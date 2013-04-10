@@ -143,7 +143,7 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
             loader.setMessage("Searching for appengine-web.xml...");
             loader.show();
             FolderModel target = currentProject;
-            FolderTreeUnmarshaller unmarshaller = new FolderTreeUnmarshaller(target, currentProject);
+            FolderTreeUnmarshaller unmarshaller = new FolderTreeUnmarshaller(target);
             VirtualFileSystem.getInstance().getTree(target.getId(), new AsyncRequestCallback<Folder>(unmarshaller) {
                 @Override
                 protected void onSuccess(Folder result) {

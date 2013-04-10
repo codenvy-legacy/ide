@@ -45,13 +45,10 @@ public class FolderTreeUnmarshaller implements Unmarshallable<Folder> {
 
     private static final String ITEM = "item";
 
-    private ProjectModel project;
-
     private final FolderModel folder;
 
-    public FolderTreeUnmarshaller(FolderModel folder, ProjectModel project) {
+    public FolderTreeUnmarshaller(FolderModel folder) {
         this.folder = folder;
-        this.project = project;
     }
 
     /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
@@ -65,29 +62,26 @@ public class FolderTreeUnmarshaller implements Unmarshallable<Folder> {
 
             ItemList<Item> children = getChildren(object.get(CHILDREN));
             folder.setChildren(children);
-
-            updateProjectAndParent(project.getChildren(), project, project);
+            
+            updateChildren(folder);
         } catch (Exception exc) {
             exc.printStackTrace();
             throw new UnmarshallerException("Can't parse JSON response.");
         }
     }
 
-    private void updateProjectAndParent(ItemList<Item> items, FolderModel parent, ProjectModel project) {
-        for (Item item : items.getItems()) {
-            if (item instanceof FileModel) {
+    private void updateChildren(FolderModel parent) {
+        ProjectModel project = parent instanceof ProjectModel ? (ProjectModel)parent : parent.getProject();
+        
+        for (Item item : parent.getChildren().getItems()) {
+            if (item instanceof FolderModel) {
+                ((FolderModel)item).setProject(project);
+                ((FolderModel)item).setParent(parent);
+                updateChildren((FolderModel)item);
+            } else if (item instanceof FileModel) {
                 ((FileModel)item).setProject(project);
                 ((FileModel)item).setParent(parent);
-            } else if (item instanceof ProjectModel) {
-                ((ProjectModel)item).setParent(parent);
-                ((ProjectModel)item).setProject(project);
-                updateProjectAndParent(((ProjectModel)item).getChildren(), (ProjectModel)item, (ProjectModel)item);
-            } else if (item instanceof FolderModel) {
-                ((FolderModel)item).setParent(parent);
-                ((FolderModel)item).setProject(project);
-                updateProjectAndParent(((FolderModel)item).getChildren(), (FolderModel)item, project);
             }
-
         }
 
     }

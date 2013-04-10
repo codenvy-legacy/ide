@@ -306,7 +306,7 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
                                                                                    public void onLoggedIn() {
                                                                                        getConfigurationOptions();
                                                                                    }
-                                                                               }) {
+                                                                               }, null) {
 
                         @Override
                         protected void processFail(Throwable exception) {
@@ -340,7 +340,7 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
                                                                                           public void onLoggedIn() {
                                                                                               getConfigurationsList();
                                                                                           }
-                                                                                      }) {
+                                                                                      }, null) {
                                                                                   @Override
                                                                                   protected void onSuccess(List<Configuration> result) {
                                                                                       // TODO make possible to edit several configuration
@@ -350,64 +350,6 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
                                                                                       } else {
                                                                                           String message =
                                                                                                   AWSExtension.LOCALIZATION_CONSTANT
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                                                                                                               .getEnvironmentConfigurationFailed();
                                                                                           Dialogs.getInstance().showError(message);
                                                                                       }
@@ -526,7 +468,7 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
                                                                      public void onLoggedIn() {
                                                                          applyConfiguration();
                                                                      }
-                                                                 }) {
+                                                                 }, null) {
 
                         @Override
                         protected void onSuccess(EnvironmentInfo result) {

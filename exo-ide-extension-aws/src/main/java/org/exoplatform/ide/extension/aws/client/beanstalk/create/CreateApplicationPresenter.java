@@ -286,7 +286,7 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
                                                                      public void onLoggedIn() {
                                                                          createApplication();
                                                                      }
-                                                                 }) {
+                                                                 }, null) {
 
                         @Override
                         protected void onSuccess(ApplicationInfo result) {
@@ -324,7 +324,7 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
                         public void onLoggedIn() {
                             getSolutionStacks();
                         }
-                    }) {
+                    }, null) {
                         @Override
                         protected void onSuccess(List<SolutionStack> result) {
                             List<String> values = new ArrayList<String>();
@@ -368,7 +368,7 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
                                                                      public void onLoggedIn() {
                                                                          createEnvironment(applicationName);
                                                                      }
-                                                                 }) {
+                                                                 }, null) {
 
                         @Override
                         protected void processFail(Throwable exception) {

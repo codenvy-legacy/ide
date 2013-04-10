@@ -40,6 +40,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.paas.DeployResultHandler;
 import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
+import org.exoplatform.ide.client.framework.paas.InitializeDeployViewHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
@@ -399,7 +400,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
     }
 
     @Override
-    public Composite getDeployView(String projectName, ProjectType projectType) {
+    public Composite getDeployView(String projectName, ProjectType projectType, InitializeDeployViewHandler initializeDeployViewHandler) {
         this.projectName = projectName;
         if (display == null) {
             display = GWT.create(Display.class);

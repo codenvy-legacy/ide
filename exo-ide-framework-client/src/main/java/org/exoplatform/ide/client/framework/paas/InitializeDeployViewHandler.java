@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -18,22 +18,14 @@
  */
 package org.exoplatform.ide.client.framework.paas;
 
-import com.google.gwt.user.client.ui.Composite;
-
-import org.exoplatform.ide.client.framework.project.ProjectType;
-import org.exoplatform.ide.client.framework.template.ProjectTemplate;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
-
 /**
- * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Jul 24, 2012 12:44:17 PM anya $
+ * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @version $Id: InitializeDeployViewHandler.java Apr 8, 2013 12:22:18 PM azatsarynnyy $
  */
-public interface HasPaaSActions {
-    void deploy(ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler);
-
-    void deploy(ProjectModel project, DeployResultHandler deployResultHandler);
-
-    Composite getDeployView(String projectName, ProjectType projectType, InitializeDeployViewHandler initializeDeployViewHandler);
-
-    boolean validate();
+public interface InitializeDeployViewHandler {
+    /**
+     * Perform actions when some error has occurred while initializing
+     * deploy view (e.g. when user press cancel in login to PaaS view).
+     */
+    public void onInitializeDeployViewError();
 }

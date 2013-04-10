@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.eclipse.jdt.internal.core.search.indexing;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.eclipse.core.resources.IFile;
 import com.codenvy.eclipse.core.resources.IFolder;
 import com.codenvy.eclipse.core.resources.IProject;
@@ -1034,7 +1035,7 @@ public class IndexManager extends JobManager implements IIndexConstants {
     public void scheduleDocumentIndexing(final SearchDocument searchDocument, IPath container,
                                          final IndexLocation indexLocation, final SearchParticipant searchParticipant) {
         request(new IndexRequest(container, this) {
-            ConversationState state = ConversationState.getCurrent();
+            EnvironmentContext context = EnvironmentContext.getCurrent();
 
             public boolean execute(IProgressMonitor progressMonitor) {
                 if (this.isCancelled || progressMonitor != null && progressMonitor.isCanceled()) {

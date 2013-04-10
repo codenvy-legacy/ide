@@ -117,35 +117,35 @@ public class DeleteVersionPresenter implements DeleteVersionHandler, ViewClosedH
     private void deleteVersion() {
         try {
             BeanstalkClientService.getInstance().deleteVersion(vfsId, projectId, version.getApplicationName(),
-                                                               version.getVersionLabel(), display.getDeleteS3Bundle().getValue(),
-                                                               new AwsAsyncRequestCallback<Object>(new LoggedInHandler() {
+               version.getVersionLabel(), display.getDeleteS3Bundle().getValue(),
+               new AwsAsyncRequestCallback<Object>(new LoggedInHandler() {
 
-                                                                   @Override
-                                                                   public void onLoggedIn() {
-                                                                       deleteVersion();
-                                                                   }
-                                                               }) {
+                   @Override
+                   public void onLoggedIn() {
+                       deleteVersion();
+                   }
+               }, null) {
 
-                                                                   @Override
-                                                                   protected void processFail(Throwable exception) {
-                                                                       String message = AWSExtension.LOCALIZATION_CONSTANT
-                                                                                                    .deleteVersionFailed(
-                                                                                                            version.getVersionLabel());
-                                                                       if (exception instanceof ServerException &&
-                                                                           ((ServerException)exception).getMessage() != null) {
-                                                                           message += "<br>" + ((ServerException)exception).getMessage();
-                                                                       }
-                                                                       Dialogs.getInstance().showError(message);
-                                                                   }
+                   @Override
+                   protected void processFail(Throwable exception) {
+                       String message = AWSExtension.LOCALIZATION_CONSTANT
+                                                    .deleteVersionFailed(
+                                                            version.getVersionLabel());
+                       if (exception instanceof ServerException &&
+                           ((ServerException)exception).getMessage() != null) {
+                           message += "<br>" + ((ServerException)exception).getMessage();
+                       }
+                       Dialogs.getInstance().showError(message);
+                   }
 
-                                                                   @Override
-                                                                   protected void onSuccess(Object result) {
-                                                                       IDE.getInstance().closeView(display.asView().getId());
-                                                                       if (versionDeletedHandler != null) {
-                                                                           versionDeletedHandler.onVersionDeleted(version);
-                                                                       }
-                                                                   }
-                                                               });
+                   @Override
+                   protected void onSuccess(Object result) {
+                       IDE.getInstance().closeView(display.asView().getId());
+                       if (versionDeletedHandler != null) {
+                           versionDeletedHandler.onVersionDeleted(version);
+                       }
+                   }
+               });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
