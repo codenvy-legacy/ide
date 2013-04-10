@@ -97,49 +97,51 @@ import java.util.List;
  * @version $Id: Mar 23, 2011 11:52:24 AM anya $
  */
 public class GitClientServiceImpl extends GitClientService {
-    public static final String ADD             = "/ide/git/add";
+    public static final String ADD               = "/ide/git/add";
 
-    public static final String BRANCH_LIST     = "/ide/git/branch-list";
+    public static final String BRANCH_LIST       = "/ide/git/branch-list";
 
-    public static final String BRANCH_CHECKOUT = "/ide/git/branch-checkout";
+    public static final String BRANCH_CHECKOUT   = "/ide/git/branch-checkout";
 
-    public static final String BRANCH_CREATE   = "/ide/git/branch-create";
+    public static final String BRANCH_CREATE     = "/ide/git/branch-create";
 
-    public static final String BRANCH_DELETE   = "/ide/git/branch-delete";
+    public static final String BRANCH_DELETE     = "/ide/git/branch-delete";
 
-    public static final String CLONE           = "/ide/git/clone";
+    public static final String CLONE             = "/ide/git/clone";
 
-    public static final String COMMIT          = "/ide/git/commit";
+    public static final String COMMIT            = "/ide/git/commit";
 
-    public static final String DIFF            = "/ide/git/diff";
+    public static final String DIFF              = "/ide/git/diff";
 
-    public static final String FETCH           = "/ide/git/fetch";
+    public static final String FETCH             = "/ide/git/fetch";
 
-    public static final String INIT            = "/ide/git/init";
+    public static final String INIT              = "/ide/git/init";
 
-    public static final String LOG             = "/ide/git/log";
+    public static final String LOG               = "/ide/git/log";
 
-    public static final String MERGE           = "/ide/git/merge";
+    public static final String MERGE             = "/ide/git/merge";
 
-    public static final String STATUS          = "/ide/git/status";
+    public static final String STATUS            = "/ide/git/status";
 
-    public static final String RO_URL          = "/ide/git/read-only-url";
+    public static final String RO_URL            = "/ide/git/read-only-url";
 
-    public static final String PUSH            = "/ide/git/push";
+    public static final String PUSH              = "/ide/git/push";
 
-    public static final String PULL            = "/ide/git/pull";
+    public static final String PULL              = "/ide/git/pull";
 
-    public static final String REMOTE_LIST     = "/ide/git/remote-list";
+    public static final String REMOTE_LIST       = "/ide/git/remote-list";
 
-    public static final String REMOTE_ADD      = "/ide/git/remote-add";
+    public static final String REMOTE_ADD        = "/ide/git/remote-add";
 
-    public static final String REMOTE_DELETE   = "/ide/git/remote-delete";
+    public static final String REMOTE_DELETE     = "/ide/git/remote-delete";
 
-    public static final String REMOVE          = "/ide/git/rm";
+    public static final String REMOVE            = "/ide/git/rm";
 
-    public static final String RESET           = "/ide/git/reset";
+    public static final String RESET             = "/ide/git/reset";
 
-    public static final String COMMITERS       = "/ide/git/commiters";
+    public static final String COMMITERS         = "/ide/git/commiters";
+
+    public static final String DELETE_REPOSITORY = "/ide/git/delete-repository";
 
     /** REST service context. */
     private String             restServiceContext;
@@ -147,7 +149,7 @@ public class GitClientServiceImpl extends GitClientService {
     /** Loader to be displayed. */
     private Loader             loader;
 
-    private Loader             emptyLoader     = new EmptyLoader();
+    private Loader             emptyLoader       = new EmptyLoader();
 
     private MessageBus         wsMessageBus;
 
@@ -772,6 +774,22 @@ public class GitClientServiceImpl extends GitClientService {
         String url = restServiceContext + COMMITERS;
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
         AsyncRequest.build(RequestBuilder.GET, url + "?" + params).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+                    .send(callback);
+    }
+    
+    
+    /**
+     * @throws RequestException
+     * @see org.exoplatform.ide.git.client.GitClientService#status(java.lang.String, boolean,
+     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+     */
+    @Override
+    public void deleteRepository(String vfsId, String projectid, AsyncRequestCallback<Void> callback) throws RequestException {
+        String url = restServiceContext + DELETE_REPOSITORY;
+
+        String params = "vfsid=" + vfsId + "&projectid=" + projectid;
+        AsyncRequest.build(RequestBuilder.GET, url + "?" + params).loader(loader)
+                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN)
                     .send(callback);
     }
 
