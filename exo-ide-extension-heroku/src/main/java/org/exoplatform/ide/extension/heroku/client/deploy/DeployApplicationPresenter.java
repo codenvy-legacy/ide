@@ -36,6 +36,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.paas.DeployResultHandler;
 import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
+import org.exoplatform.ide.client.framework.paas.InitializeDeployViewHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
@@ -235,7 +236,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
     }
 
     @Override
-    public Composite getDeployView(String projectName, ProjectType projectType) {
+    public Composite getDeployView(String projectName, ProjectType projectType, InitializeDeployViewHandler initializeDeployViewHandler) {
         if (display == null) {
             display = GWT.create(Display.class);
             bindDisplay();

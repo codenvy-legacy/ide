@@ -143,18 +143,18 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
 
         try {
             GitClientService.getInstance().status(vfs.getId(), openedProject.getId(),
-                                                  new AsyncRequestCallback<Status>(
-                                                          new AutoBeanUnmarshaller<Status>(GitExtension.AUTO_BEAN_FACTORY.status())) {
-                                                      @Override
-                                                      protected void onSuccess(Status result) {
-                                                          workingTreeStatus = result;
-                                                          addItemsTreeIcons(folder, additionalItems);
-                                                      }
+                  new AsyncRequestCallback<Status>(
+                          new AutoBeanUnmarshaller<Status>(GitExtension.AUTO_BEAN_FACTORY.status())) {
+                      @Override
+                      protected void onSuccess(Status result) {
+                          workingTreeStatus = result;
+                          addItemsTreeIcons(folder, additionalItems);
+                      }
 
-                                                      @Override
-                                                      protected void onFailure(Throwable exception) {
-                                                      }
-                                                  });
+                      @Override
+                      protected void onFailure(Throwable exception) {
+                      }
+                  });
         } catch (RequestException ignored) {
         }
     }

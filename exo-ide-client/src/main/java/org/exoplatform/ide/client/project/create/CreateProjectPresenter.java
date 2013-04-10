@@ -53,6 +53,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.paas.DeployResultHandler;
+import org.exoplatform.ide.client.framework.paas.InitializeDeployViewHandler;
 import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.project.CreateModuleEvent;
 import org.exoplatform.ide.client.framework.project.CreateModuleHandler;
@@ -84,7 +85,7 @@ import java.util.List;
  * @version $Id: Jul 24, 2012 3:38:19 PM anya $
  */
 public class CreateProjectPresenter implements CreateProjectHandler, CreateModuleHandler, VfsChangedHandler,
-                                               ViewClosedHandler, DeployResultHandler, ItemsSelectedHandler {
+                                               ViewClosedHandler, DeployResultHandler, InitializeDeployViewHandler, ItemsSelectedHandler {
     interface Display extends IsView {
 
         void switchToCreateModule();
@@ -590,7 +591,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
                     updateJRebelPanelVisibility();
                     display.showDeployProjectStep();
                     isDeployStep = true;
-                    display.setDeployView(paas.getPaaSActions().getDeployView(projectName, selectedProjectType));
+                    display.setDeployView(paas.getPaaSActions().getDeployView(projectName, selectedProjectType, this));
                     display.enableFinishButton(true);
                 } else {
                     Dialogs.getInstance().showError(
@@ -702,22 +703,21 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.paas.DeployResultHandler#onDeployFinished(boolean) */
-    @Override
-    public void onDeployFinished(boolean success) {
-        if (success && display != null) {
-            IDE.getInstance().closeView(display.asView().getId());
-        }
-    }
-
     private void doDeploy(ProjectTemplate projectTemplate) {
         if (currentPaaS != null) {
             if (projectTemplate != null || currentPaaS.isProvidesTemplate()) {
                 currentPaaS.getPaaSActions().deploy(projectTemplate, this);
             } else {
-                Dialogs.getInstance().showError(
-                        org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noProjectTemplateForTarget(currentPaaS.getTitle()));
+                Dialogs.getInstance().showError(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noProjectTemplateForTarget(currentPaaS.getTitle()));
             }
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.paas.DeployResultHandler#onDeployFinished(boolean) */
+    @Override
+    public void onDeployFinished(boolean success) {
+        if (success && display != null) {
+            IDE.getInstance().closeView(display.asView().getId());
         }
     }
 
@@ -734,6 +734,15 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
         if (display != null) {
             IDE.getInstance().closeView(display.asView().getId());
         }
+    }
+
+    /**
+     * @see org.exoplatform.ide.client.framework.paas.InitializeDeployViewHandler#onInitializeDeployViewError()
+     */
+    @Override
+    public void onInitializeDeployViewError() {
+        // when user press cancel in login to PaaS view
+        createProject(selectedTemplate);
     }
 
     /**

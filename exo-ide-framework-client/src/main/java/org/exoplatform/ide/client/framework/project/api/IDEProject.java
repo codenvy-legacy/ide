@@ -212,7 +212,7 @@ public class IDEProject extends ProjectModel {
             FolderModel target = (FolderModel)getResource(folder.getPath());
 
             try {
-                FolderTreeUnmarshaller unmarshaller = new FolderTreeUnmarshaller(target, this);
+                FolderTreeUnmarshaller unmarshaller = new FolderTreeUnmarshaller(target);
                 VirtualFileSystem.getInstance().getTree(target.getId(), new AsyncRequestCallback<Folder>(unmarshaller) {
                     @Override
                     protected void onSuccess(Folder result) {

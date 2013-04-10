@@ -39,6 +39,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.paas.DeployResultHandler;
+import org.exoplatform.ide.client.framework.paas.InitializeDeployViewHandler;
 import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectType;
@@ -73,7 +74,8 @@ import java.util.LinkedHashMap;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeploySamplesPresenter.java Nov 22, 2011 10:35:16 AM vereshchaka $
  */
-public class DeploySamplesPresenter implements ViewClosedHandler, ImportSampleStep<ProjectData>, VfsChangedHandler {
+public class DeploySamplesPresenter implements ViewClosedHandler, ImportSampleStep<ProjectData>, VfsChangedHandler,
+                                   InitializeDeployViewHandler {
 
     public interface Display extends IsView {
         HasClickHandlers getFinishButton();
@@ -169,7 +171,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, ImportSampleSt
                             selectedPaaS = paas;
                             Composite view =
                                     selectedPaaS.getPaaSActions().getDeployView(data.getName(),
-                                                                                ProjectType.fromValue(data.getType()));
+                                                                                ProjectType.fromValue(data.getType()), null);
                             openView(view);
                         }
                     }
@@ -378,6 +380,14 @@ public class DeploySamplesPresenter implements ViewClosedHandler, ImportSampleSt
     @Override
     public void onVfsChanged(VfsChangedEvent event) {
         this.vfs = event.getVfsInfo();
+    }
+
+    /**
+     * @see org.exoplatform.ide.client.framework.paas.InitializeDeployViewHandler#onInitializeDeployViewError()
+     */
+    @Override
+    public void onInitializeDeployViewError() {
+        // nothing to do
     }
 
 }

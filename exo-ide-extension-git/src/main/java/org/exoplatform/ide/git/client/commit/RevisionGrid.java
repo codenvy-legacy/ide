@@ -33,31 +33,31 @@ import java.util.List;
 
 /**
  * Grid for displaying revisions' info (date, commiter, comment.)
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 15, 2011 11:26:49 AM anya $
  */
 public class RevisionGrid extends ListGrid<Revision> {
     /** Grid's ID. */
-    private static final String ID = "ideRevisionGrid";
+    private static final String ID       = "ideRevisionGrid";
 
     /** Date column's name. */
-    private final String DATE = GitExtension.MESSAGES.commitGridDate();
+    private final String        DATE     = GitExtension.MESSAGES.commitGridDate();
 
     /** Commiter column's name. */
-    private final String COMMITER = GitExtension.MESSAGES.commitGridCommiter();
+    private final String        COMMITER = GitExtension.MESSAGES.commitGridCommiter();
 
     /** Comment column's name. */
-    private final String COMMENT = GitExtension.MESSAGES.commitGridComment();
+    private final String        COMMENT  = GitExtension.MESSAGES.commitGridComment();
 
     /** Date column. */
-    Column<Revision, String> dateColumn;
+    Column<Revision, String>    dateColumn;
 
     /** Commiter column. */
-    Column<Revision, String> commiterColumn;
+    Column<Revision, String>    commiterColumn;
 
     /** Comment column. */
-    Column<Revision, String> commentColumn;
+    Column<Revision, String>    commentColumn;
 
     public RevisionGrid() {
         super();
@@ -74,7 +74,7 @@ public class RevisionGrid extends ListGrid<Revision> {
             @Override
             public String getValue(Revision revision) {
                 return DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM).format(
-                        new Date(revision.getCommitTime()));
+                                                                                          new Date(revision.getCommitTime()));
             }
         };
 
@@ -100,11 +100,11 @@ public class RevisionGrid extends ListGrid<Revision> {
         };
 
         cellTable.addColumn(dateColumn, DATE);
-        cellTable.setColumnWidth(dateColumn, "15%");
+        cellTable.setColumnWidth(dateColumn, "20%");
         cellTable.addColumn(commiterColumn, COMMITER);
-        cellTable.setColumnWidth(commiterColumn, "20%");
+        cellTable.setColumnWidth(commiterColumn, "30%");
         cellTable.addColumn(commentColumn, COMMENT);
-        cellTable.setColumnWidth(commentColumn, "65%");
+        cellTable.setColumnWidth(commentColumn, "50%");
     }
 
     /** @see org.exoplatform.gwtframework.ui.client.component.ListGrid#setValue(java.util.List) */
@@ -119,7 +119,7 @@ public class RevisionGrid extends ListGrid<Revision> {
 
     /**
      * Returns selected revision in grid.
-     *
+     * 
      * @return {@link Revision} selected revision
      */
     public Revision getSelectedRevision() {

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.eclipse.core.resources.IProject;
 import com.codenvy.eclipse.core.resources.IProjectDescription;
 import com.codenvy.eclipse.core.resources.ResourcesPlugin;
@@ -69,7 +70,7 @@ public class RefactoringService {
     private static final Log LOG = ExoLogger.getLogger(RefactoringService.class);
 
     private WorkspaceResource getWorkspace(String vfsid) {
-        Object tenantName = ConversationState.getCurrent().getAttribute("currentTenant");
+        Object tenantName = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID); 
         if (tenantName == null) {
             if (ResourcesPlugin.getDefaultWorkspace() == null) {
 

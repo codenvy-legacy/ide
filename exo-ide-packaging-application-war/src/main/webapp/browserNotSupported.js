@@ -1,5 +1,6 @@
 var USER_AGENT = navigator.userAgent.toLowerCase();
-if (USER_AGENT.indexOf("chrome") == -1 && USER_AGENT.indexOf("firefox") == -1 && USER_AGENT.indexOf("safari") == -1) {
+var IS_WS_SUPPORTED = ("WebSocket" in window);
+if (!IS_WS_SUPPORTED || (USER_AGENT.indexOf("chrome") == -1 && USER_AGENT.indexOf("firefox") == -1 && USER_AGENT.indexOf("safari") == -1)) {
     if (document.body != null) {
         document.body.appendChild(createDivContainer());
     }

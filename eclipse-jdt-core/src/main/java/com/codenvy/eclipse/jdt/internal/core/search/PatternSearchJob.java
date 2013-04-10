@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.eclipse.jdt.internal.core.search;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.eclipse.core.runtime.IPath;
 import com.codenvy.eclipse.core.runtime.IProgressMonitor;
 import com.codenvy.eclipse.core.runtime.OperationCanceledException;
@@ -38,7 +39,8 @@ public class PatternSearchJob implements IJob {
     protected IndexQueryRequestor requestor;
     protected boolean             areIndexesReady;
     protected long executionTime = 0;
-    ConversationState state = ConversationState.getCurrent();
+    
+    EnvironmentContext context = EnvironmentContext.getCurrent();
 
     public PatternSearchJob(SearchPattern pattern, SearchParticipant participant, IJavaSearchScope scope, IndexQueryRequestor requestor) {
         this.pattern = pattern;
@@ -61,7 +63,7 @@ public class PatternSearchJob implements IJob {
     }
 
     public boolean execute(IProgressMonitor progressMonitor) {
-        ConversationState.setCurrent(state);
+        EnvironmentContext.setCurrent(context);
         if (progressMonitor != null && progressMonitor.isCanceled()) throw new OperationCanceledException();
 
         boolean isComplete = COMPLETE;

@@ -119,7 +119,6 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
                     loginCanceledHandler.onLoginCanceled(new LoginCanceledEvent());
                     loginCanceledHandler = null;
                 }
-
             }
         });
 

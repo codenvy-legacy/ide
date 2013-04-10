@@ -240,7 +240,7 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements
                 {
                     uris.append("<div><a href=\">");
                     uris.append(appUris.get(i));
-                    uris.append("\" >http://");
+                    uris.append("\" target=\"_blank\">http://");
                     uris.append(appUris.get(i));
                     uris.append("</a></div>\n");
                 }

@@ -579,7 +579,7 @@ public class LazyJavaCompletionProposal extends AbstractJavaCompletionProposal
    @Override
    public boolean isAutoInsertable()
    {
-      return false;
+      return true;
    }
 
    // /*

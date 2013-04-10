@@ -527,11 +527,20 @@ public class LocalFileSystem implements VirtualFileSystem {
             LOG.info("EVENT#project-created# PROJECT#{}# TYPE#{}#", updated.getName(), ((Project)updated).getProjectType());
         }
 
-        final String projectType = updated.hasProperty("vfs:projectType") ? updated.getPropertyValue("vfs:projectType") : null;
-        //TODO need to organize both ProjectType enums from server and client side to use one shared ProjectType
-        if (projectType != null && ("Servlet/JSP".equals(projectType) || "Spring".equals(projectType))) {
-            String jRebelUsage = updated.hasProperty("jrebel") ? updated.getPropertyValue("jrebel") : "false";
-            LOG.info("EVENT#jrebel-usage# PROJECT#" + updated.getName() + "# TYPE#" + projectType + "# JREBEL#" + jRebelUsage + "#");
+        boolean wasJRebelPropertyUpdated = false;
+        for (Property p : properties) {
+            if (p.getName().equals("jrebel")) {
+                wasJRebelPropertyUpdated = true;
+                break;
+            }
+        }
+        if (wasJRebelPropertyUpdated) {
+            final String projectType = updated.hasProperty("vfs:projectType") ? updated.getPropertyValue("vfs:projectType") : null;
+            //TODO need to organize both ProjectType enums from server and client side to use one shared ProjectType
+            if (projectType != null && ("Servlet/JSP".equals(projectType) || "Spring".equals(projectType))) {
+                String jRebelUsage = updated.hasProperty("jrebel") ? updated.getPropertyValue("jrebel") : "false";
+                LOG.info("EVENT#jrebel-usage# PROJECT#" + updated.getName() + "# TYPE#" + projectType + "# JREBEL#" + jRebelUsage + "#");
+            }
         }
         return updated;
     }

@@ -284,6 +284,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
         applicationSettings
                            .setValue(PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG, new Boolean(linkWithEditor), Store.COOKIES);
 
+
         IDE.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
 
         /*
@@ -363,8 +364,22 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
         }
 
         display.setProject(null);
+        
+        updateCloseProjectTimer.cancel();
+        updateCloseProjectTimer.schedule(250);
     }
-    
+
+    private Timer updateCloseProjectTimer = new Timer() {
+                                              @Override
+                                              public void run() {
+                                                  if (display == null) {
+                                                      return;
+                                                  }
+
+                                                  IDE.getInstance().closeView(display.asView().getId());
+                                              }
+                                          };
+
     @Override
     public void onViewOpened(ViewOpenedEvent event) {
         if (event.getView() instanceof PackageExplorerDisplay && project != null) {
@@ -436,7 +451,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
         if (display == null) {
             return;
         }
-        
+
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
             public void execute() {

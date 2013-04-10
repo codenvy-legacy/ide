@@ -16,6 +16,7 @@
  *******************************************************************************/
 package com.codenvy.eclipse.jdt.internal.core;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.eclipse.core.resources.IFile;
 import com.codenvy.eclipse.core.resources.IFolder;
 import com.codenvy.eclipse.core.resources.IProject;
@@ -2317,7 +2318,8 @@ public class JavaModelManager implements ISaveParticipant, IContentTypeChangeLis
     }
 
     private static JavaModelManager getManager() {
-        Object currentTenant = ConversationState.getCurrent().getAttribute("currentTenant");
+        Object currentTenant = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID);
+        EnvironmentContext context = EnvironmentContext.getCurrent();
         if (currentTenant != null) {
             if (!MANAGERS.containsKey(currentTenant)) {
                 MANAGERS.put((String)currentTenant, new JavaModelManager());

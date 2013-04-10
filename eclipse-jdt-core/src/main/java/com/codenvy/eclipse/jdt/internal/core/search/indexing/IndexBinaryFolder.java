@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.eclipse.jdt.internal.core.search.indexing;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.eclipse.core.resources.IContainer;
 import com.codenvy.eclipse.core.resources.IFile;
 import com.codenvy.eclipse.core.resources.IResource;
@@ -48,7 +49,7 @@ public class IndexBinaryFolder extends IndexRequest {
      * since the index was produced.
      */
     public boolean execute(IProgressMonitor progressMonitor) {
-        ConversationState.setCurrent(state);
+        EnvironmentContext.setCurrent(context);
         if (this.isCancelled || progressMonitor != null && progressMonitor.isCanceled()) {
             return true;
         }
