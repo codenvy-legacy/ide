@@ -40,9 +40,6 @@
 			margin-right: 10px;
 		}
 		
-		.boldLabel {
-			font-weight: bold;
-		}
 		
 		.indents10 {
 			margin: 0 10px 10px;
@@ -57,17 +54,13 @@
 		<g:layer left="0px" right="0" top="10px" height="30px">
 			<g:FlowPanel stylePrimaryName="{style.indents10}">
 				<g:Label text="{locale.importFromGithubAccount}"
-					addStyleNames="{style.floatLeft} {style.label} {style.boldLabel}"></g:Label>
+					addStyleNames="{style.floatLeft} {style.label}"></g:Label>
 				<f:ComboBoxField ui:field="accountNameBox"
 					addStyleNames="{style.floatLeft}" height="20px" pickListHeight="100"
-					width="30%"></f:ComboBoxField>
-				<f:Label text="Name:"
-					addStyleNames="{style.floatLeft} {style.label} {style.boldLabel}"></f:Label>
-				<f:TextInput ui:field="projectNameField" addStyleNames="{style.floatLeft} {style.border}"
-					width="30%"></f:TextInput>
+					width="325px"></f:ComboBoxField>
 			</g:FlowPanel>
 		</g:layer>
-		<g:layer top="30px" bottom="35px">
+		<g:layer top="30px" bottom="55px">
 			<g:DockLayoutPanel ui:field="importStep" width="100%"
 				height="100%">
 				<g:center>
@@ -82,7 +75,14 @@
 				</g:center>
 			</g:DockLayoutPanel>
 		</g:layer>
-		<g:layer height="22px" bottom="10">
+		<g:layer left="0px" right="0" bottom="30px" height="25px">
+		   <g:FlowPanel stylePrimaryName="{style.indents10}">
+				<f:Label text="{locale.projectName}" addStyleNames="{style.floatLeft} {style.label}"></f:Label>
+				<f:TextInput ui:field="projectNameField" addStyleNames="{style.floatLeft} {style.border}"
+					width="335px" height="20px"></f:TextInput>
+			</g:FlowPanel>
+		</g:layer>			
+		<g:layer height="22px" bottom="8">
 			<g:FlowPanel styleName="{style.buttons}">
 				<f:ImageButton ui:field="cancelButton" width="90"
 					height="22" text="{locale.cancelButton}" imageResource="{resource.cancel}"

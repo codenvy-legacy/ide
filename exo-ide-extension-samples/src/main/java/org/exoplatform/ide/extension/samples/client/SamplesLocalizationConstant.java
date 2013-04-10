@@ -150,29 +150,13 @@ public interface SamplesLocalizationConstant extends Messages {
     String wizardDeploymentPaas();
 
     /*
-     * Convert to project view
+     * Project
      */
-    @Key("convert.location.title")
-    String convertLocationTitle();
+    @Key("project.name")
+    String projectName();
 
-    @Key("convert.location.text")
-    String convertLocationText();
-
-    @Key("convert.project.name")
-    String convertProjectName();
-
-    @Key("convert.project.type")
-    String convertProjectType();
-
-    @Key("convert.properties.title")
-    String convertPropertiesTitle();
-
-    @Key("convert.properties.text")
-    String convertPropertiesText();
-
-    @Key("convert.name.exists")
-    String convertNameExists(String name);
-
+    @Key("project.type")
+    String projectType();
     /*
      * Login
      */
