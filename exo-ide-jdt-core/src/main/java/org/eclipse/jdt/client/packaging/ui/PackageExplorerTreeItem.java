@@ -52,7 +52,9 @@ public abstract class PackageExplorerTreeItem extends TreeItem
         render();
     }
 
-    /** Render tree item. */
+    /**
+     * Render tree item.
+     */
     protected void render()
     {
         Grid grid = new Grid(1, 2);

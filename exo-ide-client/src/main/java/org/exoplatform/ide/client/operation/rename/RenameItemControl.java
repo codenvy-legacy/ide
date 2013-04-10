@@ -68,7 +68,6 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
         super(ID);
         setTitle(TITLE);
         setPrompt(PROMPT);
-        //      setDelimiterBefore(true);
         setShowInContextMenu(true);
         setImages(IDEImageBundle.INSTANCE.rename(), IDEImageBundle.INSTANCE.renameDisabled());
         setEvent(new RenameItemEvent());

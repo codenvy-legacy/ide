@@ -23,14 +23,31 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
+<<<<<<< Updated upstream
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+=======
+import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+>>>>>>> Stashed changes
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.project.api.TreeRefreshedEvent;
 import org.exoplatform.ide.client.framework.project.api.TreeRefreshedHandler;
 import org.exoplatform.ide.git.client.GitExtension;
+<<<<<<< Updated upstream
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+=======
+import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
+>>>>>>> Stashed changes
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
@@ -74,9 +91,20 @@ public abstract class GitControl extends SimpleControl implements IDEControl, Vf
      * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
      */
     @Override
+<<<<<<< Updated upstream
     public void onVfsChanged(VfsChangedEvent event) {
         vfsInfo = event.getVfsInfo();
         updateControlState();
+=======
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        if (event.getSelectedItems().size() != 1) {
+            selectedItem = null;
+            updateControlState();
+        } else {
+            selectedItem = event.getSelectedItems().get(0);
+            updateControlState();
+        }
+>>>>>>> Stashed changes
     }
     
     /**
@@ -120,6 +148,16 @@ public abstract class GitControl extends SimpleControl implements IDEControl, Vf
         this.enableState = enableState;
     }
 
+<<<<<<< Updated upstream
+=======
+    /** @see org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler#onFolderRefreshed(org.exoplatform.ide.client
+     * .framework.navigation.event.FolderRefreshedEvent) */
+    @Override
+    public void onFolderRefreshed(FolderRefreshedEvent event) {
+        updateControlState();
+    }
+    
+>>>>>>> Stashed changes
     @Override
     public void onTreeRefreshed(TreeRefreshedEvent event) {
         updateControlState();
@@ -148,5 +186,9 @@ public abstract class GitControl extends SimpleControl implements IDEControl, Vf
             }
         }
     }
+<<<<<<< Updated upstream
  
+=======
+
+>>>>>>> Stashed changes
 }

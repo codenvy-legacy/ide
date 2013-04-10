@@ -28,7 +28,7 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
@@ -36,9 +36,9 @@ public class RefreshBrowserEvent extends GwtEvent<RefreshBrowserHandler> {
 
     public static final GwtEvent.Type<RefreshBrowserHandler> TYPE = new Type<RefreshBrowserHandler>();
 
-    private List<Folder> folders;
+    private List<Folder>                                     folders;
 
-    private Item itemToSelect;
+    private Item                                             itemToSelect;
 
     public RefreshBrowserEvent() {
     }
