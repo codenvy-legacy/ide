@@ -596,4 +596,6 @@ public abstract class GitClientService {
                                       String projectid,
                                       AsyncRequestCallback<Commiters> callback) throws RequestException;
 
+    public abstract void deleteRepository(String vfsId, String projectid, AsyncRequestCallback<Void> callback) throws RequestException;
+
 }

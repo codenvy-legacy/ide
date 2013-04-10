@@ -42,7 +42,7 @@
       <gwt.test.skip>true</gwt.test.skip>
       <jgit.version>2.3.1.201302201838-r</jgit.version>
       <jsch.version>0.1.44-1</jsch.version>
-      <appengine.version>1.7.2</appengine.version>
+      <appengine.version>1.7.7</appengine.version>
       <ch.qos.logback.version>1.0.0</ch.qos.logback.version>
       <crash.version>1.0.0-beta21</crash.version>
       <com.codenvy.commons.version>0.3-SNAPSHOT</com.codenvy.commons.version>
