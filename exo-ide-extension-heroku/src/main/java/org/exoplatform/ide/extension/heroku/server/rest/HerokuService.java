@@ -114,9 +114,11 @@ public class HerokuService {
                                                                   );
 
         // Update VFS properties. Need it to uniform client.
-        Property p = new PropertyImpl("heroku-application", application.get("name"));
-        List<Property> properties = new ArrayList<Property>(1);
-        properties.add(p);
+        Property herokuAppProperty = new PropertyImpl("heroku-application", application.get("name"));
+        Property isGitRepositoryProperty = new PropertyImpl("isGitRepository", "true");
+        List<Property> properties = new ArrayList<Property>(2);
+        properties.add(herokuAppProperty);
+        properties.add(isGitRepositoryProperty);
         vfs.updateItem(projectId, properties, null);
         if (projectId != null) {
             Project project = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
