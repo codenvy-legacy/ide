@@ -47,11 +47,7 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Presenter for Init Repository view.
@@ -187,9 +183,7 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
     }
     
     private void setGitRepositoryProperty() {
-        //List<Property> properties = new ArrayList<Property>();
         project.getProperties().add(new PropertyImpl(GitExtension.GIT_REPOSITORY_PROP, "true"));
-        //project.getProperties().add(e) addAll(properties);
         ItemWrapper item = new ItemWrapper(project);
         ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
         try {
@@ -199,7 +193,6 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
                        protected void onSuccess(ItemWrapper result) {
                            IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
                            IDE.fireEvent(new RefreshBrowserEvent(project));                           
-//                         IDE.fireEvent(new RefreshBrowserEvent(getSelectedProject()));
                        }
 
                        @Override
