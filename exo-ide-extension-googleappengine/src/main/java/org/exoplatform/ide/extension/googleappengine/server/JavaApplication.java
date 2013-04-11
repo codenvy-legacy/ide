@@ -169,4 +169,14 @@ public class JavaApplication implements GenericApplication {
     public String getAppYaml() {
         return delegate.getAppYaml();
     }
+    
+    /**
+     * Not implement yet. Don't use. Always return null
+     * 
+     * @see com.google.appengine.tools.admin.GenericApplication#getInstanceClass()
+     */
+    @Override
+    public String getInstanceClass() {
+        return null;
+    }
 }

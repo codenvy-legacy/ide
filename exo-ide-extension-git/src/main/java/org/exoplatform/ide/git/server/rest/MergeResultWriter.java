@@ -41,21 +41,19 @@ import java.lang.reflect.Type;
 @Produces(MediaType.TEXT_PLAIN)
 public final class MergeResultWriter implements MessageBodyWriter<MergeResult> {
     /**
-     * @see MessageBodyWriter#isWriteable(Class, java.lang.reflect.Type, java.lang.annotation.Annotation[],
-     *      javax.ws.rs.core.MediaType)
+     * @see MessageBodyWriter#isWriteable(Class, java.lang.reflect.Type, java.lang.annotation.Annotation[], javax.ws.rs.core.MediaType)
      */
     @Override
-    public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+    public boolean isWriteable(Class< ? > type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         return MergeResult.class.isAssignableFrom(type);
     }
 
     /**
-     * @see MessageBodyWriter#getSize(Object, Class, java.lang.reflect.Type, java.lang.annotation.Annotation[],
-     *      javax.ws.rs.core.MediaType)
+     * @see MessageBodyWriter#getSize(Object, Class, java.lang.reflect.Type, java.lang.annotation.Annotation[], javax.ws.rs.core.MediaType)
      */
     @Override
     public long getSize(MergeResult mergeResult,
-                        Class<?> type,
+                        Class< ? > type,
                         Type genericType,
                         Annotation[] annotations,
                         MediaType mediaType) {
@@ -63,12 +61,12 @@ public final class MergeResultWriter implements MessageBodyWriter<MergeResult> {
     }
 
     /**
-     * @see MessageBodyWriter#writeTo(Object, Class, java.lang.reflect.Type, java.lang.annotation.Annotation[],
-     *      javax.ws.rs.core.MediaType, javax.ws.rs.core.MultivaluedMap, java.io.OutputStream)
+     * @see MessageBodyWriter#writeTo(Object, Class, java.lang.reflect.Type, java.lang.annotation.Annotation[], javax.ws.rs.core.MediaType,
+     *      javax.ws.rs.core.MultivaluedMap, java.io.OutputStream)
      */
     @Override
     public void writeTo(MergeResult mergeResult,
-                        Class<?> type,
+                        Class< ? > type,
                         Type genericType,
                         Annotation[] annotations,
                         MediaType mediaType,

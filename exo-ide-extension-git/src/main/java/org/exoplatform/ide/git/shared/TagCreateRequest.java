@@ -20,32 +20,28 @@ package org.exoplatform.ide.git.shared;
 
 /**
  * Request to create new tag.
- *
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: TagCreateRequest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
 public class TagCreateRequest extends GitRequest {
     /** Name of tag to create. */
-    private String name;
+    private String  name;
 
     /** Commit to make tag. If <code>null</code> then HEAD will be used. */
-    private String commit;
+    private String  commit;
 
     /** Message for the tag. */
-    private String message;
+    private String  message;
 
     /** Force create tag. If tag with the same exists it will be replaced. */
     private boolean force;
 
     /**
-     * @param name
-     *         name of tag to create
-     * @param commit
-     *         commit to make tag
-     * @param message
-     *         message for the tag
-     * @param forceUpdate
-     *         force create tag operation
+     * @param name name of tag to create
+     * @param commit commit to make tag
+     * @param message message for the tag
+     * @param forceUpdate force create tag operation
      */
     public TagCreateRequest(String name, String commit, String message, boolean forceUpdate) {
         this.name = name;
@@ -55,12 +51,9 @@ public class TagCreateRequest extends GitRequest {
     }
 
     /**
-     * @param name
-     *         name of tag to create
-     * @param commit
-     *         commit to make tag
-     * @param message
-     *         message for the tag
+     * @param name name of tag to create
+     * @param commit commit to make tag
+     * @param message message for the tag
      */
     public TagCreateRequest(String name, String commit, String message) {
         this.name = name;
@@ -69,8 +62,7 @@ public class TagCreateRequest extends GitRequest {
     }
 
     /**
-     * "Empty" create tag request. Corresponding setters used to setup required
-     * parameters.
+     * "Empty" create tag request. Corresponding setters used to setup required parameters.
      */
     public TagCreateRequest() {
     }
@@ -81,8 +73,7 @@ public class TagCreateRequest extends GitRequest {
     }
 
     /**
-     * @param name
-     *         name of tag to create
+     * @param name name of tag to create
      */
     public void setName(String name) {
         this.name = name;
@@ -94,8 +85,7 @@ public class TagCreateRequest extends GitRequest {
     }
 
     /**
-     * @param commit
-     *         commit to make tag. If <code>null</code> then HEAD is used
+     * @param commit commit to make tag. If <code>null</code> then HEAD is used
      */
     public void setCommit(String commit) {
         this.commit = commit;
@@ -107,8 +97,7 @@ public class TagCreateRequest extends GitRequest {
     }
 
     /**
-     * @param message
-     *         message for tag
+     * @param message message for tag
      */
     public void setMessage(String message) {
         this.message = message;
@@ -123,8 +112,7 @@ public class TagCreateRequest extends GitRequest {
     }
 
     /**
-     * @param force
-     *         if <code>true</code> force create tag operation
+     * @param force if <code>true</code> force create tag operation
      * @see #force
      */
     public void setForce(boolean force) {

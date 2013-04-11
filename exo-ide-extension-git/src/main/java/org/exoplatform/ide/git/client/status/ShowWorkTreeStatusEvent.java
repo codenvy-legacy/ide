@@ -22,7 +22,7 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event is fired, when user tries to view the Git work tree status.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 28, 2011 3:04:41 PM anya $
  */

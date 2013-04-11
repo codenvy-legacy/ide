@@ -129,8 +129,7 @@ public class JavaScriptProposal implements CompletionProposal {
     /** @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#isAutoInsertable() */
     @Override
     public boolean isAutoInsertable() {
-        // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
 }

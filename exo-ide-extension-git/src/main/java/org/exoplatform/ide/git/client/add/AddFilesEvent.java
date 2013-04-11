@@ -22,7 +22,7 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event is fired, when user tries to add changes to Git index. Implement {@link AddFilesHandler} handler for processing event.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 29, 2011 4:26:18 PM anya $
  */

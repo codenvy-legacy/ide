@@ -33,25 +33,25 @@ import org.exoplatform.ide.git.client.GitExtension;
 
 /**
  * UI for initializing the repository.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 24, 2011 10:35:37 AM anya $
  */
 public class ShowProjectGitReadOnlyUrlView extends ViewImpl implements ShowProjectGitReadOnlyUrlPresenter.Display {
 
-    public static final String ID = "ideGitUrlView";
+    public static final String  ID               = "ideGitUrlView";
 
-   /* Elements IDs */
+    /* Elements IDs */
 
-    private static final String OK_BUTTON_ID = "ideGitUrlOkButton";
+    private static final String OK_BUTTON_ID     = "ideGitUrlOkButton";
 
     private static final String GIT_URL_FIELD_ID = "ideGitUrlField";
 
     @UiField
-    TextInput gitUrl;
+    TextInput                   gitUrl;
 
     @UiField
-    ImageButton closeButton;
+    ImageButton                 closeButton;
 
     interface ShowGitUrlViewUiBinder extends UiBinder<Widget, ShowProjectGitReadOnlyUrlView> {
     }

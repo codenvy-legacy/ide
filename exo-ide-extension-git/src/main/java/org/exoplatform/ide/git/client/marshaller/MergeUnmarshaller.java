@@ -31,7 +31,7 @@ import org.exoplatform.ide.git.shared.MergeResult.MergeStatus;
 
 /**
  * Unmarshaller for merge result in JSON format.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 20, 2011 12:01:03 PM anya $
  */
@@ -40,8 +40,7 @@ public class MergeUnmarshaller implements Unmarshallable<MergeResult>, Constants
     private Merge merge;
 
     /**
-     * @param merge
-     *         result of merge operation
+     * @param merge result of merge operation
      */
     public MergeUnmarshaller(Merge merge) {
         this.merge = merge;
@@ -82,9 +81,8 @@ public class MergeUnmarshaller implements Unmarshallable<MergeResult>, Constants
 
     /**
      * Get array from JSON array.
-     *
-     * @param jsonArray
-     *         JSON array
+     * 
+     * @param jsonArray JSON array
      * @return array of {@link String}
      */
     private String[] getArray(JSONArray jsonArray) {

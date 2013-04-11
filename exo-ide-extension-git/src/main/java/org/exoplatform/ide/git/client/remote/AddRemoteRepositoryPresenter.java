@@ -31,7 +31,7 @@ import org.exoplatform.ide.git.shared.Remote;
 
 /**
  * Presenter for add remote repository view.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 19, 2011 11:12:44 AM anya $
  */
@@ -39,36 +39,35 @@ public abstract class AddRemoteRepositoryPresenter {
     interface Display extends IsView {
         /**
          * Get cancel button's click handler.
-         *
+         * 
          * @return {@link HasClickHandlers} click handler
          */
         HasClickHandlers getCancelButton();
 
         /**
          * Get ok button's click handler.
-         *
+         * 
          * @return {@link HasClickHandlers} click handler
          */
         HasClickHandlers getOkButton();
 
         /**
          * Change the enable state of the ok button.
-         *
-         * @param enable
-         *         enable state of the ok button
+         * 
+         * @param enable enable state of the ok button
          */
         void enableOkButton(boolean enable);
 
         /**
          * Get name field.
-         *
+         * 
          * @return {@link HasValue} name field
          */
         HasValue<String> getName();
 
         /**
          * Get URL field.
-         *
+         * 
          * @return {@link HasValue} url field
          */
         HasValue<String> getUrl();
@@ -78,10 +77,8 @@ public abstract class AddRemoteRepositoryPresenter {
     private Display display;
 
     /**
-     * @param remote
-     *         remote repository
-     * @param title
-     *         view's title
+     * @param remote remote repository
+     * @param title view's title
      */
     public AddRemoteRepositoryPresenter(Remote remote, String title) {
         if (display == null) {
@@ -138,7 +135,7 @@ public abstract class AddRemoteRepositoryPresenter {
 
     /**
      * Checks name and url fields are not empty.
-     *
+     * 
      * @return boolean <code>true</code> if fields are not empty(full filled)
      */
     private boolean checkNotEmpty() {

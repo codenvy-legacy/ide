@@ -42,11 +42,10 @@ import java.lang.reflect.Type;
 @Produces(MediaType.TEXT_PLAIN)
 public final class RemoteListWriter implements MessageBodyWriter<Iterable<Remote>> {
     /**
-     * @see MessageBodyWriter#isWriteable(Class, java.lang.reflect.Type, java.lang.annotation.Annotation[],
-     *      javax.ws.rs.core.MediaType)
+     * @see MessageBodyWriter#isWriteable(Class, java.lang.reflect.Type, java.lang.annotation.Annotation[], javax.ws.rs.core.MediaType)
      */
     @Override
-    public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+    public boolean isWriteable(Class< ? > type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         if (Iterable.class.isAssignableFrom(type) && (genericType instanceof ParameterizedType)) {
             Type[] types = ((ParameterizedType)genericType).getActualTypeArguments();
             return types.length == 1 && types[0] == Remote.class;
@@ -55,12 +54,11 @@ public final class RemoteListWriter implements MessageBodyWriter<Iterable<Remote
     }
 
     /**
-     * @see MessageBodyWriter#getSize(Object, Class, java.lang.reflect.Type, java.lang.annotation.Annotation[],
-     *      javax.ws.rs.core.MediaType)
+     * @see MessageBodyWriter#getSize(Object, Class, java.lang.reflect.Type, java.lang.annotation.Annotation[], javax.ws.rs.core.MediaType)
      */
     @Override
     public long getSize(Iterable<Remote> remotes,
-                        Class<?> type,
+                        Class< ? > type,
                         Type genericType,
                         Annotation[] annotations,
                         MediaType mediaType) {
@@ -68,12 +66,12 @@ public final class RemoteListWriter implements MessageBodyWriter<Iterable<Remote
     }
 
     /**
-     * @see MessageBodyWriter#writeTo(Object, Class, java.lang.reflect.Type, java.lang.annotation.Annotation[],
-     *      javax.ws.rs.core.MediaType, javax.ws.rs.core.MultivaluedMap, java.io.OutputStream)
+     * @see MessageBodyWriter#writeTo(Object, Class, java.lang.reflect.Type, java.lang.annotation.Annotation[], javax.ws.rs.core.MediaType,
+     *      javax.ws.rs.core.MultivaluedMap, java.io.OutputStream)
      */
     @Override
     public void writeTo(Iterable<Remote> remotes,
-                        Class<?> type,
+                        Class< ? > type,
                         Type genericType,
                         Annotation[] annotations,
                         MediaType mediaType,

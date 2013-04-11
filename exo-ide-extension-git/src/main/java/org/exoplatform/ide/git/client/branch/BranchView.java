@@ -33,45 +33,45 @@ import org.exoplatform.ide.git.shared.Branch;
 
 /**
  * View for displaying branches and work with it. Must be pointed in Views.gwt.xml file.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 8, 2011 9:50:54 AM anya $
  */
 public class BranchView extends ViewImpl implements BranchPresenter.Display {
-    private static final int HEIGHT = 300;
+    private static final int    HEIGHT             = 300;
 
-    private static final int WIDTH = 470;
+    private static final int    WIDTH              = 470;
 
-    public static final String ID = "ideBranchView";
+    public static final String  ID                 = "ideBranchView";
 
-   /* Elements IDs */
+    /* Elements IDs */
 
-    private static final String CREATE_BUTTON_ID = "ideBranchViewCreateButton";
+    private static final String CREATE_BUTTON_ID   = "ideBranchViewCreateButton";
 
     private static final String CHECKOUT_BUTTON_ID = "ideBranchViewCheckoutButton";
 
-    private static final String DELETE_BUTTON_ID = "ideBranchViewDeleteButton";
+    private static final String DELETE_BUTTON_ID   = "ideBranchViewDeleteButton";
 
-    private static final String CLOSE_BUTTON_ID = "ideBranchViewCloseButton";
+    private static final String CLOSE_BUTTON_ID    = "ideBranchViewCloseButton";
 
     /** Create branch button. */
     @UiField
-    ImageButton createButton;
+    ImageButton                 createButton;
 
     /** Checkout branch button. */
     @UiField
-    ImageButton checkoutButton;
+    ImageButton                 checkoutButton;
 
     /** Delete branch button. */
     @UiField
-    ImageButton deleteButton;
+    ImageButton                 deleteButton;
 
     /** Cancel button. */
     @UiField
-    ImageButton closeButton;
+    ImageButton                 closeButton;
 
     @UiField
-    BranchGrid branchGrid;
+    BranchGrid                  branchGrid;
 
     interface BranchViewUiBinder extends UiBinder<Widget, BranchView> {
     }

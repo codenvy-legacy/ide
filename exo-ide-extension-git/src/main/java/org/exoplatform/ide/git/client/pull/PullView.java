@@ -36,46 +36,46 @@ import java.util.LinkedHashMap;
 
 /**
  * View for pulling changes from remote repository to local one. Point view in Views.gwt.xml.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 20, 2011 4:23:02 PM anya $
  */
 public class PullView extends ViewImpl implements PullPresenter.Display {
-    public static final int HEIGHT = 205;
+    public static final int     HEIGHT                   = 205;
 
-    public static final int WIDTH = 510;
+    public static final int     WIDTH                    = 510;
 
-    public static final String ID = "idePullView";
+    public static final String  ID                       = "idePullView";
 
-    private static final String PULL_BUTTON_ID = "idePullViewPullButton";
+    private static final String PULL_BUTTON_ID           = "idePullViewPullButton";
 
-    private static final String CANCEL_BUTTON_ID = "idePullViewCancelButton";
+    private static final String CANCEL_BUTTON_ID         = "idePullViewCancelButton";
 
-    private static final String REMOTE_FIELD_ID = "idePullViewRemoteField";
+    private static final String REMOTE_FIELD_ID          = "idePullViewRemoteField";
 
     private static final String REMOTE_BRANCHES_FIELD_ID = "idePullViewRemoteBranchesField";
 
-    private static final String LOCAL_BRANCHES_FIELD_ID = "idePullViewLocalBranchesField";
+    private static final String LOCAL_BRANCHES_FIELD_ID  = "idePullViewLocalBranchesField";
 
     /** Pull button. */
     @UiField
-    ImageButton pullButton;
+    ImageButton                 pullButton;
 
     /** Cancel button. */
     @UiField
-    ImageButton cancelButton;
+    ImageButton                 cancelButton;
 
     /** Remote repository field. */
     @UiField
-    SelectItem remoteField;
+    SelectItem                  remoteField;
 
     /** Local branches field */
     @UiField
-    ComboBoxField localBranchesField;
+    ComboBoxField               localBranchesField;
 
     /** Remote branches field. */
     @UiField
-    ComboBoxField remoteBranchesField;
+    ComboBoxField               remoteBranchesField;
 
     interface PullViewUiBinder extends UiBinder<Widget, PullView> {
     }

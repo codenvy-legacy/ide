@@ -22,7 +22,7 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to fetch data from remote repository. Implement {@link FetchHandler} to process event.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 20, 2011 11:45:47 AM anya $
  */

@@ -42,7 +42,7 @@ import java.util.List;
 /**
  * Abstract presenter for displays, which has to show and work with branches ({@link FetchPresenter}, {@link PullPresenter},
  * {@link PushToRemotePresenter}) for not to duplicate same methods.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 21, 2011 10:55:28 AM anya $
  */
@@ -51,33 +51,34 @@ public abstract class HasBranchesPresenter extends GitPresenter {
     protected List<Branch> remoteBranches;
 
     /**
-     * Get the list of remote repositories for local one. If remote repositories are found, then method
-     * {@link #onRemotesReceived(List)} is called.
+     * Get the list of remote repositories for local one. If remote repositories are found, then method {@link #onRemotesReceived(List)} is
+     * called.
      */
     public void getRemotes(String projectId) {
         try {
-            GitClientService.getInstance().remoteList(vfs.getId(), projectId, null, true,
-                                                      new AsyncRequestCallback<List<Remote>>(
-                                                              new RemoteListUnmarshaller(new ArrayList<Remote>())) {
-                                                          @Override
-                                                          protected void onSuccess(List<Remote> result) {
-                                                              if (result.size() == 0) {
-                                                                  Dialogs.getInstance().showError(GitExtension.MESSAGES.remoteListFailed());
-                                                                  return;
-                                                              }
+            GitClientService.getInstance()
+                            .remoteList(vfs.getId(), projectId, null, true,
+                                        new AsyncRequestCallback<List<Remote>>(
+                                                                               new RemoteListUnmarshaller(new ArrayList<Remote>())) {
+                                            @Override
+                                            protected void onSuccess(List<Remote> result) {
+                                                if (result.size() == 0) {
+                                                    Dialogs.getInstance().showError(GitExtension.MESSAGES.remoteListFailed());
+                                                    return;
+                                                }
 
-                                                              onRemotesReceived(result);
-                                                          }
+                                                onRemotesReceived(result);
+                                            }
 
-                                                          @Override
-                                                          protected void onFailure(Throwable exception) {
-                                                              String errorMessage =
+                                            @Override
+                                            protected void onFailure(Throwable exception) {
+                                                String errorMessage =
                                                                       (exception.getMessage() != null) ? exception.getMessage()
-                                                                                                       : GitExtension.MESSAGES
-                                                                                                                     .remoteListFailed();
-                                                              Dialogs.getInstance().showError(errorMessage);
-                                                          }
-                                                      });
+                                                                          : GitExtension.MESSAGES
+                                                                                                 .remoteListFailed();
+                                                Dialogs.getInstance().showError(errorMessage);
+                                            }
+                                        });
         } catch (RequestException e) {
             String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.remoteListFailed();
             Dialogs.getInstance().showError(errorMessage);
@@ -88,38 +89,37 @@ public abstract class HasBranchesPresenter extends GitPresenter {
 
     /**
      * Get the list of branches.
-     *
-     * @param workDir
-     *         Git repository work tree location
-     * @param remote
-     *         get remote branches if <code>true</code>
+     * 
+     * @param workDir Git repository work tree location
+     * @param remote get remote branches if <code>true</code>
      */
     public void getBranches(String projectId, final boolean remote) {
         try {
-            GitClientService.getInstance().branchList(vfs.getId(), projectId, remote,
-                                                      new AsyncRequestCallback<List<Branch>>(
-                                                              new BranchListUnmarshaller(new ArrayList<Branch>())) {
+            GitClientService.getInstance()
+                            .branchList(vfs.getId(), projectId, remote,
+                                        new AsyncRequestCallback<List<Branch>>(
+                                                                               new BranchListUnmarshaller(new ArrayList<Branch>())) {
 
-                                                          @Override
-                                                          protected void onSuccess(List<Branch> result) {
-                                                              if (remote) {
-                                                                  remoteBranches = result;
-                                                                  setRemoteBranches(remoteBranches);
-                                                                  return;
-                                                              }
+                                            @Override
+                                            protected void onSuccess(List<Branch> result) {
+                                                if (remote) {
+                                                    remoteBranches = result;
+                                                    setRemoteBranches(remoteBranches);
+                                                    return;
+                                                }
 
-                                                              setLocalBranches(result);
-                                                          }
+                                                setLocalBranches(result);
+                                            }
 
-                                                          @Override
-                                                          protected void onFailure(Throwable exception) {
-                                                              String errorMessage =
+                                            @Override
+                                            protected void onFailure(Throwable exception) {
+                                                String errorMessage =
                                                                       (exception.getMessage() != null) ? exception.getMessage()
-                                                                                                       : GitExtension.MESSAGES
-                                                                                                                     .branchesListFailed();
-                                                              IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-                                                          }
-                                                      });
+                                                                          : GitExtension.MESSAGES
+                                                                                                 .branchesListFailed();
+                                                IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+                                            }
+                                        });
         } catch (RequestException e) {
             String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.branchesListFailed();
             IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
@@ -128,23 +128,21 @@ public abstract class HasBranchesPresenter extends GitPresenter {
 
     /**
      * Set remote branches to display the values.
-     *
-     * @param branches
-     *         remote branches
+     * 
+     * @param branches remote branches
      */
     protected abstract void setRemoteBranches(List<Branch> branches);
 
     /**
      * Set local branches to display the values.
-     *
-     * @param branches
-     *         local branches
+     * 
+     * @param branches local branches
      */
     protected abstract void setLocalBranches(List<Branch> branches);
 
     /**
      * Set values of remote branches: filter remote branches due to selected remote repository.
-     *
+     * 
      * @param remoteName
      */
     protected String[] getRemoteBranchesToDisplay(String remoteName) {
@@ -168,7 +166,7 @@ public abstract class HasBranchesPresenter extends GitPresenter {
 
     /**
      * Set values of remote branches (show only simple name): filter remote branches due to selected remote repository.
-     *
+     * 
      * @param remoteName
      */
     protected String[] getRemoteBranchesNamesToDisplay(String remoteName) {

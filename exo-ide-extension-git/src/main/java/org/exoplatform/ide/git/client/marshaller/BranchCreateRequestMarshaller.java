@@ -27,7 +27,7 @@ import org.exoplatform.ide.git.shared.BranchCreateRequest;
 
 /**
  * Marshaller to create branch creation request in JSON format.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 11, 2011 12:17:59 PM anya $
  */
@@ -36,8 +36,7 @@ public class BranchCreateRequestMarshaller implements Marshallable, Constants {
     private BranchCreateRequest branchCreateRequest;
 
     /**
-     * @param branchCreateRequest
-     *         branch create request
+     * @param branchCreateRequest branch create request
      */
     public BranchCreateRequestMarshaller(BranchCreateRequest branchCreateRequest) {
         this.branchCreateRequest = branchCreateRequest;
