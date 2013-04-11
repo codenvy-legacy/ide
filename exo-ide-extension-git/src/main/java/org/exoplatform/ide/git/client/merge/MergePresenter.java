@@ -109,7 +109,6 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
     @Override
     public void onMerge(MergeEvent event) {
         if (makeSelectionCheck()) {
-            // String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
             String projectId = getSelectedProject().getId();
             if (display == null) {
                 display = GWT.create(Display.class);
@@ -202,7 +201,6 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
             return;
         }
 
-        // String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
         String projectId = getSelectedProject().getId();
 
         try {
@@ -233,6 +231,9 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
      * @return {@link String} merge result message
      */
     private String formMergeMessage(MergeResult mergeResult) {
+        if (mergeResult.getMergeStatus().equals(MergeResult.MergeStatus.ALREADY_UP_TO_DATE)) {
+            return mergeResult.getMergeStatus().toString();
+        }
         String conflicts = "";
         if (mergeResult.getConflicts() != null && mergeResult.getConflicts().length > 0) {
             for (String conflict : mergeResult.getConflicts()) {
