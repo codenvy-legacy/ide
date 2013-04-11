@@ -29,7 +29,7 @@ import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.server.observation.EventListenerList;
+import org.exoplatform.ide.vfs.server.observation.*;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -44,6 +44,9 @@ import java.util.*;
 import java.util.concurrent.*;
 
 public class EditSessions implements Startable {
+
+    private ChangeEventFilter eventFilter;
+
     private class WSConnectionListener implements org.everrest.websockets.WSConnectionListener {
         @Override
         public void onOpen(WSConnection connection) {
@@ -124,6 +127,15 @@ public class EditSessions implements Startable {
         WSConnectionContext.removeConnectionListener(listener);
     }
 
+    private void addVfsListener(String vfsId, String path,String  itemId) {
+        //renamed or moved
+        eventFilter = ChangeEventFilter.createOrFilter(new TypeFilter(ChangeEvent.ChangeType.RENAMED),
+                                                       new TypeFilter(ChangeEvent.ChangeType.MOVED));
+
+        ChangeEventFilter filter = ChangeEventFilter.createAndFilter(new VfsIDFilter(vfsId), new PathFilter(path), eventFilter);
+        listenerList.addEventListener(filter, new InternalListener(itemId, vfsId));
+    }
+
     public GetFileContentsResponse openSession(GetFileContents contentsRequest) {
         final String vfsId = contentsRequest.getWorkspaceId();
         final String path = contentsRequest.getPath();
@@ -140,8 +152,9 @@ public class EditSessions implements Startable {
             editSession = editSessionsByResourceId.get(resourceId);
             if (editSession == null) {
                 String text = loadFileContext(vfs, resourceId);
-                FileEditSession newEditSession = new FileEditSessionImpl(UUID.randomUUID().toString(), vfs, resourceId,
+                FileEditSession newEditSession = new FileEditSessionImpl(UUID.randomUUID().toString(), vfs,listenerList, resourceId,
                                                                          path, file.getMimeType(), text, null);
+                addVfsListener(vfsId, path, resourceId);
                 editSession = editSessionsByResourceId.putIfAbsent(resourceId, newEditSession);
                 if (editSession == null) {
                     editSession = newEditSession;
@@ -385,5 +398,25 @@ public class EditSessions implements Startable {
             throw new IllegalStateException("Can't find edit session: " + ediSessionId);
         }
         return editSession.getCollaborators();
+    }
+
+    private class InternalListener implements org.exoplatform.ide.vfs.server.observation.EventListener {
+        private String itemId;
+        private String vfsId;
+
+        public InternalListener(String itemId, String vfsId) {
+            this.itemId = itemId;
+            this.vfsId = vfsId;
+        }
+
+        @Override
+        public void handleEvent(ChangeEvent event) throws VirtualFileSystemException {
+            FileEditSession fileEditSession = editSessionsByResourceId.remove(itemId);
+            fileEditSession.setPath(event.getItemPath());
+            fileEditSession.setResourceId(event.getItemId());
+            editSessionsByResourceId.putIfAbsent(event.getItemId(), fileEditSession);
+            listenerList.removeEventListener(eventFilter, this);
+            addVfsListener(vfsId,event.getItemPath(), event.getItemId());
+        }
     }
 }
