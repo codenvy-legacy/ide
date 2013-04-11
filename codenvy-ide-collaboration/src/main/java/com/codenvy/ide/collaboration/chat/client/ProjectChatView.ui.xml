@@ -12,7 +12,10 @@
             margin: 0; /* don't want to add to container size */
             border: 0; /* don't want to add to container size */
             background: #FFFFFF;
-            padding: 0;
+            padding: 2px;
+            box-sizing: border-box;
+             -moz-box-sizing:border-box; /* Firefox */
+            -webkit-box-sizing:border-box;
         }
 
         .chatMessageInput:focus {
@@ -28,6 +31,7 @@
             right: 0;
             outline: 0;
             margin: 10px;
+            background: #ffffff;
         }
 
         .background {
