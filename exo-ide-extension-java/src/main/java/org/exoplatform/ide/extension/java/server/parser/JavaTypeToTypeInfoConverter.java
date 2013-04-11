@@ -41,9 +41,20 @@ import java.util.Set;
 public class JavaTypeToTypeInfoConverter {
 
     public enum Modifier {
-        STATIC(0x00000008), FINAL(0x00000010), PRIVATE(0x00000002), PUBLIC(0x00000001), PROTECTED(0x00000004), ABSTRACT(
-                0x00000400), STRICTFP(0x00000800), SYNCHRONIZED(0x00000020), THREADSAFE(0), TRANSIENT(0x00000080), VOLATILE(
-                0x00000040), NATIVE(0x00000100);
+        STATIC(0x00000008),
+        FINAL(0x00000010),
+        PRIVATE(0x00000002),
+        PUBLIC(0x00000001),
+        PROTECTED(0x00000004),
+        ABSTRACT(
+            0x00000400),
+        STRICTFP(0x00000800),
+        SYNCHRONIZED(0x00000020),
+        THREADSAFE(0),
+        TRANSIENT(0x00000080),
+        VOLATILE(
+            0x00000040),
+        NATIVE(0x00000100);
         private final int mod;
 
         Modifier(int i) {
@@ -55,15 +66,15 @@ public class JavaTypeToTypeInfoConverter {
         }
     }
 
-    private static final int AccInterface = 0x0200;
+    private static final int     AccInterface = 0x0200;
 
-    private static final int AccEnum = 0x4000;
+    private static final int     AccEnum      = 0x4000;
 
-    private static final Log LOG = ExoLogger.getLogger(JavaTypeToTypeInfoConverter.class);
+    private static final Log     LOG          = ExoLogger.getLogger(JavaTypeToTypeInfoConverter.class);
 
     private CodeAssistantStorage storage;
 
-    private final Set<String> dependency;
+    private final Set<String>    dependency;
 
     /** @param storage */
     public JavaTypeToTypeInfoConverter(CodeAssistantStorage storage, Set<String> dependency) {
@@ -197,6 +208,7 @@ public class JavaTypeToTypeInfoConverter {
         for (Type t : clazz.getImplements()) {
             signature.append(createSignatureForType(t));
         }
+        
     }
 
     /**
@@ -205,6 +217,12 @@ public class JavaTypeToTypeInfoConverter {
      */
     private static String createSignatureForType(Type type) {
         StringBuilder signature = new StringBuilder();
+        if (type == null)
+        {
+            signature.append("Ljava/lang/Object;");
+            return signature.toString();
+        }
+        
         if (type instanceof WildcardType)
             signature.append(getWildcards((WildcardType)type));
         if (type.isArray()) {
