@@ -33,13 +33,13 @@ import java.util.*;
 public class DtoImplServerTemplate extends DtoImpl {
     private static final String JSON_ARRAY = JsonArray.class.getCanonicalName();
 
-    private static final String JSON_ARRAY_ADAPTER = JsonStringMap.class.getPackage().getName().replace(".shared",
-                                                                                                        ".server.JsonArrayListAdapter");
+    private static final String JSON_ARRAY_ADAPTER = JsonStringMap.class.getPackage().getName().replace(".json",
+                                                                                                        ".json.java.JsonArrayListAdapter");
 
     private static final String JSON_MAP = JsonStringMap.class.getCanonicalName();
 
-    private static final String JSON_MAP_ADAPTER = JsonStringMap.class.getPackage().getName().replace(".shared",
-                                                                                                      ".server.JsonStringMapAdapter");
+    private static final String JSON_MAP_ADAPTER = JsonStringMap.class.getPackage().getName().replace(".json",
+                                                                                                      ".json.java.JsonStringMapAdapter");
 
     private static final String ROUTABLE_DTO_IMPL = RoutableDto.class.getPackage().getName().replace("dtogen.shared",
                                                                                                      "dtogen.server") +
