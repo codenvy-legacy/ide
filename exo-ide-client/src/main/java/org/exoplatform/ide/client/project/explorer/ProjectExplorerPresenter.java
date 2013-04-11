@@ -28,6 +28,8 @@ import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -313,6 +315,20 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
     public void bindDisplay() {
         display.getProjectTree().addOpenHandler(new OpenHandler<Item>() {
             public void onOpen(final OpenEvent<Item> event) {
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        FolderModel folder = (FolderModel)event.getTarget();
+                        List<Item> visibleItems = display.getVisibleItems();
+                        IDE.fireEvent(new FolderOpenedEvent(folder, visibleItems));
+                    }
+                });
+            }
+        });
+        
+        display.getProjectTree().addCloseHandler(new CloseHandler<Item>() {
+            @Override
+            public void onClose(final CloseEvent<Item> event) {
                 Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                     @Override
                     public void execute() {

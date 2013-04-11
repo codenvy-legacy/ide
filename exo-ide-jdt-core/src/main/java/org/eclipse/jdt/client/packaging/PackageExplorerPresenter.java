@@ -25,6 +25,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -161,26 +163,39 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
     }
 
     private void bindDisplay() {
-        display.getBrowserTree().addOpenHandler(new OpenHandler<Item>()
-        {
+        display.getBrowserTree().addOpenHandler(new OpenHandler<Item>() {
             @Override
-            public void onOpen(final OpenEvent<Item> event)
-            {
-                Scheduler.get().scheduleDeferred(new ScheduledCommand()
-                {
+            public void onOpen(final OpenEvent<Item> event) {
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                     @Override
-                    public void execute()
-                    {
-                        if (!(event.getTarget() instanceof FolderModel))
-                        {
+                    public void execute() {
+                        if (!(event.getTarget() instanceof FolderModel)) {
                             return;
                         }
 
                         FolderModel folder = (FolderModel)event.getTarget();
-                        List<Item> children = display.getTreeChildren(folder);
+                        List<Item> children = display.getVisibleItems();
                         IDE.fireEvent(new FolderOpenedEvent(folder, children));
                     }
                 });
+            }
+        });
+        
+        display.getBrowserTree().addCloseHandler(new CloseHandler<Item>() {
+            @Override
+            public void onClose(final CloseEvent<Item> event) {
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        if (!(event.getTarget() instanceof FolderModel)) {
+                            return;
+                        }
+
+                        FolderModel folder = (FolderModel)event.getTarget();
+                        List<Item> children = display.getVisibleItems();
+                        IDE.fireEvent(new FolderOpenedEvent(folder, children));
+                    }
+                });                
             }
         });
 
