@@ -25,7 +25,6 @@ import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.CreateBranchCommand;
 import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.InitCommand;
 import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.ListBranchCommand.ListMode;
 import org.eclipse.jgit.api.LogCommand;
@@ -413,12 +412,25 @@ public class JGitConnection implements GitConnection {
     /** @see org.exoplatform.ide.git.server.GitConnection#init(org.exoplatform.ide.git.shared.InitRequest) */
     @Override
     public GitConnection init(InitRequest request) throws GitException {
-        try {
-            InitCommand initCom = Git.init();
-            initCom.setBare(request.isBare());
-            initCom.setDirectory(repository.getWorkTree());
-            initCom.call();
+        File workDir = repository.getWorkTree();
+        if (!workDir.exists()) {
+            throw new GitException("Working folder " + workDir + " not exists . ");
+        }
 
+        boolean bare = request.isBare();
+
+        try {
+            repository.create(bare);
+
+            if (!bare) {
+                try {
+                    Git git = new Git(repository);
+                    git.add().addFilepattern(".").call();
+                    git.commit().setMessage("init").call();
+                } catch (GitAPIException e) {
+                    throw new GitException(e);
+                }
+            }
             GitUser gitUser = getUser();
             if (gitUser != null) {
                 StoredConfig config = repository.getConfig();
@@ -427,8 +439,6 @@ public class JGitConnection implements GitConnection {
                 config.save();
             }
         } catch (IOException e) {
-            throw new GitException(e.getMessage(), e);
-        } catch (GitAPIException e) {
             throw new GitException(e.getMessage(), e);
         }
         return this;

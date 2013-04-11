@@ -243,6 +243,7 @@ public class GitService {
     @Consumes(MediaType.APPLICATION_JSON)
     public void init(final InitRequest request) throws GitException, LocalPathResolveException,
                                                VirtualFileSystemException {
+        request.setWorkingDir(resolveLocalPath(projectId));
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.init(request);
