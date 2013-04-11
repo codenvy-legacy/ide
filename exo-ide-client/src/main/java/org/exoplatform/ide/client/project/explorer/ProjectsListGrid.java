@@ -56,6 +56,7 @@ public class ProjectsListGrid extends ListGrid<ProjectModel> {
 
         nameColumn.setCellStyleNames("default-cursor");
         getCellTable().addColumn(nameColumn);
+        setListGridId("ideProjectExplorerProjectsListGrid");
     }
 
 }

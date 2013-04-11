@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.packaging.ui;
+package org.exoplatform.ide.client.project.explorer.ui;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -29,8 +29,8 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.TreeItem;
 
-import org.eclipse.jdt.client.packaging.model.next.JavaProject;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
+import org.exoplatform.ide.client.framework.project.api.IDEProject;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -43,22 +43,19 @@ import java.util.Map;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
+ * 
  */
-public class PackageExplorerItemTree extends org.exoplatform.gwtframework.ui.client.component.Tree<Item> implements
-                                                                                                        OpenHandler<TreeItem> {
+public class ProjectExplorerItemTree extends org.exoplatform.gwtframework.ui.client.component.Tree<Item>
+    implements OpenHandler<TreeItem> {
 
     private String id;
-
-    private JavaProject project;
-
-    public PackageExplorerItemTree() {
+    
+    private IDEProject project;
+    
+    public ProjectExplorerItemTree()
+    {
         sinkEvents(Event.ONCONTEXTMENU);
-        tree.addOpenHandler(this);
-    }
-
-    @Override
-    public void doUpdateValue() {
-        System.out.println("Does not use setValue() anymore !!!");
+        tree.addOpenHandler(this);        
     }
 
     public void setTreeGridId(String id) {
@@ -69,7 +66,7 @@ public class PackageExplorerItemTree extends org.exoplatform.gwtframework.ui.cli
     public String getId() {
         return id;
     }
-
+    
     /** @see com.google.gwt.user.client.ui.Composite#onBrowserEvent(com.google.gwt.user.client.Event) */
     @Override
     public void onBrowserEvent(Event event) {
@@ -81,31 +78,37 @@ public class PackageExplorerItemTree extends org.exoplatform.gwtframework.ui.cli
             DOM.eventGetTarget(event).dispatchEvent(nativeEvent);
         }
         super.onBrowserEvent(event);
+    }    
+    
+    @Override
+    public void doUpdateValue() {
+        System.out.println("Does not use setValue() anymore !!!");
     }
 
     @Override
     public void onOpen(OpenEvent<TreeItem> event) {
-        PackageExplorerTreeItem treeItem = (PackageExplorerTreeItem)event.getTarget();
+        ProjectExplorerTreeItem treeItem = (ProjectExplorerTreeItem)event.getTarget();
         treeItem.refresh(false);
     }
+    
+    public void setProject(IDEProject project) {
+        if (this.project != null && project != null && this.project.getId().equals(project.getId())) {
+            return;
+        }
+        tree.removeItems();
 
-    public Item getSelectedItem() {
-        if (tree.getSelectedItem() == null) {
-            return null;
+        this.project = project;
+        if (project == null) {
+            return;
         }
 
-        return (Item)tree.getSelectedItem().getUserObject();
+        ProjectTreeItem treeItem = new ProjectTreeItem(project);
+        tree.addItem(treeItem);
+        treeItem.setState(true);
+        updateHighlighter();
     }
-
-    public boolean selectItem(Item item) {
-        if (tree.getItemCount() == 0) {
-            return false;
-        }
-
-        return ((JavaProjectTreeItem)tree.getItem(0)).select(item);
-    }
-
-    private void updateHighlighter() {
+    
+    public void updateHighlighter() {
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
             public void execute() {
@@ -117,31 +120,31 @@ public class PackageExplorerItemTree extends org.exoplatform.gwtframework.ui.cli
             }
         });
     }
-
-    public void setProject(JavaProject project) {
-        if (this.project != null && project != null && this.project.getId().equals(project.getId())) {
-            return;
-        }
-        tree.removeItems();
-
-        this.project = project;
-        if (project == null) {
-            return;
+    
+    public boolean selectItem(Item item) {
+        if (tree.getItemCount() == 0) {
+            return false;
         }
 
-        JavaProjectTreeItem treeItem = new JavaProjectTreeItem(project);
-        tree.addItem(treeItem);
-        treeItem.setState(true);
+        boolean selected = ((ProjectExplorerTreeItem)tree.getItem(0)).select(item);
         updateHighlighter();
+        return selected;
     }
 
+    public Item getSelectedItem() {
+        if (tree.getSelectedItem() == null) {
+            return null;
+        }
+
+        return (Item)tree.getSelectedItem().getUserObject();
+    }
+    
     public void refresh() {
         try
         {
             if (tree.getItemCount() == 1) {
-                PackageExplorerTreeItem packageExplorerTreeItem = (JavaProjectTreeItem)tree.getItem(0);
-
-                packageExplorerTreeItem.refresh(false);
+                ProjectExplorerTreeItem projectExplorerTreeItem = (ProjectExplorerTreeItem)tree.getItem(0);
+                projectExplorerTreeItem.refresh(false);
                 updateHighlighter();
             }
         } catch (Exception e)
@@ -149,7 +152,7 @@ public class PackageExplorerItemTree extends org.exoplatform.gwtframework.ui.cli
             e.printStackTrace();
         }
     }
-
+    
     /**
      * Add info icons to Item main icon
      * 
@@ -168,7 +171,7 @@ public class PackageExplorerItemTree extends org.exoplatform.gwtframework.ui.cli
             icons.put(item.getId(), iconMap);
         }
 
-        ((PackageExplorerTreeItem)tree.getItem(0)).setIcons(icons);
+        ((ProjectExplorerTreeItem)tree.getItem(0)).setIcons(icons);
     }
 
     /**
@@ -189,64 +192,14 @@ public class PackageExplorerItemTree extends org.exoplatform.gwtframework.ui.cli
             icons.put(item.getId(), iconPosition);
         }
 
-        ((PackageExplorerTreeItem)tree.getItem(0)).removeIcons(icons);
+        ((ProjectExplorerTreeItem)tree.getItem(0)).removeIcons(icons);
     }
-
-    public List<Item> getTreeChildren(FolderModel folder) {
-        if (tree.getItemCount() == 0) {
-            return new ArrayList<Item>();
-        }
-
-        return getTreeChildren((PackageExplorerTreeItem)tree.getItem(0), folder);
-    }
-
-    public List<Item> getTreeChildren(PackageExplorerTreeItem treeItem, FolderModel folder) {
-        if (!(treeItem instanceof PackageExplorerTreeItem)) {
-            return new ArrayList<Item>();
-        }
-
-        Item item = (Item)treeItem.getUserObject();
-        if (!(item instanceof FolderModel)) {
-            return new ArrayList<Item>();
-        }
-
-        if (item.getId().equals(folder.getId())) {
-            List<Item> children = new ArrayList<Item>();
-
-            for (int i = 0; i < treeItem.getChildCount(); i++) {
-                TreeItem child = treeItem.getChild(i);
-                if (!(child instanceof PackageExplorerTreeItem)) {
-                    continue;
-                }
-
-                Item childItem = (Item)child.getUserObject();
-                if (childItem instanceof FolderModel || childItem instanceof FileModel) {
-                    children.add(childItem);
-                }
-            }
-
-            return children;
-        }
-
-        for (int i = 0; i < treeItem.getChildCount(); i++) {
-            TreeItem child = treeItem.getChild(i);
-            if (!(child instanceof PackageExplorerTreeItem)) {
-                continue;
-            }
-
-            Item childItem = (Item)child.getUserObject();
-            if (folder.getPath().startsWith(childItem.getPath())) {
-                return getTreeChildren((PackageExplorerTreeItem)child, folder);
-            }
-        }
-
-        return new ArrayList<Item>();
-    }
-
+    
+    
     public List<Item> getVisibleItems() {
         List<Item> visibleItems = new ArrayList<Item>();
         if (project != null && tree.getItemCount() > 0) {
-            PackageExplorerTreeItem projectItem = (PackageExplorerTreeItem)tree.getItem(0);
+            ProjectExplorerTreeItem projectItem = (ProjectExplorerTreeItem)tree.getItem(0);
             visibleItems.add((Item)projectItem.getUserObject());
             visibleItems.addAll(getVisibleItems(projectItem));
         }
@@ -254,12 +207,12 @@ public class PackageExplorerItemTree extends org.exoplatform.gwtframework.ui.cli
         return visibleItems;
     }
 
-    private List<Item> getVisibleItems(PackageExplorerTreeItem treeItem) {
+    private List<Item> getVisibleItems(ProjectExplorerTreeItem treeItem) {
         List<Item> visibleItems = new ArrayList<Item>();
         if (treeItem.getState()) {
             for (int i = 0; i < treeItem.getChildCount(); i++) {
                 TreeItem child = treeItem.getChild(i);
-                if (!(child instanceof PackageExplorerTreeItem)) {
+                if (!(child instanceof ProjectExplorerTreeItem)) {
                     continue;
                 }
 
@@ -271,12 +224,15 @@ public class PackageExplorerItemTree extends org.exoplatform.gwtframework.ui.cli
                 visibleItems.add(item);
 
                 if (item instanceof FolderModel && child.getState()) {
-                    visibleItems.addAll(getVisibleItems((PackageExplorerTreeItem)child));
+                    visibleItems.addAll(getVisibleItems((ProjectExplorerTreeItem)child));
                 }
             }
         }
 
         return visibleItems;
     }
-
+    
+    
+    
+    
 }

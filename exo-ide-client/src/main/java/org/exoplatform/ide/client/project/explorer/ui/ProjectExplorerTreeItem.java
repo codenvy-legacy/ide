@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.packaging.ui;
+package org.exoplatform.ide.client.project.explorer.ui;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.DOM;
@@ -27,31 +27,28 @@ import com.google.gwt.user.client.ui.TreeItem;
 
 import org.exoplatform.gwtframework.ui.client.component.TreeIcon;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
+import org.exoplatform.ide.client.framework.util.ImageUtil;
 import org.exoplatform.ide.client.framework.util.Utils;
-import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
+ * 
  */
-public abstract class PackageExplorerTreeItem extends TreeItem
-{
+public abstract class ProjectExplorerTreeItem extends TreeItem {
+    
+    private static final String PREFIX_ID = "navigation-";
 
-    private static final String PREFIX_ID = "ide.package_explorer.item.";
-
-    public PackageExplorerTreeItem(Item item)
-    {
+    public ProjectExplorerTreeItem(Item item) {
         setUserObject(item);
-        render();
+        render();        
     }
-
+    
     /**
      * Render tree item.
      */
@@ -99,53 +96,33 @@ public abstract class PackageExplorerTreeItem extends TreeItem
      * 
      * @return
      */
-    protected abstract ImageResource getItemIcon();
-
+    protected ImageResource getItemIcon() {
+        return ImageUtil.getIcon(((Item)getUserObject()).getMimeType());
+    }
+    
     /**
      * Get item title.
      * 
      * @return
      */
-    protected abstract String getItemTitle();
-
-    /**
-     * Get child by Item ID.
-     * 
-     * @param id
-     * @return
-     */
-    public PackageExplorerTreeItem getChildByItemId(String id)
-    {
-        for (int i = 0; i < getChildCount(); i++)
-        {
-            TreeItem child = getChild(i);
-            if (child instanceof PackageExplorerTreeItem)
-            {
-                PackageExplorerTreeItem treeItem = (PackageExplorerTreeItem)child;
-                if (((Item)treeItem.getUserObject()).getId().equals(id))
-                {
-                    return treeItem;
-                }
-            }
-        }
-
-        return null;
+    protected String getItemTitle() {
+        return ((Item)getUserObject()).getName();
     }
-
+    
     /**
      * Get item children.
      * 
      * @return
      */
     public abstract List<Item> getItems();
-
+    
     /**
      * Refresh tree item.
      * 
      * @param expand
      */
     public abstract void refresh(boolean expand);
-
+    
     /**
      * Search and select item.
      * 
@@ -164,7 +141,7 @@ public abstract class PackageExplorerTreeItem extends TreeItem
         for (int i = 0; i < getChildCount(); i++)
         {
             TreeItem child = getChild(i);
-            if (child instanceof PackageExplorerTreeItem)
+            if (child instanceof ProjectExplorerTreeItem)
             {
                 String path = ((Item)child.getUserObject()).getPath();
                 if (path == null || path.isEmpty()) {
@@ -173,69 +150,16 @@ public abstract class PackageExplorerTreeItem extends TreeItem
                 
                 if (item.getPath().startsWith(path))
                 {
-                    ((PackageExplorerTreeItem)child).refresh(true);
-                    return ((PackageExplorerTreeItem)child).select(item);
+                    ((ProjectExplorerTreeItem)child).refresh(true);
+                    return ((ProjectExplorerTreeItem)child).select(item);
                 }
             }
         }
 
         return false;
     }
-
-    /**
-     * Remove items from tree which are points to nonexistent items on file system.
-     */
-    protected void removeNonexistendTreeItems()
-    {
-        /*
-         * Remove nonexistent
-         */
-        List<String> idList = new ArrayList<String>();
-        List<Item> items = getItems();
-        for (Item item : items)
-        {
-            idList.add(item.getId());
-        }
-
-        ArrayList<TreeItem> itemsToRemove = new ArrayList<TreeItem>();
-        for (int i = 0; i < getChildCount(); i++)
-        {
-            TreeItem child = getChild(i);
-            if (!(child instanceof PackageExplorerTreeItem))
-            {
-                itemsToRemove.add(child);
-                continue;
-            }
-
-            PackageExplorerTreeItem childTreeItem = (PackageExplorerTreeItem)child;
-            Item childItem = (Item)childTreeItem.getUserObject();
-            if (!idList.contains(childItem.getId()))
-            {
-                itemsToRemove.add(child);
-            }
-        }
-
-        for (TreeItem child : itemsToRemove)
-        {
-            removeItem(child);
-        }
-    }
-
-    /**
-     * Comparator for comparing items in received directory.
-     */
-    protected Comparator<Item> COMPARATOR = new Comparator<Item>() {
-          public int compare(Item item1, Item item2) {
-              if (item1 instanceof FolderModel && item2 instanceof FileModel) {
-                  return -1;
-              }
-              else if (item1 instanceof FileModel && item2 instanceof FolderModel) {
-                  return 1;
-              }
-              return item1.getName().compareTo(item2.getName());
-          }
-      };
-
+    
+    
     /**
      * Set additional icons.
      * 
@@ -256,12 +180,12 @@ public abstract class PackageExplorerTreeItem extends TreeItem
 
         for (int i = 0; i < getChildCount(); i++) {
             TreeItem child = getChild(i);
-            if (!(child instanceof PackageExplorerTreeItem))
+            if (!(child instanceof ProjectExplorerTreeItem))
             {
                 continue;
             }
 
-            ((PackageExplorerTreeItem)child).setIcons(icons);
+            ((ProjectExplorerTreeItem)child).setIcons(icons);
         }
     }
 
@@ -285,28 +209,78 @@ public abstract class PackageExplorerTreeItem extends TreeItem
 
         for (int i = 0; i < getChildCount(); i++) {
             TreeItem child = getChild(i);
-            if (!(child instanceof PackageExplorerTreeItem))
+            if (!(child instanceof ProjectExplorerTreeItem))
             {
                 continue;
             }
 
-            ((PackageExplorerTreeItem)child).removeIcons(icons);
+            ((ProjectExplorerTreeItem)child).removeIcons(icons);
         }
     }
     
-//    public void insertItem(int beforeIndex, TreeItem item)
-//        throws IndexOutOfBoundsException {
-//        if (beforeIndex > getChildCount())
-//        {
-//            System.out.println("!!! ERR");
-//            System.out.println("tree item > " + getItemTitle());
-//            System.out.println("beforeIndex > " + beforeIndex);
-//            System.out.println("child count > " + getChildCount());
-//            
-//            beforeIndex = getChildCount();
-//        }
-//        
-//        super.insertItem(beforeIndex, item);
-//    }
+    /**
+     * Remove items from tree which are points to nonexistent items on file system.
+     */
+    protected void removeNonexistendTreeItems()
+    {
+        /*
+         * Remove nonexistent
+         */
+        List<String> idList = new ArrayList<String>();
+        List<Item> items = getItems();
+        for (Item item : items)
+        {
+            idList.add(item.getId());
+        }
 
+        ArrayList<TreeItem> itemsToRemove = new ArrayList<TreeItem>();
+        for (int i = 0; i < getChildCount(); i++)
+        {
+            TreeItem child = getChild(i);
+            if (!(child instanceof ProjectExplorerTreeItem))
+            {
+                itemsToRemove.add(child);
+                continue;
+            }
+
+            ProjectExplorerTreeItem childTreeItem = (ProjectExplorerTreeItem)child;
+            Item childItem = (Item)childTreeItem.getUserObject();
+            if (!idList.contains(childItem.getId()))
+            {
+                itemsToRemove.add(child);
+            }
+        }
+
+        for (TreeItem child : itemsToRemove)
+        {
+            removeItem(child);
+        }
+    }
+    
+    
+    /**
+     * Get child by Item ID.
+     * 
+     * @param id
+     * @return
+     */
+    public ProjectExplorerTreeItem getChildByItemId(String id)
+    {
+        for (int i = 0; i < getChildCount(); i++)
+        {
+            TreeItem child = getChild(i);
+            if (child instanceof ProjectExplorerTreeItem)
+            {
+                ProjectExplorerTreeItem treeItem = (ProjectExplorerTreeItem)child;
+                if (((Item)treeItem.getUserObject()).getId().equals(id))
+                {
+                    return treeItem;
+                }
+            }
+        }
+
+        return null;
+    }
+    
+    
 }

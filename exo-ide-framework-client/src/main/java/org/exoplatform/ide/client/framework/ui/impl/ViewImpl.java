@@ -186,12 +186,16 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
      * @see org.exoplatform.ide.client.framework.ui.api.View#activate()
      */
     @Override
-    public void activate() {
-        if (!isViewVisible()) {
+    public void activate() {        
+        if (isActive()) {
+            return;
+        }
+        
+        if (isViewVisible()) {            
+            ViewHighlightManager.getInstance().activateView(this);
+        } else {
             setViewVisible();
         }
-
-        ViewHighlightManager.getInstance().activateView(this);
     }
 
     /**
