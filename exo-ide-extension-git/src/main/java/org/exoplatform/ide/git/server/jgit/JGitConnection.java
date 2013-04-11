@@ -25,6 +25,7 @@ import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.CreateBranchCommand;
 import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.InitCommand;
 import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.ListBranchCommand.ListMode;
 import org.eclipse.jgit.api.LogCommand;
@@ -412,25 +413,12 @@ public class JGitConnection implements GitConnection {
     /** @see org.exoplatform.ide.git.server.GitConnection#init(org.exoplatform.ide.git.shared.InitRequest) */
     @Override
     public GitConnection init(InitRequest request) throws GitException {
-        File workDir = repository.getWorkTree();
-        if (!workDir.exists()) {
-            throw new GitException("Working folder " + workDir + " not exists . ");
-        }
-
-        boolean bare = request.isBare();
-
         try {
-            repository.create(bare);
+            InitCommand initCom = Git.init();
+            initCom.setBare(request.isBare());
+            initCom.setDirectory(repository.getWorkTree());
+            initCom.call();
 
-            if (!bare) {
-                try {
-                    Git git = new Git(repository);
-                    git.add().addFilepattern(".").call();
-                    git.commit().setMessage("init").call();
-                } catch (GitAPIException e) {
-                    throw new GitException(e);
-                }
-            }
             GitUser gitUser = getUser();
             if (gitUser != null) {
                 StoredConfig config = repository.getConfig();
@@ -439,6 +427,8 @@ public class JGitConnection implements GitConnection {
                 config.save();
             }
         } catch (IOException e) {
+            throw new GitException(e.getMessage(), e);
+        } catch (GitAPIException e) {
             throw new GitException(e.getMessage(), e);
         }
         return this;
@@ -572,6 +562,9 @@ public class JGitConnection implements GitConnection {
                 throw new GitException("Cannot get ref for remote branch " + remoteBranch + ". ");
             }
             org.eclipse.jgit.api.MergeResult res = new Git(repository).merge().include(remoteBranchRef).call();
+            if (res.getMergeStatus().equals(org.eclipse.jgit.api.MergeResult.MergeStatus.ALREADY_UP_TO_DATE)) {
+                throw new GitException(res.getMergeStatus().toString());
+            }
 
             if (res.getConflicts() != null) {
                 StringBuilder message = new StringBuilder("Merge conflict appeared in files:</br>");

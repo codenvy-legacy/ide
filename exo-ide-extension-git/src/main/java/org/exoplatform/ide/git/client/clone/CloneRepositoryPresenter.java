@@ -29,6 +29,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -193,17 +194,35 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                                                                  String errorMessage =
                                                                                        (exception.getMessage() != null && exception.getMessage()
                                                                                                                                    .length() > 0)
-                                                                                           ?
-                                                                                           exception.getMessage()
+                                                                                           ? exception.getMessage()
                                                                                            : GitExtension.MESSAGES.cloneFailed(remoteUri);
                                                                  IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
                                                              }
                                                          });
         } catch (RequestException e) {
-            e.printStackTrace();
             String errorMessage = (e.getMessage() != null && e.getMessage().length() > 0) ?
                 e.getMessage() : GitExtension.MESSAGES.cloneFailed(remoteUri);
             IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+        }
+    }
+
+    private void deleteFolder(FolderModel path) {
+        try {
+            VirtualFileSystem.getInstance().delete(path,
+                                                   new AsyncRequestCallback<String>() {
+                                                       @Override
+                                                       protected void onSuccess(String result) {
+                                                           // Do nothing
+                                                       }
+
+                                                       @Override
+                                                       protected void onFailure(Throwable exception) {
+                                                           IDE.fireEvent(new ExceptionThrownEvent(exception,
+                                                                                                  "Exception during folder removing"));
+                                                       }
+                                                   });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e, "Exception during removing of directory project"));
         }
     }
 
@@ -226,7 +245,9 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
 
                                                                  @Override
                                                                  protected void onFailure(Throwable exception) {
+                                                                     deleteFolder(folder);
                                                                      handleError(exception, remoteUri);
+
                                                                  }
                                                              });
             IDE.getInstance().closeView(display.asView().getId());
@@ -253,6 +274,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
 
                                                                @Override
                                                                protected void onFailure(Throwable exception) {
+                                                                   deleteFolder(folder);
                                                                    handleError(exception, remoteUri);
                                                                }
                                                            });

@@ -18,8 +18,44 @@
  */
 package org.exoplatform.ide.git.server.rest;
 
-import org.exoplatform.ide.git.server.*;
-import org.exoplatform.ide.git.shared.*;
+import org.exoplatform.ide.git.server.CommitersBean;
+import org.exoplatform.ide.git.server.GitConnection;
+import org.exoplatform.ide.git.server.GitConnectionFactory;
+import org.exoplatform.ide.git.server.GitException;
+import org.exoplatform.ide.git.server.InfoPage;
+import org.exoplatform.ide.git.server.LogPage;
+import org.exoplatform.ide.git.shared.AddRequest;
+import org.exoplatform.ide.git.shared.Branch;
+import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
+import org.exoplatform.ide.git.shared.BranchCreateRequest;
+import org.exoplatform.ide.git.shared.BranchDeleteRequest;
+import org.exoplatform.ide.git.shared.BranchListRequest;
+import org.exoplatform.ide.git.shared.CloneRequest;
+import org.exoplatform.ide.git.shared.CommitRequest;
+import org.exoplatform.ide.git.shared.Commiters;
+import org.exoplatform.ide.git.shared.DiffRequest;
+import org.exoplatform.ide.git.shared.FetchRequest;
+import org.exoplatform.ide.git.shared.GitUser;
+import org.exoplatform.ide.git.shared.InitRequest;
+import org.exoplatform.ide.git.shared.LogRequest;
+import org.exoplatform.ide.git.shared.MergeRequest;
+import org.exoplatform.ide.git.shared.MergeResult;
+import org.exoplatform.ide.git.shared.MoveRequest;
+import org.exoplatform.ide.git.shared.PullRequest;
+import org.exoplatform.ide.git.shared.PushRequest;
+import org.exoplatform.ide.git.shared.Remote;
+import org.exoplatform.ide.git.shared.RemoteAddRequest;
+import org.exoplatform.ide.git.shared.RemoteListRequest;
+import org.exoplatform.ide.git.shared.RemoteUpdateRequest;
+import org.exoplatform.ide.git.shared.RepoInfo;
+import org.exoplatform.ide.git.shared.ResetRequest;
+import org.exoplatform.ide.git.shared.Revision;
+import org.exoplatform.ide.git.shared.RmRequest;
+import org.exoplatform.ide.git.shared.Status;
+import org.exoplatform.ide.git.shared.Tag;
+import org.exoplatform.ide.git.shared.TagCreateRequest;
+import org.exoplatform.ide.git.shared.TagDeleteRequest;
+import org.exoplatform.ide.git.shared.TagListRequest;
 import org.exoplatform.ide.vfs.server.GitUrlResolver;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
@@ -34,11 +70,18 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -140,6 +183,8 @@ public class GitService {
     public RepoInfo clone(final CloneRequest request) throws URISyntaxException, GitException,
                                                      LocalPathResolveException, VirtualFileSystemException {
         long start = System.currentTimeMillis();
+        // On-the-fly resolving of repository's working directory.
+        request.setWorkingDir(resolveLocalPath(request.getWorkingDir()));
         LOG.info("Repository clone from '" + request.getRemoteUri() + "' to '" + request.getWorkingDir() + "' started");
         GitConnection gitConnection = getGitConnection();
         try {
@@ -147,9 +192,9 @@ public class GitService {
             return new RepoInfo(request.getRemoteUri());
         } finally {
             long end = System.currentTimeMillis();
+            long seconds = (end - start) / 1000;
             LOG.info("Repository clone from '" + request.getRemoteUri() + "' to '" + request.getWorkingDir()
-                     + "' finished. Process took " + (end - start) / 1000 + " seconds (" + (end - start) / 1000 / 60
-                     + " minutes)");
+                     + "' finished. Process took " + seconds + " seconds (" + seconds / 60 + " minutes)");
             gitConnection.close();
         }
     }
@@ -440,6 +485,14 @@ public class GitService {
         vfs.updateItem(projectId, propertiesNew, null);
     }
 
+    protected String resolveLocalPath(String projId) throws VirtualFileSystemException {
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+        if (vfs == null) {
+            throw new VirtualFileSystemException("Can't resolve path on the Local File System : Virtual file system not initialized");
+        }
+        return localPathResolver.resolve(vfs, projId);
+    }
+
     protected GitConnection getGitConnection() throws GitException, LocalPathResolveException,
                                               VirtualFileSystemException {
         GitUser gituser = null;
@@ -447,11 +500,7 @@ public class GitService {
         if (user != null) {
             gituser = new GitUser(user.getIdentity().getUserId());
         }
-        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        if (vfs == null) {
-            throw new VirtualFileSystemException("Can't resolve path on the Local File System : Virtual file system not initialized");
-        }
-        return GitConnectionFactory.getInstance().getConnection(localPathResolver.resolve(vfs, projectId), gituser);
+        return GitConnectionFactory.getInstance().getConnection(resolveLocalPath(projectId), gituser);
     }
 
 }
