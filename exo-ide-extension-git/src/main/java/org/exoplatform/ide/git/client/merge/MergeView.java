@@ -34,35 +34,35 @@ import org.exoplatform.ide.git.client.GitExtension;
 
 /**
  * View to perform merge operation. Must be pointed in Views.gwt.xml
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 20, 2011 3:05:46 PM anya $
  */
 public class MergeView extends ViewImpl implements MergePresenter.Display {
-    private static final String ID = "MergeView";
+    private static final String ID               = "MergeView";
 
-    private static final String MERGE_BUTTON_ID = "MergeViewMergeButton";
+    private static final String MERGE_BUTTON_ID  = "MergeViewMergeButton";
 
     private static final String CANCEL_BUTTON_ID = "MergeViewCancelButton";
 
-    private static final int WIDTH = 430;
+    private static final int    WIDTH            = 430;
 
-    private static final int HEIGHT = 250;
+    private static final int    HEIGHT           = 250;
 
     interface MergeViewUiBinder extends UiBinder<Widget, MergeView> {
     }
 
     /** Reference tree. */
     @UiField
-    RefTree refTree;
+    RefTree                          refTree;
 
     /** Merge button. */
     @UiField
-    ImageButton mergeButton;
+    ImageButton                      mergeButton;
 
     /** Cancel button. */
     @UiField
-    ImageButton cancelButton;
+    ImageButton                      cancelButton;
 
     /** UI binder for this view. */
     private static MergeViewUiBinder uiBinder = GWT.create(MergeViewUiBinder.class);

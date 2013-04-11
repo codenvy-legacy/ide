@@ -45,17 +45,17 @@ import org.exoplatform.ide.git.client.status.StatusCommandHandler;
 
 /**
  * Git extension to be added to IDE application.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 22, 2011 12:53:29 PM anya $
  */
 public class GitExtension extends Extension implements InitializeServicesHandler {
 
-    public static final GitLocalizationConstant MESSAGES = GWT.create(GitLocalizationConstant.class);
+    public static final GitLocalizationConstant MESSAGES            = GWT.create(GitLocalizationConstant.class);
 
-    public static final String GIT_REPOSITORY_PROP = "isGitRepository";
+    public static final String                  GIT_REPOSITORY_PROP = "isGitRepository";
 
-    public static final GitAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(GitAutoBeanFactory.class);
+    public static final GitAutoBeanFactory      AUTO_BEAN_FACTORY   = GWT.create(GitAutoBeanFactory.class);
 
     /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
     @Override
@@ -109,8 +109,10 @@ public class GitExtension extends Extension implements InitializeServicesHandler
 
     }
 
-    /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
-     * .client.framework.application.event.InitializeServicesEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
+     *      .client.framework.application.event.InitializeServicesEvent)
+     */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
         new GitClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader(), IDE.messageBus());

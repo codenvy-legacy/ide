@@ -47,7 +47,7 @@ import java.util.List;
 
 /**
  * Presenter of the view for pulling changes from remote repository. View must be pointed in Views.gwt.xml.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 20, 2011 4:20:24 PM anya $
  */
@@ -56,74 +56,70 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler {
     interface Display extends IsView {
         /**
          * Get pull button's click handler.
-         *
+         * 
          * @return {@link HasClickHandlers} click handler
          */
         HasClickHandlers getPullButton();
 
         /**
          * Get cancel button's click handler.
-         *
+         * 
          * @return {@link HasClickHandlers} click handler
          */
         HasClickHandlers getCancelButton();
 
         /**
          * Get remote repository field.
-         *
+         * 
          * @return {@link HasValue}
          */
         HasValue<String> getRemoteName();
 
         /**
          * Get remote branches field.
-         *
+         * 
          * @return {@link HasValue}
          */
         HasValue<String> getRemoteBranches();
 
         /**
          * Get local branches field.
-         *
+         * 
          * @return {@link HasValue}
          */
         HasValue<String> getLocalBranches();
 
         /**
          * Set values of remote repository branches.
-         *
-         * @param values
-         *         values to set
+         * 
+         * @param values values to set
          */
         void setRemoteBranches(String[] values);
 
         /**
          * Set values of local repository branches.
-         *
-         * @param values
-         *         values to set
+         * 
+         * @param values values to set
          */
         void setLocalBranches(String[] values);
 
         /**
          * Change the enable state of the pull button.
-         *
-         * @param enable
-         *         enable state
+         * 
+         * @param enable enable state
          */
         void enablePullButton(boolean enable);
 
         /**
          * Set values of remote repositories.
-         *
-         * @param values
-         *         values to set
+         * 
+         * @param values values to set
          */
         void setRemoteValues(LinkedHashMap<String, String> values);
 
         /**
          * Get the display name of the remote repository.
-         *
+         * 
          * @return String display name of the remote repository
          */
         String getRemoteDisplayValue();
@@ -179,8 +175,8 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler {
     @Override
     public void onPull(PullEvent event) {
         if (makeSelectionCheck()) {
-//         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-//         getRemotes(projectId);
+            // String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+            // getRemotes(projectId);
             getRemotes(getSelectedProject().getId());
         }
     }
@@ -192,7 +188,7 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler {
         IDE.getInstance().openView(d.asView());
         bindDisplay(d);
 
-//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+        // String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
         String projectId = getSelectedProject().getId();
 
         LinkedHashMap<String, String> remoteValues = new LinkedHashMap<String, String>();
@@ -228,13 +224,13 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler {
     }
 
     /**
-     * Perform pull from pointed by user remote repository, from pointed remote branch to local one.
-     * Local branch may not be pointed. Sends request over WebSocket or HTTP.
+     * Perform pull from pointed by user remote repository, from pointed remote branch to local one. Local branch may not be pointed. Sends
+     * request over WebSocket or HTTP.
      */
     private void doPull() {
         String remoteName = display.getRemoteDisplayValue();
         final String remoteUrl = display.getRemoteName().getValue();
-//      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+        // ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
         ProjectModel project = getSelectedProject();
         IDE.getInstance().closeView(display.asView().getId());
 
@@ -244,7 +240,7 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler {
                                                       @Override
                                                       protected void onSuccess(String result) {
                                                           IDE.fireEvent(
-                                                                  new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.GIT));
+                                                             new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.GIT));
                                                           IDE.fireEvent(new RefreshBrowserEvent());
                                                       }
 
@@ -259,8 +255,8 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler {
     }
 
     /**
-     * Perform pull from pointed by user remote repository, from pointed remote branch to local one.
-     * Local branch may not be pointed. Sends request over HTTP.
+     * Perform pull from pointed by user remote repository, from pointed remote branch to local one. Local branch may not be pointed. Sends
+     * request over HTTP.
      */
     private void doPullREST(ProjectModel project, final String remoteUrl, String remoteName) {
         try {
@@ -269,7 +265,7 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler {
                                                     @Override
                                                     protected void onSuccess(String result) {
                                                         IDE.fireEvent(
-                                                                new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.GIT));
+                                                           new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.GIT));
                                                         IDE.fireEvent(new RefreshBrowserEvent());
                                                     }
 
@@ -285,7 +281,7 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler {
 
     /**
      * Returns list of refs to fetch.
-     *
+     * 
      * @return list of refs to fetch
      */
     private String getRefs() {
@@ -294,8 +290,9 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler {
         String remoteBranch = display.getRemoteBranches().getValue();
         // Form the refspec. User points only the branch names:
         String refs =
-                (localBranch == null || localBranch.length() == 0) ? remoteBranch : "refs/heads/" + remoteBranch + ":"
-                                                                                    + "refs/remotes/" + remoteName + "/" + remoteBranch;
+                      (localBranch == null || localBranch.length() == 0) ? remoteBranch : "refs/heads/" + remoteBranch + ":"
+                                                                                          + "refs/remotes/" + remoteName + "/"
+                                                                                          + remoteBranch;
         return refs;
     }
 

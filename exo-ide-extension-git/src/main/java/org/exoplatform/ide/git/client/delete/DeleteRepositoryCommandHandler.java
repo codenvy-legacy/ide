@@ -41,7 +41,7 @@ import java.util.List;
 
 /**
  * Delete repository command handler, performs deleting Git repository.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 21, 2011 5:57:30 PM anya $
  */

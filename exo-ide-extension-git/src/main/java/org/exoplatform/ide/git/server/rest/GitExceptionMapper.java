@@ -27,7 +27,7 @@ import javax.ws.rs.ext.Provider;
 
 /**
  * Exception mapper for GitException.
- *
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */

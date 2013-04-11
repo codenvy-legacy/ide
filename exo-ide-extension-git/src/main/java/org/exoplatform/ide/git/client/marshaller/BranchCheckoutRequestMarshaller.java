@@ -27,7 +27,7 @@ import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
 
 /**
  * Marshaller to create branch checkout request in JSON format.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 8, 2011 3:45:46 PM anya $
  */
@@ -36,8 +36,7 @@ public class BranchCheckoutRequestMarshaller implements Marshallable, Constants 
     private BranchCheckoutRequest branchCheckoutRequest;
 
     /**
-     * @param branchCheckoutRequest
-     *         branch checkout request
+     * @param branchCheckoutRequest branch checkout request
      */
     public BranchCheckoutRequestMarshaller(BranchCheckoutRequest branchCheckoutRequest) {
         this.branchCheckoutRequest = branchCheckoutRequest;

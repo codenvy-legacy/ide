@@ -49,73 +49,73 @@ import java.util.Date;
 
 /**
  * View for displaying the history of commits and it's diff. Must be pointed in Views.gwt.xml.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 29, 2011 3:00:37 PM anya $
  */
 public class HistoryView extends ViewImpl implements HistoryPresenter.Display {
 
-    public static final String ID = "ideHistoryView";
+    public static final String         ID       = "ideHistoryView";
 
-    private Editor editor;
+    private Editor                     editor;
 
     /** Grid for displaying revisions. */
     @UiField
-    RevisionGrid revisionGrid;
+    RevisionGrid                       revisionGrid;
 
     /** View's toolbar. */
     @UiField
-    Toolbar toolbar;
+    Toolbar                            toolbar;
 
     /** Editor panel. */
     @UiField
-    SimplePanel editorPanel;
+    SimplePanel                        editorPanel;
 
     /** Field to show commit date of first commit. */
     @UiField
-    TextInput comitADate;
+    TextInput                          comitADate;
 
     /** Field to show commit revision of first commit. */
     @UiField
-    TextInput comitARevision;
+    TextInput                          comitARevision;
 
     /** Field to show commit date of second commit. */
     @UiField
-    TextInput comitBDate;
+    TextInput                          comitBDate;
 
     /** Field to show commit's revision of second commit. */
     @UiField
-    TextInput comitBRevision;
+    TextInput                          comitBRevision;
 
     @UiField
-    TableCellElement revisionBTitle;
+    TableCellElement                   revisionBTitle;
 
     @UiField
-    TableCellElement revisionBDate;
+    TableCellElement                   revisionBDate;
 
     @UiField
-    TableCellElement revisionATitle;
+    TableCellElement                   revisionATitle;
 
     @UiField
-    TableCellElement revisionADate;
+    TableCellElement                   revisionADate;
 
     /** Refresh button. */
-    private IconButton refreshButton;
+    private IconButton                 refreshButton;
 
     /** Show changes in whole project button. */
-    private IconButton projectChangesButton;
+    private IconButton                 projectChangesButton;
 
     /** Show changes of the resource button. */
-    private IconButton resourceChangesButton;
+    private IconButton                 resourceChangesButton;
 
     /** Diff selected commit with index button. */
-    private IconButton diffWithIndexButton;
+    private IconButton                 diffWithIndexButton;
 
     /** Diff selected commit with working tree button. */
-    private IconButton diffWithWorkTreeButton;
+    private IconButton                 diffWithWorkTreeButton;
 
     /** Diff selected commit with previous commit button. */
-    private IconButton diffWithPrevCommitButton;
+    private IconButton                 diffWithPrevCommitButton;
 
     /** UI binder for this view. */
     private static HistoryViewUiBinder uiBinder = GWT.create(HistoryViewUiBinder.class);
@@ -125,7 +125,7 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display {
 
     public HistoryView() {
         super(ID, ViewType.INFORMATION, GitExtension.MESSAGES.historyTitle(), new Image(
-                GitClientBundle.INSTANCE.history()), 400, 250, true);
+                                                                                        GitClientBundle.INSTANCE.history()), 400, 250, true);
         add(uiBinder.createAndBindUi(this));
 
         revisionADate.setInnerText(GitExtension.MESSAGES.historyViewDateTitle());
@@ -142,57 +142,57 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display {
     /** Create view's controls. */
     private void createControls() {
         refreshButton =
-                new IconButton(ImageHelper.getImageHTML(GitClientBundle.INSTANCE.refresh()),
-                               ImageHelper.getImageHTML(GitClientBundle.INSTANCE.refreshDisabled()));
+                        new IconButton(ImageHelper.getImageHTML(GitClientBundle.INSTANCE.refresh()),
+                                       ImageHelper.getImageHTML(GitClientBundle.INSTANCE.refreshDisabled()));
         refreshButton.setTitle(GitExtension.MESSAGES.refreshRevisionListButtonTitle());
         toolbar.addItem(refreshButton, true);
         toolbar.addDelimiter(true);
 
         projectChangesButton =
-                new IconButton(ImageHelper.getImageHTML(GitClientBundle.INSTANCE.projectLevel()),
-                               ImageHelper.getImageHTML(GitClientBundle.INSTANCE.projectLevelDisabled()));
+                               new IconButton(ImageHelper.getImageHTML(GitClientBundle.INSTANCE.projectLevel()),
+                                              ImageHelper.getImageHTML(GitClientBundle.INSTANCE.projectLevelDisabled()));
         projectChangesButton.setTitle(GitExtension.MESSAGES.historyProjectChangesButtonTitle());
         toolbar.addItem(projectChangesButton, true);
 
         resourceChangesButton =
-                new IconButton(ImageHelper.getImageHTML(GitClientBundle.INSTANCE.resourceLevel()),
-                               ImageHelper.getImageHTML(GitClientBundle.INSTANCE.resourceLevelDisabled()));
+                                new IconButton(ImageHelper.getImageHTML(GitClientBundle.INSTANCE.resourceLevel()),
+                                               ImageHelper.getImageHTML(GitClientBundle.INSTANCE.resourceLevelDisabled()));
         resourceChangesButton.setTitle(GitExtension.MESSAGES.historyResourceChangesButtonTitle());
         toolbar.addItem(resourceChangesButton, true);
         toolbar.addDelimiter(true);
 
         diffWithIndexButton =
-                new IconButton(ImageHelper.getImageHTML(GitClientBundle.INSTANCE.diffIndex()),
-                               ImageHelper.getImageHTML(GitClientBundle.INSTANCE.diffIndexDisabled()));
+                              new IconButton(ImageHelper.getImageHTML(GitClientBundle.INSTANCE.diffIndex()),
+                                             ImageHelper.getImageHTML(GitClientBundle.INSTANCE.diffIndexDisabled()));
         diffWithIndexButton.setTitle(GitExtension.MESSAGES.historyDiffWithIndexButtonTitle());
         toolbar.addItem(diffWithIndexButton, true);
 
         diffWithWorkTreeButton =
-                new IconButton(ImageHelper.getImageHTML(GitClientBundle.INSTANCE.diffWorkTree()),
-                               ImageHelper.getImageHTML(GitClientBundle.INSTANCE.diffWorTreeDisabled()));
+                                 new IconButton(ImageHelper.getImageHTML(GitClientBundle.INSTANCE.diffWorkTree()),
+                                                ImageHelper.getImageHTML(GitClientBundle.INSTANCE.diffWorTreeDisabled()));
         diffWithWorkTreeButton.setTitle(GitExtension.MESSAGES.historyDiffWithWorkTree());
         toolbar.addItem(diffWithWorkTreeButton, true);
 
         diffWithPrevCommitButton =
-                new IconButton(ImageHelper.getImageHTML(GitClientBundle.INSTANCE.diffPrevVersion()),
-                               ImageHelper.getImageHTML(GitClientBundle.INSTANCE.diffPrevVersionDisabled()));
+                                   new IconButton(ImageHelper.getImageHTML(GitClientBundle.INSTANCE.diffPrevVersion()),
+                                                  ImageHelper.getImageHTML(GitClientBundle.INSTANCE.diffPrevVersionDisabled()));
         diffWithPrevCommitButton.setTitle(GitExtension.MESSAGES.historyDiffWithPrevVerson());
         toolbar.addItem(diffWithPrevCommitButton, true);
     }
 
     /**
      * Create editor for diff content.
-     *
-     * @param content
-     *         content to be shown
+     * 
+     * @param content content to be shown
      * @return {@link Editor} created editor
      */
     public Editor createEditor(String content) {
         editor =
-                new CodeMirror(MimeType.DIFF,
-                               new CodeMirrorConfiguration()
-                                       .setGenericParsers("['parsediff.js']")
-                                       .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/diffcolors.css']"));
+                 new CodeMirror(
+                                MimeType.DIFF,
+                                new CodeMirrorConfiguration()
+                                                             .setGenericParsers("['parsediff.js']")
+                                                             .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/diffcolors.css']"));
         editor.setReadOnly(true);
         editor.showLineNumbers(false);
         editor.asWidget().setSize("100%", "100%");

@@ -572,6 +572,9 @@ public class JGitConnection implements GitConnection {
                 throw new GitException("Cannot get ref for remote branch " + remoteBranch + ". ");
             }
             org.eclipse.jgit.api.MergeResult res = new Git(repository).merge().include(remoteBranchRef).call();
+            if (res.getMergeStatus().equals(org.eclipse.jgit.api.MergeResult.MergeStatus.ALREADY_UP_TO_DATE)) {
+                throw new GitException(res.getMergeStatus().toString());
+            }
 
             if (res.getConflicts() != null) {
                 StringBuilder message = new StringBuilder("Merge conflict appeared in files:</br>");

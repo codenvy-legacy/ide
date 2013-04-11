@@ -25,6 +25,10 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
@@ -32,11 +36,15 @@ import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -46,7 +54,7 @@ import java.util.List;
  */
 @RolesAllowed({"developer"})
 public class RenameItemControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, VfsChangedHandler,
-                                                                ViewActivatedHandler {
+                                                                ViewActivatedHandler, EditorFileOpenedHandler, EditorFileClosedHandler {
 
     private static final String ID = "File/Rename...";
 
@@ -60,6 +68,8 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
     private VirtualFileSystemInfo vfsInfo = null;
 
     private boolean navigationViewSelected = false;
+    
+    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
     /**
      *
@@ -68,7 +78,6 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
         super(ID);
         setTitle(TITLE);
         setPrompt(PROMPT);
-        //      setDelimiterBefore(true);
         setShowInContextMenu(true);
         setImages(IDEImageBundle.INSTANCE.rename(), IDEImageBundle.INSTANCE.renameDisabled());
         setEvent(new RenameItemEvent());
@@ -80,6 +89,8 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
         IDE.addHandler(VfsChangedEvent.TYPE, this);
         IDE.addHandler(ItemsSelectedEvent.TYPE, this);
         IDE.addHandler(ViewActivatedEvent.TYPE, this);
+        IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+        IDE.addHandler(EditorFileClosedEvent.TYPE, this);
     }
 
     /** Update control's state. */
@@ -103,8 +114,27 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
             setEnabled(false);
             return;
         }
+        
+        Item selectedItem = selectedItems.get(0);
+        if (selectedItem instanceof FileModel && !openedFiles.containsKey(selectedItem.getId())) {
+            setEnabled(true);
+            return;
+        }
+        
+        if (selectedItem instanceof FolderModel) {
+            String folderPath = selectedItem.getPath();
+            for (FileModel file : openedFiles.values()) {
+                if (file.getPath().startsWith(folderPath)) {
+                    setEnabled(false);
+                    return;
+                }
+            }
+            
+            setEnabled(true);
+        } else {            
+            setEnabled(false);
+        }
 
-        setEnabled(true);
     }
 
     /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
@@ -135,6 +165,18 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
                                  event.getView() instanceof ProjectExplorerDisplay ||
                                  event.getView() instanceof PackageExplorerDisplay;
 
+        updateState();
+    }
+
+    @Override
+    public void onEditorFileOpened(EditorFileOpenedEvent event) {
+        openedFiles = event.getOpenedFiles();
+        updateState();
+    }
+
+    @Override
+    public void onEditorFileClosed(EditorFileClosedEvent event) {
+        openedFiles = event.getOpenedFiles();
         updateState();
     }
 

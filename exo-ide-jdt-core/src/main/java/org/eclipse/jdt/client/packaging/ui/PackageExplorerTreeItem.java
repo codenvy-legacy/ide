@@ -52,7 +52,9 @@ public abstract class PackageExplorerTreeItem extends TreeItem
         render();
     }
 
-    /** Render tree item. */
+    /**
+     * Render tree item.
+     */
     protected void render()
     {
         Grid grid = new Grid(1, 2);
@@ -292,19 +294,19 @@ public abstract class PackageExplorerTreeItem extends TreeItem
         }
     }
     
-    public void insertItem(int beforeIndex, TreeItem item)
-        throws IndexOutOfBoundsException {
-        if (beforeIndex > getChildCount())
-        {
-            System.out.println("!!! ERR");
-            System.out.println("tree item > " + getItemTitle());
-            System.out.println("beforeIndex > " + beforeIndex);
-            System.out.println("child count > " + getChildCount());
-            
-            beforeIndex = getChildCount();
-        }
-        
-        super.insertItem(beforeIndex, item);
-    }
+//    public void insertItem(int beforeIndex, TreeItem item)
+//        throws IndexOutOfBoundsException {
+//        if (beforeIndex > getChildCount())
+//        {
+//            System.out.println("!!! ERR");
+//            System.out.println("tree item > " + getItemTitle());
+//            System.out.println("beforeIndex > " + beforeIndex);
+//            System.out.println("child count > " + getChildCount());
+//            
+//            beforeIndex = getChildCount();
+//        }
+//        
+//        super.insertItem(beforeIndex, item);
+//    }
 
 }

@@ -35,15 +35,16 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * The common control for working with Git.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 15, 2011 10:06:58 AM anya $
  */
-public abstract class GitControl extends SimpleControl implements IDEControl, VfsChangedHandler, 
-    ProjectOpenedHandler, ProjectClosedHandler, TreeRefreshedHandler {
+public abstract class GitControl extends SimpleControl implements IDEControl, VfsChangedHandler,
+                                                      ProjectOpenedHandler, ProjectClosedHandler, TreeRefreshedHandler {
 
     enum EnableState {
-        BEFORE_INIT, AFTER_INIT;
+        BEFORE_INIT,
+        AFTER_INIT;
     }
 
     /**
@@ -56,20 +57,19 @@ public abstract class GitControl extends SimpleControl implements IDEControl, Vf
      * <p/>
      * IDE-1252
      */
-    protected EnableState enableState = EnableState.AFTER_INIT;
+    protected EnableState           enableState = EnableState.AFTER_INIT;
 
-    protected ProjectModel project;
+    protected ProjectModel          project;
 
-    protected boolean isProjectExplorerVisible;
+    protected boolean               isProjectExplorerVisible;
 
     /**
-     * @param id
-     *         control's id
+     * @param id control's id
      */
     public GitControl(String id) {
         super(id);
     }
-    
+
     /**
      * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
      */
@@ -78,7 +78,7 @@ public abstract class GitControl extends SimpleControl implements IDEControl, Vf
         vfsInfo = event.getVfsInfo();
         updateControlState();
     }
-    
+
     /**
      * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
      */
@@ -96,7 +96,7 @@ public abstract class GitControl extends SimpleControl implements IDEControl, Vf
         project = null;
         updateControlState();
     }
-    
+
 
     /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
     @Override
@@ -108,12 +108,12 @@ public abstract class GitControl extends SimpleControl implements IDEControl, Vf
         updateControlState();
     }
 
- 
+
     /**
      * Set the state, where control must be enabled: before initializing repository or after.
      * <p/>
      * IDE-1252
-     *
+     * 
      * @param enableState
      */
     public void setEnableState(EnableState enableState) {
@@ -123,7 +123,7 @@ public abstract class GitControl extends SimpleControl implements IDEControl, Vf
     @Override
     public void onTreeRefreshed(TreeRefreshedEvent event) {
         updateControlState();
-    }    
+    }
 
     protected void updateControlState() {
         if (vfsInfo == null || project == null) {
@@ -138,7 +138,7 @@ public abstract class GitControl extends SimpleControl implements IDEControl, Vf
             if (enableState == EnableState.BEFORE_INIT) {
                 setEnabled(true);
             } else {
-                setEnabled(false);                
+                setEnabled(false);
             }
         } else {
             if (enableState == EnableState.BEFORE_INIT) {
@@ -148,5 +148,5 @@ public abstract class GitControl extends SimpleControl implements IDEControl, Vf
             }
         }
     }
- 
+
 }

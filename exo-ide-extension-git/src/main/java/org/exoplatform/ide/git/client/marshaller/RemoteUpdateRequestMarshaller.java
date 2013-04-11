@@ -26,7 +26,7 @@ import org.exoplatform.ide.git.shared.RemoteUpdateRequest;
 
 /**
  * Marshaller for update remote repository request in JSON format.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 19, 2011 12:16:57 PM anya $
  */
@@ -36,8 +36,7 @@ public class RemoteUpdateRequestMarshaller implements Marshallable, Constants {
     private RemoteUpdateRequest remoteUpdateRequest;
 
     /**
-     * @param remoteUpdateRequest
-     *         update remote repository request
+     * @param remoteUpdateRequest update remote repository request
      */
     public RemoteUpdateRequestMarshaller(RemoteUpdateRequest remoteUpdateRequest) {
         this.remoteUpdateRequest = remoteUpdateRequest;

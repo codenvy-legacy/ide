@@ -127,6 +127,7 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
         if (openedProject == null) {
             return;
         }
+        
         foldersToBeRefreshed.clear();
         for (Folder f : event.getFolders()) {
             foldersToBeRefreshed.add((FolderModel)f);

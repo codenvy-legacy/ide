@@ -60,7 +60,7 @@ public class SessionKeepAlive implements InitializeServicesHandler {
 
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        url = event.getApplicationConfiguration().getContext() + "/ide/configuration/ping?random" + Random.nextDouble();//avoid caching   
+        url = event.getApplicationConfiguration().getContext() + "/ide/configuration/ping?random=" + Random.nextDouble();//avoid caching   
         timer.scheduleRepeating(PING_DELAY);
     }
 

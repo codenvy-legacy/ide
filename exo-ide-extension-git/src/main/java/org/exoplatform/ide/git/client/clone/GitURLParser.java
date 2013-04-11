@@ -25,14 +25,10 @@ package org.exoplatform.ide.git.client.clone;
 public class GitURLParser {
 
     /**
-     * Parse GitHub url. Need extract "user" and "repository" name.
-     * If given Url its GitHub url return array of string first element will be user name, second repository name
-     * else return null.
-     * GitHub url formats:
-     * - https://github.com/user/repo.git
-     * - git@github.com:user/repo.git
-     * - git://github.com/user/repo.git
-     *
+     * Parse GitHub url. Need extract "user" and "repository" name. If given Url its GitHub url return array of string first element will be
+     * user name, second repository name else return null. GitHub url formats: - https://github.com/user/repo.git -
+     * git@github.com:user/repo.git - git://github.com/user/repo.git
+     * 
      * @param gitUrl
      * @return array of string
      */

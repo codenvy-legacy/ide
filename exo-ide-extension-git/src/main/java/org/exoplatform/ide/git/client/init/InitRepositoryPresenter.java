@@ -51,47 +51,47 @@ import org.exoplatform.ide.vfs.shared.PropertyImpl;
 
 /**
  * Presenter for Init Repository view.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 24, 2011 9:07:58 AM anya $
  */
 public class InitRepositoryPresenter extends GitPresenter implements InitRepositoryHandler,
-    ProjectOpenedHandler, ProjectClosedHandler, ViewClosedHandler {
-    
+                                                         ProjectOpenedHandler, ProjectClosedHandler, ViewClosedHandler {
+
     public interface Display extends IsView {
         /**
          * Get's bare field.
-         *
+         * 
          * @return {@link HasValue}
          */
         HasValue<Boolean> getBareValue();
 
         /**
          * Get's working directory field.
-         *
+         * 
          * @return {@link HasValue}
          */
         HasValue<String> getWorkDirValue();
 
         /**
          * Gets initialize repository button.
-         *
+         * 
          * @return {@link HasClickHandlers}
          */
         HasClickHandlers getInitButton();
 
         /**
          * Gets cancel button.
-         *
+         * 
          * @return {@link HasClickHandlers}
          */
         HasClickHandlers getCancelButton();
     }
 
     private Display display;
-    
-    ProjectModel project;
-    
+
+    ProjectModel    project;
+
     /** @param eventBus */
     public InitRepositoryPresenter() {
         IDE.addHandler(InitRepositoryEvent.TYPE, this);
@@ -119,8 +119,10 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
         });
     }
 
-    /** @see org.exoplatform.ide.git.client.init.InitRepositoryHandler#onInitRepository(org.exoplatform.ide.git.client.init
-     * .InitRepositoryEvent) */
+    /**
+     * @see org.exoplatform.ide.git.client.init.InitRepositoryHandler#onInitRepository(org.exoplatform.ide.git.client.init
+     *      .InitRepositoryEvent)
+     */
     @Override
     public void onInitRepository(InitRepositoryEvent event) {
         if (makeSelectionCheck()) {
@@ -136,25 +138,25 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
         if (project == null) {
             return;
         }
-        
+
         boolean bare = display.getBareValue().getValue();
-        IDE.getInstance().closeView(display.asView().getId());        
+        IDE.getInstance().closeView(display.asView().getId());
 
         try {
             GitClientService.getInstance().initWS(vfs.getId(), project.getId(), project.getName(), bare,
-                  new RequestCallback<String>() {
-                      @Override
-                      protected void onSuccess(String result) {
-//                          IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
-//                          IDE.fireEvent(new RefreshBrowserEvent(project));
-                          setGitRepositoryProperty();
-                      }
+                                                  new RequestCallback<String>() {
+                                                      @Override
+                                                      protected void onSuccess(String result) {
+                                                          // IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
+                                                          // IDE.fireEvent(new RefreshBrowserEvent(project));
+                                                          setGitRepositoryProperty();
+                                                      }
 
-                      @Override
-                      protected void onFailure(Throwable exception) {
-                          handleError(exception);
-                      }
-                  });
+                                                      @Override
+                                                      protected void onFailure(Throwable exception) {
+                                                          handleError(exception);
+                                                      }
+                                                  });
         } catch (WebSocketException e) {
             initRepositoryREST(project.getId(), project.getName(), bare);
         }
@@ -164,51 +166,51 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
     private void initRepositoryREST(String projectId, String projectName, boolean bare) {
         try {
             GitClientService.getInstance().init(vfs.getId(), projectId, projectName, bare,
-                    new AsyncRequestCallback<String>() {
-                        @Override
-                        protected void onSuccess(String result) {
-//                            IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
-//                            IDE.fireEvent(new RefreshBrowserEvent(getSelectedProject()));
-                            setGitRepositoryProperty();
-                        }
-    
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            handleError(exception);
-                        }
-                    });
+                                                new AsyncRequestCallback<String>() {
+                                                    @Override
+                                                    protected void onSuccess(String result) {
+                                                        // IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
+                                                        // IDE.fireEvent(new RefreshBrowserEvent(getSelectedProject()));
+                                                        setGitRepositoryProperty();
+                                                    }
+
+                                                    @Override
+                                                    protected void onFailure(Throwable exception) {
+                                                        handleError(exception);
+                                                    }
+                                                });
         } catch (RequestException e) {
             handleError(e);
         }
     }
-    
+
     private void setGitRepositoryProperty() {
         project.getProperties().add(new PropertyImpl(GitExtension.GIT_REPOSITORY_PROP, "true"));
         ItemWrapper item = new ItemWrapper(project);
         ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
         try {
             VirtualFileSystem.getInstance().updateItem(project, null,
-                   new AsyncRequestCallback<ItemWrapper>(unmarshaller) {
-                       @Override
-                       protected void onSuccess(ItemWrapper result) {
-                           IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
-                           IDE.fireEvent(new RefreshBrowserEvent(project));                           
-                       }
+                                                       new AsyncRequestCallback<ItemWrapper>(unmarshaller) {
+                                                           @Override
+                                                           protected void onSuccess(ItemWrapper result) {
+                                                               IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
+                                                               IDE.fireEvent(new RefreshBrowserEvent(project));
+                                                           }
 
-                       @Override
-                       protected void onFailure(Throwable exception) {
-                           handleError(exception);
-    
-                       }
-                   });
+                                                           @Override
+                                                           protected void onFailure(Throwable exception) {
+                                                               handleError(exception);
+
+                                                           }
+                                                       });
         } catch (RequestException e) {
             handleError(e);
         }
-    }    
+    }
 
     private void handleError(Throwable e) {
         String errorMessage =
-                (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES.initFailed();
+                              (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES.initFailed();
         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
     }
 

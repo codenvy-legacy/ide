@@ -20,7 +20,7 @@ package org.exoplatform.ide.git.shared;
 
 /**
  * Represents user's credentials.
- *
+ * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Mar 28, 2012 12:44:37 PM anya $
  * @deprecated not need it any more, we use oauth for GItHub
@@ -28,30 +28,29 @@ package org.exoplatform.ide.git.shared;
 public interface Credentials {
     /**
      * Get login.
-     *
+     * 
      * @return {@link String} login
      */
     public String getLogin();
 
     /**
      * Set login.
-     *
+     * 
      * @param login
      */
     public void setLogin(String login);
 
     /**
      * Get password.
-     *
+     * 
      * @return {@link String} password
      */
     public String getPassword();
 
     /**
      * Set the password.
-     *
-     * @param password
-     *         password.
+     * 
+     * @param password password.
      */
     public void setPassword(String password);
 }

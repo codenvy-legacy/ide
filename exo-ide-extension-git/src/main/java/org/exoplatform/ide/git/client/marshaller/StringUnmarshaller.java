@@ -24,7 +24,7 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 
 /**
  * Deserializer for response's body.
- *
+ * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 24, 2012 12:22:34 PM anya $
  */

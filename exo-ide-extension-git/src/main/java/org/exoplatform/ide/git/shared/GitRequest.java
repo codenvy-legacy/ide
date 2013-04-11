@@ -22,14 +22,13 @@ import java.util.Map;
 
 /**
  * Abstract request to {@link org.exoplatform.ide.git.server.GitConnection}.
- *
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: GitRequest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
 public abstract class GitRequest {
     /**
-     * Opaque set of request attributes. If some attribute not need value then
-     * empty string or <code>null</code> may be used.
+     * Opaque set of request attributes. If some attribute not need value then empty string or <code>null</code> may be used.
      */
     private Map<String, String> attributes;
 
@@ -39,8 +38,7 @@ public abstract class GitRequest {
     }
 
     /**
-     * @param attributes
-     *         set of request attributes
+     * @param attributes set of request attributes
      */
     public void setAttributes(Map<String, String> attributes) {
         this.attributes = attributes;

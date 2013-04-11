@@ -322,8 +322,8 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                                                       APPLICATION_TYPE type)
             throws CloudfoundryException, IOException, ParsingResponseException, VirtualFileSystemException, CredentialStoreException {
         if (APPLICATION_TYPE.PYTHON_APP_ENGINE == type) {
-            final String command = "appengine-python-sdk/dev_appserver.py --address=0.0.0.0 --port=$VCAP_APP_PORT " +
-                                   "--skip_sdk_update_check application";
+            final String command = "PATH=/home/vcap/bin:$PATH appengine-python-sdk/dev_appserver.py --host=0.0.0.0 --port=$VCAP_APP_PORT " +
+                                   "--skip_sdk_update_check=yes application";
             return cloudfoundry.createApplication(target, name, "standalone", null, 1, 128, false, "python2", command,
                                                   null, null, null, path.toURI().toURL());
         }

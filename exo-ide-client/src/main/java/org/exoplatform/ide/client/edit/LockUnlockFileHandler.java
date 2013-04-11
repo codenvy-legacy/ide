@@ -157,19 +157,19 @@ public class LockUnlockFileHandler implements LockFileHandler, EditorActiveFileC
     private void updateLockFileState(final FileModel file) {
         try {
             VirtualFileSystem.getInstance().getItemById(file.getId(),
-                                                        new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(file))) {
+                new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(file))) {
 
-                                                            @Override
-                                                            protected void onSuccess(ItemWrapper result) {
-                                                                IDE.fireEvent(
-                                                                        new EditorReplaceFileEvent(file, (FileModel)result.getItem()));
-                                                            }
+                    @Override
+                    protected void onSuccess(ItemWrapper result) {
+                        IDE.fireEvent(
+                                new EditorReplaceFileEvent(file, (FileModel)result.getItem()));
+                    }
 
-                                                            @Override
-                                                            protected void onFailure(Throwable exception) {
-                                                                IDE.fireEvent(new ExceptionThrownEvent(exception));
-                                                            }
-                                                        });
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        IDE.fireEvent(new ExceptionThrownEvent(exception));
+                    }
+                });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }

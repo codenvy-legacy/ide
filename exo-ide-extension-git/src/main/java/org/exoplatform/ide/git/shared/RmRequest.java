@@ -20,7 +20,7 @@ package org.exoplatform.ide.git.shared;
 
 /**
  * Request to remove files.
- *
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: RmRequest.java 22817 2011-03-22 09:17:52Z andrew00x $
  */
@@ -29,16 +29,14 @@ public class RmRequest extends GitRequest {
     private String[] files;
 
     /**
-     * @param files
-     *         files to remove
+     * @param files files to remove
      */
     public RmRequest(String[] files) {
         this.files = files;
     }
 
     /**
-     * "Empty" remove request. Corresponding setters used to setup required
-     * parameters.
+     * "Empty" remove request. Corresponding setters used to setup required parameters.
      */
     public RmRequest() {
     }
@@ -49,8 +47,7 @@ public class RmRequest extends GitRequest {
     }
 
     /**
-     * @param files
-     *         files to remove
+     * @param files files to remove
      */
     public void setFiles(String[] files) {
         this.files = files;

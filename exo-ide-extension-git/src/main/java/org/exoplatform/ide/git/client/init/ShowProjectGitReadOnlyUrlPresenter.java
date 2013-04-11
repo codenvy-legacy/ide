@@ -39,7 +39,7 @@ import org.exoplatform.ide.git.client.GitPresenter;
 
 /**
  * Presenter for Init Repository view.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 24, 2011 9:07:58 AM anya $
  */
@@ -48,14 +48,14 @@ public class ShowProjectGitReadOnlyUrlPresenter extends GitPresenter implements 
     public interface Display extends IsView {
         /**
          * Get's Git URl field field.
-         *
+         * 
          * @return {@link HasValue}
          */
         HasValue<String> getGitUrl();
 
         /**
          * Gets cancel button.
-         *
+         * 
          * @return {@link HasClickHandlers}
          */
         HasClickHandlers getCloseButton();
@@ -85,39 +85,43 @@ public class ShowProjectGitReadOnlyUrlPresenter extends GitPresenter implements 
         Display d = GWT.create(Display.class);
         IDE.getInstance().openView((View)d);
         bindDisplay(d);
-//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+        // String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
         String projectId = getSelectedProject().getId();
         try {
-            GitClientService.getInstance().getGitReadOnlyUrl(
-                    vfs.getId(),
-                    projectId,
-                    new AsyncRequestCallback<StringBuilder>(
-                            new StringUnmarshaller(new StringBuilder())) {
+            GitClientService.getInstance()
+                            .getGitReadOnlyUrl(
+                                               vfs.getId(),
+                                               projectId,
+                                               new AsyncRequestCallback<StringBuilder>(
+                                                                                       new StringUnmarshaller(new StringBuilder())) {
 
-                        @Override
-                        protected void onSuccess(StringBuilder result) {
-                            display.getGitUrl().setValue(result.toString());
-                        }
+                                                   @Override
+                                                   protected void onSuccess(StringBuilder result) {
+                                                       display.getGitUrl().setValue(result.toString());
+                                                   }
 
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            String errorMessage =
-                                    (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                                                                                                            : GitExtension.MESSAGES
-                                                                                                                          .initFailed();
-                            IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-                        }
-                    });
+                                                   @Override
+                                                   protected void onFailure(Throwable exception) {
+                                                       String errorMessage =
+                                                                             (exception.getMessage() != null && exception.getMessage()
+                                                                                                                         .length() > 0)
+                                                                                 ? exception.getMessage()
+                                                                                 : GitExtension.MESSAGES
+                                                                                                        .initFailed();
+                                                       IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+                                                   }
+                                               });
         } catch (RequestException e) {
             String errorMessage =
-                    (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
-                                                                                                           .initFailed();
+                                  (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage()
+                                      : GitExtension.MESSAGES
+                                                             .initFailed();
             IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
         }
     }
 
     private class StringUnmarshaller implements
-                                     Unmarshallable<StringBuilder> {
+                                    Unmarshallable<StringBuilder> {
 
         protected StringBuilder builder;
 
