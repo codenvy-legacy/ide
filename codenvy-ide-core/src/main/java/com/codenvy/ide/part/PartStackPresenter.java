@@ -21,7 +21,7 @@ import com.codenvy.ide.api.event.EditorDirtyStateChangedEvent;
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
 import com.codenvy.ide.api.ui.perspective.PartStack;
-import com.codenvy.ide.api.ui.perspective.PerspectivePresenter;
+import com.codenvy.ide.api.ui.perspective.WorkBenchPresenter;
 import com.codenvy.ide.api.ui.perspective.PropertyListener;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
@@ -52,12 +52,12 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
     /** list of parts */
     private final JsonArray<PartPresenter> parts = JsonCollections.createArray();
     /** view implementation */
-    private final PartStackView                      view;
-    private final EventBus                           eventBus;
+    private final PartStackView                    view;
+    private final EventBus                         eventBus;
     /** current active part */
-    private       PartPresenter                      activePart;
-    private       PartStackEventHandler              partStackHandler;
-    private       PerspectivePresenter.PartStackType type;
+    private       PartPresenter                    activePart;
+    private       PartStackEventHandler            partStackHandler;
+    private       WorkBenchPresenter.PartStackType type;
     private PropertyListener propertyListener = new PropertyListener() {
 
         @Override
@@ -104,6 +104,10 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
     }
 
     private PartStackView.TabPosition getTabPosition() {
+        if(type == null)
+        {
+            return PartStackView.TabPosition.ABOVE;
+        }
         switch (type) {
             case EDITING:
                 return PartStackView.TabPosition.ABOVE;
@@ -140,7 +144,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         ImageResource titleImage = part.getTitleImage();
         TabItem tabItem =
                 view.addTabButton(titleImage == null ? null : new Image(titleImage), part.getTitle(), part.getTitleToolTip(),
-                                  type == PerspectivePresenter.PartStackType.EDITING);
+                                  type == WorkBenchPresenter.PartStackType.EDITING);
         bindEvents(tabItem, part);
         setActivePart(part);
         // requst focus
@@ -188,7 +192,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
 
     /** {@inheritDoc} */
     @Override
-    public void setType(PerspectivePresenter.PartStackType type) {
+    public void setType(WorkBenchPresenter.PartStackType type) {
         this.type = type;
     }
 

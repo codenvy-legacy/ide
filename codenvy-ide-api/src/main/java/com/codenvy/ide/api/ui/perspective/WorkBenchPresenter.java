@@ -25,11 +25,11 @@ import com.google.inject.Provider;
 
 /**
  * Abstract Perspective Presenter that should be subclassed in order to create new Perspective
- * Please refer to {@link GenericPerspectivePresenter} as a sample.
+ * Please refer to {@link GenericWorkBenchPresenter} as a sample.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public abstract class PerspectivePresenter implements Presenter {
+public abstract class WorkBenchPresenter implements Presenter {
 
     /** Defines Part's position on the Screen */
     public enum PartStackType {
@@ -61,7 +61,7 @@ public abstract class PerspectivePresenter implements Presenter {
         TOOLING
     }
 
-    protected final PerspectiveView<?> view;
+    protected final WorkBenchView<?> view;
 
     protected final JsonStringMap<PartStack> partStacks = JsonCollections.createStringMap();
 
@@ -72,8 +72,8 @@ public abstract class PerspectivePresenter implements Presenter {
      * @param editorPartStackPresenter
      * @param partStackProvider
      */
-    public PerspectivePresenter(PerspectiveView<?> view, EditorPartStack editorPartStackPresenter,
-                                Provider<PartStack> partStackProvider) {
+    public WorkBenchPresenter(WorkBenchView<?> view, EditorPartStack editorPartStackPresenter,
+                              Provider<PartStack> partStackProvider) {
         this.view = view;
 
         for (PartStackType partStackType : PartStackType.values()) {

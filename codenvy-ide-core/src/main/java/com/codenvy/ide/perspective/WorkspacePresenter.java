@@ -17,10 +17,10 @@
 package com.codenvy.ide.perspective;
 
 import com.codenvy.ide.api.mvp.Presenter;
-import com.codenvy.ide.api.ui.perspective.GenericPerspectivePresenter;
+import com.codenvy.ide.api.ui.perspective.GenericWorkBenchPresenter;
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
-import com.codenvy.ide.api.ui.perspective.PerspectivePresenter;
-import com.codenvy.ide.api.ui.perspective.PerspectivePresenter.PartStackType;
+import com.codenvy.ide.api.ui.perspective.WorkBenchPresenter;
+import com.codenvy.ide.api.ui.perspective.WorkBenchPresenter.PartStackType;
 import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
@@ -51,7 +51,7 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
 
     private final MainMenuPresenter menu;
 
-    private PerspectivePresenter activePerspective;
+    private WorkBenchPresenter activePerspective;
 
     private JsonStringMap<PerspectiveDescriptor> perspectives = JsonCollections.createStringMap();
 
@@ -66,7 +66,7 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
      */
     @Inject
     protected WorkspacePresenter(WorkspaceView view, MainMenuPresenter menu, ToolbarPresenter toolbarPresenter,
-                                 Provider<GenericPerspectivePresenter> genericPerspectiveProvider) {
+                                 Provider<GenericWorkBenchPresenter> genericPerspectiveProvider) {
         super();
         this.view = view;
         this.toolbarPresenter = toolbarPresenter;
@@ -74,7 +74,7 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
         this.menu = menu;
 
         // register default perspective
-        registerPerspective(GENERAL_PERSPECTIVE, null, genericPerspectiveProvider);
+//        registerPerspective(GENERAL_PERSPECTIVE, null, genericPerspectiveProvider);
         this.activePerspective = genericPerspectiveProvider.get();
     }
 
@@ -93,34 +93,8 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
      *
      * @return
      */
-    public PerspectivePresenter getActivePerspective() {
+    public WorkBenchPresenter getActivePerspective() {
         return activePerspective;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void registerPerspective(String title, ImageResource icon,
-                                    Provider<? extends PerspectivePresenter> pespectiveProvider) {
-        perspectives.put(title, new PerspectiveDescriptor(title, icon, pespectiveProvider));
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void openPerspective(String title) {
-        // SHOW IF ALREADY INITIALIZED
-        // INITIALIZE AND SHOW IF NEW ONE
-        PerspectiveDescriptor perspectiveDescriptor = perspectives.get(title);
-        // instantiate perspective or get the same thanks to @Singleton
-        PerspectivePresenter newPerspective = perspectiveDescriptor.pespectiveProvider.get();
-        activePerspective = newPerspective;
-        activePerspective.go(view.getPerspectivePanel());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void closePerspective(String title) {
-        // REMOVE FROM INITIALIZED
-        // CALL CLOSE
     }
 
     /** {@inheritDoc} */
@@ -159,10 +133,10 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
 
         protected ImageResource icon;
 
-        protected Provider<? extends PerspectivePresenter> pespectiveProvider;
+        protected Provider<? extends WorkBenchPresenter> pespectiveProvider;
 
         public PerspectiveDescriptor(String title, ImageResource icon,
-                                     Provider<? extends PerspectivePresenter> pespectiveProvider) {
+                                     Provider<? extends WorkBenchPresenter> pespectiveProvider) {
             super();
             this.title = title;
             this.icon = icon;

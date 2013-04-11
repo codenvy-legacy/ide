@@ -18,9 +18,7 @@ package com.codenvy.ide.api.ui.perspective;
 
 
 import com.codenvy.ide.api.extension.SDK;
-import com.codenvy.ide.api.ui.perspective.PerspectivePresenter.PartStackType;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.inject.Provider;
+import com.codenvy.ide.api.ui.perspective.WorkBenchPresenter.PartStackType;
 
 
 /**
@@ -31,33 +29,6 @@ import com.google.inject.Provider;
  */
 @SDK(title = "ide.api.ui.workspace")
 public interface WorkspaceAgent {
-
-    /**
-     * Register a new perspective.
-     * <p/>
-     * TODO: associate perspectives by groups to prompt when some actions performed:
-     * like start Java Debug, open Java project and etc.
-     *
-     * @param title
-     * @param icon
-     * @param pespectiveProvider
-     */
-    public void registerPerspective(String title, ImageResource icon,
-                                    Provider<? extends PerspectivePresenter> pespectiveProvider);
-
-    /**
-     * Open new or show already opened Perspective
-     *
-     * @param title
-     */
-    public void openPerspective(String title);
-
-    /**
-     * Closed opened perspective
-     *
-     * @param title
-     */
-    public void closePerspective(String title);
 
     /**
      * Activate given part

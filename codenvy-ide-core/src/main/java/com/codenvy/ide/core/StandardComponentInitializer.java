@@ -58,8 +58,9 @@ public class StandardComponentInitializer {
                                         Provider<NewTextFilePagePresenter> newTextFileProvider,
                                         Resources resources, KeyBindingAgent keyBinding, ShowPreferenceCommand showPreferencesCommand,
                                         OpenProjectCommand openProjectCommand, ToolbarAgent toolbar, ExpressionManager expressionManager,
-                                        EventBus eventBus, ShowOpenPerspectiveDialog openPerspectiveCommand, PaaSAgent paasAgent,
+                                        EventBus eventBus, PaaSAgent paasAgent,
                                         CreateGenericProjectPresenter createGenericProject, CreateWarProjectPresenter createWarProject) {
+
         wizard.registerNewProjectWizard("Generic Project", "Create generic project", "", resources.genericProjectIcon(),
                                         genericProjectProvider, createGenericProject, JsonCollections.<String>createArray());
         wizard.registerNewProjectWizard("Java Web Application (WAR)", "Create web application", "War",
@@ -80,7 +81,6 @@ public class StandardComponentInitializer {
         menu.addMenuItem("File/Save All", saveAllCommand);
 
         menu.addMenuItem("Window/Preferences", showPreferencesCommand);
-        menu.addMenuItem("Window/Open perspective", openPerspectiveCommand);
 
         keyBinding.getGlobal().addKeyBinding(new KeyBuilder().action().charCode('s').build(), saveCommand);
         keyBinding.getGlobal().addKeyBinding(new KeyBuilder().action().charCode('S').build(), saveAllCommand);
@@ -102,7 +102,6 @@ public class StandardComponentInitializer {
         toolbar.addDropDownItem("Test/New", resources.file(), "Test item");
         toolbar.addToggleItem("Test/New/Checked item", command);
 
-        paasAgent.registerPaaS("None", "None", null, false, JsonCollections.<String>createArray("", "java", "War"),
-                               null, null);
+        paasAgent.registerPaaS("None", "None", null, false, JsonCollections.<String>createArray("", "java", "War"), null, null);
     }
 }

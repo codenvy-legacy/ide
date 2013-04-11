@@ -26,11 +26,11 @@ import com.google.gwt.user.client.ui.*;
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class GenericPerspectiveView extends Composite implements PerspectiveView<PerspectiveView.ActionDelegate> {
+public class GenericWorkBenchView extends Composite implements WorkBenchView<WorkBenchView.ActionDelegate> {
 
     private static GenericPerspectiveViewUiBinder uiBinder = GWT.create(GenericPerspectiveViewUiBinder.class);
 
-    interface GenericPerspectiveViewUiBinder extends UiBinder<Widget, GenericPerspectiveView> {
+    interface GenericPerspectiveViewUiBinder extends UiBinder<Widget, GenericWorkBenchView> {
     }
 
     @UiField(provided = true)
@@ -59,7 +59,7 @@ public class GenericPerspectiveView extends Composite implements PerspectiveView
      * Note that depending on the widget that is used, it may be necessary to
      * implement HasHTML instead of HasText.
      */
-    public GenericPerspectiveView() {
+    public GenericWorkBenchView() {
         initWidget(uiBinder.createAndBindUi(this));
     }
 

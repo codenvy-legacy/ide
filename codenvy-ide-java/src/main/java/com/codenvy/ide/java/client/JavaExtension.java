@@ -23,18 +23,30 @@ import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.menu.MainMenuAgent;
-import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
 import com.codenvy.ide.api.ui.wizard.WizardAgent;
 import com.codenvy.ide.java.client.codeassistant.ContentAssistHistory;
 import com.codenvy.ide.java.client.core.JavaCore;
 import com.codenvy.ide.java.client.editor.JavaEditorProvider;
 import com.codenvy.ide.java.client.internal.codeassist.impl.AssistOptions;
 import com.codenvy.ide.java.client.internal.compiler.impl.CompilerOptions;
-import com.codenvy.ide.java.client.perspective.DebugPerspectivePresenter;
-import com.codenvy.ide.java.client.perspective.JavaPerspectivePresenter;
 import com.codenvy.ide.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.java.client.projectmodel.JavaProjectModelProvider;
-import com.codenvy.ide.java.client.templates.*;
+import com.codenvy.ide.java.client.templates.CodeTemplateContextType;
+import com.codenvy.ide.java.client.templates.ContextTypeRegistry;
+import com.codenvy.ide.java.client.templates.ElementTypeResolver;
+import com.codenvy.ide.java.client.templates.ExceptionVariableNameResolver;
+import com.codenvy.ide.java.client.templates.FieldResolver;
+import com.codenvy.ide.java.client.templates.ImportsResolver;
+import com.codenvy.ide.java.client.templates.JavaContextType;
+import com.codenvy.ide.java.client.templates.JavaDocContextType;
+import com.codenvy.ide.java.client.templates.LinkResolver;
+import com.codenvy.ide.java.client.templates.LocalVarResolver;
+import com.codenvy.ide.java.client.templates.NameResolver;
+import com.codenvy.ide.java.client.templates.StaticImportResolver;
+import com.codenvy.ide.java.client.templates.TemplateStore;
+import com.codenvy.ide.java.client.templates.TypeResolver;
+import com.codenvy.ide.java.client.templates.TypeVariableResolver;
+import com.codenvy.ide.java.client.templates.VarResolver;
 import com.codenvy.ide.java.client.wizard.CreateJavaProjectPresenter;
 import com.codenvy.ide.java.client.wizard.NewJavaClassPagePresenter;
 import com.codenvy.ide.java.client.wizard.NewJavaProjectPagePresenter;
@@ -56,8 +68,6 @@ import java.util.HashMap;
 public class JavaExtension {
     private static final String JAVA_PERSPECTIVE = "Java";
 
-    private static final String JAVA_DEBUG_PERSPECTIVE = "Java Debug";
-
     private static JavaExtension instance;
 
     private HashMap<String, String> options;
@@ -73,10 +83,9 @@ public class JavaExtension {
      */
     @Inject
     public JavaExtension(ResourceProvider resourceProvider, EditorRegistry editorRegistry,
-                         final WorkspaceAgent workspace, JavaEditorProvider javaEditorProvider, EventBus eventBus,
+                         JavaEditorProvider javaEditorProvider, EventBus eventBus,
                          WizardAgent wizardAgent, Provider<NewJavaProjectPagePresenter> wizardProvider, MainMenuAgent mainMenu,
                          Provider<NewPackagePagePresenter> packageProvider, Provider<NewJavaClassPagePresenter> classProvider,
-                         Provider<JavaPerspectivePresenter> javaPerspProvider, Provider<DebugPerspectivePresenter> debugPerspProvider,
                          CreateJavaProjectPresenter createJavaProjectPresenter) {
         this();
         FileType javaFile = new FileType(JavaClientBundle.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
@@ -93,9 +102,6 @@ public class JavaExtension {
         wizardAgent.registerNewResourceWizard(JAVA_PERSPECTIVE, "Java Class", JavaClientBundle.INSTANCE.newClassWizz(),
                                               classProvider);
 
-        // register Perspectives
-        workspace.registerPerspective(JAVA_PERSPECTIVE, null, javaPerspProvider);
-        workspace.registerPerspective(JAVA_DEBUG_PERSPECTIVE, null, debugPerspProvider);
     }
 
     /** For test use only. */

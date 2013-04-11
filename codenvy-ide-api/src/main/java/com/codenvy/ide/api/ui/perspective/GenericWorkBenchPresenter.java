@@ -35,8 +35,8 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @Singleton
-public class GenericPerspectivePresenter extends PerspectivePresenter {
-    private GenericPerspectiveView view;
+public class GenericWorkBenchPresenter extends WorkBenchPresenter {
+    private GenericWorkBenchView view;
 
     /**
      * Instantiate the Perspective
@@ -50,9 +50,9 @@ public class GenericPerspectivePresenter extends PerspectivePresenter {
      * @param welcomePart
      */
     @Inject
-    public GenericPerspectivePresenter(GenericPerspectiveView view, EditorPartStack editorPartStackPresenter,
-                                       Provider<PartStack> partStackProvider, OutlinePart outlinePart, ConsolePart consolePart,
-                                       ProjectExplorerPart projectExplorerPart, WelcomePart welcomePart, SearchPart searchPart) {
+    public GenericWorkBenchPresenter(GenericWorkBenchView view, EditorPartStack editorPartStackPresenter,
+                                     Provider<PartStack> partStackProvider, OutlinePart outlinePart, ConsolePart consolePart,
+                                     ProjectExplorerPart projectExplorerPart, WelcomePart welcomePart, SearchPart searchPart) {
         super(view, editorPartStackPresenter, partStackProvider);
         this.view = view;
         // show required parts
@@ -67,12 +67,10 @@ public class GenericPerspectivePresenter extends PerspectivePresenter {
     public void openPart(PartPresenter part, PartStackType type) {
         PartStack destPartStack = partStacks.get(type.toString());
         destPartStack.addPart(part);
-        if(type == PartStackType.NAVIGATION)
-        {
+        if (type == PartStackType.NAVIGATION) {
             view.splitPanel.setWidgetSize(view.navPanel, 240);
         }
-        if(type == PartStackType.TOOLING)
-        {
+        if (type == PartStackType.TOOLING) {
             view.splitPanel.setWidgetSize(view.toolPanel, 240);
         }
         if(type == PartStackType.INFORMATION)

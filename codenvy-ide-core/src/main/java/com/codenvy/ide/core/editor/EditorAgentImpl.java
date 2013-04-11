@@ -27,7 +27,7 @@ import com.codenvy.ide.api.resources.FileEvent.FileOperation;
 import com.codenvy.ide.api.resources.FileEventHandler;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.perspective.PerspectivePresenter.PartStackType;
+import com.codenvy.ide.api.ui.perspective.WorkBenchPresenter.PartStackType;
 import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;

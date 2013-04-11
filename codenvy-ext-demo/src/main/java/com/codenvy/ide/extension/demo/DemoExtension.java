@@ -23,11 +23,9 @@ import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 import com.codenvy.ide.api.ui.menu.MainMenuAgent;
 import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
-import com.codenvy.ide.extension.demo.perspective.ExtendedPerspectivePresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -39,18 +37,11 @@ import com.google.inject.Singleton;
 @Extension(title = "Demo extension", version = "3.0.0")
 public class DemoExtension {
 
-    /**
-     *
-     */
-    private static final String EXTENDED_PERSPECTIVE = "Extended Perspective";
-
     @Inject
     public DemoExtension(final WorkspaceAgent workspace,
-                         Provider<ExtendedPerspectivePresenter> extendedPerspectivePresenter, MainMenuAgent menu,
+                         MainMenuAgent menu,
                          EditorAgent editorAgent, final ProjectOpenedExpression projectOpenedExpression,
                          CreateDemoCommand createDemoCommand) {
-        workspace.registerPerspective(EXTENDED_PERSPECTIVE, null, extendedPerspectivePresenter);
-
         // CREATE DYNAMIC MENU CONTENT
         menu.addMenuItem("File/Create Demo Content", createDemoCommand);
         menu.addMenuItem("Project/Some Project Operation", new ExtendedCommand() {

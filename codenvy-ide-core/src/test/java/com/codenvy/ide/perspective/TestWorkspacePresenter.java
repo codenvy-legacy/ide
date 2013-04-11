@@ -16,9 +16,9 @@
  */
 package com.codenvy.ide.perspective;
 
-import com.codenvy.ide.api.ui.perspective.GenericPerspectivePresenter;
+import com.codenvy.ide.api.ui.perspective.GenericWorkBenchPresenter;
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
-import com.codenvy.ide.api.ui.perspective.PerspectivePresenter.PartStackType;
+import com.codenvy.ide.api.ui.perspective.WorkBenchPresenter.PartStackType;
 import com.codenvy.ide.part.PartStackPresenter;
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.resources.client.ImageResource;
@@ -53,10 +53,10 @@ public class TestWorkspacePresenter {
     Provider<PartStackPresenter> partStackProvider;
 
     @Mock
-    Provider<GenericPerspectivePresenter> activePerspectiveProvider;
+    Provider<GenericWorkBenchPresenter> activePerspectiveProvider;
 
     @Mock
-    GenericPerspectivePresenter activePerspective;
+    GenericWorkBenchPresenter activePerspective;
 
     @Mock
     WorkspaceView view;
@@ -96,75 +96,5 @@ public class TestWorkspacePresenter {
         presenter.setActivePart(part);
 
         verify(activePerspective).setActivePart(eq(part));
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void shouldOpenNewPerspective() {
-        String title = "new perspective";
-
-        assertEquals(presenter.getActivePerspective(), activePerspective);
-
-        Provider<GenericPerspectivePresenter> newPerspectiveProvider = mock(Provider.class);
-        GenericPerspectivePresenter newPerspective = mock(GenericPerspectivePresenter.class);
-        when(newPerspectiveProvider.get()).thenReturn(newPerspective);
-
-        presenter.registerPerspective(title, mock(ImageResource.class), newPerspectiveProvider);
-        presenter.openPerspective(title);
-
-        assertEquals(presenter.getActivePerspective(), newPerspective);
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void shouldGoToActivePerspective() {
-        String title = "new perspective";
-
-        assertEquals(presenter.getActivePerspective(), activePerspective);
-
-        Provider<GenericPerspectivePresenter> newPerspectiveProvider = mock(Provider.class);
-        GenericPerspectivePresenter newPerspective = mock(GenericPerspectivePresenter.class);
-        when(newPerspectiveProvider.get()).thenReturn(newPerspective);
-
-        presenter.registerPerspective(title, mock(ImageResource.class), newPerspectiveProvider);
-        presenter.openPerspective(title);
-
-        assertEquals(presenter.getActivePerspective(), newPerspective);
-
-        verify(newPerspective).go((AcceptsOneWidget)anyObject());
-        verifyZeroInteractions(activePerspective);
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void shouldShownActivePerspective() {
-        String title = "new perspective";
-        PartPresenter part = mock(PartPresenter.class);
-
-        assertEquals(presenter.getActivePerspective(), activePerspective);
-
-        Provider<GenericPerspectivePresenter> newPerspectiveProvider = mock(Provider.class);
-        GenericPerspectivePresenter newPerspective = mock(GenericPerspectivePresenter.class);
-        when(newPerspectiveProvider.get()).thenReturn(newPerspective);
-
-        presenter.registerPerspective(title, mock(ImageResource.class), newPerspectiveProvider);
-        presenter.openPerspective(title);
-        presenter.showPart(part, TYPE);
-
-        assertEquals(presenter.getActivePerspective(), newPerspective);
-
-        verify(newPerspective).openPart(eq(part), eq(TYPE));
-        verifyZeroInteractions(activePerspective);
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void shouldRegisteredNewPerspective() {
-        assertEquals(presenter.getPerspectives().size(), 1);
-
-        Provider<GenericPerspectivePresenter> newPerspectiveProvider = mock(Provider.class);
-        presenter.registerPerspective("test", mock(ImageResource.class), newPerspectiveProvider);
-
-        assertEquals(presenter.getPerspectives().size(), 2);
     }
 }

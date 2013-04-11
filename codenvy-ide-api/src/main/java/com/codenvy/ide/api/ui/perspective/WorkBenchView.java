@@ -24,7 +24,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public interface PerspectiveView<T> extends View<T> {
+public interface WorkBenchView<T> extends View<T> {
     /**
      * Returns central panel.
      *
