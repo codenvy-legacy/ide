@@ -67,6 +67,11 @@ public class CloudBeesControl extends SimpleControl implements IDEControl, Proje
      * .project.ProjectOpenedEvent) */
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
+        if (event.getProject()!= null) {
+            boolean enabled = isCloudBees(event.getProject());
+            setVisible(enabled);
+            setEnabled(enabled);
+        }
     }
 
     @Override
