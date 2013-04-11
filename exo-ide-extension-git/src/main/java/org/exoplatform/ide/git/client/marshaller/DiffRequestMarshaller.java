@@ -28,7 +28,7 @@ import org.exoplatform.ide.git.shared.DiffRequest;
 
 /**
  * Marshaller for creating diff request in JSON format.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 4, 2011 10:57:37 AM anya $
  */
@@ -37,8 +37,7 @@ public class DiffRequestMarshaller implements Marshallable, Constants {
     private DiffRequest diffRequest;
 
     /**
-     * @param diffRequest
-     *         diff request
+     * @param diffRequest diff request
      */
     public DiffRequestMarshaller(DiffRequest diffRequest) {
         this.diffRequest = diffRequest;

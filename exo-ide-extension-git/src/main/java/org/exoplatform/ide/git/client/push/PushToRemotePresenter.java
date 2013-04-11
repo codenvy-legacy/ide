@@ -46,7 +46,7 @@ import java.util.List;
 
 /**
  * Presenter of view for pushing changes to remote repository. The view is pointed in Views.gwt.xml file.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 4, 2011 9:53:07 AM anya $
  */
@@ -55,44 +55,43 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
     public interface Display extends IsView {
         /**
          * Get the push button click handler.
-         *
+         * 
          * @return {@link HasClickHandlers} push button
          */
         HasClickHandlers getPushButton();
 
         /**
          * Get the cancel button click handler.
-         *
+         * 
          * @return {@link HasClickHandlers} cancel button
          */
         HasClickHandlers getCancelButton();
 
         /**
          * Get remote repository field value.
-         *
+         * 
          * @return {@link HasValue} field
          */
         HasValue<String> getRemoteValue();
 
         /**
          * Get remote branches field value.
-         *
+         * 
          * @return {@link HasValue} field
          */
         HasValue<String> getRemoteBranchesValue();
 
         /**
          * Get local branches field value.
-         *
+         * 
          * @return {@link HasValue} field
          */
         HasValue<String> getLocalBranchesValue();
 
         /**
          * Set values of remote repositories.
-         *
-         * @param values
-         *         values to set
+         * 
+         * @param values values to set
          */
         void setRemoteValues(LinkedHashMap<String, String> values);
 
@@ -100,25 +99,22 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
 
         /**
          * Set values of remote repository branches.
-         *
-         * @param values
-         *         values to set
+         * 
+         * @param values values to set
          */
         void setRemoteBranches(String[] values);
 
         /**
          * Set values of local repository branches.
-         *
-         * @param values
-         *         values to set
+         * 
+         * @param values values to set
          */
         void setLocalBranches(String[] values);
 
         /**
          * Change the enable state of the push button.
-         *
-         * @param enable
-         *         enable state
+         * 
+         * @param enable enable state
          */
         void enablePushButton(boolean enable);
 
@@ -136,9 +132,8 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
 
     /**
      * Bind pointed display with presenter.
-     *
-     * @param d
-     *         display
+     * 
+     * @param d display
      */
     public void bindDisplay() {
         display.getCancelButton().addClickHandler(new ClickHandler() {
@@ -172,7 +167,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
                 boolean empty = (event.getValue() == null || event.getValue().isEmpty());
                 empty =
                         empty || display.getLocalBranchesValue().getValue() == null
-                        || display.getLocalBranchesValue().getValue().isEmpty();
+                            || display.getLocalBranchesValue().getValue().isEmpty();
 
                 display.enablePushButton(!empty);
             }
@@ -185,14 +180,15 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
                 boolean empty = (event.getValue() == null || event.getValue().isEmpty());
                 empty =
                         empty || display.getRemoteBranchesValue().getValue() == null
-                        || display.getRemoteBranchesValue().getValue().isEmpty();
+                            || display.getRemoteBranchesValue().getValue().isEmpty();
                 display.enablePushButton(!empty);
             }
         });
     }
 
-    /** @see org.exoplatform.ide.git.client.push.PushToRemoteHandler#onPushToRemote(org.exoplatform.ide.git.client.push
-     * .PushToRemoteEvent) */
+    /**
+     * @see org.exoplatform.ide.git.client.push.PushToRemoteHandler#onPushToRemote(org.exoplatform.ide.git.client.push .PushToRemoteEvent)
+     */
     @Override
     public void onPushToRemote(PushToRemoteEvent event) {
         if (makeSelectionCheck()) {
@@ -213,7 +209,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
                                                       @Override
                                                       protected void onSuccess(String result) {
                                                           IDE.fireEvent(
-                                                                  new OutputEvent(GitExtension.MESSAGES.pushSuccess(remote), Type.GIT));
+                                                             new OutputEvent(GitExtension.MESSAGES.pushSuccess(remote), Type.GIT));
                                                       }
 
                                                       @Override
@@ -221,7 +217,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
                                                           handleError(exception);
                                                           if (remote != null && remote.startsWith("https://")) {
                                                               IDE.fireEvent(
-                                                                      new OutputEvent(GitExtension.MESSAGES.useSshProtocol(), Type.GIT));
+                                                                 new OutputEvent(GitExtension.MESSAGES.useSshProtocol(), Type.GIT));
                                                           }
                                                       }
                                                   });
@@ -245,7 +241,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
                                                         handleError(exception);
                                                         if (remote != null && remote.startsWith("https://")) {
                                                             IDE.fireEvent(
-                                                                    new OutputEvent(GitExtension.MESSAGES.useSshProtocol(), Type.GIT));
+                                                               new OutputEvent(GitExtension.MESSAGES.useSshProtocol(), Type.GIT));
                                                         }
                                                     }
                                                 });
@@ -256,7 +252,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
 
     /**
      * Returns list of refs to push.
-     *
+     * 
      * @return list of refs to push
      */
     private String[] getRefs() {

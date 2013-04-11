@@ -20,38 +20,33 @@ package org.exoplatform.ide.git.shared;
 
 /**
  * Describe single commit.
- *
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: Revision.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
 public class Revision {
-    private String branch;
+    private String  branch;
 
     private Boolean fake;
 
     /** Id of commit. */
-    private String id;
+    private String  id;
 
     /** Commit message. */
-    private String message;
+    private String  message;
 
     /** Time of commit in long format. */
-    private long commitTime;
+    private long    commitTime;
 
     /** Committer. */
     private GitUser committer;
 
     /**
-     * @param branch
-     *         branch name
-     * @param id
-     *         commit id
-     * @param message
-     *         commit message
-     * @param commitTime
-     *         time of commit in long format
-     * @param committer
-     *         committer
+     * @param branch branch name
+     * @param id commit id
+     * @param message commit message
+     * @param commitTime time of commit in long format
+     * @param committer committer
      */
     public Revision(String branch, String id, String message, long commitTime, GitUser committer) {
         this.fake = false;
@@ -63,14 +58,10 @@ public class Revision {
     }
 
     /**
-     * @param id
-     *         commit id
-     * @param message
-     *         commit message
-     * @param commitTime
-     *         time of commit in long format
-     * @param committer
-     *         committer
+     * @param id commit id
+     * @param message commit message
+     * @param commitTime time of commit in long format
+     * @param committer committer
      */
     public Revision(String id, String message, long commitTime, GitUser committer) {
         this.fake = false;
@@ -86,7 +77,7 @@ public class Revision {
 
     /**
      * Parameter which shows that this revision is a fake revision (i.e. TO for Exception)
-     *
+     * 
      * @return
      */
     public Boolean isFake() {
@@ -103,8 +94,7 @@ public class Revision {
     }
 
     /**
-     * @param branch
-     *         branch name
+     * @param branch branch name
      */
     public void setBranch(String branch) {
         this.branch = branch;
@@ -131,32 +121,28 @@ public class Revision {
     }
 
     /**
-     * @param id
-     *         the id to set
+     * @param id the id to set
      */
     public void setId(String id) {
         this.id = id;
     }
 
     /**
-     * @param message
-     *         the message to set
+     * @param message the message to set
      */
     public void setMessage(String message) {
         this.message = message;
     }
 
     /**
-     * @param commitTime
-     *         the commitTime to set
+     * @param commitTime the commitTime to set
      */
     public void setCommitTime(long commitTime) {
         this.commitTime = commitTime;
     }
 
     /**
-     * @param committer
-     *         the committer to set
+     * @param committer the committer to set
      */
     public void setCommitter(GitUser committer) {
         this.committer = committer;

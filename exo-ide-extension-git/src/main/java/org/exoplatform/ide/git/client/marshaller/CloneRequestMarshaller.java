@@ -26,7 +26,7 @@ import org.exoplatform.ide.git.shared.CloneRequest;
 
 /**
  * Marshaller for clone repository request.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 24, 2011 12:32:56 PM anya $
  */

@@ -27,11 +27,11 @@ import com.google.gwt.event.shared.GwtEvent;
 public class CloneRepositoryCompleteEvent extends GwtEvent<CloneRepositoryCompleteHandler> {
 
     public static final GwtEvent.Type<CloneRepositoryCompleteHandler> TYPE =
-            new GwtEvent.Type<CloneRepositoryCompleteHandler>();
+                                                                             new GwtEvent.Type<CloneRepositoryCompleteHandler>();
 
-    private String user;
+    private String                                                    user;
 
-    private String repositoryName;
+    private String                                                    repositoryName;
 
     public CloneRepositoryCompleteEvent(String user, String repositoryName) {
         this.user = user;

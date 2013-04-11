@@ -28,26 +28,22 @@ public class GitException extends Exception {
     }
 
     /**
-     * @param message
-     *         error message
+     * @param message error message
      */
     public GitException(String message) {
         super(message);
     }
 
     /**
-     * @param cause
-     *         cause
+     * @param cause cause
      */
     public GitException(Throwable cause) {
         super(cause);
     }
 
     /**
-     * @param message
-     *         error message
-     * @param cause
-     *         cause
+     * @param message error message
+     * @param cause cause
      */
     public GitException(String message, Throwable cause) {
         super(message, cause);

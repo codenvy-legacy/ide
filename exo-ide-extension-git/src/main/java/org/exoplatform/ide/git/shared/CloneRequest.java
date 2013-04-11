@@ -20,13 +20,13 @@ package org.exoplatform.ide.git.shared;
 
 /**
  * Clone repository to {@link #workingDir}.
- *
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: CloneRequest.java 22817 2011-03-22 09:17:52Z andrew00x $
  */
 public class CloneRequest extends GitRequest {
     /** URI of repository to be cloned. */
-    private String remoteUri;
+    private String   remoteUri;
 
     /**
      * List of refspec to fetch in cloned repository.
@@ -36,30 +36,22 @@ public class CloneRequest extends GitRequest {
     private String[] branchesToFetch;
 
     /** Work directory for cloning. */
-    private String workingDir;
+    private String   workingDir;
 
     /** Remote name. If <code>null</code> then 'origin' will be used. */
-    private String remoteName;
+    private String   remoteName;
 
     /**
-     * Time (in seconds) to wait without data transfer occurring before aborting
-     * fetching data from remote repository.
+     * Time (in seconds) to wait without data transfer occurring before aborting fetching data from remote repository.
      */
-    private int timeout;
+    private int      timeout;
 
     /**
-     * @param remoteUri
-     *         URI of repository to be cloned
-     * @param branchesToFetch
-     *         list of remote branches to fetch in cloned
-     *         repository
-     * @param workingDir
-     *         work directory for cloning
-     * @param remoteName
-     *         remote name
-     * @param timeout
-     *         time (in seconds) to wait without data transfer occurring
-     *         before aborting fetching data from remote repository
+     * @param remoteUri URI of repository to be cloned
+     * @param branchesToFetch list of remote branches to fetch in cloned repository
+     * @param workingDir work directory for cloning
+     * @param remoteName remote name
+     * @param timeout time (in seconds) to wait without data transfer occurring before aborting fetching data from remote repository
      */
     public CloneRequest(String remoteUri, String[] branchesToFetch, String workingDir, String remoteName, int timeout) {
         this.remoteUri = remoteUri;
@@ -70,10 +62,8 @@ public class CloneRequest extends GitRequest {
     }
 
     /**
-     * @param remoteUri
-     *         URI of repository to be cloned
-     * @param workingDir
-     *         work directory for cloning
+     * @param remoteUri URI of repository to be cloned
+     * @param workingDir work directory for cloning
      */
     public CloneRequest(String remoteUri, String workingDir) {
         this.remoteUri = remoteUri;
@@ -81,8 +71,7 @@ public class CloneRequest extends GitRequest {
     }
 
     /**
-     * "Empty" request to clone repository. Corresponding setters used to setup
-     * required behavior.
+     * "Empty" request to clone repository. Corresponding setters used to setup required behavior.
      */
     public CloneRequest() {
     }
@@ -93,8 +82,7 @@ public class CloneRequest extends GitRequest {
     }
 
     /**
-     * @param remoteUri
-     *         URI of repository to be cloned
+     * @param remoteUri URI of repository to be cloned
      */
     public void setRemoteUri(String remoteUri) {
         this.remoteUri = remoteUri;
@@ -106,9 +94,7 @@ public class CloneRequest extends GitRequest {
     }
 
     /**
-     * @param branchesToFetch
-     *         list of remote branches to fetch in cloned
-     *         repository
+     * @param branchesToFetch list of remote branches to fetch in cloned repository
      */
     public void setBranchesToFetch(String[] branchesToFetch) {
         this.branchesToFetch = branchesToFetch;
@@ -120,8 +106,7 @@ public class CloneRequest extends GitRequest {
     }
 
     /**
-     * @param workingDir
-     *         work directory for cloning
+     * @param workingDir work directory for cloning
      */
     public void setWorkingDir(String workingDir) {
         this.workingDir = workingDir;
@@ -133,28 +118,23 @@ public class CloneRequest extends GitRequest {
     }
 
     /**
-     * @param remoteName
-     *         remote name. If <code>null</code> then 'origin' will be
-     *         used
+     * @param remoteName remote name. If <code>null</code> then 'origin' will be used
      */
     public void setRemoteName(String remoteName) {
         this.remoteName = remoteName;
     }
 
     /**
-     * @return time (in seconds) to wait without data transfer occurring before
-     *         aborting fetching data from remote repository. If 0 then default
-     *         timeout may be used. This is implementation specific
+     * @return time (in seconds) to wait without data transfer occurring before aborting fetching data from remote repository. If 0 then
+     *         default timeout may be used. This is implementation specific
      */
     public int getTimeout() {
         return timeout;
     }
 
     /**
-     * @param timeout
-     *         time (in seconds) to wait without data transfer occurring
-     *         before aborting fetching data from remote repository. If 0 then
-     *         default timeout may be used. This is implementation specific
+     * @param timeout time (in seconds) to wait without data transfer occurring before aborting fetching data from remote repository. If 0
+     *            then default timeout may be used. This is implementation specific
      */
     public void setTimeout(int timeout) {
         this.timeout = timeout;

@@ -36,39 +36,39 @@ import java.util.LinkedHashMap;
 
 /**
  * View for pushing changes to remote repository. Must be pointed in View.gwt.xml file.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 4, 2011 10:48:28 AM anya $
  */
 public class PushToRemoteView extends ViewImpl implements PushToRemotePresenter.Display {
-    public static final String ID = "idePushToRemoteView";
+    public static final String  ID                       = "idePushToRemoteView";
 
-   /* Elements IDs */
+    /* Elements IDs */
 
-    private static final String PUSH_BUTTON_ID = "idePushToRemoteViewPushButton";
+    private static final String PUSH_BUTTON_ID           = "idePushToRemoteViewPushButton";
 
-    private static final String CANCEL_BUTTON_ID = "idePushToRemoteViewCancelButton";
+    private static final String CANCEL_BUTTON_ID         = "idePushToRemoteViewCancelButton";
 
-    private static final String REMOTE_FIELD_ID = "idePushToRemoteViewRemoteField";
+    private static final String REMOTE_FIELD_ID          = "idePushToRemoteViewRemoteField";
 
-    private static final String LOCAL_BRANCHES_FIELD_ID = "idePushToRemoteViewLocalBranchesField";
+    private static final String LOCAL_BRANCHES_FIELD_ID  = "idePushToRemoteViewLocalBranchesField";
 
     private static final String REMOTE_BRANCHES_FIELD_ID = "idePushToRemoteViewRemoteBranchesField";
 
     @UiField
-    ImageButton pushButton;
+    ImageButton                 pushButton;
 
     @UiField
-    ImageButton cancelButton;
+    ImageButton                 cancelButton;
 
     @UiField
-    SelectItem remoteField;
+    SelectItem                  remoteField;
 
     @UiField
-    SelectItem localBranchesField;
+    SelectItem                  localBranchesField;
 
     @UiField
-    ComboBoxField remoteBranchesField;
+    ComboBoxField               remoteBranchesField;
 
     interface PushToRemoteViewUiBinder extends UiBinder<Widget, PushToRemoteView> {
     }

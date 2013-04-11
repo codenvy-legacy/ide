@@ -28,7 +28,7 @@ import org.exoplatform.ide.git.shared.RemoteListRequest;
 
 /**
  * Marshaller for creating remote list request in JSON format.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 4, 2011 1:52:47 PM anya $
  */

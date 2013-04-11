@@ -28,7 +28,7 @@ import org.exoplatform.ide.git.shared.Branch;
 
 /**
  * Unmarshaller for {@link Branch} in JSON format.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 11, 2011 12:29:46 PM anya $
  */
@@ -37,8 +37,7 @@ public class BranchUnmarshaller implements Unmarshallable<Branch>, Constants {
     private Branch branch;
 
     /**
-     * @param branch
-     *         branch
+     * @param branch branch
      */
     public BranchUnmarshaller(Branch branch) {
         this.branch = branch;
@@ -56,7 +55,7 @@ public class BranchUnmarshaller implements Unmarshallable<Branch>, Constants {
             return;
         if (object.containsKey(ACTIVE)) {
             boolean active =
-                    (object.get(ACTIVE).isBoolean() != null) ? object.get(ACTIVE).isBoolean().booleanValue() : false;
+                             (object.get(ACTIVE).isBoolean() != null) ? object.get(ACTIVE).isBoolean().booleanValue() : false;
             branch.setActive(active);
         }
         if (object.containsKey(NAME)) {
@@ -65,7 +64,7 @@ public class BranchUnmarshaller implements Unmarshallable<Branch>, Constants {
         }
         if (object.containsKey(DISPLAY_NAME)) {
             String displayName =
-                    (object.get(DISPLAY_NAME).isString() != null) ? object.get(DISPLAY_NAME).isString().stringValue() : "";
+                                 (object.get(DISPLAY_NAME).isString() != null) ? object.get(DISPLAY_NAME).isString().stringValue() : "";
             branch.setDisplayName(displayName);
         }
     }

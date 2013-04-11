@@ -22,14 +22,14 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ShowWorkTreeStatusEvent} event.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 28, 2011 3:05:18 PM anya $
  */
 public interface ShowWorkTreeStatusHandler extends EventHandler {
     /**
      * Perform actions, when user makes a try to view work tree status.
-     *
+     * 
      * @param event
      */
     void onShowWorkTreeStatus(ShowWorkTreeStatusEvent event);

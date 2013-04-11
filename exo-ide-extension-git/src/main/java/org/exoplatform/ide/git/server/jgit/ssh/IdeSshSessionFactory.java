@@ -32,9 +32,9 @@ import org.exoplatform.ide.extension.ssh.server.SshKeyStoreException;
 import org.picocontainer.Startable;
 
 /**
- * SSH session factory that use SshKeyProvider to get access to private keys. Factory does not support user
- * interactivity (e.g. password authentication).
- *
+ * SSH session factory that use SshKeyProvider to get access to private keys. Factory does not support user interactivity (e.g. password
+ * authentication).
+ * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */

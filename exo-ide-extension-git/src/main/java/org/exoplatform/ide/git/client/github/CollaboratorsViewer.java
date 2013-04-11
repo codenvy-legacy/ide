@@ -38,7 +38,7 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: CollaboratorsViewer.java Aug 6, 2012
  */
@@ -50,19 +50,19 @@ public class CollaboratorsViewer extends ViewImpl implements GitHubCollaborators
     }
 
     @UiField
-    Grid grid;
+    Grid             grid;
 
     @UiField
-    Button closeButton;
+    Button           closeButton;
 
     @UiField
-    Button inviteButton;
+    Button           inviteButton;
 
     List<GitHubUser> gitHubUsers = new ArrayList<GitHubUser>();
 
-    private int width = 0;
+    private int      width       = 0;
 
-    private int height = 0;
+    private int      height      = 0;
 
     public CollaboratorsViewer() {
         super("Collaborators", ViewType.MODAL, "Collaborators", null);

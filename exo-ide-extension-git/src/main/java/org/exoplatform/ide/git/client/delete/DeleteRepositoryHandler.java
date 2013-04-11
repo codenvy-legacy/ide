@@ -22,14 +22,14 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link DeleteRepositoryEvent} event.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 21, 2011 5:46:26 PM anya $
  */
 public interface DeleteRepositoryHandler extends EventHandler {
     /**
      * Perform actions, when user tries to delete Git repository.
-     *
+     * 
      * @param event
      */
     void onDeleteRepository(DeleteRepositoryEvent event);

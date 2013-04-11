@@ -30,15 +30,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * Checks for the presence of a global .gitignore file and adds some rules to it.
- * Adds this file to Git cross-repository configuration.
+ * Checks for the presence of a global .gitignore file and adds some rules to it. Adds this file to Git cross-repository configuration.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: GitIgnoreConfigChecker.java Apr 10, 2013 12:03:18 PM azatsarynnyy $
  */
 public class GitIgnoreConfigChecker implements Startable {
 
-    private static final Log LOG = ExoLogger.getExoLogger(GitIgnoreConfigChecker.class);
+    private static final Log    LOG                         = ExoLogger.getExoLogger(GitIgnoreConfigChecker.class);
 
     private static final String GIT_GLOBAL_CONFIG_FILE_NAME = "/.gitconfig";
 

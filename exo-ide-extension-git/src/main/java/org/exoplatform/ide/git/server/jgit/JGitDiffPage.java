@@ -63,9 +63,10 @@ class JGitDiffPage extends DiffPage {
         formatter.setRepository(repository);
         String[] rawFileFilter = request.getFileFilter();
         TreeFilter pathFilter =
-                (rawFileFilter != null && rawFileFilter.length > 0) ? PathFilterGroup.createFromStrings(Arrays
-                                                                                                                .asList(rawFileFilter))
-                                                                    : TreeFilter.ALL;
+                                (rawFileFilter != null && rawFileFilter.length > 0)
+                                    ? PathFilterGroup.createFromStrings(Arrays
+                                                                              .asList(rawFileFilter))
+                                    : TreeFilter.ALL;
         formatter.setPathFilter(AndTreeFilter.create(TreeFilter.ANY_DIFF, pathFilter));
 
         try {
@@ -100,12 +101,10 @@ class JGitDiffPage extends DiffPage {
 
     /**
      * Show changes between index and working tree.
-     *
-     * @param formatter
-     *         diff formatter
+     * 
+     * @param formatter diff formatter
      * @return list of diff entries
-     * @throws IOException
-     *         if any i/o errors occurs
+     * @throws IOException if any i/o errors occurs
      */
     List<DiffEntry> indexToWorkingTree(DiffFormatter formatter) throws IOException {
         DirCache dirCache = null;
@@ -122,7 +121,7 @@ class JGitDiffPage extends DiffPage {
                 // Detect renames.
                 RenameDetector renameDetector = createRenameDetector();
                 ContentSource.Pair sourcePairReader =
-                        new ContentSource.Pair(ContentSource.create(reader), ContentSource.create(iterB));
+                                                      new ContentSource.Pair(ContentSource.create(reader), ContentSource.create(iterB));
                 renameDetector.addAll(diff);
                 diff = renameDetector.compute(sourcePairReader, NullProgressMonitor.INSTANCE);
             }
@@ -137,14 +136,11 @@ class JGitDiffPage extends DiffPage {
 
     /**
      * Show changes between specified revision and working tree.
-     *
-     * @param a
-     *         commit
-     * @param formatter
-     *         diff formatter
+     * 
+     * @param a commit
+     * @param formatter diff formatter
      * @return list of diff entries
-     * @throws IOException
-     *         if any i/o errors occurs
+     * @throws IOException if any i/o errors occurs
      */
     List<DiffEntry> commitToWorkingTree(String a, DiffFormatter formatter) throws IOException {
         ObjectId commitA = repository.resolve(a);
@@ -172,7 +168,7 @@ class JGitDiffPage extends DiffPage {
                 // Detect renames.
                 RenameDetector renameDetector = createRenameDetector();
                 ContentSource.Pair sourcePairReader =
-                        new ContentSource.Pair(ContentSource.create(reader), ContentSource.create(iterB));
+                                                      new ContentSource.Pair(ContentSource.create(reader), ContentSource.create(iterB));
                 renameDetector.addAll(diff);
                 diff = renameDetector.compute(sourcePairReader, NullProgressMonitor.INSTANCE);
             }
@@ -183,16 +179,12 @@ class JGitDiffPage extends DiffPage {
     }
 
     /**
-     * Show changes between specified revision and index. If <code>a == null</code> then view changes between HEAD and
-     * index.
-     *
-     * @param a
-     *         commit, pass <code>null</code> is the same as pass HEAD
-     * @param formatter
-     *         diff formatter
+     * Show changes between specified revision and index. If <code>a == null</code> then view changes between HEAD and index.
+     * 
+     * @param a commit, pass <code>null</code> is the same as pass HEAD
+     * @param formatter diff formatter
      * @return list of diff entries
-     * @throws IOException
-     *         if any i/o errors occurs
+     * @throws IOException if any i/o errors occurs
      */
     List<DiffEntry> commitToIndex(String a, DiffFormatter formatter) throws IOException {
         if (a == null) {
@@ -238,18 +230,13 @@ class JGitDiffPage extends DiffPage {
     }
 
     /**
-     * Show changes between specified two revisions and index. If <code>a == null</code> then view changes between HEAD
-     * and revision b.
-     *
-     * @param a
-     *         commit a, pass <code>null</code> is the same as pass HEAD
-     * @param b
-     *         commit b
-     * @param formatter
-     *         diff formatter
+     * Show changes between specified two revisions and index. If <code>a == null</code> then view changes between HEAD and revision b.
+     * 
+     * @param a commit a, pass <code>null</code> is the same as pass HEAD
+     * @param b commit b
+     * @param formatter diff formatter
      * @return list of diff entries
-     * @throws IOException
-     *         if any i/o errors occurs
+     * @throws IOException if any i/o errors occurs
      */
     List<DiffEntry> commitToCommit(String a, String b, DiffFormatter formatter) throws IOException {
         if (a == null) {

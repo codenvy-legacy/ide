@@ -31,7 +31,7 @@ import java.util.List;
 
 /**
  * Unmarshaller for list of remote repositories response.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 4, 2011 12:45:37 PM anya $
  */
@@ -40,8 +40,7 @@ public class RemoteListUnmarshaller implements Unmarshallable<List<Remote>>, Con
     private List<Remote> remotes;
 
     /**
-     * @param remotes
-     *         remote repositories
+     * @param remotes remote repositories
      */
     public RemoteListUnmarshaller(List<Remote> remotes) {
         this.remotes = remotes;

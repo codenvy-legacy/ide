@@ -32,42 +32,42 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 
 /**
  * View for adding new remote repository.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 18, 2011 5:48:04 PM anya $
  */
 public class AddRemoteRepositoryView extends ViewImpl implements AddRemoteRepositoryPresenter.Display {
-    private static final int HEIGHT = 200;
+    private static final int    HEIGHT           = 200;
 
-    private static final int WIDTH = 480;
+    private static final int    WIDTH            = 480;
 
-    public static final String ID = "ideAddRemoteRepositoryView";
+    public static final String  ID               = "ideAddRemoteRepositoryView";
 
-   /* Elements IDs */
+    /* Elements IDs */
 
-    private static final String OK_BUTTON_ID = "ideAddRemoteRepositoryViewOkButton";
+    private static final String OK_BUTTON_ID     = "ideAddRemoteRepositoryViewOkButton";
 
     private static final String CANCEL_BUTTON_ID = "ideAddRemoteRepositoryViewCancelButton";
 
-    private static final String NAME_FIELD_ID = "ideAddRemoteRepositoryViewNameField";
+    private static final String NAME_FIELD_ID    = "ideAddRemoteRepositoryViewNameField";
 
-    private static final String URL_FIELD_ID = "ideAddRemoteRepositoryViewUrlField";
+    private static final String URL_FIELD_ID     = "ideAddRemoteRepositoryViewUrlField";
 
     /** Ok button. */
     @UiField
-    ImageButton okButton;
+    ImageButton                 okButton;
 
     /** Cancel button. */
     @UiField
-    ImageButton cancelButton;
+    ImageButton                 cancelButton;
 
     /** Remote repository name field. */
     @UiField
-    TextInput nameField;
+    TextInput                   nameField;
 
     /** Remote repository URL field. */
     @UiField
-    TextInput urlField;
+    TextInput                   urlField;
 
     interface AddRemoteRepositoryViewUiBinder extends UiBinder<Widget, AddRemoteRepositoryView> {
     }
