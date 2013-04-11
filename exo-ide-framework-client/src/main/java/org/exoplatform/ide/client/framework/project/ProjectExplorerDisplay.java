@@ -25,7 +25,6 @@ import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
@@ -38,12 +37,12 @@ import java.util.Map;
  */
 public interface ProjectExplorerDisplay extends IsView {
     
-//    /**
-//     * Get Project Tree
-//     *
-//     * @return {@link TreeGridItem}
-//     */
-//    TreeGridItem<Item> getBrowserTree();
+    /**
+     * Get Project Tree
+     *
+     * @return {@link TreeGridItem}
+     */
+    TreeGridItem<Item> getProjectTree();
 
     /**
      * Set project.
@@ -62,11 +61,11 @@ public interface ProjectExplorerDisplay extends IsView {
     boolean selectItem(Item item);
     
     /**
-     * Get selected items in the tree.
+     * Get selected item in Project tree.
      *
      * @return {@link List} selected items
      */
-    List<Item> getSelectedItems();
+    Item getSelectedItem();
 
     /**
      * Get list of visible items in Project tree.
@@ -92,18 +91,6 @@ public interface ProjectExplorerDisplay extends IsView {
     
     
     
-    
-    
-//    /**
-//     * Change tree visibility.
-//     *
-//     * @param visible
-//     *         <code>true</code> if visible
-//     */
-//    void setProjectExplorerTreeVisible(boolean visible);
-//
-//    void navigateToItem(Item item);
-//
 //    /**
 //     * Deselect item in browser tree by path.
 //     *
@@ -118,13 +105,6 @@ public interface ProjectExplorerDisplay extends IsView {
 //     * @param file
 //     */
 //    void updateItemState(FileModel file);
-//
-//    /**
-//     * Set lock tokens to the items in the tree.
-//     *
-//     * @param locktokens
-//     */
-//    void setLockTokens(Map<String, String> locktokens);
 
 
     /**
@@ -154,22 +134,6 @@ public interface ProjectExplorerDisplay extends IsView {
      */
     void setLinkWithEditorButtonSelected(boolean selected);
 
-//    /**
-//     * Change projects list grid visibility.
-//     *
-//     * @param visible
-//     *         <code>true</code> if visible
-//     */
-//    void setProjectsListGridVisible(boolean visible);
-
-//    /**
-//     * Change ProjectNotOpenedPanel visibility.
-//     *
-//     * @param visible
-//     *         <code>true</code> if visible
-//     */
-//    void setProjectNotOpenedPanelVisible(boolean visible);
-
     /**
      * Get projects list grid.
      *
@@ -184,6 +148,4 @@ public interface ProjectExplorerDisplay extends IsView {
      */
     List<ProjectModel> getSelectedProjects();
     
-    void refreshProjectList();
-
 }

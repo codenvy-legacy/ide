@@ -34,6 +34,10 @@
             width: 100%;
             height: 100%;
         }
+        
+        .projectListGrid {
+		}
+        
     </ui:style>
 
     <c:Border margin="1">
@@ -48,14 +52,18 @@
                     </c:Toolbar>
                 </g:layer>
                 <g:layer top="28px" bottom="0">
+                <!-- 
                     <g:ScrollPanel width="100%" height="100%">
+                 -->
                         <g:FlowPanel>
                             <f:ProjectExplorerItemTree visible="false" styleName="{style.itemsTree}"
                             	ui:field="treeGrid" treeGridId="ideProjectExplorerItemTreeGrid"></f:ProjectExplorerItemTree>
                             <e:ProjectsListGrid visible="false" ui:field="projectsListGrid" width="100%" height="100%"
                             	listGridId="ideProjectExplorerProjectsListGrid"></e:ProjectsListGrid>
                         </g:FlowPanel>
+                        <!-- 
                     </g:ScrollPanel>
+                         -->
                 </g:layer>
             </g:LayoutPanel>
         </c:layer>

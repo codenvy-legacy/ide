@@ -26,10 +26,14 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.TreeItem;
 
 import org.exoplatform.gwtframework.ui.client.component.TreeIcon;
+import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
+import org.exoplatform.ide.client.framework.util.ImageUtil;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.vfs.shared.Item;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
@@ -92,14 +96,18 @@ public abstract class ProjectExplorerTreeItem extends TreeItem {
      * 
      * @return
      */
-    protected abstract ImageResource getItemIcon();
-
+    protected ImageResource getItemIcon() {
+        return ImageUtil.getIcon(((Item)getUserObject()).getMimeType());
+    }
+    
     /**
      * Get item title.
      * 
      * @return
      */
-    protected abstract String getItemTitle();
+    protected String getItemTitle() {
+        return ((Item)getUserObject()).getName();
+    }
     
     /**
      * Get item children.
@@ -114,5 +122,165 @@ public abstract class ProjectExplorerTreeItem extends TreeItem {
      * @param expand
      */
     public abstract void refresh(boolean expand);
+    
+    /**
+     * Search and select item.
+     * 
+     * @param item
+     * @return
+     */
+    public boolean select(Item item)
+    {
+        if (item.getId().equals(((Item)getUserObject()).getId()))
+        {
+            getTree().setSelectedItem(this);
+            getTree().ensureSelectedItemVisible();
+            return true;
+        }
+
+        for (int i = 0; i < getChildCount(); i++)
+        {
+            TreeItem child = getChild(i);
+            if (child instanceof ProjectExplorerTreeItem)
+            {
+                String path = ((Item)child.getUserObject()).getPath();
+                if (path == null || path.isEmpty()) {
+                    continue;
+                }
+                
+                if (item.getPath().startsWith(path))
+                {
+                    ((ProjectExplorerTreeItem)child).refresh(true);
+                    return ((ProjectExplorerTreeItem)child).select(item);
+                }
+            }
+        }
+
+        return false;
+    }
+    
+    
+    /**
+     * Set additional icons.
+     * 
+     * @param icons
+     */
+    public void setIcons(Map<String, Map<TreeIconPosition, ImageResource>> icons) {
+        Item item = (Item)getUserObject();
+        if (item != null) {
+            Map<TreeIconPosition, ImageResource> map = icons.get(item.getId());
+            if (map != null) {
+                Grid grid = (Grid)getWidget();
+                TreeIcon treeIcon = (TreeIcon)grid.getWidget(0, 0);
+                for (TreeIconPosition position : map.keySet()) {
+                    treeIcon.addIcon(position, map.get(position));
+                }
+            }
+        }
+
+        for (int i = 0; i < getChildCount(); i++) {
+            TreeItem child = getChild(i);
+            if (!(child instanceof ProjectExplorerTreeItem))
+            {
+                continue;
+            }
+
+            ((ProjectExplorerTreeItem)child).setIcons(icons);
+        }
+    }
+
+    /**
+     * Remove additional icons.
+     * 
+     * @param icons
+     */
+    public void removeIcons(Map<String, TreeIconPosition> icons)
+    {
+        Item item = (Item)getUserObject();
+        if (item != null) {
+            TreeIconPosition iconPosition = icons.get(item.getId());
+            if (iconPosition != null)
+            {
+                Grid grid = (Grid)getWidget();
+                TreeIcon treeIcon = (TreeIcon)grid.getWidget(0, 0);
+                treeIcon.removeIcon(iconPosition);
+            }
+        }
+
+        for (int i = 0; i < getChildCount(); i++) {
+            TreeItem child = getChild(i);
+            if (!(child instanceof ProjectExplorerTreeItem))
+            {
+                continue;
+            }
+
+            ((ProjectExplorerTreeItem)child).removeIcons(icons);
+        }
+    }
+    
+    /**
+     * Remove items from tree which are points to nonexistent items on file system.
+     */
+    protected void removeNonexistendTreeItems()
+    {
+        /*
+         * Remove nonexistent
+         */
+        List<String> idList = new ArrayList<String>();
+        List<Item> items = getItems();
+        for (Item item : items)
+        {
+            idList.add(item.getId());
+        }
+
+        ArrayList<TreeItem> itemsToRemove = new ArrayList<TreeItem>();
+        for (int i = 0; i < getChildCount(); i++)
+        {
+            TreeItem child = getChild(i);
+            if (!(child instanceof ProjectExplorerTreeItem))
+            {
+                itemsToRemove.add(child);
+                continue;
+            }
+
+            ProjectExplorerTreeItem childTreeItem = (ProjectExplorerTreeItem)child;
+            Item childItem = (Item)childTreeItem.getUserObject();
+            if (!idList.contains(childItem.getId()))
+            {
+                itemsToRemove.add(child);
+            }
+        }
+
+        for (TreeItem child : itemsToRemove)
+        {
+            removeItem(child);
+        }
+    }
+    
+    
+    /**
+     * Get child by Item ID.
+     * 
+     * @param id
+     * @return
+     */
+    public ProjectExplorerTreeItem getChildByItemId(String id)
+    {
+        for (int i = 0; i < getChildCount(); i++)
+        {
+            TreeItem child = getChild(i);
+            if (child instanceof ProjectExplorerTreeItem)
+            {
+                ProjectExplorerTreeItem treeItem = (ProjectExplorerTreeItem)child;
+                if (((Item)treeItem.getUserObject()).getId().equals(id))
+                {
+                    return treeItem;
+                }
+            }
+        }
+
+        return null;
+    }
+    
     
 }

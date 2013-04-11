@@ -181,23 +181,16 @@ public class RenameFolderPresenter extends ItemsOperationPresenter implements
     }
 
     private void completeMove(FolderModel folder, String sourceId) {
-        System.out.println("RenameFolderPresenter.completeMove() ");
-        
         if (openedProject != null)
         {
-            System.out.println("opened project id > " + openedProject.getId());
-            
             if (openedProject.getId().equals(folder.getId())) {
-                System.out.println("refreshing project");
                 IDE.fireEvent(new RefreshBrowserEvent(openedProject, openedProject));
             } else {
-                System.out.println("refreshing folder's parent");
                 IDE.fireEvent(new RefreshBrowserEvent(folder.getParent(), folder));
             }
         }
         else
         {
-            System.out.println("project is not opened");
 //            if (folder instanceof ProjectModel) {
 //                IDE.fireEvent(new OpenProjectEvent((ProjectModel)folder));
 //            } else {
@@ -214,10 +207,7 @@ public class RenameFolderPresenter extends ItemsOperationPresenter implements
     private void renameFolder() {
         final FolderModel source = (FolderModel)selectedItems.get(0);
         final String originalFolderId = source.getId();
-        System.out.println("original folder id > " + originalFolderId);
         String newName = getDestination();
-        
-        System.out.println("folder to rename > " + source);
         
         try {
             VirtualFileSystem.getInstance().rename(source, null, newName, lockTokens.get(source.getId()),
@@ -225,9 +215,6 @@ public class RenameFolderPresenter extends ItemsOperationPresenter implements
                        @Override
                        protected void onSuccess(ItemWrapper result) {
                            FolderModel destination = (FolderModel)result.getItem();
-                           
-                           System.out.println("renamed > ");
-                           System.out.println("renamed folder > " + destination);
                            
 //                           ItemContext ic = (ItemContext)result.getItem();
 //                           ic.setParent(((ItemContext)item).getParent());
@@ -247,41 +234,11 @@ public class RenameFolderPresenter extends ItemsOperationPresenter implements
                            source.getLinks().clear();
                            source.getLinks().putAll(destination.getLinks());
                            
-//                           /** Id of object. */
-//                           protected String id;
-//
-//                           /** Name of object. */
-//                           protected String name;
-//
-//                           /** Type of object. */
-//                           protected final ItemType itemType;
-//
-//                           /** Media type. */
-//                           protected String mimeType;
-//
-//                           /** Path. */
-//                           protected String path;
-//
-//                           /** Parent ID. Must be <code>null</code> if item is root folder. */
-//                           protected String parentId;
-//
-//                           /** Creation date in long format. */
-//                           protected long creationDate;
-//
-//                           /** Properties. */
-//                           @SuppressWarnings("rawtypes")
-//                           protected List<Property> properties;
-//
-//                           /** Links. */
-//                           protected Map<String, Link> links;
-                           
-                           
                            //String oldItemPath = item.getPath();
                            //updateOpenedFiles((Folder)result.getItem(), oldItemPath);
                            //updateOpenedFiles(source, destination);
                            //completeMove((FolderModel)result.getItem());
                            
-                           System.out.println("original folder id now > " + originalFolderId);
                            completeMove(source, originalFolderId);
                        }
 

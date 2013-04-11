@@ -21,16 +21,15 @@ package org.exoplatform.ide.client.project.explorer.ui;
 import com.google.gwt.resources.client.ImageResource;
 
 import org.exoplatform.ide.client.framework.project.api.IDEProject;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.vfs.shared.Item;
-
-import java.util.List;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  * 
  */
-public class ProjectTreeItem extends ProjectExplorerTreeItem {
+public class ProjectTreeItem extends FolderTreeItem {
 
     public ProjectTreeItem(IDEProject project) {
         super(project);
@@ -38,21 +37,16 @@ public class ProjectTreeItem extends ProjectExplorerTreeItem {
     
     @Override
     protected ImageResource getItemIcon() {
-        return null;
+        IDEProject project = (IDEProject)getUserObject();
+        return ProjectResolver.getImageForProject(project.getProjectType());
     }
 
-    @Override
-    protected String getItemTitle() {
-        return null;
+    protected ProjectExplorerTreeItem createTreeItem(Item item) {
+        if (item instanceof IDEProject) {
+            return new ProjectTreeItem((IDEProject)item);
+        }
+        
+        return super.createTreeItem(item);
     }
-
-    @Override
-    public List<Item> getItems() {
-        return null;
-    }
-
-    @Override
-    public void refresh(boolean expand) {
-    }
-
+    
 }

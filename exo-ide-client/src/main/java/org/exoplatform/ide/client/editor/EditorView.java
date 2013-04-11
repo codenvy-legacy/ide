@@ -271,12 +271,14 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler {
         }
 
         final Editor currentEditor = getEditor();
-        new Timer() {
-            @Override
-            public void run() {
-                currentEditor.setFocus();
-            }
-        }.schedule(100);
+        currentEditor.setFocus();
+        
+//        new Timer() {
+//            @Override
+//            public void run() {
+//                currentEditor.setFocus();
+//            }
+//        }.schedule(100);
     }
 
 }

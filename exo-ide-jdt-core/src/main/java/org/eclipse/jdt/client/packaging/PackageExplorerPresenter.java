@@ -76,7 +76,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
-import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -107,8 +106,6 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
     private FileModel              editorActiveFile;
 
     private Map<String, FileModel> openedFiles                              = new HashMap<String, FileModel>();
-
-    private Map<String, Editor>    openedEditors                            = new HashMap<String, Editor>();
 
     public PackageExplorerPresenter() {
         IDE.getInstance().addControl(new ShowPackageExplorerControl(), Docking.TOOLBAR);
@@ -312,13 +309,11 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
     @Override
     public void onEditorFileClosed(EditorFileClosedEvent event) {
         openedFiles = event.getOpenedFiles();
-        openedEditors.remove(event.getFile());
     }
 
     @Override
     public void onEditorFileOpened(EditorFileOpenedEvent event) {
         openedFiles = event.getOpenedFiles();
-        openedEditors.put(event.getFile().getId(), event.getEditor());
     }
 
     private ApplicationSettings applicationSettings;

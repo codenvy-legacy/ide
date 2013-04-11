@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.project.explorer.ui;
 
-import com.google.gwt.resources.client.ImageResource;
-
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
@@ -28,7 +26,6 @@ import java.util.List;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
 public class FileTreeItem extends ProjectExplorerTreeItem {
 
@@ -37,27 +34,13 @@ public class FileTreeItem extends ProjectExplorerTreeItem {
     }
 
     @Override
-    protected ImageResource getItemIcon() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected String getItemTitle() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public List<Item> getItems() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public void refresh(boolean expand) {
-        // TODO Auto-generated method stub
-        
+        render();
     }
-    
+
 }
