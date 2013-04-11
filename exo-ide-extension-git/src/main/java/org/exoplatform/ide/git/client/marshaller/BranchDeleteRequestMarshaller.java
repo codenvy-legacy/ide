@@ -27,7 +27,7 @@ import org.exoplatform.ide.git.shared.BranchDeleteRequest;
 
 /**
  * Marshaller to create branch delete request in JSON format.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 11, 2011 12:10:34 PM anya $
  */
@@ -36,8 +36,7 @@ public class BranchDeleteRequestMarshaller implements Marshallable, Constants {
     private BranchDeleteRequest branchDeleteRequest;
 
     /**
-     * @param branchDeleteRequest
-     *         branch delete request
+     * @param branchDeleteRequest branch delete request
      */
     public BranchDeleteRequestMarshaller(BranchDeleteRequest branchDeleteRequest) {
         this.branchDeleteRequest = branchDeleteRequest;

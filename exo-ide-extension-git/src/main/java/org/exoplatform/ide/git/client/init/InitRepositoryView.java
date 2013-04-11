@@ -34,36 +34,36 @@ import org.exoplatform.ide.git.client.GitExtension;
 
 /**
  * UI for initializing the repository.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 24, 2011 10:35:37 AM anya $
  */
 public class InitRepositoryView extends ViewImpl implements
-                                                 org.exoplatform.ide.git.client.init.InitRepositoryPresenter.Display {
+                                                org.exoplatform.ide.git.client.init.InitRepositoryPresenter.Display {
 
-    public static final String ID = "ideInitRepositoryView";
+    public static final String  ID               = "ideInitRepositoryView";
 
-   /* Elements IDs */
+    /* Elements IDs */
 
-    private static final String INIT_BUTTON_ID = "ideInitRepositoryViewInitButton";
+    private static final String INIT_BUTTON_ID   = "ideInitRepositoryViewInitButton";
 
     private static final String CANCEL_BUTTON_ID = "ideInitRepositoryViewCancelButton";
 
     private static final String WORKDIR_FIELD_ID = "ideInitRepositoryViewWorkDirField";
 
-    private static final String BARE_FIELD_ID = "ideInitRepositoryViewBareField";
+    private static final String BARE_FIELD_ID    = "ideInitRepositoryViewBareField";
 
     @UiField
-    TextInput workdirField;
+    TextInput                   workdirField;
 
     @UiField
-    CheckBox bareField;
+    CheckBox                    bareField;
 
     @UiField
-    ImageButton initButton;
+    ImageButton                 initButton;
 
     @UiField
-    ImageButton cancelButton;
+    ImageButton                 cancelButton;
 
     interface InitRepositoryViewUiBinder extends UiBinder<Widget, InitRepositoryView> {
     }

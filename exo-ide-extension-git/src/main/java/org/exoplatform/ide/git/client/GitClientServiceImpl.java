@@ -776,8 +776,8 @@ public class GitClientServiceImpl extends GitClientService {
         AsyncRequest.build(RequestBuilder.GET, url + "?" + params).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
                     .send(callback);
     }
-    
-    
+
+
     /**
      * @throws RequestException
      * @see org.exoplatform.ide.git.client.GitClientService#status(java.lang.String, boolean,

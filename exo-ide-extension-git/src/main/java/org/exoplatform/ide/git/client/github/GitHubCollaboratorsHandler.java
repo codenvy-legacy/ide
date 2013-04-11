@@ -37,12 +37,11 @@ import org.exoplatform.ide.git.shared.GitHubUser;
 import java.util.List;
 
 /**
- * Provide access via GitHubClientService for getting list of collaborators
- * and allow invite invite they to Codenvy community.
- * For inviting call REST service from cloud-ide project.
+ * Provide access via GitHubClientService for getting list of collaborators and allow invite invite they to Codenvy community. For inviting
+ * call REST service from cloud-ide project.
  * <p/>
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: GitHubCollaboratorsHandler.java Aug 6, 2012
  */
@@ -90,9 +89,8 @@ public class GitHubCollaboratorsHandler {
     }
 
     /**
-     * Get list of collaborators of GitHub repository.
-     * Display in pop window wit proposal inviting join to eXo IDE community
-     *
+     * Get list of collaborators of GitHub repository. Display in pop window wit proposal inviting join to eXo IDE community
+     * 
      * @param user
      * @param repository
      */
@@ -118,7 +116,7 @@ public class GitHubCollaboratorsHandler {
 
                                                                    @Override
                                                                    protected void onFailure(Throwable exception) {
-                                                                       //Nothing todo
+                                                                       // Nothing todo
                                                                    }
                                                                });
         } catch (RequestException e) {

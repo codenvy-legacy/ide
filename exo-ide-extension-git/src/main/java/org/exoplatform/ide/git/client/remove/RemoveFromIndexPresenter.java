@@ -39,7 +39,7 @@ import org.exoplatform.ide.vfs.shared.Folder;
 /**
  * Presenter for removing files in index and file system. The view must implement {@link RemoveFromIndexPresenter.Display}. Add view to
  * View.gwt.xml.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 29, 2011 4:35:16 PM anya $
  */
@@ -47,21 +47,21 @@ public class RemoveFromIndexPresenter extends GitPresenter implements RemoveFile
     public interface Display extends IsView {
         /**
          * Get remove button click handler.
-         *
+         * 
          * @return {@link HasClickHandlers}
          */
         HasClickHandlers getRemoveButton();
 
         /**
          * Get cancel button click handler.
-         *
+         * 
          * @return {@link HasClickHandlers}
          */
         HasClickHandlers getCancelButton();
 
         /**
          * Get message label value.
-         *
+         * 
          * @return {@link HasValue}
          */
         HasValue<String> getMessage();
@@ -75,8 +75,7 @@ public class RemoveFromIndexPresenter extends GitPresenter implements RemoveFile
     }
 
     /**
-     * @param d
-     *         display
+     * @param d display
      */
     public void bindDisplay(Display d) {
         this.display = d;
@@ -112,7 +111,7 @@ public class RemoveFromIndexPresenter extends GitPresenter implements RemoveFile
 
     /**
      * Form the message to display for removing from index, telling the user what is gonna to be removed.
-     *
+     * 
      * @return {@link String} message to display
      */
     private String formMessage(String workdir) {
@@ -160,7 +159,7 @@ public class RemoveFromIndexPresenter extends GitPresenter implements RemoveFile
 
     /**
      * Returns pattern of the files to be removed.
-     *
+     * 
      * @return pattern of the files to be removed
      */
     private String[] getFilePatterns() {
@@ -173,8 +172,9 @@ public class RemoveFromIndexPresenter extends GitPresenter implements RemoveFile
 
     private void handleError(Throwable t) {
         String errorMessage =
-                (t.getMessage() != null && t.getMessage().length() > 0) ? t.getMessage() : GitExtension.MESSAGES
-                                                                                                       .removeFilesFailed();
+                              (t.getMessage() != null && t.getMessage().length() > 0) ? t.getMessage()
+                                  : GitExtension.MESSAGES
+                                                         .removeFilesFailed();
         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
     }
 

@@ -36,6 +36,9 @@ import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.shared.Item;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Delete repository command handler, performs deleting Git repository.
  * 
@@ -101,6 +104,5 @@ public class DeleteRepositoryCommandHandler extends GitPresenter implements Dele
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
-
     }
 }

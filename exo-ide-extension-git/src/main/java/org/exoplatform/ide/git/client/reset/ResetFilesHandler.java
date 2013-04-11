@@ -22,14 +22,14 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ResetFilesEvent} event.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 13, 2011 3:54:40 PM anya $
  */
 public interface ResetFilesHandler extends EventHandler {
     /**
      * Perform actions, when user tries to do reset files in index.
-     *
+     * 
      * @param event
      */
     void onResetFiles(ResetFilesEvent event);

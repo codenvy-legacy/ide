@@ -34,18 +34,18 @@ import org.exoplatform.ide.git.client.GitExtension;
 
 /**
  * View for commiting from index to repository. Must be added to <b>View.gwt.xml file</b>.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 31, 2011 10:38:47 AM anya $
  */
 public class CommitView extends ViewImpl implements CommitPresenter.Display {
-    private static final int HEIGHT = 240;
+    private static final int    HEIGHT           = 240;
 
-    private static final int WIDTH = 460;
+    private static final int    WIDTH            = 460;
 
-    public static final String ID = "ideCommitView";
+    public static final String  ID               = "ideCommitView";
 
-   /* Elements IDs */
+    /* Elements IDs */
 
     private static final String COMMIT_BUTTON_ID = "ideCommitViewCommitButton";
 
@@ -53,26 +53,26 @@ public class CommitView extends ViewImpl implements CommitPresenter.Display {
 
     private static final String MESSAGE_FIELD_ID = "ideCommitViewMessageField";
 
-    private static final String ALL_FIELD_ID = "ideCommitViewAllField";
+    private static final String ALL_FIELD_ID     = "ideCommitViewAllField";
 
-    private static final String AMEND_FIELD_ID = "ideCommitViewAmendField";
+    private static final String AMEND_FIELD_ID   = "ideCommitViewAmendField";
 
-   /* Elements titles */
-
-    @UiField
-    ImageButton commitButton;
+    /* Elements titles */
 
     @UiField
-    ImageButton cancelButton;
+    ImageButton                 commitButton;
 
     @UiField
-    TextAreaInput messageField;
+    ImageButton                 cancelButton;
 
     @UiField
-    CheckBox allField;
+    TextAreaInput               messageField;
 
     @UiField
-    CheckBox amendField;
+    CheckBox                    allField;
+
+    @UiField
+    CheckBox                    amendField;
 
     interface CommitViewUiBinder extends UiBinder<Widget, CommitView> {
     }

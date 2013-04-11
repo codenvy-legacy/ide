@@ -27,12 +27,12 @@ import java.util.Set;
  * @version $Id: SamplesServiceApplication.java Sep 2, 2011 12:20:58 PM vereshchaka $
  */
 public class GitHubServiceApplication extends Application {
-    private Set<Class<?>> classes;
+    private Set<Class< ? >> classes;
 
-    private Set<Object> singletons;
+    private Set<Object>     singletons;
 
     public GitHubServiceApplication() {
-        classes = new HashSet<Class<?>>(1);
+        classes = new HashSet<Class< ? >>(1);
         classes.add(GitHubService.class);
         singletons = new HashSet<Object>(1);
         singletons.add(new GitHubExceptionMapper());
@@ -40,7 +40,7 @@ public class GitHubServiceApplication extends Application {
 
     /** @see javax.ws.rs.core.Application#getClasses() */
     @Override
-    public Set<Class<?>> getClasses() {
+    public Set<Class< ? >> getClasses() {
         return classes;
     }
 

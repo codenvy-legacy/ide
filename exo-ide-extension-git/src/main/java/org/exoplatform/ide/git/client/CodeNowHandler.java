@@ -62,8 +62,10 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
         IDE.addHandler(StartWithInitParamsEvent.TYPE, this);
     }
 
-    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
-     * .application.event.VfsChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     *      .application.event.VfsChangedEvent)
+     */
     @Override
     public void onVfsChanged(VfsChangedEvent event) {
         this.vfs = event.getVfsInfo();
@@ -122,58 +124,52 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
     private void cloneProject(final String giturl, final String prjName, final String prjType) {
         try {
 
-            VirtualFileSystem.getInstance().getChildren(vfs.getRoot(), ItemType.PROJECT,
-                                                        new AsyncRequestCallback<List<Item>>(
-                                                                new ChildrenUnmarshaller(new ArrayList<Item>())) {
+            VirtualFileSystem.getInstance()
+                             .getChildren(vfs.getRoot(), ItemType.PROJECT,
+                                          new AsyncRequestCallback<List<Item>>(
+                                                                               new ChildrenUnmarshaller(new ArrayList<Item>())) {
 
-                                                            @Override
-                                                            protected void onSuccess(List<Item> result) {
-                                                                boolean itemExist = false;
-                                                                for (Item item : result) {
-                                                                    if (item.getName().equals(prjName)) {
-                                                                        itemExist = true;
-                                                                    }
-                                                                    if (item.hasProperty("codenow")) {
-                                                                        String codenow = item.getPropertyValue("codenow");
-                                                                        if (codenow.equals(giturl)) {
-                                                                            IDE.fireEvent(new OpenProjectEvent((ProjectModel)item));
-                                                                            return;
-                                                                        }
-                                                                    }
-                                                                }
-                                                                if (itemExist) {
-                                                                    doClone(giturl, "origin",
-                                                                            prjName + "-" + Random.nextInt(Integer.MAX_VALUE), prjType);
-                                                                } else {
-                                                                    doClone(giturl, "origin", prjName, prjType);
-                                                                }
-                                                            }
+                                              @Override
+                                              protected void onSuccess(List<Item> result) {
+                                                  boolean itemExist = false;
+                                                  for (Item item : result) {
+                                                      if (item.getName().equals(prjName)) {
+                                                          itemExist = true;
+                                                      }
+                                                      if (item.hasProperty("codenow")) {
+                                                          String codenow = item.getPropertyValue("codenow");
+                                                          if (codenow.equals(giturl)) {
+                                                              IDE.fireEvent(new OpenProjectEvent((ProjectModel)item));
+                                                              return;
+                                                          }
+                                                      }
+                                                  }
+                                                  if (itemExist) {
+                                                      doClone(giturl, "origin",
+                                                              prjName + "-" + Random.nextInt(Integer.MAX_VALUE), prjType);
+                                                  } else {
+                                                      doClone(giturl, "origin", prjName, prjType);
+                                                  }
+                                              }
 
-                                                            @Override
-                                                            protected void onFailure(Throwable exception) {
-                                                                doClone(giturl, "origin", prjName, prjType);
-                                                            }
-                                                        });
+                                              @Override
+                                              protected void onFailure(Throwable exception) {
+                                                  doClone(giturl, "origin", prjName, prjType);
+                                              }
+                                          });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
     }
 
     /**
-     * Going to cloning repository.
-     * Clone process flow 3 steps:
-     * - create new folder with name workDir
-     * - clone repository to this folder
-     * - convert folder to project.
-     * This need because by default project with out file and folder not empty.
-     * It content ".project" item. Clone is impossible to not empty folder
-     *
-     * @param remoteUri
-     *         - git url
-     * @param remoteName
-     *         - remote name (by default origin)
-     * @param workDir
-     *         - name of target folder
+     * Going to cloning repository. Clone process flow 3 steps: - create new folder with name workDir - clone repository to this folder -
+     * convert folder to project. This need because by default project with out file and folder not empty. It content ".project" item. Clone
+     * is impossible to not empty folder
+     * 
+     * @param remoteUri - git url
+     * @param remoteName - remote name (by default origin)
+     * @param workDir - name of target folder
      */
     public void doClone(final String remoteUri, final String remoteName, final String workDir, final String prjType) {
         FolderModel folder = new FolderModel();
@@ -189,45 +185,33 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
                                                              @Override
                                                              protected void onFailure(Throwable exception) {
                                                                  String errorMessage =
-                                                                         (exception.getMessage() != null &&
-                                                                          exception.getMessage().length() > 0) ? exception.getMessage()
-                                                                                                               : GitExtension.MESSAGES
-                                                                                                                             .cloneFailed(
+                                                                                       (exception.getMessage() != null &&
+                                                                                       exception.getMessage().length() > 0)
+                                                                                           ? exception.getMessage()
+                                                                                           : GitExtension.MESSAGES
+                                                                                                                  .cloneFailed(
 
 
-
-
-
-
-
-
-
-
-
-
-
-                                                                                                                                     remoteUri);
+                                                                                                                  remoteUri);
                                                                  IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
                                                              }
                                                          });
         } catch (RequestException e) {
             e.printStackTrace();
             String errorMessage =
-                    (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
-                                                                                                           .cloneFailed(remoteUri);
+                                  (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage()
+                                      : GitExtension.MESSAGES
+                                                             .cloneFailed(remoteUri);
             IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
         }
     }
 
     /**
      * Clone of the repository by sending request over WebSocket or HTTP.
-     *
-     * @param remoteUri
-     *         the location of the remote repository
-     * @param remoteName
-     *         remote name instead of "origin"
-     * @param folder
-     *         folder (root of GIT repository)
+     * 
+     * @param remoteUri the location of the remote repository
+     * @param remoteName remote name instead of "origin"
+     * @param folder folder (root of GIT repository)
      */
     private void cloneRepository(final String remoteUri, final String remoteName, final String prjType, final FolderModel folder) {
         try {
@@ -271,13 +255,12 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
 
     /**
      * Perform actions when repository was successfully cloned.
-     *
-     * @param folder
-     *         {@link FolderModel} to clone
+     * 
+     * @param folder {@link FolderModel} to clone
      */
     private void onCloneSuccess(FolderModel folder, RepoInfo repoInfo, String prjType) {
         IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(repoInfo.getRemoteUri()), Type.GIT));
-        //TODO: not good, comment temporary need found other way
+        // TODO: not good, comment temporary need found other way
         // for inviting collaborators
         // showInvitation(repoInfo.getRemoteUri());
 
@@ -290,8 +273,9 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
 
     private void handleError(Throwable e, String remoteUri) {
         String errorMessage =
-                (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
-                                                                                                       .cloneFailed(remoteUri);
+                              (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage()
+                                  : GitExtension.MESSAGES
+                                                         .cloneFailed(remoteUri);
         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
     }
 

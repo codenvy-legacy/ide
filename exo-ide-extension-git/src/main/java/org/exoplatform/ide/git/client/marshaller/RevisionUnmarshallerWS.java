@@ -37,15 +37,16 @@ public class RevisionUnmarshallerWS implements Unmarshallable<Revision>, Constan
     private Revision revision;
 
     /**
-     * @param revision
-     *         revision information
+     * @param revision revision information
      */
     public RevisionUnmarshallerWS(Revision revision) {
         this.revision = revision;
     }
 
-    /** @see org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable#unmarshal(org.exoplatform.ide.client.framework.websocket
-     * .rest.ResponseMessage) */
+    /**
+     * @see org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable#unmarshal(org.exoplatform.ide.client.framework.websocket
+     *      .rest.ResponseMessage)
+     */
     @Override
     public void unmarshal(ResponseMessage response) {
         if (response.getBody() == null || response.getBody().isEmpty()) {
@@ -60,32 +61,36 @@ public class RevisionUnmarshallerWS implements Unmarshallable<Revision>, Constan
             return;
 
         Boolean fake =
-                (revisionObject.get(FAKE) != null && revisionObject.get(FAKE).isBoolean() != null) ? revisionObject.get(FAKE)
-                                                                                                                   .isBoolean()
-                                                                                                                   .booleanValue() : false;
+                       (revisionObject.get(FAKE) != null && revisionObject.get(FAKE).isBoolean() != null) ? revisionObject.get(FAKE)
+                                                                                                                          .isBoolean()
+                                                                                                                          .booleanValue()
+                           : false;
         revision.setFake(fake);
 
         String id =
-                (revisionObject.get(ID) != null && revisionObject.get(ID).isString() != null) ? revisionObject.get(ID)
-                                                                                                              .isString().stringValue()
-                                                                                              : "";
+                    (revisionObject.get(ID) != null && revisionObject.get(ID).isString() != null) ? revisionObject.get(ID)
+                                                                                                                  .isString().stringValue()
+                        : "";
         revision.setId(id);
         String message =
-                (revisionObject.get(MESSAGE) != null && revisionObject.get(MESSAGE).isString() != null) ? revisionObject
-                        .get(MESSAGE).isString().stringValue() : "";
+                         (revisionObject.get(MESSAGE) != null && revisionObject.get(MESSAGE).isString() != null)
+                             ? revisionObject
+                                             .get(MESSAGE).isString().stringValue() : "";
         revision.setMessage(message);
         long commitTime =
-                (long)((revisionObject.get(COMMIT_TIME) != null && revisionObject.get(COMMIT_TIME).isNumber() != null)
-                       ? revisionObject.get(COMMIT_TIME).isNumber().doubleValue() : 0);
+                          (long)((revisionObject.get(COMMIT_TIME) != null && revisionObject.get(COMMIT_TIME).isNumber() != null)
+                              ? revisionObject.get(COMMIT_TIME).isNumber().doubleValue() : 0);
         revision.setCommitTime(commitTime);
         if (revisionObject.get(COMMITTER) != null && revisionObject.get(COMMITTER).isObject() != null) {
             JSONObject committerObject = revisionObject.get(COMMITTER).isObject();
             String name =
-                    (committerObject.containsKey(NAME) && committerObject.get(NAME).isString() != null) ? committerObject
-                            .get(NAME).isString().stringValue() : "";
+                          (committerObject.containsKey(NAME) && committerObject.get(NAME).isString() != null)
+                              ? committerObject
+                                               .get(NAME).isString().stringValue() : "";
             String email =
-                    (committerObject.containsKey(EMAIL) && committerObject.get(EMAIL).isString() != null) ? committerObject
-                            .get(EMAIL).isString().stringValue() : "";
+                           (committerObject.containsKey(EMAIL) && committerObject.get(EMAIL).isString() != null)
+                               ? committerObject
+                                                .get(EMAIL).isString().stringValue() : "";
 
             GitUser gitUser = new GitUser(name, email);
             revision.setCommitter(gitUser);

@@ -25,7 +25,7 @@ import org.exoplatform.ide.git.client.remove.RemoveFilesEvent;
 
 /**
  * Control is used to remove files from commit (added by add command) and work tree.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 12, 2011 3:33:56 PM anya $
  */

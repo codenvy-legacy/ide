@@ -46,7 +46,7 @@ import java.util.List;
 
 /**
  * Presenter of the view for fetching changes from remote repository.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 20, 2011 1:33:17 PM anya $
  */
@@ -55,81 +55,77 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
     interface Display extends IsView {
         /**
          * Get fetch button's click handler.
-         *
+         * 
          * @return {@link HasClickHandlers} click handler
          */
         HasClickHandlers getFetchButton();
 
         /**
          * Get cancel button's click handler.
-         *
+         * 
          * @return {@link HasClickHandlers} click handler
          */
         HasClickHandlers getCancelButton();
 
         /**
          * Get remote repository field.
-         *
+         * 
          * @return {@link HasValue}
          */
         HasValue<String> getRemoteName();
 
         /**
          * Get remote branches field.
-         *
+         * 
          * @return {@link HasValue}
          */
         HasValue<String> getRemoteBranches();
 
         /**
          * Get local branches field.
-         *
+         * 
          * @return {@link HasValue}
          */
         HasValue<String> getLocalBranches();
 
         /**
          * Get remove deleted refs field.
-         *
+         * 
          * @return {@link HasValue}
          */
         HasValue<Boolean> getRemoveDeletedRefs();
 
         /**
          * Set values of remote repository branches.
-         *
-         * @param values
-         *         values to set
+         * 
+         * @param values values to set
          */
         void setRemoteBranches(String[] values);
 
         /**
          * Set values of local repository branches.
-         *
-         * @param values
-         *         values to set
+         * 
+         * @param values values to set
          */
         void setLocalBranches(String[] values);
 
         /**
          * Change the enable state of the fecth button.
-         *
-         * @param enable
-         *         enable state
+         * 
+         * @param enable enable state
          */
         void enableFetchButton(boolean enable);
 
         /**
          * Set values of remote repositories.
-         *
-         * @param values
-         *         values to set
+         * 
+         * @param values values to set
          */
         void setRemoteValues(LinkedHashMap<String, String> values);
 
         /**
          * Get remote repository display value.
-         *
+         * 
          * @return String
          */
         String getRemoteDisplayValue();
@@ -147,7 +143,7 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
 
     /**
      * Bind display with presenter.
-     *
+     * 
      * @param d
      */
     public void bindDisplay(Display d) {
@@ -191,8 +187,8 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
     @Override
     public void onFetch(FetchEvent event) {
         if (makeSelectionCheck()) {
-//         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-//         getRemotes(projectId);
+            // String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+            // getRemotes(projectId);
             getRemotes(getSelectedProject().getId());
         }
     }
@@ -203,7 +199,7 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
         String remoteName = display.getRemoteDisplayValue();
         boolean removeDeletedRefs = display.getRemoveDeletedRefs().getValue();
 
-//      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+        // ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
         ProjectModel project = getSelectedProject();
 
         try {
@@ -234,7 +230,7 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
                                                      @Override
                                                      protected void onSuccess(String result) {
                                                          IDE.fireEvent(
-                                                                 new OutputEvent(GitExtension.MESSAGES.fetchSuccess(remoteUrl), Type.GIT));
+                                                            new OutputEvent(GitExtension.MESSAGES.fetchSuccess(remoteUrl), Type.GIT));
                                                      }
 
                                                      @Override
@@ -250,7 +246,7 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
 
     /**
      * Returns list of refs to fetch.
-     *
+     * 
      * @return list of refs to fetch
      */
     private String[] getRefs() {
@@ -258,8 +254,9 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
         String remoteBranch = display.getRemoteBranches().getValue();
         String remoteName = display.getRemoteDisplayValue();
         String refs =
-                (localBranch == null || localBranch.length() == 0) ? remoteBranch : "refs/heads/" + remoteBranch + ":"
-                                                                                    + "refs/remotes/" + remoteName + "/" + remoteBranch;
+                      (localBranch == null || localBranch.length() == 0) ? remoteBranch : "refs/heads/" + remoteBranch + ":"
+                                                                                          + "refs/remotes/" + remoteName + "/"
+                                                                                          + remoteBranch;
         return new String[]{refs};
     }
 
@@ -283,7 +280,7 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
 
         display.setRemoteValues(remoteValues);
 
-//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+        // String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
         String projectId = getSelectedProject().getId();
 
         getBranches(projectId, false);

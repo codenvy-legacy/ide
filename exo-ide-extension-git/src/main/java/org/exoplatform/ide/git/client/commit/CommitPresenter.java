@@ -50,7 +50,7 @@ import java.util.Date;
 
 /**
  * Presenter for commit view. The view must implement {@link CommitPresenter.Display} interface and pointed in Views.gwt.xml file.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 31, 2011 10:02:25 AM anya $
  */
@@ -59,30 +59,29 @@ public class CommitPresenter extends GitPresenter implements CommitHandler {
     public interface Display extends IsView {
         /**
          * Get commit button handler.
-         *
+         * 
          * @return {@link HasClickHandlers}
          */
         HasClickHandlers getCommitButton();
 
         /**
          * Get cancel button handler.
-         *
+         * 
          * @return {@link HasClickHandlers}
          */
         HasClickHandlers getCancelButton();
 
         /**
          * Get message field value.
-         *
+         * 
          * @return {@link HasValue}
          */
         HasValue<String> getMessage();
 
         /**
          * Change the enable state of the commit button.
-         *
-         * @param enable
-         *         enabled or not
+         * 
+         * @param enable enabled or not
          */
         void enableCommitButton(boolean enable);
 
@@ -91,14 +90,14 @@ public class CommitPresenter extends GitPresenter implements CommitHandler {
 
         /**
          * Get all field.
-         *
+         * 
          * @return {@link HasValue}
          */
         HasValue<Boolean> getAllField();
 
         /**
          * Get amend field.
-         *
+         * 
          * @return {@link HasValue}
          */
         HasValue<Boolean> getAmendField();
@@ -116,9 +115,8 @@ public class CommitPresenter extends GitPresenter implements CommitHandler {
 
     /**
      * Bind display(view) with presenter.
-     *
-     * @param d
-     *         display
+     * 
+     * @param d display
      */
     public void bindDisplay(Display d) {
         this.display = d;
@@ -169,9 +167,14 @@ public class CommitPresenter extends GitPresenter implements CommitHandler {
         boolean amend = display.getAmendField().getValue();
 
         try {
-            GitClientService.getInstance().commitWS(vfs.getId(), project, message, all, amend,
+            GitClientService.getInstance().commitWS(vfs.getId(),
+                                                    project,
+                                                    message,
+                                                    all,
+                                                    amend,
                                                     new RequestCallback<Revision>(
-                                                            new RevisionUnmarshallerWS(new Revision(null, message, 0, null))) {
+                                                                                  new RevisionUnmarshallerWS(new Revision(null, message, 0,
+                                                                                                                          null))) {
                                                         @Override
                                                         protected void onSuccess(Revision result) {
                                                             if (!result.isFake()) {
@@ -195,9 +198,14 @@ public class CommitPresenter extends GitPresenter implements CommitHandler {
     /** Perform the commit to repository and process the response (sends request over HTTP). */
     private void doCommitREST(ProjectModel project, String message, boolean all, boolean amend) {
         try {
-            GitClientService.getInstance().commit(vfs.getId(), project, message, all, amend,
+            GitClientService.getInstance().commit(vfs.getId(),
+                                                  project,
+                                                  message,
+                                                  all,
+                                                  amend,
                                                   new AsyncRequestCallback<Revision>(
-                                                          new RevisionUnmarshaller(new Revision(null, message, 0, null))) {
+                                                                                     new RevisionUnmarshaller(new Revision(null, message,
+                                                                                                                           0, null))) {
                                                       @Override
                                                       protected void onSuccess(Revision result) {
                                                           if (!result.isFake()) {
@@ -220,32 +228,32 @@ public class CommitPresenter extends GitPresenter implements CommitHandler {
 
     /**
      * Performs action when commit is successfully completed.
-     *
-     * @param revision
-     *         a {@link Revision}
+     * 
+     * @param revision a {@link Revision}
      */
     private void onCommitSuccess(Revision revision) {
         DateTimeFormat formatter = DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM);
         String date = formatter.format(new Date(revision.getCommitTime()));
         String message = GitExtension.MESSAGES.commitMessage(revision.getId(), date);
         message +=
-                (revision.getCommitter() != null && revision.getCommitter().getName() != null && revision.getCommitter()
-                                                                                                         .getName().length() > 0) ? " " +
+                   (revision.getCommitter() != null && revision.getCommitter().getName() != null && revision.getCommitter()
+                                                                                                            .getName().length() > 0)
+                       ? " " +
 
-                                                                                                                                    GitExtension
-                                                                                                                                            .MESSAGES
-                                                                                                                                            .commitUser(
-                                                                                                                                                    revision.getCommitter()
-                                                                                                                                                            .getName())
-                                                                                                                                  : "";
+                         GitExtension
+                         .MESSAGES
+                                  .commitUser(
+                                  revision.getCommitter()
+                                          .getName())
+                       : "";
         IDE.fireEvent(new OutputEvent(message, Type.GIT));
         IDE.fireEvent(new RefreshBrowserEvent());
     }
 
     private void handleError(Throwable exception) {
         String errorMessage =
-                (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                                                                                        : GitExtension.MESSAGES.commitFailed();
+                              (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
+                                  : GitExtension.MESSAGES.commitFailed();
         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
     }
 

@@ -33,40 +33,40 @@ import org.exoplatform.ide.git.shared.Remote;
 
 /**
  * View for remote repositories list with possibility to add and delete remote repository. Must be pointed in Views.gwt.xml.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 18, 2011 12:31:05 PM anya $
  */
 public class RemoteView extends ViewImpl implements RemotePresenter.Display {
-    private static final int HEIGHT = 280;
+    private static final int    HEIGHT           = 280;
 
-    private static final int WIDTH = 480;
+    private static final int    WIDTH            = 480;
 
-    public static final String ID = "ideRemoteView";
+    public static final String  ID               = "ideRemoteView";
 
-   /* Elements IDs */
+    /* Elements IDs */
 
-    private static final String ADD_BUTTON_ID = "ideRemoteViewAddButton";
+    private static final String ADD_BUTTON_ID    = "ideRemoteViewAddButton";
 
     private static final String DELETE_BUTTON_ID = "ideRemoteViewDeleteButton";
 
-    private static final String CLOSE_BUTTON_ID = "ideRemoteViewCloseButton";
+    private static final String CLOSE_BUTTON_ID  = "ideRemoteViewCloseButton";
 
     /** Create remote repository button. */
     @UiField
-    ImageButton addButton;
+    ImageButton                 addButton;
 
     /** Delete remote repository button. */
     @UiField
-    ImageButton deleteButton;
+    ImageButton                 deleteButton;
 
     /** Close button. */
     @UiField
-    ImageButton closeButton;
+    ImageButton                 closeButton;
 
     /** Grid with remote repositories. */
     @UiField
-    RemoteGrid remoteGrid;
+    RemoteGrid                  remoteGrid;
 
     interface RemoteViewUiBinder extends UiBinder<Widget, RemoteView> {
     }

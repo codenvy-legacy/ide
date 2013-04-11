@@ -19,33 +19,27 @@
 package org.exoplatform.ide.git.shared;
 
 /**
- * Request to add remote configuration {@link #name} for repository at
- * {@link #url}.
- *
+ * Request to add remote configuration {@link #name} for repository at {@link #url}.
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: RemoteAddRequest.java 67651 2011-03-25 16:15:36Z andrew00x $
  */
 public class RemoteAddRequest extends GitRequest {
     /** Remote name. */
-    private String name;
+    private String   name;
 
     /** Repository url. */
-    private String url;
+    private String   url;
 
     /**
-     * List of tracked branches in remote repository. If not set then track all
-     * branches.
+     * List of tracked branches in remote repository. If not set then track all branches.
      */
     private String[] branches;
 
     /**
-     * @param name
-     *         remote name
-     * @param url
-     *         repository url
-     * @param branches
-     *         list of tracked branches in remote repository. If not set
-     *         then track all branches
+     * @param name remote name
+     * @param url repository url
+     * @param branches list of tracked branches in remote repository. If not set then track all branches
      */
     public RemoteAddRequest(String name, String url, String[] branches) {
         this.name = name;
@@ -54,10 +48,8 @@ public class RemoteAddRequest extends GitRequest {
     }
 
     /**
-     * @param name
-     *         remote name
-     * @param url
-     *         repository url
+     * @param name remote name
+     * @param url repository url
      */
     public RemoteAddRequest(String name, String url) {
         this.name = name;
@@ -65,8 +57,7 @@ public class RemoteAddRequest extends GitRequest {
     }
 
     /**
-     * "Empty" request for create remote configuration. Corresponding setters
-     * used to setup required parameters.
+     * "Empty" request for create remote configuration. Corresponding setters used to setup required parameters.
      */
     public RemoteAddRequest() {
     }
@@ -77,8 +68,7 @@ public class RemoteAddRequest extends GitRequest {
     }
 
     /**
-     * @param name
-     *         remote name
+     * @param name remote name
      */
     public void setName(String name) {
         this.name = name;
@@ -90,8 +80,7 @@ public class RemoteAddRequest extends GitRequest {
     }
 
     /**
-     * @param url
-     *         repository url
+     * @param url repository url
      */
     public void setUrl(String url) {
         this.url = url;
@@ -106,8 +95,7 @@ public class RemoteAddRequest extends GitRequest {
     }
 
     /**
-     * @param branches
-     *         list of tracked branches in remote repository
+     * @param branches list of tracked branches in remote repository
      * @see #branches
      */
     public void setBranches(String[] branches) {

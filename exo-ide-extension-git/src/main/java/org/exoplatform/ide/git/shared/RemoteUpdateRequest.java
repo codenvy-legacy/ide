@@ -20,26 +20,25 @@ package org.exoplatform.ide.git.shared;
 
 /**
  * Request to update tracked repositories.
- *
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: RemoteUpdateRequest.java 67651 2011-03-25 16:15:36Z andrew00x $
  */
 public class RemoteUpdateRequest extends GitRequest {
     /** Remote name. */
-    private String name;
+    private String   name;
 
     /**
      * Updates for list of currently tracked branches.
-     *
+     * 
      * @see #addBranches
      */
     private String[] branches;
 
     /**
-     * If <code>true</code> {@link #branches} instead of replacing the list of
-     * currently tracked branches, added to that list.
+     * If <code>true</code> {@link #branches} instead of replacing the list of currently tracked branches, added to that list.
      */
-    private boolean addBranches;
+    private boolean  addBranches;
 
     /** Remote URLs to be added. */
     private String[] addUrl;
@@ -54,22 +53,14 @@ public class RemoteUpdateRequest extends GitRequest {
     private String[] removePushUrl;
 
     /**
-     * @param name
-     *         name of remote
-     * @param branches
-     *         updates for list of currently tracked branches
-     * @param addBranches
-     *         if <code>true</code> then <code>branches</code> instead
-     *         of replacing the list of currently tracked branches, added to
-     *         that list
-     * @param addUrl
-     *         remote URLs to be added
-     * @param removeUrl
-     *         remote URLs to be removed
-     * @param addPushUrl
-     *         remote push URLs to be added
-     * @param removePushUrl
-     *         remote push URLs to be removed
+     * @param name name of remote
+     * @param branches updates for list of currently tracked branches
+     * @param addBranches if <code>true</code> then <code>branches</code> instead of replacing the list of currently tracked branches, added
+     *            to that list
+     * @param addUrl remote URLs to be added
+     * @param removeUrl remote URLs to be removed
+     * @param addPushUrl remote push URLs to be added
+     * @param removePushUrl remote push URLs to be removed
      */
     public RemoteUpdateRequest(String name, String[] branches, boolean addBranches, String[] addUrl, String[] removeUrl,
                                String[] addPushUrl, String[] removePushUrl) {
@@ -83,8 +74,7 @@ public class RemoteUpdateRequest extends GitRequest {
     }
 
     /**
-     * "Empty" request for update remote. Corresponding setters used to setup
-     * required parameters.
+     * "Empty" request for update remote. Corresponding setters used to setup required parameters.
      */
     public RemoteUpdateRequest() {
     }
@@ -98,8 +88,7 @@ public class RemoteUpdateRequest extends GitRequest {
     }
 
     /**
-     * @param name
-     *         remote name
+     * @param name remote name
      * @see #name
      */
     public void setName(String name) {
@@ -115,8 +104,7 @@ public class RemoteUpdateRequest extends GitRequest {
     }
 
     /**
-     * @param branches
-     *         list tracked branches
+     * @param branches list tracked branches
      * @see #branches
      */
     public void setBranches(String[] branches) {
@@ -124,8 +112,7 @@ public class RemoteUpdateRequest extends GitRequest {
     }
 
     /**
-     * @return if <code>true</code> then {@link #branches} instead of replacing
-     *         the list of currently tracked branches, added to that list
+     * @return if <code>true</code> then {@link #branches} instead of replacing the list of currently tracked branches, added to that list
      * @see #addBranches
      */
     public boolean isAddBranches() {
@@ -133,10 +120,8 @@ public class RemoteUpdateRequest extends GitRequest {
     }
 
     /**
-     * @param addBranches
-     *         if <code>true</code> then {@link #branches} instead of
-     *         replacing the list of currently tracked branches, added to that
-     *         list
+     * @param addBranches if <code>true</code> then {@link #branches} instead of replacing the list of currently tracked branches, added to
+     *            that list
      * @see #addBranches
      */
     public void setAddBranches(boolean addBranches) {
@@ -158,8 +143,7 @@ public class RemoteUpdateRequest extends GitRequest {
     }
 
     /**
-     * @param removeUrl
-     *         URLs to be removed
+     * @param removeUrl URLs to be removed
      */
     public void setRemoveUrl(String[] removeUrl) {
         this.removeUrl = removeUrl;
@@ -171,8 +155,7 @@ public class RemoteUpdateRequest extends GitRequest {
     }
 
     /**
-     * @param addPushUrl
-     *         push URLs to be added
+     * @param addPushUrl push URLs to be added
      */
     public void setAddPushUrl(String[] addPushUrl) {
         this.addPushUrl = addPushUrl;
@@ -184,8 +167,7 @@ public class RemoteUpdateRequest extends GitRequest {
     }
 
     /**
-     * @param removePushUrl
-     *         remote push URLs to be removed
+     * @param removePushUrl remote push URLs to be removed
      */
     public void setRemovePushUrl(String[] removePushUrl) {
         this.removePushUrl = removePushUrl;
