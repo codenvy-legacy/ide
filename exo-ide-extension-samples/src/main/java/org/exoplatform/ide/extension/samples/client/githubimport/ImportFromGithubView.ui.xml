@@ -40,7 +40,6 @@
 			margin-right: 10px;
 		}
 		
-		
 		.indents10 {
 			margin: 0 10px 10px;
 		}
@@ -75,7 +74,7 @@
 				</g:center>
 			</g:DockLayoutPanel>
 		</g:layer>
-		<g:layer left="0px" right="0" bottom="30px" height="25px">
+		<g:layer left="0px" right="0" bottom="32px" height="25px">
 		   <g:FlowPanel stylePrimaryName="{style.indents10}">
 				<f:Label text="{locale.projectName}" addStyleNames="{style.floatLeft} {style.label}"></f:Label>
 				<f:TextInput ui:field="projectNameField" addStyleNames="{style.floatLeft} {style.border}"
