@@ -144,7 +144,7 @@ public class ProjectChatView extends ViewImpl implements Display {
 
     private DivElement getTimeElement(Date d) {
         DivElement timeElement = Elements.createDivElement(css.chatTime());
-        timeElement.setInnerHTML("[" + timeFormat.format(d) + "]");
+        timeElement.setInnerHTML("[" + timeFormat.format(d) + "]&nbsp;");
         return timeElement;
     }
 
