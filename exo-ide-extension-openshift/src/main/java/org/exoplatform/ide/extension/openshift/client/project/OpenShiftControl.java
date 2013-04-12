@@ -85,7 +85,8 @@ public class OpenShiftControl extends SimpleControl implements IDEControl, Proje
 
     /** @param project */
     private void update(ProjectModel project) {
-        boolean isOpenShiftProject = project.getPropertyValue("openshift-express-application") != null;
+        boolean isOpenShiftProject = (project.getProperty("openshift-express-application") != null 
+                                     &&  !project.getPropertyValues("openshift-express-application").isEmpty());
         setVisible(isOpenShiftProject);
         setEnabled(isOpenShiftProject);
     }
