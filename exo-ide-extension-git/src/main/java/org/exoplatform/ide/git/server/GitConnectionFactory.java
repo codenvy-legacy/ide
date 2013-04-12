@@ -27,31 +27,27 @@ import java.util.ServiceLoader;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: GitConnectionFactory.java 22811 2011-03-22 07:28:35Z andrew00x
- *          $
+ * @version $Id: GitConnectionFactory.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
 public abstract class GitConnectionFactory {
     private static ServiceLoader<GitConnectionFactory> gitConnectionFactories = ServiceLoader
-            .load(GitConnectionFactory.class);
+                                                                                             .load(GitConnectionFactory.class);
 
     public static GitConnectionFactory getInstance() throws GitException {
         Iterator<GitConnectionFactory> iter = gitConnectionFactories.iterator();
         if (!iter.hasNext())
             throw new GitException(
-                    "Could not instantiate GitConnectionFactory. GitConnectionFactory is not configured properly. ");
+                                   "Could not instantiate GitConnectionFactory. GitConnectionFactory is not configured properly. ");
         return iter.next();
     }
 
     /**
      * Get connection to Git repository located in <code>workDir</code>.
-     *
-     * @param workDir
-     *         repository directory
-     * @param user
-     *         user
+     * 
+     * @param workDir repository directory
+     * @param user user
      * @return connection to Git repository
-     * @throws GitException
-     *         if can't initialize connection
+     * @throws GitException if can't initialize connection
      */
     public final GitConnection getConnection(String workDir, GitUser user) throws GitException {
         return getConnection(new File(workDir), user);
@@ -59,14 +55,11 @@ public abstract class GitConnectionFactory {
 
     /**
      * Get connection to Git repository located in <code>workDir</code>.
-     *
-     * @param workDir
-     *         repository directory
-     * @param user
-     *         user
+     * 
+     * @param workDir repository directory
+     * @param user user
      * @return connection to Git repository
-     * @throws GitException
-     *         if can't initialize connection
+     * @throws GitException if can't initialize connection
      */
     public abstract GitConnection getConnection(File workDir, GitUser user) throws GitException;
 }

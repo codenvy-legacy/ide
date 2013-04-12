@@ -24,23 +24,24 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
 /**
  * Our implementation of org.eclipse.jgit.api.Status
- *
+ * 
  * @author <a href="mailto:dvishinskiy@codenvy.com">Dmitriy Vyshinskiy</a>
  * @version $Id: StatusImpl.java 68135 2013-18-03 14:23:36Z diam $
  */
 public class StatusImpl implements Status, InfoPage {
 
-    protected String branchName;
+    protected String      branchName;
 
-    protected Boolean shortFormat;
+    protected Boolean     shortFormat;
 
-    protected Boolean clean;
+    protected Boolean     clean;
 
     protected Set<String> added;
 
@@ -69,12 +70,10 @@ public class StatusImpl implements Status, InfoPage {
         this.setMissing(status.getMissing());
         this.setModified(status.getModified());
         this.setUntracked(status.getUntracked());
-        this.setUntrackedFolders(status.getUntrackedFolders());
         this.setConflicting(status.getConflicting());
 
         if ((getAdded().isEmpty() && getChanged().isEmpty() && getRemoved().isEmpty() && getMissing().isEmpty()
-             && getModified().isEmpty() && getUntracked().isEmpty() && getUntrackedFolders().isEmpty() && getConflicting()
-                .isEmpty())) {
+             && getModified().isEmpty() && getUntracked().isEmpty() && getConflicting().isEmpty())) {
             this.setClean(true);
         } else {
             this.setClean(false);
@@ -171,9 +170,11 @@ public class StatusImpl implements Status, InfoPage {
         this.untracked = untracked;
     }
 
-    /** @see org.eclipse.jgit.api.Status#getUntrackedFolders() */
+    /** @see org.eclipse.jgit.api.Status#getUntrackedFolders() 
+     * Always empty
+     * */
     public Set<String> getUntrackedFolders() {
-        return this.untrackedFolders;
+        return Collections.<String>emptySet(); 
     }
 
     /** Setter for org.eclipse.jgit.api.Status#getUntrackedFolders() */
@@ -220,13 +221,10 @@ public class StatusImpl implements Status, InfoPage {
 
     /**
      * Writes into out all paths with given status
-     *
-     * @param out
-     *         is a stream to write to
-     * @param paths
-     *         is a set of paths
-     * @param status
-     *         is a status to be written
+     * 
+     * @param out is a stream to write to
+     * @param paths is a set of paths
+     * @param status is a status to be written
      */
     private void writeList(PrintWriter out, Set<String> paths, String status) {
         for (String path : paths) {
@@ -244,9 +242,8 @@ public class StatusImpl implements Status, InfoPage {
 
     /**
      * Equivalent of 'git status --short'
-     *
-     * @param out
-     *         is a stream to write status output.
+     * 
+     * @param out is a stream to write status output.
      * @throws IOException
      */
     private void writeShort(PrintWriter out) throws IOException {
@@ -281,15 +278,13 @@ public class StatusImpl implements Status, InfoPage {
         }
 
         writeList(out, getConflicting(), "U");
-        writeList(out, getUntrackedFolders(), "??");
         writeList(out, getUntracked(), "??");
     }
 
     /**
      * Equivalent of 'git status'
-     *
-     * @param out
-     *         is a stream to write status output.
+     * 
+     * @param out is a stream to write status output.
      * @throws IOException
      */
     private void writeLong(PrintWriter out) throws IOException {
@@ -301,7 +296,7 @@ public class StatusImpl implements Status, InfoPage {
         }
 
         if (!(getAdded().isEmpty() && getChanged().isEmpty() && getRemoved().isEmpty())) {
-            //write changes to be committed
+            // write changes to be committed
             out.write("# Changes to be committed:\n");
             out.write("#   (use \"git reset HEAD <file>...\" to unstage)\n");
             out.write("#\n");
@@ -312,7 +307,7 @@ public class StatusImpl implements Status, InfoPage {
         }
 
         if (!(getMissing().isEmpty() && getModified().isEmpty())) {
-            //write changes not staged for commit
+            // write changes not staged for commit
             out.write("#\n");
             out.write("# Changes not staged for commit:\n");
             out.write("#   (use \"git add/rm <file>...\" to update what will be committed)\n");
@@ -324,7 +319,7 @@ public class StatusImpl implements Status, InfoPage {
         }
 
         if (!getConflicting().isEmpty()) {
-            //write information about conflicting
+            // write information about conflicting
             out.write("#\n");
             out.write("# You have unmerged paths.\n");
             out.write("#   (fix conflicts and run \"git commit\")\n");
@@ -336,14 +331,13 @@ public class StatusImpl implements Status, InfoPage {
             writeList(out, getConflicting(), "both modified");
         }
 
-        if (!(getUntrackedFolders().isEmpty() && getUntracked().isEmpty())) {
-            //write untracked files
+        if (!getUntracked().isEmpty()) {
+            // write untracked files
             out.write("#\n");
             out.write("# Untracked files:\n");
             out.write("#   (use \"git add <file>...\" to include in what will be committed)\n");
             out.write("#\n");
 
-            writeList(out, getUntrackedFolders(), null);
             writeList(out, getUntracked(), null);
         }
     }

@@ -208,5 +208,5 @@ public class JavaProjectTreeItem extends PackageExplorerTreeItem {
 
         return items;
     }
-
+    
 }

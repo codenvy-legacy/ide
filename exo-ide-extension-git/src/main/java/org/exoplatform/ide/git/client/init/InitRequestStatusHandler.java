@@ -34,8 +34,7 @@ public class InitRequestStatusHandler implements RequestStatusHandler {
     private String projectName;
 
     /**
-     * @param projectName
-     *         project's name
+     * @param projectName project's name
      */
     public InitRequestStatusHandler(String projectName) {
         super();

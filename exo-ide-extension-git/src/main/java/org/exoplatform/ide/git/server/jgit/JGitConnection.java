@@ -20,6 +20,7 @@ package org.exoplatform.ide.git.server.jgit;
 
 import org.eclipse.jgit.api.AddCommand;
 import org.eclipse.jgit.api.CheckoutCommand;
+import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.CreateBranchCommand;
 import org.eclipse.jgit.api.FetchCommand;
@@ -36,15 +37,14 @@ import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.api.errors.DetachedHeadException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRefNameException;
+import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.NoFilepatternException;
 import org.eclipse.jgit.api.errors.NotMergedException;
 import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
-import org.eclipse.jgit.dircache.DirCache;
-import org.eclipse.jgit.dircache.DirCacheCheckout;
+import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.lib.ConfigConstants;
 import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.lib.NullProgressMonitor;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefUpdate;
@@ -61,11 +61,11 @@ import org.eclipse.jgit.transport.PushResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.RemoteRefUpdate;
-import org.eclipse.jgit.transport.Transport;
 import org.eclipse.jgit.transport.URIish;
 import org.exoplatform.ide.git.server.DiffPage;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitException;
+import org.exoplatform.ide.git.server.GitHelper;
 import org.exoplatform.ide.git.server.LogPage;
 import org.exoplatform.ide.git.server.StatusImpl;
 import org.exoplatform.ide.git.shared.AddRequest;
@@ -104,6 +104,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -258,47 +259,26 @@ public class JGitConnection implements GitConnection {
     }
 
     /** @see org.exoplatform.ide.git.server.GitConnection#clone(org.exoplatform.ide.git.shared.CloneRequest) */
-    public GitConnection clone(CloneRequest request) throws URISyntaxException, GitException {
+    public GitConnection clone(CloneRequest request) throws GitException {
         try {
-            File workDir = repository.getWorkTree();
-            if (!(workDir.exists() || workDir.mkdirs())) {
-                throw new GitException("Can't create working folder " + workDir + ". ");
+            if (request.getRemoteName() == null) {
+                request.setRemoteName("origin");
             }
-            repository.create();
-
-            StoredConfig config = repository.getConfig();
-            String remoteName = request.getRemoteName();
-            if (remoteName == null) {
-                remoteName = Constants.DEFAULT_REMOTE_NAME;
+            if (request.getWorkingDir() == null) {
+                request.setWorkingDir(repository.getWorkTree().getCanonicalPath());
             }
-
-            RemoteConfig remoteConfig = new RemoteConfig(config, remoteName);
-            remoteConfig.addURI(new URIish(request.getRemoteUri()));
-
-            RefSpec fetchRefSpec =
-                                   new RefSpec(Constants.R_HEADS + "*" + ":" + Constants.R_REMOTES + remoteName + "/*").setForceUpdate(true);
-
-            String[] branchesToFetch = request.getBranchesToFetch();
-            if (branchesToFetch != null) {
-                for (int i = 0; i < branchesToFetch.length; i++) {
-                    if (fetchRefSpec.matchSource(branchesToFetch[i])) {
-                        remoteConfig.addFetchRefSpec(new RefSpec(branchesToFetch[i]));
-                    }
-                }
-            } else {
-                remoteConfig.addFetchRefSpec(fetchRefSpec);
+            CloneCommand cloneCom = Git.cloneRepository();
+            cloneCom.setRemote(request.getRemoteName());
+            cloneCom.setURI(request.getRemoteUri());
+            cloneCom.setDirectory(new File(request.getWorkingDir()));
+            if (request.getBranchesToFetch() != null) {
+                cloneCom.setBranchesToClone(Arrays.asList(request.getBranchesToFetch()));
             }
-
-            remoteConfig.update(config);
-
-            final String branchName = "master";
-            final String branchRef = "refs/heads/master";
-
-            config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, branchName, ConfigConstants.CONFIG_KEY_REMOTE,
-                             remoteName);
-            config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, branchName, ConfigConstants.CONFIG_KEY_MERGE,
-                             branchRef);
-
+            else {
+                cloneCom.setCloneAllBranches(true);
+            }
+            Repository repo = cloneCom.call().getRepository();
+            StoredConfig config = repo.getConfig();
             GitUser gitUser = getUser();
             if (gitUser != null) {
                 config.setString("user", null, "name", gitUser.getName());
@@ -306,57 +286,16 @@ public class JGitConnection implements GitConnection {
             }
 
             config.save();
+            return new JGitConnection(repo, this.user);
 
-            // Fetch data from remote repository.
-            Transport transport = Transport.open(repository, remoteConfig);
-
-            int timeout = request.getTimeout();
-            if (timeout > 0) {
-                transport.setTimeout(timeout);
-            }
-
-            FetchResult fetchResult;
-            try {
-                fetchResult = transport.fetch(NullProgressMonitor.INSTANCE, null);
-            } finally {
-                transport.close();
-            }
-
-            // Merge command is not work here. Looks like JGit bug. It fails with NPE that should not happen.
-            // But 'merge' command from C git (original) works as well on repository create and fetched with JGit.
-            Ref headRef = fetchResult.getAdvertisedRef(branchRef);
-            if (headRef == null || headRef.getObjectId() == null) {
-                return this;
-            }
-
-            RevWalk revWalk = new RevWalk(repository);
-            RevCommit commit;
-            try {
-                commit = revWalk.parseCommit(headRef.getObjectId());
-            } finally {
-                revWalk.release();
-            }
-
-            boolean detached = !headRef.getName().startsWith(Constants.R_HEADS);
-            RefUpdate updateRef = repository.updateRef(Constants.HEAD, detached);
-            updateRef.setNewObjectId(commit.getId());
-            updateRef.forceUpdate();
-
-            DirCache dirCache = null;
-            try {
-                dirCache = repository.lockDirCache();
-                DirCacheCheckout dirCacheCheckout = new DirCacheCheckout(repository, dirCache, commit.getTree());
-                dirCacheCheckout.setFailOnConflict(true);
-                dirCacheCheckout.checkout();
-            } finally {
-                if (dirCache != null) {
-                    dirCache.unlock();
-                }
-            }
-
-            return this;
+        } catch (InvalidRemoteException e) {
+            throw new GitException(e);
+        } catch (TransportException e) {
+            throw new GitException(e.getMessage());
+        } catch (GitAPIException e) {
+            throw new GitException(e);
         } catch (IOException e) {
-            throw new GitException(e.getMessage(), e);
+            throw new GitException(e);
         }
     }
 
@@ -634,6 +573,9 @@ public class JGitConnection implements GitConnection {
                 throw new GitException("Cannot get ref for remote branch " + remoteBranch + ". ");
             }
             org.eclipse.jgit.api.MergeResult res = new Git(repository).merge().include(remoteBranchRef).call();
+            if (res.getMergeStatus().equals(org.eclipse.jgit.api.MergeResult.MergeStatus.ALREADY_UP_TO_DATE)) {
+                throw new GitException(res.getMergeStatus().toString());
+            }
 
             if (res.getConflicts() != null) {
                 StringBuilder message = new StringBuilder("Merge conflict appeared in files:</br>");

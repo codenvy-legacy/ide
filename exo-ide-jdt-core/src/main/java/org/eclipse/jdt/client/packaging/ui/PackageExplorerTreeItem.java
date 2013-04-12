@@ -41,20 +41,19 @@ import java.util.Map;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  */
-public abstract class PackageExplorerTreeItem extends TreeItem
-{
+public abstract class PackageExplorerTreeItem extends TreeItem {
 
     private static final String PREFIX_ID = "ide.package_explorer.item.";
 
-    public PackageExplorerTreeItem(Item item)
-    {
+    public PackageExplorerTreeItem(Item item) {
         setUserObject(item);
         render();
     }
 
-    /** Render tree item. */
-    protected void render()
-    {
+    /**
+     * Render tree item.
+     */
+    protected void render() {
         Grid grid = new Grid(1, 2);
         grid.setWidth("100%");
 
@@ -79,15 +78,12 @@ public abstract class PackageExplorerTreeItem extends TreeItem
         getElement().setId(PREFIX_ID + Utils.md5(item.getPath()));
 
         List<Item> items = getItems();
-        if (!getState() && items != null && !items.isEmpty())
-        {
-            if (getChildCount() == 0)
-            {
+        if (!getState() && items != null && !items.isEmpty()) {
+            if (getChildCount() == 0) {
                 addItem("");
             }
         }
-        else if (!getState() && items != null && items.isEmpty())
-        {
+        else if (!getState() && items != null && items.isEmpty()) {
             removeItems();
         }
     }
@@ -112,16 +108,12 @@ public abstract class PackageExplorerTreeItem extends TreeItem
      * @param id
      * @return
      */
-    public PackageExplorerTreeItem getChildByItemId(String id)
-    {
-        for (int i = 0; i < getChildCount(); i++)
-        {
+    public PackageExplorerTreeItem getChildByItemId(String id) {
+        for (int i = 0; i < getChildCount(); i++) {
             TreeItem child = getChild(i);
-            if (child instanceof PackageExplorerTreeItem)
-            {
+            if (child instanceof PackageExplorerTreeItem) {
                 PackageExplorerTreeItem treeItem = (PackageExplorerTreeItem)child;
-                if (((Item)treeItem.getUserObject()).getId().equals(id))
-                {
+                if (((Item)treeItem.getUserObject()).getId().equals(id)) {
                     return treeItem;
                 }
             }
@@ -150,27 +142,31 @@ public abstract class PackageExplorerTreeItem extends TreeItem
      * @param item
      * @return
      */
-    public boolean select(Item item)
-    {
-        if (item.getId().equals(((Item)getUserObject()).getId()))
-        {
+    public boolean select(Item item) {
+        if (item.getId().equals(((Item)getUserObject()).getId())) {
             getTree().setSelectedItem(this);
             getTree().ensureSelectedItemVisible();
             return true;
         }
 
-        for (int i = 0; i < getChildCount(); i++)
-        {
+        String packageExplorerItemPath = ((Item)getUserObject()).getPath();
+        if (packageExplorerItemPath == null || 
+            packageExplorerItemPath.isEmpty() ||
+            !item.getPath().startsWith(packageExplorerItemPath)) {
+            return false;
+        }
+
+        refresh(true);
+
+        for (int i = 0; i < getChildCount(); i++) {
             TreeItem child = getChild(i);
-            if (child instanceof PackageExplorerTreeItem)
-            {
+            if (child instanceof PackageExplorerTreeItem) {
                 String path = ((Item)child.getUserObject()).getPath();
                 if (path == null || path.isEmpty()) {
                     continue;
                 }
-                
-                if (item.getPath().startsWith(path))
-                {
+
+                if (item.getPath().startsWith(path)) {
                     ((PackageExplorerTreeItem)child).refresh(true);
                     return ((PackageExplorerTreeItem)child).select(item);
                 }
@@ -183,38 +179,32 @@ public abstract class PackageExplorerTreeItem extends TreeItem
     /**
      * Remove items from tree which are points to nonexistent items on file system.
      */
-    protected void removeNonexistendTreeItems()
-    {
+    protected void removeNonexistendTreeItems() {
         /*
          * Remove nonexistent
          */
         List<String> idList = new ArrayList<String>();
         List<Item> items = getItems();
-        for (Item item : items)
-        {
+        for (Item item : items) {
             idList.add(item.getId());
         }
 
         ArrayList<TreeItem> itemsToRemove = new ArrayList<TreeItem>();
-        for (int i = 0; i < getChildCount(); i++)
-        {
+        for (int i = 0; i < getChildCount(); i++) {
             TreeItem child = getChild(i);
-            if (!(child instanceof PackageExplorerTreeItem))
-            {
+            if (!(child instanceof PackageExplorerTreeItem)) {
                 itemsToRemove.add(child);
                 continue;
             }
 
             PackageExplorerTreeItem childTreeItem = (PackageExplorerTreeItem)child;
             Item childItem = (Item)childTreeItem.getUserObject();
-            if (!idList.contains(childItem.getId()))
-            {
+            if (!idList.contains(childItem.getId())) {
                 itemsToRemove.add(child);
             }
         }
 
-        for (TreeItem child : itemsToRemove)
-        {
+        for (TreeItem child : itemsToRemove) {
             removeItem(child);
         }
     }
@@ -291,20 +281,20 @@ public abstract class PackageExplorerTreeItem extends TreeItem
             ((PackageExplorerTreeItem)child).removeIcons(icons);
         }
     }
-    
-    public void insertItem(int beforeIndex, TreeItem item)
-        throws IndexOutOfBoundsException {
-        if (beforeIndex > getChildCount())
-        {
-            System.out.println("!!! ERR");
-            System.out.println("tree item > " + getItemTitle());
-            System.out.println("beforeIndex > " + beforeIndex);
-            System.out.println("child count > " + getChildCount());
-            
-            beforeIndex = getChildCount();
-        }
-        
-        super.insertItem(beforeIndex, item);
-    }
+
+    // public void insertItem(int beforeIndex, TreeItem item)
+    // throws IndexOutOfBoundsException {
+    // if (beforeIndex > getChildCount())
+    // {
+    // System.out.println("!!! ERR");
+    // System.out.println("tree item > " + getItemTitle());
+    // System.out.println("beforeIndex > " + beforeIndex);
+    // System.out.println("child count > " + getChildCount());
+    //
+    // beforeIndex = getChildCount();
+    // }
+    //
+    // super.insertItem(beforeIndex, item);
+    // }
 
 }

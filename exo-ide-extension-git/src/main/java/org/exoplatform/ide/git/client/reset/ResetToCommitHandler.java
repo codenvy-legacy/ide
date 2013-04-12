@@ -22,14 +22,14 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ResetToCommitEvent} event.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 15, 2011 9:51:06 AM anya $
  */
 public interface ResetToCommitHandler extends EventHandler {
     /**
      * Perform actions when user tries to reset the HEAD.
-     *
+     * 
      * @param event
      */
     void onResetToCommit(ResetToCommitEvent event);

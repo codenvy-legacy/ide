@@ -47,7 +47,7 @@ import java.util.Map;
 public class PackageExplorerItemTree extends org.exoplatform.gwtframework.ui.client.component.Tree<Item> implements
                                                                                                         OpenHandler<TreeItem> {
 
-    private String      id;
+    private String id;
 
     private JavaProject project;
 
@@ -74,12 +74,10 @@ public class PackageExplorerItemTree extends org.exoplatform.gwtframework.ui.cli
     @Override
     public void onBrowserEvent(Event event) {
         if (Event.ONCONTEXTMENU == DOM.eventGetType(event)) {
-            NativeEvent nativeEvent =
-                                      Document.get().createMouseDownEvent(-1, event.getScreenX(), event.getScreenY(), event.getClientX(),
-                                                                          event.getClientY(), event.getCtrlKey(), event.getAltKey(),
-                                                                          event.getShiftKey(),
-                                                                          event.getMetaKey(),
-                                                                          NativeEvent.BUTTON_LEFT);
+            NativeEvent nativeEvent = Document.get().createMouseDownEvent(
+                    -1, event.getScreenX(), event.getScreenY(), event.getClientX(),
+                    event.getClientY(), event.getCtrlKey(), event.getAltKey(),
+                    event.getShiftKey(), event.getMetaKey(), NativeEvent.BUTTON_LEFT);
             DOM.eventGetTarget(event).dispatchEvent(nativeEvent);
         }
         super.onBrowserEvent(event);

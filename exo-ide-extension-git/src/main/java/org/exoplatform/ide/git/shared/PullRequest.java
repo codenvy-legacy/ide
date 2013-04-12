@@ -19,9 +19,8 @@
 package org.exoplatform.ide.git.shared;
 
 /**
- * Request to pull (fetch and merge) changes from remote repository to local
- * branch.
- *
+ * Request to pull (fetch and merge) changes from remote repository to local branch.
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: PullRequest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
@@ -33,15 +32,12 @@ public class PullRequest extends GitRequest {
     private String remote;
 
     /**
-     * Time (in seconds) to wait without data transfer occurring before aborting
-     * fetching data from remote repository.
+     * Time (in seconds) to wait without data transfer occurring before aborting fetching data from remote repository.
      */
-    private int timeout;
+    private int    timeout;
 
     /**
-     * @param timeout
-     *         time (in seconds) to wait without data transfer occurring
-     *         before aborting fetching data from remote repository
+     * @param timeout time (in seconds) to wait without data transfer occurring before aborting fetching data from remote repository
      */
     public PullRequest(String remote, String refSpec, int timeout) {
         this.remote = remote;
@@ -50,8 +46,7 @@ public class PullRequest extends GitRequest {
     }
 
     /**
-     * "Empty" pull request. Corresponding setters used to setup required
-     * parameters.
+     * "Empty" pull request. Corresponding setters used to setup required parameters.
      */
     public PullRequest() {
     }
@@ -65,8 +60,7 @@ public class PullRequest extends GitRequest {
     }
 
     /**
-     * @param refSpec
-     *         refspec to fetch
+     * @param refSpec refspec to fetch
      * @see #refSpec
      */
     public void setRefSpec(String refSpec) {
@@ -79,25 +73,21 @@ public class PullRequest extends GitRequest {
     }
 
     /**
-     * @param remote
-     *         remote name
+     * @param remote remote name
      */
     public void setRemote(String remote) {
         this.remote = remote;
     }
 
     /**
-     * @return time (in seconds) to wait without data transfer occurring before
-     *         aborting fetching data from remote repository
+     * @return time (in seconds) to wait without data transfer occurring before aborting fetching data from remote repository
      */
     public int getTimeout() {
         return timeout;
     }
 
     /**
-     * @param timeout
-     *         time (in seconds) to wait without data transfer occurring
-     *         before aborting fetching data from remote repository
+     * @param timeout time (in seconds) to wait without data transfer occurring before aborting fetching data from remote repository
      */
     public void setTimeout(int timeout) {
         this.timeout = timeout;

@@ -35,21 +35,18 @@ public class BranchListRequest extends GitRequest {
     public static final String LIST_REMOTE = "r";
 
     /** Branches list mode. */
-    private String listMode;
+    private String             listMode;
 
     /** Create list branches request that will retrieved local branches. */
     public BranchListRequest() {
     }
 
     /**
-     * Create list branch request with specified list mode. Parameter
-     * <code>listMode</code> may be either 'a' or 'r'. If 'a' is specified then
-     * all branches (local and remote) will be displayed. If 'r' is specified
-     * then remote branches only will be displayed. May be <code>null</code> also
-     * in this case only local branches displayed. This is default behavior.
-     *
-     * @param listMode
-     *         list branch mode
+     * Create list branch request with specified list mode. Parameter <code>listMode</code> may be either 'a' or 'r'. If 'a' is specified
+     * then all branches (local and remote) will be displayed. If 'r' is specified then remote branches only will be displayed. May be
+     * <code>null</code> also in this case only local branches displayed. This is default behavior.
+     * 
+     * @param listMode list branch mode
      */
     public BranchListRequest(String listMode) {
         setListMode(listMode);
@@ -61,12 +58,9 @@ public class BranchListRequest extends GitRequest {
     }
 
     /**
-     * @param listMode
-     *         may be either 'a' or 'r'. If 'a' is specified then all
-     *         branches (local and remote) will be displayed. If 'r' is
-     *         specified then remote branches only will be displayed. May be
-     *         <code>null</code> also in this case only local branches
-     *         displayed
+     * @param listMode may be either 'a' or 'r'. If 'a' is specified then all branches (local and remote) will be displayed. If 'r' is
+     *            specified then remote branches only will be displayed. May be <code>null</code> also in this case only local branches
+     *            displayed
      */
     public void setListMode(String listMode) {
         this.listMode = listMode;

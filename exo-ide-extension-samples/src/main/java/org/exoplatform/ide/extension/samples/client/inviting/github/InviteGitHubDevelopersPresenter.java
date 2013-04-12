@@ -68,9 +68,9 @@ import java.util.List;
  * @version $
  */
 public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteHandler, ViewClosedHandler,
-                                                        InviteGitHubCollaboratorsHandler, GitHubUserSelectionChangedHandler,
-                                                        ProjectOpenedHandler, ProjectClosedHandler,
-                                                        VfsChangedHandler {
+                                            InviteGitHubCollaboratorsHandler, GitHubUserSelectionChangedHandler,
+                                            ProjectOpenedHandler, ProjectClosedHandler,
+                                            VfsChangedHandler {
 
     public static final String COLLABORATORS_FAILED = "Codenvy failed to get the list of collaborators.";
 
@@ -93,13 +93,13 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
         void setInviteButtonEnabled(boolean enabled);
     }
 
-    private Display display;
+    private Display               display;
 
     private VirtualFileSystemInfo vfs;
 
-    private List<GitHubUser> collaborators;
+    private List<GitHubUser>      collaborators;
 
-    private ProjectModel project;
+    private ProjectModel          project;
 
     public InviteGitHubDevelopersPresenter() {
         IDE.getInstance().addControl(new InviteGitHubCollaboratorsControl());
@@ -112,8 +112,10 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
         IDE.addHandler(VfsChangedEvent.TYPE, this);
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     *      .event.ViewClosedEvent)
+     */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
@@ -121,8 +123,10 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
         }
     }
 
-    /** @see org.exoplatform.ide.extension.samples.client.inviting.github.InviteGitHubCollaboratorsHandler#onInviteGitHubCollaborators(org
-     * .exoplatform.ide.extension.samples.client.inviting.github.InviteGitHubCollaboratorsEvent) */
+    /**
+     * @see org.exoplatform.ide.extension.samples.client.inviting.github.InviteGitHubCollaboratorsHandler#onInviteGitHubCollaborators(org
+     *      .exoplatform.ide.extension.samples.client.inviting.github.InviteGitHubCollaboratorsEvent)
+     */
     @Override
     public void onInviteGitHubCollaborators(InviteGitHubCollaboratorsEvent event) {
         if (project == null || vfs == null || display != null) {
@@ -130,35 +134,36 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
         }
 
         try {
-            GitClientService.getInstance().remoteList(vfs.getId(), project.getId(), null, true,
-                                                      new AsyncRequestCallback<List<Remote>>(
-                                                              new RemoteListUnmarshaller(new ArrayList<Remote>())) {
-                                                          @Override
-                                                          protected void onSuccess(List<Remote> result) {
-                                                              if (result.size() == 0) {
-                                                                  Dialogs.getInstance().showError(GitExtension.MESSAGES.remoteListFailed());
-                                                                  return;
-                                                              }
+            GitClientService.getInstance()
+                            .remoteList(vfs.getId(), project.getId(), null, true,
+                                        new AsyncRequestCallback<List<Remote>>(
+                                                                               new RemoteListUnmarshaller(new ArrayList<Remote>())) {
+                                            @Override
+                                            protected void onSuccess(List<Remote> result) {
+                                                if (result.size() == 0) {
+                                                    Dialogs.getInstance().showError(GitExtension.MESSAGES.remoteListFailed());
+                                                    return;
+                                                }
 
-                                                              Remote origin = getRemoteOrigin(result);
-                                                              String[] repo = GitURLParser.parseGitHubUrl(origin.getUrl());
-                                                              if (repo == null) {
-                                                                  Dialogs.getInstance().showError(GitExtension.MESSAGES.remoteListFailed());
-                                                                  return;
-                                                              }
+                                                Remote origin = getRemoteOrigin(result);
+                                                String[] repo = GitURLParser.parseGitHubUrl(origin.getUrl());
+                                                if (repo == null) {
+                                                    Dialogs.getInstance().showError(GitExtension.MESSAGES.remoteListFailed());
+                                                    return;
+                                                }
 
-                                                              loadGitHubCollaborators(repo[0], repo[1], true);
-                                                          }
+                                                loadGitHubCollaborators(repo[0], repo[1], true);
+                                            }
 
-                                                          @Override
-                                                          protected void onFailure(Throwable exception) {
-                                                              String errorMessage =
+                                            @Override
+                                            protected void onFailure(Throwable exception) {
+                                                String errorMessage =
                                                                       exception.getMessage() != null ? exception.getMessage()
-                                                                                                     : GitExtension.MESSAGES
-                                                                                                                   .remoteListFailed();
-                                                              Dialogs.getInstance().showError(errorMessage);
-                                                          }
-                                                      });
+                                                                          : GitExtension.MESSAGES
+                                                                                                 .remoteListFailed();
+                                                Dialogs.getInstance().showError(errorMessage);
+                                            }
+                                        });
         } catch (RequestException e) {
             String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.remoteListFailed();
             Dialogs.getInstance().showError(errorMessage);
@@ -167,7 +172,7 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
 
     /**
      * Search "origin" repository
-     *
+     * 
      * @param remotes
      * @return
      */
@@ -185,17 +190,18 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
         return remotes.get(0);
     }
 
-    /** @see org.exoplatform.ide.git.client.clone.CloneRepositoryCompleteHandler#onCloneRepositoryComplete(org.exoplatform.ide.git.client
-     * .clone.CloneRepositoryCompleteEvent) */
+    /**
+     * @see org.exoplatform.ide.git.client.clone.CloneRepositoryCompleteHandler#onCloneRepositoryComplete(org.exoplatform.ide.git.client
+     *      .clone.CloneRepositoryCompleteEvent)
+     */
     @Override
     public void onCloneRepositoryComplete(CloneRepositoryCompleteEvent event) {
-        //loadStaticGitHubCollaborators();
+        // loadStaticGitHubCollaborators();
         loadGitHubCollaborators(event.getUser(), event.getRepositoryName(), false);
     }
 
     /**
-     * Load list of GitHub collaborators from prepared JSON file.
-     * This method uses only for testing.
+     * Load list of GitHub collaborators from prepared JSON file. This method uses only for testing.
      */
     private void lazyLoadCollaboratorList(final boolean showIfEmpty) {
         AutoBean<Collaborators> autoBean = GitExtension.AUTO_BEAN_FACTORY.collaborators();
@@ -212,8 +218,11 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
 
                             @Override
                             protected void onFailure(Throwable exception) {
-                                String message = exception.getMessage() != null ? exception.getMessage() : COLLABORATORS_FAILED;
-                                Dialogs.getInstance().showError(message);
+                                // TODO Exception handling
+                                /**
+                                 * String message = exception.getMessage() != null ? exception.getMessage() : COLLABORATORS_FAILED;
+                                 * Dialogs.getInstance().showError(message);
+                                 */
                             }
                         });
         } catch (RequestException exception) {
@@ -236,11 +245,12 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
 
                                                                    @Override
                                                                    protected void onFailure(Throwable exception) {
-                                                                       if (exception.getMessage().equals("Not Found")) {
-                                                                           //This exception must be ignored.
-                                                                       } else {
-                                                                           IDE.fireEvent(new ExceptionThrownEvent(exception));
-                                                                       }
+                                                                       // TODO Exception handling
+                                                                       /**
+                                                                        * if (exception.getMessage().equals("Not Found")) { //This exception
+                                                                        * must be ignored. } else { IDE.fireEvent(new
+                                                                        * ExceptionThrownEvent(exception)); }
+                                                                        */
                                                                    }
                                                                });
         } catch (RequestException e) {
@@ -313,7 +323,7 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
 
     private List<String> emailsToSend = new ArrayList<String>();
 
-    private int invitations = 0;
+    private int          invitations  = 0;
 
     private void inviteCollaborators() {
         emailsToSend.clear();

@@ -970,8 +970,12 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
     /** @see org.exoplatform.ide.editor.client.api.Editor#setFocus() */
     @Override
     public void setFocus() {
-        setCursorPosition(cursorPositionRow, cursorPositionCol);
         setFocus(editorObject);
+        try {            
+            setCursorPosition(cursorPositionRow, cursorPositionCol);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private native void setFocus(JavaScriptObject editor)

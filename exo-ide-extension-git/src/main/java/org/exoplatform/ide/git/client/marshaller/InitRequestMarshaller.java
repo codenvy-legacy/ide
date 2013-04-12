@@ -27,7 +27,7 @@ import org.exoplatform.ide.git.shared.InitRequest;
 
 /**
  * Marshaller for creation request in JSON format for {@link InitRequest}.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 24, 2011 11:48:40 AM anya $
  */
@@ -36,8 +36,7 @@ public class InitRequestMarshaller implements Marshallable, Constants {
     private InitRequest initRequest;
 
     /**
-     * @param initRequest
-     *         initialize repository request
+     * @param initRequest initialize repository request
      */
     public InitRequestMarshaller(InitRequest initRequest) {
         this.initRequest = initRequest;

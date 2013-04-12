@@ -27,7 +27,7 @@ import org.exoplatform.ide.git.shared.RmRequest;
 
 /**
  * Marshaller for remove files request in JSON format.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 12, 2011 2:55:02 PM anya $
  */
@@ -36,8 +36,7 @@ public class RemoveRequestMarshaller implements Marshallable, Constants {
     private RmRequest rmRequest;
 
     /**
-     * @param rmRequest
-     *         remove request
+     * @param rmRequest remove request
      */
     public RemoveRequestMarshaller(RmRequest rmRequest) {
         this.rmRequest = rmRequest;

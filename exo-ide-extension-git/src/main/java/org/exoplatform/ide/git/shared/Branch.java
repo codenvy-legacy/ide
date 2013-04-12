@@ -20,28 +20,24 @@ package org.exoplatform.ide.git.shared;
 
 /**
  * Git branch description.
- *
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: Branch.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
 public class Branch {
     /** Full name of branch, e.g. 'refs/heads/master'. */
-    private String name;
+    private String  name;
 
     /** Display name of branch, e.g. 'refs/heads/master' -> 'master'. */
-    private String displayName;
+    private String  displayName;
 
     /** <code>true</code> if branch is checked out in working tree (active) */
     private boolean active;
 
     /**
-     * @param name
-     *         the name of branch
-     * @param active
-     *         indicate is current branch active or not
-     * @param displayName
-     *         short name of branch. Full name 'refs/heads/master' may
-     *         be represented by short name 'master'
+     * @param name the name of branch
+     * @param active indicate is current branch active or not
+     * @param displayName short name of branch. Full name 'refs/heads/master' may be represented by short name 'master'
      */
     public Branch(String name, boolean active, String displayName) {
         this.name = name;
@@ -69,24 +65,21 @@ public class Branch {
     }
 
     /**
-     * @param name
-     *         full name of branch, e.g. 'refs/heads/master'
+     * @param name full name of branch, e.g. 'refs/heads/master'
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * @param displayName
-     *         name of branch, e.g. 'refs/heads/master' -> 'master'
+     * @param displayName name of branch, e.g. 'refs/heads/master' -> 'master'
      */
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
 
     /**
-     * @param active
-     *         <code>true</code> if branch is checked out and false otherwise
+     * @param active <code>true</code> if branch is checked out and false otherwise
      */
     public void setActive(boolean active) {
         this.active = active;

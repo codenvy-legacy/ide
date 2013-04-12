@@ -22,7 +22,7 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to perform merge operation. Implement {@link MergeHandler} to handle event.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 20, 2011 12:25:30 PM anya $
  */

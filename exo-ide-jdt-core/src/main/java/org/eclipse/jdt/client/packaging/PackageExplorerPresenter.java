@@ -25,6 +25,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -76,7 +78,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
-import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -107,8 +108,6 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
     private FileModel              editorActiveFile;
 
     private Map<String, FileModel> openedFiles                              = new HashMap<String, FileModel>();
-
-    private Map<String, Editor>    openedEditors                            = new HashMap<String, Editor>();
 
     public PackageExplorerPresenter() {
         IDE.getInstance().addControl(new ShowPackageExplorerControl(), Docking.TOOLBAR);
@@ -164,26 +163,39 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
     }
 
     private void bindDisplay() {
-        display.getBrowserTree().addOpenHandler(new OpenHandler<Item>()
-        {
+        display.getBrowserTree().addOpenHandler(new OpenHandler<Item>() {
             @Override
-            public void onOpen(final OpenEvent<Item> event)
-            {
-                Scheduler.get().scheduleDeferred(new ScheduledCommand()
-                {
+            public void onOpen(final OpenEvent<Item> event) {
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                     @Override
-                    public void execute()
-                    {
-                        if (!(event.getTarget() instanceof FolderModel))
-                        {
+                    public void execute() {
+                        if (!(event.getTarget() instanceof FolderModel)) {
                             return;
                         }
 
                         FolderModel folder = (FolderModel)event.getTarget();
-                        List<Item> children = display.getTreeChildren(folder);
+                        List<Item> children = display.getVisibleItems();
                         IDE.fireEvent(new FolderOpenedEvent(folder, children));
                     }
                 });
+            }
+        });
+        
+        display.getBrowserTree().addCloseHandler(new CloseHandler<Item>() {
+            @Override
+            public void onClose(final CloseEvent<Item> event) {
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        if (!(event.getTarget() instanceof FolderModel)) {
+                            return;
+                        }
+
+                        FolderModel folder = (FolderModel)event.getTarget();
+                        List<Item> children = display.getVisibleItems();
+                        IDE.fireEvent(new FolderOpenedEvent(folder, children));
+                    }
+                });                
             }
         });
 
@@ -312,13 +324,11 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
     @Override
     public void onEditorFileClosed(EditorFileClosedEvent event) {
         openedFiles = event.getOpenedFiles();
-        openedEditors.remove(event.getFile());
     }
 
     @Override
     public void onEditorFileOpened(EditorFileOpenedEvent event) {
         openedFiles = event.getOpenedFiles();
-        openedEditors.put(event.getFile().getId(), event.getEditor());
     }
 
     private ApplicationSettings applicationSettings;

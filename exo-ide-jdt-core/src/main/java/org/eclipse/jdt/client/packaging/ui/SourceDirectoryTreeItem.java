@@ -164,6 +164,6 @@ public class SourceDirectoryTreeItem extends PackageExplorerTreeItem {
         }
 
         return true;
-    }
+    }    
 
 }

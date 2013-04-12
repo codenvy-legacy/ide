@@ -25,7 +25,7 @@ import org.exoplatform.ide.git.client.merge.MergeEvent;
 
 /**
  * Control for merging branch with Head commit.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 20, 2011 12:31:07 PM anya $
  */

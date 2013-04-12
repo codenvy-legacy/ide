@@ -222,6 +222,18 @@ public class TypeSignatureTest extends SignatureBase {
         TypeInfo typeInfo = getTypeInfo(b, "test.GenericClass");
         assertThat(typeInfo.getSignature()).isNotNull().isEqualTo("Ljava/lang/Object;Ljava/util/List<Ljava/lang/Integer;>;");
     }
+    
+   
+    @Test
+    public void interfaceGeneric2() throws Exception {
+        StringBuilder b = new StringBuilder("package test;\n");
+        b.append("import java.util.AbstractCollection;\n");
+        b.append("import java.util.List;\n");
+        b.append("public interface GenericClass extends List<Integer>{}");
+
+        TypeInfo typeInfo = getTypeInfo(b, "test.GenericClass");
+        assertThat(typeInfo.getSignature()).isNotNull().isEqualTo("Ljava/lang/Object;Ljava/util/List<Ljava/lang/Integer;>;");
+    }
 
     @SuppressWarnings("unchecked")
     @Test

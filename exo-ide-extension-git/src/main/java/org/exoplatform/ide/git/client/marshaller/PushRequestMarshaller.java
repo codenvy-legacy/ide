@@ -28,7 +28,7 @@ import org.exoplatform.ide.git.shared.PushRequest;
 
 /**
  * Marshaller for creating push request in JSON format.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 4, 2011 4:04:27 PM anya $
  */
@@ -38,8 +38,7 @@ public class PushRequestMarshaller implements Marshallable, Constants {
     private PushRequest pushRequest;
 
     /**
-     * @param pushRequest
-     *         push request
+     * @param pushRequest push request
      */
     public PushRequestMarshaller(PushRequest pushRequest) {
         this.pushRequest = pushRequest;

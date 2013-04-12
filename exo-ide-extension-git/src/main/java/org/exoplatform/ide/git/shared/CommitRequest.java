@@ -20,17 +20,16 @@ package org.exoplatform.ide.git.shared;
 
 /**
  * Request to commit current state of index in new commit.
- *
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: CommitRequest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
 public class CommitRequest extends GitRequest {
     /** Commit message. */
-    private String message;
+    private String  message;
 
     /**
-     * Need automatically stage files that have been modified and deleted, but
-     * not new files.
+     * Need automatically stage files that have been modified and deleted, but not new files.
      */
     private boolean all;
 
@@ -38,8 +37,7 @@ public class CommitRequest extends GitRequest {
     private boolean amend;
 
     /**
-     * @param message
-     *         commit message
+     * @param message commit message
      */
     public CommitRequest(String message, boolean all, boolean amend) {
         this.message = message;
@@ -48,16 +46,14 @@ public class CommitRequest extends GitRequest {
     }
 
     /**
-     * @param message
-     *         commit message
+     * @param message commit message
      */
     public CommitRequest(String message) {
         this.message = message;
     }
 
     /**
-     * "Empty" commit request. Corresponding setters used to setup required
-     * parameters.
+     * "Empty" commit request. Corresponding setters used to setup required parameters.
      */
     public CommitRequest() {
     }
@@ -68,25 +64,21 @@ public class CommitRequest extends GitRequest {
     }
 
     /**
-     * @param message
-     *         commit message
+     * @param message commit message
      */
     public void setMessage(String message) {
         this.message = message;
     }
 
     /**
-     * @return <code>true</code> if need automatically stage files that have been
-     *         modified and deleted
+     * @return <code>true</code> if need automatically stage files that have been modified and deleted
      */
     public boolean isAll() {
         return all;
     }
 
     /**
-     * @param all
-     *         if <code>true</code> automatically stage files that have been
-     *         modified and deleted
+     * @param all if <code>true</code> automatically stage files that have been modified and deleted
      */
     public void setAll(boolean all) {
         this.all = all;
@@ -98,8 +90,7 @@ public class CommitRequest extends GitRequest {
     }
 
     /**
-     * @param amend
-     *         if <code>true</code> it means that previous commit must be amended.
+     * @param amend if <code>true</code> it means that previous commit must be amended.
      */
     public void setAmend(boolean amend) {
         this.amend = amend;

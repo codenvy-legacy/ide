@@ -33,16 +33,16 @@ import org.exoplatform.ide.git.client.GitExtension;
 
 /**
  * View for removing changes in git index.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 30, 2011 9:25:02 AM anya $
  */
 public class RemoveFromIndexView extends ViewImpl implements RemoveFromIndexPresenter.Display {
-    public static final int HEIGHT = 180;
+    public static final int     HEIGHT           = 180;
 
-    public static final int WIDTH = 420;
+    public static final int     WIDTH            = 420;
 
-    public static final String ID = "ideRemoveFromIndexView";
+    public static final String  ID               = "ideRemoveFromIndexView";
 
     private static final String REMOVE_BUTTON_ID = "ideRemoveFromIndexViewRemoveButton";
 
@@ -53,13 +53,13 @@ public class RemoveFromIndexView extends ViewImpl implements RemoveFromIndexPres
 
     /* Elements titles */
     @UiField
-    ImageButton removeButton;
+    ImageButton                 removeButton;
 
     @UiField
-    ImageButton cancelButton;
+    ImageButton                 cancelButton;
 
     @UiField
-    Label messageField;
+    Label                       messageField;
 
     interface RemoveFromIndexViewUiBinder extends UiBinder<Widget, RemoveFromIndexView> {
     }

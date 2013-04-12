@@ -97,7 +97,6 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
     public ApplicationsPresenter() {
         IDE.addHandler(ShowApplicationsEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
-        IDE.addHandler(ApplicationDeletedEvent.TYPE, this);
     }
 
     /** Bind presenter with display. */
@@ -199,6 +198,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
             bindDisplay();
             IDE.getInstance().openView(display.asView());
             IDE.addHandler(ApplicationInfoChangedEvent.TYPE, this);
+            IDE.addHandler(ApplicationDeletedEvent.TYPE, this);
         }
         display.setServerValue(AppfogExtension.DEFAULT_SERVER);
         getApplicationList();

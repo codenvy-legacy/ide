@@ -20,7 +20,7 @@ package org.exoplatform.ide.git.shared;
 
 /**
  * Git tag description.
- *
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: Tag.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
@@ -29,8 +29,7 @@ public class Tag {
     private String name;
 
     /**
-     * @param name
-     *         tag name
+     * @param name tag name
      */
     public Tag(String name) {
         this.name = name;
