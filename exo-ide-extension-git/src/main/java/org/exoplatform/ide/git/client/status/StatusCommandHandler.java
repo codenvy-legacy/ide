@@ -139,6 +139,8 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
      * @param folder folder to be updated
      */
     private void getStatus(final FolderModel folder, boolean forced, final List<Item> additionalItems) {
+        if (openedProject.getProperty(GitExtension.GIT_REPOSITORY_PROP) == null)
+            return;
         if (!folder.getId().equals(openedProject.getId()) && !forced) {
             addItemsTreeIcons(folder, additionalItems);
             return;
@@ -148,9 +150,7 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
             GitClientService.getInstance()
                             .status(vfs.getId(),
                                     openedProject.getId(),
-                                    new AsyncRequestCallback<Status>(
-                                                                     new AutoBeanUnmarshaller<Status>(
-                                                                                                      GitExtension.AUTO_BEAN_FACTORY.status())) {
+                                    new AsyncRequestCallback<Status>(new AutoBeanUnmarshaller<Status>(GitExtension.AUTO_BEAN_FACTORY.status())) {
                                         @Override
                                         protected void onSuccess(Status result) {
                                             workingTreeStatus = result;
