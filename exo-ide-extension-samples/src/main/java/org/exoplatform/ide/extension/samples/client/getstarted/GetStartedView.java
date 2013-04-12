@@ -220,9 +220,16 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
 
                 PaaS paaS = paaSTypes.get(buttonNum++);
 
+                Image paasImg = new Image(resolvePaaSImage(paaS, false));
+                paasImg.setSize("36px", "36px");
+
+                Image paasImgDisabled = new Image(resolvePaaSImage(paaS, true));
+                paasImgDisabled.setSize("36px", "36px");
+
+
                 PaaSToggleButton paaSToggleButton = new PaaSToggleButton();
-                paaSToggleButton.getUpFace().setImage(paaS.getImageEnabled());
-                paaSToggleButton.getUpDisabledFace().setImage(paaS.getImageDisabled());
+                paaSToggleButton.getUpFace().setImage(paasImg);
+                paaSToggleButton.getUpDisabledFace().setImage(paasImgDisabled);
                 paaSToggleButton.setSize("36px", "36px");
                 paaSToggleButton.getElement().getStyle().setPropertyPx("borderRadius", 5);
                 paaSToggleButton.getElement().getStyle().setPropertyPx("outline", 0);
@@ -308,9 +315,34 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
     private ImageResource resolveProjectTypeImage(ProjectType projectType) {
         switch (projectType) {
             case JAR: return SamplesClientBundle.INSTANCE.jarTechnology();
-            //TODO fill project types
+            case JAVASCRIPT: return SamplesClientBundle.INSTANCE.jsTechnology();
+            case JSP: return SamplesClientBundle.INSTANCE.jspTechnology();
+            case MultiModule: return SamplesClientBundle.INSTANCE.multiModuleTechnology();
+            case PHP: return SamplesClientBundle.INSTANCE.phpTechnology();
+            case PYTHON: return SamplesClientBundle.INSTANCE.pythonTechnology();
+            case RUBY_ON_RAILS: return SamplesClientBundle.INSTANCE.rorTechnology();
+            case SPRING: return SamplesClientBundle.INSTANCE.springTechnology();
+            default: return null;
         }
+    }
 
-        return null;
+    private ImageResource resolvePaaSImage(PaaS paaS, boolean disable) {
+        if (paaS.getId().equals("CloudBees")) {
+            return !disable ? SamplesClientBundle.INSTANCE.cloudBeesPaaS() : SamplesClientBundle.INSTANCE.cloudBeesPaaSDisabled();
+        } else if (paaS.getId().equals("CloudFoundry")) {
+            return !disable ? SamplesClientBundle.INSTANCE.cloudfoundryPaaS() : SamplesClientBundle.INSTANCE.cloudfoundryPaaSDisabled();
+        } else if (paaS.getId().equals("AppFog")) {
+            return !disable ? SamplesClientBundle.INSTANCE.appfogPaaS() : SamplesClientBundle.INSTANCE.appfogPaaSDisabled();
+        } else if (paaS.getId().equals("Heroku")) {
+            return !disable ? SamplesClientBundle.INSTANCE.herokuPaaS() : SamplesClientBundle.INSTANCE.herokuPaaSDisabled();
+        } else if (paaS.getId().equals("OpenShift")) {
+            return !disable ? SamplesClientBundle.INSTANCE.openShiftPaaS() : SamplesClientBundle.INSTANCE.openShiftPaaSDisabled();
+        } else if (paaS.getId().equals("GAE")) {
+            return !disable ? SamplesClientBundle.INSTANCE.gaePaaS() : SamplesClientBundle.INSTANCE.gaePaaSDisabled();
+        } else if (paaS.getId().equals("AWS")) {
+            return !disable ? SamplesClientBundle.INSTANCE.beansTalkPaaS() : SamplesClientBundle.INSTANCE.beansTalkPaaSDisabled();
+        } else {
+            return !disable ? SamplesClientBundle.INSTANCE.nonePaaS() : SamplesClientBundle.INSTANCE.nonePaaS();
+        }
     }
 }
