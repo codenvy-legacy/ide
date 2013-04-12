@@ -356,7 +356,7 @@ public class JGitConnection implements GitConnection {
 
             RevCommit result = commitCommand.call();
 
-            return new Revision(getCurrentBranch(), result.getId().getName(), result.getFullMessage(),
+            return new Revision(repository.getBranch(), result.getId().getName(), result.getFullMessage(),
                                 (long)result.getCommitTime() * 1000, new GitUser(comitterName, comitterEmail));
         } catch (GitAPIException e) {
             throw new GitException(e);
@@ -639,7 +639,7 @@ public class JGitConnection implements GitConnection {
                             message.append("Already up-to-date.");
                         }
                         else {
-                            message.append("! [rejected] " + getCurrentBranch() + " -> " + request.getRefSpec()[0].split(":")[1]
+                            message.append("! [rejected] " + repository.getBranch() + " -> " + request.getRefSpec()[0].split(":")[1]
                                            + " (non-fast-forward)\n");
                             message.append("error: failed to push some refs to " + request.getRemote() + "\n");
                             message.append("To prevent you from losing history, non-fast-forward updates were rejected\n");
@@ -650,6 +650,8 @@ public class JGitConnection implements GitConnection {
                 }
             }
         } catch (GitAPIException e) {
+            throw new GitException(e.getMessage(), e);
+        } catch (IOException e) {
             throw new GitException(e.getMessage(), e);
         }
     }
@@ -881,24 +883,30 @@ public class JGitConnection implements GitConnection {
                 throw new GitException("Reset is not possible because repository state is" +
                                        repository.getRepositoryState().getDescription() + ".");
             }
-
             ResetCommand req = new Git(repository).reset();
             req.setRef(request.getCommit());
+            if (request.getPaths() != null) {
+                for (String path : request.getPaths()) {
+                    req.addPath(path);
+                }
+            }
 
-            if (request.getType().equals(ResetRequest.ResetType.HARD)) {
-                req.setMode(ResetCommand.ResetType.HARD);
-            }
-            else if (request.getType().equals(ResetRequest.ResetType.KEEP)) {
-                req.setMode(ResetCommand.ResetType.KEEP);
-            }
-            else if (request.getType().equals(ResetRequest.ResetType.MERGE)) {
-                req.setMode(ResetCommand.ResetType.MERGE);
-            }
-            else if (request.getType().equals(ResetRequest.ResetType.MIXED)) {
-                req.setMode(ResetCommand.ResetType.MIXED);
-            }
-            else if (request.getType().equals(ResetRequest.ResetType.SOFT)) {
-                req.setMode(ResetCommand.ResetType.SOFT);
+            if (request.getType() != null) {
+                if (request.getType().equals(ResetRequest.ResetType.HARD)) {
+                    req.setMode(ResetCommand.ResetType.HARD);
+                }
+                else if (request.getType().equals(ResetRequest.ResetType.KEEP)) {
+                    req.setMode(ResetCommand.ResetType.KEEP);
+                }
+                else if (request.getType().equals(ResetRequest.ResetType.MERGE)) {
+                    req.setMode(ResetCommand.ResetType.MERGE);
+                }
+                else if (request.getType().equals(ResetRequest.ResetType.MIXED)) {
+                    req.setMode(ResetCommand.ResetType.MIXED);
+                }
+                else if (request.getType().equals(ResetRequest.ResetType.SOFT)) {
+                    req.setMode(ResetCommand.ResetType.SOFT);
+                }
             }
 
             req.call();
@@ -935,10 +943,12 @@ public class JGitConnection implements GitConnection {
     @Override
     public Status status(boolean shortFormat) throws GitException {
         try {
-            String currentBranch = getCurrentBranch();
+            String currentBranch = repository.getBranch();
             org.eclipse.jgit.api.Status status = new Git(repository).status().call();
             return new StatusImpl(currentBranch, shortFormat, status);
         } catch (GitAPIException e) {
+            throw new GitException(e.getMessage(), e);
+        } catch (IOException e) {
             throw new GitException(e.getMessage(), e);
         }
     }
@@ -1047,15 +1057,5 @@ public class JGitConnection implements GitConnection {
 
     public Repository getRepository() {
         return repository;
-    }
-
-    public String getCurrentBranch() throws GitException {
-        try {
-            Ref headRef;
-            headRef = repository.getRef(Constants.HEAD);
-            return Repository.shortenRefName(headRef.getLeaf().getName());
-        } catch (IOException e) {
-            throw new GitException(e.getMessage(), e);
-        }
     }
 }
