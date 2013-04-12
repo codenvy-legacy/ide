@@ -415,6 +415,9 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
 
     /** Temporary block renaming top-level class/interface/enum which is opened */
     private boolean isNodeDeclarationOpenedInSeparateFile(ASTNode astNode) {
+        if (astNode == null) {
+            return false;
+        }
         if (astNode.getNodeType() == ASTNode.SIMPLE_NAME) {
             ASTNode parentNode = astNode.getParent();
             if (parentNode instanceof AbstractTypeDeclaration || parentNode instanceof SimpleType) {
