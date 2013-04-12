@@ -18,10 +18,40 @@
  */
 package com.codenvy.ide.api.ui.perspective;
 
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.SplitLayoutPanel;
+
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public interface PartStackPresenterFactory {
-    PartStack create(PartStackView view, WorkBenchPartController workBenchPartController);
+public class WorkBenchPartControllerImpl implements WorkBenchPartController {
+
+    public static final int DURATION = 300;
+    private SplitLayoutPanel splitLayoutPanel;
+
+    private SimplePanel widget;
+
+    public WorkBenchPartControllerImpl(SplitLayoutPanel splitLayoutPanel, SimplePanel widget) {
+        this.splitLayoutPanel = splitLayoutPanel;
+        this.widget = widget;
+        setHidden(true);
+    }
+
+    @Override
+    public double getSize() {
+        return splitLayoutPanel.getWidgetSize(widget);
+    }
+
+    @Override
+    public void setSize(double size) {
+        splitLayoutPanel.setWidgetSize(widget, size);
+        splitLayoutPanel.animate(DURATION);
+    }
+
+    @Override
+    public void setHidden(boolean hidden) {
+        splitLayoutPanel.setWidgetHidden(widget, hidden);
+        splitLayoutPanel.animate(DURATION);
+    }
 }

@@ -22,6 +22,11 @@ package com.codenvy.ide.api.ui.perspective;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public interface PartStackPresenterFactory {
-    PartStack create(PartStackView view, WorkBenchPartController workBenchPartController);
+public interface WorkBenchPartController {
+
+    double getSize();
+
+    void setSize(double size);
+
+    void setHidden(boolean hidden);
 }

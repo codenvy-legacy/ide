@@ -68,6 +68,9 @@ public interface PartStackUIResources extends ClientBundle {
 
         @ClassName("ide-PartStack-Tool-Tab")
         String idePartStackToolTab();
+
+        @ClassName("ide-PartStack-Tool-Tab-selected")
+        String idePartStackToolTabSelected();
     }
 
     @Source({"PartStack.css", "com/codenvy/ide/api/ui/style.css"})

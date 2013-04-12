@@ -90,16 +90,18 @@ public class WorkBenchPresenter implements Presenter {
 
         partStacks.put(PartStackType.EDITING.toString(), editorPartStackPresenter);
 
+        //TODO move to implementation
         PartStackView navigationView = partViewFactory.create(PartStackView.TabPosition.LEFT,view.leftPanel);
-        PartStack navigationPartStack = stackPresenterFactory.create(navigationView);
+
+        PartStack navigationPartStack = stackPresenterFactory.create(navigationView, new WorkBenchPartControllerImpl(view.splitPanel, view.navPanel));
         partStacks.put(PartStackType.NAVIGATION.toString(), navigationPartStack);
 
         PartStackView informationView = partViewFactory.create(PartStackView.TabPosition.BELOW, view.bottomPanel);
-        PartStack informationStack = stackPresenterFactory.create(informationView);
+        PartStack informationStack = stackPresenterFactory.create(informationView, new WorkBenchPartControllerImpl(view.splitPanel, view.infoPanel));
         partStacks.put(PartStackType.INFORMATION.toString(), informationStack);
 
         PartStackView toolingView = partViewFactory.create(PartStackView.TabPosition.RIGHT, view.rightPanel);
-        PartStack toolingPartStack = stackPresenterFactory.create(toolingView);
+        PartStack toolingPartStack = stackPresenterFactory.create(toolingView, new WorkBenchPartControllerImpl(view.splitPanel, view.toolPanel));
         partStacks.put(PartStackType.TOOLING.toString(), toolingPartStack);
 
         openPart(welcomePart, PartStackType.EDITING);

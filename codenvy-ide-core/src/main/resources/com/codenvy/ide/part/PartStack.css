@@ -8,7 +8,6 @@
     /* panel where tab-buttons created*/
     background: tabsPanelBackground;
     border-bottom: 1px solid tabBorder;
-    border-left: 1px solid tabBorder;
 }
 
 .ide-PartStack .ide-PartStack-Editor-Content {
@@ -120,13 +119,13 @@
     top: 1px;
 }
 
-.ide-PartStack-Tab-selected-Below {
+.ide-PartStack-Tool-Tab-selected {
     /* tab that is currently selected (active) */
     cursor: default;
     /*font-weight: bold;*/
     /*padding: 3px;*/
     /*border-top: 2px solid activeTabBackground;*/
-    background: activeTabBackground;
+    background-color: activeTabBackground !important;
 }
 .ide-PartStack-focused .ide-PartStack-Tab-selected-Below {
     background: highlightFocus;

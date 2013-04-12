@@ -37,6 +37,7 @@ import com.codenvy.ide.api.ui.perspective.PartStack;
 import com.codenvy.ide.api.ui.perspective.PartStackPresenterFactory;
 import com.codenvy.ide.api.ui.perspective.PartStackView;
 import com.codenvy.ide.api.ui.perspective.PartStackViewFactory;
+import com.codenvy.ide.api.ui.perspective.WorkBenchPartController;
 import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
 import com.codenvy.ide.api.ui.wizard.WizardAgent;

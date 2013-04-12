@@ -18,6 +18,7 @@ package com.codenvy.ide.api.ui.perspective;
 
 import com.codenvy.ide.api.mvp.View;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.InsertPanel;
 
 /**
  * Perspective View contains abstract containers for PartStack

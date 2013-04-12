@@ -22,11 +22,11 @@ import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
 import com.codenvy.ide.api.ui.perspective.PartStack;
 import com.codenvy.ide.api.ui.perspective.PartStackView;
-import com.codenvy.ide.api.ui.perspective.WorkBenchPresenter;
+import com.codenvy.ide.api.ui.perspective.PartStackView.TabItem;
 import com.codenvy.ide.api.ui.perspective.PropertyListener;
+import com.codenvy.ide.api.ui.perspective.WorkBenchPartController;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.api.ui.perspective.PartStackView.TabItem;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
@@ -51,16 +51,20 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public class PartStackPresenter implements Presenter, PartStackView.ActionDelegate, PartStack {
+
+    private static final double                   DEFAULT_SIZE = 200;
     /** list of parts */
-    private final JsonArray<PartPresenter> parts = JsonCollections.createArray();
+    protected final        JsonArray<PartPresenter> parts        = JsonCollections.createArray();
     /** view implementation */
-    private final PartStackView                    view;
-    private final EventBus                         eventBus;
-    /** current active part */
-    private       PartPresenter                    activePart;
-    private       PartStackEventHandler            partStackHandler;
+    protected final PartStackView view;
+    private final EventBus      eventBus;
     protected boolean partsClosable = false;
-    private PropertyListener propertyListener = new PropertyListener() {
+    /** current active part */
+    private PartPresenter           activePart;
+    private PartStackEventHandler   partStackHandler;
+    private WorkBenchPartController workBenchPartController;
+    private JsonArray<Double> partsSize = JsonCollections.createArray();
+    protected PropertyListener propertyListener = new PropertyListener() {
 
         @Override
         public void propertyChanged(PartPresenter source, int propId) {
@@ -75,10 +79,12 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
     /** Creates PartStack with given instance of display and resources (CSS and Images) */
     @Inject
     public PartStackPresenter(EventBus eventBus,
-                              PartStackEventHandler partStackEventHandler, @Assisted PartStackView view) {
+                              PartStackEventHandler partStackEventHandler, @Assisted PartStackView view,
+                              @Assisted WorkBenchPartController workBenchPartController) {
         this.view = view;
         this.eventBus = eventBus;
         partStackHandler = partStackEventHandler;
+        this.workBenchPartController = workBenchPartController;
         view.setDelegate(this);
     }
 
@@ -121,6 +127,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             return;
         }
         parts.add(part);
+        partsSize.add(DEFAULT_SIZE);
         part.addPropertyListener(propertyListener);
         // include close button
         ImageResource titleImage = part.getTitleImage();
@@ -128,7 +135,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
                 view.addTabButton(titleImage == null ? null : new Image(titleImage), part.getTitle(), part.getTitleToolTip(),
                                   partsClosable);
         bindEvents(tabItem, part);
-        setActivePart(part);
+//        setActivePart(part);
         // requst focus
         onRequestFocus();
     }
@@ -165,6 +172,8 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         } else {
             view.setActiveTabButton(parts.indexOf(activePart));
             activePart.go(contentPanel);
+            if (workBenchPartController != null)
+                workBenchPartController.setSize(DEFAULT_SIZE);
         }
         // request part stack to get the focus
         onRequestFocus();
@@ -183,6 +192,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             int partIndex = parts.indexOf(part);
             view.removeTabButton(partIndex);
             parts.remove(part);
+            partsSize.remove(partIndex);
             part.removePropertyListener(propertyListener);
             if (activePart == part) {
                 //select another part
@@ -202,7 +212,18 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             @Override
             public void onClick(ClickEvent event) {
                 // make active
-                setActivePart(part);
+                if(part == activePart)
+                {
+
+                  partsSize.set(parts.indexOf(part), workBenchPartController.getSize());
+                  workBenchPartController.setHidden(true);
+                  setActivePart(null);
+                }else
+                {
+                  workBenchPartController.setHidden(false);
+                  setActivePart(part);
+                  workBenchPartController.setSize(partsSize.get(parts.indexOf(part)));
+                }
             }
         });
 

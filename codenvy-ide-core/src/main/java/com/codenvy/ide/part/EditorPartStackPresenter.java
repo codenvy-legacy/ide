@@ -44,7 +44,7 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
     @Inject
     public EditorPartStackPresenter(@Named("editorPartStack")PartStackView view, EventBus eventBus,
                                     PartStackEventHandler partStackEventHandler) {
-        super(eventBus, partStackEventHandler, view);
+        super(eventBus, partStackEventHandler, view, null);
         partsClosable = true;
     }
 
@@ -55,7 +55,24 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
             Log.warn(getClass(), "EditorPartStack is not intended to be used to open non-Editor Parts.");
         }
 
-        super.addPart(part);
+        if (parts.contains(part)) {
+            // part already exists
+            // activate it
+            setActivePart(part);
+            // and return
+            return;
+        }
+        parts.add(part);
+        part.addPropertyListener(propertyListener);
+        // include close button
+        ImageResource titleImage = part.getTitleImage();
+        PartStackView.TabItem tabItem =
+                view.addTabButton(titleImage == null ? null : new Image(titleImage), part.getTitle(), part.getTitleToolTip(),
+                                  partsClosable);
+        bindEvents(tabItem, part);
+        setActivePart(part);
+        // requst focus
+        onRequestFocus();
     }
 
     /** {@inheritDoc} */
