@@ -86,6 +86,9 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
     @UiField
     Grid paasGrid;
 
+    @UiField
+    Label errorLabel;
+
     private List<ProjectTypeToggleButton> projectTypeToggleButtonList = new ArrayList<ProjectTypeToggleButton>();
 
     private List<PaaSToggleButton> paaSToggleButtonList = new ArrayList<PaaSToggleButton>();
@@ -96,6 +99,7 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
         chooseNamePanel.setVisible(false);
         chooseTechnologyPanel.setVisible(false);
         choosePaaSPanel.setVisible(false);
+        errorLabel.setVisible(false);
     }
 
     @Override
@@ -296,6 +300,17 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
     @Override
     public void setProjectNameFocus() {
         projectName.setFocus(true);
+    }
+
+    @Override
+    public void setErrorVisible(boolean visible) {
+        if (visible) {
+            nextButton.setEnabled(false);
+            errorLabel.setVisible(true);
+        } else {
+            nextButton.setEnabled(true);
+            errorLabel.setVisible(false);
+        }
     }
 
     //-------------------------------------------

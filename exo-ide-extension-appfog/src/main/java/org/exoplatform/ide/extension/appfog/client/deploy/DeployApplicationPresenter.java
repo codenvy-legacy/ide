@@ -288,11 +288,11 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
         return appUris;
     }
 
-    private void getInfras(final String server) {
+    private void getInfras(final String server, final boolean startedWizard) {
         LoggedInHandler getInfrasHandler = new LoggedInHandler() {
             @Override
             public void onLoggedIn() {
-                getInfras(server);
+                getInfras(server, startedWizard);
             }
         };
         LoginCanceledHandler loginCanceledHandler = new LoginCanceledHandler() {
@@ -328,6 +328,9 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
 
                                 updateUrlField();
                                 url = display.getUrlField().getValue();
+                                if (startedWizard) {
+                                    beforeDeploy();
+                                }
                             }
                         }
                     });
@@ -370,7 +373,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
             || currentInfra == null) {
             Dialogs.getInstance().showError("Infrastructure field must be valid and not empty.");
         } else {
-            createProject(display.getNameField().getValue(), projectTemplate);
+            createProject(display.getNameField().getValue(), projectTemplate, false);
         }
     }
 
@@ -417,13 +420,13 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
         }
         display.setServerValue(AppfogExtension.DEFAULT_SERVER);
         display.getNameField().setValue(projectName);
-        getInfras(AppfogExtension.DEFAULT_SERVER);
+        getInfras(AppfogExtension.DEFAULT_SERVER, false);
         server = display.getServerField().getValue();
         bindDisplay();
         return display.getView();
     }
 
-    private void createProject(String name, ProjectTemplate projectTemplate) {
+    private void createProject(String name, ProjectTemplate projectTemplate, final boolean startedWizard) {
         final Loader loader = new GWTLoader();
         loader.setMessage(lb.creatingProject());
         loader.show();
@@ -440,7 +443,11 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
                             loader.hide();
                             project = result;
                             deployResultHandler.onProjectCreated(project);
-                            beforeDeploy();
+                            if (startedWizard) {
+                                getInfras(server, startedWizard);
+                            } else {
+                                beforeDeploy();
+                            }
                         }
 
                         @Override
@@ -471,53 +478,21 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
 
     @Override
     public void deployFirstTime(final String projectName, final ProjectTemplate projectTemplate, final DeployResultHandler deployResultHandler) {
-        LoggedInHandler getInfrasHandler = new LoggedInHandler() {
-            @Override
-            public void onLoggedIn() {
-                deployFirstTime(projectName, projectTemplate, deployResultHandler);
-            }
-        };
-
         this.deployResultHandler = deployResultHandler;
+        this.projectName = projectName;
 
         if (display == null) {
             display = GWT.create(Display.class);
         }
 
         server = AppfogExtension.DEFAULT_SERVER;
+        name = projectName + "-" + rand();
         display.setServerValue(server);
-        display.getNameField().setValue(projectName + "-" + rand());
+        display.getNameField().setValue(name);
 
         bindDisplay();
 
-        try {
-            AppfogClientService.getInstance().infras(
-                    server,
-                    null,
-                    null,
-                    new AppfogAsyncRequestCallback<List<InfraDetail>>(new InfrasUnmarshaller(new ArrayList<InfraDetail>()),
-                                                                      getInfrasHandler, null, server) {
-                        @Override
-                        protected void onSuccess(List<InfraDetail> result) {
-                            infras = result;
-
-                            List<String> infraNames = new ArrayList<String>(result.size());
-                            for (InfraDetail infra : result) {
-                                infraNames.add(infra.getName());
-                            }
-
-                            display.getInfraField().setValue(infraNames.get(0));
-                            display.setInfraValues(infraNames.toArray(new String[infraNames.size()]));
-
-                            currentInfra = infras.get(0);
-                            updateUrlField();
-                            url = display.getUrlField().getValue();
-                            createProject(projectName, projectTemplate);
-                        }
-                    });
-        } catch (RequestException e) {
-            IDE.fireEvent(new ExceptionThrownEvent(e));
-        }
+        createProject(name, projectTemplate, true);
     }
 
     private int rand() {

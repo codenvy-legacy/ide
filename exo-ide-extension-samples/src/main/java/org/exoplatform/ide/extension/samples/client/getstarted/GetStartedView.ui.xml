@@ -86,7 +86,7 @@
         }
 
         .getStarted {
-            padding: 5px 30px 40px;
+            padding: 5px 35px 40px 30px;
             height: 330px;
             position: relative;
             font-family: Verdana;
@@ -152,12 +152,16 @@
 
         .prevButton {
             display: inline;
-            width: 100px;
+            width: 110px;
             margin-right: 15px;
         }
 
         .nextButton {
-            width: 100px;
+            width: 110px;
+        }
+
+        .error {
+            color: red;
         }
     </ui:style>
 
@@ -178,6 +182,7 @@
                 Start by choosing a project name:
             </p>
             <f:TextInput ui:field="projectName" styleName="{style.projectNameInput}" text="myproject"></f:TextInput>
+            <f:Label text="Project name must contain alphabetical chars only." styleName="{style.error}" ui:field="errorLabel"></f:Label>
         </g:HTMLPanel>
         <!-- end chooseName -->
         <g:HTMLPanel styleName="{style.chooseTechnology}" ui:field="chooseTechnologyPanel">
