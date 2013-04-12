@@ -24,6 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -69,12 +70,10 @@ public class StatusImpl implements Status, InfoPage {
         this.setMissing(status.getMissing());
         this.setModified(status.getModified());
         this.setUntracked(status.getUntracked());
-        this.setUntrackedFolders(status.getUntrackedFolders());
         this.setConflicting(status.getConflicting());
 
         if ((getAdded().isEmpty() && getChanged().isEmpty() && getRemoved().isEmpty() && getMissing().isEmpty()
-             && getModified().isEmpty() && getUntracked().isEmpty() && getUntrackedFolders().isEmpty() && getConflicting()
-                                                                                                                          .isEmpty())) {
+             && getModified().isEmpty() && getUntracked().isEmpty() && getConflicting().isEmpty())) {
             this.setClean(true);
         } else {
             this.setClean(false);
@@ -171,9 +170,11 @@ public class StatusImpl implements Status, InfoPage {
         this.untracked = untracked;
     }
 
-    /** @see org.eclipse.jgit.api.Status#getUntrackedFolders() */
+    /** @see org.eclipse.jgit.api.Status#getUntrackedFolders() 
+     * Always empty
+     * */
     public Set<String> getUntrackedFolders() {
-        return this.untrackedFolders;
+        return Collections.<String>emptySet(); 
     }
 
     /** Setter for org.eclipse.jgit.api.Status#getUntrackedFolders() */
@@ -277,7 +278,6 @@ public class StatusImpl implements Status, InfoPage {
         }
 
         writeList(out, getConflicting(), "U");
-        writeList(out, getUntrackedFolders(), "??");
         writeList(out, getUntracked(), "??");
     }
 
@@ -331,14 +331,13 @@ public class StatusImpl implements Status, InfoPage {
             writeList(out, getConflicting(), "both modified");
         }
 
-        if (!(getUntrackedFolders().isEmpty() && getUntracked().isEmpty())) {
+        if (!getUntracked().isEmpty()) {
             // write untracked files
             out.write("#\n");
             out.write("# Untracked files:\n");
             out.write("#   (use \"git add <file>...\" to include in what will be committed)\n");
             out.write("#\n");
 
-            writeList(out, getUntrackedFolders(), null);
             writeList(out, getUntracked(), null);
         }
     }
