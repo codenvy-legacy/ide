@@ -185,7 +185,7 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
 
         String projectId = getSelectedProject().getId();
         try {
-            GitClientService.getInstance().reset(vfs.getId(), projectId, files.toArray(new String[files.size()]), "HEAD",
+            GitClientService.getInstance().reset(vfs.getId(), projectId, "HEAD",
                                                  null, new AsyncRequestCallback<String>() {
                                                      @Override
                                                      protected void onSuccess(String result) {
