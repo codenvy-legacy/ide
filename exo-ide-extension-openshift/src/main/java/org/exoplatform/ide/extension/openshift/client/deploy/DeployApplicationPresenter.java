@@ -561,12 +561,8 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
             display = GWT.create(Display.class);
         }
         bindDisplay();
-        display.getApplicationNameField().setValue(projectName + "-" + rand());
+        display.getApplicationNameField().setValue(projectName);
         deployResultHandler.onDeployFinished(true);
         getApplicationTypes(true);
-    }
-
-    private int rand() {
-        return (int)(Math.floor(Math.random() * 999 - 100) + 100);
     }
 }

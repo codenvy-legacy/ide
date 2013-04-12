@@ -94,6 +94,8 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         void setNextButtonEnable(boolean isEnable);
 
         void setProjectNameFocus();
+
+        void setErrorVisible(boolean visible);
     }
 
     /** representing display */
@@ -171,6 +173,17 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
             @Override
             public void onClick(ClickEvent event) {
                 IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
+
+        display.getProjectName().addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                if (!event.getValue().matches("[a-zA-Z0-9]{1,25}")) {
+                    display.setErrorVisible(true);
+                } else {
+                    display.setErrorVisible(false);
+                }
             }
         });
     }
@@ -379,7 +392,7 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
          * OpenShift has specific procedure for creating project, for first we should create application on openshift after that we may
          *
          */
-        if ("OpenShift".equals(paaS.getId()) || "GAE".equals(paaS.getId())) {
+        if ("OpenShift".equals(paaS.getId()) || "GAE".equals(paaS.getId()) || "Heroku".equals(paaS.getId())) {
             startWithName = paaS.getId() + "_";
         } else {
             startWithName = "Simple_";
