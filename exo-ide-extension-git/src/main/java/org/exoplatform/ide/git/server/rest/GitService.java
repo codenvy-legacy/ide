@@ -60,12 +60,9 @@ import org.exoplatform.ide.vfs.server.GitUrlResolver;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
-import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
-import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
@@ -116,21 +113,6 @@ public class GitService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public void add(AddRequest request) throws GitException, LocalPathResolveException, VirtualFileSystemException {
-        // Specially for multi-module projects
-        VirtualFileSystem vfs = getVfs();
-        Item proj = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
-        Item parent = getParentProject();
-        if (parent.getItemType().equals(ItemType.PROJECT)) {
-            String[] oldPatterns = request.getFilepattern();
-            if (oldPatterns != null) {
-                String[] newPatterns = new String[request.getFilepattern().length];
-                for (int i = 0; i < oldPatterns.length; i++) {
-                    String newPattern = proj.getName() + "/" + oldPatterns[i];
-                    newPatterns[i] = newPattern;
-                }
-                request.setFilepattern(newPatterns);
-            }
-        }
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.add(request);
@@ -236,20 +218,6 @@ public class GitService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public InfoPage diff(DiffRequest request) throws GitException, LocalPathResolveException, VirtualFileSystemException {
-        VirtualFileSystem vfs = getVfs();
-        Item proj = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
-        Item parent = getParentProject();
-        if (parent.getItemType().equals(ItemType.PROJECT)) {
-            String[] oldPatterns = request.getFileFilter();
-            if (oldPatterns != null) {
-                String[] newPatterns = new String[request.getFileFilter().length];
-                for (int i = 0; i < oldPatterns.length; i++) {
-                    String newPattern = proj.getName() + "/" + oldPatterns[i];
-                    newPatterns[i] = newPattern;
-                }
-                request.setFileFilter(newPatterns);
-            }
-        }
         GitConnection gitConnection = getGitConnection();
         try {
             return gitConnection.diff(request);
@@ -404,20 +372,6 @@ public class GitService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public void reset(ResetRequest request) throws GitException, LocalPathResolveException, VirtualFileSystemException {
-        VirtualFileSystem vfs = getVfs();
-        Item proj = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
-        Item parent = getParentProject();
-        if (parent.getItemType().equals(ItemType.PROJECT)) {
-            String[] oldPatterns = request.getPaths();
-            if (oldPatterns != null) {
-                String[] newPatterns = new String[request.getPaths().length];
-                for (int i = 0; i < oldPatterns.length; i++) {
-                    String newPattern = proj.getName() + "/" + oldPatterns[i];
-                    newPatterns[i] = newPattern;
-                }
-                request.setPaths(newPatterns);
-            }
-        }
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.reset(request);
@@ -430,20 +384,6 @@ public class GitService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public void rm(RmRequest request) throws GitException, LocalPathResolveException, VirtualFileSystemException {
-        VirtualFileSystem vfs = getVfs();
-        Item proj = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
-        Item parent = getParentProject();
-        if (parent.getItemType().equals(ItemType.PROJECT)) {
-            String[] oldPatterns = request.getFiles();
-            if (oldPatterns != null) {
-                String[] newPatterns = new String[request.getFiles().length];
-                for (int i = 0; i < oldPatterns.length; i++) {
-                    String newPattern = proj.getName() + "/" + oldPatterns[i];
-                    newPatterns[i] = newPattern;
-                }
-                request.setFiles(newPatterns);
-            }
-        }
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.rm(request);
@@ -455,8 +395,12 @@ public class GitService {
     @Path("status")
     @POST
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public Status status(@PathParam("short") boolean shortFormat) throws GitException, LocalPathResolveException,
+    public Status status(@PathParam("short") boolean shortFormat) throws GitException,
+                                                                 LocalPathResolveException,
                                                                  VirtualFileSystemException {
+        if (!isGitRepository()) {
+            throw new GitException("Not a git repository.");
+        }
         GitConnection gitConnection = getGitConnection();
         try {
             return gitConnection.status(shortFormat);
@@ -469,8 +413,7 @@ public class GitService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Tag tagCreate(TagCreateRequest request) throws GitException, LocalPathResolveException,
-                                                  VirtualFileSystemException {
+    public Tag tagCreate(TagCreateRequest request) throws GitException, LocalPathResolveException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             return gitConnection.tagCreate(request);
@@ -482,8 +425,7 @@ public class GitService {
     @Path("tag-delete")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void tagDelete(TagDeleteRequest request) throws GitException, LocalPathResolveException,
-                                                   VirtualFileSystemException {
+    public void tagDelete(TagDeleteRequest request) throws GitException, LocalPathResolveException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.tagDelete(request);
@@ -546,33 +488,22 @@ public class GitService {
         vfs.updateItem(projectId, propertiesNew, null);
     }
 
-    protected Item getParentProject() throws ItemNotFoundException, PermissionDeniedException, VirtualFileSystemException {
-        VirtualFileSystem vfs = getVfs();
-        Item proj = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
-        String parentId = proj.getParentId();
-        Item parent = vfs.getItem(parentId, PropertyFilter.ALL_FILTER);
-        return parent;
+    protected boolean isGitRepository() throws VirtualFileSystemException {
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+        Item project = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+        String value = project.getPropertyValue("isGitRepository");
+        return value != null && value.equals("true");
     }
 
-    protected VirtualFileSystem getVfs() throws VirtualFileSystemException {
+    protected String resolveLocalPath(String projId) throws LocalPathResolveException, VirtualFileSystemException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         if (vfs == null) {
             throw new VirtualFileSystemException("Can't resolve path on the Local File System : Virtual file system not initialized");
         }
-        return vfs;
+        return localPathResolver.resolve(vfs, projId);
     }
 
-    protected String resolveLocalPath(String projId) throws LocalPathResolveException, VirtualFileSystemException {
-
-        return localPathResolver.resolve(getVfs(), projId);
-    }
-
-    protected GitConnection getGitConnection() throws GitException, LocalPathResolveException,
-                                              VirtualFileSystemException {
-        Item parentProj = getParentProject();
-        if (parentProj != null && parentProj.getItemType().equals(ItemType.PROJECT)) {
-            projectId = parentProj.getId();
-        }
+    protected GitConnection getGitConnection() throws GitException, LocalPathResolveException, VirtualFileSystemException {
         GitUser gituser = null;
         ConversationState user = ConversationState.getCurrent();
         if (user != null) {
