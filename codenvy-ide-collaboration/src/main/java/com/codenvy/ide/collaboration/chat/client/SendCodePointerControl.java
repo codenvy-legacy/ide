@@ -20,12 +20,15 @@ package com.codenvy.ide.collaboration.chat.client;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class SendCodePointerControl extends SimpleControl implements IDEControl {
+public class SendCodePointerControl extends SimpleControl implements IDEControl, ViewActivatedHandler {
 
     private static final String ID = "Edit/Send Code Pointer";
 
@@ -45,5 +48,11 @@ public class SendCodePointerControl extends SimpleControl implements IDEControl 
     /** {@inheritDoc} */
     @Override
     public void initialize() {
+        IDE.eventBus().addHandler(ViewActivatedEvent.TYPE, this);
+    }
+
+    @Override
+    public void onViewActivated(ViewActivatedEvent event) {
+        setShowInContextMenu(event.getView().getId().contains("editor-"));
     }
 }
