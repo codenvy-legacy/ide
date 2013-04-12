@@ -370,7 +370,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
             || currentInfra == null) {
             Dialogs.getInstance().showError("Infrastructure field must be valid and not empty.");
         } else {
-            createProject(projectTemplate);
+            createProject(display.getNameField().getValue(), projectTemplate);
         }
     }
 
@@ -423,7 +423,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
         return display.getView();
     }
 
-    private void createProject(ProjectTemplate projectTemplate) {
+    private void createProject(String name, ProjectTemplate projectTemplate) {
         final Loader loader = new GWTLoader();
         loader.setMessage(lb.creatingProject());
         loader.show();
@@ -431,7 +431,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
             TemplateService.getInstance().createProjectFromTemplate(
                     vfs.getId(),
                     vfs.getRoot().getId(),
-                    display.getNameField().getValue(),
+                    name,
                     projectTemplate.getName(),
                     new AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(new ProjectModel())) {
 
@@ -467,5 +467,60 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
         return display.getNameField().getValue() != null && !display.getNameField().getValue().isEmpty()
                && display.getUrlField().getValue() != null && !display.getUrlField().getValue().isEmpty();
         //         && display.getInfraField().getValue() != null && !display.getInfraField().getValue().isEmpty();
+    }
+
+    @Override
+    public void deployFirstTime(final String projectName, final ProjectTemplate projectTemplate, final DeployResultHandler deployResultHandler) {
+        LoggedInHandler getInfrasHandler = new LoggedInHandler() {
+            @Override
+            public void onLoggedIn() {
+                deployFirstTime(projectName, projectTemplate, deployResultHandler);
+            }
+        };
+
+        this.deployResultHandler = deployResultHandler;
+
+        if (display == null) {
+            display = GWT.create(Display.class);
+        }
+
+        server = AppfogExtension.DEFAULT_SERVER;
+        display.setServerValue(server);
+        display.getNameField().setValue(projectName + "-" + rand());
+
+        bindDisplay();
+
+        try {
+            AppfogClientService.getInstance().infras(
+                    server,
+                    null,
+                    null,
+                    new AppfogAsyncRequestCallback<List<InfraDetail>>(new InfrasUnmarshaller(new ArrayList<InfraDetail>()),
+                                                                      getInfrasHandler, null, server) {
+                        @Override
+                        protected void onSuccess(List<InfraDetail> result) {
+                            infras = result;
+
+                            List<String> infraNames = new ArrayList<String>(result.size());
+                            for (InfraDetail infra : result) {
+                                infraNames.add(infra.getName());
+                            }
+
+                            display.getInfraField().setValue(infraNames.get(0));
+                            display.setInfraValues(infraNames.toArray(new String[infraNames.size()]));
+
+                            currentInfra = infras.get(0);
+                            updateUrlField();
+                            url = display.getUrlField().getValue();
+                            createProject(projectName, projectTemplate);
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    private int rand() {
+        return (int)(Math.floor(Math.random() * 999 - 100) + 100);
     }
 }

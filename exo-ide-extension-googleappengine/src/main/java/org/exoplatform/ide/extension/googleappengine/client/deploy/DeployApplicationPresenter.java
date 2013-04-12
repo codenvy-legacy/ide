@@ -364,4 +364,42 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
     public boolean validate() {
         return true;
     }
+
+    @Override
+    public void deployFirstTime(String projectName, ProjectTemplate projectTemplate, final DeployResultHandler deployResultHandler) {
+        this.projectTemplate = projectTemplate;
+        this.deployResultHandler = deployResultHandler;
+        this.projectName = projectName;
+
+        if (display == null) {
+            display = GWT.create(Display.class);
+            bindDisplay();
+        }
+
+        display.getUseExisting().setValue(false);
+        display.enableApplicationIdField(false);
+        display.getApplicationIdField().setValue("");
+
+        try {
+            TemplateService.getInstance().createProjectFromTemplate(currentVfs.getId(), currentVfs.getRoot().getId(),
+                                                                    projectName, projectTemplate.getName(),
+                                                                    new AsyncRequestCallback<ProjectModel>(
+                                                                            new ProjectUnmarshaller(new ProjectModel())) {
+
+                                                                        @Override
+                                                                        protected void onSuccess(final ProjectModel result) {
+                                                                            deployResultHandler.onProjectCreated(result);
+
+                                                                            IDE.fireEvent(new CreateApplicationEvent(result));
+                                                                        }
+
+                                                                        @Override
+                                                                        protected void onFailure(Throwable exception) {
+                                                                            IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                                        }
+                                                                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 }

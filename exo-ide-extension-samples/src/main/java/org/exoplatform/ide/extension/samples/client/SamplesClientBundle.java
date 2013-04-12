@@ -174,6 +174,12 @@ public interface SamplesClientBundle extends ClientBundle {
     @Source("org/exoplatform/ide/extension/samples/client/images/import-samples_Disabled.png")
     ImageResource importSamplesDisabledControl();
 
+    /**
+     * Technology images
+     */
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/technology/jar36x36.png")
+    ImageResource jarTechnology();
+
     public interface Style extends CssResource {
         String inviteHeader();
 
