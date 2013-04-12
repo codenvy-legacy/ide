@@ -60,7 +60,9 @@ import org.exoplatform.ide.vfs.server.GitUrlResolver;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
+import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
@@ -473,17 +475,8 @@ public class GitService {
     @Path("delete-repository")
     public void deleteRepository(@Context UriInfo uriInfo) throws VirtualFileSystemException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        Item project = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
-        String parentId = project.getParentId();
-        Item parent = vfs.getItem(parentId, PropertyFilter.ALL_FILTER);
-        String path2gitFolder;
-        if (parent.getItemType().equals(ItemType.PROJECT)) //MultiModule project
-        {
-            project = parent;
-        }
-        path2gitFolder = project.getPath() + "/.git";
-        Item gitItem = vfs.getItemByPath(path2gitFolder, null, PropertyFilter.NONE_FILTER);
-        vfs.delete(gitItem.getId(), null);
+        Item project = getGitProject(vfs, projectId);
+        vfs.delete(project.getId(), null);
         List<Property> properties = project.getProperties();
         List<Property> propertiesNew = new ArrayList<Property>(properties.size() - 1);
         for (Property property : properties) {
@@ -495,10 +488,22 @@ public class GitService {
         }
         vfs.updateItem(project.getId(), propertiesNew, null);
     }
+    
+    private Item getGitProject(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException
+    {
+        Item project = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+        String parentId = vfs.getItem(projectId, PropertyFilter.ALL_FILTER).getParentId();
+        Item parent = vfs.getItem(parentId, PropertyFilter.ALL_FILTER);
+        if (parent.getItemType().equals(ItemType.PROJECT)) //MultiModule project
+            return parent;
+        else 
+            return project;
+    }
+    
 
     protected boolean isGitRepository() throws VirtualFileSystemException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        Item project = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+        Item project = getGitProject(vfs, projectId);
         String value = project.getPropertyValue("isGitRepository");
         return value != null && value.equals("true");
     }
@@ -508,12 +513,8 @@ public class GitService {
         if (vfs == null) {
             throw new VirtualFileSystemException("Can't resolve path on the Local File System : Virtual file system not initialized");
         }
-        String parentId = vfs.getItem(projId, PropertyFilter.ALL_FILTER).getParentId();
-        Item parent = vfs.getItem(parentId, PropertyFilter.ALL_FILTER);
-        if (parent.getItemType().equals(ItemType.PROJECT)) //MultiModule project
-          return localPathResolver.resolve(vfs, parentId);
-        else
-          return localPathResolver.resolve(vfs, projId);  
+        Item gitProject = getGitProject(vfs, projectId);
+        return localPathResolver.resolve(vfs, gitProject.getId());  
     }
 
     protected GitConnection getGitConnection() throws GitException, LocalPathResolveException, VirtualFileSystemException {
