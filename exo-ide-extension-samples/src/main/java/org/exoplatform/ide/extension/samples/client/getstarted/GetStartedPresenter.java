@@ -179,7 +179,7 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         display.getProjectName().addValueChangeHandler(new ValueChangeHandler<String>() {
             @Override
             public void onValueChange(ValueChangeEvent<String> event) {
-                if (!event.getValue().matches("[a-zA-Z0-9]{1,25}")) {
+                if (!event.getValue().matches("[a-zA-Z0-9]{1,100}")) {
                     display.setErrorVisible(true);
                 } else {
                     display.setErrorVisible(false);
