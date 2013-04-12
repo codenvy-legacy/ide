@@ -255,8 +255,8 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
     }
 
     private void createAndDeploy() {
-        loader.setMessage("Loading...");
-        loader.show();
+//        loader.setMessage("Loading...");
+//        loader.show();
         if (currentPaaS instanceof NoneTarget) {
             createProjectFromTemplate(currentProjectTemplate, this);
         } else {

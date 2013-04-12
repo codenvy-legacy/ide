@@ -380,26 +380,6 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
         display.enableApplicationIdField(false);
         display.getApplicationIdField().setValue("");
 
-        try {
-            TemplateService.getInstance().createProjectFromTemplate(currentVfs.getId(), currentVfs.getRoot().getId(),
-                                                                    projectName, projectTemplate.getName(),
-                                                                    new AsyncRequestCallback<ProjectModel>(
-                                                                            new ProjectUnmarshaller(new ProjectModel())) {
-
-                                                                        @Override
-                                                                        protected void onSuccess(final ProjectModel result) {
-                                                                            deployResultHandler.onProjectCreated(result);
-
-                                                                            IDE.fireEvent(new CreateApplicationEvent(result));
-                                                                        }
-
-                                                                        @Override
-                                                                        protected void onFailure(Throwable exception) {
-                                                                            IDE.fireEvent(new ExceptionThrownEvent(exception));
-                                                                        }
-                                                                    });
-        } catch (RequestException e) {
-            IDE.fireEvent(new ExceptionThrownEvent(e));
-        }
+        isUserLogged(true);
     }
 }

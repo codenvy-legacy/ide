@@ -134,8 +134,7 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
             display = GWT.create(Display.class);
         }
 
-        bindDisplay();
-        IDE.getInstance().openView(display.asView());
+        isUserLogged();
     }
 
     private void checkIfAppengineWebXmlExist() {
@@ -162,7 +161,8 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
                             if ("appengine-web.xml".equals(current.getName())
                                 && "WEB-INF".equals(((FileModel)current).getParent().getName())) {
                                 loader.hide();
-                                createApplication();
+                                bindDisplay();
+                                IDE.getInstance().openView(display.asView());
                                 return;
                             }
                         }
@@ -210,6 +210,28 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
      * id in this case.
      */
     private void startCreateApp() {
+        display.enableDeployButton(true);
+        display.enableCreateButton(false);
+        display.setUserInstructions(GoogleAppEngineExtension.GAE_LOCALIZATION.deployApplicationInstruction());
+
+        String projectId = currentProject.getId();
+        String vfsId = currentVfs.getId();
+        UrlBuilder builder = new UrlBuilder();
+        String redirectUrl = builder.setProtocol(Window.Location.getProtocol())//
+                .setHost(Window.Location.getHost())//
+                .setPath(restContext + "/ide/appengine/change-appid/" + vfsId + "/" + projectId).buildString();
+
+        String url = GOOGLE_APP_ENGINE_URL + "?redirect_url=" + redirectUrl;
+
+        clickToCreate(url);
+    }
+
+    private static native void clickToCreate(String url)
+   /*-{
+       $wnd.open(url, "_blank");
+   }-*/;
+
+    private void isUserLogged() {
         AutoBean<GaeUser> user = GoogleAppEngineExtension.AUTO_BEAN_FACTORY.user();
         AutoBeanUnmarshaller<GaeUser> unmarshaller = new AutoBeanUnmarshaller<GaeUser>(user);
         try {
@@ -219,13 +241,15 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
                         @Override
                         protected void onSuccess(GaeUser result) {
                             if (!result.isAuthenticated()) {
+                                // IDE.fireEvent(new LoginEvent());
                                 new OAuthLoginView();
                             } else {
                                 if (ProjectResolver.APP_ENGINE_JAVA.equals(currentProject.getProjectType()))
                                     checkIfAppengineWebXmlExist();
                                 else
                                 {
-                                    createApplication();
+                                    bindDisplay();
+                                    IDE.getInstance().openView(display.asView());
                                 }
                             }
                         }
@@ -244,24 +268,4 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
             // TODO
         }
     }
-
-    private void createApplication() {
-        display.enableDeployButton(true);
-        display.enableCreateButton(false);
-        display.setUserInstructions(GoogleAppEngineExtension.GAE_LOCALIZATION.deployApplicationInstruction());
-        String projectId = currentProject.getId();
-        String vfsId = currentVfs.getId();
-        UrlBuilder builder = new UrlBuilder();
-        String redirectUrl = builder.setProtocol(Window.Location.getProtocol())//
-                .setHost(Window.Location.getHost())//
-                .setPath(restContext + "/ide/appengine/change-appid/" + vfsId + "/" + projectId).buildString();
-
-        String url = GOOGLE_APP_ENGINE_URL + "?redirect_url=" + redirectUrl;
-        jsCreateClick(url);
-    }
-
-    private static native void jsCreateClick(String url)
-   /*-{
-       $wnd.open(url, "_blank");
-   }-*/;
 }
