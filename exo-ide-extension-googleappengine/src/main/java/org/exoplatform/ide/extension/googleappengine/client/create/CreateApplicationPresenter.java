@@ -262,6 +262,6 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
 
     private static native void jsCreateClick(String url)
    /*-{
-       $wnd.open(url, "Create application", "width=1100,height=670,scrollbars=yes,location=yes,resizable=yes");
+       $wnd.open(url, "_blank");
    }-*/;
 }
