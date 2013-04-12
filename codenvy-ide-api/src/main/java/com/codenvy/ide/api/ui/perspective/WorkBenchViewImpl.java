@@ -20,17 +20,18 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
+import com.google.inject.Inject;
 
 /**
  * General-purpose Perspective View
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class GenericWorkBenchView extends Composite implements WorkBenchView<WorkBenchView.ActionDelegate> {
+public class WorkBenchViewImpl extends Composite implements WorkBenchView<WorkBenchView.ActionDelegate> {
 
     private static GenericPerspectiveViewUiBinder uiBinder = GWT.create(GenericPerspectiveViewUiBinder.class);
 
-    interface GenericPerspectiveViewUiBinder extends UiBinder<Widget, GenericWorkBenchView> {
+    interface GenericPerspectiveViewUiBinder extends UiBinder<Widget, WorkBenchViewImpl> {
     }
 
     @UiField(provided = true)
@@ -47,19 +48,20 @@ public class GenericWorkBenchView extends Composite implements WorkBenchView<Wor
 
     @UiField
     SimplePanel toolPanel;
+    @UiField
+    FlowPanel   rightPanel;
+    @UiField
+    FlowPanel   leftPanel;
+    @UiField
+    FlowPanel   bottomPanel;
 
-    /**
-     * Because this class has a default constructor, it can
-     * be used as a binder template. In other words, it can be used in other
-     * *.ui.xml files as follows:
-     * <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-     * xmlns:g="urn:import:**user's package**">
-     * <g:**UserClassName**>Hello!</g:**UserClassName>
-     * </ui:UiBinder>
-     * Note that depending on the widget that is used, it may be necessary to
-     * implement HasHTML instead of HasText.
-     */
-    public GenericWorkBenchView() {
+    @UiField(provided = true)
+    final WorkBenchResources res;
+
+    @Inject
+    public WorkBenchViewImpl(WorkBenchResources resources) {
+        this.res = resources;
+        resources.workBenchCss().ensureInjected();
         initWidget(uiBinder.createAndBindUi(this));
     }
 

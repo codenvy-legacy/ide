@@ -17,19 +17,29 @@
 package com.codenvy.ide.api.ui.perspective;
 
 import com.codenvy.ide.api.mvp.Presenter;
+import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.parts.OutlinePart;
+import com.codenvy.ide.api.parts.ProjectExplorerPart;
+import com.codenvy.ide.api.parts.SearchPart;
+import com.codenvy.ide.api.parts.WelcomePart;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.Singleton;
 
 
 /**
- * Abstract Perspective Presenter that should be subclassed in order to create new Perspective
- * Please refer to {@link GenericWorkBenchPresenter} as a sample.
- *
+ * * General-purpose, displaying all the PartStacks in a default manner:
+ * Navigation at the left side;
+ * Tooling at the right side;
+ * Information at the bottom of the page;
+ * Editors int center.
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public abstract class WorkBenchPresenter implements Presenter {
+@Singleton
+public class WorkBenchPresenter implements Presenter {
 
     /** Defines Part's position on the Screen */
     public enum PartStackType {
@@ -61,7 +71,7 @@ public abstract class WorkBenchPresenter implements Presenter {
         TOOLING
     }
 
-    protected final WorkBenchView<?> view;
+    private WorkBenchViewImpl view;
 
     protected final JsonStringMap<PartStack> partStacks = JsonCollections.createStringMap();
 
@@ -70,19 +80,33 @@ public abstract class WorkBenchPresenter implements Presenter {
      *
      * @param view
      * @param editorPartStackPresenter
-     * @param partStackProvider
+     * @param stackPresenterFactory
      */
-    public WorkBenchPresenter(WorkBenchView<?> view, EditorPartStack editorPartStackPresenter,
-                              Provider<PartStack> partStackProvider) {
+    @Inject
+    public WorkBenchPresenter(WorkBenchViewImpl view, EditorPartStack editorPartStackPresenter,
+                              PartStackPresenterFactory stackPresenterFactory, PartStackViewFactory partViewFactory, OutlinePart outlinePart, ConsolePart consolePart,
+                              ProjectExplorerPart projectExplorerPart, WelcomePart welcomePart, SearchPart searchPart) {
         this.view = view;
 
-        for (PartStackType partStackType : PartStackType.values()) {
-            // use global Editor Part Stack
-            PartStack partStack =
-                    (partStackType == PartStackType.EDITING) ? editorPartStackPresenter : partStackProvider.get();
-            partStack.setType(partStackType);
-            partStacks.put(partStackType.toString(), partStack);
-        }
+        partStacks.put(PartStackType.EDITING.toString(), editorPartStackPresenter);
+
+        PartStackView navigationView = partViewFactory.create(PartStackView.TabPosition.LEFT,view.leftPanel);
+        PartStack navigationPartStack = stackPresenterFactory.create(navigationView);
+        partStacks.put(PartStackType.NAVIGATION.toString(), navigationPartStack);
+
+        PartStackView informationView = partViewFactory.create(PartStackView.TabPosition.BELOW, view.bottomPanel);
+        PartStack informationStack = stackPresenterFactory.create(informationView);
+        partStacks.put(PartStackType.INFORMATION.toString(), informationStack);
+
+        PartStackView toolingView = partViewFactory.create(PartStackView.TabPosition.RIGHT, view.rightPanel);
+        PartStack toolingPartStack = stackPresenterFactory.create(toolingView);
+        partStacks.put(PartStackType.TOOLING.toString(), toolingPartStack);
+
+        openPart(welcomePart, PartStackType.EDITING);
+        openPart(projectExplorerPart, PartStackType.NAVIGATION);
+        openPart(outlinePart, PartStackType.TOOLING);
+        openPart(consolePart, PartStackType.INFORMATION);
+        openPart(searchPart, PartStackType.INFORMATION);
 
     }
 

@@ -36,6 +36,7 @@ import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
@@ -1127,6 +1128,7 @@ public class Tree<D> extends UiComponent<Tree.View<D>> implements IsWidget {
         if (widget == null) {
             widget = new HTML();
             widget.getElement().appendChild((Node)getView().getElement());
+            widget.getElement().getStyle().setOverflow(Style.Overflow.AUTO);
         }
 
         return widget;

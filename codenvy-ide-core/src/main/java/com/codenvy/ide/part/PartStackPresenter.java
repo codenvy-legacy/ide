@@ -21,11 +21,12 @@ import com.codenvy.ide.api.event.EditorDirtyStateChangedEvent;
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
 import com.codenvy.ide.api.ui.perspective.PartStack;
+import com.codenvy.ide.api.ui.perspective.PartStackView;
 import com.codenvy.ide.api.ui.perspective.WorkBenchPresenter;
 import com.codenvy.ide.api.ui.perspective.PropertyListener;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.part.PartStackView.TabItem;
+import com.codenvy.ide.api.ui.perspective.PartStackView.TabItem;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
@@ -34,6 +35,7 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import com.google.web.bindery.event.shared.EventBus;
 
 
@@ -57,7 +59,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
     /** current active part */
     private       PartPresenter                    activePart;
     private       PartStackEventHandler            partStackHandler;
-    private       WorkBenchPresenter.PartStackType type;
+    protected boolean partsClosable = false;
     private PropertyListener propertyListener = new PropertyListener() {
 
         @Override
@@ -72,8 +74,8 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
 
     /** Creates PartStack with given instance of display and resources (CSS and Images) */
     @Inject
-    public PartStackPresenter(PartStackView view, EventBus eventBus,
-                              PartStackEventHandler partStackEventHandler) {
+    public PartStackPresenter(EventBus eventBus,
+                              PartStackEventHandler partStackEventHandler, @Assisted PartStackView view) {
         this.view = view;
         this.eventBus = eventBus;
         partStackHandler = partStackEventHandler;
@@ -96,29 +98,9 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
-        view.setTabPosition(getTabPosition());
         container.setWidget(view);
         if (activePart != null) {
             activePart.go(view.getContentPanel());
-        }
-    }
-
-    private PartStackView.TabPosition getTabPosition() {
-        if(type == null)
-        {
-            return PartStackView.TabPosition.ABOVE;
-        }
-        switch (type) {
-            case EDITING:
-                return PartStackView.TabPosition.ABOVE;
-            case NAVIGATION:
-                return PartStackView.TabPosition.LEFT;
-            case TOOLING:
-                return PartStackView.TabPosition.RIGHT;
-            case INFORMATION:
-                return PartStackView.TabPosition.BELOW;
-            default:
-                return PartStackView.TabPosition.ABOVE;
         }
     }
 
@@ -144,7 +126,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         ImageResource titleImage = part.getTitleImage();
         TabItem tabItem =
                 view.addTabButton(titleImage == null ? null : new Image(titleImage), part.getTitle(), part.getTitleToolTip(),
-                                  type == WorkBenchPresenter.PartStackType.EDITING);
+                                  partsClosable);
         bindEvents(tabItem, part);
         setActivePart(part);
         // requst focus
@@ -188,12 +170,6 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         onRequestFocus();
         // notify handler, that part changed
         partStackHandler.onActivePartChanged(activePart);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setType(WorkBenchPresenter.PartStackType type) {
-        this.type = type;
     }
 
     /**

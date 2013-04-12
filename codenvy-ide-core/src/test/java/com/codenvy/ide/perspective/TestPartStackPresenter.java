@@ -19,7 +19,7 @@ package com.codenvy.ide.perspective;
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
 import com.codenvy.ide.part.PartStackPresenter;
 import com.codenvy.ide.part.PartStackUIResources;
-import com.codenvy.ide.part.PartStackView;
+import com.codenvy.ide.api.ui.perspective.PartStackView;
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;

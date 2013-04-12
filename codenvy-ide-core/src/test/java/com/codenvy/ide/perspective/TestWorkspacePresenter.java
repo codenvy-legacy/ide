@@ -16,13 +16,11 @@
  */
 package com.codenvy.ide.perspective;
 
-import com.codenvy.ide.api.ui.perspective.GenericWorkBenchPresenter;
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
+import com.codenvy.ide.api.ui.perspective.WorkBenchPresenter;
 import com.codenvy.ide.api.ui.perspective.WorkBenchPresenter.PartStackType;
 import com.codenvy.ide.part.PartStackPresenter;
 import com.google.gwt.junit.GWTMockUtilities;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Provider;
 
 import org.junit.After;
@@ -32,10 +30,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Testing {@link WorkspacePresenter} functionality.
@@ -53,10 +51,10 @@ public class TestWorkspacePresenter {
     Provider<PartStackPresenter> partStackProvider;
 
     @Mock
-    Provider<GenericWorkBenchPresenter> activePerspectiveProvider;
+    Provider<WorkBenchPresenter> activePerspectiveProvider;
 
     @Mock
-    GenericWorkBenchPresenter activePerspective;
+    WorkBenchPresenter activePerspective;
 
     @Mock
     WorkspaceView view;

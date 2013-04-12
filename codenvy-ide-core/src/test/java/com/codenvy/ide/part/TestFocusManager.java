@@ -21,6 +21,7 @@ package com.codenvy.ide.part;
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
 import com.codenvy.ide.api.ui.perspective.PartStack;
+import com.codenvy.ide.api.ui.perspective.PartStackView;
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.web.bindery.event.shared.EventBus;
 

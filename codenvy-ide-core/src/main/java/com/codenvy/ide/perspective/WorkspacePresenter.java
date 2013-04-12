@@ -17,7 +17,6 @@
 package com.codenvy.ide.perspective;
 
 import com.codenvy.ide.api.mvp.Presenter;
-import com.codenvy.ide.api.ui.perspective.GenericWorkBenchPresenter;
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
 import com.codenvy.ide.api.ui.perspective.WorkBenchPresenter;
 import com.codenvy.ide.api.ui.perspective.WorkBenchPresenter.PartStackType;
@@ -45,8 +44,6 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelegate, WorkspaceAgent {
-    public static final String GENERAL_PERSPECTIVE = "Default";
-
     private final WorkspaceView view;
 
     private final MainMenuPresenter menu;
@@ -66,7 +63,7 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
      */
     @Inject
     protected WorkspacePresenter(WorkspaceView view, MainMenuPresenter menu, ToolbarPresenter toolbarPresenter,
-                                 Provider<GenericWorkBenchPresenter> genericPerspectiveProvider) {
+                                 Provider<WorkBenchPresenter> genericPerspectiveProvider) {
         super();
         this.view = view;
         this.toolbarPresenter = toolbarPresenter;

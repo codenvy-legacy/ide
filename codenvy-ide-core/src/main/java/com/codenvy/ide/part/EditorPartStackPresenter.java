@@ -19,9 +19,13 @@ package com.codenvy.ide.part;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.ui.perspective.EditorPartStack;
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
+import com.codenvy.ide.api.ui.perspective.PartStackView;
 import com.codenvy.ide.util.loging.Log;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -38,9 +42,10 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
      * @param eventBus
      */
     @Inject
-    public EditorPartStackPresenter(PartStackView view, EventBus eventBus,
+    public EditorPartStackPresenter(@Named("editorPartStack")PartStackView view, EventBus eventBus,
                                     PartStackEventHandler partStackEventHandler) {
-        super(view, eventBus, partStackEventHandler);
+        super(eventBus, partStackEventHandler, view);
+        partsClosable = true;
     }
 
     /** {@inheritDoc} */
@@ -49,6 +54,7 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
         if (!(part instanceof EditorPartPresenter)) {
             Log.warn(getClass(), "EditorPartStack is not intended to be used to open non-Editor Parts.");
         }
+
         super.addPart(part);
     }
 

@@ -34,6 +34,9 @@ import com.codenvy.ide.api.ui.menu.MainMenuAgent;
 import com.codenvy.ide.api.ui.menu.ToolbarAgent;
 import com.codenvy.ide.api.ui.perspective.EditorPartStack;
 import com.codenvy.ide.api.ui.perspective.PartStack;
+import com.codenvy.ide.api.ui.perspective.PartStackPresenterFactory;
+import com.codenvy.ide.api.ui.perspective.PartStackView;
+import com.codenvy.ide.api.ui.perspective.PartStackViewFactory;
 import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
 import com.codenvy.ide.api.ui.wizard.WizardAgent;
@@ -90,6 +93,7 @@ import com.codenvy.ide.wizard.newfile.NewGenericFilePageViewImpl;
 import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectPageView;
 import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectPageViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
+import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -111,7 +115,8 @@ public class CoreGinModule extends AbstractGinModule {
         bind(ExtensionRegistry.class).in(Singleton.class);
         bind(StandardComponentInitializer.class).in(Singleton.class);
         bind(TemplateService.class).to(TemplateServiceImpl.class).in(Singleton.class);
-
+        install(new GinFactoryModuleBuilder().implement(PartStackView.class, PartStackViewImpl.class).build(PartStackViewFactory.class));
+        install(new GinFactoryModuleBuilder().implement(PartStack.class, PartStackPresenter.class).build(PartStackPresenterFactory.class));
         apiBindingConfigure();
 
         resourcesAPIconfigure();
@@ -134,7 +139,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(WizardAgent.class).to(WizardAgentImpl.class).in(Singleton.class);
         bind(PaaSAgent.class).to(PaaSAgentImpl.class).in(Singleton.class);
         // UI Model
-        bind(PartStack.class).to(PartStackPresenter.class);
+//        bind(PartStack.class).to(PartStackPresenter.class);
         bind(EditorPartStack.class).to(EditorPartStackPresenter.class).in(Singleton.class);
         // Parts
         bind(ConsolePart.class).to(ConsolePartPresenter.class).in(Singleton.class);
@@ -168,13 +173,15 @@ public class CoreGinModule extends AbstractGinModule {
     /** Configure Core UI components, resouces and views */
     protected void coreUiConfigure() {
         // Resources
+
         bind(PartStackUIResources.class).to(Resources.class).in(Singleton.class);
         // Views
         bind(WorkspaceView.class).to(WorkspaceViewImpl.class).in(Singleton.class);
         bind(MainMenuView.class).to(MainMenuViewImpl.class).in(Singleton.class);
         bind(NewGenericFilePageView.class).to(NewGenericFilePageViewImpl.class).in(Singleton.class);
         bind(ToolbarView.class).to(ToolbarViewImpl.class).in(Singleton.class);
-        bind(PartStackView.class).to(PartStackViewImpl.class);
+//        bind(PartStackView.class).to(PartStackViewImpl.class);
+        bind(PartStackView.class).annotatedWith(Names.named("editorPartStack")).to(EditorPartStackView.class);
         bind(ProjectExplorerView.class).to(ProjectExplorerViewImpl.class).in(Singleton.class);
         bind(ConsolePartView.class).to(ConsolePartViewImpl.class).in(Singleton.class);
         bind(SearchPartView.class).to(SearchPartViewImpl.class).in(Singleton.class);

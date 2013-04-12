@@ -25,6 +25,7 @@ import com.codenvy.ide.tree.FileTreeNodeRenderer;
 import com.codenvy.ide.tree.ResourceTreeNodeDataAdapter;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -50,7 +51,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
     public ProjectExplorerViewImpl(Resources resources) {
         super(resources);
         tree = Tree.create(resources, new ResourceTreeNodeDataAdapter(), FileTreeNodeRenderer.create(resources));
-        container.add(tree);
+        container.add(tree.asWidget());
     }
 
 //    /** {@inheritDoc} */

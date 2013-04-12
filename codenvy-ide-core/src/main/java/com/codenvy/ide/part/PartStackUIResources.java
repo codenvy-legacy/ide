@@ -39,8 +39,8 @@ public interface PartStackUIResources extends ClientBundle {
         @ClassName("ide-PartStack-Tab-selected")
         String idePartStackTabSelected();
 
-        @ClassName("ide-PartStack-Content")
-        String idePartStackContent();
+        @ClassName("ide-PartStack-Editor-Content")
+        String idePartStackEditorContent();
 
         @ClassName("ide-PartStack-focused")
         String idePartStackFocused();
@@ -59,6 +59,15 @@ public interface PartStackUIResources extends ClientBundle {
 
         @ClassName("ide-Base-Part-Toolbar")
         String ideBasePartToolbar();
+
+        @ClassName("ide-PartStack-Tab-Label")
+        String idePartStackTabLabel();
+
+        @ClassName("ide-PartStack-Content")
+        String idePartStackContent();
+
+        @ClassName("ide-PartStack-Tool-Tab")
+        String idePartStackToolTab();
     }
 
     @Source({"PartStack.css", "com/codenvy/ide/api/ui/style.css"})

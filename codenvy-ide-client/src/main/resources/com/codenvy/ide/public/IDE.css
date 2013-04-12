@@ -129,11 +129,21 @@ body {
     color: #333333;
 }
 .hsplitter, .gwt-SplitLayoutPanel-HDragger {
-    background: #91C0EF url(vsplit.png) repeat-y !important;
+    background: rgb(195,198,204); /* Old browsers */
+    background: -moz-linear-gradient(left, rgba(195,198,204,1) 0%, rgba(244,244,244,1) 14%, rgba(228,228,228,1) 57%, rgba(227,227,227,1) 71%, rgba(229,229,229,1) 86%, rgba(198,200,206,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(195,198,204,1)), color-stop(14%,rgba(244,244,244,1)), color-stop(57%,rgba(228,228,228,1)), color-stop(71%,rgba(227,227,227,1)), color-stop(86%,rgba(229,229,229,1)), color-stop(100%,rgba(198,200,206,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(left, rgba(195,198,204,1) 0%,rgba(244,244,244,1) 14%,rgba(228,228,228,1) 57%,rgba(227,227,227,1) 71%,rgba(229,229,229,1) 86%,rgba(198,200,206,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: linear-gradient(to right, rgba(195,198,204,1) 0%,rgba(244,244,244,1) 14%,rgba(228,228,228,1) 57%,rgba(227,227,227,1) 71%,rgba(229,229,229,1) 86%,rgba(198,200,206,1) 100%); /* W3C */
 }
 
 .vsplitter, .gwt-SplitLayoutPanel-VDragger {
-    background: #91C0EF url(hsplit.png) repeat-x !important;
+    background: rgb(195,198,204); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(195,198,204,1) 0%, rgba(244,244,244,1) 14%, rgba(228,228,228,1) 57%, rgba(227,227,227,1) 71%, rgba(229,229,229,1) 86%, rgba(198,200,206,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(195,198,204,1)), color-stop(14%,rgba(244,244,244,1)), color-stop(57%,rgba(228,228,228,1)), color-stop(71%,rgba(227,227,227,1)), color-stop(86%,rgba(229,229,229,1)), color-stop(100%,rgba(198,200,206,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(195,198,204,1) 0%,rgba(244,244,244,1) 14%,rgba(228,228,228,1) 57%,rgba(227,227,227,1) 71%,rgba(229,229,229,1) 86%,rgba(198,200,206,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(195,198,204,1) 0%,rgba(244,244,244,1) 14%,rgba(228,228,228,1) 57%,rgba(227,227,227,1) 71%,rgba(229,229,229,1) 86%,rgba(198,200,206,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(195,198,204,1) 0%,rgba(244,244,244,1) 14%,rgba(228,228,228,1) 57%,rgba(227,227,227,1) 71%,rgba(229,229,229,1) 86%,rgba(198,200,206,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom, rgba(195,198,204,1) 0%,rgba(244,244,244,1) 14%,rgba(228,228,228,1) 57%,rgba(227,227,227,1) 71%,rgba(229,229,229,1) 86%,rgba(198,200,206,1) 100%); /* W3C */
 }
 
 .gwt-MenuItem{

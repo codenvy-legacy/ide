@@ -75,5 +75,4 @@ public interface PartStack extends Presenter {
      */
     public void setActivePart(PartPresenter part);
 
-    void setType(WorkBenchPresenter.PartStackType type);
 }
