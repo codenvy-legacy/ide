@@ -46,4 +46,8 @@
         <type>org.exoplatform.ide.git.server.rest.GitApplication</type>
     </component>
     
+    <component>
+       <type>org.exoplatform.ide.git.server.GitIgnoreConfigChecker</type>
+    </component>
+    
 </configuration>

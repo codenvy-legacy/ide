@@ -97,6 +97,6 @@ public class HerokuControl extends SimpleControl implements IDEControl, ProjectC
     }
 
     private boolean isHeroku(ProjectModel project) {
-        return project.getPropertyValue("heroku-application") != null;
+        return (project.getProperty("heroku-application") != null &&  !project.getPropertyValues("heroku-application").isEmpty());
     }
 }
