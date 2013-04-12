@@ -22,35 +22,25 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to copy selected text in editor.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 4, 2012 9:35:44 AM anya $
- * 
  */
-public class EditorCopyTextEvent extends GwtEvent<EditorCopyTextHandler>
-{
+public class EditorCopyTextEvent extends GwtEvent<EditorCopyTextHandler> {
 
-   /**
-    * Type used to register the event.
-    */
-   public static final GwtEvent.Type<EditorCopyTextHandler> TYPE = new GwtEvent.Type<EditorCopyTextHandler>();
+    /** Type used to register the event. */
+    public static final GwtEvent.Type<EditorCopyTextHandler> TYPE = new GwtEvent.Type<EditorCopyTextHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorCopyTextHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorCopyTextHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(EditorCopyTextHandler handler)
-   {
-      handler.onEditorCopyText(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(EditorCopyTextHandler handler) {
+        handler.onEditorCopyText(this);
+    }
 
 }

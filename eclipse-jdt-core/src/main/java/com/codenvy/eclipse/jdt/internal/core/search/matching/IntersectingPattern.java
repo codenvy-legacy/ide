@@ -23,66 +23,65 @@ import com.codenvy.eclipse.jdt.internal.core.search.IndexQueryRequestor;
 import java.io.IOException;
 
 
-/**
- * Query the index multiple times and do an 'and' on the results.
- */
+/** Query the index multiple times and do an 'and' on the results. */
 public abstract class IntersectingPattern extends JavaSearchPattern {
 
-public IntersectingPattern(int patternKind, int matchRule) {
-	super(patternKind, matchRule);
-}
-public void findIndexMatches(Index index, IndexQueryRequestor requestor, SearchParticipant participant, IJavaSearchScope scope, IProgressMonitor progressMonitor) throws IOException {
-	if (progressMonitor != null && progressMonitor.isCanceled()) throw new OperationCanceledException();
+    public IntersectingPattern(int patternKind, int matchRule) {
+        super(patternKind, matchRule);
+    }
 
-	resetQuery();
-	SimpleSet intersectedNames = null;
-	try {
-		index.startQuery();
-		do {
-			SearchPattern pattern = currentPattern();
-			EntryResult[] entries = pattern.queryIn(index);
-			if (entries == null) return;
+    public void findIndexMatches(Index index, IndexQueryRequestor requestor, SearchParticipant participant, IJavaSearchScope scope,
+                                 IProgressMonitor progressMonitor) throws IOException {
+        if (progressMonitor != null && progressMonitor.isCanceled()) throw new OperationCanceledException();
 
-			SearchPattern decodedResult = pattern.getBlankPattern();
-			SimpleSet newIntersectedNames = new SimpleSet(3);
-			for (int i = 0, l = entries.length; i < l; i++) {
-				if (progressMonitor != null && progressMonitor.isCanceled()) throw new OperationCanceledException();
+        resetQuery();
+        SimpleSet intersectedNames = null;
+        try {
+            index.startQuery();
+            do {
+                SearchPattern pattern = currentPattern();
+                EntryResult[] entries = pattern.queryIn(index);
+                if (entries == null) return;
 
-				EntryResult entry = entries[i];
-				decodedResult.decodeIndexKey(entry.getWord());
-				if (pattern.matchesDecodedKey(decodedResult)) {
-					String[] names = entry.getDocumentNames(index);
-					if (intersectedNames != null) {
-						for (int j = 0, n = names.length; j < n; j++)
-							if (intersectedNames.includes(names[j]))
-								newIntersectedNames.add(names[j]);
-					} else {
-						for (int j = 0, n = names.length; j < n; j++)
-							newIntersectedNames.add(names[j]);
-					}
-				}
-			}
+                SearchPattern decodedResult = pattern.getBlankPattern();
+                SimpleSet newIntersectedNames = new SimpleSet(3);
+                for (int i = 0, l = entries.length; i < l; i++) {
+                    if (progressMonitor != null && progressMonitor.isCanceled()) throw new OperationCanceledException();
 
-			if (newIntersectedNames.elementSize == 0) return;
-			intersectedNames = newIntersectedNames;
-		} while (hasNextQuery());
-	} finally {
-		index.stopQuery();
-	}
+                    EntryResult entry = entries[i];
+                    decodedResult.decodeIndexKey(entry.getWord());
+                    if (pattern.matchesDecodedKey(decodedResult)) {
+                        String[] names = entry.getDocumentNames(index);
+                        if (intersectedNames != null) {
+                            for (int j = 0, n = names.length; j < n; j++)
+                                if (intersectedNames.includes(names[j]))
+                                    newIntersectedNames.add(names[j]);
+                        } else {
+                            for (int j = 0, n = names.length; j < n; j++)
+                                newIntersectedNames.add(names[j]);
+                        }
+                    }
+                }
 
-	String containerPath = index.containerPath;
-	char separator = index.separator;
-	Object[] names = intersectedNames.values;
-	for (int i = 0, l = names.length; i < l; i++)
-		if (names[i] != null)
-			acceptMatch((String) names[i], containerPath, separator, null/*no pattern*/, requestor, participant, scope, progressMonitor); // AndPatterns cannot provide the decoded result
-}
-/**
- * Returns whether another query must be done.
- */
-protected abstract boolean hasNextQuery();
-/**
- * Resets the query and prepares this pattern to be queried.
- */
-protected abstract void resetQuery();
+                if (newIntersectedNames.elementSize == 0) return;
+                intersectedNames = newIntersectedNames;
+            } while (hasNextQuery());
+        } finally {
+            index.stopQuery();
+        }
+
+        String containerPath = index.containerPath;
+        char separator = index.separator;
+        Object[] names = intersectedNames.values;
+        for (int i = 0, l = names.length; i < l; i++)
+            if (names[i] != null)
+                acceptMatch((String)names[i], containerPath, separator, null/*no pattern*/, requestor, participant, scope,
+                            progressMonitor); // AndPatterns cannot provide the decoded result
+    }
+
+    /** Returns whether another query must be done. */
+    protected abstract boolean hasNextQuery();
+
+    /** Resets the query and prepares this pattern to be queried. */
+    protected abstract void resetQuery();
 }

@@ -20,31 +20,24 @@ package org.exoplatform.ide.extension.heroku.client.marshaller;
 
 /**
  * Response of the application's logs.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Sep 19, 2011 2:38:21 PM anya $
- * 
  */
-public class LogsResponse
-{
-   /**
-    * Logs.
-    */
-   private String logs;
+public class LogsResponse {
+    /** Logs. */
+    private String logs;
 
-   /**
-    * @return the logs
-    */
-   public String getLogs()
-   {
-      return logs;
-   }
+    /** @return the logs */
+    public String getLogs() {
+        return logs;
+    }
 
-   /**
-    * @param logs the logs to set
-    */
-   public void setLogs(String logs)
-   {
-      this.logs = logs;
-   }
+    /**
+     * @param logs
+     *         the logs to set
+     */
+    public void setLogs(String logs) {
+        this.logs = logs;
+    }
 }

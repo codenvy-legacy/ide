@@ -26,13 +26,12 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface DeleteApplicationHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to delete application.
-    *
-    * @param event
-    */
-   void onDeleteApplication(DeleteApplicationEvent event);
+public interface DeleteApplicationHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to delete application.
+     *
+     * @param event
+     */
+    void onDeleteApplication(DeleteApplicationEvent event);
 
 }

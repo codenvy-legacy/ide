@@ -24,35 +24,34 @@ import com.google.gwt.i18n.client.Messages;
  * Interface to represent the constants contained in resource bundle: 'IdeOverwriteLocalizationConstant.properties'.
  * <p/>
  * Localization message for overwrite dialog.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: IdeOverwriteLocalizationConstant.java Nov 11, 2011 10:51:24 AM vereshchaka $
  */
-public interface IdeOverwriteLocalizationConstant extends Messages
-{
+public interface IdeOverwriteLocalizationConstant extends Messages {
 
-   /*
-    * Buttons
-    */
-   @Key("button.overwrite")
-   String overwriteButton();
+    /*
+     * Buttons
+     */
+    @Key("button.overwrite")
+    String overwriteButton();
 
-   @Key("button.rename")
-   String renameButton();
+    @Key("button.rename")
+    String renameButton();
 
-   /*
-    * OverwriteDialog
-    */
-   @Key("dialog.title")
-   String dialogTitle();
+    /*
+     * OverwriteDialog
+     */
+    @Key("dialog.title")
+    String dialogTitle();
 
-   @Key("dialog.text.fileExists")
-   String dialogTextFileExists();
+    @Key("dialog.text.fileExists")
+    String dialogTextFileExists();
 
-   @Key("dialog.text.ask")
-   String dialogAskToOverwrite();
+    @Key("dialog.text.ask")
+    String dialogAskToOverwrite();
 
-   @Key("dialog.renameField.lable")
-   String dialogRenameFieldLable();
+    @Key("dialog.renameField.lable")
+    String dialogRenameFieldLable();
 
 }

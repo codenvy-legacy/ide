@@ -1,33 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-   <modelVersion>4.0.0</modelVersion>
-   <parent>
-      <groupId>org.exoplatform.ide</groupId>
-      <artifactId>exo-ide-parent</artifactId>
-      <version>2.0.1-SNAPSHOT</version>
-   </parent>
-   <artifactId>exo-ide-git-server</artifactId>
-   <packaging>war</packaging>
-   <name>Codenvy IDE :: GIT :: Server</name>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.exoplatform.ide</groupId>
+        <artifactId>exo-ide-parent</artifactId>
+        <version>2.1.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>exo-ide-git-server</artifactId>
+    <packaging>war</packaging>
+    <name>Codenvy IDE :: GIT :: Server</name>
 
-   <dependencies>
-      <dependency>
-         <groupId>org.eclipse.jgit</groupId>
-         <artifactId>org.eclipse.jgit.http.server</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.eclipse.jgit</groupId>
-         <artifactId>org.eclipse.jgit</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>com.jcraft</groupId>
-         <artifactId>jsch</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>javax.servlet</groupId>
-         <artifactId>servlet-api</artifactId>
-         <scope>provided</scope>
-      </dependency>
-   </dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit.http.server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 </project>
 

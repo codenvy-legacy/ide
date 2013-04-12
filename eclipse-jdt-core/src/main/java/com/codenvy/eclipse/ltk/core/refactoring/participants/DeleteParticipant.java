@@ -23,26 +23,21 @@ package com.codenvy.eclipse.ltk.core.refactoring.participants;
  *
  * @since 3.0
  */
-public abstract class DeleteParticipant extends RefactoringParticipant
-{
+public abstract class DeleteParticipant extends RefactoringParticipant {
 
-   private DeleteArguments fArguments;
+    private DeleteArguments fArguments;
 
-   /**
-    * {@inheritDoc}
-    */
-   protected final void initialize(RefactoringArguments arguments)
-   {
-      fArguments = (DeleteArguments)arguments;
-   }
+    /** {@inheritDoc} */
+    protected final void initialize(RefactoringArguments arguments) {
+        fArguments = (DeleteArguments)arguments;
+    }
 
-   /**
-    * Returns the delete arguments.
-    *
-    * @return the delete arguments
-    */
-   public DeleteArguments getArguments()
-   {
-      return fArguments;
-   }
+    /**
+     * Returns the delete arguments.
+     *
+     * @return the delete arguments
+     */
+    public DeleteArguments getArguments() {
+        return fArguments;
+    }
 }

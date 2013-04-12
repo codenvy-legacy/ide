@@ -26,29 +26,25 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-public class VFSListGrid extends ListGrid<VirtualFileSystemInfo>
-{
-   private final String ID = "ideEntryPointListGrid";
+public class VFSListGrid extends ListGrid<VirtualFileSystemInfo> {
+    private final String ID = "ideEntryPointListGrid";
 
-   public VFSListGrid()
-   {
-      setID(ID);
+    public VFSListGrid() {
+        setID(ID);
 
-      Column<VirtualFileSystemInfo, String> entryNameColumn = new Column<VirtualFileSystemInfo, String>(new TextCell())
-      {
+        Column<VirtualFileSystemInfo, String> entryNameColumn = new Column<VirtualFileSystemInfo, String>(new TextCell()) {
 
-         @Override
-         public String getValue(VirtualFileSystemInfo object)
-         {
-            return object.getId();
-         }
-      };
+            @Override
+            public String getValue(VirtualFileSystemInfo object) {
+                return object.getId();
+            }
+        };
 
-      getCellTable().addColumn(entryNameColumn);
-   }
+        getCellTable().addColumn(entryNameColumn);
+    }
 
 }

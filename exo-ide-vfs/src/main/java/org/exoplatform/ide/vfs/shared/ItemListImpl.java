@@ -27,69 +27,62 @@ import java.util.List;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: ItemList.java 79579 2012-02-17 13:27:25Z andrew00x $
  */
-public class ItemListImpl<T extends Item> implements ItemList<T>
-{
-   /**
-    * Total number of items.
-    *
-    * @see #getNumItems()
-    */
-   private int numItems = -1;
+public class ItemListImpl<T extends Item> implements ItemList<T> {
+    /**
+     * Total number of items.
+     *
+     * @see #getNumItems()
+     */
+    private int numItems = -1;
 
-   /** Has more items in result set. */
-   private boolean hasMoreItems;
+    /** Has more items in result set. */
+    private boolean hasMoreItems;
 
-   /** Current range of items. */
-   private List<T> list;
+    /** Current range of items. */
+    private List<T> list;
 
-   public ItemListImpl()
-   {
-   }
+    public ItemListImpl() {
+    }
 
-   /** @param list the list of items. */
-   public ItemListImpl(List<T> list)
-   {
-      this.list = list;
-   }
+    /**
+     * @param list
+     *         the list of items.
+     */
+    public ItemListImpl(List<T> list) {
+        this.list = list;
+    }
 
-   /** @return set of items */
-   @Override
-   public List<T> getItems()
-   {
-      if (list == null)
-      {
-         list = new ArrayList<T>();
-      }
-      return list;
-   }
+    /** @return set of items */
+    @Override
+    public List<T> getItems() {
+        if (list == null) {
+            list = new ArrayList<T>();
+        }
+        return list;
+    }
 
-   @Override
-   public void setItems(List<T> list)
-   {
-      this.list = list;
-   }
+    @Override
+    public void setItems(List<T> list) {
+        this.list = list;
+    }
 
-   @Override
-   public int getNumItems()
-   {
-      return numItems;
-   }
+    @Override
+    public int getNumItems() {
+        return numItems;
+    }
 
-   @Override
-   public void setNumItems(int numItems)
-   {
-      this.numItems = numItems;
-   }
+    @Override
+    public void setNumItems(int numItems) {
+        this.numItems = numItems;
+    }
 
-   @Override
-   public boolean isHasMoreItems()
-   {
-      return hasMoreItems;
-   }
+    @Override
+    public boolean isHasMoreItems() {
+        return hasMoreItems;
+    }
 
-   @Override
-   public void setHasMoreItems(boolean hasMoreItems)
-   {
-      this.hasMoreItems = hasMoreItems;
-   }
+    @Override
+    public void setHasMoreItems(boolean hasMoreItems) {
+        this.hasMoreItems = hasMoreItems;
+    }
 }

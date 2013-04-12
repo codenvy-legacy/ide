@@ -22,52 +22,52 @@ import com.codenvy.eclipse.jdt.internal.compiler.ast.Javadoc;
  */
 public class FormatJavadoc extends Javadoc {
 
-	FormatJavadocBlock[] blocks;
-	int textStart, textEnd;
-	int lineStart, lineEnd;
+    FormatJavadocBlock[] blocks;
+    int                  textStart, textEnd;
+    int lineStart, lineEnd;
 
-public FormatJavadoc(int sourceStart, int sourceEnd, int length) {
-	super(sourceStart, sourceEnd);
-	if (length > 0) {
-		this.blocks = new FormatJavadocBlock[length];
-	}
-}
+    public FormatJavadoc(int sourceStart, int sourceEnd, int length) {
+        super(sourceStart, sourceEnd);
+        if (length > 0) {
+            this.blocks = new FormatJavadocBlock[length];
+        }
+    }
 
-/**
- * Return the first block of the javadoc or <code>null</code> if has no block
- * at all.
- *
- * @return a {@link FormatJavadocBlock} or <code>null</code>.
- */
-public FormatJavadocBlock getFirstBlock() {
-	if (this.blocks != null) {
-		return this.blocks[0];
-	}
-	return null;
-}
+    /**
+     * Return the first block of the javadoc or <code>null</code> if has no block
+     * at all.
+     *
+     * @return a {@link FormatJavadocBlock} or <code>null</code>.
+     */
+    public FormatJavadocBlock getFirstBlock() {
+        if (this.blocks != null) {
+            return this.blocks[0];
+        }
+        return null;
+    }
 
-/**
- * Returns whether it has several lines or not.
- *
- * @return <code>true</code> if the javadoc comment has several lines
- * 	<code>false</code> otherwise (e.g. header and footer are on the same
- * 	line).
- */
-public boolean isMultiLine() {
-	return this.lineStart < this.lineEnd;
-}
+    /**
+     * Returns whether it has several lines or not.
+     *
+     * @return <code>true</code> if the javadoc comment has several lines
+     *         <code>false</code> otherwise (e.g. header and footer are on the same
+     *         line).
+     */
+    public boolean isMultiLine() {
+        return this.lineStart < this.lineEnd;
+    }
 
-public String toDebugString(char[] source) {
-	if (this.blocks == null) {
-		return "No block in current Javadoc comment"; //$NON-NLS-1$
-	}
-	StringBuffer buffer = new StringBuffer();
-	int length = this.blocks.length;
-	for (int i=0; i<length; i++) {
-		this.blocks[i].toStringDebug(buffer, source);
-		buffer.append('\n');
-	}
-	return buffer.toString();
-}
+    public String toDebugString(char[] source) {
+        if (this.blocks == null) {
+            return "No block in current Javadoc comment"; //$NON-NLS-1$
+        }
+        StringBuffer buffer = new StringBuffer();
+        int length = this.blocks.length;
+        for (int i = 0; i < length; i++) {
+            this.blocks[i].toStringDebug(buffer, source);
+            buffer.append('\n');
+        }
+        return buffer.toString();
+    }
 
 }

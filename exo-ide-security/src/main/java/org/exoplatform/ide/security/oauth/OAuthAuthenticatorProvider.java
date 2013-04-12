@@ -18,18 +18,15 @@
  */
 package org.exoplatform.ide.security.oauth;
 
-/**
- * Allow store and provide services which implementations of OAuthAuthenticator.
- */
-public interface OAuthAuthenticatorProvider
-{
+/** Allow store and provide services which implementations of OAuthAuthenticator. */
+public interface OAuthAuthenticatorProvider {
 
-   /**
-    * Get authentication service by name.
-    *
-    * @param oauthProviderName
-    *    name of OAuth provider
-    * @return OAuthAuthenticator instance or <code>null</code> if specified OAuth provider is not supported
-    */
-   OAuthAuthenticator getAuthenticator(String oauthProviderName);
+    /**
+     * Get authentication service by name.
+     *
+     * @param oauthProviderName
+     *         name of OAuth provider
+     * @return OAuthAuthenticator instance or <code>null</code> if specified OAuth provider is not supported
+     */
+    OAuthAuthenticator getAuthenticator(String oauthProviderName);
 }

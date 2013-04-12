@@ -20,18 +20,17 @@ package org.exoplatform.ide.testframework.server.cloudbees;
 
 /**
  * If cloudbees server return unexpected or error status for request.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudbeesException.java Aug 16, 2011 12:56:58 PM vereshchaka $
  */
 @SuppressWarnings("serial")
-public class CloudBeesException extends Exception
-{
-   /**
-    * @param message text message
-    */
-   public CloudBeesException(String message)
-   {
-      super(message);
-   }
+public class CloudBeesException extends Exception {
+    /**
+     * @param message
+     *         text message
+     */
+    public CloudBeesException(String message) {
+        super(message);
+    }
 }

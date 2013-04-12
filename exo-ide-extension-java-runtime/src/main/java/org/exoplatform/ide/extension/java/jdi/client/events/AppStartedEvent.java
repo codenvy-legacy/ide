@@ -18,51 +18,43 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client.events;
 
-import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class AppStartedEvent extends GwtEvent<AppStartedHandler>
-{
+public class AppStartedEvent extends GwtEvent<AppStartedHandler> {
 
-   public static final GwtEvent.Type<AppStartedHandler> TYPE = new GwtEvent.Type<AppStartedHandler>();
+    public static final GwtEvent.Type<AppStartedHandler> TYPE = new GwtEvent.Type<AppStartedHandler>();
 
-   /**
-    * Started application.
-    */
-   private ApplicationInstance application;
+    /** Started application. */
+    private ApplicationInstance application;
 
-   /**
-    * @param application started application
-    */
-   public AppStartedEvent(ApplicationInstance application)
-   {
-      this.application = application;
-   }
+    /**
+     * @param application
+     *         started application
+     */
+    public AppStartedEvent(ApplicationInstance application) {
+        this.application = application;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<AppStartedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<AppStartedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(AppStartedHandler handler)
-   {
-      handler.onAppStarted(this);
-   }
+    @Override
+    protected void dispatch(AppStartedHandler handler) {
+        handler.onAppStarted(this);
+    }
 
-   /**
-    * @return {@link ApplicationInstance} started application
-    */
-   public ApplicationInstance getApplication()
-   {
-      return application;
-   }
+    /** @return {@link ApplicationInstance} started application */
+    public ApplicationInstance getApplication() {
+        return application;
+    }
 }

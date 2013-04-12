@@ -24,22 +24,24 @@ package org.waveprotocol.wave.model.operation;
 @SuppressWarnings("serial")
 public class TransformException extends Exception {
 
-  /**
-   * Constructs an exception with the specified detail message.
-   *
-   * @param message the detail message
-   */
-  public TransformException(String message) {
-    super(message);
-  }
+    /**
+     * Constructs an exception with the specified detail message.
+     *
+     * @param message
+     *         the detail message
+     */
+    public TransformException(String message) {
+        super(message);
+    }
 
-  /**
-   * Constructs an exception with the specified cause.
-   *
-   * @param cause the cause
-   */
-  public TransformException(Throwable cause) {
-    super(cause);
-  }
+    /**
+     * Constructs an exception with the specified cause.
+     *
+     * @param cause
+     *         the cause
+     */
+    public TransformException(Throwable cause) {
+        super(cause);
+    }
 
 }

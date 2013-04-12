@@ -28,67 +28,58 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Oct 21, 2010 $
- * 
  */
-public class ControlAnnotationMapGenerator extends ClassAnnotationMapGenerator
-{
-   public static final String CLASS_NAME = org.exoplatform.gwtframework.ui.client.command.Control.class.getName();
+public class ControlAnnotationMapGenerator extends ClassAnnotationMapGenerator {
+    public static final String CLASS_NAME = org.exoplatform.gwtframework.ui.client.command.Control.class.getName();
 
-   /**
-    * @see org.exoplatform.ide.generator.ClassAnnotationMapGenerator#writeConstructor(com.google.gwt.uibinder.rebind.IndentedWriter,
-    *      com.google.gwt.core.ext.typeinfo.JClassType, java.lang.String, com.google.gwt.core.ext.GeneratorContext)
-    */
-   @Override
-   protected void writeConstructor(ConsolePrintWriter writer, JClassType interfaceType, String implName,
-      GeneratorContext context)
-   {
-      writer.write("public %s()", implName);
-      writer.println();
-      writer.write("{");
-      writer.println();
-      JClassType[] subTypes = getSubTypes(CLASS_NAME, context);
-      if (subTypes != null)
-      {
-         writer.write("List<String> values;");
-         writer.println();
-         for (JClassType type : subTypes)
-         {
-            if (type.isAnnotationPresent(RolesAllowed.class))
-            {
-               writer.write("values = new ArrayList<String>();");
-               writer.println();
-               for (String value : type.getAnnotation(RolesAllowed.class).value())
-               {
-                  writer.write("values.add(\"" + value + "\");");
-                  writer.println();
-               }
-               writer.write("classAnnotations.put(\"%s\", values);", type.getQualifiedSourceName());
-               writer.println();
+    /**
+     * @see org.exoplatform.ide.generator.ClassAnnotationMapGenerator#writeConstructor(com.google.gwt.uibinder.rebind.IndentedWriter,
+     *      com.google.gwt.core.ext.typeinfo.JClassType, java.lang.String, com.google.gwt.core.ext.GeneratorContext)
+     */
+    @Override
+    protected void writeConstructor(ConsolePrintWriter writer, JClassType interfaceType, String implName,
+                                    GeneratorContext context) {
+        writer.write("public %s()", implName);
+        writer.println();
+        writer.write("{");
+        writer.println();
+        JClassType[] subTypes = getSubTypes(CLASS_NAME, context);
+        if (subTypes != null) {
+            writer.write("List<String> values;");
+            writer.println();
+            for (JClassType type : subTypes) {
+                if (type.isAnnotationPresent(RolesAllowed.class)) {
+                    writer.write("values = new ArrayList<String>();");
+                    writer.println();
+                    for (String value : type.getAnnotation(RolesAllowed.class).value()) {
+                        writer.write("values.add(\"" + value + "\");");
+                        writer.println();
+                    }
+                    writer.write("classAnnotations.put(\"%s\", values);", type.getQualifiedSourceName());
+                    writer.println();
+                }
+
             }
+        }
+        writer.write("}");
+        writer.println();
+    }
 
-         }
-      }
-      writer.write("}");
-      writer.println();
-   }
-
-   /**
-    * @param className name of the super class
-    * @param context generator context
-    * @return {@link JClassType[]} sub types of the pointed super class
-    */
-   private JClassType[] getSubTypes(String className, GeneratorContext context)
-   {
-      try
-      {
-         JClassType superClass = context.getTypeOracle().getType(className);
-         JClassType[] subTypes = context.getTypeOracle().getWildcardType(BoundType.EXTENDS, superClass).getSubtypes();
-         return subTypes;
-      }
-      catch (NotFoundException e)
-      {
-         return null;
-      }
-   }
+    /**
+     * @param className
+     *         name of the super class
+     * @param context
+     *         generator context
+     * @return {@link JClassType[]} sub types of the pointed super class
+     */
+    private JClassType[] getSubTypes(String className, GeneratorContext context) {
+        try {
+            JClassType superClass = context.getTypeOracle().getType(className);
+            JClassType[] subTypes = context.getTypeOracle().getWildcardType(BoundType.EXTENDS, superClass).getSubtypes();
+            return subTypes;
+        } catch (NotFoundException e) {
+            return null;
+        }
+    }
 
 }

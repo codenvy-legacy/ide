@@ -22,17 +22,16 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ShowEC2ManagerEvent}
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: ShowEC2ManagerHandler.java Sep 21, 2012 10:04:28 AM azatsarynnyy $
- *
  */
-public interface ShowEC2ManagerHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to manage Amazon EC2 virtual sever instances.
-    * 
-    * @param event {@link ShowEC2ManagerEvent}
-    */
-   void onShowEC2Manager(ShowEC2ManagerEvent event);
+public interface ShowEC2ManagerHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to manage Amazon EC2 virtual sever instances.
+     *
+     * @param event
+     *         {@link ShowEC2ManagerEvent}
+     */
+    void onShowEC2Manager(ShowEC2ManagerEvent event);
 }

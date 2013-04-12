@@ -18,23 +18,23 @@ import com.codenvy.eclipse.jdt.internal.compiler.lookup.TypeBinding;
 
 public class SelectionOnNameOfMemberValuePair extends MemberValuePair {
 
-	public SelectionOnNameOfMemberValuePair(char[] token, int sourceStart, int sourceEnd, Expression value) {
-		super(token, sourceStart, sourceEnd, value);
-	}
+    public SelectionOnNameOfMemberValuePair(char[] token, int sourceStart, int sourceEnd, Expression value) {
+        super(token, sourceStart, sourceEnd, value);
+    }
 
-	public StringBuffer print(int indent, StringBuffer output) {
-		output.append("<SelectOnName:"); //$NON-NLS-1$
-		output.append(this.name);
-		output.append(">"); //$NON-NLS-1$
-		return output;
-	}
+    public StringBuffer print(int indent, StringBuffer output) {
+        output.append("<SelectOnName:"); //$NON-NLS-1$
+        output.append(this.name);
+        output.append(">"); //$NON-NLS-1$
+        return output;
+    }
 
-	public void resolveTypeExpecting(BlockScope scope, TypeBinding requiredType) {
-		super.resolveTypeExpecting(scope, requiredType);
+    public void resolveTypeExpecting(BlockScope scope, TypeBinding requiredType) {
+        super.resolveTypeExpecting(scope, requiredType);
 
-		if(this.binding != null) {
-			throw new SelectionNodeFound(this.binding);
-		}
-		throw new SelectionNodeFound();
-	}
+        if (this.binding != null) {
+            throw new SelectionNodeFound(this.binding);
+        }
+        throw new SelectionNodeFound();
+    }
 }

@@ -22,28 +22,24 @@ package org.exoplatform.ide.client.framework.project;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class CloseProjectEvent extends GwtEvent<CloseProjectHandler>
-{
+public class CloseProjectEvent extends GwtEvent<CloseProjectHandler> {
 
-   public static final GwtEvent.Type<CloseProjectHandler> TYPE = new GwtEvent.Type<CloseProjectHandler>();
+    public static final GwtEvent.Type<CloseProjectHandler> TYPE = new GwtEvent.Type<CloseProjectHandler>();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CloseProjectHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<CloseProjectHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(CloseProjectHandler handler)
-   {
-      handler.onCloseProject(this);
-   }
+    @Override
+    protected void dispatch(CloseProjectHandler handler) {
+        handler.onCloseProject(this);
+    }
 
 }

@@ -22,94 +22,79 @@ package org.exoplatform.ide.testframework.server.cloudfoundry.bean;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class SystemInfo
-{
-   private SystemResources limits;
+public class SystemInfo {
+    private SystemResources limits;
 
-   private SystemResources usage;
+    private SystemResources usage;
 
-   /** Cloud platform description. */
-   private String description;
+    /** Cloud platform description. */
+    private String description;
 
-   /** User email. */
-   private String user;
+    /** User email. */
+    private String user;
 
-   /** Cloud platform version. */
-   private String version;
+    /** Cloud platform version. */
+    private String version;
 
-   /** Cloud platform name. */
-   private String name;
+    /** Cloud platform name. */
+    private String name;
 
-   /** Support email address. */
-   private String support;
+    /** Support email address. */
+    private String support;
 
-   public SystemResources getUsage()
-   {
-      return usage;
-   }
+    public SystemResources getUsage() {
+        return usage;
+    }
 
-   public void setUsage(SystemResources usage)
-   {
-      this.usage = usage;
-   }
+    public void setUsage(SystemResources usage) {
+        this.usage = usage;
+    }
 
-   public SystemResources getLimits()
-   {
-      return limits;
-   }
+    public SystemResources getLimits() {
+        return limits;
+    }
 
-   public void setLimits(SystemResources limits)
-   {
-      this.limits = limits;
-   }
+    public void setLimits(SystemResources limits) {
+        this.limits = limits;
+    }
 
-   public String getDescription()
-   {
-      return description;
-   }
+    public String getDescription() {
+        return description;
+    }
 
-   public void setDescription(String description)
-   {
-      this.description = description;
-   }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-   public String getUser()
-   {
-      return user;
-   }
+    public String getUser() {
+        return user;
+    }
 
-   public void setUser(String user)
-   {
-      this.user = user;
-   }
+    public void setUser(String user) {
+        this.user = user;
+    }
 
-   public String getVersion()
-   {
-      return version;
-   }
+    public String getVersion() {
+        return version;
+    }
 
-   public void setVersion(String version)
-   {
-      this.version = version;
-   }
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
-   public String getName()
-   {
-      return name;
-   }
+    public String getName() {
+        return name;
+    }
 
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   public String getSupport()
-   {
-      return support;
-   }
+    public String getSupport() {
+        return support;
+    }
 
-   public void setSupport(String support)
-   {
-      this.support = support;
-   }
+    public void setSupport(String support) {
+        this.support = support;
+    }
 }

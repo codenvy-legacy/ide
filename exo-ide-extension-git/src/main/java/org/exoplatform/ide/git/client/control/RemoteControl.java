@@ -25,16 +25,13 @@ import org.exoplatform.ide.git.client.GitExtension;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class RemoteControl extends GitControl
-{
-   public RemoteControl()
-   {
-      super(GitExtension.MESSAGES.remoteControlId());
-      setTitle(GitExtension.MESSAGES.remoteControlTitle());
-      setPrompt(GitExtension.MESSAGES.remoteControlPrompt());
-      setImages(GitClientBundle.INSTANCE.remote(), GitClientBundle.INSTANCE.remoteDisabled());
-      setGroupName(GroupNames.COMMANDS);
-   }
+public class RemoteControl extends GitControl {
+    public RemoteControl() {
+        super(GitExtension.MESSAGES.remoteControlId());
+        setTitle(GitExtension.MESSAGES.remoteControlTitle());
+        setPrompt(GitExtension.MESSAGES.remoteControlPrompt());
+        setImages(GitClientBundle.INSTANCE.remote(), GitClientBundle.INSTANCE.remoteDisabled());
+        setGroupName(GroupNames.COMMANDS);
+    }
 }

@@ -44,180 +44,150 @@ import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 14, 2012 4:10:17 PM anya $
- * 
  */
-public class LoginPresenter implements LoginHandler, ViewClosedHandler
-{
-   interface Display extends IsView
-   {
-      TextFieldItem getAccessKey();
+public class LoginPresenter implements LoginHandler, ViewClosedHandler {
+    interface Display extends IsView {
+        TextFieldItem getAccessKey();
 
-      TextFieldItem getSecretKey();
+        TextFieldItem getSecretKey();
 
-      HasClickHandlers getLoginButton();
+        HasClickHandlers getLoginButton();
 
-      HasClickHandlers getCancelButton();
+        HasClickHandlers getCancelButton();
 
-      HasValue<String> getLoginResult();
+        HasValue<String> getLoginResult();
 
-      void enableLoginButton(boolean enable);
+        void enableLoginButton(boolean enable);
 
-      void focusInAccessKey();
+        void focusInAccessKey();
 
-   }
+    }
 
-   private Display display;
+    private Display display;
 
-   private LoggedInHandler loggedInHandler;
+    private LoggedInHandler loggedInHandler;
 
-   public LoginPresenter()
-   {
-      IDE.getInstance().addControl(new SwitchAccountControl());
+    private LoginCanceledHandler loginCanceledHandler;
 
-      IDE.addHandler(LoginEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    public LoginPresenter() {
+        IDE.getInstance().addControl(new SwitchAccountControl());
 
-   public void bindDisplay()
-   {
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
+        IDE.addHandler(LoginEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
+    public void bindDisplay() {
+        display.getCancelButton().addClickHandler(new ClickHandler() {
 
-      display.getLoginButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            doLogin();
-         }
-      });
-
-      display.getAccessKey().addKeyUpHandler(new KeyUpHandler()
-      {
-
-         @Override
-         public void onKeyUp(KeyUpEvent event)
-         {
-            if (event.getNativeKeyCode() == 13 && isFieldsFullFilled())
-            {
-               doLogin();
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+                if (loginCanceledHandler != null) {
+                    loginCanceledHandler.onLoginCanceled();
+                    loginCanceledHandler = null;
+                }
             }
-         }
-      });
+        });
 
-      display.getSecretKey().addKeyUpHandler(new KeyUpHandler()
-      {
+        display.getLoginButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onKeyUp(KeyUpEvent event)
-         {
-            if (event.getNativeKeyCode() == 13 && isFieldsFullFilled())
-            {
-               doLogin();
+            @Override
+            public void onClick(ClickEvent event) {
+                doLogin();
             }
-         }
-      });
+        });
 
-      display.getAccessKey().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
+        display.getAccessKey().addKeyUpHandler(new KeyUpHandler() {
 
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            display.enableLoginButton(isFieldsFullFilled());
-         }
-      });
+            @Override
+            public void onKeyUp(KeyUpEvent event) {
+                if (event.getNativeKeyCode() == 13 && isFieldsFullFilled()) {
+                    doLogin();
+                }
+            }
+        });
 
-      display.getSecretKey().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
+        display.getSecretKey().addKeyUpHandler(new KeyUpHandler() {
 
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            display.enableLoginButton(isFieldsFullFilled());
-         }
-      });
-   }
+            @Override
+            public void onKeyUp(KeyUpEvent event) {
+                if (event.getNativeKeyCode() == 13 && isFieldsFullFilled()) {
+                    doLogin();
+                }
+            }
+        });
 
-   /**
-    * @return {@link Boolean} <code>true</code> if fields are full filled
-    */
-   private boolean isFieldsFullFilled()
-   {
-      return (display.getAccessKey().getValue() != null && !display.getAccessKey().getValue().isEmpty()
-         && display.getSecretKey().getValue() != null && !display.getSecretKey().getValue().isEmpty());
-   }
+        display.getAccessKey().addValueChangeHandler(new ValueChangeHandler<String>() {
 
-   /**
-    * Perform login operation.
-    */
-   public void doLogin()
-   {
-      try
-      {
-         BeanstalkClientService.getInstance().login(display.getAccessKey().getValue(),
-            display.getSecretKey().getValue(), new AsyncRequestCallback<Object>()
-            {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                display.enableLoginButton(isFieldsFullFilled());
+            }
+        });
 
-               @Override
-               protected void onSuccess(Object result)
-               {
-                  IDE.getInstance().closeView(display.asView().getId());
-                  IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT.loginSuccess(), Type.INFO));
-                  if (loggedInHandler != null)
-                  {
-                     loggedInHandler.onLoggedIn();
-                  }
-               }
+        display.getSecretKey().addValueChangeHandler(new ValueChangeHandler<String>() {
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  display.getLoginResult().setValue(AWSExtension.LOCALIZATION_CONSTANT.loginErrorInvalidKeyValue());
-               }
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                display.enableLoginButton(isFieldsFullFilled());
+            }
+        });
+    }
+
+    /** @return {@link Boolean} <code>true</code> if fields are full filled */
+    private boolean isFieldsFullFilled() {
+        return (display.getAccessKey().getValue() != null && !display.getAccessKey().getValue().isEmpty()
+                && display.getSecretKey().getValue() != null && !display.getSecretKey().getValue().isEmpty());
+    }
+
+    /** Perform login operation. */
+    public void doLogin() {
+        try {
+            BeanstalkClientService.getInstance().login(display.getAccessKey().getValue(),
+                                                       display.getSecretKey().getValue(), new AsyncRequestCallback<Object>() {
+
+                @Override
+                protected void onSuccess(Object result) {
+                    IDE.getInstance().closeView(display.asView().getId());
+                    IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT.loginSuccess(), Type.INFO));
+                    if (loggedInHandler != null) {
+                        loggedInHandler.onLoggedIn();
+                    }
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    display.getLoginResult().setValue(AWSExtension.LOCALIZATION_CONSTANT.loginErrorInvalidKeyValue());
+                }
             });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.login.LoginHandler#onLogin(org.exoplatform.ide.extension.aws.client.login.LoginEvent)
-    */
-   @Override
-   public void onLogin(LoginEvent event)
-   {
-      this.loggedInHandler = event.getLoggedInHandler();
+    /**
+     * @see org.exoplatform.ide.extension.aws.client.login.LoginHandler#onLogin(org.exoplatform.ide.extension.aws.client.login.LoginEvent)
+     */
+    @Override
+    public void onLogin(LoginEvent event) {
+        this.loggedInHandler = event.getLoggedInHandler();
+        this.loginCanceledHandler = event.getLoginCanceledHandler();
 
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         IDE.getInstance().openView(display.asView());
-         bindDisplay();
-      }
-      display.getLoginResult().setValue("");
-      display.enableLoginButton(false);
-   }
+        if (display == null) {
+            display = GWT.create(Display.class);
+            IDE.getInstance().openView(display.asView());
+            bindDisplay();
+        }
+        display.getLoginResult().setValue("");
+        display.enableLoginButton(false);
+    }
 }

@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
-import org.exoplatform.container.xml.InitParams;
+import com.codenvy.commons.env.EnvironmentContext;
+
 import org.exoplatform.ide.commons.FileUtils;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
@@ -43,131 +44,100 @@ import java.util.concurrent.Executors;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class CleanableSearcherProvider extends SearcherProvider
-{
-   private final ConcurrentMap<java.io.File, CleanableSearcher> instances;
-   private final ExecutorService executor;
+public class CleanableSearcherProvider implements SearcherProvider {
+    private final ConcurrentMap<java.io.File, CleanableSearcher> instances;
+    private final ExecutorService                                executor;
 
-   public CleanableSearcherProvider(InitParams initParams)
-   {
-      super(initParams);
-      executor = Executors.newFixedThreadPool(1 + Runtime.getRuntime().availableProcessors());
-      instances = new ConcurrentHashMap<java.io.File, CleanableSearcher>();
-   }
+    public CleanableSearcherProvider() {
+        executor = Executors.newFixedThreadPool(1 + Runtime.getRuntime().availableProcessors());
+        instances = new ConcurrentHashMap<java.io.File, CleanableSearcher>();
+    }
 
-   public CleanableSearcherProvider(String indexRoot)
-   {
-      super(indexRoot);
-      executor = Executors.newFixedThreadPool(1 + Runtime.getRuntime().availableProcessors());
-      instances = new ConcurrentHashMap<java.io.File, CleanableSearcher>();
-   }
-
-   public CleanableSearcherProvider(java.io.File indexRoot)
-   {
-      super(indexRoot);
-      executor = Executors.newFixedThreadPool(1 + Runtime.getRuntime().availableProcessors());
-      instances = new ConcurrentHashMap<java.io.File, CleanableSearcher>();
-   }
-
-   @Override
-   public Searcher getSearcher(MountPoint mountPoint) throws VirtualFileSystemException
-   {
-      final java.io.File vfsIoRoot = mountPoint.getRoot().getIoFile();
-      CleanableSearcher searcher = instances.get(vfsIoRoot);
-      if (searcher == null)
-      {
-
-         final java.io.File indexDir;
-         CleanableSearcher newSearcher;
-         try
-         {
-            indexDir = FileUtils.createTempDirectory(indexRoot, "vfs_index");
-            newSearcher = new CleanableSearcher(this, indexDir, getIndexedMediaTypes());
-         }
-         catch (IOException e)
-         {
-            throw new VirtualFileSystemException("Unable create searcher. " + e.getMessage(), e);
-         }
-         searcher = instances.putIfAbsent(vfsIoRoot, newSearcher);
-         if (searcher == null)
-         {
-            searcher = newSearcher;
-            searcher.init(executor, mountPoint);
-         }
-      }
-      return searcher;
-   }
-
-   void close(CleanableSearcher searcher)
-   {
-      instances.values().remove(searcher);
-      searcher.doClose();
-      FileUtils.deleteRecursive(searcher.getIndexDir());
-   }
-
-   private Set<String> getIndexedMediaTypes() throws VirtualFileSystemException
-   {
-      Set<String> forIndex = null;
-      final URL url = Thread.currentThread().getContextClassLoader().getResource("META-INF/indices_types.txt");
-      if (url != null)
-      {
-         InputStream in = null;
-         BufferedReader reader = null;
-         try
-         {
-            in = url.openStream();
-            reader = new BufferedReader(new InputStreamReader(in));
-            forIndex = new LinkedHashSet<String>();
-            String line;
-            while ((line = reader.readLine()) != null)
-            {
-               int c = line.indexOf('#');
-               if (c >= 0)
-               {
-                  line = line.substring(0, c);
-               }
-               line = line.trim();
-               if (line.length() > 0)
-               {
-                  forIndex.add(line);
-               }
+    @Override
+    public Searcher getSearcher(MountPoint mountPoint) throws VirtualFileSystemException {
+        final java.io.File vfsIoRoot = mountPoint.getRoot().getIoFile();
+        CleanableSearcher searcher = instances.get(vfsIoRoot);
+        if (searcher == null) {
+            final EnvironmentContext context = EnvironmentContext.getCurrent();
+            final String workspaceId = (String)context.getVariable(EnvironmentContext.WORKSPACE_ID);
+            if (workspaceId == null || workspaceId.isEmpty()) {
+                throw new VirtualFileSystemException("Unable create searcher. Workspace id is not set.");
             }
-         }
-         catch (IOException e)
-         {
-            throw new VirtualFileSystemException(
-               String.format("Failed to get list of media types for indexing. %s", e.getMessage()));
-         }
-         finally
-         {
-            if (reader != null)
-            {
-               try
-               {
-                  reader.close();
-               }
-               catch (IOException ignored)
-               {
-               }
+
+            final java.io.File indexRootDir = (java.io.File)context.getVariable(EnvironmentContext.VFS_INDEX_DIR);
+            if (indexRootDir == null) {
+                throw new VirtualFileSystemException(
+                        String.format("Unable create searcher for virtual file system '%s'. Index directory is not set. ", workspaceId));
             }
-            if (in != null)
-            {
-               try
-               {
-                  in.close();
-               }
-               catch (IOException ignored)
-               {
-               }
+
+
+            final java.io.File myIndexDir;
+            CleanableSearcher newSearcher;
+            try {
+                myIndexDir = FileUtils.createTempDirectory(indexRootDir, workspaceId);
+                newSearcher = new CleanableSearcher(this, myIndexDir, getIndexedMediaTypes());
+            } catch (IOException e) {
+                throw new VirtualFileSystemException("Unable create searcher. " + e.getMessage(), e);
             }
-         }
-      }
-      if (forIndex == null || forIndex.isEmpty())
-      {
-         throw new VirtualFileSystemException("Failed to get list of media types for indexing. " +
-            "File 'META-INF/indices_types.txt not found or empty. ");
-      }
-      return forIndex;
-   }
+            searcher = instances.putIfAbsent(vfsIoRoot, newSearcher);
+            if (searcher == null) {
+                searcher = newSearcher;
+                searcher.init(executor, mountPoint);
+            }
+        }
+        return searcher;
+    }
+
+    void close(CleanableSearcher searcher) {
+        instances.values().remove(searcher);
+        searcher.doClose();
+        FileUtils.deleteRecursive(searcher.getIndexDir());
+    }
+
+    private Set<String> getIndexedMediaTypes() throws VirtualFileSystemException {
+        Set<String> forIndex = null;
+        final URL url = Thread.currentThread().getContextClassLoader().getResource("META-INF/indices_types.txt");
+        if (url != null) {
+            InputStream in = null;
+            BufferedReader reader = null;
+            try {
+                in = url.openStream();
+                reader = new BufferedReader(new InputStreamReader(in));
+                forIndex = new LinkedHashSet<String>();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    int c = line.indexOf('#');
+                    if (c >= 0) {
+                        line = line.substring(0, c);
+                    }
+                    line = line.trim();
+                    if (line.length() > 0) {
+                        forIndex.add(line);
+                    }
+                }
+            } catch (IOException e) {
+                throw new VirtualFileSystemException(
+                        String.format("Failed to get list of media types for indexing. %s", e.getMessage()));
+            } finally {
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException ignored) {
+                    }
+                }
+                if (in != null) {
+                    try {
+                        in.close();
+                    } catch (IOException ignored) {
+                    }
+                }
+            }
+        }
+        if (forIndex == null || forIndex.isEmpty()) {
+            throw new VirtualFileSystemException("Failed to get list of media types for indexing. " +
+                                                 "File 'META-INF/indices_types.txt not found or empty. ");
+        }
+        return forIndex;
+    }
 }
 

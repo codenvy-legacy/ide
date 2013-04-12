@@ -23,18 +23,16 @@ import com.google.gwt.resources.client.CssResource;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public interface HtmlCss extends CssResource
-{
+public interface HtmlCss extends CssResource {
 
-   @ClassName("exo-autocomplete-list-item-selected")
-   String selectedItem();
+    @ClassName("exo-autocomplete-list-item-selected")
+    String selectedItem();
 
-   @ClassName("exo-autocomplete-list-item")
-   String item();
+    @ClassName("exo-autocomplete-list-item")
+    String item();
 
-   @ClassName("exo-autocomplete-fqn")
-   String fqn();
+    @ClassName("exo-autocomplete-fqn")
+    String fqn();
 
 }

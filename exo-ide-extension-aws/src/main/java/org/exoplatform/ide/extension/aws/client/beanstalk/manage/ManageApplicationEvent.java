@@ -22,30 +22,22 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to manage application on AWS.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 19, 2012 11:23:47 AM anya $
- * 
  */
-public class ManageApplicationEvent extends GwtEvent<ManageApplicationHandler>
-{
-   public static final GwtEvent.Type<ManageApplicationHandler> TYPE = new GwtEvent.Type<ManageApplicationHandler>();
+public class ManageApplicationEvent extends GwtEvent<ManageApplicationHandler> {
+    public static final GwtEvent.Type<ManageApplicationHandler> TYPE = new GwtEvent.Type<ManageApplicationHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ManageApplicationHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ManageApplicationHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ManageApplicationHandler handler)
-   {
-      handler.onManageApplication(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ManageApplicationHandler handler) {
+        handler.onManageApplication(this);
+    }
 }

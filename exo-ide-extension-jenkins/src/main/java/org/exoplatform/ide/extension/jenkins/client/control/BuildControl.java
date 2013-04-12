@@ -27,33 +27,25 @@ import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class BuildControl extends SimpleControl implements IDEControl
-{
+public class BuildControl extends SimpleControl implements IDEControl {
 
-   /**
-    * @param id
-    */
-   public BuildControl()
-   {
-      super(JenkinsExtension.MESSAGES.buildJavaAppId());
-      setTitle(JenkinsExtension.MESSAGES.buildJavaAppTitle());
-      setPrompt(JenkinsExtension.MESSAGES.buildJavaAppPrompt());
-      setImages(JenkinsExtension.RESOURCES.build(), JenkinsExtension.RESOURCES.build_Disabled());
-      setEvent(new BuildApplicationEvent());
-      setGroupName(GroupNames.RUNDEBUG);
-   }
+    /** @param id */
+    public BuildControl() {
+        super(JenkinsExtension.MESSAGES.buildJavaAppId());
+        setTitle(JenkinsExtension.MESSAGES.buildJavaAppTitle());
+        setPrompt(JenkinsExtension.MESSAGES.buildJavaAppPrompt());
+        setImages(JenkinsExtension.RESOURCES.build(), JenkinsExtension.RESOURCES.build_Disabled());
+        setEvent(new BuildApplicationEvent());
+        setGroupName(GroupNames.RUNDEBUG);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      // TODO enable only if Java project selected
-      setEnabled(true);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(true);
+        // TODO enable only if Java project selected
+        setEnabled(true);
+    }
 
 }

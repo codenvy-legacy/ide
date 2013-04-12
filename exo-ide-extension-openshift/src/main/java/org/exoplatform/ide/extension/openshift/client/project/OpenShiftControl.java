@@ -23,93 +23,72 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.*;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * Control for managing project, deployed on OpenShift.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 5, 2011 9:55:32 AM anya $
- * 
  */
 public class OpenShiftControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler,
-   FolderRefreshedHandler, ActiveProjectChangedHandler
-{
-   public OpenShiftControl()
-   {
-      super("Project/PaaS/OpenShift");
-      setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.openShiftControlTitle());
-      setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.openShiftControlPrompt());
-      setImages(OpenShiftClientBundle.INSTANCE.openShiftControl(),
-         OpenShiftClientBundle.INSTANCE.openShiftControlDisabled());
-      setEvent(new ManageOpenShiftProjectEvent());
-   }
+                                                               FolderRefreshedHandler, ActiveProjectChangedHandler {
+    public OpenShiftControl() {
+        super("Project/PaaS/OpenShift");
+        setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.openShiftControlTitle());
+        setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.openShiftControlPrompt());
+        setImages(OpenShiftClientBundle.INSTANCE.openShiftControl(),
+                  OpenShiftClientBundle.INSTANCE.openShiftControlDisabled());
+        setEvent(new ManageOpenShiftProjectEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(FolderRefreshedEvent.TYPE, this);
-      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        IDE.addHandler(FolderRefreshedEvent.TYPE, this);
+        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      setVisible(false);
-      setEnabled(false);
-   }
+    /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+     * .project.ProjectClosedEvent) */
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        setVisible(false);
+        setEnabled(false);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      update(event.getProject());
-   }
-   
-   @Override
-   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-   {
-      update(event.getProject());
-   }
+    /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
+     * .project.ProjectOpenedEvent) */
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        update(event.getProject());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler#onFolderRefreshed(org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent)
-    */
-   @Override
-   public void onFolderRefreshed(FolderRefreshedEvent event)
-   {
-      if (event.getFolder() instanceof ProjectModel)
-      {
-         update((ProjectModel)event.getFolder());
-      }
-   }
+    @Override
+    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
+        update(event.getProject());
+    }
 
-   /**
-    * @param project
-    */
-   private void update(ProjectModel project)
-   {
-      boolean isOpenShiftProject = project.getPropertyValue("openshift-express-application") != null;
-      setVisible(isOpenShiftProject);
-      setEnabled(isOpenShiftProject);
-   }
+    /** @see org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler#onFolderRefreshed(org.exoplatform.ide.client
+     * .framework.navigation.event.FolderRefreshedEvent) */
+    @Override
+    public void onFolderRefreshed(FolderRefreshedEvent event) {
+        if (event.getFolder() instanceof ProjectModel) {
+            update((ProjectModel)event.getFolder());
+        }
+    }
+
+    /** @param project */
+    private void update(ProjectModel project) {
+        boolean isOpenShiftProject = (project.getProperty("openshift-express-application") != null 
+                                     &&  !project.getPropertyValues("openshift-express-application").isEmpty());
+        setVisible(isOpenShiftProject);
+        setEnabled(isOpenShiftProject);
+    }
 
 }

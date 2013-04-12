@@ -24,64 +24,54 @@ import java.util.List;
 import java.util.Map;
 
 /**
-*/
-public class B extends A implements I
-{
+ */
+public class B extends A implements I {
 
-   public List<Boolean> booleans;
+    public List<Boolean> booleans;
 
-   private final Collection<Double> doubles;
+    private final Collection<Double> doubles;
 
-   public B() throws ClassFormatError, ClassNotFoundException
-   {
-      doubles = new ArrayList<Double>();
-   }
+    public B() throws ClassFormatError, ClassNotFoundException {
+        doubles = new ArrayList<Double>();
+    }
 
-   public B(List<Boolean> booleans, Collection<Double> doubles) throws ClassFormatError, ClassNotFoundException
-   {
-      this.booleans = booleans;
-      this.doubles = doubles;
-   }
+    public B(List<Boolean> booleans, Collection<Double> doubles) throws ClassFormatError, ClassNotFoundException {
+        this.booleans = booleans;
+        this.doubles = doubles;
+    }
 
-   /**
-    * @param s
-    * @param ss
-    * @param clazz
-    * @return
-    * @throws ClassFormatError
-    * @throws ClassNotFoundException
-    */
-   public A createA(String s, List<String> ss, Class<?> clazz) throws ClassFormatError, ClassNotFoundException
-   {
-      return new A()
-      {
-      };
-   }
+    /**
+     * @param s
+     * @param ss
+     * @param clazz
+     * @return
+     * @throws ClassFormatError
+     * @throws ClassNotFoundException
+     */
+    public A createA(String s, List<String> ss, Class<?> clazz) throws ClassFormatError, ClassNotFoundException {
+        return new A() {
+        };
+    }
 
-   public Collection<Double> getDoubles()
-   {
-      return doubles;
-   }
+    public Collection<Double> getDoubles() {
+        return doubles;
+    }
 
-   public String getName()
-   {
-      return null;
-   }
+    public String getName() {
+        return null;
+    }
 
-   public String[] getName(Long[] longs)
-   {
-      return null;
-   }
+    public String[] getName(Long[] longs) {
+        return null;
+    }
 
-   public <T extends Number, InputStream> T genericMethod(T number)
-   {
-      return null;
-   }
+    public <T extends Number, InputStream> T genericMethod(T number) {
+        return null;
+    }
 
-   public <T extends Number, InputStream, K extends Number, V extends List<? extends Object>> T methodWithMap(
-      Map<Map<Map<K, ? extends Map<? super List<Number>, V>>, Number>, V> map)
-   {
-      return null;
-   }
+    public <T extends Number, InputStream, K extends Number, V extends List<? extends Object>> T methodWithMap(
+            Map<Map<Map<K, ? extends Map<? super List<Number>, V>>, Number>, V> map) {
+        return null;
+    }
 
 }

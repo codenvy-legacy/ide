@@ -31,119 +31,88 @@ import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 
-public class CreateBucketView extends ViewImpl implements CreateBucketPresenter.Display
-{
-   private static final String ID = "ideLoginView";
+public class CreateBucketView extends ViewImpl implements CreateBucketPresenter.Display {
+    private static final String ID = "ideLoginView";
 
-   private static final int WIDTH = 410;
+    private static final int WIDTH = 410;
 
-   private static final int HEIGHT = 213;
+    private static final int HEIGHT = 213;
 
-   private static final String CREATE_BUTTON_ID = "ideCreateBucketButton";
+    private static final String CREATE_BUTTON_ID = "ideCreateBucketButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideCreateBucketCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideCreateBucketCancelButton";
 
-   private static final String NAME_FIELD_ID = "ideCreateBucketNameField";
+    private static final String NAME_FIELD_ID = "ideCreateBucketNameField";
 
-   private static final String REGION_FIELD_ID = "ideCreateBucketRegionField";
+    private static final String REGION_FIELD_ID = "ideCreateBucketRegionField";
 
-   /**
-    * UI binder for this view.
-    */
-   private static LoginViewUiBinder uiBinder = GWT.create(LoginViewUiBinder.class);
+    /** UI binder for this view. */
+    private static LoginViewUiBinder uiBinder = GWT.create(LoginViewUiBinder.class);
 
-   interface LoginViewUiBinder extends UiBinder<Widget, CreateBucketView>
-   {
-   }
+    interface LoginViewUiBinder extends UiBinder<Widget, CreateBucketView> {
+    }
 
-   /**
-    * Email field.
-    */
-   @UiField
-   TextInput bucketNameField;
+    /** Email field. */
+    @UiField
+    TextInput bucketNameField;
 
-   /**
-    * Password field.
-    */
-   @UiField
-   ListBox regionField;
+    /** Password field. */
+    @UiField
+    ListBox regionField;
 
-   /**
-    * Login button.
-    */
-   @UiField
-   ImageButton createButton;
+    /** Login button. */
+    @UiField
+    ImageButton createButton;
 
-   /**
-    * Cancel button.
-    */
-   @UiField
-   ImageButton cancelButton;
+    /** Cancel button. */
+    @UiField
+    ImageButton cancelButton;
 
-   public CreateBucketView()
-   {
-      super(ID, ViewType.MODAL, "Create bucket", null, WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
+    public CreateBucketView() {
+        super(ID, ViewType.MODAL, "Create bucket", null, WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
 
-      bucketNameField.setName(NAME_FIELD_ID);
-      regionField.setName(REGION_FIELD_ID);
-      createButton.setButtonId(CREATE_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-   }
+        bucketNameField.setName(NAME_FIELD_ID);
+        regionField.setName(REGION_FIELD_ID);
+        createButton.setButtonId(CREATE_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#getBucketName()
-    */
-   @Override
-   public TextFieldItem getBucketName()
-   {
-      return bucketNameField;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#getBucketName() */
+    @Override
+    public TextFieldItem getBucketName() {
+        return bucketNameField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#getRegion()
-    */
-   @Override
-   public ListBox getRegion()
-   {
-      return regionField;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#getRegion() */
+    @Override
+    public ListBox getRegion() {
+        return regionField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#getDeployButton()
-    */
-   @Override
-   public HasClickHandlers getCreateButton()
-   {
-      return createButton;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#getDeployButton() */
+    @Override
+    public HasClickHandlers getCreateButton() {
+        return createButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#enableLaunchButton(boolean)
-    */
-   @Override
-   public void enableCreateButton(boolean enable)
-   {
-      createButton.setEnabled(enable);
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#enableLaunchButton(boolean) */
+    @Override
+    public void enableCreateButton(boolean enable) {
+        createButton.setEnabled(enable);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#focusInName()
-    */
-   @Override
-   public void focusInName()
-   {
-      bucketNameField.setFocus(true);
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#focusInName() */
+    @Override
+    public void focusInName() {
+        bucketNameField.setFocus(true);
+    }
 
 }

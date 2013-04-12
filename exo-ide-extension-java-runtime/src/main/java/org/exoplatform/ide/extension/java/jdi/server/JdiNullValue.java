@@ -22,23 +22,19 @@ package org.exoplatform.ide.extension.java.jdi.server;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public final class JdiNullValue implements JdiValue
-{
-   @Override
-   public String getAsString() throws DebuggerException
-   {
-      return "null";
-   }
+public final class JdiNullValue implements JdiValue {
+    @Override
+    public String getAsString() throws DebuggerException {
+        return "null";
+    }
 
-   @Override
-   public JdiVariable[] getVariables() throws DebuggerException
-   {
-      return new JdiVariable[0];
-   }
+    @Override
+    public JdiVariable[] getVariables() throws DebuggerException {
+        return new JdiVariable[0];
+    }
 
-   @Override
-   public JdiVariable getVariableByName(String name) throws DebuggerException
-   {
-      return null;
-   }
+    @Override
+    public JdiVariable getVariableByName(String name) throws DebuggerException {
+        return null;
+    }
 }

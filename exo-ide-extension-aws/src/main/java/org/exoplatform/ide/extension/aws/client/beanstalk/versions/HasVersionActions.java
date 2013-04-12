@@ -25,11 +25,9 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 20, 2012 4:36:10 PM anya $
- * 
  */
-public interface HasVersionActions
-{
-   void addDeployHandler(SelectionHandler<ApplicationVersionInfo> handler);
+public interface HasVersionActions {
+    void addDeployHandler(SelectionHandler<ApplicationVersionInfo> handler);
 
-   void addDeleteHandler(SelectionHandler<ApplicationVersionInfo> handler);
+    void addDeleteHandler(SelectionHandler<ApplicationVersionInfo> handler);
 }

@@ -28,53 +28,41 @@ import org.exoplatform.ide.git.client.GitExtension;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Sep 16, 2011 evgen $
- * 
  */
-public class InitRequestStatusHandler implements RequestStatusHandler
-{
+public class InitRequestStatusHandler implements RequestStatusHandler {
 
-   private String projectName;
+    private String projectName;
 
-   /**
-    * @param projectName project's name
-    */
-   public InitRequestStatusHandler(String projectName)
-   {
-      super();
-      this.projectName = projectName;
-   }
+    /**
+     * @param projectName project's name
+     */
+    public InitRequestStatusHandler(String projectName) {
+        super();
+        this.projectName = projectName;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestInProgress(java.lang.String)
-    */
-   @Override
-   public void requestInProgress(String id)
-   {
-      Job job = new Job(id, JobStatus.STARTED);
-      job.setStartMessage(GitExtension.MESSAGES.initStarted(projectName));
-      IDE.fireEvent(new JobChangeEvent(job));
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestInProgress(java.lang.String) */
+    @Override
+    public void requestInProgress(String id) {
+        Job job = new Job(id, JobStatus.STARTED);
+        job.setStartMessage(GitExtension.MESSAGES.initStarted(projectName));
+        IDE.fireEvent(new JobChangeEvent(job));
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestFinished(java.lang.String)
-    */
-   @Override
-   public void requestFinished(String id)
-   {
-      Job job = new Job(id, JobStatus.FINISHED);
-      job.setFinishMessage(GitExtension.MESSAGES.initFinished(projectName));
-      IDE.fireEvent(new JobChangeEvent(job));
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestFinished(java.lang.String) */
+    @Override
+    public void requestFinished(String id) {
+        Job job = new Job(id, JobStatus.FINISHED);
+        job.setFinishMessage(GitExtension.MESSAGES.initFinished(projectName));
+        IDE.fireEvent(new JobChangeEvent(job));
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestError(java.lang.Throwable)
-    */
-   @Override
-   public void requestError(String id, Throwable exception)
-   {
-      Job job = new Job(id, JobStatus.ERROR);
-      job.setError(exception);
-      IDE.fireEvent(new JobChangeEvent(job));
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestError(java.lang.Throwable) */
+    @Override
+    public void requestError(String id, Throwable exception) {
+        Job job = new Job(id, JobStatus.ERROR);
+        job.setError(exception);
+        IDE.fireEvent(new JobChangeEvent(job));
+    }
 
 }

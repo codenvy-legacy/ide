@@ -19,7 +19,10 @@
 package org.exoplatform.ide.git.server.jgit;
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevTag;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.exoplatform.ide.git.shared.Tag;
 import org.exoplatform.ide.git.shared.TagListRequest;
 
@@ -30,39 +33,42 @@ import java.util.List;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: TagListTest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
-public class TagListTest extends BaseTest
-{
-   private RevTag bugfixTag;
-   private RevTag featureTag;
+public class TagListTest extends BaseTest {
+    private RevTag bugfixTag;
 
-   @Override
-   protected void setUp() throws Exception
-   {
-      super.setUp();
-      Git git = new Git(getDefaultRepository());
-      bugfixTag = git.tag().setName("bugfix-tag").setMessage("bugfix-tag").call();
-      featureTag = git.tag().setName("feature-tag").setMessage("feature-tag").call();
-   }
+    private RevTag featureTag;
 
-   public void testListAllTag() throws Exception
-   {
-      List<Tag> tagList = getDefaultConnection().tagList(new TagListRequest());
-      validateTags(tagList, bugfixTag.getTagName(), featureTag.getTagName());
-   }
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        Repository repo = getDefaultRepository();
 
-   public void testListTagPattern() throws Exception
-   {
-      List<Tag> tagList = getDefaultConnection().tagList(new TagListRequest("feature*"));
-      validateTags(tagList, featureTag.getTagName());
-   }
+        RevWalk revWalker = new RevWalk(repo);
+        Git git = new Git(repo);
 
-   private void validateTags(List<Tag> tagList, String... expNames)
-   {
-      assertEquals(expNames.length, tagList.size());
-      List<String> names = new ArrayList<String>(tagList.size());
-      for (Tag t : tagList)
-         names.add(t.getName());
-      for (String name : expNames)
-         assertTrue("Expected tag " + name + " not found in result. ", names.contains(name));
-   }
+        Ref bugfixRef = git.tag().setName("bugfix-tag").setMessage("bugfix-tag").call();
+        Ref featureRef = git.tag().setName("feature-tag").setMessage("feature-tag").call();
+
+        bugfixTag = revWalker.parseTag(bugfixRef.getLeaf().getObjectId());
+        featureTag = revWalker.parseTag(featureRef.getLeaf().getObjectId());
+    }
+
+    public void testListAllTag() throws Exception {
+        List<Tag> tagList = getDefaultConnection().tagList(new TagListRequest());
+        validateTags(tagList, bugfixTag.getTagName(), featureTag.getTagName());
+    }
+
+    public void testListTagPattern() throws Exception {
+        List<Tag> tagList = getDefaultConnection().tagList(new TagListRequest("feature*"));
+        validateTags(tagList, featureTag.getTagName());
+    }
+
+    private void validateTags(List<Tag> tagList, String... expNames) {
+        assertEquals(expNames.length, tagList.size());
+        List<String> names = new ArrayList<String>(tagList.size());
+        for (Tag t : tagList)
+            names.add(t.getName());
+        for (String name : expNames)
+            assertTrue("Expected tag " + name + " not found in result. ", names.contains(name));
+    }
 }

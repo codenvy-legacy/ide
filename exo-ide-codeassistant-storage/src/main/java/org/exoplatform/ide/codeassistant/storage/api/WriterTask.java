@@ -28,111 +28,94 @@ import java.util.Set;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class WriterTask
-{
+public class WriterTask {
 
-   private Dependency artifact;
+    private Dependency artifact;
 
-   private List<TypeInfo> typesInfo;
+    private List<TypeInfo> typesInfo;
 
-   private Set<String> packages;
+    private Set<String> packages;
 
-   private Map<String, String> javaDock;
+    private Map<String, String> javaDock;
 
-   /**
-    * 
-    */
-   public WriterTask(Dependency artifact, List<TypeInfo> typesInfo, Set<String> packages)
-   {
-      this(artifact, typesInfo, packages, null);
-   }
+    /**
+     *
+     */
+    public WriterTask(Dependency artifact, List<TypeInfo> typesInfo, Set<String> packages) {
+        this(artifact, typesInfo, packages, null);
+    }
 
-   /**
-    * 
-    */
-   public WriterTask(Dependency artifact, Map<String, String> javaDock)
-   {
-      this(artifact, null, null, javaDock);
-   }
+    /**
+     *
+     */
+    public WriterTask(Dependency artifact, Map<String, String> javaDock) {
+        this(artifact, null, null, javaDock);
+    }
 
-   /**
-    * @param artifact
-    * @param typesInfo
-    * @param packages
-    * @param javaDock
-    */
-   public WriterTask(Dependency artifact, List<TypeInfo> typesInfo, Set<String> packages, Map<String, String> javaDock)
-   {
-      this.artifact = artifact;
-      this.typesInfo = typesInfo;
-      this.packages = packages;
-      this.javaDock = javaDock;
-   }
+    /**
+     * @param artifact
+     * @param typesInfo
+     * @param packages
+     * @param javaDock
+     */
+    public WriterTask(Dependency artifact, List<TypeInfo> typesInfo, Set<String> packages, Map<String, String> javaDock) {
+        this.artifact = artifact;
+        this.typesInfo = typesInfo;
+        this.packages = packages;
+        this.javaDock = javaDock;
+    }
 
-   /**
-    * @return the artifact
-    */
-   public Dependency getArtifact()
-   {
-      return artifact;
-   }
+    /** @return the artifact */
+    public Dependency getArtifact() {
+        return artifact;
+    }
 
-   /**
-    * @param artifact the artifact to set
-    */
-   public void setArtifact(Dependency artifact)
-   {
-      this.artifact = artifact;
-   }
+    /**
+     * @param artifact
+     *         the artifact to set
+     */
+    public void setArtifact(Dependency artifact) {
+        this.artifact = artifact;
+    }
 
-   /**
-    * @return the typesInfo
-    */
-   public List<TypeInfo> getTypesInfo()
-   {
-      return typesInfo;
-   }
+    /** @return the typesInfo */
+    public List<TypeInfo> getTypesInfo() {
+        return typesInfo;
+    }
 
-   /**
-    * @param typesInfo the typesInfo to set
-    */
-   public void setTypesInfo(List<TypeInfo> typesInfo)
-   {
-      this.typesInfo = typesInfo;
-   }
+    /**
+     * @param typesInfo
+     *         the typesInfo to set
+     */
+    public void setTypesInfo(List<TypeInfo> typesInfo) {
+        this.typesInfo = typesInfo;
+    }
 
-   /**
-    * @return the packages
-    */
-   public Set<String> getPackages()
-   {
-      return packages;
-   }
+    /** @return the packages */
+    public Set<String> getPackages() {
+        return packages;
+    }
 
-   /**
-    * @param packages the packages to set
-    */
-   public void setPackages(Set<String> packages)
-   {
-      this.packages = packages;
-   }
+    /**
+     * @param packages
+     *         the packages to set
+     */
+    public void setPackages(Set<String> packages) {
+        this.packages = packages;
+    }
 
-   /**
-    * @return the javaDock
-    */
-   public Map<String, String> getJavaDock()
-   {
-      return javaDock;
-   }
+    /** @return the javaDock */
+    public Map<String, String> getJavaDock() {
+        return javaDock;
+    }
 
-   /**
-    * @param javaDock the javaDock to set
-    */
-   public void setJavaDock(Map<String, String> javaDock)
-   {
-      this.javaDock = javaDock;
-   }
+    /**
+     * @param javaDock
+     *         the javaDock to set
+     */
+    public void setJavaDock(Map<String, String> javaDock) {
+        this.javaDock = javaDock;
+    }
 
 }

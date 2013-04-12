@@ -27,8 +27,8 @@ package org.eclipse.jdt.client.internal.text.quickassist;
  * <li>{@link IQuickAssistAssistantExtension} since version 3.4 introducing the
  * following function:
  * <ul>
- * 	<li>allows to get a handler for the given command identifier</li>
- * 	<li>allows to enable support for colored labels in the proposal popup</li>
+ * <li>allows to get a handler for the given command identifier</li>
+ * <li>allows to enable support for colored labels in the proposal popup</li>
  * </ul>
  * </li>
  * </p>
@@ -43,125 +43,128 @@ package org.eclipse.jdt.client.internal.text.quickassist;
  * @see IQuickAssistAssistantExtension
  * @since 3.2
  */
-public interface IQuickAssistAssistant
-{
+public interface IQuickAssistAssistant {
 
-   //	/**
-   //	 * Installs quick assist support on the given source viewer.
-   //	 * <p>
-   //	 * <strong>Note:</strong> This quick assist assistant will only be able to query the invocation context
-   //	 * if <code>sourceViewer</code> also implements {@link ISourceViewerExtension3}.
-   //	 * </p>
-   //	 *
-   //	 * @param sourceViewer the source viewer on which quick assist will work
-   //	 */
-   //	void install(ISourceViewer sourceViewer);
-   //
-   //	/**
-   //	 * Sets the information control creator for the additional information control.
-   //	 *
-   //	 * @param creator the information control creator for the additional information control
-   //	 */
-   //	void setInformationControlCreator(IInformationControlCreator creator);
+    //	/**
+    //	 * Installs quick assist support on the given source viewer.
+    //	 * <p>
+    //	 * <strong>Note:</strong> This quick assist assistant will only be able to query the invocation context
+    //	 * if <code>sourceViewer</code> also implements {@link ISourceViewerExtension3}.
+    //	 * </p>
+    //	 *
+    //	 * @param sourceViewer the source viewer on which quick assist will work
+    //	 */
+    //	void install(ISourceViewer sourceViewer);
+    //
+    //	/**
+    //	 * Sets the information control creator for the additional information control.
+    //	 *
+    //	 * @param creator the information control creator for the additional information control
+    //	 */
+    //	void setInformationControlCreator(IInformationControlCreator creator);
 
-   /**
-    * Uninstalls quick assist support from the source viewer it has
-    * previously be installed on.
-    */
-   void uninstall();
+    /**
+     * Uninstalls quick assist support from the source viewer it has
+     * previously be installed on.
+     */
+    void uninstall();
 
-   /**
-    * Shows all possible quick fixes and quick assists at the viewer's cursor position.
-    *
-    * @return an optional error message if no proposals can be computed
-    */
-   String showPossibleQuickAssists();
+    /**
+     * Shows all possible quick fixes and quick assists at the viewer's cursor position.
+     *
+     * @return an optional error message if no proposals can be computed
+     */
+    String showPossibleQuickAssists();
 
-   /**
-    * Registers a given quick assist processor for a particular content type. If there is already
-    * a processor registered, the new processor is registered instead of the old one.
-    *
-    * @param processor the quick assist processor to register, or <code>null</code> to remove
-    *        an existing one
-    */
-   void setQuickAssistProcessor(IQuickAssistProcessor processor);
+    /**
+     * Registers a given quick assist processor for a particular content type. If there is already
+     * a processor registered, the new processor is registered instead of the old one.
+     *
+     * @param processor
+     *         the quick assist processor to register, or <code>null</code> to remove
+     *         an existing one
+     */
+    void setQuickAssistProcessor(IQuickAssistProcessor processor);
 
-   /**
-    * Returns the quick assist processor to be used for the given content type.
-    *
-    * @return the quick assist processor or <code>null</code> if none exists
-    */
-   IQuickAssistProcessor getQuickAssistProcessor();
+    /**
+     * Returns the quick assist processor to be used for the given content type.
+     *
+     * @return the quick assist processor or <code>null</code> if none exists
+     */
+    IQuickAssistProcessor getQuickAssistProcessor();
 
-   //	/**
-   //	 * Tells whether this assistant has a fix for the given annotation.
-   //	 * <p>
-   //	 * <strong>Note:</strong> This test must be fast and optimistic i.e. it is OK to return
-   //	 * <code>true</code> even though there might be no quick fix.
-   //	 * </p>
-   //	 *
-   //	 * @param annotation the annotation
-   //	 * @return <code>true</code> if the assistant has a fix for the given annotation
-   //	 */
-   //	boolean canFix(Annotation annotation);
+    //	/**
+    //	 * Tells whether this assistant has a fix for the given annotation.
+    //	 * <p>
+    //	 * <strong>Note:</strong> This test must be fast and optimistic i.e. it is OK to return
+    //	 * <code>true</code> even though there might be no quick fix.
+    //	 * </p>
+    //	 *
+    //	 * @param annotation the annotation
+    //	 * @return <code>true</code> if the assistant has a fix for the given annotation
+    //	 */
+    //	boolean canFix(Annotation annotation);
 
-   /**
-    * Tells whether this assistant has assists for the given invocation context.
-    *
-    * @param invocationContext the invocation context
-    * @return <code>true</code> if the assistant has a fix for the given annotation
-    */
-   boolean canAssist(IQuickAssistInvocationContext invocationContext);
+    /**
+     * Tells whether this assistant has assists for the given invocation context.
+     *
+     * @param invocationContext
+     *         the invocation context
+     * @return <code>true</code> if the assistant has a fix for the given annotation
+     */
+    boolean canAssist(IQuickAssistInvocationContext invocationContext);
 
-   //	/**
-   //	 * Sets the proposal selector's background color.
-   //	 * <p>
-   //	 * <strong>Note:</strong> As of 3.4, you should only call this
-   //	 * method if you want to override the {@link JFacePreferences#CONTENT_ASSIST_BACKGROUND_COLOR}.
-   //	 * </p>
-   //	 *
-   //	 * @param background the background color
-   //	 */
-   //	void setProposalSelectorBackground(Color background);
-   //
-   //	/**
-   //	 * Sets the proposal's foreground color.
-   //	 * <p>
-   //	 * <strong>Note:</strong> As of 3.4, you should only call this
-   //	 * method if you want to override the {@link JFacePreferences#CONTENT_ASSIST_FOREGROUND_COLOR}.
-   //	 * </p>
-   //	 *
-   //	 * @param foreground the foreground color
-   //	 */
-   //	void setProposalSelectorForeground(Color foreground);
+    //	/**
+    //	 * Sets the proposal selector's background color.
+    //	 * <p>
+    //	 * <strong>Note:</strong> As of 3.4, you should only call this
+    //	 * method if you want to override the {@link JFacePreferences#CONTENT_ASSIST_BACKGROUND_COLOR}.
+    //	 * </p>
+    //	 *
+    //	 * @param background the background color
+    //	 */
+    //	void setProposalSelectorBackground(Color background);
+    //
+    //	/**
+    //	 * Sets the proposal's foreground color.
+    //	 * <p>
+    //	 * <strong>Note:</strong> As of 3.4, you should only call this
+    //	 * method if you want to override the {@link JFacePreferences#CONTENT_ASSIST_FOREGROUND_COLOR}.
+    //	 * </p>
+    //	 *
+    //	 * @param foreground the foreground color
+    //	 */
+    //	void setProposalSelectorForeground(Color foreground);
 
-   //	/**
-   //	 * Adds a completion listener that will be informed before proposals are computed.
-   //	 *
-   //	 * @param listener the listener
-   //	 */
-   //	void addCompletionListener(ICompletionListener listener);
-   //
-   //	/**
-   //	 * Removes a completion listener.
-   //	 *
-   //	 * @param listener the listener to remove
-   //	 */
-   //	void removeCompletionListener(ICompletionListener listener);
+    //	/**
+    //	 * Adds a completion listener that will be informed before proposals are computed.
+    //	 *
+    //	 * @param listener the listener
+    //	 */
+    //	void addCompletionListener(ICompletionListener listener);
+    //
+    //	/**
+    //	 * Removes a completion listener.
+    //	 *
+    //	 * @param listener the listener to remove
+    //	 */
+    //	void removeCompletionListener(ICompletionListener listener);
 
-   /**
-    * Enables displaying a status line below the proposal popup. The default is not to show the
-    * status line. The contents of the status line may be set via {@link #setStatusMessage(String)}.
-    *
-    * @param show <code>true</code> to show a message line, <code>false</code> to not show one.
-    */
-   public void setStatusLineVisible(boolean show);
+    /**
+     * Enables displaying a status line below the proposal popup. The default is not to show the
+     * status line. The contents of the status line may be set via {@link #setStatusMessage(String)}.
+     *
+     * @param show
+     *         <code>true</code> to show a message line, <code>false</code> to not show one.
+     */
+    public void setStatusLineVisible(boolean show);
 
-   /**
-    * Sets the caption message displayed at the bottom of the completion proposal popup.
-    *
-    * @param message the message
-    */
-   public void setStatusMessage(String message);
+    /**
+     * Sets the caption message displayed at the bottom of the completion proposal popup.
+     *
+     * @param message
+     *         the message
+     */
+    public void setStatusMessage(String message);
 
 }

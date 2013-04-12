@@ -34,107 +34,111 @@ import org.exoplatform.ide.git.shared.Credentials;
 import org.exoplatform.ide.git.shared.GitHubRepository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation for {@link GitHubClientService}.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SamplesClientServiceImpl.java Sep 2, 2011 12:34:27 PM vereshchaka $
- * 
  */
-public class GitHubClientServiceImpl extends GitHubClientService
-{
-   private static final String BASE_URL = "/ide/github";
+public class GitHubClientServiceImpl extends GitHubClientService {
+    private static final String BASE_URL      = "/ide/github";
 
-   private static final String LIST = BASE_URL + "/list";
+    private static final String LIST          = BASE_URL + "/list";
 
-   private static final String LOGIN = BASE_URL + "/login";
+    private static final String LOGIN         = BASE_URL + "/login";
 
-   private static final String LIST_USER = BASE_URL + "/list/user";
+    private static final String LIST_USER     = BASE_URL + "/list/user";
 
-   private static final String COLLABORATORS = BASE_URL + "/collaborators";
+    private static final String LIST_ALL      = BASE_URL + "/list/available";
 
-   private static final String TOKEN = BASE_URL + "/token";
+    private static final String COLLABORATORS = BASE_URL + "/collaborators";
 
-   /**
-    * REST service context.
-    */
-   private String restServiceContext;
+    private static final String TOKEN         = BASE_URL + "/token";
 
-   /**
-    * Loader to be displayed.
-    */
-   private Loader loader;
+    /** REST service context. */
+    private String              restServiceContext;
 
-   public static final String SUPPORT = "support";
+    /** Loader to be displayed. */
+    private Loader              loader;
 
-   public GitHubClientServiceImpl(String restContext, Loader loader)
-   {
-      this.loader = loader;
-      this.restServiceContext = restContext;
-   }
+    public static final String  SUPPORT       = "support";
 
-   /**
-    * @throws RequestException
-    * @see org.exoplatform.ide.git.client.github.GitHubClientService#getRepositoriesList(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-    */
-   @Override
-   public void getRepositoriesList(AsyncRequestCallback<List<GitHubRepository>> callback) throws RequestException
-   {
-      String url = restServiceContext + LIST;
-      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
-   }
+    public GitHubClientServiceImpl(String restContext, Loader loader) {
+        this.loader = loader;
+        this.restServiceContext = restContext;
+    }
 
-   /**
-    * @throws RequestException
-    * @see org.exoplatform.ide.git.client.github.GitHubClientService#getRepositoriesByUser(java.lang.String,
-    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-    */
-   @Override
-   public void getRepositoriesByUser(String userName, AsyncRequestCallback<List<GitHubRepository>> callback)
-      throws RequestException
-   {
-      String params = (userName != null) ? "?username=" + userName : "";
-      String url = restServiceContext + LIST_USER;
-      AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader).send(callback);
-   }
+    /**
+     * @throws RequestException
+     * @see org.exoplatform.ide.git.client.github.GitHubClientService#getRepositoriesList(org.exoplatform.gwtframework.commons.rest
+     *      .AsyncRequestCallback)
+     */
+    @Override
+    public void getRepositoriesList(AsyncRequestCallback<List<GitHubRepository>> callback) throws RequestException {
+        String url = restServiceContext + LIST;
+        AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
+    }
 
-   /**
-    * @throws RequestException
-    * @see org.exoplatform.ide.git.client.github.GitHubClientService#loginGitHub(java.lang.String, java.lang.String,
-    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-    */
-   @Override
-   public void loginGitHub(String login, String password, AsyncRequestCallback<String> callback)
-      throws RequestException
-   {
-      String url = restServiceContext + LOGIN;
+    /**
+     * @throws RequestException
+     * @see org.exoplatform.ide.git.client.github.GitHubClientService#getRepositoriesByUser(java.lang.String,
+     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+     */
+    @Override
+    public void getRepositoriesByUser(String userName, AsyncRequestCallback<List<GitHubRepository>> callback)
+                                                                                                             throws RequestException {
+        String params = (userName != null) ? "?username=" + userName : "";
+        String url = restServiceContext + LIST_USER;
+        AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader).send(callback);
+    }
 
-      Credentials credentialsBean = GitExtension.AUTO_BEAN_FACTORY.githubCredentials().as();
-      credentialsBean.setLogin(login);
-      credentialsBean.setPassword(password);
-      String credentials = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(credentialsBean)).getPayload();
+    /**
+     * @throws RequestException
+     * @see org.exoplatform.ide.git.client.github.GitHubClientService#getRepositoriesByUser(java.lang.String,
+     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+     */
+    @Override
+    public void getAllRepositories(AsyncRequestCallback<Map<String, List<GitHubRepository>>> callback)
+                                                                                                      throws RequestException {
+        String url = restServiceContext + LIST_ALL;
+        AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
+    }
 
-      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(credentials)
-         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
-   }
+    /**
+     * @throws RequestException
+     * @see org.exoplatform.ide.git.client.github.GitHubClientService#loginGitHub(java.lang.String, java.lang.String,
+     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+     */
+    @Override
+    public void loginGitHub(String login, String password, AsyncRequestCallback<String> callback)
+                                                                                                 throws RequestException {
+        String url = restServiceContext + LOGIN;
 
-   @Override
-   public void getCollaborators(String user, String repository, AsyncRequestCallback<Collaborators> callback)
-      throws RequestException
-   {
-      String url = restServiceContext + COLLABORATORS + "/" + user + "/" + repository;
-      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
-   }
+        Credentials credentialsBean = GitExtension.AUTO_BEAN_FACTORY.githubCredentials().as();
+        credentialsBean.setLogin(login);
+        credentialsBean.setPassword(password);
+        String credentials = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(credentialsBean)).getPayload();
 
-   /**
-    * @see org.exoplatform.ide.git.client.github.GitHubClientService#getUserToken(java.lang.String,
-    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-    */
-   @Override
-   public void getUserToken(String user, AsyncRequestCallback<StringBuilder> callback) throws RequestException
-   {
-      String url = restServiceContext + TOKEN + "/" + user;
-      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
-   }
+        AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(credentials)
+                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+    }
+
+    @Override
+    public void getCollaborators(String user, String repository, AsyncRequestCallback<Collaborators> callback)
+                                                                                                              throws RequestException {
+        String url = restServiceContext + COLLABORATORS + "/" + user + "/" + repository;
+        AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
+    }
+
+    /**
+     * @see org.exoplatform.ide.git.client.github.GitHubClientService#getUserToken(java.lang.String,
+     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+     */
+    @Override
+    public void getUserToken(String user, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
+        String url = restServiceContext + TOKEN + "/" + user;
+        AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
+    }
 }

@@ -25,28 +25,20 @@ import org.exoplatform.ide.git.shared.Log;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 14, 2011 4:32:17 PM anya $
- * 
  */
-public class LogResponse extends Log
-{
-   /**
-    * The text format of the log response.
-    */
-   private String textLog;
+public class LogResponse extends Log {
+    /** The text format of the log response. */
+    private String textLog;
 
-   /**
-    * @return the textLog text format of the log response
-    */
-   public String getTextLog()
-   {
-      return textLog;
-   }
+    /** @return the textLog text format of the log response */
+    public String getTextLog() {
+        return textLog;
+    }
 
-   /**
-    * @param textLog the textLog text format of the log response
-    */
-   public void setTextLog(String textLog)
-   {
-      this.textLog = textLog;
-   }
+    /**
+     * @param textLog the textLog text format of the log response
+     */
+    public void setTextLog(String textLog) {
+        this.textLog = textLog;
+    }
 }

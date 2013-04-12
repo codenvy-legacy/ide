@@ -19,78 +19,90 @@
 
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
-   xmlns:tp="urn:import:org.exoplatform.gwtframework.ui.client.tablayout">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
+             xmlns:tp="urn:import:org.exoplatform.gwtframework.ui.client.tablayout">
 
-   <ui:with field='resource' type='org.exoplatform.ide.extension.java.jdi.client.DebuggerClientBundle' />
-   <ui:with field='locale' type='org.exoplatform.ide.extension.java.jdi.client.DebuggerLocalizationConstant' />
+    <ui:with field='resource' type='org.exoplatform.ide.extension.java.jdi.client.DebuggerClientBundle'/>
+    <ui:with field='locale' type='org.exoplatform.ide.extension.java.jdi.client.DebuggerLocalizationConstant'/>
 
-   <ui:style>
-      .font {
-      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-      }
-   </ui:style>
+    <ui:style>
+        .font {
+            font-family: Verdana, Bitstream Vera Sans, sans-serif;
+        }
+    </ui:style>
 
-   <c:Border margin="1">
-      <c:layer>
-         <g:LayoutPanel>
-            <g:layer top="0" height="28px">
-               <c:Toolbar height="28px">
-                  <c:ToolbarItem rightDocked="false" paddingRight="2">
-                     <c:ImageButton ui:field="resumeButton" width="22px" buttonId="resumeButton" title="{locale.resumeButton}"
-                        imageResource="{resource.resumeButton}" disabledImageResource="{resource.resumeButtonDisabled}"></c:ImageButton>
-                  </c:ToolbarItem>
-                  <c:ToolbarItem rightDocked="false" paddingRight="2">
-                     <c:ImageButton ui:field="stepIntoButton" width="22px" buttonId="stepIntoButton" title="{locale.stepInto}"
-                        imageResource="{resource.stepIntoButton}" disabledImageResource="{resource.stepIntoButtonDisabled}"></c:ImageButton>
-                  </c:ToolbarItem>
-                  <c:ToolbarItem rightDocked="false" paddingRight="2">
-                     <c:ImageButton ui:field="stepOverButton" width="22px" buttonId="stepOverButton" title="{locale.stepOver}"
-                        imageResource="{resource.stepOverButton}" disabledImageResource="{resource.stepOverButtonDisabled}"></c:ImageButton>
-                  </c:ToolbarItem>
-                  <c:ToolbarItem rightDocked="false" paddingRight="2">
-                     <c:ImageButton ui:field="stepReturnButton" width="22px" buttonId="stepReturnButton" title="{locale.stepReturn}"
-                        imageResource="{resource.stepReturnButton}" disabledImageResource="{resource.stepReturnButtonDisabled}"></c:ImageButton>
-                  </c:ToolbarItem>
-                  <c:ToolbarItem rightDocked="false" paddingRight="2">
-                     <c:ImageButton ui:field="disconnectButton" width="22px" buttonId="disconnectButton" title="{locale.disConnectButton}"
-                        imageResource="{resource.disconnectButton}" disabledImageResource="{resource.disconnectButtonDisabled}"></c:ImageButton>
-                  </c:ToolbarItem>
-                  <c:ToolbarItem rightDocked="false" paddingRight="2">
-                     <c:ImageButton ui:field="removeAllBreakpointsButton" width="22px" buttonId="removeAllBreakpointsButton" title="{locale.removeBreakPointsButton}"
-                        imageResource="{resource.removeAllBreakpointsButton}"></c:ImageButton>
-                  </c:ToolbarItem>
-                  <c:ToolbarItem rightDocked="false" paddingRight="2">
-                     <c:ImageButton ui:field="changeValueButton" width="22px" buttonId="changeValueButton" title="{locale.changeValue}"
-                        imageResource="{resource.variable}" disabledImageResource="{resource.variableDisabled}"></c:ImageButton>
-                  </c:ToolbarItem>
-                  <c:ToolbarItem rightDocked="false" paddingRight="2">
-                     <c:ImageButton ui:field="evaluateExpressionButton" width="22px" buttonId="evaluateExpressionButton" title="{locale.evaluateExpression}"
-                        imageResource="{resource.evaluate}" disabledImageResource="{resource.evaluateDisabled}"></c:ImageButton>
-                  </c:ToolbarItem>
-                  <c:ToolbarItem rightDocked="true" paddingRight="2">
-                     <c:Label ui:field="vmName" width="280px" wordWrap="false" title="{locale.vmName}"></c:Label>
-                  </c:ToolbarItem>
-               </c:Toolbar>
-            </g:layer>
-            <g:layer top="30" bottom="0">
-               <c:Border margin="5" borderColor="transparent">
-                  <c:layer>
-                     <g:DockLayoutPanel height="100%" width="100%" unit="PCT" addStyleNames="{style.font}">
-                        <g:east size="50">
-                           <tp:TabPanel ui:field="breakPointsPanel"></tp:TabPanel>
-                        </g:east>
-                        <g:center>
-                           <g:FlexTable></g:FlexTable>
-                        </g:center>
-                        <g:west size="49">
-                           <tp:TabPanel ui:field="variablesPanel"></tp:TabPanel>
-                        </g:west>
-                     </g:DockLayoutPanel>
-                  </c:layer>
-               </c:Border>
-            </g:layer>
-         </g:LayoutPanel>
-      </c:layer>
-   </c:Border>
+    <c:Border margin="1">
+        <c:layer>
+            <g:LayoutPanel>
+                <g:layer top="0" height="28px">
+                    <c:Toolbar height="28px">
+                        <c:ToolbarItem rightDocked="false" paddingRight="2">
+                            <c:ImageButton ui:field="resumeButton" width="22px" buttonId="resumeButton" title="{locale.resumeButton}"
+                                           imageResource="{resource.resumeButton}"
+                                           disabledImageResource="{resource.resumeButtonDisabled}"></c:ImageButton>
+                        </c:ToolbarItem>
+                        <c:ToolbarItem rightDocked="false" paddingRight="2">
+                            <c:ImageButton ui:field="stepIntoButton" width="22px" buttonId="stepIntoButton" title="{locale.stepInto}"
+                                           imageResource="{resource.stepIntoButton}"
+                                           disabledImageResource="{resource.stepIntoButtonDisabled}"></c:ImageButton>
+                        </c:ToolbarItem>
+                        <c:ToolbarItem rightDocked="false" paddingRight="2">
+                            <c:ImageButton ui:field="stepOverButton" width="22px" buttonId="stepOverButton" title="{locale.stepOver}"
+                                           imageResource="{resource.stepOverButton}"
+                                           disabledImageResource="{resource.stepOverButtonDisabled}"></c:ImageButton>
+                        </c:ToolbarItem>
+                        <c:ToolbarItem rightDocked="false" paddingRight="2">
+                            <c:ImageButton ui:field="stepReturnButton" width="22px" buttonId="stepReturnButton" title="{locale.stepReturn}"
+                                           imageResource="{resource.stepReturnButton}"
+                                           disabledImageResource="{resource.stepReturnButtonDisabled}"></c:ImageButton>
+                        </c:ToolbarItem>
+                        <c:ToolbarItem rightDocked="false" paddingRight="2">
+                            <c:ImageButton ui:field="disconnectButton" width="22px" buttonId="disconnectButton"
+                                           title="{locale.disConnectButton}"
+                                           imageResource="{resource.disconnectButton}"
+                                           disabledImageResource="{resource.disconnectButtonDisabled}"></c:ImageButton>
+                        </c:ToolbarItem>
+                        <c:ToolbarItem rightDocked="false" paddingRight="2">
+                            <c:ImageButton ui:field="removeAllBreakpointsButton" width="22px" buttonId="removeAllBreakpointsButton"
+                                           title="{locale.removeBreakPointsButton}"
+                                           imageResource="{resource.removeAllBreakpointsButton}"></c:ImageButton>
+                        </c:ToolbarItem>
+                        <c:ToolbarItem rightDocked="false" paddingRight="2">
+                            <c:ImageButton ui:field="changeValueButton" width="22px" buttonId="changeValueButton"
+                                           title="{locale.changeValue}"
+                                           imageResource="{resource.variable}"
+                                           disabledImageResource="{resource.variableDisabled}"></c:ImageButton>
+                        </c:ToolbarItem>
+                        <c:ToolbarItem rightDocked="false" paddingRight="2">
+                            <c:ImageButton ui:field="evaluateExpressionButton" width="22px" buttonId="evaluateExpressionButton"
+                                           title="{locale.evaluateExpression}"
+                                           imageResource="{resource.evaluate}"
+                                           disabledImageResource="{resource.evaluateDisabled}"></c:ImageButton>
+                        </c:ToolbarItem>
+                        <c:ToolbarItem rightDocked="true" paddingRight="2">
+                            <c:Label ui:field="vmName" width="280px" wordWrap="false" title="{locale.vmName}"></c:Label>
+                        </c:ToolbarItem>
+                    </c:Toolbar>
+                </g:layer>
+                <g:layer top="30" bottom="0">
+                    <c:Border margin="5" borderColor="transparent">
+                        <c:layer>
+                            <g:DockLayoutPanel height="100%" width="100%" unit="PCT" addStyleNames="{style.font}">
+                                <g:east size="50">
+                                    <tp:TabPanel ui:field="breakPointsPanel"></tp:TabPanel>
+                                </g:east>
+                                <g:center>
+                                    <g:FlexTable></g:FlexTable>
+                                </g:center>
+                                <g:west size="49">
+                                    <tp:TabPanel ui:field="variablesPanel"></tp:TabPanel>
+                                </g:west>
+                            </g:DockLayoutPanel>
+                        </c:layer>
+                    </c:Border>
+                </g:layer>
+            </g:LayoutPanel>
+        </c:layer>
+    </c:Border>
 </ui:UiBinder>

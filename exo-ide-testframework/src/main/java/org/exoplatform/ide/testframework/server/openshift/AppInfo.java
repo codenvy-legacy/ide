@@ -22,85 +22,71 @@ package org.exoplatform.ide.testframework.server.openshift;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class AppInfo
-{
-   private String name;
+public class AppInfo {
+    private String name;
 
-   private String type;
+    private String type;
 
-   private String gitUrl;
+    private String gitUrl;
 
-   private String publicUrl;
+    private String publicUrl;
 
-   private long creationTime;
+    private long creationTime;
 
-   public AppInfo(String name, String type, String gitUrl, String publicUrl, long creationTime)
-   {
-      this.name = name;
-      this.type = type;
-      this.gitUrl = gitUrl;
-      this.publicUrl = publicUrl;
-      this.creationTime = creationTime;
-   }
+    public AppInfo(String name, String type, String gitUrl, String publicUrl, long creationTime) {
+        this.name = name;
+        this.type = type;
+        this.gitUrl = gitUrl;
+        this.publicUrl = publicUrl;
+        this.creationTime = creationTime;
+    }
 
-   public AppInfo()
-   {
-   }
+    public AppInfo() {
+    }
 
-   public String getName()
-   {
-      return name;
-   }
+    public String getName() {
+        return name;
+    }
 
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   public String getType()
-   {
-      return type;
-   }
+    public String getType() {
+        return type;
+    }
 
-   public void setType(String type)
-   {
-      this.type = type;
-   }
+    public void setType(String type) {
+        this.type = type;
+    }
 
-   public String getGitUrl()
-   {
-      return gitUrl;
-   }
+    public String getGitUrl() {
+        return gitUrl;
+    }
 
-   public void setGitUrl(String gitUrl)
-   {
-      this.gitUrl = gitUrl;
-   }
+    public void setGitUrl(String gitUrl) {
+        this.gitUrl = gitUrl;
+    }
 
-   public String getPublicUrl()
-   {
-      return publicUrl;
-   }
+    public String getPublicUrl() {
+        return publicUrl;
+    }
 
-   public void setPublicUrl(String publicUrl)
-   {
-      this.publicUrl = publicUrl;
-   }
+    public void setPublicUrl(String publicUrl) {
+        this.publicUrl = publicUrl;
+    }
 
-   public long getCreationTime()
-   {
-      return creationTime;
-   }
+    public long getCreationTime() {
+        return creationTime;
+    }
 
-   public void setCreationTime(long creationTime)
-   {
-      this.creationTime = creationTime;
-   }
+    public void setCreationTime(long creationTime) {
+        this.creationTime = creationTime;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "AppInfo [name=" + name + ", type=" + type + ", gitUrl=" + gitUrl + ", publicUrl=" + publicUrl
-         + ", creationTime=" + creationTime + "]";
-   }
+    @Override
+    public String toString() {
+        return "AppInfo [name=" + name + ", type=" + type + ", gitUrl=" + gitUrl + ", publicUrl=" + publicUrl
+               + ", creationTime=" + creationTime + "]";
+    }
 }

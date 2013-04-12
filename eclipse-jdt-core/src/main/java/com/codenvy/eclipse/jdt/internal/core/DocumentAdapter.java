@@ -18,27 +18,23 @@ import org.exoplatform.ide.editor.shared.text.Document;
 /*
  * Adapts an IBuffer to IDocument
  */
-public class DocumentAdapter extends Document
-{
+public class DocumentAdapter extends Document {
 
-   private IBuffer buffer;
+    private IBuffer buffer;
 
-   public DocumentAdapter(IBuffer buffer)
-   {
-      super(buffer.getContents());
-      this.buffer = buffer;
-   }
+    public DocumentAdapter(IBuffer buffer) {
+        super(buffer.getContents());
+        this.buffer = buffer;
+    }
 
-   public void set(String text)
-   {
-      super.set(text);
-      this.buffer.setContents(text);
-   }
+    public void set(String text) {
+        super.set(text);
+        this.buffer.setContents(text);
+    }
 
-   public void replace(int offset, int length, String text) throws BadLocationException
-   {
-      super.replace(offset, length, text);
-      this.buffer.replace(offset, length, text);
-   }
+    public void replace(int offset, int length, String text) throws BadLocationException {
+        super.replace(offset, length, text);
+        this.buffer.replace(offset, length, text);
+    }
 
 }

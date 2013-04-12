@@ -22,13 +22,12 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @version $Id: $
  */
 
-public interface PreviewHTMLHandler extends EventHandler
-{
+public interface PreviewHTMLHandler extends EventHandler {
 
-   void onPreviewHTMLFile(PreviewHTMLEvent event);
+    void onPreviewHTMLFile(PreviewHTMLEvent event);
 
 }

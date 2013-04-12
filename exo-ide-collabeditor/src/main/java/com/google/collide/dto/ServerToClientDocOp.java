@@ -17,48 +17,41 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
-/**
- * Serialized doc op (and related data) sent from the server to the client.
- *
- */
+/** Serialized doc op (and related data) sent from the server to the client. */
 @RoutingType(type = RoutingTypes.SERVERTOCLIENTDOCOP)
 public interface ServerToClientDocOp extends ServerToClientDto {
 
-  String getWorkspaceId();
+    String getWorkspaceId();
 
-  /**
-   * @return the (concurrency control) revision of the document after the doc op
-   *         was applied
-   */
-  int getAppliedCcRevision();
+    /**
+     * @return the (concurrency control) revision of the document after the doc op
+     *         was applied
+     */
+    int getAppliedCcRevision();
 
-  /**
-   * @return the author of this doc op
-   */
-  String getClientId();
+    /** @return the author of this doc op */
+    String getClientId();
 
-  /**
-   * Applied DocOp ack.
-   * 
-   * {@link DocOp} DTO.
-   */
-  DocOp getDocOp2();
+    /**
+     * Applied DocOp ack.
+     * <p/>
+     * {@link DocOp} DTO.
+     */
+    DocOp getDocOp2();
 
-  String getFileEditSessionKey();
+    String getFileEditSessionKey();
 
-  /**
-   * @return the current path to the mutated file.
-   */
-  String getFilePath();
+    /** @return the current path to the mutated file. */
+    String getFilePath();
 
-  /**
-   * If non-null, the positions contained by this field will be valid after
-   * {@link #getDocOp2()} has been applied to the document.
-   *
-   * Note that this string is actually the JSON-serialized form of a
-   * {@link DocumentSelection} DTO.
-   *
-   * @see ClientToServerDocOp#getSelection()
-   */
-  DocumentSelection getSelection();
+    /**
+     * If non-null, the positions contained by this field will be valid after
+     * {@link #getDocOp2()} has been applied to the document.
+     * <p/>
+     * Note that this string is actually the JSON-serialized form of a
+     * {@link DocumentSelection} DTO.
+     *
+     * @see ClientToServerDocOp#getSelection()
+     */
+    DocumentSelection getSelection();
 }

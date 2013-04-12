@@ -24,9 +24,8 @@ import com.sun.jdi.Value;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface ExpressionValue
-{
-   Value getValue();
+public interface ExpressionValue {
+    Value getValue();
 
-   void setValue(Value value);
+    void setValue(Value value);
 }

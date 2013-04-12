@@ -35,65 +35,53 @@ import org.exoplatform.ide.editor.client.api.Editor;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 3, 2012 12:35:53 PM anya $
- * 
  */
 public class CutTextControl extends SimpleControl implements IDEControl, ShowContextMenuHandler, ViewActivatedHandler,
-   EditorActiveFileChangedHandler
-{
-   public static final String ID = "Edit/Cut";
+                                                             EditorActiveFileChangedHandler {
+    public static final String ID = "Edit/Cut";
 
-   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.cutTextControl();
+    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.cutTextControl();
 
-   private boolean isEditorPanelActive = false;
+    private boolean isEditorPanelActive = false;
 
-   public CutTextControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.cut(), IDEImageBundle.INSTANCE.cutDisabled());
-      setEvent(new EditorCutTextEvent());
-   }
+    public CutTextControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setImages(IDEImageBundle.INSTANCE.cut(), IDEImageBundle.INSTANCE.cutDisabled());
+        setEvent(new EditorCutTextEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      IDE.addHandler(ShowContextMenuEvent.TYPE, this);
-      IDE.addHandler(ViewActivatedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+        IDE.addHandler(ShowContextMenuEvent.TYPE, this);
+        IDE.addHandler(ViewActivatedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.event.ShowContextMenuHandler#onShowContextMenu(org.exoplatform.ide.client.framework.event.ShowContextMenuEvent)
-    */
-   @Override
-   public void onShowContextMenu(ShowContextMenuEvent event)
-   {
-      boolean showInContextMenu = (event.getObject() instanceof Editor);
-      setShowInContextMenu(showInContextMenu && isEditorPanelActive);
-   }
+    /** @see org.exoplatform.ide.client.framework.event.ShowContextMenuHandler#onShowContextMenu(org.exoplatform.ide.client.framework
+     * .event.ShowContextMenuEvent) */
+    @Override
+    public void onShowContextMenu(ShowContextMenuEvent event) {
+        boolean showInContextMenu = (event.getObject() instanceof Editor);
+        setShowInContextMenu(showInContextMenu && isEditorPanelActive);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent)
-    */
-   @Override
-   public void onViewActivated(ViewActivatedEvent event)
-   {
-      isEditorPanelActive = event.getView() instanceof EditorView;
-      setShowInContextMenu(isEditorPanelActive);
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework
+     * .ui.api.event.ViewActivatedEvent) */
+    @Override
+    public void onViewActivated(ViewActivatedEvent event) {
+        isEditorPanelActive = event.getView() instanceof EditorView;
+        setShowInContextMenu(isEditorPanelActive);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
-    */
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      boolean isEnabled = (event.getFile() != null);
-      setVisible(isEnabled);
-      setEnabled(isEnabled);
-   }
+    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    @Override
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        boolean isEnabled = (event.getFile() != null);
+        setVisible(isEnabled);
+        setEnabled(isEnabled);
+    }
 }

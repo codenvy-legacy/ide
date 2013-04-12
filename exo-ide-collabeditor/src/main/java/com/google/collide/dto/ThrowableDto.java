@@ -19,17 +19,14 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * A serialized version of a {@link java.lang.Throwable}
- *
- */
+/** A serialized version of a {@link java.lang.Throwable} */
 @RoutingType(type = RoutingTypes.THROWABLEDTO)
 public interface ThrowableDto extends ClientToServerDto, ServerToClientDto {
-  String getMessage();
+    String getMessage();
 
-  String className();
+    String className();
 
-  ThrowableDto getCause();
+    ThrowableDto getCause();
 
-  JsonArray<StackTraceElementDto> getStackTrace();
+    JsonArray<StackTraceElementDto> getStackTrace();
 }

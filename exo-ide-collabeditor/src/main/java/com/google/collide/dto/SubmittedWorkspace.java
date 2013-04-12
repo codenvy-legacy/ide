@@ -17,10 +17,7 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
-/**
- * DTO to tell the client that a workspace was submitted.
- * 
- */
+/** DTO to tell the client that a workspace was submitted. */
 @RoutingType(type = RoutingTypes.SUBMITTEDWORKSPACE)
 public interface SubmittedWorkspace extends ServerToClientDto {
 }

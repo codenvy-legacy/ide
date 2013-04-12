@@ -21,52 +21,45 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 /**
  * Common type-independent methods for optimised JSO maps
- *
+ * <p/>
  * Designed to be subclassed, but also useful in its own right for its methods
  *
  * @author danilatos@google.com (Daniel Danilatos)
  */
-public abstract class JsoMapBase extends JavaScriptObject
-{
+public abstract class JsoMapBase extends JavaScriptObject {
 
-   protected JsoMapBase()
-   {
-   }
+    protected JsoMapBase() {
+    }
 
-   /**
-    * Removes all entries from this map.
-    */
-   public final native void clear() /*-{
-      for (var key in this)
-      {
-         delete this[key];
-      }
-   }-*/;
+    /** Removes all entries from this map. */
+    public final native void clear() /*-{
+        for (var key in this) {
+            delete this[key];
+        }
+    }-*/;
 
-   /**
-    * Tests whether this map is empty.
-    *
-    * @return true if this map has no entries.
-    */
-   public final native boolean isEmpty() /*-{
-      for (var k in this)
-      {
-         return false;
-      }
-      return true;
-   }-*/;
+    /**
+     * Tests whether this map is empty.
+     *
+     * @return true if this map has no entries.
+     */
+    public final native boolean isEmpty() /*-{
+        for (var k in this) {
+            return false;
+        }
+        return true;
+    }-*/;
 
-   /**
-    * Counts the number of entries in this map.  This is a time-consuming
-    * operation.
-    */
-   public final native int countEntries() /*-{
-      var n = 0;
-      for (var k in this)
-      {
-         n++;
-      }
-      return n;
-   }-*/;
+    /**
+     * Counts the number of entries in this map.  This is a time-consuming
+     * operation.
+     */
+    public final native int countEntries() /*-{
+        var n = 0;
+        for (var k in this) {
+            n++;
+        }
+        return n;
+    }-*/;
 
 }

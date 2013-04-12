@@ -24,93 +24,74 @@ package com.codenvy.ide.client.util;
  *
  * @author zdwang@google.com (David Wang)
  */
-public class FuzzingBackOffGenerator
-{
-   public static class BackOffParameters
-   {
-      public final int targetDelay;
+public class FuzzingBackOffGenerator {
+    public static class BackOffParameters {
+        public final int targetDelay;
 
-      public final int minimumDelay;
+        public final int minimumDelay;
 
-      private BackOffParameters(int targetDelay, int minimumDelay)
-      {
-         this.targetDelay = targetDelay;
-         this.minimumDelay = minimumDelay;
-      }
-   }
+        private BackOffParameters(int targetDelay, int minimumDelay) {
+            this.targetDelay = targetDelay;
+            this.minimumDelay = minimumDelay;
+        }
+    }
 
-   /**
-    * Randomisation factor. Must be between 0 and 1.
-    */
-   private final double randomisationFactor;
+    /** Randomisation factor. Must be between 0 and 1. */
+    private final double randomisationFactor;
 
-   /**
-    * The first time we back off.
-    */
-   private final int initialBackOff;
+    /** The first time we back off. */
+    private final int initialBackOff;
 
-   /**
-    * The max back off value, it'll be fuzzed.
-    */
-   private final int maxBackOff;
+    /** The max back off value, it'll be fuzzed. */
+    private final int maxBackOff;
 
-   /**
-    * The next time we've backed off.
-    */
-   private int nextBackOffTime;
+    /** The next time we've backed off. */
+    private int nextBackOffTime;
 
-   /**
-    * The current back off time.
-    */
-   private int backOffTime;
+    /** The current back off time. */
+    private int backOffTime;
 
-   /**
-    * @param initialBackOff      Initial value to back off. This class does not interpret the meaning of
-    *                            this value. must be > 0
-    * @param maxBackOff          Max value to back off
-    * @param randomisationFactor between 0 and 1 to control the range of randomness.
-    */
-   public FuzzingBackOffGenerator(int initialBackOff, int maxBackOff, double randomisationFactor)
-   {
-      if (randomisationFactor < 0 || randomisationFactor > 1)
-      {
-         throw new IllegalArgumentException(
-            "randomisationFactor must be between 0 and 1. actual " + randomisationFactor);
-      }
+    /**
+     * @param initialBackOff
+     *         Initial value to back off. This class does not interpret the meaning of
+     *         this value. must be > 0
+     * @param maxBackOff
+     *         Max value to back off
+     * @param randomisationFactor
+     *         between 0 and 1 to control the range of randomness.
+     */
+    public FuzzingBackOffGenerator(int initialBackOff, int maxBackOff, double randomisationFactor) {
+        if (randomisationFactor < 0 || randomisationFactor > 1) {
+            throw new IllegalArgumentException(
+                    "randomisationFactor must be between 0 and 1. actual " + randomisationFactor);
+        }
 
-      if (initialBackOff <= 0)
-      {
-         throw new IllegalArgumentException("initialBackOff must be between 0 and 1. actual " + initialBackOff);
-      }
+        if (initialBackOff <= 0) {
+            throw new IllegalArgumentException("initialBackOff must be between 0 and 1. actual " + initialBackOff);
+        }
 
-      this.randomisationFactor = randomisationFactor;
-      this.initialBackOff = initialBackOff;
-      this.maxBackOff = maxBackOff;
-      this.nextBackOffTime = initialBackOff;
-      this.backOffTime = 0;
-   }
+        this.randomisationFactor = randomisationFactor;
+        this.initialBackOff = initialBackOff;
+        this.maxBackOff = maxBackOff;
+        this.nextBackOffTime = initialBackOff;
+        this.backOffTime = 0;
+    }
 
-   /**
-    * Gets the next back off time. Until maxBackOff is reached.
-    */
-   public BackOffParameters next()
-   {
-      int ret = Math.min(nextBackOffTime, maxBackOff);
-      nextBackOffTime += backOffTime;
-      backOffTime = ret;
+    /** Gets the next back off time. Until maxBackOff is reached. */
+    public BackOffParameters next() {
+        int ret = Math.min(nextBackOffTime, maxBackOff);
+        nextBackOffTime += backOffTime;
+        backOffTime = ret;
 
-      int randomizeTime = (int)(backOffTime * (1.0 + (Math.random() * randomisationFactor)));
-      int minAllowedTime = (int)Math.round(randomizeTime - backOffTime * randomisationFactor);
+        int randomizeTime = (int)(backOffTime * (1.0 + (Math.random() * randomisationFactor)));
+        int minAllowedTime = (int)Math.round(randomizeTime - backOffTime * randomisationFactor);
 
-      return new BackOffParameters(randomizeTime, minAllowedTime);
-   }
+        return new BackOffParameters(randomizeTime, minAllowedTime);
+    }
 
-   /**
-    * Resets the back off.
-    */
-   public void reset()
-   {
-      nextBackOffTime = initialBackOff;
-      backOffTime = 0;
-   }
+    /** Resets the back off. */
+    public void reset() {
+        nextBackOffTime = initialBackOff;
+        backOffTime = 0;
+    }
 }

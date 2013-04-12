@@ -28,21 +28,19 @@ import org.exoplatform.ide.extension.appfog.client.update.UpdateApplicationEvent
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class UpdateApplicationControl extends AbstractAppfogControl
-{
+public class UpdateApplicationControl extends AbstractAppfogControl {
 
-   private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.updateAppControlId();
+    private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.updateAppControlId();
 
-   private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.updateAppControlTitle();
+    private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.updateAppControlTitle();
 
-   private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.updateAppControlPrompt();
+    private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.updateAppControlPrompt();
 
-   public UpdateApplicationControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(AppfogClientBundle.INSTANCE.updateApp(), AppfogClientBundle.INSTANCE.updateAppDisabled());
-      setEvent(new UpdateApplicationEvent());
-   }
+    public UpdateApplicationControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(AppfogClientBundle.INSTANCE.updateApp(), AppfogClientBundle.INSTANCE.updateAppDisabled());
+        setEvent(new UpdateApplicationEvent());
+    }
 }

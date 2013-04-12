@@ -28,49 +28,39 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 
 /**
  * Discovery service for REST services.
- * 
+ * <p/>
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-public class RestDiscoveryService
-{
-   /**
-    * Instance of the {@link RestDiscoveryService}.
-    */
-   private static RestDiscoveryService instance;
+public class RestDiscoveryService {
+    /** Instance of the {@link RestDiscoveryService}. */
+    private static RestDiscoveryService instance;
 
-   /**
-    * Context of the REST services.
-    */
-   private String restServiceContext;
+    /** Context of the REST services. */
+    private String restServiceContext;
 
-   /**
-    * @return {@link RestDiscoveryService}
-    */
-   public static RestDiscoveryService getInstance()
-   {
-      return instance;
-   }
+    /** @return {@link RestDiscoveryService} */
+    public static RestDiscoveryService getInstance() {
+        return instance;
+    }
 
-   public RestDiscoveryService(String restServiceContext)
-   {
-      instance = this;
-      this.restServiceContext = restServiceContext;
-   }
+    public RestDiscoveryService(String restServiceContext) {
+        instance = this;
+        this.restServiceContext = restServiceContext;
+    }
 
-   /**
-    * @param callback callback
-    * @throws RequestException
-    */
-   public void getRestServices(AsyncRequestCallback<RestServicesList> callback) throws RequestException
-   {
-      String url = restServiceContext;
-      if (!url.endsWith("/"))
-      {
-         url += "/";
-      }
-      AsyncRequest.build(RequestBuilder.GET, url).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
-   }
+    /**
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
+    public void getRestServices(AsyncRequestCallback<RestServicesList> callback) throws RequestException {
+        String url = restServiceContext;
+        if (!url.endsWith("/")) {
+            url += "/";
+        }
+        AsyncRequest.build(RequestBuilder.GET, url).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+    }
 }

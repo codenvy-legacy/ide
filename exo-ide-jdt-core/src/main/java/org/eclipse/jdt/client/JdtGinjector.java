@@ -28,13 +28,11 @@ import org.eclipse.jdt.client.internal.corext.codemanipulation.GenerateNewConstr
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
 @GinModules({JdtModule.class, CodemanipulationModule.class})
-public interface JdtGinjector extends Ginjector
-{
-   
-   AddGetterSetterPresenter getSetterGetterPresenter();
-   
-   GenerateNewConstructorUsingFieldsPresenter getNewConstructorUsingFields();
+public interface JdtGinjector extends Ginjector {
+
+    AddGetterSetterPresenter getSetterGetterPresenter();
+
+    GenerateNewConstructorUsingFieldsPresenter getNewConstructorUsingFields();
 }

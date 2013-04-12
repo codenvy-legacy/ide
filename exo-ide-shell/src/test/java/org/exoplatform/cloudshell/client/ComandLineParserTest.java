@@ -18,72 +18,63 @@
  */
 package org.exoplatform.cloudshell.client;
 
-import org.exoplatform.ide.shell.client.cli.CommandLine;
-import org.exoplatform.ide.shell.client.cli.GnuParser;
-import org.exoplatform.ide.shell.client.cli.Option;
-import org.exoplatform.ide.shell.client.cli.Options;
-import org.exoplatform.ide.shell.client.cli.Parser;
-import org.exoplatform.ide.shell.client.cli.Util;
-import org.junit.Test;
-
 import junit.framework.Assert;
+
+import org.exoplatform.ide.shell.client.cli.*;
+import org.junit.Test;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class ComandLineParserTest
-{
+public class ComandLineParserTest {
 
-   String tabl = "/ide/git/commit;POST=git commit\n" + "git commit.body.params=message,all\n"
-      + "git commit.body.message=-m\n" + "git commit.body.all=-a\n";
+    String tabl = "/ide/git/commit;POST=git commit\n" + "git commit.body.params=message,all\n"
+                  + "git commit.body.message=-m\n" + "git commit.body.all=-a\n";
 
-   @Test
-   public void parserTest() throws Exception
-   {
-      String cmd = "git commit -m='My first commit'      -a false";
-      String[] args = Util.translateCommandline(cmd);
-      Option msg = new Option("m", true, "Commit message");
-      msg.setLongOpt("message");
-      Option a = new Option("a", true, "Add file");
-      Options options = new Options();
-      options.addOption(a);
-      options.addOption(msg);
-      Parser parser = new GnuParser();
-      CommandLine line = parser.parse(options, args);
-      Assert.assertEquals("My first commit", line.getOptionValue("m"));
-      Assert.assertFalse(Boolean.valueOf(line.getOptionValue("a")));
+    @Test
+    public void parserTest() throws Exception {
+        String cmd = "git commit -m='My first commit'      -a false";
+        String[] args = Util.translateCommandline(cmd);
+        Option msg = new Option("m", true, "Commit message");
+        msg.setLongOpt("message");
+        Option a = new Option("a", true, "Add file");
+        Options options = new Options();
+        options.addOption(a);
+        options.addOption(msg);
+        Parser parser = new GnuParser();
+        CommandLine line = parser.parse(options, args);
+        Assert.assertEquals("My first commit", line.getOptionValue("m"));
+        Assert.assertFalse(Boolean.valueOf(line.getOptionValue("a")));
 
-      String[] commands = tabl.split("\n");
-      String command = commands[0].split("=")[1];
+        String[] commands = tabl.split("\n");
+        String command = commands[0].split("=")[1];
 
-      String url = "";
-      if (command.equalsIgnoreCase(line.getArgs()[0] + " " + line.getArgs()[1]))
-      {
-         url = commands[0].split("=")[0];
-      }
-      String body = "{\"message\":\"" + line.getOptionValue("m") + "\",\"all\":" + line.getOptionValue("a") + "\"}";
+        String url = "";
+        if (command.equalsIgnoreCase(line.getArgs()[0] + " " + line.getArgs()[1])) {
+            url = commands[0].split("=")[0];
+        }
+        String body = "{\"message\":\"" + line.getOptionValue("m") + "\",\"all\":" + line.getOptionValue("a") + "\"}";
 
-   }
+    }
 
-   @Test
-   public void parserLongOptTest() throws Exception
-   {
-      String cmd = "git commit --message='My first commit'      -a false";
-      String[] args = Util.translateCommandline(cmd);
-      Option msg = new Option("m", true, "Commit message");
-      msg.setLongOpt("message");
-      Option a = new Option("a", true, "Add file");
-      Options options = new Options();
-      options.addOption(a);
-      options.addOption(msg);
-      Parser parser = new GnuParser();
-      CommandLine line = parser.parse(options, args);
-      Assert.assertEquals("My first commit", line.getOptionValue("m"));
-      Assert.assertFalse(Boolean.valueOf(line.getOptionValue("a")));
+    @Test
+    public void parserLongOptTest() throws Exception {
+        String cmd = "git commit --message='My first commit'      -a false";
+        String[] args = Util.translateCommandline(cmd);
+        Option msg = new Option("m", true, "Commit message");
+        msg.setLongOpt("message");
+        Option a = new Option("a", true, "Add file");
+        Options options = new Options();
+        options.addOption(a);
+        options.addOption(msg);
+        Parser parser = new GnuParser();
+        CommandLine line = parser.parse(options, args);
+        Assert.assertEquals("My first commit", line.getOptionValue("m"));
+        Assert.assertFalse(Boolean.valueOf(line.getOptionValue("a")));
 
-   }
+    }
 
 }

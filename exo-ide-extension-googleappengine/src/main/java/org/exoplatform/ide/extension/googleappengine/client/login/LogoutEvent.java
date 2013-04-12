@@ -22,34 +22,24 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to log out Google App Engine.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 14, 2012 11:39:10 AM anya $
- * 
  */
-public class LogoutEvent extends GwtEvent<LogoutHandler>
-{
-   /**
-    * Type used to register the event.
-    */
-   public static final GwtEvent.Type<LogoutHandler> TYPE = new GwtEvent.Type<LogoutHandler>();
+public class LogoutEvent extends GwtEvent<LogoutHandler> {
+    /** Type used to register the event. */
+    public static final GwtEvent.Type<LogoutHandler> TYPE = new GwtEvent.Type<LogoutHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<LogoutHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<LogoutHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(LogoutHandler handler)
-   {
-      handler.onLogout(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(LogoutHandler handler) {
+        handler.onLogout(this);
+    }
 
 }

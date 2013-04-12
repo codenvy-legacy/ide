@@ -18,22 +18,19 @@
  */
 package org.exoplatform.ide.security.oauth;
 
+import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.ws.rs.core.Application;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class OAuthAuthenticationApplication extends Application
-{
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      Set<Class<?>> cls = new HashSet<Class<?>>(1);
-      cls.add(OAuthAuthenticationService.class);
-      return cls;
-   }
+public class OAuthAuthenticationApplication extends Application {
+    @Override
+    public Set<Class<?>> getClasses() {
+        Set<Class<?>> cls = new HashSet<Class<?>>(1);
+        cls.add(OAuthAuthenticationService.class);
+        return cls;
+    }
 }

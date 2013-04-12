@@ -18,13 +18,6 @@
  */
 package org.exoplatform.ide.client.operation.openbyurl;
 
-import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextInput;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -32,107 +25,85 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+
 /**
  * View for opening file by URL.
- * 
+ * <p/>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class OpenFileByURLView extends ViewImpl implements
-   org.exoplatform.ide.client.operation.openbyurl.OpenFileByURLPresenter.Display
-{
+                                                org.exoplatform.ide.client.operation.openbyurl.OpenFileByURLPresenter.Display {
 
-   /**
-    * View ID.
-    */
-   public static final String ID = "ide.openFileByURL.view";
+    /** View ID. */
+    public static final String ID = "ide.openFileByURL.view";
 
-   private static final String URL_FIELD_ID = "ide.openFileByURL.view.URL";
+    private static final String URL_FIELD_ID = "ide.openFileByURL.view.URL";
 
-   /**
-    * Initial width of this view
-    */
-   private static final int WIDTH = 550;
+    /** Initial width of this view */
+    private static final int WIDTH = 550;
 
-   /**
-    * Initial height of this view
-    */
-   private static final int HEIGHT = 170;
+    /** Initial height of this view */
+    private static final int HEIGHT = 170;
 
-   private static OpenFileByURLViewUiBinder uiBinder = GWT.create(OpenFileByURLViewUiBinder.class);
+    private static OpenFileByURLViewUiBinder uiBinder = GWT.create(OpenFileByURLViewUiBinder.class);
 
-   interface OpenFileByURLViewUiBinder extends UiBinder<Widget, OpenFileByURLView>
-   {
-   }
+    interface OpenFileByURLViewUiBinder extends UiBinder<Widget, OpenFileByURLView> {
+    }
 
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.openFileByURLViewTitle();
+    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.openFileByURLViewTitle();
 
-   /**
-    * URL text field.
-    */
-   @UiField
-   TextInput urlField;
+    /** URL text field. */
+    @UiField
+    TextInput urlField;
 
-   /**
-    * Open button.
-    */
-   @UiField
-   ImageButton openButton;
+    /** Open button. */
+    @UiField
+    ImageButton openButton;
 
-   /**
-    * Cancel button.
-    */
-   @UiField
-   ImageButton cancelButton;
+    /** Cancel button. */
+    @UiField
+    ImageButton cancelButton;
 
-   /**
-    * Creates view instance.
-    */
-   public OpenFileByURLView()
-   {
-      super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.url()), WIDTH, HEIGHT);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
-      urlField.setName(URL_FIELD_ID);
-   }
+    /** Creates view instance. */
+    public OpenFileByURLView() {
+        super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.url()), WIDTH, HEIGHT);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
+        urlField.setName(URL_FIELD_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.remote.OpenFileByURLPresenter.Display#getURLField()
-    */
-   @Override
-   public TextFieldItem getURLField()
-   {
-      return urlField;
-   }
+    /** @see org.exoplatform.ide.client.remote.OpenFileByURLPresenter.Display#getURLField() */
+    @Override
+    public TextFieldItem getURLField() {
+        return urlField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.remote.OpenFileByURLPresenter.Display#getOpenButton()
-    */
-   @Override
-   public HasClickHandlers getOpenButton()
-   {
-      return openButton;
-   }
+    /** @see org.exoplatform.ide.client.remote.OpenFileByURLPresenter.Display#getOpenButton() */
+    @Override
+    public HasClickHandlers getOpenButton() {
+        return openButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.remote.OpenFileByURLPresenter.Display#setOpenButtonEnabled(boolean)
-    */
-   @Override
-   public void setOpenButtonEnabled(boolean enabled)
-   {
-      openButton.setEnabled(enabled);
-   }
+    /** @see org.exoplatform.ide.client.remote.OpenFileByURLPresenter.Display#setOpenButtonEnabled(boolean) */
+    @Override
+    public void setOpenButtonEnabled(boolean enabled) {
+        openButton.setEnabled(enabled);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.remote.OpenFileByURLPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.client.remote.OpenFileByURLPresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
 }

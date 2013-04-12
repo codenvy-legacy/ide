@@ -22,25 +22,22 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-public class CopyItemsEvent extends GwtEvent<CopyItemsHandler>
-{
+public class CopyItemsEvent extends GwtEvent<CopyItemsHandler> {
 
-   public static final GwtEvent.Type<CopyItemsHandler> TYPE = new GwtEvent.Type<CopyItemsHandler>();
+    public static final GwtEvent.Type<CopyItemsHandler> TYPE = new GwtEvent.Type<CopyItemsHandler>();
 
-   @Override
-   protected void dispatch(CopyItemsHandler handler)
-   {
-      handler.onCopyItems(this);
-   }
+    @Override
+    protected void dispatch(CopyItemsHandler handler) {
+        handler.onCopyItems(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CopyItemsHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<CopyItemsHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

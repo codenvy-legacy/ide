@@ -26,42 +26,30 @@ import java.util.Properties;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-class LoginInfo
-{
-   static String email;
-   static String password;
-   static String target = "http://api.cloudfoundry.com";
+class LoginInfo {
+    static String email;
+    static String password;
+    static String target = "http://api.cloudfoundry.com";
 
-   static
-   {
-      Properties properties = new Properties();
-      InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("security.properties");
-      if (in != null)
-      {
-         try
-         {
-            properties.load(in);
-            email = (String)properties.get("email");
-            password = (String)properties.get("password");
-            if (properties.containsKey("target"))
-            {
-               target = (String)properties.get("target");
+    static {
+        Properties properties = new Properties();
+        InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("security.properties");
+        if (in != null) {
+            try {
+                properties.load(in);
+                email = (String)properties.get("email");
+                password = (String)properties.get("password");
+                if (properties.containsKey("target")) {
+                    target = (String)properties.get("target");
+                }
+            } catch (IOException ignored) {
+                // Lets resolve this in tests.
+            } finally {
+                try {
+                    in.close();
+                } catch (IOException ignored2) {
+                }
             }
-         }
-         catch (IOException ignored)
-         {
-            // Lets resolve this in tests.
-         }
-         finally
-         {
-            try
-            {
-               in.close();
-            }
-            catch (IOException ignored2)
-            {
-            }
-         }
-      }
-   }
+        }
+    }
 }

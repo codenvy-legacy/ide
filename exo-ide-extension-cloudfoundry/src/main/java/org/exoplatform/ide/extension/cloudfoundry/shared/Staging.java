@@ -22,13 +22,12 @@ package org.exoplatform.ide.extension.cloudfoundry.shared;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface Staging
-{
-   String getModel();
+public interface Staging {
+    String getModel();
 
-   void setModel(String model);
+    void setModel(String model);
 
-   String getStack();
+    String getStack();
 
-   void setStack(String stack);
+    void setStack(String stack);
 }

@@ -17,15 +17,12 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Request to update the project summary and name.
- *
- */
+/** Request to update the project summary and name. */
 @RoutingType(type = RoutingTypes.UPDATEPROJECT)
 public interface UpdateProject extends ClientToServerDto {
-  String getProjectId();
+    String getProjectId();
 
-  String getSummary();
+    String getSummary();
 
-  String getName();
+    String getName();
 }

@@ -22,15 +22,15 @@
 
 <module>
 
-	<!-- Inherit the core Web Toolkit stuff.                        -->
-	<inherits name='com.google.gwt.user.User' />
-	<inherits name='com.google.gwt.user.Debug' />
+    <!-- Inherit the core Web Toolkit stuff.                        -->
+    <inherits name='com.google.gwt.user.User'/>
+    <inherits name='com.google.gwt.user.Debug'/>
 
-	<!--  inherit css based theme -->
-	<inherits name='com.google.gwt.user.theme.standard.Standard' />
+    <!--  inherit css based theme -->
+    <inherits name='com.google.gwt.user.theme.standard.Standard'/>
 
-<!-- 
-	<source path="smartgwteditor" />
- -->
+    <!--
+        <source path="smartgwteditor" />
+     -->
 
 </module>

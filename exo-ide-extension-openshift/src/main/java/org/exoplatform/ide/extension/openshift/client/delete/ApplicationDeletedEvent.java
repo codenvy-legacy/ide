@@ -22,70 +22,51 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when OpenShift application is deleted.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 8, 2011 2:39:55 PM anya $
- * 
  */
-public class ApplicationDeletedEvent extends GwtEvent<ApplicationDeletedHandler>
-{
+public class ApplicationDeletedEvent extends GwtEvent<ApplicationDeletedHandler> {
 
-   /**
-    * Type used to register event.
-    */
-   public static final GwtEvent.Type<ApplicationDeletedHandler> TYPE = new GwtEvent.Type<ApplicationDeletedHandler>();
+    /** Type used to register event. */
+    public static final GwtEvent.Type<ApplicationDeletedHandler> TYPE = new GwtEvent.Type<ApplicationDeletedHandler>();
 
-   /**
-    * VFS id.
-    */
-   private String vfsId;
+    /** VFS id. */
+    private String vfsId;
 
-   /**
-    * Project's id.
-    */
-   private String projectId;
+    /** Project's id. */
+    private String projectId;
 
-   /**
-    * @param vfsId VFS id
-    * @param projectId project's id
-    */
-   public ApplicationDeletedEvent(String vfsId, String projectId)
-   {
-      this.vfsId = vfsId;
-      this.projectId = projectId;
-   }
+    /**
+     * @param vfsId
+     *         VFS id
+     * @param projectId
+     *         project's id
+     */
+    public ApplicationDeletedEvent(String vfsId, String projectId) {
+        this.vfsId = vfsId;
+        this.projectId = projectId;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ApplicationDeletedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ApplicationDeletedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ApplicationDeletedHandler handler)
-   {
-      handler.onApplicationDeleted(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ApplicationDeletedHandler handler) {
+        handler.onApplicationDeleted(this);
+    }
 
-   /**
-    * @return the vfsId VFS id
-    */
-   public String getVfsId()
-   {
-      return vfsId;
-   }
+    /** @return the vfsId VFS id */
+    public String getVfsId() {
+        return vfsId;
+    }
 
-   /**
-    * @return the projectId project's id
-    */
-   public String getProjectId()
-   {
-      return projectId;
-   }
+    /** @return the projectId project's id */
+    public String getProjectId() {
+        return projectId;
+    }
 }

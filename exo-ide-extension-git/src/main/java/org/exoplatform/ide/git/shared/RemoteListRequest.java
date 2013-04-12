@@ -19,80 +19,65 @@
 package org.exoplatform.ide.git.shared;
 
 /**
- * Request to get list of remotes. If {@link #remote} is specified then info
- * about this remote only given.
+ * Request to get list of remotes. If {@link #remote} is specified then info about this remote only given.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: RemoteListRequest.java 68015 2011-04-06 09:21:31Z anya $
  */
-public class RemoteListRequest extends GitRequest
-{
-   /**
-    * If <code>true</code> show remote url and name otherwise show remote name
-    * only.
-    */
-   private boolean verbose;
+public class RemoteListRequest extends GitRequest {
+    /**
+     * If <code>true</code> show remote url and name otherwise show remote name only.
+     */
+    private boolean verbose;
 
-   /**
-    * Remote name. May be <code>null</code> if need to get info about all
-    * remotes.
-    */
-   private String remote;
-   
-   /**
-    * "Empty" remote list request. Corresponding setters used to setup required
-    * parameters.
-    */
-   public RemoteListRequest()
-   {
-      
-   }
-   
-   /**
-    * @param remote remote name. May be <code>null</code> if need to get info
-    *           about all remotes
-    * @param verbose if <code>true</code> show remote url and name otherwise
-    *           show remote name only
-    */
-   public RemoteListRequest(String remote, boolean verbose)
-   {
-      this.remote = remote;
-      this.verbose = verbose;
-   }
+    /**
+     * Remote name. May be <code>null</code> if need to get info about all remotes.
+     */
+    private String  remote;
 
-   /**
-    * @return if <code>true</code> show remote url and name otherwise show
-    *         remote name only
-    */
-   public boolean isVerbose()
-   {
-      return verbose;
-   }
+    /**
+     * "Empty" remote list request. Corresponding setters used to setup required parameters.
+     */
+    public RemoteListRequest() {
 
-   /**
-    * @param verbose if <code>true</code> show remote url and name otherwise
-    *           show remote name only
-    */
-   public void setVerbose(boolean verbose)
-   {
-      this.verbose = verbose;
-   }
+    }
 
-   /**
-    * @return remote name
-    * @see #remote
-    */
-   public String getRemote()
-   {
-      return remote;
-   }
+    /**
+     * @param remote remote name. May be <code>null</code> if need to get info about all remotes
+     * @param verbose if <code>true</code> show remote url and name otherwise show remote name only
+     */
+    public RemoteListRequest(String remote, boolean verbose) {
+        this.remote = remote;
+        this.verbose = verbose;
+    }
 
-   /**
-    * @param remote remote name
-    * @see #remote
-    */
-   public void setRemote(String remote)
-   {
-      this.remote = remote;
-   }
+    /**
+     * @return if <code>true</code> show remote url and name otherwise show remote name only
+     */
+    public boolean isVerbose() {
+        return verbose;
+    }
+
+    /**
+     * @param verbose if <code>true</code> show remote url and name otherwise show remote name only
+     */
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
+    }
+
+    /**
+     * @return remote name
+     * @see #remote
+     */
+    public String getRemote() {
+        return remote;
+    }
+
+    /**
+     * @param remote remote name
+     * @see #remote
+     */
+    public void setRemote(String remote) {
+        this.remote = remote;
+    }
 }

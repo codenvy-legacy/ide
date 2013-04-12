@@ -23,249 +23,247 @@ import com.google.gwt.i18n.client.Messages;
 /**
  * Interface to represent the constants for template and project forms contained in resource bundle:
  * 'IdeTemplateLocalizationConstant.properties'.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: TemplateConstant.java Jun 2, 2011 2:59:52 PM vereshchaka $
- * 
  */
-public interface IdeTemplateLocalizationConstant extends Messages
-{
+public interface IdeTemplateLocalizationConstant extends Messages {
 
-   /*
-    * TemplateTree
-    */
-   @Key("template.tree.from")
-   String from();
+    /*
+     * TemplateTree
+     */
+    @Key("template.tree.from")
+    String from();
 
-   /*
-    * TemplateListGrid
-    */
-   @Key("template.listGrid.name")
-   String listGridName();
+    /*
+     * TemplateListGrid
+     */
+    @Key("template.listGrid.name")
+    String listGridName();
 
-   @Key("template.listGrid.description")
-   String listGridDescription();
+    @Key("template.listGrid.description")
+    String listGridDescription();
 
-   /*
-    * SaveAsTemplateForm
-    */
-   @Key("saveAsTemplate.title")
-   String saveAsTemplateTitle();
+    /*
+     * SaveAsTemplateForm
+     */
+    @Key("saveAsTemplate.title")
+    String saveAsTemplateTitle();
 
-   @Key("saveAsTemplate.type")
-   String saveAsTemplateType();
+    @Key("saveAsTemplate.type")
+    String saveAsTemplateType();
 
-   @Key("saveAsTemplate.name")
-   String saveAsTemplateName();
+    @Key("saveAsTemplate.name")
+    String saveAsTemplateName();
 
-   @Key("saveAsTemplate.description")
-   String saveAsTemplateDescription();
+    @Key("saveAsTemplate.description")
+    String saveAsTemplateDescription();
 
-   /*
-    * CreateFileFromTemplateForm CreateFileFromTemplateView
-    */
-   @Key("createFileFromTemplate.createButton")
-   String createFileFromTemplateCreateButton();
+    /*
+     * CreateFileFromTemplateForm CreateFileFromTemplateView
+     */
+    @Key("createFileFromTemplate.createButton")
+    String createFileFromTemplateCreateButton();
 
-   @Key("createFileFromTemplate.formTitle")
-   String createFileFromTemplateFormTitle();
+    @Key("createFileFromTemplate.formTitle")
+    String createFileFromTemplateFormTitle();
 
-   @Key("createFileFromTemplate.nameField")
-   String createFileFromTemplateNameField();
+    @Key("createFileFromTemplate.nameField")
+    String createFileFromTemplateNameField();
 
-   @Key("createFileFromTemplate.name")
-   String createFileFromTemplateName();
+    @Key("createFileFromTemplate.name")
+    String createFileFromTemplateName();
 
-   /*
-    * CreateProjectFromTemplateForm
-    */
-   @Key("createProjectFromTemplate.formTitle")
-   String createProjectFromTemplateTitle();
+    /*
+     * CreateProjectFromTemplateForm
+     */
+    @Key("createProjectFromTemplate.formTitle")
+    String createProjectFromTemplateTitle();
 
-   @Key("createProjectFromTemplate.newModule.formTitle")
-   String createProjectFromTemplateNewModuleTitle();   
-   
-   @Key("createProjectFromTemplate.nameField")
-   String createProjectFromTemplateName();
+    @Key("createProjectFromTemplate.newModule.formTitle")
+    String createProjectFromTemplateNewModuleTitle();
 
-   @Key("createProjectFromTemplate.selectProject")
-   String createProjectFromTemplateSelectProject();
+    @Key("createProjectFromTemplate.nameField")
+    String createProjectFromTemplateName();
 
-   @Key("createProjectFromTemplate.deployField")
-   String createProjectFromTemplateDeployField();
+    @Key("createProjectFromTemplate.selectProject")
+    String createProjectFromTemplateSelectProject();
 
-   @Key("createProjectFromTemplate.descriptionField")
-   String createProjectFromTemplateDescriptionField();
+    @Key("createProjectFromTemplate.deployField")
+    String createProjectFromTemplateDeployField();
 
-   @Key("createProjectFromTemplate.selectTemplate")
-   String createProjectFromTemplateSelectTemplate();
+    @Key("createProjectFromTemplate.descriptionField")
+    String createProjectFromTemplateDescriptionField();
 
-   @Key("createProjectFromTemplate.project.exists")
-   String createProjectFromTemplateProjectExists(String projectName);
+    @Key("createProjectFromTemplate.selectTemplate")
+    String createProjectFromTemplateSelectTemplate();
 
-   @Key("creatingProject")
-   String creatingProject();
+    @Key("createProjectFromTemplate.project.exists")
+    String createProjectFromTemplateProjectExists(String projectName);
 
-   @Key("noRegistedDeployAction")
-   String noRegistedDeployAction(String target);
+    @Key("creatingProject")
+    String creatingProject();
 
-   @Key("noProjectTempate")
-   String noProjectTempate();
+    @Key("noRegistedDeployAction")
+    String noRegistedDeployAction(String target);
 
-   @Key("noProjectTemplateForTarget")
-   String noProjectTemplateForTarget(String target);
+    @Key("noProjectTempate")
+    String noProjectTempate();
 
-   @Key("chooseTechnology")
-   String chooseTechnology();
+    @Key("noProjectTemplateForTarget")
+    String noProjectTemplateForTarget(String target);
 
-   @Key("chooseTechnologyTooltip")
-   String chooseTechnologyTooltip();
+    @Key("chooseTechnology")
+    String chooseTechnology();
 
-   @Key("choosePaas")
-   String choosePaaS();
+    @Key("chooseTechnologyTooltip")
+    String chooseTechnologyTooltip();
 
-   @Key("choosePaasTooltip")
-   String choosePaaSTooltip();
+    @Key("choosePaas")
+    String choosePaaS();
 
-   @Key("noTechnologyTitle")
-   String noTechnologyTitle();
+    @Key("choosePaasTooltip")
+    String choosePaaSTooltip();
 
-   @Key("noTechnologyMessage")
-   String noTechnologyMessage();
+    @Key("noTechnologyTitle")
+    String noTechnologyTitle();
 
-   @Key("useJRebelPlugin")
-   String useJRebelPlugin();
+    @Key("noTechnologyMessage")
+    String noTechnologyMessage();
 
-   @Key("whatIsJRebel")
-   String whatIsJRebel();
+    @Key("useJRebelPlugin")
+    String useJRebelPlugin();
 
-   @Key("zeroturnaround")
-   String zeroturnaround();
+    @Key("whatIsJRebel")
+    String whatIsJRebel();
 
-   /*
-    * CreateProjectTemplateForm
-    */
-   @Key("createProjectTemplate.title")
-   String createProjectTemplateTitle();
+    @Key("zeroturnaround")
+    String zeroturnaround();
 
-   @Key("createProjectTemplate.addFolderButton")
-   String createProjectTemplateAddFolderBtn();
+    /*
+     * CreateProjectTemplateForm
+     */
+    @Key("createProjectTemplate.title")
+    String createProjectTemplateTitle();
 
-   @Key("createProjectTemplate.addFileButton")
-   String createProjectTemplateAddFileBtn();
+    @Key("createProjectTemplate.addFolderButton")
+    String createProjectTemplateAddFolderBtn();
 
-   @Key("createProjectTemplate.addFolder.title")
-   String createProjectTemplateAddFolderTitle();
+    @Key("createProjectTemplate.addFileButton")
+    String createProjectTemplateAddFileBtn();
 
-   @Key("createProjectTemplate.addFolder.text")
-   String createProjectTemplateAddFolderText();
+    @Key("createProjectTemplate.addFolder.title")
+    String createProjectTemplateAddFolderTitle();
 
-   @Key("createProjectTemplate.addFolder.default")
-   String createProjectTemplateAddFolderDefault();
+    @Key("createProjectTemplate.addFolder.text")
+    String createProjectTemplateAddFolderText();
 
-   @Key("createProjectTemplate.textField.name")
-   String createProjectTemplateTextFieldName();
+    @Key("createProjectTemplate.addFolder.default")
+    String createProjectTemplateAddFolderDefault();
 
-   @Key("createProjectTemplate.textArea.description")
-   String createProjectTemplateTextAreaDescription();
+    @Key("createProjectTemplate.textField.name")
+    String createProjectTemplateTextFieldName();
 
-   /*
-    * TemplateServiceImpl
-    */
-   @Key("template.emptyProject.name")
-   String templateEmptyProjectName();
+    @Key("createProjectTemplate.textArea.description")
+    String createProjectTemplateTextAreaDescription();
 
-   @Key("template.emptyProject.description")
-   String templateEmptyProjectDescription();
+    /*
+     * TemplateServiceImpl
+     */
+    @Key("template.emptyProject.name")
+    String templateEmptyProjectName();
 
-   @Key("template.emptyXml.name")
-   String templateEmptyXmlName();
+    @Key("template.emptyProject.description")
+    String templateEmptyProjectDescription();
 
-   @Key("template.emptyXml.description")
-   String templateEmptyXmlDescription();
+    @Key("template.emptyXml.name")
+    String templateEmptyXmlName();
 
-   @Key("template.emptyHtml.name")
-   String templateEmptyHtmlName();
+    @Key("template.emptyXml.description")
+    String templateEmptyXmlDescription();
 
-   @Key("template.emptyHtml.description")
-   String templateEmptyHtmlDescription();
+    @Key("template.emptyHtml.name")
+    String templateEmptyHtmlName();
 
-   @Key("template.emptyText.name")
-   String templateEmptyTextName();
+    @Key("template.emptyHtml.description")
+    String templateEmptyHtmlDescription();
 
-   @Key("template.emptyText.description")
-   String templateEmptyTextDescription();
+    @Key("template.emptyText.name")
+    String templateEmptyTextName();
 
-   @Key("template.openSocialGadget.name")
-   String templateOpenSocialGadgetName();
+    @Key("template.emptyText.description")
+    String templateEmptyTextDescription();
 
-   @Key("template.openSocialGadget.description")
-   String templateOpenSocialGadgetDescription();
+    @Key("template.openSocialGadget.name")
+    String templateOpenSocialGadgetName();
 
-   @Key("template.groovyRestService.name")
-   String templateGroovyRestServiceName();
+    @Key("template.openSocialGadget.description")
+    String templateOpenSocialGadgetDescription();
 
-   @Key("template.groovyRestService.description")
-   String templateGroovyRestServiceDescription();
+    @Key("template.groovyRestService.name")
+    String templateGroovyRestServiceName();
 
-   @Key("template.groovyTemplate.name")
-   String templateGroovyTemplateName();
+    @Key("template.groovyRestService.description")
+    String templateGroovyRestServiceDescription();
 
-   @Key("template.groovyTemplate.description")
-   String templateGroovyTemplateDescription();
+    @Key("template.groovyTemplate.name")
+    String templateGroovyTemplateName();
 
-   /*
-    * CreateProjectTemplatePresenter
-    */
-   @Key("button.addFile")
-   String addFileButton();
+    @Key("template.groovyTemplate.description")
+    String templateGroovyTemplateDescription();
 
-   @Key("createProjectTemplate.enterNameFirst")
-   String createProjectTemplateEnterNameFirst();
+    /*
+     * CreateProjectTemplatePresenter
+     */
+    @Key("button.addFile")
+    String addFileButton();
 
-   @Key("createProjectTemplate.valueCantBeEmpty")
-   String createProjectTemplateValueCantBeEmpty();
+    @Key("createProjectTemplate.enterNameFirst")
+    String createProjectTemplateEnterNameFirst();
 
-   @Key("createProjectTemplate.folderAlreadyExists")
-   String createProjectTemplateFolderAlreadyExists();
+    @Key("createProjectTemplate.valueCantBeEmpty")
+    String createProjectTemplateValueCantBeEmpty();
 
-   @Key("createProjectTemplate.projectAlreadyExists")
-   String createProjectTemplateProjectAlreadyExists();
+    @Key("createProjectTemplate.folderAlreadyExists")
+    String createProjectTemplateFolderAlreadyExists();
 
-   @Key("createProjectTemplate.fileAlreadyExists")
-   String createProjectTemplateFileAlreadyExists();
+    @Key("createProjectTemplate.projectAlreadyExists")
+    String createProjectTemplateProjectAlreadyExists();
 
-   @Key("createProjectTemplate.templateCreated")
-   String createProjectTemplateCreated();
+    @Key("createProjectTemplate.fileAlreadyExists")
+    String createProjectTemplateFileAlreadyExists();
 
-   /*
-    * CreateFileFromTemplatePresenter
-    */
-   @Key("createFileFromTemplate.enterFileNameFirst")
-   String createFileFromTemplateEnterFileNameFirst();
+    @Key("createProjectTemplate.templateCreated")
+    String createProjectTemplateCreated();
 
-   /*
-    * SaveAsTemplatePresenter
-    */
-   @Key("saveAsTemplate.enterNameFirst")
-   String saveAsTemplateEnterNameFirst();
+    /*
+     * CreateFileFromTemplatePresenter
+     */
+    @Key("createFileFromTemplate.enterFileNameFirst")
+    String createFileFromTemplateEnterFileNameFirst();
 
-   @Key("saveAsTemplate.templateCreated")
-   String saveAsTemplateCreated();
+    /*
+     * SaveAsTemplatePresenter
+     */
+    @Key("saveAsTemplate.enterNameFirst")
+    String saveAsTemplateEnterNameFirst();
 
-   @Key("saveAsTemplate.openFileForTemplate")
-   String saveAsTemplateOpenFileForTemplate();
+    @Key("saveAsTemplate.templateCreated")
+    String saveAsTemplateCreated();
 
-   /*
-    * CreateFileFromTemplatePresenter
-    */
-   @Key("template.askDeleteTemplateDialog.title")
-   String askDeleteTemplateDialogTitle();
+    @Key("saveAsTemplate.openFileForTemplate")
+    String saveAsTemplateOpenFileForTemplate();
 
-   /*
-    * CreateProjectFromTemplatePresenter
-    */
-   @Key("createProjectFromTemplate.askDeleteSeveralTemplates")
-   String createFromTemplateAskDeleteSeveralTemplates();
+    /*
+     * CreateFileFromTemplatePresenter
+     */
+    @Key("template.askDeleteTemplateDialog.title")
+    String askDeleteTemplateDialogTitle();
+
+    /*
+     * CreateProjectFromTemplatePresenter
+     */
+    @Key("createProjectFromTemplate.askDeleteSeveralTemplates")
+    String createFromTemplateAskDeleteSeveralTemplates();
 
 }

@@ -24,66 +24,49 @@ import org.exoplatform.ide.shell.shared.UserInfo;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Aug 12, 2011 evgen $
- * 
  */
-public class ShellConfigurationBean implements ShellConfiguration
-{
-   private UserInfo userInfo;
+public class ShellConfigurationBean implements ShellConfiguration {
+    private UserInfo userInfo;
 
-   private String entryPoint;
+    private String   vfsBaseUrl;
 
-   /**
-    * 
-    */
-   public ShellConfigurationBean()
-   {
-   }
+    /**
+     *
+     */
+    public ShellConfigurationBean() {
+    }
 
-   /**
-    * @param userInfo
-    * @param entryPoint
-    */
-   public ShellConfigurationBean(UserInfo userInfo, String entryPoint)
-   {
-      super();
-      this.userInfo = userInfo;
-      this.entryPoint = entryPoint;
-   }
+    /**
+     * @param userInfo
+     * @param vfsBaseUrl
+     */
+    public ShellConfigurationBean(UserInfo userInfo, String vfsBaseUrl) {
+        super();
+        this.userInfo = userInfo;
+        this.vfsBaseUrl = vfsBaseUrl;
+    }
 
-   /**
-    * @see org.exoplatform.ide.shell.shared.ShellConfiguration#getUserInfo()
-    */
-   @Override
-   public UserInfo getUser()
-   {
-      return userInfo;
-   }
+    /** @see org.exoplatform.ide.shell.shared.ShellConfiguration#getUserInfo() */
+    @Override
+    public UserInfo getUser() {
+        return userInfo;
+    }
 
-   /**
-    * @see org.exoplatform.ide.shell.shared.ShellConfiguration#setUserInfo(org.exoplatform.ide.shell.shared.UserInfo)
-    */
-   @Override
-   public void setUser(UserInfo userInfo)
-   {
-      this.userInfo = userInfo;
-   }
+    /** @see org.exoplatform.ide.shell.shared.ShellConfiguration#setUserInfo(org.exoplatform.ide.shell.shared.UserInfo) */
+    @Override
+    public void setUser(UserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
 
-   /**
-    * @see org.exoplatform.ide.shell.shared.ShellConfiguration#getDefaultEntrypoint()
-    */
-   @Override
-   public String getDefaultEntrypoint()
-   {
-      return entryPoint;
-   }
+    @Override
+    public String getVfsBaseUrl() {
+        return vfsBaseUrl;
+    }
 
-   /**
-    * @see org.exoplatform.ide.shell.shared.ShellConfiguration#setDefaultEntrypoint(java.lang.String)
-    */
-   @Override
-   public void setDefaultEntrypoint(String entryPoint)
-   {
-      this.entryPoint = entryPoint;
-   }
+    @Override
+    public void setVfsBaseUrl(String vfsBaseUrl) {
+        this.vfsBaseUrl = vfsBaseUrl;
+    }
+
 
 }

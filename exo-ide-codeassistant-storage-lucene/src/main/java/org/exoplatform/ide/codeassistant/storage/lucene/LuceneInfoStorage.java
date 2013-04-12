@@ -33,89 +33,72 @@ import java.io.IOException;
  * Container component responsible for extracting class information from jars
  * specified in configuration
  */
-public class LuceneInfoStorage
-{
+public class LuceneInfoStorage {
 
-   private static final Logger LOG = LoggerFactory.getLogger(LuceneInfoStorage.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LuceneInfoStorage.class);
 
-   private final Directory typeInfoIndexDirectory;
+    private final Directory typeInfoIndexDirectory;
 
-   private IndexReader typeInfoIndexReader;
+    private IndexReader typeInfoIndexReader;
 
-   private IndexSearcher typeInfoIndexSearcher;
+    private IndexSearcher typeInfoIndexSearcher;
 
-   /**
-    * Create file based lucene storage.
-    * 
-    * @throws IOException
-    */
-   public LuceneInfoStorage(String storagePath) throws IOException
-   {
-      this(NIOFSDirectory.open(new File(storagePath)));
-   }
+    /**
+     * Create file based lucene storage.
+     *
+     * @throws IOException
+     */
+    public LuceneInfoStorage(String storagePath) throws IOException {
+        this(NIOFSDirectory.open(new File(storagePath)));
+    }
 
-   /**
-    * Create lucene info storage on the given directory.
-    * 
-    * @throws IOException
-    */
-   public LuceneInfoStorage(Directory typeInfoIndexDirectory) throws IOException
-   {
-      this.typeInfoIndexDirectory = typeInfoIndexDirectory;
-   }
+    /**
+     * Create lucene info storage on the given directory.
+     *
+     * @throws IOException
+     */
+    public LuceneInfoStorage(Directory typeInfoIndexDirectory) throws IOException {
+        this.typeInfoIndexDirectory = typeInfoIndexDirectory;
+    }
 
-   public Directory getTypeInfoIndexDirectory() throws IOException
-   {
-      return typeInfoIndexDirectory;
-   }
+    public Directory getTypeInfoIndexDirectory() throws IOException {
+        return typeInfoIndexDirectory;
+    }
 
-   /**
-    * Close all open resources.
-    */
-   public void closeIndexes()
-   {
-      try
-      {
-         if (typeInfoIndexReader != null)
-         {
-            typeInfoIndexReader.close();
-         }
-         typeInfoIndexDirectory.close();
-      }
-      catch (IOException e)
-      {
-         LOG.error(e.getLocalizedMessage(), e);
-      }
-   }
+    /** Close all open resources. */
+    public void closeIndexes() {
+        try {
+            if (typeInfoIndexReader != null) {
+                typeInfoIndexReader.close();
+            }
+            typeInfoIndexDirectory.close();
+        } catch (IOException e) {
+            LOG.error(e.getLocalizedMessage(), e);
+        }
+    }
 
-   /**
-    * Reopen reader if where is some changes in index
-    * 
-    * @throws CorruptIndexException
-    * @throws IOException
-    */
-   private synchronized void reopenReaderWhenNeed() throws IOException
-   {
-      if (typeInfoIndexReader == null)
-      {
-         typeInfoIndexReader = IndexReader.open(typeInfoIndexDirectory, true);
-         typeInfoIndexSearcher = new IndexSearcher(typeInfoIndexReader);
-      }
-      else
-      {
-         IndexReader newReader = typeInfoIndexReader.reopen(true);
-         if (newReader != typeInfoIndexReader)
-         {
-            typeInfoIndexReader.close();
-            typeInfoIndexSearcher = new IndexSearcher(newReader);
-         }
-         typeInfoIndexReader = newReader;
-      }
-   }
+    /**
+     * Reopen reader if where is some changes in index
+     *
+     * @throws CorruptIndexException
+     * @throws IOException
+     */
+    private synchronized void reopenReaderWhenNeed() throws IOException {
+        if (typeInfoIndexReader == null) {
+            typeInfoIndexReader = IndexReader.open(typeInfoIndexDirectory, true);
+            typeInfoIndexSearcher = new IndexSearcher(typeInfoIndexReader);
+        } else {
+            IndexReader newReader = typeInfoIndexReader.reopen(true);
+            if (newReader != typeInfoIndexReader) {
+                typeInfoIndexReader.close();
+                typeInfoIndexSearcher = new IndexSearcher(newReader);
+            }
+            typeInfoIndexReader = newReader;
+        }
+    }
 
-   public IndexSearcher getTypeInfoIndexSearcher() throws IOException
-   {
-      reopenReaderWhenNeed();
-      return typeInfoIndexSearcher;
-   }
+    public IndexSearcher getTypeInfoIndexSearcher() throws IOException {
+        reopenReaderWhenNeed();
+        return typeInfoIndexSearcher;
+    }
 }

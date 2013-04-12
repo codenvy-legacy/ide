@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.operation.cutcopy;
 
-import java.util.List;
-
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -39,101 +37,90 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
+import java.util.List;
+
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
 @RolesAllowed({"developer"})
 public class CopyItemsCommand extends SimpleControl implements IDEControl, ItemsSelectedHandler, ViewActivatedHandler,
-   VfsChangedHandler
-{
+                                                               VfsChangedHandler {
 
-   public static final String ID = "Edit/Copy Item(s)";
+    public static final String ID = "Edit/Copy Item(s)";
 
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.copyItemsTitleControl();
+    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.copyItemsTitleControl();
 
-   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.copyItemsPromptControl();
+    private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.copyItemsPromptControl();
 
-   private VirtualFileSystemInfo vfsInfo;
+    private VirtualFileSystemInfo vfsInfo;
 
-   private boolean browserPanelSelected = false;
+    private boolean browserPanelSelected = false;
 
-   private List<Item> selectedItems;
+    private List<Item> selectedItems;
 
-   /**
-    * 
-    */
-   public CopyItemsCommand()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(IDEImageBundle.INSTANCE.copy(), IDEImageBundle.INSTANCE.copyDisabled());
-      setEvent(new CopyItemsEvent());
-      setGroupName(GroupNames.CUT_COPY);
-   }
+    /**
+     *
+     */
+    public CopyItemsCommand() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(IDEImageBundle.INSTANCE.copy(), IDEImageBundle.INSTANCE.copyDisabled());
+        setEvent(new CopyItemsEvent());
+        setGroupName(GroupNames.CUT_COPY);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(ViewActivatedEvent.TYPE, this);
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(ViewActivatedEvent.TYPE, this);
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      this.selectedItems = event.getSelectedItems();
-      updateState();
-   }
+    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     * .framework.navigation.event.ItemsSelectedEvent) */
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        this.selectedItems = event.getSelectedItems();
+        updateState();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent)
-    */
-   @Override
-   public void onViewActivated(ViewActivatedEvent event)
-   {
-      browserPanelSelected = event.getView() instanceof NavigatorDisplay || 
-               event.getView() instanceof ProjectExplorerDisplay ||
-               event.getView() instanceof PackageExplorerDisplay ;
-      updateState();
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework
+     * .ui.api.event.ViewActivatedEvent) */
+    @Override
+    public void onViewActivated(ViewActivatedEvent event) {
+        browserPanelSelected = event.getView() instanceof NavigatorDisplay ||
+                               event.getView() instanceof ProjectExplorerDisplay ||
+                               event.getView() instanceof PackageExplorerDisplay;
+        updateState();
+    }
 
-   protected void updateState()
-   {
-      setShowInContextMenu(browserPanelSelected);
+    protected void updateState() {
+        setShowInContextMenu(browserPanelSelected);
 
-      if (vfsInfo == null || selectedItems == null || selectedItems.size() != 1)
-      {
-         setEnabled(false);
-         return;
-      }
+        if (vfsInfo == null || selectedItems == null || selectedItems.size() != 1) {
+            setEnabled(false);
+            return;
+        }
 
-      if (selectedItems.get(0) instanceof ProjectModel
-         || selectedItems.get(0).getId().equals(vfsInfo.getRoot().getId()))
-      {
-         setEnabled(false);
-         setShowInContextMenu(false);
-         return;
-      }
+        if (selectedItems.get(0) instanceof ProjectModel
+            || selectedItems.get(0).getId().equals(vfsInfo.getRoot().getId())) {
+            setEnabled(false);
+            setShowInContextMenu(false);
+            return;
+        }
 
-      setEnabled(browserPanelSelected);
-   }
+        setEnabled(browserPanelSelected);
+    }
 
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      vfsInfo = event.getVfsInfo();
-      setVisible(vfsInfo != null);
-      updateState();
-   }
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        vfsInfo = event.getVfsInfo();
+        setVisible(vfsInfo != null);
+        updateState();
+    }
 }

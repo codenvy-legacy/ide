@@ -34,30 +34,29 @@ package org.exoplatform.ide.editor.shared.text;
  * {@link org.eclipse.jface.text.IDocumentPartitioningListenerExtension}.</li>
  * </ul>
  * </p>
- * 
+ *
  * @see org.eclipse.jface.text.IDocumentPartitioningListenerExtension
  * @see org.eclipse.jface.text.IDocumentPartitioningListenerExtension2
  * @see org.eclipse.jface.text.IDocument
  * @see org.eclipse.jface.text.IDocumentPartitioner
  */
-public interface IDocumentPartitioningListener
-{
+public interface IDocumentPartitioningListener {
 
-   /**
-    * The partitioning of the given document changed.
-    * <p>
-    * In version 2.0 this method has been replaces by
-    * {@link IDocumentPartitioningListenerExtension#documentPartitioningChanged(IDocument, IRegion)}.
-    * <p>
-    * In version 3.0 this method has been replaces by
-    * {@link IDocumentPartitioningListenerExtension2#documentPartitioningChanged(DocumentPartitioningChangedEvent)}
-    * <p>
-    * 
-    * @param document the document whose partitioning changed
-    * 
-    * @see IDocumentPartitioningListenerExtension#documentPartitioningChanged(IDocument, IRegion)
-    * @see IDocumentPartitioningListenerExtension2#documentPartitioningChanged(DocumentPartitioningChangedEvent)
-    * @see IDocument#addDocumentPartitioningListener(IDocumentPartitioningListener)
-    */
-   void documentPartitioningChanged(IDocument document);
+    /**
+     * The partitioning of the given document changed.
+     * <p/>
+     * In version 2.0 this method has been replaces by
+     * {@link IDocumentPartitioningListenerExtension#documentPartitioningChanged(IDocument, IRegion)}.
+     * <p/>
+     * In version 3.0 this method has been replaces by
+     * {@link IDocumentPartitioningListenerExtension2#documentPartitioningChanged(DocumentPartitioningChangedEvent)}
+     * <p/>
+     *
+     * @param document
+     *         the document whose partitioning changed
+     * @see IDocumentPartitioningListenerExtension#documentPartitioningChanged(IDocument, IRegion)
+     * @see IDocumentPartitioningListenerExtension2#documentPartitioningChanged(DocumentPartitioningChangedEvent)
+     * @see IDocument#addDocumentPartitioningListener(IDocumentPartitioningListener)
+     */
+    void documentPartitioningChanged(IDocument document);
 }

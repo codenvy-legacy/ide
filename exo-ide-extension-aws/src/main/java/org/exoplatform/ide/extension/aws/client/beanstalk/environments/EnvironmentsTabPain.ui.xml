@@ -19,52 +19,54 @@
 
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
-   xmlns:e="urn:import:org.exoplatform.ide.extension.aws.client.beanstalk.environments">
-   
-   <ui:with field='resource' type='org.exoplatform.ide.extension.aws.client.AWSClientBundle' />
-   <ui:with field='locale' type='org.exoplatform.ide.extension.aws.client.AWSLocalizationConstant' />
-   <ui:style>
-      .floatLeft {
-			float: left;
-			margin-left: 5px;
-			margin-top: 5px;
-		}
-   </ui:style>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
+             xmlns:e="urn:import:org.exoplatform.ide.extension.aws.client.beanstalk.environments">
 
-   <f:Border borderColor="transparent">
-      <f:layer>
-	      <g:FlowPanel width="100%" height="100%">
-	         <g:FlowPanel width="100%" height="32px">
-				<f:ImageButton ui:field="editConfigurationButton" width="150" height="22" text="{locale.viewConfigurationButton}"
-					addStyleNames="{style.floatLeft}" imageResource="{resource.environmentEdit}"
-					disabledImageResource="{resource.environmentEditDisabled}" title="{locale.editEnvironmentPrompt}">
-				</f:ImageButton>
-				<f:ImageButton ui:field="restartEnvironmentButton" width="150" height="22" text="{locale.restartButton}"
-					addStyleNames="{style.floatLeft}" imageResource="{resource.environmentRestart}"
-					disabledImageResource="{resource.environmentRestartDisabled}" title="{locale.restartEnvironmentPrompt}">
-				</f:ImageButton>
-				<f:ImageButton ui:field="rebuildEnvironmentButton" width="150" height="22" text="{locale.rebuildButton}"
-					addStyleNames="{style.floatLeft}" imageResource="{resource.environmentRebuild}"
-					disabledImageResource="{resource.environmentRebuildDisabled}" title="{locale.rebuildEnvironmentPrompt}">
-				</f:ImageButton>
-				<f:ImageButton ui:field="terminateEnvironmentButton" width="150" height="22" text="{locale.terminateButton}"
-					addStyleNames="{style.floatLeft}" imageResource="{resource.environmentTerminate}"
-					disabledImageResource="{resource.environmentTerminateDisabled}" title="{locale.terminateEnvironmentPrompt}">
-				</f:ImageButton>
-				<f:ImageButton ui:field="logsEnvironmentButton" width="150" height="22" text="{locale.logsButton}"
-					addStyleNames="{style.floatLeft}" imageResource="{resource.environmentLogs}"
-					disabledImageResource="{resource.environmentLogsDisabled}" title="{locale.logEnvironmentPrompt}">
-				</f:ImageButton>
-			 </g:FlowPanel>
-	         <f:Border height="90%">
-	            <f:layer>
-	               <g:ScrollPanel>
-	                  <e:EnvironmentsGrid width="100%" ui:field="environmentsGrid"></e:EnvironmentsGrid>
-	               </g:ScrollPanel>
-	            </f:layer>
-	         </f:Border>
-	      </g:FlowPanel>
-       </f:layer>
-   </f:Border>
+    <ui:with field='resource' type='org.exoplatform.ide.extension.aws.client.AWSClientBundle'/>
+    <ui:with field='locale' type='org.exoplatform.ide.extension.aws.client.AWSLocalizationConstant'/>
+    <ui:style>
+        .floatLeft {
+            float: left;
+            margin-left: 5px;
+            margin-top: 5px;
+        }
+    </ui:style>
+
+    <f:Border borderColor="transparent">
+        <f:layer>
+            <g:FlowPanel width="100%" height="100%">
+                <g:FlowPanel width="100%" height="32px">
+                    <f:ImageButton ui:field="editConfigurationButton" width="150" height="22" text="{locale.viewConfigurationButton}"
+                                   addStyleNames="{style.floatLeft}" imageResource="{resource.environmentEdit}"
+                                   disabledImageResource="{resource.environmentEditDisabled}" title="{locale.editEnvironmentPrompt}">
+                    </f:ImageButton>
+                    <f:ImageButton ui:field="restartEnvironmentButton" width="150" height="22" text="{locale.restartButton}"
+                                   addStyleNames="{style.floatLeft}" imageResource="{resource.environmentRestart}"
+                                   disabledImageResource="{resource.environmentRestartDisabled}" title="{locale.restartEnvironmentPrompt}">
+                    </f:ImageButton>
+                    <f:ImageButton ui:field="rebuildEnvironmentButton" width="150" height="22" text="{locale.rebuildButton}"
+                                   addStyleNames="{style.floatLeft}" imageResource="{resource.environmentRebuild}"
+                                   disabledImageResource="{resource.environmentRebuildDisabled}" title="{locale.rebuildEnvironmentPrompt}">
+                    </f:ImageButton>
+                    <f:ImageButton ui:field="terminateEnvironmentButton" width="150" height="22" text="{locale.terminateButton}"
+                                   addStyleNames="{style.floatLeft}" imageResource="{resource.environmentTerminate}"
+                                   disabledImageResource="{resource.environmentTerminateDisabled}"
+                                   title="{locale.terminateEnvironmentPrompt}">
+                    </f:ImageButton>
+                    <f:ImageButton ui:field="logsEnvironmentButton" width="150" height="22" text="{locale.logsButton}"
+                                   addStyleNames="{style.floatLeft}" imageResource="{resource.environmentLogs}"
+                                   disabledImageResource="{resource.environmentLogsDisabled}" title="{locale.logEnvironmentPrompt}">
+                    </f:ImageButton>
+                </g:FlowPanel>
+                <f:Border height="90%">
+                    <f:layer>
+                        <g:ScrollPanel>
+                            <e:EnvironmentsGrid width="100%" ui:field="environmentsGrid"></e:EnvironmentsGrid>
+                        </g:ScrollPanel>
+                    </f:layer>
+                </f:Border>
+            </g:FlowPanel>
+        </f:layer>
+    </f:Border>
 </ui:UiBinder>

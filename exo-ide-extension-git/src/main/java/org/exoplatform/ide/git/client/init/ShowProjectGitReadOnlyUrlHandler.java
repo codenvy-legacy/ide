@@ -27,14 +27,12 @@ import org.exoplatform.ide.git.client.remote.ShowRemotesEvent;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 18, 2011 10:24:53 AM anya $
- * 
  */
-public interface ShowProjectGitReadOnlyUrlHandler extends EventHandler
-{
-   /**
-    * Perform actions on show remote repositories.
-    * 
-    * @param event event
-    */
-   void onShowGitUrl(ShowProjectGitReadOnlyUrlEvent event);
+public interface ShowProjectGitReadOnlyUrlHandler extends EventHandler {
+    /**
+     * Perform actions on show remote repositories.
+     * 
+     * @param event event
+     */
+    void onShowGitUrl(ShowProjectGitReadOnlyUrlEvent event);
 }

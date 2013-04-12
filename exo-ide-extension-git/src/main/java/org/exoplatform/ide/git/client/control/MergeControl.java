@@ -28,17 +28,14 @@ import org.exoplatform.ide.git.client.merge.MergeEvent;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 20, 2011 12:31:07 PM anya $
- * 
  */
-public class MergeControl extends GitControl
-{
-   public MergeControl()
-   {
-      super(GitExtension.MESSAGES.mergeControlId());
-      setTitle(GitExtension.MESSAGES.mergeControlTitle());
-      setPrompt(GitExtension.MESSAGES.mergeControlPrompt());
-      setEvent(new MergeEvent());
-      setImages(GitClientBundle.INSTANCE.merge(), GitClientBundle.INSTANCE.mergeDisabled());
-      setGroupName(GroupNames.COMMANDS);
-   }
+public class MergeControl extends GitControl {
+    public MergeControl() {
+        super(GitExtension.MESSAGES.mergeControlId());
+        setTitle(GitExtension.MESSAGES.mergeControlTitle());
+        setPrompt(GitExtension.MESSAGES.mergeControlPrompt());
+        setEvent(new MergeEvent());
+        setImages(GitClientBundle.INSTANCE.merge(), GitClientBundle.INSTANCE.mergeDisabled());
+        setGroupName(GroupNames.COMMANDS);
+    }
 }

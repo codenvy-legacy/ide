@@ -19,59 +19,52 @@
 
 package org.exoplatform.ide.editor.client.api.event;
 
-import org.exoplatform.ide.editor.client.api.Editor;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.editor.client.api.Editor;
 
 /**
  * Fires just after {@link org.exoplatform.ide.editor.client.api.Editor} has been initialized (loaded and displayed).
- * 
+ * <p/>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public class EditorInitializedEvent extends GwtEvent<EditorInitializedHandler>
-{
+public class EditorInitializedEvent extends GwtEvent<EditorInitializedHandler> {
 
-   public static final GwtEvent.Type<EditorInitializedHandler> TYPE = new GwtEvent.Type<EditorInitializedHandler>();
+    public static final GwtEvent.Type<EditorInitializedHandler> TYPE = new GwtEvent.Type<EditorInitializedHandler>();
 
-   /**
-    * Editor instance.
-    */
-   private Editor editor;
+    /** Editor instance. */
+    private Editor editor;
 
-   /**
-    * Creates new instance of {@link EditorInitializedEvent}.
-    * 
-    * @param editor
-    */
-   public EditorInitializedEvent(Editor editor)
-   {
-      this.editor = editor;
-   }
+    /**
+     * Creates new instance of {@link EditorInitializedEvent}.
+     *
+     * @param editor
+     */
+    public EditorInitializedEvent(Editor editor) {
+        this.editor = editor;
+    }
 
-   /**
-    * Returns {@link Editor} instance.
-    * 
-    * @return
-    */
-   public Editor getEditor()
-   {
-      return editor;
-   }
+    /**
+     * Returns {@link Editor} instance.
+     *
+     * @return
+     */
+    public Editor getEditor() {
+        return editor;
+    }
 
-   @Override
-   protected void dispatch(EditorInitializedHandler handler)
-   {
-      handler.onEditorInitialized(this);
-   }
+    @Override
+    protected void dispatch(EditorInitializedHandler handler) {
+        handler.onEditorInitialized(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorInitializedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorInitializedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

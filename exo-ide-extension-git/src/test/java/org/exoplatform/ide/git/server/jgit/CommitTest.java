@@ -38,122 +38,101 @@ import java.io.FileOutputStream;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: CommitTest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
-public class CommitTest extends BaseTest
-{
-   public void testCommit() throws Exception
-   {
-      Repository repository = getDefaultRepository();
-      // Add file.
-      addFile(getDefaultRepository().getWorkTree(), "file1", "file1");
+public class CommitTest extends BaseTest {
+    public void testCommit() throws Exception {
+        Repository repository = getDefaultRepository();
+        // Add file.
+        addFile(getDefaultRepository().getWorkTree(), "file1", "file1");
 
-      Git git = new Git(getDefaultRepository());
-      git.add().addFilepattern(".").call();
+        Git git = new Git(getDefaultRepository());
+        git.add().addFilepattern(".").call();
 
-      CommitRequest request = new CommitRequest("add file1");
-      Revision revision = getDefaultConnection().commit(request);
+        CommitRequest request = new CommitRequest("add file1");
+        Revision revision = getDefaultConnection().commit(request);
 
-      RevCommit revCommit = git.log().call().iterator().next();
+        RevCommit revCommit = git.log().call().iterator().next();
 
-      assertEquals("add file1", revision.getMessage());
-      assertEquals(revCommit.getId().getName(), revision.getId());
+        assertEquals("add file1", revision.getMessage());
+        assertEquals(revCommit.getId().getName(), revision.getId());
 
-      String configName = repository.getConfig().getString("user", null, "name");
-      String configEmail = repository.getConfig().getString("user", null, "email");
+        String configName = repository.getConfig().getString("user", null, "name");
+        String configEmail = repository.getConfig().getString("user", null, "email");
 
-      if (configName != null)
-      {
-         assertEquals(configName, revision.getCommitter().getName());
-      }
-      else
-      {
-         assertEquals("andrey", revision.getCommitter().getName());
-      }
+        if (configName != null) {
+            assertEquals(configName, revision.getCommitter().getName());
+        } else {
+            assertEquals("andrey", revision.getCommitter().getName());
+        }
 
-      if (configEmail != null)
-      {
-         assertEquals(configEmail, revision.getCommitter().getEmail());
-      }
-      else
-      {
-         assertEquals("andrey@mail.com", revision.getCommitter().getEmail());
-      }
-   }
+        if (configEmail != null) {
+            assertEquals(configEmail, revision.getCommitter().getEmail());
+        } else {
+            assertEquals("andrey@mail.com", revision.getCommitter().getEmail());
+        }
+    }
 
-   public void testCommitAll() throws Exception
-   {
-      // Add file and commit.
-      Repository repository = getDefaultRepository();
-      File file = addFile(repository.getWorkTree(), "file2", "file2");
+    public void testCommitAll() throws Exception {
+        // Add file and commit.
+        Repository repository = getDefaultRepository();
+        File file = addFile(repository.getWorkTree(), "file2", "file2");
 
-      Git git = new Git(repository);
-      git.add().addFilepattern(".").call();
-      git.commit().setMessage("add file2").call();
+        Git git = new Git(repository);
+        git.add().addFilepattern(".").call();
+        git.commit().setMessage("add file2").call();
 
-      // Update file.
-      FileOutputStream fileStream = new FileOutputStream(file);
-      fileStream.write("updated".getBytes());
-      fileStream.close();
+        // Update file.
+        FileOutputStream fileStream = new FileOutputStream(file);
+        fileStream.write("updated".getBytes());
+        fileStream.close();
 
-      // Remove.
-      delete(new File(repository.getWorkTree(), "README.txt"));
+        // Remove.
+        delete(new File(repository.getWorkTree(), "README.txt"));
 
-      CommitRequest request = new CommitRequest("update file2", true);
-      Revision revision = getDefaultConnection().commit(request);
+        CommitRequest request = new CommitRequest("update file2", true, false);
+        Revision revision = getDefaultConnection().commit(request);
 
-      RevCommit revCommit = git.log().call().iterator().next();
+        RevCommit revCommit = git.log().call().iterator().next();
 
-      assertEquals("update file2", revision.getMessage());
-      assertEquals(revCommit.getId().getName(), revision.getId());
+        assertEquals("update file2", revision.getMessage());
+        assertEquals(revCommit.getId().getName(), revision.getId());
 
-      String configName = repository.getConfig().getString("user", null, "name");
-      String configEmail = repository.getConfig().getString("user", null, "email");
+        String configName = repository.getConfig().getString("user", null, "name");
+        String configEmail = repository.getConfig().getString("user", null, "email");
 
-      if (configName != null)
-      {
-         assertEquals(configName, revision.getCommitter().getName());
-      }
-      else
-      {
-         assertEquals("andrey", revision.getCommitter().getName());
-      }
+        if (configName != null) {
+            assertEquals(configName, revision.getCommitter().getName());
+        } else {
+            assertEquals("andrey", revision.getCommitter().getName());
+        }
 
-      if (configEmail != null)
-      {
-         assertEquals(configEmail, revision.getCommitter().getEmail());
-      }
-      else
-      {
-         assertEquals("andrey@mail.com", revision.getCommitter().getEmail());
-      }
+        if (configEmail != null) {
+            assertEquals(configEmail, revision.getCommitter().getEmail());
+        } else {
+            assertEquals("andrey@mail.com", revision.getCommitter().getEmail());
+        }
 
-      checkNoFilesInCache(repository, "README.txt");
+        checkNoFilesInCache(repository, "README.txt");
 
-      TreeWalk treeWalk = new TreeWalk(repository);
-      treeWalk.reset();
-      treeWalk.setRecursive(true);
-      try
-      {
-         ObjectId head = repository.resolve(Constants.HEAD);
+        TreeWalk treeWalk = new TreeWalk(repository);
+        treeWalk.reset();
+        treeWalk.setRecursive(true);
+        try {
+            ObjectId head = repository.resolve(Constants.HEAD);
 
-         RevWalk revWalk = new RevWalk(repository);
-         RevTree headTree;
-         try
-         {
-            headTree = revWalk.parseTree(head);
-         }
-         finally
-         {
-            revWalk.release();
-         }
-         treeWalk.addTree(headTree);
-         treeWalk.addTree(new FileTreeIterator(repository));
-         treeWalk.setFilter(TreeFilter.ANY_DIFF);
-         // Index and file system the same so changes added.
-         assertFalse(treeWalk.next());
-      }
-      finally
-      {
-         treeWalk.release();
-      }
-   }
+            RevWalk revWalk = new RevWalk(repository);
+            RevTree headTree;
+            try {
+                headTree = revWalk.parseTree(head);
+            } finally {
+                revWalk.release();
+            }
+            treeWalk.addTree(headTree);
+            treeWalk.addTree(new FileTreeIterator(repository));
+            treeWalk.setFilter(TreeFilter.ANY_DIFF);
+            // Index and file system the same so changes added.
+            assertFalse(treeWalk.next());
+        } finally {
+            treeWalk.release();
+        }
+    }
 }

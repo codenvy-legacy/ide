@@ -14,41 +14,36 @@ import com.codenvy.eclipse.core.runtime.Assert;
 import com.codenvy.eclipse.jdt.core.dom.IMethodBinding;
 import com.codenvy.eclipse.jdt.internal.corext.dom.Bindings;
 
-public class ParameterTypeVariable extends ConstraintVariable
-{
+public class ParameterTypeVariable extends ConstraintVariable {
 
-   private final IMethodBinding fMethodBinding;
+    private final IMethodBinding fMethodBinding;
 
-   private final int fParameterIndex;
+    private final int fParameterIndex;
 
-   public ParameterTypeVariable(IMethodBinding methodBinding, int parameterIndex)
-   {
-      super(methodBinding.getParameterTypes()[parameterIndex]);
-      Assert.isNotNull(methodBinding);
-      Assert.isTrue(0 <= parameterIndex);
-      Assert.isTrue(parameterIndex < methodBinding.getParameterTypes().length);
-      fMethodBinding = methodBinding;
-      fParameterIndex = parameterIndex;
-   }
+    public ParameterTypeVariable(IMethodBinding methodBinding, int parameterIndex) {
+        super(methodBinding.getParameterTypes()[parameterIndex]);
+        Assert.isNotNull(methodBinding);
+        Assert.isTrue(0 <= parameterIndex);
+        Assert.isTrue(parameterIndex < methodBinding.getParameterTypes().length);
+        fMethodBinding = methodBinding;
+        fParameterIndex = parameterIndex;
+    }
 
-   /* (non-Javadoc)
-    * @see java.lang.Object#toString()
-    */
-   @Override
-   public String toString()
-   {
-      return "[Parameter(" + fParameterIndex + "," + Bindings.asString(
-         fMethodBinding) + ")]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-   }
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "[Parameter(" + fParameterIndex + "," + Bindings.asString(
+                fMethodBinding) + ")]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    }
 
-   public IMethodBinding getMethodBinding()
-   {
-      return fMethodBinding;
-   }
+    public IMethodBinding getMethodBinding() {
+        return fMethodBinding;
+    }
 
-   public int getParameterIndex()
-   {
-      return fParameterIndex;
-   }
+    public int getParameterIndex() {
+        return fParameterIndex;
+    }
 
 }

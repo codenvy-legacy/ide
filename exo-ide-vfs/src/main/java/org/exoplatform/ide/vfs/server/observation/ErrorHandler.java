@@ -27,7 +27,6 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface ErrorHandler
-{
-   void onError(ChangeEvent event, Throwable error) throws VirtualFileSystemException;
+public interface ErrorHandler {
+    void onError(ChangeEvent event, Throwable error) throws VirtualFileSystemException;
 }

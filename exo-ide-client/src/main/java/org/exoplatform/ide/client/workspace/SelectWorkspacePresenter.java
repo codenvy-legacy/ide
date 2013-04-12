@@ -19,14 +19,11 @@
 package org.exoplatform.ide.client.workspace;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.RequestException;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -57,313 +54,245 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
 public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHandler, SelectWorkspaceHandler,
-   ViewClosedHandler, AllFilesClosedHandler, PreferencePerformer
-{
+                                                 ViewClosedHandler, AllFilesClosedHandler, PreferencePerformer {
 
-   public interface Display extends IsView
-   {
+    public interface Display extends IsView {
 
-      /*
-       * Returns Workspace list grid
-       */
-      ListGridItem<VirtualFileSystemInfo> getWorkspaceListGrid();
+        /*
+         * Returns Workspace list grid
+         */
+        ListGridItem<VirtualFileSystemInfo> getWorkspaceListGrid();
 
-      /*
-       * Returns Ok button
-       */
-      HasClickHandlers getOkButton();
+        /*
+         * Returns Ok button
+         */
+        HasClickHandlers getOkButton();
 
-      /**
-       * Enables or disables Ok button.
-       * 
-       * @param enabled is Ok button enabled
-       */
-      void setOkButtonEnabled(boolean enabled);
+        /**
+         * Enables or disables Ok button.
+         *
+         * @param enabled
+         *         is Ok button enabled
+         */
+        void setOkButtonEnabled(boolean enabled);
 
-      /**
-       * 
-       * Selects specified item in
-       */
-      void setSelectedItem(VirtualFileSystemInfo item);
+        /** Selects specified item in */
+        void setSelectedItem(VirtualFileSystemInfo item);
 
-   }
+    }
 
-   /**
-    * Instance of Display
-    */
-   private Display display;
+    /** Instance of Display */
+    private Display display;
 
-   /**
-    * Current Workspace, used by IDE
-    */
-   private String workingWorkspace;
+    /** Current Workspace, used by IDE */
+    private String workingWorkspace;
 
-   /**
-    * Selected Workspace in Workspace List Grid
-    */
-   private VirtualFileSystemInfo selectedWorkspace;
+    /** Selected Workspace in Workspace List Grid */
+    private VirtualFileSystemInfo selectedWorkspace;
 
-   /**
-    * Application Settings for retrieving current Workspace and storing selected Workspace
-    */
-   private ApplicationSettings applicationSettings;
+    /** Application Settings for retrieving current Workspace and storing selected Workspace */
+    private ApplicationSettings applicationSettings;
 
-   /**
-    * List of workspaces for displaying in Workspace List
-    */
-   private List<VirtualFileSystemInfo> workspaceList = new ArrayList<VirtualFileSystemInfo>();
+    /** List of workspaces for displaying in Workspace List */
+    private List<VirtualFileSystemInfo> workspaceList = new ArrayList<VirtualFileSystemInfo>();
 
-   public SelectWorkspacePresenter()
-   {
-      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      IDE.addHandler(SelectWorkspaceEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(AllFilesClosedEvent.TYPE, this);
-   }
+    public SelectWorkspacePresenter() {
+        IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+        IDE.addHandler(SelectWorkspaceEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(AllFilesClosedEvent.TYPE, this);
+    }
 
-   /**
-    * Handler of ApplicationSettingsReceived Event
-    */
-   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
-   {
-      applicationSettings = event.getApplicationSettings();
+    /** Handler of ApplicationSettingsReceived Event */
+    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event) {
+        applicationSettings = event.getApplicationSettings();
 
-      if (applicationSettings.getValueAsMap("lock-tokens") == null)
-      {
-         applicationSettings.setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
-      }
+        if (applicationSettings.getValueAsMap("lock-tokens") == null) {
+            applicationSettings.setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
+        }
 
-      workingWorkspace = applicationSettings.getValueAsString("entry-point");
-   }
+        workingWorkspace = applicationSettings.getValueAsString("entry-point");
+    }
 
-   /**
-    * Handler of selection of the workspace from the list of workspaces.
-    * 
-    * @see org.exoplatform.ide.client.workspace.event.SelectWorkspaceHandler#onSelectWorkspace(org.exoplatform.ide.client.workspace.event.SelectWorkspaceEvent)
-    */
-   public void onSelectWorkspace(SelectWorkspaceEvent event)
-   {
-      if (display != null)
-      {
-         return;
-      }
+    /**
+     * Handler of selection of the workspace from the list of workspaces.
+     *
+     * @see org.exoplatform.ide.client.workspace.event.SelectWorkspaceHandler#onSelectWorkspace(org.exoplatform.ide.client.workspace
+     * .event.SelectWorkspaceEvent)
+     */
+    public void onSelectWorkspace(SelectWorkspaceEvent event) {
+        if (display != null) {
+            return;
+        }
 
-      try
-      {
-         VirtualFileSystemFactory.getInstance().getAvailableFileSystems(
-            new AsyncRequestCallback<List<VirtualFileSystemInfo>>(new VFSListUnmarshaller(
-               new ArrayList<VirtualFileSystemInfo>()))
-            {
+        try {
+            VirtualFileSystemFactory.getInstance().getAvailableFileSystems(
+                    new AsyncRequestCallback<List<VirtualFileSystemInfo>>(new VFSListUnmarshaller(
+                            new ArrayList<VirtualFileSystemInfo>())) {
 
-               @Override
-               protected void onSuccess(List<VirtualFileSystemInfo> result)
-               {
-                  workspaceList = result;
+                        @Override
+                        protected void onSuccess(List<VirtualFileSystemInfo> result) {
+                            workspaceList = result;
 
-                  display = GWT.create(Display.class);
-                  IDE.getInstance().openView(display.asView());
-                  bindDisplay();
-                  updateVFSListGrid();
-               }
+                            display = GWT.create(Display.class);
+                            IDE.getInstance().openView(display.asView());
+                            bindDisplay();
+                            updateVFSListGrid();
+                        }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            IDE.fireEvent(new ExceptionThrownEvent(exception));
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   /**
-    * Binding Display instance after the Display implementation has been created.
-    */
-   public void bindDisplay()
-   {
-      display.getOkButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            changeEntryPoint();
-         }
-      });
+    /** Binding Display instance after the Display implementation has been created. */
+    public void bindDisplay() {
+        display.getOkButton().addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                changeEntryPoint();
+            }
+        });
 
-      display.getWorkspaceListGrid().addDoubleClickHandler(new DoubleClickHandler()
-      {
-         public void onDoubleClick(DoubleClickEvent event)
-         {
-            onVFSDoubleClicked();
-         }
-      });
+        display.getWorkspaceListGrid().addDoubleClickHandler(new DoubleClickHandler() {
+            public void onDoubleClick(DoubleClickEvent event) {
+                onVFSDoubleClicked();
+            }
+        });
 
-      display.getWorkspaceListGrid().addSelectionHandler(new SelectionHandler<VirtualFileSystemInfo>()
-      {
-         public void onSelection(SelectionEvent<VirtualFileSystemInfo> event)
-         {
-            onVFSSelected(event.getSelectedItem());
-         }
-      });
+        display.getWorkspaceListGrid().addSelectionHandler(new SelectionHandler<VirtualFileSystemInfo>() {
+            public void onSelection(SelectionEvent<VirtualFileSystemInfo> event) {
+                onVFSSelected(event.getSelectedItem());
+            }
+        });
 
-      display.setOkButtonEnabled(false);
-   }
+        display.setOkButtonEnabled(false);
+    }
 
-   /**
-    * Update Workspaces List Grid
-    */
-   private void updateVFSListGrid()
-   {
-      VirtualFileSystemInfo selectedWorkspace = null;
+    /** Update Workspaces List Grid */
+    private void updateVFSListGrid() {
+        VirtualFileSystemInfo selectedWorkspace = null;
 
-      List<VirtualFileSystemInfo> workspaces = new ArrayList<VirtualFileSystemInfo>();
-      for (int i = 0; i < workspaceList.size(); i++)
-      {
-         VirtualFileSystemInfo entryPoint = workspaceList.get(i);
-         workspaces.add(entryPoint);
-         if (entryPoint.getId().equals(workingWorkspace))
-         {
-            selectedWorkspace = entryPoint;
-         }
-      }
+        List<VirtualFileSystemInfo> workspaces = new ArrayList<VirtualFileSystemInfo>();
+        for (int i = 0; i < workspaceList.size(); i++) {
+            VirtualFileSystemInfo entryPoint = workspaceList.get(i);
+            workspaces.add(entryPoint);
+            if (entryPoint.getId().equals(workingWorkspace)) {
+                selectedWorkspace = entryPoint;
+            }
+        }
 
-      display.getWorkspaceListGrid().setValue(workspaces);
-      if (selectedWorkspace != null)
-      {
-         display.setSelectedItem(selectedWorkspace);
-      }
-   }
+        display.getWorkspaceListGrid().setValue(workspaces);
+        if (selectedWorkspace != null) {
+            display.setSelectedItem(selectedWorkspace);
+        }
+    }
 
-   /**
-    * Handler of single clicking on the Workspace List
-    * 
-    * @param selectedItem
-    */
-   protected void onVFSSelected(VirtualFileSystemInfo selectedItem)
-   {
-      selectedWorkspace = selectedItem;
+    /**
+     * Handler of single clicking on the Workspace List
+     *
+     * @param selectedItem
+     */
+    protected void onVFSSelected(VirtualFileSystemInfo selectedItem) {
+        selectedWorkspace = selectedItem;
 
-      if (selectedWorkspace == null)
-      {
-         display.setOkButtonEnabled(false);
-         return;
-      }
+        if (selectedWorkspace == null) {
+            display.setOkButtonEnabled(false);
+            return;
+        }
 
-      boolean currentVFSSelected = selectedWorkspace.getId().equals(workingWorkspace);
-      display.setOkButtonEnabled(!currentVFSSelected);
-   }
+        boolean currentVFSSelected = selectedWorkspace.getId().equals(workingWorkspace);
+        display.setOkButtonEnabled(!currentVFSSelected);
+    }
 
-   /**
-    * Handler of Double Clicking on the Workspace List
-    */
-   protected void onVFSDoubleClicked()
-   {
-      if (selectedWorkspace == null)
-      {
-         return;
-      }
-      if (selectedWorkspace.getId().equals(workingWorkspace))
-      {
-         return;
-      }
-      changeEntryPoint();
-   }
+    /** Handler of Double Clicking on the Workspace List */
+    protected void onVFSDoubleClicked() {
+        if (selectedWorkspace == null) {
+            return;
+        }
+        if (selectedWorkspace.getId().equals(workingWorkspace)) {
+            return;
+        }
+        changeEntryPoint();
+    }
 
-   /**
-    * Changing entry point. Here must be checking for opened files and asking user for saving them.
-    */
-   private void changeEntryPoint()
-   {
-      IDE.fireEvent(new CloseAllFilesEvent());
-   }
+    /** Changing entry point. Here must be checking for opened files and asking user for saving them. */
+    private void changeEntryPoint() {
+        IDE.fireEvent(new CloseAllFilesEvent());
+    }
 
-   @Override
-   public void onAllFilesClosed(AllFilesClosedEvent event)
-   {
-      if (display == null)
-      {
-         return;
-      }
+    @Override
+    public void onAllFilesClosed(AllFilesClosedEvent event) {
+        if (display == null) {
+            return;
+        }
 
-      storeCurrentWorkspaceToConfiguration();
-   }
+        storeCurrentWorkspaceToConfiguration();
+    }
 
-   /**
-    * Saving selected workspace to the configuration.
-    */
-   private void storeCurrentWorkspaceToConfiguration()
-   {
-      applicationSettings.setValue("entry-point", selectedWorkspace.getId(), Store.COOKIES);
-      SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
-      // Handle of ApplicationSettingsSaved Event and switch current workspace.
-      if (display != null)
-      {
-         workingWorkspace = selectedWorkspace.getId();
-         IDE.getInstance().closeView(display.asView().getId());
-         IDE.fireEvent(new SwitchVFSEvent(selectedWorkspace.getId()));
-      }
-   }
+    /** Saving selected workspace to the configuration. */
+    private void storeCurrentWorkspaceToConfiguration() {
+        applicationSettings.setValue("entry-point", selectedWorkspace.getId(), Store.COOKIES);
+        SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
+        // Handle of ApplicationSettingsSaved Event and switch current workspace.
+        if (display != null) {
+            workingWorkspace = selectedWorkspace.getId();
+            IDE.getInstance().closeView(display.asView().getId());
+            IDE.fireEvent(new SwitchVFSEvent(selectedWorkspace.getId()));
+        }
+    }
 
-   /**
-    * Handler of ViewClosed Event. Clear the display variable if closed view is implementation of the Display.
-    * 
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+    /**
+     * Handler of ViewClosed Event. Clear the display variable if closed view is implementation of the Display.
+     *
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent)
+     */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.preference.PreferencePerformer#getPreference()
-    */
-   @Override
-   public View getPreference()
-   {
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         bindDisplay();
-      }
+    /** @see org.exoplatform.ide.client.framework.preference.PreferencePerformer#getPreference() */
+    @Override
+    public View getPreference() {
+        if (display == null) {
+            display = GWT.create(Display.class);
+            bindDisplay();
+        }
 
-      try
-      {
-         VirtualFileSystemFactory.getInstance().getAvailableFileSystems(
-            new AsyncRequestCallback<List<VirtualFileSystemInfo>>(new VFSListUnmarshaller(
-               new ArrayList<VirtualFileSystemInfo>()))
-            {
+        try {
+            VirtualFileSystemFactory.getInstance().getAvailableFileSystems(
+                    new AsyncRequestCallback<List<VirtualFileSystemInfo>>(new VFSListUnmarshaller(
+                            new ArrayList<VirtualFileSystemInfo>())) {
 
-               @Override
-               protected void onSuccess(List<VirtualFileSystemInfo> result)
-               {
-                  workspaceList = result;
-                  updateVFSListGrid();
-               }
+                        @Override
+                        protected void onSuccess(List<VirtualFileSystemInfo> result) {
+                            workspaceList = result;
+                            updateVFSListGrid();
+                        }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            IDE.fireEvent(new ExceptionThrownEvent(exception));
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
 
-      return display.asView();
-   }
+        return display.asView();
+    }
 
 }

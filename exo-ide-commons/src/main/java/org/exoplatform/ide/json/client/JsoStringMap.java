@@ -20,13 +20,12 @@ import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /**
  * This is used to satisfy DTO casting requirements.
- *
+ * <p/>
  * On the client, if you have a reference to JsonStringMap, or JsoStringMap
  * (the JavaScriptObject backed impl), feel free to cross cast this to the more
  * robust {@link Jso}.
  */
-public final class JsoStringMap<T> extends JavaScriptObject implements JsonStringMap<T>
-{
+public final class JsoStringMap<T> extends JavaScriptObject implements JsonStringMap<T> {
 
   /*
    * GWT dev mode adds a __gwt_ObjectId property to all objects. We have to call
@@ -35,122 +34,107 @@ public final class JsoStringMap<T> extends JavaScriptObject implements JsonStrin
    * set by Chrome dev mode.
    */
 
-   /**
-    * Convenience factory method.
-    */
-   public static <T> JsoStringMap<T> create()
-   {
-      return Jso.create().cast();
-   }
+    /** Convenience factory method. */
+    public static <T> JsoStringMap<T> create() {
+        return Jso.create().cast();
+    }
 
-   protected JsoStringMap()
-   {
-   }
+    protected JsoStringMap() {
+    }
 
-   @Override
-   public native T get(String key) /*-{
-      return Object.prototype.hasOwnProperty.call(this, key) ? this[key] : undefined;
-   }-*/;
+    @Override
+    public native T get(String key) /*-{
+        return Object.prototype.hasOwnProperty.call(this, key) ? this[key] : undefined;
+    }-*/;
 
-   @Override
-   public native final JsoArray<String> getKeys() /*-{
-      keys = [];
-      for (key in this)
-      {
-         if (Object.prototype.hasOwnProperty.call(this, key))
-         {
-            keys.push(key);
-         }
-      }
-      return keys;
-   }-*/;
+    @Override
+    public native final JsoArray<String> getKeys() /*-{
+        keys = [];
+        for (key in this) {
+            if (Object.prototype.hasOwnProperty.call(this, key)) {
+                keys.push(key);
+            }
+        }
+        return keys;
+    }-*/;
 
-   @Override
-   public final native boolean isEmpty()/*-{
-      for (key in this)
-      {
-         if (Object.prototype.hasOwnProperty.call(this, key))
-         {
-            return false;
-         }
-      }
-      return true;
-   }-*/;
+    @Override
+    public final native boolean isEmpty()/*-{
+        for (key in this) {
+            if (Object.prototype.hasOwnProperty.call(this, key)) {
+                return false;
+            }
+        }
+        return true;
+    }-*/;
 
-   /**
-    * Method for iterating through the contents of a Map.
-    *
-    * <p>{@code T} is the expected type of the values returned from the map.
-    * <b>Caveat:</b> if you have a map of heterogeneous types, you need to think
-    * what value of T you specify here.
-    *
-    * @param callback The callback object that gets called on each iteration.
-    */
-   @Override
-   public native void iterate(IterationCallback<T> callback) /*-{
-      for (key in this)
-      {
-         if (Object.prototype.hasOwnProperty.call(this, key))
-         {
-            callback.
-               @org.exoplatform.ide.json.shared.JsonStringMap.IterationCallback::onIteration(Ljava/lang/String;Ljava/lang/Object;)
-               (key, this[key]);
-         }
-      }
-   }-*/;
+    /**
+     * Method for iterating through the contents of a Map.
+     * <p/>
+     * <p>{@code T} is the expected type of the values returned from the map.
+     * <b>Caveat:</b> if you have a map of heterogeneous types, you need to think
+     * what value of T you specify here.
+     *
+     * @param callback
+     *         The callback object that gets called on each iteration.
+     */
+    @Override
+    public native void iterate(IterationCallback<T> callback) /*-{
+        for (key in this) {
+            if (Object.prototype.hasOwnProperty.call(this, key)) {
+                callback.
+                    @org.exoplatform.ide.json.shared.JsonStringMap.IterationCallback::onIteration(Ljava/lang/String;Ljava/lang/Object;)
+                    (key, this[key]);
+            }
+        }
+    }-*/;
 
-   // TODO: We still have problem with "__proto__"
-   @Override
-   public native void put(String key, T value) /*-{
-      this[key] = value;
-   }-*/;
+    // TODO: We still have problem with "__proto__"
+    @Override
+    public native void put(String key, T value) /*-{
+        this[key] = value;
+    }-*/;
 
-   @Override
-   public void putAll(JsonStringMap<T> map)
-   {
-      map.iterate(new IterationCallback<T>()
-      {
-         @Override
-         public void onIteration(String key, T value)
-         {
-            put(key, value);
-         }
-      });
-   }
+    @Override
+    public void putAll(JsonStringMap<T> map) {
+        map.iterate(new IterationCallback<T>() {
+            @Override
+            public void onIteration(String key, T value) {
+                put(key, value);
+            }
+        });
+    }
 
-   @Override
-   public native T remove(String key) /*-{
-      if (!Object.prototype.hasOwnProperty.call(this, key))
-      {
-         return undefined;
-      }
-      var retVal = this[key];
-      delete this[key];
-      return retVal;
-   }-*/;
+    @Override
+    public native T remove(String key) /*-{
+        if (!Object.prototype.hasOwnProperty.call(this, key)) {
+            return undefined;
+        }
+        var retVal = this[key];
+        delete this[key];
+        return retVal;
+    }-*/;
 
-   @Override
-   public native boolean containsKey(String key) /*-{
-      return Object.prototype.hasOwnProperty.call(this, key);
-   }-*/;
+    @Override
+    public native boolean containsKey(String key) /*-{
+        return Object.prototype.hasOwnProperty.call(this, key);
+    }-*/;
 
-   /**
-    * Returns the size of the map (the number of keys).
-    *
-    * <p>NB: This method is currently O(N) because it iterates over all keys.
-    *
-    * @return the size of the map.
-    */
-   @Override
-   public final native int size() /*-{
-      size = 0;
-      for (key in this)
-      {
-         if (Object.prototype.hasOwnProperty.call(this, key))
-         {
-            size++;
-         }
-      }
-      return size;
-   }-*/;
+    /**
+     * Returns the size of the map (the number of keys).
+     * <p/>
+     * <p>NB: This method is currently O(N) because it iterates over all keys.
+     *
+     * @return the size of the map.
+     */
+    @Override
+    public final native int size() /*-{
+        size = 0;
+        for (key in this) {
+            if (Object.prototype.hasOwnProperty.call(this, key)) {
+                size++;
+            }
+        }
+        return size;
+    }-*/;
 }

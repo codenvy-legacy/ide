@@ -14,25 +14,20 @@ import com.codenvy.eclipse.jdt.core.dom.Expression;
 import com.codenvy.eclipse.jdt.core.dom.ParenthesizedExpression;
 import com.codenvy.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 
-class SimpleExpressionFragment extends SimpleFragment implements IExpressionFragment
-{
-   SimpleExpressionFragment(Expression node)
-   {
-      super(node);
-   }
+class SimpleExpressionFragment extends SimpleFragment implements IExpressionFragment {
+    SimpleExpressionFragment(Expression node) {
+        super(node);
+    }
 
-   public Expression getAssociatedExpression()
-   {
-      return (Expression)getAssociatedNode();
-   }
+    public Expression getAssociatedExpression() {
+        return (Expression)getAssociatedNode();
+    }
 
-   public Expression createCopyTarget(ASTRewrite rewrite, boolean removeSurroundingParenthesis)
-   {
-      Expression node = getAssociatedExpression();
-      if (removeSurroundingParenthesis && node instanceof ParenthesizedExpression)
-      {
-         node = ((ParenthesizedExpression)node).getExpression();
-      }
-      return (Expression)rewrite.createCopyTarget(node);
-   }
+    public Expression createCopyTarget(ASTRewrite rewrite, boolean removeSurroundingParenthesis) {
+        Expression node = getAssociatedExpression();
+        if (removeSurroundingParenthesis && node instanceof ParenthesizedExpression) {
+            node = ((ParenthesizedExpression)node).getExpression();
+        }
+        return (Expression)rewrite.createCopyTarget(node);
+    }
 }

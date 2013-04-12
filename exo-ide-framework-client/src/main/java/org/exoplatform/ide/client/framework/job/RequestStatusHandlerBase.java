@@ -24,34 +24,30 @@ import org.exoplatform.ide.client.framework.module.IDE;
 
 /**
  * Standard handling of errors for {@link RequestStatusHandler} interface
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Oct 31, 2011 evgen $
- * 
  */
-public abstract class RequestStatusHandlerBase implements RequestStatusHandler
-{
+public abstract class RequestStatusHandlerBase implements RequestStatusHandler {
 
-   protected String projectName;
+    protected String projectName;
 
-   /**
-    * @param projectName
-    */
-   public RequestStatusHandlerBase(String projectName)
-   {
-      super();
-      this.projectName = projectName;
-   }
+    /** @param projectName */
+    public RequestStatusHandlerBase(String projectName) {
+        super();
+        this.projectName = projectName;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestStatusHandler.RequestStatusHandler#requestError(java.lang.String, java.lang.Throwable)
-    */
-   @Override
-   public void requestError(String id, Throwable exception)
-   {
-      Job job = new Job(id, JobStatus.ERROR);
-      job.setError(exception);
-      IDE.fireEvent(new JobChangeEvent(job));
-   }
+    /**
+     * @see org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestStatusHandler.RequestStatusHandler#requestError(java
+     * .lang.String,
+     *      java.lang.Throwable)
+     */
+    @Override
+    public void requestError(String id, Throwable exception) {
+        Job job = new Job(id, JobStatus.ERROR);
+        job.setError(exception);
+        IDE.fireEvent(new JobChangeEvent(job));
+    }
 
 }

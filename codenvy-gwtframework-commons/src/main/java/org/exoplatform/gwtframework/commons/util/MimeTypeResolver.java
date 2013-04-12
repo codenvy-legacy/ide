@@ -19,113 +19,91 @@
  */
 package org.exoplatform.gwtframework.commons.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 
+import java.util.*;
+
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class MimeTypeResolver
-{
+public class MimeTypeResolver {
 
-   private static final String DEFAULT_MIMETYPE = "application/octet-stream";
+    private static final String DEFAULT_MIMETYPE = "application/octet-stream";
 
-   private static HashMap<String, List<String>> mimeTypes;
+    private static HashMap<String, List<String>> mimeTypes;
 
-   private static native JavaScriptObject getMimeTypesConfig() /*-{
-      return $wnd.mimeTypes;
-   }-*/;
+    private static native JavaScriptObject getMimeTypesConfig() /*-{
+        return $wnd.mimeTypes;
+    }-*/;
 
-   private static void loadMimeTypes()
-   {
-      mimeTypes = new HashMap<String, List<String>>();
-      try
-      {
-         JSONObject json = new JSONObject(getMimeTypesConfig());
+    private static void loadMimeTypes() {
+        mimeTypes = new HashMap<String, List<String>>();
+        try {
+            JSONObject json = new JSONObject(getMimeTypesConfig());
 
-         Iterator<String> iterator = json.keySet().iterator();
-         while (iterator.hasNext())
-         {
-            String key = iterator.next();
+            Iterator<String> iterator = json.keySet().iterator();
+            while (iterator.hasNext()) {
+                String key = iterator.next();
 
-            JSONValue value = json.get(key);
-            if (value.isArray() != null)
-            {
-               JSONArray array = value.isArray();
-               List<String> types = new ArrayList<String>();
-               for (int i = 0; i < array.size(); i++)
-               {
-                  String mimeType = array.get(i).isString().stringValue();
-                  types.add(mimeType);
-               }
-               mimeTypes.put(key, types);
+                JSONValue value = json.get(key);
+                if (value.isArray() != null) {
+                    JSONArray array = value.isArray();
+                    List<String> types = new ArrayList<String>();
+                    for (int i = 0; i < array.size(); i++) {
+                        String mimeType = array.get(i).isString().stringValue();
+                        types.add(mimeType);
+                    }
+                    mimeTypes.put(key, types);
 
+                } else if (value.isString() != null) {
+                    String mimeType = value.isString().stringValue();
+                    List<String> types = new ArrayList<String>();
+                    types.add(mimeType);
+                    mimeTypes.put(key, types);
+                }
             }
-            else if (value.isString() != null)
-            {
-               String mimeType = value.isString().stringValue();
-               List<String> types = new ArrayList<String>();
-               types.add(mimeType);
-               mimeTypes.put(key, types);
-            }
-         }
-      }
-      catch (Exception exc)
-      {
-         exc.printStackTrace();
-      }
-   }
+        } catch (Exception exc) {
+            exc.printStackTrace();
+        }
+    }
 
-   public static List<String> getMimeTypes(String fileExtension)
-   {
-      if (mimeTypes == null)
-      {
-         loadMimeTypes();
-      }
+    public static List<String> getMimeTypes(String fileExtension) {
+        if (mimeTypes == null) {
+            loadMimeTypes();
+        }
 
-      List<String> types = mimeTypes.get(fileExtension);
-      if (types == null)
-      {
-         types = new ArrayList<String>();
-         types.add(DEFAULT_MIMETYPE);
-      }
+        List<String> types = mimeTypes.get(fileExtension);
+        if (types == null) {
+            types = new ArrayList<String>();
+            types.add(DEFAULT_MIMETYPE);
+        }
 
-      return types;
-   }
-   
-   public static Set<String> getAllMimeTypes()
-   {
-      if (mimeTypes == null)
-      {
-         loadMimeTypes();
-      }
-      
-      Set<String> setTypes = new HashSet<String>();
-      
-      for(String key : mimeTypes.keySet())
-      {
-         for(String t: mimeTypes.get(key))
-         {
+        return types;
+    }
+
+    public static Set<String> getAllMimeTypes() {
+        if (mimeTypes == null) {
+            loadMimeTypes();
+        }
+
+        Set<String> setTypes = new HashSet<String>();
+
+        for (String key : mimeTypes.keySet()) {
+            for (String t : mimeTypes.get(key)) {
 //           types.add(t);
-            setTypes.add(t);
-         }
-      }
-     
-      return setTypes;
-      
-   }
+                setTypes.add(t);
+            }
+        }
+
+        return setTypes;
+
+    }
 
 }

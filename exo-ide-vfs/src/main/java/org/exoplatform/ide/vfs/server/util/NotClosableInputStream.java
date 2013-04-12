@@ -30,17 +30,14 @@ import java.io.InputStream;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public final class NotClosableInputStream extends FilterInputStream
-{
-   public NotClosableInputStream(InputStream delegate)
-   {
-      super(delegate);
-   }
+public final class NotClosableInputStream extends FilterInputStream {
+    public NotClosableInputStream(InputStream delegate) {
+        super(delegate);
+    }
 
-   /** @see java.io.InputStream#close() */
-   @Override
-   public void close() throws IOException
-   {
-   }
+    /** @see java.io.InputStream#close() */
+    @Override
+    public void close() throws IOException {
+    }
 }
 

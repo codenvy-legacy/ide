@@ -26,35 +26,29 @@ import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- *
  */
 @RolesAllowed({"developer"})
-public class InviteGoogleDevelopersControl extends SimpleControl implements IDEControl
-{
+public class InviteGoogleDevelopersControl extends SimpleControl implements IDEControl {
 
-   private static final String ID = "Share/Invite Developers...";
+    private static final String ID = "Share/Invite Developers...";
 
-   private static final String TITLE = "Invite Developers...";
+    private static final String TITLE = "Invite Developers...";
 
-   private static final String PROMPT = "Invite Developers...";
+    private static final String PROMPT = "Invite Developers...";
 
-   public InviteGoogleDevelopersControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(SamplesClientBundle.INSTANCE.invite(), SamplesClientBundle.INSTANCE.inviteDisable());
-      setEvent(new InviteGoogleDevelopersEvent());
-      setEnabled(true);
-      setVisible(true);
-   }
+    public InviteGoogleDevelopersControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(SamplesClientBundle.INSTANCE.invite(), SamplesClientBundle.INSTANCE.inviteDisable());
+        setEvent(new InviteGoogleDevelopersEvent());
+        setEnabled(true);
+        setVisible(true);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+    }
 
 }

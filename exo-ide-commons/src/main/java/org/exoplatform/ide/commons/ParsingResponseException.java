@@ -19,24 +19,22 @@
 package org.exoplatform.ide.commons;
 
 /**
+ * Base class for error that occurs when try to parse response from any resources we try to access.
+ *
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 @SuppressWarnings("serial")
-public class ParsingResponseException extends Exception
-{
-   public ParsingResponseException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+public class ParsingResponseException extends Exception {
+    public ParsingResponseException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-   public ParsingResponseException(String message)
-   {
-      super(message);
-   }
+    public ParsingResponseException(String message) {
+        super(message);
+    }
 
-   public ParsingResponseException(Throwable cause)
-   {
-      super(cause);
-   }
+    public ParsingResponseException(Throwable cause) {
+        super(cause);
+    }
 }

@@ -30,72 +30,57 @@ import org.exoplatform.ide.extension.openshift.client.login.LoginCanceledHandler
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 
 /**
- * 
+ * @param <T>
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: OpenShiftRESTfulRequestCallback.java Nov 30, 2012 4:40:25 PM azatsarynnyy $
- *
- * @param <T>
- * 
  * @see OpenShiftAsyncRequestCallback
  */
-public abstract class OpenShiftRESTfulRequestCallback<T> extends RequestCallback<T>
-{
+public abstract class OpenShiftRESTfulRequestCallback<T> extends RequestCallback<T> {
 
-   private LoggedInHandler loggedInHandler;
+    private LoggedInHandler loggedInHandler;
 
-   private LoginCanceledHandler loginCanceledHandler;
+    private LoginCanceledHandler loginCanceledHandler;
 
-   private String errorMessage;
+    private String errorMessage;
 
-   public OpenShiftRESTfulRequestCallback(Unmarshallable<T> unmarshaller)
-   {
-      super(unmarshaller);
-   }
+    public OpenShiftRESTfulRequestCallback(Unmarshallable<T> unmarshaller) {
+        super(unmarshaller);
+    }
 
-   public OpenShiftRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedInHandler,
-      LoginCanceledHandler loginCanceledHandler)
-   {
-      super(unmarshaller);
+    public OpenShiftRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedInHandler,
+                                           LoginCanceledHandler loginCanceledHandler) {
+        super(unmarshaller);
 
-      this.loggedInHandler = loggedInHandler;
-      this.loginCanceledHandler = loginCanceledHandler;
-   }
+        this.loggedInHandler = loggedInHandler;
+        this.loginCanceledHandler = loginCanceledHandler;
+    }
 
-   public OpenShiftRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedInHandler,
-      LoginCanceledHandler loginCanceledHandler, String errorMessage)
-   {
-      super(unmarshaller);
+    public OpenShiftRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedInHandler,
+                                           LoginCanceledHandler loginCanceledHandler, String errorMessage) {
+        super(unmarshaller);
 
-      this.loggedInHandler = loggedInHandler;
-      this.loginCanceledHandler = loginCanceledHandler;
-      this.errorMessage = errorMessage;
-   }
+        this.loggedInHandler = loggedInHandler;
+        this.loginCanceledHandler = loginCanceledHandler;
+        this.errorMessage = errorMessage;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.websocket.rest.RequestCallback#onFailure(java.lang.Throwable)
-    */
-   @Override
-   protected void onFailure(Throwable exception)
-   {
-      if (exception instanceof ServerException)
-      {
-         ServerException serverException = (ServerException)exception;
-         if (HTTPStatus.OK == serverException.getHTTPStatus()
-            && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
-         {
-            IDE.fireEvent(new LoginEvent(loggedInHandler, loginCanceledHandler));
-            return;
-         }
-      }
+    /** @see org.exoplatform.ide.client.framework.websocket.rest.RequestCallback#onFailure(java.lang.Throwable) */
+    @Override
+    protected void onFailure(Throwable exception) {
+        if (exception instanceof ServerException) {
+            ServerException serverException = (ServerException)exception;
+            if (HTTPStatus.OK == serverException.getHTTPStatus()
+                && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED))) {
+                IDE.fireEvent(new LoginEvent(loggedInHandler, loginCanceledHandler));
+                return;
+            }
+        }
 
-      if (errorMessage != null)
-      {
-         IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, errorMessage));
-      }
-      else
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(exception));
-      }
-   }
+        if (errorMessage != null) {
+            IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, errorMessage));
+        } else {
+            IDE.fireEvent(new ExceptionThrownEvent(exception));
+        }
+    }
 
 }

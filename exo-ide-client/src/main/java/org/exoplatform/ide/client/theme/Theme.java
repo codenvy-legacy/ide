@@ -21,49 +21,41 @@ package org.exoplatform.ide.client.theme;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class Theme
-{
+public class Theme {
 
-   private String name;
+    private String name;
 
-   private String mainFrameCss;
+    private String mainFrameCss;
 
-   private String codemirrorCss;
+    private String codemirrorCss;
 
-   private boolean active;
+    private boolean active;
 
-   public Theme(String name, String mainFrameCss, String codemirrorCss)
-   {
-      this.name = name;
-      this.mainFrameCss = mainFrameCss;
-      this.codemirrorCss = codemirrorCss;
-   }
+    public Theme(String name, String mainFrameCss, String codemirrorCss) {
+        this.name = name;
+        this.mainFrameCss = mainFrameCss;
+        this.codemirrorCss = codemirrorCss;
+    }
 
-   public String getName()
-   {
-      return name;
-   }
+    public String getName() {
+        return name;
+    }
 
-   public String getMainFrameCss()
-   {
-      return mainFrameCss;
-   }
+    public String getMainFrameCss() {
+        return mainFrameCss;
+    }
 
-   public String getCodemirrorCss()
-   {
-      return codemirrorCss;
-   }
+    public String getCodemirrorCss() {
+        return codemirrorCss;
+    }
 
-   public boolean isActive()
-   {
-      return active;
-   }
+    public boolean isActive() {
+        return active;
+    }
 
-   public void setActive(boolean active)
-   {
-      this.active = active;
-   }
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
 }

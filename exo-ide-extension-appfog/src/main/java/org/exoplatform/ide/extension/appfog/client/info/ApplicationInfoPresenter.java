@@ -29,7 +29,6 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -39,7 +38,6 @@ import org.exoplatform.ide.extension.appfog.client.AppfogExtension;
 import org.exoplatform.ide.extension.appfog.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.appfog.shared.AppfogApplication;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 /**
  * Presenter for showing application info.
@@ -47,129 +45,127 @@ import org.exoplatform.ide.vfs.client.model.ItemContext;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class ApplicationInfoPresenter extends GitPresenter implements ApplicationInfoHandler, ViewClosedHandler
-{
+public class ApplicationInfoPresenter extends GitPresenter implements ApplicationInfoHandler, ViewClosedHandler {
 
-   interface Display extends IsView
-   {
-      HasClickHandlers getOkButton();
+    interface Display extends IsView {
+        HasClickHandlers getOkButton();
 
-      ListGridItem<String> getApplicationUrisGrid();
+        ListGridItem<String> getApplicationUrisGrid();
 
-      ListGridItem<String> getApplicationServicesGrid();
+        ListGridItem<String> getApplicationServicesGrid();
 
-      ListGridItem<String> getApplicationEnvironmentsGrid();
+        ListGridItem<String> getApplicationEnvironmentsGrid();
 
-      void setName(String text);
+        void setName(String text);
 
-      void setState(String text);
+        void setState(String text);
 
-      void setInstances(String text);
+        void setInstances(String text);
 
-      void setVersion(String text);
+        void setVersion(String text);
 
-      void setDisk(String text);
+        void setDisk(String text);
 
-      void setMemory(String text);
+        void setMemory(String text);
 
-      void setStack(String text);
+        void setStack(String text);
 
-      void setModel(String text);
-   }
+        void setModel(String text);
+    }
 
-   private Display display;
+    private Display display;
 
-   public ApplicationInfoPresenter()
-   {
-      IDE.addHandler(ApplicationInfoEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    public ApplicationInfoPresenter() {
+        IDE.addHandler(ApplicationInfoEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   /**
-    * Bind presenter with display.
-    */
-   public void bindDisplay()
-   {
-      display.getOkButton().addClickHandler(new ClickHandler()
-      {
+    /** Bind presenter with display. */
+    public void bindDisplay() {
+        display.getOkButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-   }
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
+    }
 
-   @Override
-   public void onShowApplicationInfo(ApplicationInfoEvent event)
-   {
-      if (makeSelectionCheck())
-      {
-         //showApplicationInfo(((ItemContext)selectedItems.get(0)).getProject().getId());
-         showApplicationInfo(getSelectedProject().getId());
-      }
-   }
+    @Override
+    public void onShowApplicationInfo(ApplicationInfoEvent event) {
+        if (makeSelectionCheck()) {
+            //showApplicationInfo(((ItemContext)selectedItems.get(0)).getProject().getId());
+            showApplicationInfo(getSelectedProject().getId());
+        }
+    }
 
-   private void showApplicationInfo(final String projectId)
-   {
-      try
-      {
-         AutoBean<AppfogApplication> appfogApplication =
-            AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
+    private void showApplicationInfo(final String projectId) {
+        try {
+            AutoBean<AppfogApplication> appfogApplication =
+                    AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
 
-         AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
-            new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
+            AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
+                    new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
 
-         AppfogClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
-            new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, new LoggedInHandler()
-            {
-               @Override
-               public void onLoggedIn()
-               {
-                  showApplicationInfo(projectId);
-               }
-            }, null)
-            {
-               @Override
-               protected void onSuccess(AppfogApplication result)
-               {
-                  if (display == null)
-                  {
-                     display = GWT.create(Display.class);
-                     bindDisplay();
-                     display.setName(result.getName());
-                     display.setState(result.getState());
-                     display.setInstances(String.valueOf(result.getInstances()));
-                     display.setVersion(result.getVersion());
-                     display.setDisk(String.valueOf(result.getResources().getDisk()));
-                     display.setMemory(String.valueOf(result.getResources().getMemory()) + "MB");
-                     display.setModel(String.valueOf(result.getStaging().getModel()));
-                     display.setStack(String.valueOf(result.getStaging().getStack()));
-                     display.getApplicationUrisGrid().setValue(result.getUris());
-                     display.getApplicationServicesGrid().setValue(result.getServices());
-                     display.getApplicationEnvironmentsGrid().setValue(result.getEnv());
-                     IDE.getInstance().openView(display.asView());
-                  }
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+            AppfogClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
+                                                                 new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller,
+                                                                                                                   new LoggedInHandler() {
+                                                                                                                       @Override
+                                                                                                                       public void
+                                                                                                                       onLoggedIn() {
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+
+
+
+
+
+
+
+
+
+                                                                                                                           showApplicationInfo(
+                                                                                                                                   projectId);
+                                                                                                                       }
+                                                                                                                   }, null) {
+                                                                     @Override
+                                                                     protected void onSuccess(AppfogApplication result) {
+                                                                         if (display == null) {
+                                                                             display = GWT.create(Display.class);
+                                                                             bindDisplay();
+                                                                             display.setName(result.getName());
+                                                                             display.setState(result.getState());
+                                                                             display.setInstances(String.valueOf(result.getInstances()));
+                                                                             display.setVersion(result.getVersion());
+                                                                             display.setDisk(
+                                                                                     String.valueOf(result.getResources().getDisk()));
+                                                                             display.setMemory(
+                                                                                     String.valueOf(result.getResources().getMemory()) +
+                                                                                     "MB");
+                                                                             display.setModel(
+                                                                                     String.valueOf(result.getStaging().getModel()));
+                                                                             display.setStack(
+                                                                                     String.valueOf(result.getStaging().getStack()));
+                                                                             display.getApplicationUrisGrid().setValue(result.getUris());
+                                                                             display.getApplicationServicesGrid()
+                                                                                    .setValue(result.getServices());
+                                                                             display.getApplicationEnvironmentsGrid()
+                                                                                    .setValue(result.getEnv());
+                                                                             IDE.getInstance().openView(display.asView());
+                                                                         }
+                                                                     }
+                                                                 });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
 }

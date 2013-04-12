@@ -22,22 +22,22 @@
 
 <module>
 
-      <!-- Inherit the core Web Toolkit stuff.                        -->
-      <inherits name='com.google.gwt.user.User'/>  
-      <inherits name="com.google.gwt.http.HTTP"/>      
-      <inherits name='com.google.gwt.user.Debug'/>
-      <inherits name='com.google.gwt.xml.XML'/> 
-      <inherits name='com.google.gwt.junit.JUnit'/> 	
-      
-      <inherits name='com.google.web.bindery.autobean.AutoBean'/>
-      <!--  inherit css based theme -->
-      <inherits name='com.google.gwt.user.theme.standard.Standard'/>
-      
-      <!-- Specify the app entry point class.                         -->
-      <entry-point class='org.exoplatform.gwtframework.commons.client.Commons'/>      
-      
-      <source path="rest" />
-      <source path="wadl" />
-       <source path="xml" />
-      
+    <!-- Inherit the core Web Toolkit stuff.                        -->
+    <inherits name='com.google.gwt.user.User'/>
+    <inherits name="com.google.gwt.http.HTTP"/>
+    <inherits name='com.google.gwt.user.Debug'/>
+    <inherits name='com.google.gwt.xml.XML'/>
+    <inherits name='com.google.gwt.junit.JUnit'/>
+
+    <inherits name='com.google.web.bindery.autobean.AutoBean'/>
+    <!--  inherit css based theme -->
+    <inherits name='com.google.gwt.user.theme.standard.Standard'/>
+
+    <!-- Specify the app entry point class.                         -->
+    <entry-point class='org.exoplatform.gwtframework.commons.client.Commons'/>
+
+    <source path="rest"/>
+    <source path="wadl"/>
+    <source path="xml"/>
+
 </module>

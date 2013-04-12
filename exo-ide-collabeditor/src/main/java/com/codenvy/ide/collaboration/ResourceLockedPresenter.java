@@ -41,122 +41,100 @@ import org.exoplatform.ide.json.shared.JsonArray;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class ResourceLockedPresenter implements ActionDelegate, ParticipantsListener
-{
+public class ResourceLockedPresenter implements ActionDelegate, ParticipantsListener {
 
-   @DefaultLocale("en")
-   public interface ResourceLockedMessages extends Messages
-   {
-      @DefaultMessage("This file is opened by {0} users.")
-      @AlternateMessage({"one", "This file is opened by other user."})
-      String file(@PluralCount int users);
+    @DefaultLocale("en")
+    public interface ResourceLockedMessages extends Messages {
+        @DefaultMessage("This file is opened by {0} users.")
+        @AlternateMessage({"one", "This file is opened by other user."})
+        String file(@PluralCount int users);
 
-      @DefaultMessage("This folder contains file(s) opened by {0} users.")
-      @AlternateMessage({"one", "This folder contains file(s) opened by other user."})
-      String folder(@PluralCount int size);
-   }
+        @DefaultMessage("This folder contains file(s) opened by {0} users.")
+        @AlternateMessage({"one", "This folder contains file(s) opened by other user."})
+        String folder(@PluralCount int size);
+    }
 
 
-   private static final ResourceLockedMessages MESSAGES = GWT.create(ResourceLockedMessages.class);
+    private static final ResourceLockedMessages MESSAGES = GWT.create(ResourceLockedMessages.class);
 
-   private ResourceLockedView view;
+    private ResourceLockedView view;
 
-   private CollaborationManager manager;
+    private CollaborationManager manager;
 
-   private String path;
+    private String path;
 
-   private boolean file;
+    private boolean file;
 
-   private String targetPaht;
+    private String targetPaht;
 
-   private Operation operation;
+    private Operation operation;
 
-   public ResourceLockedPresenter(SafeHtml message, CollaborationManager manager, String path, boolean isFile,
-      String targetPaht, Operation operation)
-   {
-      this.manager = manager;
-      this.path = path;
-      file = isFile;
-      this.targetPaht = targetPaht;
-      this.operation = operation;
-      view = GWT.create(ResourceLockedView.class);
-      view.setDelegate(this);
-      IDE.getInstance().openView(view);
-      manager.getParticipantsListenerManager().add(this);
+    public ResourceLockedPresenter(SafeHtml message, CollaborationManager manager, String path, boolean isFile,
+                                   String targetPaht, Operation operation) {
+        this.manager = manager;
+        this.path = path;
+        file = isFile;
+        this.targetPaht = targetPaht;
+        this.operation = operation;
+        view = GWT.create(ResourceLockedView.class);
+        view.setDelegate(this);
+        IDE.getInstance().openView(view);
+        manager.getParticipantsListenerManager().add(this);
 
-      view.setMessageText(message);
-      updateUserList(path);
-   }
+        view.setMessageText(message);
+        updateUserList(path);
+    }
 
-   private void updateUserList(String path)
-   {
-      JsonArray<ParticipantUserDetails> participants = manager.getParticipantsForFile(path);
-      if (participants == null)
-      {
-         Dialogs.getInstance().showInfo("All users close file, now you may perform operation.");
-         onClose();
-         return;
-      }
+    private void updateUserList(String path) {
+        JsonArray<ParticipantUserDetails> participants = manager.getParticipantsForFile(path);
+        if (participants == null) {
+            Dialogs.getInstance().showInfo("All users close file, now you may perform operation.");
+            onClose();
+            return;
+        }
 
-      SafeHtmlBuilder builder = new SafeHtmlBuilder();
-      if (file)
-      {
-         builder.appendHtmlConstant(MESSAGES.file(participants.size()));
-      }
-      else
-      {
-         builder.appendHtmlConstant(MESSAGES.folder(participants.size()));
-      }
-      view.setUserList(builder.toSafeHtml());
-   }
+        SafeHtmlBuilder builder = new SafeHtmlBuilder();
+        if (file) {
+            builder.appendHtmlConstant(MESSAGES.file(participants.size()));
+        } else {
+            builder.appendHtmlConstant(MESSAGES.folder(participants.size()));
+        }
+        view.setUserList(builder.toSafeHtml());
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onClose()
-   {
-      IDE.getInstance().closeView(view.getId());
-      manager.getParticipantsListenerManager().remove(this);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void onClose() {
+        IDE.getInstance().closeView(view.getId());
+        manager.getParticipantsListenerManager().remove(this);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onNotify()
-   {
-      FileOperationNotificationImpl notification = FileOperationNotificationImpl.make();
-      notification.setFilePath(path);
-      notification.setOperation(operation);
-      notification.setTarget(targetPaht);
-      notification.setUserId(BootstrapSession.getBootstrapSession().getActiveClientId());
-      notification.setEditSessionId(manager.getEditSessionId(path));
-      CollabEditorExtension.get().getContext().getFrontendApi().FILE_OPERATION_NOTIFY.send(notification);
-      view.setNotifyButtonEnabled(false);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void onNotify() {
+        FileOperationNotificationImpl notification = FileOperationNotificationImpl.make();
+        notification.setFilePath(path);
+        notification.setOperation(operation);
+        notification.setTarget(targetPaht);
+        notification.setUserId(BootstrapSession.getBootstrapSession().getActiveClientId());
+        notification.setEditSessionId(manager.getEditSessionId(path));
+        CollabEditorExtension.get().getContext().getFrontendApi().FILE_OPERATION_NOTIFY.send(notification);
+        view.setNotifyButtonEnabled(false);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void userOpenFile(String path, UserDetails user)
-   {
-      if (path.equals(this.path))
-      {
-         updateUserList(path);
-      }
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void userOpenFile(String path, UserDetails user) {
+        if (path.equals(this.path)) {
+            updateUserList(path);
+        }
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void userCloseFile(String path, UserDetails user)
-   {
-      if (path.equals(this.path))
-      {
-         updateUserList(path);
-      }
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void userCloseFile(String path, UserDetails user) {
+        if (path.equals(this.path)) {
+            updateUserList(path);
+        }
+    }
 }

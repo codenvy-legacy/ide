@@ -22,33 +22,33 @@ import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * POJO that holds parser state and token array.
- *
+ * <p/>
  * <p>This object represents line parsing results:
  * array of tokens produced by parser and
  * parser state when parsing is finished.
  *
- * @param <T> actual {@link State} type.
- *
+ * @param <T>
+ *         actual {@link State} type.
  */
 public class ParseResult<T extends State> {
 
-  private final JsonArray<Token> tokens;
+    private final JsonArray<Token> tokens;
 
-  private final T state;
+    private final T state;
 
-  @VisibleForTesting
-  public ParseResult(JsonArray<Token> tokens, T state) {
-    Preconditions.checkNotNull(tokens, "tokens");
-    Preconditions.checkNotNull(state, "state");
-    this.tokens = tokens;
-    this.state = state;
-  }
+    @VisibleForTesting
+    public ParseResult(JsonArray<Token> tokens, T state) {
+        Preconditions.checkNotNull(tokens, "tokens");
+        Preconditions.checkNotNull(state, "state");
+        this.tokens = tokens;
+        this.state = state;
+    }
 
-  public JsonArray<Token> getTokens() {
-    return tokens;
-  }
+    public JsonArray<Token> getTokens() {
+        return tokens;
+    }
 
-  public T getState() {
-    return state;
-  }
+    public T getState() {
+        return state;
+    }
 }

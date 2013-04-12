@@ -33,131 +33,131 @@ import com.codenvy.eclipse.core.runtime.QualifiedName;
  * @see IResourceProxyVisitor
  * @since 2.1
  */
-public interface IResourceProxy
-{
-   /**
-    * Returns the modification stamp of the resource being visited.
-    *
-    * @return the modification stamp, or <code>NULL_STAMP</code> if the
-    *         resource either does not exist or exists as a closed project
-    * @see IResource#getModificationStamp()
-    */
-   public long getModificationStamp();
+public interface IResourceProxy {
+    /**
+     * Returns the modification stamp of the resource being visited.
+     *
+     * @return the modification stamp, or <code>NULL_STAMP</code> if the
+     *         resource either does not exist or exists as a closed project
+     * @see IResource#getModificationStamp()
+     */
+    public long getModificationStamp();
 
-   /**
-    * Returns whether the resource being visited is accessible.
-    *
-    * @return <code>true</code> if the resource is accessible, and
-    *         <code>false</code> otherwise
-    * @see IResource#isAccessible()
-    */
-   public boolean isAccessible();
+    /**
+     * Returns whether the resource being visited is accessible.
+     *
+     * @return <code>true</code> if the resource is accessible, and
+     *         <code>false</code> otherwise
+     * @see IResource#isAccessible()
+     */
+    public boolean isAccessible();
 
-   /**
-    * Returns whether the resource being visited is derived.
-    *
-    * @return <code>true</code> if the resource is marked as derived, and
-    *         <code>false</code> otherwise
-    * @see IResource#isDerived()
-    */
-   public boolean isDerived();
+    /**
+     * Returns whether the resource being visited is derived.
+     *
+     * @return <code>true</code> if the resource is marked as derived, and
+     *         <code>false</code> otherwise
+     * @see IResource#isDerived()
+     */
+    public boolean isDerived();
 
-   /**
-    * Returns whether the resource being visited is a linked resource.
-    *
-    * @return <code>true</code> if the resource is linked, and
-    *         <code>false</code> otherwise
-    * @see IResource#isLinked()
-    */
-   public boolean isLinked();
+    /**
+     * Returns whether the resource being visited is a linked resource.
+     *
+     * @return <code>true</code> if the resource is linked, and
+     *         <code>false</code> otherwise
+     * @see IResource#isLinked()
+     */
+    public boolean isLinked();
 
-   /**
-    * Returns whether the resource being visited is a phantom resource.
-    *
-    * @return <code>true</code> if the resource is a phantom resource, and
-    *         <code>false</code> otherwise
-    * @see IResource#isPhantom()
-    */
-   public boolean isPhantom();
+    /**
+     * Returns whether the resource being visited is a phantom resource.
+     *
+     * @return <code>true</code> if the resource is a phantom resource, and
+     *         <code>false</code> otherwise
+     * @see IResource#isPhantom()
+     */
+    public boolean isPhantom();
 
-   /**
-    * Returns whether the resource being visited is a hidden resource.
-    *
-    * @return <code>true</code> if the resource is a hidden resource, and
-    *         <code>false</code> otherwise
-    * @see IResource#isHidden()
-    * @since 3.4
-    */
-   public boolean isHidden();
+    /**
+     * Returns whether the resource being visited is a hidden resource.
+     *
+     * @return <code>true</code> if the resource is a hidden resource, and
+     *         <code>false</code> otherwise
+     * @see IResource#isHidden()
+     * @since 3.4
+     */
+    public boolean isHidden();
 
-   /**
-    * Returns whether the resource being visited is a team private member.
-    *
-    * @return <code>true</code> if the resource is a team private member, and
-    *         <code>false</code> otherwise
-    * @see IResource#isTeamPrivateMember()
-    */
-   public boolean isTeamPrivateMember();
+    /**
+     * Returns whether the resource being visited is a team private member.
+     *
+     * @return <code>true</code> if the resource is a team private member, and
+     *         <code>false</code> otherwise
+     * @see IResource#isTeamPrivateMember()
+     */
+    public boolean isTeamPrivateMember();
 
-   /**
-    * Returns the simple name of the resource being visited.
-    *
-    * @return the name of the resource
-    * @see IResource#getName()
-    */
-   public String getName();
+    /**
+     * Returns the simple name of the resource being visited.
+     *
+     * @return the name of the resource
+     * @see IResource#getName()
+     */
+    public String getName();
 
-   /**
-    * Returns the value of the session property of the resource being
-    * visited, identified by the given key.  Returns <code>null</code> if this
-    * resource has no such property.
-    * <p>
-    * Note that this method can return an out of date property value, or a
-    * value that no longer exists, if session properties are being modified
-    * concurrently with the resource visit.
-    * </p>
-    *
-    * @param key the qualified name of the property
-    * @return the string value of the session property,
-    *         or <code>null</code> if the resource has no such property
-    * @see IResource#getSessionProperty(QualifiedName)
-    */
-   public Object getSessionProperty(QualifiedName key);
+    /**
+     * Returns the value of the session property of the resource being
+     * visited, identified by the given key.  Returns <code>null</code> if this
+     * resource has no such property.
+     * <p>
+     * Note that this method can return an out of date property value, or a
+     * value that no longer exists, if session properties are being modified
+     * concurrently with the resource visit.
+     * </p>
+     *
+     * @param key
+     *         the qualified name of the property
+     * @return the string value of the session property,
+     *         or <code>null</code> if the resource has no such property
+     * @see IResource#getSessionProperty(QualifiedName)
+     */
+    public Object getSessionProperty(QualifiedName key);
 
-   /**
-    * Returns the type of the resource being visited.
-    *
-    * @return the resource type
-    * @see IResource#getType()
-    */
-   public int getType();
+    /**
+     * Returns the type of the resource being visited.
+     *
+     * @return the resource type
+     * @see IResource#getType()
+     */
+    public int getType();
 
-   /**
-    * Returns the full workspace path of the resource being visited.
-    * <p>
-    * Note that this is not a &quot;free&quot; proxy operation.  This method
-    * will generally cause a path object to be created.  For an optimal
-    * visitor, only call this method when absolutely necessary.  Note that the
-    * simple resource name can be obtained from the proxy with no cost.
-    * </p>
-    *
-    * @return the full path of the resource
-    * @see IResource#getFullPath()
-    */
-   public IPath requestFullPath();
+    /**
+     * Returns the full workspace path of the resource being visited.
+     * <p>
+     * Note that this is not a &quot;free&quot; proxy operation.  This method
+     * will generally cause a path object to be created.  For an optimal
+     * visitor, only call this method when absolutely necessary.  Note that the
+     * simple resource name can be obtained from the proxy with no cost.
+     * </p>
+     *
+     * @return the full path of the resource
+     * @see IResource#getFullPath()
+     */
+    public IPath requestFullPath();
 
-   /**
-    * Returns the handle of the resource being visited.
-    * <p>
-    * Note that this is not a &quot;free&quot; proxy operation.  This method will
-    * generally cause both a path object and a resource object to be created.
-    * For an optimal visitor, only call this method when absolutely necessary.
-    * Note that the simple resource name can be obtained from the proxy with no
-    * cost, and the full path of the resource can be obtained through the proxy
-    * with smaller cost.
-    * </p>
-    *
-    * @return the resource handle
-    */
-   public IResource requestResource();
+    /**
+     * Returns the handle of the resource being visited.
+     * <p>
+     * Note that this is not a &quot;free&quot; proxy operation.  This method will
+     * generally cause both a path object and a resource object to be created.
+     * For an optimal visitor, only call this method when absolutely necessary.
+     * Note that the simple resource name can be obtained from the proxy with no
+     * cost, and the full path of the resource can be obtained through the proxy
+     * with smaller cost.
+     * </p>
+     *
+     * @return the resource handle
+     */
+    public IResource requestResource();
 }

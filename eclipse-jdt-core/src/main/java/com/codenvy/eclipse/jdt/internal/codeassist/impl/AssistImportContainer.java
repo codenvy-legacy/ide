@@ -20,17 +20,18 @@ import java.util.Map;
 
 
 public class AssistImportContainer extends ImportContainer {
-	private Map infoCache;
-	public AssistImportContainer(CompilationUnit parent, Map infoCache) {
-		super(parent);
-		this.infoCache = infoCache;
-	}
+    private Map infoCache;
 
-	public Object getElementInfo(IProgressMonitor monitor) throws JavaModelException {
-		return this.infoCache.get(this);
-	}
+    public AssistImportContainer(CompilationUnit parent, Map infoCache) {
+        super(parent);
+        this.infoCache = infoCache;
+    }
 
-	protected IImportDeclaration getImport(String importName, boolean isOnDemand) {
-		return new AssistImportDeclaration(this, importName, isOnDemand, this.infoCache);
-	}
+    public Object getElementInfo(IProgressMonitor monitor) throws JavaModelException {
+        return this.infoCache.get(this);
+    }
+
+    protected IImportDeclaration getImport(String importName, boolean isOnDemand) {
+        return new AssistImportDeclaration(this, importName, isOnDemand, this.infoCache);
+    }
 }

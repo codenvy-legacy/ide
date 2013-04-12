@@ -23,13 +23,12 @@ package org.exoplatform.ide.vfs.server.exceptions;
  * @version $Id: $
  */
 @SuppressWarnings("serial")
-public final class ItemAlreadyExistException extends VirtualFileSystemException
-{
-   /**
-    * @param message the message
-    */
-   public ItemAlreadyExistException(String message)
-   {
-      super(message);
-   }
+public final class ItemAlreadyExistException extends VirtualFileSystemException {
+    /**
+     * @param message
+     *         the message
+     */
+    public ItemAlreadyExistException(String message) {
+        super(message);
+    }
 }

@@ -17,34 +17,31 @@ package com.google.collide.shared.document;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 
-/**
- * A simple structure to store the line number and column.
- *
- */
+/** A simple structure to store the line number and column. */
 public final class LineNumberAndColumn implements Comparable<LineNumberAndColumn> {
 
-  public final int column;
-  public final int lineNumber;
+    public final int column;
+    public final int lineNumber;
 
-  public static LineNumberAndColumn from(int lineNumber, int column) {
-    return new LineNumberAndColumn(lineNumber, column);
-  }
+    public static LineNumberAndColumn from(int lineNumber, int column) {
+        return new LineNumberAndColumn(lineNumber, column);
+    }
 
-  @VisibleForTesting
-  public LineNumberAndColumn(int lineNumber, int column) {
-    this.lineNumber = lineNumber;
-    this.column = column;
-  }
+    @VisibleForTesting
+    public LineNumberAndColumn(int lineNumber, int column) {
+        this.lineNumber = lineNumber;
+        this.column = column;
+    }
 
-  @Override
-  public String toString() {
-    return "(" + lineNumber + ", " + column + ")";
-  }
+    @Override
+    public String toString() {
+        return "(" + lineNumber + ", " + column + ")";
+    }
 
-  @Override
-  public int compareTo(LineNumberAndColumn o) {
-    Preconditions.checkNotNull(o);
-    int result = this.lineNumber - o.lineNumber;
-    return result == 0 ? this.column - o.column : result;
-  }
+    @Override
+    public int compareTo(LineNumberAndColumn o) {
+        Preconditions.checkNotNull(o);
+        int result = this.lineNumber - o.lineNumber;
+        return result == 0 ? this.column - o.column : result;
+    }
 }

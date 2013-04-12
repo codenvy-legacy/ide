@@ -22,63 +22,55 @@ import com.codenvy.eclipse.ltk.core.refactoring.MultiStateTextFileChange;
  *
  * @since 3.2
  */
-public final class MultiStateCompilationUnitChange extends MultiStateTextFileChange
-{
+public final class MultiStateCompilationUnitChange extends MultiStateTextFileChange {
 
-   /**
-    * The compilation unit
-    */
-   private final ICompilationUnit fUnit;
+    /** The compilation unit */
+    private final ICompilationUnit fUnit;
 
-   /**
-    * Creates a new multi state compilation unit change.
-    *
-    * @param name the name of the change
-    * @param unit the compilation unit
-    */
-   public MultiStateCompilationUnitChange(final String name, final ICompilationUnit unit)
-   {
-      super(name, (IFile)unit.getResource());
+    /**
+     * Creates a new multi state compilation unit change.
+     *
+     * @param name
+     *         the name of the change
+     * @param unit
+     *         the compilation unit
+     */
+    public MultiStateCompilationUnitChange(final String name, final ICompilationUnit unit) {
+        super(name, (IFile)unit.getResource());
 
-      fUnit = unit;
+        fUnit = unit;
 
-      setTextType("java"); //$NON-NLS-1$
-   }
+        setTextType("java"); //$NON-NLS-1$
+    }
 
-   /*
-    * @see org.eclipse.ltk.core.refactoring.Change#getAdapter(java.lang.Class)
-    */
-   @Override
-   public final Object getAdapter(final Class adapter)
-   {
+    /*
+     * @see org.eclipse.ltk.core.refactoring.Change#getAdapter(java.lang.Class)
+     */
+    @Override
+    public final Object getAdapter(final Class adapter) {
 
-      if (ICompilationUnit.class.equals(adapter))
-      {
-         return fUnit;
-      }
+        if (ICompilationUnit.class.equals(adapter)) {
+            return fUnit;
+        }
 
-      return super.getAdapter(adapter);
-   }
+        return super.getAdapter(adapter);
+    }
 
-   /**
-    * Returns the compilation unit.
-    *
-    * @return the compilation unit
-    */
-   public final ICompilationUnit getCompilationUnit()
-   {
-      return fUnit;
-   }
+    /**
+     * Returns the compilation unit.
+     *
+     * @return the compilation unit
+     */
+    public final ICompilationUnit getCompilationUnit() {
+        return fUnit;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getName()
-   {
-      return Messages.format(RefactoringCoreMessages.MultiStateCompilationUnitChange_name_pattern,
-         new String[]{BasicElementLabels.getFileName(fUnit), BasicElementLabels.getPathLabel(
-            fUnit.getParent().getPath(), false)});
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getName() {
+        return Messages.format(RefactoringCoreMessages.MultiStateCompilationUnitChange_name_pattern,
+                               new String[]{BasicElementLabels.getFileName(fUnit), BasicElementLabels.getPathLabel(
+                                       fUnit.getParent().getPath(), false)});
+    }
 
 }

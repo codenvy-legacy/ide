@@ -40,44 +40,46 @@ import com.codenvy.eclipse.jdt.internal.compiler.lookup.ProblemReferenceBinding;
 import com.codenvy.eclipse.jdt.internal.compiler.lookup.TypeBinding;
 
 public class SelectionOnSingleNameReference extends SingleNameReference {
-public SelectionOnSingleNameReference(char[] source, long pos) {
-	super(source, pos);
-}
-public TypeBinding resolveType(BlockScope scope) {
-	if (this.actualReceiverType != null) {
-		this.binding = scope.getField(this.actualReceiverType, this.token, this);
-		if (this.binding != null && this.binding.isValidBinding()) {
-			throw new SelectionNodeFound(this.binding);
-		}
-	}
-	// it can be a package, type, member type, local variable or field
-	this.binding = scope.getBinding(this.token, Binding.VARIABLE | Binding.TYPE | Binding.PACKAGE, this, true /*resolve*/);
-	if (!this.binding.isValidBinding()) {
-		if (this.binding instanceof ProblemFieldBinding) {
-			// tolerate some error cases
-			if (this.binding.problemId() == ProblemReasons.NotVisible
-					|| this.binding.problemId() == ProblemReasons.InheritedNameHidesEnclosingName
-					|| this.binding.problemId() == ProblemReasons.NonStaticReferenceInConstructorInvocation
-					|| this.binding.problemId() == ProblemReasons.NonStaticReferenceInStaticContext){
-				throw new SelectionNodeFound(this.binding);
-			}
-			scope.problemReporter().invalidField(this, (FieldBinding) this.binding);
-		} else if (this.binding instanceof ProblemReferenceBinding || this.binding instanceof MissingTypeBinding) {
-			// tolerate some error cases
-			if (this.binding.problemId() == ProblemReasons.NotVisible){
-				throw new SelectionNodeFound(this.binding);
-			}
-			scope.problemReporter().invalidType(this, (TypeBinding) this.binding);
-		} else {
-			scope.problemReporter().unresolvableReference(this, this.binding);
-		}
-		throw new SelectionNodeFound();
-	}
+    public SelectionOnSingleNameReference(char[] source, long pos) {
+        super(source, pos);
+    }
 
-	throw new SelectionNodeFound(this.binding);
-}
-public StringBuffer printExpression(int indent, StringBuffer output) {
-	output.append("<SelectOnName:"); //$NON-NLS-1$
-	return super.printExpression(0, output).append('>');
-}
+    public TypeBinding resolveType(BlockScope scope) {
+        if (this.actualReceiverType != null) {
+            this.binding = scope.getField(this.actualReceiverType, this.token, this);
+            if (this.binding != null && this.binding.isValidBinding()) {
+                throw new SelectionNodeFound(this.binding);
+            }
+        }
+        // it can be a package, type, member type, local variable or field
+        this.binding = scope.getBinding(this.token, Binding.VARIABLE | Binding.TYPE | Binding.PACKAGE, this, true /*resolve*/);
+        if (!this.binding.isValidBinding()) {
+            if (this.binding instanceof ProblemFieldBinding) {
+                // tolerate some error cases
+                if (this.binding.problemId() == ProblemReasons.NotVisible
+                    || this.binding.problemId() == ProblemReasons.InheritedNameHidesEnclosingName
+                    || this.binding.problemId() == ProblemReasons.NonStaticReferenceInConstructorInvocation
+                    || this.binding.problemId() == ProblemReasons.NonStaticReferenceInStaticContext) {
+                    throw new SelectionNodeFound(this.binding);
+                }
+                scope.problemReporter().invalidField(this, (FieldBinding)this.binding);
+            } else if (this.binding instanceof ProblemReferenceBinding || this.binding instanceof MissingTypeBinding) {
+                // tolerate some error cases
+                if (this.binding.problemId() == ProblemReasons.NotVisible) {
+                    throw new SelectionNodeFound(this.binding);
+                }
+                scope.problemReporter().invalidType(this, (TypeBinding)this.binding);
+            } else {
+                scope.problemReporter().unresolvableReference(this, this.binding);
+            }
+            throw new SelectionNodeFound();
+        }
+
+        throw new SelectionNodeFound(this.binding);
+    }
+
+    public StringBuffer printExpression(int indent, StringBuffer output) {
+        output.append("<SelectOnName:"); //$NON-NLS-1$
+        return super.printExpression(0, output).append('>');
+    }
 }

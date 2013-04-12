@@ -27,56 +27,43 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
-import org.exoplatform.ide.extension.aws.shared.beanstalk.Configuration;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: ConfigurationOptionInfoListUnmarshaller.java Oct 8, 2012 10:22:32 AM azatsarynnyy $
- *
  */
-public class ConfigurationOptionInfoListUnmarshaller implements Unmarshallable<List<ConfigurationOptionInfo>>
-{
-   private List<ConfigurationOptionInfo> configurationOptionInfoList = new ArrayList<ConfigurationOptionInfo>();
+public class ConfigurationOptionInfoListUnmarshaller implements Unmarshallable<List<ConfigurationOptionInfo>> {
+    private List<ConfigurationOptionInfo> configurationOptionInfoList = new ArrayList<ConfigurationOptionInfo>();
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      if (response.getText() == null || response.getText().isEmpty())
-      {
-         return;
-      }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        if (response.getText() == null || response.getText().isEmpty()) {
+            return;
+        }
 
-      JSONArray value = JSONParser.parseLenient(response.getText()).isArray();
+        JSONArray value = JSONParser.parseLenient(response.getText()).isArray();
 
-      if (value == null)
-      {
-         return;
-      }
+        if (value == null) {
+            return;
+        }
 
-      for (int i = 0; i < value.size(); i++)
-      {
-         String payload = value.get(i).isObject().toString();
+        for (int i = 0; i < value.size(); i++) {
+            String payload = value.get(i).isObject().toString();
 
-         AutoBean<ConfigurationOptionInfo> configurationBean =
-            AutoBeanCodex.decode(AWSExtension.AUTO_BEAN_FACTORY, ConfigurationOptionInfo.class, payload);
-         configurationOptionInfoList.add(configurationBean.as());
-      }
-   }
+            AutoBean<ConfigurationOptionInfo> configurationBean =
+                    AutoBeanCodex.decode(AWSExtension.AUTO_BEAN_FACTORY, ConfigurationOptionInfo.class, payload);
+            configurationOptionInfoList.add(configurationBean.as());
+        }
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#getPayload()
-    */
-   @Override
-   public List<ConfigurationOptionInfo> getPayload()
-   {
-      return configurationOptionInfoList;
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#getPayload() */
+    @Override
+    public List<ConfigurationOptionInfo> getPayload() {
+        return configurationOptionInfoList;
+    }
 }

@@ -32,51 +32,39 @@ import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-/**
- * This class used for parsing jar file
- */
-public class JarParser
-{
+/** This class used for parsing jar file */
+public class JarParser {
 
-   private JarParser()
-   {
-   }
+    private JarParser() {
+    }
 
-   public static List<TypeInfo> parse(InputStream jar) throws IOException
-   {
+    public static List<TypeInfo> parse(InputStream jar) throws IOException {
       /*
        * There are no way to predict entries order in jar, so, manifest will be added
        * to classes when all classes parsed successfully.
        */
-      Manifest manifest = null;
+        Manifest manifest = null;
 
-      List<TypeInfo> classes = new ArrayList<TypeInfo>();
-      ZipInputStream zip = new ZipInputStream(jar);
-      try
-      {
-         ZipEntry entry = zip.getNextEntry();
-         while (entry != null)
-         {
-            String name = entry.getName();
-            // Make check class not anonymous. I.e ExceptionThrownEventHandler$1.class
-            // so we check that first character after '$' not digit.
-            if (name.endsWith(".class") && !Character.isDigit(name.charAt(name.lastIndexOf("$") + 1)))
-            {
-               TypeInfo typeInfo = ClassParser.parse(zip);
-               if (!Modifier.isPrivate(typeInfo.getModifiers()))
-                  classes.add(typeInfo);
+        List<TypeInfo> classes = new ArrayList<TypeInfo>();
+        ZipInputStream zip = new ZipInputStream(jar);
+        try {
+            ZipEntry entry = zip.getNextEntry();
+            while (entry != null) {
+                String name = entry.getName();
+                // Make check class not anonymous. I.e ExceptionThrownEventHandler$1.class
+                // so we check that first character after '$' not digit.
+                if (name.endsWith(".class") && !Character.isDigit(name.charAt(name.lastIndexOf("$") + 1))) {
+                    TypeInfo typeInfo = ClassParser.parse(zip);
+                    if (!Modifier.isPrivate(typeInfo.getModifiers()))
+                        classes.add(typeInfo);
+                } else if (name.equalsIgnoreCase("MANIFEST.MF")) {
+                    manifest = new Manifest(zip);
+                }
+                entry = zip.getNextEntry();
             }
-            else if (name.equalsIgnoreCase("MANIFEST.MF"))
-            {
-               manifest = new Manifest(zip);
-            }
-            entry = zip.getNextEntry();
-         }
-      }
-      finally
-      {
-         zip.close();
-      }
+        } finally {
+            zip.close();
+        }
 
       /*
        * Temporary disabled to provide List<TypeInfo> return type
@@ -85,91 +73,74 @@ public class JarParser
          builder.addManifest(manifest);
       }
       */
-      return classes;
-   }
+        return classes;
+    }
 
-   /**
-    * Parse content of the jar file
-    * 
-    * @param jarFile
-    *           - input jar file.
-    * @return - list of the TypeInfo parsed from classes in jar file
-    * @throws IOException
-    */
-   public static List<TypeInfo> parse(File jarFile) throws IOException
-   {
-      FileInputStream jarStream = new FileInputStream(jarFile);
-      try
-      {
-         return parse(jarStream);
-      }
-      finally
-      {
-         jarStream.close();
-      }
-   }
+    /**
+     * Parse content of the jar file
+     *
+     * @param jarFile
+     *         - input jar file.
+     * @return - list of the TypeInfo parsed from classes in jar file
+     * @throws IOException
+     */
+    public static List<TypeInfo> parse(File jarFile) throws IOException {
+        FileInputStream jarStream = new FileInputStream(jarFile);
+        try {
+            return parse(jarStream);
+        } finally {
+            jarStream.close();
+        }
+    }
 
-   /**
-    * @param jarFile
-    * @param ignoredPackages
-    * @return
-    */
-   public static List<TypeInfo> parse(File jarFile, Set<String> ignoredPackages) throws IOException
-   {
-      FileInputStream jarStream = new FileInputStream(jarFile);
-      try
-      {
-         return parse(jarStream, ignoredPackages);
-      }
-      finally
-      {
-         jarStream.close();
-      }
-   }
+    /**
+     * @param jarFile
+     * @param ignoredPackages
+     * @return
+     */
+    public static List<TypeInfo> parse(File jarFile, Set<String> ignoredPackages) throws IOException {
+        FileInputStream jarStream = new FileInputStream(jarFile);
+        try {
+            return parse(jarStream, ignoredPackages);
+        } finally {
+            jarStream.close();
+        }
+    }
 
-   /**
-    * 
-    * @param jarStream
-    * @param ignoredPackages
-    * @return
-    */
-   //To provide same performance duplicate method code 
-   private static List<TypeInfo> parse(FileInputStream jar, Set<String> ignoredPackages) throws IOException
-   {
-      List<TypeInfo> classes = new ArrayList<TypeInfo>();
-      ZipInputStream zip = new ZipInputStream(jar);
-      try
-      {
-         ZipEntry entry = zip.getNextEntry();
-         boolean ignore = false;
-         while (entry != null)
-         {
-            String name = entry.getName();
-            ignore = false;
-            for (String s : ignoredPackages)
-            {
-               if (name.startsWith(s))
-               {
-                  ignore = true;
-                  break;
-               }
+    /**
+     * @param jarStream
+     * @param ignoredPackages
+     * @return
+     */
+    //To provide same performance duplicate method code
+    private static List<TypeInfo> parse(FileInputStream jar, Set<String> ignoredPackages) throws IOException {
+        List<TypeInfo> classes = new ArrayList<TypeInfo>();
+        ZipInputStream zip = new ZipInputStream(jar);
+        try {
+            ZipEntry entry = zip.getNextEntry();
+            boolean ignore = false;
+            while (entry != null) {
+                String name = entry.getName();
+                ignore = false;
+                for (String s : ignoredPackages) {
+                    if (name.startsWith(s)) {
+                        ignore = true;
+                        break;
+                    }
+                }
+                // Make check class not anonymous. I.e ExceptionThrownEventHandler$1.class
+                // so we check that first character after '$' not digit.
+                if (!ignore && name.endsWith(".class") && !Character.isDigit(name.charAt(name.lastIndexOf("$") + 1))) {
+                    TypeInfo typeInfo = ClassParser.parse(zip);
+                    if (!Modifier.isPrivate(typeInfo.getModifiers()))
+                        classes.add(typeInfo);
+                }
+                entry = zip.getNextEntry();
             }
-            // Make check class not anonymous. I.e ExceptionThrownEventHandler$1.class
-            // so we check that first character after '$' not digit.
-            if (!ignore && name.endsWith(".class") && !Character.isDigit(name.charAt(name.lastIndexOf("$") + 1)))
-            {
-               TypeInfo typeInfo = ClassParser.parse(zip);
-               if (!Modifier.isPrivate(typeInfo.getModifiers()))
-                  classes.add(typeInfo);
-            }
-            entry = zip.getNextEntry();
-         }
-      }
-      finally
-      {
-         zip.close();
-      }
-      return classes;
-   }
+        } finally {
+            zip.close();
+        }
+        return classes;
+    }
 
 }

@@ -20,18 +20,18 @@ package org.exoplatform.ide.extension.cloudfoundry.client.marshaller;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public interface IFieldInfo extends IMember
-{
+ */
+public interface IFieldInfo extends IMember {
 
-   String getType();
+    String getType();
 
-   void setType(String type);
+    void setType(String type);
 
-   String getDeclaringClass();
+    String getDeclaringClass();
 
-   void setDeclaringClass(String declaringClass);
+    void setDeclaringClass(String declaringClass);
 
 }

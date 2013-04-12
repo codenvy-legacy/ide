@@ -26,66 +26,56 @@ import org.exoplatform.ide.extension.aws.shared.s3.S3Permission;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class S3AccessControlImpl implements S3AccessControl
-{
-   private S3IdentityType identityType;
-   private S3Permission permission;
-   private String identifier;
+public class S3AccessControlImpl implements S3AccessControl {
+    private S3IdentityType identityType;
+    private S3Permission   permission;
+    private String         identifier;
 
-   public S3AccessControlImpl()
-   {
-   }
+    public S3AccessControlImpl() {
+    }
 
-   public S3AccessControlImpl(S3IdentityType identityType, S3Permission permission, String identifier)
-   {
-      this.identityType = identityType;
-      this.permission = permission;
-      this.identifier = identifier;
-   }
+    public S3AccessControlImpl(S3IdentityType identityType, S3Permission permission, String identifier) {
+        this.identityType = identityType;
+        this.permission = permission;
+        this.identifier = identifier;
+    }
 
-   @Override
-   public S3IdentityType getIdentityType()
-   {
-      return identityType;
-   }
+    @Override
+    public S3IdentityType getIdentityType() {
+        return identityType;
+    }
 
-   @Override
-   public void setIdentityType(S3IdentityType identityType)
-   {
-      this.identityType = identityType;
-   }
+    @Override
+    public void setIdentityType(S3IdentityType identityType) {
+        this.identityType = identityType;
+    }
 
-   @Override
-   public S3Permission getPermission()
-   {
-      return permission;
-   }
+    @Override
+    public S3Permission getPermission() {
+        return permission;
+    }
 
-   @Override
-   public void setPermission(S3Permission permission)
-   {
-      this.permission = permission;
-   }
+    @Override
+    public void setPermission(S3Permission permission) {
+        this.permission = permission;
+    }
 
-   @Override
-   public String getIdentifier()
-   {
-      return identifier;
-   }
+    @Override
+    public String getIdentifier() {
+        return identifier;
+    }
 
-   @Override
-   public void setIdentifier(String identifier)
-   {
-      this.identifier = identifier;
-   }
+    @Override
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "S3AccessControlImpl{" +
-         "identityType=" + identityType +
-         ", permission=" + permission +
-         ", identifier='" + identifier + '\'' +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "S3AccessControlImpl{" +
+               "identityType=" + identityType +
+               ", permission=" + permission +
+               ", identifier='" + identifier + '\'' +
+               '}';
+    }
 }

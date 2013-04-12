@@ -36,144 +36,111 @@ import java.util.jar.JarFile;
  * Simple source generator that takes in a jar of interface definitions and
  * generates client and server DTO impls.
  */
-public class DtoGenerator
-{
+public class DtoGenerator {
 
-   private static final String INVALID_PATH = "invalid path";
+    private static final String INVALID_PATH = "invalid path";
 
-   private static final String SERVER = "server";
+    private static final String SERVER = "server";
 
-   private static final String CLIENT = "client";
+    private static final String CLIENT = "client";
 
-   /**
-    * Flag: location of the input source dto jar.
-    */
-   static String dto_jar = null;
+    /** Flag: location of the input source dto jar. */
+    static String dto_jar = null;
 
-   /**
-    * Flag: Name of the generated java class file that contains the DTOs.
-    */
-   static String gen_file_name = "DataObjects.java";
+    /** Flag: Name of the generated java class file that contains the DTOs. */
+    static String gen_file_name = "DataObjects.java";
 
-   /**
-    * Flag: The type of impls to be generated, either CLIENT or SERVER.
-    */
-   static String impl = CLIENT;
+    /** Flag: The type of impls to be generated, either CLIENT or SERVER. */
+    static String impl = CLIENT;
 
-   /**
-    * Flag: A pattern we can use to search an absolute path and find the start
-    * of the package definition.")
-    */
-   static String package_base = "java.";
+    /**
+     * Flag: A pattern we can use to search an absolute path and find the start
+     * of the package definition.")
+     */
+    static String package_base = "java.";
 
-   /**
-    * @param args
-    */
-   public static void main(String[] args)
-   {
-      for (String arg : args)
-      {
-         if (arg.startsWith("--dto_jar="))
-         {
-            dto_jar = arg.substring("--dto_jar=".length());
-         }
-         else if (arg.startsWith("--gen_file_name="))
-         {
-            gen_file_name = arg.substring("--gen_file_name=".length());
-         }
-         else if (arg.startsWith("--impl="))
-         {
-            impl = arg.substring("--impl=".length());
-         }
-         else if (arg.startsWith("--package_base="))
-         {
-            package_base = arg.substring("--package_base=".length());
-         }
-         else
-         {
-            System.err.println("Unknown flag: " + arg);
-            System.exit(1);
-         }
-      }
-
-      String outputFilePath = gen_file_name;
-
-      // Extract the name of the output file that will contain all the DTOs and
-      // its package.
-      int packageStart = outputFilePath.lastIndexOf(package_base) + package_base.length();
-      int packageEnd = outputFilePath.lastIndexOf('/');
-      String fileName = outputFilePath.substring(packageEnd + 1);
-      String className = fileName.substring(0, fileName.indexOf(".java"));
-      String packageName = outputFilePath.substring(packageStart, packageEnd).replace('/', '.');
-
-      File outFile = new File(outputFilePath);
-      File interfaceJar = new File(dto_jar);
-
-      try
-      {
-         DtoTemplate dtoTemplate = new DtoTemplate(packageName, className, getApiHash(interfaceJar),
-            impl.equals(SERVER));
-
-         // Crack open the JAR that contains the class files for the DTO
-         // interfaces. Collect class files to load.
-         List<String> classFilePaths = new ArrayList<String>();
-
-         JarFile jarFile = new JarFile(interfaceJar);
-         Enumeration<JarEntry> entries = jarFile.entries();
-         while (entries.hasMoreElements())
-         {
-            String entryFilePath = entries.nextElement().getName();
-            if (entryFilePath.endsWith(".class"))
-            {
-               classFilePaths.add(entryFilePath);
+    /** @param args */
+    public static void main(String[] args) {
+        for (String arg : args) {
+            if (arg.startsWith("--dto_jar=")) {
+                dto_jar = arg.substring("--dto_jar=".length());
+            } else if (arg.startsWith("--gen_file_name=")) {
+                gen_file_name = arg.substring("--gen_file_name=".length());
+            } else if (arg.startsWith("--impl=")) {
+                impl = arg.substring("--impl=".length());
+            } else if (arg.startsWith("--package_base=")) {
+                package_base = arg.substring("--package_base=".length());
+            } else {
+                System.err.println("Unknown flag: " + arg);
+                System.exit(1);
             }
-         }
+        }
 
-         // Load the classes that we found above.
-         URL[] urls = {interfaceJar.toURI().toURL()};
-         URLClassLoader loader = new URLClassLoader(urls,Thread.currentThread().getContextClassLoader());
+        String outputFilePath = gen_file_name;
 
-         // We sort alphabetically to ensure deterministic order of routing types.
-         Collections.sort(classFilePaths);
+        // Extract the name of the output file that will contain all the DTOs and
+        // its package.
+        int packageStart = outputFilePath.lastIndexOf(package_base) + package_base.length();
+        int packageEnd = outputFilePath.lastIndexOf('/');
+        String fileName = outputFilePath.substring(packageEnd + 1);
+        String className = fileName.substring(0, fileName.indexOf(".java"));
+        String packageName = outputFilePath.substring(packageStart, packageEnd).replace('/', '.');
 
-         for (String classFilePath : classFilePaths)
-         {
-            URL resource = loader.findResource(classFilePath);
-            if (resource != null)
-            {
-               String javaName = classFilePath.replace('/', '.').substring(0, classFilePath.lastIndexOf(".class"));
-               Class<?> dtoInterface = Class.forName(javaName, false, loader);
-               if (dtoInterface.isInterface())
-               {
-                  // Add interfaces to the DtoTemplate.
-                  dtoTemplate.addInterface(dtoInterface);
-               }
+        File outFile = new File(outputFilePath);
+        File interfaceJar = new File(dto_jar);
+
+        try {
+            DtoTemplate dtoTemplate = new DtoTemplate(packageName, className, getApiHash(interfaceJar),
+                                                      impl.equals(SERVER));
+
+            // Crack open the JAR that contains the class files for the DTO
+            // interfaces. Collect class files to load.
+            List<String> classFilePaths = new ArrayList<String>();
+
+            JarFile jarFile = new JarFile(interfaceJar);
+            Enumeration<JarEntry> entries = jarFile.entries();
+            while (entries.hasMoreElements()) {
+                String entryFilePath = entries.nextElement().getName();
+                if (entryFilePath.endsWith(".class")) {
+                    classFilePaths.add(entryFilePath);
+                }
             }
-         }
 
-         // Emit the generated file.
-         BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
-         writer.write(dtoTemplate.toString());
-         writer.close();
-      }
-      catch (MalformedURLException e1)
-      {
-         e1.printStackTrace();
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ClassNotFoundException e)
-      {
-         e.printStackTrace();
-      }
-   }
+            // Load the classes that we found above.
+            URL[] urls = {interfaceJar.toURI().toURL()};
+            URLClassLoader loader = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
 
-   private static String getApiHash(File interfaceJar) throws IOException
-   {
-      byte[] fileBytes = Files.toByteArray(interfaceJar);
-      HashCode hashCode = Hashing.sha1().hashBytes(fileBytes);
-      return hashCode.toString();
-   }
+            // We sort alphabetically to ensure deterministic order of routing types.
+            Collections.sort(classFilePaths);
+
+            for (String classFilePath : classFilePaths) {
+                URL resource = loader.findResource(classFilePath);
+                if (resource != null) {
+                    String javaName = classFilePath.replace('/', '.').substring(0, classFilePath.lastIndexOf(".class"));
+                    Class<?> dtoInterface = Class.forName(javaName, false, loader);
+                    if (dtoInterface.isInterface()) {
+                        // Add interfaces to the DtoTemplate.
+                        dtoTemplate.addInterface(dtoInterface);
+                    }
+                }
+            }
+
+            // Emit the generated file.
+            BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
+            writer.write(dtoTemplate.toString());
+            writer.close();
+        } catch (MalformedURLException e1) {
+            e1.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static String getApiHash(File interfaceJar) throws IOException {
+        byte[] fileBytes = Files.toByteArray(interfaceJar);
+        HashCode hashCode = Hashing.sha1().hashBytes(fileBytes);
+        return hashCode.toString();
+    }
 }

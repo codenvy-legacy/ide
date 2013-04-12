@@ -27,62 +27,55 @@ import java.util.Set;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: AccessControlEntryImpl.java 79579 2012-02-17 13:27:25Z andrew00x $
  */
-public class AccessControlEntryImpl implements AccessControlEntry
-{
-   /** Principal name. */
-   private String principal;
+public class AccessControlEntryImpl implements AccessControlEntry {
+    /** Principal name. */
+    private String principal;
 
-   /** Permissions. */
-   private Set<String> permissions;
+    /** Permissions. */
+    private Set<String> permissions;
 
-   /** Empty AccessControlEntryImpl instance. Both principal and permissions are not set. */
-   public AccessControlEntryImpl()
-   {
-   }
+    /** Empty AccessControlEntryImpl instance. Both principal and permissions are not set. */
+    public AccessControlEntryImpl() {
+    }
 
-   /**
-    * AccessControlEntryImpl instance with specified principal and permissions.
-    *
-    * @param principal principal
-    * @param permissions permissions
-    */
-   public AccessControlEntryImpl(String principal, Set<String> permissions)
-   {
-      this.principal = principal;
-      this.permissions = permissions;
-   }
+    /**
+     * AccessControlEntryImpl instance with specified principal and permissions.
+     *
+     * @param principal
+     *         principal
+     * @param permissions
+     *         permissions
+     */
+    public AccessControlEntryImpl(String principal, Set<String> permissions) {
+        this.principal = principal;
+        this.permissions = permissions;
+    }
 
-   @Override
-   public Set<String> getPermissions()
-   {
-      if (permissions == null)
-      {
-         permissions = new HashSet<String>();
-      }
-      return permissions;
-   }
+    @Override
+    public Set<String> getPermissions() {
+        if (permissions == null) {
+            permissions = new HashSet<String>();
+        }
+        return permissions;
+    }
 
-   @Override
-   public void setPermissions(Set<String> permissions)
-   {
-      this.permissions = permissions;
-   }
+    @Override
+    public void setPermissions(Set<String> permissions) {
+        this.permissions = permissions;
+    }
 
-   @Override
-   public String getPrincipal()
-   {
-      return principal;
-   }
+    @Override
+    public String getPrincipal() {
+        return principal;
+    }
 
-   @Override
-   public void setPrincipal(String principal)
-   {
-      this.principal = principal;
-   }
+    @Override
+    public void setPrincipal(String principal) {
+        this.principal = principal;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "AccessControlEntryImpl [principal=" + principal + ", permissions=" + permissions + ']';
-   }
+    @Override
+    public String toString() {
+        return "AccessControlEntryImpl [principal=" + principal + ", permissions=" + permissions + ']';
+    }
 }

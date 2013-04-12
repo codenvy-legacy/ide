@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -45,120 +46,92 @@ import org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter
  * <li>Upload
  * <li>Cancel
  * </ul>
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
 
-public class UploadSshKeyView extends ViewImpl implements Display
-{
+public class UploadSshKeyView extends ViewImpl implements Display {
 
-   /**
-    * ID of View
-    */
-   private static final String ID = "ideUploadSshKeyView";
+    /** ID of View */
+    private static final String ID = "ideUploadSshKeyView";
 
-   private static UploadSshKeyUiBinder uiBinder = GWT.create(UploadSshKeyUiBinder.class);
+    private static UploadSshKeyUiBinder uiBinder = GWT.create(UploadSshKeyUiBinder.class);
 
-   interface UploadSshKeyUiBinder extends UiBinder<Widget, UploadSshKeyView>
-   {
-   }
+    interface UploadSshKeyUiBinder extends UiBinder<Widget, UploadSshKeyView> {
+    }
 
-   @UiField
-   TextInput hostField;
+    @UiField
+    TextInput hostField;
 
-   @UiField
-   FileUploadInput fileField;
+    @UiField
+    FileUploadInput fileField;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   @UiField
-   ImageButton uploadButton;
+    @UiField
+    ImageButton uploadButton;
 
-   @UiField
-   TextInput fileNameField;
+    @UiField
+    TextInput fileNameField;
 
-   @UiField
-   Label messageLabel;
+    @UiField
+    Label messageLabel;
 
-   @UiField
-   FormPanel formPanel;
+    @UiField
+    FormPanel formPanel;
 
-   public UploadSshKeyView()
-   {
-      super(ID, ViewType.MODAL, "Upload private SSH key", null, 350, 130, false);
-      add(uiBinder.createAndBindUi(this));
-   }
+    public UploadSshKeyView() {
+        super(ID, ViewType.MODAL, "Upload private SSH key", null, 350, 130, false);
+        add(uiBinder.createAndBindUi(this));
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#getHostField()
-    */
-   @Override
-   public HasValue<String> getHostField()
-   {
-      return hostField;
-   }
+    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#getHostField() */
+    @Override
+    public HasValue<String> getHostField() {
+        return hostField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#getCancelButon()
-    */
-   @Override
-   public HasClickHandlers getCancelButon()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#getCancelButon() */
+    @Override
+    public HasClickHandlers getCancelButon() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#getFileNameField()
-    */
-   @Override
-   public HasValue<String> getFileNameField()
-   {
-      return fileNameField;
-   }
+    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#getFileNameField() */
+    @Override
+    public HasValue<String> getFileNameField() {
+        return fileNameField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#setMessage(java.lang.String)
-    */
-   @Override
-   public void setMessage(String message)
-   {
-      messageLabel.setText(message);
-   }
+    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#setMessage(java.lang.String) */
+    @Override
+    public void setMessage(String message) {
+        messageLabel.setText(message);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#getUploadButton()
-    */
-   @Override
-   public HasClickHandlers getUploadButton()
-   {
-      return uploadButton;
-   }
+    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#getUploadButton() */
+    @Override
+    public HasClickHandlers getUploadButton() {
+        return uploadButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#getFormPanel()
-    */
-   @Override
-   public FormPanel getFormPanel()
-   {
-      return formPanel;
-   }
+    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#getFormPanel() */
+    @Override
+    public FormPanel getFormPanel() {
+        return formPanel;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#setUploadButtonEnabled()
-    */
-   @Override
-   public void setUploadButtonEnabled()
-   {
-      uploadButton.setEnabled(true);
-   }
+    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#setUploadButtonEnabled() */
+    @Override
+    public void setUploadButtonEnabled() {
+        uploadButton.setEnabled(true);
+    }
 
-   @Override
-   public HasFileSelectedHandler getFileUploadInput()
-   {
-      return fileField;
-   }
+    @Override
+    public HasFileSelectedHandler getFileUploadInput() {
+        return fileField;
+    }
 
 }

@@ -37,102 +37,57 @@ import org.exoplatform.ide.client.project.explorer.ShowProjectExplorerControl;
 import org.exoplatform.ide.client.project.list.ShowProjectsPresenter;
 import org.exoplatform.ide.client.project.properties.ProjectPropertiesPresenter;
 import org.exoplatform.ide.client.project.resource.OpenResourcePresenter;
-import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
-import org.exoplatform.ide.client.template.MigrateTemplatesHandler;
-import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
-import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ProjectSupportingModule implements ConfigurationReceivedSuccessfullyHandler, MigrateTemplatesHandler
-{
+public class ProjectSupportingModule implements ConfigurationReceivedSuccessfullyHandler{
 
-   private TemplatesMigratedCallback callback;
+    
 
-   public ProjectSupportingModule()
-   {
-      IDE.getInstance().addControl(new NewProjectMenuGroup());
-      IDE.getInstance().addControl(new ProjectPaaSControl());
+    public ProjectSupportingModule() {
+        IDE.getInstance().addControl(new NewProjectMenuGroup());
+        IDE.getInstance().addControl(new ProjectPaaSControl());
 
-      new CreateProjectPresenter();
-      new MavenModuleCreationCallback();
-      new ShowProjectsPresenter();
+        new CreateProjectPresenter();
+        new MavenModuleCreationCallback();
+        new ShowProjectsPresenter();
 
-      new ProjectExplorerPresenter();
+        new ProjectExplorerPresenter();
 
-      IDE.getInstance().addControl(new ShowProjectExplorerControl());
-      IDE.getInstance().addControl(new CloseProjectControl());
+        IDE.getInstance().addControl(new ShowProjectExplorerControl());
+        IDE.getInstance().addControl(new CloseProjectControl());
 
-      new ProjectPropertiesPresenter();
+        new ProjectPropertiesPresenter();
 
-      new ProjectCreatedEventHandler();
+        new ProjectCreatedEventHandler();
 
-      new OpenResourcePresenter();
+        new OpenResourcePresenter();
 
-      IDE.getInstance().addControlsFormatter(new ProjectMenuItemFormatter());
+        IDE.getInstance().addControlsFormatter(new ProjectMenuItemFormatter());
 
-      IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
-      IDE.addHandler(MigrateTemplatesEvent.TYPE, this);
-      
-      new ProjectProcessor();
-   }
+        IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+    
 
-   /**
-    * @see org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent)
-    */
-   public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
-   {
-      if (TemplateService.getInstance() == null)
-      {
-         new TemplateServiceImpl(IDELoader.get(), event.getConfiguration().getRegistryURL() + "/"
-            + "exo:applications" + "/" + IDEConfigurationLoader.APPLICATION_NAME, event.getConfiguration().getContext());
-      }
-   }
+        new ProjectProcessor();
+    }
 
-  
+    /** @see org.exoplatform.ide.client.framework.configuration.event
+     * .ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ide.client.framework.configuration
+     * .event.ConfigurationReceivedSuccessfullyEvent) */
+    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event) {
+        if (TemplateService.getInstance() == null) {
+            new TemplateServiceImpl(IDELoader.get(), event.getConfiguration().getRegistryURL() + "/"
+                                                     + "exo:applications" + "/" + IDEConfigurationLoader.APPLICATION_NAME,
+                                    event.getConfiguration().getContext());
+        }
+    }
 
-  
 
-   protected void deleteTemplatesFromRegistry()
-   {
-      try
-      {
-         TemplateService.getInstance().deleteTemplatesFromRegistry(new AsyncRequestCallback<String>()
-         {
-            @Override
-            protected void onSuccess(String result)
-            {
-               IDE.fireEvent(new TemplatesMigratedEvent());
-               if (callback != null)
-               {
-                  callback.onTemplatesMigrated();
-               }
-            }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(exception));
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.template.MigrateTemplatesHandler#onMigrateTemplates(org.exoplatform.ide.client.template.MigrateTemplatesEvent)
-    */
-   @Override
-   public void onMigrateTemplates(MigrateTemplatesEvent event)
-   {
-      this.callback = event.getTemplatesMigratedCallback();
-   }
+   
 }

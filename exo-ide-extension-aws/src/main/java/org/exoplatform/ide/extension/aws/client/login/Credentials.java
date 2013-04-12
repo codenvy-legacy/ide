@@ -21,27 +21,23 @@ package org.exoplatform.ide.extension.aws.client.login;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 14, 2012 11:52:17 AM anya $
- * 
  */
-public interface Credentials
-{
-   /**
-    * @return the access_key
-    */
-   public String getAccess_key();
+public interface Credentials {
+    /** @return the access_key */
+    public String getAccess_key();
 
-   /**
-    * @param access_key the access_key to set
-    */
-   public void setAccess_key(String access_key);
+    /**
+     * @param access_key
+     *         the access_key to set
+     */
+    public void setAccess_key(String access_key);
 
-   /**
-    * @return the secret_key
-    */
-   public String getSecret_key();
+    /** @return the secret_key */
+    public String getSecret_key();
 
-   /**
-    * @param secret_key the secret_key to set
-    */
-   public void setSecret_key(String secret_key);
+    /**
+     * @param secret_key
+     *         the secret_key to set
+     */
+    public void setSecret_key(String secret_key);
 }

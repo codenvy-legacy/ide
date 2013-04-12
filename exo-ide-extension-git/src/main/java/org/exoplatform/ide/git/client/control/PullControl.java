@@ -27,17 +27,14 @@ import org.exoplatform.ide.git.client.pull.PullEvent;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 20, 2011 12:03:32 PM anya $
- * 
  */
-public class PullControl extends GitControl
-{
-   public PullControl()
-   {
-      super(GitExtension.MESSAGES.pullControlId());
-      setTitle(GitExtension.MESSAGES.pullControlTitle());
-      setPrompt(GitExtension.MESSAGES.pullControlPrompt());
-      setEvent(new PullEvent());
-      setImages(GitClientBundle.INSTANCE.pull(), GitClientBundle.INSTANCE.pullDisabled());
-   }
+public class PullControl extends GitControl {
+    public PullControl() {
+        super(GitExtension.MESSAGES.pullControlId());
+        setTitle(GitExtension.MESSAGES.pullControlTitle());
+        setPrompt(GitExtension.MESSAGES.pullControlPrompt());
+        setEvent(new PullEvent());
+        setImages(GitClientBundle.INSTANCE.pull(), GitClientBundle.INSTANCE.pullDisabled());
+    }
 
 }

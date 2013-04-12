@@ -21,39 +21,32 @@ import com.codenvy.eclipse.core.runtime.SubProgressMonitor;
 import com.codenvy.eclipse.ltk.core.refactoring.Change;
 import com.codenvy.eclipse.ltk.core.refactoring.resource.ResourceChange;
 
-abstract class AbstractDeleteChange extends ResourceChange
-{
+abstract class AbstractDeleteChange extends ResourceChange {
 
-   protected abstract Change doDelete(IProgressMonitor pm) throws CoreException;
+    protected abstract Change doDelete(IProgressMonitor pm) throws CoreException;
 
-   /* non java-doc
-    * @see IChange#perform(ChangeContext, IProgressMonitor)
-    */
-   @Override
-   public final Change perform(IProgressMonitor pm) throws CoreException
-   {
-      try
-      {
-         Change undo = doDelete(pm);
-         return undo;
-      }
-      finally
-      {
-         pm.done();
-      }
-   }
+    /* non java-doc
+     * @see IChange#perform(ChangeContext, IProgressMonitor)
+     */
+    @Override
+    public final Change perform(IProgressMonitor pm) throws CoreException {
+        try {
+            Change undo = doDelete(pm);
+            return undo;
+        } finally {
+            pm.done();
+        }
+    }
 
-   protected static void saveFileIfNeeded(IFile file, IProgressMonitor pm) throws CoreException
-   {
-      ITextFileBuffer buffer = FileBuffers.getTextFileBufferManager().getTextFileBuffer(file.getFullPath(),
-         LocationKind.IFILE);
-      if (buffer != null && buffer.isDirty() && buffer.isStateValidated() && buffer.isSynchronized())
-      {
-         pm.beginTask("", 2); //$NON-NLS-1$
-         buffer.commit(new SubProgressMonitor(pm, 1), false);
-         file.refreshLocal(IResource.DEPTH_ONE, new SubProgressMonitor(pm, 1));
-      }
-      pm.done();
-   }
+    protected static void saveFileIfNeeded(IFile file, IProgressMonitor pm) throws CoreException {
+        ITextFileBuffer buffer = FileBuffers.getTextFileBufferManager().getTextFileBuffer(file.getFullPath(),
+                                                                                          LocationKind.IFILE);
+        if (buffer != null && buffer.isDirty() && buffer.isStateValidated() && buffer.isSynchronized()) {
+            pm.beginTask("", 2); //$NON-NLS-1$
+            buffer.commit(new SubProgressMonitor(pm, 1), false);
+            file.refreshLocal(IResource.DEPTH_ONE, new SubProgressMonitor(pm, 1));
+        }
+        pm.done();
+    }
 }
 

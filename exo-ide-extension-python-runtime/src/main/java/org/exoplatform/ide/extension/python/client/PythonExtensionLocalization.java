@@ -21,55 +21,53 @@ package org.exoplatform.ide.extension.python.client;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 21, 2012 9:51:19 AM anya $
- * 
  */
-public interface PythonExtensionLocalization extends com.google.gwt.i18n.client.Messages
-{
-   @Key("run.application.control.title")
-   String runApplicationControlTitle();
+public interface PythonExtensionLocalization extends com.google.gwt.i18n.client.Messages {
+    @Key("run.application.control.title")
+    String runApplicationControlTitle();
 
-   @Key("run.application.control.prompt")
-   String runApplicationControlPrompt();
+    @Key("run.application.control.prompt")
+    String runApplicationControlPrompt();
 
-   @Key("starting.project.message")
-   String startingProjectMessage(String project);
+    @Key("starting.project.message")
+    String startingProjectMessage(String project);
 
-   @Key("project.started.message")
-   String projectStartedMessage(String project);
+    @Key("project.started.message")
+    String projectStartedMessage(String project);
 
-   @Key("start.application.failed")
-   String startApplicationFailed();
+    @Key("start.application.failed")
+    String startApplicationFailed();
 
-   @Key("application.started.url")
-   String applicationStartedUrl(String application, String url);
+    @Key("application.started.url")
+    String applicationStartedUrl(String application, String url);
 
-   @Key("stop.application.control.title")
-   String stopApplicationControlTitle();
+    @Key("stop.application.control.title")
+    String stopApplicationControlTitle();
 
-   @Key("stop.application.control.prompt")
-   String stopApplicationControlPrompt();
+    @Key("stop.application.control.prompt")
+    String stopApplicationControlPrompt();
 
-   @Key("stopping.project.message")
-   String stoppingProjectMessage(String project);
+    @Key("stopping.project.message")
+    String stoppingProjectMessage(String project);
 
-   @Key("stop.application.failed")
-   String stopApplicationFailed();
+    @Key("stop.application.failed")
+    String stopApplicationFailed();
 
-   @Key("project.stopped.message")
-   String projectStoppedMessage(String project);
+    @Key("project.stopped.message")
+    String projectStoppedMessage(String project);
 
-   @Key("not.python.project")
-   String notPythonProject();
+    @Key("not.python.project")
+    String notPythonProject();
 
-   @Key("no.run.application")
-   String noRunningApplication();
+    @Key("no.run.application")
+    String noRunningApplication();
 
-   @Key("show.logs.control.title")
-   String showLogsControlTitle();
+    @Key("show.logs.control.title")
+    String showLogsControlTitle();
 
-   @Key("show.logs.control.prompt")
-   String showLogsControlPrompt();
+    @Key("show.logs.control.prompt")
+    String showLogsControlPrompt();
 
-   @Key("get.logs.error.message")
-   String getLogsErrorMessage();
+    @Key("get.logs.error.message")
+    String getLogsErrorMessage();
 }

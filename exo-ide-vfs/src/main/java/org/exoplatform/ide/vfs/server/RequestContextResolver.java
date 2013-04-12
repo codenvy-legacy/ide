@@ -18,11 +18,7 @@
  */
 package org.exoplatform.ide.vfs.server;
 
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
 import javax.ws.rs.ext.Providers;
@@ -32,56 +28,49 @@ import javax.ws.rs.ext.Providers;
  * @version $Id: $
  */
 @Provider
-public class RequestContextResolver implements RequestContext, ContextResolver<RequestContext>
-{
-   @Context
-   private UriInfo uriInfo;
+public class RequestContextResolver implements RequestContext, ContextResolver<RequestContext> {
+    @Context
+    private UriInfo uriInfo;
 
-   @Context
-   private Request request;
+    @Context
+    private Request request;
 
-   @Context
-   private HttpHeaders headers;
+    @Context
+    private HttpHeaders headers;
 
-   @Context
-   private SecurityContext security;
+    @Context
+    private SecurityContext security;
 
-   @Context
-   private Providers providers;
+    @Context
+    private Providers providers;
 
-   @Override
-   public UriInfo getUriInfo()
-   {
-      return uriInfo;
-   }
+    @Override
+    public UriInfo getUriInfo() {
+        return uriInfo;
+    }
 
-   @Override
-   public Request getRequest()
-   {
-      return request;
-   }
+    @Override
+    public Request getRequest() {
+        return request;
+    }
 
-   @Override
-   public HttpHeaders getHeaders()
-   {
-      return headers;
-   }
+    @Override
+    public HttpHeaders getHeaders() {
+        return headers;
+    }
 
-   @Override
-   public SecurityContext getSecurityContext()
-   {
-      return security;
-   }
+    @Override
+    public SecurityContext getSecurityContext() {
+        return security;
+    }
 
-   @Override
-   public Providers getProviders()
-   {
-      return providers;
-   }
+    @Override
+    public Providers getProviders() {
+        return providers;
+    }
 
-   @Override
-   public RequestContext getContext(Class<?> type)
-   {
-      return this;
-   }
+    @Override
+    public RequestContext getContext(Class<?> type) {
+        return this;
+    }
 }

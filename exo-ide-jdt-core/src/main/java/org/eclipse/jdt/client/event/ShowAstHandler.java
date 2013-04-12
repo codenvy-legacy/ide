@@ -24,9 +24,8 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 20, 2012 1:25:31 PM evgen $
  */
-public interface ShowAstHandler extends EventHandler
-{
+public interface ShowAstHandler extends EventHandler {
 
-   void onShowAst(ShowAstEvent event);
+    void onShowAst(ShowAstEvent event);
 
 }

@@ -18,66 +18,51 @@
  */
 package org.eclipse.jdt.client.event;
 
-import org.exoplatform.ide.vfs.client.model.FolderModel;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class PackageCreatedEvent extends GwtEvent<PackageCreatedHandler>
-{
+public class PackageCreatedEvent extends GwtEvent<PackageCreatedHandler> {
 
-   public static final Type<PackageCreatedHandler> TYPE = new Type<PackageCreatedHandler>();
+    public static final Type<PackageCreatedHandler> TYPE = new Type<PackageCreatedHandler>();
 
-   private final FolderModel parentFolder;
+    private final FolderModel parentFolder;
 
-   private final String pack;
+    private final String pack;
 
-   /**
-    * @param pack
-    * @param parentFolder
-    */
-   public PackageCreatedEvent(String pack, FolderModel parentFolder)
-   {
-      this.pack = pack;
-      this.parentFolder = parentFolder;
-   }
+    /**
+     * @param pack
+     * @param parentFolder
+     */
+    public PackageCreatedEvent(String pack, FolderModel parentFolder) {
+        this.pack = pack;
+        this.parentFolder = parentFolder;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<PackageCreatedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<PackageCreatedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(PackageCreatedHandler handler)
-   {
-      handler.onPackageCreated(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(PackageCreatedHandler handler) {
+        handler.onPackageCreated(this);
+    }
 
-   /**
-    * @return the parentFolder
-    */
-   public FolderModel getParentFolder()
-   {
-      return parentFolder;
-   }
+    /** @return the parentFolder */
+    public FolderModel getParentFolder() {
+        return parentFolder;
+    }
 
-   /**
-    * @return the pack
-    */
-   public String getPack()
-   {
-      return pack;
-   }
+    /** @return the pack */
+    public String getPack() {
+        return pack;
+    }
 
 }

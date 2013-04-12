@@ -21,58 +21,48 @@ package org.exoplatform.ide.editor.php.client.codeassistant;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
-import org.exoplatform.ide.editor.php.client.codeassistant.ui.PhpClassWidget;
-import org.exoplatform.ide.editor.php.client.codeassistant.ui.PhpConstantWidget;
-import org.exoplatform.ide.editor.php.client.codeassistant.ui.PhpFunctionWidget;
-import org.exoplatform.ide.editor.php.client.codeassistant.ui.PhpPropertyWidget;
-import org.exoplatform.ide.editor.php.client.codeassistant.ui.PhpTokenKeyWordWidget;
-import org.exoplatform.ide.editor.php.client.codeassistant.ui.PhpVariableWidget;
+import org.exoplatform.ide.editor.php.client.codeassistant.ui.*;
 
 /**
  * Factory of {@link TokenWidget}, need to build token UI representation.
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class PhpTokenWidgetFactory implements TokenWidgetFactory
-{
+public class PhpTokenWidgetFactory implements TokenWidgetFactory {
 
-   /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory#buildTokenWidget(org.exoplatform.ide.editor.api.codeassitant.Token)
-    */
-   @Override
-   public TokenWidget buildTokenWidget(Token token)
-   {
-      switch (token.getType())
-      {
-         case KEYWORD :
-            return new PhpTokenKeyWordWidget(token);
+    /** @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory#buildTokenWidget(org.exoplatform.ide.editor.api
+     * .codeassitant.Token) */
+    @Override
+    public TokenWidget buildTokenWidget(Token token) {
+        switch (token.getType()) {
+            case KEYWORD:
+                return new PhpTokenKeyWordWidget(token);
 
-         case FUNCTION :
-         case METHOD :
-            return new PhpFunctionWidget(token);
+            case FUNCTION:
+            case METHOD:
+                return new PhpFunctionWidget(token);
 
-         case PROPERTY :
-            return new PhpPropertyWidget(token);
+            case PROPERTY:
+                return new PhpPropertyWidget(token);
 
-         case CONSTANT :
-         case CLASS_CONSTANT :
-            return new PhpConstantWidget(token);
+            case CONSTANT:
+            case CLASS_CONSTANT:
+                return new PhpConstantWidget(token);
 
-         case PARAMETER :
-         case VARIABLE :
-         case LOCAL_VARIABLE :
-            return new PhpVariableWidget(token);
+            case PARAMETER:
+            case VARIABLE:
+            case LOCAL_VARIABLE:
+                return new PhpVariableWidget(token);
 
-         case CLASS :
-         case INTERFACE :
-            return new PhpClassWidget(token);
+            case CLASS:
+            case INTERFACE:
+                return new PhpClassWidget(token);
 
-         default :
-            return new PhpTokenKeyWordWidget(token);
-      }
+            default:
+                return new PhpTokenKeyWordWidget(token);
+        }
 
-   }
+    }
 
 }

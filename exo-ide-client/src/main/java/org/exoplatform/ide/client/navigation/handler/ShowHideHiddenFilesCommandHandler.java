@@ -34,66 +34,51 @@ import org.exoplatform.ide.client.navigation.control.ShowHideHiddenFilesControl;
 /**
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: ShowHideHiddenFilesCommandHandler.java Apr 2, 2012 10:27:21 AM azatsarynnyy $
- *
  */
 public class ShowHideHiddenFilesCommandHandler implements ShowHideHiddenFilesHandler, InitializeServicesHandler,
-   ApplicationSettingsReceivedHandler
-{
-   /**
-    * Stores the pattern for hidden files.
-    */
-   private String hiddenFilesPattern = "";
+                                                          ApplicationSettingsReceivedHandler {
+    /** Stores the pattern for hidden files. */
+    private String hiddenFilesPattern = "";
 
-   private ApplicationSettings applicationSettings;
+    private ApplicationSettings applicationSettings;
 
-   public ShowHideHiddenFilesCommandHandler()
-   {
-      IDE.getInstance().addControl(new ShowHideHiddenFilesControl());
+    public ShowHideHiddenFilesCommandHandler() {
+        IDE.getInstance().addControl(new ShowHideHiddenFilesControl());
 
-      IDE.addHandler(InitializeServicesEvent.TYPE, this);
-      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      IDE.addHandler(ShowHideHiddenFilesEvent.TYPE, this);
-   }
+        IDE.addHandler(InitializeServicesEvent.TYPE, this);
+        IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+        IDE.addHandler(ShowHideHiddenFilesEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
-    */
-   @Override
-   public void onInitializeServices(InitializeServicesEvent event)
-   {
-      hiddenFilesPattern = event.getApplicationConfiguration().getHiddenFiles();
+    /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
+     * .client.framework.application.event.InitializeServicesEvent) */
+    @Override
+    public void onInitializeServices(InitializeServicesEvent event) {
+        hiddenFilesPattern = event.getApplicationConfiguration().getHiddenFiles();
 
-      boolean showHiddenFiles = applicationSettings.getValueAsBoolean(Settings.SHOW_HIDDEN_FILES);
-      IDE.fireEvent(new ShowHideHiddenFilesEvent(showHiddenFiles));
-   }
+        boolean showHiddenFiles = applicationSettings.getValueAsBoolean(Settings.SHOW_HIDDEN_FILES);
+        IDE.fireEvent(new ShowHideHiddenFilesEvent(showHiddenFiles));
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesHandler#onShowHideHiddenFiles(org.exoplatform.ide.client.navigation.event.ShowHideHiddenFilesEvent)
-    */
-   @Override
-   public void onShowHideHiddenFiles(ShowHideHiddenFilesEvent event)
-   {
-      if (event.isFilesShown())
-      {
-         DirectoryFilter.get().setPattern("");
-      }
-      else
-      {
-         DirectoryFilter.get().setPattern(hiddenFilesPattern);
-      }
-   }
+    /** @see org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesHandler#onShowHideHiddenFiles(org.exoplatform.ide.client
+     * .navigation.event.ShowHideHiddenFilesEvent) */
+    @Override
+    public void onShowHideHiddenFiles(ShowHideHiddenFilesEvent event) {
+        if (event.isFilesShown()) {
+            DirectoryFilter.get().setPattern("");
+        } else {
+            DirectoryFilter.get().setPattern(hiddenFilesPattern);
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
-    */
-   @Override
-   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
-   {
-      applicationSettings = event.getApplicationSettings();
+    /** @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org
+     * .exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent) */
+    @Override
+    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event) {
+        applicationSettings = event.getApplicationSettings();
 
-      if (applicationSettings.getValueAsBoolean(Settings.SHOW_HIDDEN_FILES) == null)
-      {
-         applicationSettings.setValue(Settings.SHOW_HIDDEN_FILES, Boolean.FALSE, Store.COOKIES);
-      }
-   }
+        if (applicationSettings.getValueAsBoolean(Settings.SHOW_HIDDEN_FILES) == null) {
+            applicationSettings.setValue(Settings.SHOW_HIDDEN_FILES, Boolean.FALSE, Store.COOKIES);
+        }
+    }
 }

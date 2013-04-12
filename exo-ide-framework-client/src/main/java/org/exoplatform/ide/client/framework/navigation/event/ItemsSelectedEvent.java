@@ -28,59 +28,53 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public class ItemsSelectedEvent extends GwtEvent<ItemsSelectedHandler>
-{
+public class ItemsSelectedEvent extends GwtEvent<ItemsSelectedHandler> {
 
-   public static final GwtEvent.Type<ItemsSelectedHandler> TYPE = new GwtEvent.Type<ItemsSelectedHandler>();
+    public static final GwtEvent.Type<ItemsSelectedHandler> TYPE = new GwtEvent.Type<ItemsSelectedHandler>();
 
-   private List<Item> selectedItems;
+    private List<Item> selectedItems;
 
-   private View view;
+    private View view;
 
-   public ItemsSelectedEvent(List<Item> selectedItems, View view)
-   {
-      this.selectedItems = selectedItems;
-      this.view = view;
-   }
+    public ItemsSelectedEvent(List<Item> selectedItems, View view) {
+        this.selectedItems = selectedItems;
+        this.view = view;
+    }
 
-   public ItemsSelectedEvent(Item item, View view)
-   {
-      selectedItems = new ArrayList<Item>();
-      selectedItems.add(item);
-      this.view = view;
-   }
+    public ItemsSelectedEvent(Item item, View view) {
+        selectedItems = new ArrayList<Item>();
+        if (item != null) {
+            selectedItems.add(item);            
+        }
+        this.view = view;
+    }
 
-   @Override
-   protected void dispatch(ItemsSelectedHandler handler)
-   {
-      handler.onItemsSelected(this);
-   }
+    @Override
+    protected void dispatch(ItemsSelectedHandler handler) {
+        handler.onItemsSelected(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ItemsSelectedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ItemsSelectedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   public List<Item> getSelectedItems()
-   {
-      List<Item> items = new ArrayList<Item>();
-      if (selectedItems != null)
-      {
-         items.addAll(selectedItems);
-      }
-      
-      return items;
-   }
+    public List<Item> getSelectedItems() {
+        List<Item> items = new ArrayList<Item>();
+        if (selectedItems != null) {
+            items.addAll(selectedItems);
+        }
 
-   public View getView()
-   {
-      return view;
-   }
+        return items;
+    }
+
+    public View getView() {
+        return view;
+    }
 
 }

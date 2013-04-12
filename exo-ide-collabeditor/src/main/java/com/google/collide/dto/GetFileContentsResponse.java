@@ -24,13 +24,9 @@ import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 @RoutingType(type = RoutingTypes.GETFILECONTENTSRESPONSE)
 public interface GetFileContentsResponse extends ServerToClientDto {
 
-  /**
-   * Returns the file contents if the file exists and is editable.
-   */
-  FileContents getFileContents();
+    /** Returns the file contents if the file exists and is editable. */
+    FileContents getFileContents();
 
-  /**
-   * Returns whether the file exists.
-   */
-  boolean getFileExists();
+    /** Returns whether the file exists. */
+    boolean getFileExists();
 }

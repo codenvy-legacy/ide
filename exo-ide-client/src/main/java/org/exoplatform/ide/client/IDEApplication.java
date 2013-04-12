@@ -26,27 +26,23 @@ import org.exoplatform.gwtframework.commons.util.Log;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
  */
-public class IDEApplication implements EntryPoint
-{
+public class IDEApplication implements EntryPoint {
 
-   public void onModuleLoad()
-   {
-      GWT.setUncaughtExceptionHandler(new H());
-      new IDE();
-   }
+    public void onModuleLoad() {
+        GWT.setUncaughtExceptionHandler(new H());
+        new IDE();
+    }
 
-   private class H implements UncaughtExceptionHandler
-   {
+    private class H implements UncaughtExceptionHandler {
 
-      public void onUncaughtException(Throwable e)
-      {
-         Log.info(e.getMessage());
-      }
+        public void onUncaughtException(Throwable e) {
+            Log.info(e.getMessage());
+        }
 
-   }
+    }
 
 }

@@ -25,150 +25,137 @@ package org.exoplatform.ide.git.shared;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: ResetRequest.java 22817 2011-03-22 09:17:52Z andrew00x $
  */
-public class ResetRequest extends GitRequest
-{
-   /**
-    * Type of reset operation.
-    */
-   public enum ResetType {
-      /**
-       * Resets the index but not the working tree (default).
-       */
-      MIXED {
-         @Override
-         public String toString()
-         {
-            return "--mixed";
-         }
-      },
-      /**
-       * Does not touch the index file nor the working tree at all.
-       */
-      SOFT {
-         @Override
-         public String toString()
-         {
-            return "--soft";
-         }
-      },
-      /**
-       * Resets the working tree and index to that of the tree being switched
-       * to.
-       */
-      HARD {
-         @Override
-         public String toString()
-         {
-            return "--hard";
-         }
-      }
-   }
+public class ResetRequest extends GitRequest {
+    /** Type of reset operation. */
+    public enum ResetType {
+        /**
+         * Change the ref and the index, the workdir is not changed (default).
+         */
+        MIXED {
+            @Override
+            public String toString() {
+                return "--mixed";
+            }
+        },
+        /**
+         * Just change the ref, the index and workdir are not changed.
+         */
+        SOFT {
+            @Override
+            public String toString() {
+                return "--soft";
+            }
+        },
+        /**
+         * Change the ref, the index and the workdir.
+         */
+        HARD {
+            @Override
+            public String toString() {
+                return "--hard";
+            }
+        },
+        /**
+         * Change the ref, the index and the workdir that are different between respective commit and HEAD.
+         */
+        KEEP {
+            @Override
+            public String toString() {
+                return "--keep";
+            }
+        },
+        /**
+         * Resets the index and updates the files in the working tree that are different between respective commit and HEAD, but keeps those
+         * which are different between the index and working tree
+         */
+        MERGE {
+            @Override
+            public String toString() {
+                return "--merge";
+            }
+        };
 
-   /**
-    * Commit to which current head should be reset, e.g. 'HEAD^' one commit back
-    * in history.
-    */
-   private String commit;
+    }
 
-   /**
-    * Type of reset.
-    * 
-    * @see ResetType
-    */
-   private ResetType type = ResetType.MIXED;
+    /**
+     * Commit to which current head should be reset, e.g. 'HEAD^' one commit back in history.
+     */
+    private String    commit;
 
-   /**
-    * Files to reset in index. Content of files is untouched. Typically it is
-    * useful to remove from index mistakenly added files. If paths is not
-    * <code>null</code> or empty list then {@link #type} may not be other than
-    * {@link ResetType#MIXED}.
-    */
-   private String[] paths;
+    /**
+     * Paths to be reseted.
+     */
+    private String[]  paths;
 
-   /**
-    * @param commit commit to which current head should be reset
-    * @param type type of reset
-    * @see #commit
-    * @see #type
-    */
-   public ResetRequest(String commit, ResetType type)
-   {
-      this.commit = commit;
-      this.type = type;
-   }
+    /**
+     * Type of reset.
+     * 
+     * @see ResetType
+     */
+    private ResetType type;
 
-   /**
-    * @param paths files to reset in index. Content of files is untouched.
-    *           Typically it is useful to remove from index mistakenly added
-    *           files. If paths is not <code>null</code> or empty list then
-    *           {@link #type} may not be other than {@link ResetType#MIXED}
-    */
-   public ResetRequest(String[] paths)
-   {
-      this.setPaths(paths);
-      this.commit = "HEAD";
-      this.type = ResetType.MIXED;
-   }
+    /**
+     * @param commit commit to which current head should be reset
+     * @param type type of reset
+     * @see #commit
+     * @see #type
+     */
+    public ResetRequest(String commit, ResetType type) {
+        this.commit = commit;
+        this.type = type;
+    }
 
-   /**
-    * "Empty" reset request. Corresponding setters used to setup required
-    * parameters.
-    */
-   public ResetRequest()
-   {
-   }
+    /**
+     * "Empty" reset request. Corresponding setters used to setup required parameters.
+     */
+    public ResetRequest() {
+    }
 
-   /**
-    * @return commit to which current head should be reset
-    * @see #commit
-    */
-   public String getCommit()
-   {
-      return commit;
-   }
+    /**
+     * @return commit to which current head should be reset
+     * @see #commit
+     */
+    public String getCommit() {
+        return commit;
+    }
 
-   /**
-    * @param commit commit to which current head should be reset
-    * @see #commit
-    */
-   public void setCommit(String commit)
-   {
-      this.commit = commit;
-   }
+    /**
+     * @param commit commit to which current head should be reset
+     * @see #commit
+     */
+    public void setCommit(String commit) {
+        this.commit = commit;
+    }
 
-   /**
-    * @return type of reset.
-    * @see ResetType
-    */
-   public ResetType getType()
-   {
-      return type;
-   }
+    /**
+     * @return type of reset.
+     * @see ResetType
+     */
+    public ResetType getType() {
+        return type;
+    }
 
-   /**
-    * @param type type of reset.
-    * @see ResetType
-    */
-   public void setType(ResetType type)
-   {
-      this.type = type;
-   }
+    /**
+     * @param type type of reset.
+     * @see ResetType
+     */
+    public void setType(ResetType type) {
+        this.type = type;
+    }
 
-   /**
-    * @return files to reset in index
-    * @see #paths
-    */
-   public String[] getPaths()
-   {
-      return paths;
-   }
+    /**
+     * @return files to reset in index
+     * @see #paths
+     */
+    public String[] getPaths() {
+        return paths;
+    }
 
-   /**
-    * @param paths files to reset in index
-    * @see #paths
-    */
-   public void setPaths(String[] paths)
-   {
-      this.paths = paths;
-   }
+    /**
+     * @param paths files to reset in index
+     * @see #paths
+     */
+    public void setPaths(String[] paths) {
+        this.paths = paths;
+    }
 }

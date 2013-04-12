@@ -18,36 +18,32 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene;
 
-/**
- * Keep all field names in lucene Document
- */
-public final class DataIndexFields
-{
-   public static final String MODIFIERS = "modifiers";
+/** Keep all field names in lucene Document */
+public final class DataIndexFields {
+    public static final String MODIFIERS = "modifiers";
 
-   public static final String CLASS_NAME = "class-name";
+    public static final String CLASS_NAME = "class-name";
 
-   public static final String FQN = "fqn";
+    public static final String FQN = "fqn";
 
-   public static final String ENTITY_TYPE = "entity-type";
+    public static final String ENTITY_TYPE = "entity-type";
 
-   public static final String SUPERCLASS = "superclass";
+    public static final String SUPERCLASS = "superclass";
 
-   public static final String INTERFACES = "interfaces";
+    public static final String INTERFACES = "interfaces";
 
-   public static final String TYPE_INFO = "type-info";
+    public static final String TYPE_INFO = "type-info";
 
-   public static final String JAVA_DOC = "doc";
-   
-   public static final String SIGNATURE = "signature";
-   
-   public static final String PACKAGE = "package";
-   
-   public static final String ARTIFACT = "artifact";
+    public static final String JAVA_DOC = "doc";
+
+    public static final String SIGNATURE = "signature";
+
+    public static final String PACKAGE = "package";
+
+    public static final String ARTIFACT = "artifact";
 //   public static final String DESCRIPTOR = "descriptor";
-   
-   private DataIndexFields()
-   {
-   }
+
+    private DataIndexFields() {
+    }
 
 }

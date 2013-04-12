@@ -24,65 +24,64 @@ package org.exoplatform.ide.extension.aws.shared.ec2;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface SecurityGroupInfo
-{
-   /**
-    * Get AWS Access Key ID of the owner of the security group.
-    *
-    * @return ID of the owner of the security group
-    */
-   String getOwnerId();
+public interface SecurityGroupInfo {
+    /**
+     * Get AWS Access Key ID of the owner of the security group.
+     *
+     * @return ID of the owner of the security group
+     */
+    String getOwnerId();
 
-   /**
-    * Set AWS Access Key ID of the owner of the security group.
-    *
-    * @param ownerId
-    *    ID of the owner of the security group
-    */
-   void setOwnerId(String ownerId);
+    /**
+     * Set AWS Access Key ID of the owner of the security group.
+     *
+     * @param ownerId
+     *         ID of the owner of the security group
+     */
+    void setOwnerId(String ownerId);
 
-   /**
-    * Get name of this security group.
-    *
-    * @return name of this security group
-    */
-   String getName();
+    /**
+     * Get name of this security group.
+     *
+     * @return name of this security group
+     */
+    String getName();
 
-   /**
-    * Set name of this security group.
-    *
-    * @param name
-    *    name of this security group
-    */
-   void setName(String name);
+    /**
+     * Set name of this security group.
+     *
+     * @param name
+     *         name of this security group
+     */
+    void setName(String name);
 
-   /**
-    * Get ID of this security group.
-    *
-    * @return ID of this security group
-    */
-   String getId();
+    /**
+     * Get ID of this security group.
+     *
+     * @return ID of this security group
+     */
+    String getId();
 
-   /**
-    * Set ID of this security group.
-    *
-    * @param id
-    *    ID of this security group
-    */
-   void setId(String id);
+    /**
+     * Set ID of this security group.
+     *
+     * @param id
+     *         ID of this security group
+     */
+    void setId(String id);
 
-   /**
-    * Get description of this security group.
-    *
-    * @return description of this security group
-    */
-   String getDescription();
+    /**
+     * Get description of this security group.
+     *
+     * @return description of this security group
+     */
+    String getDescription();
 
-   /**
-    * Set description of this security group.
-    *
-    * @param description
-    *    description of this security group
-    */
-   void setDescription(String description);
+    /**
+     * Set description of this security group.
+     *
+     * @param description
+     *         description of this security group
+     */
+    void setDescription(String description);
 }

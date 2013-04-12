@@ -55,203 +55,167 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 21, 2012 12:00:58 PM anya $
- * 
  */
-public class CreateVersionPresenter implements CreateVersionHandler, ViewClosedHandler, ProjectBuiltHandler
-{
-   interface Display extends IsView
-   {
-      TextFieldItem getVersionLabelField();
+public class CreateVersionPresenter implements CreateVersionHandler, ViewClosedHandler, ProjectBuiltHandler {
+    interface Display extends IsView {
+        TextFieldItem getVersionLabelField();
 
-      TextFieldItem getDescriptionField();
+        TextFieldItem getDescriptionField();
 
-      TextFieldItem getS3BucketField();
+        TextFieldItem getS3BucketField();
 
-      TextFieldItem getS3KeyField();
+        TextFieldItem getS3KeyField();
 
-      HasClickHandlers getCreateButton();
+        HasClickHandlers getCreateButton();
 
-      HasClickHandlers getCancelButton();
+        HasClickHandlers getCancelButton();
 
-      void enableCreateButton(boolean enabled);
+        void enableCreateButton(boolean enabled);
 
-      void focusInVersionLabelField();
-   }
+        void focusInVersionLabelField();
+    }
 
-   private Display display;
+    private Display display;
 
-   private String vfsId;
+    private String vfsId;
 
-   private ProjectModel project;
+    private ProjectModel project;
 
-   private String applicationName;
+    private String applicationName;
 
-   private String warUrl = null;
+    private String warUrl = null;
 
-   private VersionCreatedHandler versionCreatedHandler;
+    private VersionCreatedHandler versionCreatedHandler;
 
-   public CreateVersionPresenter()
-   {
-      IDE.addHandler(CreateVersionEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    public CreateVersionPresenter() {
+        IDE.addHandler(CreateVersionEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   public void bindDisplay()
-   {
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
+    public void bindDisplay() {
+        display.getCancelButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
 
-      display.getCreateButton().addClickHandler(new ClickHandler()
-      {
+        display.getCreateButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            warUrl = null;
-            beforeCreation();
-         }
-      });
+            @Override
+            public void onClick(ClickEvent event) {
+                warUrl = null;
+                beforeCreation();
+            }
+        });
 
-      display.getVersionLabelField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
+        display.getVersionLabelField().addValueChangeHandler(new ValueChangeHandler<String>() {
 
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            display.enableCreateButton(event.getValue() != null);
-         }
-      });
-   }
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                display.enableCreateButton(event.getValue() != null);
+            }
+        });
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.create.CreateVersionHandler#onCreateVersion(org.exoplatform.ide.extension.aws.client.beanstalk.versions.create.CreateVersionEvent)
-    */
-   @Override
-   public void onCreateVersion(CreateVersionEvent event)
-   {
-      this.vfsId = event.getVfsId();
-      this.project = event.getProject();
-      this.applicationName = event.getApplicationName();
-      this.versionCreatedHandler = event.getVersionCreatedHandler();
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.create.CreateVersionHandler#onCreateVersion(org.exoplatform.ide
+     * .extension.aws.client.beanstalk.versions.create.CreateVersionEvent) */
+    @Override
+    public void onCreateVersion(CreateVersionEvent event) {
+        this.vfsId = event.getVfsId();
+        this.project = event.getProject();
+        this.applicationName = event.getApplicationName();
+        this.versionCreatedHandler = event.getVersionCreatedHandler();
 
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         IDE.getInstance().openView(display.asView());
-         bindDisplay();
-      }
-      display.enableCreateButton(false);
-      display.focusInVersionLabelField();
-   }
+        if (display == null) {
+            display = GWT.create(Display.class);
+            IDE.getInstance().openView(display.asView());
+            bindDisplay();
+        }
+        display.enableCreateButton(false);
+        display.focusInVersionLabelField();
+    }
 
-   private void beforeCreation()
-   {
-      ProjectType projectType = ProjectType.fromValue(project.getProjectType());
-      if (ProjectResolver.getProjectTypesByLanguage(Language.JAVA).contains(projectType))
-      {
-         IDE.addHandler(ProjectBuiltEvent.TYPE, this);
-         JobManager.get().showJobSeparated();
-         IDE.fireEvent(new BuildProjectEvent(project));
-      }
-      else
-      {
-         createVersion();
-      }
-   }
+    private void beforeCreation() {
+        ProjectType projectType = ProjectType.fromValue(project.getProjectType());
+        if (ProjectResolver.getProjectTypesByLanguage(Language.JAVA).contains(projectType)) {
+            IDE.addHandler(ProjectBuiltEvent.TYPE, this);
+            JobManager.get().showJobSeparated();
+            IDE.fireEvent(new BuildProjectEvent(project));
+        } else {
+            createVersion();
+        }
+    }
 
-   private void createVersion()
-   {
-      final String versionLabel = display.getVersionLabelField().getValue();
-      CreateApplicationVersionRequest createApplicationVersionRequest =
-         AWSExtension.AUTO_BEAN_FACTORY.createVersionRequest().as();
-      createApplicationVersionRequest.setApplicationName(applicationName);
-      createApplicationVersionRequest.setDescription(display.getDescriptionField().getValue());
-      createApplicationVersionRequest.setVersionLabel(versionLabel);
-      createApplicationVersionRequest.setS3Bucket(display.getS3BucketField().getValue());
-      createApplicationVersionRequest.setS3Key(display.getS3KeyField().getValue());
-      createApplicationVersionRequest.setWar(warUrl);
+    private void createVersion() {
+        final String versionLabel = display.getVersionLabelField().getValue();
+        CreateApplicationVersionRequest createApplicationVersionRequest =
+                AWSExtension.AUTO_BEAN_FACTORY.createVersionRequest().as();
+        createApplicationVersionRequest.setApplicationName(applicationName);
+        createApplicationVersionRequest.setDescription(display.getDescriptionField().getValue());
+        createApplicationVersionRequest.setVersionLabel(versionLabel);
+        createApplicationVersionRequest.setS3Bucket(display.getS3BucketField().getValue());
+        createApplicationVersionRequest.setS3Key(display.getS3KeyField().getValue());
+        createApplicationVersionRequest.setWar(warUrl);
 
-      AutoBean<ApplicationVersionInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.applicationVersionInfo();
+        AutoBean<ApplicationVersionInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.applicationVersionInfo();
 
-      try
-      {
-         BeanstalkClientService.getInstance().createVersion(
-            vfsId,
-            project.getId(),
-            createApplicationVersionRequest,
-            new AwsAsyncRequestCallback<ApplicationVersionInfo>(new AutoBeanUnmarshaller<ApplicationVersionInfo>(
-               autoBean), new LoggedInHandler()
-            {
+        try {
+            BeanstalkClientService.getInstance().createVersion(
+                    vfsId,
+                    project.getId(),
+                    createApplicationVersionRequest,
+                    new AwsAsyncRequestCallback<ApplicationVersionInfo>(new AutoBeanUnmarshaller<ApplicationVersionInfo>(
+                            autoBean), new LoggedInHandler() {
 
-               @Override
-               public void onLoggedIn()
-               {
-                  createVersion();
-               }
-            })
-            {
+                        @Override
+                        public void onLoggedIn() {
+                            createVersion();
+                        }
+                    }, null) {
 
-               @Override
-               protected void onSuccess(ApplicationVersionInfo result)
-               {
-                  if (display != null)
-                  {
-                     IDE.getInstance().closeView(display.asView().getId());
-                  }
-                  if (versionCreatedHandler != null)
-                  {
-                     versionCreatedHandler.onVersionCreate(result);
-                  }
-               }
+                        @Override
+                        protected void onSuccess(ApplicationVersionInfo result) {
+                            if (display != null) {
+                                IDE.getInstance().closeView(display.asView().getId());
+                            }
+                            if (versionCreatedHandler != null) {
+                                versionCreatedHandler.onVersionCreate(result);
+                            }
+                        }
 
-               @Override
-               protected void processFail(Throwable exception)
-               {
-                  String message = AWSExtension.LOCALIZATION_CONSTANT.createVersionFailed(versionLabel);
-                  if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null)
-                  {
-                     message += "<br>" + ((ServerException)exception).getMessage();
-                  }
-                  IDE.fireEvent(new OutputEvent(message, Type.ERROR));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                        @Override
+                        protected void processFail(Throwable exception) {
+                            String message = AWSExtension.LOCALIZATION_CONSTANT.createVersionFailed(versionLabel);
+                            if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null) {
+                                message += "<br>" + ((ServerException)exception).getMessage();
+                            }
+                            IDE.fireEvent(new OutputEvent(message, Type.ERROR));
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler#onProjectBuilt(org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent)
-    */
-   @Override
-   public void onProjectBuilt(ProjectBuiltEvent event)
-   {
-      IDE.removeHandler(event.getAssociatedType(), this);
-      if (event.getBuildStatus().getDownloadUrl() != null)
-      {
-         warUrl = event.getBuildStatus().getDownloadUrl();
-         createVersion();
-      }
-   }
+    /** @see org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler#onProjectBuilt(org.exoplatform.ide.extension.maven
+     * .client.event.ProjectBuiltEvent) */
+    @Override
+    public void onProjectBuilt(ProjectBuiltEvent event) {
+        IDE.removeHandler(event.getAssociatedType(), this);
+        if (event.getBuildStatus().getDownloadUrl() != null) {
+            warUrl = event.getBuildStatus().getDownloadUrl();
+            createVersion();
+        }
+    }
 }

@@ -20,7 +20,9 @@ package org.exoplatform.ide.git.server.jgit;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevTag;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.exoplatform.ide.git.shared.TagDeleteRequest;
 
 import java.util.Map;
@@ -29,30 +31,35 @@ import java.util.Map;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: TagDeleteTest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
-public class TagDeleteTest extends BaseTest
-{
-   private RevTag goodTag;
-   private RevTag badTag;
+public class TagDeleteTest extends BaseTest {
+    private RevTag goodTag;
 
-   @Override
-   protected void setUp() throws Exception
-   {
-      super.setUp();
-      Git git = new Git(getDefaultRepository());
-      goodTag = git.tag().setName("good-tag").setMessage("good-tag").call();
-      badTag = git.tag().setName("bad-tag").setMessage("bad-tag").call();
-   }
+    private RevTag badTag;
 
-   public void testDeleteTag() throws Exception
-   {
-      Map<String, Ref> tags = getDefaultRepository().getTags();
-      assertTrue(tags.containsKey(badTag.getTagName()));
-      assertTrue(tags.containsKey(goodTag.getTagName()));
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        Repository repo = getDefaultRepository();
 
-      getDefaultConnection().tagDelete(new TagDeleteRequest(badTag.getTagName()));
+        RevWalk revWalker = new RevWalk(repo);
+        Git git = new Git(repo);
 
-      tags = getDefaultRepository().getTags();
-      assertFalse(tags.containsKey(badTag.getTagName()));
-      assertTrue(tags.containsKey(goodTag.getTagName()));
-   }
+        Ref goodRef = git.tag().setName("good-tag").setMessage("good-tag").call();
+        Ref badRef = git.tag().setName("bad-tag").setMessage("bad-tag").call();
+
+        goodTag = revWalker.parseTag(goodRef.getLeaf().getObjectId());
+        badTag = revWalker.parseTag(badRef.getLeaf().getObjectId());
+    }
+
+    public void testDeleteTag() throws Exception {
+        Map<String, Ref> tags = getDefaultRepository().getTags();
+        assertTrue(tags.containsKey(badTag.getTagName()));
+        assertTrue(tags.containsKey(goodTag.getTagName()));
+
+        getDefaultConnection().tagDelete(new TagDeleteRequest(badTag.getTagName()));
+
+        tags = getDefaultRepository().getTags();
+        assertFalse(tags.containsKey(badTag.getTagName()));
+        assertTrue(tags.containsKey(goodTag.getTagName()));
+    }
 }

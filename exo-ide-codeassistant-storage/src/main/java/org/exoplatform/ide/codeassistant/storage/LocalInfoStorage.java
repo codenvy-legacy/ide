@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.codeassistant.storage;
 
-import static org.exoplatform.ide.codeassistant.storage.lucene.search.SearchByFieldConstraint.eq;
-
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.storage.api.DataWriter;
 import org.exoplatform.ide.codeassistant.storage.api.InfoStorage;
@@ -34,76 +32,62 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.List;
 
+import static org.exoplatform.ide.codeassistant.storage.lucene.search.SearchByFieldConstraint.eq;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class LocalInfoStorage implements InfoStorage
-{
+public class LocalInfoStorage implements InfoStorage {
 
-   private static final Logger LOG = LoggerFactory.getLogger(LocalInfoStorage.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LocalInfoStorage.class);
 
-   private LuceneInfoStorage infoStorage;
+    private LuceneInfoStorage infoStorage;
 
-   private final LuceneQueryExecutor queryExecutor;
+    private final LuceneQueryExecutor queryExecutor;
 
-   /**
-    * @param infoStorage
-    */
-   public LocalInfoStorage(LuceneInfoStorage infoStorage)
-   {
-      super();
-      this.infoStorage = infoStorage;
-      queryExecutor = new LuceneQueryExecutor(infoStorage);
-   }
+    /** @param infoStorage */
+    public LocalInfoStorage(LuceneInfoStorage infoStorage) {
+        super();
+        this.infoStorage = infoStorage;
+        queryExecutor = new LuceneQueryExecutor(infoStorage);
+    }
 
-   /**
-    * @throws IOException 
-    * @see org.exoplatform.ide.codeassistant.storage.api.InfoStorage#getWriter()
-    */
-   @Override
-   public DataWriter getWriter() throws IOException
-   {
-      return new LocalDataWriter(new LuceneDataWriter(infoStorage));
-   }
+    /**
+     * @throws IOException
+     * @see org.exoplatform.ide.codeassistant.storage.api.InfoStorage#getWriter()
+     */
+    @Override
+    public DataWriter getWriter() throws IOException {
+        return new LocalDataWriter(new LuceneDataWriter(infoStorage));
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.storage.api.InfoStorage#isArtifactExist(java.lang.String)
-    */
-   @Override
-   public boolean isArtifactExist(String artifact)
-   {
-      return isExist(artifact, IndexType.PACKAGE);
-   }
+    /** @see org.exoplatform.ide.codeassistant.storage.api.InfoStorage#isArtifactExist(java.lang.String) */
+    @Override
+    public boolean isArtifactExist(String artifact) {
+        return isExist(artifact, IndexType.PACKAGE);
+    }
 
-   /**
-    * @param artifact
-    * @return
-    */
-   private boolean isExist(String artifact, IndexType indexType)
-   {
-      try
-      {
-         List<String> artifacts =
-            queryExecutor.executeQuery(new ArtifactExtractor(), indexType, eq("artifact", artifact), 100, 0);
-         return (artifacts != null && !artifacts.isEmpty());
-      }
-      catch (CodeAssistantException e)
-      {
-         if (LOG.isDebugEnabled())
-            LOG.debug(e.getMessage(), e);
-      }
-      return false;
-   }
+    /**
+     * @param artifact
+     * @return
+     */
+    private boolean isExist(String artifact, IndexType indexType) {
+        try {
+            List<String> artifacts =
+                    queryExecutor.executeQuery(new ArtifactExtractor(), indexType, eq("artifact", artifact), 100, 0);
+            return (artifacts != null && !artifacts.isEmpty());
+        } catch (CodeAssistantException e) {
+            if (LOG.isDebugEnabled())
+                LOG.debug(e.getMessage(), e);
+        }
+        return false;
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.storage.api.InfoStorage#isJavaDockForArtifactExist(java.lang.String)
-    */
-   @Override
-   public boolean isJavaDockForArtifactExist(String artifact)
-   {
-      return isExist(artifact, IndexType.DOC);
-   }
+    /** @see org.exoplatform.ide.codeassistant.storage.api.InfoStorage#isJavaDockForArtifactExist(java.lang.String) */
+    @Override
+    public boolean isJavaDockForArtifactExist(String artifact) {
+        return isExist(artifact, IndexType.DOC);
+    }
 
 }

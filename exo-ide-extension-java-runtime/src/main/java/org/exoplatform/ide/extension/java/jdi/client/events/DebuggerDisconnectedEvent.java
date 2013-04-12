@@ -23,29 +23,21 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  12:18:47 PM Mar 28, 2012 evgen $
- *
  */
-public class DebuggerDisconnectedEvent extends GwtEvent<DebuggerDisconnectedHandler>
-{
+public class DebuggerDisconnectedEvent extends GwtEvent<DebuggerDisconnectedHandler> {
 
-   public static final GwtEvent.Type<DebuggerDisconnectedHandler> TYPE = new Type<DebuggerDisconnectedHandler>();
-   
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(DebuggerDisconnectedHandler handler)
-   {
-      handler.onDebuggerDisconnected(this);
-   }
+    public static final GwtEvent.Type<DebuggerDisconnectedHandler> TYPE = new Type<DebuggerDisconnectedHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<DebuggerDisconnectedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(DebuggerDisconnectedHandler handler) {
+        handler.onDebuggerDisconnected(this);
+    }
+
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<DebuggerDisconnectedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

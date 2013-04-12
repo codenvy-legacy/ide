@@ -22,29 +22,29 @@ import com.codenvy.eclipse.ltk.core.refactoring.RefactoringStatus;
  *
  * @since 3.2
  */
-public interface IRefactoringDescriptorDeleteQuery
-{
+public interface IRefactoringDescriptorDeleteQuery {
 
-   /**
-    * Have any refactoring descriptors been deleted?
-    *
-    * @return <code>true</code> if any descriptors have been deleted,
-    *         <code>true</code> otherwise
-    */
-   public boolean hasDeletions();
+    /**
+     * Have any refactoring descriptors been deleted?
+     *
+     * @return <code>true</code> if any descriptors have been deleted,
+     *         <code>true</code> otherwise
+     */
+    public boolean hasDeletions();
 
-   /**
-    * Returns whether the current delete operation can be executed.
-    * <p>
-    * The refactoring descriptor will considered to be deleted only if this
-    * method returns a status of severity {@link com.codenvy.eclipse.ltk.core.refactoring.RefactoringStatus#OK}.<br>
-    * If a status of severity {@link com.codenvy.eclipse.ltk.core.refactoring.RefactoringStatus#FATAL} is returned, the
-    * entire operation which this deletion is part of is considered to be
-    * aborted.
-    * </p>
-    *
-    * @param proxy the refactoring descriptor proxy to delete
-    * @return a refactoring status describing the outcome of the user prompt
-    */
-   public RefactoringStatus proceed(RefactoringDescriptorProxy proxy);
+    /**
+     * Returns whether the current delete operation can be executed.
+     * <p>
+     * The refactoring descriptor will considered to be deleted only if this
+     * method returns a status of severity {@link com.codenvy.eclipse.ltk.core.refactoring.RefactoringStatus#OK}.<br>
+     * If a status of severity {@link com.codenvy.eclipse.ltk.core.refactoring.RefactoringStatus#FATAL} is returned, the
+     * entire operation which this deletion is part of is considered to be
+     * aborted.
+     * </p>
+     *
+     * @param proxy
+     *         the refactoring descriptor proxy to delete
+     * @return a refactoring status describing the outcome of the user prompt
+     */
+    public RefactoringStatus proceed(RefactoringDescriptorProxy proxy);
 }

@@ -40,125 +40,104 @@ import java.util.List;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
 @RolesAllowed({"developer"})
 public class ShowOutlineControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-   ViewClosedHandler, ViewOpenedHandler
-{
+                                                                 ViewClosedHandler, ViewOpenedHandler {
 
-   public static final String ID = "View/Show \\ Hide Outline";
+    public static final String ID = "View/Show \\ Hide Outline";
 
-   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.outlineTitleControl();
+    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.outlineTitleControl();
 
-   public static final String PROMPT_SHOW = IDE.IDE_LOCALIZATION_CONSTANT.outlinePromptShowControl();
+    public static final String PROMPT_SHOW = IDE.IDE_LOCALIZATION_CONSTANT.outlinePromptShowControl();
 
-   public static final String PROMPT_HIDE = IDE.IDE_LOCALIZATION_CONSTANT.outlinePromptHideControl();
+    public static final String PROMPT_HIDE = IDE.IDE_LOCALIZATION_CONSTANT.outlinePromptHideControl();
 
-   private boolean outlineViewOpened = false;
+    private boolean outlineViewOpened = false;
 
-   private List<String> ignoredMimeTypes = new ArrayList<String>();
+    private List<String> ignoredMimeTypes = new ArrayList<String>();
 
-   /**
-    * 
-    */
-   public ShowOutlineControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setImages(IDEImageBundle.INSTANCE.outline(), IDEImageBundle.INSTANCE.outlineDisabled());
-      setEvent(new ShowOutlineEvent(true));
-      setEnabled(true);
-      setDelimiterBefore(true);
-      setCanBeSelected(true);
-   }
+    /**
+     *
+     */
+    public ShowOutlineControl() {
+        super(ID);
+        setTitle(TITLE);
+        setImages(IDEImageBundle.INSTANCE.outline(), IDEImageBundle.INSTANCE.outlineDisabled());
+        setEvent(new ShowOutlineEvent(true));
+        setEnabled(true);
+        setDelimiterBefore(true);
+        setCanBeSelected(true);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(ViewOpenedEvent.TYPE, this);
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(ViewOpenedEvent.TYPE, this);
 
-      ignoredMimeTypes.add(MimeType.TEXT_HTML);
-      ignoredMimeTypes.add(MimeType.TEXT_CSS);
-      ignoredMimeTypes.add(MimeType.TEXT_JAVASCRIPT);
-      ignoredMimeTypes.add(MimeType.APPLICATION_JAVASCRIPT);
-      ignoredMimeTypes.add(MimeType.APPLICATION_X_JAVASCRIPT);
-   }
+        ignoredMimeTypes.add(MimeType.TEXT_HTML);
+        ignoredMimeTypes.add(MimeType.TEXT_CSS);
+        ignoredMimeTypes.add(MimeType.TEXT_JAVASCRIPT);
+        ignoredMimeTypes.add(MimeType.APPLICATION_JAVASCRIPT);
+        ignoredMimeTypes.add(MimeType.APPLICATION_X_JAVASCRIPT);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.editor.event.EditorActiveFileChangedEvent)
-    */
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      if (event.getFile() == null || event.getEditor() == null)
-      {
-         setVisible(false);
-         return;
-      }
+    /** @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client
+     * .editor.event.EditorActiveFileChangedEvent) */
+    @Override
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        if (event.getFile() == null || event.getEditor() == null) {
+            setVisible(false);
+            return;
+        }
 
-      boolean visible = event.getEditor().isCapable(EditorCapability.OUTLINE);
+        boolean visible = event.getEditor().isCapable(EditorCapability.OUTLINE);
 
-      // TODO add possibility to configure editor's capabilities 
-      if (ignoredMimeTypes.contains(event.getFile().getMimeType()))
-      {
-         visible = false;
-      }
+        // TODO add possibility to configure editor's capabilities
+        if (ignoredMimeTypes.contains(event.getFile().getMimeType())) {
+            visible = false;
+        }
 
-      setVisible(visible);
-      if (visible)
-      {
-         update();
-      }
-   }
+        setVisible(visible);
+        if (visible) {
+            update();
+        }
+    }
 
-   /**
-    * 
-    */
-   private void update()
-   {
-      setSelected(outlineViewOpened);
-      if (outlineViewOpened)
-      {
-         setPrompt(PROMPT_HIDE);
-         setEvent(new ShowOutlineEvent(false));
-      }
-      else
-      {
-         setPrompt(PROMPT_SHOW);
-         setEvent(new ShowOutlineEvent(true));
-      }
-   }
+    /**
+     *
+     */
+    private void update() {
+        setSelected(outlineViewOpened);
+        if (outlineViewOpened) {
+            setPrompt(PROMPT_HIDE);
+            setEvent(new ShowOutlineEvent(false));
+        } else {
+            setPrompt(PROMPT_SHOW);
+            setEvent(new ShowOutlineEvent(true));
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler#onViewOpened(org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent)
-    */
-   @Override
-   public void onViewOpened(ViewOpenedEvent event)
-   {
-      if (event.getView() instanceof OutlineDisplay)
-      {
-         outlineViewOpened = true;
-         update();
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler#onViewOpened(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewOpenedEvent) */
+    @Override
+    public void onViewOpened(ViewOpenedEvent event) {
+        if (event.getView() instanceof OutlineDisplay) {
+            outlineViewOpened = true;
+            update();
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof OutlineDisplay)
-      {
-         outlineViewOpened = false;
-         update();
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof OutlineDisplay) {
+            outlineViewOpened = false;
+            update();
+        }
+    }
 
 }

@@ -22,12 +22,7 @@ package org.exoplatform.ide.client.edit.switching;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
+import org.exoplatform.ide.client.framework.editor.event.*;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.File;
@@ -36,94 +31,83 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class GoNextEditorControl extends SimpleControl implements IDEControl, EditorFileOpenedHandler, EditorFileClosedHandler, EditorActiveFileChangedHandler
-{
-   
-   public static final String ID = "Window/Navigation/Next Editor";
+public class GoNextEditorControl extends SimpleControl
+        implements IDEControl, EditorFileOpenedHandler, EditorFileClosedHandler, EditorActiveFileChangedHandler {
 
-   public static final String TITLE = "Next Editor";
-   
-   public static final String PROMPT = "Switch to Next Editor";
-   
-   private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
-   
-   private File activeFile;
+    public static final String ID = "Window/Navigation/Next Editor";
 
-   public GoNextEditorControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(IDEImageBundle.INSTANCE.next(), IDEImageBundle.INSTANCE.nextDisabled());
-      setEvent(new GoNextEditorEvent());
-      setHotKey("Ctrl+Shift+PageDown");
-   }
+    public static final String TITLE = "Next Editor";
 
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
-      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      setVisible(true);
-   }
+    public static final String PROMPT = "Switch to Next Editor";
 
-   @Override
-   public void onEditorFileOpened(EditorFileOpenedEvent event)
-   {
-      openedFiles = event.getOpenedFiles();
-      update();
-   }
+    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
-   @Override
-   public void onEditorFileClosed(EditorFileClosedEvent event)
-   {
-      openedFiles = event.getOpenedFiles();
-      update();
-   }
+    private File activeFile;
 
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      activeFile = event.getFile();
-      update();
-   }
-   
-   private void update()
-   {
-      if (activeFile == null)
-      {
-         setEnabled(false);
-         return;
-      }
+    public GoNextEditorControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(IDEImageBundle.INSTANCE.next(), IDEImageBundle.INSTANCE.nextDisabled());
+        setEvent(new GoNextEditorEvent());
+        setHotKey("Ctrl+Shift+PageDown");
+    }
 
-      String[] keys = openedFiles.keySet().toArray(new String[openedFiles.size()]);
-      if (keys.length == 1)
-      {
-         setEnabled(false);
-         return;
-      }
+    @Override
+    public void initialize() {
+        IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+        IDE.addHandler(EditorFileClosedEvent.TYPE, this);
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+        setVisible(true);
+    }
 
-      int pos = 0;
-      for (String key : keys)
-      {
-         if (activeFile.getId().equals(key) && pos < keys.length - 1)
-         {
-            setEnabled(true);
+    @Override
+    public void onEditorFileOpened(EditorFileOpenedEvent event) {
+        openedFiles = event.getOpenedFiles();
+        update();
+    }
+
+    @Override
+    public void onEditorFileClosed(EditorFileClosedEvent event) {
+        openedFiles = event.getOpenedFiles();
+        update();
+    }
+
+    @Override
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        activeFile = event.getFile();
+        update();
+    }
+
+    private void update() {
+        if (activeFile == null) {
+            setEnabled(false);
             return;
-         }
+        }
 
-         pos++;
-      }
+        String[] keys = openedFiles.keySet().toArray(new String[openedFiles.size()]);
+        if (keys.length == 1) {
+            setEnabled(false);
+            return;
+        }
 
-      setEnabled(false);
-   }   
+        int pos = 0;
+        for (String key : keys) {
+            if (activeFile.getId().equals(key) && pos < keys.length - 1) {
+                setEnabled(true);
+                return;
+            }
+
+            pos++;
+        }
+
+        setEnabled(false);
+    }
 
 }

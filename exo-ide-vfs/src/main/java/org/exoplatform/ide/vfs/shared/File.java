@@ -22,29 +22,40 @@ package org.exoplatform.ide.vfs.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface File extends Item
-{
-   /** @return version id */
-   String getVersionId();
+public interface File extends Item {
+    /** @return version id */
+    String getVersionId();
 
-   /** @param versionId the version id */
-   void setVersionId(String versionId);
+    /**
+     * @param versionId
+     *         the version id
+     */
+    void setVersionId(String versionId);
 
-   /** @return content length */
-   long getLength();
+    /** @return content length */
+    long getLength();
 
-   /** @param length the content length */
-   void setLength(long length);
+    /**
+     * @param length
+     *         the content length
+     */
+    void setLength(long length);
 
-   /** @return date of last modification */
-   long getLastModificationDate();
+    /** @return date of last modification */
+    long getLastModificationDate();
 
-   /** @param lastModificationDate the date of last modification */
-   void setLastModificationDate(long lastModificationDate);
+    /**
+     * @param lastModificationDate
+     *         the date of last modification
+     */
+    void setLastModificationDate(long lastModificationDate);
 
-   /** @return <code>true</code> if object locked and <code>false</code> otherwise */
-   boolean isLocked();
+    /** @return <code>true</code> if object locked and <code>false</code> otherwise */
+    boolean isLocked();
 
-   /** @param locked locking flag. Must be <code>true</code> if object locked and <code>false</code> otherwise */
-   void setLocked(boolean locked);
+    /**
+     * @param locked
+     *         locking flag. Must be <code>true</code> if object locked and <code>false</code> otherwise
+     */
+    void setLocked(boolean locked);
 }

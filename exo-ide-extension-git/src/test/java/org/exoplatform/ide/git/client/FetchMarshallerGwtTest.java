@@ -27,35 +27,30 @@ import org.exoplatform.ide.git.shared.FetchRequest;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 28, 2011 9:55:30 AM anya $
- * 
  */
-public class FetchMarshallerGwtTest extends BaseGwtTest
-{
-   /**
-    * Test fetch from remote repository request marshaller.
-    */
-   public void testFetchRequestMarshaller()
-   {
-      String remote = "origin";
-      String refsSpec1 = "refs/heads/featured:refs/remotes/origin/featured";
-      String refsSpec2 = "refs/heads/test:refs/remotes/origin/test";
+public class FetchMarshallerGwtTest extends BaseGwtTest {
+    /** Test fetch from remote repository request marshaller. */
+    public void testFetchRequestMarshaller() {
+        String remote = "origin";
+        String refsSpec1 = "refs/heads/featured:refs/remotes/origin/featured";
+        String refsSpec2 = "refs/heads/test:refs/remotes/origin/test";
 
-      FetchRequest fetchRequest = new FetchRequest(new String[]{refsSpec1, refsSpec2}, remote, true, 0);
-      FetchRequestMarshaller marshaller = new FetchRequestMarshaller(fetchRequest);
-      String json = marshaller.marshal();
+        FetchRequest fetchRequest = new FetchRequest(new String[]{refsSpec1, refsSpec2}, remote, true, 0);
+        FetchRequestMarshaller marshaller = new FetchRequestMarshaller(fetchRequest);
+        String json = marshaller.marshal();
 
-      assertNotNull(json);
+        assertNotNull(json);
 
-      JSONObject jsonObject = new JSONObject(build(json));
-      assertTrue(jsonObject.containsKey(Constants.REF_SPEC));
-      assertEquals(2, jsonObject.get(Constants.REF_SPEC).isArray().size());
-      assertEquals(refsSpec1, jsonObject.get(Constants.REF_SPEC).isArray().get(0).isString().stringValue());
-      assertEquals(refsSpec2, jsonObject.get(Constants.REF_SPEC).isArray().get(1).isString().stringValue());
+        JSONObject jsonObject = new JSONObject(build(json));
+        assertTrue(jsonObject.containsKey(Constants.REF_SPEC));
+        assertEquals(2, jsonObject.get(Constants.REF_SPEC).isArray().size());
+        assertEquals(refsSpec1, jsonObject.get(Constants.REF_SPEC).isArray().get(0).isString().stringValue());
+        assertEquals(refsSpec2, jsonObject.get(Constants.REF_SPEC).isArray().get(1).isString().stringValue());
 
-      assertTrue(jsonObject.containsKey(Constants.REMOTE));
-      assertEquals(remote, jsonObject.get(Constants.REMOTE).isString().stringValue());
+        assertTrue(jsonObject.containsKey(Constants.REMOTE));
+        assertEquals(remote, jsonObject.get(Constants.REMOTE).isString().stringValue());
 
-      assertTrue(jsonObject.containsKey(Constants.REMOVE_DELETED_REFS));
-      assertTrue(jsonObject.get(Constants.REMOVE_DELETED_REFS).isBoolean().booleanValue());
-   }
+        assertTrue(jsonObject.containsKey(Constants.REMOVE_DELETED_REFS));
+        assertTrue(jsonObject.get(Constants.REMOVE_DELETED_REFS).isBoolean().booleanValue());
+    }
 }

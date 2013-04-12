@@ -18,44 +18,38 @@ import com.codenvy.eclipse.jdt.core.search.TypeNameMatchRequestor;
 
 import java.util.Collection;
 
-public class TypeNameMatchCollector extends TypeNameMatchRequestor
-{
+public class TypeNameMatchCollector extends TypeNameMatchRequestor {
 
-   private final Collection<TypeNameMatch> fCollection;
+    private final Collection<TypeNameMatch> fCollection;
 
-   public TypeNameMatchCollector(Collection<TypeNameMatch> collection)
-   {
-      Assert.isNotNull(collection);
-      fCollection = collection;
-   }
+    public TypeNameMatchCollector(Collection<TypeNameMatch> collection) {
+        Assert.isNotNull(collection);
+        fCollection = collection;
+    }
 
-   private boolean inScope(TypeNameMatch match)
-   {
-      //		if (TypeFilter.isFiltered(match))
-      //			return false;
+    private boolean inScope(TypeNameMatch match) {
+        //		if (TypeFilter.isFiltered(match))
+        //			return false;
 
-      int accessibility = match.getAccessibility();
-      switch (accessibility)
-      {
-         case IAccessRule.K_NON_ACCESSIBLE:
-            return JavaCore.DISABLED.equals(JavaCore.getOption(JavaCore.CODEASSIST_FORBIDDEN_REFERENCE_CHECK));
-         case IAccessRule.K_DISCOURAGED:
-            return JavaCore.DISABLED.equals(JavaCore.getOption(JavaCore.CODEASSIST_DISCOURAGED_REFERENCE_CHECK));
-         default:
-            return true;
-      }
-   }
+        int accessibility = match.getAccessibility();
+        switch (accessibility) {
+            case IAccessRule.K_NON_ACCESSIBLE:
+                return JavaCore.DISABLED.equals(JavaCore.getOption(JavaCore.CODEASSIST_FORBIDDEN_REFERENCE_CHECK));
+            case IAccessRule.K_DISCOURAGED:
+                return JavaCore.DISABLED.equals(JavaCore.getOption(JavaCore.CODEASSIST_DISCOURAGED_REFERENCE_CHECK));
+            default:
+                return true;
+        }
+    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.core.search.TypeNameMatchRequestor#acceptTypeNameMatch(org.eclipse.jdt.core.search.TypeNameMatch)
-    */
-   @Override
-   public void acceptTypeNameMatch(TypeNameMatch match)
-   {
-      if (inScope(match))
-      {
-         fCollection.add(match);
-      }
-   }
+    /* (non-Javadoc)
+     * @see org.eclipse.jdt.core.search.TypeNameMatchRequestor#acceptTypeNameMatch(org.eclipse.jdt.core.search.TypeNameMatch)
+     */
+    @Override
+    public void acceptTypeNameMatch(TypeNameMatch match) {
+        if (inScope(match)) {
+            fCollection.add(match);
+        }
+    }
 
 }

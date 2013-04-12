@@ -20,42 +20,36 @@ package org.exoplatform.ide.extension.ssh.server;
 
 /**
  * SSH key.
- * 
+ *
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class SshKey
-{
-   private String path;
-   private byte[] bytes;
+public class SshKey {
+    private final String identifier;
+    private final byte[] bytes;
 
-   public SshKey(String path, byte[] bytes)
-   {
-      this.path = path;
-      this.bytes = bytes;
-   }
+    public SshKey(String identifier, byte[] bytes) {
+        this.identifier = identifier;
+        this.bytes = bytes;
+    }
 
-   protected SshKey()
-   {
-   }
+    /**
+     * Identifier of SSH key, e.g. path to file where key stored, etc.
+     *
+     * @return identifier of key file
+     */
+    public String getIdentifier() {
+        return identifier;
+    }
 
-   /**
-    * Identifier of key file, e.g. path to file where key stored.
-    * 
-    * @return identifier of key file
-    */
-   public String getIdentifier()
-   {
-      return path;
-   }
-
-   /**
-    * Get SSH key as byte array.
-    * 
-    * @return SSH key as byte array
-    */
-   public byte[] getBytes()
-   {
-      return bytes;
-   }
+    /**
+     * Get SSH key as byte array.
+     *
+     * @return SSH key as byte array
+     */
+    public byte[] getBytes() {
+        byte[] copy = new byte[bytes.length];
+        System.arraycopy(bytes, 0, copy, 0, copy.length);
+        return copy;
+    }
 }

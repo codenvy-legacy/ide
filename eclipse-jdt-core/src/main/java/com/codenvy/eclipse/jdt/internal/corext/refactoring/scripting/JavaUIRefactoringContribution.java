@@ -16,9 +16,8 @@ import com.codenvy.eclipse.jdt.core.refactoring.descriptors.JavaRefactoringContr
 /**
  * Partial implementation of a Java UI refactoring contribution.
  *
- * @since 3.5
- *
  * @noextend This class is not intended to be subclassed by clients outside JDT
+ * @since 3.5
  */
 public abstract class JavaUIRefactoringContribution extends JavaRefactoringContribution {
 

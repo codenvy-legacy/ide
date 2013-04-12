@@ -41,185 +41,148 @@ import org.exoplatform.ide.extension.ssh.client.keymanager.ui.UploadSshKeyView;
 
 /**
  * This class is presenter for {@link UploadSshKeyView}. Main appointment of this class is upload private SSH key to the server.
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHandler
-{
-   public interface Display extends IsView
-   {
+public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHandler {
+    public interface Display extends IsView {
 
-      /**
-       * Get host filed
-       * 
-       * @return instance of {@link HasValue} interface
-       */
-      HasValue<String> getHostField();
+        /**
+         * Get host filed
+         *
+         * @return instance of {@link HasValue} interface
+         */
+        HasValue<String> getHostField();
 
-      /**
-       * @return {@link HasClickHandlers} instance for Cancel button
-       */
-      HasClickHandlers getCancelButon();
+        /** @return {@link HasClickHandlers} instance for Cancel button */
+        HasClickHandlers getCancelButon();
 
-      /**
-       * @return {@link HasClickHandlers} instance for Upload button
-       */
-      HasClickHandlers getUploadButton();
+        /** @return {@link HasClickHandlers} instance for Upload button */
+        HasClickHandlers getUploadButton();
 
-      /**
-       * Get file name filed
-       * 
-       * @return instance of {@link HasValue} interface
-       */
-      HasValue<String> getFileNameField();
+        /**
+         * Get file name filed
+         *
+         * @return instance of {@link HasValue} interface
+         */
+        HasValue<String> getFileNameField();
 
-      /**
-       * Form that do upload
-       * 
-       * @return {@link FormPanel} instance
-       */
-      FormPanel getFormPanel();
+        /**
+         * Form that do upload
+         *
+         * @return {@link FormPanel} instance
+         */
+        FormPanel getFormPanel();
 
-      /**
-       * Set error message
-       * 
-       * @param message the message
-       */
-      void setMessage(String message);
+        /**
+         * Set error message
+         *
+         * @param message
+         *         the message
+         */
+        void setMessage(String message);
 
-      HasFileSelectedHandler getFileUploadInput();
+        HasFileSelectedHandler getFileUploadInput();
 
-      /**
-       * Enable Upload button
-       */
-      void setUploadButtonEnabled();
-   }
+        /** Enable Upload button */
+        void setUploadButtonEnabled();
+    }
 
-   /**
-    * Instance of display
-    */
-   private Display display;
+    /** Instance of display */
+    private Display display;
 
-   /**
-    * Registration of {@link ViewClosedEvent} handler
-    */
-   private HandlerRegistration viewClosedHandler;
+    /** Registration of {@link ViewClosedEvent} handler */
+    private HandlerRegistration viewClosedHandler;
 
-   /**
-    * IDE REST Context URL
-    */
-   private String restContext;
+    /** IDE REST Context URL */
+    private String restContext;
 
-   /**
-    * @param restContext part of URL to IDE REST Context
-    */
-   public UploadSshKeyPresenter(String restContext)
-   {
-      this.restContext = restContext;
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-      display = GWT.create(Display.class);
+    /**
+     * @param restContext
+     *         part of URL to IDE REST Context
+     */
+    public UploadSshKeyPresenter(String restContext) {
+        this.restContext = restContext;
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+        display = GWT.create(Display.class);
 
-      bind();
+        bind();
 
-      IDE.getInstance().openView(display.asView());
-      viewClosedHandler = IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+        IDE.getInstance().openView(display.asView());
+        viewClosedHandler = IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   /**
-    * Add all handlers to controls.
-    */
-   private void bind()
-   {
-      display.getCancelButon().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-
-      display.getUploadButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            upload();
-         }
-      });
-
-      display.getFormPanel().addSubmitCompleteHandler(new SubmitCompleteHandler()
-      {
-         @Override
-         public void onSubmitComplete(SubmitCompleteEvent event)
-         {
-            String result = event.getResults();
-            if (result.isEmpty())
-            {
-               IDE.getInstance().closeView(display.asView().getId());
+    /** Add all handlers to controls. */
+    private void bind() {
+        display.getCancelButon().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
             }
-            else
-            {
-               if (result.startsWith("<pre>") && result.endsWith("</pre>"))
-               {
-                  result.substring(5, (result.length() - 6));
-               }
-               IDE.fireEvent(new ExceptionThrownEvent(result));
+        });
+
+        display.getUploadButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                upload();
             }
-         }
-      });
+        });
 
-      display.getFileUploadInput().addFileSelectedHandler(this);
-   }
+        display.getFormPanel().addSubmitCompleteHandler(new SubmitCompleteHandler() {
+            @Override
+            public void onSubmitComplete(SubmitCompleteEvent event) {
+                String result = event.getResults();
+                if (result.isEmpty()) {
+                    IDE.getInstance().closeView(display.asView().getId());
+                } else {
+                    if (result.startsWith("<pre>") && result.endsWith("</pre>")) {
+                        result.substring(5, (result.length() - 6));
+                    }
+                    IDE.fireEvent(new ExceptionThrownEvent(result));
+                }
+            }
+        });
 
-   /**
-    * Validate <b>host</b> parameter and do submit action. If <b>host</b> parameter is null or empty string, show error message.
-    */
-   private void upload()
-   {
-      String host = display.getHostField().getValue();
-      if (host == null || host.isEmpty())
-      {
-         display.setMessage(SshKeyExtension.CONSTANTS.hostValidationError());
-         return;
-      }
+        display.getFileUploadInput().addFileSelectedHandler(this);
+    }
 
-      display.getFormPanel().setEncoding(FormPanel.ENCODING_MULTIPART);
-      display.getFormPanel().setAction(restContext + "/ide/ssh-keys/add?host=" + host);
-      display.getFormPanel().submit();
-   }
+    /** Validate <b>host</b> parameter and do submit action. If <b>host</b> parameter is null or empty string, show error message. */
+    private void upload() {
+        String host = display.getHostField().getValue();
+        if (host == null || host.isEmpty()) {
+            display.setMessage(SshKeyExtension.CONSTANTS.hostValidationError());
+            return;
+        }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-         viewClosedHandler.removeHandler();
-      }
-   }
+        display.getFormPanel().setEncoding(FormPanel.ENCODING_MULTIPART);
+        display.getFormPanel().setAction(restContext + "/ide/ssh-keys/add?host=" + host);
+        display.getFormPanel().submit();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler#onFileSelected(org.exoplatform.ide.client.framework.ui.upload.FileSelectedEvent)
-    */
-   @Override
-   public void onFileSelected(FileSelectedEvent event)
-   {
-      String file = event.getFileName();
-      file = file.replace('\\', '/');
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+            viewClosedHandler.removeHandler();
+        }
+    }
 
-      if (file.indexOf('/') >= 0)
-      {
-         file = file.substring(file.lastIndexOf("/") + 1);
-      }
+    /** @see org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler#onFileSelected(org.exoplatform.ide.client.framework.ui
+     * .upload.FileSelectedEvent) */
+    @Override
+    public void onFileSelected(FileSelectedEvent event) {
+        String file = event.getFileName();
+        file = file.replace('\\', '/');
 
-      display.getFileNameField().setValue(file);
-      display.setUploadButtonEnabled();
-   }
+        if (file.indexOf('/') >= 0) {
+            file = file.substring(file.lastIndexOf("/") + 1);
+        }
+
+        display.getFileNameField().setValue(file);
+        display.setUploadButtonEnabled();
+    }
 
 }

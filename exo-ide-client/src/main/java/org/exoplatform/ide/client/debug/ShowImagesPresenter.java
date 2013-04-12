@@ -30,67 +30,57 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ShowImagesPresenter implements ShowImagesgHandler, ViewClosedHandler
-{
+public class ShowImagesPresenter implements ShowImagesgHandler, ViewClosedHandler {
 
-   public interface Display extends IsView
-   {
+    public interface Display extends IsView {
 
-      HasClickHandlers getOkButton();
+        HasClickHandlers getOkButton();
 
-      void updateImageList();
+        void updateImageList();
 
-   }
+    }
 
-   private Display display;
+    private Display display;
 
-   public ShowImagesPresenter()
-   {
-      IDE.getInstance().addControl(new ShowImagesControl());
+    public ShowImagesPresenter() {
+        IDE.getInstance().addControl(new ShowImagesControl());
 
-      IDE.addHandler(ShowImagesEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+        IDE.addHandler(ShowImagesEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   private void bindDisplay()
-   {
-      display.getOkButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
+    private void bindDisplay() {
+        display.getOkButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
 
-      display.updateImageList();
-   }
+        display.updateImageList();
+    }
 
-   @Override
-   public void onShowImages(ShowImagesEvent event)
-   {
-      if (display != null)
-      {
-         return;
-      }
+    @Override
+    public void onShowImages(ShowImagesEvent event) {
+        if (display != null) {
+            return;
+        }
 
-      display = GWT.create(Display.class);
-      IDE.getInstance().openView(display.asView());
-      bindDisplay();
-   }
+        display = GWT.create(Display.class);
+        IDE.getInstance().openView(display.asView());
+        bindDisplay();
+    }
 
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
 }

@@ -19,69 +19,53 @@
 package org.exoplatform.ide.extension.heroku.client.control;
 
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.*;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.create.CreateApplicationEvent;
 
 /**
  * Control for creating new application on Heroku.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 26, 2011 2:27:45 PM anya $
- * 
  */
 public class CreateApplicationControl extends AbstractHerokuControl implements ProjectOpenedHandler,
-   ProjectClosedHandler, ActiveProjectChangedHandler
-{
-   public CreateApplicationControl()
-   {
-      super(HerokuExtension.LOCALIZATION_CONSTANT.createApplicationControlId());
-      setTitle(HerokuExtension.LOCALIZATION_CONSTANT.createApplicationControlTitle());
-      setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.createApplicationControlPrompt());
-      setEvent(new CreateApplicationEvent());
-      setImages(HerokuClientBundle.INSTANCE.createApplication(),
-         HerokuClientBundle.INSTANCE.createApplicationDisabled());
-   }
+                                                                               ProjectClosedHandler, ActiveProjectChangedHandler {
+    public CreateApplicationControl() {
+        super(HerokuExtension.LOCALIZATION_CONSTANT.createApplicationControlId());
+        setTitle(HerokuExtension.LOCALIZATION_CONSTANT.createApplicationControlTitle());
+        setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.createApplicationControlPrompt());
+        setEvent(new CreateApplicationEvent());
+        setImages(HerokuClientBundle.INSTANCE.createApplication(),
+                  HerokuClientBundle.INSTANCE.createApplicationDisabled());
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.control.AbstractHerokuControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
-      setVisible(true);
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.control.AbstractHerokuControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
+        setVisible(true);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      setEnabled(false);
-   }
+    /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+     * .project.ProjectClosedEvent) */
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        setEnabled(false);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      setEnabled(event.getProject() != null && HerokuExtension.canBeDeployedToHeroku(event.getProject()));
-   }
-   
-   @Override
-   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-   {
-      setEnabled(event.getProject() != null && HerokuExtension.canBeDeployedToHeroku(event.getProject()));
-   }
+    /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
+     * .project.ProjectOpenedEvent) */
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        setEnabled(event.getProject() != null && HerokuExtension.canBeDeployedToHeroku(event.getProject()));
+    }
+
+    @Override
+    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
+        setEnabled(event.getProject() != null && HerokuExtension.canBeDeployedToHeroku(event.getProject()));
+    }
 }

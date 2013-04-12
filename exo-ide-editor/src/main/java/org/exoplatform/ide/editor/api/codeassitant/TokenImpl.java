@@ -25,102 +25,77 @@ import java.util.Set;
 
 /**
  * Basic implementation of {@link Token} interface Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 17, 2010 5:22:15 PM evgen $
- * 
  */
-public class TokenImpl implements Token
-{
-   private Map<String, TokenProperty> properties = new LinkedHashMap<String, TokenProperty>();
+public class TokenImpl implements Token {
+    private Map<String, TokenProperty> properties = new LinkedHashMap<String, TokenProperty>();
 
-   private String name;
+    private String name;
 
-   private TokenType type;
+    private TokenType type;
 
-   public TokenImpl()
-   {
-   }
+    public TokenImpl() {
+    }
 
-   /**
-    * @param name
-    * @param type
-    */
-   public TokenImpl(String name, TokenType type)
-   {
-      this.name = name;
-      this.type = type;
-   }
+    /**
+     * @param name
+     * @param type
+     */
+    public TokenImpl(String name, TokenType type) {
+        this.name = name;
+        this.type = type;
+    }
 
-   /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.Token#getName()
-    */
-   public String getName()
-   {
-      return name;
-   }
+    /** @see org.exoplatform.ide.editor.api.codeassitant.Token#getName() */
+    public String getName() {
+        return name;
+    }
 
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.Token#getType()
-    */
-   public TokenType getType()
-   {
-      return type;
-   }
+    /** @see org.exoplatform.ide.editor.api.codeassitant.Token#getType() */
+    public TokenType getType() {
+        return type;
+    }
 
-   public void setType(TokenType type)
-   {
-      this.type = type;
-   }
+    public void setType(TokenType type) {
+        this.type = type;
+    }
 
-   /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.Token#getPropertiesKeys()
-    */
-   public Set<String> getPropertiesNames()
-   {
-      return properties.keySet();
-   }
+    /** @see org.exoplatform.ide.editor.api.codeassitant.Token#getPropertiesKeys() */
+    public Set<String> getPropertiesNames() {
+        return properties.keySet();
+    }
 
-   /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.Token#getProperties()
-    */
+    /** @see org.exoplatform.ide.editor.api.codeassitant.Token#getProperties() */
 
-   public Collection<TokenProperty> getProperties()
-   {
-      return properties.values();
-   }
+    public Collection<TokenProperty> getProperties() {
+        return properties.values();
+    }
 
-   /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.Token#getProperty(java.lang.String)
-    */
+    /** @see org.exoplatform.ide.editor.api.codeassitant.Token#getProperty(java.lang.String) */
 
-   public TokenProperty getProperty(String key)
-   {
-      return properties.get(key);
-   }
+    public TokenProperty getProperty(String key) {
+        return properties.get(key);
+    }
 
-   /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.Token#setProperty(java.lang.String,
-    *      org.exoplatform.ide.editor.api.codeassitant.TokenProperty)
-    */
+    /**
+     * @see org.exoplatform.ide.editor.api.codeassitant.Token#setProperty(java.lang.String,
+     *      org.exoplatform.ide.editor.api.codeassitant.TokenProperty)
+     */
 
-   public void setProperty(String key, TokenProperty property)
-   {
-      properties.put(key, property);
-   }
+    public void setProperty(String key, TokenProperty property) {
+        properties.put(key, property);
+    }
 
-   /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.Token#hasProperty(java.lang.String)
-    */
+    /** @see org.exoplatform.ide.editor.api.codeassitant.Token#hasProperty(java.lang.String) */
 
-   public boolean hasProperty(String name)
-   {
-      return properties.containsKey(name);
-   }
+    public boolean hasProperty(String name) {
+        return properties.containsKey(name);
+    }
 
 }

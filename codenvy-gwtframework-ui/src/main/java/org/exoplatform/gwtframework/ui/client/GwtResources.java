@@ -23,82 +23,59 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 
 /**
- * Resources for common GWT components. 
- * 
+ * Resources for common GWT components.
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Feb 16, 2011 12:56:09 PM anya $
- *
  */
-public interface GwtResources extends ClientBundle
-{
-   /**
-    * Instance of the GWT resources.
-    */
-   public static final GwtResources INSTANCE = GWT.create(GwtResources.class);
+public interface GwtResources extends ClientBundle {
+    /** Instance of the GWT resources. */
+    public static final GwtResources INSTANCE = GWT.create(GwtResources.class);
 
-   /**
-    * <b>Note : </b> To inject styles to DOM use command:
-    * <pre>
-    * GwtResources.INSTANCE.css().ensureInjected();
-    * </pre>
-    * 
-    * @return {@link Style} CSS styles
-    */
-   @Source("eXoStyle/skin/default/gwt-style.css")
-   Style css();
+    /**
+     * <b>Note : </b> To inject styles to DOM use command:
+     * <pre>
+     * GwtResources.INSTANCE.css().ensureInjected();
+     * </pre>
+     *
+     * @return {@link Style} CSS styles
+     */
+    @Source("eXoStyle/skin/default/gwt-style.css")
+    Style css();
 
-   /**
-    * CSS styles for GWT components.
-    */
-   public interface Style extends CssResource
-   {
-      /**
-       * @return {@link String} checkbox style
-       */
-      String checkBox();
+    /** CSS styles for GWT components. */
+    public interface Style extends CssResource {
+        /** @return {@link String} checkbox style */
+        String checkBox();
 
-      /**
-       * @return {@link String} checkbox disabled state style
-       */
-      String checkBoxDisabled();
+        /** @return {@link String} checkbox disabled state style */
+        String checkBoxDisabled();
 
-      /**
-       * @return {@link String} checkbox when title is at the left side
-       */
-      String checkBoxTitleLeft();
+        /** @return {@link String} checkbox when title is at the left side */
+        String checkBoxTitleLeft();
 
-      /**
-       * @return {@link String} radio button's style
-       */
-      String radioButton();
+        /** @return {@link String} radio button's style */
+        String radioButton();
 
-      /**
-       * @return {@link String} radio button's style when disabled
-       */
-      String radioButtonDisabled();
+        /** @return {@link String} radio button's style when disabled */
+        String radioButtonDisabled();
 
-      /**
-       * @return {@link String} text box's style
-       */
-      String textBox();
+        /** @return {@link String} text box's style */
+        String textBox();
 
-      /**
-       * @return {@link String} text box's style when has focus
-       */
-      String textBoxFocused();
+        /** @return {@link String} text box's style when has focus */
+        String textBoxFocused();
 
-      /**
-       * @return {@link String} text box's style in disabled state
-       */
-      String textBoxDisabled();
-      
-      String transparent();
-      
-      String loaderBackground();
-      
-      String loaderCenteredContent();
-      
-      String loaderImage();
-   }
+        /** @return {@link String} text box's style in disabled state */
+        String textBoxDisabled();
+
+        String transparent();
+
+        String loaderBackground();
+
+        String loaderCenteredContent();
+
+        String loaderImage();
+    }
 
 }

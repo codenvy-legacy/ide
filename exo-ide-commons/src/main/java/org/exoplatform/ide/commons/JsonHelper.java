@@ -18,132 +18,126 @@
  */
 package org.exoplatform.ide.commons;
 
-import org.everrest.core.impl.provider.json.JsonException;
-import org.everrest.core.impl.provider.json.JsonGenerator;
-import org.everrest.core.impl.provider.json.JsonParser;
-import org.everrest.core.impl.provider.json.JsonValue;
-import org.everrest.core.impl.provider.json.JsonWriter;
-import org.everrest.core.impl.provider.json.ObjectBuilder;
+import org.everrest.core.impl.provider.json.*;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Map;
 
 /**
+ * Tool to serialize/deserialize Java objects to/from JSON representation.
+ *
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
+ * @see JsonNameConventions
  */
-public class JsonHelper
-{
-   @SuppressWarnings("unchecked")
-   public static <O> String toJson(O instance)
-   {
-      try
-      {
-         JsonValue json;
-         if (instance.getClass().isArray())
-         {
-            json = JsonGenerator.createJsonArray(instance);
-         }
-         else if (instance instanceof Collection)
-         {
-            json = JsonGenerator.createJsonArray((Collection<?>)instance);
-         }
-         else if (instance instanceof Map)
-         {
-            json = JsonGenerator.createJsonObjectFromMap((Map<String, ?>)instance);
-         }
-         else
-         {
-            json = JsonGenerator.createJsonObject(instance);
-         }
+public class JsonHelper {
+    @SuppressWarnings("unchecked")
+    public static <O> String toJson(O instance) {
+        return toJson(instance, JsonNameConventions.DEFAULT);
+    }
 
-         Writer w = new StringWriter();
-         json.writeTo(new JsonWriter(w));
-         return w.toString();
-      }
-      catch (JsonException jsone)
-      {
-         // Must not happen since serialize well known object.
-         throw new RuntimeException(jsone.getMessage(), jsone);
-      }
-   }
+    @SuppressWarnings("unchecked")
+    public static <O> String toJson(O instance, JsonNameConvention nameConvention) {
+        try {
+            JsonValue json;
+            if (instance.getClass().isArray()) {
+                json = JsonGenerator.createJsonArray(instance);
+            } else if (instance instanceof Collection) {
+                json = JsonGenerator.createJsonArray((Collection<?>)instance);
+            } else if (instance instanceof Map) {
+                json = JsonGenerator.createJsonObjectFromMap((Map<String, ?>)instance);
+            } else {
+                json = JsonGenerator.createJsonObject(instance);
+            }
 
-   @SuppressWarnings({"unchecked", "rawtypes"})
-   public static <O> O fromJson(String json, Class<O> klass, Type type) throws ParsingResponseException
-   {
-      return fromJson(parseJson(json), klass, type);
-   }
+            Writer w = new StringWriter();
+            json.writeTo(new NameConventionJsonWriter(w, nameConvention));
+            return w.toString();
+        } catch (JsonException jsone) {
+            // Must not happen since serialize well known object.
+            throw new RuntimeException(jsone.getMessage(), jsone);
+        }
+    }
 
-   public static <O> O fromJson(InputStream json, Class<O> klass, Type type) throws ParsingResponseException
-   {
-      return fromJson(parseJson(json), klass, type);
-   }
+    public static <O> O fromJson(String json, Class<O> klass, Type type) throws JsonParseException {
+        return fromJson(parseJson(json), klass, type);
+    }
 
-   public static <O> O fromJson(Reader json, Class<O> klass, Type type) throws ParsingResponseException
-   {
-      return fromJson(parseJson(json), klass, type);
-   }
+    public static <O> O fromJson(String json, Class<O> klass, Type type, JsonNameConvention nameConvention) throws JsonParseException {
+        return fromJson(parseJson(json, nameConvention), klass, type);
+    }
 
-   private static <O> O fromJson(JsonValue jsonValue, Class<O> klass, Type type) throws ParsingResponseException
-   {
-      try
-      {
-         O instance;
-         if (klass.isArray())
-         {
-            instance = (O)ObjectBuilder.createArray(klass, jsonValue);
-         }
-         else if (Collection.class.isAssignableFrom(klass))
-         {
-            Class k = klass;
-            instance = (O)ObjectBuilder.createCollection(k, type, jsonValue);
-         }
-         else if (Map.class.isAssignableFrom(klass))
-         {
-            Class k = klass;
-            instance = (O)ObjectBuilder.createObject(k, type, jsonValue);
-         }
-         else
-         {
-            instance = ObjectBuilder.createObject(klass, jsonValue);
-         }
-         return instance;
-      }
-      catch (JsonException jsone)
-      {
-         throw new ParsingResponseException(jsone.getMessage(), jsone);
-      }
-   }
 
-   public static JsonValue parseJson(String json) throws ParsingResponseException
-   {
-      return parseJson(new StringReader(json));
-   }
+    public static <O> O fromJson(InputStream json, Class<O> klass, Type type) throws JsonParseException {
+        return fromJson(parseJson(json), klass, type);
+    }
 
-   public static JsonValue parseJson(InputStream json) throws ParsingResponseException
-   {
-      return parseJson(new InputStreamReader(json, Charset.forName("UTF-8")));
-   }
+    public static <O> O fromJson(InputStream json, Class<O> klass, Type type, JsonNameConvention nameConvention) throws JsonParseException {
+        return fromJson(parseJson(json, nameConvention), klass, type);
+    }
 
-   public static JsonValue parseJson(Reader json) throws ParsingResponseException
-   {
-      try
-      {
-         JsonParser parser = new JsonParser();
-         parser.parse(json);
-         return parser.getJsonObject();
-      }
-      catch (JsonException jsone)
-      {
-         throw new ParsingResponseException(jsone.getMessage(), jsone);
-      }
-   }
+
+    public static <O> O fromJson(Reader json, Class<O> klass, Type type) throws JsonParseException {
+        return fromJson(parseJson(json), klass, type);
+    }
+
+    public static <O> O fromJson(Reader json, Class<O> klass, Type type, JsonNameConvention nameConvention) throws JsonParseException {
+        return fromJson(parseJson(json, nameConvention), klass, type);
+    }
+
+
+    private static <O> O fromJson(JsonValue jsonValue, Class<O> klass, Type type) throws JsonParseException {
+        try {
+            O instance;
+            if (klass.isArray()) {
+                instance = (O)ObjectBuilder.createArray(klass, jsonValue);
+            } else if (Collection.class.isAssignableFrom(klass)) {
+                Class k = klass;
+                instance = (O)ObjectBuilder.createCollection(k, type, jsonValue);
+            } else if (Map.class.isAssignableFrom(klass)) {
+                Class k = klass;
+                instance = (O)ObjectBuilder.createObject(k, type, jsonValue);
+            } else {
+                instance = ObjectBuilder.createObject(klass, jsonValue);
+            }
+            return instance;
+        } catch (JsonException jsone) {
+            throw new JsonParseException(jsone.getMessage(), jsone);
+        }
+    }
+
+    public static JsonValue parseJson(String json) throws JsonParseException {
+        return parseJson(new StringReader(json));
+    }
+
+    public static JsonValue parseJson(String json, JsonNameConvention nameConvention) throws JsonParseException {
+        return parseJson(new StringReader(json), nameConvention);
+    }
+
+
+    public static JsonValue parseJson(InputStream json) throws JsonParseException {
+        return parseJson(new InputStreamReader(json, Charset.forName("UTF-8")));
+    }
+
+    public static JsonValue parseJson(InputStream json, JsonNameConvention nameConvention) throws JsonParseException {
+        return parseJson(new InputStreamReader(json, Charset.forName("UTF-8")), nameConvention);
+    }
+
+
+    public static JsonValue parseJson(Reader json) throws JsonParseException {
+        return parseJson(json, JsonNameConventions.DEFAULT);
+    }
+
+    public static JsonValue parseJson(Reader json, JsonNameConvention nameConvention) throws JsonParseException {
+        try {
+            JsonParser parser = new NameConventionJsonParser(nameConvention);
+            parser.parse(json);
+            return parser.getJsonObject();
+        } catch (JsonException jsone) {
+            throw new JsonParseException(jsone.getMessage(), jsone);
+        }
+    }
 }

@@ -21,11 +21,9 @@ package org.exoplatform.ide.editor.api.codeassitant;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public interface CanInsertImportStatement
-{
+public interface CanInsertImportStatement {
 
-   void insertImportStatement(String fqn);
+    void insertImportStatement(String fqn);
 
 }

@@ -22,40 +22,34 @@ package org.exoplatform.ide.client.framework.event;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class OperationFailedEvent extends GwtEvent<OperationFailedHandler>
-{
+public class OperationFailedEvent extends GwtEvent<OperationFailedHandler> {
 
-   public static final GwtEvent.Type<OperationFailedHandler> TYPE = new GwtEvent.Type<OperationFailedHandler>();
+    public static final GwtEvent.Type<OperationFailedHandler> TYPE = new GwtEvent.Type<OperationFailedHandler>();
 
-   private GwtEvent<?> initialEvent;
+    private GwtEvent<?> initialEvent;
 
-   public OperationFailedEvent(GwtEvent<?> initialEvent)
-   {
-      this.initialEvent = initialEvent;
-   }
+    public OperationFailedEvent(GwtEvent<?> initialEvent) {
+        this.initialEvent = initialEvent;
+    }
 
-   public GwtEvent<?> getInitialEvent()
-   {
-      return initialEvent;
-   }
+    public GwtEvent<?> getInitialEvent() {
+        return initialEvent;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<OperationFailedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<OperationFailedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(OperationFailedHandler handler)
-   {
-      handler.onOperationFailed(this);
-   }
+    @Override
+    protected void dispatch(OperationFailedHandler handler) {
+        handler.onOperationFailed(this);
+    }
 
 }

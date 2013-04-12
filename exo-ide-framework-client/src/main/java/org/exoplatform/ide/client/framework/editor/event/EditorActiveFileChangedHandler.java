@@ -22,13 +22,12 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @version $Id: $
  */
 
-public interface EditorActiveFileChangedHandler extends EventHandler
-{
+public interface EditorActiveFileChangedHandler extends EventHandler {
 
-   void onEditorActiveFileChanged(EditorActiveFileChangedEvent event);
+    void onEditorActiveFileChanged(EditorActiveFileChangedEvent event);
 
 }

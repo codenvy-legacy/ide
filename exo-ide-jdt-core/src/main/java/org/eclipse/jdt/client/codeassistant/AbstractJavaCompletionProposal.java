@@ -24,12 +24,7 @@ import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
 import org.exoplatform.ide.editor.client.api.contentassist.Point;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 import org.exoplatform.ide.editor.shared.runtime.Assert;
-import org.exoplatform.ide.editor.shared.text.BadLocationException;
-import org.exoplatform.ide.editor.shared.text.BadPositionCategoryException;
-import org.exoplatform.ide.editor.shared.text.DefaultPositionUpdater;
-import org.exoplatform.ide.editor.shared.text.IDocument;
-import org.exoplatform.ide.editor.shared.text.IPositionUpdater;
-import org.exoplatform.ide.editor.shared.text.Position;
+import org.exoplatform.ide.editor.shared.text.*;
 
 /**
  * 

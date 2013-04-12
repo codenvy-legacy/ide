@@ -18,45 +18,40 @@
  */
 package org.exoplatform.ide.client.framework.ui.api.event;
 
-import org.exoplatform.ide.client.framework.ui.api.View;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.client.framework.ui.api.View;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class BeforeViewLoseActivityEvent extends GwtEvent<BeforeViewLoseActivityHandler>
-{
+public class BeforeViewLoseActivityEvent extends GwtEvent<BeforeViewLoseActivityHandler> {
 
-   public static final GwtEvent.Type<BeforeViewLoseActivityHandler> TYPE =
-      new GwtEvent.Type<BeforeViewLoseActivityHandler>();
+    public static final GwtEvent.Type<BeforeViewLoseActivityHandler> TYPE =
+            new GwtEvent.Type<BeforeViewLoseActivityHandler>();
 
-   private View view;
+    private View view;
 
-   public BeforeViewLoseActivityEvent(View view)
-   {
-      this.view = view;
-   }
+    public BeforeViewLoseActivityEvent(View view) {
+        this.view = view;
+    }
 
-   public View getView()
-   {
-      return view;
-   }
+    public View getView() {
+        return view;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<BeforeViewLoseActivityHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<BeforeViewLoseActivityHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(BeforeViewLoseActivityHandler handler)
-   {
-      handler.onBeforeViewLoseActivity(this);
-   }
+    @Override
+    protected void dispatch(BeforeViewLoseActivityHandler handler) {
+        handler.onBeforeViewLoseActivity(this);
+    }
 
 }

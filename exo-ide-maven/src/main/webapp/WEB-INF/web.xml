@@ -20,45 +20,45 @@
 
 -->
 <web-app xmlns="http://java.sun.com/xml/ns/javaee"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
                       http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-  version="3.0"
-  metadata-complete="true">
+         version="3.0"
+         metadata-complete="true">
 
-   <display-name>build server</display-name>
-   <context-param>
-       <param-name>javax.ws.rs.Application</param-name>
-       <param-value>org.exoplatform.ide.maven.BuildApplication</param-value>
-    </context-param>
-   <context-param>
-      <param-name>org.everrest.scan.components</param-name>
-      <param-value>false</param-value>
-   </context-param>
-   <context-param>
-      <param-name>builder.timeout</param-name>
-      <param-value>300</param-value>
-   </context-param>
+    <display-name>build server</display-name>
     <context-param>
-      <param-name>builder.publish-repository</param-name>
-      <param-value>../../releases</param-value>
-   </context-param>
-   <context-param>
-      <param-name>builder.publish-repository-url</param-name>
-      <param-value>http://localhost:8080/releases</param-value>
-   </context-param>
-   <listener>
-      <listener-class>org.everrest.core.servlet.EverrestInitializedListener</listener-class>
-   </listener>
-   <listener>
-      <listener-class>org.exoplatform.ide.maven.BuilderBootstrap</listener-class>
-   </listener>
-   <servlet>
-      <servlet-name>EverrestServlet</servlet-name>
-      <servlet-class>org.everrest.core.servlet.EverrestServlet</servlet-class>
-   </servlet>
-   <servlet-mapping>
-      <servlet-name>EverrestServlet</servlet-name>
-      <url-pattern>/*</url-pattern>
-   </servlet-mapping>
+        <param-name>javax.ws.rs.Application</param-name>
+        <param-value>org.exoplatform.ide.maven.BuildApplication</param-value>
+    </context-param>
+    <context-param>
+        <param-name>org.everrest.scan.components</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>builder.timeout</param-name>
+        <param-value>300</param-value>
+    </context-param>
+    <context-param>
+        <param-name>builder.publish-repository</param-name>
+        <param-value>../../releases</param-value>
+    </context-param>
+    <context-param>
+        <param-name>builder.publish-repository-url</param-name>
+        <param-value>http://localhost:8080/releases</param-value>
+    </context-param>
+    <listener>
+        <listener-class>org.everrest.core.servlet.EverrestInitializedListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.exoplatform.ide.maven.BuilderBootstrap</listener-class>
+    </listener>
+    <servlet>
+        <servlet-name>EverrestServlet</servlet-name>
+        <servlet-class>org.everrest.core.servlet.EverrestServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EverrestServlet</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
 </web-app>

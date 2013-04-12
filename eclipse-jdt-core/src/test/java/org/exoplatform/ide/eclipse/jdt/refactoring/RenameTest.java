@@ -45,132 +45,134 @@ import java.util.Random;
  * @version $Id:
  */
 @Ignore
-public class RenameTest extends JdtBaseTest
-{
+public class RenameTest extends JdtBaseTest {
 
-   private IJavaProject javaProject;
+    private IJavaProject javaProject;
 
-   private IPackageFragment packageFragment;
+    private IPackageFragment packageFragment;
 
-   private String projectName;
+    private String projectName;
 
-   @Before
-   public void init() throws CoreException
-   {
-      projectName = "test" + new Random().nextInt();
-      javaProject = createJavaProject(projectName);
-      IPackageFragmentRoot packageFragmentRoot = javaProject.getPackageFragmentRoots()[0];
-      packageFragment = packageFragmentRoot.createPackageFragment("com", true, null);
-      packageFragment.open(null);
+    @Before
+    public void init() throws CoreException {
+        projectName = "test" + new Random().nextInt();
+        javaProject = createJavaProject(projectName);
+        IPackageFragmentRoot packageFragmentRoot = javaProject.getPackageFragmentRoots()[0];
+        packageFragment = packageFragmentRoot.createPackageFragment("com", true, null);
+        packageFragment.open(null);
 
-   }
+    }
 
-   @Test
-   public void renameType() throws CoreException, InvocationTargetException, InterruptedException, IOException, VirtualFileSystemException
-   {
-      ICompilationUnit myCUnit = packageFragment.createCompilationUnit("My.java",
-         "package com;\npublic class My{\n private My instance = null;\n}", true, null);
+    @Test
+    public void renameType()
+            throws CoreException, InvocationTargetException, InterruptedException, IOException, VirtualFileSystemException {
+        ICompilationUnit myCUnit = packageFragment.createCompilationUnit("My.java",
+                                                                         "package com;\npublic class My{\n private My instance = null;\n}",
+                                                                         true, null);
 
-      ICompilationUnit ourCUnit = packageFragment.createCompilationUnit("Our.java", "package com;\n" +
-         "import dsd.asds.Ass;\n" +
-         "public class Our{\npublic com.My fff; \n" +
-         "private Ass ddd(){}\n }", true, null);
+        ICompilationUnit ourCUnit = packageFragment.createCompilationUnit("Our.java", "package com;\n" +
+                                                                                      "import dsd.asds.Ass;\n" +
+                                                                                      "public class Our{\npublic com.My fff; \n" +
+                                                                                      "private Ass ddd(){}\n }", true, null);
 
-      RenameSupport renameSupport = RenameSupport.create(myCUnit, "MyClass", RenameSupport.UPDATE_REFERENCES);
-      IStatus status = renameSupport.preCheck();
-      System.out.println(status.getMessage());
-      renameSupport.perform();
+        RenameSupport renameSupport = RenameSupport.create(myCUnit, "MyClass", RenameSupport.UPDATE_REFERENCES);
+        IStatus status = renameSupport.preCheck();
+        System.out.println(status.getMessage());
+        renameSupport.perform();
 
-      ContentStream content = vfs.getContent("/" + projectName + "/src/com/MyClass.java", null);
-      String c = IOUtils.toString(content.getStream());
-      assertTrue(c.contains("class MyClass"));
-      assertTrue(c.contains("private MyClass instance"));
-      content = vfs.getContent("/" + projectName + "/src/com/Our.java", null);
+        ContentStream content = vfs.getContent("/" + projectName + "/src/com/MyClass.java", null);
+        String c = IOUtils.toString(content.getStream());
+        assertTrue(c.contains("class MyClass"));
+        assertTrue(c.contains("private MyClass instance"));
+        content = vfs.getContent("/" + projectName + "/src/com/Our.java", null);
 
-      String ourContent = IOUtils.toString(content.getStream());
-      assertTrue(ourContent.contains("public com.MyClass fff"));
-   }
+        String ourContent = IOUtils.toString(content.getStream());
+        assertTrue(ourContent.contains("public com.MyClass fff"));
+    }
 
-   @Test
-   public void renameField() throws CoreException, InvocationTargetException, InterruptedException, IOException, VirtualFileSystemException
-   {
-      ICompilationUnit myCUnit = packageFragment.createCompilationUnit("My.java",
-         "package com;\npublic class My{\n public static My instance = null;\n}", true, null);
+    @Test
+    public void renameField()
+            throws CoreException, InvocationTargetException, InterruptedException, IOException, VirtualFileSystemException {
+        ICompilationUnit myCUnit = packageFragment.createCompilationUnit("My.java",
+                                                                         "package com;\npublic class My{\n public static My instance = " +
+                                                                         "null;\n}",
+                                                                         true, null);
 
-      ICompilationUnit ourCUnit = packageFragment.createCompilationUnit("Our.java", "package com;\n" +
-         "import dsd.asds.Ass;\n" +
-         "public class Our{\npublic com.My fff; \n" +
-         "private Ass ddd(){" +
-         "My.instance = null;\n" +
-         "}\n }", true, null);
+        ICompilationUnit ourCUnit = packageFragment.createCompilationUnit("Our.java", "package com;\n" +
+                                                                                      "import dsd.asds.Ass;\n" +
+                                                                                      "public class Our{\npublic com.My fff; \n" +
+                                                                                      "private Ass ddd(){" +
+                                                                                      "My.instance = null;\n" +
+                                                                                      "}\n }", true, null);
 
-      RenameSupport renameSupport = RenameSupport.create(myCUnit.getType("My").getField("instance"), "get",
-         RenameSupport.UPDATE_REFERENCES);
-      IStatus status = renameSupport.preCheck();
-      System.out.println(status.getMessage());
-      renameSupport.perform();
+        RenameSupport renameSupport = RenameSupport.create(myCUnit.getType("My").getField("instance"), "get",
+                                                           RenameSupport.UPDATE_REFERENCES);
+        IStatus status = renameSupport.preCheck();
+        System.out.println(status.getMessage());
+        renameSupport.perform();
 
-      ContentStream content = vfs.getContent("/" + projectName + "/src/com/My.java", null);
-      String c = IOUtils.toString(content.getStream());
-      assertTrue(c.contains("public static My get"));
-      content = vfs.getContent("/" + projectName + "/src/com/Our.java", null);
+        ContentStream content = vfs.getContent("/" + projectName + "/src/com/My.java", null);
+        String c = IOUtils.toString(content.getStream());
+        assertTrue(c.contains("public static My get"));
+        content = vfs.getContent("/" + projectName + "/src/com/Our.java", null);
 
-      String ourContent = IOUtils.toString(content.getStream());
-      assertTrue(ourContent.contains("My.get = null"));
-   }
+        String ourContent = IOUtils.toString(content.getStream());
+        assertTrue(ourContent.contains("My.get = null"));
+    }
 
-   @Test
-   public void renameMethod() throws CoreException, InvocationTargetException, InterruptedException, IOException, VirtualFileSystemException
-   {
-      ICompilationUnit myCUnit = packageFragment.createCompilationUnit("My.java",
-         "package com;\npublic class My{\n public void some(){\n}}", true, null);
+    @Test
+    public void renameMethod()
+            throws CoreException, InvocationTargetException, InterruptedException, IOException, VirtualFileSystemException {
+        ICompilationUnit myCUnit = packageFragment.createCompilationUnit("My.java",
+                                                                         "package com;\npublic class My{\n public void some(){\n}}", true,
+                                                                         null);
 
-      ICompilationUnit ourCUnit = packageFragment.createCompilationUnit("Our.java", "package com;\n" +
-         "import dsd.asds.Ass;\n" +
-         "public class Our{\npublic com.My fff; \n" +
-         "private Ass ddd(){" +
-         "fff.some();\n" +
-         "}\n }", true, null);
+        ICompilationUnit ourCUnit = packageFragment.createCompilationUnit("Our.java", "package com;\n" +
+                                                                                      "import dsd.asds.Ass;\n" +
+                                                                                      "public class Our{\npublic com.My fff; \n" +
+                                                                                      "private Ass ddd(){" +
+                                                                                      "fff.some();\n" +
+                                                                                      "}\n }", true, null);
 
-      RenameSupport renameSupport = RenameSupport.create(myCUnit.getType("My").getMethods()[0], "bar",
-         RenameSupport.UPDATE_REFERENCES);
-      IStatus status = renameSupport.preCheck();
-      System.out.println(status.getMessage());
-      renameSupport.perform();
+        RenameSupport renameSupport = RenameSupport.create(myCUnit.getType("My").getMethods()[0], "bar",
+                                                           RenameSupport.UPDATE_REFERENCES);
+        IStatus status = renameSupport.preCheck();
+        System.out.println(status.getMessage());
+        renameSupport.perform();
 
-      ContentStream content = vfs.getContent("/" + projectName + "/src/com/My.java", null);
-      String c = IOUtils.toString(content.getStream());
-      assertTrue(c.contains("public void bar()"));
-      content = vfs.getContent("/" + projectName + "/src/com/Our.java", null);
+        ContentStream content = vfs.getContent("/" + projectName + "/src/com/My.java", null);
+        String c = IOUtils.toString(content.getStream());
+        assertTrue(c.contains("public void bar()"));
+        content = vfs.getContent("/" + projectName + "/src/com/Our.java", null);
 
-      String ourContent = IOUtils.toString(content.getStream());
-      assertTrue(ourContent.contains("fff.bar();"));
-   }
+        String ourContent = IOUtils.toString(content.getStream());
+        assertTrue(ourContent.contains("fff.bar();"));
+    }
 
-   @Test
-   public void renameVariable() throws CoreException, InvocationTargetException, InterruptedException, IOException, VirtualFileSystemException
-   {
-      ICompilationUnit myCUnit = packageFragment.createCompilationUnit("My.java",
-         "package com;\npublic class My{\n public void some(String name){System.out.print(\"Hello \" + name);\n}}",
-         true, null);
+    @Test
+    public void renameVariable()
+            throws CoreException, InvocationTargetException, InterruptedException, IOException, VirtualFileSystemException {
+        ICompilationUnit myCUnit = packageFragment.createCompilationUnit("My.java",
+                                                                         "package com;\npublic class My{\n public void some(String name){System.out.print(\"Hello \" + name);\n}}",
+                                                                         true, null);
 
-      ICompilationUnit ourCUnit = packageFragment.createCompilationUnit("Our.java", "package com;\n" +
-         "import dsd.asds.Ass;\n" +
-         "public class Our{\npublic com.My fff; \n" +
-         "private Ass ddd(){" +
-         "fff.some(\"sdfsdf\");\n" +
-         "}\n }", true, null);
+        ICompilationUnit ourCUnit = packageFragment.createCompilationUnit("Our.java", "package com;\n" +
+                                                                                      "import dsd.asds.Ass;\n" +
+                                                                                      "public class Our{\npublic com.My fff; \n" +
+                                                                                      "private Ass ddd(){" +
+                                                                                      "fff.some(\"sdfsdf\");\n" +
+                                                                                      "}\n }", true, null);
 
-      RenameSupport renameSupport = RenameSupport.create(myCUnit.getType("My").getMethods()[0].getParameters()[0],
-         "foo", RenameSupport.UPDATE_REFERENCES);
-      IStatus status = renameSupport.preCheck();
-      System.out.println(status.getMessage());
-      renameSupport.perform();
+        RenameSupport renameSupport = RenameSupport.create(myCUnit.getType("My").getMethods()[0].getParameters()[0],
+                                                           "foo", RenameSupport.UPDATE_REFERENCES);
+        IStatus status = renameSupport.preCheck();
+        System.out.println(status.getMessage());
+        renameSupport.perform();
 
-      ContentStream content = vfs.getContent("/" + projectName + "/src/com/My.java", null);
-      String c = IOUtils.toString(content.getStream());
-      assertTrue(c.contains("public void some(String foo)"));
-      assertTrue(c.contains("System.out.print(\"Hello \" + foo);"));
+        ContentStream content = vfs.getContent("/" + projectName + "/src/com/My.java", null);
+        String c = IOUtils.toString(content.getStream());
+        assertTrue(c.contains("public void some(String foo)"));
+        assertTrue(c.contains("System.out.print(\"Hello \" + foo);"));
 
-   }
+    }
 }

@@ -21,38 +21,33 @@ import com.codenvy.eclipse.core.runtime.Assert;
  *
  * @since 3.1
  */
-public class CopyRefactoring extends ProcessorBasedRefactoring
-{
+public class CopyRefactoring extends ProcessorBasedRefactoring {
 
-   private CopyProcessor fProcessor;
+    private CopyProcessor fProcessor;
 
-   /**
-    * Creates a new copy refactoring with the given copy processor.
-    *
-    * @param processor the copy processor
-    */
-   public CopyRefactoring(CopyProcessor processor)
-   {
-      super(processor);
-      Assert.isNotNull(processor);
-      fProcessor = processor;
-   }
+    /**
+     * Creates a new copy refactoring with the given copy processor.
+     *
+     * @param processor
+     *         the copy processor
+     */
+    public CopyRefactoring(CopyProcessor processor) {
+        super(processor);
+        Assert.isNotNull(processor);
+        fProcessor = processor;
+    }
 
-   /**
-    * Returns the copy processor associated with this copy refactoring.
-    *
-    * @return returns the copy processor associated with this copy refactoring
-    */
-   public CopyProcessor getCopyProcessor()
-   {
-      return fProcessor;
-   }
+    /**
+     * Returns the copy processor associated with this copy refactoring.
+     *
+     * @return returns the copy processor associated with this copy refactoring
+     */
+    public CopyProcessor getCopyProcessor() {
+        return fProcessor;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public RefactoringProcessor getProcessor()
-   {
-      return fProcessor;
-   }
+    /** {@inheritDoc} */
+    public RefactoringProcessor getProcessor() {
+        return fProcessor;
+    }
 }

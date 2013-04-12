@@ -26,9 +26,8 @@ import java.io.IOException;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface DataSerializer<T>
-{
-   void write(DataOutput output, T value) throws IOException;
+public interface DataSerializer<T> {
+    void write(DataOutput output, T value) throws IOException;
 
-   T read(DataInput input) throws IOException;
+    T read(DataInput input) throws IOException;
 }

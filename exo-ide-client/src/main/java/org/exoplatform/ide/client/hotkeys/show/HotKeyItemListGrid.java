@@ -31,166 +31,132 @@ import org.exoplatform.ide.client.IDE;
 
 /**
  * Grid for displaying keyboard shortcuts list.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: HotKeyItemListGrid.java May 10, 2012 2:21:56 PM azatsarynnyy $
- *
  */
 
-public class HotKeyItemListGrid extends ListGrid<HotKeyItem>
-{
+public class HotKeyItemListGrid extends ListGrid<HotKeyItem> {
 
-   /**
-    * List grid identifier.
-    */
-   private final static String ID = "ideShowHotKeysListGrid";
+    /** List grid identifier. */
+    private final static String ID = "ideShowHotKeysListGrid";
 
-   /**
-    * Title of command column.
-    */
-   private final static String COMMAND_COLUMN_TITLE = IDE.PREFERENCES_CONSTANT.showHotKeysListGridCommand();
+    /** Title of command column. */
+    private final static String COMMAND_COLUMN_TITLE = IDE.PREFERENCES_CONSTANT.showHotKeysListGridCommand();
 
-   /**
-    * Title of shortcut column.
-    */
-   private final static String SHORTCUT_COLUMN_TITLE = IDE.PREFERENCES_CONSTANT.showHotKeysListGridShortcut();
+    /** Title of shortcut column. */
+    private final static String SHORTCUT_COLUMN_TITLE = IDE.PREFERENCES_CONSTANT.showHotKeysListGridShortcut();
 
-   /**
-    * Text displaying for pop-up menu control title.
-    */
-   private final static String POPUP = IDE.PREFERENCES_CONSTANT.showHotKeysListGridPopup();
+    /** Text displaying for pop-up menu control title. */
+    private final static String POPUP = IDE.PREFERENCES_CONSTANT.showHotKeysListGridPopup();
 
-   public HotKeyItemListGrid()
-   {
-      setID(ID);
-      initColumns();
-   }
+    public HotKeyItemListGrid() {
+        setID(ID);
+        initColumns();
+    }
 
-   /**
-    * Initialize column settings.
-    */
-   private void initColumns()
-   {
-      Column<HotKeyItem, SafeHtml> commandColumn =
-         new Column<HotKeyItem, SafeHtml>(new SafeHtmlCell())
-         {
+    /** Initialize column settings. */
+    private void initColumns() {
+        Column<HotKeyItem, SafeHtml> commandColumn =
+                new Column<HotKeyItem, SafeHtml>(new SafeHtmlCell()) {
 
-            @Override
-            public SafeHtml getValue(final HotKeyItem item)
-            {
-               SafeHtml html = new SafeHtml()
-               {
-                  private static final long serialVersionUID = 1L;
+                    @Override
+                    public SafeHtml getValue(final HotKeyItem item) {
+                        SafeHtml html = new SafeHtml() {
+                            private static final long serialVersionUID = 1L;
 
-                  @Override
-                  public String asString()
-                  {
-                     return getItemTitle(item);
-                  }
-               };
-               return html;
+                            @Override
+                            public String asString() {
+                                return getItemTitle(item);
+                            }
+                        };
+                        return html;
+                    }
+
+                };
+        getCellTable().addColumn(commandColumn, COMMAND_COLUMN_TITLE);
+        getCellTable().setColumnWidth(commandColumn, 50, Unit.PCT);
+
+        Column<HotKeyItem, SafeHtml> shortcutColumn =
+                new Column<HotKeyItem, SafeHtml>(new SafeHtmlCell()) {
+
+                    @Override
+                    public SafeHtml getValue(final HotKeyItem item) {
+                        SafeHtml html = new SafeHtml() {
+                            private static final long serialVersionUID = 1L;
+
+                            @Override
+                            public String asString() {
+                                return item.getHotKey() == null ? "" : item.getHotKey();
+                            }
+                        };
+                        return html;
+                    }
+
+                };
+        getCellTable().addColumn(shortcutColumn, SHORTCUT_COLUMN_TITLE);
+        getCellTable().setColumnWidth(shortcutColumn, 100, Unit.PCT);
+    }
+
+    /**
+     * Returns keyboard shortcut title for displaying in list grid.
+     *
+     * @param item
+     *         keyboard shortcut item
+     * @return shortcut title
+     */
+    private String getItemTitle(HotKeyItem item) {
+        if (item.isGroup()) {
+            String title = item.getTitle();
+            title = title.replace("/", "&nbsp;/&nbsp;");
+            title = getDivider(title);
+            return title;
+        } else {
+            String title = "";
+            if (item.getCommand() == null) {
+                return item.getTitle();
+            }
+            String commandName = item.getCommand().getId();
+            if (commandName.indexOf("/") >= 0) {
+                commandName = commandName.substring(commandName.lastIndexOf("/") + 1);
             }
 
-         };
-      getCellTable().addColumn(commandColumn, COMMAND_COLUMN_TITLE);
-      getCellTable().setColumnWidth(commandColumn, 50, Unit.PCT);
-
-      Column<HotKeyItem, SafeHtml> shortcutColumn =
-         new Column<HotKeyItem, SafeHtml>(new SafeHtmlCell())
-         {
-
-            @Override
-            public SafeHtml getValue(final HotKeyItem item)
-            {
-               SafeHtml html = new SafeHtml()
-               {
-                  private static final long serialVersionUID = 1L;
-
-                  @Override
-                  public String asString()
-                  {
-                     return item.getHotKey() == null ? "" : item.getHotKey();
-                  }
-               };
-               return html;
+            while (commandName.indexOf("\\") >= 0) {
+                commandName = commandName.replace("\\", "/");
             }
 
-         };
-      getCellTable().addColumn(shortcutColumn, SHORTCUT_COLUMN_TITLE);
-      getCellTable().setColumnWidth(shortcutColumn, 100, Unit.PCT);
-   }
+            if (item.getCommand() instanceof PopupMenuControl) {
+                commandName += "&nbsp;[" + POPUP + "]";
+            }
 
-   /**
-    * Returns keyboard shortcut title for displaying in list grid.
-    * 
-    * @param item keyboard shortcut item
-    * @return shortcut title
-    */
-   private String getItemTitle(HotKeyItem item)
-   {
-      if (item.isGroup())
-      {
-         String title = item.getTitle();
-         title = title.replace("/", "&nbsp;/&nbsp;");
-         title = getDivider(title);
-         return title;
-      }
-      else
-      {
-         String title = "";
-         if (item.getCommand() == null)
-         {
-            return item.getTitle();
-         }
-         String commandName = item.getCommand().getId();
-         if (commandName.indexOf("/") >= 0)
-         {
-            commandName = commandName.substring(commandName.lastIndexOf("/") + 1);
-         }
+            if (item.getCommand().getNormalImage() != null) {
+                Image image = new Image(item.getCommand().getNormalImage());
+                String imageHTML = ImageHelper.getImageHTML(image);
+                title = "<span>" + imageHTML + "&nbsp;" + commandName + "</span>";
+            } else if (item.getCommand().getIcon() != null) {
+                title = "<span><img src = \"" + item.getCommand().getIcon() + "\"/>&nbsp;" + commandName + "</span>";
+            } else {
+                title = "<span>" + commandName + "</span>";
+            }
 
-         while (commandName.indexOf("\\") >= 0)
-         {
-            commandName = commandName.replace("\\", "/");
-         }
+            return title;
+        }
+    }
 
-         if (item.getCommand() instanceof PopupMenuControl)
-         {
-            commandName += "&nbsp;[" + POPUP + "]";
-         }
+    /**
+     * Returns formatted title for divider of items group.
+     *
+     * @param title
+     *         divider title
+     * @return formatted divider title
+     */
+    private String getDivider(String title) {
+        String divider =
+                "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; height:20px;\">"
+                + "<tr><td></td><td>&nbsp;" + "<b><font color=\"#3764A3\" style=\"font-size: 12px; margin-left: 15px\">"
+                + title + "</font></b>" + "&nbsp;</td><td></td></tr>" + "</table>";
 
-         if (item.getCommand().getNormalImage() != null)
-         {
-            Image image = new Image(item.getCommand().getNormalImage());
-            String imageHTML = ImageHelper.getImageHTML(image);
-            title = "<span>" + imageHTML + "&nbsp;" + commandName + "</span>";
-         }
-         else if (item.getCommand().getIcon() != null)
-         {
-            title = "<span><img src = \"" + item.getCommand().getIcon() + "\"/>&nbsp;" + commandName + "</span>";
-         }
-         else
-         {
-            title = "<span>" + commandName + "</span>";
-         }
-
-         return title;
-      }
-   }
-
-   /**
-    * Returns formatted title for divider of items group.
-    * 
-    * @param title divider title
-    * @return formatted divider title
-    */
-   private String getDivider(String title)
-   {
-      String divider =
-         "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; height:20px;\">"
-            + "<tr><td></td><td>&nbsp;" + "<b><font color=\"#3764A3\" style=\"font-size: 12px; margin-left: 15px\">"
-            + title + "</font></b>" + "&nbsp;</td><td></td></tr>" + "</table>";
-
-      return divider;
-   }
+        return divider;
+    }
 
 }

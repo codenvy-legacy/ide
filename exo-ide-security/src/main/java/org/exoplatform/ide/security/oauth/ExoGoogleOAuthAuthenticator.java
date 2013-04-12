@@ -29,44 +29,36 @@ import org.exoplatform.ide.commons.ContainerUtils;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Implementation of GoogleOAuthAuthenticator configured throw eXo container.
- */
-public class ExoGoogleOAuthAuthenticator extends GoogleOAuthAuthenticator
-{
-   public ExoGoogleOAuthAuthenticator(InitParams initParams)
-   {
-      super(new MemoryCredentialStore(), createClientSecrets(initParams));
-   }
+/** Implementation of GoogleOAuthAuthenticator configured throw eXo container. */
+public class ExoGoogleOAuthAuthenticator extends GoogleOAuthAuthenticator {
+    public ExoGoogleOAuthAuthenticator(InitParams initParams) {
+        super(new MemoryCredentialStore(), createClientSecrets(initParams));
+    }
 
-   public ExoGoogleOAuthAuthenticator(CredentialStore credentialStore, InitParams initParams)
-   {
-      super(credentialStore, createClientSecrets(initParams));
-   }
+    public ExoGoogleOAuthAuthenticator(CredentialStore credentialStore, InitParams initParams) {
+        super(credentialStore, createClientSecrets(initParams));
+    }
 
-   public static GoogleClientSecrets loadClientSecrets(String configName) throws IOException
-   {
-      InputStream secrets = Thread.currentThread().getContextClassLoader().getResourceAsStream(configName);
-      if (secrets != null)
-      {
-         // stream closed after parsing by JsonFactory.
-         return GoogleClientSecrets.load(new JacksonFactory(), secrets);
-      }
-      throw new IOException("Cannot load client secrets. File '" + configName + "' not found. ");
-   }
+    public static GoogleClientSecrets loadClientSecrets(String configName) throws IOException {
+        InputStream secrets = Thread.currentThread().getContextClassLoader().getResourceAsStream(configName);
+        if (secrets != null) {
+            // stream closed after parsing by JsonFactory.
+            return GoogleClientSecrets.load(new JacksonFactory(), secrets);
+        }
+        throw new IOException("Cannot load client secrets. File '" + configName + "' not found. ");
+    }
 
-   public static GoogleClientSecrets createClientSecrets(InitParams initParams)
-   {
-      final String type = ContainerUtils.readValueParam(initParams, "type");
-      if (!("installed".equals(type) || "web".equals(type)))
-      {
-         throw new IllegalArgumentException("Invalid credentials type " + type + " .Must be 'web' or 'installed'. ");
-      }
-      GoogleClientSecrets.Details cfg = new GoogleClientSecrets.Details();
-      cfg.setClientId(ContainerUtils.readValueParam(initParams, "client-id")).setClientSecret(ContainerUtils
-         .readValueParam(initParams, "client-secret")).setAuthUri(ContainerUtils.readValueParam(initParams,
-         "auth-uri")).setTokenUri(ContainerUtils.readValueParam(initParams,
-         "token-uri")).setRedirectUris(ContainerUtils.readValuesParam(initParams, "redirect-uris"));
-      return "web".equals(type) ? new GoogleClientSecrets().setWeb(cfg) : new GoogleClientSecrets().setInstalled(cfg);
-   }
+    public static GoogleClientSecrets createClientSecrets(InitParams initParams) {
+        final String type = ContainerUtils.readValueParam(initParams, "type");
+        if (!("installed".equals(type) || "web".equals(type))) {
+            throw new IllegalArgumentException("Invalid credentials type " + type + " .Must be 'web' or 'installed'. ");
+        }
+        GoogleClientSecrets.Details cfg = new GoogleClientSecrets.Details();
+        cfg.setClientId(ContainerUtils.readValueParam(initParams, "client-id"))
+           .setClientSecret(ContainerUtils.readValueParam(initParams, "client-secret"))
+           .setAuthUri(ContainerUtils.readValueParam(initParams, "auth-uri"))
+           .setTokenUri(ContainerUtils.readValueParam(initParams, "token-uri"))
+           .setRedirectUris(ContainerUtils.readValuesParam(initParams, "redirect-uris"));
+        return "web".equals(type) ? new GoogleClientSecrets().setWeb(cfg) : new GoogleClientSecrets().setInstalled(cfg);
+    }
 }

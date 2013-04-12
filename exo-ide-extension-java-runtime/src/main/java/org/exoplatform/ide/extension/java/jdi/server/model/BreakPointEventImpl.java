@@ -25,38 +25,32 @@ import org.exoplatform.ide.extension.java.jdi.shared.BreakPointEvent;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class BreakPointEventImpl implements BreakPointEvent
-{
-   private BreakPoint breakPoint;
+public class BreakPointEventImpl implements BreakPointEvent {
+    private BreakPoint breakPoint;
 
-   public BreakPointEventImpl(BreakPoint breakPoint)
-   {
-      this.breakPoint = breakPoint;
-   }
+    public BreakPointEventImpl(BreakPoint breakPoint) {
+        this.breakPoint = breakPoint;
+    }
 
-   @Override
-   public BreakPoint getBreakPoint()
-   {
-      return breakPoint;
-   }
+    @Override
+    public BreakPoint getBreakPoint() {
+        return breakPoint;
+    }
 
-   @Override
-   public void setBreakPoint(BreakPoint breakPoint)
-   {
-      this.breakPoint = breakPoint;
-   }
+    @Override
+    public void setBreakPoint(BreakPoint breakPoint) {
+        this.breakPoint = breakPoint;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "BreakPointEventImpl{" +
-         "breakPoint=" + breakPoint +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "BreakPointEventImpl{" +
+               "breakPoint=" + breakPoint +
+               '}';
+    }
 
-   @Override
-   public final int getType()
-   {
-      return BREAKPOINT;
-   }
+    @Override
+    public final int getType() {
+        return BREAKPOINT;
+    }
 }

@@ -22,34 +22,24 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to update page speed.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 24, 2012 3:44:33 PM anya $
- * 
  */
-public class UpdatePageSpeedEvent extends GwtEvent<UpdatePageSpeedHandler>
-{
-   /**
-    * Type, used to register the event.
-    */
-   public static final GwtEvent.Type<UpdatePageSpeedHandler> TYPE = new GwtEvent.Type<UpdatePageSpeedHandler>();
+public class UpdatePageSpeedEvent extends GwtEvent<UpdatePageSpeedHandler> {
+    /** Type, used to register the event. */
+    public static final GwtEvent.Type<UpdatePageSpeedHandler> TYPE = new GwtEvent.Type<UpdatePageSpeedHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<UpdatePageSpeedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<UpdatePageSpeedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(UpdatePageSpeedHandler handler)
-   {
-      handler.onUpdatePageSpeed(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(UpdatePageSpeedHandler handler) {
+        handler.onUpdatePageSpeed(this);
+    }
 
 }

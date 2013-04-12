@@ -43,14 +43,14 @@ import com.codenvy.eclipse.core.runtime.CoreException;
  *
  * @see IResource#accept(IResourceVisitor)
  */
-public interface IResourceDeltaVisitor
-{
-   /**
-    * Visits the given resource delta.
-    *
-    * @return <code>true</code> if the resource delta's children should
-    *         be visited; <code>false</code> if they should be skipped.
-    * @throws CoreException if the visit fails for some reason.
-    */
-   public boolean visit(IResourceDelta delta) throws CoreException;
+public interface IResourceDeltaVisitor {
+    /**
+     * Visits the given resource delta.
+     *
+     * @return <code>true</code> if the resource delta's children should
+     *         be visited; <code>false</code> if they should be skipped.
+     * @throws CoreException
+     *         if the visit fails for some reason.
+     */
+    public boolean visit(IResourceDelta delta) throws CoreException;
 }

@@ -24,49 +24,48 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface ConfigurationOptionInfo
-{
-   String getNamespace();
+public interface ConfigurationOptionInfo {
+    String getNamespace();
 
-   void setNamespace(String namespace);
+    void setNamespace(String namespace);
 
-   String getName();
+    String getName();
 
-   void setName(String name);
+    void setName(String name);
 
-   String getDefaultValue();
+    String getDefaultValue();
 
-   void setDefaultValue(String defaultValue);
+    void setDefaultValue(String defaultValue);
 
-   ConfigurationOptionChangeSeverity getChangeSeverity();
+    ConfigurationOptionChangeSeverity getChangeSeverity();
 
-   void setChangeSeverity(ConfigurationOptionChangeSeverity changeSeverity);
+    void setChangeSeverity(ConfigurationOptionChangeSeverity changeSeverity);
 
-   boolean isUserDefined();
+    boolean isUserDefined();
 
-   void setUserDefined(boolean userDefined);
+    void setUserDefined(boolean userDefined);
 
-   ConfigurationOptionType getValueType();
+    ConfigurationOptionType getValueType();
 
-   void setValueType(ConfigurationOptionType valueType);
+    void setValueType(ConfigurationOptionType valueType);
 
-   List<String> getValueOptions();
+    List<String> getValueOptions();
 
-   void setValueOptions(List<String> valueOptions);
+    void setValueOptions(List<String> valueOptions);
 
-   Integer getMinValue();
+    Integer getMinValue();
 
-   void setMinValue(Integer minValue);
+    void setMinValue(Integer minValue);
 
-   Integer getMaxValue();
+    Integer getMaxValue();
 
-   void setMaxValue(Integer maxValue);
+    void setMaxValue(Integer maxValue);
 
-   Integer getMaxLength();
+    Integer getMaxLength();
 
-   void setMaxLength(Integer maxLength);
+    void setMaxLength(Integer maxLength);
 
-   ConfigurationOptionRestriction getOptionRestriction();
+    ConfigurationOptionRestriction getOptionRestriction();
 
-   void setRegex(ConfigurationOptionRestriction optionRestriction);
+    void setRegex(ConfigurationOptionRestriction optionRestriction);
 }

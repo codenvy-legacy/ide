@@ -26,11 +26,9 @@ import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Sep 22, 2011 evgen $
- * 
  */
-public interface HasApplicationListActions extends ListGridItem<ApplicationInfo>
-{
-   void addDeleteHandler(SelectionHandler<ApplicationInfo> handler);
+public interface HasApplicationListActions extends ListGridItem<ApplicationInfo> {
+    void addDeleteHandler(SelectionHandler<ApplicationInfo> handler);
 
-   void addInfoHandler(SelectionHandler<ApplicationInfo> handler);
+    void addInfoHandler(SelectionHandler<ApplicationInfo> handler);
 }

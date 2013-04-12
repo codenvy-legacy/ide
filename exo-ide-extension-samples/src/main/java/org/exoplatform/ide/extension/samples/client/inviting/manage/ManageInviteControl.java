@@ -26,27 +26,24 @@ import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class ManageInviteControl extends SimpleControl implements IDEControl
-{
-   private static final String ID = "Share/Manage Access";
+public class ManageInviteControl extends SimpleControl implements IDEControl {
+    private static final String ID = "Share/Manage Access";
 
-   private static final String TITLE = "Manage Access";
+    private static final String TITLE = "Manage Access";
 
-   private static final String PROMPT = "Manage Access";
+    private static final String PROMPT = "Manage Access";
 
-   public ManageInviteControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(SamplesClientBundle.INSTANCE.manageInvite(), SamplesClientBundle.INSTANCE.manageInviteDisable());
-      setEvent(new ManageInviteEvent());
-      setVisible(true);
-      setEnabled(true);
-   }
+    public ManageInviteControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(SamplesClientBundle.INSTANCE.manageInvite(), SamplesClientBundle.INSTANCE.manageInviteDisable());
+        setEvent(new ManageInviteEvent());
+        setVisible(true);
+        setEnabled(true);
+    }
 
-   @Override
-   public void initialize()
-   {
-   }
+    @Override
+    public void initialize() {
+    }
 }

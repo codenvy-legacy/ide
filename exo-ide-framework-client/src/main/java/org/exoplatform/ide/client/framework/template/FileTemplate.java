@@ -23,44 +23,37 @@ import com.google.gwt.resources.client.ImageResource;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 27, 2012 12:53:34 PM anya $
- * 
  */
-public interface FileTemplate extends Template
-{
+public interface FileTemplate extends Template {
 
-   /**
-    * @return the content
-    */
-   String getContent();
+    /** @return the content */
+    String getContent();
 
-   /**
-    * @param content the content to set
-    */
-   void setContent(String content);
+    /**
+     * @param content
+     *         the content to set
+     */
+    void setContent(String content);
 
-   /**
-    * @return the mimeType
-    */
-   String getMimeType();
+    /** @return the mimeType */
+    String getMimeType();
 
-   /**
-    * @param mimeType the mimeType to set
-    */
-   void setMimeType(String mimeType);
+    /**
+     * @param mimeType
+     *         the mimeType to set
+     */
+    void setMimeType(String mimeType);
 
-   /**
-    * @return the fileName
-    */
-   String getFileName();
+    /** @return the fileName */
+    String getFileName();
 
-   /**
-    * @param fileName the fileName to set
-    */
-   void setFileName(String fileName);
+    /**
+     * @param fileName
+     *         the fileName to set
+     */
+    void setFileName(String fileName);
 
-   /**
-    * @see org.exoplatform.ide.client.framework.template.AbstractTemplate#getIcon()
-    */
-   ImageResource getIcon();
+    /** @see org.exoplatform.ide.client.framework.template.AbstractTemplate#getIcon() */
+    ImageResource getIcon();
 
 }

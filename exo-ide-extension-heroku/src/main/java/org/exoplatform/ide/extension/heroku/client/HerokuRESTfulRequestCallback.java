@@ -35,41 +35,33 @@ import java.util.List;
 /**
  * WebSocket Heroku request. The {@link #onFailure(Throwable)} method contains the check for user not authorized exception, in
  * this case - the {@link LoginEvent} is fired.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: HerokuRESTfulRequestCallback.java Nov 30, 2012 2:00:07 PM azatsarynnyy $
- *
  * @see HerokuAsyncRequestCallback
  */
-public abstract class HerokuRESTfulRequestCallback extends RequestCallback<List<Property>>
-{
-   private LoggedInHandler loggedInHandler;
+public abstract class HerokuRESTfulRequestCallback extends RequestCallback<List<Property>> {
+    private LoggedInHandler loggedInHandler;
 
-   public HerokuRESTfulRequestCallback(LoggedInHandler handler)
-   {
-      super(new ApplicationInfoUnmarshallerWS(new ArrayList<Property>()));
-      this.loggedInHandler = handler;
-   }
+    public HerokuRESTfulRequestCallback(LoggedInHandler handler) {
+        super(new ApplicationInfoUnmarshallerWS(new ArrayList<Property>()));
+        this.loggedInHandler = handler;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.websocket.rest.RequestCallback#onFailure(java.lang.Throwable)
-    */
-   @Override
-   protected void onFailure(Throwable exception)
-   {
-      if (exception instanceof ServerException)
-      {
-         ServerException serverException = (ServerException)exception;
-         if ((HTTPStatus.OK == serverException.getHTTPStatus() || HTTPStatus.INTERNAL_ERROR == serverException
-            .getHTTPStatus())
-            && serverException.getMessage() != null
-            && serverException.getMessage().contains("Authentication required"))
-         {
-            IDE.addHandler(LoggedInEvent.TYPE, loggedInHandler);
-            IDE.fireEvent(new LoginEvent());
-            return;
-         }
-      }
-      IDE.fireEvent(new ExceptionThrownEvent(exception));
-   }
+    /** @see org.exoplatform.ide.client.framework.websocket.rest.RequestCallback#onFailure(java.lang.Throwable) */
+    @Override
+    protected void onFailure(Throwable exception) {
+        if (exception instanceof ServerException) {
+            ServerException serverException = (ServerException)exception;
+            if ((HTTPStatus.OK == serverException.getHTTPStatus() || HTTPStatus.INTERNAL_ERROR == serverException
+                    .getHTTPStatus())
+                && serverException.getMessage() != null
+                && serverException.getMessage().contains("Authentication required")) {
+                IDE.addHandler(LoggedInEvent.TYPE, loggedInHandler);
+                IDE.fireEvent(new LoginEvent());
+                return;
+            }
+        }
+        IDE.fireEvent(new ExceptionThrownEvent(exception));
+    }
 }

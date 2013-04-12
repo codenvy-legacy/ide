@@ -37,107 +37,96 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class LoginView extends ViewImpl implements org.exoplatform.ide.client.authentication.LoginPresenter.Display
-{
+public class LoginView extends ViewImpl implements org.exoplatform.ide.client.authentication.LoginPresenter.Display {
 
-   private static final String ID = "ideLoginView";
+    private static final String ID = "ideLoginView";
 
-   private static LoginViewUiBinder uiBinder = GWT.create(LoginViewUiBinder.class);
+    private static LoginViewUiBinder uiBinder = GWT.create(LoginViewUiBinder.class);
 
-   interface LoginViewUiBinder extends UiBinder<Widget, LoginView>
-   {
-   }
+    interface LoginViewUiBinder extends UiBinder<Widget, LoginView> {
+    }
 
-   @UiField
-   ImageButton loginButton;
+    @UiField
+    ImageButton loginButton;
 
-   @UiField
-   ImageButton loginGoogleButton;
+    @UiField
+    ImageButton loginGoogleButton;
 
-   @UiField
-   ImageButton loginGitHubButton;
+    @UiField
+    ImageButton loginGitHubButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   @UiField
-   TextInput loginField;
+    @UiField
+    TextInput loginField;
 
-   @UiField
-   PasswordTextInput passwordField;
+    @UiField
+    PasswordTextInput passwordField;
 
-   @UiField
-   VerticalPanel verticalPanel;
+    @UiField
+    VerticalPanel verticalPanel;
 
-   public LoginView()
-   {
-      super(ID, "modal", "Login", new Image(IDEImageBundle.INSTANCE.ok()), 540, 290);
-      add(uiBinder.createAndBindUi(this));
-      passwordField.setName("ideLoginViewPasswordField");
-      loginGoogleButton.setImage(new Image("http://www.google.com/favicon.ico"));
-      loginGitHubButton.setImage(new Image(IDEImageBundle.INSTANCE.gitHubIconSmall()));
-      verticalPanel.add(createLogoLayout());
-   }
+    public LoginView() {
+        super(ID, "modal", "Login", new Image(IDEImageBundle.INSTANCE.ok()), 540, 290);
+        add(uiBinder.createAndBindUi(this));
+        passwordField.setName("ideLoginViewPasswordField");
+        loginGoogleButton.setImage(new Image("http://www.google.com/favicon.ico"));
+        loginGitHubButton.setImage(new Image(IDEImageBundle.INSTANCE.gitHubIconSmall()));
+        verticalPanel.add(createLogoLayout());
+    }
 
-   @Override
-   public HasClickHandlers getLoginButton()
-   {
-      return loginButton;
-   }
+    @Override
+    public HasClickHandlers getLoginButton() {
+        return loginButton;
+    }
 
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   @Override
-   public void setLoginButtonEnabled(boolean enabled)
-   {
-      loginButton.setEnabled(enabled);
-   }
+    @Override
+    public void setLoginButtonEnabled(boolean enabled) {
+        loginButton.setEnabled(enabled);
+    }
 
-   @Override
-   public TextFieldItem getLoginField()
-   {
-      return loginField;
-   }
+    @Override
+    public TextFieldItem getLoginField() {
+        return loginField;
+    }
 
-   @Override
-   public TextFieldItem getPasswordField()
-   {
-      return passwordField;
-   }
+    @Override
+    public TextFieldItem getPasswordField() {
+        return passwordField;
+    }
 
-   @Override
-   public HasClickHandlers getLoginGoogleButton()
-   {
-      return loginGoogleButton;
-   }
+    @Override
+    public HasClickHandlers getLoginGoogleButton() {
+        return loginGoogleButton;
+    }
 
-   @Override
-   public HasClickHandlers getLoginGitHubButton()
-   {
-      return loginGitHubButton;
-   }
+    @Override
+    public HasClickHandlers getLoginGitHubButton() {
+        return loginGitHubButton;
+    }
 
-   private HorizontalPanel createLogoLayout()
-   {
-      HorizontalPanel logoLayout = new HorizontalPanel();
-      logoLayout.setWidth("100%");
-      logoLayout.setHeight(84 + "px");
-      String style = logoLayout.getElement().getAttribute("style");
-      style += "background : url(\"" + Images.Logos.ABOUT_BG + "\") repeat-x scroll 0 0 transparent;";
-      logoLayout.getElement().setAttribute("style", style);
-      Image logoImage = new Image();
-      logoImage.setUrl(Images.Logos.ABOUT_LOGO);
-      logoImage.getElement().setAttribute("style", "padding-left: 35px; padding-top: 34px;");
-      logoLayout.add(logoImage);
-      return logoLayout;
-   }
+    private HorizontalPanel createLogoLayout() {
+        HorizontalPanel logoLayout = new HorizontalPanel();
+        logoLayout.setWidth("100%");
+        logoLayout.setHeight(84 + "px");
+        String style = logoLayout.getElement().getAttribute("style");
+        style += "background : url(\"" + Images.Logos.ABOUT_BG + "\") repeat-x scroll 0 0 transparent;";
+        logoLayout.getElement().setAttribute("style", style);
+        Image logoImage = new Image();
+        logoImage.setUrl(Images.Logos.ABOUT_LOGO);
+        logoImage.getElement().setAttribute("style", "padding-left: 35px; padding-top: 34px;");
+        logoLayout.add(logoImage);
+        return logoLayout;
+    }
 }

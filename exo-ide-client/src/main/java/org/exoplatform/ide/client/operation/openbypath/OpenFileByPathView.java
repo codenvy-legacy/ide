@@ -35,99 +35,84 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 /**
  * Created by The eXo.
- * 
+ *
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
  */
 public class OpenFileByPathView extends ViewImpl implements
-   org.exoplatform.ide.client.operation.openbypath.OpenFileByPathPresenter.Display
-{
+                                                 org.exoplatform.ide.client.operation.openbypath.OpenFileByPathPresenter.Display {
 
-   public static final int WIDTH = 500;
+    public static final int WIDTH = 500;
 
-   public static final int HEIGHT = 165;
+    public static final int HEIGHT = 165;
 
-   private static final String ID = "ideOpenFileByPathWindow";
+    private static final String ID = "ideOpenFileByPathWindow";
 
-   private static final String OPEN_BUTTON_ID = "ideOpenFileByPathFormOpenButton";
+    private static final String OPEN_BUTTON_ID = "ideOpenFileByPathFormOpenButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideOpenFileByPathFormCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideOpenFileByPathFormCancelButton";
 
-   private static final String FILE_PATH_FIELD_NAME = "ideOpenFileByPathFormFilePathField";
+    private static final String FILE_PATH_FIELD_NAME = "ideOpenFileByPathFormFilePathField";
 
-   private static final String TITLE = IDE.UPLOAD_CONSTANT.openFileByPathTitle();
+    private static final String TITLE = IDE.UPLOAD_CONSTANT.openFileByPathTitle();
 
-   @UiField
-   TextInput filePathField;
+    @UiField
+    TextInput filePathField;
 
-   @UiField
-   ImageButton openButton;
+    @UiField
+    ImageButton openButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   interface OpenFileByPathViewUiBinder extends UiBinder<Widget, OpenFileByPathView>
-   {
-   }
+    interface OpenFileByPathViewUiBinder extends UiBinder<Widget, OpenFileByPathView> {
+    }
 
-   private static OpenFileByPathViewUiBinder uiBinder = GWT.create(OpenFileByPathViewUiBinder.class);
+    private static OpenFileByPathViewUiBinder uiBinder = GWT.create(OpenFileByPathViewUiBinder.class);
 
-   public OpenFileByPathView()
-   {
-      super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.ok()), WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
+    public OpenFileByPathView() {
+        super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.ok()), WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
 
-      filePathField.setName(FILE_PATH_FIELD_NAME);
-      openButton.setButtonId(OPEN_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-   }
+        filePathField.setName(FILE_PATH_FIELD_NAME);
+        openButton.setButtonId(OPEN_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+    }
 
-   public HasClickHandlers getCancelButton()
-   {
-      return this.cancelButton;
-   }
+    public HasClickHandlers getCancelButton() {
+        return this.cancelButton;
+    }
 
-   public HasKeyPressHandlers getFilePathField()
-   {
-      return this.filePathField;
-   }
+    public HasKeyPressHandlers getFilePathField() {
+        return this.filePathField;
+    }
 
-   public void disableOpenButton()
-   {
-      openButton.setEnabled(false);
-   }
+    public void disableOpenButton() {
+        openButton.setEnabled(false);
+    }
 
-   public void enableOpenButton()
-   {
-      openButton.setEnabled(true);
-   }
+    public void enableOpenButton() {
+        openButton.setEnabled(true);
+    }
 
-   public HasClickHandlers getOpenButton()
-   {
-      return openButton;
-   }
+    public HasClickHandlers getOpenButton() {
+        return openButton;
+    }
 
-   public TextFieldItem getFilePathFieldOrigin()
-   {
-      return filePathField;
-   }
+    public TextFieldItem getFilePathFieldOrigin() {
+        return filePathField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.upload.OpenFileByPathPresenter.Display#selectPathField()
-    */
-   @Override
-   public void selectPathField()
-   {
-      filePathField.selectAll();
-   }
+    /** @see org.exoplatform.ide.client.upload.OpenFileByPathPresenter.Display#selectPathField() */
+    @Override
+    public void selectPathField() {
+        filePathField.selectAll();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.upload.OpenFileByPathPresenter.Display#focusInPathField()
-    */
-   @Override
-   public void focusInPathField()
-   {
-      filePathField.focus();
-   }
+    /** @see org.exoplatform.ide.client.upload.OpenFileByPathPresenter.Display#focusInPathField() */
+    @Override
+    public void focusInPathField() {
+        filePathField.focus();
+    }
 
 }

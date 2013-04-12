@@ -30,57 +30,48 @@ import org.exoplatform.ide.editor.javascript.client.JavaScriptEditorExtension;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: JsTemplateWidtet Feb 24, 2011 2:28:32 PM evgen $
- * 
  */
-public class JsTemplateWidget extends JSBaseWidget
-{
+public class JsTemplateWidget extends JSBaseWidget {
 
-   /**
-    * @param token
-    */
-   public JsTemplateWidget(Token token)
-   {
-      super(token);
-      grid = new Grid(1, 3);
-      grid.setStyleName(JavaScriptEditorExtension.RESOURCES.css().item());
-      grid.setWidth("100%");
+    /** @param token */
+    public JsTemplateWidget(Token token) {
+        super(token);
+        grid = new Grid(1, 3);
+        grid.setStyleName(JavaScriptEditorExtension.RESOURCES.css().item());
+        grid.setWidth("100%");
 
-      Image i = new Image(JavaScriptEditorExtension.RESOURCES.template());
-      i.setHeight("16px");
-      grid.setWidget(0, 0, i);
+        Image i = new Image(JavaScriptEditorExtension.RESOURCES.template());
+        i.setHeight("16px");
+        grid.setWidget(0, 0, i);
 
-      String name = token.getName();
-      if (token.hasProperty(TokenProperties.SHORT_HINT))
-      {
-         String hint = " - " + token.getProperty(TokenProperties.SHORT_HINT).isStringProperty().stringValue();
-         Label hintLabel = new Label(hint, false);
-         grid.setWidget(0, 2, hintLabel);
-      }
+        String name = token.getName();
+        if (token.hasProperty(TokenProperties.SHORT_HINT)) {
+            String hint = " - " + token.getProperty(TokenProperties.SHORT_HINT).isStringProperty().stringValue();
+            Label hintLabel = new Label(hint, false);
+            grid.setWidget(0, 2, hintLabel);
+        }
 
-      Label nameLabel = new Label(name, false);
+        Label nameLabel = new Label(name, false);
 
-      grid.setWidget(0, 1, nameLabel);
+        grid.setWidget(0, 1, nameLabel);
 
-      grid.getCellFormatter().setWidth(0, 0, "16px");
-      grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setHorizontalAlignment(0, 2, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setWidth(0, 2, "100%");
+        grid.getCellFormatter().setWidth(0, 0, "16px");
+        grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
+        grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
+        grid.getCellFormatter().setHorizontalAlignment(0, 2, HasHorizontalAlignment.ALIGN_LEFT);
+        grid.getCellFormatter().setWidth(0, 2, "100%");
 
-      initWidget(grid);
-   }
+        initWidget(grid);
+    }
 
-   /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget#getTokenValue()
-    */
-   @Override
-   public String getTokenValue()
-   {
-      if (token.hasProperty(TokenProperties.CODE))
-         return token.getProperty(TokenProperties.CODE).isStringProperty().stringValue();
-      else
-         return token.getName();
+    /** @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget#getTokenValue() */
+    @Override
+    public String getTokenValue() {
+        if (token.hasProperty(TokenProperties.CODE))
+            return token.getProperty(TokenProperties.CODE).isStringProperty().stringValue();
+        else
+            return token.getName();
 
-   }
+    }
 
 }

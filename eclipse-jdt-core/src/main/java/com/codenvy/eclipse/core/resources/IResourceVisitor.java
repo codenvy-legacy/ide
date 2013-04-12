@@ -33,15 +33,16 @@ import com.codenvy.eclipse.core.runtime.CoreException;
  *
  * @see IResource#accept(IResourceVisitor)
  */
-public interface IResourceVisitor
-{
-   /**
-    * Visits the given resource.
-    *
-    * @param resource the resource to visit
-    * @return <code>true</code> if the resource's members should
-    *         be visited; <code>false</code> if they should be skipped
-    * @throws CoreException if the visit fails for some reason.
-    */
-   public boolean visit(IResource resource) throws CoreException;
+public interface IResourceVisitor {
+    /**
+     * Visits the given resource.
+     *
+     * @param resource
+     *         the resource to visit
+     * @return <code>true</code> if the resource's members should
+     *         be visited; <code>false</code> if they should be skipped
+     * @throws CoreException
+     *         if the visit fails for some reason.
+     */
+    public boolean visit(IResource resource) throws CoreException;
 }

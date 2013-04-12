@@ -37,17 +37,18 @@ import com.codenvy.eclipse.core.runtime.CoreException;
  * @see IResource#accept(IResourceVisitor)
  * @since 2.1
  */
-public interface IResourceProxyVisitor
-{
-   /**
-    * Visits the given resource.
-    *
-    * @param proxy for requesting information about the resource being visited;
-    *              this object is only valid for the duration of the invocation of this
-    *              method, and must not be used after this method has completed
-    * @return <code>true</code> if the resource's members should
-    *         be visited; <code>false</code> if they should be skipped
-    * @throws CoreException if the visit fails for some reason.
-    */
-   public boolean visit(IResourceProxy proxy) throws CoreException;
+public interface IResourceProxyVisitor {
+    /**
+     * Visits the given resource.
+     *
+     * @param proxy
+     *         for requesting information about the resource being visited;
+     *         this object is only valid for the duration of the invocation of this
+     *         method, and must not be used after this method has completed
+     * @return <code>true</code> if the resource's members should
+     *         be visited; <code>false</code> if they should be skipped
+     * @throws CoreException
+     *         if the visit fails for some reason.
+     */
+    public boolean visit(IResourceProxy proxy) throws CoreException;
 }

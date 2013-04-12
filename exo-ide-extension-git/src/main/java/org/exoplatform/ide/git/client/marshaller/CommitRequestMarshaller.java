@@ -30,33 +30,25 @@ import org.exoplatform.ide.git.shared.CommitRequest;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 31, 2011 11:11:25 AM anya $
- * 
  */
-public class CommitRequestMarshaller implements Marshallable, Constants
-{
-   /**
-    * Request for commit.
-    */
-   private CommitRequest commitRequest;
+public class CommitRequestMarshaller implements Marshallable, Constants {
+    /** Request for commit. */
+    private CommitRequest commitRequest;
 
-   /**
-    * @param commitRequest request for commit
-    */
-   public CommitRequestMarshaller(CommitRequest commitRequest)
-   {
-      this.commitRequest = commitRequest;
-   }
+    /**
+     * @param commitRequest request for commit
+     */
+    public CommitRequestMarshaller(CommitRequest commitRequest) {
+        this.commitRequest = commitRequest;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
-    */
-   @Override
-   public String marshal()
-   {
-      JSONObject jsonObject = new JSONObject();
-      jsonObject.put(MESSAGE, new JSONString(commitRequest.getMessage()));
-      jsonObject.put(ALL, JSONBoolean.getInstance(commitRequest.isAll()));
-      return jsonObject.toString();
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal() */
+    @Override
+    public String marshal() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(MESSAGE, new JSONString(commitRequest.getMessage()));
+        jsonObject.put(ALL, JSONBoolean.getInstance(commitRequest.isAll()));
+        return jsonObject.toString();
+    }
 
 }

@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link SwitchAccountEvent} event.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: SwitchAccountHandler.java Feb 7, 2012 12:48:32 PM azatsarynnyy $
- *
  */
-public interface SwitchAccountHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to switch in OpenShift.
-    * 
-    * @param event
-    */
-   void onSwitchAccount(SwitchAccountEvent event);
+public interface SwitchAccountHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to switch in OpenShift.
+     *
+     * @param event
+     */
+    void onSwitchAccount(SwitchAccountEvent event);
 }

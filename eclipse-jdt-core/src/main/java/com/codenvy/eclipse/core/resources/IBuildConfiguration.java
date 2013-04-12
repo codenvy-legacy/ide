@@ -52,31 +52,26 @@ import com.codenvy.eclipse.core.runtime.IAdaptable;
  * @see IProjectDescription#setBuildConfigReferences(String, IBuildConfiguration[])
  * @since 3.7
  */
-public interface IBuildConfiguration extends IAdaptable
-{
+public interface IBuildConfiguration extends IAdaptable {
 
-   /**
-    * The Id of the default build configuration
-    */
-   public static final String DEFAULT_CONFIG_NAME = ""; //$NON-NLS-1$
+    /** The Id of the default build configuration */
+    public static final String DEFAULT_CONFIG_NAME = ""; //$NON-NLS-1$
 
-   /**
-    * @return the project that the config is for; never null.
-    */
-   public IProject getProject();
+    /** @return the project that the config is for; never null. */
+    public IProject getProject();
 
-   /**
-    * Returns the human readable name of this build configuration.  If this
-    * {@link IBuildConfiguration} is set on a Project, this can never be null.
-    * <p>
-    * If this IBuildConfiguration is being used as a reference to a build configuration
-    * in another project, this may be null.  Such build configuration references are
-    * resolved to the current active configuration at build time.
-    * </p>
-    *
-    * @return the name of the configuration; or null if this is a reference to the active
-    *         configuration
-    */
-   public String getName();
+    /**
+     * Returns the human readable name of this build configuration.  If this
+     * {@link IBuildConfiguration} is set on a Project, this can never be null.
+     * <p>
+     * If this IBuildConfiguration is being used as a reference to a build configuration
+     * in another project, this may be null.  Such build configuration references are
+     * resolved to the current active configuration at build time.
+     * </p>
+     *
+     * @return the name of the configuration; or null if this is a reference to the active
+     *         configuration
+     */
+    public String getName();
 
 }

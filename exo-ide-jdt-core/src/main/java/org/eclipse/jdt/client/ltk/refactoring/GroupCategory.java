@@ -19,68 +19,64 @@ import org.exoplatform.ide.editor.shared.runtime.Assert;
  * Note: this class is not intended to be subclassed
  * </p>
  *
- * @since 3.2
- *
  * @noextend This class is not intended to be subclassed by clients.
+ * @since 3.2
  */
-public class GroupCategory
-{
+public class GroupCategory {
 
-   private String fId;
+    private String fId;
 
-   private String fName;
+    private String fName;
 
-   private String fDescription;
+    private String fDescription;
 
-   /**
-    * Creates a new group category with the given name and
-    * description.
-    *
-    * @param id a unique identifier
-    * @param name the name
-    * @param description the description
-    */
-   public GroupCategory(String id, String name, String description)
-   {
-      Assert.isNotNull(id);
-      Assert.isNotNull(name);
-      Assert.isNotNull(description);
-      fId = id;
-      fName = name;
-      fDescription = description;
-   }
+    /**
+     * Creates a new group category with the given name and
+     * description.
+     *
+     * @param id
+     *         a unique identifier
+     * @param name
+     *         the name
+     * @param description
+     *         the description
+     */
+    public GroupCategory(String id, String name, String description) {
+        Assert.isNotNull(id);
+        Assert.isNotNull(name);
+        Assert.isNotNull(description);
+        fId = id;
+        fName = name;
+        fDescription = description;
+    }
 
-   /**
-    * Returns the name of the group category.
-    *
-    * @return the name
-    */
-   public String getName()
-   {
-      return fName;
-   }
+    /**
+     * Returns the name of the group category.
+     *
+     * @return the name
+     */
+    public String getName() {
+        return fName;
+    }
 
-   /**
-    * Returns the description of the group category.
-    *
-    * @return the description
-    */
-   public String getDescription()
-   {
-      return fDescription;
-   }
+    /**
+     * Returns the description of the group category.
+     *
+     * @return the description
+     */
+    public String getDescription() {
+        return fDescription;
+    }
 
-   public boolean equals(Object obj)
-   {
-      if (this == obj)
-         return true;
-      if (obj == null || !getClass().equals(obj.getClass()))
-         return false;
-      return fId.equals(((GroupCategory)obj).fId);
-   }
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || !getClass().equals(obj.getClass()))
+            return false;
+        return fId.equals(((GroupCategory)obj).fId);
+    }
 
-   public int hashCode()
-   {
-      return fId.hashCode();
-   }
+    public int hashCode() {
+        return fId.hashCode();
+    }
 }

@@ -41,136 +41,113 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 20, 2012 5:01:04 PM anya $
- * 
  */
-public class DeleteVersionPresenter implements DeleteVersionHandler, ViewClosedHandler
-{
-   interface Display extends IsView
-   {
-      HasClickHandlers getDeleteButton();
+public class DeleteVersionPresenter implements DeleteVersionHandler, ViewClosedHandler {
+    interface Display extends IsView {
+        HasClickHandlers getDeleteButton();
 
-      HasClickHandlers getCancelButton();
+        HasClickHandlers getCancelButton();
 
-      HasValue<String> getDeleteQuestion();
+        HasValue<String> getDeleteQuestion();
 
-      HasValue<Boolean> getDeleteS3Bundle();
-   }
+        HasValue<Boolean> getDeleteS3Bundle();
+    }
 
-   private Display display;
+    private Display display;
 
-   private String vfsId;
+    private String vfsId;
 
-   private String projectId;
+    private String projectId;
 
-   private ApplicationVersionInfo version;
+    private ApplicationVersionInfo version;
 
-   private VersionDeletedHandler versionDeletedHandler;
+    private VersionDeletedHandler versionDeletedHandler;
 
-   public DeleteVersionPresenter()
-   {
-      IDE.addHandler(DeleteVersionEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    public DeleteVersionPresenter() {
+        IDE.addHandler(DeleteVersionEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   public void bindDisplay()
-   {
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
+    public void bindDisplay() {
+        display.getCancelButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
 
-      display.getDeleteButton().addClickHandler(new ClickHandler()
-      {
+        display.getDeleteButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            deleteVersion();
-         }
-      });
-   }
+            @Override
+            public void onClick(ClickEvent event) {
+                deleteVersion();
+            }
+        });
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.delete.DeleteVersionHandler#onDeleteVersion(org.exoplatform.ide.extension.aws.client.beanstalk.versions.delete.DeleteVersionEvent)
-    */
-   @Override
-   public void onDeleteVersion(DeleteVersionEvent event)
-   {
-      this.vfsId = event.getVfsId();
-      this.projectId = event.getProjectId();
-      this.versionDeletedHandler = event.getVersionDeletedHandler();
-      this.version = event.getVersion();
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.delete.DeleteVersionHandler#onDeleteVersion(org.exoplatform.ide
+     * .extension.aws.client.beanstalk.versions.delete.DeleteVersionEvent) */
+    @Override
+    public void onDeleteVersion(DeleteVersionEvent event) {
+        this.vfsId = event.getVfsId();
+        this.projectId = event.getProjectId();
+        this.versionDeletedHandler = event.getVersionDeletedHandler();
+        this.version = event.getVersion();
 
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         IDE.getInstance().openView(display.asView());
-         bindDisplay();
-      }
-      display.getDeleteS3Bundle().setValue(true);
-      display.getDeleteQuestion().setValue(
-         AWSExtension.LOCALIZATION_CONSTANT.deleteVersionQuestion(version.getVersionLabel()));
-   }
+        if (display == null) {
+            display = GWT.create(Display.class);
+            IDE.getInstance().openView(display.asView());
+            bindDisplay();
+        }
+        display.getDeleteS3Bundle().setValue(true);
+        display.getDeleteQuestion().setValue(
+                AWSExtension.LOCALIZATION_CONSTANT.deleteVersionQuestion(version.getVersionLabel()));
+    }
 
-   private void deleteVersion()
-   {
-      try
-      {
-         BeanstalkClientService.getInstance().deleteVersion(vfsId, projectId, version.getApplicationName(),
-            version.getVersionLabel(), display.getDeleteS3Bundle().getValue(),
-            new AwsAsyncRequestCallback<Object>(new LoggedInHandler()
-            {
+    private void deleteVersion() {
+        try {
+            BeanstalkClientService.getInstance().deleteVersion(vfsId, projectId, version.getApplicationName(),
+               version.getVersionLabel(), display.getDeleteS3Bundle().getValue(),
+               new AwsAsyncRequestCallback<Object>(new LoggedInHandler() {
 
-               @Override
-               public void onLoggedIn()
-               {
-                  deleteVersion();
-               }
-            })
-            {
+                   @Override
+                   public void onLoggedIn() {
+                       deleteVersion();
+                   }
+               }, null) {
 
-               @Override
-               protected void processFail(Throwable exception)
-               {
-                  String message = AWSExtension.LOCALIZATION_CONSTANT.deleteVersionFailed(version.getVersionLabel());
-                  if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null)
-                  {
-                     message += "<br>" + ((ServerException)exception).getMessage();
-                  }
-                  Dialogs.getInstance().showError(message);
-               }
+                   @Override
+                   protected void processFail(Throwable exception) {
+                       String message = AWSExtension.LOCALIZATION_CONSTANT
+                                                    .deleteVersionFailed(
+                                                            version.getVersionLabel());
+                       if (exception instanceof ServerException &&
+                           ((ServerException)exception).getMessage() != null) {
+                           message += "<br>" + ((ServerException)exception).getMessage();
+                       }
+                       Dialogs.getInstance().showError(message);
+                   }
 
-               @Override
-               protected void onSuccess(Object result)
-               {
-                  IDE.getInstance().closeView(display.asView().getId());
-                  if (versionDeletedHandler != null)
-                  {
-                     versionDeletedHandler.onVersionDeleted(version);
-                  }
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                   @Override
+                   protected void onSuccess(Object result) {
+                       IDE.getInstance().closeView(display.asView().getId());
+                       if (versionDeletedHandler != null) {
+                           versionDeletedHandler.onVersionDeleted(version);
+                       }
+                   }
+               });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 }

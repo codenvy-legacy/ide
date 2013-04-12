@@ -4,17 +4,15 @@ SHADOW
 style prefix: exo-shadow-
 ****************************************************************************************/
 
-.exo-shadow-panel
-{
-	position: absolute;
-	z-index: 0;
+.exo-shadow-panel {
+    position: absolute;
+    z-index: 0;
 }
 
-.exo-shadow-table
-{
-	width: 100%;
-	height: 100%;
-	border-collapse: collapse;
+.exo-shadow-table {
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
 }
 
 .exo-shadow-tl,
@@ -22,9 +20,8 @@ style prefix: exo-shadow-
 .exo-shadow-tr,
 .exo-shadow-bl,
 .exo-shadow-b,
-.exo-shadow-br
-{
-	height: 10px;
+.exo-shadow-br {
+    height: 10px;
 }
 
 .exo-shadow-tl,
@@ -32,51 +29,41 @@ style prefix: exo-shadow-
 .exo-shadow-l,
 .exo-shadow-r,
 .exo-shadow-bl,
-.exo-shadow-br
-{
-	width: 10px;
+.exo-shadow-br {
+    width: 10px;
 }
 
-.exo-shadow-tl
-{
-	background: url("images/shadow/shadow_TL.png") no-repeat;
+.exo-shadow-tl {
+    background: url("images/shadow/shadow_TL.png") no-repeat;
 }
 
-.exo-shadow-t
-{
-	background: url("images/shadow/shadow_T.png") repeat-x;
+.exo-shadow-t {
+    background: url("images/shadow/shadow_T.png") repeat-x;
 }
 
-.exo-shadow-tr
-{
-	background: url("images/shadow/shadow_TR.png") no-repeat;
+.exo-shadow-tr {
+    background: url("images/shadow/shadow_TR.png") no-repeat;
 }
 
-.exo-shadow-l
-{
-	background: url("images/shadow/shadow_L.png") repeat-y;
+.exo-shadow-l {
+    background: url("images/shadow/shadow_L.png") repeat-y;
 }
 
-.exo-shadow-m
-{
+.exo-shadow-m {
 }
 
-.exo-shadow-r
-{
-	background: url("images/shadow/shadow_R.png") repeat-y;
+.exo-shadow-r {
+    background: url("images/shadow/shadow_R.png") repeat-y;
 }
 
-.exo-shadow-bl
-{
-	background: url("images/shadow/shadow_BL.png") no-repeat;
+.exo-shadow-bl {
+    background: url("images/shadow/shadow_BL.png") no-repeat;
 }
 
-.exo-shadow-b
-{
-	background: url("images/shadow/shadow_B.png") repeat-x;
+.exo-shadow-b {
+    background: url("images/shadow/shadow_B.png") repeat-x;
 }
 
-.exo-shadow-br
-{
-	background: url("images/shadow/shadow_BR.png") no-repeat;
+.exo-shadow-br {
+    background: url("images/shadow/shadow_BR.png") no-repeat;
 }

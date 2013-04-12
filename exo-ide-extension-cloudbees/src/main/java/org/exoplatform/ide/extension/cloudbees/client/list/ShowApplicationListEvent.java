@@ -23,29 +23,21 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Sep 21, 2011 evgen $
- * 
  */
-public class ShowApplicationListEvent extends GwtEvent<ShowApplicationListHandler>
-{
+public class ShowApplicationListEvent extends GwtEvent<ShowApplicationListHandler> {
 
-   public static final GwtEvent.Type<ShowApplicationListHandler> TYPE = new Type<ShowApplicationListHandler>();
+    public static final GwtEvent.Type<ShowApplicationListHandler> TYPE = new Type<ShowApplicationListHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowApplicationListHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowApplicationListHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ShowApplicationListHandler handler)
-   {
-      handler.onShowApplicationList(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ShowApplicationListHandler handler) {
+        handler.onShowApplicationList(this);
+    }
 
 }

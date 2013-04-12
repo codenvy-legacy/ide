@@ -20,57 +20,52 @@ import org.exoplatform.ide.editor.shared.runtime.Assert;
  *
  * @since 3.1
  */
-public final class SerialVersionDefaultOperation extends AbstractSerialVersionOperation
-{
+public final class SerialVersionDefaultOperation extends AbstractSerialVersionOperation {
 
-   /** The initializer linked position group id */
-   private static final String GROUP_INITIALIZER = "initializer"; //$NON-NLS-1$
+    /** The initializer linked position group id */
+    private static final String GROUP_INITIALIZER = "initializer"; //$NON-NLS-1$
 
-   /**
-    * Creates a new serial version default proposal.
-    *
-    * @param unit
-    *            the compilation unit
-    * @param nodes
-    *            the originally selected nodes
-    */
-   public SerialVersionDefaultOperation(ASTNode[] nodes)
-   {
-      super(nodes);
-   }
+    /**
+     * Creates a new serial version default proposal.
+     *
+     * @param unit
+     *         the compilation unit
+     * @param nodes
+     *         the originally selected nodes
+     */
+    public SerialVersionDefaultOperation(ASTNode[] nodes) {
+        super(nodes);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   protected boolean addInitializer(final VariableDeclarationFragment fragment, final ASTNode declarationNode)
-   {
-      Assert.isNotNull(fragment);
+    /** {@inheritDoc} */
+    @Override
+    protected boolean addInitializer(final VariableDeclarationFragment fragment, final ASTNode declarationNode) {
+        Assert.isNotNull(fragment);
 
-      final Expression expression = fragment.getAST().newNumberLiteral(DEFAULT_EXPRESSION);
-      if (expression != null)
-         fragment.setInitializer(expression);
-      return true;
-   }
+        final Expression expression = fragment.getAST().newNumberLiteral(DEFAULT_EXPRESSION);
+        if (expression != null)
+            fragment.setInitializer(expression);
+        return true;
+    }
 
-   //   /**
-   //    * {@inheritDoc}
-   //    */
-   //   @Override
-   //   protected void addLinkedPositions(final ASTRewrite rewrite, final VariableDeclarationFragment fragment,
-   //      final LinkedProposalModel positionGroups)
-   //   {
-   //
-   //      Assert.isNotNull(rewrite);
-   //      Assert.isNotNull(fragment);
-   //
-   //      final Expression initializer = fragment.getInitializer();
-   //      if (initializer != null)
-   //      {
-   //         LinkedProposalPositionGroup group = new LinkedProposalPositionGroup(GROUP_INITIALIZER);
-   //         group.addPosition(rewrite.track(initializer), true);
-   //         positionGroups.addPositionGroup(group);
-   //      }
-   //   }
+    //   /**
+    //    * {@inheritDoc}
+    //    */
+    //   @Override
+    //   protected void addLinkedPositions(final ASTRewrite rewrite, final VariableDeclarationFragment fragment,
+    //      final LinkedProposalModel positionGroups)
+    //   {
+    //
+    //      Assert.isNotNull(rewrite);
+    //      Assert.isNotNull(fragment);
+    //
+    //      final Expression initializer = fragment.getInitializer();
+    //      if (initializer != null)
+    //      {
+    //         LinkedProposalPositionGroup group = new LinkedProposalPositionGroup(GROUP_INITIALIZER);
+    //         group.addPosition(rewrite.track(initializer), true);
+    //         positionGroups.addPositionGroup(group);
+    //      }
+    //   }
 
 }

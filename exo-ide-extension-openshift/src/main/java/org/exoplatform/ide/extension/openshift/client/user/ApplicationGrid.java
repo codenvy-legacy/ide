@@ -37,125 +37,97 @@ import java.util.List;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 14, 2011 11:11:34 AM anya $
- *
  */
-public class ApplicationGrid extends ListGrid<AppInfo>
-{
-   private static final String ID = "ideApplicationGrid";
+public class ApplicationGrid extends ListGrid<AppInfo> {
+    private static final String ID = "ideApplicationGrid";
 
-   /**
-    * Column for deleting user's applications.
-    */
-   private Column<AppInfo, String> deleteAppColumn;
+    /** Column for deleting user's applications. */
+    private Column<AppInfo, String> deleteAppColumn;
 
-   public ApplicationGrid()
-   {
-      setID(ID);
-      initColumns();
-   }
+    public ApplicationGrid() {
+        setID(ID);
+        initColumns();
+    }
 
-   /**
-    * Initialize columns.
-    */
-   private void initColumns()
-   {
-      Column<AppInfo, String> appColumn = new Column<AppInfo, String>(new TextCell())
-      {
-
-         @Override
-         public String getValue(AppInfo application)
-         {
-            return application.getName();
-         }
-      };
-
-      deleteAppColumn = new Column<AppInfo, String>(new Link())
-      {
-         @Override
-         public String getValue(AppInfo object)
-         {
-            return "Delete";
-         }
-      };
-
-      getCellTable().addColumn(appColumn, OpenShiftExtension.LOCALIZATION_CONSTANT.userInfoViewApplications());
-      getCellTable().setColumnWidth(appColumn, "100%");
-      getCellTable().addColumn(deleteAppColumn, "Delete");
-      getCellTable().setColumnWidth(deleteAppColumn, "30");
-   }
-
-   /**
-    * Handler for deleting applications.
-    *
-    * @param handler
-    * @return
-    */
-   public HandlerRegistration addDeleteButtonSelectionHandler(final SelectionHandler<AppInfo> handler)
-   {
-      deleteAppColumn.setFieldUpdater(new FieldUpdater<AppInfo, String>()
-      {
-
-         @Override
-         public void update(int index, AppInfo object, String value)
-         {
-            handler.onSelection(new SelectionEventImpl(object));
-         }
-      });
-      return null;
-   }
-
-   /**
-    * Implementation of {@link SelectionEvent} event.
-    */
-   private class SelectionEventImpl extends SelectionEvent<AppInfo>
-   {
-      /**
-       * @param selectedItem selected application
-       */
-      protected SelectionEventImpl(AppInfo selectedItem)
-      {
-         super(selectedItem);
-      }
-
-   }
-
-   /**
-    * @see org.exoplatform.gwtframework.ui.client.component.ListGrid#setValue(java.util.List)
-    */
-   @Override
-   public void setValue(List<AppInfo> value)
-   {
-      super.setValue(value);
-      if (value != null && value.size() > 0)
-      {
-         selectItem(getValue().get(0));
-         updateGrid();
-      }
-   }
-
-   /**
-    * Cell for clicking to delete application.
-    */
-   private class Link extends ClickableTextCell
-   {
-      /**
-       * @see com.google.gwt.cell.client.ClickableTextCell#render(com.google.gwt.cell.client.Cell.Context,
-       *      com.google.gwt.safehtml.shared.SafeHtml, com.google.gwt.safehtml.shared.SafeHtmlBuilder)
-       */
-      @Override
-      protected void render(com.google.gwt.cell.client.Cell.Context context, final SafeHtml value, SafeHtmlBuilder sb)
-      {
-         SafeHtml s = new SafeHtml()
-         {
-            private static final long serialVersionUID = 1L;
+    /** Initialize columns. */
+    private void initColumns() {
+        Column<AppInfo, String> appColumn = new Column<AppInfo, String>(new TextCell()) {
 
             @Override
-            public String asString()
-            {
-               return "<u style=\"cursor: pointer; color:##555555\">" + value.asString() + "</u>";
+            public String getValue(AppInfo application) {
+                return application.getName();
             }
-         };
-         sb.append(s);
-      }
-   }
+        };
+
+        deleteAppColumn = new Column<AppInfo, String>(new Link()) {
+            @Override
+            public String getValue(AppInfo object) {
+                return "Delete";
+            }
+        };
+
+        getCellTable().addColumn(appColumn, OpenShiftExtension.LOCALIZATION_CONSTANT.userInfoViewApplications());
+        getCellTable().setColumnWidth(appColumn, "100%");
+        getCellTable().addColumn(deleteAppColumn, "Delete");
+        getCellTable().setColumnWidth(deleteAppColumn, "30");
+    }
+
+    /**
+     * Handler for deleting applications.
+     *
+     * @param handler
+     * @return
+     */
+    public HandlerRegistration addDeleteButtonSelectionHandler(final SelectionHandler<AppInfo> handler) {
+        deleteAppColumn.setFieldUpdater(new FieldUpdater<AppInfo, String>() {
+
+            @Override
+            public void update(int index, AppInfo object, String value) {
+                handler.onSelection(new SelectionEventImpl(object));
+            }
+        });
+        return null;
+    }
+
+    /** Implementation of {@link SelectionEvent} event. */
+    private class SelectionEventImpl extends SelectionEvent<AppInfo> {
+        /**
+         * @param selectedItem
+         *         selected application
+         */
+        protected SelectionEventImpl(AppInfo selectedItem) {
+            super(selectedItem);
+        }
+
+    }
+
+    /** @see org.exoplatform.gwtframework.ui.client.component.ListGrid#setValue(java.util.List) */
+    @Override
+    public void setValue(List<AppInfo> value) {
+        super.setValue(value);
+        if (value != null && value.size() > 0) {
+            selectItem(getValue().get(0));
+            updateGrid();
+        }
+    }
+
+    /** Cell for clicking to delete application. */
+    private class Link extends ClickableTextCell {
+        /**
+         * @see com.google.gwt.cell.client.ClickableTextCell#render(com.google.gwt.cell.client.Cell.Context,
+         *      com.google.gwt.safehtml.shared.SafeHtml, com.google.gwt.safehtml.shared.SafeHtmlBuilder)
+         */
+        @Override
+        protected void render(com.google.gwt.cell.client.Cell.Context context, final SafeHtml value, SafeHtmlBuilder sb) {
+            SafeHtml s = new SafeHtml() {
+                private static final long serialVersionUID = 1L;
+
+                @Override
+                public String asString() {
+                    return "<u style=\"cursor: pointer; color:##555555\">" + value.asString() + "</u>";
+                }
+            };
+            sb.append(s);
+        }
+    }
 }

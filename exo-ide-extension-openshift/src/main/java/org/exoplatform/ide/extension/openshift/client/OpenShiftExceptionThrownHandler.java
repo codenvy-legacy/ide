@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link OpenShiftExceptionThrownEvent} event.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 10, 2011 5:27:04 PM anya $
- * 
  */
-public interface OpenShiftExceptionThrownHandler extends EventHandler
-{
-   /**
-    * Process exception, that occurred performing actions with OpenShift.
-    * 
-    * @param event
-    */
-   void onOpenShiftExceptionThrown(OpenShiftExceptionThrownEvent event);
+public interface OpenShiftExceptionThrownHandler extends EventHandler {
+    /**
+     * Process exception, that occurred performing actions with OpenShift.
+     *
+     * @param event
+     */
+    void onOpenShiftExceptionThrown(OpenShiftExceptionThrownEvent event);
 }

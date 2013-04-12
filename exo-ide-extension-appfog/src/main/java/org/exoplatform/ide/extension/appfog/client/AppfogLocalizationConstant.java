@@ -24,621 +24,620 @@ import com.google.gwt.i18n.client.Messages;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface AppfogLocalizationConstant extends Messages
-{
-   /*
-   * Buttons.
-   */
-   @Key("button.create")
-   String createButton();
-
-   @Key("button.cancel")
-   String cancelButton();
-
-   @Key("button.ok")
-   String okButton();
-
-   @Key("button.rename")
-   String renameButton();
-
-   @Key("button.delete")
-   String deleteButton();
-
-   @Key("button.logs")
-   String logsButton();
-
-   @Key("button.services")
-   String servicesButton();
-
-   @Key("button.close")
-   String closeButton();
-
-   @Key("button.unmap")
-   String unmapButton();
-
-   @Key("button.map")
-   String mapButton();
-
-   @Key("button.show")
-   String showButton();
-
-   @Key("button.update")
-   String updateButton();
-
-   @Key("button.bind")
-   String bindButton();
-
-   @Key("button.unbind")
-   String unBindButton();
-
-   @Key("button.add")
-   String addButton();
-
-   /*
-    * Controls.
+public interface AppfogLocalizationConstant extends Messages {
+    /*
+    * Buttons.
     */
-   @Key("control.appfog.id")
-   String appfogControlId();
+    @Key("button.create")
+    String createButton();
 
-   @Key("control.appfog.title")
-   String appfogControlTitle();
+    @Key("button.cancel")
+    String cancelButton();
 
-   @Key("control.appfog.prompt")
-   String appfogControlPrompt();
+    @Key("button.ok")
+    String okButton();
 
-   @Key("control.createApp.id")
-   String createAppControlId();
+    @Key("button.rename")
+    String renameButton();
 
-   @Key("control.createApp.title")
-   String createAppControlTitle();
+    @Key("button.delete")
+    String deleteButton();
 
-   @Key("control.createApp.prompt")
-   String createAppControlPrompt();
+    @Key("button.logs")
+    String logsButton();
 
-   @Key("control.startApp.id")
-   String startAppControlId();
+    @Key("button.services")
+    String servicesButton();
 
-   @Key("control.startApp.title")
-   String startAppControlTitle();
+    @Key("button.close")
+    String closeButton();
 
-   @Key("control.startApp.prompt")
-   String startAppControlPrompt();
+    @Key("button.unmap")
+    String unmapButton();
 
-   @Key("control.restartApp.id")
-   String restartAppControlId();
+    @Key("button.map")
+    String mapButton();
 
-   @Key("control.restartApp.title")
-   String restartAppControlTitle();
+    @Key("button.show")
+    String showButton();
 
-   @Key("control.restartApp.prompt")
-   String restartAppControlPrompt();
+    @Key("button.update")
+    String updateButton();
 
-   @Key("control.stopApp.id")
-   String stopAppControlId();
+    @Key("button.bind")
+    String bindButton();
 
-   @Key("control.stopApp.title")
-   String stopAppControlTitle();
+    @Key("button.unbind")
+    String unBindButton();
 
-   @Key("control.stopApp.prompt")
-   String stopAppControlPrompt();
+    @Key("button.add")
+    String addButton();
 
-   @Key("control.updateApp.id")
-   String updateAppControlId();
+    /*
+     * Controls.
+     */
+    @Key("control.appfog.id")
+    String appfogControlId();
 
-   @Key("control.updateApp.title")
-   String updateAppControlTitle();
+    @Key("control.appfog.title")
+    String appfogControlTitle();
 
-   @Key("control.updateApp.prompt")
-   String updateAppControlPrompt();
+    @Key("control.appfog.prompt")
+    String appfogControlPrompt();
 
-   @Key("control.appInfo.id")
-   String applicationInfoControlId();
+    @Key("control.createApp.id")
+    String createAppControlId();
 
-   @Key("control.appInfo.title")
-   String applicationInfoControlTitle();
+    @Key("control.createApp.title")
+    String createAppControlTitle();
 
-   @Key("control.appInfo.prompt")
-   String applicationInfoControlPrompt();
+    @Key("control.createApp.prompt")
+    String createAppControlPrompt();
 
-   @Key("control.deleteApp.id")
-   String deleteApplicationControlId();
+    @Key("control.startApp.id")
+    String startAppControlId();
 
-   @Key("control.deleteApp.title")
-   String deleteApplicationControlTitle();
+    @Key("control.startApp.title")
+    String startAppControlTitle();
 
-   @Key("control.deleteApp.prompt")
-   String deleteApplicationControlPrompt();
+    @Key("control.startApp.prompt")
+    String startAppControlPrompt();
 
-   @Key("control.renameApp.id")
-   String renameAppControlId();
+    @Key("control.restartApp.id")
+    String restartAppControlId();
 
-   @Key("control.renameApp.title")
-   String renameAppControlTitle();
+    @Key("control.restartApp.title")
+    String restartAppControlTitle();
 
-   @Key("control.renameApp.prompt")
-   String renameAppControlPrompt();
+    @Key("control.restartApp.prompt")
+    String restartAppControlPrompt();
 
-   @Key("control.mapUrl.id")
-   String mapUrlControlId();
+    @Key("control.stopApp.id")
+    String stopAppControlId();
 
-   @Key("control.mapUrl.title")
-   String mapUrlControlTitle();
+    @Key("control.stopApp.title")
+    String stopAppControlTitle();
 
-   @Key("control.mapUrl.prompt")
-   String mapUrlControlPrompt();
+    @Key("control.stopApp.prompt")
+    String stopAppControlPrompt();
 
-   @Key("control.unmapUrl.id")
-   String unmapUrlControlId();
+    @Key("control.updateApp.id")
+    String updateAppControlId();
 
-   @Key("control.unmapUrl.title")
-   String unmapUrlControlTitle();
+    @Key("control.updateApp.title")
+    String updateAppControlTitle();
 
-   @Key("control.unmapUrl.prompt")
-   String unmapUrlControlPrompt();
+    @Key("control.updateApp.prompt")
+    String updateAppControlPrompt();
 
-   @Key("control.updMemory.id")
-   String updateMemoryControlId();
+    @Key("control.appInfo.id")
+    String applicationInfoControlId();
 
-   @Key("control.updMemory.title")
-   String updateMemoryTitle();
+    @Key("control.appInfo.title")
+    String applicationInfoControlTitle();
 
-   @Key("control.updMemory.prompt")
-   String updateMemoryPrompt();
+    @Key("control.appInfo.prompt")
+    String applicationInfoControlPrompt();
 
-   @Key("control.updInstances.id")
-   String updateInstancesControlId();
+    @Key("control.deleteApp.id")
+    String deleteApplicationControlId();
 
-   @Key("control.updInstances.title")
-   String updateInstancesControlTitle();
+    @Key("control.deleteApp.title")
+    String deleteApplicationControlTitle();
 
-   @Key("control.updInstances.prompt")
-   String updateInstancesControlPrompt();
+    @Key("control.deleteApp.prompt")
+    String deleteApplicationControlPrompt();
 
-   @Key("control.switchAccount.id")
-   String switchAccountControlId();
+    @Key("control.renameApp.id")
+    String renameAppControlId();
 
-   @Key("control.switchAccount.title")
-   String switchAccountControlTitle();
+    @Key("control.renameApp.title")
+    String renameAppControlTitle();
 
-   @Key("control.switchAccount.prompt")
-   String switchAccountControlPrompt();
+    @Key("control.renameApp.prompt")
+    String renameAppControlPrompt();
 
-   @Key("control.appsList.id")
-   String appsControlId();
+    @Key("control.mapUrl.id")
+    String mapUrlControlId();
 
-   @Key("control.appsList.title")
-   String appsControlTitle();
+    @Key("control.mapUrl.title")
+    String mapUrlControlTitle();
 
-   @Key("control.apps.List.prompt")
-   String appsControlPrompt();
+    @Key("control.mapUrl.prompt")
+    String mapUrlControlPrompt();
 
-   /*
-    * LoginView.
-    */
-   @Key("login.title")
-   String loginViewTitle();
+    @Key("control.unmapUrl.id")
+    String unmapUrlControlId();
 
-   @Key("login.field.email")
-   String loginViewEmailField();
+    @Key("control.unmapUrl.title")
+    String unmapUrlControlTitle();
 
-   @Key("login.field.password")
-   String loginViewPasswordField();
+    @Key("control.unmapUrl.prompt")
+    String unmapUrlControlPrompt();
 
-   @Key("login.field.target")
-   String loginViewTargetField();
+    @Key("control.updMemory.id")
+    String updateMemoryControlId();
 
-   @Key("login.error.unknowTarget")
-   String loginViewErrorUnknownTarget();
+    @Key("control.updMemory.title")
+    String updateMemoryTitle();
 
-   @Key("login.error.invalidUserOrPassword")
-   String loginViewErrorInvalidUserOrPassword();
+    @Key("control.updMemory.prompt")
+    String updateMemoryPrompt();
 
-   /*
-    * CreateApplicationView.
-    */
-   @Key("createApp.title")
-   String createApplicationTitle();
+    @Key("control.updInstances.id")
+    String updateInstancesControlId();
 
-   @Key("createApp.field.type")
-   String createAppTypeField();
+    @Key("control.updInstances.title")
+    String updateInstancesControlTitle();
 
-   @Key("createApp.field.autodetectType.label")
-   String createAppAutodetectTypeLabel();
+    @Key("control.updInstances.prompt")
+    String updateInstancesControlPrompt();
 
-   @Key("createApp.field.name")
-   String createAppNameField();
+    @Key("control.switchAccount.id")
+    String switchAccountControlId();
 
-   @Key("createApp.field.url")
-   String createAppUrlField();
+    @Key("control.switchAccount.title")
+    String switchAccountControlTitle();
 
-   @Key("createApp.field.useDefaultUrl.label")
-   String createAppUseDefaultUrlLabel();
+    @Key("control.switchAccount.prompt")
+    String switchAccountControlPrompt();
 
-   @Key("createApp.field.instances")
-   String createAppInstancesField();
+    @Key("control.appsList.id")
+    String appsControlId();
 
-   @Key("createApp.field.memory")
-   String createAppMemoryField();
+    @Key("control.appsList.title")
+    String appsControlTitle();
 
-   @Key("createApp.field.useDefaultMemorySize.label")
-   String createAppUseDefaultMemorySizeLabel();
+    @Key("control.apps.List.prompt")
+    String appsControlPrompt();
 
-   @Key("createApp.field.change")
-   String createAppChangeLabel();
+    /*
+     * LoginView.
+     */
+    @Key("login.title")
+    String loginViewTitle();
 
-   @Key("createApp.field.startAfterCreation")
-   String createAppStartAfterCreationField();
+    @Key("login.field.email")
+    String loginViewEmailField();
 
-   @Key("createApp.field.server")
-   String createAppServerField();
+    @Key("login.field.password")
+    String loginViewPasswordField();
 
-   @Key("create.application.started")
-   String createApplicationStarted(String project);
+    @Key("login.field.target")
+    String loginViewTargetField();
 
-   @Key("create.application.finished")
-   String createApplicationFinished(String project);
+    @Key("login.error.unknowTarget")
+    String loginViewErrorUnknownTarget();
 
-   @Key("createApp.field.infra")
-   String createAppInfraField();
+    @Key("login.error.invalidUserOrPassword")
+    String loginViewErrorInvalidUserOrPassword();
 
-   /*
-    * CreateApplicationPresenter
-    */
-   @Key("createApp.appCreated")
-   String applicationCreatedSuccessfully(String name);
+    /*
+     * CreateApplicationView.
+     */
+    @Key("createApp.title")
+    String createApplicationTitle();
 
-   @Key("create.appStartedOnUrl")
-   String applicationStartedOnUrl(String urls);
+    @Key("createApp.field.type")
+    String createAppTypeField();
 
-   @Key("create.appStarted.noUrls")
-   String applicationStartedWithNoUrls();
+    @Key("createApp.field.autodetectType.label")
+    String createAppAutodetectTypeLabel();
 
-   @Key("create.application.forbidden")
-   String createApplicationForbidden(String folderName);
+    @Key("createApp.field.name")
+    String createAppNameField();
 
-   @Key("create.application.selectFolder")
-   String selectFolderToCreate();
+    @Key("createApp.field.url")
+    String createAppUrlField();
 
-   @Key("create.application.notFolder")
-   String createApplicationNotFolder(String name);
+    @Key("createApp.field.useDefaultUrl.label")
+    String createAppUseDefaultUrlLabel();
 
-   @Key("create.application.failed")
-   String applicationCreationFailed();
+    @Key("createApp.field.instances")
+    String createAppInstancesField();
 
-   @Key("create.application.error.getting.infras")
-   String errorGettingInfras();
+    @Key("createApp.field.memory")
+    String createAppMemoryField();
 
-   /*
-    * StartApplicationPresenter
-    */
-   @Key("startApp.appStarted")
-   String applicationStarted(String name);
+    @Key("createApp.field.useDefaultMemorySize.label")
+    String createAppUseDefaultMemorySizeLabel();
 
-   @Key("startApp.appStarted.uris")
-   String applicationStartedOnUrls(String name, String uris);
+    @Key("createApp.field.change")
+    String createAppChangeLabel();
 
-   @Key("startApp.appStopped")
-   String applicationStopped(String name);
+    @Key("createApp.field.startAfterCreation")
+    String createAppStartAfterCreationField();
 
-   @Key("startApp.appRestarted")
-   String applicationRestarted(String name);
+    @Key("createApp.field.server")
+    String createAppServerField();
 
-   @Key("startApp.appRestarted.uris")
-   String applicationRestartedUris(String name, String uris);
+    @Key("create.application.started")
+    String createApplicationStarted(String project);
 
-   @Key("startApp.appAlreadyStarted")
-   String applicationAlreadyStarted(String name);
+    @Key("create.application.finished")
+    String createApplicationFinished(String project);
 
-   @Key("startApp.appAlreadyStopped")
-   String applicationAlreadyStopped(String name);
+    @Key("createApp.field.infra")
+    String createAppInfraField();
 
-   @Key("startApp.error.appNotStarted")
-   String applicationWasNotStarted(String name);
+    /*
+     * CreateApplicationPresenter
+     */
+    @Key("createApp.appCreated")
+    String applicationCreatedSuccessfully(String name);
 
-   /*
-    * UpdateApplicationPresenter
-    */
-   @Key("update.applicationUpdated")
-   String updateApplicationSuccess(String name);
+    @Key("create.appStartedOnUrl")
+    String applicationStartedOnUrl(String urls);
 
-   @Key("update.application.forbidden")
-   String updateApplicationForbidden(String name);
+    @Key("create.appStarted.noUrls")
+    String applicationStartedWithNoUrls();
 
-   @Key("update.application.selectFolder")
-   String selectFolderToUpdate();
+    @Key("create.application.forbidden")
+    String createApplicationForbidden(String folderName);
 
-   @Key("update.application.notFolder")
-   String updateApplicationNotFolder(String name);
+    @Key("create.application.selectFolder")
+    String selectFolderToCreate();
 
-   /*
-    * Messages
-    */
-   @Key("loginSuccess")
-   String loginSuccess();
+    @Key("create.application.notFolder")
+    String createApplicationNotFolder(String name);
 
-   @Key("loginFailed")
-   String loginFailed();
+    @Key("create.application.failed")
+    String applicationCreationFailed();
 
-   @Key("systemInfo.umarshaller.error")
-   String systemInfoUnmarshallerError();
+    @Key("create.application.error.getting.infras")
+    String errorGettingInfras();
 
-   @Key("application.not.found")
-   String applicationNotFound();
+    /*
+     * StartApplicationPresenter
+     */
+    @Key("startApp.appStarted")
+    String applicationStarted(String name);
 
-   @Key("creatingProject")
-   String creatingProject();
+    @Key("startApp.appStarted.uris")
+    String applicationStartedOnUrls(String name, String uris);
 
-   /*
-    * DeployApplicationPresenter
-    */
-   @Key("deployApplication.deployedSuccess")
-   String deployApplicationSuccess();
+    @Key("startApp.appStopped")
+    String applicationStopped(String name);
 
-   @Key("deployApplication.appInfo")
-   String deployApplicationInfo();
+    @Key("startApp.appRestarted")
+    String applicationRestarted(String name);
 
-   /*
-    * ApplicationInfoView
-    */
-   @Key("appInfo.title")
-   String applicationInfoTitle();
+    @Key("startApp.appRestarted.uris")
+    String applicationRestartedUris(String name, String uris);
 
-   @Key("appInfo.name")
-   String appInfoName();
+    @Key("startApp.appAlreadyStarted")
+    String applicationAlreadyStarted(String name);
 
-   @Key("appInfo.state")
-   String appInfoState();
+    @Key("startApp.appAlreadyStopped")
+    String applicationAlreadyStopped(String name);
 
-   @Key("appInfo.instances")
-   String appInfoInstances();
+    @Key("startApp.error.appNotStarted")
+    String applicationWasNotStarted(String name);
 
-   @Key("appInfo.version")
-   String appInfoVersion();
+    /*
+     * UpdateApplicationPresenter
+     */
+    @Key("update.applicationUpdated")
+    String updateApplicationSuccess(String name);
 
-   @Key("appInfo.uris")
-   String appInfoUris();
+    @Key("update.application.forbidden")
+    String updateApplicationForbidden(String name);
 
-   @Key("appInfo.resources")
-   String appInfoResources();
+    @Key("update.application.selectFolder")
+    String selectFolderToUpdate();
 
-   @Key("appInfo.resources.disk")
-   String appInfoResourcesDisk();
+    @Key("update.application.notFolder")
+    String updateApplicationNotFolder(String name);
 
-   @Key("appInfo.resources.memory")
-   String appInfoResourcesMemory();
+    /*
+     * Messages
+     */
+    @Key("loginSuccess")
+    String loginSuccess();
 
-   @Key("appInfo.staging")
-   String appInfoStaging();
+    @Key("loginFailed")
+    String loginFailed();
 
-   @Key("appInfo.staging.model")
-   String appInfoStagingModel();
+    @Key("systemInfo.umarshaller.error")
+    String systemInfoUnmarshallerError();
 
-   @Key("appInfo.staging.stack")
-   String appInfoStagingStack();
+    @Key("application.not.found")
+    String applicationNotFound();
 
-   @Key("appInfo.services")
-   String appInfoServices();
+    @Key("creatingProject")
+    String creatingProject();
 
-   @Key("appInfo.env")
-   String appInfoEnvironments();
+    /*
+     * DeployApplicationPresenter
+     */
+    @Key("deployApplication.deployedSuccess")
+    String deployApplicationSuccess();
 
-   /*
-    * UnmapUrlGrid
-    */
-   @Key("unmapUrl.listGrid.field.url")
-   String applicationUnmapUrlGridUrlField();
+    @Key("deployApplication.appInfo")
+    String deployApplicationInfo();
 
-   /*
-    * UnmapUrlsView
-    */
-   @Key("unmapUrl.view.title")
-   String unmapUrlViewTitle();
+    /*
+     * ApplicationInfoView
+     */
+    @Key("appInfo.title")
+    String applicationInfoTitle();
 
-   /*
-    * DeleteApplication
-    */
-   @Key("deleteApplication.title")
-   String deleteApplicationTitle();
+    @Key("appInfo.name")
+    String appInfoName();
 
-   @Key("askForDeleteApplication")
-   String deleteApplicationQuestion(String applicationTitle);
+    @Key("appInfo.state")
+    String appInfoState();
 
-   @Key("applicationDeleted")
-   String applicationDeletedMsg(String applicationTitle);
+    @Key("appInfo.instances")
+    String appInfoInstances();
 
-   @Key("delete.application.services")
-   String deleteApplicationAskDeleteServices();
+    @Key("appInfo.version")
+    String appInfoVersion();
 
-   /*
-    * MapUnmapUrlPresenter
-    */
-   @Key("mapUrl.dialog.title")
-   String mapUrlDialogTitle();
+    @Key("appInfo.uris")
+    String appInfoUris();
 
-   @Key("mapUrl.dialog.message")
-   String mapUrlDialogMessage();
+    @Key("appInfo.resources")
+    String appInfoResources();
 
-   @Key("unmapUrl.dialog.title")
-   String unmapUrlDialogTitle();
+    @Key("appInfo.resources.disk")
+    String appInfoResourcesDisk();
 
-   @Key("unmapUrl.dialog.message")
-   String unmapUrlDialogMessage();
+    @Key("appInfo.resources.memory")
+    String appInfoResourcesMemory();
 
-   @Key("mapUrl.success")
-   String mapUrlRegisteredSuccess(String url);
+    @Key("appInfo.staging")
+    String appInfoStaging();
 
-   @Key("unmapUrl.success")
-   String unmapUrlSuccess(String url);
+    @Key("appInfo.staging.model")
+    String appInfoStagingModel();
 
-   @Key("unmapUrl.confirmationDialog.title")
-   String unmapUrlConfirmationDialogTitle();
+    @Key("appInfo.staging.stack")
+    String appInfoStagingStack();
 
-   @Key("unmapUrl.confirmationDialog.message")
-   String unmapUrlConfirmationDialogMessage();
+    @Key("appInfo.services")
+    String appInfoServices();
 
-   @Key("unmapUrl.lisgrid.column.title")
-   String unmapUrlListGridColumnTitle();
+    @Key("appInfo.env")
+    String appInfoEnvironments();
 
-   @Key("mapUrl.alreadyRegistered")
-   String mapUrlAlredyRegistered();
+    /*
+     * UnmapUrlGrid
+     */
+    @Key("unmapUrl.listGrid.field.url")
+    String applicationUnmapUrlGridUrlField();
 
-   /*
-    * UpdatePropertiesPresenter
-    */
-   @Key("updateMemory.dialog.title")
-   String updateMemoryDialogTitle();
+    /*
+     * UnmapUrlsView
+     */
+    @Key("unmapUrl.view.title")
+    String unmapUrlViewTitle();
 
-   @Key("updateMemory.dialog.message")
-   String updateMemoryDialogMessage();
+    /*
+     * DeleteApplication
+     */
+    @Key("deleteApplication.title")
+    String deleteApplicationTitle();
 
-   @Key("updateMemory.success")
-   String updateMemorySuccess(String memory);
+    @Key("askForDeleteApplication")
+    String deleteApplicationQuestion(String applicationTitle);
 
-   @Key("updateMemory.dialog.invalidNumber.message")
-   String updateMemoryInvalidNumberMessage();
+    @Key("applicationDeleted")
+    String applicationDeletedMsg(String applicationTitle);
 
-   @Key("updateInstances.dialog.title")
-   String updateInstancesDialogTitle();
+    @Key("delete.application.services")
+    String deleteApplicationAskDeleteServices();
 
-   @Key("updateInstances.dialog.message")
-   String updateInstancesDialogMessage();
+    /*
+     * MapUnmapUrlPresenter
+     */
+    @Key("mapUrl.dialog.title")
+    String mapUrlDialogTitle();
 
-   @Key("updateInstances.success")
-   String updateInstancesSuccess(String expression);
+    @Key("mapUrl.dialog.message")
+    String mapUrlDialogMessage();
 
-   @Key("updateInstances.invalidValue.message")
-   String updateInstancesInvalidValueMessage();
+    @Key("unmapUrl.dialog.title")
+    String unmapUrlDialogTitle();
 
-   /*
-    * RenameApplicationPresenter
-    */
-   @Key("rename.view.title")
-   String renameApplicationViewTitle();
+    @Key("unmapUrl.dialog.message")
+    String unmapUrlDialogMessage();
 
-   @Key("rename.field.name")
-   String renameApplicationViewNameField();
+    @Key("mapUrl.success")
+    String mapUrlRegisteredSuccess(String url);
 
-   @Key("rename.application.success")
-   String renameApplicationSuccess(String oldName, String newName);
+    @Key("unmapUrl.success")
+    String unmapUrlSuccess(String url);
 
-   @Key("create.error.memoryFormat")
-   String errorMemoryFormat();
+    @Key("unmapUrl.confirmationDialog.title")
+    String unmapUrlConfirmationDialogTitle();
 
-   @Key("create.error.instancesFormat")
-   String errorInstancesFormat();
+    @Key("unmapUrl.confirmationDialog.message")
+    String unmapUrlConfirmationDialogMessage();
 
-   /*
-    * ApplicationsView
-    */
-   @Key("apps.view.title")
-   String appsViewTitle();
+    @Key("unmapUrl.lisgrid.column.title")
+    String unmapUrlListGridColumnTitle();
 
-   @Key("apps.view.server.label")
-   String appsServerLabel();
+    @Key("mapUrl.alreadyRegistered")
+    String mapUrlAlredyRegistered();
 
-   /*
-    * Manage deployed project view
-    */
-   @Key("manage.project.view.title")
-   String manageProjectViewTitle();
+    /*
+     * UpdatePropertiesPresenter
+     */
+    @Key("updateMemory.dialog.title")
+    String updateMemoryDialogTitle();
 
-   @Key("manage.project.application")
-   String manageProjectApplication();
+    @Key("updateMemory.dialog.message")
+    String updateMemoryDialogMessage();
 
-   @Key("manage.project.urls")
-   String manageProjectUrls();
+    @Key("updateMemory.success")
+    String updateMemorySuccess(String memory);
 
-   @Key("manage.project.model")
-   String manageProjectModel();
+    @Key("updateMemory.dialog.invalidNumber.message")
+    String updateMemoryInvalidNumberMessage();
 
-   @Key("manage.project.stack")
-   String manageProjectStack();
+    @Key("updateInstances.dialog.title")
+    String updateInstancesDialogTitle();
 
-   @Key("manage.project.infra")
-   String manageProjectInfra();
+    @Key("updateInstances.dialog.message")
+    String updateInstancesDialogMessage();
 
-   @Key("manage.project.instances")
-   String manageProjectInstances();
+    @Key("updateInstances.success")
+    String updateInstancesSuccess(String expression);
 
-   @Key("manage.project.memory")
-   String manageProjectMemory();
+    @Key("updateInstances.invalidValue.message")
+    String updateInstancesInvalidValueMessage();
 
-   @Key("manage.project.status")
-   String manageProjectStatus();
+    /*
+     * RenameApplicationPresenter
+     */
+    @Key("rename.view.title")
+    String renameApplicationViewTitle();
 
-   @Key("manage.project.actions")
-   String manageProjectActions();
+    @Key("rename.field.name")
+    String renameApplicationViewNameField();
 
-   @Key("manage.project.edit.url")
-   String manageProjectEditUrl();
+    @Key("rename.application.success")
+    String renameApplicationSuccess(String oldName, String newName);
 
-   @Key("manage.project.edit.memory")
-   String manageProjectEditMemory();
+    @Key("create.error.memoryFormat")
+    String errorMemoryFormat();
 
-   @Key("manage.project.edit.instances")
-   String manageProjectEditInstances();
+    @Key("create.error.instancesFormat")
+    String errorInstancesFormat();
 
-   @Key("manage.project.properties")
-   String manageProjectProperties();
+    /*
+     * ApplicationsView
+     */
+    @Key("apps.view.title")
+    String appsViewTitle();
 
-   @Key("manage.project.stop")
-   String manageProjectStop();
+    @Key("apps.view.server.label")
+    String appsServerLabel();
 
-   @Key("manage.project.start")
-   String manageProjectStart();
+    /*
+     * Manage deployed project view
+     */
+    @Key("manage.project.view.title")
+    String manageProjectViewTitle();
 
-   @Key("manage.project.restart")
-   String manageProjectRestart();
+    @Key("manage.project.application")
+    String manageProjectApplication();
 
-   @Key("manage.project.services")
-   String manageProjectServices();
+    @Key("manage.project.urls")
+    String manageProjectUrls();
 
-   /* Services */
-   @Key("service.name")
-   String serviceName();
+    @Key("manage.project.model")
+    String manageProjectModel();
 
-   @Key("service.type")
-   String serviceType();
+    @Key("manage.project.stack")
+    String manageProjectStack();
 
-   @Key("service.vendor")
-   String serviceVendor();
+    @Key("manage.project.infra")
+    String manageProjectInfra();
 
-   @Key("service.version")
-   String serviceVersion();
+    @Key("manage.project.instances")
+    String manageProjectInstances();
 
-   @Key("manage.services.view.title")
-   String bindServiceViewTitle();
+    @Key("manage.project.memory")
+    String manageProjectMemory();
 
-   @Key("delete.service.title")
-   String deleteServiceTitle();
+    @Key("manage.project.status")
+    String manageProjectStatus();
 
-   @Key("delete.service.question")
-   String deleteServiceQuestion(String service);
+    @Key("manage.project.actions")
+    String manageProjectActions();
 
-   @Key("bind.service.successfully")
-   String bindServiceSuccessfully(String service);
+    @Key("manage.project.edit.url")
+    String manageProjectEditUrl();
 
-   @Key("create.service.view.title")
-   String createServiceViewTitle();
+    @Key("manage.project.edit.memory")
+    String manageProjectEditMemory();
 
-   @Key("create.service.type.field")
-   String createServiceTypeField();
+    @Key("manage.project.edit.instances")
+    String manageProjectEditInstances();
 
-   @Key("create.service.name.field")
-   String createServiceNameField();
+    @Key("manage.project.properties")
+    String manageProjectProperties();
 
-   @Key("retrieve.services.failed")
-   String retrieveServicesFailed();
+    @Key("manage.project.stop")
+    String manageProjectStop();
 
-   @Key("no.bounded.services")
-   String noBoundedServices();
+    @Key("manage.project.start")
+    String manageProjectStart();
 
-   @Key("bounded.services")
-   String boundedServices();
+    @Key("manage.project.restart")
+    String manageProjectRestart();
 
-   @Key("provisioned.services")
-   String provisionedServices();
+    @Key("manage.project.services")
+    String manageProjectServices();
 
-   @Key("optional")
-   String optional();
+    /* Services */
+    @Key("service.name")
+    String serviceName();
+
+    @Key("service.type")
+    String serviceType();
+
+    @Key("service.vendor")
+    String serviceVendor();
+
+    @Key("service.version")
+    String serviceVersion();
+
+    @Key("manage.services.view.title")
+    String bindServiceViewTitle();
+
+    @Key("delete.service.title")
+    String deleteServiceTitle();
+
+    @Key("delete.service.question")
+    String deleteServiceQuestion(String service);
+
+    @Key("bind.service.successfully")
+    String bindServiceSuccessfully(String service);
+
+    @Key("create.service.view.title")
+    String createServiceViewTitle();
+
+    @Key("create.service.type.field")
+    String createServiceTypeField();
+
+    @Key("create.service.name.field")
+    String createServiceNameField();
+
+    @Key("retrieve.services.failed")
+    String retrieveServicesFailed();
+
+    @Key("no.bounded.services")
+    String noBoundedServices();
+
+    @Key("bounded.services")
+    String boundedServices();
+
+    @Key("provisioned.services")
+    String provisionedServices();
+
+    @Key("optional")
+    String optional();
 }

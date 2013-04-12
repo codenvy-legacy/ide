@@ -24,11 +24,9 @@ import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 4:12:57 PM Apr 2, 2012 evgen $
- * 
  */
-public interface CodeFormatter
-{
+public interface CodeFormatter {
 
-   TextEdit format(IDocument document);
+    TextEdit format(IDocument document);
 
 }

@@ -25,21 +25,22 @@ import com.google.gwt.resources.client.ImageResource;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Apr 3, 2012 3:03:35 PM anya $
- * 
  */
-public interface BuilderClientBundle extends ClientBundle
-{
-   BuilderClientBundle INSTANCE = GWT.<BuilderClientBundle> create(BuilderClientBundle.class);
+public interface BuilderClientBundle extends ClientBundle {
+    BuilderClientBundle INSTANCE = GWT.<BuilderClientBundle>create(BuilderClientBundle.class);
 
-   @Source("org/exoplatform/ide/extension/maven/images/controls/build.png")
-   ImageResource build();
-   
-   @Source("org/exoplatform/ide/extension/maven/images/controls/build_Disabled.png")
-   ImageResource buildDisabled();
+    @Source("org/exoplatform/ide/extension/maven/images/controls/build.png")
+    ImageResource build();
 
-   @Source("org/exoplatform/ide/extension/maven/images/controls/clearOutput.png")
-   ImageResource clearOutput();
+    @Source("org/exoplatform/ide/extension/maven/images/controls/build_Disabled.png")
+    ImageResource buildDisabled();
 
-   @Source("org/exoplatform/ide/extension/maven/images/controls/clearOutput_Disabled.png")
-   ImageResource clearOutputDisabled();
+    @Source("org/exoplatform/ide/extension/maven/images/controls/clearOutput.png")
+    ImageResource clearOutput();
+
+    @Source("org/exoplatform/ide/extension/maven/images/controls/clearOutput_Disabled.png")
+    ImageResource clearOutputDisabled();
+
+    @Source("org/exoplatform/ide/extension/maven/images/controls/build_Stop.png")
+    ImageResource buildStop();
 }

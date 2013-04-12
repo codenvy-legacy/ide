@@ -35,23 +35,19 @@ package org.eclipse.jdt.client.internal.codeassist.complete;
 import org.eclipse.jdt.client.internal.compiler.ast.ImportReference;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 
-public class CompletionOnPackageReference extends ImportReference
-{
-   public CompletionOnPackageReference(char[][] tokens, long[] positions)
-   {
-      super(tokens, positions, false, ClassFileConstants.AccDefault);
-   }
+public class CompletionOnPackageReference extends ImportReference {
+    public CompletionOnPackageReference(char[][] tokens, long[] positions) {
+        super(tokens, positions, false, ClassFileConstants.AccDefault);
+    }
 
-   public StringBuffer print(int indent, StringBuffer output, boolean withOnDemand)
-   {
+    public StringBuffer print(int indent, StringBuffer output, boolean withOnDemand) {
 
-      printIndent(indent, output).append("<CompleteOnPackage:"); //$NON-NLS-1$
-      for (int i = 0; i < this.tokens.length; i++)
-      {
-         if (i > 0)
-            output.append('.');
-         output.append(this.tokens[i]);
-      }
-      return output.append('>');
-   }
+        printIndent(indent, output).append("<CompleteOnPackage:"); //$NON-NLS-1$
+        for (int i = 0; i < this.tokens.length; i++) {
+            if (i > 0)
+                output.append('.');
+            output.append(this.tokens[i]);
+        }
+        return output.append('>');
+    }
 }

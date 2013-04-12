@@ -22,33 +22,23 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to paste text to editor.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 4, 2012 9:45:06 AM anya $
- * 
  */
-public class EditorPasteTextEvent extends GwtEvent<EditorPasteTextHandler>
-{
-   /**
-    * Type used to register the event.
-    */
-   public static final GwtEvent.Type<EditorPasteTextHandler> TYPE = new GwtEvent.Type<EditorPasteTextHandler>();
+public class EditorPasteTextEvent extends GwtEvent<EditorPasteTextHandler> {
+    /** Type used to register the event. */
+    public static final GwtEvent.Type<EditorPasteTextHandler> TYPE = new GwtEvent.Type<EditorPasteTextHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorPasteTextHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorPasteTextHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(EditorPasteTextHandler handler)
-   {
-      handler.onEditorPasteText(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(EditorPasteTextHandler handler) {
+        handler.onEditorPasteText(this);
+    }
 }

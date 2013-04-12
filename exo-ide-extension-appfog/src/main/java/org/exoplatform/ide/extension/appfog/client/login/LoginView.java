@@ -42,138 +42,112 @@ import org.exoplatform.ide.extension.appfog.client.AppfogExtension;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class LoginView extends ViewImpl implements LoginPresenter.Display
-{
-   private static final String ID = "ideLoginView";
+public class LoginView extends ViewImpl implements LoginPresenter.Display {
+    private static final String ID = "ideLoginView";
 
-   private static final int WIDTH = 400;
+    private static final int WIDTH = 400;
 
-   private static final int HEIGHT = 180;
+    private static final int HEIGHT = 180;
 
-   private static final String LOGIN_BUTTON_ID = "ideLoginViewLoginButton";
+    private static final String LOGIN_BUTTON_ID = "ideLoginViewLoginButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideLoginViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideLoginViewCancelButton";
 
-   private static final String EMAIL_FIELD_ID = "ideLoginViewEmailField";
+    private static final String EMAIL_FIELD_ID = "ideLoginViewEmailField";
 
-   private static final String PASSWORD_FIELD_ID = "ideLoginViewPasswordField";
+    private static final String PASSWORD_FIELD_ID = "ideLoginViewPasswordField";
 
-   private static final String TARGET_FIELD_ID = "ideLoginViewTargetField";
+    private static final String TARGET_FIELD_ID = "ideLoginViewTargetField";
 
-   /**
-    * UI binder for this view.
-    */
-   private static LoginViewUiBinder uiBinder = GWT.create(LoginViewUiBinder.class);
+    /** UI binder for this view. */
+    private static LoginViewUiBinder uiBinder = GWT.create(LoginViewUiBinder.class);
 
-   interface LoginViewUiBinder extends UiBinder<Widget, LoginView>
-   {
-   }
+    interface LoginViewUiBinder extends UiBinder<Widget, LoginView> {
+    }
 
-   /**
-    * Field to select target (domain, server), where to login.
-    */
-   @UiField
-   TextBox targetField;
+    /** Field to select target (domain, server), where to login. */
+    @UiField
+    TextBox targetField;
 
-   /**
-    * Email field.
-    */
-   @UiField
-   TextBox emailField;
+    /** Email field. */
+    @UiField
+    TextBox emailField;
 
-   /**
-    * Password field.
-    */
-   @UiField
-   PasswordTextInput passwordField;
+    /** Password field. */
+    @UiField
+    PasswordTextInput passwordField;
 
-   /**
-    * Login button.
-    */
-   @UiField
-   ImageButton loginButton;
+    /** Login button. */
+    @UiField
+    ImageButton loginButton;
 
-   /**
-    * Cancel button.
-    */
-   @UiField
-   ImageButton cancelButton;
+    /** Cancel button. */
+    @UiField
+    ImageButton cancelButton;
 
-   @UiField
-   Label errLabel;
+    @UiField
+    Label errLabel;
 
-   public LoginView()
-   {
-      super(ID, ViewType.MODAL, AppfogExtension.LOCALIZATION_CONSTANT.loginViewTitle(), null, WIDTH, HEIGHT,
-         false);
-      add(uiBinder.createAndBindUi(this));
+    public LoginView() {
+        super(ID, ViewType.MODAL, AppfogExtension.LOCALIZATION_CONSTANT.loginViewTitle(), null, WIDTH, HEIGHT,
+              false);
+        add(uiBinder.createAndBindUi(this));
 
-      targetField.setName(TARGET_FIELD_ID);
-      emailField.setName(EMAIL_FIELD_ID);
-      passwordField.setName(PASSWORD_FIELD_ID);
-      loginButton.setButtonId(LOGIN_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-      targetField.setReadOnly(true);
-   }
+        targetField.setName(TARGET_FIELD_ID);
+        emailField.setName(EMAIL_FIELD_ID);
+        passwordField.setName(PASSWORD_FIELD_ID);
+        loginButton.setButtonId(LOGIN_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+        targetField.setReadOnly(true);
+    }
 
-   @Override
-   public HasClickHandlers getLoginButton()
-   {
-      return loginButton;
-   }
+    @Override
+    public HasClickHandlers getLoginButton() {
+        return loginButton;
+    }
 
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   @Override
-   public HasValue<String> getEmailField()
-   {
-      return emailField;
-   }
+    @Override
+    public HasValue<String> getEmailField() {
+        return emailField;
+    }
 
-   @Override
-   public TextFieldItem getPasswordField()
-   {
-      return passwordField;
-   }
+    @Override
+    public TextFieldItem getPasswordField() {
+        return passwordField;
+    }
 
-   @Override
-   public void enableLoginButton(boolean enabled)
-   {
-      loginButton.setEnabled(enabled);
-   }
+    @Override
+    public void enableLoginButton(boolean enabled) {
+        loginButton.setEnabled(enabled);
+    }
 
-   @Override
-   public void focusInEmailField()
-   {
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            emailField.setFocus(true);
-         }
-      });
-   }
+    @Override
+    public void focusInEmailField() {
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                emailField.setFocus(true);
+            }
+        });
+    }
 
-   @Override
-   public HasValue<String> getTargetSelectField()
-   {
-      return targetField;
-   }
+    @Override
+    public HasValue<String> getTargetSelectField() {
+        return targetField;
+    }
 
-   @Override
-   public void setTargetValues(String target)
-   {
-      targetField.setValue(target);
-   }
+    @Override
+    public void setTargetValues(String target) {
+        targetField.setValue(target);
+    }
 
-   @Override
-   public HasValue<String> getErrorLabelField()
-   {
-      return errLabel;
-   }
+    @Override
+    public HasValue<String> getErrorLabelField() {
+        return errLabel;
+    }
 }

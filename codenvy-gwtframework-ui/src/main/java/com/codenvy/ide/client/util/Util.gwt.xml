@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
-  <inherits name="com.google.gwt.user.User"/>
-     <inherits name="com.google.gwt.user.User"/>
-  <inherits name="com.codenvy.ide.client.util.useragents"/>
-  <inherits name="com.google.common.base.Base"/>
+    <inherits name="com.google.gwt.user.User"/>
+    <inherits name="com.google.gwt.user.User"/>
+    <inherits name="com.codenvy.ide.client.util.useragents"/>
+    <inherits name="com.google.common.base.Base"/>
 
-   <!-- Allow for conditional compilation per user.agent with a single "if": -->
+    <!-- Allow for conditional compilation per user.agent with a single "if": -->
 
-   <replace-with class="com.codenvy.ide.client.util.UserAgentStaticProperties.FirefoxImpl">
-    <when-type-is class="com.codenvy.ide.client.util.UserAgentStaticProperties"/>
+    <replace-with class="com.codenvy.ide.client.util.UserAgentStaticProperties.FirefoxImpl">
+        <when-type-is class="com.codenvy.ide.client.util.UserAgentStaticProperties"/>
 
-    <when-property-is name="user.agent" value="gecko1_8"/>
-  </replace-with>
+        <when-property-is name="user.agent" value="gecko1_8"/>
+    </replace-with>
 
-  <replace-with class="com.codenvy.ide.client.util.UserAgentStaticProperties.IEImpl">
-    <when-type-is class="com.codenvy.ide.client.util.UserAgentStaticProperties"/>
+    <replace-with class="com.codenvy.ide.client.util.UserAgentStaticProperties.IEImpl">
+        <when-type-is class="com.codenvy.ide.client.util.UserAgentStaticProperties"/>
 
-    <any>
-      <when-property-is name="user.agent" value="ie6"/>
-      <when-property-is name="user.agent" value="ie8"/>
-    </any>
-  </replace-with>
+        <any>
+            <when-property-is name="user.agent" value="ie6"/>
+            <when-property-is name="user.agent" value="ie8"/>
+        </any>
+    </replace-with>
 
-   <!-- Following rules are order dependent: android and iphone have to come after "simple" safari -->
-   <replace-with class="com.codenvy.ide.client.util.UserAgentStaticProperties.SafariImpl">
-    <when-type-is class="com.codenvy.ide.client.util.UserAgentStaticProperties"/>
+    <!-- Following rules are order dependent: android and iphone have to come after "simple" safari -->
+    <replace-with class="com.codenvy.ide.client.util.UserAgentStaticProperties.SafariImpl">
+        <when-type-is class="com.codenvy.ide.client.util.UserAgentStaticProperties"/>
 
-    <when-property-is name="user.agent" value="safari"/>
-  </replace-with>
+        <when-property-is name="user.agent" value="safari"/>
+    </replace-with>
 
-  <replace-with class="com.codenvy.ide.client.util.UserAgentStaticProperties.AndroidImpl">
-    <when-type-is class="com.codenvy.ide.client.util.UserAgentStaticProperties"/>
+    <replace-with class="com.codenvy.ide.client.util.UserAgentStaticProperties.AndroidImpl">
+        <when-type-is class="com.codenvy.ide.client.util.UserAgentStaticProperties"/>
 
-    <when-property-is name="mobile.user.agent" value="android"/>
-  </replace-with>
+        <when-property-is name="mobile.user.agent" value="android"/>
+    </replace-with>
 
-  <replace-with class="com.codenvy.ide.client.util.UserAgentStaticProperties.IPhoneImpl">
-    <when-type-is class="com.codenvy.ide.client.util.UserAgentStaticProperties"/>
+    <replace-with class="com.codenvy.ide.client.util.UserAgentStaticProperties.IPhoneImpl">
+        <when-type-is class="com.codenvy.ide.client.util.UserAgentStaticProperties"/>
 
-    <when-property-is name="mobile.user.agent" value="iphone"/>
-  </replace-with>
-  <source path=""/>
-    
+        <when-property-is name="mobile.user.agent" value="iphone"/>
+    </replace-with>
+    <source path=""/>
+
 </module>

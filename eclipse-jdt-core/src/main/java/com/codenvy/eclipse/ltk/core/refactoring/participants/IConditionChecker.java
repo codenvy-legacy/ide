@@ -25,17 +25,17 @@ import com.codenvy.eclipse.ltk.core.refactoring.RefactoringStatus;
  * @see com.codenvy.eclipse.ltk.core.refactoring.participants.CheckConditionsContext
  * @since 3.0
  */
-public interface IConditionChecker
-{
+public interface IConditionChecker {
 
-   /**
-    * Performs the actual condition checking.
-    *
-    * @param monitor a progress monitor to report progress
-    * @return the outcome of the condition check
-    * @throws com.codenvy.eclipse.core.runtime.CoreException
-    *          if an error occurred during condition
-    *          checking. The check is interpreted as failed if this happens
-    */
-   public RefactoringStatus check(IProgressMonitor monitor) throws CoreException;
+    /**
+     * Performs the actual condition checking.
+     *
+     * @param monitor
+     *         a progress monitor to report progress
+     * @return the outcome of the condition check
+     * @throws com.codenvy.eclipse.core.runtime.CoreException
+     *         if an error occurred during condition
+     *         checking. The check is interpreted as failed if this happens
+     */
+    public RefactoringStatus check(IProgressMonitor monitor) throws CoreException;
 }

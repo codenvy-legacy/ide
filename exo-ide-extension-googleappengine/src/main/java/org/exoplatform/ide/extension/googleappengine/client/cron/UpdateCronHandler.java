@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link UpdateCronEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 25, 2012 4:19:51 PM anya $
- * 
  */
-public interface UpdateCronHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to update cron.
-    * 
-    * @param event
-    */
-   void onUpdateCron(UpdateCronEvent event);
+public interface UpdateCronHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to update cron.
+     *
+     * @param event
+     */
+    void onUpdateCron(UpdateCronEvent event);
 }

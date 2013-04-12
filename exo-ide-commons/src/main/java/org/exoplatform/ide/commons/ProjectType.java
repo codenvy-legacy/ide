@@ -22,39 +22,33 @@ package org.exoplatform.ide.commons;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public enum ProjectType
-{
-   PHP("PHP"), //
-   WAR("War"), //
-   JAR("Jar"), //
-   JAVASCRIPT("JavaScript"), //
-   PYTHON("Python"), //
-   RUBY_ON_RAILS("Rails"), //
-   SPRING("Spring"), //
-   MULTI_MODULE("Maven Multi-module"),
-   DEFAULT("default");
+public enum ProjectType {
+    PHP("PHP"), //
+    WAR("War"), //
+    JAR("Jar"), //
+    JAVASCRIPT("JavaScript"), //
+    PYTHON("Python"), //
+    RUBY_ON_RAILS("Rails"), //
+    SPRING("Spring"), //
+    MULTI_MODULE("Maven Multi-module"),
+    DEFAULT("default");
 
-   private final String value;
+    private final String value;
 
-   private ProjectType(String value)
-   {
-      this.value = value;
-   }
+    private ProjectType(String value) {
+        this.value = value;
+    }
 
-   public String toString()
-   {
-      return value;
-   }
+    public String toString() {
+        return value;
+    }
 
-   public static ProjectType fromValue(String value)
-   {
-      for (ProjectType v : ProjectType.values())
-      {
-         if (v.value.equals(value))
-         {
-            return v;
-         }
-      }
-      throw new IllegalArgumentException("Invalid value '" + value + "' ");
-   }
+    public static ProjectType fromValue(String value) {
+        for (ProjectType v : ProjectType.values()) {
+            if (v.value.equals(value)) {
+                return v;
+            }
+        }
+        throw new IllegalArgumentException("Invalid value '" + value + "' ");
+    }
 }

@@ -20,19 +20,19 @@
 -->
 <module>
 
-	<!-- Inherit the core Web Toolkit stuff.                        -->
-	<inherits name='com.google.gwt.user.User' />
+    <!-- Inherit the core Web Toolkit stuff.                        -->
+    <inherits name='com.google.gwt.user.User'/>
 
-	<inherits name="com.google.gwt.http.HTTP" />
-	<inherits name='com.google.gwt.user.Debug' />
-	<inherits name='com.google.gwt.xml.XML' />
-	<inherits name='com.google.gwt.junit.JUnit' />
-    <inherits name='com.google.gwt.json.JSON' />
-	
-    <inherits name='org.exoplatform.gwtframework.commons.Commons' />
-	<!--  inherit css based theme -->
+    <inherits name="com.google.gwt.http.HTTP"/>
+    <inherits name='com.google.gwt.user.Debug'/>
+    <inherits name='com.google.gwt.xml.XML'/>
+    <inherits name='com.google.gwt.junit.JUnit'/>
+    <inherits name='com.google.gwt.json.JSON'/>
 
-	<source path="client" />
-	<source path="shared" />
+    <inherits name='org.exoplatform.gwtframework.commons.Commons'/>
+    <!--  inherit css based theme -->
+
+    <source path="client"/>
+    <source path="shared"/>
 
 </module>

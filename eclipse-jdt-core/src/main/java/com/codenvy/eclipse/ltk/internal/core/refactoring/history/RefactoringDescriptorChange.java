@@ -20,29 +20,24 @@ import com.codenvy.eclipse.ltk.core.refactoring.RefactoringChangeDescriptor;
  *
  * @since 3.2
  */
-public final class RefactoringDescriptorChange extends CompositeChange
-{
+public final class RefactoringDescriptorChange extends CompositeChange {
 
-   /**
-    * Creates a new refactoring descriptor change.
-    *
-    * @param name the name of the change
-    */
-   public RefactoringDescriptorChange(final String name)
-   {
-      super(name);
-   }
+    /**
+     * Creates a new refactoring descriptor change.
+     *
+     * @param name
+     *         the name of the change
+     */
+    public RefactoringDescriptorChange(final String name) {
+        super(name);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public final ChangeDescriptor getDescriptor()
-   {
-      final ChangeDescriptor descriptor = super.getDescriptor();
-      if (descriptor == null)
-      {
-         return new RefactoringChangeDescriptor(new UnknownRefactoringDescriptor(getChildren()[0].getName()));
-      }
-      return descriptor;
-   }
+    /** {@inheritDoc} */
+    public final ChangeDescriptor getDescriptor() {
+        final ChangeDescriptor descriptor = super.getDescriptor();
+        if (descriptor == null) {
+            return new RefactoringChangeDescriptor(new UnknownRefactoringDescriptor(getChildren()[0].getName()));
+        }
+        return descriptor;
+    }
 }

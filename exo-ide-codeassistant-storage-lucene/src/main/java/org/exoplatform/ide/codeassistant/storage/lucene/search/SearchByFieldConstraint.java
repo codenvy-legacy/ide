@@ -25,62 +25,49 @@ import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
 import org.exoplatform.ide.codeassistant.storage.lucene.DataIndexFields;
 
-/**
- * Constrain where field match specific value.
- */
-public class SearchByFieldConstraint implements LuceneSearchConstraint
-{
+/** Constrain where field match specific value. */
+public class SearchByFieldConstraint implements LuceneSearchConstraint {
 
-   private final String filedName;
+    private final String filedName;
 
-   private final String value;
+    private final String value;
 
-   public SearchByFieldConstraint(String filedName, String value)
-   {
-      super();
-      this.filedName = filedName;
-      this.value = value;
-   }
+    public SearchByFieldConstraint(String filedName, String value) {
+        super();
+        this.filedName = filedName;
+        this.value = value;
+    }
 
-   /**
-    * @throws CodeAssistantException
-    * 
-    */
-   @Override
-   public Query getQuery() throws CodeAssistantException
-   {
-      return new TermQuery(new Term(filedName, value));
-   }
+    /** @throws CodeAssistantException */
+    @Override
+    public Query getQuery() throws CodeAssistantException {
+        return new TermQuery(new Term(filedName, value));
+    }
 
-   /**
-    * Create SearchByFieldConstraint where fieldName = value.
-    * 
-    * @param fieldName
-    * @param value
-    * @return
-    */
-   public static SearchByFieldConstraint eq(String fieldName, String value)
-   {
-      return new SearchByFieldConstraint(fieldName, value);
-   }
+    /**
+     * Create SearchByFieldConstraint where fieldName = value.
+     *
+     * @param fieldName
+     * @param value
+     * @return
+     */
+    public static SearchByFieldConstraint eq(String fieldName, String value) {
+        return new SearchByFieldConstraint(fieldName, value);
+    }
 
-   /**
-    * Create SearchByFieldConstraint where DataIndexFields.ENTITY_TYPE = value.
-    * 
-    * @param type
-    * @return
-    */
-   public static LuceneSearchConstraint eqJavaType(JavaType type)
-   {
-      return new SearchByFieldConstraint(DataIndexFields.ENTITY_TYPE, type.toString());
-   }
+    /**
+     * Create SearchByFieldConstraint where DataIndexFields.ENTITY_TYPE = value.
+     *
+     * @param type
+     * @return
+     */
+    public static LuceneSearchConstraint eqJavaType(JavaType type) {
+        return new SearchByFieldConstraint(DataIndexFields.ENTITY_TYPE, type.toString());
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.storage.lucene.search.LuceneSearchConstraint#matchAll()
-    */
-   @Override
-   public boolean matchAll()
-   {
-      return false;
-   }
+    /** @see org.exoplatform.ide.codeassistant.storage.lucene.search.LuceneSearchConstraint#matchAll() */
+    @Override
+    public boolean matchAll() {
+        return false;
+    }
 }

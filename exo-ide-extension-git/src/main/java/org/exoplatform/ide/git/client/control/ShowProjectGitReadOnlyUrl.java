@@ -28,18 +28,15 @@ import org.exoplatform.ide.git.client.init.ShowProjectGitReadOnlyUrlEvent;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 18, 2011 10:21:02 AM anya $
- * 
  */
-public class ShowProjectGitReadOnlyUrl extends GitControl
-{
-   public ShowProjectGitReadOnlyUrl()
-   {
-      super(GitExtension.MESSAGES.projectReadOnlyGitUrlId());
-      setTitle(GitExtension.MESSAGES.projectReadOnlyGitUrlTitle());
-      setPrompt(GitExtension.MESSAGES.projectReadOnlyGitUrlPrompt());
-      setImages(GitClientBundle.INSTANCE.projectReadOnlyGitUrl(),
-         GitClientBundle.INSTANCE.projectReadOnlyGitUrlDisabled());
-      setEvent(new ShowProjectGitReadOnlyUrlEvent());
-      setGroupName(GroupNames.INFORMATION);
-   }
+public class ShowProjectGitReadOnlyUrl extends GitControl {
+    public ShowProjectGitReadOnlyUrl() {
+        super(GitExtension.MESSAGES.projectReadOnlyGitUrlId());
+        setTitle(GitExtension.MESSAGES.projectReadOnlyGitUrlTitle());
+        setPrompt(GitExtension.MESSAGES.projectReadOnlyGitUrlPrompt());
+        setImages(GitClientBundle.INSTANCE.projectReadOnlyGitUrl(),
+                  GitClientBundle.INSTANCE.projectReadOnlyGitUrlDisabled());
+        setEvent(new ShowProjectGitReadOnlyUrlEvent());
+        setGroupName(GroupNames.INFORMATION);
+    }
 }

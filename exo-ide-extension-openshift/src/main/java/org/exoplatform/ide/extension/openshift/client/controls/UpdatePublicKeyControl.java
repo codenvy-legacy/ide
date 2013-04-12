@@ -26,40 +26,33 @@ import org.exoplatform.ide.extension.openshift.client.key.UpdatePublicKeyEvent;
 
 /**
  * Control is used for updating SSH public key on OpenShift.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 21, 2011 12:15:28 PM anya $
- * 
  */
-public class UpdatePublicKeyControl extends AbstractOpenShiftControl
-{
+public class UpdatePublicKeyControl extends AbstractOpenShiftControl {
 
-   public UpdatePublicKeyControl()
-   {
-      super(OpenShiftExtension.LOCALIZATION_CONSTANT.updatePublicKeyControlId());
-      setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.updatePublicKeyControlTitle());
-      setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.updatePublicKeyControlPrompt());
-      setImages(OpenShiftClientBundle.INSTANCE.updateKeyControl(),
-         OpenShiftClientBundle.INSTANCE.updateKeyControlDisabled());
-      setEvent(new UpdatePublicKeyEvent());
-   }
+    public UpdatePublicKeyControl() {
+        super(OpenShiftExtension.LOCALIZATION_CONSTANT.updatePublicKeyControlId());
+        setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.updatePublicKeyControlTitle());
+        setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.updatePublicKeyControlPrompt());
+        setImages(OpenShiftClientBundle.INSTANCE.updateKeyControl(),
+                  OpenShiftClientBundle.INSTANCE.updateKeyControlDisabled());
+        setEvent(new UpdatePublicKeyEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
 
-      setVisible(true);
-   }
+        setVisible(true);
+    }
 
-   /**
-    * 
-    */
-   protected void refresh()
-   {
-      setEnabled(vfsInfo != null);
-   }
+    /**
+     *
+     */
+    protected void refresh() {
+        setEnabled(vfsInfo != null);
+    }
 }

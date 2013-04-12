@@ -2,115 +2,95 @@
 TREE
 ****************************************************************************************/
 
-.exo-tree-panel
-{
-	width: 100%;
+.exo-tree-panel {
+    width: 100%;
 }
 
 .exo-tree-row,
-
 .exo-tree-row-overed,
 .exo-tree-row-selected,
 .exo-tree-row-selected-overed,
-
 .exo-tree-control-image-panel,
 .exo-tree-control-icon-panel,
-.exo-tree-control-title-panel
-{
-	height: 20px;
+.exo-tree-control-title-panel {
+    height: 20px;
 }
 
-.exo-tree-row-overed
-{
-	width: 100%;
-	background: url(images/tree/row_over.png) repeat-x;
+.exo-tree-row-overed {
+    width: 100%;
+    background: url(images/tree/row_over.png) repeat-x;
 }
 
-.exo-tree-row-selected
-{
-	width: 100%;
-	background: url(images/tree/row-selected.png) repeat-x;
+.exo-tree-row-selected {
+    width: 100%;
+    background: url(images/tree/row-selected.png) repeat-x;
 }
 
-.exo-tree-row-selected-overed
-{
-	width: 100%;
-	background: url(images/tree/row-selected_over.png) repeat-x;
+.exo-tree-row-selected-overed {
+    width: 100%;
+    background: url(images/tree/row-selected_over.png) repeat-x;
 }
 
-
-.exo-tree-row
-{
-	width: 100%;
+.exo-tree-row {
+    width: 100%;
 }
 
-.exo-tree-row-over
-{
-	background: url(images/tree/row_over.png) repeat-x;
+.exo-tree-row-over {
+    background: url(images/tree/row_over.png) repeat-x;
 }
 
-.exo-tree-row-selected
-{
-	background: url(images/tree/row-selected.png) repeat-x;
+.exo-tree-row-selected {
+    background: url(images/tree/row-selected.png) repeat-x;
 }
 
-.exo-tree-row-selected-over
-{
-	background: url(images/tree/row-selected_over.png) repeat-x;
+.exo-tree-row-selected-over {
+    background: url(images/tree/row-selected_over.png) repeat-x;
 }
 
-.exo-tree-control-image-panel
-{
-	width: 20px;
-	float: left;
-	overflow: hidden;
-	cursor: default;
+.exo-tree-control-image-panel {
+    width: 20px;
+    float: left;
+    overflow: hidden;
+    cursor: default;
 }
 
-.exo-tree-control-image
-{
-	width: 16px;
-	height: 16px;
-	margin: 2px;
-	cursor: pointer;
+.exo-tree-control-image {
+    width: 16px;
+    height: 16px;
+    margin: 2px;
+    cursor: pointer;
 }
 
-.exo-tree-control-icon-panel
-{
-	width: 20px;
-	float: left;
-	cursor: default;
+.exo-tree-control-icon-panel {
+    width: 20px;
+    float: left;
+    cursor: default;
 }
 
-.exo-tree-control-icon-image
-{
-	width: 16px;
-	height: 16px;
-	margin: 2px;
-	float: left;
-	cursor: default;
+.exo-tree-control-icon-image {
+    width: 16px;
+    height: 16px;
+    margin: 2px;
+    float: left;
+    cursor: default;
 }
 
-.exo-tree-control-title-panel
-{
+.exo-tree-control-title-panel {
     float: left;
 }
 
-.exo-tree-control-title-table
-{
-	height: 100%;
-	border-collapse: collapse;
+.exo-tree-control-title-table {
+    height: 100%;
+    border-collapse: collapse;
 }
 
-.exo-tree-control-title-table-tr
-{
-	vertical-align: middle;
+.exo-tree-control-title-table-tr {
+    vertical-align: middle;
 }
 
-.exo-tree-control-title-table-td
-{
-	font-family:Verdana, Bitstream Vera Sans, sans-serif;
-    font-size:11px;
+.exo-tree-control-title-table-td {
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-size: 11px;
     font-weight: normal;
     font-style: normal;
     font-size: 11px;

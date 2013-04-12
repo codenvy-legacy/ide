@@ -18,93 +18,84 @@
  */
 package org.exoplatform.gwtframework.ui.client.testcase.cases;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.testcase.ShowCaseImageBundle;
 import org.exoplatform.gwtframework.ui.client.testcase.TestCase;
 import org.exoplatform.gwtframework.ui.client.window.Window;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Widget;
-
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class WindowsTestCase extends TestCase
-{
+public class WindowsTestCase extends TestCase {
 
-   @Override
-   public void draw()
-   {
-      ImageButton showWindowButton = new ImageButton("Open Popup Window");
-      testCasePanel().add(showWindowButton);
-      showWindowButton.addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            openPopupWindow();
-         }
-      });
+    @Override
+    public void draw() {
+        ImageButton showWindowButton = new ImageButton("Open Popup Window");
+        testCasePanel().add(showWindowButton);
+        showWindowButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                openPopupWindow();
+            }
+        });
 
-      testCasePanel().add(new HTML("<br>"));
+        testCasePanel().add(new HTML("<br>"));
 
-      ImageButton showModalWindowButton = new ImageButton("Open Modal Window");
-      testCasePanel().add(showModalWindowButton);
-      showModalWindowButton.addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            openModalWindow();
-         }
-      });
+        ImageButton showModalWindowButton = new ImageButton("Open Modal Window");
+        testCasePanel().add(showModalWindowButton);
+        showModalWindowButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                openModalWindow();
+            }
+        });
 
-   }
+    }
 
-   private void openPopupWindow()
-   {
-      Window window = new Window("Popup Window");
-      window.setAnimationEnabled(true);
-      window.setCanClose(true);
-      window.setModal(false);
-      window.setWidth(500);
-      window.setHeight(300);
+    private void openPopupWindow() {
+        Window window = new Window("Popup Window");
+        window.setAnimationEnabled(true);
+        window.setCanClose(true);
+        window.setModal(false);
+        window.setWidth(500);
+        window.setHeight(300);
 
-      Widget contentWidget = new FlowPanel();
-      contentWidget.setSize("100%", "100%");
-      contentWidget.getElement().getStyle().setBackgroundColor("#CCCCFF");
-      window.add(contentWidget);
+        Widget contentWidget = new FlowPanel();
+        contentWidget.setSize("100%", "100%");
+        contentWidget.getElement().getStyle().setBackgroundColor("#CCCCFF");
+        window.add(contentWidget);
 
-      window.center();
-      window.show();
-   }
+        window.center();
+        window.show();
+    }
 
-   private void openModalWindow()
-   {
-      Window window = new Window("Modal Window", new Image(ShowCaseImageBundle.INSTANCE.search()));
-      window.setAnimationEnabled(true);
-      window.setCanClose(true);
-      window.setModal(true);
-      window.setWidth(550);
-      window.setHeight(250);
-      window.setGlassEnabled(true);
+    private void openModalWindow() {
+        Window window = new Window("Modal Window", new Image(ShowCaseImageBundle.INSTANCE.search()));
+        window.setAnimationEnabled(true);
+        window.setCanClose(true);
+        window.setModal(true);
+        window.setWidth(550);
+        window.setHeight(250);
+        window.setGlassEnabled(true);
 
-      Widget contentWidget = new FlowPanel();
-      contentWidget.setSize("100%", "100%");
-      contentWidget.getElement().getStyle().setBackgroundColor("#AACC00");
-      window.add(contentWidget);
+        Widget contentWidget = new FlowPanel();
+        contentWidget.setSize("100%", "100%");
+        contentWidget.getElement().getStyle().setBackgroundColor("#AACC00");
+        window.add(contentWidget);
 
-      window.center();
-      window.show();
-   }
+        window.center();
+        window.show();
+    }
 
 }

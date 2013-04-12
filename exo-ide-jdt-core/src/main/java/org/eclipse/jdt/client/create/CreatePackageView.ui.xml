@@ -1,35 +1,35 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
-	<ui:with field='tex'
-		type='org.exoplatform.ide.editor.java.client.JavaConstants' />
-	<ui:style field="sty">
-		.error {
-			color: #f82c92;
-		}
-		
-		.warning {
-			color: #ffac00;
-		}
-	</ui:style>
-	<f:Border borderColor="transparent" margin="5">
-		<f:layer left="10px" width="300px" top="5px" height="14px">
-			<g:Label text="{tex.createPackageLabel}" />
-		</f:layer>
-		<f:layer left="10px" top="25px" height="27px" right="17px">
-			<f:TextInput ui:field="packageField" width="100%" />
-		</f:layer>
-		<f:layer left="75px" width="90px" height="22px" bottom="10px">
-			<f:ImageButton ui:field="createButton" text="{tex.createPackageButtonCreate}" imageName="ok" />
-		</f:layer>
-		<f:layer left="195px" width="90px" height="22px" bottom="10px">
-			<f:ImageButton ui:field="cancelButton" text="{tex.createPackageButtonCancel}" imageName="cancel" />
-		</f:layer>
-		<f:layer top="53px" right="23px" left="10px" height="27px">
-			<g:Label ui:field="errorLabel" styleName="{sty.error}" />
-		</f:layer>
-		<f:layer top="53px" right="23px" left="10px" height="27px">
-			<g:Label ui:field="warningLabel" styleName="{sty.warning}" />
-		</f:layer>
-	</f:Border>
+             xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+    <ui:with field='tex'
+             type='org.exoplatform.ide.editor.java.client.JavaConstants'/>
+    <ui:style field="sty">
+        .error {
+            color: #f82c92;
+        }
+
+        .warning {
+            color: #ffac00;
+        }
+    </ui:style>
+    <f:Border borderColor="transparent" margin="5">
+        <f:layer left="10px" width="300px" top="5px" height="14px">
+            <g:Label text="{tex.createPackageLabel}"/>
+        </f:layer>
+        <f:layer left="10px" top="25px" height="27px" right="17px">
+            <f:TextInput ui:field="packageField" width="100%"/>
+        </f:layer>
+        <f:layer left="75px" width="90px" height="22px" bottom="10px">
+            <f:ImageButton ui:field="createButton" text="{tex.createPackageButtonCreate}" imageName="ok"/>
+        </f:layer>
+        <f:layer left="195px" width="90px" height="22px" bottom="10px">
+            <f:ImageButton ui:field="cancelButton" text="{tex.createPackageButtonCancel}" imageName="cancel"/>
+        </f:layer>
+        <f:layer top="53px" right="23px" left="10px" height="27px">
+            <g:Label ui:field="errorLabel" styleName="{sty.error}"/>
+        </f:layer>
+        <f:layer top="53px" right="23px" left="10px" height="27px">
+            <g:Label ui:field="warningLabel" styleName="{sty.warning}"/>
+        </f:layer>
+    </f:Border>
 </ui:UiBinder>

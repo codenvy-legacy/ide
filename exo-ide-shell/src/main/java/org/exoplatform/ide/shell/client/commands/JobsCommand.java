@@ -33,53 +33,40 @@ import java.util.Set;
 
 /**
  * Get the list of running jobs (asynchronous tasks).
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Mar 13, 2012 10:16:28 AM anya $
- * 
  */
-public class JobsCommand extends ClientCommand
-{
-   private static final Set<String> commands = new HashSet<String>();
+public class JobsCommand extends ClientCommand {
+    private static final Set<String> commands = new HashSet<String>();
 
-   static
-   {
-      commands.add("jobs");
-   }
+    static {
+        commands.add("jobs");
+    }
 
-   public JobsCommand()
-   {
-      super(commands, new Options(), CloudShell.messages.jobsHelp());
-   }
+    public JobsCommand() {
+        super(commands, new Options(), CloudShell.messages.jobsHelp());
+    }
 
-   /**
-    * @see org.exoplatform.ide.shell.client.model.ClientCommand#execute(org.exoplatform.ide.shell.client.cli.CommandLine)
-    */
-   @Override
-   public void execute(CommandLine commandLine)
-   {
-      try
-      {
-         JobService.getService().getJobs(
-            new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
-            {
+    /** @see org.exoplatform.ide.shell.client.model.ClientCommand#execute(org.exoplatform.ide.shell.client.cli.CommandLine) */
+    @Override
+    public void execute(CommandLine commandLine) {
+        try {
+            JobService.getService().getJobs(
+                    new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder())) {
 
-               @Override
-               protected void onSuccess(StringBuilder result)
-               {
-                  CloudShell.console().print(result.toString());
-               }
+                        @Override
+                        protected void onSuccess(StringBuilder result) {
+                            CloudShell.console().print(result.toString());
+                        }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  CloudShell.console().print(CloudShell.messages.jobsError());
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         CloudShell.console().print(CloudShell.messages.jobsError());
-      }
-   }
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            CloudShell.console().print(CloudShell.messages.jobsError());
+                        }
+                    });
+        } catch (RequestException e) {
+            CloudShell.console().print(CloudShell.messages.jobsError());
+        }
+    }
 }

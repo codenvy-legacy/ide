@@ -17,14 +17,11 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Request for information about workspaces by ID.
- *
- */
+/** Request for information about workspaces by ID. */
 @RoutingType(type = RoutingTypes.GETWORKSPACE)
 public interface GetWorkspace extends ClientToServerDto {
 
-  String getProjectId();
+    String getProjectId();
 
-  String getWorkspaceId();
+    String getWorkspaceId();
 }

@@ -24,51 +24,36 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 
 /**
  * Event occurs, when user tries to restart an application server associated with the specified environment.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: RestartAppServerEvent.java Sep 28, 2012 3:49:51 PM azatsarynnyy $
- *
  */
-public class RestartAppServerEvent extends GwtEvent<RestartAppServerHandler>
-{
+public class RestartAppServerEvent extends GwtEvent<RestartAppServerHandler> {
 
-   /**
-    * Type, used to register event.
-    */
-   public static final GwtEvent.Type<RestartAppServerHandler> TYPE = new GwtEvent.Type<RestartAppServerHandler>();
+    /** Type, used to register event. */
+    public static final GwtEvent.Type<RestartAppServerHandler> TYPE = new GwtEvent.Type<RestartAppServerHandler>();
 
-   private EnvironmentInfo environmentInfo;
+    private EnvironmentInfo environmentInfo;
 
-   public RestartAppServerEvent(EnvironmentInfo environmentInfo)
-   {
-      this.environmentInfo = environmentInfo;
-   }
+    public RestartAppServerEvent(EnvironmentInfo environmentInfo) {
+        this.environmentInfo = environmentInfo;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<RestartAppServerHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<RestartAppServerHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(RestartAppServerHandler handler)
-   {
-      handler.onRestartAppServer(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(RestartAppServerHandler handler) {
+        handler.onRestartAppServer(this);
+    }
 
-   /**
-    * 
-    * @return
-    */
-   public EnvironmentInfo getEnvironmentInfo()
-   {
-      return environmentInfo;
-   }
+    /** @return  */
+    public EnvironmentInfo getEnvironmentInfo() {
+        return environmentInfo;
+    }
 
 }

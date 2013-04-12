@@ -18,37 +18,31 @@
  */
 package org.exoplatform.ide.client.operation.openbypath;
 
-import org.exoplatform.ide.client.framework.event.CursorPosition;
-
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmitry Nochevnov</a>
  * @version $
  */
 
-public class OpenFileByPathEvent extends GwtEvent<OpenFileByPathHandler>
-{
-   
-   public static final GwtEvent.Type<OpenFileByPathHandler> TYPE = new GwtEvent.Type<OpenFileByPathHandler>();
+public class OpenFileByPathEvent extends GwtEvent<OpenFileByPathHandler> {
 
-   public OpenFileByPathEvent()
-   {
-   }
-   
-   @Override
-   protected void dispatch(OpenFileByPathHandler handler)
-   {
-      handler.onOpenFileByPath(this);
-   }
+    public static final GwtEvent.Type<OpenFileByPathHandler> TYPE = new GwtEvent.Type<OpenFileByPathHandler>();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<OpenFileByPathHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-   
+    public OpenFileByPathEvent() {
+    }
+
+    @Override
+    protected void dispatch(OpenFileByPathHandler handler) {
+        handler.onOpenFileByPath(this);
+    }
+
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<OpenFileByPathHandler> getAssociatedType() {
+        return TYPE;
+    }
+
 
 }

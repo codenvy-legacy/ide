@@ -10,9 +10,8 @@
  *******************************************************************************/
 package com.codenvy.eclipse.jdt.internal.corext.refactoring.reorg;
 
-public interface ICreateTargetQueries
-{
+public interface ICreateTargetQueries {
 
-   ICreateTargetQuery createNewPackageQuery();
+    ICreateTargetQuery createNewPackageQuery();
 
 }

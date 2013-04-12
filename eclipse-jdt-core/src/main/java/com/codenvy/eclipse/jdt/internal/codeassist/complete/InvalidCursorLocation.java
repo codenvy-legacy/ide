@@ -16,17 +16,17 @@ package com.codenvy.eclipse.jdt.internal.codeassist.complete;
  */
 public class InvalidCursorLocation extends RuntimeException {
 
-	public String irritant;
+    public String irritant;
 
-	/* Possible irritants */
-	public static final String NO_COMPLETION_INSIDE_UNICODE = "No Completion Inside Unicode"; //$NON-NLS-1$
-	public static final String NO_COMPLETION_INSIDE_COMMENT = "No Completion Inside Comment";      //$NON-NLS-1$
-	public static final String NO_COMPLETION_INSIDE_STRING = "No Completion Inside String";        //$NON-NLS-1$
-	public static final String NO_COMPLETION_INSIDE_NUMBER = "No Completion Inside Number";        //$NON-NLS-1$
+    /* Possible irritants */
+    public static final String NO_COMPLETION_INSIDE_UNICODE = "No Completion Inside Unicode"; //$NON-NLS-1$
+    public static final String NO_COMPLETION_INSIDE_COMMENT = "No Completion Inside Comment";      //$NON-NLS-1$
+    public static final String NO_COMPLETION_INSIDE_STRING  = "No Completion Inside String";        //$NON-NLS-1$
+    public static final String NO_COMPLETION_INSIDE_NUMBER  = "No Completion Inside Number";        //$NON-NLS-1$
 
-	private static final long serialVersionUID = -3443160725735779590L; // backward compatible
+    private static final long serialVersionUID = -3443160725735779590L; // backward compatible
 
-public InvalidCursorLocation(String irritant){
-	this.irritant = irritant;
-}
+    public InvalidCursorLocation(String irritant) {
+        this.irritant = irritant;
+    }
 }

@@ -22,13 +22,12 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-public interface ItemsToPasteSelectedHandler extends EventHandler
-{
+public interface ItemsToPasteSelectedHandler extends EventHandler {
 
-   void onItemsToPasteSelected(ItemsToPasteSelectedEvent event);
+    void onItemsToPasteSelected(ItemsToPasteSelectedEvent event);
 
 }

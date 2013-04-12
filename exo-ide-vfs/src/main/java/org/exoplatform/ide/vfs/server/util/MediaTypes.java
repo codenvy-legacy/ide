@@ -26,20 +26,17 @@ import org.exoplatform.commons.utils.MimeTypeResolver;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public enum MediaTypes
-{
-   INSTANCE;
+public enum MediaTypes {
+    INSTANCE;
 
-   final MimeTypeResolver resolver;
+    final MimeTypeResolver resolver;
 
-   private MediaTypes()
-   {
-      resolver = new MimeTypeResolver();
-      resolver.setDefaultMimeType("text/plain");
-   }
+    private MediaTypes() {
+        resolver = new MimeTypeResolver();
+        resolver.setDefaultMimeType("text/plain");
+    }
 
-   public String getMediaType(String filename)
-   {
-      return resolver.getMimeType(filename);
-   }
+    public String getMediaType(String filename) {
+        return resolver.getMimeType(filename);
+    }
 }

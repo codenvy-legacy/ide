@@ -27,33 +27,28 @@ import java.util.List;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class Package extends FolderModel
-{
+public class Package extends FolderModel {
 
-   private String packageName;
+    private String packageName;
 
-   private List<FileModel> files = new ArrayList<FileModel>();
+    private List<FileModel> files = new ArrayList<FileModel>();
 
-   public Package(FolderModel folder, String packageName)
-   {
-      super(folder);
-      this.packageName = packageName;
+    public Package(FolderModel folder, String packageName) {
+        super(folder);
+        this.packageName = packageName;
 
-      getChildren().getItems().addAll(folder.getChildren().getItems());
-      setParent(folder.getParent());
-      setProject(folder.getProject());
-   }
+        getChildren().getItems().addAll(folder.getChildren().getItems());
+        setParent(folder.getParent());
+        setProject(folder.getProject());
+    }
 
-   public String getPackageName()
-   {
-      return packageName;
-   }
+    public String getPackageName() {
+        return packageName;
+    }
 
-   public List<FileModel> getFiles()
-   {
-      return files;
-   }
+    public List<FileModel> getFiles() {
+        return files;
+    }
 
 }

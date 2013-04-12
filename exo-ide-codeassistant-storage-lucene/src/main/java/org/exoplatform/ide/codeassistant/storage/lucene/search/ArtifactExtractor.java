@@ -28,20 +28,15 @@ import java.io.IOException;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class ArtifactExtractor implements ContentExtractor<String>
-{
+public class ArtifactExtractor implements ContentExtractor<String> {
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.storage.lucene.search.ContentExtractor#getValue(org.apache.lucene.index.IndexReader, int)
-    */
-   @Override
-   public String getValue(IndexReader reader, int doc) throws IOException
-   {
-      Document document = reader.document(doc, new MapFieldSelector(new String[]{DataIndexFields.ARTIFACT}));
+    /** @see org.exoplatform.ide.codeassistant.storage.lucene.search.ContentExtractor#getValue(org.apache.lucene.index.IndexReader, int) */
+    @Override
+    public String getValue(IndexReader reader, int doc) throws IOException {
+        Document document = reader.document(doc, new MapFieldSelector(new String[]{DataIndexFields.ARTIFACT}));
 
-      return document.get(DataIndexFields.ARTIFACT);
-   }
+        return document.get(DataIndexFields.ARTIFACT);
+    }
 
 }

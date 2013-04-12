@@ -22,38 +22,33 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class SetViewVisibleEvent extends GwtEvent<SetViewVisibleHandler>
-{
+public class SetViewVisibleEvent extends GwtEvent<SetViewVisibleHandler> {
 
-   public static final GwtEvent.Type<SetViewVisibleHandler> TYPE = new GwtEvent.Type<SetViewVisibleHandler>();
+    public static final GwtEvent.Type<SetViewVisibleHandler> TYPE = new GwtEvent.Type<SetViewVisibleHandler>();
 
-   private String viewId;
+    private String viewId;
 
-   public SetViewVisibleEvent(String viewId)
-   {
-      this.viewId = viewId;
-   }
+    public SetViewVisibleEvent(String viewId) {
+        this.viewId = viewId;
+    }
 
-   public String getViewId()
-   {
-      return viewId;
-   }
+    public String getViewId() {
+        return viewId;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<SetViewVisibleHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<SetViewVisibleHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(SetViewVisibleHandler handler)
-   {
-      handler.onSetViewVisible(this);
-   }
+    @Override
+    protected void dispatch(SetViewVisibleHandler handler) {
+        handler.onSetViewVisible(this);
+    }
 
 }

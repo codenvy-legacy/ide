@@ -28,49 +28,40 @@ import org.exoplatform.ide.git.client.GitExtension;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Oct 31, 2011 evgen $
- * 
  */
-public class PullRequestHandler extends RequestStatusHandlerBase
-{
+public class PullRequestHandler extends RequestStatusHandlerBase {
 
-   private String localBranch;
+    private String localBranch;
 
-   private String remoteBranch = "";
+    private String remoteBranch = "";
 
-   /**
-    * @param projectName
-    * @param localBranch
-    * @param remoteBranch
-    */
-   public PullRequestHandler(String projectName, String refSpec)
-   {
-      super(projectName);
-      String[] split = refSpec.split(":");
-      this.localBranch = split[0];
-      if (split.length < 2)
-         this.remoteBranch = split[1];
-   }
+    /**
+     * @param projectName
+     * @param localBranch
+     * @param remoteBranch
+     */
+    public PullRequestHandler(String projectName, String refSpec) {
+        super(projectName);
+        String[] split = refSpec.split(":");
+        this.localBranch = split[0];
+        if (split.length < 2)
+            this.remoteBranch = split[1];
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestInProgress(java.lang.String)
-    */
-   @Override
-   public void requestInProgress(String id)
-   {
-      Job job = new Job(id, JobStatus.STARTED);
-      job.setStartMessage(GitExtension.MESSAGES.pullStarted(projectName, localBranch, remoteBranch));
-      IDE.fireEvent(new JobChangeEvent(job));
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestInProgress(java.lang.String) */
+    @Override
+    public void requestInProgress(String id) {
+        Job job = new Job(id, JobStatus.STARTED);
+        job.setStartMessage(GitExtension.MESSAGES.pullStarted(projectName, localBranch, remoteBranch));
+        IDE.fireEvent(new JobChangeEvent(job));
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestFinished(java.lang.String)
-    */
-   @Override
-   public void requestFinished(String id)
-   {
-      Job job = new Job(id, JobStatus.FINISHED);
-      job.setFinishMessage(GitExtension.MESSAGES.pullFinished(projectName, localBranch, remoteBranch));
-      IDE.fireEvent(new JobChangeEvent(job));
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestFinished(java.lang.String) */
+    @Override
+    public void requestFinished(String id) {
+        Job job = new Job(id, JobStatus.FINISHED);
+        job.setFinishMessage(GitExtension.MESSAGES.pullFinished(projectName, localBranch, remoteBranch));
+        IDE.fireEvent(new JobChangeEvent(job));
+    }
 
 }

@@ -24,14 +24,11 @@ package org.exoplatform.ide.git.shared;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: GutHubUser.java Aug 6, 2012
  */
-public class GutHubUser extends GitUser
-{
+public class GutHubUser extends GitUser {
 
-   public GutHubUser(String name)
-   {
-      super(name);
-   }
-   
-   
+    public GutHubUser(String name) {
+        super(name);
+    }
+
 
 }

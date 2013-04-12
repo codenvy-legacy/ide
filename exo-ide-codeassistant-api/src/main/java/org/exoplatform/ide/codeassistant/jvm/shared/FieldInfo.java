@@ -30,50 +30,41 @@ package org.exoplatform.ide.codeassistant.jvm.shared;
  * "signature : "Ljava/util/Comparator<Ljava/lang/String;>"
  * }
  * </code>
- * 
- * 
  */
-public interface FieldInfo extends Member
-{
+public interface FieldInfo extends Member {
 
-   String getDeclaringClass();
+    String getDeclaringClass();
 
-   String getType();
+    String getType();
 
-   /**
-    * return the signature of the field. May be <tt>null</tt>.
-    */
-   String getSignature();
+    /** return the signature of the field. May be <tt>null</tt>. */
+    String getSignature();
 
-   /**
-    * @return the field's descriptor.   
-    */
-   String getDescriptor();
-   
-   /**
-    * Should return field initial value description if exist, otherwise <code>null</code>.
-    * @return initial value;
-    */
-   String getValue();
+    /** @return the field's descriptor. */
+    String getDescriptor();
 
-   void setDeclaringClass(String declaringClass);
+    /**
+     * Should return field initial value description if exist, otherwise <code>null</code>.
+     *
+     * @return initial value;
+     */
+    String getValue();
 
-   void setType(String type);
+    void setDeclaringClass(String declaringClass);
 
-   /**
-    * set signature of the field. May be <tt>null</tt>.
-    * @param signature
-    */
-   void setSignature(String signature);
+    void setType(String type);
 
-   /**
-    * @param descriptor
-    */
-   void setDescriptor(String descriptor);
-   
-   /**
-    * @param value
-    */
-   void setValue(String value);
+    /**
+     * set signature of the field. May be <tt>null</tt>.
+     *
+     * @param signature
+     */
+    void setSignature(String signature);
+
+    /** @param descriptor */
+    void setDescriptor(String descriptor);
+
+    /** @param value */
+    void setValue(String value);
 
 }

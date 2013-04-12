@@ -16,50 +16,38 @@ import com.codenvy.eclipse.jdt.core.util.IConstantPool;
 import com.codenvy.eclipse.jdt.core.util.IConstantPoolConstant;
 import com.codenvy.eclipse.jdt.core.util.IConstantPoolEntry;
 
-/**
- * Default implementation of IClassFileAttribute
- */
-public class ClassFileAttribute extends ClassFileStruct implements IClassFileAttribute
-{
-   public static final IClassFileAttribute[] NO_ATTRIBUTES = new IClassFileAttribute[0];
+/** Default implementation of IClassFileAttribute */
+public class ClassFileAttribute extends ClassFileStruct implements IClassFileAttribute {
+    public static final IClassFileAttribute[] NO_ATTRIBUTES = new IClassFileAttribute[0];
 
-   private long attributeLength;
+    private long attributeLength;
 
-   private int attributeNameIndex;
+    private int attributeNameIndex;
 
-   private char[] attributeName;
+    private char[] attributeName;
 
-   public ClassFileAttribute(byte[] classFileBytes, IConstantPool constantPool, int offset) throws ClassFormatException
-   {
-      this.attributeNameIndex = u2At(classFileBytes, 0, offset);
-      this.attributeLength = u4At(classFileBytes, 2, offset);
-      IConstantPoolEntry constantPoolEntry = constantPool.decodeEntry(this.attributeNameIndex);
-      if (constantPoolEntry.getKind() != IConstantPoolConstant.CONSTANT_Utf8)
-      {
-         throw new ClassFormatException(ClassFormatException.INVALID_CONSTANT_POOL_ENTRY);
-      }
-      this.attributeName = constantPoolEntry.getUtf8Value();
-   }
+    public ClassFileAttribute(byte[] classFileBytes, IConstantPool constantPool, int offset) throws ClassFormatException {
+        this.attributeNameIndex = u2At(classFileBytes, 0, offset);
+        this.attributeLength = u4At(classFileBytes, 2, offset);
+        IConstantPoolEntry constantPoolEntry = constantPool.decodeEntry(this.attributeNameIndex);
+        if (constantPoolEntry.getKind() != IConstantPoolConstant.CONSTANT_Utf8) {
+            throw new ClassFormatException(ClassFormatException.INVALID_CONSTANT_POOL_ENTRY);
+        }
+        this.attributeName = constantPoolEntry.getUtf8Value();
+    }
 
-   public int getAttributeNameIndex()
-   {
-      return this.attributeNameIndex;
-   }
+    public int getAttributeNameIndex() {
+        return this.attributeNameIndex;
+    }
 
-   /**
-    * @see IClassFileAttribute#getAttributeName()
-    */
-   public char[] getAttributeName()
-   {
-      return this.attributeName;
-   }
+    /** @see IClassFileAttribute#getAttributeName() */
+    public char[] getAttributeName() {
+        return this.attributeName;
+    }
 
-   /**
-    * @see IClassFileAttribute#getAttributeLength()
-    */
-   public long getAttributeLength()
-   {
-      return this.attributeLength;
-   }
+    /** @see IClassFileAttribute#getAttributeLength() */
+    public long getAttributeLength() {
+        return this.attributeLength;
+    }
 
 }

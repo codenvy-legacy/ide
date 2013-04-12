@@ -24,35 +24,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Here lists the types of projects that may be modules of Maven project. 
- * 
+ * Here lists the types of projects that may be modules of Maven project.
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class AvailableModluleTypes
-{
+public class AvailableModluleTypes {
 
-   private static List<ProjectType> projectTypes = new ArrayList<ProjectType>();
+    private static List<ProjectType> projectTypes = new ArrayList<ProjectType>();
 
-   static
-   {
-      projectTypes.add(ProjectType.MultiModule);
-      
-      projectTypes.add(ProjectType.JSP);
-      projectTypes.add(ProjectType.SPRING);
-      projectTypes.add(ProjectType.JAR);
-      projectTypes.add(ProjectType.WAR);
-   }
+    static {
+        projectTypes.add(ProjectType.MultiModule);
 
-   public static boolean contains(ProjectType projectType)
-   {
-      return projectTypes.contains(projectType);
-   }
+        projectTypes.add(ProjectType.JSP);
+        projectTypes.add(ProjectType.SPRING);
+        projectTypes.add(ProjectType.JAR);
+        projectTypes.add(ProjectType.WAR);
+    }
 
-   public static boolean contains(String projectType)
-   {
-      return projectTypes.contains(ProjectType.fromValue(projectType));
-   }
+    public static boolean contains(ProjectType projectType) {
+        return projectTypes.contains(projectType);
+    }
+
+    public static boolean contains(String projectType) {
+        return projectTypes.contains(ProjectType.fromValue(projectType));
+    }
 
 }

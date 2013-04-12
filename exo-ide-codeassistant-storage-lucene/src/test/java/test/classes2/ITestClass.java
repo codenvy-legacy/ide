@@ -23,15 +23,12 @@ import test.classes.ATestClass2;
 /**
  *
  */
-public class ITestClass extends ATestClass2
-{
-   public void method1()
-   {
-      ATestClass2 aTestClass2 = new ATestClass2();
-   }
+public class ITestClass extends ATestClass2 {
+    public void method1() {
+        ATestClass2 aTestClass2 = new ATestClass2();
+    }
 
-   public void method3()
-   {
-   }
+    public void method3() {
+    }
 
 }

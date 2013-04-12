@@ -30,50 +30,37 @@ import org.exoplatform.ide.client.framework.module.IDE;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class ShowQuickOutlineControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
-{
+public class ShowQuickOutlineControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler {
 
-   /**
-    * @param id
-    */
-   public ShowQuickOutlineControl()
-   {
-      super("View/Quick Outline");
-      setTitle("Quick Outline");
-      setPrompt("Show Quick Outline");
-      setHotKey("Ctrl+O");
-      setEvent(new ShowQuickOutlineEvent());
-      setImages(JdtClientBundle.INSTANCE.quickOutline(), JdtClientBundle.INSTANCE.quickOutlineDisabled());
-   }
+    /** @param id */
+    public ShowQuickOutlineControl() {
+        super("View/Quick Outline");
+        setTitle("Quick Outline");
+        setPrompt("Show Quick Outline");
+        setHotKey("Ctrl+O");
+        setEvent(new ShowQuickOutlineEvent());
+        setImages(JdtClientBundle.INSTANCE.quickOutline(), JdtClientBundle.INSTANCE.quickOutlineDisabled());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.eventBus().addHandler(EditorActiveFileChangedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.eventBus().addHandler(EditorActiveFileChangedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
-    */
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      if (event.getFile() == null)
-      {
-         setEnabled(false);
-         return;
-      }
-      if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
-      {
-         setEnabled(true);
-      }
-      else
-         setEnabled(false);
-   }
+    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    @Override
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        if (event.getFile() == null) {
+            setEnabled(false);
+            return;
+        }
+        if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA)) {
+            setEnabled(true);
+        } else
+            setEnabled(false);
+    }
 
 }

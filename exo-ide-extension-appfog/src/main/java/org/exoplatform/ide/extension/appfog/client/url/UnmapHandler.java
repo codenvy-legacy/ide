@@ -24,7 +24,6 @@ package org.exoplatform.ide.extension.appfog.client.url;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface UnmapHandler
-{
-   void onUnmapUrl(String url);
+public interface UnmapHandler {
+    void onUnmapUrl(String url);
 }

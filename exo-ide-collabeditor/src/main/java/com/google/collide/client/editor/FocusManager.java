@@ -14,91 +14,87 @@
 
 package com.google.collide.client.editor;
 
-import com.codenvy.ide.client.util.Elements;
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
-
 import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.html.Element;
 
-/**
- * Tracks the focus state of the editor.
- *
- */
+import com.codenvy.ide.client.util.Elements;
+
+import org.exoplatform.ide.shared.util.ListenerManager;
+import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
+
+/** Tracks the focus state of the editor. */
 public class FocusManager {
 
-  /**
-   * A listener that is called when the editor receives or loses focus.
-   */
-  public interface FocusListener {
-    void onFocusChange(boolean hasFocus);
-  }
+    /** A listener that is called when the editor receives or loses focus. */
+    public interface FocusListener {
+        void onFocusChange(boolean hasFocus);
+    }
 
-  private final ListenerManager<FocusManager.FocusListener> focusListenerManager = ListenerManager
-      .create();
-  private boolean hasFocus;
-  private final Element inputElement;
+    private final ListenerManager<FocusManager.FocusListener> focusListenerManager = ListenerManager
+            .create();
+    private       boolean hasFocus;
+    private final Element inputElement;
 
 
-  FocusManager(Buffer buffer, Element inputElement) {
-    this.inputElement = inputElement;
+    FocusManager(Buffer buffer, Element inputElement) {
+        this.inputElement = inputElement;
 
-    attachEventHandlers(buffer);
-    hasFocus = inputElement.equals(Elements.getActiveElement());
-  }
+        attachEventHandlers(buffer);
+        hasFocus = inputElement.equals(Elements.getActiveElement());
+    }
 
-  private void attachEventHandlers(Buffer buffer) {
-    inputElement.addEventListener(Event.FOCUS, new EventListener() {
-      private final Dispatcher<FocusManager.FocusListener> dispatcher =
-          new Dispatcher<FocusManager.FocusListener>() {
+    private void attachEventHandlers(Buffer buffer) {
+        inputElement.addEventListener(Event.FOCUS, new EventListener() {
+            private final Dispatcher<FocusManager.FocusListener> dispatcher =
+                    new Dispatcher<FocusManager.FocusListener>() {
+                        @Override
+                        public void dispatch(FocusListener listener) {
+                            listener.onFocusChange(true);
+                        }
+                    };
+
             @Override
-            public void dispatch(FocusListener listener) {
-              listener.onFocusChange(true);
+            public void handleEvent(Event evt) {
+                hasFocus = true;
+                focusListenerManager.dispatch(dispatcher);
             }
-          };
+        }, false);
 
-      @Override
-      public void handleEvent(Event evt) {
-        hasFocus = true;
-        focusListenerManager.dispatch(dispatcher);
-      }
-    }, false);
+        inputElement.addEventListener(Event.BLUR, new EventListener() {
+            private final Dispatcher<FocusManager.FocusListener> dispatcher =
+                    new Dispatcher<FocusManager.FocusListener>() {
+                        @Override
+                        public void dispatch(FocusListener listener) {
+                            listener.onFocusChange(false);
+                        }
+                    };
 
-    inputElement.addEventListener(Event.BLUR, new EventListener() {
-      private final Dispatcher<FocusManager.FocusListener> dispatcher =
-          new Dispatcher<FocusManager.FocusListener>() {
             @Override
-            public void dispatch(FocusListener listener) {
-              listener.onFocusChange(false);
+            public void handleEvent(Event evt) {
+                hasFocus = false;
+                focusListenerManager.dispatch(dispatcher);
             }
-          };
+        }, false);
 
-      @Override
-      public void handleEvent(Event evt) {
-        hasFocus = false;
-        focusListenerManager.dispatch(dispatcher);
-      }
-    }, false);
+        buffer.getMouseClickListenerRegistrar().add(new Buffer.MouseClickListener() {
+            @Override
+            public void onMouseClick(int x, int y) {
+                focus();
+            }
+        });
+    }
 
-    buffer.getMouseClickListenerRegistrar().add(new Buffer.MouseClickListener() {
-      @Override
-      public void onMouseClick(int x, int y) {
-        focus();
-      }
-    });
-  }
+    public ListenerRegistrar<FocusManager.FocusListener> getFocusListenerRegistrar() {
+        return focusListenerManager;
+    }
 
-  public ListenerRegistrar<FocusManager.FocusListener> getFocusListenerRegistrar() {
-    return focusListenerManager;
-  }
+    public boolean hasFocus() {
+        return hasFocus;
+    }
 
-  public boolean hasFocus() {
-    return hasFocus;
-  }
-
-  public void focus() {
-    inputElement.focus();
-  }
+    public void focus() {
+        inputElement.focus();
+    }
 }

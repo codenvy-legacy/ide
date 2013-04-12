@@ -30,39 +30,30 @@ import org.exoplatform.ide.extension.logreader.client.model.LogReaderService;
 
 /**
  * IDE Extension for log reader feature.
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class LogReaderExtension extends Extension implements InitializeServicesHandler
-{
+public class LogReaderExtension extends Extension implements InitializeServicesHandler {
 
-   /**
-    * The generator of an {@link AutoBean}.
-    */
-   public static final LogReaderAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(LogReaderAutoBeanFactory.class);
+    /** The generator of an {@link AutoBean}. */
+    public static final LogReaderAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(LogReaderAutoBeanFactory.class);
 
-   public static LogReaderMessages MESSAGES = GWT.create(LogReaderMessages.class);
+    public static LogReaderMessages MESSAGES = GWT.create(LogReaderMessages.class);
 
-   /**
-    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(InitializeServicesEvent.TYPE, this);
-      IDE.getInstance().addControl(new LogReaderControl());
-      new LogReaderPresenter();
-   }
+    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(InitializeServicesEvent.TYPE, this);
+        IDE.getInstance().addControl(new LogReaderControl());
+        new LogReaderPresenter();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
-    */
-   @Override
-   public void onInitializeServices(InitializeServicesEvent event)
-   {
-      new LogReaderService(event.getApplicationConfiguration().getContext(), event.getLoader());
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
+     * .client.framework.application.event.InitializeServicesEvent) */
+    @Override
+    public void onInitializeServices(InitializeServicesEvent event) {
+        new LogReaderService(event.getApplicationConfiguration().getContext(), event.getLoader());
+    }
 
 }

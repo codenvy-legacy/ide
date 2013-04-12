@@ -22,5 +22,5 @@ package org.exoplatform.ide.codeassistant.asm.test;
  *
  */
 public @interface C {
-   String value();
+    String value();
 }

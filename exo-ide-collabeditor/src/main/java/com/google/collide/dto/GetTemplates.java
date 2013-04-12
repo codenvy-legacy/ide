@@ -23,10 +23,10 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
  */
 @RoutingType(type = RoutingTypes.GETTEMPLATES)
 public interface GetTemplates extends ClientToServerDto {
-  /**
-   * Locale for template names returned.  If unset, the server will look for
-   * answers in locale "default", which we happen to initialize with English
-   * names.
-   */
-  public String getLocale();
+    /**
+     * Locale for template names returned.  If unset, the server will look for
+     * answers in locale "default", which we happen to initialize with English
+     * names.
+     */
+    public String getLocale();
 }

@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.project.create;
 
-import com.google.gwt.json.client.JSONParser;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -31,11 +29,13 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ToggleButton;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -53,6 +53,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.paas.DeployResultHandler;
+import org.exoplatform.ide.client.framework.paas.InitializeDeployViewHandler;
 import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.project.CreateModuleEvent;
 import org.exoplatform.ide.client.framework.project.CreateModuleHandler;
@@ -72,11 +73,7 @@ import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Folder;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemType;
-import org.exoplatform.ide.vfs.shared.PropertyImpl;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+import org.exoplatform.ide.vfs.shared.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -86,1070 +83,915 @@ import java.util.List;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 24, 2012 3:38:19 PM anya $
- *
  */
 public class CreateProjectPresenter implements CreateProjectHandler, CreateModuleHandler, VfsChangedHandler,
-   ViewClosedHandler, DeployResultHandler, ItemsSelectedHandler
-{
-   interface Display extends IsView
-   {
+                                               ViewClosedHandler, DeployResultHandler, InitializeDeployViewHandler, ItemsSelectedHandler {
+    interface Display extends IsView {
 
-      void switchToCreateModule();
+        void switchToCreateModule();
 
-      HasValue<String> getNameField();
+        HasValue<String> getNameField();
 
-      HasValue<String> getErrorLabel();
+        HasValue<String> getErrorLabel();
 
-      void setProjectTypes(List<ProjectType> projectTypeList);
+        void setProjectTypes(List<ProjectType> projectTypeList);
 
-      void setTargets(List<PaaS> targetList);
+        void setTargets(List<PaaS> targetList);
 
-      List<ToggleButton> getProjectTypeButtons();
+        List<ToggleButton> getProjectTypeButtons();
 
-      List<ToggleButton> getTargetButtons();
+        List<ToggleButton> getTargetButtons();
 
-      /**
-       * Returns {@link ProjectType} for the appropriate button.
-       *
-       * @param button {@link ToggleButton}
-       * @return {@link ProjectType}
-       */
-      ProjectType getProjectTypeByButton(ToggleButton button);
+        /**
+         * Returns {@link ProjectType} for the appropriate button.
+         *
+         * @param button
+         *         {@link ToggleButton}
+         * @return {@link ProjectType}
+         */
+        ProjectType getProjectTypeByButton(ToggleButton button);
 
-      /**
-       * Returns {@link PaaS} for the appropriate button.
-       *
-       * @param button {@link ToggleButton}
-       * @return {@link PaaS}
-       */
-      PaaS getTargetByButton(ToggleButton button);
+        /**
+         * Returns {@link PaaS} for the appropriate button.
+         *
+         * @param button
+         *         {@link ToggleButton}
+         * @return {@link PaaS}
+         */
+        PaaS getTargetByButton(ToggleButton button);
 
-      void enableButtonsForSupportedTargets(List<PaaS> list);
+        void enableButtonsForSupportedTargets(List<PaaS> list);
 
-      /**
-       * Toggle up all buttons from the <code>buttonsList</code> except the <code>currentButton</code>.
-       */
-      void toggleUpAllButtons(List<ToggleButton> buttonsList, ToggleButton currentButton);
+        /** Toggle up all buttons from the <code>buttonsList</code> except the <code>currentButton</code>. */
+        void toggleUpAllButtons(List<ToggleButton> buttonsList, ToggleButton currentButton);
 
-      void selectTarget(PaaS target);
+        void selectTarget(PaaS target);
 
-      void setJRebelPanelVisibility(boolean isVisible);
+        void setJRebelPanelVisibility(boolean isVisible);
 
-      ListGridItem<ProjectTemplate> getTemplatesGrid();
+        ListGridItem<ProjectTemplate> getTemplatesGrid();
 
-      void selectTemplate(ProjectTemplate projectTemplate);
+        void selectTemplate(ProjectTemplate projectTemplate);
 
-      HasValue<Boolean> getUseJRebelPlugin();
+        HasValue<Boolean> getUseJRebelPlugin();
 
-      HasClickHandlers getBackButton();
+        HasClickHandlers getBackButton();
 
-      HasClickHandlers getNextButton();
+        HasClickHandlers getNextButton();
 
-      HasClickHandlers getFinishButton();
+        HasClickHandlers getFinishButton();
 
-      HasClickHandlers getCancelButton();
+        HasClickHandlers getCancelButton();
 
-      HasValue<String> getJRebelFirstNameField();
+        HasValue<String> getJRebelFirstNameField();
 
-      HasValue<String> getJRebelLastNameField();
+        HasValue<String> getJRebelLastNameField();
 
-      HasValue<String> getJRebelPhoneNumberField();
+        HasValue<String> getJRebelPhoneNumberField();
 
-      void enableNextButton(boolean enabled);
+        void enableNextButton(boolean enabled);
 
-      void enableFinishButton(boolean enabled);
+        void enableFinishButton(boolean enabled);
 
-      void showCreateProjectStep();
+        void showCreateProjectStep();
 
-      void showChooseTemlateStep();
+        void showChooseTemlateStep();
 
-      void showDeployProjectStep();
+        void showDeployProjectStep();
 
-      void setDeployView(Composite deployView);
+        void setDeployView(Composite deployView);
 
-      void setJRebelErrorMessageLabel(String message);
+        void setJRebelErrorMessageLabel(String message);
 
-      void setJRebelFormVisible(boolean visible);
+        void setJRebelFormVisible(boolean visible);
 
-      void setJRebelStoredFormVisible(boolean visible);
-   }
+        void setJRebelStoredFormVisible(boolean visible);
+    }
 
-   private Display display;
+    private Display display;
 
-   private boolean isChooseTemplateStep;
+    private boolean isChooseTemplateStep;
 
-   private boolean isDeployStep;
+    private boolean isDeployStep;
 
-   private VirtualFileSystemInfo vfsInfo;
+    private VirtualFileSystemInfo vfsInfo;
 
-   private ProjectType selectedProjectType;
+    private ProjectType selectedProjectType;
 
-   private ProjectTemplate selectedTemplate;
+    private ProjectTemplate selectedTemplate;
 
-   private List<ProjectTemplate> allProjectTemplates;
+    private List<ProjectTemplate> allProjectTemplates;
 
-   private List<ProjectTemplate> availableProjectTemplates = new ArrayList<ProjectTemplate>();
+    private List<ProjectTemplate> availableProjectTemplates = new ArrayList<ProjectTemplate>();
 
-   private PaaS currentPaaS;
+    private PaaS currentPaaS;
 
-   private PaaS selectedTarget;
+    private PaaS selectedTarget;
 
-   private final PaaS noneTarget = new NoneTarget();
+    private final PaaS noneTarget = new NoneTarget();
 
-   /**
-    * Name of the property for using JRebel.
-    */
-   private static final String JREBEL = "jrebel";
+    /** Name of the property for using JRebel. */
+    private static final String JREBEL = "jrebel";
 
-   /**
-    * Comparator for ordering project types.
-    */
-   private static final Comparator<ProjectType> PROJECT_TYPES_COMPARATOR = new ProjectTypesComparator();
+    /** Comparator for ordering project types. */
+    private static final Comparator<ProjectType> PROJECT_TYPES_COMPARATOR = new ProjectTypesComparator();
 
-   private static final Comparator<PaaS> PAAS_COMPARATOR = new PaaSComparator();
+    private static final Comparator<PaaS> PAAS_COMPARATOR = new PaaSComparator();
 
-   private boolean createModule = false;
+    private boolean createModule = false;
 
 //   private ProjectModel parentProject;
 
-   private Item selectedItem;
+    private Item selectedItem;
 
-   private class NoneTarget extends PaaS
-   {
-      public NoneTarget()
-      {
-         super("none", "None", new Image(IDEImageBundle.INSTANCE.noneTarget()), new Image(
-            IDEImageBundle.INSTANCE.noneTarget()), new ArrayList<ProjectType>());
-      }
-   }
+    private class NoneTarget extends PaaS {
+        public NoneTarget() {
+            super("none", "None", new Image(IDEImageBundle.INSTANCE.noneTarget()), new Image(
+                    IDEImageBundle.INSTANCE.noneTarget()), new ArrayList<ProjectType>());
+        }
+    }
 
-   public CreateProjectPresenter()
-   {
-      IDE.getInstance().addControl(new CreateProjectControl());
-      IDE.getInstance().addControl(new CreateModuleControl());
+    public CreateProjectPresenter() {
+        IDE.getInstance().addControl(new CreateProjectControl());
+        IDE.getInstance().addControl(new CreateModuleControl());
 
-      IDE.addHandler(CreateProjectEvent.TYPE, this);
-      IDE.addHandler(CreateModuleEvent.TYPE, this);
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-   }
+        IDE.addHandler(CreateProjectEvent.TYPE, this);
+        IDE.addHandler(CreateModuleEvent.TYPE, this);
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+    }
 
-   public void bindDisplay()
-   {
-      display.getUseJRebelPlugin().setValue(true);
-      display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
+    public void bindDisplay() {
+        display.getUseJRebelPlugin().setValue(true);
+        display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>() {
 
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            updateNavigationButtonsState();
-         }
-      });
-
-      display.getTemplatesGrid().addSelectionHandler(new SelectionHandler<ProjectTemplate>()
-      {
-
-         @Override
-         public void onSelection(SelectionEvent<ProjectTemplate> event)
-         {
-            selectedTemplate = event.getSelectedItem();
-            updateNavigationButtonsState();
-         }
-      });
-
-      display.getBackButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            goBack();
-         }
-      });
-
-      display.getNextButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            if (!isChooseTemplateStep && !isDeployStep)
-            {
-               if (selectedProjectType == null)
-               {
-                  Dialogs.getInstance().showInfo(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noTechnologyTitle(),
-                     org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noTechnologyMessage());
-               }
-               else
-               {
-                  if (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING)
-                  {
-                     getJRebelUserProfileInfo();
-                  }
-                  validateProjectName(display.getNameField().getValue());
-               }
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                updateNavigationButtonsState();
             }
-            else
-            {
-               if (display.getUseJRebelPlugin().getValue()
-                  && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING))
-               {
-                  if (!checkJRebelFieldFill())
-                  {
-                     return;
-                  }
-               }
-               goNext();
+        });
+
+        display.getTemplatesGrid().addSelectionHandler(new SelectionHandler<ProjectTemplate>() {
+
+            @Override
+            public void onSelection(SelectionEvent<ProjectTemplate> event) {
+                selectedTemplate = event.getSelectedItem();
+                updateNavigationButtonsState();
             }
-         }
-      });
+        });
 
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
+        display.getBackButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-
-      display.getFinishButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            if (display.getUseJRebelPlugin().getValue()
-               && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING))
-            {
-               if (!checkJRebelFieldFill())
-               {
-                  return;
-               }
-               sendProfileInfoToZeroTurnaround();
+            @Override
+            public void onClick(ClickEvent event) {
+                goBack();
             }
-            if (isDeployStep)
-            {
-               doDeploy((availableProjectTemplates.size() == 1) ? availableProjectTemplates.get(0) : selectedTemplate);
-            }
-            else if (isChooseTemplateStep)
-            {
-               createProject(selectedTemplate);
-            }
-            else if (selectedProjectType == null)
-            {
-               Dialogs.getInstance().showInfo(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noTechnologyTitle(),
-                  org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noTechnologyMessage());
-            }
-            else if (availableProjectTemplates.size() == 1)
-            {
-               createProject(availableProjectTemplates.get(0));
-            }
-            else
-            {
-               createProject(null);
-            }
-         }
-      });
+        });
 
-      display.getUseJRebelPlugin().addValueChangeHandler(new ValueChangeHandler<Boolean>()
-      {
-         @Override
-         public void onValueChange(ValueChangeEvent<Boolean> event)
-         {
-            if (event.getValue())
-            {
-               display.setJRebelFormVisible(true);
-            }
-            else
-            {
-               display.setJRebelFormVisible(false);
-            }
-         }
-      });
-
-      display.getJRebelFirstNameField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            checkJRebelFieldFill();
-         }
-      });
-
-      display.getJRebelLastNameField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            checkJRebelFieldFill();
-         }
-      });
-
-      display.getJRebelPhoneNumberField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            checkJRebelFieldFill();
-         }
-      });
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.event.CreateProjectHandler#onCreateProject(org.exoplatform.ide.client.framework.event.CreateProjectEvent)
-    */
-   @Override
-   public void onCreateProject(CreateProjectEvent event)
-   {
-      openCreateProjectView(false);
-   }
-
-   @Override
-   public void onCreateModule(CreateModuleEvent event)
-   {
-      if (MavenModuleCreationCallback.getInstance().isPomXMLOpened(getParentProject()))
-      {
-         Dialogs.getInstance().showError("First close pom.xml.");
-         return;
-      }
-
-      openCreateProjectView(true);
-   }
-
-   private void openCreateProjectView(boolean createModule)
-   {
-      this.createModule = createModule;
-
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         IDE.getInstance().openView(display.asView());
-         if (createModule)
-         {
-            display.switchToCreateModule();
-         }
-
-         bindDisplay();
-      }
-
-      selectedProjectType = null;
-      availableProjectTemplates.clear();
-
-      display.showCreateProjectStep();
-      isDeployStep = false;
-      isChooseTemplateStep = false;
-      getProjectTemplates();
-      setTargets(IDE.getInstance().getPaaSes());
-      updateNavigationButtonsState();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
-
-   /**
-    * Update the enabled/disabled state of the navigation buttons.
-    */
-   private void updateNavigationButtonsState()
-   {
-      boolean firstStepIsOK =
-         display.getNameField().getValue() != null && !display.getNameField().getValue().isEmpty()
-            && selectedProjectType != null;
-      boolean noneDeploy = (selectedTarget == null || selectedTarget instanceof NoneTarget);
-
-      if (isChooseTemplateStep)
-      {
-         display.enableFinishButton(firstStepIsOK && noneDeploy && selectedTemplate != null);
-         display.enableNextButton(firstStepIsOK && !noneDeploy && selectedTemplate != null);
-      }
-      else if (isDeployStep)
-      {
-         display.enableFinishButton(true);
-      }
-      else
-      {
-         display.enableFinishButton(false);
-         display.enableNextButton(true);
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      this.vfsInfo = event.getVfsInfo();
-   }
-
-   /**
-    * Get the list of available project templates.
-    */
-   private void getProjectTemplates()
-   {
-      try
-      {
-         TemplateService.getInstance().getProjectTemplateList(
-            new AsyncRequestCallback<List<ProjectTemplate>>(new ProjectTemplateListUnmarshaller(
-               new ArrayList<ProjectTemplate>()))
-            {
-               @Override
-               protected void onSuccess(List<ProjectTemplate> templates)
-               {
-                  if (createModule)
-                  {
-                     allProjectTemplates = new ArrayList<ProjectTemplate>();
-                     for (ProjectTemplate template : templates)
-                     {
-                        if (AvailableModluleTypes.contains(template.getType()))
-                        {
-                           allProjectTemplates.add(template);
+        display.getNextButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                if (!isChooseTemplateStep && !isDeployStep) {
+                    if (selectedProjectType == null) {
+                        Dialogs.getInstance().showInfo(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noTechnologyTitle(),
+                                                       org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noTechnologyMessage());
+                    } else {
+                        if (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING) {
+                            getJRebelUserProfileInfo();
                         }
-                     }
-                  }
-                  else
-                  {
-                     allProjectTemplates = templates;
-                  }
+                        validateProjectName(display.getNameField().getValue());
+                    }
+                } else {
+                    if (display.getUseJRebelPlugin().getValue()
+                        && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING)) {
+                        if (!checkJRebelFieldFill()) {
+                            return;
+                        }
+                    }
+                    goNext();
+                }
+            }
+        });
 
-                  List<ProjectType> list = getProjectTypesFromTemplates(allProjectTemplates);
-                  setProjectTypes(list);
-
-                  if (display.getNameField().getValue() == null || display.getNameField().getValue().isEmpty())
-                  {
-                     display.getNameField().setValue("untitled");
-                  }
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   /**
-    * Sets the available project types.
-    *
-    * @param list a list of the available project types
-    */
-   private void setProjectTypes(List<ProjectType> list)
-   {
-      Collections.sort(list, PROJECT_TYPES_COMPARATOR);
-      display.setProjectTypes(list);
-
-      for (final ToggleButton toggleButton : display.getProjectTypeButtons())
-      {
-         toggleButton.addValueChangeHandler(new ValueChangeHandler<Boolean>()
-         {
+        display.getCancelButton().addClickHandler(new ClickHandler() {
 
             @Override
-            public void onValueChange(ValueChangeEvent<Boolean> event)
-            {
-               if (event.getValue())
-               {
-                  display.toggleUpAllButtons(display.getProjectTypeButtons(), toggleButton);
-                  selectedProjectType = display.getProjectTypeByButton(toggleButton);
-
-                  display.enableButtonsForSupportedTargets(getAvailableTargets(selectedProjectType));
-                  display.selectTarget(noneTarget);
-                  updateNavigationButtonsState();
-               }
-               else
-               {
-                  // do not allow toggle up
-                  toggleButton.setDown(true);
-               }
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
             }
-         });
-      }
-   }
+        });
 
-   /**
-    * Sets the deployment targets.
-    *
-    * @param targetsList a list of the available deployment targets
-    */
-   private void setTargets(List<PaaS> targetsList)
-   {
-      List<PaaS> list = new ArrayList<PaaS>();
-      list.addAll(targetsList);
-      Collections.sort(list, PAAS_COMPARATOR);
-      list.add(noneTarget);
-      display.setTargets(list);
-
-      for (final ToggleButton toggleButton : display.getTargetButtons())
-      {
-         toggleButton.addValueChangeHandler(new ValueChangeHandler<Boolean>()
-         {
+        display.getFinishButton().addClickHandler(new ClickHandler() {
 
             @Override
-            public void onValueChange(ValueChangeEvent<Boolean> event)
-            {
-               if (event.getValue())
-               {
-                  display.toggleUpAllButtons(display.getTargetButtons(), toggleButton);
-                  selectedTarget = display.getTargetByButton(toggleButton);
-                  availableProjectTemplates = getProjectTemplates(selectedProjectType, selectedTarget);
-                  updateNavigationButtonsState();
-               }
-               else
-               {
-                  // do not allow toggle up
-                  toggleButton.setDown(true);
-               }
-            }
-         });
-      }
-   }
-
-   /**
-    * Go to previous step.
-    */
-   private void goBack()
-   {
-      if (isDeployStep)
-      {
-         isDeployStep = false;
-         goToTemplatesStep();
-      }
-      else if (isChooseTemplateStep)
-      {
-         isChooseTemplateStep = false;
-         goToProjectStep();
-      }
-      updateNavigationButtonsState();
-   }
-
-   /**
-    * Go to next step.
-    */
-   private void goNext()
-   {
-      if (isChooseTemplateStep)
-      {
-         isChooseTemplateStep = false;
-         goToDeployStep();
-      }
-      else
-      // create project step
-      {
-         goToTemplatesStep();
-         if (!availableProjectTemplates.contains(selectedTemplate))
-         {
-            selectedTemplate = null;
-         }
-      }
-      updateNavigationButtonsState();
-   }
-
-   /**
-    * Move to project's data step.
-    */
-   private void goToProjectStep()
-   {
-      updateJRebelPanelVisibility();
-      display.showCreateProjectStep();
-   }
-
-   /**
-    * Move to choosing project template step.
-    */
-   private void goToTemplatesStep()
-   {
-      isChooseTemplateStep = true;
-
-      // This code need to detect openshift template and hide it if user choosen none target.
-      // Specification of working openshift is that application created on server side of openshift for example if
-      // if will be simple jsp project, openshift will put into source directory own web.xml and pom.xml and our
-      // project templates that pulling from git repository are conflicting with their and to undestruct all project
-      // we create it on openshift paas and after creation it will be fetched by git to our project directory for
-      // feature working on it. That's why we created a few simple empty project templates that allow IDE to create
-      // project waiting to create application on openshift and then to fetch all source files of this application
-      // into our local directory.
-      List<ProjectTemplate> templatesToTempHide = new ArrayList<ProjectTemplate>();
-      for (ProjectTemplate template : availableProjectTemplates)
-      {
-         if (selectedTarget instanceof NoneTarget
-            && template.getTargets() != null
-            && template.getTargets().contains("OpenShift")
-            && template.getTargets().size() == 1)
-         {
-            templatesToTempHide.add(template);
-         }
-      }
-      availableProjectTemplates.removeAll(templatesToTempHide);
-
-      display.getTemplatesGrid().setValue(availableProjectTemplates);
-      updateJRebelPanelVisibility();
-      display.showChooseTemlateStep();
-   }
-
-   /**
-    * Move to deploy project step.
-    */
-   private void goToDeployStep()
-   {
-      isDeployStep = true;
-
-      String projectName = display.getNameField().getValue();
-      for (PaaS paas : IDE.getInstance().getPaaSes())
-      {
-         if (paas.getId().equals(selectedTarget.getId()))
-         {
-            currentPaaS = paas;
-            if (paas.getPaaSActions() != null)
-            {
-               updateJRebelPanelVisibility();
-               display.showDeployProjectStep();
-               isDeployStep = true;
-               display.setDeployView(paas.getPaaSActions().getDeployView(projectName, selectedProjectType));
-               display.enableFinishButton(true);
-            }
-            else
-            {
-               Dialogs.getInstance().showError(
-                  org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noRegistedDeployAction(paas.getTitle()));
-            }
-            return;
-         }
-      }
-   }
-
-   /**
-    * Get the list of targets, where project with pointed project type can be deployed.
-    *
-    * @param projectType the project type
-    * @return {@link List} of {@link PaaS}
-    */
-   private List<PaaS> getAvailableTargets(ProjectType projectType)
-   {
-      List<PaaS> values = new ArrayList<PaaS>();
-      values.add(noneTarget);
-      for (PaaS paas : IDE.getInstance().getPaaSes())
-      {
-         if (paas.getSupportedProjectTypes().contains(projectType))
-         {
-            values.add(paas);
-         }
-      }
-      ;
-      return values;
-   }
-
-   private void createProject(ProjectTemplate projectTemplate)
-   {
-      if (projectTemplate == null)
-      {
-         Dialogs.getInstance().showError(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noProjectTempate());
-         return;
-      }
-
-      if (vfsInfo == null || vfsInfo.getRoot() == null)
-      {
-         Dialogs.getInstance().showError(
-            org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.createProjectErrorVFSInfoNotSets());
-         return;
-      }
-
-      try
-      {
-         String parentId = vfsInfo.getRoot().getId();
-
-         if (createModule && getParentProject() != null)
-         {
-            parentId = getParentProject().getId();
-         }
-
-         String projectName = display.getNameField().getValue();
-         IDELoader.getInstance().setMessage(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.creatingProject());
-         IDELoader.getInstance().show();
-         TemplateService.getInstance().createProjectFromTemplate(vfsInfo.getId(), parentId, projectName,
-            projectTemplate.getName(),
-            new AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(new ProjectModel()))
-            {
-               @Override
-               protected void onSuccess(final ProjectModel result)
-               {
-                  if ((selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING))
-                  {
-                     writeUseJRebelProperty(result);
-                  }
-
-                  IDELoader.getInstance().hide();
-                  IDE.getInstance().closeView(display.asView().getId());
-
-                  if (createModule)
-                  {
-                     MavenModuleCreationCallback.getInstance().moduleCreated(getParentProject(), result);
-                  }
-                  else
-                  {
-                     IDE.fireEvent(new ProjectCreatedEvent(result));
-                  }
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDELoader.getInstance().hide();
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDELoader.getInstance().hide();
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   /**
-    * Writes 'jrebel' property to the project properties.
-    *
-    * @param project {@link ProjectModel}
-    */
-   private void writeUseJRebelProperty(ProjectModel project)
-   {
-      project.getProperties().add(new PropertyImpl(JREBEL, display.getUseJRebelPlugin().getValue().toString()));
-      try
-      {
-         VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>()
-         {
-
-            @Override
-            protected void onSuccess(ItemWrapper result)
-            {
-               // nothing to do
-            }
-
-            @Override
-            protected void onFailure(Throwable ignore)
-            {
-               // ignore this exception
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         // ignore this exception
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.DeployResultHandler#onDeployFinished(boolean)
-    */
-   @Override
-   public void onDeployFinished(boolean success)
-   {
-      if (success && display != null)
-      {
-         IDE.getInstance().closeView(display.asView().getId());
-      }
-   }
-
-   private void doDeploy(ProjectTemplate projectTemplate)
-   {
-      if (currentPaaS != null)
-      {
-         if (projectTemplate != null || currentPaaS.isProvidesTemplate())
-         {
-            currentPaaS.getPaaSActions().deploy(projectTemplate, this);
-         }
-         else
-         {
-            Dialogs.getInstance().showError(
-               org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noProjectTemplateForTarget(currentPaaS.getTitle()));
-         }
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.DeployResultHandler#onProjectCreated(org.exoplatform.ide.vfs.client.model.ProjectModel)
-    */
-   @Override
-   public void onProjectCreated(ProjectModel project)
-   {
-      if ((selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING)
-         && display.getUseJRebelPlugin().getValue() == true)
-      {
-         writeUseJRebelProperty(project);
-      }
-
-      IDE.fireEvent(new ProjectCreatedEvent(project));
-      if (display != null)
-      {
-         IDE.getInstance().closeView(display.asView().getId());
-      }
-   }
-
-   /**
-    * Prepare project type list to be displayed.
-    *
-    * @param projectTemplates available project templates
-    * @return {@link List}
-    */
-   private List<ProjectType> getProjectTypesFromTemplates(List<ProjectTemplate> projectTemplates)
-   {
-      List<ProjectType> projectTypes = new ArrayList<ProjectType>();
-      for (ProjectTemplate projectTemplate : projectTemplates)
-      {
-         ProjectType projectType = ProjectType.fromValue(projectTemplate.getType());
-         if (!projectTypes.contains(projectType))
-         {
-            projectTypes.add(projectType);
-         }
-      }
-      return projectTypes;
-   }
-
-   /**
-    * Get the list of project templates, that are suitable to pointed project type and deploy target.
-    *
-    * @param projectType project's type
-    * @param target deploy target
-    * @return {@link List} list of {@link ProjectTemplate}
-    */
-   private List<ProjectTemplate> getProjectTemplates(ProjectType projectType, PaaS target)
-   {
-      List<ProjectTemplate> templates = new ArrayList<ProjectTemplate>();
-
-      // Get templates by project's type:
-      if (target instanceof NoneTarget)
-      {
-         for (ProjectTemplate projectTemplate : allProjectTemplates)
-         {
-            if (projectTemplate.getType().equals(projectType.value()))
-            {
-               templates.add(projectTemplate);
-            }
-         }
-         return templates;
-      }
-
-      // Get templates by project type and it's deploy target:
-      for (ProjectTemplate projectTemplate : allProjectTemplates)
-      {
-         if (projectTemplate.getType().equals(projectType.value())
-            && (projectTemplate.getTargets() == null || projectTemplate.getTargets().contains(target.getId())))
-         {
-            templates.add(projectTemplate);
-         }
-      }
-      return templates;
-   }
-
-   private ProjectModel getParentProject()
-   {
-      if (selectedItem == null)
-      {
-         return null;
-      }
-
-      ProjectModel project = ((ItemContext)selectedItem).getProject();
-      if (project == null && selectedItem instanceof ProjectModel)
-      {
-         project = (ProjectModel)selectedItem;
-      }
-      return project;
-   }
-
-   /**
-    * Validates project name for existence.
-    *
-    * @param projectName project's name
-    */
-   private void validateProjectName(final String projectName)
-   {
-      try
-      {
-         Folder parent = VirtualFileSystem.getInstance().getInfo().getRoot();
-         if (createModule)
-         {
-            parent = getParentProject();
-         }
-
-         VirtualFileSystem.getInstance().getChildren(parent, ItemType.PROJECT,
-            new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
-            {
-               @Override
-               protected void onSuccess(List<Item> result)
-               {
-                  for (Item item : result)
-                  {
-                     if (projectName.equals(item.getName()))
-                     {
-                        display.getErrorLabel().setValue(
-                           org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT
-                              .createProjectFromTemplateProjectExists(projectName));
+            public void onClick(ClickEvent event) {
+                if (display.getUseJRebelPlugin().getValue()
+                    && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING)) {
+                    if (!checkJRebelFieldFill()) {
                         return;
-                     }
-                  }
-                  display.getErrorLabel().setValue("");
-                  goNext();
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception, "Searching of projects failed."));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e, "Searching of projects failed."));
-      }
-
-   }
-
-   /**
-    * Set the visibility state of a panel with JRebel setting.
-    */
-   private void updateJRebelPanelVisibility()
-   {
-      boolean visible =
-         (isChooseTemplateStep && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING));
-      display.setJRebelPanelVisibility(visible);
-   }
-
-   private void sendProfileInfoToZeroTurnaround()
-   {
-      String url = Utils.getRestContext() + "/ide/jrebel/profile/send";
-
-      JSONObject json = new JSONObject();
-      json.put("first_name", new JSONString(display.getJRebelFirstNameField().getValue()));
-      json.put("last_name", new JSONString(display.getJRebelLastNameField().getValue()));
-      json.put("phone", new JSONString(display.getJRebelPhoneNumberField().getValue()));
-
-      try
-      {
-         AsyncRequest.build(RequestBuilder.POST, url)
-            .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-            .data(json.toString())
-            .send(new AsyncRequestCallback<Void>()
-            {
-               @Override
-               protected void onSuccess(Void result)
-               {
-                  //success
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   private boolean checkJRebelFieldFill()
-   {
-      if (display.getUseJRebelPlugin().getValue())
-      {
-         if (!display.getJRebelFirstNameField().getValue().isEmpty()
-            && !display.getJRebelLastNameField().getValue().isEmpty()
-            && !display.getJRebelPhoneNumberField().getValue().isEmpty())
-         {
-            String phone = display.getJRebelPhoneNumberField().getValue();
-
-            boolean phoneMatched = phone.matches("^[+]?[\\d\\-\\s().]+$");
-            if (!phoneMatched)
-            {
-               display.setJRebelErrorMessageLabel("Valid phone number consists of digits or special characters '+', '(', ')', '-' only.");
+                    }
+                    sendProfileInfoToZeroTurnaround();
+                }
+                if (isDeployStep) {
+                    doDeploy((availableProjectTemplates.size() == 1) ? availableProjectTemplates.get(0) : selectedTemplate);
+                } else if (isChooseTemplateStep) {
+                    createProject(selectedTemplate);
+                } else if (selectedProjectType == null) {
+                    Dialogs.getInstance().showInfo(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noTechnologyTitle(),
+                                                   org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noTechnologyMessage());
+                } else if (availableProjectTemplates.size() == 1) {
+                    createProject(availableProjectTemplates.get(0));
+                } else {
+                    createProject(null);
+                }
             }
-            else
-            {
-               display.setJRebelErrorMessageLabel("");
+        });
+
+        display.getUseJRebelPlugin().addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Boolean> event) {
+                if (event.getValue()) {
+                    display.setJRebelFormVisible(true);
+                } else {
+                    display.setJRebelFormVisible(false);
+                }
             }
-            return phoneMatched;
-         }
-         display.setJRebelErrorMessageLabel("All fields are required!");
-      }
-      return false;
-   }
+        });
 
-   private void getJRebelUserProfileInfo()
-   {
-      String url = Utils.getRestContext() + "/ide/jrebel/profile/get";
+        display.getJRebelFirstNameField().addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                checkJRebelFieldFill();
+            }
+        });
 
-      try
-      {
-         StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
-         AsyncRequest.build(RequestBuilder.GET, url)
-            .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
-            .send(new AsyncRequestCallback<StringBuilder>(unmarshaller)
-            {
-               @Override
-               protected void onSuccess(StringBuilder result)
-               {
-                  JSONObject jsonObject = JSONParser.parseStrict(result.toString()).isObject();
-                  String firstName = jsonObject.get("first_name").isString().stringValue();
-                  String lastName = jsonObject.get("last_name").isString().stringValue();
-                  String phone = jsonObject.get("phone").isString().stringValue();
+        display.getJRebelLastNameField().addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                checkJRebelFieldFill();
+            }
+        });
 
-                  if (firstName != null && lastName != null && phone != null)
-                  {
-                     display.getJRebelFirstNameField().setValue(firstName);
-                     display.getJRebelLastNameField().setValue(lastName);
-                     display.getJRebelPhoneNumberField().setValue(phone);
+        display.getJRebelPhoneNumberField().addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                checkJRebelFieldFill();
+            }
+        });
+    }
 
-                     display.setJRebelStoredFormVisible(false);
-                  }
-                  else
-                  {
-                     display.setJRebelStoredFormVisible(true);
-                  }
-                  display.setJRebelFormVisible(display.getUseJRebelPlugin().getValue());
-               }
+    /** @see org.exoplatform.ide.client.framework.event.CreateProjectHandler#onCreateProject(org.exoplatform.ide.client.framework.event
+     * .CreateProjectEvent) */
+    @Override
+    public void onCreateProject(CreateProjectEvent event) {
+        openCreateProjectView(false);
+    }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  display.setJRebelStoredFormVisible(true);
-                  display.setJRebelFormVisible(display.getUseJRebelPlugin().getValue());
-               }
+    @Override
+    public void onCreateModule(CreateModuleEvent event) {
+        if (MavenModuleCreationCallback.getInstance().isPomXMLOpened(getParentProject())) {
+            Dialogs.getInstance().showError("First close pom.xml.");
+            return;
+        }
+
+        openCreateProjectView(true);
+    }
+
+    private void openCreateProjectView(boolean createModule) {
+        this.createModule = createModule;
+
+        if (display == null) {
+            display = GWT.create(Display.class);
+            IDE.getInstance().openView(display.asView());
+            if (createModule) {
+                display.switchToCreateModule();
+            }
+
+            bindDisplay();
+        }
+
+        selectedProjectType = null;
+        availableProjectTemplates.clear();
+
+        display.showCreateProjectStep();
+        isDeployStep = false;
+        isChooseTemplateStep = false;
+        getProjectTemplates();
+        setTargets(IDE.getInstance().getPaaSes());
+        updateNavigationButtonsState();
+    }
+
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
+
+    /** Update the enabled/disabled state of the navigation buttons. */
+    private void updateNavigationButtonsState() {
+        boolean firstStepIsOK =
+                display.getNameField().getValue() != null && !display.getNameField().getValue().isEmpty()
+                && selectedProjectType != null;
+        boolean noneDeploy = (selectedTarget == null || selectedTarget instanceof NoneTarget);
+
+        if (isChooseTemplateStep) {
+            display.enableFinishButton(firstStepIsOK && noneDeploy && selectedTemplate != null);
+            display.enableNextButton(firstStepIsOK && !noneDeploy && selectedTemplate != null);
+        } else if (isDeployStep) {
+            display.enableFinishButton(true);
+        } else {
+            display.enableFinishButton(false);
+            display.enableNextButton(true);
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     * .application.event.VfsChangedEvent) */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        this.vfsInfo = event.getVfsInfo();
+    }
+
+    /** Get the list of available project templates. */
+    private void getProjectTemplates() {
+        try {
+            TemplateService.getInstance().getProjectTemplateList(
+                    new AsyncRequestCallback<List<ProjectTemplate>>(new ProjectTemplateListUnmarshaller(
+                            new ArrayList<ProjectTemplate>())) {
+                        @Override
+                        protected void onSuccess(List<ProjectTemplate> templates) {
+                            if (createModule) {
+                                allProjectTemplates = new ArrayList<ProjectTemplate>();
+                                for (ProjectTemplate template : templates) {
+                                    if (AvailableModluleTypes.contains(template.getType())) {
+                                        allProjectTemplates.add(template);
+                                    }
+                                }
+                            } else {
+                                allProjectTemplates = templates;
+                            }
+
+                            List<ProjectType> list = getProjectTypesFromTemplates(allProjectTemplates);
+                            setProjectTypes(list);
+
+                            if (display.getNameField().getValue() == null || display.getNameField().getValue().isEmpty()) {
+                                display.getNameField().setValue("untitled");
+                            }
+                        }
+
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            IDE.fireEvent(new ExceptionThrownEvent(exception));
+                        }
+
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /**
+     * Sets the available project types.
+     *
+     * @param list
+     *         a list of the available project types
+     */
+    private void setProjectTypes(List<ProjectType> list) {
+        Collections.sort(list, PROJECT_TYPES_COMPARATOR);
+        display.setProjectTypes(list);
+
+        for (final ToggleButton toggleButton : display.getProjectTypeButtons()) {
+            toggleButton.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+
+                @Override
+                public void onValueChange(ValueChangeEvent<Boolean> event) {
+                    if (event.getValue()) {
+                        display.toggleUpAllButtons(display.getProjectTypeButtons(), toggleButton);
+                        selectedProjectType = display.getProjectTypeByButton(toggleButton);
+
+                        display.enableButtonsForSupportedTargets(getAvailableTargets(selectedProjectType));
+                        display.selectTarget(noneTarget);
+                        updateNavigationButtonsState();
+                    } else {
+                        // do not allow toggle up
+                        toggleButton.setDown(true);
+                    }
+                }
             });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+        }
+    }
 
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      if (event.getSelectedItems().size() == 1)
-      {
-         selectedItem = event.getSelectedItems().get(0);
-      }
-      else
-      {
-         selectedItem = null;
-      }
+    /**
+     * Sets the deployment targets.
+     *
+     * @param targetsList
+     *         a list of the available deployment targets
+     */
+    private void setTargets(List<PaaS> targetsList) {
+        List<PaaS> list = new ArrayList<PaaS>();
+        list.addAll(targetsList);
+        Collections.sort(list, PAAS_COMPARATOR);
+        list.add(noneTarget);
+        display.setTargets(list);
+
+        for (final ToggleButton toggleButton : display.getTargetButtons()) {
+            toggleButton.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+
+                @Override
+                public void onValueChange(ValueChangeEvent<Boolean> event) {
+                    if (event.getValue()) {
+                        display.toggleUpAllButtons(display.getTargetButtons(), toggleButton);
+                        selectedTarget = display.getTargetByButton(toggleButton);
+                        availableProjectTemplates = getProjectTemplates(selectedProjectType, selectedTarget);
+                        updateNavigationButtonsState();
+                    } else {
+                        // do not allow toggle up
+                        toggleButton.setDown(true);
+                    }
+                }
+            });
+        }
+    }
+
+    /** Go to previous step. */
+    private void goBack() {
+        if (isDeployStep) {
+            isDeployStep = false;
+            goToTemplatesStep();
+        } else if (isChooseTemplateStep) {
+            isChooseTemplateStep = false;
+            goToProjectStep();
+        }
+        updateNavigationButtonsState();
+    }
+
+    /** Go to next step. */
+    private void goNext() {
+        if (isChooseTemplateStep) {
+            isChooseTemplateStep = false;
+            goToDeployStep();
+        } else
+        // create project step
+        {
+            goToTemplatesStep();
+            if (!availableProjectTemplates.contains(selectedTemplate)) {
+                selectedTemplate = null;
+            }
+        }
+        updateNavigationButtonsState();
+    }
+
+    /** Move to project's data step. */
+    private void goToProjectStep() {
+        updateJRebelPanelVisibility();
+        display.showCreateProjectStep();
+    }
+
+    /** Move to choosing project template step. */
+    private void goToTemplatesStep() {
+        isChooseTemplateStep = true;
+
+        // This code need to detect openshift template and hide it if user choosen none target.
+        // Specification of working openshift is that application created on server side of openshift for example if
+        // if will be simple jsp project, openshift will put into source directory own web.xml and pom.xml and our
+        // project templates that pulling from git repository are conflicting with their and to undestruct all project
+        // we create it on openshift paas and after creation it will be fetched by git to our project directory for
+        // feature working on it. That's why we created a few simple empty project templates that allow IDE to create
+        // project waiting to create application on openshift and then to fetch all source files of this application
+        // into our local directory.
+        List<ProjectTemplate> templatesToTempHide = new ArrayList<ProjectTemplate>();
+        for (ProjectTemplate template : availableProjectTemplates) {
+            if (selectedTarget instanceof NoneTarget
+                && template.getTargets() != null
+                && template.getTargets().contains("OpenShift")
+                && template.getTargets().size() == 1) {
+                templatesToTempHide.add(template);
+            }
+        }
+        availableProjectTemplates.removeAll(templatesToTempHide);
+
+        display.getTemplatesGrid().setValue(availableProjectTemplates);
+        updateJRebelPanelVisibility();
+        display.showChooseTemlateStep();
+    }
+
+    /** Move to deploy project step. */
+    private void goToDeployStep() {
+        isDeployStep = true;
+
+        String projectName = display.getNameField().getValue();
+        for (PaaS paas : IDE.getInstance().getPaaSes()) {
+            if (paas.getId().equals(selectedTarget.getId())) {
+                currentPaaS = paas;
+                if (paas.getPaaSActions() != null) {
+                    updateJRebelPanelVisibility();
+                    display.showDeployProjectStep();
+                    isDeployStep = true;
+                    display.setDeployView(paas.getPaaSActions().getDeployView(projectName, selectedProjectType, this));
+                    display.enableFinishButton(true);
+                } else {
+                    Dialogs.getInstance().showError(
+                            org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noRegistedDeployAction(paas.getTitle()));
+                }
+                return;
+            }
+        }
+    }
+
+    /**
+     * Get the list of targets, where project with pointed project type can be deployed.
+     *
+     * @param projectType
+     *         the project type
+     * @return {@link List} of {@link PaaS}
+     */
+    private List<PaaS> getAvailableTargets(ProjectType projectType) {
+        List<PaaS> values = new ArrayList<PaaS>();
+        values.add(noneTarget);
+        for (PaaS paas : IDE.getInstance().getPaaSes()) {
+            if (paas.getSupportedProjectTypes().contains(projectType)) {
+                values.add(paas);
+            }
+        }
+        ;
+        return values;
+    }
+
+    private void createProject(ProjectTemplate projectTemplate) {
+        if (projectTemplate == null) {
+            Dialogs.getInstance().showError(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noProjectTempate());
+            return;
+        }
+
+        if (vfsInfo == null || vfsInfo.getRoot() == null) {
+            Dialogs.getInstance().showError(
+                    org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.createProjectErrorVFSInfoNotSets());
+            return;
+        }
+
+        try {
+            String parentId = vfsInfo.getRoot().getId();
+
+            if (createModule && getParentProject() != null) {
+                parentId = getParentProject().getId();
+            }
+
+            String projectName = display.getNameField().getValue();
+            IDELoader.getInstance().setMessage(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.creatingProject());
+            IDELoader.getInstance().show();
+            TemplateService.getInstance().createProjectFromTemplate(vfsInfo.getId(), parentId, projectName,
+                                                                    projectTemplate.getName(),
+                                                                    new AsyncRequestCallback<ProjectModel>(
+                                                                            new ProjectUnmarshaller(new ProjectModel())) {
+                                                                        @Override
+                                                                        protected void onSuccess(final ProjectModel result) {
+                                                                            if ((selectedProjectType == ProjectType.JSP ||
+                                                                                 selectedProjectType == ProjectType.SPRING)) {
+                                                                                writeUseJRebelProperty(result);
+                                                                            }
+
+                                                                            IDELoader.getInstance().hide();
+                                                                            IDE.getInstance().closeView(display.asView().getId());
+
+                                                                            if (createModule) {
+                                                                                MavenModuleCreationCallback.getInstance().moduleCreated(
+                                                                                        getParentProject(), result);
+                                                                            } else {
+                                                                                IDE.fireEvent(new ProjectCreatedEvent(result));
+                                                                            }
+                                                                        }
+
+                                                                        @Override
+                                                                        protected void onFailure(Throwable exception) {
+                                                                            IDELoader.getInstance().hide();
+                                                                            IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                                        }
+                                                                    });
+        } catch (RequestException e) {
+            IDELoader.getInstance().hide();
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /**
+     * Writes 'jrebel' property to the project properties.
+     *
+     * @param project
+     *         {@link ProjectModel}
+     */
+    private void writeUseJRebelProperty(ProjectModel project) {
+        project.getProperties().add(new PropertyImpl(JREBEL, display.getUseJRebelPlugin().getValue().toString()));
+        try {
+            VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>() {
+
+                @Override
+                protected void onSuccess(ItemWrapper result) {
+                    // nothing to do
+                }
+
+                @Override
+                protected void onFailure(Throwable ignore) {
+                    // ignore this exception
+                }
+            });
+        } catch (RequestException e) {
+            // ignore this exception
+        }
+    }
+
+    private void doDeploy(ProjectTemplate projectTemplate) {
+        if (currentPaaS != null) {
+            if (projectTemplate != null || currentPaaS.isProvidesTemplate()) {
+                currentPaaS.getPaaSActions().deploy(projectTemplate, this);
+            } else {
+                Dialogs.getInstance().showError(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noProjectTemplateForTarget(currentPaaS.getTitle()));
+            }
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.paas.DeployResultHandler#onDeployFinished(boolean) */
+    @Override
+    public void onDeployFinished(boolean success) {
+        if (success && display != null) {
+            IDE.getInstance().closeView(display.asView().getId());
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.paas.DeployResultHandler#onProjectCreated(org.exoplatform.ide.vfs.client.model
+     * .ProjectModel) */
+    @Override
+    public void onProjectCreated(ProjectModel project) {
+        if ((selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING)
+            && display.getUseJRebelPlugin().getValue() == true) {
+            writeUseJRebelProperty(project);
+        }
+
+        IDE.fireEvent(new ProjectCreatedEvent(project));
+        if (display != null) {
+            IDE.getInstance().closeView(display.asView().getId());
+        }
+    }
+
+    /**
+     * @see org.exoplatform.ide.client.framework.paas.InitializeDeployViewHandler#onInitializeDeployViewError()
+     */
+    @Override
+    public void onInitializeDeployViewError() {
+        // when user press cancel in login to PaaS view
+        createProject(selectedTemplate);
+    }
+
+    /**
+     * Prepare project type list to be displayed.
+     *
+     * @param projectTemplates
+     *         available project templates
+     * @return {@link List}
+     */
+    private List<ProjectType> getProjectTypesFromTemplates(List<ProjectTemplate> projectTemplates) {
+        List<ProjectType> projectTypes = new ArrayList<ProjectType>();
+        for (ProjectTemplate projectTemplate : projectTemplates) {
+            ProjectType projectType = ProjectType.fromValue(projectTemplate.getType());
+            if (!projectTypes.contains(projectType)) {
+                projectTypes.add(projectType);
+            }
+        }
+        return projectTypes;
+    }
+
+    /**
+     * Get the list of project templates, that are suitable to pointed project type and deploy target.
+     *
+     * @param projectType
+     *         project's type
+     * @param target
+     *         deploy target
+     * @return {@link List} list of {@link ProjectTemplate}
+     */
+    private List<ProjectTemplate> getProjectTemplates(ProjectType projectType, PaaS target) {
+        List<ProjectTemplate> templates = new ArrayList<ProjectTemplate>();
+
+        // Get templates by project's type:
+        if (target instanceof NoneTarget) {
+            for (ProjectTemplate projectTemplate : allProjectTemplates) {
+                if (projectTemplate.getType().equals(projectType.value())) {
+                    templates.add(projectTemplate);
+                }
+            }
+            return templates;
+        }
+
+        // Get templates by project type and it's deploy target:
+        for (ProjectTemplate projectTemplate : allProjectTemplates) {
+            if (projectTemplate.getType().equals(projectType.value())
+                && (projectTemplate.getTargets() == null || projectTemplate.getTargets().contains(target.getId()))) {
+                templates.add(projectTemplate);
+            }
+        }
+        return templates;
+    }
+
+    private ProjectModel getParentProject() {
+        if (selectedItem == null) {
+            return null;
+        }
+
+        ProjectModel project = ((ItemContext)selectedItem).getProject();
+        if (project == null && selectedItem instanceof ProjectModel) {
+            project = (ProjectModel)selectedItem;
+        }
+        return project;
+    }
+
+    /**
+     * Validates project name for existence.
+     *
+     * @param projectName
+     *         project's name
+     */
+    private void validateProjectName(final String projectName) {
+        try {
+            Folder parent = VirtualFileSystem.getInstance().getInfo().getRoot();
+            if (createModule) {
+                parent = getParentProject();
+            }
+
+            VirtualFileSystem.getInstance().getChildren(parent, ItemType.PROJECT,
+                                                        new AsyncRequestCallback<List<Item>>(
+                                                                new ChildrenUnmarshaller(new ArrayList<Item>())) {
+                                                            @Override
+                                                            protected void onSuccess(List<Item> result) {
+                                                                for (Item item : result) {
+                                                                    if (projectName.equals(item.getName())) {
+                                                                        display.getErrorLabel().setValue(
+                                                                                org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                                              .createProjectFromTemplateProjectExists(
+                                                                                                                      projectName));
+                                                                        return;
+                                                                    }
+                                                                }
+                                                                display.getErrorLabel().setValue("");
+                                                                goNext();
+                                                            }
+
+                                                            @Override
+                                                            protected void onFailure(Throwable exception) {
+                                                                IDE.fireEvent(new ExceptionThrownEvent(exception,
+                                                                                                       "Searching of projects failed."));
+                                                            }
+                                                        });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e, "Searching of projects failed."));
+        }
+
+    }
+
+    /** Set the visibility state of a panel with JRebel setting. */
+    private void updateJRebelPanelVisibility() {
+        boolean visible =
+                (isChooseTemplateStep && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING));
+        display.setJRebelPanelVisibility(visible);
+    }
+
+    private void sendProfileInfoToZeroTurnaround() {
+        String url = Utils.getRestContext() + "/ide/jrebel/profile/send";
+
+        JSONObject json = new JSONObject();
+        json.put("firstName", new JSONString(display.getJRebelFirstNameField().getValue()));
+        json.put("lastName", new JSONString(display.getJRebelLastNameField().getValue()));
+        json.put("phone", new JSONString(display.getJRebelPhoneNumberField().getValue()));
+
+        try {
+            AsyncRequest.build(RequestBuilder.POST, url)
+                        .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+                        .data(json.toString())
+                        .send(new AsyncRequestCallback<Void>() {
+                            @Override
+                            protected void onSuccess(Void result) {
+                                //success
+                            }
+
+                            @Override
+                            protected void onFailure(Throwable exception) {
+                            }
+                        });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    private boolean checkJRebelFieldFill() {
+        if (display.getUseJRebelPlugin().getValue()) {
+            if (!display.getJRebelFirstNameField().getValue().isEmpty()
+                && !display.getJRebelLastNameField().getValue().isEmpty()
+                && !display.getJRebelPhoneNumberField().getValue().isEmpty()) {
+                String phone = display.getJRebelPhoneNumberField().getValue();
+
+                boolean phoneMatched = phone.matches("^[+]?[\\d\\-\\s().]+$");
+                if (!phoneMatched) {
+                    display.setJRebelErrorMessageLabel(
+                            "Valid phone number consists of digits or special characters '+', '(', ')', '-' only.");
+                } else {
+                    display.setJRebelErrorMessageLabel("");
+                }
+                return phoneMatched;
+            }
+            display.setJRebelErrorMessageLabel("All fields are required!");
+        }
+        return false;
+    }
+
+    private void getJRebelUserProfileInfo() {
+        String url = Utils.getRestContext() + "/ide/jrebel/profile/get";
+
+        try {
+            StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+            AsyncRequest.build(RequestBuilder.GET, url)
+                        .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+                        .send(new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+                            @Override
+                            protected void onSuccess(StringBuilder result) {
+                                JSONObject jsonObject = JSONParser.parseStrict(result.toString()).isObject();
+                                String firstName =
+                                        jsonObject.get("firstName") != null ? jsonObject.get("firstName").isString().stringValue() : "";
+                                String lastName =
+                                        jsonObject.get("lastName") != null ? jsonObject.get("lastName").isString().stringValue() : "";
+                                String phone = jsonObject.get("phone") != null ? jsonObject.get("phone").isString().stringValue() : "";
+
+                                display.getJRebelFirstNameField().setValue(firstName);
+                                display.getJRebelLastNameField().setValue(lastName);
+                                display.getJRebelPhoneNumberField().setValue(phone);
+
+                                if (!firstName.isEmpty() && !lastName.isEmpty() && !phone.isEmpty()) {
+                                    //if all fields are filled then we hide form
+                                    display.setJRebelStoredFormVisible(false);
+                                } else if (!firstName.isEmpty() || !lastName.isEmpty() || !phone.isEmpty()) {
+                                    //if one or more fields are not filled then we show form
+                                    display.setJRebelStoredFormVisible(true);
+                                } else {
+                                    //if all fields are empty then we also show form
+                                    display.setJRebelStoredFormVisible(true);
+                                }
+                                display.setJRebelFormVisible(display.getUseJRebelPlugin().getValue());
+                            }
+
+                            @Override
+                            protected void onFailure(Throwable exception) {
+                                display.setJRebelStoredFormVisible(true);
+                                display.setJRebelFormVisible(display.getUseJRebelPlugin().getValue());
+                            }
+                        });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        if (event.getSelectedItems().size() == 1) {
+            selectedItem = event.getSelectedItems().get(0);
+        } else {
+            selectedItem = null;
+        }
       
       /*
       if (event.getSelectedItems() == null || event.getSelectedItems().size() != 1
@@ -1162,6 +1004,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
       ItemContext context = (ItemContext)event.getSelectedItems().get(0);
       parentProject = context.getProject();
       */
-   }
+    }
 
 }

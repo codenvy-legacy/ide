@@ -26,18 +26,18 @@ import com.codenvy.eclipse.ltk.core.refactoring.participants.RefactoringProcesso
  *
  * @since 3.2
  */
-public interface IResourceMapper
-{
+public interface IResourceMapper {
 
-   /**
-    * Returns the refactored resource for the given element.
-    * <p>
-    * Note that the returned resource might not yet exist
-    * when the method is called.
-    * </p>
-    *
-    * @param element the resource to be refactored
-    * @return the refactored element for the given element
-    */
-   IResource getRefactoredResource(IResource element);
+    /**
+     * Returns the refactored resource for the given element.
+     * <p>
+     * Note that the returned resource might not yet exist
+     * when the method is called.
+     * </p>
+     *
+     * @param element
+     *         the resource to be refactored
+     * @return the refactored element for the given element
+     */
+    IResource getRefactoredResource(IResource element);
 }

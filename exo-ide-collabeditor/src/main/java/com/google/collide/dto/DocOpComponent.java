@@ -15,9 +15,10 @@
 package com.google.collide.dto;
 
 // TODO: These should be moved to an Editor2-specific package
+
 /**
  * Models one component of a document operation for the Collide code editor.
- *
+ * <p/>
  * With exception of RetainLine, all DocOpComponents must only touch one line.
  * If there is a multiline insert, that must be split into multiple Inserts, one
  * per line.
@@ -26,23 +27,23 @@ package com.google.collide.dto;
  */
 public interface DocOpComponent {
 
-  /**
-   * Models a deletion within a document operation. This contains the text to be
-   * deleted. The deletion must not span multiple lines (can only contain a
-   * maximum of one newline character, which must be the last character.)
-   */
-  public interface Delete extends DocOpComponent {
-    String getText();
-  }
+    /**
+     * Models a deletion within a document operation. This contains the text to be
+     * deleted. The deletion must not span multiple lines (can only contain a
+     * maximum of one newline character, which must be the last character.)
+     */
+    public interface Delete extends DocOpComponent {
+        String getText();
+    }
 
-  /**
-   * Models an insertion within a document operation. This contains the text to
-   * be inserted. The insertion must not span multiple lines (can only contain a
-   * maximum of one newline character, which must be the last character.)
-   */
-  public interface Insert extends DocOpComponent {
-    String getText();
-  }
+    /**
+     * Models an insertion within a document operation. This contains the text to
+     * be inserted. The insertion must not span multiple lines (can only contain a
+     * maximum of one newline character, which must be the last character.)
+     */
+    public interface Insert extends DocOpComponent {
+        String getText();
+    }
 
   /*-
    * The Retain must indicate whether it is covering the end of the line. This
@@ -72,42 +73,43 @@ public interface DocOpComponent {
    * must span the entire line, but the previous component (Insert:"2") did
    * not end with a newline.
    */
-  /**
-   * Models a retain within a document operation. This contains the number of
-   * characters to be retained, and a flag indicating that the last character
-   * being retained is a newline character. This retain must not span multiple
-   * lines (the characters being retained can only have one newline character.)
-   */
-  public interface Retain extends DocOpComponent {
-    int getCount();
 
-    boolean hasTrailingNewline();
-  }
+    /**
+     * Models a retain within a document operation. This contains the number of
+     * characters to be retained, and a flag indicating that the last character
+     * being retained is a newline character. This retain must not span multiple
+     * lines (the characters being retained can only have one newline character.)
+     */
+    public interface Retain extends DocOpComponent {
+        int getCount();
 
-  /**
-   * Models a retain through the rest of the line (or the entire line if it is
-   * the only components on a line) within a document operation. The purpose of
-   * this is allowing for a component that is agnostic to the actual number of
-   * characters on some lines. This contains the number of lines to be retained.
-   * This is the only DocOpComponent that can span multiple lines.
-   *
-   * The {@link #getLineCount()} must always be greater than 0.
-   */
-  public interface RetainLine extends DocOpComponent {
-    int getLineCount();
-  }
+        boolean hasTrailingNewline();
+    }
 
-  /*
-   * TODO: saw extreme weirdness when this was an enum. DevMode in
-   * Chrome would overflow the stack when trying to JSON.stringify this.
-   * console.logging this showed a seemingly infinite depth of Objects
-   */
-  public static class Type {
-    public static final int DELETE = 0;
-    public static final int INSERT = 1;
-    public static final int RETAIN = 2;
-    public static final int RETAIN_LINE = 3;
-  }
+    /**
+     * Models a retain through the rest of the line (or the entire line if it is
+     * the only components on a line) within a document operation. The purpose of
+     * this is allowing for a component that is agnostic to the actual number of
+     * characters on some lines. This contains the number of lines to be retained.
+     * This is the only DocOpComponent that can span multiple lines.
+     * <p/>
+     * The {@link #getLineCount()} must always be greater than 0.
+     */
+    public interface RetainLine extends DocOpComponent {
+        int getLineCount();
+    }
 
-  public int getType();
+    /*
+     * TODO: saw extreme weirdness when this was an enum. DevMode in
+     * Chrome would overflow the stack when trying to JSON.stringify this.
+     * console.logging this showed a seemingly infinite depth of Objects
+     */
+    public static class Type {
+        public static final int DELETE      = 0;
+        public static final int INSERT      = 1;
+        public static final int RETAIN      = 2;
+        public static final int RETAIN_LINE = 3;
+    }
+
+    public int getType();
 }

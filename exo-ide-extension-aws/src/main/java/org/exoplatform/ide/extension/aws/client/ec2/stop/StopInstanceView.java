@@ -33,85 +33,68 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: StopInstanceView.java Sep 28, 2012 4:34:01 PM azatsarynnyy $
- *
  */
-public class StopInstanceView extends ViewImpl implements StopInstancePresenter.Display
-{
-   private static final String ID = "ideStopInstanceView";
+public class StopInstanceView extends ViewImpl implements StopInstancePresenter.Display {
+    private static final String ID = "ideStopInstanceView";
 
-   private static final int WIDTH = 460;
+    private static final int WIDTH = 460;
 
-   private static final int HEIGHT = 170;
+    private static final int HEIGHT = 170;
 
-   private static final String OK_BUTTON_ID = "ideStopInstanceViewOKButton";
+    private static final String OK_BUTTON_ID = "ideStopInstanceViewOKButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideStopInstanceViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideStopInstanceViewCancelButton";
 
-   @UiField
-   Label questionLabel;
+    @UiField
+    Label questionLabel;
 
-   @UiField
-   ImageButton okButton;
+    @UiField
+    ImageButton okButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   @UiField
-   CheckBox forceCheckBox;
+    @UiField
+    CheckBox forceCheckBox;
 
-   private static StopEnvironmentViewUiBinder uiBinder = GWT.create(StopEnvironmentViewUiBinder.class);
+    private static StopEnvironmentViewUiBinder uiBinder = GWT.create(StopEnvironmentViewUiBinder.class);
 
-   interface StopEnvironmentViewUiBinder extends UiBinder<Widget, StopInstanceView>
-   {
-   }
+    interface StopEnvironmentViewUiBinder extends UiBinder<Widget, StopInstanceView> {
+    }
 
-   public StopInstanceView()
-   {
-      super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.restartAppServerViewTitle(), null, WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
+    public StopInstanceView() {
+        super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.restartAppServerViewTitle(), null, WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
 
-      questionLabel.setIsHTML(true);
-      okButton.setButtonId(OK_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-   }
+        questionLabel.setIsHTML(true);
+        okButton.setButtonId(OK_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.restart.RestartAppServerPresenter.Display#getOKButton()
-    */
-   @Override
-   public HasClickHandlers getOKButton()
-   {
-      return okButton;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.restart.RestartAppServerPresenter.Display#getOKButton() */
+    @Override
+    public HasClickHandlers getOKButton() {
+        return okButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.delete.DeleteVersionPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.delete.DeleteVersionPresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.restart.RestartAppServerPresenter.Display#getStopQuestion()
-    */
-   @Override
-   public HasValue<String> getStopQuestion()
-   {
-      return questionLabel;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.restart.RestartAppServerPresenter.Display#getStopQuestion() */
+    @Override
+    public HasValue<String> getStopQuestion() {
+        return questionLabel;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.ec2.stop.StopInstancePresenter.Display#getForce()
-    */
-   @Override
-   public HasValue<Boolean> getForce()
-   {
-      return forceCheckBox;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.ec2.stop.StopInstancePresenter.Display#getForce() */
+    @Override
+    public HasValue<Boolean> getForce() {
+        return forceCheckBox;
+    }
 
 }

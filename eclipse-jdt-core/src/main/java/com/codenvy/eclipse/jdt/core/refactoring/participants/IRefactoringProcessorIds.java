@@ -12,7 +12,7 @@ package com.codenvy.eclipse.jdt.core.refactoring.participants;
 
 /**
  * Interface to define the processor IDs provided by JDT refactorings.
- *
+ * <p/>
  * <p>
  * This interface declares static final fields only; it is not intended to be
  * implemented.
@@ -20,24 +20,23 @@ package com.codenvy.eclipse.jdt.core.refactoring.participants;
  *
  * @since 1.4
  */
-public interface IRefactoringProcessorIds
-{
+public interface IRefactoringProcessorIds {
 
-   /**
-    * Processor ID of the Change Method Signature processor
-    * (value <code>"org.eclipse.jdt.ui.changeMethodSignatureRefactoring"</code>).
-    *
-    * The Change Method Signature processor loads {@link ChangeMethodSignatureParticipant}s registered for the
-    * <code>IMethod</code> whose signature is changed.
-    */
-   public static String CHANGE_METHOD_SIGNATURE_PROCESSOR = "org.eclipse.jdt.ui.changeMethodSignatureRefactoring"; //$NON-NLS-1$
+    /**
+     * Processor ID of the Change Method Signature processor
+     * (value <code>"org.eclipse.jdt.ui.changeMethodSignatureRefactoring"</code>).
+     * <p/>
+     * The Change Method Signature processor loads {@link ChangeMethodSignatureParticipant}s registered for the
+     * <code>IMethod</code> whose signature is changed.
+     */
+    public static String CHANGE_METHOD_SIGNATURE_PROCESSOR = "org.eclipse.jdt.ui.changeMethodSignatureRefactoring"; //$NON-NLS-1$
 
-   /**
-    * Processor ID of the Introduce Parameter Object processor
-    * (value <code>"org.eclipse.jdt.ui.introduceParameterObjectRefactoring"</code>).
-    *
-    * The Introduce Parameter Object processor loads {@link ChangeMethodSignatureParticipant}s registered for the
-    * <code>IMethod</code> whose signature is changed.
-    */
-   public static String INTRODUCE_PARAMETER_OBJECT_PROCESSOR = "org.eclipse.jdt.ui.introduceParameterObjectRefactoring"; //$NON-NLS-1$
+    /**
+     * Processor ID of the Introduce Parameter Object processor
+     * (value <code>"org.eclipse.jdt.ui.introduceParameterObjectRefactoring"</code>).
+     * <p/>
+     * The Introduce Parameter Object processor loads {@link ChangeMethodSignatureParticipant}s registered for the
+     * <code>IMethod</code> whose signature is changed.
+     */
+    public static String INTRODUCE_PARAMETER_OBJECT_PROCESSOR = "org.eclipse.jdt.ui.introduceParameterObjectRefactoring"; //$NON-NLS-1$
 }

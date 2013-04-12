@@ -35,85 +35,69 @@ import org.exoplatform.ide.extension.aws.client.AWSExtension;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 20, 2012 5:59:53 PM anya $
- * 
  */
-public class DeleteVersionView extends ViewImpl implements DeleteVersionPresenter.Display
-{
-   private static final String ID = "ideDeleteVersionView";
+public class DeleteVersionView extends ViewImpl implements DeleteVersionPresenter.Display {
+    private static final String ID = "ideDeleteVersionView";
 
-   private static final int WIDTH = 460;
+    private static final int WIDTH = 460;
 
-   private static final int HEIGHT = 170;
+    private static final int HEIGHT = 170;
 
-   private static final String DELETE_BUTTON_ID = "ideDeleteVersionViewDeleteButton";
+    private static final String DELETE_BUTTON_ID = "ideDeleteVersionViewDeleteButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideDeleteVersionViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideDeleteVersionViewCancelButton";
 
-   private static final String DELETE_S3_BUNDLE_ID = "ideDeleteVersionViewDeleteS3Bundle";
+    private static final String DELETE_S3_BUNDLE_ID = "ideDeleteVersionViewDeleteS3Bundle";
 
-   @UiField
-   Label questionLabel;
+    @UiField
+    Label questionLabel;
 
-   @UiField
-   CheckBox deleteS3BundleField;
+    @UiField
+    CheckBox deleteS3BundleField;
 
-   @UiField
-   ImageButton deleteButton;
+    @UiField
+    ImageButton deleteButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   private static DeleteVersionViewUiBinder uiBinder = GWT.create(DeleteVersionViewUiBinder.class);
+    private static DeleteVersionViewUiBinder uiBinder = GWT.create(DeleteVersionViewUiBinder.class);
 
-   interface DeleteVersionViewUiBinder extends UiBinder<Widget, DeleteVersionView>
-   {
-   }
+    interface DeleteVersionViewUiBinder extends UiBinder<Widget, DeleteVersionView> {
+    }
 
-   public DeleteVersionView()
-   {
-      super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.deleteVersionViewTitle(), null, WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
+    public DeleteVersionView() {
+        super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.deleteVersionViewTitle(), null, WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
 
-      questionLabel.setIsHTML(true);
-      deleteButton.setButtonId(DELETE_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-      deleteS3BundleField.setName(DELETE_S3_BUNDLE_ID);
-   }
+        questionLabel.setIsHTML(true);
+        deleteButton.setButtonId(DELETE_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+        deleteS3BundleField.setName(DELETE_S3_BUNDLE_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.delete.DeleteVersionPresenter.Display#getDeleteButton()
-    */
-   @Override
-   public HasClickHandlers getDeleteButton()
-   {
-      return deleteButton;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.delete.DeleteVersionPresenter.Display#getDeleteButton() */
+    @Override
+    public HasClickHandlers getDeleteButton() {
+        return deleteButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.delete.DeleteVersionPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.delete.DeleteVersionPresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.delete.DeleteVersionPresenter.Display#getDeleteQuestion()
-    */
-   @Override
-   public HasValue<String> getDeleteQuestion()
-   {
-      return questionLabel;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.delete.DeleteVersionPresenter.Display#getDeleteQuestion() */
+    @Override
+    public HasValue<String> getDeleteQuestion() {
+        return questionLabel;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.delete.DeleteVersionPresenter.Display#getDeleteS3Bundle()
-    */
-   @Override
-   public HasValue<Boolean> getDeleteS3Bundle()
-   {
-      return deleteS3BundleField;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.delete.DeleteVersionPresenter.Display#getDeleteS3Bundle() */
+    @Override
+    public HasValue<Boolean> getDeleteS3Bundle() {
+        return deleteS3BundleField;
+    }
 
 }

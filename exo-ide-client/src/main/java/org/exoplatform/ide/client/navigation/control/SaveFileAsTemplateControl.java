@@ -28,88 +28,71 @@ import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.navigation.event.SaveFileAsTemplateEvent;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 @RolesAllowed({"developer"})
 public class SaveFileAsTemplateControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-   VfsChangedHandler
-{
+                                                                        VfsChangedHandler {
 
-   public static final String ID = "File/Save As Template...";
+    public static final String ID = "File/Save As Template...";
 
-   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.saveFileAsTemplateControl();
+    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.saveFileAsTemplateControl();
 
-   private FileModel activeFile;
+    private FileModel activeFile;
 
-   /**
-    * Current workspace's href.
-    */
-   private VirtualFileSystemInfo vfsInfo;
+    /** Current workspace's href. */
+    private VirtualFileSystemInfo vfsInfo;
 
-   /**
-    * 
-    */
-   public SaveFileAsTemplateControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.saveFileAsTemplate(), IDEImageBundle.INSTANCE.saveFileAsTemplateDisabled());
-      setEvent(new SaveFileAsTemplateEvent());
-      setGroupName(GroupNames.SAVE);
-   }
+    /**
+     *
+     */
+    public SaveFileAsTemplateControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setImages(IDEImageBundle.INSTANCE.saveFileAsTemplate(), IDEImageBundle.INSTANCE.saveFileAsTemplateDisabled());
+        setGroupName(GroupNames.SAVE);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+    }
 
-   /**
-    * Update control's state.
-    */
-   private void updateState()
-   {
-      if (vfsInfo == null)
-      {
-         setVisible(false);
-         return;
-      }
-      setVisible(true);
+    /** Update control's state. */
+    private void updateState() {
+        if (vfsInfo == null) {
+            setVisible(false);
+            return;
+        }
+        setVisible(true);
 
-      setEnabled(activeFile != null);
-   }
+        setEnabled(activeFile != null);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
-    */
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      activeFile = event.getFile();
-      updateState();
-   }
+    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    @Override
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        activeFile = event.getFile();
+        updateState();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      vfsInfo = event.getVfsInfo();
-      updateState();
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     * .application.event.VfsChangedEvent) */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        vfsInfo = event.getVfsInfo();
+        updateState();
+    }
 
 }

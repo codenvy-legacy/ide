@@ -23,19 +23,17 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 
 /**
  * Implementation of {@link CloseEvent}.
- * 
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jan 17, 2011 4:45:49 PM anya $
  *
  * @param <T>
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id:  Jan 17, 2011 4:45:49 PM anya $
  */
-public class CloseEventImpl<T> extends CloseEvent<T>
-{
-   /**
-    * @param target closed target
-    */
-   public CloseEventImpl(T target)
-   {
-      super(target, false);
-   }
+public class CloseEventImpl<T> extends CloseEvent<T> {
+    /**
+     * @param target
+     *         closed target
+     */
+    public CloseEventImpl(T target) {
+        super(target, false);
+    }
 }

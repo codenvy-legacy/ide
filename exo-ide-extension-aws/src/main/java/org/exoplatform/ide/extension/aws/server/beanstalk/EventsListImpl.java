@@ -28,45 +28,38 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class EventsListImpl implements EventsList
-{
-   private List<Event> events;
-   private String nextToken;
+public class EventsListImpl implements EventsList {
+    private List<Event> events;
+    private String      nextToken;
 
-   @Override
-   public List<Event> getEvents()
-   {
-      if (events == null)
-      {
-         events = new ArrayList<Event>();
-      }
-      return events;
-   }
+    @Override
+    public List<Event> getEvents() {
+        if (events == null) {
+            events = new ArrayList<Event>();
+        }
+        return events;
+    }
 
-   @Override
-   public void setEvents(List<Event> events)
-   {
-      this.events = events;
-   }
+    @Override
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
 
-   @Override
-   public String getNextToken()
-   {
-      return nextToken;
-   }
+    @Override
+    public String getNextToken() {
+        return nextToken;
+    }
 
-   @Override
-   public void setNextToken(String nextToken)
-   {
-      this.nextToken = nextToken;
-   }
+    @Override
+    public void setNextToken(String nextToken) {
+        this.nextToken = nextToken;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "EventsListImpl{" +
-         "events=" + events +
-         ", nextToken='" + nextToken + '\'' +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "EventsListImpl{" +
+               "events=" + events +
+               ", nextToken='" + nextToken + '\'' +
+               '}';
+    }
 }

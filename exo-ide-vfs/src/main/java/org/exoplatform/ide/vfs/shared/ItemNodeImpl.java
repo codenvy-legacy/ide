@@ -24,43 +24,36 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class ItemNodeImpl implements ItemNode
-{
-   private Item item;
-   private List<ItemNode> children;
+public class ItemNodeImpl implements ItemNode {
+    private Item           item;
+    private List<ItemNode> children;
 
-   public ItemNodeImpl(Item item, List<ItemNode> children)
-   {
-      this.item = item;
-      this.children = children;
-   }
+    public ItemNodeImpl(Item item, List<ItemNode> children) {
+        this.item = item;
+        this.children = children;
+    }
 
-   public ItemNodeImpl(Item item)
-   {
-      this(item, null);
-   }
+    public ItemNodeImpl(Item item) {
+        this(item, null);
+    }
 
-   @Override
-   public Item getItem()
-   {
-      return item;
-   }
+    @Override
+    public Item getItem() {
+        return item;
+    }
 
-   @Override
-   public void setItem(Item item)
-   {
-      this.item = item;
-   }
+    @Override
+    public void setItem(Item item) {
+        this.item = item;
+    }
 
-   @Override
-   public List<ItemNode> getChildren()
-   {
-      return children;
-   }
+    @Override
+    public List<ItemNode> getChildren() {
+        return children;
+    }
 
-   @Override
-   public void setChildren(List<ItemNode> children)
-   {
-      this.children = children;
-   }
+    @Override
+    public void setChildren(List<ItemNode> children) {
+        this.children = children;
+    }
 }

@@ -29,42 +29,37 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 @RolesAllowed({"developer"})
-public class ShowImagesControl extends SimpleControl implements IDEControl, ViewOpenedHandler, ViewClosedHandler
-{
+public class ShowImagesControl extends SimpleControl implements IDEControl, ViewOpenedHandler, ViewClosedHandler {
 
-   public static final String ID = "Help/Debug/Show Images";
+    public static final String ID = "Help/Debug/Show Images";
 
-   public ShowImagesControl()
-   {
-      super(ID);
-      setTitle("Show Images");
-      setPrompt("Show Images");
-      // setImages(IDEImageBundle.INSTANCE., IDEImageBundle.INSTANCE.propertiesDisabled());
-      setEvent(new ShowImagesEvent());
-      setVisible(true);
-      setEnabled(true);
-      setGroupName("Debug");
-   }
+    public ShowImagesControl() {
+        super(ID);
+        setTitle("Show Images");
+        setPrompt("Show Images");
+        // setImages(IDEImageBundle.INSTANCE., IDEImageBundle.INSTANCE.propertiesDisabled());
+        setEvent(new ShowImagesEvent());
+        setVisible(true);
+        setEnabled(true);
+        setGroupName("Debug");
+    }
 
-   public void initialize()
-   {
-      IDE.addHandler(ViewOpenedEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    public void initialize() {
+        IDE.addHandler(ViewOpenedEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-   }
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+    }
 
-   @Override
-   public void onViewOpened(ViewOpenedEvent event)
-   {
-   }
+    @Override
+    public void onViewOpened(ViewOpenedEvent event) {
+    }
 
 }

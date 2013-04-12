@@ -31,114 +31,80 @@ import java.util.Set;
 
 /**
  * Implementation of {@link DataWriter}, uses {@link LuceneDataWriter}
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
 
-public class LocalDataWriter implements DataWriter
-{
+public class LocalDataWriter implements DataWriter {
 
-   private static final Logger LOG = LoggerFactory.getLogger(LocalDataWriter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LocalDataWriter.class);
 
-   private LuceneDataWriter dataWriter;
+    private LuceneDataWriter dataWriter;
 
-   /**
-    * @param dataWriter
-    */
-   public LocalDataWriter(LuceneDataWriter dataWriter)
-   {
-      this.dataWriter = dataWriter;
-   }
+    /** @param dataWriter */
+    public LocalDataWriter(LuceneDataWriter dataWriter) {
+        this.dataWriter = dataWriter;
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.storage.api.DataWriter#addTypeInfo(java.util.List, java.lang.String)
-    */
-   @Override
-   public void addTypeInfo(List<TypeInfo> typeInfos, String artifact)
-   {
-      try
-      {
-         dataWriter.addTypeInfo(typeInfos, artifact);
-      }
-      catch (SaveDataIndexException e)
-      {
-         LOG.error("Can't save type info for artifact:" + artifact, e);
-      }
-   }
+    /** @see org.exoplatform.ide.codeassistant.storage.api.DataWriter#addTypeInfo(java.util.List, java.lang.String) */
+    @Override
+    public void addTypeInfo(List<TypeInfo> typeInfos, String artifact) {
+        try {
+            dataWriter.addTypeInfo(typeInfos, artifact);
+        } catch (SaveDataIndexException e) {
+            LOG.error("Can't save type info for artifact:" + artifact, e);
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.storage.api.DataWriter#addPackages(java.util.Set, java.lang.String)
-    */
-   @Override
-   public void addPackages(Set<String> packages, String artifact)
-   {
-      try
-      {
-         dataWriter.addPackages(packages, artifact);
-      }
-      catch (SaveDataIndexException e)
-      {
-         LOG.error("Can't save packages for artifact:" + artifact, e);
-      }
-   }
+    /** @see org.exoplatform.ide.codeassistant.storage.api.DataWriter#addPackages(java.util.Set, java.lang.String) */
+    @Override
+    public void addPackages(Set<String> packages, String artifact) {
+        try {
+            dataWriter.addPackages(packages, artifact);
+        } catch (SaveDataIndexException e) {
+            LOG.error("Can't save packages for artifact:" + artifact, e);
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.storage.api.DataWriter#addJavaDocs(java.util.Map, java.lang.String)
-    */
-   @Override
-   public void addJavaDocs(Map<String, String> javaDocs, String artifact)
-   {
-      try
-      {
-         dataWriter.addJavaDocs(javaDocs, artifact);
-      }
-      catch (SaveDataIndexException e)
-      {
-         LOG.error("Can't save javadock for artifact:" + artifact, e);
-      }
-   }
+    /** @see org.exoplatform.ide.codeassistant.storage.api.DataWriter#addJavaDocs(java.util.Map, java.lang.String) */
+    @Override
+    public void addJavaDocs(Map<String, String> javaDocs, String artifact) {
+        try {
+            dataWriter.addJavaDocs(javaDocs, artifact);
+        } catch (SaveDataIndexException e) {
+            LOG.error("Can't save javadock for artifact:" + artifact, e);
+        }
+    }
 
-   @Override
-   public void removeTypeInfo(String artifact)
-   {
-      try
-      {
-         dataWriter.removeTypeInfo(artifact);
-      }
-      catch (SaveDataIndexException e)
-      {
-         LOG.error("Can't save type info for artifact:" + artifact, e);
-      }
-      
-   }
+    @Override
+    public void removeTypeInfo(String artifact) {
+        try {
+            dataWriter.removeTypeInfo(artifact);
+        } catch (SaveDataIndexException e) {
+            LOG.error("Can't save type info for artifact:" + artifact, e);
+        }
 
-   @Override
-   public void removePackages(String artifact)
-   {
-      try
-      {
-         dataWriter.removePackages(artifact);
-      }
-      catch (SaveDataIndexException e)
-      {
-         LOG.error("Can't save packages for artifact:" + artifact, e);
-      }
-      
-   }
+    }
 
-   @Override
-   public void removeJavaDocs(String artifact)
-   {
-      try
-      {
-         dataWriter.removeJavaDocs(artifact);
-      }
-      catch (SaveDataIndexException e)
-      {
-         LOG.error("Can't save javadock for artifact:" + artifact, e);
-      }
-      
-   }
+    @Override
+    public void removePackages(String artifact) {
+        try {
+            dataWriter.removePackages(artifact);
+        } catch (SaveDataIndexException e) {
+            LOG.error("Can't save packages for artifact:" + artifact, e);
+        }
+
+    }
+
+    @Override
+    public void removeJavaDocs(String artifact) {
+        try {
+            dataWriter.removeJavaDocs(artifact);
+        } catch (SaveDataIndexException e) {
+            LOG.error("Can't save javadock for artifact:" + artifact, e);
+        }
+
+    }
 
 }

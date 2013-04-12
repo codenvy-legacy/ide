@@ -24,81 +24,69 @@ import org.exoplatform.ide.extension.aws.shared.ec2.SecurityGroupInfo;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class SecurityGroupInfoImpl implements SecurityGroupInfo
-{
-   private String id;
-   private String name;
-   private String ownerId;
-   private String description;
+public class SecurityGroupInfoImpl implements SecurityGroupInfo {
+    private String id;
+    private String name;
+    private String ownerId;
+    private String description;
 
-   public SecurityGroupInfoImpl(String id, String name, String ownerId, String description)
-   {
-      this.id = id;
-      this.name = name;
-      this.ownerId = ownerId;
-      this.description = description;
-   }
+    public SecurityGroupInfoImpl(String id, String name, String ownerId, String description) {
+        this.id = id;
+        this.name = name;
+        this.ownerId = ownerId;
+        this.description = description;
+    }
 
-   public SecurityGroupInfoImpl()
-   {
-   }
+    public SecurityGroupInfoImpl() {
+    }
 
-   @Override
-   public String getId()
-   {
-      return id;
-   }
+    @Override
+    public String getId() {
+        return id;
+    }
 
-   @Override
-   public void setId(String id)
-   {
-      this.id = id;
-   }
+    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
 
-   @Override
-   public String getName()
-   {
-      return name;
-   }
+    @Override
+    public String getName() {
+        return name;
+    }
 
-   @Override
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   @Override
-   public String getOwnerId()
-   {
-      return ownerId;
-   }
+    @Override
+    public String getOwnerId() {
+        return ownerId;
+    }
 
-   @Override
-   public void setOwnerId(String ownerId)
-   {
-      this.ownerId = ownerId;
-   }
+    @Override
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
+    }
 
-   @Override
-   public String getDescription()
-   {
-      return description;
-   }
+    @Override
+    public String getDescription() {
+        return description;
+    }
 
-   @Override
-   public void setDescription(String description)
-   {
-      this.description = description;
-   }
+    @Override
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "SecurityGroupInfoImpl{" +
-         "id='" + id + '\'' +
-         ", name='" + name + '\'' +
-         ", ownerId='" + ownerId + '\'' +
-         ", description='" + description + '\'' +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "SecurityGroupInfoImpl{" +
+               "id='" + id + '\'' +
+               ", name='" + name + '\'' +
+               ", ownerId='" + ownerId + '\'' +
+               ", description='" + description + '\'' +
+               '}';
+    }
 }

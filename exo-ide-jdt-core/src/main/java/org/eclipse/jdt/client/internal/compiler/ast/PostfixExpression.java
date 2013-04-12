@@ -13,66 +13,59 @@ package org.eclipse.jdt.client.internal.compiler.ast;
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
 
-public class PostfixExpression extends CompoundAssignment
-{
+public class PostfixExpression extends CompoundAssignment {
 
-   public PostfixExpression(Expression lhs, Expression expression, int operator, int pos)
-   {
-      super(lhs, expression, operator, pos);
-      this.sourceStart = lhs.sourceStart;
-      this.sourceEnd = pos;
-   }
+    public PostfixExpression(Expression lhs, Expression expression, int operator, int pos) {
+        super(lhs, expression, operator, pos);
+        this.sourceStart = lhs.sourceStart;
+        this.sourceEnd = pos;
+    }
 
-   public boolean checkCastCompatibility()
-   {
-      return false;
-   }
+    public boolean checkCastCompatibility() {
+        return false;
+    }
 
-   /**
-    * Code generation for PostfixExpression
-    *
-    * @param currentScope org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
-    * @param codeStream org.eclipse.jdt.client.internal.compiler.codegen.CodeStream
-    * @param valueRequired boolean
-    */
-   public void generateCode(BlockScope currentScope, boolean valueRequired)
-   {
-      // various scenarii are possible, setting an array reference,
-      // a field reference, a blank final field reference, a field of an enclosing instance or
-      // just a local variable.
+    /**
+     * Code generation for PostfixExpression
+     *
+     * @param currentScope
+     *         org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
+     * @param codeStream
+     *         org.eclipse.jdt.client.internal.compiler.codegen.CodeStream
+     * @param valueRequired
+     *         boolean
+     */
+    public void generateCode(BlockScope currentScope, boolean valueRequired) {
+        // various scenarii are possible, setting an array reference,
+        // a field reference, a blank final field reference, a field of an enclosing instance or
+        // just a local variable.
 
-      ((Reference)this.lhs).generatePostIncrement(currentScope, this, valueRequired);
-   }
+        ((Reference)this.lhs).generatePostIncrement(currentScope, this, valueRequired);
+    }
 
-   public String operatorToString()
-   {
-      switch (this.operator)
-      {
-         case PLUS :
-            return "++"; //$NON-NLS-1$
-         case MINUS :
-            return "--"; //$NON-NLS-1$
-      }
-      return "unknown operator"; //$NON-NLS-1$
-   }
+    public String operatorToString() {
+        switch (this.operator) {
+            case PLUS:
+                return "++"; //$NON-NLS-1$
+            case MINUS:
+                return "--"; //$NON-NLS-1$
+        }
+        return "unknown operator"; //$NON-NLS-1$
+    }
 
-   public StringBuffer printExpressionNoParenthesis(int indent, StringBuffer output)
-   {
-      return this.lhs.printExpression(indent, output).append(' ').append(operatorToString());
-   }
+    public StringBuffer printExpressionNoParenthesis(int indent, StringBuffer output) {
+        return this.lhs.printExpression(indent, output).append(' ').append(operatorToString());
+    }
 
-   public boolean restrainUsageToNumericTypes()
-   {
-      return true;
-   }
+    public boolean restrainUsageToNumericTypes() {
+        return true;
+    }
 
-   public void traverse(ASTVisitor visitor, BlockScope scope)
-   {
+    public void traverse(ASTVisitor visitor, BlockScope scope) {
 
-      if (visitor.visit(this, scope))
-      {
-         this.lhs.traverse(visitor, scope);
-      }
-      visitor.endVisit(this, scope);
-   }
+        if (visitor.visit(this, scope)) {
+            this.lhs.traverse(visitor, scope);
+        }
+        visitor.endVisit(this, scope);
+    }
 }

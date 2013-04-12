@@ -20,59 +20,46 @@ import com.codenvy.eclipse.search.core.text.TextSearchScope;
 
 import java.util.ArrayList;
 
-public class FilesOfScopeCalculator implements IResourceProxyVisitor
-{
+public class FilesOfScopeCalculator implements IResourceProxyVisitor {
 
-   private final TextSearchScope fScope;
+    private final TextSearchScope fScope;
 
-   private final MultiStatus fStatus;
+    private final MultiStatus fStatus;
 
-   private ArrayList fFiles;
+    private ArrayList fFiles;
 
-   public FilesOfScopeCalculator(TextSearchScope scope, MultiStatus status)
-   {
-      fScope = scope;
-      fStatus = status;
-   }
+    public FilesOfScopeCalculator(TextSearchScope scope, MultiStatus status) {
+        fScope = scope;
+        fStatus = status;
+    }
 
-   public boolean visit(IResourceProxy proxy)
-   {
-      boolean inScope = fScope.contains(proxy);
+    public boolean visit(IResourceProxy proxy) {
+        boolean inScope = fScope.contains(proxy);
 
-      if (inScope && proxy.getType() == IResource.FILE)
-      {
-         fFiles.add(proxy.requestResource());
-      }
-      return inScope;
-   }
+        if (inScope && proxy.getType() == IResource.FILE) {
+            fFiles.add(proxy.requestResource());
+        }
+        return inScope;
+    }
 
-   public IFile[] process()
-   {
-      fFiles = new ArrayList();
-      try
-      {
-         IResource[] roots = fScope.getRoots();
-         for (int i = 0; i < roots.length; i++)
-         {
-            try
-            {
-               IResource resource = roots[i];
-               if (resource.isAccessible())
-               {
-                  resource.accept(this, 0);
-               }
+    public IFile[] process() {
+        fFiles = new ArrayList();
+        try {
+            IResource[] roots = fScope.getRoots();
+            for (int i = 0; i < roots.length; i++) {
+                try {
+                    IResource resource = roots[i];
+                    if (resource.isAccessible()) {
+                        resource.accept(this, 0);
+                    }
+                } catch (CoreException ex) {
+                    // report and ignore
+                    fStatus.add(ex.getStatus());
+                }
             }
-            catch (CoreException ex)
-            {
-               // report and ignore
-               fStatus.add(ex.getStatus());
-            }
-         }
-         return (IFile[])fFiles.toArray(new IFile[fFiles.size()]);
-      }
-      finally
-      {
-         fFiles = null;
-      }
-   }
+            return (IFile[])fFiles.toArray(new IFile[fFiles.size()]);
+        } finally {
+            fFiles = null;
+        }
+    }
 }

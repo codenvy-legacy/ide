@@ -24,7 +24,6 @@ import test.interfaces.ETestInterface2;
 /**
  *
  */
-public class CTestClass extends BTestClass implements ETestInterface, ETestInterface2
-{
+public class CTestClass extends BTestClass implements ETestInterface, ETestInterface2 {
 
 }

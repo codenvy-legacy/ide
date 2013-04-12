@@ -30,92 +30,69 @@ import org.exoplatform.ide.extension.googleappengine.client.backends.BackendGrid
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 23, 2012 3:47:59 PM anya $
- * 
  */
-public class BackendsTabPane extends Composite
-{
-   private static BackendsTabPaneUiBinder uiBinder = GWT.create(BackendsTabPaneUiBinder.class);
+public class BackendsTabPane extends Composite {
+    private static BackendsTabPaneUiBinder uiBinder = GWT.create(BackendsTabPaneUiBinder.class);
 
-   interface BackendsTabPaneUiBinder extends UiBinder<Widget, BackendsTabPane>
-   {
-   }
+    interface BackendsTabPaneUiBinder extends UiBinder<Widget, BackendsTabPane> {
+    }
 
-   public BackendsTabPane()
-   {
-      initWidget(uiBinder.createAndBindUi(this));
-   }
+    public BackendsTabPane() {
+        initWidget(uiBinder.createAndBindUi(this));
+    }
 
-   @UiField
-   ImageButton configureBackendButton;
+    @UiField
+    ImageButton configureBackendButton;
 
-   @UiField
-   ImageButton deleteBackendButton;
+    @UiField
+    ImageButton deleteBackendButton;
 
-   @UiField
-   ImageButton rollbackBackendButton;
+    @UiField
+    ImageButton rollbackBackendButton;
 
-   @UiField
-   ImageButton rollbackAllBackendsButton;
+    @UiField
+    ImageButton rollbackAllBackendsButton;
 
-   @UiField
-   ImageButton updateAllBackendsButton;
+    @UiField
+    ImageButton updateAllBackendsButton;
 
-   @UiField
-   ImageButton updateBackendButton;
+    @UiField
+    ImageButton updateBackendButton;
 
-   @UiField
-   BackendGrid backendsGrid;
+    @UiField
+    BackendGrid backendsGrid;
 
-   /**
-    * @return the configureBackendButton
-    */
-   public ImageButton getConfigureBackendButton()
-   {
-      return configureBackendButton;
-   }
+    /** @return the configureBackendButton */
+    public ImageButton getConfigureBackendButton() {
+        return configureBackendButton;
+    }
 
-   /**
-    * @return the deleteBackendButton
-    */
-   public ImageButton getDeleteBackendButton()
-   {
-      return deleteBackendButton;
-   }
+    /** @return the deleteBackendButton */
+    public ImageButton getDeleteBackendButton() {
+        return deleteBackendButton;
+    }
 
-   /**
-    * @return the rollbackBackendButton
-    */
-   public ImageButton getRollbackBackendButton()
-   {
-      return rollbackBackendButton;
-   }
+    /** @return the rollbackBackendButton */
+    public ImageButton getRollbackBackendButton() {
+        return rollbackBackendButton;
+    }
 
-   /**
-    * @return the rollbackAllBackendsButton
-    */
-   public ImageButton getRollbackAllBackendsButton()
-   {
-      return rollbackAllBackendsButton;
-   }
+    /** @return the rollbackAllBackendsButton */
+    public ImageButton getRollbackAllBackendsButton() {
+        return rollbackAllBackendsButton;
+    }
 
-   /**
-    * @return the updateAllBackendsButton
-    */
-   public ImageButton getUpdateAllBackendsButton()
-   {
-      return updateAllBackendsButton;
-   }
+    /** @return the updateAllBackendsButton */
+    public ImageButton getUpdateAllBackendsButton() {
+        return updateAllBackendsButton;
+    }
 
-   /**
-    * @return the updateBackendButton
-    */
-   public ImageButton getUpdateBackendButton()
-   {
-      return updateBackendButton;
-   }
+    /** @return the updateBackendButton */
+    public ImageButton getUpdateBackendButton() {
+        return updateBackendButton;
+    }
 
-   public BackendGrid getBackendGrid()
-   {
-      return backendsGrid;
-   }
+    public BackendGrid getBackendGrid() {
+        return backendsGrid;
+    }
 }

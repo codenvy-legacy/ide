@@ -23,23 +23,22 @@ import org.exoplatform.ide.json.shared.JsonArray;
  * ids, version ids, etc). This is done on the server side because the deploy
  * button is on the project landing page, where we can't get app.yamls from
  * workspaces easily.
- * 
  */
 @RoutingType(type = RoutingTypes.GETDEPLOYINFORMATIONRESPONSE)
 public interface GetDeployInformationResponse extends ServerToClientDto {
 
-  public interface DeployInformation {
-    // the path of the app.yaml file that this information came from.
-    String getAppYamlPath();
+    public interface DeployInformation {
+        // the path of the app.yaml file that this information came from.
+        String getAppYamlPath();
 
-    // The app id from the app.yaml
-    String getAppId();
+        // The app id from the app.yaml
+        String getAppId();
 
-    // The app version from the app.yaml
-    String getVersion();
-  }
+        // The app version from the app.yaml
+        String getVersion();
+    }
 
-  // An array of all the app.yaml's and their information
-  // in the workspace.
-  JsonArray<DeployInformation> getDeployInformation();
+    // An array of all the app.yaml's and their information
+    // in the workspace.
+    JsonArray<DeployInformation> getDeployInformation();
 }

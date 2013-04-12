@@ -25,104 +25,76 @@ import org.objectweb.asm.tree.FieldNode;
 /**
  * AsmFieldInfo based on org.objectweb.asm.tree.AsmTypeInfo created during class
  * file parsing.
- * 
+ *
  * @see org.objectweb.asm.tree.AsmTypeInfo
  */
-public class AsmFieldInfo extends AsmMember implements FieldInfo
-{
-   private final FieldNode fieldNode;
+public class AsmFieldInfo extends AsmMember implements FieldInfo {
+    private final FieldNode fieldNode;
 
-   private final AsmTypeInfo declaredClass;
+    private final AsmTypeInfo declaredClass;
 
-   public AsmFieldInfo(FieldNode fieldNode, AsmTypeInfo declaredClass)
-   {
-      super(fieldNode.name, fieldNode.access);
-      this.fieldNode = fieldNode;
-      this.declaredClass = declaredClass;
-   }
+    public AsmFieldInfo(FieldNode fieldNode, AsmTypeInfo declaredClass) {
+        super(fieldNode.name, fieldNode.access);
+        this.fieldNode = fieldNode;
+        this.declaredClass = declaredClass;
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.jvm.FieldInfo#getDeclaringClass()
-    */
-   @Override
-   public String getDeclaringClass()
-   {
-      return declaredClass.getName();
-   }
+    /** @see org.exoplatform.ide.codeassistant.jvm.FieldInfo#getDeclaringClass() */
+    @Override
+    public String getDeclaringClass() {
+        return declaredClass.getName();
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.jvm.FieldInfo#getType()
-    */
-   @Override
-   public String getType()
-   {
-      return Type.getType(fieldNode.desc).getClassName();
-   }
+    /** @see org.exoplatform.ide.codeassistant.jvm.FieldInfo#getType() */
+    @Override
+    public String getType() {
+        return Type.getType(fieldNode.desc).getClassName();
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.jvm.FieldInfo#setDeclaringClass(java.lang.String)
-    */
-   @Override
-   public void setDeclaringClass(String declaringClass)
-   {
-      throw new UnsupportedOperationException("Set not supported");
-   }
+    /** @see org.exoplatform.ide.codeassistant.jvm.FieldInfo#setDeclaringClass(java.lang.String) */
+    @Override
+    public void setDeclaringClass(String declaringClass) {
+        throw new UnsupportedOperationException("Set not supported");
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.jvm.FieldInfo#setType(java.lang.String)
-    */
-   @Override
-   public void setType(String type)
-   {
-      throw new UnsupportedOperationException("Set not supported");
-   }
+    /** @see org.exoplatform.ide.codeassistant.jvm.FieldInfo#setType(java.lang.String) */
+    @Override
+    public void setType(String type) {
+        throw new UnsupportedOperationException("Set not supported");
+    }
 
-   public String getDescriptor()
-   {
-      return fieldNode.desc;
-   }
+    public String getDescriptor() {
+        return fieldNode.desc;
+    }
 
-   public String getSignature()
-   {
-      return fieldNode.signature;
-   }
+    public String getSignature() {
+        return fieldNode.signature;
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo#getValue()
-    */
-   @Override
-   public String getValue()
-   {
-      if (fieldNode.value != null)
-         return fieldNode.value.toString();
-      return null;
-   }
+    /** @see org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo#getValue() */
+    @Override
+    public String getValue() {
+        if (fieldNode.value != null)
+            return fieldNode.value.toString();
+        return null;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setSignature(String signature)
-   {
-      throw new UnsupportedOperationException("Set not supported");
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setSignature(String signature) {
+        throw new UnsupportedOperationException("Set not supported");
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setDescriptor(String descriptor)
-   {
-      throw new UnsupportedOperationException("Set not supported");
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setDescriptor(String descriptor) {
+        throw new UnsupportedOperationException("Set not supported");
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo#setValue(java.lang.String)
-    */
-   @Override
-   public void setValue(String value)
-   {
-      throw new UnsupportedOperationException("Set not supported");
-   }
+    /** @see org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo#setValue(java.lang.String) */
+    @Override
+    public void setValue(String value) {
+        throw new UnsupportedOperationException("Set not supported");
+    }
 
 }

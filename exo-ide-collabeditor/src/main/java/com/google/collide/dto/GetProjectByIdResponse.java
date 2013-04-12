@@ -18,22 +18,18 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * Response with a project.
- */
+/** Response with a project. */
 @RoutingType(type = RoutingTypes.GETPROJECTBYIDRESPONSE)
 public interface GetProjectByIdResponse extends ServerToClientDto {
 
-  ProjectInfo getProject();
+    ProjectInfo getProject();
 
-  /**
-   * The members of the project.
-   */
-  ProjectMembersInfo getProjectMembersInfo();
+    /** The members of the project. */
+    ProjectMembersInfo getProjectMembersInfo();
 
-  /**
-   * Returns the workspaces matching the workspace type given in
-   * {@link GetProjectById#getWorkspaceType()}.
-   */
-  JsonArray<WorkspaceInfo> getWorkspaces();
+    /**
+     * Returns the workspaces matching the workspace type given in
+     * {@link GetProjectById#getWorkspaceType()}.
+     */
+    JsonArray<WorkspaceInfo> getWorkspaces();
 }

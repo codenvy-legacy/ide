@@ -26,38 +26,33 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 @RolesAllowed({"developer"})
-public class CustomizeToolbarCommand extends SimpleControl implements IDEControl
-{
+public class CustomizeToolbarCommand extends SimpleControl implements IDEControl {
 
-   public static final String ID = "Window/Customize Toolbar...";
+    public static final String ID = "Window/Customize Toolbar...";
 
-   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.customizeToolbarControl();
+    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.customizeToolbarControl();
 
-   /**
-    * 
-    */
-   public CustomizeToolbarCommand()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.customizeToolbar(), IDEImageBundle.INSTANCE.customizeToolbarDisabled());
-      setEvent(new CustomizeToolbarEvent());
-   }
+    /**
+     *
+     */
+    public CustomizeToolbarCommand() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setImages(IDEImageBundle.INSTANCE.customizeToolbar(), IDEImageBundle.INSTANCE.customizeToolbarDisabled());
+        setEvent(new CustomizeToolbarEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(true);
+        setEnabled(true);
+    }
 
 }

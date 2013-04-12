@@ -23,21 +23,21 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ProblemClickEvent}
- * 
+ * <p/>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface ProblemClickHandler extends EventHandler
-{
-   
-   /**
-    * Handles Problem Click Event
-    *  
-    * @param event instance of {@link ProblemClickEvent}
-    */
-   void onProblemClick(ProblemClickEvent event);
+public interface ProblemClickHandler extends EventHandler {
+
+    /**
+     * Handles Problem Click Event
+     *
+     * @param event
+     *         instance of {@link ProblemClickEvent}
+     */
+    void onProblemClick(ProblemClickEvent event);
 
 }

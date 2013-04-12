@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  4:10:22 PM Apr 2, 2012 evgen $
- *
  */
-public interface AddCodeFormatterHandler extends EventHandler
-{
+public interface AddCodeFormatterHandler extends EventHandler {
 
-   void onAddCodeFormatter(AddCodeFormatterEvent event);
-   
+    void onAddCodeFormatter(AddCodeFormatterEvent event);
+
 }

@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ManageApplicationsEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Mar 14, 2012 5:03:21 PM anya $
- * 
  */
-public interface ManageApplicationsHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to view applications list.
-    * 
-    * @param event
-    */
-   void onManageApplications(ManageApplicationsEvent event);
+public interface ManageApplicationsHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to view applications list.
+     *
+     * @param event
+     */
+    void onManageApplications(ManageApplicationsEvent event);
 }

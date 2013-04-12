@@ -37,99 +37,72 @@ import org.exoplatform.ide.git.client.GitExtension;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 20, 2011 3:05:46 PM anya $
- * 
  */
-public class MergeView extends ViewImpl implements MergePresenter.Display
-{
-   private static final String ID = "MergeView";
+public class MergeView extends ViewImpl implements MergePresenter.Display {
+    private static final String ID               = "MergeView";
 
-   private static final String MERGE_BUTTON_ID = "MergeViewMergeButton";
+    private static final String MERGE_BUTTON_ID  = "MergeViewMergeButton";
 
-   private static final String CANCEL_BUTTON_ID = "MergeViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "MergeViewCancelButton";
 
-   private static final int WIDTH = 430;
+    private static final int    WIDTH            = 430;
 
-   private static final int HEIGHT = 250;
+    private static final int    HEIGHT           = 250;
 
-   interface MergeViewUiBinder extends UiBinder<Widget, MergeView>
-   {
-   }
+    interface MergeViewUiBinder extends UiBinder<Widget, MergeView> {
+    }
 
-   /**
-    * Reference tree.
-    */
-   @UiField
-   RefTree refTree;
+    /** Reference tree. */
+    @UiField
+    RefTree                          refTree;
 
-   /**
-    * Merge button.
-    */
-   @UiField
-   ImageButton mergeButton;
+    /** Merge button. */
+    @UiField
+    ImageButton                      mergeButton;
 
-   /**
-    * Cancel button.
-    */
-   @UiField
-   ImageButton cancelButton;
+    /** Cancel button. */
+    @UiField
+    ImageButton                      cancelButton;
 
-   /**
-    * UI binder for this view.
-    */
-   private static MergeViewUiBinder uiBinder = GWT.create(MergeViewUiBinder.class);
+    /** UI binder for this view. */
+    private static MergeViewUiBinder uiBinder = GWT.create(MergeViewUiBinder.class);
 
-   public MergeView()
-   {
-      super(ID, ViewType.MODAL, GitExtension.MESSAGES.mergeTitle(), new Image(GitClientBundle.INSTANCE.merge()), WIDTH,
-         HEIGHT);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
-      mergeButton.setButtonId(MERGE_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-   }
+    public MergeView() {
+        super(ID, ViewType.MODAL, GitExtension.MESSAGES.mergeTitle(), new Image(GitClientBundle.INSTANCE.merge()), WIDTH,
+              HEIGHT);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
+        mergeButton.setButtonId(MERGE_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.merge.MergePresenter.Display#getMergeButton()
-    */
-   @Override
-   public HasClickHandlers getMergeButton()
-   {
-      return mergeButton;
-   }
+    /** @see org.exoplatform.ide.git.client.merge.MergePresenter.Display#getMergeButton() */
+    @Override
+    public HasClickHandlers getMergeButton() {
+        return mergeButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.merge.MergePresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.git.client.merge.MergePresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.merge.MergePresenter.Display#getRefTree()
-    */
-   @Override
-   public TreeGridItem<Reference> getRefTree()
-   {
-      return refTree;
-   }
+    /** @see org.exoplatform.ide.git.client.merge.MergePresenter.Display#getRefTree() */
+    @Override
+    public TreeGridItem<Reference> getRefTree() {
+        return refTree;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.merge.MergePresenter.Display#enableMergeButton(boolean)
-    */
-   @Override
-   public void enableMergeButton(boolean enable)
-   {
-      mergeButton.setEnabled(enable);
-   }
+    /** @see org.exoplatform.ide.git.client.merge.MergePresenter.Display#enableMergeButton(boolean) */
+    @Override
+    public void enableMergeButton(boolean enable) {
+        mergeButton.setEnabled(enable);
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.merge.MergePresenter.Display#getSelectedReference()
-    */
-   @Override
-   public Reference getSelectedReference()
-   {
-      return refTree.getSelectedItem();
-   }
+    /** @see org.exoplatform.ide.git.client.merge.MergePresenter.Display#getSelectedReference() */
+    @Override
+    public Reference getSelectedReference() {
+        return refTree.getSelectedItem();
+    }
 }

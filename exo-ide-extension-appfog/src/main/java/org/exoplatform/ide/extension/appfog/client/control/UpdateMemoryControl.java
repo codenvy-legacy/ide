@@ -28,21 +28,19 @@ import org.exoplatform.ide.extension.appfog.client.update.UpdateMemoryEvent;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class UpdateMemoryControl extends AbstractAppfogControl
-{
+public class UpdateMemoryControl extends AbstractAppfogControl {
 
-   private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.updateMemoryControlId();
+    private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.updateMemoryControlId();
 
-   private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.updateMemoryTitle();
+    private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.updateMemoryTitle();
 
-   private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.updateMemoryPrompt();
+    private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.updateMemoryPrompt();
 
-   public UpdateMemoryControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(AppfogClientBundle.INSTANCE.appMemory(), AppfogClientBundle.INSTANCE.appMemoryDisabled());
-      setEvent(new UpdateMemoryEvent());
-   }
+    public UpdateMemoryControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(AppfogClientBundle.INSTANCE.appMemory(), AppfogClientBundle.INSTANCE.appMemoryDisabled());
+        setEvent(new UpdateMemoryEvent());
+    }
 }

@@ -10,10 +10,7 @@
  *******************************************************************************/
 package com.codenvy.eclipse.jdt.core;
 
-/**
- * Represents a stand-alone instance or class (static) initializer in a type.
- */
-public interface IInitializer extends IMember
-{
-   // interface used as a marker: defines no member
+/** Represents a stand-alone instance or class (static) initializer in a type. */
+public interface IInitializer extends IMember {
+    // interface used as a marker: defines no member
 }

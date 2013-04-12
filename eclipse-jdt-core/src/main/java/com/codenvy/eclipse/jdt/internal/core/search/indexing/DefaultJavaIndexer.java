@@ -29,34 +29,34 @@ import java.util.zip.ZipFile;
 
 
 public class DefaultJavaIndexer {
-	private static final char JAR_SEPARATOR = IJavaSearchScope.JAR_FILE_ENTRY_SEPARATOR.charAt(0);
-	
-	public void generateIndexForJar(String pathToJar, String pathToIndexFile) throws IOException {
-		File f = new File(pathToJar);
-		if (!f.exists()) {
-			throw new FileNotFoundException(pathToJar + " not found"); //$NON-NLS-1$
-		}
-		IndexLocation indexLocation = new FileIndexLocation(new File(pathToIndexFile));
-		Index index = new Index(indexLocation, pathToJar, false /*reuse index file*/);
-		SearchParticipant participant = SearchEngine.getDefaultSearchParticipant();
-		index.separator = JAR_SEPARATOR;
-		ZipFile zip = new ZipFile(pathToJar);
-		try {
-			for (Enumeration e = zip.entries(); e.hasMoreElements();) {
-				// iterate each entry to index it
-				ZipEntry ze = (ZipEntry) e.nextElement();
-				String zipEntryName = ze.getName();
-				if (Util.isClassFileName(zipEntryName)) {
-					final byte[] classFileBytes = com.codenvy.eclipse.jdt.internal.compiler.util.Util.getZipEntryByteContent(ze, zip);
-					JavaSearchDocument entryDocument = new JavaSearchDocument(ze, new Path(pathToJar), classFileBytes, participant);
-					entryDocument.setIndex(index);
-					new BinaryIndexer(entryDocument).indexDocument();
-				}
-			}
-			index.save();
-		} finally {
-			zip.close();
-		}
-		return;
-	}
+    private static final char JAR_SEPARATOR = IJavaSearchScope.JAR_FILE_ENTRY_SEPARATOR.charAt(0);
+
+    public void generateIndexForJar(String pathToJar, String pathToIndexFile) throws IOException {
+        File f = new File(pathToJar);
+        if (!f.exists()) {
+            throw new FileNotFoundException(pathToJar + " not found"); //$NON-NLS-1$
+        }
+        IndexLocation indexLocation = new FileIndexLocation(new File(pathToIndexFile));
+        Index index = new Index(indexLocation, pathToJar, false /*reuse index file*/);
+        SearchParticipant participant = SearchEngine.getDefaultSearchParticipant();
+        index.separator = JAR_SEPARATOR;
+        ZipFile zip = new ZipFile(pathToJar);
+        try {
+            for (Enumeration e = zip.entries(); e.hasMoreElements(); ) {
+                // iterate each entry to index it
+                ZipEntry ze = (ZipEntry)e.nextElement();
+                String zipEntryName = ze.getName();
+                if (Util.isClassFileName(zipEntryName)) {
+                    final byte[] classFileBytes = com.codenvy.eclipse.jdt.internal.compiler.util.Util.getZipEntryByteContent(ze, zip);
+                    JavaSearchDocument entryDocument = new JavaSearchDocument(ze, new Path(pathToJar), classFileBytes, participant);
+                    entryDocument.setIndex(index);
+                    new BinaryIndexer(entryDocument).indexDocument();
+                }
+            }
+            index.save();
+        } finally {
+            zip.close();
+        }
+        return;
+    }
 }

@@ -17,46 +17,38 @@ import com.codenvy.eclipse.core.runtime.CoreException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ResourceProcessors
-{
+public class ResourceProcessors {
 
-   public static String[] computeAffectedNatures(IResource resource) throws CoreException
-   {
-      IProject project = resource.getProject();
-      Set<String> result = new HashSet<String>();
-      Set<IProject> visitedProjects = new HashSet<IProject>();
-      computeNatures(result, visitedProjects, project);
-      return result.toArray(new String[result.size()]);
-   }
+    public static String[] computeAffectedNatures(IResource resource) throws CoreException {
+        IProject project = resource.getProject();
+        Set<String> result = new HashSet<String>();
+        Set<IProject> visitedProjects = new HashSet<IProject>();
+        computeNatures(result, visitedProjects, project);
+        return result.toArray(new String[result.size()]);
+    }
 
-   public static String[] computeAffectedNatures(IResource[] resources) throws CoreException
-   {
-      Set<String> result = new HashSet<String>();
-      Set<IProject> visitedProjects = new HashSet<IProject>();
-      for (int i = 0; i < resources.length; i++)
-      {
-         computeNatures(result, visitedProjects, resources[i].getProject());
-      }
-      return result.toArray(new String[result.size()]);
-   }
+    public static String[] computeAffectedNatures(IResource[] resources) throws CoreException {
+        Set<String> result = new HashSet<String>();
+        Set<IProject> visitedProjects = new HashSet<IProject>();
+        for (int i = 0; i < resources.length; i++) {
+            computeNatures(result, visitedProjects, resources[i].getProject());
+        }
+        return result.toArray(new String[result.size()]);
+    }
 
-   private static void computeNatures(Set<String> result, Set<IProject> visitedProjects,
-      IProject focus) throws CoreException
-   {
-      if (visitedProjects.contains(focus))
-      {
-         return;
-      }
-      String[] pns = focus.getDescription().getNatureIds();
-      for (int p = 0; p < pns.length; p++)
-      {
-         result.add(pns[p]);
-      }
-      visitedProjects.add(focus);
-      IProject[] referencing = focus.getReferencingProjects();
-      for (int i = 0; i < referencing.length; i++)
-      {
-         computeNatures(result, visitedProjects, referencing[i]);
-      }
-   }
+    private static void computeNatures(Set<String> result, Set<IProject> visitedProjects,
+                                       IProject focus) throws CoreException {
+        if (visitedProjects.contains(focus)) {
+            return;
+        }
+        String[] pns = focus.getDescription().getNatureIds();
+        for (int p = 0; p < pns.length; p++) {
+            result.add(pns[p]);
+        }
+        visitedProjects.add(focus);
+        IProject[] referencing = focus.getReferencingProjects();
+        for (int i = 0; i < referencing.length; i++) {
+            computeNatures(result, visitedProjects, referencing[i]);
+        }
+    }
 }

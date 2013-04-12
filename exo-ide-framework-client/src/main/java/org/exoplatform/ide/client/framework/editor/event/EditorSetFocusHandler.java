@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public interface EditorSetFocusHandler extends EventHandler
-{
+public interface EditorSetFocusHandler extends EventHandler {
 
-   void onEditorSetFocus(EditorSetFocusEvent event);
+    void onEditorSetFocus(EditorSetFocusEvent event);
 
 }

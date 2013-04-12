@@ -22,13 +22,12 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public interface SearchResultReceivedHandler extends EventHandler
-{
+public interface SearchResultReceivedHandler extends EventHandler {
 
-   void onSearchResultReceived(SearchResultReceivedEvent event);
+    void onSearchResultReceived(SearchResultReceivedEvent event);
 
 }

@@ -18,14 +18,7 @@
  */
 package org.eclipse.jdt.client.outline;
 
-import org.eclipse.jdt.client.core.dom.ASTNode;
-import org.eclipse.jdt.client.core.dom.ASTVisitor;
-import org.eclipse.jdt.client.core.dom.AnnotationTypeDeclaration;
-import org.eclipse.jdt.client.core.dom.EnumDeclaration;
-import org.eclipse.jdt.client.core.dom.FieldDeclaration;
-import org.eclipse.jdt.client.core.dom.MethodDeclaration;
-import org.eclipse.jdt.client.core.dom.TypeDeclaration;
-import org.eclipse.jdt.client.core.dom.VariableDeclarationFragment;
+import org.eclipse.jdt.client.core.dom.*;
 
 import java.util.Iterator;
 import java.util.List;
@@ -33,86 +26,67 @@ import java.util.List;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-final class TypeChildrenVisitor extends ASTVisitor
-{
-   /**
-    * 
-    */
-   private final List<ASTNode> list;
+final class TypeChildrenVisitor extends ASTVisitor {
+    /**
+     *
+     */
+    private final List<ASTNode> list;
 
-   /**
-    * 
-    */
-   private final TypeDeclaration t;
+    /**
+     *
+     */
+    private final TypeDeclaration t;
 
-   /**
-    * @param list
-    * @param t
-    */
-   TypeChildrenVisitor(List<ASTNode> list, TypeDeclaration t)
-   {
-      this.list = list;
-      this.t = t;
-   }
+    /**
+     * @param list
+     * @param t
+     */
+    TypeChildrenVisitor(List<ASTNode> list, TypeDeclaration t) {
+        this.list = list;
+        this.t = t;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.EnumDeclaration)
-    */
-   @Override
-   public boolean visit(EnumDeclaration node)
-   {
-      list.add(node);
-      return false;
-   }
+    /** @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.EnumDeclaration) */
+    @Override
+    public boolean visit(EnumDeclaration node) {
+        list.add(node);
+        return false;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.FieldDeclaration)
-    */
-   @Override
-   public boolean visit(FieldDeclaration node)
-   {
-      // Get field's name and type:
+    /** @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.FieldDeclaration) */
+    @Override
+    public boolean visit(FieldDeclaration node) {
+        // Get field's name and type:
 
-      Iterator iterator = node.fragments().iterator();
-      while (iterator.hasNext())
-      {
-         list.add(((VariableDeclarationFragment)iterator.next()));
+        Iterator iterator = node.fragments().iterator();
+        while (iterator.hasNext()) {
+            list.add(((VariableDeclarationFragment)iterator.next()));
 
-      }
-      return false;
-   }
+        }
+        return false;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.MethodDeclaration)
-    */
-   @Override
-   public boolean visit(MethodDeclaration node)
-   {
-      list.add(node);
-      return false;
-   }
+    /** @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.MethodDeclaration) */
+    @Override
+    public boolean visit(MethodDeclaration node) {
+        list.add(node);
+        return false;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.TypeDeclaration)
-    */
-   @Override
-   public boolean visit(TypeDeclaration node)
-   {
-      if (node.equals(t))
-         return true;
-      list.add(node);
-      return false;
-   }
+    /** @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.TypeDeclaration) */
+    @Override
+    public boolean visit(TypeDeclaration node) {
+        if (node.equals(t))
+            return true;
+        list.add(node);
+        return false;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.AnnotationTypeDeclaration)
-    */
-   @Override
-   public boolean visit(AnnotationTypeDeclaration node)
-   {
-      list.add(node);
-      return false;
-   }
+    /** @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.AnnotationTypeDeclaration) */
+    @Override
+    public boolean visit(AnnotationTypeDeclaration node) {
+        list.add(node);
+        return false;
+    }
 }

@@ -20,25 +20,23 @@ package com.google.collide.client;
 
 /**
  * Interface to represent the constants contained in resource bundle: 'CollabEditorLocalizationConstant.properties'.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: CollabEditorLocalizationConstant.java Feb 6, 2013 3:04:53 PM azatsarynnyy $
- *
  */
-public interface CollabEditorLocalizationConstant extends com.google.gwt.i18n.client.Messages
-{
+public interface CollabEditorLocalizationConstant extends com.google.gwt.i18n.client.Messages {
 
-   // Controls
-   @Key("control.collaborators.id")
-   String collaboratorsControlId();
+    // Controls
+    @Key("control.collaborators.id")
+    String collaboratorsControlId();
 
-   @Key("control.collaborators.title")
-   String collaboratorsControlTitle();
+    @Key("control.collaborators.title")
+    String collaboratorsControlTitle();
 
-   @Key("control.collaborators.prompt.show")
-   String collaboratorsControlPromptShow();
+    @Key("control.collaborators.prompt.show")
+    String collaboratorsControlPromptShow();
 
-   @Key("control.collaborators.prompt.hide")
-   String collaboratorsControlPromptHide();
+    @Key("control.collaborators.prompt.hide")
+    String collaboratorsControlPromptHide();
 
 }

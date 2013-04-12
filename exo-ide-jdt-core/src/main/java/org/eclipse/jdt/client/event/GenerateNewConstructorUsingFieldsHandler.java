@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface GenerateNewConstructorUsingFieldsHandler extends EventHandler
-{
+public interface GenerateNewConstructorUsingFieldsHandler extends EventHandler {
 
-   void onGenerateNewConstructorUsingFields(GenerateNewConstructorUsingFieldsEvent event);
+    void onGenerateNewConstructorUsingFields(GenerateNewConstructorUsingFieldsEvent event);
 
 }

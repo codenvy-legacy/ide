@@ -60,993 +60,854 @@ import java.util.Map;
  *
  * @since 3.1
  */
-public final class StubUtility2
-{
+public final class StubUtility2 {
 
-   public static void addOverrideAnnotation(ASTRewrite rewrite, MethodDeclaration decl, IMethodBinding binding)
-   {
-      //      String version = JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE);
-      //      if (!binding.getDeclaringClass().isInterface())
-      //      {
-      final Annotation marker = rewrite.getAST().newMarkerAnnotation();
-      marker.setTypeName(rewrite.getAST().newSimpleName("Override")); //$NON-NLS-1$
-      rewrite.getListRewrite(decl, MethodDeclaration.MODIFIERS2_PROPERTY).insertFirst(marker, null);
-      //      }
-   }
+    public static void addOverrideAnnotation(ASTRewrite rewrite, MethodDeclaration decl, IMethodBinding binding) {
+        //      String version = JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE);
+        //      if (!binding.getDeclaringClass().isInterface())
+        //      {
+        final Annotation marker = rewrite.getAST().newMarkerAnnotation();
+        marker.setTypeName(rewrite.getAST().newSimpleName("Override")); //$NON-NLS-1$
+        rewrite.getListRewrite(decl, MethodDeclaration.MODIFIERS2_PROPERTY).insertFirst(marker, null);
+        //      }
+    }
 
-   public static MethodDeclaration createConstructorStub(ASTRewrite rewrite, ImportRewrite imports,
-      ImportRewriteContext context, IMethodBinding binding, String type, int modifiers, boolean omitSuperForDefConst,
-      boolean todo, CodeGenerationSettings settings) throws CoreException
-   {
-      AST ast = rewrite.getAST();
-      MethodDeclaration decl = ast.newMethodDeclaration();
-      decl.modifiers().addAll(ASTNodeFactory.newModifiers(ast, modifiers & ~Modifier.ABSTRACT & ~Modifier.NATIVE));
-      decl.setName(ast.newSimpleName(type));
-      decl.setConstructor(true);
+    public static MethodDeclaration createConstructorStub(ASTRewrite rewrite, ImportRewrite imports,
+                                                          ImportRewriteContext context, IMethodBinding binding, String type, int modifiers,
+                                                          boolean omitSuperForDefConst,
+                                                          boolean todo, CodeGenerationSettings settings) throws CoreException {
+        AST ast = rewrite.getAST();
+        MethodDeclaration decl = ast.newMethodDeclaration();
+        decl.modifiers().addAll(ASTNodeFactory.newModifiers(ast, modifiers & ~Modifier.ABSTRACT & ~Modifier.NATIVE));
+        decl.setName(ast.newSimpleName(type));
+        decl.setConstructor(true);
 
-      ITypeBinding[] typeParams = binding.getTypeParameters();
-      List<TypeParameter> typeParameters = decl.typeParameters();
-      for (int i = 0; i < typeParams.length; i++)
-      {
-         ITypeBinding curr = typeParams[i];
-         TypeParameter newTypeParam = ast.newTypeParameter();
-         newTypeParam.setName(ast.newSimpleName(curr.getName()));
-         ITypeBinding[] typeBounds = curr.getTypeBounds();
-         if (typeBounds.length != 1 || !"java.lang.Object".equals(typeBounds[0].getQualifiedName()))
-         {//$NON-NLS-1$
-            List<Type> newTypeBounds = newTypeParam.typeBounds();
-            for (int k = 0; k < typeBounds.length; k++)
-            {
-               newTypeBounds.add(imports.addImport(typeBounds[k], ast, context));
-            }
-         }
-         typeParameters.add(newTypeParam);
-      }
-
-      List<SingleVariableDeclaration> parameters = createParameters(imports, context, ast, binding, decl);
-
-      List<Name> thrownExceptions = decl.thrownExceptions();
-      ITypeBinding[] excTypes = binding.getExceptionTypes();
-      for (int i = 0; i < excTypes.length; i++)
-      {
-         String excTypeName = imports.addImport(excTypes[i], context);
-         thrownExceptions.add(ASTNodeFactory.newName(ast, excTypeName));
-      }
-
-      Block body = ast.newBlock();
-      decl.setBody(body);
-
-      String delimiter = "\n";//StubUtility.getLineDelimiterUsed(unit);
-      String bodyStatement = ""; //$NON-NLS-1$
-      if (!omitSuperForDefConst || !parameters.isEmpty())
-      {
-         SuperConstructorInvocation invocation = ast.newSuperConstructorInvocation();
-         SingleVariableDeclaration varDecl = null;
-         for (Iterator<SingleVariableDeclaration> iterator = parameters.iterator(); iterator.hasNext(); )
-         {
-            varDecl = iterator.next();
-            invocation.arguments().add(ast.newSimpleName(varDecl.getName().getIdentifier()));
-         }
-         bodyStatement = ASTNodes.asFormattedString(invocation, 0, delimiter, JavaCore.getOptions());
-      }
-
-      if (todo)
-      {
-         //TDO
-         //         String placeHolder =
-         //            CodeGeneration.getMethodBodyContent(unit, type, binding.getName(), true, bodyStatement, delimiter);
-         //         if (placeHolder != null)
-         //         {
-         //            ReturnStatement todoNode =
-         //               (ReturnStatement)rewrite.createStringPlaceholder(placeHolder, ASTNode.RETURN_STATEMENT);
-         //            body.statements().add(todoNode);
-         //         }
-      }
-      else
-      {
-         ReturnStatement statementNode = (ReturnStatement)rewrite.createStringPlaceholder(bodyStatement,
-            ASTNode.RETURN_STATEMENT);
-         body.statements().add(statementNode);
-      }
-
-      if (settings != null && settings.createComments)
-      {
-         //TODO
-         //         String string = CodeGeneration.getMethodComment(unit, type, decl, binding, delimiter);
-         //         if (string != null)
-         //         {
-         //            Javadoc javadoc = (Javadoc)rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
-         //            decl.setJavadoc(javadoc);
-         //         }
-      }
-      return decl;
-   }
-
-   public static MethodDeclaration createConstructorStub(ASTRewrite rewrite, ImportRewrite imports,
-      ImportRewriteContext context, ITypeBinding typeBinding, IMethodBinding superConstructor,
-      IVariableBinding[] variableBindings, int modifiers, CodeGenerationSettings settings)
-   {
-      AST ast = rewrite.getAST();
-
-      MethodDeclaration decl = ast.newMethodDeclaration();
-      decl.modifiers().addAll(ASTNodeFactory.newModifiers(ast, modifiers & ~Modifier.ABSTRACT & ~Modifier.NATIVE));
-      decl.setName(ast.newSimpleName(typeBinding.getName()));
-      decl.setConstructor(true);
-
-      List<SingleVariableDeclaration> parameters = decl.parameters();
-      if (superConstructor != null)
-      {
-         ITypeBinding[] typeParams = superConstructor.getTypeParameters();
-         List<TypeParameter> typeParameters = decl.typeParameters();
-         for (int i = 0; i < typeParams.length; i++)
-         {
+        ITypeBinding[] typeParams = binding.getTypeParameters();
+        List<TypeParameter> typeParameters = decl.typeParameters();
+        for (int i = 0; i < typeParams.length; i++) {
             ITypeBinding curr = typeParams[i];
             TypeParameter newTypeParam = ast.newTypeParameter();
             newTypeParam.setName(ast.newSimpleName(curr.getName()));
             ITypeBinding[] typeBounds = curr.getTypeBounds();
-            if (typeBounds.length != 1 || !"java.lang.Object".equals(typeBounds[0].getQualifiedName()))
-            {//$NON-NLS-1$
-               List<Type> newTypeBounds = newTypeParam.typeBounds();
-               for (int k = 0; k < typeBounds.length; k++)
-               {
-                  newTypeBounds.add(imports.addImport(typeBounds[k], ast, context));
-               }
+            if (typeBounds.length != 1 || !"java.lang.Object".equals(typeBounds[0].getQualifiedName())) {//$NON-NLS-1$
+                List<Type> newTypeBounds = newTypeParam.typeBounds();
+                for (int k = 0; k < typeBounds.length; k++) {
+                    newTypeBounds.add(imports.addImport(typeBounds[k], ast, context));
+                }
             }
             typeParameters.add(newTypeParam);
-         }
+        }
 
-         createParameters(imports, context, ast, superConstructor, decl);
+        List<SingleVariableDeclaration> parameters = createParameters(imports, context, ast, binding, decl);
 
-         List<Name> thrownExceptions = decl.thrownExceptions();
-         ITypeBinding[] excTypes = superConstructor.getExceptionTypes();
-         for (int i = 0; i < excTypes.length; i++)
-         {
+        List<Name> thrownExceptions = decl.thrownExceptions();
+        ITypeBinding[] excTypes = binding.getExceptionTypes();
+        for (int i = 0; i < excTypes.length; i++) {
             String excTypeName = imports.addImport(excTypes[i], context);
             thrownExceptions.add(ASTNodeFactory.newName(ast, excTypeName));
-         }
-      }
+        }
 
-      Block body = ast.newBlock();
-      decl.setBody(body);
+        Block body = ast.newBlock();
+        decl.setBody(body);
 
-      String delimiter = "\n";
+        String delimiter = "\n";//StubUtility.getLineDelimiterUsed(unit);
+        String bodyStatement = ""; //$NON-NLS-1$
+        if (!omitSuperForDefConst || !parameters.isEmpty()) {
+            SuperConstructorInvocation invocation = ast.newSuperConstructorInvocation();
+            SingleVariableDeclaration varDecl = null;
+            for (Iterator<SingleVariableDeclaration> iterator = parameters.iterator(); iterator.hasNext(); ) {
+                varDecl = iterator.next();
+                invocation.arguments().add(ast.newSimpleName(varDecl.getName().getIdentifier()));
+            }
+            bodyStatement = ASTNodes.asFormattedString(invocation, 0, delimiter, JavaCore.getOptions());
+        }
 
-      if (superConstructor != null)
-      {
-         SuperConstructorInvocation invocation = ast.newSuperConstructorInvocation();
-         SingleVariableDeclaration varDecl = null;
-         for (Iterator<SingleVariableDeclaration> iterator = parameters.iterator(); iterator.hasNext(); )
-         {
-            varDecl = iterator.next();
-            invocation.arguments().add(ast.newSimpleName(varDecl.getName().getIdentifier()));
-         }
-         body.statements().add(invocation);
-      }
+        if (todo) {
+            //TDO
+            //         String placeHolder =
+            //            CodeGeneration.getMethodBodyContent(unit, type, binding.getName(), true, bodyStatement, delimiter);
+            //         if (placeHolder != null)
+            //         {
+            //            ReturnStatement todoNode =
+            //               (ReturnStatement)rewrite.createStringPlaceholder(placeHolder, ASTNode.RETURN_STATEMENT);
+            //            body.statements().add(todoNode);
+            //         }
+        } else {
+            ReturnStatement statementNode = (ReturnStatement)rewrite.createStringPlaceholder(bodyStatement,
+                                                                                             ASTNode.RETURN_STATEMENT);
+            body.statements().add(statementNode);
+        }
 
-      List<String> prohibited = new ArrayList<String>();
-      for (final Iterator<SingleVariableDeclaration> iterator = parameters.iterator(); iterator.hasNext(); )
-      {
-         prohibited.add(iterator.next().getName().getIdentifier());
-      }
-      String param = null;
-      List<String> list = new ArrayList<String>(prohibited);
-      String[] excluded = null;
-      for (int i = 0; i < variableBindings.length; i++)
-      {
-         SingleVariableDeclaration var = ast.newSingleVariableDeclaration();
-         var.setType(imports.addImport(variableBindings[i].getType(), ast, context));
-         excluded = new String[list.size()];
-         list.toArray(excluded);
-         param = suggestParameterName(variableBindings[i], excluded);
-         list.add(param);
-         var.setName(ast.newSimpleName(param));
-         parameters.add(var);
-      }
+        if (settings != null && settings.createComments) {
+            //TODO
+            //         String string = CodeGeneration.getMethodComment(unit, type, decl, binding, delimiter);
+            //         if (string != null)
+            //         {
+            //            Javadoc javadoc = (Javadoc)rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
+            //            decl.setJavadoc(javadoc);
+            //         }
+        }
+        return decl;
+    }
 
-      list = new ArrayList<String>(prohibited);
-      for (int i = 0; i < variableBindings.length; i++)
-      {
-         excluded = new String[list.size()];
-         list.toArray(excluded);
-         final String paramName = suggestParameterName(variableBindings[i], excluded);
-         list.add(paramName);
-         final String fieldName = variableBindings[i].getName();
-         Expression expression = null;
-         if (paramName.equals(fieldName) || settings.useKeywordThis)
-         {
+    public static MethodDeclaration createConstructorStub(ASTRewrite rewrite, ImportRewrite imports,
+                                                          ImportRewriteContext context, ITypeBinding typeBinding,
+                                                          IMethodBinding superConstructor,
+                                                          IVariableBinding[] variableBindings, int modifiers,
+                                                          CodeGenerationSettings settings) {
+        AST ast = rewrite.getAST();
+
+        MethodDeclaration decl = ast.newMethodDeclaration();
+        decl.modifiers().addAll(ASTNodeFactory.newModifiers(ast, modifiers & ~Modifier.ABSTRACT & ~Modifier.NATIVE));
+        decl.setName(ast.newSimpleName(typeBinding.getName()));
+        decl.setConstructor(true);
+
+        List<SingleVariableDeclaration> parameters = decl.parameters();
+        if (superConstructor != null) {
+            ITypeBinding[] typeParams = superConstructor.getTypeParameters();
+            List<TypeParameter> typeParameters = decl.typeParameters();
+            for (int i = 0; i < typeParams.length; i++) {
+                ITypeBinding curr = typeParams[i];
+                TypeParameter newTypeParam = ast.newTypeParameter();
+                newTypeParam.setName(ast.newSimpleName(curr.getName()));
+                ITypeBinding[] typeBounds = curr.getTypeBounds();
+                if (typeBounds.length != 1 || !"java.lang.Object".equals(typeBounds[0].getQualifiedName())) {//$NON-NLS-1$
+                    List<Type> newTypeBounds = newTypeParam.typeBounds();
+                    for (int k = 0; k < typeBounds.length; k++) {
+                        newTypeBounds.add(imports.addImport(typeBounds[k], ast, context));
+                    }
+                }
+                typeParameters.add(newTypeParam);
+            }
+
+            createParameters(imports, context, ast, superConstructor, decl);
+
+            List<Name> thrownExceptions = decl.thrownExceptions();
+            ITypeBinding[] excTypes = superConstructor.getExceptionTypes();
+            for (int i = 0; i < excTypes.length; i++) {
+                String excTypeName = imports.addImport(excTypes[i], context);
+                thrownExceptions.add(ASTNodeFactory.newName(ast, excTypeName));
+            }
+        }
+
+        Block body = ast.newBlock();
+        decl.setBody(body);
+
+        String delimiter = "\n";
+
+        if (superConstructor != null) {
+            SuperConstructorInvocation invocation = ast.newSuperConstructorInvocation();
+            SingleVariableDeclaration varDecl = null;
+            for (Iterator<SingleVariableDeclaration> iterator = parameters.iterator(); iterator.hasNext(); ) {
+                varDecl = iterator.next();
+                invocation.arguments().add(ast.newSimpleName(varDecl.getName().getIdentifier()));
+            }
+            body.statements().add(invocation);
+        }
+
+        List<String> prohibited = new ArrayList<String>();
+        for (final Iterator<SingleVariableDeclaration> iterator = parameters.iterator(); iterator.hasNext(); ) {
+            prohibited.add(iterator.next().getName().getIdentifier());
+        }
+        String param = null;
+        List<String> list = new ArrayList<String>(prohibited);
+        String[] excluded = null;
+        for (int i = 0; i < variableBindings.length; i++) {
+            SingleVariableDeclaration var = ast.newSingleVariableDeclaration();
+            var.setType(imports.addImport(variableBindings[i].getType(), ast, context));
+            excluded = new String[list.size()];
+            list.toArray(excluded);
+            param = suggestParameterName(variableBindings[i], excluded);
+            list.add(param);
+            var.setName(ast.newSimpleName(param));
+            parameters.add(var);
+        }
+
+        list = new ArrayList<String>(prohibited);
+        for (int i = 0; i < variableBindings.length; i++) {
+            excluded = new String[list.size()];
+            list.toArray(excluded);
+            final String paramName = suggestParameterName(variableBindings[i], excluded);
+            list.add(paramName);
+            final String fieldName = variableBindings[i].getName();
+            Expression expression = null;
+            if (paramName.equals(fieldName) || settings.useKeywordThis) {
+                FieldAccess access = ast.newFieldAccess();
+                access.setExpression(ast.newThisExpression());
+                access.setName(ast.newSimpleName(fieldName));
+                expression = access;
+            } else {
+                expression = ast.newSimpleName(fieldName);
+            }
+            Assignment assignment = ast.newAssignment();
+            assignment.setLeftHandSide(expression);
+            assignment.setRightHandSide(ast.newSimpleName(paramName));
+            assignment.setOperator(Assignment.Operator.ASSIGN);
+            body.statements().add(ast.newExpressionStatement(assignment));
+        }
+
+        if (settings != null && settings.createComments) {
+            String declaringClassQualifiedName = superConstructor.getDeclaringClass().getQualifiedName();
+            String linkToMethodName = superConstructor.getName();
+            String[] parameterTypesQualifiedNames = StubUtility.getParameterTypeNamesForSeeTag(superConstructor);
+
+            String string = null;
+            try {
+                string = StubUtility.getMethodComment(typeBinding.getName(), decl, superConstructor.isDeprecated(),
+                                                      linkToMethodName, declaringClassQualifiedName, parameterTypesQualifiedNames, false,
+                                                      delimiter);
+            } catch (CoreException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+            if (string != null) {
+                Javadoc javadoc = (Javadoc)rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
+                decl.setJavadoc(javadoc);
+            }
+        }
+        return decl;
+    }
+
+    public static MethodDeclaration createDelegationStub(ASTRewrite rewrite, ImportRewrite imports,
+                                                         ImportRewriteContext context, IMethodBinding delegate,
+                                                         IVariableBinding delegatingField,
+                                                         CodeGenerationSettings settings) throws CoreException {
+        Assert.isNotNull(delegate);
+        Assert.isNotNull(delegatingField);
+        Assert.isNotNull(settings);
+
+        AST ast = rewrite.getAST();
+
+        MethodDeclaration decl = ast.newMethodDeclaration();
+        decl.modifiers().addAll(ASTNodeFactory.newModifiers(ast,
+                                                            delegate.getModifiers() & ~Modifier.SYNCHRONIZED & ~Modifier.ABSTRACT &
+                                                            ~Modifier.NATIVE));
+
+        decl.setName(ast.newSimpleName(delegate.getName()));
+        decl.setConstructor(false);
+
+        ITypeBinding[] typeParams = delegate.getTypeParameters();
+        List<TypeParameter> typeParameters = decl.typeParameters();
+        for (int i = 0; i < typeParams.length; i++) {
+            ITypeBinding curr = typeParams[i];
+            TypeParameter newTypeParam = ast.newTypeParameter();
+            newTypeParam.setName(ast.newSimpleName(curr.getName()));
+            ITypeBinding[] typeBounds = curr.getTypeBounds();
+            if (typeBounds.length != 1 || !"java.lang.Object".equals(typeBounds[0].getQualifiedName())) {//$NON-NLS-1$
+                List<Type> newTypeBounds = newTypeParam.typeBounds();
+                for (int k = 0; k < typeBounds.length; k++) {
+                    newTypeBounds.add(imports.addImport(typeBounds[k], ast, context));
+                }
+            }
+            typeParameters.add(newTypeParam);
+        }
+
+        decl.setReturnType2(imports.addImport(delegate.getReturnType(), ast, context));
+
+        List<SingleVariableDeclaration> parameters = decl.parameters();
+        ITypeBinding[] params = delegate.getParameterTypes();
+        String[] paramNames = StubUtility.suggestArgumentNames(delegate);
+        for (int i = 0; i < params.length; i++) {
+            SingleVariableDeclaration varDecl = ast.newSingleVariableDeclaration();
+            if (params[i].isWildcardType() && !params[i].isUpperbound()) {
+                varDecl.setType(imports.addImport(params[i].getBound(), ast, context));
+            } else {
+                if (delegate.isVarargs() && params[i].isArray() && i == params.length - 1) {
+                    StringBuffer buffer = new StringBuffer(imports.addImport(params[i].getElementType(), context));
+                    for (int dim = 1; dim < params[i].getDimensions(); dim++) {
+                        buffer.append("[]"); //$NON-NLS-1$
+                    }
+                    varDecl.setType(ASTNodeFactory.newType(ast, buffer.toString()));
+                    varDecl.setVarargs(true);
+                } else {
+                    varDecl.setType(imports.addImport(params[i], ast, context));
+                }
+            }
+            varDecl.setName(ast.newSimpleName(paramNames[i]));
+            parameters.add(varDecl);
+        }
+
+        List<Name> thrownExceptions = decl.thrownExceptions();
+        ITypeBinding[] excTypes = delegate.getExceptionTypes();
+        for (int i = 0; i < excTypes.length; i++) {
+            String excTypeName = imports.addImport(excTypes[i], context);
+            thrownExceptions.add(ASTNodeFactory.newName(ast, excTypeName));
+        }
+
+        Block body = ast.newBlock();
+        decl.setBody(body);
+
+        String delimiter = StubUtility.getLineDelimiterUsed();
+
+        Statement statement = null;
+        MethodInvocation invocation = ast.newMethodInvocation();
+        invocation.setName(ast.newSimpleName(delegate.getName()));
+        List<Expression> arguments = invocation.arguments();
+        for (int i = 0; i < params.length; i++) {
+            arguments.add(ast.newSimpleName(paramNames[i]));
+        }
+        if (settings.useKeywordThis) {
             FieldAccess access = ast.newFieldAccess();
             access.setExpression(ast.newThisExpression());
-            access.setName(ast.newSimpleName(fieldName));
-            expression = access;
-         }
-         else
-         {
-            expression = ast.newSimpleName(fieldName);
-         }
-         Assignment assignment = ast.newAssignment();
-         assignment.setLeftHandSide(expression);
-         assignment.setRightHandSide(ast.newSimpleName(paramName));
-         assignment.setOperator(Assignment.Operator.ASSIGN);
-         body.statements().add(ast.newExpressionStatement(assignment));
-      }
+            access.setName(ast.newSimpleName(delegatingField.getName()));
+            invocation.setExpression(access);
+        } else {
+            invocation.setExpression(ast.newSimpleName(delegatingField.getName()));
+        }
+        if (delegate.getReturnType().isPrimitive() && delegate.getReturnType().getName().equals("void")) {//$NON-NLS-1$
+            statement = ast.newExpressionStatement(invocation);
+        } else {
+            ReturnStatement returnStatement = ast.newReturnStatement();
+            returnStatement.setExpression(invocation);
+            statement = returnStatement;
+        }
+        body.statements().add(statement);
 
-      if (settings != null && settings.createComments)
-      {
-         String declaringClassQualifiedName = superConstructor.getDeclaringClass().getQualifiedName();
-         String linkToMethodName = superConstructor.getName();
-         String[] parameterTypesQualifiedNames = StubUtility.getParameterTypeNamesForSeeTag(superConstructor);
+        ITypeBinding declaringType = delegatingField.getDeclaringClass();
+        if (declaringType == null) { // can be null for
+            return decl;
+        }
 
-         String string = null;
-         try
-         {
-            string = StubUtility.getMethodComment(typeBinding.getName(), decl, superConstructor.isDeprecated(),
-               linkToMethodName, declaringClassQualifiedName, parameterTypesQualifiedNames, false, delimiter);
-         }
-         catch (CoreException e)
-         {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-         }
-         if (string != null)
-         {
-            Javadoc javadoc = (Javadoc)rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
-            decl.setJavadoc(javadoc);
-         }
-      }
-      return decl;
-   }
-
-   public static MethodDeclaration createDelegationStub(ASTRewrite rewrite, ImportRewrite imports,
-      ImportRewriteContext context, IMethodBinding delegate, IVariableBinding delegatingField,
-      CodeGenerationSettings settings) throws CoreException
-   {
-      Assert.isNotNull(delegate);
-      Assert.isNotNull(delegatingField);
-      Assert.isNotNull(settings);
-
-      AST ast = rewrite.getAST();
-
-      MethodDeclaration decl = ast.newMethodDeclaration();
-      decl.modifiers().addAll(ASTNodeFactory.newModifiers(ast,
-         delegate.getModifiers() & ~Modifier.SYNCHRONIZED & ~Modifier.ABSTRACT & ~Modifier.NATIVE));
-
-      decl.setName(ast.newSimpleName(delegate.getName()));
-      decl.setConstructor(false);
-
-      ITypeBinding[] typeParams = delegate.getTypeParameters();
-      List<TypeParameter> typeParameters = decl.typeParameters();
-      for (int i = 0; i < typeParams.length; i++)
-      {
-         ITypeBinding curr = typeParams[i];
-         TypeParameter newTypeParam = ast.newTypeParameter();
-         newTypeParam.setName(ast.newSimpleName(curr.getName()));
-         ITypeBinding[] typeBounds = curr.getTypeBounds();
-         if (typeBounds.length != 1 || !"java.lang.Object".equals(typeBounds[0].getQualifiedName()))
-         {//$NON-NLS-1$
-            List<Type> newTypeBounds = newTypeParam.typeBounds();
-            for (int k = 0; k < typeBounds.length; k++)
-            {
-               newTypeBounds.add(imports.addImport(typeBounds[k], ast, context));
+        String qualifiedName = declaringType.getQualifiedName();
+        IPackageBinding packageBinding = declaringType.getPackage();
+        if (packageBinding != null) {
+            if (packageBinding.getName().length() > 0 && qualifiedName.startsWith(packageBinding.getName())) {
+                qualifiedName = qualifiedName.substring(packageBinding.getName().length());
             }
-         }
-         typeParameters.add(newTypeParam);
-      }
+        }
 
-      decl.setReturnType2(imports.addImport(delegate.getReturnType(), ast, context));
-
-      List<SingleVariableDeclaration> parameters = decl.parameters();
-      ITypeBinding[] params = delegate.getParameterTypes();
-      String[] paramNames = StubUtility.suggestArgumentNames(delegate);
-      for (int i = 0; i < params.length; i++)
-      {
-         SingleVariableDeclaration varDecl = ast.newSingleVariableDeclaration();
-         if (params[i].isWildcardType() && !params[i].isUpperbound())
-         {
-            varDecl.setType(imports.addImport(params[i].getBound(), ast, context));
-         }
-         else
-         {
-            if (delegate.isVarargs() && params[i].isArray() && i == params.length - 1)
-            {
-               StringBuffer buffer = new StringBuffer(imports.addImport(params[i].getElementType(), context));
-               for (int dim = 1; dim < params[i].getDimensions(); dim++)
-               {
-                  buffer.append("[]"); //$NON-NLS-1$
-               }
-               varDecl.setType(ASTNodeFactory.newType(ast, buffer.toString()));
-               varDecl.setVarargs(true);
-            }
-            else
-            {
-               varDecl.setType(imports.addImport(params[i], ast, context));
-            }
-         }
-         varDecl.setName(ast.newSimpleName(paramNames[i]));
-         parameters.add(varDecl);
-      }
-
-      List<Name> thrownExceptions = decl.thrownExceptions();
-      ITypeBinding[] excTypes = delegate.getExceptionTypes();
-      for (int i = 0; i < excTypes.length; i++)
-      {
-         String excTypeName = imports.addImport(excTypes[i], context);
-         thrownExceptions.add(ASTNodeFactory.newName(ast, excTypeName));
-      }
-
-      Block body = ast.newBlock();
-      decl.setBody(body);
-
-      String delimiter = StubUtility.getLineDelimiterUsed();
-
-      Statement statement = null;
-      MethodInvocation invocation = ast.newMethodInvocation();
-      invocation.setName(ast.newSimpleName(delegate.getName()));
-      List<Expression> arguments = invocation.arguments();
-      for (int i = 0; i < params.length; i++)
-      {
-         arguments.add(ast.newSimpleName(paramNames[i]));
-      }
-      if (settings.useKeywordThis)
-      {
-         FieldAccess access = ast.newFieldAccess();
-         access.setExpression(ast.newThisExpression());
-         access.setName(ast.newSimpleName(delegatingField.getName()));
-         invocation.setExpression(access);
-      }
-      else
-      {
-         invocation.setExpression(ast.newSimpleName(delegatingField.getName()));
-      }
-      if (delegate.getReturnType().isPrimitive() && delegate.getReturnType().getName().equals("void"))
-      {//$NON-NLS-1$
-         statement = ast.newExpressionStatement(invocation);
-      }
-      else
-      {
-         ReturnStatement returnStatement = ast.newReturnStatement();
-         returnStatement.setExpression(invocation);
-         statement = returnStatement;
-      }
-      body.statements().add(statement);
-
-      ITypeBinding declaringType = delegatingField.getDeclaringClass();
-      if (declaringType == null)
-      { // can be null for
-         return decl;
-      }
-
-      String qualifiedName = declaringType.getQualifiedName();
-      IPackageBinding packageBinding = declaringType.getPackage();
-      if (packageBinding != null)
-      {
-         if (packageBinding.getName().length() > 0 && qualifiedName.startsWith(packageBinding.getName()))
-         {
-            qualifiedName = qualifiedName.substring(packageBinding.getName().length());
-         }
-      }
-
-      if (settings.createComments)
-      {
+        if (settings.createComments) {
          /*
           * TODO: have API for delegate method comments This is an inlined version of {@link
           * CodeGeneration#getMethodComment(ICompilationUnit, String, MethodDeclaration, IMethodBinding, String)}
           */
-         //         delegate = delegate.getMethodDeclaration();
-         //         String declaringClassQualifiedName = delegate.getDeclaringClass().getQualifiedName();
-         //         String linkToMethodName = delegate.getName();
-         //         String[] parameterTypesQualifiedNames = StubUtility.getParameterTypeNamesForSeeTag(delegate);
-         //         String string =
-         //            StubUtility.getMethodComment(qualifiedName, decl, delegate.isDeprecated(), linkToMethodName,
-         //               declaringClassQualifiedName, parameterTypesQualifiedNames, true, delimiter);
-         //         if (string != null)
-         //         {
-         //            Javadoc javadoc = (Javadoc)rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
-         //            decl.setJavadoc(javadoc);
-         //         }
-      }
-      return decl;
-   }
+            //         delegate = delegate.getMethodDeclaration();
+            //         String declaringClassQualifiedName = delegate.getDeclaringClass().getQualifiedName();
+            //         String linkToMethodName = delegate.getName();
+            //         String[] parameterTypesQualifiedNames = StubUtility.getParameterTypeNamesForSeeTag(delegate);
+            //         String string =
+            //            StubUtility.getMethodComment(qualifiedName, decl, delegate.isDeprecated(), linkToMethodName,
+            //               declaringClassQualifiedName, parameterTypesQualifiedNames, true, delimiter);
+            //         if (string != null)
+            //         {
+            //            Javadoc javadoc = (Javadoc)rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
+            //            decl.setJavadoc(javadoc);
+            //         }
+        }
+        return decl;
+    }
 
-   public static MethodDeclaration createImplementationStub(ASTRewrite rewrite, ImportRewrite imports,
-      ImportRewriteContext context, IMethodBinding binding, String type, CodeGenerationSettings settings,
-      boolean deferred) throws CoreException
-   {
-      Assert.isNotNull(imports);
-      Assert.isNotNull(rewrite);
+    public static MethodDeclaration createImplementationStub(ASTRewrite rewrite, ImportRewrite imports,
+                                                             ImportRewriteContext context, IMethodBinding binding, String type,
+                                                             CodeGenerationSettings settings,
+                                                             boolean deferred) throws CoreException {
+        Assert.isNotNull(imports);
+        Assert.isNotNull(rewrite);
 
-      AST ast = rewrite.getAST();
+        AST ast = rewrite.getAST();
 
-      MethodDeclaration decl = ast.newMethodDeclaration();
-      decl.modifiers().addAll(getImplementationModifiers(ast, binding, deferred));
+        MethodDeclaration decl = ast.newMethodDeclaration();
+        decl.modifiers().addAll(getImplementationModifiers(ast, binding, deferred));
 
-      decl.setName(ast.newSimpleName(binding.getName()));
-      decl.setConstructor(false);
+        decl.setName(ast.newSimpleName(binding.getName()));
+        decl.setConstructor(false);
 
-      ITypeBinding bindingReturnType = binding.getReturnType();
+        ITypeBinding bindingReturnType = binding.getReturnType();
 
-      //      if (JavaModelUtil.is50OrHigher(unit.getJavaProject()))
-      //      {
-      ITypeBinding[] typeParams = binding.getTypeParameters();
-      List<TypeParameter> typeParameters = decl.typeParameters();
-      for (int i = 0; i < typeParams.length; i++)
-      {
-         ITypeBinding curr = typeParams[i];
-         TypeParameter newTypeParam = ast.newTypeParameter();
-         newTypeParam.setName(ast.newSimpleName(curr.getName()));
-         ITypeBinding[] typeBounds = curr.getTypeBounds();
-         if (typeBounds.length != 1 || !"java.lang.Object".equals(typeBounds[0].getQualifiedName()))
-         {//$NON-NLS-1$
-            List<Type> newTypeBounds = newTypeParam.typeBounds();
-            for (int k = 0; k < typeBounds.length; k++)
-            {
-               newTypeBounds.add(imports.addImport(typeBounds[k], ast, context));
+        //      if (JavaModelUtil.is50OrHigher(unit.getJavaProject()))
+        //      {
+        ITypeBinding[] typeParams = binding.getTypeParameters();
+        List<TypeParameter> typeParameters = decl.typeParameters();
+        for (int i = 0; i < typeParams.length; i++) {
+            ITypeBinding curr = typeParams[i];
+            TypeParameter newTypeParam = ast.newTypeParameter();
+            newTypeParam.setName(ast.newSimpleName(curr.getName()));
+            ITypeBinding[] typeBounds = curr.getTypeBounds();
+            if (typeBounds.length != 1 || !"java.lang.Object".equals(typeBounds[0].getQualifiedName())) {//$NON-NLS-1$
+                List<Type> newTypeBounds = newTypeParam.typeBounds();
+                for (int k = 0; k < typeBounds.length; k++) {
+                    newTypeBounds.add(imports.addImport(typeBounds[k], ast, context));
+                }
             }
-         }
-         typeParameters.add(newTypeParam);
-      }
+            typeParameters.add(newTypeParam);
+        }
 
-      //      }
-      //      else
-      //      {
-      //         bindingReturnType = bindingReturnType.getErasure();
-      //      }
+        //      }
+        //      else
+        //      {
+        //         bindingReturnType = bindingReturnType.getErasure();
+        //      }
 
-      decl.setReturnType2(imports.addImport(bindingReturnType, ast, context));
+        decl.setReturnType2(imports.addImport(bindingReturnType, ast, context));
 
-      List<SingleVariableDeclaration> parameters = createParameters(imports, context, ast, binding, decl);
+        List<SingleVariableDeclaration> parameters = createParameters(imports, context, ast, binding, decl);
 
-      List<Name> thrownExceptions = decl.thrownExceptions();
-      ITypeBinding[] excTypes = binding.getExceptionTypes();
-      for (int i = 0; i < excTypes.length; i++)
-      {
-         String excTypeName = imports.addImport(excTypes[i], context);
-         thrownExceptions.add(ASTNodeFactory.newName(ast, excTypeName));
-      }
+        List<Name> thrownExceptions = decl.thrownExceptions();
+        ITypeBinding[] excTypes = binding.getExceptionTypes();
+        for (int i = 0; i < excTypes.length; i++) {
+            String excTypeName = imports.addImport(excTypes[i], context);
+            thrownExceptions.add(ASTNodeFactory.newName(ast, excTypeName));
+        }
 
-      String delimiter = StubUtility.getLineDelimiterUsed();
-      if (!deferred)
-      {
-         Map<String, String> options = JavaCore.getOptions();
+        String delimiter = StubUtility.getLineDelimiterUsed();
+        if (!deferred) {
+            Map<String, String> options = JavaCore.getOptions();
 
-         Block body = ast.newBlock();
-         decl.setBody(body);
+            Block body = ast.newBlock();
+            decl.setBody(body);
 
-         String bodyStatement = ""; //$NON-NLS-1$
-         ITypeBinding declaringType = binding.getDeclaringClass();
-         if (Modifier.isAbstract(binding.getModifiers()) || declaringType.isAnnotation() || declaringType.isInterface())
-         {
-            Expression expression = ASTNodeFactory.newDefaultExpression(ast, decl.getReturnType2(),
-               decl.getExtraDimensions());
-            if (expression != null)
-            {
-               ReturnStatement returnStatement = ast.newReturnStatement();
-               returnStatement.setExpression(expression);
-               bodyStatement = ASTNodes.asFormattedString(returnStatement, 0, delimiter, options);
+            String bodyStatement = ""; //$NON-NLS-1$
+            ITypeBinding declaringType = binding.getDeclaringClass();
+            if (Modifier.isAbstract(binding.getModifiers()) || declaringType.isAnnotation() || declaringType.isInterface()) {
+                Expression expression = ASTNodeFactory.newDefaultExpression(ast, decl.getReturnType2(),
+                                                                            decl.getExtraDimensions());
+                if (expression != null) {
+                    ReturnStatement returnStatement = ast.newReturnStatement();
+                    returnStatement.setExpression(expression);
+                    bodyStatement = ASTNodes.asFormattedString(returnStatement, 0, delimiter, options);
+                }
+            } else {
+                SuperMethodInvocation invocation = ast.newSuperMethodInvocation();
+                invocation.setName(ast.newSimpleName(binding.getName()));
+                SingleVariableDeclaration varDecl = null;
+                for (Iterator<SingleVariableDeclaration> iterator = parameters.iterator(); iterator.hasNext(); ) {
+                    varDecl = iterator.next();
+                    invocation.arguments().add(ast.newSimpleName(varDecl.getName().getIdentifier()));
+                }
+                Expression expression = invocation;
+                Type returnType = decl.getReturnType2();
+                if (returnType instanceof PrimitiveType && ((PrimitiveType)returnType).getPrimitiveTypeCode().equals(
+                        PrimitiveType.VOID)) {
+                    bodyStatement = ASTNodes.asFormattedString(ast.newExpressionStatement(expression), 0, delimiter,
+                                                               options);
+                } else {
+                    ReturnStatement returnStatement = ast.newReturnStatement();
+                    returnStatement.setExpression(expression);
+                    bodyStatement = ASTNodes.asFormattedString(returnStatement, 0, delimiter, options);
+                }
             }
-         }
-         else
-         {
-            SuperMethodInvocation invocation = ast.newSuperMethodInvocation();
-            invocation.setName(ast.newSimpleName(binding.getName()));
-            SingleVariableDeclaration varDecl = null;
-            for (Iterator<SingleVariableDeclaration> iterator = parameters.iterator(); iterator.hasNext(); )
-            {
-               varDecl = iterator.next();
-               invocation.arguments().add(ast.newSimpleName(varDecl.getName().getIdentifier()));
+
+            String placeHolder = StubUtility.getMethodBodyContent(false, type, binding.getName(), bodyStatement,
+                                                                  delimiter);
+            //            CodeGeneration.getMethodBodyContent(unit, type, binding.getName(), false, bodyStatement, delimiter);
+            if (placeHolder != null) {
+                ReturnStatement todoNode = (ReturnStatement)rewrite.createStringPlaceholder(placeHolder,
+                                                                                            ASTNode.RETURN_STATEMENT);
+                body.statements().add(todoNode);
             }
-            Expression expression = invocation;
-            Type returnType = decl.getReturnType2();
-            if (returnType instanceof PrimitiveType && ((PrimitiveType)returnType).getPrimitiveTypeCode().equals(
-               PrimitiveType.VOID))
-            {
-               bodyStatement = ASTNodes.asFormattedString(ast.newExpressionStatement(expression), 0, delimiter,
-                  options);
+        }
+        //TODO
+        //      if (settings != null && settings.createComments)
+        //      {
+        //         String string = CodeGeneration.getMethodComment(unit, type, decl, binding, delimiter);
+        //         if (string != null)
+        //         {
+        //            Javadoc javadoc = (Javadoc)rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
+        //            decl.setJavadoc(javadoc);
+        //         }
+        //      }
+        if (settings != null && settings.overrideAnnotation) {
+            addOverrideAnnotation(rewrite, decl, binding);
+        }
+
+        return decl;
+    }
+
+    private static List<SingleVariableDeclaration> createParameters(ImportRewrite imports, ImportRewriteContext context,
+                                                                    AST ast, IMethodBinding binding, MethodDeclaration decl) {
+        boolean is50OrHigher = true;
+        List<SingleVariableDeclaration> parameters = decl.parameters();
+        ITypeBinding[] params = binding.getParameterTypes();
+        String[] paramNames = StubUtility.suggestArgumentNames(binding);
+        for (int i = 0; i < params.length; i++) {
+            SingleVariableDeclaration var = ast.newSingleVariableDeclaration();
+            if (binding.isVarargs() && params[i].isArray() && i == params.length - 1) {
+                ITypeBinding type = params[i].getElementType();
+                if (!is50OrHigher) {
+                    type = type.getErasure();
+                }
+                StringBuffer buffer = new StringBuffer(imports.addImport(type, context));
+                for (int dim = 1; dim < params[i].getDimensions(); dim++) {
+                    buffer.append("[]"); //$NON-NLS-1$
+                }
+                var.setType(ASTNodeFactory.newType(ast, buffer.toString()));
+                var.setVarargs(true);
+            } else {
+                ITypeBinding type = params[i];
+                if (!is50OrHigher) {
+                    type = type.getErasure();
+                }
+                var.setType(imports.addImport(type, ast, context));
             }
-            else
-            {
-               ReturnStatement returnStatement = ast.newReturnStatement();
-               returnStatement.setExpression(expression);
-               bodyStatement = ASTNodes.asFormattedString(returnStatement, 0, delimiter, options);
+            var.setName(ast.newSimpleName(paramNames[i]));
+            parameters.add(var);
+        }
+        return parameters;
+    }
+
+    private static IMethodBinding findMethodBinding(IMethodBinding method, List<IMethodBinding> allMethods) {
+        for (int i = 0; i < allMethods.size(); i++) {
+            IMethodBinding curr = allMethods.get(i);
+            if (Bindings.isSubsignature(method, curr)) {
+                return curr;
             }
-         }
+        }
+        return null;
+    }
 
-         String placeHolder = StubUtility.getMethodBodyContent(false, type, binding.getName(), bodyStatement,
-            delimiter);
-         //            CodeGeneration.getMethodBodyContent(unit, type, binding.getName(), false, bodyStatement, delimiter);
-         if (placeHolder != null)
-         {
-            ReturnStatement todoNode = (ReturnStatement)rewrite.createStringPlaceholder(placeHolder,
-               ASTNode.RETURN_STATEMENT);
-            body.statements().add(todoNode);
-         }
-      }
-      //TODO
-      //      if (settings != null && settings.createComments)
-      //      {
-      //         String string = CodeGeneration.getMethodComment(unit, type, decl, binding, delimiter);
-      //         if (string != null)
-      //         {
-      //            Javadoc javadoc = (Javadoc)rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
-      //            decl.setJavadoc(javadoc);
-      //         }
-      //      }
-      if (settings != null && settings.overrideAnnotation)
-      {
-         addOverrideAnnotation(rewrite, decl, binding);
-      }
-
-      return decl;
-   }
-
-   private static List<SingleVariableDeclaration> createParameters(ImportRewrite imports, ImportRewriteContext context,
-      AST ast, IMethodBinding binding, MethodDeclaration decl)
-   {
-      boolean is50OrHigher = true;
-      List<SingleVariableDeclaration> parameters = decl.parameters();
-      ITypeBinding[] params = binding.getParameterTypes();
-      String[] paramNames = StubUtility.suggestArgumentNames(binding);
-      for (int i = 0; i < params.length; i++)
-      {
-         SingleVariableDeclaration var = ast.newSingleVariableDeclaration();
-         if (binding.isVarargs() && params[i].isArray() && i == params.length - 1)
-         {
-            ITypeBinding type = params[i].getElementType();
-            if (!is50OrHigher)
-            {
-               type = type.getErasure();
+    private static IMethodBinding findOverridingMethod(IMethodBinding method, List<IMethodBinding> allMethods) {
+        for (int i = 0; i < allMethods.size(); i++) {
+            IMethodBinding curr = allMethods.get(i);
+            if (Bindings.areOverriddenMethods(curr, method) || Bindings.isSubsignature(curr, method)) {
+                return curr;
             }
-            StringBuffer buffer = new StringBuffer(imports.addImport(type, context));
-            for (int dim = 1; dim < params[i].getDimensions(); dim++)
-            {
-               buffer.append("[]"); //$NON-NLS-1$
+        }
+        return null;
+    }
+
+    private static void findUnimplementedInterfaceMethods(ITypeBinding typeBinding, HashSet<ITypeBinding> visited,
+                                                          ArrayList<IMethodBinding> allMethods, IPackageBinding currPack,
+                                                          ArrayList<IMethodBinding> toImplement) {
+        if (visited.add(typeBinding)) {
+            IMethodBinding[] typeMethods = typeBinding.getDeclaredMethods();
+            for (int i = 0; i < typeMethods.length; i++) {
+                IMethodBinding curr = typeMethods[i];
+                IMethodBinding impl = findMethodBinding(curr, allMethods);
+                if (impl == null || !Bindings.isVisibleInHierarchy(impl, currPack)) {
+                    if (impl != null) {
+                        allMethods.remove(impl);
+                    }
+                    toImplement.add(curr);
+                    allMethods.add(curr);
+                }
             }
-            var.setType(ASTNodeFactory.newType(ast, buffer.toString()));
-            var.setVarargs(true);
-         }
-         else
-         {
-            ITypeBinding type = params[i];
-            if (!is50OrHigher)
-            {
-               type = type.getErasure();
+            ITypeBinding[] superInterfaces = typeBinding.getInterfaces();
+            for (int i = 0; i < superInterfaces.length; i++) {
+                findUnimplementedInterfaceMethods(superInterfaces[i], visited, allMethods, currPack, toImplement);
             }
-            var.setType(imports.addImport(type, ast, context));
-         }
-         var.setName(ast.newSimpleName(paramNames[i]));
-         parameters.add(var);
-      }
-      return parameters;
-   }
+        }
+    }
 
-   private static IMethodBinding findMethodBinding(IMethodBinding method, List<IMethodBinding> allMethods)
-   {
-      for (int i = 0; i < allMethods.size(); i++)
-      {
-         IMethodBinding curr = allMethods.get(i);
-         if (Bindings.isSubsignature(method, curr))
-         {
-            return curr;
-         }
-      }
-      return null;
-   }
+    //   public static DelegateEntry[] getDelegatableMethods(ITypeBinding binding)
+    //   {
+    //      final List<DelegateEntry> tuples = new ArrayList<DelegateEntry>();
+    //      final List<IMethodBinding> declared = new ArrayList<IMethodBinding>();
+    //      IMethodBinding[] typeMethods = binding.getDeclaredMethods();
+    //      for (int index = 0; index < typeMethods.length; index++)
+    //         declared.add(typeMethods[index]);
+    //      IVariableBinding[] typeFields = binding.getDeclaredFields();
+    //      for (int index = 0; index < typeFields.length; index++)
+    //      {
+    //         IVariableBinding fieldBinding = typeFields[index];
+    //         if (fieldBinding.isField() && !fieldBinding.isEnumConstant() && !fieldBinding.isSynthetic())
+    //            getDelegatableMethods(new ArrayList<IMethodBinding>(declared), fieldBinding, fieldBinding.getType(),
+    //               binding, tuples);
+    //      }
+    //      // list of tuple<IVariableBinding, IMethodBinding>
+    //      return tuples.toArray(new DelegateEntry[tuples.size()]);
+    //   }
 
-   private static IMethodBinding findOverridingMethod(IMethodBinding method, List<IMethodBinding> allMethods)
-   {
-      for (int i = 0; i < allMethods.size(); i++)
-      {
-         IMethodBinding curr = allMethods.get(i);
-         if (Bindings.areOverriddenMethods(curr, method) || Bindings.isSubsignature(curr, method))
-         {
-            return curr;
-         }
-      }
-      return null;
-   }
+    //   private static void getDelegatableMethods(List<IMethodBinding> methods, IVariableBinding fieldBinding,
+    //      ITypeBinding typeBinding, ITypeBinding binding, List<DelegateEntry> result)
+    //   {
+    //      boolean match = false;
+    //      if (typeBinding.isTypeVariable())
+    //      {
+    //         ITypeBinding[] typeBounds = typeBinding.getTypeBounds();
+    //         if (typeBounds.length > 0)
+    //         {
+    //            for (int i = 0; i < typeBounds.length; i++)
+    //            {
+    //               getDelegatableMethods(methods, fieldBinding, typeBounds[i], binding, result);
+    //            }
+    //         }
+    //         else
+    //         {
+    //            ITypeBinding objectBinding = Bindings.findTypeInHierarchy(binding, "java.lang.Object"); //$NON-NLS-1$
+    //            if (objectBinding != null)
+    //            {
+    //               getDelegatableMethods(methods, fieldBinding, objectBinding, binding, result);
+    //            }
+    //         }
+    //      }
+    //      else
+    //      {
+    //         IMethodBinding[] candidates = getDelegateCandidates(typeBinding, binding);
+    //         for (int index = 0; index < candidates.length; index++)
+    //         {
+    //            match = false;
+    //            final IMethodBinding methodBinding = candidates[index];
+    //            for (int offset = 0; offset < methods.size() && !match; offset++)
+    //            {
+    //               if (Bindings.areOverriddenMethods(methods.get(offset), methodBinding))
+    //                  match = true;
+    //            }
+    //            if (!match)
+    //            {
+    //               result.add(new DelegateEntry(methodBinding, fieldBinding));
+    //               methods.add(methodBinding);
+    //            }
+    //         }
+    //         final ITypeBinding superclass = typeBinding.getSuperclass();
+    //         if (superclass != null)
+    //            getDelegatableMethods(methods, fieldBinding, superclass, binding, result);
+    //         ITypeBinding[] superInterfaces = typeBinding.getInterfaces();
+    //         for (int offset = 0; offset < superInterfaces.length; offset++)
+    //            getDelegatableMethods(methods, fieldBinding, superInterfaces[offset], binding, result);
+    //      }
+    //   }
 
-   private static void findUnimplementedInterfaceMethods(ITypeBinding typeBinding, HashSet<ITypeBinding> visited,
-      ArrayList<IMethodBinding> allMethods, IPackageBinding currPack, ArrayList<IMethodBinding> toImplement)
-   {
-      if (visited.add(typeBinding))
-      {
-         IMethodBinding[] typeMethods = typeBinding.getDeclaredMethods();
-         for (int i = 0; i < typeMethods.length; i++)
-         {
-            IMethodBinding curr = typeMethods[i];
-            IMethodBinding impl = findMethodBinding(curr, allMethods);
-            if (impl == null || !Bindings.isVisibleInHierarchy(impl, currPack))
-            {
-               if (impl != null)
-               {
-                  allMethods.remove(impl);
-               }
-               toImplement.add(curr);
-               allMethods.add(curr);
+    private static IMethodBinding[] getDelegateCandidates(ITypeBinding binding, ITypeBinding hierarchy) {
+        List<IMethodBinding> allMethods = new ArrayList<IMethodBinding>();
+        boolean isInterface = binding.isInterface();
+        IMethodBinding[] typeMethods = binding.getDeclaredMethods();
+        for (int index = 0; index < typeMethods.length; index++) {
+            final int modifiers = typeMethods[index].getModifiers();
+            if (!typeMethods[index].isConstructor() && !Modifier.isStatic(modifiers) && (isInterface || Modifier.isPublic(
+                    modifiers))) {
+                IMethodBinding result = Bindings.findOverriddenMethodInHierarchy(hierarchy, typeMethods[index]);
+                if (result != null && Flags.isFinal(result.getModifiers())) {
+                    continue;
+                }
+                ITypeBinding[] parameterBindings = typeMethods[index].getParameterTypes();
+                boolean upper = false;
+                for (int offset = 0; offset < parameterBindings.length; offset++) {
+                    if (parameterBindings[offset].isWildcardType() && parameterBindings[offset].isUpperbound()) {
+                        upper = true;
+                    }
+                }
+                if (!upper) {
+                    allMethods.add(typeMethods[index]);
+                }
             }
-         }
-         ITypeBinding[] superInterfaces = typeBinding.getInterfaces();
-         for (int i = 0; i < superInterfaces.length; i++)
-         {
-            findUnimplementedInterfaceMethods(superInterfaces[i], visited, allMethods, currPack, toImplement);
-         }
-      }
-   }
+        }
+        return allMethods.toArray(new IMethodBinding[allMethods.size()]);
+    }
 
-   //   public static DelegateEntry[] getDelegatableMethods(ITypeBinding binding)
-   //   {
-   //      final List<DelegateEntry> tuples = new ArrayList<DelegateEntry>();
-   //      final List<IMethodBinding> declared = new ArrayList<IMethodBinding>();
-   //      IMethodBinding[] typeMethods = binding.getDeclaredMethods();
-   //      for (int index = 0; index < typeMethods.length; index++)
-   //         declared.add(typeMethods[index]);
-   //      IVariableBinding[] typeFields = binding.getDeclaredFields();
-   //      for (int index = 0; index < typeFields.length; index++)
-   //      {
-   //         IVariableBinding fieldBinding = typeFields[index];
-   //         if (fieldBinding.isField() && !fieldBinding.isEnumConstant() && !fieldBinding.isSynthetic())
-   //            getDelegatableMethods(new ArrayList<IMethodBinding>(declared), fieldBinding, fieldBinding.getType(),
-   //               binding, tuples);
-   //      }
-   //      // list of tuple<IVariableBinding, IMethodBinding>
-   //      return tuples.toArray(new DelegateEntry[tuples.size()]);
-   //   }
+    private static List<Modifier> getImplementationModifiers(AST ast, IMethodBinding method, boolean deferred) {
+        int modifiers = method.getModifiers() & ~Modifier.ABSTRACT & ~Modifier.NATIVE & ~Modifier.PRIVATE;
+        if (deferred) {
+            modifiers = modifiers & ~Modifier.PROTECTED;
+            modifiers = modifiers | Modifier.PUBLIC;
+        }
+        return ASTNodeFactory.newModifiers(ast, modifiers);
+    }
 
-   //   private static void getDelegatableMethods(List<IMethodBinding> methods, IVariableBinding fieldBinding,
-   //      ITypeBinding typeBinding, ITypeBinding binding, List<DelegateEntry> result)
-   //   {
-   //      boolean match = false;
-   //      if (typeBinding.isTypeVariable())
-   //      {
-   //         ITypeBinding[] typeBounds = typeBinding.getTypeBounds();
-   //         if (typeBounds.length > 0)
-   //         {
-   //            for (int i = 0; i < typeBounds.length; i++)
-   //            {
-   //               getDelegatableMethods(methods, fieldBinding, typeBounds[i], binding, result);
-   //            }
-   //         }
-   //         else
-   //         {
-   //            ITypeBinding objectBinding = Bindings.findTypeInHierarchy(binding, "java.lang.Object"); //$NON-NLS-1$
-   //            if (objectBinding != null)
-   //            {
-   //               getDelegatableMethods(methods, fieldBinding, objectBinding, binding, result);
-   //            }
-   //         }
-   //      }
-   //      else
-   //      {
-   //         IMethodBinding[] candidates = getDelegateCandidates(typeBinding, binding);
-   //         for (int index = 0; index < candidates.length; index++)
-   //         {
-   //            match = false;
-   //            final IMethodBinding methodBinding = candidates[index];
-   //            for (int offset = 0; offset < methods.size() && !match; offset++)
-   //            {
-   //               if (Bindings.areOverriddenMethods(methods.get(offset), methodBinding))
-   //                  match = true;
-   //            }
-   //            if (!match)
-   //            {
-   //               result.add(new DelegateEntry(methodBinding, fieldBinding));
-   //               methods.add(methodBinding);
-   //            }
-   //         }
-   //         final ITypeBinding superclass = typeBinding.getSuperclass();
-   //         if (superclass != null)
-   //            getDelegatableMethods(methods, fieldBinding, superclass, binding, result);
-   //         ITypeBinding[] superInterfaces = typeBinding.getInterfaces();
-   //         for (int offset = 0; offset < superInterfaces.length; offset++)
-   //            getDelegatableMethods(methods, fieldBinding, superInterfaces[offset], binding, result);
-   //      }
-   //   }
-
-   private static IMethodBinding[] getDelegateCandidates(ITypeBinding binding, ITypeBinding hierarchy)
-   {
-      List<IMethodBinding> allMethods = new ArrayList<IMethodBinding>();
-      boolean isInterface = binding.isInterface();
-      IMethodBinding[] typeMethods = binding.getDeclaredMethods();
-      for (int index = 0; index < typeMethods.length; index++)
-      {
-         final int modifiers = typeMethods[index].getModifiers();
-         if (!typeMethods[index].isConstructor() && !Modifier.isStatic(modifiers) && (isInterface || Modifier.isPublic(
-            modifiers)))
-         {
-            IMethodBinding result = Bindings.findOverriddenMethodInHierarchy(hierarchy, typeMethods[index]);
-            if (result != null && Flags.isFinal(result.getModifiers()))
-            {
-               continue;
+    public static IMethodBinding[] getOverridableMethods(AST ast, ITypeBinding typeBinding, boolean isSubType) {
+        List<IMethodBinding> allMethods = new ArrayList<IMethodBinding>();
+        IMethodBinding[] typeMethods = typeBinding.getDeclaredMethods();
+        for (int index = 0; index < typeMethods.length; index++) {
+            final int modifiers = typeMethods[index].getModifiers();
+            if (!typeMethods[index].isConstructor() && !Modifier.isStatic(modifiers) && !Modifier.isPrivate(modifiers)) {
+                allMethods.add(typeMethods[index]);
             }
-            ITypeBinding[] parameterBindings = typeMethods[index].getParameterTypes();
-            boolean upper = false;
-            for (int offset = 0; offset < parameterBindings.length; offset++)
-            {
-               if (parameterBindings[offset].isWildcardType() && parameterBindings[offset].isUpperbound())
-               {
-                  upper = true;
-               }
+        }
+        ITypeBinding clazz = typeBinding.getSuperclass();
+        while (clazz != null) {
+            IMethodBinding[] methods = clazz.getDeclaredMethods();
+            for (int offset = 0; offset < methods.length; offset++) {
+                final int modifiers = methods[offset].getModifiers();
+                if (!methods[offset].isConstructor() && !Modifier.isStatic(modifiers) && !Modifier.isPrivate(modifiers)) {
+                    if (findOverridingMethod(methods[offset], allMethods) == null) {
+                        allMethods.add(methods[offset]);
+                    }
+                }
             }
-            if (!upper)
-            {
-               allMethods.add(typeMethods[index]);
+            clazz = clazz.getSuperclass();
+        }
+        clazz = typeBinding;
+        while (clazz != null) {
+            ITypeBinding[] superInterfaces = clazz.getInterfaces();
+            for (int index = 0; index < superInterfaces.length; index++) {
+                getOverridableMethods(ast, superInterfaces[index], allMethods);
             }
-         }
-      }
-      return allMethods.toArray(new IMethodBinding[allMethods.size()]);
-   }
+            clazz = clazz.getSuperclass();
+        }
+        if (typeBinding.isInterface()) {
+            getOverridableMethods(ast, ast.resolveWellKnownType("java.lang.Object"), allMethods); //$NON-NLS-1$
+        }
+        if (!isSubType) {
+            allMethods.removeAll(Arrays.asList(typeMethods));
+        }
+        int modifiers = 0;
+        if (!typeBinding.isInterface()) {
+            for (int index = allMethods.size() - 1; index >= 0; index--) {
+                IMethodBinding method = allMethods.get(index);
+                modifiers = method.getModifiers();
+                if (Modifier.isFinal(modifiers)) {
+                    allMethods.remove(index);
+                }
+            }
+        }
+        return allMethods.toArray(new IMethodBinding[allMethods.size()]);
+    }
 
-   private static List<Modifier> getImplementationModifiers(AST ast, IMethodBinding method, boolean deferred)
-   {
-      int modifiers = method.getModifiers() & ~Modifier.ABSTRACT & ~Modifier.NATIVE & ~Modifier.PRIVATE;
-      if (deferred)
-      {
-         modifiers = modifiers & ~Modifier.PROTECTED;
-         modifiers = modifiers | Modifier.PUBLIC;
-      }
-      return ASTNodeFactory.newModifiers(ast, modifiers);
-   }
-
-   public static IMethodBinding[] getOverridableMethods(AST ast, ITypeBinding typeBinding, boolean isSubType)
-   {
-      List<IMethodBinding> allMethods = new ArrayList<IMethodBinding>();
-      IMethodBinding[] typeMethods = typeBinding.getDeclaredMethods();
-      for (int index = 0; index < typeMethods.length; index++)
-      {
-         final int modifiers = typeMethods[index].getModifiers();
-         if (!typeMethods[index].isConstructor() && !Modifier.isStatic(modifiers) && !Modifier.isPrivate(modifiers))
-         {
-            allMethods.add(typeMethods[index]);
-         }
-      }
-      ITypeBinding clazz = typeBinding.getSuperclass();
-      while (clazz != null)
-      {
-         IMethodBinding[] methods = clazz.getDeclaredMethods();
-         for (int offset = 0; offset < methods.length; offset++)
-         {
+    private static void getOverridableMethods(AST ast, ITypeBinding superBinding, List<IMethodBinding> allMethods) {
+        IMethodBinding[] methods = superBinding.getDeclaredMethods();
+        for (int offset = 0; offset < methods.length; offset++) {
             final int modifiers = methods[offset].getModifiers();
-            if (!methods[offset].isConstructor() && !Modifier.isStatic(modifiers) && !Modifier.isPrivate(modifiers))
-            {
-               if (findOverridingMethod(methods[offset], allMethods) == null)
-               {
-                  allMethods.add(methods[offset]);
-               }
+            if (!methods[offset].isConstructor() && !Modifier.isStatic(modifiers) && !Modifier.isPrivate(modifiers)) {
+                if (findOverridingMethod(methods[offset], allMethods) == null && !Modifier.isStatic(modifiers)) {
+                    allMethods.add(methods[offset]);
+                }
             }
-         }
-         clazz = clazz.getSuperclass();
-      }
-      clazz = typeBinding;
-      while (clazz != null)
-      {
-         ITypeBinding[] superInterfaces = clazz.getInterfaces();
-         for (int index = 0; index < superInterfaces.length; index++)
-         {
+        }
+        ITypeBinding[] superInterfaces = superBinding.getInterfaces();
+        for (int index = 0; index < superInterfaces.length; index++) {
             getOverridableMethods(ast, superInterfaces[index], allMethods);
-         }
-         clazz = clazz.getSuperclass();
-      }
-      if (typeBinding.isInterface())
-      {
-         getOverridableMethods(ast, ast.resolveWellKnownType("java.lang.Object"), allMethods); //$NON-NLS-1$
-      }
-      if (!isSubType)
-      {
-         allMethods.removeAll(Arrays.asList(typeMethods));
-      }
-      int modifiers = 0;
-      if (!typeBinding.isInterface())
-      {
-         for (int index = allMethods.size() - 1; index >= 0; index--)
-         {
-            IMethodBinding method = allMethods.get(index);
-            modifiers = method.getModifiers();
-            if (Modifier.isFinal(modifiers))
-            {
-               allMethods.remove(index);
-            }
-         }
-      }
-      return allMethods.toArray(new IMethodBinding[allMethods.size()]);
-   }
+        }
+    }
 
-   private static void getOverridableMethods(AST ast, ITypeBinding superBinding, List<IMethodBinding> allMethods)
-   {
-      IMethodBinding[] methods = superBinding.getDeclaredMethods();
-      for (int offset = 0; offset < methods.length; offset++)
-      {
-         final int modifiers = methods[offset].getModifiers();
-         if (!methods[offset].isConstructor() && !Modifier.isStatic(modifiers) && !Modifier.isPrivate(modifiers))
-         {
-            if (findOverridingMethod(methods[offset], allMethods) == null && !Modifier.isStatic(modifiers))
-            {
-               allMethods.add(methods[offset]);
-            }
-         }
-      }
-      ITypeBinding[] superInterfaces = superBinding.getInterfaces();
-      for (int index = 0; index < superInterfaces.length; index++)
-      {
-         getOverridableMethods(ast, superInterfaces[index], allMethods);
-      }
-   }
+    private static String suggestParameterName(IVariableBinding binding, String[] excluded) {
+        String name = StubUtility.getBaseName(binding);
+        return StubUtility.suggestArgumentName(name, excluded);
+    }
 
-   private static String suggestParameterName(IVariableBinding binding, String[] excluded)
-   {
-      String name = StubUtility.getBaseName(binding);
-      return StubUtility.suggestArgumentName(name, excluded);
-   }
+    public static IMethodBinding[] getUnimplementedMethods(ITypeBinding typeBinding) {
+        return getUnimplementedMethods(typeBinding, false);
+    }
 
-   public static IMethodBinding[] getUnimplementedMethods(ITypeBinding typeBinding)
-   {
-      return getUnimplementedMethods(typeBinding, false);
-   }
+    public static IMethodBinding[] getUnimplementedMethods(ITypeBinding typeBinding, boolean implementAbstractsOfInput) {
+        ArrayList<IMethodBinding> allMethods = new ArrayList<IMethodBinding>();
+        ArrayList<IMethodBinding> toImplement = new ArrayList<IMethodBinding>();
 
-   public static IMethodBinding[] getUnimplementedMethods(ITypeBinding typeBinding, boolean implementAbstractsOfInput)
-   {
-      ArrayList<IMethodBinding> allMethods = new ArrayList<IMethodBinding>();
-      ArrayList<IMethodBinding> toImplement = new ArrayList<IMethodBinding>();
-
-      IMethodBinding[] typeMethods = typeBinding.getDeclaredMethods();
-      for (int i = 0; i < typeMethods.length; i++)
-      {
-         IMethodBinding curr = typeMethods[i];
-         int modifiers = curr.getModifiers();
-         if (!curr.isConstructor() && !Modifier.isStatic(modifiers) && !Modifier.isPrivate(modifiers))
-         {
-            allMethods.add(curr);
-         }
-      }
-
-      ITypeBinding superClass = typeBinding.getSuperclass();
-      while (superClass != null)
-      {
-         typeMethods = superClass.getDeclaredMethods();
-         for (int i = 0; i < typeMethods.length; i++)
-         {
+        IMethodBinding[] typeMethods = typeBinding.getDeclaredMethods();
+        for (int i = 0; i < typeMethods.length; i++) {
             IMethodBinding curr = typeMethods[i];
             int modifiers = curr.getModifiers();
-            if (!curr.isConstructor() && !Modifier.isStatic(modifiers) && !Modifier.isPrivate(modifiers))
-            {
-               if (findMethodBinding(curr, allMethods) == null)
-               {
-                  allMethods.add(curr);
-               }
+            if (!curr.isConstructor() && !Modifier.isStatic(modifiers) && !Modifier.isPrivate(modifiers)) {
+                allMethods.add(curr);
             }
-         }
-         superClass = superClass.getSuperclass();
-      }
+        }
 
-      for (int i = 0; i < allMethods.size(); i++)
-      {
-         IMethodBinding curr = allMethods.get(i);
-         int modifiers = curr.getModifiers();
-         if ((Modifier.isAbstract(
-            modifiers) || curr.getDeclaringClass().isInterface()) && (implementAbstractsOfInput || typeBinding != curr.getDeclaringClass()))
-         {
-            // implement all abstract methods
-            toImplement.add(curr);
-         }
-      }
-
-      HashSet<ITypeBinding> visited = new HashSet<ITypeBinding>();
-      ITypeBinding curr = typeBinding;
-      while (curr != null)
-      {
-         ITypeBinding[] superInterfaces = curr.getInterfaces();
-         for (int i = 0; i < superInterfaces.length; i++)
-         {
-            findUnimplementedInterfaceMethods(superInterfaces[i], visited, allMethods, typeBinding.getPackage(),
-               toImplement);
-         }
-         curr = curr.getSuperclass();
-      }
-
-      return toImplement.toArray(new IMethodBinding[toImplement.size()]);
-   }
-
-   public static IMethodBinding[] getVisibleConstructors(ITypeBinding binding, boolean accountExisting,
-      boolean proposeDefault)
-   {
-      List<IMethodBinding> constructorMethods = new ArrayList<IMethodBinding>();
-      List<IMethodBinding> existingConstructors = null;
-      ITypeBinding superType = binding.getSuperclass();
-      if (superType == null)
-      {
-         return new IMethodBinding[0];
-      }
-      if (accountExisting)
-      {
-         IMethodBinding[] methods = binding.getDeclaredMethods();
-         existingConstructors = new ArrayList<IMethodBinding>(methods.length);
-         for (int index = 0; index < methods.length; index++)
-         {
-            IMethodBinding method = methods[index];
-            if (method.isConstructor() && !method.isDefaultConstructor())
-            {
-               existingConstructors.add(method);
+        ITypeBinding superClass = typeBinding.getSuperclass();
+        while (superClass != null) {
+            typeMethods = superClass.getDeclaredMethods();
+            for (int i = 0; i < typeMethods.length; i++) {
+                IMethodBinding curr = typeMethods[i];
+                int modifiers = curr.getModifiers();
+                if (!curr.isConstructor() && !Modifier.isStatic(modifiers) && !Modifier.isPrivate(modifiers)) {
+                    if (findMethodBinding(curr, allMethods) == null) {
+                        allMethods.add(curr);
+                    }
+                }
             }
-         }
-      }
-      if (existingConstructors != null)
-      {
-         constructorMethods.addAll(existingConstructors);
-      }
-      IMethodBinding[] methods = binding.getDeclaredMethods();
-      IMethodBinding[] superMethods = superType.getDeclaredMethods();
-      for (int index = 0; index < superMethods.length; index++)
-      {
-         IMethodBinding method = superMethods[index];
-         if (method.isConstructor())
-         {
-            if (Bindings.isVisibleInHierarchy(method,
-               binding.getPackage()) && (!accountExisting || !Bindings.containsSignatureEquivalentConstructor(methods,
-               method)))
-            {
-               constructorMethods.add(method);
+            superClass = superClass.getSuperclass();
+        }
+
+        for (int i = 0; i < allMethods.size(); i++) {
+            IMethodBinding curr = allMethods.get(i);
+            int modifiers = curr.getModifiers();
+            if ((Modifier.isAbstract(
+                    modifiers) || curr.getDeclaringClass().isInterface()) &&
+                (implementAbstractsOfInput || typeBinding != curr.getDeclaringClass())) {
+                // implement all abstract methods
+                toImplement.add(curr);
             }
-         }
-      }
-      if (existingConstructors != null)
-      {
-         constructorMethods.removeAll(existingConstructors);
-      }
-      if (constructorMethods.isEmpty())
-      {
-         superType = binding;
-         while (superType.getSuperclass() != null)
-         {
-            superType = superType.getSuperclass();
-         }
-         IMethodBinding method = Bindings.findMethodInType(superType, "Object", new ITypeBinding[0]); //$NON-NLS-1$
-         if (method != null)
-         {
-            if ((proposeDefault || !accountExisting || existingConstructors == null || existingConstructors.isEmpty()) && (!accountExisting || !Bindings.containsSignatureEquivalentConstructor(
-               methods, method)))
-            {
-               constructorMethods.add(method);
+        }
+
+        HashSet<ITypeBinding> visited = new HashSet<ITypeBinding>();
+        ITypeBinding curr = typeBinding;
+        while (curr != null) {
+            ITypeBinding[] superInterfaces = curr.getInterfaces();
+            for (int i = 0; i < superInterfaces.length; i++) {
+                findUnimplementedInterfaceMethods(superInterfaces[i], visited, allMethods, typeBinding.getPackage(),
+                                                  toImplement);
             }
-         }
-      }
-      return constructorMethods.toArray(new IMethodBinding[constructorMethods.size()]);
-   }
+            curr = curr.getSuperclass();
+        }
 
-   /**
-    * Evaluates the insertion position of a new node.
-    *
-    * @param listRewrite The list rewriter to which the new node will be added
-    * @param sibling     The Java element before which the new element should be added.
-    * @return the AST node of the list to insert before or null to insert as last.
-    * @throws JavaModelException thrown if accessing the Java element failed
-    */
+        return toImplement.toArray(new IMethodBinding[toImplement.size()]);
+    }
 
-   public static ASTNode getNodeToInsertBefore(ListRewrite listRewrite, int insertPos)
-   {
-      //      if (sibling instanceof IMember)
-      //      {
-      //         ISourceRange sourceRange = ((IMember)sibling).getSourceRange();
-      //         if (sourceRange == null)
-      //         {
-      //            return null;
-      //         }
-      //         int insertPos = sourceRange.getOffset();
+    public static IMethodBinding[] getVisibleConstructors(ITypeBinding binding, boolean accountExisting,
+                                                          boolean proposeDefault) {
+        List<IMethodBinding> constructorMethods = new ArrayList<IMethodBinding>();
+        List<IMethodBinding> existingConstructors = null;
+        ITypeBinding superType = binding.getSuperclass();
+        if (superType == null) {
+            return new IMethodBinding[0];
+        }
+        if (accountExisting) {
+            IMethodBinding[] methods = binding.getDeclaredMethods();
+            existingConstructors = new ArrayList<IMethodBinding>(methods.length);
+            for (int index = 0; index < methods.length; index++) {
+                IMethodBinding method = methods[index];
+                if (method.isConstructor() && !method.isDefaultConstructor()) {
+                    existingConstructors.add(method);
+                }
+            }
+        }
+        if (existingConstructors != null) {
+            constructorMethods.addAll(existingConstructors);
+        }
+        IMethodBinding[] methods = binding.getDeclaredMethods();
+        IMethodBinding[] superMethods = superType.getDeclaredMethods();
+        for (int index = 0; index < superMethods.length; index++) {
+            IMethodBinding method = superMethods[index];
+            if (method.isConstructor()) {
+                if (Bindings.isVisibleInHierarchy(method,
+                                                  binding.getPackage()) &&
+                    (!accountExisting || !Bindings.containsSignatureEquivalentConstructor(methods,
+                                                                                          method))) {
+                    constructorMethods.add(method);
+                }
+            }
+        }
+        if (existingConstructors != null) {
+            constructorMethods.removeAll(existingConstructors);
+        }
+        if (constructorMethods.isEmpty()) {
+            superType = binding;
+            while (superType.getSuperclass() != null) {
+                superType = superType.getSuperclass();
+            }
+            IMethodBinding method = Bindings.findMethodInType(superType, "Object", new ITypeBinding[0]); //$NON-NLS-1$
+            if (method != null) {
+                if ((proposeDefault || !accountExisting || existingConstructors == null || existingConstructors.isEmpty()) &&
+                    (!accountExisting || !Bindings.containsSignatureEquivalentConstructor(
+                            methods, method))) {
+                    constructorMethods.add(method);
+                }
+            }
+        }
+        return constructorMethods.toArray(new IMethodBinding[constructorMethods.size()]);
+    }
 
-      List<? extends ASTNode> members = listRewrite.getOriginalList();
-      for (int i = 0; i < members.size(); i++)
-      {
-         ASTNode curr = members.get(i);
-         if (curr.getStartPosition() >= insertPos)
-         {
-            return curr;
-         }
-      }
-      //      }
-      return null;
-   }
+    /**
+     * Evaluates the insertion position of a new node.
+     *
+     * @param listRewrite
+     *         The list rewriter to which the new node will be added
+     * @param sibling
+     *         The Java element before which the new element should be added.
+     * @return the AST node of the list to insert before or null to insert as last.
+     * @throws JavaModelException
+     *         thrown if accessing the Java element failed
+     */
 
-   /**
-    * Creates a new stub utility.
-    */
-   private StubUtility2()
-   {
-      // Not for instantiation
-   }
+    public static ASTNode getNodeToInsertBefore(ListRewrite listRewrite, int insertPos) {
+        //      if (sibling instanceof IMember)
+        //      {
+        //         ISourceRange sourceRange = ((IMember)sibling).getSourceRange();
+        //         if (sourceRange == null)
+        //         {
+        //            return null;
+        //         }
+        //         int insertPos = sourceRange.getOffset();
+
+        List<? extends ASTNode> members = listRewrite.getOriginalList();
+        for (int i = 0; i < members.size(); i++) {
+            ASTNode curr = members.get(i);
+            if (curr.getStartPosition() >= insertPos) {
+                return curr;
+            }
+        }
+        //      }
+        return null;
+    }
+
+    /** Creates a new stub utility. */
+    private StubUtility2() {
+        // Not for instantiation
+    }
 }

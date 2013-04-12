@@ -27,20 +27,19 @@ package org.exoplatform.ide.editor.shared.text;
  * Clients may implement this interface or use the standard implementation {@link org.eclipse.jdt.client.text.jface.text.Region}.
  * </p>
  */
-public interface IRegion
-{
+public interface IRegion {
 
-   /**
-    * Returns the length of the region.
-    * 
-    * @return the length of the region
-    */
-   int getLength();
+    /**
+     * Returns the length of the region.
+     *
+     * @return the length of the region
+     */
+    int getLength();
 
-   /**
-    * Returns the offset of the region.
-    * 
-    * @return the offset of the region
-    */
-   int getOffset();
+    /**
+     * Returns the offset of the region.
+     *
+     * @return the offset of the region
+     */
+    int getOffset();
 }

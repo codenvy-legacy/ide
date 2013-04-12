@@ -24,66 +24,52 @@ import org.exoplatform.ide.shell.client.cli.Options;
 import org.exoplatform.ide.shell.client.model.ClientCommand;
 import org.exoplatform.ide.shell.shared.CLIResource;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Aug 10, 2011 evgen $
- * 
  */
-public class HelpCommand extends ClientCommand
-{
+public class HelpCommand extends ClientCommand {
 
-   private static final Set<String> commands = new HashSet<String>();
+    private static final Set<String> commands = new HashSet<String>();
 
-   static
-   {
-      commands.add("help");
-   }
+    static {
+        commands.add("help");
+    }
 
-   /**
-    * 
-    */
-   public HelpCommand()
-   {
-      super(commands, new Options(), CloudShell.messages.helpHelp());
-   }
+    /**
+     *
+     */
+    public HelpCommand() {
+        super(commands, new Options(), CloudShell.messages.helpHelp());
+    }
 
-   /**
-    * @see org.exoplatform.ide.shell.client.model.ClientCommand#execute(org.exoplatform.ide.shell.client.cli.CommandLine)
-    */
-   @Override
-   public void execute(CommandLine commandLine)
-   {
-      Map<String, String> commands = new TreeMap<String, String>();
-      int max = 0;
-      String tab = "  ";
-      for (CLIResource res : CloudShell.getCommands())
-      {
-         for (String s : res.getCommand())
-         {
-            commands.put(s, res.getDescription() == null ? "" : res.getDescription());
-            if (s.length() > max)
-               max = s.length();
-         }
-      }
-      StringBuilder help = new StringBuilder();
-      for (String name : commands.keySet())
-      {
-         char chars[] = new char[tab.length() + max - name.length()];
-         Arrays.fill(chars, (char)' ');
-         String s = new String(chars);
-         help.append(tab);
-         help.append(name);
-         help.append(s);
-         help.append(commands.get(name));
-         help.append("\n");
-      }
-      CloudShell.console().print(help.toString());
-   }
+    /** @see org.exoplatform.ide.shell.client.model.ClientCommand#execute(org.exoplatform.ide.shell.client.cli.CommandLine) */
+    @Override
+    public void execute(CommandLine commandLine) {
+        Map<String, String> commands = new TreeMap<String, String>();
+        int max = 0;
+        String tab = "  ";
+        for (CLIResource res : CloudShell.getCommands()) {
+            for (String s : res.getCommand()) {
+                commands.put(s, res.getDescription() == null ? "" : res.getDescription());
+                if (s.length() > max)
+                    max = s.length();
+            }
+        }
+        StringBuilder help = new StringBuilder();
+        for (String name : commands.keySet()) {
+            char chars[] = new char[tab.length() + max - name.length()];
+            Arrays.fill(chars, (char)' ');
+            String s = new String(chars);
+            help.append(tab);
+            help.append(name);
+            help.append(s);
+            help.append(commands.get(name));
+            help.append("\n");
+        }
+        CloudShell.console().print(help.toString());
+    }
 
 }

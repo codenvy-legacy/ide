@@ -22,26 +22,23 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class CustomizeHotKeysEvent extends GwtEvent<CustomizeHotKeysHandler>
-{
+public class CustomizeHotKeysEvent extends GwtEvent<CustomizeHotKeysHandler> {
 
-   public static final GwtEvent.Type<CustomizeHotKeysHandler> TYPE = new GwtEvent.Type<CustomizeHotKeysHandler>();
+    public static final GwtEvent.Type<CustomizeHotKeysHandler> TYPE = new GwtEvent.Type<CustomizeHotKeysHandler>();
 
-   @Override
-   protected void dispatch(CustomizeHotKeysHandler handler)
-   {
-      handler.onCustomizeHotKeys(this);
-   }
+    @Override
+    protected void dispatch(CustomizeHotKeysHandler handler) {
+        handler.onCustomizeHotKeys(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CustomizeHotKeysHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<CustomizeHotKeysHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

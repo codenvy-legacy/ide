@@ -35,130 +35,113 @@ import org.openid4java.message.ax.AxMessage;
 import org.openid4java.message.ax.FetchRequest;
 import org.openid4java.message.ax.FetchResponse;
 
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 @Path("ide/openid")
-public class OpenIDAuthenticationService
-{
-   private static final Log LOG = ExoLogger.getLogger(OpenIDAuthenticationService.class);
+public class OpenIDAuthenticationService {
+    private static final Log LOG = ExoLogger.getLogger(OpenIDAuthenticationService.class);
 
-   private static final Map<String, String> openIdProviders;
+    private static final Map<String, String> openIdProviders;
 
-   static
-   {
-      openIdProviders = new HashMap<String, String>(1);
-      openIdProviders.put("google", "https://www.google.com/accounts/o8/id");
-   }
+    static {
+        openIdProviders = new HashMap<String, String>(1);
+        openIdProviders.put("google", "https://www.google.com/accounts/o8/id");
+    }
 
-   private final FederatedLoginList loginList;
+    private final FederatedLoginList loginList;
 
-   public OpenIDAuthenticationService(FederatedLoginList loginList)
-   {
-      this.loginList = loginList;
-   }
+    public OpenIDAuthenticationService(FederatedLoginList loginList) {
+        this.loginList = loginList;
+    }
 
-   @Path("authenticate")
-   @GET
-   public Response authenticate(@Context UriInfo uriInfo, @Context HttpServletRequest servletRequest) throws OpenIDException
-   {
-      final String openIDProviderName = uriInfo.getQueryParameters().getFirst("openid_provider");
-      final String discoveryUrl = openIdProviders.get(openIDProviderName);
-      if (discoveryUrl == null)
-      {
-         LOG.error("Unsupported OpenID provider {} ", openIDProviderName);
-         throw new WebApplicationException(Response
-            .status(400)
-            .entity("Unsupported OpenID provider " + openIDProviderName)
-            .type(MediaType.TEXT_PLAIN).build());
-      }
+    @Path("authenticate")
+    @GET
+    public Response authenticate(@Context UriInfo uriInfo, @Context HttpServletRequest servletRequest) throws OpenIDException {
+        final String openIDProviderName = uriInfo.getQueryParameters().getFirst("openid_provider");
+        final String discoveryUrl = openIdProviders.get(openIDProviderName);
+        if (discoveryUrl == null) {
+            LOG.error("Unsupported OpenID provider {} ", openIDProviderName);
+            throw new WebApplicationException(Response
+                                                      .status(400)
+                                                      .entity("Unsupported OpenID provider " + openIDProviderName)
+                                                      .type(MediaType.TEXT_PLAIN).build());
+        }
 
-      HttpSession session = servletRequest.getSession();
-      final String redirectAfterLogin = uriInfo.getQueryParameters().getFirst("redirect_after_login");
-      if (redirectAfterLogin != null)
-      {
-         session.setAttribute("openid.redirect_after_login", redirectAfterLogin);
-      }
+        HttpSession session = servletRequest.getSession();
+        final String redirectAfterLogin = uriInfo.getQueryParameters().getFirst("redirect_after_login");
+        if (redirectAfterLogin != null) {
+            session.setAttribute("openid.redirect_after_login", redirectAfterLogin);
+        }
 
-      ConsumerManager consumerManager = new ConsumerManager();
-      DiscoveryInformation discovered = consumerManager.associate(consumerManager.discover(discoveryUrl));
-      session.setAttribute("openid.consumer", consumerManager);
-      session.setAttribute("openid.discovered", discovered);
+        ConsumerManager consumerManager = new ConsumerManager();
+        DiscoveryInformation discovered = consumerManager.associate(consumerManager.discover(discoveryUrl));
+        session.setAttribute("openid.consumer", consumerManager);
+        session.setAttribute("openid.discovered", discovered);
 
-      final String returnTo = uriInfo.getBaseUriBuilder().path(getClass(), "verify").build().toString();
-      AuthRequest req = consumerManager.authenticate(discovered, returnTo);
-      FetchRequest fetch = FetchRequest.createFetchRequest();
-      fetch.addAttribute("email", "http://schema.openid.net/contact/email", true);
-      req.addExtension(fetch);
-      final boolean popup = null != uriInfo.getQueryParameters().getFirst("popup");
-      session.setAttribute("openid.popup", popup);
-      final boolean favicon = null != uriInfo.getQueryParameters().getFirst("favicon");
-      if (popup || favicon)
-      {
-         req.addExtension(new UIExtension(popup ? "popup" : null, favicon));
-      }
-      return Response.temporaryRedirect(URI.create(req.getDestinationUrl(true))).build();
-   }
+        final String returnTo = uriInfo.getBaseUriBuilder().path(getClass(), "verify").build().toString();
+        AuthRequest req = consumerManager.authenticate(discovered, returnTo);
+        FetchRequest fetch = FetchRequest.createFetchRequest();
+        fetch.addAttribute("email", "http://schema.openid.net/contact/email", true);
+        req.addExtension(fetch);
+        final boolean popup = null != uriInfo.getQueryParameters().getFirst("popup");
+        session.setAttribute("openid.popup", popup);
+        final boolean favicon = null != uriInfo.getQueryParameters().getFirst("favicon");
+        if (popup || favicon) {
+            req.addExtension(new UIExtension(popup ? "popup" : null, favicon));
+        }
+        return Response.temporaryRedirect(URI.create(req.getDestinationUrl(true))).build();
+    }
 
-   @Path("verify")
-   @GET
-   public Response verify(@Context UriInfo uriInfo,
-                          @Context HttpServletRequest servletRequest) throws Exception
-   {
-      HttpSession session = servletRequest.getSession();
-      try
-      {
-         DiscoveryInformation discovered = (DiscoveryInformation)session.getAttribute("openid.discovered");
-         ConsumerManager consumerManager = (ConsumerManager)session.getAttribute("openid.consumer");
-         ParameterList params = new ParameterList(servletRequest.getParameterMap());
-         VerificationResult result = consumerManager.verify(uriInfo.getRequestUri().toString(), params, discovered);
-         final Identifier identifier = result.getVerifiedId();
-         if (identifier == null)
-         {
-            final String mode = result.getAuthResponse().getParameterValue("openid.mode");
-            LOG.error("Cannot get openID identifier, result {}. ", mode);
-            session.setAttribute("openid.mode", mode);
-            // Lets user enter user ID and password.
-            return Response.temporaryRedirect(URI.create((String)session.getAttribute("openid.redirect_after_login"))).build();
-         }
+    @Path("verify")
+    @GET
+    public Response verify(@Context UriInfo uriInfo,
+                           @Context HttpServletRequest servletRequest) throws Exception {
+        HttpSession session = servletRequest.getSession();
+        try {
+            DiscoveryInformation discovered = (DiscoveryInformation)session.getAttribute("openid.discovered");
+            ConsumerManager consumerManager = (ConsumerManager)session.getAttribute("openid.consumer");
+            ParameterList params = new ParameterList(servletRequest.getParameterMap());
+            VerificationResult result = consumerManager.verify(uriInfo.getRequestUri().toString(), params, discovered);
+            final Identifier identifier = result.getVerifiedId();
+            if (identifier == null) {
+                final String mode = result.getAuthResponse().getParameterValue("openid.mode");
+                LOG.error("Cannot get openID identifier, result {}. ", mode);
+                session.setAttribute("openid.mode", mode);
+                // Lets user enter user ID and password.
+                return Response.temporaryRedirect(URI.create((String)session.getAttribute("openid.redirect_after_login"))).build();
+            }
 
-         AuthSuccess authSuccess = (AuthSuccess)result.getAuthResponse();
-         FetchResponse fetchResp = (FetchResponse)authSuccess.getExtension(AxMessage.OPENID_NS_AX);
-         final String email = (String)fetchResp.getAttributeValues("email").get(0);
+            AuthSuccess authSuccess = (AuthSuccess)result.getAuthResponse();
+            FetchResponse fetchResp = (FetchResponse)authSuccess.getExtension(AxMessage.OPENID_NS_AX);
+            final String email = (String)fetchResp.getAttributeValues("email").get(0);
 
-         final String redirectAfterLogin = (String)session.getAttribute("openid.redirect_after_login");
-         final String tmpPassword = NameGenerator.generate(null, 16);
-         // LoginModule may check userId|password from the FederatedLoginList.
-         loginList.add(email, tmpPassword);
-         return Response.temporaryRedirect(
-            UriBuilder.fromUri(redirectAfterLogin)
-               .queryParam("username", email)
-               .queryParam("password", tmpPassword)
-               .build()
-         ).build();
-      }
-      finally
-      {
-         session.removeAttribute("openid.discovered");
-         session.removeAttribute("openid.consumer");
-         session.removeAttribute("openid.popup");
-         session.removeAttribute("openid.redirect_after_login");
-      }
-   }
+            final String redirectAfterLogin = (String)session.getAttribute("openid.redirect_after_login");
+            final String tmpPassword = NameGenerator.generate(null, 16);
+            // LoginModule may check userId|password from the FederatedLoginList.
+            loginList.add(email, tmpPassword);
+            return Response.temporaryRedirect(
+                    UriBuilder.fromUri(redirectAfterLogin)
+                              .queryParam("username", email)
+                              .queryParam("password", tmpPassword)
+                              .build()
+                                             ).build();
+        } finally {
+            session.removeAttribute("openid.discovered");
+            session.removeAttribute("openid.consumer");
+            session.removeAttribute("openid.popup");
+            session.removeAttribute("openid.redirect_after_login");
+        }
+    }
 }

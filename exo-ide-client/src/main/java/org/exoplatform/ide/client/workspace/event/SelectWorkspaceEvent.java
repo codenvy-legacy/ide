@@ -22,26 +22,23 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class SelectWorkspaceEvent extends GwtEvent<SelectWorkspaceHandler>
-{
+public class SelectWorkspaceEvent extends GwtEvent<SelectWorkspaceHandler> {
 
-   public static final GwtEvent.Type<SelectWorkspaceHandler> TYPE = new GwtEvent.Type<SelectWorkspaceHandler>();
+    public static final GwtEvent.Type<SelectWorkspaceHandler> TYPE = new GwtEvent.Type<SelectWorkspaceHandler>();
 
-   @Override
-   protected void dispatch(SelectWorkspaceHandler handler)
-   {
-      handler.onSelectWorkspace(this);
-   }
+    @Override
+    protected void dispatch(SelectWorkspaceHandler handler) {
+        handler.onSelectWorkspace(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<SelectWorkspaceHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<SelectWorkspaceHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

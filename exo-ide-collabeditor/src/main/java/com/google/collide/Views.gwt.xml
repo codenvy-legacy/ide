@@ -19,8 +19,8 @@
 
 -->
 <module>
-   <inherits name='com.google.gwt.user.User' />
-   <replace-with class="com.google.collide.client.collaboration.participants.ParticipantsView">
-      <when-type-is class="com.google.collide.client.collaboration.participants.ParticipantsPresenter.Display" />
-   </replace-with>
+    <inherits name='com.google.gwt.user.User'/>
+    <replace-with class="com.google.collide.client.collaboration.participants.ParticipantsView">
+        <when-type-is class="com.google.collide.client.collaboration.participants.ParticipantsPresenter.Display"/>
+    </replace-with>
 </module>

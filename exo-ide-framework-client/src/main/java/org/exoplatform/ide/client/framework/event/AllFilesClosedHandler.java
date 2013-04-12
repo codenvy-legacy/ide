@@ -22,16 +22,14 @@ package org.exoplatform.ide.client.framework.event;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface AllFilesClosedHandler extends EventHandler
-{
+public interface AllFilesClosedHandler extends EventHandler {
 
-   void onAllFilesClosed(AllFilesClosedEvent event);
+    void onAllFilesClosed(AllFilesClosedEvent event);
 
 }

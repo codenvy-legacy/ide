@@ -22,9 +22,8 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
 @RoutingType(type = RoutingTypes.FILECOLLABORATORGONE)
-public interface FileCollaboratorGone extends ServerToClientDto
-{
-   String getPath();
+public interface FileCollaboratorGone extends ServerToClientDto {
+    String getPath();
 
-   ParticipantUserDetails getParticipant();
+    ParticipantUserDetails getParticipant();
 }

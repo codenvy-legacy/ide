@@ -28,18 +28,16 @@ import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
 
 /**
  * The interface for the {@link AutoBean} generator.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 16, 2012 11:25:04 AM anya $
- * 
  */
-public interface GoogleAppEngineAutoBeanFactory extends AutoBeanFactory
-{
-   AutoBean<CronEntry> cronEntry();
+public interface GoogleAppEngineAutoBeanFactory extends AutoBeanFactory {
+    AutoBean<CronEntry> cronEntry();
 
-   AutoBean<Backend> backend();
-   
-   AutoBean<GaeUser> user();
+    AutoBean<Backend> backend();
 
-   AutoBean<ApplicationInfo> applicationInfo();
+    AutoBean<GaeUser> user();
+
+    AutoBean<ApplicationInfo> applicationInfo();
 }

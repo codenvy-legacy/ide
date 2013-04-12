@@ -21,111 +21,92 @@ package org.exoplatform.ide.codeassistant.storage.lucene;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class Artifact
-{
+public class Artifact {
 
-   private String path;
+    private String path;
 
-   private String artifactID;
+    private String artifactID;
 
-   private String groupID;
+    private String groupID;
 
-   private String version;
+    private String version;
 
-   private String type;
+    private String type;
 
-   /**
-    * 
-    */
-   public Artifact()
-   {
-   }
+    /**
+     *
+     */
+    public Artifact() {
+    }
 
-   /**
-    * @return the path
-    */
-   public String getPath()
-   {
-      return path;
-   }
+    /** @return the path */
+    public String getPath() {
+        return path;
+    }
 
-   /**
-    * @param path the path to set
-    */
-   public void setPath(String path)
-   {
-      this.path = path;
-   }
+    /**
+     * @param path
+     *         the path to set
+     */
+    public void setPath(String path) {
+        this.path = path;
+    }
 
-   /**
-    * @return the artifactID
-    */
-   public String getArtifactID()
-   {
-      return artifactID;
-   }
+    /** @return the artifactID */
+    public String getArtifactID() {
+        return artifactID;
+    }
 
-   /**
-    * @param artifactID the artifactID to set
-    */
-   public void setArtifactID(String artifactID)
-   {
-      this.artifactID = artifactID;
-   }
+    /**
+     * @param artifactID
+     *         the artifactID to set
+     */
+    public void setArtifactID(String artifactID) {
+        this.artifactID = artifactID;
+    }
 
-   /**
-    * @return the groupID
-    */
-   public String getGroupID()
-   {
-      return groupID;
-   }
+    /** @return the groupID */
+    public String getGroupID() {
+        return groupID;
+    }
 
-   /**
-    * @param groupID the groupID to set
-    */
-   public void setGroupID(String groupID)
-   {
-      this.groupID = groupID;
-   }
+    /**
+     * @param groupID
+     *         the groupID to set
+     */
+    public void setGroupID(String groupID) {
+        this.groupID = groupID;
+    }
 
-   /**
-    * @return the version
-    */
-   public String getVersion()
-   {
-      return version;
-   }
+    /** @return the version */
+    public String getVersion() {
+        return version;
+    }
 
-   /**
-    * @param version the version to set
-    */
-   public void setVersion(String version)
-   {
-      this.version = version;
-   }
+    /**
+     * @param version
+     *         the version to set
+     */
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
-   /**
-    * @return the type
-    */
-   public String getType()
-   {
-      return type;
-   }
+    /** @return the type */
+    public String getType() {
+        return type;
+    }
 
-   /**
-    * @param type the type to set
-    */
-   public void setType(String type)
-   {
-      this.type = type;
-   }
+    /**
+     * @param type
+     *         the type to set
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
 
-   public String getArtifactString()
-   {
-      return groupID + ":" + artifactID + ":" + version + ":" + type;
-   }
+    public String getArtifactString() {
+        return groupID + ":" + artifactID + ":" + version + ":" + type;
+    }
 
 }

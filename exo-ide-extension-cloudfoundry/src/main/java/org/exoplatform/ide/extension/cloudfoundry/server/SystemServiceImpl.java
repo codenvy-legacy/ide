@@ -24,61 +24,51 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.SystemService;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class SystemServiceImpl implements SystemService
-{
-   private String vendor;
-   private String type;
-   private String version;
-   private String description;
+public class SystemServiceImpl implements SystemService {
+    private String vendor;
+    private String type;
+    private String version;
+    private String description;
 
-   public String getVendor()
-   {
-      return vendor;
-   }
+    public String getVendor() {
+        return vendor;
+    }
 
-   public void setVendor(String vendor)
-   {
-      this.vendor = vendor;
-   }
+    public void setVendor(String vendor) {
+        this.vendor = vendor;
+    }
 
-   public String getType()
-   {
-      return type;
-   }
+    public String getType() {
+        return type;
+    }
 
-   public void setType(String type)
-   {
-      this.type = type;
-   }
+    public void setType(String type) {
+        this.type = type;
+    }
 
-   public String getVersion()
-   {
-      return version;
-   }
+    public String getVersion() {
+        return version;
+    }
 
-   public void setVersion(String version)
-   {
-      this.version = version;
-   }
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
-   public String getDescription()
-   {
-      return description;
-   }
+    public String getDescription() {
+        return description;
+    }
 
-   public void setDescription(String description)
-   {
-      this.description = description;
-   }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "SystemServiceImpl{" +
-         "vendor='" + vendor + '\'' +
-         ", type='" + type + '\'' +
-         ", version='" + version + '\'' +
-         ", description='" + description + '\'' +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "SystemServiceImpl{" +
+               "vendor='" + vendor + '\'' +
+               ", type='" + type + '\'' +
+               ", version='" + version + '\'' +
+               ", description='" + description + '\'' +
+               '}';
+    }
 }

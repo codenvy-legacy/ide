@@ -23,18 +23,16 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link DeleteApplicationEvent} event.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeleteApplicationHandler.java Jul 15, 2011 10:39:48 AM vereshchaka $
- *
  */
-public interface DeleteApplicationHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to delete application.
-    * 
-    * @param event
-    */
-   void onDeleteApplication(DeleteApplicationEvent event);
+public interface DeleteApplicationHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to delete application.
+     *
+     * @param event
+     */
+    void onDeleteApplication(DeleteApplicationEvent event);
 
 }

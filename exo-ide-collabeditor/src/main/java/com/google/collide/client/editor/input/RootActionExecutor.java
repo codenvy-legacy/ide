@@ -14,47 +14,42 @@
 
 package com.google.collide.client.editor.input;
 
-import org.exoplatform.ide.json.shared.JsonCollections;
-
-import org.exoplatform.ide.json.shared.JsonArray;
 import com.codenvy.ide.client.util.SignalEvent;
 
-/**
- * Implementation of proxy that delegated execution to a list of executors.
- *
- */
+import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonCollections;
+
+/** Implementation of proxy that delegated execution to a list of executors. */
 public class RootActionExecutor implements ActionExecutor {
 
-  /**
-   * Object used to unregister delegate.
-   */
-  public class Remover {
+    /** Object used to unregister delegate. */
+    public class Remover {
 
-    public Remover(ActionExecutor instance) {
-      this.instance = instance;
+        public Remover(ActionExecutor instance) {
+            this.instance = instance;
+        }
+
+        private ActionExecutor instance;
+
+        public void remove() {
+            delegates.remove(instance);
+        }
     }
 
-    private ActionExecutor instance;
+    private final JsonArray<ActionExecutor> delegates = JsonCollections.createArray();
 
-    public void remove() {
-      delegates.remove(instance);
+    public Remover addDelegate(ActionExecutor delegate) {
+        delegates.add(delegate);
+        return new Remover(delegate);
     }
-  }
 
-  private final JsonArray<ActionExecutor> delegates = JsonCollections.createArray();
-
-  public Remover addDelegate(ActionExecutor delegate) {
-    delegates.add(delegate);
-    return new Remover(delegate);
-  }
-
-  @Override
-  public boolean execute(String actionName, InputScheme scheme, SignalEvent event) {
-    for (int i = 0, l = delegates.size(); i < l; i++) {
-      if (delegates.get(i).execute(actionName, scheme, event)) {
-        return true;
-      }
+    @Override
+    public boolean execute(String actionName, InputScheme scheme, SignalEvent event) {
+        for (int i = 0, l = delegates.size(); i < l; i++) {
+            if (delegates.get(i).execute(actionName, scheme, event)) {
+                return true;
+            }
+        }
+        return false;
     }
-    return false;
-  }
 }

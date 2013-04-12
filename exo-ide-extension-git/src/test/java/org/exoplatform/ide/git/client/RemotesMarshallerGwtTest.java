@@ -29,75 +29,64 @@ import org.exoplatform.ide.git.shared.RemoteListRequest;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 28, 2011 9:55:30 AM anya $
- * 
  */
-public class RemotesMarshallerGwtTest extends BaseGwtTest
-{
-   /**
-    * Test add remote repository request marshaller.
-    */
-   public void testRemoteAddRequestMarshaller()
-   {
-      String name = "remote1";
-      String url = "remote/repository/location";
+public class RemotesMarshallerGwtTest extends BaseGwtTest {
+    /** Test add remote repository request marshaller. */
+    public void testRemoteAddRequestMarshaller() {
+        String name = "remote1";
+        String url = "remote/repository/location";
 
-      RemoteAddRequest remoteAddRequest = new RemoteAddRequest(name, url);
-      RemoteAddRequestMarshaller marshaller = new RemoteAddRequestMarshaller(remoteAddRequest);
+        RemoteAddRequest remoteAddRequest = new RemoteAddRequest(name, url);
+        RemoteAddRequestMarshaller marshaller = new RemoteAddRequestMarshaller(remoteAddRequest);
 
-      String json = marshaller.marshal();
+        String json = marshaller.marshal();
 
-      assertNotNull(json);
+        assertNotNull(json);
 
-      JSONObject jsonObject = new JSONObject(build(json));
-      assertTrue(jsonObject.containsKey(Constants.NAME));
-      assertEquals(name, jsonObject.get(Constants.NAME).isString().stringValue());
+        JSONObject jsonObject = new JSONObject(build(json));
+        assertTrue(jsonObject.containsKey(Constants.NAME));
+        assertEquals(name, jsonObject.get(Constants.NAME).isString().stringValue());
 
-      assertTrue(jsonObject.containsKey(Constants.URL));
-      assertEquals(url, jsonObject.get(Constants.URL).isString().stringValue());
-   }
+        assertTrue(jsonObject.containsKey(Constants.URL));
+        assertEquals(url, jsonObject.get(Constants.URL).isString().stringValue());
+    }
 
-   /**
-    * Test get the list of remote repositories.
-    */
-   public void testRemoteListRequestMarshaller()
-   {
-      RemoteListRequest remoteListRequest = new RemoteListRequest();
-      remoteListRequest.setVerbose(true);
-      RemoteListRequestMarshaller marshaller = new RemoteListRequestMarshaller(remoteListRequest);
+    /** Test get the list of remote repositories. */
+    public void testRemoteListRequestMarshaller() {
+        RemoteListRequest remoteListRequest = new RemoteListRequest();
+        remoteListRequest.setVerbose(true);
+        RemoteListRequestMarshaller marshaller = new RemoteListRequestMarshaller(remoteListRequest);
 
-      String json = marshaller.marshal();
+        String json = marshaller.marshal();
 
-      assertNotNull(json);
+        assertNotNull(json);
 
-      JSONObject jsonObject = new JSONObject(build(json));
+        JSONObject jsonObject = new JSONObject(build(json));
 
-      assertTrue(jsonObject.containsKey(Constants.REMOTE));
-      assertNotNull(jsonObject.get(Constants.REMOTE).isNull());
+        assertTrue(jsonObject.containsKey(Constants.REMOTE));
+        assertNotNull(jsonObject.get(Constants.REMOTE).isNull());
 
-      assertTrue(jsonObject.containsKey(Constants.VERBOSE));
-      assertTrue(jsonObject.get(Constants.VERBOSE).isBoolean().booleanValue());
-   }
+        assertTrue(jsonObject.containsKey(Constants.VERBOSE));
+        assertTrue(jsonObject.get(Constants.VERBOSE).isBoolean().booleanValue());
+    }
 
-   /**
-    * Test get the info of pointed remote repository.
-    */
-   public void testRemoteRequestMarshaller()
-   {
-      String remote = "remote1";
+    /** Test get the info of pointed remote repository. */
+    public void testRemoteRequestMarshaller() {
+        String remote = "remote1";
 
-      RemoteListRequest remoteListRequest = new RemoteListRequest(remote, true);
-      RemoteListRequestMarshaller marshaller = new RemoteListRequestMarshaller(remoteListRequest);
+        RemoteListRequest remoteListRequest = new RemoteListRequest(remote, true);
+        RemoteListRequestMarshaller marshaller = new RemoteListRequestMarshaller(remoteListRequest);
 
-      String json = marshaller.marshal();
+        String json = marshaller.marshal();
 
-      assertNotNull(json);
+        assertNotNull(json);
 
-      JSONObject jsonObject = new JSONObject(build(json));
+        JSONObject jsonObject = new JSONObject(build(json));
 
-      assertTrue(jsonObject.containsKey(Constants.REMOTE));
-      assertEquals(remote, jsonObject.get(Constants.REMOTE).isString().stringValue());
+        assertTrue(jsonObject.containsKey(Constants.REMOTE));
+        assertEquals(remote, jsonObject.get(Constants.REMOTE).isString().stringValue());
 
-      assertTrue(jsonObject.containsKey(Constants.VERBOSE));
-      assertTrue(jsonObject.get(Constants.VERBOSE).isBoolean().booleanValue());
-   }
+        assertTrue(jsonObject.containsKey(Constants.VERBOSE));
+        assertTrue(jsonObject.get(Constants.VERBOSE).isBoolean().booleanValue());
+    }
 }

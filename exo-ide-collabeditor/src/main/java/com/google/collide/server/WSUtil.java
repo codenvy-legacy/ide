@@ -29,29 +29,22 @@ import java.util.Set;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class WSUtil
-{
-   private static final Log LOG = ExoLogger.getLogger(WSUtil.class);
+public class WSUtil {
+    private static final Log LOG = ExoLogger.getLogger(WSUtil.class);
 
-   private WSUtil()
-   {
-   }
+    private WSUtil() {
+    }
 
-   public static void broadcastToClients(String message, Set<String> collaborators)
-   {
-      for (String collaborator : collaborators)
-      {
-         ChannelBroadcastMessage broadcastMessage = new ChannelBroadcastMessage();
-         broadcastMessage.setChannel("collab_editor." + collaborator);
-         broadcastMessage.setBody(message);
-         try
-         {
-            WSConnectionContext.sendMessage(broadcastMessage);
-         }
-         catch (Exception e)
-         {
-            LOG.error(e.getMessage(), e);
-         }
-      }
-   }
+    public static void broadcastToClients(String message, Set<String> collaborators) {
+        for (String collaborator : collaborators) {
+            ChannelBroadcastMessage broadcastMessage = new ChannelBroadcastMessage();
+            broadcastMessage.setChannel("collab_editor." + collaborator);
+            broadcastMessage.setBody(message);
+            try {
+                WSConnectionContext.sendMessage(broadcastMessage);
+            } catch (Exception e) {
+                LOG.error(e.getMessage(), e);
+            }
+        }
+    }
 }

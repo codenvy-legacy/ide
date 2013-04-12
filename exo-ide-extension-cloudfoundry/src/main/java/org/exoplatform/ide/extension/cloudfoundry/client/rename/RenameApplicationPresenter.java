@@ -19,11 +19,7 @@
 package org.exoplatform.ide.extension.cloudfoundry.client.rename;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
@@ -46,227 +42,193 @@ import org.exoplatform.ide.git.client.GitPresenter;
 
 /**
  * Presenter for rename operation with application.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: RenameApplicationPresenter.java Jul 15, 2011 11:32:02 AM vereshchaka $
- * 
  */
-public class RenameApplicationPresenter extends GitPresenter implements RenameApplicationHandler, ViewClosedHandler
-{
-   
-   interface Display extends IsView
-   {
-      /**
-       * Get rename text field.
-       * 
-       * @return {@link TextFieldItem}
-       */
-      TextFieldItem getRenameField();
+public class RenameApplicationPresenter extends GitPresenter implements RenameApplicationHandler, ViewClosedHandler {
 
-      /**
-       * Get rename button's click handler.
-       * 
-       * @return {@link HasClickHandlers} click handler
-       */
-      HasClickHandlers getRenameButton();
+    interface Display extends IsView {
+        /**
+         * Get rename text field.
+         *
+         * @return {@link TextFieldItem}
+         */
+        TextFieldItem getRenameField();
 
-      /**
-       * Get cancel button's click handler.
-       * 
-       * @return {@link HasClickHandlers} click handler
-       */
-      HasClickHandlers getCancelButton();
+        /**
+         * Get rename button's click handler.
+         *
+         * @return {@link HasClickHandlers} click handler
+         */
+        HasClickHandlers getRenameButton();
 
-      /**
-       * Select value in rename field.
-       */
-      void selectValueInRenameField();
+        /**
+         * Get cancel button's click handler.
+         *
+         * @return {@link HasClickHandlers} click handler
+         */
+        HasClickHandlers getCancelButton();
 
-      /**
-       * Change the enable state of the rename button.
-       * 
-       * @param isEnabled
-       */
-      void enableRenameButton(boolean isEnabled);
-   }
+        /** Select value in rename field. */
+        void selectValueInRenameField();
 
-   private Display display;
+        /**
+         * Change the enable state of the rename button.
+         *
+         * @param isEnabled
+         */
+        void enableRenameButton(boolean isEnabled);
+    }
 
-   /**
-    * The name of application.
-    */
-   private String applicationName;
+    private Display display;
 
-   /**
-    * The new name of application.
-    */
-   public RenameApplicationPresenter()
-   {
-      IDE.addHandler(RenameApplicationEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    /** The name of application. */
+    private String applicationName;
 
-   public void bindDisplay()
-   {
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
+    /** The new name of application. */
+    public RenameApplicationPresenter() {
+        IDE.addHandler(RenameApplicationEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            closeView();
-         }
-      });
+    public void bindDisplay() {
+        display.getCancelButton().addClickHandler(new ClickHandler() {
 
-      display.getRenameButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            renameApplication();
-         }
-      });
-
-      display.getRenameField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            String newName = event.getValue();
-            boolean enable = !applicationName.equals(newName) && newName != null && !newName.isEmpty();
-            display.enableRenameButton(enable);
-         }
-      });
-
-      display.getRenameField().addKeyUpHandler(new KeyUpHandler()
-      {
-
-         @Override
-         public void onKeyUp(KeyUpEvent event)
-         {
-            if (event.getNativeKeyCode() == 13)
-            {
-               renameApplication();
+            @Override
+            public void onClick(ClickEvent event) {
+                closeView();
             }
-         }
-      });
-   }
+        });
 
-   private LoggedInHandler appInfoLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         getApplicationInfo();
-      }
-   };
+        display.getRenameButton().addClickHandler(new ClickHandler() {
 
-   private void getApplicationInfo()
-   {
+            @Override
+            public void onClick(ClickEvent event) {
+                renameApplication();
+            }
+        });
+
+        display.getRenameField().addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                String newName = event.getValue();
+                boolean enable = !applicationName.equals(newName) && newName != null && !newName.isEmpty();
+                display.enableRenameButton(enable);
+            }
+        });
+
+        display.getRenameField().addKeyUpHandler(new KeyUpHandler() {
+
+            @Override
+            public void onKeyUp(KeyUpEvent event) {
+                if (event.getNativeKeyCode() == 13) {
+                    renameApplication();
+                }
+            }
+        });
+    }
+
+    private LoggedInHandler appInfoLoggedInHandler = new LoggedInHandler() {
+        @Override
+        public void onLoggedIn() {
+            getApplicationInfo();
+        }
+    };
+
+    private void getApplicationInfo() {
 //      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      String projectId = getSelectedProject().getId();
+        String projectId = getSelectedProject().getId();
 
-      try
-      {
-         AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-            CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
+        try {
+            AutoBean<CloudFoundryApplication> cloudFoundryApplication =
+                    CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
 
-         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-            new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+            AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+                    new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-         CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
-            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, appInfoLoggedInHandler, null)
-            {
-               @Override
-               protected void onSuccess(CloudFoundryApplication result)
-               {
-                  applicationName = result.getName();
-                  showRenameDialog();
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+            CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
+                                                                       new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
+                                                                               unmarshaller, appInfoLoggedInHandler, null) {
+                                                                           @Override
+                                                                           protected void onSuccess(CloudFoundryApplication result) {
+                                                                               applicationName = result.getName();
+                                                                               showRenameDialog();
+                                                                           }
+                                                                       });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   private void showRenameDialog()
-   {
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         bindDisplay();
-         IDE.getInstance().openView(display.asView());
-         display.getRenameField().setValue(applicationName);
-         display.selectValueInRenameField();
-         display.enableRenameButton(false);
-      }
-   }
+    private void showRenameDialog() {
+        if (display == null) {
+            display = GWT.create(Display.class);
+            bindDisplay();
+            IDE.getInstance().openView(display.asView());
+            display.getRenameField().setValue(applicationName);
+            display.selectValueInRenameField();
+            display.enableRenameButton(false);
+        }
+    }
 
-   private LoggedInHandler renameAppLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         renameApplication();
-      }
-   };
+    private LoggedInHandler renameAppLoggedInHandler = new LoggedInHandler() {
+        @Override
+        public void onLoggedIn() {
+            renameApplication();
+        }
+    };
 
-   private void renameApplication()
-   {
-      final String newName = display.getRenameField().getValue();
+    private void renameApplication() {
+        final String newName = display.getRenameField().getValue();
 //      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      String projectId = getSelectedProject().getId();
-      
-      try
-      {
-         CloudFoundryClientService.getInstance().renameApplication(vfs.getId(), projectId, applicationName, null,
-            newName, new CloudFoundryAsyncRequestCallback<String>(null, renameAppLoggedInHandler, null)
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  closeView();
-                  IDE.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.renameApplicationSuccess(
-                     applicationName, newName)));
-               }
+        String projectId = getSelectedProject().getId();
+
+        try {
+            CloudFoundryClientService.getInstance().renameApplication(vfs.getId(), projectId, applicationName, null,
+                                                                      newName, new CloudFoundryAsyncRequestCallback<String>(null,
+
+
+
+
+
+
+
+
+
+
+                                                                                                                            renameAppLoggedInHandler,
+                                                                                                                            null) {
+                @Override
+                protected void onSuccess(String result) {
+                    closeView();
+                    IDE.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.renameApplicationSuccess(
+                            applicationName, newName)));
+                }
             });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.rename.RenameApplicationHandler#onRenameApplication(org.exoplatform.ide.extension.cloudfoundry.client.rename.RenameApplicationEvent)
-    */
-   @Override
-   public void onRenameApplication(RenameApplicationEvent event)
-   {
-      if (makeSelectionCheck())
-      {
-         getApplicationInfo();
-      }
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.rename.RenameApplicationHandler#onRenameApplication(org.exoplatform.ide.extension.cloudfoundry.client.rename.RenameApplicationEvent) */
+    @Override
+    public void onRenameApplication(RenameApplicationEvent event) {
+        if (makeSelectionCheck()) {
+            getApplicationInfo();
+        }
+    }
 
-   private void closeView()
-   {
-      IDE.getInstance().closeView(display.asView().getId());
-   }
+    private void closeView() {
+        IDE.getInstance().closeView(display.asView().getId());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
 }

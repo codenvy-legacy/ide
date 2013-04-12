@@ -19,23 +19,18 @@ package com.codenvy.eclipse.ltk.core.refactoring.participants;
  *
  * @since 3.0
  */
-public class CreateArguments extends RefactoringArguments
-{
+public class CreateArguments extends RefactoringArguments {
 
-   /**
-    * Creates a new create arguments object.
-    */
-   public CreateArguments()
-   {
-   }
+    /** Creates a new create arguments object. */
+    public CreateArguments() {
+    }
 
-   /**
-    * {@inheritDoc}
-    *
-    * @since 3.2
-    */
-   public String toString()
-   {
-      return "create"; //$NON-NLS-1$
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @since 3.2
+     */
+    public String toString() {
+        return "create"; //$NON-NLS-1$
+    }
 }

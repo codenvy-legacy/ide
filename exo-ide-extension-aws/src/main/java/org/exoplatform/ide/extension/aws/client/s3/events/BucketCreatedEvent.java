@@ -22,35 +22,25 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to log in AWS.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 14, 2012 3:04:41 PM anya $
- * 
  */
-public class BucketCreatedEvent extends GwtEvent<BucketCreatedHandler>
-{
+public class BucketCreatedEvent extends GwtEvent<BucketCreatedHandler> {
 
-   /**
-    * Type used to register the event.
-    */
-   public static final GwtEvent.Type<BucketCreatedHandler> TYPE = new GwtEvent.Type<BucketCreatedHandler>();
+    /** Type used to register the event. */
+    public static final GwtEvent.Type<BucketCreatedHandler> TYPE = new GwtEvent.Type<BucketCreatedHandler>();
 
-  
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<BucketCreatedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(BucketCreatedHandler handler)
-   {
-      handler.onBucketCreated(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<BucketCreatedHandler> getAssociatedType() {
+        return TYPE;
+    }
+
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(BucketCreatedHandler handler) {
+        handler.onBucketCreated(this);
+    }
 }

@@ -23,79 +23,76 @@ import org.eclipse.jgit.merge.MergeChunk.ConflictState;
 
 import java.util.List;
 
-/**
- * Merger for performing a 3-way-merge using JGit.
- * 
- */
+/** Merger for performing a 3-way-merge using JGit. */
 public class JGitMerger {
 
-  private static MergeAlgorithm mergeAlgorithm = new MergeAlgorithm();
-  
-  public static MergeResult merge(String base, String child, String parent) {
-    // Jgit Merge
-    org.eclipse.jgit.merge.MergeResult<RawText> jgitMergeResult =
-        mergeAlgorithm.merge(RawTextComparator.DEFAULT, new RawText(base.getBytes()),
-            new RawText(child.getBytes()), new RawText(parent.getBytes()));
+    private static MergeAlgorithm mergeAlgorithm = new MergeAlgorithm();
 
-    return formatMerge(jgitMergeResult);
-  }
+    public static MergeResult merge(String base, String child, String parent) {
+        // Jgit Merge
+        org.eclipse.jgit.merge.MergeResult<RawText> jgitMergeResult =
+                mergeAlgorithm.merge(RawTextComparator.DEFAULT, new RawText(base.getBytes()),
+                                     new RawText(child.getBytes()), new RawText(parent.getBytes()));
 
-  public static MergeResult formatMerge(org.eclipse.jgit.merge.MergeResult<RawText> results) {
-    int runningIndex = 0;
-    int numLines = 0;
-    List<MergeChunk> mergeChunks = Lists.newArrayList();
-    MergeChunk currentMergeChunk = null;
-    StringBuilder fileContent = new StringBuilder();
-    int conflictIndex = 0;
-    for (org.eclipse.jgit.merge.MergeChunk chunk : results) {
-      RawText seq = results.getSequences().get(chunk.getSequenceIndex());
-      String chunkContent = seq.getString(chunk.getBegin(), chunk.getEnd(), false);
+        return formatMerge(jgitMergeResult);
+    }
 
-      if (chunk.getConflictState() == ConflictState.NO_CONFLICT
-          || chunk.getConflictState() == ConflictState.FIRST_CONFLICTING_RANGE) {
-        if (currentMergeChunk != null) {
-          mergeChunks.add(currentMergeChunk);
+    public static MergeResult formatMerge(org.eclipse.jgit.merge.MergeResult<RawText> results) {
+        int runningIndex = 0;
+        int numLines = 0;
+        List<MergeChunk> mergeChunks = Lists.newArrayList();
+        MergeChunk currentMergeChunk = null;
+        StringBuilder fileContent = new StringBuilder();
+        int conflictIndex = 0;
+        for (org.eclipse.jgit.merge.MergeChunk chunk : results) {
+            RawText seq = results.getSequences().get(chunk.getSequenceIndex());
+            String chunkContent = seq.getString(chunk.getBegin(), chunk.getEnd(), false);
+
+            if (chunk.getConflictState() == ConflictState.NO_CONFLICT
+                || chunk.getConflictState() == ConflictState.FIRST_CONFLICTING_RANGE) {
+                if (currentMergeChunk != null) {
+                    mergeChunks.add(currentMergeChunk);
+                }
+                currentMergeChunk = new MergeChunk();
+            }
+
+            switch (chunk.getConflictState()) {
+                case NO_CONFLICT:
+                    currentMergeChunk.setHasConflict(false);
+                    currentMergeChunk.setMergedData(chunkContent);
+                    fileContent.append(chunkContent);
+                    numLines = chunk.getEnd() - chunk.getBegin();
+                    runningIndex = setRanges(currentMergeChunk, runningIndex, numLines);
+                    break;
+                case FIRST_CONFLICTING_RANGE:
+                    currentMergeChunk.setHasConflict(true);
+                    currentMergeChunk.setChildData(chunkContent);
+                    fileContent.append(chunkContent);
+                    numLines = chunk.getEnd() - chunk.getBegin();
+                    runningIndex = setRanges(currentMergeChunk, runningIndex, numLines);
+                    break;
+                case NEXT_CONFLICTING_RANGE:
+                    currentMergeChunk.setParentData(chunkContent);
+                    break;
+            }
         }
-        currentMergeChunk = new MergeChunk();
-      }
+        mergeChunks.add(currentMergeChunk);
 
-      switch (chunk.getConflictState()) {
-        case NO_CONFLICT:
-          currentMergeChunk.setHasConflict(false);
-          currentMergeChunk.setMergedData(chunkContent);
-          fileContent.append(chunkContent);
-          numLines = chunk.getEnd() - chunk.getBegin();
-          runningIndex = setRanges(currentMergeChunk, runningIndex, numLines);
-          break;
-        case FIRST_CONFLICTING_RANGE:
-          currentMergeChunk.setHasConflict(true);
-          currentMergeChunk.setChildData(chunkContent);
-          fileContent.append(chunkContent);
-          numLines = chunk.getEnd() - chunk.getBegin();
-          runningIndex = setRanges(currentMergeChunk, runningIndex, numLines);
-          break;
-        case NEXT_CONFLICTING_RANGE:
-          currentMergeChunk.setParentData(chunkContent);
-          break;
-      }
+        MergeResult mergeResult =
+                new MergeResult(mergeChunks, (conflictIndex > 0) ? "" : fileContent.toString());
+
+        return mergeResult;
     }
-    mergeChunks.add(currentMergeChunk);
 
-    MergeResult mergeResult =
-        new MergeResult(mergeChunks, (conflictIndex > 0) ? "" : fileContent.toString());
-
-    return mergeResult;
-  }
-
-  private static int setRanges(MergeChunk mergeChunk, int runningChildIndex, int numLines) {
-    mergeChunk.setStartLine(runningChildIndex);
-    // JGit end index is exclusive, Collide's is inclusive. numLines can be 0.
-    int endLine = runningChildIndex + numLines;
-    if (numLines > 0) {
-      endLine--;
+    private static int setRanges(MergeChunk mergeChunk, int runningChildIndex, int numLines) {
+        mergeChunk.setStartLine(runningChildIndex);
+        // JGit end index is exclusive, Collide's is inclusive. numLines can be 0.
+        int endLine = runningChildIndex + numLines;
+        if (numLines > 0) {
+            endLine--;
+        }
+        mergeChunk.setEndLine(endLine);
+        runningChildIndex += numLines;
+        return runningChildIndex;
     }
-    mergeChunk.setEndLine(endLine);
-    runningChildIndex += numLines;
-    return runningChildIndex;
-  }
 }

@@ -20,64 +20,60 @@ package org.exoplatform.ide.extension.logreader.shared;
 
 /**
  * Interface represent log one logical Log file.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: Job.java Mar 15, 2012 3:14:27 PM azatsarynnyy $
- *
  */
-public interface LogEntry
-{
+public interface LogEntry {
 
-   /**
-    * Get identifier for the log file.
-    * 
-    * @return the token
-    */
-   public String getToken();
+    /**
+     * Get identifier for the log file.
+     *
+     * @return the token
+     */
+    public String getToken();
 
-   /**
-    * Set identifier for the log file.
-    * 
-    * @param token the token to set
-    */
-   public void setToken(String token);
+    /**
+     * Set identifier for the log file.
+     *
+     * @param token
+     *         the token to set
+     */
+    public void setToken(String token);
 
-   /**
-    * Get content of the log file.
-    * 
-    * @return the content
-    */
-   public String getContent();
+    /**
+     * Get content of the log file.
+     *
+     * @return the content
+     */
+    public String getContent();
 
-   /**
-    * Set content of the log file.
-    * 
-    * @param content the content to set
-    */
-   public void setContent(String content);
+    /**
+     * Set content of the log file.
+     *
+     * @param content
+     *         the content to set
+     */
+    public void setContent(String content);
 
-   /**
-    * Is log has next log file.
-    * 
-    * @return true if log has next log file
-    */
-   public boolean isHasNext();
+    /**
+     * Is log has next log file.
+     *
+     * @return true if log has next log file
+     */
+    public boolean isHasNext();
 
-   /**
-    * @param hasNext
-    */
-   public void setHasNext(boolean hasNext);
+    /** @param hasNext */
+    public void setHasNext(boolean hasNext);
 
-   /**
-    * Is log has previous log file.
-    * 
-    * @return true if log has previous log file
-    */
-   public boolean isHasPrevious();
+    /**
+     * Is log has previous log file.
+     *
+     * @return true if log has previous log file
+     */
+    public boolean isHasPrevious();
 
-   /**
-    * @param hasPrevious
-    */
-   public void setHasPrevious(boolean hasPrevious);
+    /** @param hasPrevious */
+    public void setHasPrevious(boolean hasPrevious);
 
 }

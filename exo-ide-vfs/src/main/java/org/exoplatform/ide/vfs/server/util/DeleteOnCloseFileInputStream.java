@@ -28,32 +28,25 @@ import java.io.IOException;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public final class DeleteOnCloseFileInputStream extends FileInputStream
-{
-   private final java.io.File file;
-   private boolean deleted = false;
+public final class DeleteOnCloseFileInputStream extends FileInputStream {
+    private final java.io.File file;
+    private boolean deleted = false;
 
-   public DeleteOnCloseFileInputStream(java.io.File file) throws FileNotFoundException
-   {
-      super(file);
-      this.file = file;
-   }
+    public DeleteOnCloseFileInputStream(java.io.File file) throws FileNotFoundException {
+        super(file);
+        this.file = file;
+    }
 
-   /** @see java.io.FileInputStream#close() */
-   @Override
-   public void close() throws IOException
-   {
-      try
-      {
-         super.close();
-      }
-      finally
-      {
-         if (!deleted)
-         {
-            deleted = file.delete();
-         }
-      }
-      //System.out.println("---> " + file.getAbsolutePath() + ", exists : " + file.exists());
-   }
+    /** @see java.io.FileInputStream#close() */
+    @Override
+    public void close() throws IOException {
+        try {
+            super.close();
+        } finally {
+            if (!deleted) {
+                deleted = file.delete();
+            }
+        }
+        //System.out.println("---> " + file.getAbsolutePath() + ", exists : " + file.exists());
+    }
 }

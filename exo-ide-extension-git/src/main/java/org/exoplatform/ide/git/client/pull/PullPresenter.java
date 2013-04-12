@@ -50,297 +50,255 @@ import java.util.List;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 20, 2011 4:20:24 PM anya $
- * 
  */
-public class PullPresenter extends HasBranchesPresenter implements PullHandler
-{
-   
-   interface Display extends IsView
-   {
-      /**
-       * Get pull button's click handler.
-       * 
-       * @return {@link HasClickHandlers} click handler
-       */
-      HasClickHandlers getPullButton();
+public class PullPresenter extends HasBranchesPresenter implements PullHandler {
 
-      /**
-       * Get cancel button's click handler.
-       * 
-       * @return {@link HasClickHandlers} click handler
-       */
-      HasClickHandlers getCancelButton();
+    interface Display extends IsView {
+        /**
+         * Get pull button's click handler.
+         * 
+         * @return {@link HasClickHandlers} click handler
+         */
+        HasClickHandlers getPullButton();
 
-      /**
-       * Get remote repository field.
-       * 
-       * @return {@link HasValue}
-       */
-      HasValue<String> getRemoteName();
+        /**
+         * Get cancel button's click handler.
+         * 
+         * @return {@link HasClickHandlers} click handler
+         */
+        HasClickHandlers getCancelButton();
 
-      /**
-       * Get remote branches field.
-       * 
-       * @return {@link HasValue}
-       */
-      HasValue<String> getRemoteBranches();
+        /**
+         * Get remote repository field.
+         * 
+         * @return {@link HasValue}
+         */
+        HasValue<String> getRemoteName();
 
-      /**
-       * Get local branches field.
-       * 
-       * @return {@link HasValue}
-       */
-      HasValue<String> getLocalBranches();
+        /**
+         * Get remote branches field.
+         * 
+         * @return {@link HasValue}
+         */
+        HasValue<String> getRemoteBranches();
 
-      /**
-       * Set values of remote repository branches.
-       * 
-       * @param values values to set
-       */
-      void setRemoteBranches(String[] values);
+        /**
+         * Get local branches field.
+         * 
+         * @return {@link HasValue}
+         */
+        HasValue<String> getLocalBranches();
 
-      /**
-       * Set values of local repository branches.
-       * 
-       * @param values values to set
-       */
-      void setLocalBranches(String[] values);
+        /**
+         * Set values of remote repository branches.
+         * 
+         * @param values values to set
+         */
+        void setRemoteBranches(String[] values);
 
-      /**
-       * Change the enable state of the pull button.
-       * 
-       * @param enable enable state
-       */
-      void enablePullButton(boolean enable);
+        /**
+         * Set values of local repository branches.
+         * 
+         * @param values values to set
+         */
+        void setLocalBranches(String[] values);
 
-      /**
-       * Set values of remote repositories.
-       * 
-       * @param values values to set
-       */
-      void setRemoteValues(LinkedHashMap<String, String> values);
+        /**
+         * Change the enable state of the pull button.
+         * 
+         * @param enable enable state
+         */
+        void enablePullButton(boolean enable);
 
-      /**
-       * Get the display name of the remote repository.
-       * 
-       * @return String display name of the remote repository
-       */
-      String getRemoteDisplayValue();
-   }
+        /**
+         * Set values of remote repositories.
+         * 
+         * @param values values to set
+         */
+        void setRemoteValues(LinkedHashMap<String, String> values);
 
-   private Display display;
+        /**
+         * Get the display name of the remote repository.
+         * 
+         * @return String display name of the remote repository
+         */
+        String getRemoteDisplayValue();
+    }
 
-   public void bindDisplay(Display d)
-   {
-      this.display = d;
+    private Display display;
 
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
+    public void bindDisplay(Display d) {
+        this.display = d;
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
+        display.getCancelButton().addClickHandler(new ClickHandler() {
 
-      display.getPullButton().addClickHandler(new ClickHandler()
-      {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            doPull();
-         }
-      });
+        display.getPullButton().addClickHandler(new ClickHandler() {
 
-      display.getRemoteName().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
+            @Override
+            public void onClick(ClickEvent event) {
+                doPull();
+            }
+        });
 
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            display.setRemoteBranches(getRemoteBranchesNamesToDisplay(display.getRemoteDisplayValue()));
-         }
-      });
+        display.getRemoteName().addValueChangeHandler(new ValueChangeHandler<String>() {
 
-      display.getRemoteBranches().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                display.setRemoteBranches(getRemoteBranchesNamesToDisplay(display.getRemoteDisplayValue()));
+            }
+        });
 
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            boolean empty = (event.getValue() == null || event.getValue().length() <= 0);
-            display.enablePullButton(!empty);
-         }
-      });
-   }
+        display.getRemoteBranches().addValueChangeHandler(new ValueChangeHandler<String>() {
 
-   /**
-    *
-    */
-   public PullPresenter()
-   {
-      IDE.addHandler(PullEvent.TYPE, this);
-   }
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                boolean empty = (event.getValue() == null || event.getValue().length() <= 0);
+                display.enablePullButton(!empty);
+            }
+        });
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.pull.PullHandler#onPull(org.exoplatform.ide.git.client.pull.PullEvent)
-    */
-   @Override
-   public void onPull(PullEvent event)
-   {
-      if (makeSelectionCheck())
-      {
-//         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-//         getRemotes(projectId);
-         getRemotes(getSelectedProject().getId());
-      }
-   }
+    /**
+     *
+     */
+    public PullPresenter() {
+        IDE.addHandler(PullEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.remote.HasBranchesPresenter#onRemotesReceived(java.util.List)
-    */
-   @Override
-   public void onRemotesReceived(List<Remote> remotes)
-   {
-      Display d = GWT.create(Display.class);
-      IDE.getInstance().openView(d.asView());
-      bindDisplay(d);
+    /** @see org.exoplatform.ide.git.client.pull.PullHandler#onPull(org.exoplatform.ide.git.client.pull.PullEvent) */
+    @Override
+    public void onPull(PullEvent event) {
+        if (makeSelectionCheck()) {
+            // String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+            // getRemotes(projectId);
+            getRemotes(getSelectedProject().getId());
+        }
+    }
 
-//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      String projectId = getSelectedProject().getId();
-      
-      LinkedHashMap<String, String> remoteValues = new LinkedHashMap<String, String>();
-      for (Remote remote : remotes)
-      {
-         remoteValues.put(remote.getUrl(), remote.getName());
-      }
+    /** @see org.exoplatform.ide.git.client.remote.HasBranchesPresenter#onRemotesReceived(java.util.List) */
+    @Override
+    public void onRemotesReceived(List<Remote> remotes) {
+        Display d = GWT.create(Display.class);
+        IDE.getInstance().openView(d.asView());
+        bindDisplay(d);
 
-      display.setRemoteValues(remoteValues);
+        // String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+        String projectId = getSelectedProject().getId();
 
-      getBranches(projectId, false);
-      getBranches(projectId, true);
-   }
+        LinkedHashMap<String, String> remoteValues = new LinkedHashMap<String, String>();
+        for (Remote remote : remotes) {
+            remoteValues.put(remote.getUrl(), remote.getName());
+        }
 
-   /**
-    * @see org.exoplatform.ide.git.client.remote.HasBranchesPresenter#setRemoteBranches(java.util.List)
-    */
-   @Override
-   protected void setRemoteBranches(List<Branch> result)
-   {
-      display.setRemoteBranches(getRemoteBranchesNamesToDisplay(display.getRemoteDisplayValue()));
-   }
+        display.setRemoteValues(remoteValues);
 
-   /**
-    * @see org.exoplatform.ide.git.client.remote.HasBranchesPresenter#setLocalBranches(java.lang.String[])
-    */
-   @Override
-   protected void setLocalBranches(List<Branch> branches)
-   {
-      if (branches == null || branches.isEmpty())
-      {
-         display.setLocalBranches(new String[]{"master"});
-         return;
-      }
+        getBranches(projectId, false);
+        getBranches(projectId, true);
+    }
 
-      String[] values = new String[branches.size()];
-      for (int i = 0; i < branches.size(); i++)
-      {
-         values[i] = branches.get(i).getDisplayName();
-      }
-      display.setLocalBranches(values);
-   }
+    /** @see org.exoplatform.ide.git.client.remote.HasBranchesPresenter#setRemoteBranches(java.util.List) */
+    @Override
+    protected void setRemoteBranches(List<Branch> result) {
+        display.setRemoteBranches(getRemoteBranchesNamesToDisplay(display.getRemoteDisplayValue()));
+    }
 
-   /**
-    * Perform pull from pointed by user remote repository, from pointed remote branch to local one.
-    * Local branch may not be pointed. Sends request over WebSocket or HTTP.
-    */
-   private void doPull()
-   {
-      String remoteName = display.getRemoteDisplayValue();
-      final String remoteUrl = display.getRemoteName().getValue();
-//      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
-      ProjectModel project = getSelectedProject();
-      IDE.getInstance().closeView(display.asView().getId());
+    /** @see org.exoplatform.ide.git.client.remote.HasBranchesPresenter#setLocalBranches(java.lang.String[]) */
+    @Override
+    protected void setLocalBranches(List<Branch> branches) {
+        if (branches == null || branches.isEmpty()) {
+            display.setLocalBranches(new String[]{"master"});
+            return;
+        }
 
-      try
-      {
-         GitClientService.getInstance().pullWS(vfs.getId(), project, getRefs(), remoteName,
-            new RequestCallback<String>()
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.GIT));
-                  IDE.fireEvent(new RefreshBrowserEvent());
-               }
+        String[] values = new String[branches.size()];
+        for (int i = 0; i < branches.size(); i++) {
+            values[i] = branches.get(i).getDisplayName();
+        }
+        display.setLocalBranches(values);
+    }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception, remoteUrl);
-               }
-            });
-      }
-      catch (WebSocketException e)
-      {
-         doPullREST(project, remoteUrl, remoteName);
-      }
-   }
+    /**
+     * Perform pull from pointed by user remote repository, from pointed remote branch to local one. Local branch may not be pointed. Sends
+     * request over WebSocket or HTTP.
+     */
+    private void doPull() {
+        String remoteName = display.getRemoteDisplayValue();
+        final String remoteUrl = display.getRemoteName().getValue();
+        // ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+        ProjectModel project = getSelectedProject();
+        IDE.getInstance().closeView(display.asView().getId());
 
-   /**
-    * Perform pull from pointed by user remote repository, from pointed remote branch to local one.
-    * Local branch may not be pointed. Sends request over HTTP.
-    */
-   private void doPullREST(ProjectModel project, final String remoteUrl, String remoteName)
-   {
-      try
-      {
-         GitClientService.getInstance().pull(vfs.getId(), project, getRefs(), remoteName,
-            new AsyncRequestCallback<String>()
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.GIT));
-                  IDE.fireEvent(new RefreshBrowserEvent());
-               }
+        try {
+            GitClientService.getInstance().pullWS(vfs.getId(), project, getRefs(), remoteName,
+                                                  new RequestCallback<String>() {
+                                                      @Override
+                                                      protected void onSuccess(String result) {
+                                                          IDE.fireEvent(
+                                                             new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.GIT));
+                                                          IDE.fireEvent(new RefreshBrowserEvent());
+                                                      }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception, remoteUrl);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         handleError(e, remoteUrl);
-      }
-   }
+                                                      @Override
+                                                      protected void onFailure(Throwable exception) {
+                                                          handleError(exception, remoteUrl);
+                                                      }
+                                                  });
+        } catch (WebSocketException e) {
+            doPullREST(project, remoteUrl, remoteName);
+        }
+    }
 
-   /**
-    * Returns list of refs to fetch.
-    * 
-    * @return list of refs to fetch
-    */
-   private String getRefs()
-   {
-      String remoteName = display.getRemoteDisplayValue();
-      String localBranch = display.getLocalBranches().getValue();
-      String remoteBranch = display.getRemoteBranches().getValue();
-      // Form the refspec. User points only the branch names:
-      String refs =
-         (localBranch == null || localBranch.length() == 0) ? remoteBranch : "refs/heads/" + remoteBranch + ":"
-            + "refs/remotes/" + remoteName + "/" + remoteBranch;
-      return refs;
-   }
+    /**
+     * Perform pull from pointed by user remote repository, from pointed remote branch to local one. Local branch may not be pointed. Sends
+     * request over HTTP.
+     */
+    private void doPullREST(ProjectModel project, final String remoteUrl, String remoteName) {
+        try {
+            GitClientService.getInstance().pull(vfs.getId(), project, getRefs(), remoteName,
+                                                new AsyncRequestCallback<String>() {
+                                                    @Override
+                                                    protected void onSuccess(String result) {
+                                                        IDE.fireEvent(
+                                                           new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.GIT));
+                                                        IDE.fireEvent(new RefreshBrowserEvent());
+                                                    }
 
-   private void handleError(Throwable t, String remoteUrl)
-   {
-      String errorMessage = (t.getMessage() != null) ? t.getMessage() : GitExtension.MESSAGES.pullFail(remoteUrl);
-      IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-   }
+                                                    @Override
+                                                    protected void onFailure(Throwable exception) {
+                                                        handleError(exception, remoteUrl);
+                                                    }
+                                                });
+        } catch (RequestException e) {
+            handleError(e, remoteUrl);
+        }
+    }
+
+    /**
+     * Returns list of refs to fetch.
+     * 
+     * @return list of refs to fetch
+     */
+    private String getRefs() {
+        String remoteName = display.getRemoteDisplayValue();
+        String localBranch = display.getLocalBranches().getValue();
+        String remoteBranch = display.getRemoteBranches().getValue();
+        // Form the refspec. User points only the branch names:
+        String refs =
+                      (localBranch == null || localBranch.length() == 0) ? remoteBranch : "refs/heads/" + remoteBranch + ":"
+                                                                                          + "refs/remotes/" + remoteName + "/"
+                                                                                          + remoteBranch;
+        return refs;
+    }
+
+    private void handleError(Throwable t, String remoteUrl) {
+        String errorMessage = (t.getMessage() != null) ? t.getMessage() : GitExtension.MESSAGES.pullFail(remoteUrl);
+        IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+    }
 
 }

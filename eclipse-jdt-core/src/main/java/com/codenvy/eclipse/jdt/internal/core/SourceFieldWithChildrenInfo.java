@@ -12,19 +12,16 @@ package com.codenvy.eclipse.jdt.internal.core;
 
 import com.codenvy.eclipse.jdt.core.IJavaElement;
 
-public class SourceFieldWithChildrenInfo extends SourceFieldElementInfo
-{
+public class SourceFieldWithChildrenInfo extends SourceFieldElementInfo {
 
-   protected IJavaElement[] children;
+    protected IJavaElement[] children;
 
-   public SourceFieldWithChildrenInfo(IJavaElement[] children)
-   {
-      this.children = children;
-   }
+    public SourceFieldWithChildrenInfo(IJavaElement[] children) {
+        this.children = children;
+    }
 
-   public IJavaElement[] getChildren()
-   {
-      return this.children;
-   }
+    public IJavaElement[] getChildren() {
+        return this.children;
+    }
 
 }

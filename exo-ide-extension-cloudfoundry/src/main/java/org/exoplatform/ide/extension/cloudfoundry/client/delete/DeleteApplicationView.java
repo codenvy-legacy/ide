@@ -35,107 +35,83 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 /**
  * View for deleting CloudFoundry application.
  * View must be pointed in Views.gwt.xml.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Jun 2, 2011 2:26:41 PM anya $
- *
  */
-public class DeleteApplicationView extends ViewImpl implements DeleteApplicationPresenter.Display
-{
-   private static final String ID = "ideDeleteApplicationView";
+public class DeleteApplicationView extends ViewImpl implements DeleteApplicationPresenter.Display {
+    private static final String ID = "ideDeleteApplicationView";
 
-   private static final int WIDTH = 420;
+    private static final int WIDTH = 420;
 
-   private static final int HEIGHT = 160;
+    private static final int HEIGHT = 160;
 
-   private static final String RENAME_BUTTON_ID = "ideDeleteApplicationViewRenameButton";
+    private static final String RENAME_BUTTON_ID = "ideDeleteApplicationViewRenameButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideDeleteApplicationViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideDeleteApplicationViewCancelButton";
 
-   /**
-    * Checkbox, that indicates is delete services with application.
-    */
-   @UiField
-   CheckBox deleteServicesField;
-   
-   /**
-    * Delete button.
-    */
-   @UiField
-   ImageButton deleteButton;
+    /** Checkbox, that indicates is delete services with application. */
+    @UiField
+    CheckBox deleteServicesField;
 
-   /**
-    * Cancel button.
-    */
-   @UiField
-   ImageButton cancelButton;
-   
-   @UiField
-   Label askLabel;
-   
-   @UiField
-   Label askDeleteServicesLabel;
+    /** Delete button. */
+    @UiField
+    ImageButton deleteButton;
 
-   private static DeleteApplicationViewUiBinder uiBinder = GWT.create(DeleteApplicationViewUiBinder.class);
+    /** Cancel button. */
+    @UiField
+    ImageButton cancelButton;
 
-   interface DeleteApplicationViewUiBinder extends UiBinder<Widget, DeleteApplicationView>
-   {
-   }
+    @UiField
+    Label askLabel;
 
-   public DeleteApplicationView()
-   {
-      super(ID, ViewType.MODAL, CloudFoundryExtension.LOCALIZATION_CONSTANT.deleteApplicationTitle(), null, WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
+    @UiField
+    Label askDeleteServicesLabel;
 
-      deleteButton.setButtonId(RENAME_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-   }
+    private static DeleteApplicationViewUiBinder uiBinder = GWT.create(DeleteApplicationViewUiBinder.class);
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPresenter.Display#getDeleteServicesCheckbox()
-    */
-   @Override
-   public HasValue<Boolean> getDeleteServicesCheckbox()
-   {
-      return deleteServicesField;
-   }
+    interface DeleteApplicationViewUiBinder extends UiBinder<Widget, DeleteApplicationView> {
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPresenter.Display#getDeleteButton()
-    */
-   @Override
-   public HasClickHandlers getDeleteButton()
-   {
-      return deleteButton;
-   }
+    public DeleteApplicationView() {
+        super(ID, ViewType.MODAL, CloudFoundryExtension.LOCALIZATION_CONSTANT.deleteApplicationTitle(), null, WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+        deleteButton.setButtonId(RENAME_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationPresenter.Display#setAskMessage(java.lang.String)
-    */
-   @Override
-   public void setAskMessage(String message)
-   {
-      askLabel.setIsHTML(true);
-      askLabel.setValue(message);
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPresenter.Display#getDeleteServicesCheckbox() */
+    @Override
+    public HasValue<Boolean> getDeleteServicesCheckbox() {
+        return deleteServicesField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationPresenter.Display#setAskDeleteServices(java.lang.String)
-    */
-   @Override
-   public void setAskDeleteServices(String text)
-   {
-      askDeleteServicesLabel.setIsHTML(true);
-      askDeleteServicesLabel.setValue(text);
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPresenter.Display#getDeleteButton() */
+    @Override
+    public HasClickHandlers getDeleteButton() {
+        return deleteButton;
+    }
+
+    /** @see org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationPresenter.Display#setAskMessage(java.lang.String) */
+    @Override
+    public void setAskMessage(String message) {
+        askLabel.setIsHTML(true);
+        askLabel.setValue(message);
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationPresenter.Display#setAskDeleteServices(java.lang
+     * .String) */
+    @Override
+    public void setAskDeleteServices(String text) {
+        askDeleteServicesLabel.setIsHTML(true);
+        askDeleteServicesLabel.setValue(text);
+    }
 
 }

@@ -20,10 +20,10 @@ package org.exoplatform.ide.git.server.jgit;
 
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.storage.file.FileRepository;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
-import org.exoplatform.ide.git.server.jgit.jgit_copy.FileRepository_Copy;
 import org.exoplatform.ide.git.shared.GitUser;
 
 import java.io.File;
@@ -31,30 +31,22 @@ import java.io.IOException;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: JGitConnectionFactory.java 22811 2011-03-22 07:28:35Z andrew00x
- *          $
+ * @version $Id: JGitConnectionFactory.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
-public class JGitConnectionFactory extends GitConnectionFactory
-{
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnectionFactory#getConnection(java.io.File,
-    *      org.exoplatform.ide.git.shared.GitUser)
-    */
-   @Override
-   public GitConnection getConnection(File workDir, GitUser user) throws GitException
-   {
-      return new JGitConnection(createRepository(workDir), user);
-   }
+public class JGitConnectionFactory extends GitConnectionFactory {
+    /**
+     * @see org.exoplatform.ide.git.server.GitConnectionFactory#getConnection(java.io.File, org.exoplatform.ide.git.shared.GitUser)
+     */
+    @Override
+    public GitConnection getConnection(File workDir, GitUser user) throws GitException {
+        return new JGitConnection(createRepository(workDir), user);
+    }
 
-   private static Repository createRepository(File workDir) throws GitException
-   {
-      try
-      {
-         return new FileRepository_Copy(new File(workDir, Constants.DOT_GIT));
-      }
-      catch (IOException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-   }
+    private static Repository createRepository(File workDir) throws GitException {
+        try {
+            return new FileRepository(new File(workDir, Constants.DOT_GIT));
+        } catch (IOException e) {
+            throw new GitException(e.getMessage(), e);
+        }
+    }
 }

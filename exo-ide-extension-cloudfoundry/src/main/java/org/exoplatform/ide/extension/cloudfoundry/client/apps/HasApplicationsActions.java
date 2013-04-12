@@ -25,15 +25,13 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  Aug 18, 2011 evgen $
- *
  */
-public interface HasApplicationsActions
-{
-   void addStartApplicationHandler(SelectionHandler<CloudFoundryApplication> handler);
+public interface HasApplicationsActions {
+    void addStartApplicationHandler(SelectionHandler<CloudFoundryApplication> handler);
 
-   void addStopApplicationHandler(SelectionHandler<CloudFoundryApplication> handler);
+    void addStopApplicationHandler(SelectionHandler<CloudFoundryApplication> handler);
 
-   void addRestartApplicationHandler(SelectionHandler<CloudFoundryApplication> handler);
+    void addRestartApplicationHandler(SelectionHandler<CloudFoundryApplication> handler);
 
-   void addDeleteApplicationHandler(SelectionHandler<CloudFoundryApplication> handler);
+    void addDeleteApplicationHandler(SelectionHandler<CloudFoundryApplication> handler);
 }

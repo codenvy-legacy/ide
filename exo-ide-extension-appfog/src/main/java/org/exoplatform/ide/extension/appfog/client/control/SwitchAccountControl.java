@@ -30,36 +30,32 @@ import org.exoplatform.ide.extension.appfog.client.login.LoginEvent;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class SwitchAccountControl extends AbstractAppfogControl
-{
+public class SwitchAccountControl extends AbstractAppfogControl {
 
-   private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.switchAccountControlId();
+    private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.switchAccountControlId();
 
-   private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.switchAccountControlTitle();
+    private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.switchAccountControlTitle();
 
-   private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.switchAccountControlPrompt();
+    private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.switchAccountControlPrompt();
 
-   public SwitchAccountControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(AppfogClientBundle.INSTANCE.switchAccount(),
-         AppfogClientBundle.INSTANCE.switchAccountDisabled());
-      setEvent(new LoginEvent(null, null));
-   }
+    public SwitchAccountControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(AppfogClientBundle.INSTANCE.switchAccount(),
+                  AppfogClientBundle.INSTANCE.switchAccountDisabled());
+        setEvent(new LoginEvent(null, null));
+    }
 
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
+    @Override
+    public void initialize() {
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
 
-      setVisible(true);
-   }
+        setVisible(true);
+    }
 
-   @Override
-   protected void refresh()
-   {
-      setEnabled(vfsInfo != null);
-   }
+    @Override
+    protected void refresh() {
+        setEnabled(vfsInfo != null);
+    }
 }

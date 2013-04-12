@@ -20,35 +20,35 @@ package org.exoplatform.ide.vfs.server.exceptions;
 
 /**
  * Should be used as base class for any VFS (Virtual File System) checked exception.
- * 
+ *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: VirtualFileSystemException.java 73805 2011-09-21 08:30:20Z andrew00x $
  */
 @SuppressWarnings("serial")
-public class VirtualFileSystemException extends Exception
-{
-   /**
-    * @param message the detail message
-    * @param cause the cause
-    */
-   public VirtualFileSystemException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+public class VirtualFileSystemException extends Exception {
+    /**
+     * @param message
+     *         the detail message
+     * @param cause
+     *         the cause
+     */
+    public VirtualFileSystemException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-   /**
-    * @param message the detail message
-    */
-   public VirtualFileSystemException(String message)
-   {
-      super(message);
-   }
+    /**
+     * @param message
+     *         the detail message
+     */
+    public VirtualFileSystemException(String message) {
+        super(message);
+    }
 
-   /**
-    * @param cause the cause
-    */
-   public VirtualFileSystemException(Throwable cause)
-   {
-      super(cause);
-   }
+    /**
+     * @param cause
+     *         the cause
+     */
+    public VirtualFileSystemException(Throwable cause) {
+        super(cause);
+    }
 }

@@ -17,11 +17,8 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Tells the server that the client is still alive.
- *
- */
+/** Tells the server that the client is still alive. */
 @RoutingType(type = RoutingTypes.KEEPALIVE)
 public interface KeepAlive extends ClientToServerDto {
-  String getWorkspaceId();
+    String getWorkspaceId();
 }

@@ -53,212 +53,208 @@ import java.util.Date;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 31, 2011 10:02:25 AM anya $
- * 
  */
-public class CommitPresenter extends GitPresenter implements CommitHandler
-{
-   
-   public interface Display extends IsView
-   {
-      /**
-       * Get commit button handler.
-       * 
-       * @return {@link HasClickHandlers}
-       */
-      HasClickHandlers getCommitButton();
+public class CommitPresenter extends GitPresenter implements CommitHandler {
 
-      /**
-       * Get cancel button handler.
-       * 
-       * @return {@link HasClickHandlers}
-       */
-      HasClickHandlers getCancelButton();
+    public interface Display extends IsView {
+        /**
+         * Get commit button handler.
+         * 
+         * @return {@link HasClickHandlers}
+         */
+        HasClickHandlers getCommitButton();
 
-      /**
-       * Get message field value.
-       * 
-       * @return {@link HasValue}
-       */
-      HasValue<String> getMessage();
+        /**
+         * Get cancel button handler.
+         * 
+         * @return {@link HasClickHandlers}
+         */
+        HasClickHandlers getCancelButton();
 
-      /**
-       * Change the enable state of the commit button.
-       * 
-       * @param enable enabled or not
-       */
-      void enableCommitButton(boolean enable);
+        /**
+         * Get message field value.
+         * 
+         * @return {@link HasValue}
+         */
+        HasValue<String> getMessage();
 
-      /**
-       * Give focus to message field.
-       */
-      void focusInMessageField();
+        /**
+         * Change the enable state of the commit button.
+         * 
+         * @param enable enabled or not
+         */
+        void enableCommitButton(boolean enable);
 
-      /**
-       * Get all field.
-       * 
-       * @return {@link HasValue}
-       */
-      HasValue<Boolean> getAllField();
-   }
+        /** Give focus to message field. */
+        void focusInMessageField();
 
-   /**
-    * Display.
-    */
-   private Display display;
+        /**
+         * Get all field.
+         * 
+         * @return {@link HasValue}
+         */
+        HasValue<Boolean> getAllField();
 
-   /**
-    * 
-    */
-   public CommitPresenter()
-   {
-      IDE.addHandler(CommitEvent.TYPE, this);
-   }
+        /**
+         * Get amend field.
+         * 
+         * @return {@link HasValue}
+         */
+        HasValue<Boolean> getAmendField();
+    }
 
-   /**
-    * Bind display(view) with presenter.
-    * 
-    * @param d display
-    */
-   public void bindDisplay(Display d)
-   {
-      this.display = d;
+    /** Display. */
+    private Display display;
 
-      display.getCommitButton().addClickHandler(new ClickHandler()
-      {
+    /**
+     *
+     */
+    public CommitPresenter() {
+        IDE.addHandler(CommitEvent.TYPE, this);
+    }
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            doCommit();
-         }
-      });
+    /**
+     * Bind display(view) with presenter.
+     * 
+     * @param d display
+     */
+    public void bindDisplay(Display d) {
+        this.display = d;
 
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
+        display.getCommitButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
+            @Override
+            public void onClick(ClickEvent event) {
+                doCommit();
+            }
+        });
+
+        display.getCancelButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
+
+        display.getMessage().addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                boolean notEmpty = (event.getValue() != null && event.getValue().length() > 0);
+                display.enableCommitButton(notEmpty);
+            }
+        });
+    }
+
+    /** @see org.exoplatform.ide.git.client.commit.CommitHandler#onCommit(org.exoplatform.ide.git.client.commit.CommitEvent) */
+    @Override
+    public void onCommit(CommitEvent event) {
+        if (makeSelectionCheck()) {
+            Display d = GWT.create(Display.class);
+            IDE.getInstance().openView(d.asView());
+            bindDisplay(d);
+            // Commit button is disabled, because message is empty:
+            display.enableCommitButton(false);
+            display.focusInMessageField();
+        }
+    }
+
+    /** Perform the commit to repository and process the response (sends request over WebSocket or HTTP). */
+    private void doCommit() {
+        ProjectModel project = getSelectedProject();
+        String message = display.getMessage().getValue();
+        boolean all = display.getAllField().getValue();
+        boolean amend = display.getAmendField().getValue();
+
+        try {
+            GitClientService.getInstance().commitWS(vfs.getId(),
+                                                    project,
+                                                    message,
+                                                    all,
+                                                    amend,
+                                                    new RequestCallback<Revision>(
+                                                                                  new RevisionUnmarshallerWS(new Revision(null, message, 0,
+                                                                                                                          null))) {
+                                                        @Override
+                                                        protected void onSuccess(Revision result) {
+                                                            if (!result.isFake()) {
+                                                                onCommitSuccess(result);
+                                                            } else {
+                                                                IDE.fireEvent(new OutputEvent(result.getMessage(), Type.GIT));
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        protected void onFailure(Throwable exception) {
+                                                            handleError(exception);
+                                                        }
+                                                    });
             IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
+        } catch (WebSocketException e) {
+            doCommitREST(project, message, all, amend);
+        }
+    }
 
-      display.getMessage().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            boolean notEmpty = (event.getValue() != null && event.getValue().length() > 0);
-            display.enableCommitButton(notEmpty);
-         }
-      });
-   }
+    /** Perform the commit to repository and process the response (sends request over HTTP). */
+    private void doCommitREST(ProjectModel project, String message, boolean all, boolean amend) {
+        try {
+            GitClientService.getInstance().commit(vfs.getId(),
+                                                  project,
+                                                  message,
+                                                  all,
+                                                  amend,
+                                                  new AsyncRequestCallback<Revision>(
+                                                                                     new RevisionUnmarshaller(new Revision(null, message,
+                                                                                                                           0, null))) {
+                                                      @Override
+                                                      protected void onSuccess(Revision result) {
+                                                          if (!result.isFake()) {
+                                                              onCommitSuccess(result);
+                                                          } else {
+                                                              IDE.fireEvent(new OutputEvent(result.getMessage(), Type.GIT));
+                                                          }
+                                                      }
 
-   /**
-    * @see org.exoplatform.ide.git.client.commit.CommitHandler#onCommit(org.exoplatform.ide.git.client.commit.CommitEvent)
-    */
-   @Override
-   public void onCommit(CommitEvent event)
-   {
-      if (makeSelectionCheck())
-      {
-         Display d = GWT.create(Display.class);
-         IDE.getInstance().openView(d.asView());
-         bindDisplay(d);
-         // Commit button is disabled, because message is empty:
-         display.enableCommitButton(false);
-         display.focusInMessageField();
-      }
-   }
+                                                      @Override
+                                                      protected void onFailure(Throwable exception) {
+                                                          handleError(exception);
+                                                      }
+                                                  });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+        IDE.getInstance().closeView(display.asView().getId());
+    }
 
-   /**
-    * Perform the commit to repository and process the response (sends request over WebSocket or HTTP).
-    */
-   private void doCommit()
-   {
-      //ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
-      ProjectModel project = getSelectedProject();
-      String message = display.getMessage().getValue();
-      boolean all = display.getAllField().getValue();
+    /**
+     * Performs action when commit is successfully completed.
+     * 
+     * @param revision a {@link Revision}
+     */
+    private void onCommitSuccess(Revision revision) {
+        DateTimeFormat formatter = DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM);
+        String date = formatter.format(new Date(revision.getCommitTime()));
+        String message = GitExtension.MESSAGES.commitMessage(revision.getId(), date);
+        message +=
+                   (revision.getCommitter() != null && revision.getCommitter().getName() != null && revision.getCommitter()
+                                                                                                            .getName().length() > 0)
+                       ? " " +
 
-      try
-      {
-         GitClientService.getInstance().commitWS(vfs.getId(), project, message, all,
-            new RequestCallback<Revision>(new RevisionUnmarshallerWS(new Revision(null, message, 0, null)))
-            {
-               @Override
-               protected void onSuccess(Revision result)
-               {
-                  onCommitSuccess(result);
-               }
+                         GitExtension
+                         .MESSAGES
+                                  .commitUser(
+                                  revision.getCommitter()
+                                          .getName())
+                       : "";
+        IDE.fireEvent(new OutputEvent(message, Type.GIT));
+        IDE.fireEvent(new RefreshBrowserEvent());
+    }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception);
-               }
-            });
-         IDE.getInstance().closeView(display.asView().getId());
-      }
-      catch (WebSocketException e)
-      {
-         doCommitREST(project, message, all);
-      }
-   }
-
-   /**
-    * Perform the commit to repository and process the response (sends request over HTTP).
-    */
-   private void doCommitREST(ProjectModel project, String message, boolean all)
-   {
-      try
-      {
-         GitClientService.getInstance().commit(vfs.getId(), project, message, all,
-            new AsyncRequestCallback<Revision>(new RevisionUnmarshaller(new Revision(null, message, 0, null)))
-            {
-               @Override
-               protected void onSuccess(Revision result)
-               {
-                  onCommitSuccess(result);
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-      IDE.getInstance().closeView(display.asView().getId());
-   }
-
-   /**
-    * Performs action when commit is successfully completed.
-    * 
-    * @param revision a {@link Revision}
-    */
-   private void onCommitSuccess(Revision revision)
-   {
-      DateTimeFormat formatter = DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM);
-      String date = formatter.format(new Date(revision.getCommitTime()));
-      String message = GitExtension.MESSAGES.commitMessage(revision.getId(), date);
-      message +=
-         (revision.getCommitter() != null && revision.getCommitter().getName() != null && revision.getCommitter()
-            .getName().length() > 0) ? " " + GitExtension.MESSAGES.commitUser(revision.getCommitter().getName()) : "";
-      IDE.fireEvent(new OutputEvent(message, Type.GIT));
-      IDE.fireEvent(new RefreshBrowserEvent());
-   }
-
-   private void handleError(Throwable exception)
-   {
-      String errorMessage =
-         (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-            : GitExtension.MESSAGES.commitFailed();
-      IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-   }
+    private void handleError(Throwable exception) {
+        String errorMessage =
+                              (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
+                                  : GitExtension.MESSAGES.commitFailed();
+        IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+    }
 
 }

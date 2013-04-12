@@ -24,75 +24,55 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class SystemResourcesImpl implements SystemResources
-{
-   private int services;
-   /** Number of application deployed under account. */
-   private int apps;
-   /** Memory available for all applications under account (in MB). */
-   private int memory;
+public class SystemResourcesImpl implements SystemResources {
+    private int services;
+    /** Number of application deployed under account. */
+    private int apps;
+    /** Memory available for all applications under account (in MB). */
+    private int memory;
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public int getServices()
-   {
-      return services;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public int getServices() {
+        return services;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setServices(int services)
-   {
-      this.services = services;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setServices(int services) {
+        this.services = services;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public int getApps()
-   {
-      return apps;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public int getApps() {
+        return apps;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setApps(int apps)
-   {
-      this.apps = apps;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setApps(int apps) {
+        this.apps = apps;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public int getMemory()
-   {
-      return memory;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public int getMemory() {
+        return memory;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setMemory(int memory)
-   {
-      this.memory = memory;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setMemory(int memory) {
+        this.memory = memory;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "SystemResourcesImpl{" +
-         "services=" + services +
-         ", apps=" + apps +
-         ", memory=" + memory +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "SystemResourcesImpl{" +
+               "services=" + services +
+               ", apps=" + apps +
+               ", memory=" + memory +
+               '}';
+    }
 }

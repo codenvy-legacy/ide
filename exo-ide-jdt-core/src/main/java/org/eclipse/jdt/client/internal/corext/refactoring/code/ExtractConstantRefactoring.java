@@ -208,7 +208,8 @@
 //
 //	public void setVisibility(String am) {
 //		Assert.isTrue(
-//			am == JdtFlags.VISIBILITY_STRING_PRIVATE || am == JdtFlags.VISIBILITY_STRING_PROTECTED || am == JdtFlags.VISIBILITY_STRING_PACKAGE || am == JdtFlags.VISIBILITY_STRING_PUBLIC
+//			am == JdtFlags.VISIBILITY_STRING_PRIVATE || am == JdtFlags.VISIBILITY_STRING_PROTECTED || am == JdtFlags.VISIBILITY_STRING_PACKAGE ||
+// am == JdtFlags.VISIBILITY_STRING_PUBLIC
 //		);
 //		fVisibility= am;
 //	}
@@ -247,7 +248,8 @@
 //				Expression expression= getSelectedExpression().getAssociatedExpression();
 //				if (expression != null) {
 //					ITypeBinding binding= guessBindingForReference(expression);
-//					fGuessedConstNames= StubUtility.getVariableNameSuggestions(NamingConventions.VK_STATIC_FINAL_FIELD, fCu.getJavaProject(), binding, expression, Arrays.asList(getExcludedVariableNames()));
+//					fGuessedConstNames= StubUtility.getVariableNameSuggestions(NamingConventions.VK_STATIC_FINAL_FIELD, fCu.getJavaProject(), binding,
+// expression, Arrays.asList(getExcludedVariableNames()));
 //				}
 //			} catch (JavaModelException e) {
 //			}
@@ -262,7 +264,8 @@
 //		if (fExcludedVariableNames == null) {
 //			try {
 //				IExpressionFragment expr= getSelectedExpression();
-//				Collection<String> takenNames= new ScopeAnalyzer(fCuRewrite.getRoot()).getUsedVariableNames(expr.getStartPosition(), expr.getLength());
+//				Collection<String> takenNames= new ScopeAnalyzer(fCuRewrite.getRoot()).getUsedVariableNames(expr.getStartPosition(),
+// expr.getLength());
 //				fExcludedVariableNames= takenNames.toArray(new String[takenNames.size()]);
 //			} catch (JavaModelException e) {
 //				fExcludedVariableNames= new String[0];
@@ -354,9 +357,11 @@
 //		   ExtractTempRefactoring, others */
 //		switch(Checks.checkExpressionIsRValue(getSelectedExpression().getAssociatedExpression())) {
 //			case Checks.NOT_RVALUE_MISC:
-//				return RefactoringStatus.createStatus(RefactoringStatus.FATAL, RefactoringCoreMessages.ExtractConstantRefactoring_select_expression, null, Corext.getPluginId(), RefactoringStatusCodes.EXPRESSION_NOT_RVALUE, null);
+//				return RefactoringStatus.createStatus(RefactoringStatus.FATAL, RefactoringCoreMessages.ExtractConstantRefactoring_select_expression,
+// null, Corext.getPluginId(), RefactoringStatusCodes.EXPRESSION_NOT_RVALUE, null);
 //			case Checks.NOT_RVALUE_VOID:
-//				return RefactoringStatus.createStatus(RefactoringStatus.FATAL, RefactoringCoreMessages.ExtractConstantRefactoring_no_void, null, Corext.getPluginId(), RefactoringStatusCodes.EXPRESSION_NOT_RVALUE_VOID, null);
+//				return RefactoringStatus.createStatus(RefactoringStatus.FATAL, RefactoringCoreMessages.ExtractConstantRefactoring_no_void, null,
+// Corext.getPluginId(), RefactoringStatusCodes.EXPRESSION_NOT_RVALUE_VOID, null);
 //			case Checks.IS_RVALUE_GUESSED:
 //			case Checks.IS_RVALUE:
 //				return new RefactoringStatus();
@@ -407,8 +412,10 @@
 //		else if (!ConstantChecks.isLoadTimeConstant(selectedExpression))
 //			result.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ExtractConstantRefactoring_not_load_time_constant));
 //		else if (associatedExpression instanceof SimpleName) {
-//			if (associatedExpression.getParent() instanceof QualifiedName && associatedExpression.getLocationInParent() == QualifiedName.NAME_PROPERTY
-//					|| associatedExpression.getParent() instanceof FieldAccess && associatedExpression.getLocationInParent() == FieldAccess.NAME_PROPERTY)
+//			if (associatedExpression.getParent() instanceof QualifiedName && associatedExpression.getLocationInParent() == QualifiedName
+// .NAME_PROPERTY
+//					|| associatedExpression.getParent() instanceof FieldAccess && associatedExpression.getLocationInParent() == FieldAccess
+// .NAME_PROPERTY)
 //				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ExtractConstantRefactoring_select_expression);
 //		}
 //
@@ -434,7 +441,8 @@
 //	 */
 //	public RefactoringStatus checkConstantNameOnChange() throws JavaModelException {
 //		if (Arrays.asList(getExcludedVariableNames()).contains(fConstantName))
-//			return RefactoringStatus.createErrorStatus(Messages.format(RefactoringCoreMessages.ExtractConstantRefactoring_another_variable, BasicElementLabels.getJavaElementName(getConstantName())));
+//			return RefactoringStatus.createErrorStatus(Messages.format(RefactoringCoreMessages.ExtractConstantRefactoring_another_variable,
+// BasicElementLabels.getJavaElementName(getConstantName())));
 //		return Checks.checkConstantName(fConstantName, fCu);
 //	}
 //
@@ -488,7 +496,8 @@
 //		for (int i= 0; i < newProblems.length; i++) {
 //			IProblem problem= newProblems[i];
 //			if (problem.isError())
-//				result.addEntry(new RefactoringStatusEntry((problem.isError() ? RefactoringStatus.ERROR : RefactoringStatus.WARNING), problem.getMessage(), new JavaStringStatusContext(newCuSource, SourceRangeFactory.create(problem))));
+//				result.addEntry(new RefactoringStatusEntry((problem.isError() ? RefactoringStatus.ERROR : RefactoringStatus.WARNING),
+// problem.getMessage(), new JavaStringStatusContext(newCuSource, SourceRangeFactory.create(problem))));
 //		}
 //	}
 //
@@ -553,7 +562,8 @@
 //				}
 //			}
 //			boolean isInterface= parent.resolveBinding() != null && parent.resolveBinding().isInterface();
-//			ModifierCorrectionSubProcessor.installLinkedVisibilityProposals(fLinkedProposalModel, rewrite, fieldDeclaration.modifiers(), isInterface);
+//			ModifierCorrectionSubProcessor.installLinkedVisibilityProposals(fLinkedProposalModel, rewrite, fieldDeclaration.modifiers(),
+// isInterface);
 //		}
 //	}
 //
@@ -588,11 +598,15 @@
 //			flags|= RefactoringDescriptor.STRUCTURAL_CHANGE;
 //
 //		final String expression= ASTNodes.asString(fSelectedExpression.getAssociatedExpression());
-//		final String description= Messages.format(RefactoringCoreMessages.ExtractConstantRefactoring_descriptor_description_short, BasicElementLabels.getJavaElementName(fConstantName));
-//		final String header= Messages.format(RefactoringCoreMessages.ExtractConstantRefactoring_descriptor_description, new String[] { BasicElementLabels.getJavaElementName(fConstantName), BasicElementLabels.getJavaCodeString(expression)});
+//		final String description= Messages.format(RefactoringCoreMessages.ExtractConstantRefactoring_descriptor_description_short,
+// BasicElementLabels.getJavaElementName(fConstantName));
+//		final String header= Messages.format(RefactoringCoreMessages.ExtractConstantRefactoring_descriptor_description,
+// new String[] { BasicElementLabels.getJavaElementName(fConstantName), BasicElementLabels.getJavaCodeString(expression)});
 //		final JDTRefactoringDescriptorComment comment= new JDTRefactoringDescriptorComment(project, this, header);
-//		comment.addSetting(Messages.format(RefactoringCoreMessages.ExtractConstantRefactoring_constant_name_pattern, BasicElementLabels.getJavaElementName(fConstantName)));
-//		comment.addSetting(Messages.format(RefactoringCoreMessages.ExtractConstantRefactoring_constant_expression_pattern, BasicElementLabels.getJavaCodeString(expression)));
+//		comment.addSetting(Messages.format(RefactoringCoreMessages.ExtractConstantRefactoring_constant_name_pattern,
+// BasicElementLabels.getJavaElementName(fConstantName)));
+//		comment.addSetting(Messages.format(RefactoringCoreMessages.ExtractConstantRefactoring_constant_expression_pattern,
+// BasicElementLabels.getJavaCodeString(expression)));
 //		String visibility= fVisibility;
 //		if ("".equals(visibility)) //$NON-NLS-1$
 //			visibility= RefactoringCoreMessages.ExtractConstantRefactoring_default_visibility;
@@ -603,12 +617,14 @@
 //			comment.addSetting(RefactoringCoreMessages.ExtractConstantRefactoring_qualify_references);
 //		arguments.put(JavaRefactoringDescriptorUtil.ATTRIBUTE_INPUT, JavaRefactoringDescriptorUtil.elementToHandle(project, fCu));
 //		arguments.put(JavaRefactoringDescriptorUtil.ATTRIBUTE_NAME, fConstantName);
-//		arguments.put(JavaRefactoringDescriptorUtil.ATTRIBUTE_SELECTION, new Integer(fSelectionStart).toString() + " " + new Integer(fSelectionLength).toString()); //$NON-NLS-1$
+//		arguments.put(JavaRefactoringDescriptorUtil.ATTRIBUTE_SELECTION, new Integer(fSelectionStart).toString() + " " + new Integer
+// (fSelectionLength).toString()); //$NON-NLS-1$
 //		arguments.put(ATTRIBUTE_REPLACE, Boolean.valueOf(fReplaceAllOccurrences).toString());
 //		arguments.put(ATTRIBUTE_QUALIFY, Boolean.valueOf(fQualifyReferencesWithDeclaringClassName).toString());
 //		arguments.put(ATTRIBUTE_VISIBILITY, new Integer(JdtFlags.getVisibilityCode(fVisibility)).toString());
 //
-//		ExtractConstantDescriptor descriptor= RefactoringSignatureDescriptorFactory.createExtractConstantDescriptor(project, description, comment.asString(), arguments, flags);
+//		ExtractConstantDescriptor descriptor= RefactoringSignatureDescriptorFactory.createExtractConstantDescriptor(project, description,
+// comment.asString(), arguments, flags);
 //		return descriptor;
 //	}
 //
@@ -824,7 +840,8 @@
 //		if(fSelectedExpression != null)
 //			return fSelectedExpression;
 //
-//		IASTFragment selectedFragment= ASTFragmentFactory.createFragmentForSourceRange(new SourceRange(fSelectionStart, fSelectionLength), fCuRewrite.getRoot(), fCu);
+//		IASTFragment selectedFragment= ASTFragmentFactory.createFragmentForSourceRange(new SourceRange(fSelectionStart, fSelectionLength),
+// fCuRewrite.getRoot(), fCu);
 //
 //		if (selectedFragment instanceof IExpressionFragment
 //				&& ! Checks.isInsideJavadoc(selectedFragment.getAssociatedNode())) {
@@ -845,7 +862,8 @@
 //	 * @throws JavaModelException shouldn't happen
 //	 */
 //	private AbstractTypeDeclaration getContainingTypeDeclarationNode() throws JavaModelException {
-//		AbstractTypeDeclaration result= (AbstractTypeDeclaration) ASTNodes.getParent(getSelectedExpression().getAssociatedNode(), AbstractTypeDeclaration.class);
+//		AbstractTypeDeclaration result= (AbstractTypeDeclaration) ASTNodes.getParent(getSelectedExpression().getAssociatedNode(),
+// AbstractTypeDeclaration.class);
 //		Assert.isNotNull(result);
 //		return result;
 //	}
@@ -870,9 +888,11 @@
 //				fSelectionStart= offset;
 //				fSelectionLength= length;
 //			} else
-//				return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.InitializableRefactoring_illegal_argument, new Object[] { selection, JavaRefactoringDescriptorUtil.ATTRIBUTE_SELECTION}));
+//				return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.InitializableRefactoring_illegal_argument,
+// new Object[] { selection, JavaRefactoringDescriptorUtil.ATTRIBUTE_SELECTION}));
 //		} else
-//			return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist, JavaRefactoringDescriptorUtil.ATTRIBUTE_SELECTION));
+//			return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
+// JavaRefactoringDescriptorUtil.ATTRIBUTE_SELECTION));
 //		final String handle= arguments.getAttribute(JavaRefactoringDescriptorUtil.ATTRIBUTE_INPUT);
 //		if (handle != null) {
 //			final IJavaElement element= JavaRefactoringDescriptorUtil.handleToElement(arguments.getProject(), handle, false);
@@ -881,14 +901,16 @@
 //			else
 //				fCu= (ICompilationUnit) element;
 //		} else
-//			return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist, JavaRefactoringDescriptorUtil.ATTRIBUTE_INPUT));
+//			return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
+// JavaRefactoringDescriptorUtil.ATTRIBUTE_INPUT));
 //		final String visibility= arguments.getAttribute(ATTRIBUTE_VISIBILITY);
 //		if (visibility != null && !"".equals(visibility)) {//$NON-NLS-1$
 //			int flag= 0;
 //			try {
 //				flag= Integer.parseInt(visibility);
 //			} catch (NumberFormatException exception) {
-//				return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist, ATTRIBUTE_VISIBILITY));
+//				return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
+// ATTRIBUTE_VISIBILITY));
 //			}
 //			fVisibility= JdtFlags.getVisibilityString(flag);
 //		}
@@ -896,12 +918,14 @@
 //		if (name != null && !"".equals(name)) //$NON-NLS-1$
 //			fConstantName= name;
 //		else
-//			return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist, JavaRefactoringDescriptorUtil.ATTRIBUTE_NAME));
+//			return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
+// JavaRefactoringDescriptorUtil.ATTRIBUTE_NAME));
 //		final String replace= arguments.getAttribute(ATTRIBUTE_REPLACE);
 //		if (replace != null) {
 //			fReplaceAllOccurrences= Boolean.valueOf(replace).booleanValue();
 //		} else
-//			return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist, ATTRIBUTE_REPLACE));
+//			return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
+// ATTRIBUTE_REPLACE));
 //		final String declareFinal= arguments.getAttribute(ATTRIBUTE_QUALIFY);
 //		if (declareFinal != null) {
 //			fQualifyReferencesWithDeclaringClassName= Boolean.valueOf(declareFinal).booleanValue();

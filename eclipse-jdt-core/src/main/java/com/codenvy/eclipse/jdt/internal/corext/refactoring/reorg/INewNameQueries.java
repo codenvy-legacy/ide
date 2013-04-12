@@ -16,21 +16,20 @@ import com.codenvy.eclipse.jdt.core.ICompilationUnit;
 import com.codenvy.eclipse.jdt.core.IPackageFragment;
 import com.codenvy.eclipse.jdt.core.IPackageFragmentRoot;
 
-public interface INewNameQueries
-{
-   public INewNameQuery createNewCompilationUnitNameQuery(ICompilationUnit cu,
-      String initialSuggestedName) throws OperationCanceledException;
+public interface INewNameQueries {
+    public INewNameQuery createNewCompilationUnitNameQuery(ICompilationUnit cu,
+                                                           String initialSuggestedName) throws OperationCanceledException;
 
-   public INewNameQuery createNewResourceNameQuery(IResource res,
-      String initialSuggestedName) throws OperationCanceledException;
+    public INewNameQuery createNewResourceNameQuery(IResource res,
+                                                    String initialSuggestedName) throws OperationCanceledException;
 
-   public INewNameQuery createNewPackageNameQuery(IPackageFragment pack,
-      String initialSuggestedName) throws OperationCanceledException;
+    public INewNameQuery createNewPackageNameQuery(IPackageFragment pack,
+                                                   String initialSuggestedName) throws OperationCanceledException;
 
-   public INewNameQuery createNewPackageFragmentRootNameQuery(IPackageFragmentRoot root,
-      String initialSuggestedName) throws OperationCanceledException;
+    public INewNameQuery createNewPackageFragmentRootNameQuery(IPackageFragmentRoot root,
+                                                               String initialSuggestedName) throws OperationCanceledException;
 
-   public INewNameQuery createNullQuery();
+    public INewNameQuery createNullQuery();
 
-   public INewNameQuery createStaticQuery(String newName) throws OperationCanceledException;
+    public INewNameQuery createStaticQuery(String newName) throws OperationCanceledException;
 }

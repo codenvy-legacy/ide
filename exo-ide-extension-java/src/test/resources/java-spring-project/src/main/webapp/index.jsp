@@ -1,4 +1,3 @@
-
 <%
-   response.sendRedirect("spring/cart");
+    response.sendRedirect("spring/cart");
 %>

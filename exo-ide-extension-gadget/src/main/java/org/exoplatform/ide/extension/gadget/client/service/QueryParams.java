@@ -20,18 +20,17 @@ package org.exoplatform.ide.extension.gadget.client.service;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class QueryParams
-{
+public class QueryParams {
 
-   public static final String GADGET_URL = "gadgetURL";
+    public static final String GADGET_URL = "gadgetURL";
 
-   public static final String PUBLIC_CONTEXT = "publicContext";
+    public static final String PUBLIC_CONTEXT = "publicContext";
 
-   public static final String PRIVATE_CONTEXT = "privateContext";
+    public static final String PRIVATE_CONTEXT = "privateContext";
 
 }

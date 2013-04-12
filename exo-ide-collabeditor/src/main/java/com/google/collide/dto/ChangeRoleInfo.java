@@ -24,23 +24,15 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
 @RoutingType(type = RoutingTypes.CHANGEROLEINFO)
 public interface ChangeRoleInfo extends ClientToServerDto {
 
-  /**
-   * Returns the desired role for the users.
-   */
-  Role getRole();
+    /** Returns the desired role for the users. */
+    Role getRole();
 
-  /**
-   * Returns true if an email should be sent to all users.
-   */
-  boolean emailUsers();
+    /** Returns true if an email should be sent to all users. */
+    boolean emailUsers();
 
-  /**
-   * Returns true if an email should be sent to the current user.
-   */
-  boolean emailSelf();
+    /** Returns true if an email should be sent to the current user. */
+    boolean emailSelf();
 
-  /**
-   * Returns an option private message to include in the email.
-   */
-  String getEmailMessage();
+    /** Returns an option private message to include in the email. */
+    String getEmailMessage();
 }

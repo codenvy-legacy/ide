@@ -46,322 +46,278 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
  * @version $
  */
 
-public class IDEDialogs extends Dialogs implements ViewClosedHandler
-{
+public class IDEDialogs extends Dialogs implements ViewClosedHandler {
 
-   private DialogClosedHandler dialogClosedHandler;
+    private DialogClosedHandler dialogClosedHandler;
 
-   public IDEDialogs()
-   {
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    public IDEDialogs() {
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   private abstract class DialogClosedHandler implements ViewClosedHandler
-   {
+    private abstract class DialogClosedHandler implements ViewClosedHandler {
 
-      private String id;
+        private String id;
 
-      public DialogClosedHandler(String id)
-      {
-         this.id = id;
-      }
+        public DialogClosedHandler(String id) {
+            this.id = id;
+        }
 
-      public String getId()
-      {
-         return id;
-      }
+        public String getId() {
+            return id;
+        }
 
-   }
+    }
 
-   private BooleanCallback booleanCallback = new BooleanCallback()
-   {
-      public void execute(Boolean value)
-      {
-         if (currentDialog.getBooleanValueReceivedHandler() != null)
-         {
-            try
-            {
-               currentDialog.getBooleanValueReceivedHandler().booleanValueReceived(value);
+    private BooleanCallback booleanCallback = new BooleanCallback() {
+        public void execute(Boolean value) {
+            if (currentDialog.getBooleanValueReceivedHandler() != null) {
+                try {
+                    currentDialog.getBooleanValueReceivedHandler().booleanValueReceived(value);
+                } catch (Throwable exc) {
+                }
             }
-            catch (Throwable exc)
-            {
+
+            showQueueDialog();
+        }
+    };
+
+    private ValueCallback valueCallback = new ValueCallback() {
+        public void execute(String value) {
+            if (currentDialog.getStringValueReceivedHandler() != null) {
+                try {
+                    currentDialog.getStringValueReceivedHandler().stringValueReceived(value);
+                } catch (Throwable exc) {
+                }
             }
-         }
 
-         showQueueDialog();
-      }
-   };
+            showQueueDialog();
+        }
+    };
 
-   private ValueCallback valueCallback = new ValueCallback()
-   {
-      public void execute(String value)
-      {
-         if (currentDialog.getStringValueReceivedHandler() != null)
-         {
-            try
-            {
-               currentDialog.getStringValueReceivedHandler().stringValueReceived(value);
+    /**
+     * @param name
+     * @param title
+     *         title near input field
+     * @param width
+     *         width
+     * @param value
+     *         value by default
+     * @return {@link TextField}
+     */
+    public static TextField createTextField(String name, String title, int width, String value) {
+        TextField textField = new TextField(name, title);
+        textField.setTitleOrientation(TitleOrientation.TOP);
+        textField.setHeight(22);
+        textField.setWidth(width);
+        textField.setValue(value);
+        textField.getElement().getStyle().setMarginLeft(-5.0, Style.Unit.PX);
+        return textField;
+    }
+
+    /*
+     * VALUE ASKING
+     */
+    @Override
+    protected void openAskForValueDialog(String title, String message, String defaultValue) {
+        final TextField textField = createTextField("valueField", message, 350, defaultValue);
+        final IDEDialogsView view = new IDEDialogsView("codenvyAskForValueModalView", title, 400, 160, textField);
+
+        ImageButton okButton = createButton("Ok", null);
+        view.getButtonsLayout().add(okButton);
+        okButton.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                dialogClosedHandler = null;
+                IDE.getInstance().closeView(view.getId());
+                valueCallback.execute(textField.getValue());
             }
-            catch (Throwable exc)
-            {
+        });
+
+        ImageButton cancelButton = createButton("Cancel", null);
+        view.getButtonsLayout().add(cancelButton);
+        cancelButton.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                dialogClosedHandler = null;
+                IDE.getInstance().closeView(view.getId());
+                valueCallback.execute(null);
             }
-         }
+        });
 
-         showQueueDialog();
-      }
-   };
-
-   /**
-    * @param name
-    * @param title title near input field
-    * @param width width
-    * @param value value by default
-    * @return {@link TextField}
-    */
-   public static TextField createTextField(String name, String title, int width, String value)
-   {
-      TextField textField = new TextField(name, title);
-      textField.setTitleOrientation(TitleOrientation.TOP);
-      textField.setHeight(22);
-      textField.setWidth(width);
-      textField.setValue(value);
-      textField.getElement().getStyle().setMarginLeft(-5.0, Style.Unit.PX);
-      return textField;
-   }
-
-   /*
-    * VALUE ASKING
-    */
-   @Override
-   protected void openAskForValueDialog(String title, String message, String defaultValue)
-   {
-      final TextField textField = createTextField("valueField", message, 350, defaultValue);
-      final IDEDialogsView view = new IDEDialogsView("codenvyAskForValueModalView", title, 400, 160, textField);
-
-      ImageButton okButton = createButton("Ok", null);
-      view.getButtonsLayout().add(okButton);
-      okButton.addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            dialogClosedHandler = null;
-            IDE.getInstance().closeView(view.getId());
-            valueCallback.execute(textField.getValue());
-         }
-      });
-
-      ImageButton cancelButton = createButton("Cancel", null);
-      view.getButtonsLayout().add(cancelButton);
-      cancelButton.addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            dialogClosedHandler = null;
-            IDE.getInstance().closeView(view.getId());
-            valueCallback.execute(null);
-         }
-      });
-
-      dialogClosedHandler = new DialogClosedHandler("codenvyAskForValueModalView")
-      {
-         @Override
-         public void onViewClosed(ViewClosedEvent event)
-         {
-            dialogClosedHandler = null;
-            valueCallback.execute(null);
-         }
-      };
-
-      IDE.getInstance().openView(view);
-   }
-
-   ;
-
-   @Override
-   protected void openAskDialog(String title, String message)
-   {
-      HorizontalPanel content = createImageWithTextLayout(WindowResource.INSTANCE.askDialog(), message);
-      final IDEDialogsView view = new IDEDialogsView("ideAskModalView", title, 430, 150, content);
-
-      ImageButton yesButton = createButton("Yes", null);
-      view.getButtonsLayout().add(yesButton);
-      yesButton.addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            dialogClosedHandler = null;
-            IDE.getInstance().closeView(view.getId());
-            booleanCallback.execute(true);
-         }
-      });
-
-      ImageButton noButton = createButton("No", null);
-      view.getButtonsLayout().add(noButton);
-      noButton.addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            if (valueCallback != null)
-            {
-               dialogClosedHandler = null;
-               IDE.getInstance().closeView(view.getId());
-               booleanCallback.execute(false);
+        dialogClosedHandler = new DialogClosedHandler("codenvyAskForValueModalView") {
+            @Override
+            public void onViewClosed(ViewClosedEvent event) {
+                dialogClosedHandler = null;
+                valueCallback.execute(null);
             }
-         }
-      });
+        };
 
-      dialogClosedHandler = new DialogClosedHandler("ideAskModalView")
-      {
-         @Override
-         public void onViewClosed(ViewClosedEvent event)
-         {
-            dialogClosedHandler = null;
-            booleanCallback.execute(null);
-         }
-      };
+        IDE.getInstance().openView(view);
+    }
 
-      IDE.getInstance().openView(view);
-   }
+    ;
 
-   ;
+    @Override
+    protected void openAskDialog(String title, String message) {
+        HorizontalPanel content = createImageWithTextLayout(WindowResource.INSTANCE.askDialog(), message);
+        final IDEDialogsView view = new IDEDialogsView("ideAskModalView", title, 430, 150, content);
 
-   @Override
-   protected void openWarningDialog(String title, String message)
-   {
-      HorizontalPanel content = createImageWithTextLayout(WindowResource.INSTANCE.warnDialog(), message);
-      final IDEDialogsView view = new IDEDialogsView("ideWarningModalView", title, 450, 250, content);
+        ImageButton yesButton = createButton("Yes", null);
+        view.getButtonsLayout().add(yesButton);
+        yesButton.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                dialogClosedHandler = null;
+                IDE.getInstance().closeView(view.getId());
+                booleanCallback.execute(true);
+            }
+        });
 
-      ImageButton okButton = createButton("Ok", null);
-      view.getButtonsLayout().add(okButton);
-      okButton.addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            dialogClosedHandler = null;
-            IDE.getInstance().closeView(view.getId());
-            booleanCallback.execute(true);
-         }
-      });
+        ImageButton noButton = createButton("No", null);
+        view.getButtonsLayout().add(noButton);
+        noButton.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                if (valueCallback != null) {
+                    dialogClosedHandler = null;
+                    IDE.getInstance().closeView(view.getId());
+                    booleanCallback.execute(false);
+                }
+            }
+        });
 
-      dialogClosedHandler = new DialogClosedHandler("ideWarningModalView")
-      {
-         @Override
-         public void onViewClosed(ViewClosedEvent event)
-         {
-            dialogClosedHandler = null;
-            booleanCallback.execute(null);
-         }
-      };
+        dialogClosedHandler = new DialogClosedHandler("ideAskModalView") {
+            @Override
+            public void onViewClosed(ViewClosedEvent event) {
+                dialogClosedHandler = null;
+                booleanCallback.execute(null);
+            }
+        };
 
-      IDE.getInstance().openView(view);
-   }
+        IDE.getInstance().openView(view);
+    }
 
-   ;
+    ;
 
-   @Override
-   protected void openInfoDialog(String title, String message)
-   {
-      HorizontalPanel content = createImageWithTextLayout(WindowResource.INSTANCE.sayDialog(), message);
-      final IDEDialogsView view = new IDEDialogsView("ideInformationModalView", title, 400, 130, content);
+    @Override
+    protected void openWarningDialog(String title, String message) {
+        HorizontalPanel content = createImageWithTextLayout(WindowResource.INSTANCE.warnDialog(), message);
+        final IDEDialogsView view = new IDEDialogsView("ideWarningModalView", title, 450, 250, content);
 
-      ImageButton okButton = createButton("Ok", null);
-      view.getButtonsLayout().add(okButton);
-      okButton.addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            dialogClosedHandler = null;
-            IDE.getInstance().closeView(view.getId());
-            booleanCallback.execute(true);
-         }
-      });
+        ImageButton okButton = createButton("Ok", null);
+        view.getButtonsLayout().add(okButton);
+        okButton.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                dialogClosedHandler = null;
+                IDE.getInstance().closeView(view.getId());
+                booleanCallback.execute(true);
+            }
+        });
 
-      dialogClosedHandler = new DialogClosedHandler("ideInformationModalView")
-      {
-         @Override
-         public void onViewClosed(ViewClosedEvent event)
-         {
-            dialogClosedHandler = null;
-            booleanCallback.execute(null);
-         }
-      };
+        dialogClosedHandler = new DialogClosedHandler("ideWarningModalView") {
+            @Override
+            public void onViewClosed(ViewClosedEvent event) {
+                dialogClosedHandler = null;
+                booleanCallback.execute(null);
+            }
+        };
 
-      IDE.getInstance().openView(view);
-   }
+        IDE.getInstance().openView(view);
+    }
 
-   ;
+    ;
 
-   /**
-    * Create button.
-    *
-    * @param title button's title
-    * @param icon button's image
-    * @return {@link IButton}
-    */
-   public ImageButton createButton(String title, ImageResource icon)
-   {
-      ImageButton button = new DialogsImageButton(title);
-      if (icon != null)
-      {
-         button.setImage(new Image(icon));
-      }
-      return button;
-   }
+    @Override
+    protected void openInfoDialog(String title, String message) {
+        HorizontalPanel content = createImageWithTextLayout(WindowResource.INSTANCE.sayDialog(), message);
+        final IDEDialogsView view = new IDEDialogsView("ideInformationModalView", title, 400, 130, content);
 
-   private class DialogsImageButton extends ImageButton
-   {
+        ImageButton okButton = createButton("Ok", null);
+        view.getButtonsLayout().add(okButton);
+        okButton.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                dialogClosedHandler = null;
+                IDE.getInstance().closeView(view.getId());
+                booleanCallback.execute(true);
+            }
+        });
 
-      public DialogsImageButton(String text)
-      {
-         super(text);
-      }
+        dialogClosedHandler = new DialogClosedHandler("ideInformationModalView") {
+            @Override
+            public void onViewClosed(ViewClosedEvent event) {
+                dialogClosedHandler = null;
+                booleanCallback.execute(null);
+            }
+        };
 
-      @Override
-      protected void onAttach()
-      {
-         setButtonId(getParent().getElement().getId() + getText() + "Button");
-         super.onAttach();
-      }
+        IDE.getInstance().openView(view);
+    }
 
-   }
+    ;
 
-   /**
-    * Creates layout with pointed image and text near it.
-    *
-    * @param icon image to display
-    * @param text text to display
-    * @return {@link HorizontalPanel}
-    */
-   public static HorizontalPanel createImageWithTextLayout(ImageResource icon, String text)
-   {
-      HorizontalPanel hPanel = new HorizontalPanel();
-      hPanel.setWidth("100%");
-      hPanel.setHeight(32 + "px");
-      hPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-      hPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+    /**
+     * Create button.
+     *
+     * @param title
+     *         button's title
+     * @param icon
+     *         button's image
+     * @return {@link IButton}
+     */
+    public ImageButton createButton(String title, ImageResource icon) {
+        ImageButton button = new DialogsImageButton(title);
+        if (icon != null) {
+            button.setImage(new Image(icon));
+        }
+        return button;
+    }
 
-      // Add image
-      Image image = new Image(icon);
-      image.setWidth(32 + "px");
-      image.setHeight(32 + "px");
-      hPanel.add(image);
-      hPanel.setCellWidth(image, "42px");
+    private class DialogsImageButton extends ImageButton {
 
-      // Add text:
-      Label label = new Label();
-      label.getElement().setInnerHTML(text);
-      hPanel.add(label);
+        public DialogsImageButton(String text) {
+            super(text);
+        }
 
-      return hPanel;
-   }
+        @Override
+        protected void onAttach() {
+            setButtonId(getParent().getElement().getId() + getText() + "Button");
+            super.onAttach();
+        }
 
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (dialogClosedHandler != null && dialogClosedHandler.getId().equals(event.getView().getId()))
-      {
-         dialogClosedHandler.onViewClosed(event);
-      }
-   }
+    }
+
+    /**
+     * Creates layout with pointed image and text near it.
+     *
+     * @param icon
+     *         image to display
+     * @param text
+     *         text to display
+     * @return {@link HorizontalPanel}
+     */
+    public static HorizontalPanel createImageWithTextLayout(ImageResource icon, String text) {
+        HorizontalPanel hPanel = new HorizontalPanel();
+        hPanel.setWidth("100%");
+        hPanel.setHeight(32 + "px");
+        hPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+        hPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+
+        // Add image
+        Image image = new Image(icon);
+        image.setWidth(32 + "px");
+        image.setHeight(32 + "px");
+        hPanel.add(image);
+        hPanel.setCellWidth(image, "42px");
+
+        // Add text:
+        Label label = new Label();
+        label.getElement().setInnerHTML(text);
+        hPanel.add(label);
+
+        return hPanel;
+    }
+
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (dialogClosedHandler != null && dialogClosedHandler.getId().equals(event.getView().getId())) {
+            dialogClosedHandler.onViewClosed(event);
+        }
+    }
 
 }

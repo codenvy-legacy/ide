@@ -24,18 +24,14 @@ import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 @RoutingType(type = RoutingTypes.MEMBERSHIPCHANGEDPAYLOAD)
 public interface MembershipChangedPayload extends ServerToClientDto {
 
-  /**
-   * An object which identifies the type of membership change which occurred.
-   */
-  public enum MembershipChange {
-    ADDED_TO_WORKSPACE, REMOVED_FROM_WORKSPACE, ADDED_TO_PROJECT, REMOVED_FROM_PROJECT
-  }
+    /** An object which identifies the type of membership change which occurred. */
+    public enum MembershipChange {
+        ADDED_TO_WORKSPACE, REMOVED_FROM_WORKSPACE, ADDED_TO_PROJECT, REMOVED_FROM_PROJECT
+    }
 
-  /** The type of membership change */
-  MembershipChange getMembershipChange();
+    /** The type of membership change */
+    MembershipChange getMembershipChange();
 
-  /**
-   * The id of the project or workspace the user was added to or removed from
-   */
-  String getId();
+    /** The id of the project or workspace the user was added to or removed from */
+    String getId();
 }

@@ -37,86 +37,71 @@ import org.exoplatform.ide.vfs.shared.Link;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
 public class GadgetPluginEventHandler implements EditorActiveFileChangedHandler, PreviewGadgetHandler,
-   ConfigurationReceivedSuccessfullyHandler, ViewClosedHandler
-{
+                                                 ConfigurationReceivedSuccessfullyHandler, ViewClosedHandler {
 
-   private FileModel activeFile;
+    private FileModel activeFile;
 
-   private IDEConfiguration applicationConfiguration;
+    private IDEConfiguration applicationConfiguration;
 
-   private boolean previewOpened = false;
+    private boolean previewOpened = false;
 
-   private GadgetPreviewPane gadgetPreviewPane;
+    private GadgetPreviewPane gadgetPreviewPane;
 
-   public GadgetPluginEventHandler()
-   {
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      IDE.addHandler(PreviewGadgetEvent.TYPE, this);
-      IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    public GadgetPluginEventHandler() {
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+        IDE.addHandler(PreviewGadgetEvent.TYPE, this);
+        IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      this.activeFile = event.getFile();
-      if (previewOpened)
-      {
-         IDE.getInstance().closeView(GadgetPreviewPane.ID);
-         previewOpened = false;
-      }
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        this.activeFile = event.getFile();
+        if (previewOpened) {
+            IDE.getInstance().closeView(GadgetPreviewPane.ID);
+            previewOpened = false;
+        }
 
-   }
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.gadget.client.event.PreviewGadgetHandler#onPreviewGadget(org.exoplatform.ide.extension.gadget.client.event.PreviewGadgetEvent)
-    */
-   @Override
-   public void onPreviewGadget(PreviewGadgetEvent event)
-   {
-      String href = activeFile.getLinkByRelation(Link.REL_CONTENT_BY_PATH).getHref();
-      href = href.replace(applicationConfiguration.getContext(), applicationConfiguration.getPublicContext());
-      if (gadgetPreviewPane == null)
-      {
-         gadgetPreviewPane = new GadgetPreviewPane(href, applicationConfiguration.getGadgetServer());
-         gadgetPreviewPane.setIcon(new Image(GadgetClientBundle.INSTANCE.preview()));
-         IDE.getInstance().openView(gadgetPreviewPane);
-      }
-      else
-      {
-         if (!gadgetPreviewPane.isViewVisible())
-         {
-            gadgetPreviewPane.setViewVisible();
-         }
-      }
-      gadgetPreviewPane.showGadget();
-      previewOpened = true;
-   }
+    /** @see org.exoplatform.ide.extension.gadget.client.event.PreviewGadgetHandler#onPreviewGadget(org.exoplatform.ide.extension.gadget
+     * .client.event.PreviewGadgetEvent) */
+    @Override
+    public void onPreviewGadget(PreviewGadgetEvent event) {
+        String href = activeFile.getLinkByRelation(Link.REL_CONTENT_BY_PATH).getHref();
+        href = href.replace(applicationConfiguration.getContext(), applicationConfiguration.getPublicContext());
+        if (gadgetPreviewPane == null) {
+            gadgetPreviewPane = new GadgetPreviewPane(href, applicationConfiguration.getGadgetServer());
+            gadgetPreviewPane.setIcon(new Image(GadgetClientBundle.INSTANCE.preview()));
+            IDE.getInstance().openView(gadgetPreviewPane);
+        } else {
+            if (!gadgetPreviewPane.isViewVisible()) {
+                gadgetPreviewPane.setViewVisible();
+            }
+        }
+        gadgetPreviewPane.showGadget();
+        previewOpened = true;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent)
-    */
-   @Override
-   public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
-   {
-      applicationConfiguration = event.getConfiguration();
-   }
+    /** @see org.exoplatform.ide.client.framework.configuration.event
+     * .ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ide.client.framework.configuration
+     * .event.ConfigurationReceivedSuccessfullyEvent) */
+    @Override
+    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event) {
+        applicationConfiguration = event.getConfiguration();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (gadgetPreviewPane == null)
-         return;
-      if (event.getView().getId().equals(gadgetPreviewPane.getId()))
-      {
-         previewOpened = false;
-         gadgetPreviewPane = null;
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (gadgetPreviewPane == null)
+            return;
+        if (event.getView().getId().equals(gadgetPreviewPane.getId())) {
+            previewOpened = false;
+            gadgetPreviewPane = null;
+        }
+    }
 
 }

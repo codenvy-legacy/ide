@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.codeassistant.jvm;
 
-import static org.junit.Assert.assertEquals;
-
 import org.exoplatform.ide.codeassistant.jvm.bean.FieldInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.bean.MethodInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.bean.ShortTypeInfoBean;
@@ -34,50 +32,45 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-/**
- * Check result of method toString() classes which extends Member
- */
-public class TestMemberToString
-{
-   @Test
-   public void testFieldInfoToString()
-   {
-      FieldInfo fieldInfo = new FieldInfoBean("field", Modifier.PUBLIC, "java.lang.String", "test.TestClass", null, null, null);
+import static org.junit.Assert.assertEquals;
 
-      assertEquals("public java.lang.String test.TestClass.field", fieldInfo.toString());
-   }
+/** Check result of method toString() classes which extends Member */
+public class TestMemberToString {
+    @Test
+    public void testFieldInfoToString() {
+        FieldInfo fieldInfo = new FieldInfoBean("field", Modifier.PUBLIC, "java.lang.String", "test.TestClass", null, null, null);
 
-   @Test
-   public void testMethodInfoToString()
-   {
-      MethodInfo methodInfo =
-         new MethodInfoBean("method", Modifier.PUBLIC, new ArrayList<String>(), new ArrayList<String>(),
-            Arrays.asList(new String[]{"param1"}), false, "", "test.TestClass", null, null, null);
+        assertEquals("public java.lang.String test.TestClass.field", fieldInfo.toString());
+    }
 
-      assertEquals("public void test.TestClass.method()", methodInfo.toString());
-   }
+    @Test
+    public void testMethodInfoToString() {
+        MethodInfo methodInfo =
+                new MethodInfoBean("method", Modifier.PUBLIC, new ArrayList<String>(), new ArrayList<String>(),
+                                   Arrays.asList(new String[]{"param1"}), false, "", "test.TestClass", null, null, null);
 
-   @Test
-   public void testShortTypeInfoToString()
-   {
-      ShortTypeInfoBean shortTypeInfo = new ShortTypeInfoBean("test.TestClass", Modifier.PUBLIC, "CLASS", null);
+        assertEquals("public void test.TestClass.method()", methodInfo.toString());
+    }
 
-      assertEquals("public CLASS test.TestClass", shortTypeInfo.toString());
-   }
+    @Test
+    public void testShortTypeInfoToString() {
+        ShortTypeInfoBean shortTypeInfo = new ShortTypeInfoBean("test.TestClass", Modifier.PUBLIC, "CLASS", null);
 
-   @Ignore
-   @Test
-   public void testTypeInfoToString()
-   {
-      TypeInfoBean typeInfo = new TypeInfoBean();
-      typeInfo.setModifiers(Modifier.PROTECTED);
-      typeInfo.setType(JavaType.CLASS.toString());
-      typeInfo.setName("test.TestClass2");
-      typeInfo.setSuperClass("test.TestClass1");
-      typeInfo.setInterfaces(Arrays.asList(new String[]{"test.TestInterface1", "test.TestInterface2"}));
+        assertEquals("public CLASS test.TestClass", shortTypeInfo.toString());
+    }
 
-      assertEquals(
-         "protected CLASS test.TestClass2 extends test.TestClass1 implements test.TestInterface1, test.TestInterface2",
-         typeInfo.toString());
-   }
+    @Ignore
+    @Test
+    public void testTypeInfoToString() {
+        TypeInfoBean typeInfo = new TypeInfoBean();
+        typeInfo.setModifiers(Modifier.PROTECTED);
+        typeInfo.setType(JavaType.CLASS.toString());
+        typeInfo.setName("test.TestClass2");
+        typeInfo.setSuperClass("test.TestClass1");
+        typeInfo.setInterfaces(Arrays.asList(new String[]{"test.TestInterface1", "test.TestInterface2"}));
+
+        assertEquals(
+                "protected CLASS test.TestClass2 extends test.TestClass1 implements test.TestInterface1, test.TestInterface2",
+                typeInfo.toString());
+    }
 }

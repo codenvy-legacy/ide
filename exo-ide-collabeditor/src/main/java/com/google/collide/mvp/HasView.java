@@ -14,10 +14,8 @@
 
 package com.google.collide.mvp;
 
-/**
- * An object which has a view.
- */
+/** An object which has a view. */
 public interface HasView<V extends View<?>> {
 
-  V getView();
+    V getView();
 }

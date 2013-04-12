@@ -10,47 +10,43 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.text.correction.proposals;
 
+import com.google.gwt.user.client.ui.Image;
+
 import org.eclipse.jdt.client.codeassistant.QualifiedTypeNameHistory;
 import org.eclipse.jdt.client.core.dom.SimpleName;
 import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 
-import com.google.gwt.user.client.ui.Image;
+public class AddImportCorrectionProposal extends ASTRewriteCorrectionProposal {
 
-public class AddImportCorrectionProposal extends ASTRewriteCorrectionProposal
-{
+    private final String fTypeName;
 
-   private final String fTypeName;
+    private final String fQualifierName;
 
-   private final String fQualifierName;
+    public AddImportCorrectionProposal(String name, int relevance, IDocument document, Image image,
+                                       String qualifierName, String typeName, SimpleName node) {
+        super(name, ASTRewrite.create(node.getAST()), relevance, document, image);
+        fTypeName = typeName;
+        fQualifierName = qualifierName;
+    }
 
-   public AddImportCorrectionProposal(String name, int relevance, IDocument document, Image image,
-      String qualifierName, String typeName, SimpleName node)
-   {
-      super(name, ASTRewrite.create(node.getAST()), relevance, document, image);
-      fTypeName = typeName;
-      fQualifierName = qualifierName;
-   }
+    public String getQualifiedTypeName() {
+        return fQualifierName + '.' + fTypeName;
+    }
 
-   public String getQualifiedTypeName()
-   {
-      return fQualifierName + '.' + fTypeName;
-   }
+    /* (non-Javadoc)
+     * @see org.eclipse.jdt.internal.ui.text.correction.ChangeCorrectionProposal#performChange(org.eclipse.ui.IEditorPart,
+     * org.eclipse.jface.text.IDocument)
+     */
+    @Override
+    protected void performChange(IDocument document) throws CoreException {
+        super.performChange(document);
+        rememberSelection();
+    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.ui.text.correction.ChangeCorrectionProposal#performChange(org.eclipse.ui.IEditorPart, org.eclipse.jface.text.IDocument)
-    */
-   @Override
-   protected void performChange(IDocument document) throws CoreException
-   {
-      super.performChange(document);
-      rememberSelection();
-   }
-
-   private void rememberSelection()
-   {
-      QualifiedTypeNameHistory.remember(getQualifiedTypeName());
-   }
+    private void rememberSelection() {
+        QualifiedTypeNameHistory.remember(getQualifiedTypeName());
+    }
 
 }

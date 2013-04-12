@@ -20,38 +20,37 @@ package org.exoplatform.ide.extension.openshift.shared;
 
 /**
  * Authentication credentials.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: Credentials.java Mar 20, 2012 9:32:20 AM azatsarynnyy $
- *
  */
-public interface Credentials
-{
-   /**
-    * Returns the RedHat login.
-    * 
-    * @return e-mail.
-    */
-   public String getRhlogin();
+public interface Credentials {
+    /**
+     * Returns the RedHat login.
+     *
+     * @return e-mail.
+     */
+    public String getRhlogin();
 
-   /**
-    * Set the RedHat login.
-    * 
-    * @param email
-    */
-   public void setRhlogin(String email);
+    /**
+     * Set the RedHat login.
+     *
+     * @param email
+     */
+    public void setRhlogin(String email);
 
-   /**
-    * Returns the password.
-    * 
-    * @return password.
-    */
-   public String getPassword();
+    /**
+     * Returns the password.
+     *
+     * @return password.
+     */
+    public String getPassword();
 
-   /**
-    * Set the password.
-    * 
-    * @param password password.
-    */
-   public void setPassword(String password);
+    /**
+     * Set the password.
+     *
+     * @param password
+     *         password.
+     */
+    public void setPassword(String password);
 }

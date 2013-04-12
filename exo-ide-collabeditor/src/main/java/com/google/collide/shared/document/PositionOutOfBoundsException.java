@@ -17,10 +17,9 @@ package com.google.collide.shared.document;
 /**
  * An exception that is thrown when the thrower has gone out of the document's
  * bounds.
- *
  */
 public class PositionOutOfBoundsException extends RuntimeException {
-  public PositionOutOfBoundsException(String message) {
-    super(message);
-  }
+    public PositionOutOfBoundsException(String message) {
+        super(message);
+    }
 }

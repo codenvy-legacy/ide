@@ -49,315 +49,261 @@ import java.util.List;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 4, 2011 9:53:07 AM anya $
- * 
  */
-public class PushToRemotePresenter extends HasBranchesPresenter implements PushToRemoteHandler
-{
-   
-   public interface Display extends IsView
-   {
-      /**
-       * Get the push button click handler.
-       * 
-       * @return {@link HasClickHandlers} push button
-       */
-      HasClickHandlers getPushButton();
+public class PushToRemotePresenter extends HasBranchesPresenter implements PushToRemoteHandler {
 
-      /**
-       * Get the cancel button click handler.
-       * 
-       * @return {@link HasClickHandlers} cancel button
-       */
-      HasClickHandlers getCancelButton();
+    public interface Display extends IsView {
+        /**
+         * Get the push button click handler.
+         * 
+         * @return {@link HasClickHandlers} push button
+         */
+        HasClickHandlers getPushButton();
 
-      /**
-       * Get remote repository field value.
-       * 
-       * @return {@link HasValue} field
-       */
-      HasValue<String> getRemoteValue();
+        /**
+         * Get the cancel button click handler.
+         * 
+         * @return {@link HasClickHandlers} cancel button
+         */
+        HasClickHandlers getCancelButton();
 
-      /**
-       * Get remote branches field value.
-       * 
-       * @return {@link HasValue} field
-       */
-      HasValue<String> getRemoteBranchesValue();
+        /**
+         * Get remote repository field value.
+         * 
+         * @return {@link HasValue} field
+         */
+        HasValue<String> getRemoteValue();
 
-      /**
-       * Get local branches field value.
-       * 
-       * @return {@link HasValue} field
-       */
-      HasValue<String> getLocalBranchesValue();
+        /**
+         * Get remote branches field value.
+         * 
+         * @return {@link HasValue} field
+         */
+        HasValue<String> getRemoteBranchesValue();
 
-      /**
-       * Set values of remote repositories.
-       * 
-       * @param values values to set
-       */
-      void setRemoteValues(LinkedHashMap<String, String> values);
+        /**
+         * Get local branches field value.
+         * 
+         * @return {@link HasValue} field
+         */
+        HasValue<String> getLocalBranchesValue();
 
-      String getRemoteDisplayValue();
+        /**
+         * Set values of remote repositories.
+         * 
+         * @param values values to set
+         */
+        void setRemoteValues(LinkedHashMap<String, String> values);
 
-      /**
-       * Set values of remote repository branches.
-       * 
-       * @param values values to set
-       */
-      void setRemoteBranches(String[] values);
+        String getRemoteDisplayValue();
 
-      /**
-       * Set values of local repository branches.
-       * 
-       * @param values values to set
-       */
-      void setLocalBranches(String[] values);
+        /**
+         * Set values of remote repository branches.
+         * 
+         * @param values values to set
+         */
+        void setRemoteBranches(String[] values);
 
-      /**
-       * Change the enable state of the push button.
-       * 
-       * @param enable enable state
-       */
-      void enablePushButton(boolean enable);
+        /**
+         * Set values of local repository branches.
+         * 
+         * @param values values to set
+         */
+        void setLocalBranches(String[] values);
 
-   }
+        /**
+         * Change the enable state of the push button.
+         * 
+         * @param enable enable state
+         */
+        void enablePushButton(boolean enable);
 
-   /**
-    * Presenter's display.
-    */
-   private Display display;
+    }
 
-   /**
-    *
-    */
-   public PushToRemotePresenter()
-   {
-      IDE.addHandler(PushToRemoteEvent.TYPE, this);
-   }
+    /** Presenter's display. */
+    private Display display;
 
-   /**
-    * Bind pointed display with presenter.
-    * 
-    * @param d display
-    */
-   public void bindDisplay()
-   {
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
+    /**
+     *
+     */
+    public PushToRemotePresenter() {
+        IDE.addHandler(PushToRemoteEvent.TYPE, this);
+    }
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
+    /**
+     * Bind pointed display with presenter.
+     * 
+     * @param d display
+     */
+    public void bindDisplay() {
+        display.getCancelButton().addClickHandler(new ClickHandler() {
 
-      display.getPushButton().addClickHandler(new ClickHandler()
-      {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            doPush();
-         }
-      });
+        display.getPushButton().addClickHandler(new ClickHandler() {
 
-      display.getRemoteValue().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
+            @Override
+            public void onClick(ClickEvent event) {
+                doPush();
+            }
+        });
 
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            display.setRemoteBranches(getRemoteBranchesToDisplay(display.getRemoteDisplayValue()));
-         }
-      });
+        display.getRemoteValue().addValueChangeHandler(new ValueChangeHandler<String>() {
 
-      display.getRemoteBranchesValue().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                display.setRemoteBranches(getRemoteBranchesToDisplay(display.getRemoteDisplayValue()));
+            }
+        });
 
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            boolean empty = (event.getValue() == null || event.getValue().isEmpty());
-            empty =
-               empty || display.getLocalBranchesValue().getValue() == null
-                  || display.getLocalBranchesValue().getValue().isEmpty();
+        display.getRemoteBranchesValue().addValueChangeHandler(new ValueChangeHandler<String>() {
 
-            display.enablePushButton(!empty);
-         }
-      });
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                boolean empty = (event.getValue() == null || event.getValue().isEmpty());
+                empty =
+                        empty || display.getLocalBranchesValue().getValue() == null
+                            || display.getLocalBranchesValue().getValue().isEmpty();
 
-      display.getLocalBranchesValue().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
+                display.enablePushButton(!empty);
+            }
+        });
 
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            boolean empty = (event.getValue() == null || event.getValue().isEmpty());
-            empty =
-               empty || display.getRemoteBranchesValue().getValue() == null
-                  || display.getRemoteBranchesValue().getValue().isEmpty();
-            display.enablePushButton(!empty);
-         }
-      });
-   }
+        display.getLocalBranchesValue().addValueChangeHandler(new ValueChangeHandler<String>() {
 
-   /**
-    * @see org.exoplatform.ide.git.client.push.PushToRemoteHandler#onPushToRemote(org.exoplatform.ide.git.client.push.PushToRemoteEvent)
-    */
-   @Override
-   public void onPushToRemote(PushToRemoteEvent event)
-   {
-      if (makeSelectionCheck())
-      {
-//         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-//         getRemotes(projectId);
-         getRemotes(getSelectedProject().getId());
-      }
-   }
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                boolean empty = (event.getValue() == null || event.getValue().isEmpty());
+                empty =
+                        empty || display.getRemoteBranchesValue().getValue() == null
+                            || display.getRemoteBranchesValue().getValue().isEmpty();
+                display.enablePushButton(!empty);
+            }
+        });
+    }
 
-   /**
-    * Push changes to remote repository (sends request over WebSocket or HTTP).
-    */
-   private void doPush()
-   {
-//      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
-      ProjectModel project = getSelectedProject();
-      
-      final String remote = display.getRemoteValue().getValue();
-      IDE.getInstance().closeView(display.asView().getId());
+    /**
+     * @see org.exoplatform.ide.git.client.push.PushToRemoteHandler#onPushToRemote(org.exoplatform.ide.git.client.push .PushToRemoteEvent)
+     */
+    @Override
+    public void onPushToRemote(PushToRemoteEvent event) {
+        if (makeSelectionCheck()) {
+            getRemotes(getSelectedProject().getId());
+        }
+    }
 
-      try
-      {
-         GitClientService.getInstance().pushWS(vfs.getId(), project, getRefs(), remote, false,
-            new RequestCallback<String>()
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pushSuccess(remote), Type.GIT));
-               }
+    /** Push changes to remote repository (sends request over WebSocket or HTTP). */
+    private void doPush() {
+        ProjectModel project = getSelectedProject();
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception);
-                  if (remote != null && remote.startsWith("https://"))
-                  {
-                     IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.useSshProtocol(), Type.GIT));
-                  }
-               }
-            });
-      }
-      catch (WebSocketException e)
-      {
-         doPushREST(project, remote);
-      }
-   }
+        final String remote = display.getRemoteValue().getValue();
+        IDE.getInstance().closeView(display.asView().getId());
 
-   /**
-    * Push changes to remote repository (sends request over HTTP).
-    */
-   private void doPushREST(ProjectModel project, final String remote)
-   {
-      try
-      {
-         GitClientService.getInstance().push(vfs.getId(), project, getRefs(), remote, false,
-            new AsyncRequestCallback<String>()
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pushSuccess(remote), Type.GIT));
-               }
+        try {
+            GitClientService.getInstance().pushWS(vfs.getId(), project, getRefs(), remote, false,
+                                                  new RequestCallback<String>() {
+                                                      @Override
+                                                      protected void onSuccess(String result) {
+                                                          IDE.fireEvent(
+                                                             new OutputEvent(GitExtension.MESSAGES.pushSuccess(remote), Type.GIT));
+                                                      }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception);
-                  if (remote != null && remote.startsWith("https://"))
-                  {
-                     IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.useSshProtocol(), Type.GIT));
-                  }
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         handleError(e);
-      }
-   }
+                                                      @Override
+                                                      protected void onFailure(Throwable exception) {
+                                                          handleError(exception);
+                                                          if (remote != null && remote.startsWith("https://")) {
+                                                              IDE.fireEvent(
+                                                                 new OutputEvent(GitExtension.MESSAGES.useSshProtocol(), Type.GIT));
+                                                          }
+                                                      }
+                                                  });
+        } catch (WebSocketException e) {
+            doPushREST(project, remote);
+        }
+    }
 
-   /**
-    * Returns list of refs to push.
-    * 
-    * @return list of refs to push
-    */
-   private String[] getRefs()
-   {
-      String localBranch = display.getLocalBranchesValue().getValue();
-      String remoteBranch = display.getRemoteBranchesValue().getValue();
-      return new String[]{localBranch + ":" + remoteBranch};
-   }
+    /** Push changes to remote repository (sends request over HTTP). */
+    private void doPushREST(ProjectModel project, final String remote) {
+        try {
+            GitClientService.getInstance().push(vfs.getId(), project, getRefs(), remote, false,
+                                                new AsyncRequestCallback<String>() {
+                                                    @Override
+                                                    protected void onSuccess(String result) {
+                                                        IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pushSuccess(remote), Type.GIT));
+                                                    }
 
-   private void handleError(Throwable t)
-   {
-      String errorMessage = (t.getMessage() != null) ? t.getMessage() : GitExtension.MESSAGES.pushFail();
-      IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-   }
+                                                    @Override
+                                                    protected void onFailure(Throwable exception) {
+                                                        handleError(exception);
+                                                        if (remote != null && remote.startsWith("https://")) {
+                                                            IDE.fireEvent(
+                                                               new OutputEvent(GitExtension.MESSAGES.useSshProtocol(), Type.GIT));
+                                                        }
+                                                    }
+                                                });
+        } catch (RequestException e) {
+            handleError(e);
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.remote.HasBranchesPresenter#onRemotesReceived(java.util.List)
-    */
-   @Override
-   public void onRemotesReceived(List<Remote> remotes)
-   {
-//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      String projectId = getSelectedProject().getId();
-      
-      display = GWT.create(Display.class);
-      bindDisplay();
-      IDE.getInstance().openView(display.asView());
+    /**
+     * Returns list of refs to push.
+     * 
+     * @return list of refs to push
+     */
+    private String[] getRefs() {
+        String localBranch = display.getLocalBranchesValue().getValue();
+        String remoteBranch = display.getRemoteBranchesValue().getValue();
+        return new String[]{localBranch + ":" + remoteBranch};
+    }
 
-      LinkedHashMap<String, String> remoteValues = new LinkedHashMap<String, String>();
-      for (Remote remote : remotes)
-      {
-         remoteValues.put(remote.getUrl(), remote.getName());
-      }
-      display.setRemoteValues(remoteValues);
+    private void handleError(Throwable t) {
+        String errorMessage = (t.getMessage() != null) ? t.getMessage() : GitExtension.MESSAGES.pushFail();
+        IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+    }
 
-      getBranches(projectId, false);
-      getBranches(projectId, true);
-   }
+    /** @see org.exoplatform.ide.git.client.remote.HasBranchesPresenter#onRemotesReceived(java.util.List) */
+    @Override
+    public void onRemotesReceived(List<Remote> remotes) {
+        String projectId = getSelectedProject().getId();
 
-   /**
-    * @see org.exoplatform.ide.git.client.remote.HasBranchesPresenter#setRemoteBranches(java.util.List)
-    */
-   @Override
-   protected void setRemoteBranches(List<Branch> result)
-   {
-      display.setRemoteBranches(getRemoteBranchesToDisplay(display.getRemoteDisplayValue()));
-   }
+        display = GWT.create(Display.class);
+        bindDisplay();
+        IDE.getInstance().openView(display.asView());
 
-   /**
-    * @see org.exoplatform.ide.git.client.remote.HasBranchesPresenter#setLocalBranches(java.lang.String[])
-    */
-   @Override
-   protected void setLocalBranches(List<Branch> branches)
-   {
-      if (branches == null || branches.isEmpty())
-      {
-         display.setLocalBranches(new String[]{"master"});
-         return;
-      }
+        LinkedHashMap<String, String> remoteValues = new LinkedHashMap<String, String>();
+        for (Remote remote : remotes) {
+            remoteValues.put(remote.getUrl(), remote.getName());
+        }
+        display.setRemoteValues(remoteValues);
 
-      String[] values = new String[branches.size()];
-      for (int i = 0; i < branches.size(); i++)
-      {
-         values[i] = branches.get(i).getName();
-      }
-      display.setLocalBranches(values);
-   }
+        getBranches(projectId, false);
+        getBranches(projectId, true);
+    }
+
+    /** @see org.exoplatform.ide.git.client.remote.HasBranchesPresenter#setRemoteBranches(java.util.List) */
+    @Override
+    protected void setRemoteBranches(List<Branch> result) {
+        display.setRemoteBranches(getRemoteBranchesToDisplay(display.getRemoteDisplayValue()));
+    }
+
+    /** @see org.exoplatform.ide.git.client.remote.HasBranchesPresenter#setLocalBranches(java.lang.String[]) */
+    @Override
+    protected void setLocalBranches(List<Branch> branches) {
+        if (branches == null || branches.isEmpty()) {
+            display.setLocalBranches(new String[]{"master"});
+            return;
+        }
+
+        String[] values = new String[branches.size()];
+        for (int i = 0; i < branches.size(); i++) {
+            values[i] = branches.get(i).getName();
+        }
+        display.setLocalBranches(values);
+    }
 
 }

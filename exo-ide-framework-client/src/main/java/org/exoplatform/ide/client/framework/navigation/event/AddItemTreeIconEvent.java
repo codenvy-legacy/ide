@@ -29,48 +29,34 @@ import java.util.Map;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: AddItemTreeIcon Apr 6, 2011 9:40:05 AM evgen $
- * 
  */
-public class AddItemTreeIconEvent extends GwtEvent<AddItemTreeIconHandler>
-{
+public class AddItemTreeIconEvent extends GwtEvent<AddItemTreeIconHandler> {
 
-   public static GwtEvent.Type<AddItemTreeIconHandler> TYPE = new Type<AddItemTreeIconHandler>();
+    public static GwtEvent.Type<AddItemTreeIconHandler> TYPE = new Type<AddItemTreeIconHandler>();
 
-   private Map<Item, Map<TreeIconPosition, ImageResource>> treeItemIcons;
+    private Map<Item, Map<TreeIconPosition, ImageResource>> treeItemIcons;
 
-   /**
-    * @param treeItemIcons
-    */
-   public AddItemTreeIconEvent(Map<Item, Map<TreeIconPosition, ImageResource>> treeItemsIcons)
-   {
-      super();
-      this.treeItemIcons = treeItemsIcons;
-   }
+    /** @param treeItemIcons */
+    public AddItemTreeIconEvent(Map<Item, Map<TreeIconPosition, ImageResource>> treeItemsIcons) {
+        super();
+        this.treeItemIcons = treeItemsIcons;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<AddItemTreeIconHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<AddItemTreeIconHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(AddItemTreeIconHandler handler)
-   {
-      handler.onAddItemTreeIcon(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(AddItemTreeIconHandler handler) {
+        handler.onAddItemTreeIcon(this);
+    }
 
-   /**
-    * @return the treeItemIcons
-    */
-   public Map<Item, Map<TreeIconPosition, ImageResource>> getTreeItemIcons()
-   {
-      return treeItemIcons;
-   }
+    /** @return the treeItemIcons */
+    public Map<Item, Map<TreeIconPosition, ImageResource>> getTreeItemIcons() {
+        return treeItemIcons;
+    }
 
 }

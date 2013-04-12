@@ -28,17 +28,14 @@ import org.exoplatform.ide.git.client.branch.ShowBranchesEvent;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 7, 2011 5:39:13 PM anya $
- * 
  */
-public class BranchesControl extends GitControl
-{
-   public BranchesControl()
-   {
-      super(GitExtension.MESSAGES.branchesControlId());
-      setTitle(GitExtension.MESSAGES.branchesControlTitle());
-      setPrompt(GitExtension.MESSAGES.branchesControlPrompt());
-      setEvent(new ShowBranchesEvent());
-      setImages(GitClientBundle.INSTANCE.branches(), GitClientBundle.INSTANCE.branchesDisabled());
-      setGroupName(GroupNames.COMMANDS);
-   }
+public class BranchesControl extends GitControl {
+    public BranchesControl() {
+        super(GitExtension.MESSAGES.branchesControlId());
+        setTitle(GitExtension.MESSAGES.branchesControlTitle());
+        setPrompt(GitExtension.MESSAGES.branchesControlPrompt());
+        setEvent(new ShowBranchesEvent());
+        setImages(GitClientBundle.INSTANCE.branches(), GitClientBundle.INSTANCE.branchesDisabled());
+        setGroupName(GroupNames.COMMANDS);
+    }
 }

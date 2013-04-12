@@ -30,33 +30,25 @@ import org.exoplatform.ide.git.shared.InitRequest;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 24, 2011 11:48:40 AM anya $
- * 
  */
-public class InitRequestMarshaller implements Marshallable, Constants
-{
-   /**
-    * Initialize repository request.
-    */
-   private InitRequest initRequest;
+public class InitRequestMarshaller implements Marshallable, Constants {
+    /** Initialize repository request. */
+    private InitRequest initRequest;
 
-   /**
-    * @param initRequest initialize repository request
-    */
-   public InitRequestMarshaller(InitRequest initRequest)
-   {
-      this.initRequest = initRequest;
-   }
+    /**
+     * @param initRequest initialize repository request
+     */
+    public InitRequestMarshaller(InitRequest initRequest) {
+        this.initRequest = initRequest;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
-    */
-   @Override
-   public String marshal()
-   {
-      JSONObject jsonObject = new JSONObject();
-      jsonObject.put(WORKNG_DIR, new JSONString(initRequest.getWorkingDir()));
-      jsonObject.put(BARE, JSONBoolean.getInstance(initRequest.isBare()));
-      return jsonObject.toString();
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal() */
+    @Override
+    public String marshal() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(WORKNG_DIR, new JSONString(initRequest.getWorkingDir()));
+        jsonObject.put(BARE, JSONBoolean.getInstance(initRequest.isBare()));
+        return jsonObject.toString();
+    }
 
 }

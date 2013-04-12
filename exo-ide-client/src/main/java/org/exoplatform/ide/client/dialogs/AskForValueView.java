@@ -35,93 +35,82 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class AskForValueView extends ViewImpl implements org.exoplatform.ide.client.dialogs.AskForValueDialog.Display
-{
+public class AskForValueView extends ViewImpl implements org.exoplatform.ide.client.dialogs.AskForValueDialog.Display {
 
-   private static final String ID = "ideAskForValueView";
+    private static final String ID = "ideAskForValueView";
 
-   private static AskForValueViewUiBinder uiBinder = GWT.create(AskForValueViewUiBinder.class);
+    private static AskForValueViewUiBinder uiBinder = GWT.create(AskForValueViewUiBinder.class);
 
-   interface AskForValueViewUiBinder extends UiBinder<Widget, AskForValueView>
-   {
-   }
+    interface AskForValueViewUiBinder extends UiBinder<Widget, AskForValueView> {
+    }
 
-   @UiField
-   Label promptLabel;
+    @UiField
+    Label promptLabel;
 
-   @UiField
-   TextInput textField;
+    @UiField
+    TextInput textField;
 
-   @UiField
-   ImageButton yesButton;
+    @UiField
+    ImageButton yesButton;
 
-   @UiField
-   ImageButton noButton;
+    @UiField
+    ImageButton noButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   public AskForValueView()
-   {
-      super(ID, "modal", "view title", new Image(IDEImageBundle.INSTANCE.about()), 450, 170);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
-   }
+    public AskForValueView() {
+        super(ID, "modal", "view title", new Image(IDEImageBundle.INSTANCE.about()), 450, 170);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
+    }
 
-   @Override
-   public HasText getPromptLabel()
-   {
-      return promptLabel;
-   }
+    @Override
+    public HasText getPromptLabel() {
+        return promptLabel;
+    }
 
-   @Override
-   public TextFieldItem getTextField()
-   {
-      return textField;
-   }
+    @Override
+    public TextFieldItem getTextField() {
+        return textField;
+    }
 
-   @Override
-   public HasClickHandlers getYesButton()
-   {
-      return yesButton;
-   }
+    @Override
+    public HasClickHandlers getYesButton() {
+        return yesButton;
+    }
 
-   @Override
-   public HasClickHandlers getNoButton()
-   {
-      return noButton;
-   }
+    @Override
+    public HasClickHandlers getNoButton() {
+        return noButton;
+    }
 
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   @Override
-   public void setNoButtonEnabled(boolean enabled)
-   {
-      noButton.setEnabled(enabled);
-   }
+    @Override
+    public void setNoButtonEnabled(boolean enabled) {
+        noButton.setEnabled(enabled);
+    }
 
-   @Override
-   public void setYesButtonEnabled(boolean enabled)
-   {
-      yesButton.setEnabled(enabled);
-   }
+    @Override
+    public void setYesButtonEnabled(boolean enabled) {
+        yesButton.setEnabled(enabled);
+    }
 
-   @Override
-   protected void onAttach()
-   {
-      super.onAttach();
+    @Override
+    protected void onAttach() {
+        super.onAttach();
 
-      textField.focus();
-      textField.selectAll();
-   }
+        textField.focus();
+        textField.selectAll();
+    }
 
 }

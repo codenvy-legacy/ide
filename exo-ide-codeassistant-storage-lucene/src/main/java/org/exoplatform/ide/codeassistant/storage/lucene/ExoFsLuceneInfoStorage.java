@@ -27,48 +27,40 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-/**
- * FsLuceneInfoStorage to be able to configure over eXo configuration
- */
-public class ExoFsLuceneInfoStorage extends LuceneInfoStorage implements Startable
-{
+/** FsLuceneInfoStorage to be able to configure over eXo configuration */
+public class ExoFsLuceneInfoStorage extends LuceneInfoStorage implements Startable {
 
-   private static final Logger LOG = LoggerFactory.getLogger(ExoFsLuceneInfoStorage.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ExoFsLuceneInfoStorage.class);
 
-   public static final String STORAGE_PATH_NAME = "storage-path";
+    public static final String STORAGE_PATH_NAME = "storage-path";
 
-   /**
-    * Extract configuration parameter from InitParams
-    * 
-    * @param initParams
-    * @return
-    * @throws ConfigurationException
-    */
-   private static String extractStoragePath(InitParams initParams) throws ConfigurationException
-   {
-      ValueParam storagePathParamValue = initParams.getValueParam(STORAGE_PATH_NAME);
-      if (storagePathParamValue == null)
-      {
-         LOG.error("Configuration parameter {} not found", STORAGE_PATH_NAME);
-         throw new ConfigurationException("Configuration parameter " + STORAGE_PATH_NAME + " not found");
-      }
-      return storagePathParamValue.getValue();
-   }
+    /**
+     * Extract configuration parameter from InitParams
+     *
+     * @param initParams
+     * @return
+     * @throws ConfigurationException
+     */
+    private static String extractStoragePath(InitParams initParams) throws ConfigurationException {
+        ValueParam storagePathParamValue = initParams.getValueParam(STORAGE_PATH_NAME);
+        if (storagePathParamValue == null) {
+            LOG.error("Configuration parameter {} not found", STORAGE_PATH_NAME);
+            throw new ConfigurationException("Configuration parameter " + STORAGE_PATH_NAME + " not found");
+        }
+        return storagePathParamValue.getValue();
+    }
 
-   public ExoFsLuceneInfoStorage(InitParams params) throws IOException, ConfigurationException
-   {
-      super(extractStoragePath(params));
-   }
+    public ExoFsLuceneInfoStorage(InitParams params) throws IOException, ConfigurationException {
+        super(extractStoragePath(params));
+    }
 
-   @Override
-   public void start()
-   {
-   }
+    @Override
+    public void start() {
+    }
 
-   @Override
-   public void stop()
-   {
-      this.closeIndexes();
-   }
+    @Override
+    public void stop() {
+        this.closeIndexes();
+    }
 
 }

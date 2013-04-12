@@ -1,54 +1,54 @@
 @CHARSET "UTF-8";
 
 .textInput {
-	font-size: 12px;
-	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-	display: table;
+    font-size: 12px;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    display: table;
 }
 
 .textInputDisabled {
-	color: #AAA;
+    color: #AAA;
 }
 
 .textInputWithTopTitle {
-	clear: left;
+    clear: left;
 }
 
 .textInputTitle {
-	white-space: nowrap;
-	font-size: 11px;
-	visibility: visible;
+    white-space: nowrap;
+    font-size: 11px;
+    visibility: visible;
 }
 
 .textInputTitleHidden {
-	visibility: hidden;
-	display: none;
+    visibility: hidden;
+    display: none;
 }
 
 .textInputTitleTop {
-	margin-bottom: 4px;
-	float: left;
-	height: 14px;
+    margin-bottom: 4px;
+    float: left;
+    height: 14px;
 }
 
 .textInputTitleLeft {
-	margin-right: 5px;
-	float: left;
+    margin-right: 5px;
+    float: left;
 }
 
 .textInputTitleRight {
-	width: 100%;
-	margin-left: 5px;
+    width: 100%;
+    margin-left: 5px;
 }
 
 .textAlignLeft {
-	text-align: left;
+    text-align: left;
 }
 
 .textAlignRight {
-	text-align: right;
+    text-align: right;
 }
 
 .textAlignCenter {
-	text-align: center;
+    text-align: center;
 }

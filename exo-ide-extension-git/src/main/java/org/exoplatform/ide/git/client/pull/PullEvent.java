@@ -25,31 +25,21 @@ import com.google.gwt.event.shared.GwtEvent;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 20, 2011 12:03:56 PM anya $
- * 
  */
-public class PullEvent extends GwtEvent<PullHandler>
-{
+public class PullEvent extends GwtEvent<PullHandler> {
 
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<PullHandler> TYPE = new GwtEvent.Type<PullHandler>();
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<PullHandler> TYPE = new GwtEvent.Type<PullHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<PullHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<PullHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(PullHandler handler)
-   {
-      handler.onPull(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(PullHandler handler) {
+        handler.onPull(this);
+    }
 }

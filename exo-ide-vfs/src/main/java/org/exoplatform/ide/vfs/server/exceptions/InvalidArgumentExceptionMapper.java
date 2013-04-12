@@ -31,14 +31,10 @@ import javax.ws.rs.ext.Provider;
  * @version $Id: InvalidArgumentExceptionMapper.java 74306 2011-09-29 13:55:18Z andrew00x $
  */
 @Provider
-public class InvalidArgumentExceptionMapper implements ExceptionMapper<InvalidArgumentException>
-{
-   /**
-    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
-    */
-   public Response toResponse(InvalidArgumentException exception)
-   {
-      return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
-         .header("X-Exit-Code", Integer.toString(ExitCodes.INVALID_ARGUMENT)).build();
-   }
+public class InvalidArgumentExceptionMapper implements ExceptionMapper<InvalidArgumentException> {
+    /** @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable) */
+    public Response toResponse(InvalidArgumentException exception) {
+        return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
+                       .header("X-Exit-Code", Integer.toString(ExitCodes.INVALID_ARGUMENT)).build();
+    }
 }

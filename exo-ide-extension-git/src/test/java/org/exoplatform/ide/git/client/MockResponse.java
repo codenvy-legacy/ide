@@ -24,71 +24,50 @@ import com.google.gwt.http.client.Response;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 27, 2011 11:42:28 AM anya $
- * 
  */
-public class MockResponse extends Response
-{
-   private String text;
+public class MockResponse extends Response {
+    private String text;
 
-   /**
-    * 
-    */
-   public MockResponse(String text)
-   {
-      this.text = text;
-   }
+    /**
+     *
+     */
+    public MockResponse(String text) {
+        this.text = text;
+    }
 
-   /**
-    * @see com.google.gwt.http.client.Response#getHeader(java.lang.String)
-    */
-   @Override
-   public String getHeader(String header)
-   {
-      return "";
-   }
+    /** @see com.google.gwt.http.client.Response#getHeader(java.lang.String) */
+    @Override
+    public String getHeader(String header) {
+        return "";
+    }
 
-   /**
-    * @see com.google.gwt.http.client.Response#getHeaders()
-    */
-   @Override
-   public Header[] getHeaders()
-   {
-      return new Header[0];
-   }
+    /** @see com.google.gwt.http.client.Response#getHeaders() */
+    @Override
+    public Header[] getHeaders() {
+        return new Header[0];
+    }
 
-   /**
-    * @see com.google.gwt.http.client.Response#getHeadersAsString()
-    */
-   @Override
-   public String getHeadersAsString()
-   {
-      return "";
-   }
+    /** @see com.google.gwt.http.client.Response#getHeadersAsString() */
+    @Override
+    public String getHeadersAsString() {
+        return "";
+    }
 
-   /**
-    * @see com.google.gwt.http.client.Response#getStatusCode()
-    */
-   @Override
-   public int getStatusCode()
-   {
-      return 0;
-   }
+    /** @see com.google.gwt.http.client.Response#getStatusCode() */
+    @Override
+    public int getStatusCode() {
+        return 0;
+    }
 
-   /**
-    * @see com.google.gwt.http.client.Response#getStatusText()
-    */
-   @Override
-   public String getStatusText()
-   {
-      return "";
-   }
+    /** @see com.google.gwt.http.client.Response#getStatusText() */
+    @Override
+    public String getStatusText() {
+        return "";
+    }
 
-   /**
-    * @see com.google.gwt.http.client.Response#getText()
-    */
-   @Override
-   public String getText()
-   {
-      return text;
-   }
+    /** @see com.google.gwt.http.client.Response#getText() */
+    @Override
+    public String getText() {
+        return text;
+    }
 }

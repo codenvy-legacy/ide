@@ -21,61 +21,51 @@ package org.exoplatform.ide.codeassistant.storage;
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: UpdateStorageResult.java Oct 29, 2012 vetal $
- *
  */
-public class UpdateStorageResult
-{
+public class UpdateStorageResult {
 
-   private String erroMessage;
+    private String erroMessage;
 
-   private int exitCode;
+    private int exitCode;
 
-   public UpdateStorageResult()
-   {
-      exitCode = 0;
-   }
+    public UpdateStorageResult() {
+        exitCode = 0;
+    }
 
-   /**
-    * @param erroMessage
-    * @param exitCode
-    */
-   public UpdateStorageResult(String erroMessage, int exitCode)
-   {
-      super();
-      this.erroMessage = erroMessage;
-      this.exitCode = exitCode;
-   }
+    /**
+     * @param erroMessage
+     * @param exitCode
+     */
+    public UpdateStorageResult(String erroMessage, int exitCode) {
+        super();
+        this.erroMessage = erroMessage;
+        this.exitCode = exitCode;
+    }
 
-   /**
-    * @return the erroMessage
-    */
-   public String getErroMessage()
-   {
-      return erroMessage;
-   }
+    /** @return the erroMessage */
+    public String getErroMessage() {
+        return erroMessage;
+    }
 
-   /**
-    * @param erroMessage the erroMessage to set
-    */
-   public void setErroMessage(String erroMessage)
-   {
-      this.erroMessage = erroMessage;
-   }
+    /**
+     * @param erroMessage
+     *         the erroMessage to set
+     */
+    public void setErroMessage(String erroMessage) {
+        this.erroMessage = erroMessage;
+    }
 
-   /**
-    * @return the exitCode
-    */
-   public int getExitCode()
-   {
-      return exitCode;
-   }
+    /** @return the exitCode */
+    public int getExitCode() {
+        return exitCode;
+    }
 
-   /**
-    * @param exitCode the exitCode to set
-    */
-   public void setExitCode(int exitCode)
-   {
-      this.exitCode = exitCode;
-   }
+    /**
+     * @param exitCode
+     *         the exitCode to set
+     */
+    public void setExitCode(int exitCode) {
+        this.exitCode = exitCode;
+    }
 
 }

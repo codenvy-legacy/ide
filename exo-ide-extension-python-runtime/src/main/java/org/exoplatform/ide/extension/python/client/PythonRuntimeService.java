@@ -26,52 +26,53 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * Service for operations with Python applications.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 20, 2012 3:08:51 PM anya $
- * 
  */
-public abstract class PythonRuntimeService
-{
-   /**
-    * Python service.
-    */
-   private static PythonRuntimeService instance;
+public abstract class PythonRuntimeService {
+    /** Python service. */
+    private static PythonRuntimeService instance;
 
-   public static PythonRuntimeService getInstance()
-   {
-      return instance;
-   }
+    public static PythonRuntimeService getInstance() {
+        return instance;
+    }
 
-   protected PythonRuntimeService()
-   {
-      instance = this;
-   }
+    protected PythonRuntimeService() {
+        instance = this;
+    }
 
-   /**
-    * Start Python project.
-    * 
-    * @param vfsId virtual file system id
-    * @param projectId project's id
-    * @param callback callback
-    * @throws RequestException
-    */
-   public abstract void start(String vfsId, ProjectModel project, AsyncRequestCallback<ApplicationInstance> callback)
-      throws RequestException;
+    /**
+     * Start Python project.
+     *
+     * @param vfsId
+     *         virtual file system id
+     * @param projectId
+     *         project's id
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
+    public abstract void start(String vfsId, ProjectModel project, AsyncRequestCallback<ApplicationInstance> callback)
+            throws RequestException;
 
-   /**
-    * Stop running Python application.
-    * 
-    * @param name application's name to stop
-    * @param callback callback
-    * @throws RequestException
-    */
-   public abstract void stop(String name, AsyncRequestCallback<Object> callback) throws RequestException;
+    /**
+     * Stop running Python application.
+     *
+     * @param name
+     *         application's name to stop
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
+    public abstract void stop(String name, AsyncRequestCallback<Object> callback) throws RequestException;
 
-   /**
-    * @param name application's name
-    * @param callback callback
-    * @throws RequestException
-    */
-   public abstract void getLogs(String name, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+    /**
+     * @param name
+     *         application's name
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
+    public abstract void getLogs(String name, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 }

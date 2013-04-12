@@ -14,13 +14,11 @@
 
 package com.google.collide.dto;
 
-/**
- * DTO for basic information for displaying a node in a history listing.
- */
+/** DTO for basic information for displaying a node in a history listing. */
 public interface NodeHistoryInfo extends TreeNodeInfo {
-  // This is a long serialized to a decimal string. We do this because Longs
-  // wont fit in JS numeric types.
-  String getCreationTime();
+    // This is a long serialized to a decimal string. We do this because Longs
+    // wont fit in JS numeric types.
+    String getCreationTime();
 
-  String getPredecessorId();
+    String getPredecessorId();
 }

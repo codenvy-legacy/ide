@@ -20,39 +20,38 @@ import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 /**
  * A DTO for the roll up of a single changed to a file or directory. The file or
  * directory can be modified (files only), added, removed, moved, or copied.
- *
- *  This change may NOT be a conflicting mutation. Conflicts are captured in a
+ * <p/>
+ * This change may NOT be a conflicting mutation. Conflicts are captured in a
  * separate NodeConflictDto.
- *
  */
 @RoutingType(type = RoutingTypes.NODEMUTATIONDTO)
 public interface NodeMutationDto extends ServerToClientDto {
 
-  /**
-   * The type of mutation. Note the MOVED and COPIED types may also carry
-   * modifications. They are represented as MOVED_AND_EDITED, COPIED_AND_EDITED
-   * and should have different before and after string keys (unless they are
-   * null edits).
-   */
-  public static enum MutationType {
-    ADDED, DELETED, EDITED, MOVED, COPIED, MOVED_AND_EDITED, COPIED_AND_EDITED;
-  }
+    /**
+     * The type of mutation. Note the MOVED and COPIED types may also carry
+     * modifications. They are represented as MOVED_AND_EDITED, COPIED_AND_EDITED
+     * and should have different before and after string keys (unless they are
+     * null edits).
+     */
+    public static enum MutationType {
+        ADDED, DELETED, EDITED, MOVED, COPIED, MOVED_AND_EDITED, COPIED_AND_EDITED;
+    }
 
-  MutationType getMutationType();
+    MutationType getMutationType();
 
-  String getFileEditSessionKey();
+    String getFileEditSessionKey();
 
-  String getNewPath();
+    String getNewPath();
 
-  String getOldPath();
+    String getOldPath();
 
-  /**
-   * @return true if this node represents a FILE, or false if this node
-   *         represents a DIRECTORY
-   */
-  boolean isFile();
+    /**
+     * @return true if this node represents a FILE, or false if this node
+     *         represents a DIRECTORY
+     */
+    boolean isFile();
 
-  String getWorkspaceId();
+    String getWorkspaceId();
 
-  DiffStatsDto getDiffStats();
+    DiffStatsDto getDiffStats();
 }

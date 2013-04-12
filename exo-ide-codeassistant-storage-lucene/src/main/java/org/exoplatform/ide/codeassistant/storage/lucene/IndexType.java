@@ -22,44 +22,34 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 
-/**
- * Types of indexes.
- */
+/** Types of indexes. */
 public enum IndexType {
 
-   JAVA("indexType", "java"), // 
-   DOC("indexType", "doc"), //
-   PACKAGE("indexType", "package");
+    JAVA("indexType", "java"), //
+    DOC("indexType", "doc"), //
+    PACKAGE("indexType", "package");
 
-   private final String indexFieldName;
+    private final String indexFieldName;
 
-   private final String indexFieldValue;
+    private final String indexFieldValue;
 
-   private IndexType(String indexFieldName, String indexFieldValue)
-   {
-      this.indexFieldName = indexFieldName;
-      this.indexFieldValue = indexFieldValue;
-   }
+    private IndexType(String indexFieldName, String indexFieldValue) {
+        this.indexFieldName = indexFieldName;
+        this.indexFieldValue = indexFieldValue;
+    }
 
-   /**
-    * @return the indexFieldName
-    */
-   public String getIndexFieldName()
-   {
-      return indexFieldName;
-   }
+    /** @return the indexFieldName */
+    public String getIndexFieldName() {
+        return indexFieldName;
+    }
 
-   /**
-    * @return the indexFieldValue
-    */
-   public String getIndexFieldValue()
-   {
-      return indexFieldValue;
-   }
+    /** @return the indexFieldValue */
+    public String getIndexFieldValue() {
+        return indexFieldValue;
+    }
 
-   public Query getQuery()
-   {
-      return new TermQuery(new Term(indexFieldName, indexFieldValue));
-   }
+    public Query getQuery() {
+        return new TermQuery(new Term(indexFieldName, indexFieldValue));
+    }
 
 }

@@ -19,6 +19,7 @@
 package org.exoplatform.ide.shell.client;
 
 import com.google.gwt.storage.client.Storage;
+
 import org.exoplatform.ide.vfs.shared.Folder;
 
 import java.util.HashMap;
@@ -27,84 +28,63 @@ import java.util.Map;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Sep 26, 2011 evgen $
- * 
  */
-public class Environment
-{
-   private Storage storage;
+public class Environment {
+    private Storage storage;
 
-   private static Environment instance;
+    private static Environment instance;
 
-   private Map<String, String> storageMap;
+    private Map<String, String> storageMap;
 
-   private Folder currentFolder;
+    private Folder currentFolder;
 
-   /**
-    * 
-    */
-   protected Environment()
-   {
-      if (Storage.isSessionStorageSupported())
-      {
-         storage = Storage.getLocalStorageIfSupported();
-      }
-      else
-      {
-         storageMap = new HashMap<String, String>();
-      }
-      instance = this;
-   }
+    /**
+     *
+     */
+    protected Environment() {
+        if (Storage.isSessionStorageSupported()) {
+            storage = Storage.getLocalStorageIfSupported();
+        } else {
+            storageMap = new HashMap<String, String>();
+        }
+        instance = this;
+    }
 
-   /**
-    * @return instance of Environment class
-    */
-   public static Environment get()
-   {
-      if (instance == null)
-      {
-         instance = new Environment();
-      }
-      return instance;
-   }
+    /** @return instance of Environment class */
+    public static Environment get() {
+        if (instance == null) {
+            instance = new Environment();
+        }
+        return instance;
+    }
 
-   public void saveValue(String key, String value)
-   {
-      if (storage != null)
-      {
-         storage.setItem(key, value);
-      }
-      else
-      {
-         storageMap.put(key, value);
-      }
-   }
+    public void saveValue(String key, String value) {
+        if (storage != null) {
+            storage.setItem(key, value);
+        } else {
+            storageMap.put(key, value);
+        }
+    }
 
-   public String getValue(String key)
-   {
-      if (storage != null)
-      {
-         return storage.getItem(key);
-      }
-      else
-      {
-         return storageMap.get(key);
-      }
-   }
+    public String getValue(String key) {
+        if (storage != null) {
+            return storage.getItem(key);
+        } else {
+            return storageMap.get(key);
+        }
+    }
 
-   /**
-    * @return the currentFolder
-    */
-   public Folder getCurrentFolder()
-   {
-      return currentFolder;
-   }
+    /** @return the currentFolder */
+    public Folder getCurrentFolder() {
+        return currentFolder;
+    }
 
-   /**
-    * @param currentFolder the currentFolder to set
-    */
-   public void setCurrentFolder(Folder currentFolder)
-   {
-      this.currentFolder = currentFolder;
-   }
+    /**
+     * @param currentFolder
+     *         the currentFolder to set
+     */
+    public void setCurrentFolder(Folder currentFolder) {
+        this.currentFolder = currentFolder;
+    }
 
 }

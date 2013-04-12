@@ -16,116 +16,106 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-.exo-code-error-mark
-{
-  /* gwt-image: "codeErrorMark"; */
-  /* background: transparent url('images/code-error-mark.png') no-repeat scroll center center;  */
-  background-image: url("images/code-error-mark.png");
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-attachment: scroll;
-  cursor: pointer;
-  width: auto;
-  height: auto;
+.exo-code-error-mark {
+    /* gwt-image: "codeErrorMark"; */
+    /* background: transparent url('images/code-error-mark.png') no-repeat scroll center center;  */
+    background-image: url("images/code-error-mark.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: scroll;
+    cursor: pointer;
+    width: auto;
+    height: auto;
 }
 
-.exo-code-mark-warning
-{
-  /* gwt-image: "markWarning"; */
-  /* background: transparent url('images/code-error-mark.png') no-repeat scroll center center;  */
-  background-image: url("images/mark-warning.png");
-  background-repeat: no-repeat;
-  background-position: left center;
-  background-attachment: scroll;
-  cursor: pointer;
-  width: auto;
-  height: auto;
+.exo-code-mark-warning {
+    /* gwt-image: "markWarning"; */
+    /* background: transparent url('images/code-error-mark.png') no-repeat scroll center center;  */
+    background-image: url("images/mark-warning.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-attachment: scroll;
+    cursor: pointer;
+    width: auto;
+    height: auto;
 }
 
-.exo-code-mark-error
-{
-  /* gwt-image: "markError"; */
-  /* background: transparent url('images/code-error-mark.png') no-repeat scroll center center;  */
-  background-image: url("images/mark-error.png");
-  background-repeat: no-repeat;
-  background-position: left center;
-  background-attachment: scroll;
-  cursor: pointer;
-  width: auto;
-  height: auto;
+.exo-code-mark-error {
+    /* gwt-image: "markError"; */
+    /* background: transparent url('images/code-error-mark.png') no-repeat scroll center center;  */
+    background-image: url("images/mark-error.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-attachment: scroll;
+    cursor: pointer;
+    width: auto;
+    height: auto;
 }
 
-.exo-code-mark-breakpoint
-{
-  /* gwt-image: "breakpoint"; */
-  background-image: url("images/breakpoint.gif");
-  background-repeat: no-repeat;
-  background-position: left center;
-  background-attachment: scroll;
-  cursor: pointer;
-  width: auto;
-  height: auto;
-  margin-left: 5px;
+.exo-code-mark-breakpoint {
+    /* gwt-image: "breakpoint"; */
+    background-image: url("images/breakpoint.gif");
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-attachment: scroll;
+    cursor: pointer;
+    width: auto;
+    height: auto;
+    margin-left: 5px;
 }
 
-.exo-code-mark-breakpoint-current
-{
-  /* gwt-image: "breakpointCurrent"; */
-  background-image: url("images/braekpoint-current.gif");
-  background-repeat: no-repeat;
-  background-position: left center;
-  background-attachment: scroll;
-  cursor: pointer;
-  width: auto;
-  height: auto;
-  margin-left: 5px;
+.exo-code-mark-breakpoint-current {
+    /* gwt-image: "breakpointCurrent"; */
+    background-image: url("images/braekpoint-current.gif");
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-attachment: scroll;
+    cursor: pointer;
+    width: auto;
+    height: auto;
+    margin-left: 5px;
 }
 
-.overview-panel
-{
+.overview-panel {
     background-color: #eee;
 }
 
-.overview-mark-error
-{
-	background-color: #e4a5c5;
-	border-width: 1px;
-	border-style: solid;
-	border-color: #f82c92;
-	width: 7px;
-	height: 3px;
-	cursor: pointer;	
+.overview-mark-error {
+    background-color: #e4a5c5;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #f82c92;
+    width: 7px;
+    height: 3px;
+    cursor: pointer;
 }
 
-.overview-bottom-mark-error
-{
-	background-color: #e4a5c5;
-	border-width: 1px;
-	border-style: solid;
-	border-color: #f82c92;
-	width: 7px;
-	height: 6px;
-	cursor: pointer;	
+.overview-bottom-mark-error {
+    background-color: #e4a5c5;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #f82c92;
+    width: 7px;
+    height: 6px;
+    cursor: pointer;
 }
 
-.overview-mark-warning
-{
+.overview-mark-warning {
     background-color: #fcf1ca;
     border-width: 1px;
     border-style: solid;
     border-color: #f6d357;
     width: 7px;
-    height: 3px;    
-	cursor: pointer;	
+    height: 3px;
+    cursor: pointer;
 }
 
-.overview-bottom-mark-warning
-{
+.overview-bottom-mark-warning {
     background-color: #fcf1ca;
     border-width: 1px;
     border-style: solid;
     border-color: #f6d357;
     width: 7px;
-    height: 6px;    
-    cursor: pointer;    
+    height: 6px;
+    cursor: pointer;
 }

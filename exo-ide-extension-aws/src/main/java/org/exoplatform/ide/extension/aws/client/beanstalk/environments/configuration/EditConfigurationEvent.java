@@ -23,63 +23,47 @@ import com.google.gwt.event.shared.GwtEvent;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: EditConfigurationEvent.java Oct 5, 2012 1:17:17 PM azatsarynnyy $
- *
  */
-public class EditConfigurationEvent extends GwtEvent<EditConfigurationHandler>
-{
-   /**
-    * Type used to register the event.
-    */
-   public static final GwtEvent.Type<EditConfigurationHandler> TYPE = new GwtEvent.Type<EditConfigurationHandler>();
+public class EditConfigurationEvent extends GwtEvent<EditConfigurationHandler> {
+    /** Type used to register the event. */
+    public static final GwtEvent.Type<EditConfigurationHandler> TYPE = new GwtEvent.Type<EditConfigurationHandler>();
 
-   private EnvironmentInfo environment;
+    private EnvironmentInfo environment;
 
-   private UpdateEnvironmentStartedHandler updateEnvironmentStartedHandler;
+    private UpdateEnvironmentStartedHandler updateEnvironmentStartedHandler;
 
-   public EditConfigurationEvent(EnvironmentInfo environment,
-      UpdateEnvironmentStartedHandler updateEnvironmentStartedHandler)
-   {
-      this.environment = environment;
-      this.updateEnvironmentStartedHandler = updateEnvironmentStartedHandler;
-   }
+    public EditConfigurationEvent(EnvironmentInfo environment,
+                                  UpdateEnvironmentStartedHandler updateEnvironmentStartedHandler) {
+        this.environment = environment;
+        this.updateEnvironmentStartedHandler = updateEnvironmentStartedHandler;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(EditConfigurationHandler handler)
-   {
-      handler.onEditConfiguration(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(EditConfigurationHandler handler) {
+        handler.onEditConfiguration(this);
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditConfigurationHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditConfigurationHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * Returns the environment.
-    * 
-    * @return the environment
-    */
-   public EnvironmentInfo getEnvironment()
-   {
-      return environment;
-   }
+    /**
+     * Returns the environment.
+     *
+     * @return the environment
+     */
+    public EnvironmentInfo getEnvironment() {
+        return environment;
+    }
 
-   /**
-    * @return the updateEnvironmentStartedHandler
-    */
-   public UpdateEnvironmentStartedHandler getUpdateEnvironmentStartedHandler()
-   {
-      return updateEnvironmentStartedHandler;
-   }
+    /** @return the updateEnvironmentStartedHandler */
+    public UpdateEnvironmentStartedHandler getUpdateEnvironmentStartedHandler() {
+        return updateEnvironmentStartedHandler;
+    }
 
 }

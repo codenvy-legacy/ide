@@ -24,25 +24,16 @@ package com.codenvy.ide.client.util;
  *
  * @author zdwang@google.com (David Wang)
  */
-public interface NumberPriorityQueue
-{
-   /**
-    * Number of items in the queue
-    */
-   public int size();
+public interface NumberPriorityQueue {
+    /** Number of items in the queue */
+    public int size();
 
-   /**
-    * Adds e to the back of the queue
-    */
-   public boolean offer(double e);
+    /** Adds e to the back of the queue */
+    public boolean offer(double e);
 
-   /**
-    * Peek at the head of queue
-    */
-   public double peek();
+    /** Peek at the head of queue */
+    public double peek();
 
-   /**
-    * Removes an item from the beginning of the queue
-    */
-   public double poll();
+    /** Removes an item from the beginning of the queue */
+    public double poll();
 }

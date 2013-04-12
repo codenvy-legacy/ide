@@ -70,133 +70,136 @@ import java.util.Map;
  *
  * @since 3.2
  */
-public abstract class RefactoringContribution
-{
+public abstract class RefactoringContribution {
 
-   /**
-    * Creates a new customizable refactoring descriptor initialized with its
-    * default values.
-    * <p>
-    * This method may be reimplemented to return a language-specified
-    * refactoring descriptor which can be initialized using language-specific
-    * features. Refactoring tool providers may reimplement this method to
-    * provide a uniform API to expose refactoring functionality in the form of
-    * refactoring descriptors.
-    * </p>
-    * <p>
-    * Callers of this method are supposed to cast the resulting refactoring
-    * descriptor to the corresponding language-specific refactoring descriptor
-    * provided by the API of the refactoring tooling provider.
-    * </p>
-    * <p>
-    * Note: this method is supposed to be reimplemented by clients wishing to
-    * provide customizable refactoring descriptors.
-    * </p>
-    *
-    * @return the refactoring descriptor, or <code>null</code> if the
-    *         refactoring represented by this contribution does not expose
-    *         customizable refactoring descriptors
-    * @see #createDescriptor(String, String, String, String, java.util.Map, int)
-    * @since 3.3
-    */
-   public RefactoringDescriptor createDescriptor()
-   {
-      return null;
-   }
+    /**
+     * Creates a new customizable refactoring descriptor initialized with its
+     * default values.
+     * <p>
+     * This method may be reimplemented to return a language-specified
+     * refactoring descriptor which can be initialized using language-specific
+     * features. Refactoring tool providers may reimplement this method to
+     * provide a uniform API to expose refactoring functionality in the form of
+     * refactoring descriptors.
+     * </p>
+     * <p>
+     * Callers of this method are supposed to cast the resulting refactoring
+     * descriptor to the corresponding language-specific refactoring descriptor
+     * provided by the API of the refactoring tooling provider.
+     * </p>
+     * <p>
+     * Note: this method is supposed to be reimplemented by clients wishing to
+     * provide customizable refactoring descriptors.
+     * </p>
+     *
+     * @return the refactoring descriptor, or <code>null</code> if the
+     *         refactoring represented by this contribution does not expose
+     *         customizable refactoring descriptors
+     * @see #createDescriptor(String, String, String, String, java.util.Map, int)
+     * @since 3.3
+     */
+    public RefactoringDescriptor createDescriptor() {
+        return null;
+    }
 
-   /**
-    * Creates a new refactoring descriptor initialized with the values provided
-    * by the arguments of this method.
-    * <p>
-    * This method is used by the refactoring framework to create a
-    * language-specific refactoring descriptor representing the refactoring
-    * instance corresponding to the specified arguments. Implementations of
-    * this method must never return <code>null</code>. The refactoring
-    * framework guarantees that this method is only called with <code>id</code>
-    * values for which the refactoring contribution has been registered with
-    * the extension point.
-    * </p>
-    *
-    * @param id          the unique id of the refactoring
-    * @param project     the non-empty name of the project associated with this
-    *                    refactoring, or <code>null</code> for a workspace
-    *                    refactoring
-    * @param description a non-empty human-readable description of the particular
-    *                    refactoring instance
-    * @param comment     the comment associated with the refactoring, or
-    *                    <code>null</code> for no comment
-    * @param arguments   the argument map (element type: &lt;String, String&gt;). The
-    *                    keys of the arguments are required to be non-empty strings
-    *                    which must not contain spaces. The values must be non-empty
-    *                    strings
-    * @param flags       the flags of the refactoring descriptor
-    * @return the refactoring descriptor
-    * @throws IllegalArgumentException if the argument map contains invalid keys/values
-    * @see #retrieveArgumentMap(RefactoringDescriptor)
-    */
-   public abstract RefactoringDescriptor createDescriptor(String id, String project, String description, String comment,
-      Map arguments, int flags) throws IllegalArgumentException;
+    /**
+     * Creates a new refactoring descriptor initialized with the values provided
+     * by the arguments of this method.
+     * <p>
+     * This method is used by the refactoring framework to create a
+     * language-specific refactoring descriptor representing the refactoring
+     * instance corresponding to the specified arguments. Implementations of
+     * this method must never return <code>null</code>. The refactoring
+     * framework guarantees that this method is only called with <code>id</code>
+     * values for which the refactoring contribution has been registered with
+     * the extension point.
+     * </p>
+     *
+     * @param id
+     *         the unique id of the refactoring
+     * @param project
+     *         the non-empty name of the project associated with this
+     *         refactoring, or <code>null</code> for a workspace
+     *         refactoring
+     * @param description
+     *         a non-empty human-readable description of the particular
+     *         refactoring instance
+     * @param comment
+     *         the comment associated with the refactoring, or
+     *         <code>null</code> for no comment
+     * @param arguments
+     *         the argument map (element type: &lt;String, String&gt;). The
+     *         keys of the arguments are required to be non-empty strings
+     *         which must not contain spaces. The values must be non-empty
+     *         strings
+     * @param flags
+     *         the flags of the refactoring descriptor
+     * @return the refactoring descriptor
+     * @throws IllegalArgumentException
+     *         if the argument map contains invalid keys/values
+     * @see #retrieveArgumentMap(RefactoringDescriptor)
+     */
+    public abstract RefactoringDescriptor createDescriptor(String id, String project, String description, String comment,
+                                                           Map arguments, int flags) throws IllegalArgumentException;
 
-   /**
-    * Returns the refactoring id for which this refactoring contribution has
-    * been registered with the extension point. Implementations of
-    * {@link #createDescriptor()} may use this method to initialize the
-    * resulting refactoring descriptor with the id of this refactoring
-    * contribution.
-    * <p>
-    * Note: this method is not intended to be extended or reimplemented by
-    * clients.
-    * </p>
-    *
-    * @return the unique id of the refactoring
-    * @since 3.3
-    */
-   public String getId()
-   {
-      return RefactoringContributionManager.getInstance().getRefactoringId(this);
-   }
+    /**
+     * Returns the refactoring id for which this refactoring contribution has
+     * been registered with the extension point. Implementations of
+     * {@link #createDescriptor()} may use this method to initialize the
+     * resulting refactoring descriptor with the id of this refactoring
+     * contribution.
+     * <p>
+     * Note: this method is not intended to be extended or reimplemented by
+     * clients.
+     * </p>
+     *
+     * @return the unique id of the refactoring
+     * @since 3.3
+     */
+    public String getId() {
+        return RefactoringContributionManager.getInstance().getRefactoringId(this);
+    }
 
-   /**
-    * Retrieves the argument map of the specified refactoring descriptor.
-    * <p>
-    * This method is used by the refactoring framework to obtain
-    * refactoring-specific arguments provided by the refactoring descriptor.
-    * These are the arguments which are specific to certain refactoring
-    * instances, and correspond to the argument map which has been passed to
-    * {@link #createDescriptor(String, String, String, String, java.util.Map, int)} upon
-    * creation of the refactoring descriptor.
-    * </p>
-    * <p>
-    * The returned argument map (element type: &lt;String, String&gt;) must
-    * satisfy the following conditions:
-    * <ul>
-    * <li>The keys of the arguments are required to be non-empty strings which
-    * must not contain spaces. </li>
-    * <li>The values must be non-empty</li>
-    * strings
-    * </ul>
-    * </p>
-    * <p>
-    * Note: Subclasses must extend this method to provide more specific
-    * implementation in order to let the refactoring framework retrieve the
-    * argument map from language-specific refactoring descriptors.
-    * Implementations of this method must never return <code>null</code>.
-    * The refactoring framework guarantees that this method is only called for
-    * refactoring descriptors which have been obtained by a previous call to
-    * {@link #createDescriptor(String, String, String, String, java.util.Map, int)}.
-    * </p>
-    *
-    * @param descriptor the refactoring descriptor to retrieve its argument map
-    * @return the argument map of the specified refactoring descriptor
-    * @see #createDescriptor(String, String, String, String, java.util.Map, int)
-    */
-   public Map retrieveArgumentMap(final RefactoringDescriptor descriptor)
-   {
-      if (descriptor instanceof DefaultRefactoringDescriptor)
-      {
-         final DefaultRefactoringDescriptor extended = (DefaultRefactoringDescriptor)descriptor;
-         return extended.getArguments();
-      }
-      return Collections.EMPTY_MAP;
-   }
+    /**
+     * Retrieves the argument map of the specified refactoring descriptor.
+     * <p>
+     * This method is used by the refactoring framework to obtain
+     * refactoring-specific arguments provided by the refactoring descriptor.
+     * These are the arguments which are specific to certain refactoring
+     * instances, and correspond to the argument map which has been passed to
+     * {@link #createDescriptor(String, String, String, String, java.util.Map, int)} upon
+     * creation of the refactoring descriptor.
+     * </p>
+     * <p>
+     * The returned argument map (element type: &lt;String, String&gt;) must
+     * satisfy the following conditions:
+     * <ul>
+     * <li>The keys of the arguments are required to be non-empty strings which
+     * must not contain spaces. </li>
+     * <li>The values must be non-empty</li>
+     * strings
+     * </ul>
+     * </p>
+     * <p>
+     * Note: Subclasses must extend this method to provide more specific
+     * implementation in order to let the refactoring framework retrieve the
+     * argument map from language-specific refactoring descriptors.
+     * Implementations of this method must never return <code>null</code>.
+     * The refactoring framework guarantees that this method is only called for
+     * refactoring descriptors which have been obtained by a previous call to
+     * {@link #createDescriptor(String, String, String, String, java.util.Map, int)}.
+     * </p>
+     *
+     * @param descriptor
+     *         the refactoring descriptor to retrieve its argument map
+     * @return the argument map of the specified refactoring descriptor
+     * @see #createDescriptor(String, String, String, String, java.util.Map, int)
+     */
+    public Map retrieveArgumentMap(final RefactoringDescriptor descriptor) {
+        if (descriptor instanceof DefaultRefactoringDescriptor) {
+            final DefaultRefactoringDescriptor extended = (DefaultRefactoringDescriptor)descriptor;
+            return extended.getArguments();
+        }
+        return Collections.EMPTY_MAP;
+    }
 }

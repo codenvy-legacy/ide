@@ -23,38 +23,28 @@ import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * This handler manager helps to find the error during execution of the fireEvent(...) method.
- * 
+ * <p/>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class SafeHandlerManager extends HandlerManager
-{
+public class SafeHandlerManager extends HandlerManager {
 
-   /**
-    * Creates a new instance of this HandlerManager
-    */
-   public SafeHandlerManager()
-   {
-      super(null);
-   }
+    /** Creates a new instance of this HandlerManager */
+    public SafeHandlerManager() {
+        super(null);
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.HandlerManager#fireEvent(com.google.gwt.event.shared.GwtEvent)
-    */
-   @Override
-   public void fireEvent(GwtEvent<?> event)
-   {
-      try
-      {
-         super.fireEvent(event);
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
-   }
+    /** @see com.google.gwt.event.shared.HandlerManager#fireEvent(com.google.gwt.event.shared.GwtEvent) */
+    @Override
+    public void fireEvent(GwtEvent<?> event) {
+        try {
+            super.fireEvent(event);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

@@ -18,64 +18,33 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server;
 
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-
-import java.io.IOException;
-
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public final class SimpleAuthenticator extends BaseCloudfoundryAuthenticator
-{
-   private final String cfTarget;
-   private final String cfUser;
-   private final String cfPassword;
+public final class SimpleAuthenticator extends CloudfoundryAuthenticator {
+    private final String cfTarget;
+    private final String cfUser;
+    private final String cfPassword;
 
-   private CloudfoundryCredentials credentials;
+    public SimpleAuthenticator(String cfTarget, String cfUser, String cfPassword) {
+        this.cfTarget = cfTarget;
+        this.cfUser = cfUser;
+        this.cfPassword = cfPassword;
+    }
 
-   public SimpleAuthenticator(String cfTarget, String cfUser, String cfPassword)
-   {
-      this.cfTarget = cfTarget;
-      this.cfUser = cfUser;
-      this.cfPassword = cfPassword;
-      this.credentials = new CloudfoundryCredentials();
-   }
+    @Override
+    public String getEmail() {
+        return cfUser;
+    }
 
-   @Override
-   public String getUsername() throws VirtualFileSystemException, IOException
-   {
-      return cfUser;
-   }
+    @Override
+    public String getPassword() {
+        return cfPassword;
+    }
 
-   @Override
-   public String getPassword() throws VirtualFileSystemException, IOException
-   {
-      return cfPassword;
-   }
-
-   @Override
-   public String getTarget() throws VirtualFileSystemException, IOException
-   {
-      return cfTarget;
-   }
-
-   @Override
-   public CloudfoundryCredentials readCredentials() throws VirtualFileSystemException, IOException
-   {
-      return credentials;
-   }
-
-   @Override
-   public void writeTarget(String target) throws VirtualFileSystemException, IOException
-   {
-      throw new UnsupportedOperationException();
-   }
-
-   @Override
-   public void writeCredentials(CloudfoundryCredentials credentials) throws VirtualFileSystemException, IOException
-   {
-      this.credentials = new CloudfoundryCredentials();
-      this.credentials.addToken(cfTarget, credentials.getToken(cfTarget));
-   }
+    @Override
+    public String getTarget() {
+        return cfTarget;
+    }
 }

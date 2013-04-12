@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ShowPreferencesEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 18, 2012 2:39:30 PM anya $
- * 
  */
-public interface ShowPreferencesHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user wants to view preferences.
-    * 
-    * @param event
-    */
-   void onShowPreferences(ShowPreferencesEvent event);
+public interface ShowPreferencesHandler extends EventHandler {
+    /**
+     * Perform actions, when user wants to view preferences.
+     *
+     * @param event
+     */
+    void onShowPreferences(ShowPreferencesEvent event);
 }

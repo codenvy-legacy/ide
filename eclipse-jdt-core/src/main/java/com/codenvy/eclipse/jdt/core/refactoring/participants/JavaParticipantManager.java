@@ -27,46 +27,69 @@ import com.codenvy.eclipse.ltk.core.refactoring.participants.SharableParticipant
  *
  * @since 1.2
  */
-public class JavaParticipantManager
-{
+public class JavaParticipantManager {
 
-   private final static String PLUGIN_ID = "org.eclipse.jdt.core.manipulation"; //$NON-NLS-1$
+    private final static String PLUGIN_ID = "org.eclipse.jdt.core.manipulation"; //$NON-NLS-1$
 
-   private JavaParticipantManager()
-   {
-      // no instance
-   }
+    private JavaParticipantManager() {
+        // no instance
+    }
 
-   //---- Change method signature participants ----------------------------------------------------------------
+    //---- Change method signature participants ----------------------------------------------------------------
 
-   private static final String METHOD_SIGNATURE_PARTICIPANT_EXT_POINT = "changeMethodSignatureParticipants"; //$NON-NLS-1$
+    private static final String METHOD_SIGNATURE_PARTICIPANT_EXT_POINT = "changeMethodSignatureParticipants"; //$NON-NLS-1$
 
-   private static ParticipantExtensionPoint fgMethodSignatureInstance = new ParticipantExtensionPoint(PLUGIN_ID,
-      METHOD_SIGNATURE_PARTICIPANT_EXT_POINT, ChangeMethodSignatureParticipant.class);
+    private static ParticipantExtensionPoint fgMethodSignatureInstance = new ParticipantExtensionPoint(PLUGIN_ID,
 
-   /**
-    * Loads the change method signature participants for the given element.
-    *
-    * @param status          a refactoring status to report status if problems occurred while
-    *                        loading the participants
-    * @param processor       the processor that will own the participants
-    * @param method          the method to be changed
-    * @param arguments       the change method signature arguments describing the change
-    * @param filter          a participant filter to exclude certain participants, or <code>null</code>
-    *                        if no filtering is desired
-    * @param affectedNatures an array of project natures affected by the refactoring
-    * @param shared          a list of shared participants
-    * @return an array of change method signature participants
-    */
-   public static ChangeMethodSignatureParticipant[] loadChangeMethodSignatureParticipants(RefactoringStatus status,
-      RefactoringProcessor processor, IMethod method, ChangeMethodSignatureArguments arguments,
-      IParticipantDescriptorFilter filter, String[] affectedNatures, SharableParticipants shared)
-   {
-      RefactoringParticipant[] participants = fgMethodSignatureInstance.getParticipants(status, processor, method,
-         arguments, filter, affectedNatures, shared);
-      ChangeMethodSignatureParticipant[] result = new ChangeMethodSignatureParticipant[participants.length];
-      System.arraycopy(participants, 0, result, 0, participants.length);
-      return result;
-   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                                       METHOD_SIGNATURE_PARTICIPANT_EXT_POINT,
+                                                                                                       ChangeMethodSignatureParticipant.class);
+
+    /**
+     * Loads the change method signature participants for the given element.
+     *
+     * @param status
+     *         a refactoring status to report status if problems occurred while
+     *         loading the participants
+     * @param processor
+     *         the processor that will own the participants
+     * @param method
+     *         the method to be changed
+     * @param arguments
+     *         the change method signature arguments describing the change
+     * @param filter
+     *         a participant filter to exclude certain participants, or <code>null</code>
+     *         if no filtering is desired
+     * @param affectedNatures
+     *         an array of project natures affected by the refactoring
+     * @param shared
+     *         a list of shared participants
+     * @return an array of change method signature participants
+     */
+    public static ChangeMethodSignatureParticipant[] loadChangeMethodSignatureParticipants(RefactoringStatus status,
+                                                                                           RefactoringProcessor processor, IMethod method,
+                                                                                           ChangeMethodSignatureArguments arguments,
+                                                                                           IParticipantDescriptorFilter filter,
+                                                                                           String[] affectedNatures,
+                                                                                           SharableParticipants shared) {
+        RefactoringParticipant[] participants = fgMethodSignatureInstance.getParticipants(status, processor, method,
+                                                                                          arguments, filter, affectedNatures, shared);
+        ChangeMethodSignatureParticipant[] result = new ChangeMethodSignatureParticipant[participants.length];
+        System.arraycopy(participants, 0, result, 0, participants.length);
+        return result;
+    }
 
 }

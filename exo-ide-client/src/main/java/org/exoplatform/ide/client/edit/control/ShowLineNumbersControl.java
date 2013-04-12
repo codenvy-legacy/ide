@@ -36,125 +36,103 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 @RolesAllowed({"developer"})
 public class ShowLineNumbersControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-   ApplicationSettingsSavedHandler, ApplicationSettingsReceivedHandler
-{
+                                                                     ApplicationSettingsSavedHandler, ApplicationSettingsReceivedHandler {
 
-   private static final String ID = "Edit/Show \\ Hide Line Numbers";
+    private static final String ID = "Edit/Show \\ Hide Line Numbers";
 
-   private static final String TITLE_SHOW = IDE.IDE_LOCALIZATION_CONSTANT.showLineNumbersShowControl();
+    private static final String TITLE_SHOW = IDE.IDE_LOCALIZATION_CONSTANT.showLineNumbersShowControl();
 
-   private static final String TITLE_HIDE = IDE.IDE_LOCALIZATION_CONSTANT.showLineNumbersHideControl();
+    private static final String TITLE_HIDE = IDE.IDE_LOCALIZATION_CONSTANT.showLineNumbersHideControl();
 
-   private FileModel activeFile;
+    private FileModel activeFile;
 
-   private Editor activeEditor;
+    private Editor activeEditor;
 
-   private boolean showLineNumbers = true;
+    private boolean showLineNumbers = true;
 
-   /**
-    * 
-    */
-   public ShowLineNumbersControl()
-   {
-      super(ID);
-      setTitle(TITLE_HIDE);
-      setPrompt(TITLE_HIDE);
-      setImages(IDEImageBundle.INSTANCE.hideLineNumbers(), IDEImageBundle.INSTANCE.hideLineNumbersDisabled());
-   }
+    /**
+     *
+     */
+    public ShowLineNumbersControl() {
+        super(ID);
+        setTitle(TITLE_HIDE);
+        setPrompt(TITLE_HIDE);
+        setImages(IDEImageBundle.INSTANCE.hideLineNumbers(), IDEImageBundle.INSTANCE.hideLineNumbersDisabled());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      IDE.addHandler(ApplicationSettingsSavedEvent.TYPE, this);
-      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+        IDE.addHandler(ApplicationSettingsSavedEvent.TYPE, this);
+        IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+    }
 
-   /**
-    * 
-    */
-   private void updateState()
-   {
-      if (showLineNumbers)
-      {
-         // hide
-         setTitle(TITLE_HIDE);
-         setPrompt(TITLE_HIDE);
-         setImages(IDEImageBundle.INSTANCE.hideLineNumbers(), IDEImageBundle.INSTANCE.hideLineNumbersDisabled());
-         setEvent(new ShowLineNumbersEvent(false));
-      }
-      else
-      {
-         // show
-         setTitle(TITLE_SHOW);
-         setPrompt(TITLE_SHOW);
-         setImages(IDEImageBundle.INSTANCE.showLineNumbers(), IDEImageBundle.INSTANCE.showLineNumbersDisabled());
-         setEvent(new ShowLineNumbersEvent(true));
-      }
+    /**
+     *
+     */
+    private void updateState() {
+        if (showLineNumbers) {
+            // hide
+            setTitle(TITLE_HIDE);
+            setPrompt(TITLE_HIDE);
+            setImages(IDEImageBundle.INSTANCE.hideLineNumbers(), IDEImageBundle.INSTANCE.hideLineNumbersDisabled());
+            setEvent(new ShowLineNumbersEvent(false));
+        } else {
+            // show
+            setTitle(TITLE_SHOW);
+            setPrompt(TITLE_SHOW);
+            setImages(IDEImageBundle.INSTANCE.showLineNumbers(), IDEImageBundle.INSTANCE.showLineNumbersDisabled());
+            setEvent(new ShowLineNumbersEvent(true));
+        }
 
-      // verify and show
-      if (activeFile == null || activeEditor == null || !activeEditor.isCapable(EditorCapability.SHOW_LINE_NUMBERS))
-      {
-         setVisible(false);
-         setEnabled(false);
-      }
-      else
-      {
-         setVisible(true);
-         setEnabled(true);
-      }
-   }
+        // verify and show
+        if (activeFile == null || activeEditor == null || !activeEditor.isCapable(EditorCapability.SHOW_LINE_NUMBERS)) {
+            setVisible(false);
+            setEnabled(false);
+        } else {
+            setVisible(true);
+            setEnabled(true);
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
-    */
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      activeEditor = event.getEditor();
-      activeFile = event.getFile();
-      updateState();
-   }
+    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    @Override
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        activeEditor = event.getEditor();
+        activeFile = event.getFile();
+        updateState();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedHandler#onApplicationSettingsSaved(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent)
-    */
-   @Override
-   public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event)
-   {
-      if (event.getApplicationSettings().getValueAsBoolean("line-numbers") != null)
-      {
-         showLineNumbers = event.getApplicationSettings().getValueAsBoolean("line-numbers");
-      }
-      else
-      {
-         showLineNumbers = true;
-      }
+    /** @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedHandler#onApplicationSettingsSaved(org
+     * .exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent) */
+    @Override
+    public void onApplicationSettingsSaved(ApplicationSettingsSavedEvent event) {
+        if (event.getApplicationSettings().getValueAsBoolean("line-numbers") != null) {
+            showLineNumbers = event.getApplicationSettings().getValueAsBoolean("line-numbers");
+        } else {
+            showLineNumbers = true;
+        }
 
-      updateState();
-   }
+        updateState();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
-    */
-   @Override
-   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
-   {
-      if (event.getApplicationSettings().getValueAsBoolean("line-numbers") != null)
-      {
-         showLineNumbers = event.getApplicationSettings().getValueAsBoolean("line-numbers");
-      }
+    /** @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org
+     * .exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent) */
+    @Override
+    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event) {
+        if (event.getApplicationSettings().getValueAsBoolean("line-numbers") != null) {
+            showLineNumbers = event.getApplicationSettings().getValueAsBoolean("line-numbers");
+        }
 
-      updateState();
-   }
+        updateState();
+    }
 
 }

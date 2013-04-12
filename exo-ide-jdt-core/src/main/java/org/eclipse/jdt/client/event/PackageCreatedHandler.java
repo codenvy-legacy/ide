@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface PackageCreatedHandler extends EventHandler
-{
+public interface PackageCreatedHandler extends EventHandler {
 
-   void onPackageCreated(PackageCreatedEvent event);
-   
+    void onPackageCreated(PackageCreatedEvent event);
+
 }

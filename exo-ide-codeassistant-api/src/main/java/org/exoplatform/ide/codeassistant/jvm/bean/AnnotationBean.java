@@ -24,67 +24,52 @@ import org.exoplatform.ide.codeassistant.jvm.shared.AnnotationParameter;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class AnnotationBean implements Annotation
-{
+public class AnnotationBean implements Annotation {
 
-   private String typeName;
+    private String typeName;
 
-   private AnnotationParameter[] annotationParameters;
+    private AnnotationParameter[] annotationParameters;
 
-   /**
-    * 
-    */
-   public AnnotationBean()
-   {
-   }
+    /**
+     *
+     */
+    public AnnotationBean() {
+    }
 
-   /**
-    * @param typeName
-    * @param annotationParameters
-    */
-   public AnnotationBean(String typeName, AnnotationParameter[] annotationParameters)
-   {
-      super();
-      this.typeName = typeName;
-      this.annotationParameters = annotationParameters;
-   }
+    /**
+     * @param typeName
+     * @param annotationParameters
+     */
+    public AnnotationBean(String typeName, AnnotationParameter[] annotationParameters) {
+        super();
+        this.typeName = typeName;
+        this.annotationParameters = annotationParameters;
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.jvm.shared.Annotation#getTypeName()
-    */
-   @Override
-   public String getTypeName()
-   {
-      return typeName;
-   }
+    /** @see org.exoplatform.ide.codeassistant.jvm.shared.Annotation#getTypeName() */
+    @Override
+    public String getTypeName() {
+        return typeName;
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.jvm.shared.Annotation#getAnnotationParameters()
-    */
-   @Override
-   public AnnotationParameter[] getAnnotationParameters()
-   {
-      return annotationParameters;
-   }
+    /** @see org.exoplatform.ide.codeassistant.jvm.shared.Annotation#getAnnotationParameters() */
+    @Override
+    public AnnotationParameter[] getAnnotationParameters() {
+        return annotationParameters;
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.jvm.shared.Annotation#setTypeName()
-    */
-   @Override
-   public void setTypeName(String name)
-   {
-      typeName = name;
-   }
+    /** @see org.exoplatform.ide.codeassistant.jvm.shared.Annotation#setTypeName() */
+    @Override
+    public void setTypeName(String name) {
+        typeName = name;
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.jvm.shared.Annotation#setAnnotationParameters(org.exoplatform.ide.codeassistant.jvm.shared.AnnotationParameter[])
-    */
-   @Override
-   public void setAnnotationParameters(AnnotationParameter[] parameters)
-   {
-      annotationParameters = parameters;
-   }
+    /** @see org.exoplatform.ide.codeassistant.jvm.shared.Annotation#setAnnotationParameters(org.exoplatform.ide.codeassistant.jvm.shared
+     * .AnnotationParameter[]) */
+    @Override
+    public void setAnnotationParameters(AnnotationParameter[] parameters) {
+        annotationParameters = parameters;
+    }
 
 }

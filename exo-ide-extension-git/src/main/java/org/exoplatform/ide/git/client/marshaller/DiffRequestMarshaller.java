@@ -31,57 +31,44 @@ import org.exoplatform.ide.git.shared.DiffRequest;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 4, 2011 10:57:37 AM anya $
- * 
  */
-public class DiffRequestMarshaller implements Marshallable, Constants
-{
-   /**
-    * Diff request.
-    */
-   private DiffRequest diffRequest;
+public class DiffRequestMarshaller implements Marshallable, Constants {
+    /** Diff request. */
+    private DiffRequest diffRequest;
 
-   /**
-    * @param diffRequest diff request
-    */
-   public DiffRequestMarshaller(DiffRequest diffRequest)
-   {
-      this.diffRequest = diffRequest;
-   }
+    /**
+     * @param diffRequest diff request
+     */
+    public DiffRequestMarshaller(DiffRequest diffRequest) {
+        this.diffRequest = diffRequest;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
-    */
-   @Override
-   public String marshal()
-   {
-      JSONObject jsonObject = new JSONObject();
+    /** @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal() */
+    @Override
+    public String marshal() {
+        JSONObject jsonObject = new JSONObject();
 
-      if (diffRequest.getFileFilter() != null && diffRequest.getFileFilter().length > 0)
-      {
-         JSONArray array = new JSONArray();
-         for (int i = 0; i < diffRequest.getFileFilter().length; i++)
-         {
-            array.set(i, new JSONString(diffRequest.getFileFilter()[i]));
-         }
-         jsonObject.put(FILE_FILTER, array);
-      }
-      jsonObject.put(NO_RENAMES, JSONBoolean.getInstance(diffRequest.isNoRenames()));
-      jsonObject.put(CACHED, JSONBoolean.getInstance(diffRequest.isCached()));
+        if (diffRequest.getFileFilter() != null && diffRequest.getFileFilter().length > 0) {
+            JSONArray array = new JSONArray();
+            for (int i = 0; i < diffRequest.getFileFilter().length; i++) {
+                array.set(i, new JSONString(diffRequest.getFileFilter()[i]));
+            }
+            jsonObject.put(FILE_FILTER, array);
+        }
+        jsonObject.put(NO_RENAMES, JSONBoolean.getInstance(diffRequest.isNoRenames()));
+        jsonObject.put(CACHED, JSONBoolean.getInstance(diffRequest.isCached()));
 
-      if (diffRequest.getType() != null)
-      {
-         jsonObject.put(TYPE, new JSONString(diffRequest.getType().name()));
-      }
+        if (diffRequest.getType() != null) {
+            jsonObject.put(TYPE, new JSONString(diffRequest.getType().name()));
+        }
 
-      if (diffRequest.getCommitA() != null)
-      {
-         jsonObject.put(COMMIT_A, new JSONString(diffRequest.getCommitA()));
-      }
+        if (diffRequest.getCommitA() != null) {
+            jsonObject.put(COMMIT_A, new JSONString(diffRequest.getCommitA()));
+        }
 
-      if (diffRequest.getCommitB() != null)
-      {
-         jsonObject.put(COMMIT_B, new JSONString(diffRequest.getCommitB()));
-      }
-      return jsonObject.toString();
-   }
+        if (diffRequest.getCommitB() != null) {
+            jsonObject.put(COMMIT_B, new JSONString(diffRequest.getCommitB()));
+        }
+        return jsonObject.toString();
+    }
 }

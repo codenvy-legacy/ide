@@ -32,65 +32,52 @@ import org.exoplatform.ide.extension.ssh.client.SshClientBundle;
 import org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerPresenter.Display;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 
-public class SshKeyManagerView extends ViewImpl implements Display
-{
+public class SshKeyManagerView extends ViewImpl implements Display {
 
-   private static SshKeyManagerViewUiBinder uiBinder = GWT.create(SshKeyManagerViewUiBinder.class);
+    private static SshKeyManagerViewUiBinder uiBinder = GWT.create(SshKeyManagerViewUiBinder.class);
 
-   interface SshKeyManagerViewUiBinder extends UiBinder<Widget, SshKeyManagerView>
-   {
-   }
+    interface SshKeyManagerViewUiBinder extends UiBinder<Widget, SshKeyManagerView> {
+    }
 
-   @UiField
-   SshKeysGrid keysGrid;
+    @UiField
+    SshKeysGrid keysGrid;
 
-   @UiField
-   ImageButton generateButton;
+    @UiField
+    ImageButton generateButton;
 
-   @UiField
-   ImageButton uploadButton;
+    @UiField
+    ImageButton uploadButton;
 
-   @UiField
-   ImageButton generateGithubKeyButton;
+    @UiField
+    ImageButton generateGithubKeyButton;
 
-   public SshKeyManagerView()
-   {
-      super(ID, ViewType.MODAL, "Ssh Keys", null, 725, 390, false);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
-      generateGithubKeyButton.setImage(new Image(SshClientBundle.INSTANCE.sshKeyGithubGenerate()));
-   }
+    public SshKeyManagerView() {
+        super(ID, ViewType.MODAL, "Ssh Keys", null, 725, 390, false);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
+        generateGithubKeyButton.setImage(new Image(SshClientBundle.INSTANCE.sshKeyGithubGenerate()));
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerPresenter.Display#getKeyItemGrid()
-    */
-   @Override
-   public HasSshGrid<KeyItem> getKeyItemGrid()
-   {
-      return keysGrid;
-   }
+    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerPresenter.Display#getKeyItemGrid() */
+    @Override
+    public HasSshGrid<KeyItem> getKeyItemGrid() {
+        return keysGrid;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerPresenter.Display#getGenerateButton()
-    */
-   @Override
-   public HasClickHandlers getGenerateButton()
-   {
-      return generateButton;
-   }
+    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerPresenter.Display#getGenerateButton() */
+    @Override
+    public HasClickHandlers getGenerateButton() {
+        return generateButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerPresenter.Display#getUploadButton()
-    */
-   @Override
-   public HasClickHandlers getUploadButton()
-   {
-      return uploadButton;
-   }
+    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerPresenter.Display#getUploadButton() */
+    @Override
+    public HasClickHandlers getUploadButton() {
+        return uploadButton;
+    }
 
-   @Override
-   public HasClickHandlers getGenerateGithubKeyButton()
-   {
-      return generateGithubKeyButton;
-   }
+    @Override
+    public HasClickHandlers getGenerateGithubKeyButton() {
+        return generateGithubKeyButton;
+    }
 }

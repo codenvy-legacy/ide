@@ -17,98 +17,96 @@
 
 package com.codenvy.ide.client.scheduler;
 
-import com.google.gwt.user.client.ui.Widget;
 import com.codenvy.ide.client.scheduler.Scheduler.Priority;
 import com.codenvy.ide.client.scheduler.Scheduler.Schedulable;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Something that can control the behaviour of the scheduler, and display
  * controls in the UI.
- *
+ * <p/>
  * The only control mechanism is the ability to enable or disable priority
  * levels, exposed by {@link #isRunnable(Priority)}.
- *
+ * <p/>
  * A controller is also notified when jobs are added and removed
  */
-public interface Controller
-{
+public interface Controller {
 
-   /**
-    * Tells this controller a job was added.
-    *
-    * @param priority priority level
-    * @param job      the job
-    */
-   void jobAdded(Priority priority, Schedulable job);
+    /**
+     * Tells this controller a job was added.
+     *
+     * @param priority
+     *         priority level
+     * @param job
+     *         the job
+     */
+    void jobAdded(Priority priority, Schedulable job);
 
-   /**
-    * Tells this controller a job was removed.
-    *
-    * @param priority priority level
-    * @param job      the job
-    */
-   void jobRemoved(Priority priority, Schedulable job);
+    /**
+     * Tells this controller a job was removed.
+     *
+     * @param priority
+     *         priority level
+     * @param job
+     *         the job
+     */
+    void jobRemoved(Priority priority, Schedulable job);
 
-   /**
-    * Queries whether a priority level should be run or not.
-    *
-    * @param priority priority level
-    * @return true if tasks in {@code priority} should be run; false if they
-    *         should not be run.
-    */
-   boolean isRunnable(Priority priority);
+    /**
+     * Queries whether a priority level should be run or not.
+     *
+     * @param priority
+     *         priority level
+     * @return true if tasks in {@code priority} should be run; false if they
+     *         should not be run.
+     */
+    boolean isRunnable(Priority priority);
 
-   /**
-    * Queries whether an individual job is to be suppressed when run at a specific priority.
-    * This is independent of {@link #isRunnable(Priority)}
-    *
-    * @param priority
-    * @param job
-    * @return true if the job is to be suppressed
-    */
-   boolean isSuppressed(Priority priority, Schedulable job);
+    /**
+     * Queries whether an individual job is to be suppressed when run at a specific priority.
+     * This is independent of {@link #isRunnable(Priority)}
+     *
+     * @param priority
+     * @param job
+     * @return true if the job is to be suppressed
+     */
+    boolean isSuppressed(Priority priority, Schedulable job);
 
-   /**
-    * Gets the view of this controller, if it has one.
-    *
-    * @return the controller's view, or {@code null} if there is no view.
-    */
-   Widget asWidget();
+    /**
+     * Gets the view of this controller, if it has one.
+     *
+     * @return the controller's view, or {@code null} if there is no view.
+     */
+    Widget asWidget();
 
-   /**
-    * Controller implementation that does nothing.  GWT optimizations should make
-    * the cost of this implementation zero.
-    */
-   public static final Controller NOOP = new Controller()
-   {
-      @Override
-      public Widget asWidget()
-      {
-         return null;
-      }
+    /**
+     * Controller implementation that does nothing.  GWT optimizations should make
+     * the cost of this implementation zero.
+     */
+    public static final Controller NOOP = new Controller() {
+        @Override
+        public Widget asWidget() {
+            return null;
+        }
 
-      @Override
-      public void jobAdded(Priority priority, Schedulable job)
-      {
-         // Do nothing
-      }
+        @Override
+        public void jobAdded(Priority priority, Schedulable job) {
+            // Do nothing
+        }
 
-      @Override
-      public void jobRemoved(Priority priority, Schedulable job)
-      {
-         // Do nothing
-      }
+        @Override
+        public void jobRemoved(Priority priority, Schedulable job) {
+            // Do nothing
+        }
 
-      @Override
-      public boolean isRunnable(Priority priority)
-      {
-         return true;
-      }
+        @Override
+        public boolean isRunnable(Priority priority) {
+            return true;
+        }
 
-      @Override
-      public boolean isSuppressed(Priority priority, Schedulable job)
-      {
-         return false;
-      }
-   };
+        @Override
+        public boolean isSuppressed(Priority priority, Schedulable job) {
+            return false;
+        }
+    };
 }

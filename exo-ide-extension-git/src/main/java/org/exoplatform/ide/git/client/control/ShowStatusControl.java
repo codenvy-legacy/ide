@@ -28,17 +28,14 @@ import org.exoplatform.ide.git.client.status.ShowWorkTreeStatusEvent;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 28, 2011 2:57:35 PM anya $
- * 
  */
-public class ShowStatusControl extends GitControl
-{
-   public ShowStatusControl()
-   {
-      super(GitExtension.MESSAGES.statusControlId());
-      setTitle(GitExtension.MESSAGES.statusControlTitle());
-      setPrompt(GitExtension.MESSAGES.statusControlPrompt());
-      setEvent(new ShowWorkTreeStatusEvent());
-      setImages(GitClientBundle.INSTANCE.status(), GitClientBundle.INSTANCE.statusDisabled());
-      setGroupName(GroupNames.INFORMATION);
-   }
+public class ShowStatusControl extends GitControl {
+    public ShowStatusControl() {
+        super(GitExtension.MESSAGES.statusControlId());
+        setTitle(GitExtension.MESSAGES.statusControlTitle());
+        setPrompt(GitExtension.MESSAGES.statusControlPrompt());
+        setEvent(new ShowWorkTreeStatusEvent());
+        setImages(GitClientBundle.INSTANCE.status(), GitClientBundle.INSTANCE.statusDisabled());
+        setGroupName(GroupNames.INFORMATION);
+    }
 }

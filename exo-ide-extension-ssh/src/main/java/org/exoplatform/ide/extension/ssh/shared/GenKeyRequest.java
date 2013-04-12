@@ -20,54 +20,55 @@ package org.exoplatform.ide.extension.ssh.shared;
 
 /**
  * Interface describe a request for generate a SSH-key.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: GenKeyRequest.java Mar 21, 2012 6:14:27 PM azatsarynnyy $
- *
  */
-public interface GenKeyRequest
-{
+public interface GenKeyRequest {
 
-   /**
-    * Returns remote host name for which generate key.
-    * 
-    * @return host name
-    */
-   public String getHost();
+    /**
+     * Returns remote host name for which generate key.
+     *
+     * @return host name
+     */
+    public String getHost();
 
-   /**
-    * Change remote host name for which generate key.
-    * 
-    * @param host host name
-    */
-   public void setHost(String host);
+    /**
+     * Change remote host name for which generate key.
+     *
+     * @param host
+     *         host name
+     */
+    public void setHost(String host);
 
-   /**
-    * Returns comment for public key.
-    * 
-    * @return comment
-    */
-   public String getComment();
+    /**
+     * Returns comment for public key.
+     *
+     * @return comment
+     */
+    public String getComment();
 
-   /**
-    * Set comment for public key.
-    * 
-    * @param comment comment
-    */
-   public void setComment(String comment);
+    /**
+     * Set comment for public key.
+     *
+     * @param comment
+     *         comment
+     */
+    public void setComment(String comment);
 
-   /**
-    * Returns passphrase for private key.
-    * 
-    * @return passphrase
-    */
-   public String getPassphrase();
+    /**
+     * Returns passphrase for private key.
+     *
+     * @return passphrase
+     */
+    public String getPassphrase();
 
-   /**
-    * Set passphrase for private key.
-    * 
-    * @param passphrase passphrase
-    */
-   public void setPassphrase(String passphrase);
+    /**
+     * Set passphrase for private key.
+     *
+     * @param passphrase
+     *         passphrase
+     */
+    public void setPassphrase(String passphrase);
 
 }

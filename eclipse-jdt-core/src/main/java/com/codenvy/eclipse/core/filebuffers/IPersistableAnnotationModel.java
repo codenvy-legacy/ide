@@ -22,36 +22,41 @@ import org.exoplatform.ide.editor.shared.text.IDocument;
  *
  * @since 3.0
  */
-public interface IPersistableAnnotationModel
-{
+public interface IPersistableAnnotationModel {
 
-   /**
-    * Transforms the current transient state of the annotation model into a
-    * persistent state.
-    *
-    * @param document the document the annotation model is connected to
-    * @throws CoreException in case the transformation fails
-    */
-   void commit(IDocument document) throws CoreException;
+    /**
+     * Transforms the current transient state of the annotation model into a
+     * persistent state.
+     *
+     * @param document
+     *         the document the annotation model is connected to
+     * @throws CoreException
+     *         in case the transformation fails
+     */
+    void commit(IDocument document) throws CoreException;
 
-   /**
-    * Changes the current transient state of the annotation model to match the
-    * last persisted state.
-    *
-    * @param document the document the annotation model is connected to
-    * @throws CoreException in case accessing the persisted state
-    */
-   void revert(IDocument document) throws CoreException;
+    /**
+     * Changes the current transient state of the annotation model to match the
+     * last persisted state.
+     *
+     * @param document
+     *         the document the annotation model is connected to
+     * @throws CoreException
+     *         in case accessing the persisted state
+     */
+    void revert(IDocument document) throws CoreException;
 
-   /**
-    * Forces this annotation model to re-initialize from the persistent state.
-    * The persistent state must not be the same as the last persisted state.
-    * I.e. external modification may have caused changes to the persistent
-    * state since the last <code>commit</code> or <code>revert</code>
-    * operation.
-    *
-    * @param document the document the annotation model is connected to
-    * @throws CoreException in case accessing the persistent state fails
-    */
-   void reinitialize(IDocument document) throws CoreException;
+    /**
+     * Forces this annotation model to re-initialize from the persistent state.
+     * The persistent state must not be the same as the last persisted state.
+     * I.e. external modification may have caused changes to the persistent
+     * state since the last <code>commit</code> or <code>revert</code>
+     * operation.
+     *
+     * @param document
+     *         the document the annotation model is connected to
+     * @throws CoreException
+     *         in case accessing the persistent state fails
+     */
+    void reinitialize(IDocument document) throws CoreException;
 }

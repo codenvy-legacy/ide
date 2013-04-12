@@ -22,57 +22,56 @@ package org.exoplatform.ide.extension.aws.shared.beanstalk;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface EnvironmentInfo
-{
-   String getName();
+public interface EnvironmentInfo {
+    String getName();
 
-   void setName(String name);
+    void setName(String name);
 
-   String getId();
+    String getId();
 
-   void setId(String id);
+    void setId(String id);
 
-   String getApplicationName();
+    String getApplicationName();
 
-   void setApplicationName(String applicationName);
+    void setApplicationName(String applicationName);
 
-   String getVersionLabel();
+    String getVersionLabel();
 
-   void setVersionLabel(String versionLabel);
+    void setVersionLabel(String versionLabel);
 
-   String getSolutionStackName();
+    String getSolutionStackName();
 
-   void setSolutionStackName(String solutionStackName);
+    void setSolutionStackName(String solutionStackName);
 
-   String getTemplateName();
+    String getTemplateName();
 
-   void setTemplateName(String templateName);
+    void setTemplateName(String templateName);
 
-   String getDescription();
+    String getDescription();
 
-   void setDescription(String description);
+    void setDescription(String description);
 
-   String getEndpointUrl();
+    String getEndpointUrl();
 
-   void setEndpointUrl(String endpointURL);
+    void setEndpointUrl(String endpointURL);
 
-   String getCname();
+    String getCname();
 
-   void setCname(String cNAME);
+    void setCname(String cNAME);
 
-   long getCreated();
+    long getCreated();
 
-   void setCreated(long created);
+    void setCreated(long created);
 
-   long getUpdated();
+    long getUpdated();
 
-   void setUpdated(long updated);
+    void setUpdated(long updated);
 
-   EnvironmentStatus getStatus();
+    EnvironmentStatus getStatus();
 
-   void setStatus(EnvironmentStatus status);
+    void setStatus(EnvironmentStatus status);
 
-   EnvironmentHealth getHealth();
+    EnvironmentHealth getHealth();
 
-   void setHealth(EnvironmentHealth health);
+    void setHealth(EnvironmentHealth health);
 }

@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
@@ -17,38 +17,39 @@ package com.codenvy.eclipse.core.runtime;
  * <p>
  * This class can be used without OSGi running.
  * </p>
+ *
  * @since org.eclipse.equinox.common 3.2
  */
-public final class SafeRunner
-{
+public final class SafeRunner {
 
-	/**
-	 * Runs the given runnable in a protected mode.   Exceptions
-	 * thrown in the runnable are logged and passed to the runnable's
-	 * exception handler.  Such exceptions are not rethrown by this method.
-	 * <p>
-	 * In addition to catching all {@link Exception} types, this method also catches certain {@link Error} 
-	 * types that typically result from programming errors in the code being executed. 
-	 * Severe errors that are not generally safe to catch are not caught by this method.
-	 * </p>
-	 *
-	 * @param code the runnable to run
-	 */
-	public static void run(ISafeRunnable code) {
-		Assert.isNotNull(code);
-		try {
-			code.run();
-		} catch (Exception e) {
-			handleException(code, e);
-		} catch (LinkageError e) {
-			handleException(code, e);
-		} catch (AssertionError e) {
-			handleException(code, e);
-		}
-	}
+    /**
+     * Runs the given runnable in a protected mode.   Exceptions
+     * thrown in the runnable are logged and passed to the runnable's
+     * exception handler.  Such exceptions are not rethrown by this method.
+     * <p>
+     * In addition to catching all {@link Exception} types, this method also catches certain {@link Error}
+     * types that typically result from programming errors in the code being executed.
+     * Severe errors that are not generally safe to catch are not caught by this method.
+     * </p>
+     *
+     * @param code
+     *         the runnable to run
+     */
+    public static void run(ISafeRunnable code) {
+        Assert.isNotNull(code);
+        try {
+            code.run();
+        } catch (Exception e) {
+            handleException(code, e);
+        } catch (LinkageError e) {
+            handleException(code, e);
+        } catch (AssertionError e) {
+            handleException(code, e);
+        }
+    }
 
-	private static void handleException(ISafeRunnable code, Throwable e) {
-		if (!(e instanceof OperationCanceledException)) {
+    private static void handleException(ISafeRunnable code, Throwable e) {
+        if (!(e instanceof OperationCanceledException)) {
 //			// try to obtain the correct plug-in id for the bundle providing the safe runnable
 //			Activator activator = Activator.getDefault();
 //			String pluginId = null;
@@ -68,8 +69,8 @@ public final class SafeRunner
 //			if (!RuntimeLog.isEmpty())
 //				RuntimeLog.log(status);
 //			else
-				e.printStackTrace();
-		}
-		code.handleException(e);
-	}
+            e.printStackTrace();
+        }
+        code.handleException(e);
+    }
 }

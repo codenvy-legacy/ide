@@ -31,63 +31,50 @@ import org.exoplatform.ide.editor.client.api.EditorCapability;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
 @RolesAllowed({"developer"})
-public class DeleteCurrentLineControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
-{
+public class DeleteCurrentLineControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler {
 
-   public static final String ID = "Edit/Delete Current Line";
+    public static final String ID = "Edit/Delete Current Line";
 
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.deleteCurrentLineControl();
+    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.deleteCurrentLineControl();
 
-   public DeleteCurrentLineControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.deleteCurrentLine(), IDEImageBundle.INSTANCE.deleteCurrentLineDisabled());
-      setEvent(new EditorDeleteCurrentLineEvent());
-      setHotKey("Ctrl+D");
-   }
+    public DeleteCurrentLineControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setImages(IDEImageBundle.INSTANCE.deleteCurrentLine(), IDEImageBundle.INSTANCE.deleteCurrentLineDisabled());
+        setEvent(new EditorDeleteCurrentLineEvent());
+        setHotKey("Ctrl+D");
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.editor.event.EditorActiveFileChangedEvent)
-    */
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
+    /** @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client
+     * .editor.event.EditorActiveFileChangedEvent) */
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
 
-      if (event.getFile() == null || event.getEditor() == null)
-      {
-         setVisible(false);
-         setEnabled(false);
-         return;
-      }
+        if (event.getFile() == null || event.getEditor() == null) {
+            setVisible(false);
+            setEnabled(false);
+            return;
+        }
 
-      if (event.getEditor().isCapable(EditorCapability.DELETE_LINES))
-      {
-         setVisible(true);
-         setEnabled(true);
-      }
-      else
-      {
-         setVisible(false);
-         setEnabled(false);
-      }
+        if (event.getEditor().isCapable(EditorCapability.DELETE_LINES)) {
+            setVisible(true);
+            setEnabled(true);
+        } else {
+            setVisible(false);
+            setEnabled(false);
+        }
 
-      if (event.getEditor().isReadOnly())
-      {
-         setEnabled(false);
-         return;
-      }
-   }
+        if (event.getEditor().isReadOnly()) {
+            setEnabled(false);
+            return;
+        }
+    }
 }

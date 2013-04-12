@@ -18,37 +18,30 @@ import com.codenvy.eclipse.jdt.core.dom.ITypeBinding;
 import com.codenvy.eclipse.jdt.internal.corext.dom.ASTNodes;
 import com.codenvy.eclipse.jdt.internal.corext.dom.Selection;
 
-public class SurroundWithTryCatchAnalyzer extends SurroundWithAnalyzer
-{
-   private ITypeBinding[] fExceptions;
+public class SurroundWithTryCatchAnalyzer extends SurroundWithAnalyzer {
+    private ITypeBinding[] fExceptions;
 
-   public SurroundWithTryCatchAnalyzer(ICompilationUnit unit, Selection selection) throws CoreException
-   {
-      super(unit, selection);
-   }
+    public SurroundWithTryCatchAnalyzer(ICompilationUnit unit, Selection selection) throws CoreException {
+        super(unit, selection);
+    }
 
-   public ITypeBinding[] getExceptions()
-   {
-      return fExceptions;
-   }
+    public ITypeBinding[] getExceptions() {
+        return fExceptions;
+    }
 
-   @Override
-   public void endVisit(CompilationUnit node)
-   {
-      BodyDeclaration enclosingNode = null;
-      if (!getStatus().hasFatalError() && hasSelectedNodes())
-      {
-         enclosingNode = (BodyDeclaration)ASTNodes.getParent(getFirstSelectedNode(), BodyDeclaration.class);
-      }
+    @Override
+    public void endVisit(CompilationUnit node) {
+        BodyDeclaration enclosingNode = null;
+        if (!getStatus().hasFatalError() && hasSelectedNodes()) {
+            enclosingNode = (BodyDeclaration)ASTNodes.getParent(getFirstSelectedNode(), BodyDeclaration.class);
+        }
 
-      super.endVisit(node);
-      if (enclosingNode != null && !getStatus().hasFatalError())
-      {
-         fExceptions = ExceptionAnalyzer.perform(enclosingNode, getSelection());
-         if (fExceptions == null || fExceptions.length == 0)
-         {
-            fExceptions = new ITypeBinding[]{node.getAST().resolveWellKnownType("java.lang.Exception")}; //$NON-NLS-1$
-         }
-      }
-   }
+        super.endVisit(node);
+        if (enclosingNode != null && !getStatus().hasFatalError()) {
+            fExceptions = ExceptionAnalyzer.perform(enclosingNode, getSelection());
+            if (fExceptions == null || fExceptions.length == 0) {
+                fExceptions = new ITypeBinding[]{node.getAST().resolveWellKnownType("java.lang.Exception")}; //$NON-NLS-1$
+            }
+        }
+    }
 }

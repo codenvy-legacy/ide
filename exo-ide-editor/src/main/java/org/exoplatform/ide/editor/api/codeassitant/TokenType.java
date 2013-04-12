@@ -20,38 +20,33 @@ package org.exoplatform.ide.editor.api.codeassitant;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 17, 2010 5:45:20 PM evgen $
- * 
  */
 public enum TokenType {
-   CLASS, METHOD, FIELD, ANNOTATION, INTERFACE, ARRAY, ENUM, CONSTRUCTOR, KEYWORD, TEMPLATE, VARIABLE, FUNCTION,
-   /** Property type for JSON */
-   PROPERTY,
+    CLASS, METHOD, FIELD, ANNOTATION, INTERFACE, ARRAY, ENUM, CONSTRUCTOR, KEYWORD, TEMPLATE, VARIABLE, FUNCTION,
+    /** Property type for JSON */
+    PROPERTY,
 
-   /**
-    * HTML or XML tag.
-    */
-   TAG,
+    /** HTML or XML tag. */
+    TAG,
 
-   /**
-    * HTML or XML attribute;
-    */
-   ATTRIBUTE, CDATA,
+    /** HTML or XML attribute; */
+    ATTRIBUTE, CDATA,
 
-   /** Property type for JavaScript */
-   BLOCK,
+    /** Property type for JavaScript */
+    BLOCK,
 
-   /** Property type for Groovy code */
-   GROOVY_TAG, PACKAGE, IMPORT, PARAMETER, TYPE,
+    /** Property type for Groovy code */
+    GROOVY_TAG, PACKAGE, IMPORT, PARAMETER, TYPE,
 
-   /** Property type for Java code */
-   JSP_TAG,
+    /** Property type for Java code */
+    JSP_TAG,
 
-   /** Property type for Ruby code **/
-   ROOT, MODULE, LOCAL_VARIABLE, GLOBAL_VARIABLE, CLASS_VARIABLE, INSTANCE_VARIABLE, CONSTANT,
+    /** Property type for Ruby code * */
+    ROOT, MODULE, LOCAL_VARIABLE, GLOBAL_VARIABLE, CLASS_VARIABLE, INSTANCE_VARIABLE, CONSTANT,
 
-   /** Propperty type for Php code **/
-   PHP_TAG, CLASS_CONSTANT, NAMESPACE;
+    /** Propperty type for Php code * */
+    PHP_TAG, CLASS_CONSTANT, NAMESPACE;
 }

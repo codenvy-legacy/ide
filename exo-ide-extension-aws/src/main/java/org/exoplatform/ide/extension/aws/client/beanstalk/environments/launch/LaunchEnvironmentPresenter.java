@@ -56,265 +56,214 @@ import java.util.List;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 21, 2012 3:37:53 PM anya $
- * 
  */
-public class LaunchEnvironmentPresenter implements LaunchEnvironmentHandler, ViewClosedHandler
-{
-   interface Display extends IsView
-   {
-      TextFieldItem getEnvNameField();
+public class LaunchEnvironmentPresenter implements LaunchEnvironmentHandler, ViewClosedHandler {
+    interface Display extends IsView {
+        TextFieldItem getEnvNameField();
 
-      TextFieldItem getEnvDescriptionField();
+        TextFieldItem getEnvDescriptionField();
 
-      HasValue<String> getSolutionStackField();
+        HasValue<String> getSolutionStackField();
 
-      void setSolutionStackValues(String[] values);
+        void setSolutionStackValues(String[] values);
 
-      HasValue<String> getVersionField();
+        HasValue<String> getVersionField();
 
-      void setVersionValues(String[] values, String selectedValue);
+        void setVersionValues(String[] values, String selectedValue);
 
-      HasClickHandlers getLaunchButton();
+        HasClickHandlers getLaunchButton();
 
-      HasClickHandlers getCancelButton();
+        HasClickHandlers getCancelButton();
 
-      void enableLaunchButton(boolean enabled);
+        void enableLaunchButton(boolean enabled);
 
-      void focusInEnvNameField();
-   }
+        void focusInEnvNameField();
+    }
 
-   private Display display;
+    private Display display;
 
-   private String applicationName;
+    private String applicationName;
 
-   private String projectId;
+    private String projectId;
 
-   private String vfsId;
+    private String vfsId;
 
-   private LaunchEnvironmentStartedHandler launchEnvironmentStartedHandler;
+    private LaunchEnvironmentStartedHandler launchEnvironmentStartedHandler;
 
-   public LaunchEnvironmentPresenter()
-   {
-      IDE.addHandler(LaunchEnvironmentEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    public LaunchEnvironmentPresenter() {
+        IDE.addHandler(LaunchEnvironmentEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   public void bindDisplay()
-   {
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
+    public void bindDisplay() {
+        display.getCancelButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
 
-      display.getLaunchButton().addClickHandler(new ClickHandler()
-      {
+        display.getLaunchButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            launchEnvironment();
-         }
-      });
+            @Override
+            public void onClick(ClickEvent event) {
+                launchEnvironment();
+            }
+        });
 
-      display.getEnvNameField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
+        display.getEnvNameField().addValueChangeHandler(new ValueChangeHandler<String>() {
 
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            display.enableLaunchButton(event.getValue() != null && !event.getValue().isEmpty());
-         }
-      });
-   }
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                display.enableLaunchButton(event.getValue() != null && !event.getValue().isEmpty());
+            }
+        });
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.launch.LaunchEnvironmentHandler#onLaunchEnvironment(org.exoplatform.ide.extension.aws.client.beanstalk.environments.launch.LaunchEnvironmentEvent)
-    */
-   @Override
-   public void onLaunchEnvironment(LaunchEnvironmentEvent event)
-   {
-      this.projectId = event.getProjectId();
-      this.vfsId = event.getVfsId();
-      this.applicationName = event.getApplicationName();
-      this.launchEnvironmentStartedHandler = event.getEnvironmentCreatedHandler();
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.launch.LaunchEnvironmentHandler#onLaunchEnvironment(org
+     * .exoplatform.ide.extension.aws.client.beanstalk.environments.launch.LaunchEnvironmentEvent) */
+    @Override
+    public void onLaunchEnvironment(LaunchEnvironmentEvent event) {
+        this.projectId = event.getProjectId();
+        this.vfsId = event.getVfsId();
+        this.applicationName = event.getApplicationName();
+        this.launchEnvironmentStartedHandler = event.getEnvironmentCreatedHandler();
 
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         IDE.getInstance().openView(display.asView());
-         bindDisplay();
-      }
-      display.enableLaunchButton(false);
-      display.focusInEnvNameField();
-      getSolutionStacks();
-      getVersions(event.getVersionLabel());
-   }
+        if (display == null) {
+            display = GWT.create(Display.class);
+            IDE.getInstance().openView(display.asView());
+            bindDisplay();
+        }
+        display.enableLaunchButton(false);
+        display.focusInEnvNameField();
+        getSolutionStacks();
+        getVersions(event.getVersionLabel());
+    }
 
-   private void getSolutionStacks()
-   {
-      try
-      {
-         BeanstalkClientService.getInstance().getAvailableSolutionStacks(
-            new AwsAsyncRequestCallback<List<SolutionStack>>(new SolutionStackListUnmarshaller(), new LoggedInHandler()
-            {
-               @Override
-               public void onLoggedIn()
-               {
-                  getSolutionStacks();
-               }
-            })
-            {
-               @Override
-               protected void onSuccess(List<SolutionStack> result)
-               {
-                  List<String> values = new ArrayList<String>();
-                  for (SolutionStack solutionStack : result)
-                  {
-                     //For detail see https://jira.exoplatform.org/browse/IDE-1951
-                     if (solutionStack.getPermittedFileTypes().contains("war"))
-                        values.add(solutionStack.getName());
-                  }
-                  display.setSolutionStackValues(values.toArray(new String[values.size()]));
-               }
+    private void getSolutionStacks() {
+        try {
+            BeanstalkClientService.getInstance().getAvailableSolutionStacks(
+                    new AwsAsyncRequestCallback<List<SolutionStack>>(new SolutionStackListUnmarshaller(), new LoggedInHandler() {
+                        @Override
+                        public void onLoggedIn() {
+                            getSolutionStacks();
+                        }
+                    }, null) {
+                        @Override
+                        protected void onSuccess(List<SolutionStack> result) {
+                            List<String> values = new ArrayList<String>();
+                            for (SolutionStack solutionStack : result) {
+                                //For detail see https://jira.exoplatform.org/browse/IDE-1951
+                                if (solutionStack.getPermittedFileTypes().contains("war"))
+                                    values.add(solutionStack.getName());
+                            }
+                            display.setSolutionStackValues(values.toArray(new String[values.size()]));
+                        }
 
-               @Override
-               protected void processFail(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                        @Override
+                        protected void processFail(Throwable exception) {
+                            IDE.fireEvent(new ExceptionThrownEvent(exception));
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   /**
-    * Get application versions.
-    */
-   private void getVersions(final String selectedVersionLabel)
-   {
-      try
-      {
-         BeanstalkClientService.getInstance().getVersions(
-            vfsId,
-            projectId,
-            new AwsAsyncRequestCallback<List<ApplicationVersionInfo>>(new ApplicationVersionListUnmarshaller(),
-               new LoggedInHandler()
-               {
+    /** Get application versions. */
+    private void getVersions(final String selectedVersionLabel) {
+        try {
+            BeanstalkClientService.getInstance().getVersions(
+                    vfsId,
+                    projectId,
+                    new AwsAsyncRequestCallback<List<ApplicationVersionInfo>>(new ApplicationVersionListUnmarshaller(),
+                                                                              new LoggedInHandler() {
 
-                  @Override
-                  public void onLoggedIn()
-                  {
-                     getVersions(selectedVersionLabel);
-                  }
-               })
-            {
+                                                                                  @Override
+                                                                                  public void onLoggedIn() {
+                                                                                      getVersions(selectedVersionLabel);
+                                                                                  }
+                                                                              }, null) {
 
-               @Override
-               protected void processFail(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
+                        @Override
+                        protected void processFail(Throwable exception) {
+                            IDE.fireEvent(new ExceptionThrownEvent(exception));
+                        }
 
-               @Override
-               protected void onSuccess(List<ApplicationVersionInfo> result)
-               {
-                  String[] values = new String[result.size()];
-                  int i = 0;
-                  for (ApplicationVersionInfo version : result)
-                  {
-                     values[i] = version.getVersionLabel();
-                     i++;
-                  }
-                  display.setVersionValues(values, selectedVersionLabel);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                        @Override
+                        protected void onSuccess(List<ApplicationVersionInfo> result) {
+                            String[] values = new String[result.size()];
+                            int i = 0;
+                            for (ApplicationVersionInfo version : result) {
+                                values[i] = version.getVersionLabel();
+                                i++;
+                            }
+                            display.setVersionValues(values, selectedVersionLabel);
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   public void launchEnvironment()
-   {
-      final String environmentName = display.getEnvNameField().getValue();
-      CreateEnvironmentRequest createEnvironmentRequest =
-         AWSExtension.AUTO_BEAN_FACTORY.createEnvironmentRequest().as();
-      createEnvironmentRequest.setApplicationName(applicationName);
-      createEnvironmentRequest.setVersionLabel(display.getVersionField().getValue());
-      createEnvironmentRequest.setDescription(display.getEnvDescriptionField().getValue());
-      createEnvironmentRequest.setEnvironmentName(environmentName);
-      createEnvironmentRequest.setSolutionStackName(display.getSolutionStackField().getValue());
+    public void launchEnvironment() {
+        final String environmentName = display.getEnvNameField().getValue();
+        CreateEnvironmentRequest createEnvironmentRequest =
+                AWSExtension.AUTO_BEAN_FACTORY.createEnvironmentRequest().as();
+        createEnvironmentRequest.setApplicationName(applicationName);
+        createEnvironmentRequest.setVersionLabel(display.getVersionField().getValue());
+        createEnvironmentRequest.setDescription(display.getEnvDescriptionField().getValue());
+        createEnvironmentRequest.setEnvironmentName(environmentName);
+        createEnvironmentRequest.setSolutionStackName(display.getSolutionStackField().getValue());
 
-      AutoBean<EnvironmentInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.environmentInfo();
-      try
-      {
-         BeanstalkClientService.getInstance().createEnvironment(
-            vfsId,
-            projectId,
-            createEnvironmentRequest,
-            new AwsAsyncRequestCallback<EnvironmentInfo>(new AutoBeanUnmarshaller<EnvironmentInfo>(autoBean),
-               new LoggedInHandler()
-               {
+        AutoBean<EnvironmentInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.environmentInfo();
+        try {
+            BeanstalkClientService.getInstance().createEnvironment(
+                    vfsId,
+                    projectId,
+                    createEnvironmentRequest,
+                    new AwsAsyncRequestCallback<EnvironmentInfo>(new AutoBeanUnmarshaller<EnvironmentInfo>(autoBean),
+                                                                 new LoggedInHandler() {
 
-                  @Override
-                  public void onLoggedIn()
-                  {
-                     launchEnvironment();
-                  }
-               })
-            {
+                                                                     @Override
+                                                                     public void onLoggedIn() {
+                                                                         launchEnvironment();
+                                                                     }
+                                                                 }, null) {
 
-               @Override
-               protected void processFail(Throwable exception)
-               {
-                  String message = AWSExtension.LOCALIZATION_CONSTANT.launchEnvironmentFailed(environmentName);
-                  if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null)
-                  {
-                     message += "<br>" + ((ServerException)exception).getMessage();
-                  }
-                  IDE.fireEvent(new OutputEvent(message, Type.ERROR));
-               }
+                        @Override
+                        protected void processFail(Throwable exception) {
+                            String message = AWSExtension.LOCALIZATION_CONSTANT.launchEnvironmentFailed(environmentName);
+                            if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null) {
+                                message += "<br>" + ((ServerException)exception).getMessage();
+                            }
+                            IDE.fireEvent(new OutputEvent(message, Type.ERROR));
+                        }
 
-               @Override
-               protected void onSuccess(EnvironmentInfo result)
-               {
-                  JobManager.get().showJobSeparated();
-                  if (display != null)
-                  {
-                     IDE.getInstance().closeView(display.asView().getId());
-                  }
+                        @Override
+                        protected void onSuccess(EnvironmentInfo result) {
+                            JobManager.get().showJobSeparated();
+                            if (display != null) {
+                                IDE.getInstance().closeView(display.asView().getId());
+                            }
 
-                  if (launchEnvironmentStartedHandler != null)
-                  {
-                     launchEnvironmentStartedHandler.onLaunchEnvironmentStarted(result);
-                  }
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                            if (launchEnvironmentStartedHandler != null) {
+                                launchEnvironmentStartedHandler.onLaunchEnvironmentStarted(result);
+                            }
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 }

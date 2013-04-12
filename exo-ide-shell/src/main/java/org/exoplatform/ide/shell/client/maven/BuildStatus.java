@@ -24,76 +24,72 @@ package org.exoplatform.ide.shell.client.maven;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface BuildStatus
-{
-   public enum Status
-   {
-      IN_PROGRESS("In progress"), //
-      SUCCESSFUL("Successful"), //
-      FAILED("Failed"); //
+public interface BuildStatus {
+    public enum Status {
+        IN_PROGRESS("In progress"), //
+        SUCCESSFUL("Successful"), //
+        FAILED("Failed"); //
 
-      private final String value;
+        private final String value;
 
-      private Status(String value)
-      {
-         this.value = value;
-      }
+        private Status(String value) {
+            this.value = value;
+        }
 
-      @Override
-      public String toString()
-      {
-         return value;
-      }
-   }
+        @Override
+        public String toString() {
+            return value;
+        }
+    }
 
-   Status getStatus();
+    Status getStatus();
 
-   /**
-    * Returns exit code.
-    * 
-    * @return {@link Integer} exit code
-    */
-   int getExitCode();
+    /**
+     * Returns exit code.
+     *
+     * @return {@link Integer} exit code
+     */
+    int getExitCode();
 
-   /**
-    * Returns build error.
-    * 
-    * @return {@link String} error
-    */
-   String getError();
+    /**
+     * Returns build error.
+     *
+     * @return {@link String} error
+     */
+    String getError();
 
-   /**
-    * Returns location of the built war.
-    * 
-    * @return {@link String} built war location
-    */
-   String getDownloadUrl();
+    /**
+     * Returns location of the built war.
+     *
+     * @return {@link String} built war location
+     */
+    String getDownloadUrl();
 
-   /**
-    * Set build status.
-    * 
-    * @param status
-    */
-   void setStatus(Status status);
+    /**
+     * Set build status.
+     *
+     * @param status
+     */
+    void setStatus(Status status);
 
-   /**
-    * Set exit code.
-    * 
-    * @param exitCode
-    */
-   void setExitCode(int exitCode);
+    /**
+     * Set exit code.
+     *
+     * @param exitCode
+     */
+    void setExitCode(int exitCode);
 
-   /**
-    * Set error.
-    * 
-    * @param error
-    */
-   void setError(String error);
+    /**
+     * Set error.
+     *
+     * @param error
+     */
+    void setError(String error);
 
-   /**
-    * Set built war location.
-    * 
-    * @param downloadUrl
-    */
-   void setDownloadUrl(String downloadUrl);
+    /**
+     * Set built war location.
+     *
+     * @param downloadUrl
+     */
+    void setDownloadUrl(String downloadUrl);
 }

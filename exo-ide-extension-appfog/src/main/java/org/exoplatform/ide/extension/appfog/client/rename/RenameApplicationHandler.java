@@ -26,13 +26,12 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface RenameApplicationHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to rename application.
-    *
-    * @param event
-    */
-   void onRenameApplication(RenameApplicationEvent event);
+public interface RenameApplicationHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to rename application.
+     *
+     * @param event
+     */
+    void onRenameApplication(RenameApplicationEvent event);
 
 }

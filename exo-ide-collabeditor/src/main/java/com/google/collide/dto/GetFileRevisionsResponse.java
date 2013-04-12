@@ -18,16 +18,12 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * List of revisions (plus revision information) for a file
- * 
- *
- */
+/** List of revisions (plus revision information) for a file */
 @RoutingType(type = RoutingTypes.GETFILEREVISIONSRESPONSE)
 public interface GetFileRevisionsResponse extends ServerToClientDto {
-  JsonArray<Revision> getRevisions();
-  
-  String getWorkspaceId();
-  
-  String getPath();
+    JsonArray<Revision> getRevisions();
+
+    String getWorkspaceId();
+
+    String getPath();
 }

@@ -49,110 +49,98 @@ import java.util.Map;
  *
  * @since 3.0
  */
-public class CheckConditionsContext
-{
+public class CheckConditionsContext {
 
-   private Map fCheckers = new HashMap();
+    private Map fCheckers = new HashMap();
 
-   /**
-    * Returns the condition checker of the given type.
-    *
-    * @param clazz the type of the condition checker
-    * @return the condition checker or <code>null</code> if
-    *         no checker is registered for the given type
-    */
-   public IConditionChecker getChecker(Class clazz)
-   {
-      return (IConditionChecker)fCheckers.get(clazz);
-   }
+    /**
+     * Returns the condition checker of the given type.
+     *
+     * @param clazz
+     *         the type of the condition checker
+     * @return the condition checker or <code>null</code> if
+     *         no checker is registered for the given type
+     */
+    public IConditionChecker getChecker(Class clazz) {
+        return (IConditionChecker)fCheckers.get(clazz);
+    }
 
-   /**
-    * Adds the given condition checker. An exception will be
-    * thrown if a checker of the same type already exists in
-    * this context.
-    *
-    * @param checker the checker to add
-    * @throws com.codenvy.eclipse.core.runtime.CoreException
-    *          if a checker of the same type already
-    *          exists
-    */
-   public void add(IConditionChecker checker) throws CoreException
-   {
-      Object old = fCheckers.put(checker.getClass(), checker);
-      if (old != null)
-      {
-         fCheckers.put(checker.getClass(), old);
-         throw new CoreException(new Status(IStatus.ERROR, RefactoringCorePlugin.getPluginId(),
-            IRefactoringCoreStatusCodes.CHECKER_ALREADY_EXISTS_IN_CONTEXT,
-            Messages.format(RefactoringCoreMessages.CheckConditionContext_error_checker_exists,
-               checker.getClass().toString()), null));
-      }
-   }
+    /**
+     * Adds the given condition checker. An exception will be
+     * thrown if a checker of the same type already exists in
+     * this context.
+     *
+     * @param checker
+     *         the checker to add
+     * @throws com.codenvy.eclipse.core.runtime.CoreException
+     *         if a checker of the same type already
+     *         exists
+     */
+    public void add(IConditionChecker checker) throws CoreException {
+        Object old = fCheckers.put(checker.getClass(), checker);
+        if (old != null) {
+            fCheckers.put(checker.getClass(), old);
+            throw new CoreException(new Status(IStatus.ERROR, RefactoringCorePlugin.getPluginId(),
+                                               IRefactoringCoreStatusCodes.CHECKER_ALREADY_EXISTS_IN_CONTEXT,
+                                               Messages.format(RefactoringCoreMessages.CheckConditionContext_error_checker_exists,
+                                                               checker.getClass().toString()), null));
+        }
+    }
 
-   /**
-    * Checks the condition of all registered condition checkers and returns a
-    * merge status result.
-    *
-    * @param pm a progress monitor or <code>null</code> if no progress
-    *           reporting is desired
-    * @return the combined status result
-    * @throws com.codenvy.eclipse.core.runtime.CoreException
-    *          if an error occurs during condition checking
-    */
-   public RefactoringStatus check(IProgressMonitor pm) throws CoreException
-   {
-      if (pm == null)
-      {
-         pm = new NullProgressMonitor();
-      }
-      RefactoringStatus result = new RefactoringStatus();
-      mergeResourceOperationAndValidateEdit();
-      List values = new ArrayList(fCheckers.values());
-      Collections.sort(values, new Comparator()
-      {
-         public int compare(Object o1, Object o2)
-         {
-            // Note there can only be one ResourceOperationChecker. So it
-            // is save to not test the case that both objects are
-            // ResourceOperationChecker
-            if (o1 instanceof ResourceChangeChecker)
-            {
-               return -1;
+    /**
+     * Checks the condition of all registered condition checkers and returns a
+     * merge status result.
+     *
+     * @param pm
+     *         a progress monitor or <code>null</code> if no progress
+     *         reporting is desired
+     * @return the combined status result
+     * @throws com.codenvy.eclipse.core.runtime.CoreException
+     *         if an error occurs during condition checking
+     */
+    public RefactoringStatus check(IProgressMonitor pm) throws CoreException {
+        if (pm == null) {
+            pm = new NullProgressMonitor();
+        }
+        RefactoringStatus result = new RefactoringStatus();
+        mergeResourceOperationAndValidateEdit();
+        List values = new ArrayList(fCheckers.values());
+        Collections.sort(values, new Comparator() {
+            public int compare(Object o1, Object o2) {
+                // Note there can only be one ResourceOperationChecker. So it
+                // is save to not test the case that both objects are
+                // ResourceOperationChecker
+                if (o1 instanceof ResourceChangeChecker) {
+                    return -1;
+                }
+                if (o2 instanceof ResourceChangeChecker) {
+                    return 1;
+                }
+                return 0;
             }
-            if (o2 instanceof ResourceChangeChecker)
-            {
-               return 1;
+        });
+        pm.beginTask("", values.size()); //$NON-NLS-1$
+        for (Iterator iter = values.iterator(); iter.hasNext(); ) {
+            IConditionChecker checker = (IConditionChecker)iter.next();
+            result.merge(checker.check(new SubProgressMonitor(pm, 1)));
+            if (pm.isCanceled()) {
+                throw new OperationCanceledException();
             }
-            return 0;
-         }
-      });
-      pm.beginTask("", values.size()); //$NON-NLS-1$
-      for (Iterator iter = values.iterator(); iter.hasNext(); )
-      {
-         IConditionChecker checker = (IConditionChecker)iter.next();
-         result.merge(checker.check(new SubProgressMonitor(pm, 1)));
-         if (pm.isCanceled())
-         {
-            throw new OperationCanceledException();
-         }
-      }
-      return result;
-   }
+        }
+        return result;
+    }
 
-   private void mergeResourceOperationAndValidateEdit() throws CoreException
-   {
-      ValidateEditChecker validateEditChecker = (ValidateEditChecker)getChecker(ValidateEditChecker.class);
-      if (validateEditChecker == null)
-      {
-         return;
-      }
-      ResourceChangeChecker resourceChangeChecker = (ResourceChangeChecker)getChecker(ResourceChangeChecker.class);
-      if (resourceChangeChecker == null)
-      {
-         return;
-      }
+    private void mergeResourceOperationAndValidateEdit() throws CoreException {
+        ValidateEditChecker validateEditChecker = (ValidateEditChecker)getChecker(ValidateEditChecker.class);
+        if (validateEditChecker == null) {
+            return;
+        }
+        ResourceChangeChecker resourceChangeChecker = (ResourceChangeChecker)getChecker(ResourceChangeChecker.class);
+        if (resourceChangeChecker == null) {
+            return;
+        }
 
-      IFile[] changedFiles = resourceChangeChecker.getChangedFiles();
-      validateEditChecker.addFiles(changedFiles);
-   }
+        IFile[] changedFiles = resourceChangeChecker.getChangedFiles();
+        validateEditChecker.addFiles(changedFiles);
+    }
 }

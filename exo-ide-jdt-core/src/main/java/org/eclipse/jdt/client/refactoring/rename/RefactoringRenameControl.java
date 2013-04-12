@@ -24,25 +24,22 @@ import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
  * Control for rename refactoring.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: RefactoringRenameControl.java Jan 18, 2013 11:32:03 AM azatsarynnyy $
- *
  */
-public class RefactoringRenameControl extends JavaControl
-{
+public class RefactoringRenameControl extends JavaControl {
 
-   public RefactoringRenameControl()
-   {
-      super(JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameControlId());
-      setTitle(JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameControlTitle());
-      setPrompt(JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameControlPrompt());
-      setEvent(new RefactoringRenameEvent());
-      setHotKey("Alt+Shift+R");
-      setImages(JavaClientBundle.INSTANCE.blankImage(), JavaClientBundle.INSTANCE.blankImage());
+    public RefactoringRenameControl() {
+        super(JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameControlId());
+        setTitle(JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameControlTitle());
+        setPrompt(JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameControlPrompt());
+        setEvent(new RefactoringRenameEvent());
+        setHotKey("Alt+Shift+R");
+        setImages(JavaClientBundle.INSTANCE.blankImage(), JavaClientBundle.INSTANCE.blankImage());
 
-      // TODO remove from context menu while bug with group name will fixed
-      //setShowInContextMenu(true);
-   }
+        // TODO remove from context menu while bug with group name will fixed
+        //setShowInContextMenu(true);
+    }
 
 }

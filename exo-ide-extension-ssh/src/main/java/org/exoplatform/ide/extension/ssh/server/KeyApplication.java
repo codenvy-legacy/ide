@@ -18,40 +18,33 @@
  */
 package org.exoplatform.ide.extension.ssh.server;
 
+import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.ws.rs.core.Application;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class KeyApplication extends Application
-{
-   private final Set<Class<?>> classes;
-   private final Set<Object> singletons;
+public class KeyApplication extends Application {
+    private final Set<Class<?>> classes;
+    private final Set<Object>   singletons;
 
-   public KeyApplication()
-   {
-      classes = new HashSet<Class<?>>(1);
-      classes.add(KeyService.class);
-      singletons = new HashSet<Object>(1);
-      singletons.add(new JsonpEntityProvider());
-   }
+    public KeyApplication() {
+        classes = new HashSet<Class<?>>(1);
+        classes.add(KeyService.class);
+        singletons = new HashSet<Object>(1);
+        singletons.add(new JsonpEntityProvider());
+    }
 
-   /**
-    * @see javax.ws.rs.core.Application#getClasses()
-    */
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      return classes;
-   }
-   
-   @Override
-   public Set<Object> getSingletons()
-   {
-      return singletons;
-   }
+    /** @see javax.ws.rs.core.Application#getClasses() */
+    @Override
+    public Set<Class<?>> getClasses() {
+        return classes;
+    }
+
+    @Override
+    public Set<Object> getSingletons() {
+        return singletons;
+    }
 }

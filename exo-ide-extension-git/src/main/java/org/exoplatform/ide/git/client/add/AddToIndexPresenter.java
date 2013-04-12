@@ -36,234 +36,176 @@ import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
-import org.exoplatform.ide.vfs.shared.Item;
 
 /**
  * Presenter for add changes to index view. The view must implement {@link AddToIndexPresenter.Display}. Add view to View.gwt.xml.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 29, 2011 4:35:16 PM anya $
- * 
  */
-public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
-{
-   public interface Display extends IsView
-   {
-      /**
-       * Get add button click handler.
-       * 
-       * @return {@link HasClickHandlers}
-       */
-      HasClickHandlers getAddButton();
+public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler {
+    public interface Display extends IsView {
+        /**
+         * Get add button click handler.
+         * 
+         * @return {@link HasClickHandlers}
+         */
+        HasClickHandlers getAddButton();
 
-      /**
-       * Get cancel button click handler.
-       * 
-       * @return {@link HasClickHandlers}
-       */
-      HasClickHandlers getCancelButton();
+        /**
+         * Get cancel button click handler.
+         * 
+         * @return {@link HasClickHandlers}
+         */
+        HasClickHandlers getCancelButton();
 
-      /**
-       * Get update field value.
-       * 
-       * @return {@link HasValue}
-       */
-      HasValue<Boolean> getUpdateValue();
+        /**
+         * Get update field value.
+         * 
+         * @return {@link HasValue}
+         */
+        HasValue<Boolean> getUpdateValue();
 
-      /**
-       * Get message label value.
-       * 
-       * @return {@link HasValue}
-       */
-      HasValue<String> getMessage();
-   }
+        /**
+         * Get message label value.
+         * 
+         * @return {@link HasValue}
+         */
+        HasValue<String> getMessage();
+    }
 
-   /**
-    * Presenter's display.
-    */
-   private Display display;
+    /** Presenter's display. */
+    private Display display;
 
-   public AddToIndexPresenter()
-   {
-      IDE.addHandler(AddFilesEvent.TYPE, this);
-   }
+    public AddToIndexPresenter() {
+        IDE.addHandler(AddFilesEvent.TYPE, this);
+    }
 
-   /**
-    * @param d display
-    */
-   public void bindDisplay(Display d)
-   {
-      this.display = d;
+    /**
+     * @param d display
+     */
+    public void bindDisplay(Display d) {
+        this.display = d;
 
-      display.getAddButton().addClickHandler(new ClickHandler()
-      {
+        display.getAddButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            doAdd();
-         }
-      });
+            @Override
+            public void onClick(ClickEvent event) {
+                doAdd();
+            }
+        });
 
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
+        display.getCancelButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
+    }
+
+    /** @see org.exoplatform.ide.git.client.add.AddFilesHandler#onAddFiles(org.exoplatform.ide.git.client.add.AddFilesEvent) */
+    @Override
+    public void onAddFiles(AddFilesEvent event) {
+        if (makeSelectionCheck()) {
+            Display d = GWT.create(Display.class);
+            IDE.getInstance().openView(d.asView());
+            bindDisplay(d);
+            String workDir = getSelectedProject().getPath();
+            display.getMessage().setValue(formMessage(workDir), true);
+        }
+    }
+
+    /**
+     * Form the message to display for adding to index, telling the user what is gonna to be added.
+     * 
+     * @return {@link String} message to display
+     */
+    private String formMessage(String workdir) {
+        if (selectedItem == null) {
+            return "";
+        }
+        String pattern = selectedItem.getPath().replaceFirst(workdir, "");
+        pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
+
+        // Root of the working tree:
+        if (pattern.length() == 0 || "/".equals(pattern)) {
+            return GitExtension.MESSAGES.addToIndexAllChanges();
+        }
+
+        if (selectedItem instanceof Folder) {
+            return GitExtension.MESSAGES.addToIndexFolder(pattern);
+        } else {
+            return GitExtension.MESSAGES.addToIndexFile(pattern);
+        }
+    }
+
+    /** Perform adding to index (sends request over WebSocket or HTTP). */
+    private void doAdd() {
+        ProjectModel project = getSelectedProject();
+
+        boolean update = display.getUpdateValue().getValue();
+        try {
+            GitClientService.getInstance().addWS(vfs.getId(), project, update, getFilePatterns(),
+                                                 new RequestCallback<String>() {
+                                                     @Override
+                                                     protected void onSuccess(String result) {
+                                                         IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.addSuccess()));
+                                                         IDE.fireEvent(new RefreshBrowserEvent());
+                                                     }
+
+                                                     @Override
+                                                     protected void onFailure(Throwable exception) {
+                                                         handleError(exception);
+                                                     }
+                                                 });
             IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-   }
+        } catch (WebSocketException e) {
+            doAddREST(project, update);
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.add.AddFilesHandler#onAddFiles(org.exoplatform.ide.git.client.add.AddFilesEvent)
-    */
-   @Override
-   public void onAddFiles(AddFilesEvent event)
-   {
-      if (makeSelectionCheck())
-      {
-         Display d = GWT.create(Display.class);
-         IDE.getInstance().openView(d.asView());
-         bindDisplay(d);
-//         String workDir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
-         String workDir = getSelectedProject().getPath();
-         display.getMessage().setValue(formMessage(workDir), true);
-      }
-   }
+    /** Perform adding to index (sends request over HTTP). */
+    private void doAddREST(ProjectModel project, boolean update) {
+        try {
+            GitClientService.getInstance().add(vfs.getId(), project, update, getFilePatterns(),
+                                               new AsyncRequestCallback<String>() {
+                                                   @Override
+                                                   protected void onSuccess(String result) {
+                                                       IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.addSuccess()));
+                                                       IDE.fireEvent(new RefreshBrowserEvent());
+                                                   }
 
-   /**
-    * Form the message to display for adding to index, telling the user what is gonna to be added.
-    * 
-    * @return {@link String} message to display
-    */
-   private String formMessage(String workdir)
-   {
-      if (selectedItem == null)
-      {
-         return "";
-      }
-      
-//      if (selectedItems == null || selectedItems.size() <= 0)
-//         return "";
-//      Item selectedItem = selectedItems.get(0);
-      
-      String pattern = selectedItem.getPath().replaceFirst(workdir, "");
-      pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
+                                                   @Override
+                                                   protected void onFailure(Throwable exception) {
+                                                       handleError(exception);
+                                                   }
+                                               });
+        } catch (RequestException e) {
+            handleError(e);
+        }
+        IDE.getInstance().closeView(display.asView().getId());
+    }
 
-      // Root of the working tree:
-      if (pattern.length() == 0 || "/".equals(pattern))
-      {
-         return GitExtension.MESSAGES.addToIndexAllChanges();
-      }
+    /**
+     * Returns pattern of the files to be added.
+     * 
+     * @return pattern of the files to be added
+     */
+    private String[] getFilePatterns() {
+        String projectPath = getSelectedProject().getPath();
+        String pattern = selectedItem.getPath().replaceFirst(projectPath, "");
 
-      if (selectedItem instanceof Folder)
-      {
-         return GitExtension.MESSAGES.addToIndexFolder(pattern);
-      }
-      else
-      {
-         return GitExtension.MESSAGES.addToIndexFile(pattern);
-      }
-   }
+        pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
+        return (pattern.length() == 0 || "/".equals(pattern)) ? new String[]{"."} : new String[]{pattern};
+    }
 
-   /**
-    * Perform adding to index (sends request over WebSocket or HTTP).
-    */
-   private void doAdd()
-   {
-//      if (selectedItems == null || selectedItems.size() <= 0)
-//      {
-//         return;
-//      }
-//
-//      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
-      ProjectModel project = getSelectedProject();
-
-      boolean update = display.getUpdateValue().getValue();
-      try
-      {
-         GitClientService.getInstance().addWS(vfs.getId(), project, update, getFilePatterns(),
-            new RequestCallback<String>()
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.addSuccess()));
-                  IDE.fireEvent(new RefreshBrowserEvent());
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception);
-               }
-            });
-         IDE.getInstance().closeView(display.asView().getId());
-      }
-      catch (WebSocketException e)
-      {
-         doAddREST(project, update);
-      }
-   }
-
-   /**
-    * Perform adding to index (sends request over HTTP).
-    */
-   private void doAddREST(ProjectModel project, boolean update)
-   {
-      try
-      {
-         GitClientService.getInstance().add(vfs.getId(), project, update, getFilePatterns(),
-            new AsyncRequestCallback<String>()
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.addSuccess()));
-                  IDE.fireEvent(new RefreshBrowserEvent());
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         handleError(e);
-      }
-      IDE.getInstance().closeView(display.asView().getId());
-   }
-
-   /**
-    * Returns pattern of the files to be added.
-    * 
-    * @return pattern of the files to be added
-    */
-   private String[] getFilePatterns()
-   {
-//      String projectPath = ((ItemContext)selectedItems.get(0)).getProject().getPath();
-//      String pattern = selectedItems.get(0).getPath().replaceFirst(projectPath, "");
-      
-      String projectPath = getSelectedProject().getPath();
-      String pattern = selectedItem.getPath().replaceFirst(projectPath, "");
-
-      pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
-      return (pattern.length() == 0 || "/".equals(pattern)) ? new String[]{"."} : new String[]{pattern};
-   }
-
-   private void handleError(Throwable t)
-   {
-      String errorMessage =
-         (t.getMessage() != null && t.getMessage().length() > 0) ? t.getMessage() : GitExtension.MESSAGES.addFailed();
-      IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-   }
+    private void handleError(Throwable t) {
+        String errorMessage =
+                              (t.getMessage() != null && t.getMessage().length() > 0) ? t.getMessage() : GitExtension.MESSAGES.addFailed();
+        IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+    }
 
 }

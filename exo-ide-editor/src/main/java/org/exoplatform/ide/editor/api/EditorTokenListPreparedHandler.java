@@ -23,14 +23,13 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version @version $Id: $
  */
 
-public interface EditorTokenListPreparedHandler extends EventHandler
-{
+public interface EditorTokenListPreparedHandler extends EventHandler {
 
-   void onEditorTokenListPrepared(EditorTokenListPreparedEvent event);
+    void onEditorTokenListPrepared(EditorTokenListPreparedEvent event);
 
 }

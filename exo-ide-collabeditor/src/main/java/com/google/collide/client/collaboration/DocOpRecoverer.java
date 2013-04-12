@@ -14,72 +14,71 @@
 
 package com.google.collide.client.collaboration;
 
+import elemental.util.Timer;
+
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.collaboration.cc.RevisionProvider;
-import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.dto.RecoverFromMissedDocOps;
 import com.google.collide.dto.RecoverFromMissedDocOpsResponse;
 import com.google.collide.dto.ServerToClientDocOp;
 import com.google.collide.dto.client.DtoClientImpls.ClientToServerDocOpImpl;
 import com.google.collide.dto.client.DtoClientImpls.RecoverFromMissedDocOpsImpl;
 import com.google.collide.dto.client.DtoClientImpls.ServerToClientDocOpImpl;
-import org.exoplatform.ide.shared.util.ErrorCallback;
-import elemental.util.Timer;
 
 import org.exoplatform.ide.client.framework.websocket.FrontendApi.ApiCallback;
 import org.exoplatform.ide.client.framework.websocket.FrontendApi.RequestResponseApi;
 import org.exoplatform.ide.dtogen.shared.ServerError.FailureReason;
 import org.exoplatform.ide.json.client.JsoArray;
 import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.shared.util.ErrorCallback;
 
 /**
  * A class that performs the XHR to recover missed doc ops and funnels the results into the right
  * components.
  */
-class DocOpRecoverer {    
-  private static final int RECOVERY_MAX_RETRIES = 5;
-  private static final int RECOVERY_RETRY_DELAY_MS = 5000;
+class DocOpRecoverer {
+    private static final int RECOVERY_MAX_RETRIES    = 5;
+    private static final int RECOVERY_RETRY_DELAY_MS = 5000;
 
-  private final String fileEditSessionKey;
-  private final RequestResponseApi<RecoverFromMissedDocOps, RecoverFromMissedDocOpsResponse>
-      recoverFrontendApi;
-  private final DocOpReceiver docOpReceiver;
-  private final LastClientToServerDocOpProvider lastSentDocOpProvider;
-  private final RevisionProvider revisionProvider;
-  
-  private boolean isRecovering;
-  
-  DocOpRecoverer(String fileEditSessionKey, RequestResponseApi<
-        RecoverFromMissedDocOps, RecoverFromMissedDocOpsResponse> recoverFrontendApi,
-      DocOpReceiver docOpReceiver, LastClientToServerDocOpProvider lastSentDocOpProvider,
-      RevisionProvider revisionProvider) {
-    this.fileEditSessionKey = fileEditSessionKey;
-    this.recoverFrontendApi = recoverFrontendApi;
-    this.docOpReceiver = docOpReceiver;
-    this.lastSentDocOpProvider = lastSentDocOpProvider;
-    this.revisionProvider = revisionProvider;
-  }
+    private final String fileEditSessionKey;
+    private final RequestResponseApi<RecoverFromMissedDocOps, RecoverFromMissedDocOpsResponse>
+                                                  recoverFrontendApi;
+    private final DocOpReceiver                   docOpReceiver;
+    private final LastClientToServerDocOpProvider lastSentDocOpProvider;
+    private final RevisionProvider                revisionProvider;
 
-  /**
-   * Attempts to recover after missed doc ops.
-   */
-  void recover(ErrorCallback errorCallback) {
-    recover(errorCallback, 0);
-  }
-  
-  private void recover(final ErrorCallback errorCallback, final int retryCount) {
-    
-    if (isRecovering) {
-      return;
+    private boolean isRecovering;
+
+    DocOpRecoverer(String fileEditSessionKey, RequestResponseApi<
+            RecoverFromMissedDocOps, RecoverFromMissedDocOpsResponse> recoverFrontendApi,
+                   DocOpReceiver docOpReceiver, LastClientToServerDocOpProvider lastSentDocOpProvider,
+                   RevisionProvider revisionProvider) {
+        this.fileEditSessionKey = fileEditSessionKey;
+        this.recoverFrontendApi = recoverFrontendApi;
+        this.docOpReceiver = docOpReceiver;
+        this.lastSentDocOpProvider = lastSentDocOpProvider;
+        this.revisionProvider = revisionProvider;
     }
-    
-    isRecovering = true;
-    
-    Log.info(getClass(), "Recovering from disconnection");
-    
-    // 1) Gather potentially unacked doc ops
-    final ClientToServerDocOpImpl lastSentMsg =
-        lastSentDocOpProvider.getLastClientToServerDocOpMsg();
+
+    /** Attempts to recover after missed doc ops. */
+    void recover(ErrorCallback errorCallback) {
+        recover(errorCallback, 0);
+    }
+
+    private void recover(final ErrorCallback errorCallback, final int retryCount) {
+
+        if (isRecovering) {
+            return;
+        }
+
+        isRecovering = true;
+
+        Log.info(getClass(), "Recovering from disconnection");
+
+        // 1) Gather potentially unacked doc ops
+        final ClientToServerDocOpImpl lastSentMsg =
+                lastSentDocOpProvider.getLastClientToServerDocOpMsg();
     
     /*
      * 2) Pause processing of incoming doc ops and queue them instead. This allows us, in the
@@ -87,9 +86,9 @@ class DocOpRecoverer {
      * contained some of the queued doc ops depending on the order the XHR and doc ops being
      * processed by the server.)
      */
-    docOpReceiver.pause();
-    
-    // 3) Perform recovery XHR
+        docOpReceiver.pause();
+
+        // 3) Perform recovery XHR
     /*
      * If we had unacked doc ops, we must use their intended version since that
      * is the version of the document to which the unacked doc ops apply
@@ -102,43 +101,43 @@ class DocOpRecoverer {
      * ops from the document history, we will skip those that have already been
      * applied.
      */
-    int revision = lastSentMsg != null ? lastSentMsg.getCcRevision() : revisionProvider.revision();
-    
-    RecoverFromMissedDocOpsImpl recoveryDto =
-        RecoverFromMissedDocOpsImpl.make()
-            .setClientId(BootstrapSession.getBootstrapSession().getActiveClientId())
-            .setCurrentCcRevision(revision)
-            .setFileEditSessionKey(fileEditSessionKey);
-    
-    if (lastSentMsg != null) {
-      recoveryDto.setDocOps2((JsoArray<String>) lastSentMsg.getDocOps2());
-    }
-    
-    recoverFrontendApi.send(recoveryDto,
-        new ApiCallback<RecoverFromMissedDocOpsResponse>() {
-          @Override
-          public void onMessageReceived(RecoverFromMissedDocOpsResponse message) {
-            
-            // 4) Process the doc ops while I was disconnected (which will include our ack)
-            JsonArray<ServerToClientDocOp> recoveredServerDocOps = message.getDocOps();
-            for (int i = 0; i < recoveredServerDocOps.size(); i++) {
-              ServerToClientDocOp serverDocOp = recoveredServerDocOps.get(i);
-              if (serverDocOp.getAppliedCcRevision() > revisionProvider.revision()) {
-                docOpReceiver.simulateOrderedDocOpReceived((ServerToClientDocOpImpl) serverDocOp,
-                    true);
-              }
-            }
-            
-            // 5) Process queued doc ops while I was recovering
-            JsonArray<ServerToClientDocOp> queuedServerDocOps =
-                docOpReceiver.getOrderedQueuedServerToClientDocOps();
-            for (int i = 0; i < queuedServerDocOps.size(); i++) {
-              ServerToClientDocOp serverDocOp = queuedServerDocOps.get(i);
-              if (serverDocOp.getAppliedCcRevision() > revisionProvider.revision()) {
-                docOpReceiver.simulateOrderedDocOpReceived((ServerToClientDocOpImpl) serverDocOp,
-                    true);
-              }
-            }
+        int revision = lastSentMsg != null ? lastSentMsg.getCcRevision() : revisionProvider.revision();
+
+        RecoverFromMissedDocOpsImpl recoveryDto =
+                RecoverFromMissedDocOpsImpl.make()
+                                           .setClientId(BootstrapSession.getBootstrapSession().getActiveClientId())
+                                           .setCurrentCcRevision(revision)
+                                           .setFileEditSessionKey(fileEditSessionKey);
+
+        if (lastSentMsg != null) {
+            recoveryDto.setDocOps2((JsoArray<String>)lastSentMsg.getDocOps2());
+        }
+
+        recoverFrontendApi.send(recoveryDto,
+                                new ApiCallback<RecoverFromMissedDocOpsResponse>() {
+                                    @Override
+                                    public void onMessageReceived(RecoverFromMissedDocOpsResponse message) {
+
+                                        // 4) Process the doc ops while I was disconnected (which will include our ack)
+                                        JsonArray<ServerToClientDocOp> recoveredServerDocOps = message.getDocOps();
+                                        for (int i = 0; i < recoveredServerDocOps.size(); i++) {
+                                            ServerToClientDocOp serverDocOp = recoveredServerDocOps.get(i);
+                                            if (serverDocOp.getAppliedCcRevision() > revisionProvider.revision()) {
+                                                docOpReceiver.simulateOrderedDocOpReceived((ServerToClientDocOpImpl)serverDocOp,
+                                                                                           true);
+                                            }
+                                        }
+
+                                        // 5) Process queued doc ops while I was recovering
+                                        JsonArray<ServerToClientDocOp> queuedServerDocOps =
+                                                docOpReceiver.getOrderedQueuedServerToClientDocOps();
+                                        for (int i = 0; i < queuedServerDocOps.size(); i++) {
+                                            ServerToClientDocOp serverDocOp = queuedServerDocOps.get(i);
+                                            if (serverDocOp.getAppliedCcRevision() > revisionProvider.revision()) {
+                                                docOpReceiver.simulateOrderedDocOpReceived((ServerToClientDocOpImpl)serverDocOp,
+                                                                                           true);
+                                            }
+                                        }
 
             /*
              * 6) Back to normal! At this point, any unacked doc ops will have
@@ -147,34 +146,34 @@ class DocOpRecoverer {
              * receiver now since our document is at the version that they will
              * be targetting.
              */
-            lastSentDocOpProvider.clearLastClientToServerDocOpMsg(lastSentMsg);
-            docOpReceiver.resume(revisionProvider.revision() + 1);
-            
-            Log.info(getClass(), "Recovered successfully");
-            
-            handleRecoverFinished();
-          }
+                                        lastSentDocOpProvider.clearLastClientToServerDocOpMsg(lastSentMsg);
+                                        docOpReceiver.resume(revisionProvider.revision() + 1);
 
-          @Override
-          public void onFail(FailureReason reason) {
-            if (retryCount < RECOVERY_MAX_RETRIES) {
-              new Timer() {
-                @Override
-                public void run() {
-                  recover(errorCallback, retryCount + 1);
-                }
-              }.schedule(RECOVERY_RETRY_DELAY_MS);
-            } else {
-              Log.info(getClass(), "Could not recover");
-              errorCallback.onError();
-              
-              handleRecoverFinished();
-            }
-          }
-        });
-  }
+                                        Log.info(getClass(), "Recovered successfully");
 
-  private void handleRecoverFinished() {
-    isRecovering = false;
-  }
+                                        handleRecoverFinished();
+                                    }
+
+                                    @Override
+                                    public void onFail(FailureReason reason) {
+                                        if (retryCount < RECOVERY_MAX_RETRIES) {
+                                            new Timer() {
+                                                @Override
+                                                public void run() {
+                                                    recover(errorCallback, retryCount + 1);
+                                                }
+                                            }.schedule(RECOVERY_RETRY_DELAY_MS);
+                                        } else {
+                                            Log.info(getClass(), "Could not recover");
+                                            errorCallback.onError();
+
+                                            handleRecoverFinished();
+                                        }
+                                    }
+                                });
+    }
+
+    private void handleRecoverFinished() {
+        isRecovering = false;
+    }
 }

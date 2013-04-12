@@ -19,41 +19,37 @@
 package org.exoplatform.gwtframework.commons.rest;
 
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-
 import com.google.gwt.http.client.Response;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+
 /**
  * Created by The eXo Platform SAS.
+ *
+ * @param <T>
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
- * @param <T>
-*/
-public class AutoBeanUnmarshaller<T> implements Unmarshallable<T>
-{
-   private AutoBean<T> bean;
+ */
+public class AutoBeanUnmarshaller<T> implements Unmarshallable<T> {
+    private AutoBean<T> bean;
 
-   public AutoBeanUnmarshaller(AutoBean<T> autoBean)
-   {
-      this.bean = autoBean;
-   }
+    public AutoBeanUnmarshaller(AutoBean<T> autoBean) {
+        this.bean = autoBean;
+    }
 
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      if (response.getStatusCode() != 204 && response.getText() != null)
-      {
-         Splittable data = StringQuoter.split(response.getText());
-         AutoBeanCodex.decodeInto(data, bean);
-      }
-   }
+    public void unmarshal(Response response) throws UnmarshallerException {
+        if (response.getStatusCode() != 204 && response.getText() != null) {
+            Splittable data = StringQuoter.split(response.getText());
+            AutoBeanCodex.decodeInto(data, bean);
+        }
+    }
 
-   public T getPayload()
-   {
-      return bean.as();
-   }
+    public T getPayload() {
+        return bean.as();
+    }
 
 }

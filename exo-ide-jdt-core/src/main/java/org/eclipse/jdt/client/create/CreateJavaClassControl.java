@@ -25,20 +25,17 @@ import org.exoplatform.ide.client.framework.control.GroupNames;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jan 10, 2012 2:05:22 PM anya $
- * 
  */
-public class CreateJavaClassControl extends JavaControl
-{
-   
-   public CreateJavaClassControl()
-   {
-      super("File/New/New Java Class");
-      setTitle("Java Class");
-      setPrompt("Create Java Class");
-      setNormalImage(JdtClientBundle.INSTANCE.newClassWizz());
-      setDisabledImage(JdtClientBundle.INSTANCE.newClassWizzDisabled());
-      setEvent(new CreateJavaClassEvent());
-      setGroupName(GroupNames.NEW_SCRIPT);
-   }
-   
+public class CreateJavaClassControl extends JavaControl {
+
+    public CreateJavaClassControl() {
+        super("File/New/New Java Class");
+        setTitle("Java Class");
+        setPrompt("Create Java Class");
+        setNormalImage(JdtClientBundle.INSTANCE.newClassWizz());
+        setDisabledImage(JdtClientBundle.INSTANCE.newClassWizzDisabled());
+        setEvent(new CreateJavaClassEvent());
+        setGroupName(GroupNames.NEW_SCRIPT);
+    }
+
 }

@@ -17,18 +17,15 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * DTO for updating user-specific workspace metadata.
- * 
- */
+/** DTO for updating user-specific workspace metadata. */
 @RoutingType(type = RoutingTypes.UPDATEUSERWORKSPACEMETADATA)
 public interface UpdateUserWorkspaceMetadata extends ClientToServerDto {
 
-  String getWorkspaceId();
+    String getWorkspaceId();
 
-  /**
-   * Returns a {@link GetWorkspaceMetaDataResponse} object populated only with fields
-   * that should be updated. Excluded fields will not be updated.
-   */
-  GetWorkspaceMetaDataResponse getUserWorkspaceMetadata();
+    /**
+     * Returns a {@link GetWorkspaceMetaDataResponse} object populated only with fields
+     * that should be updated. Excluded fields will not be updated.
+     */
+    GetWorkspaceMetaDataResponse getUserWorkspaceMetadata();
 }

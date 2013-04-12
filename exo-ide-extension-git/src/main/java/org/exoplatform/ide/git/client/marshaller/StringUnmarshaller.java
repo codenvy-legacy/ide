@@ -27,30 +27,23 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 24, 2012 12:22:34 PM anya $
- * 
  */
-public class StringUnmarshaller implements Unmarshallable<StringBuilder>
-{
+public class StringUnmarshaller implements Unmarshallable<StringBuilder> {
 
-   protected StringBuilder builder;
+    protected StringBuilder builder;
 
-   public StringUnmarshaller(StringBuilder builder)
-   {
-      this.builder = builder;
-   }
+    public StringUnmarshaller(StringBuilder builder) {
+        this.builder = builder;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response)
-   {
-      builder.append(response.getText());
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) {
+        builder.append(response.getText());
+    }
 
-   @Override
-   public StringBuilder getPayload()
-   {
-      return builder;
-   }
+    @Override
+    public StringBuilder getPayload() {
+        return builder;
+    }
 }

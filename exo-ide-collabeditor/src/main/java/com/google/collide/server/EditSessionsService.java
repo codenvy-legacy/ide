@@ -19,15 +19,7 @@
 package com.google.collide.server;
 
 import com.google.collide.dto.server.DtoServerImpls;
-import com.google.collide.dto.server.DtoServerImpls.ClientToServerDocOpImpl;
-import com.google.collide.dto.server.DtoServerImpls.CloseEditorImpl;
-import com.google.collide.dto.server.DtoServerImpls.GetEditSessionCollaboratorsImpl;
-import com.google.collide.dto.server.DtoServerImpls.GetFileContentsImpl;
-import com.google.collide.dto.server.DtoServerImpls.GetFileContentsResponseImpl;
-import com.google.collide.dto.server.DtoServerImpls.GetOpenedFilesInWorkspaceResponseImpl;
-import com.google.collide.dto.server.DtoServerImpls.RecoverFromMissedDocOpsImpl;
-import com.google.collide.dto.server.DtoServerImpls.RecoverFromMissedDocOpsResponseImpl;
-import com.google.collide.dto.server.DtoServerImpls.ServerToClientDocOpsImpl;
+import com.google.collide.dto.server.DtoServerImpls.*;
 import com.google.collide.server.documents.EditSessions;
 
 import javax.inject.Inject;
@@ -38,64 +30,57 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @Path("ide/collab_editor/documents")
-public class EditSessionsService
-{
-   @Inject
-   private EditSessions editSessions;
+public class EditSessionsService {
+    @Inject
+    private EditSessions editSessions;
 
-   @POST
-   @Path("open")
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
-   public String openSession(String message)
-   {
-      return ((GetFileContentsResponseImpl)editSessions.openSession(
-         GetFileContentsImpl.fromJsonString(message))).toJson();
-   }
+    @POST
+    @Path("open")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String openSession(String message) {
+        return ((GetFileContentsResponseImpl)editSessions.openSession(
+                GetFileContentsImpl.fromJsonString(message))).toJson();
+    }
 
-   @POST
-   @Path("all")
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
-   public String getAllOpenedFiles(String message)
-   {
-      return ((GetOpenedFilesInWorkspaceResponseImpl)editSessions.getOpenedFiles()).toJson();
-   }
+    @POST
+    @Path("all")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getAllOpenedFiles(String message) {
+        return ((GetOpenedFilesInWorkspaceResponseImpl)editSessions.getOpenedFiles()).toJson();
+    }
 
-   @POST
-   @Path("close")
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void closeSession(String message)
-   {
-      editSessions.closeSession(CloseEditorImpl.fromJsonString(message));
-   }
+    @POST
+    @Path("close")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void closeSession(String message) {
+        editSessions.closeSession(CloseEditorImpl.fromJsonString(message));
+    }
 
-   @POST
-   @Path("recoverMissedDocop")
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
-   public String recoverDocOps(String message)
-   {
-      RecoverFromMissedDocOpsImpl request = RecoverFromMissedDocOpsImpl.fromJsonString(message);
-      return ((RecoverFromMissedDocOpsResponseImpl)editSessions.recoverDocOps(request)).toJson();
-   }
+    @POST
+    @Path("recoverMissedDocop")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String recoverDocOps(String message) {
+        RecoverFromMissedDocOpsImpl request = RecoverFromMissedDocOpsImpl.fromJsonString(message);
+        return ((RecoverFromMissedDocOpsResponseImpl)editSessions.recoverDocOps(request)).toJson();
+    }
 
-   @POST
-   @Path("mutate")
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
-   public String mutate(String message)
-   {
-      return ((ServerToClientDocOpsImpl)editSessions.mutate(ClientToServerDocOpImpl.fromJsonString(message))).toJson();
-   }
+    @POST
+    @Path("mutate")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String mutate(String message) {
+        return ((ServerToClientDocOpsImpl)editSessions.mutate(ClientToServerDocOpImpl.fromJsonString(message))).toJson();
+    }
 
-   @POST
-   @Path("collaborators")
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
-   public String getEditSessionCollaborators(String message)
-   {
-      return ((DtoServerImpls.GetEditSessionCollaboratorsResponseImpl)editSessions.getEditSessionCollaborators(
-         GetEditSessionCollaboratorsImpl.fromJsonString(message))).toJson();
-   }
+    @POST
+    @Path("collaborators")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getEditSessionCollaborators(String message) {
+        return ((DtoServerImpls.GetEditSessionCollaboratorsResponseImpl)editSessions.getEditSessionCollaborators(
+                GetEditSessionCollaboratorsImpl.fromJsonString(message))).toJson();
+    }
 }

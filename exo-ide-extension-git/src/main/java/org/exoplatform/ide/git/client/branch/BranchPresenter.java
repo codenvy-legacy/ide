@@ -41,7 +41,6 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.marshaller.BranchListUnmarshaller;
 import org.exoplatform.ide.git.shared.Branch;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,357 +50,309 @@ import java.util.List;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 8, 2011 12:02:49 PM anya $
- * 
  */
-public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
-{
-   interface Display extends IsView
-   {
-      /**
-       * Click handler for create branch button.
-       * 
-       * @return {@link HasClickHandlers}
-       */
-      HasClickHandlers getCreateBranchButton();
+public class BranchPresenter extends GitPresenter implements ShowBranchesHandler {
+    interface Display extends IsView {
+        /**
+         * Click handler for create branch button.
+         * 
+         * @return {@link HasClickHandlers}
+         */
+        HasClickHandlers getCreateBranchButton();
 
-      /**
-       * Click handler for checkout branch button.
-       * 
-       * @return {@link HasClickHandlers}
-       */
-      HasClickHandlers getCheckoutBranchButton();
+        /**
+         * Click handler for checkout branch button.
+         * 
+         * @return {@link HasClickHandlers}
+         */
+        HasClickHandlers getCheckoutBranchButton();
 
-      /**
-       * Click handler for delete branch button.
-       * 
-       * @return {@link HasClickHandlers}
-       */
-      HasClickHandlers getDeleteBranchButton();
+        /**
+         * Click handler for delete branch button.
+         * 
+         * @return {@link HasClickHandlers}
+         */
+        HasClickHandlers getDeleteBranchButton();
 
-      /**
-       * Click handler for close button.
-       * 
-       * @return {@link HasClickHandlers}
-       */
-      HasClickHandlers getCloseButton();
+        /**
+         * Click handler for close button.
+         * 
+         * @return {@link HasClickHandlers}
+         */
+        HasClickHandlers getCloseButton();
 
-      /**
-       * Returns the grid, responsible for displaying branches.
-       * 
-       * @return {@link ListGridItem}
-       */
-      ListGridItem<Branch> getBranchesGrid();
+        /**
+         * Returns the grid, responsible for displaying branches.
+         * 
+         * @return {@link ListGridItem}
+         */
+        ListGridItem<Branch> getBranchesGrid();
 
-      /**
-       * Get selected branch in grid.
-       * 
-       * @return {@link Branch} selected branch
-       */
-      Branch getSelectedBranch();
+        /**
+         * Get selected branch in grid.
+         * 
+         * @return {@link Branch} selected branch
+         */
+        Branch getSelectedBranch();
 
-      /**
-       * Change the enable state of the delete button.
-       * 
-       * @param enabled is enabled
-       */
-      void enableDeleteButton(boolean enabled);
+        /**
+         * Change the enable state of the delete button.
+         * 
+         * @param enabled is enabled
+         */
+        void enableDeleteButton(boolean enabled);
 
-      /**
-       * Change the enable state of the checkout button.
-       * 
-       * @param enabled is enabled
-       */
-      void enableCheckoutButton(boolean enabled);
-   }
+        /**
+         * Change the enable state of the checkout button.
+         * 
+         * @param enabled is enabled
+         */
+        void enableCheckoutButton(boolean enabled);
+    }
 
-   /**
-    * Presenter's display.
-    */
-   private Display display;
+    /** Presenter's display. */
+    private Display display;
 
-   /**
-    *
-    */
-   public BranchPresenter()
-   {
-      IDE.addHandler(ShowBranchesEvent.TYPE, this);
-   }
+    /**
+     *
+     */
+    public BranchPresenter() {
+        IDE.addHandler(ShowBranchesEvent.TYPE, this);
+    }
 
-   /**
-    * Bind display with presenter.
-    * 
-    * @param d display
-    */
-   public void bindDisplay(Display d)
-   {
-      this.display = d;
+    /**
+     * Bind display with presenter.
+     * 
+     * @param d display
+     */
+    public void bindDisplay(Display d) {
+        this.display = d;
 
-      display.getBranchesGrid().addSelectionHandler(new SelectionHandler<Branch>()
-      {
-
-         @Override
-         public void onSelection(SelectionEvent<Branch> event)
-         {
-            boolean enabled = (event.getSelectedItem() != null && !event.getSelectedItem().isActive());
-            display.enableDeleteButton(enabled);
-            display.enableCheckoutButton(enabled);
-         }
-      });
-
-      display.getCheckoutBranchButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            doCheckoutBranch();
-         }
-      });
-
-      display.getCreateBranchButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            askNewBranchName();
-         }
-      });
-
-      display.getDeleteBranchButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            askDeleteBranch();
-         }
-      });
-
-      display.getCloseButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-
-   }
-
-   /**
-    * Get the list of branches.
-    * 
-    * @param workDir Git repository work tree location
-    * @param remote get remote branches if <code>true</code>
-    */
-   public void getBranches(String projectId)
-   {
-      try
-      {
-         GitClientService.getInstance().branchList(vfs.getId(), projectId, false,
-            new AsyncRequestCallback<List<Branch>>(new BranchListUnmarshaller(new ArrayList<Branch>()))
-            {
-
-               @Override
-               protected void onSuccess(List<Branch> result)
-               {
-                  display.getBranchesGrid().setValue(result);
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  String errorMessage =
-                     (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES
-                        .branchesListFailed();
-                  IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.branchesListFailed();
-         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.git.client.branch.ShowBranchesHandler#onShowBranches(org.exoplatform.ide.git.client.branch.ShowBranchesEvent)
-    */
-   @Override
-   public void onShowBranches(ShowBranchesEvent event)
-   {
-      if (makeSelectionCheck())
-      {
-         Display d = GWT.create(Display.class);
-         IDE.getInstance().openView(d.asView());
-         bindDisplay(d);
-
-         display.enableCheckoutButton(false);
-         display.enableDeleteButton(false);
-         //String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-         //getBranches(projectId);
-         getBranches(getSelectedProject().getId());
-      }
-   }
-
-   private void askNewBranchName()
-   {
-      Dialogs.getInstance().askForValue(GitExtension.MESSAGES.branchCreateNew(), GitExtension.MESSAGES.branchTypeNew(),
-         "", new StringValueReceivedHandler()
-         {
+        display.getBranchesGrid().addSelectionHandler(new SelectionHandler<Branch>() {
 
             @Override
-            public void stringValueReceived(String value)
-            {
-               if (value != null)
-               {
-                  doCreateBranch(value);
-               }
+            public void onSelection(SelectionEvent<Branch> event) {
+                boolean enabled = (event.getSelectedItem() != null && !event.getSelectedItem().isActive());
+                display.enableDeleteButton(enabled);
+                display.enableCheckoutButton(enabled);
             }
-         });
-   }
+        });
 
-   /**
-    * Create branch with pointed name.
-    * 
-    * @param name new branch's name
-    */
-   private void doCreateBranch(String name)
-   {
-      //final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      final String projectId = getSelectedProject().getId();
-
-      try
-      {
-         GitClientService.getInstance().branchCreate(vfs.getId(), projectId, name, null,
-            new AsyncRequestCallback<Branch>()
-            {
-
-               @Override
-               protected void onSuccess(Branch result)
-               {
-                  getBranches(projectId);
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  String errorMessage =
-                     (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES
-                        .branchCreateFailed();
-                  IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.branchCreateFailed();
-         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-      }
-   }
-
-   /**
-    * Checkout the branch.
-    */
-   private void doCheckoutBranch()
-   {
-      String name = display.getSelectedBranch().getDisplayName();
-      //final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      final String projectId = getSelectedProject().getId();
-      if (name == null)
-      {
-         return;
-      }
-
-      try
-      {
-         GitClientService.getInstance().branchCheckout(vfs.getId(), projectId, name, null, false,
-            new AsyncRequestCallback<String>()
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  getBranches(projectId);
-                  IDE.fireEvent(new RefreshBrowserEvent());
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  String errorMessage =
-                     (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES
-                        .branchCheckoutFailed();
-                  IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.branchCheckoutFailed();
-         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-      }
-
-   }
-
-   /**
-    * Show ask dialog for deleting branch, if user confirms - delete branch.
-    */
-   private void askDeleteBranch()
-   {
-      final String name = display.getSelectedBranch().getName();
-
-      Dialogs.getInstance().ask(GitExtension.MESSAGES.branchDelete(), GitExtension.MESSAGES.branchDeleteAsk(name),
-         new BooleanValueReceivedHandler()
-         {
+        display.getCheckoutBranchButton().addClickHandler(new ClickHandler() {
 
             @Override
-            public void booleanValueReceived(Boolean value)
-            {
-               if (value != null && value)
-               {
-                  doDeleteBranch(name);
-               }
+            public void onClick(ClickEvent event) {
+                doCheckoutBranch();
             }
-         });
-   }
+        });
 
-   /**
-    * Delete branch with pointed name.
-    * 
-    * @param name name of branch to delete
-    */
-   private void doDeleteBranch(String name)
-   {
-//      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      final String projectId = getSelectedProject().getId();
-      try
-      {
-         GitClientService.getInstance().branchDelete(vfs.getId(), projectId, name, true,
-            new AsyncRequestCallback<String>()
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  getBranches(projectId);
-               }
+        display.getCreateBranchButton().addClickHandler(new ClickHandler() {
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  String errorMessage =
-                     (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES
-                        .branchDeleteFailed();
-                  IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.branchDeleteFailed();
-         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-      }
-   }
+            @Override
+            public void onClick(ClickEvent event) {
+                askNewBranchName();
+            }
+        });
+
+        display.getDeleteBranchButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                askDeleteBranch();
+            }
+        });
+
+        display.getCloseButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
+
+    }
+
+    /**
+     * Get the list of branches.
+     * 
+     * @param workDir Git repository work tree location
+     * @param remote get remote branches if <code>true</code>
+     */
+    public void getBranches(String projectId) {
+        try {
+            GitClientService.getInstance()
+                            .branchList(vfs.getId(), projectId, false,
+                                        new AsyncRequestCallback<List<Branch>>(
+                                                                               new BranchListUnmarshaller(new ArrayList<Branch>())) {
+
+                                            @Override
+                                            protected void onSuccess(List<Branch> result) {
+                                                display.getBranchesGrid().setValue(result);
+                                            }
+
+                                            @Override
+                                            protected void onFailure(Throwable exception) {
+                                                String errorMessage =
+                                                                      (exception.getMessage() != null) ? exception.getMessage()
+                                                                          : GitExtension.MESSAGES
+                                                                                                 .branchesListFailed();
+                                                IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+                                            }
+                                        });
+        } catch (RequestException e) {
+            String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.branchesListFailed();
+            IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+        }
+    }
+
+    /**
+     * @see org.exoplatform.ide.git.client.branch.ShowBranchesHandler#onShowBranches(org.exoplatform.ide.git.client.branch
+     *      .ShowBranchesEvent)
+     */
+    @Override
+    public void onShowBranches(ShowBranchesEvent event) {
+        if (makeSelectionCheck()) {
+            Display d = GWT.create(Display.class);
+            IDE.getInstance().openView(d.asView());
+            bindDisplay(d);
+
+            display.enableCheckoutButton(false);
+            display.enableDeleteButton(false);
+            // String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+            // getBranches(projectId);
+            getBranches(getSelectedProject().getId());
+        }
+    }
+
+    private void askNewBranchName() {
+        Dialogs.getInstance().askForValue(GitExtension.MESSAGES.branchCreateNew(), GitExtension.MESSAGES.branchTypeNew(),
+                                          "", new StringValueReceivedHandler() {
+
+                                              @Override
+                                              public void stringValueReceived(String value) {
+                                                  if (value != null) {
+                                                      doCreateBranch(value);
+                                                  }
+                                              }
+                                          });
+    }
+
+    /**
+     * Create branch with pointed name.
+     * 
+     * @param name new branch's name
+     */
+    private void doCreateBranch(String name) {
+        // final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+        final String projectId = getSelectedProject().getId();
+
+        try {
+            GitClientService.getInstance().branchCreate(vfs.getId(), projectId, name, null,
+                                                        new AsyncRequestCallback<Branch>() {
+
+                                                            @Override
+                                                            protected void onSuccess(Branch result) {
+                                                                getBranches(projectId);
+                                                            }
+
+                                                            @Override
+                                                            protected void onFailure(Throwable exception) {
+                                                                String errorMessage =
+                                                                                      (exception.getMessage() != null)
+                                                                                          ? exception.getMessage()
+                                                                                          : GitExtension.MESSAGES
+
+
+                                                                                                                 .branchCreateFailed();
+                                                                IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+                                                            }
+                                                        });
+        } catch (RequestException e) {
+            String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.branchCreateFailed();
+            IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+        }
+    }
+
+    /** Checkout the branch. */
+    private void doCheckoutBranch() {
+        String name = display.getSelectedBranch().getDisplayName();
+        // final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+        final String projectId = getSelectedProject().getId();
+        if (name == null) {
+            return;
+        }
+
+        try {
+            GitClientService.getInstance().branchCheckout(vfs.getId(), projectId, name, null, false,
+                                                          new AsyncRequestCallback<String>() {
+                                                              @Override
+                                                              protected void onSuccess(String result) {
+                                                                  getBranches(projectId);
+                                                                  IDE.fireEvent(new RefreshBrowserEvent());
+                                                              }
+
+                                                              @Override
+                                                              protected void onFailure(Throwable exception) {
+                                                                  String errorMessage =
+                                                                                        (exception.getMessage() != null)
+                                                                                            ? exception.getMessage()
+                                                                                            : GitExtension.MESSAGES
+                                                                                                                   .branchCheckoutFailed();
+                                                                  IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+                                                              }
+                                                          });
+        } catch (RequestException e) {
+            String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.branchCheckoutFailed();
+            IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+        }
+
+    }
+
+    /** Show ask dialog for deleting branch, if user confirms - delete branch. */
+    private void askDeleteBranch() {
+        final String name = display.getSelectedBranch().getName();
+
+        Dialogs.getInstance().ask(GitExtension.MESSAGES.branchDelete(), GitExtension.MESSAGES.branchDeleteAsk(name),
+                                  new BooleanValueReceivedHandler() {
+
+                                      @Override
+                                      public void booleanValueReceived(Boolean value) {
+                                          if (value != null && value) {
+                                              doDeleteBranch(name);
+                                          }
+                                      }
+                                  });
+    }
+
+    /**
+     * Delete branch with pointed name.
+     * 
+     * @param name name of branch to delete
+     */
+    private void doDeleteBranch(String name) {
+        // final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+        final String projectId = getSelectedProject().getId();
+        try {
+            GitClientService.getInstance().branchDelete(vfs.getId(), projectId, name, true,
+                                                        new AsyncRequestCallback<String>() {
+                                                            @Override
+                                                            protected void onSuccess(String result) {
+                                                                getBranches(projectId);
+                                                            }
+
+                                                            @Override
+                                                            protected void onFailure(Throwable exception) {
+                                                                String errorMessage =
+                                                                                      (exception.getMessage() != null)
+                                                                                          ? exception.getMessage()
+                                                                                          : GitExtension.MESSAGES
+                                                                                                                 .branchDeleteFailed();
+                                                                IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+                                                            }
+                                                        });
+        } catch (RequestException e) {
+            String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.branchDeleteFailed();
+            IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+        }
+    }
 }

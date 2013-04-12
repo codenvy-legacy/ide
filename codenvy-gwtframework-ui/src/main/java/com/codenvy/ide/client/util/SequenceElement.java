@@ -19,28 +19,21 @@ package com.codenvy.ide.client.util;
 
 /**
  * Wrapper for an element in a sequence
- * <p>
+ * <p/>
  * Implementations must enforce the contract that
  * element.getNext().getPrev() == element.getPrev().getNext() == element
  *
  * @param <T>
  * @author danilatos@google.com (Daniel Danilatos)
  */
-public interface SequenceElement<T>
-{
+public interface SequenceElement<T> {
 
-   /**
-    * @return Next element in the sequence (wraps)
-    */
-   SequenceElement<T> getNext();
+    /** @return Next element in the sequence (wraps) */
+    SequenceElement<T> getNext();
 
-   /**
-    * @return Previous element in the sequence (wraps)
-    */
-   SequenceElement<T> getPrev();
+    /** @return Previous element in the sequence (wraps) */
+    SequenceElement<T> getPrev();
 
-   /**
-    * @return Boxed value
-    */
-   T value();
+    /** @return Boxed value */
+    T value();
 }

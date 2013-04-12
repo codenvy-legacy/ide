@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link EditorSelectAllEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  May 3, 2012 3:34:43 PM anya $
- *
  */
-public interface EditorSelectAllHandler extends EventHandler
-{
-   /**
-    * Perform actions to select all text in editor.
-    * 
-    * @param event
-    */
-   void onEditorSelectAll(EditorSelectAllEvent event);
+public interface EditorSelectAllHandler extends EventHandler {
+    /**
+     * Perform actions to select all text in editor.
+     *
+     * @param event
+     */
+    void onEditorSelectAll(EditorSelectAllEvent event);
 }

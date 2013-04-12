@@ -37,86 +37,67 @@ import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 14, 2012 11:44:01 AM anya $
- * 
  */
-public class AccountsHandler implements LogoutHandler
-{
+public class AccountsHandler implements LogoutHandler {
 
-   public AccountsHandler()
-   {
-      IDE.addHandler(LogoutEvent.TYPE, this);
-      isLogged();
-   }
+    public AccountsHandler() {
+        IDE.addHandler(LogoutEvent.TYPE, this);
+        isLogged();
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.login.LogoutHandler#onLogout(org.exoplatform.ide.extension.googleappengine.client.login.LogoutEvent)
-    */
-   @Override
-   public void onLogout(LogoutEvent event)
-   {
-      try
-      {
-         GoogleAppEngineClientService.getInstance().logout(new AsyncRequestCallback<Object>()
-         {
+    /** @see org.exoplatform.ide.extension.googleappengine.client.login.LogoutHandler#onLogout(org.exoplatform.ide.extension
+     * .googleappengine.client.login.LogoutEvent) */
+    @Override
+    public void onLogout(LogoutEvent event) {
+        try {
+            GoogleAppEngineClientService.getInstance().logout(new AsyncRequestCallback<Object>() {
 
-            @Override
-            protected void onSuccess(Object result)
-            {
-               IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.logoutSuccess(), Type.INFO));
-               IDE.fireEvent(new SetLoggedUserStateEvent(false));
-            }
+                @Override
+                protected void onSuccess(Object result) {
+                    IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.logoutSuccess(), Type.INFO));
+                    IDE.fireEvent(new SetLoggedUserStateEvent(false));
+                }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               if (exception instanceof ServerException)
-               {
-                  ServerException serverException = (ServerException)exception;
-                  if (HTTPStatus.NOT_FOUND == serverException.getHTTPStatus())
-                  {
-                     IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.logoutNotLogged(),
-                        Type.INFO));
-                     IDE.fireEvent(new SetLoggedUserStateEvent(false));
-                     return;
-                  }
-               }
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   public static void isLogged()
-   {
-      AutoBean<GaeUser> user = GoogleAppEngineExtension.AUTO_BEAN_FACTORY.user();
-      AutoBeanUnmarshaller<GaeUser> unmarshaller = new AutoBeanUnmarshaller<GaeUser>(user);
-      try
-      {
-         GoogleAppEngineClientService.getInstance().getLoggedUser(
-            new GoogleAppEngineAsyncRequestCallback<GaeUser>(unmarshaller)
-            {
-
-               @Override
-               protected void onSuccess(GaeUser result)
-               {
-                  IDE.fireEvent(new SetLoggedUserStateEvent(result.isAuthenticated()));
-               }
-
-               /**
-                * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback#onFailure(java.lang.Throwable)
-                */
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-               }
+                @Override
+                protected void onFailure(Throwable exception) {
+                    if (exception instanceof ServerException) {
+                        ServerException serverException = (ServerException)exception;
+                        if (HTTPStatus.NOT_FOUND == serverException.getHTTPStatus()) {
+                            IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.logoutNotLogged(),
+                                                          Type.INFO));
+                            IDE.fireEvent(new SetLoggedUserStateEvent(false));
+                            return;
+                        }
+                    }
+                }
             });
-      }
-      catch (RequestException e)
-      {
-      }
-   }
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    public static void isLogged() {
+        AutoBean<GaeUser> user = GoogleAppEngineExtension.AUTO_BEAN_FACTORY.user();
+        AutoBeanUnmarshaller<GaeUser> unmarshaller = new AutoBeanUnmarshaller<GaeUser>(user);
+        try {
+            GoogleAppEngineClientService.getInstance().getLoggedUser(
+                    new GoogleAppEngineAsyncRequestCallback<GaeUser>(unmarshaller) {
+
+                        @Override
+                        protected void onSuccess(GaeUser result) {
+                            IDE.fireEvent(new SetLoggedUserStateEvent(result.isAuthenticated()));
+                        }
+
+                        /**
+                         * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback#onFailure(java
+                         * .lang.Throwable)
+                         */
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                        }
+                    });
+        } catch (RequestException e) {
+        }
+    }
 
 }

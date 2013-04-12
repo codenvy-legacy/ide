@@ -23,85 +23,78 @@ import org.exoplatform.ide.editor.shared.text.IDocument;
 
 /**
  * Text edit to replace a range in a document with a different string.
- * 
+ *
  * @since 3.0
  */
-public final class ReplaceEdit extends TextEdit
-{
+public final class ReplaceEdit extends TextEdit {
 
-   private String fText;
+    private String fText;
 
-   /**
-    * Constructs a new replace edit.
-    * 
-    * @param offset the offset of the range to replace
-    * @param length the length of the range to replace
-    * @param text the new text
-    */
-   public ReplaceEdit(int offset, int length, String text)
-   {
-      super(offset, length);
-      // Assert.isNotNull(text);
-      fText = text;
-   }
+    /**
+     * Constructs a new replace edit.
+     *
+     * @param offset
+     *         the offset of the range to replace
+     * @param length
+     *         the length of the range to replace
+     * @param text
+     *         the new text
+     */
+    public ReplaceEdit(int offset, int length, String text) {
+        super(offset, length);
+        // Assert.isNotNull(text);
+        fText = text;
+    }
 
-   /*
-    * Copy constructor
-    * @param other the edit to copy from
-    */
-   private ReplaceEdit(ReplaceEdit other)
-   {
-      super(other);
-      fText = other.fText;
-   }
+    /*
+     * Copy constructor
+     * @param other the edit to copy from
+     */
+    private ReplaceEdit(ReplaceEdit other) {
+        super(other);
+        fText = other.fText;
+    }
 
-   /**
-    * Returns the new text replacing the text denoted by the edit.
-    * 
-    * @return the edit's text.
-    */
-   public String getText()
-   {
-      return fText;
-   }
+    /**
+     * Returns the new text replacing the text denoted by the edit.
+     *
+     * @return the edit's text.
+     */
+    public String getText() {
+        return fText;
+    }
 
-   /* @see TextEdit#doCopy */
-   protected TextEdit doCopy()
-   {
-      return new ReplaceEdit(this);
-   }
+    /* @see TextEdit#doCopy */
+    protected TextEdit doCopy() {
+        return new ReplaceEdit(this);
+    }
 
-   /* @see TextEdit#accept0 */
-   protected void accept0(TextEditVisitor visitor)
-   {
-      boolean visitChildren = visitor.visit(this);
-      if (visitChildren)
-      {
-         acceptChildren(visitor);
-      }
-   }
+    /* @see TextEdit#accept0 */
+    protected void accept0(TextEditVisitor visitor) {
+        boolean visitChildren = visitor.visit(this);
+        if (visitChildren) {
+            acceptChildren(visitor);
+        }
+    }
 
-   /* @see TextEdit#performDocumentUpdating */
-   int performDocumentUpdating(IDocument document) throws BadLocationException
-   {
-      document.replace(getOffset(), getLength(), fText);
-      fDelta = fText.length() - getLength();
-      return fDelta;
-   }
+    /* @see TextEdit#performDocumentUpdating */
+    int performDocumentUpdating(IDocument document) throws BadLocationException {
+        document.replace(getOffset(), getLength(), fText);
+        fDelta = fText.length() - getLength();
+        return fDelta;
+    }
 
-   /* @see TextEdit#deleteChildren */
-   boolean deleteChildren()
-   {
-      return true;
-   }
+    /* @see TextEdit#deleteChildren */
+    boolean deleteChildren() {
+        return true;
+    }
 
-   /*
-    * @see org.eclipse.text.edits.TextEdit#internalToString(java.lang.StringBuffer, int)
-    * @since 3.3
-    */
-   void internalToString(StringBuffer buffer, int indent)
-   {
-      super.internalToString(buffer, indent);
-      buffer.append(" <<").append(fText); //$NON-NLS-1$
-   }
+    /*
+     * @see org.eclipse.text.edits.TextEdit#internalToString(java.lang.StringBuffer, int)
+     * @since 3.3
+     */
+    void internalToString(StringBuffer buffer, int indent) {
+        super.internalToString(buffer, indent);
+        buffer.append(" <<").append(fText); //$NON-NLS-1$
+    }
 }

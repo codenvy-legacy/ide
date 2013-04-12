@@ -18,52 +18,45 @@
  */
 package org.exoplatform.ide.client.framework.ui;
 
-import java.util.List;
-
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 
+import java.util.List;
+
 /**
  * This HandlerRegistration points on event which stores in the List of handlers.
- * 
+ * <p/>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ListBasedHandlerRegistration implements HandlerRegistration
-{
+public class ListBasedHandlerRegistration implements HandlerRegistration {
 
-   /**
-    * List where handler stores.
-    */
-   private List<?> handlerList;
+    /** List where handler stores. */
+    private List<?> handlerList;
 
-   /**
-    * Event Handler instance.
-    */
-   private EventHandler handler;
+    /** Event Handler instance. */
+    private EventHandler handler;
 
-   /**
-    * Creates new instance of this HandlerRegistration.
-    * 
-    * @param handlerList list where handlers stores
-    * @param handler event handler
-    */
-   public ListBasedHandlerRegistration(List<?> handlerList, EventHandler handler)
-   {
-      this.handlerList = handlerList;
-      this.handler = handler;
-   }
+    /**
+     * Creates new instance of this HandlerRegistration.
+     *
+     * @param handlerList
+     *         list where handlers stores
+     * @param handler
+     *         event handler
+     */
+    public ListBasedHandlerRegistration(List<?> handlerList, EventHandler handler) {
+        this.handlerList = handlerList;
+        this.handler = handler;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.HandlerRegistration#removeHandler()
-    */
-   @Override
-   public void removeHandler()
-   {
-      handlerList.remove(handler);
-   }
+    /** @see com.google.gwt.event.shared.HandlerRegistration#removeHandler() */
+    @Override
+    public void removeHandler() {
+        handlerList.remove(handler);
+    }
 
 }

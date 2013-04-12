@@ -26,6 +26,9 @@ import com.google.api.client.json.jackson.JacksonFactory;
 
 import org.exoplatform.ide.security.shared.User;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Collections;
 import java.util.HashSet;
 
@@ -35,25 +38,47 @@ import java.util.HashSet;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladyslav Zhukovskii</a>
  * @version $Id: $
  */
-public class GoogleOAuthAuthenticator extends OAuthAuthenticator
-{
+public class GoogleOAuthAuthenticator extends OAuthAuthenticator {
 
-   protected GoogleOAuthAuthenticator(CredentialStore credentialStore, GoogleClientSecrets clientSecrets)
-   {
-      super(new GoogleAuthorizationCodeFlow.Builder(new NetHttpTransport(), new JacksonFactory(), clientSecrets,
-         Collections.<String>emptyList()).setCredentialStore(credentialStore).setApprovalPrompt("auto").setAccessType
-         ("online").build(), new HashSet<String>(clientSecrets.getDetails().getRedirectUris()));
-   }
+    public GoogleOAuthAuthenticator(CredentialStore credentialStore, GoogleClientSecrets clientSecrets) {
+        super(new GoogleAuthorizationCodeFlow.Builder(new NetHttpTransport(), new JacksonFactory(), clientSecrets,
+                                                      Collections.<String>emptyList()).setCredentialStore(credentialStore)
+                                                                                      .setApprovalPrompt("auto").setAccessType
+                        ("online").build(), new HashSet<String>(clientSecrets.getDetails().getRedirectUris()));
+    }
 
-   @Override
-   public User getUser(String accessToken) throws OAuthAuthenticationException
-   {
-      return getJson("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken, GoogleUser.class);
-   }
+    @Override
+    public User getUser(String accessToken) throws OAuthAuthenticationException {
+        return getJson("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken, GoogleUser.class);
+    }
 
-   @Override
-   public final String getOAuthProvider()
-   {
-      return "google";
-   }
+    @Override
+    public final String getOAuthProvider() {
+        return "google";
+    }
+
+    @Override
+    public String getToken(String userId) throws IOException {
+        final String token = super.getToken(userId);
+        if (!(token == null || token.isEmpty())) {
+            // Need to check if token which stored is valid for requests, then if valid - we returns it to caller
+            URL tokenInfoUrl = new URL("https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=" + token);
+            HttpURLConnection http = null;
+
+            try {
+                http = (HttpURLConnection)tokenInfoUrl.openConnection();
+                if (http.getResponseCode() != 200) {
+                    return null;
+                }
+            } finally {
+                if (http != null) {
+                    http.disconnect();
+                }
+            }
+
+            return token;
+        }
+
+        return null;
+    }
 }

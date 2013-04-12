@@ -10,16 +10,14 @@
  *******************************************************************************/
 package com.codenvy.eclipse.jdt.internal.codeassist;
 
-/**
- * @deprecated Use {@link com.codenvy.eclipse.jdt.core.CompletionRequestor} instead
- */
+/** @deprecated Use {@link com.codenvy.eclipse.jdt.core.CompletionRequestor} instead */
 //TODO remove this class once no more clients
 public interface IExtendedCompletionRequestor extends com.codenvy.eclipse.jdt.core.ICompletionRequestor {
-	void acceptPotentialMethodDeclaration(
-			char[] declaringTypePackageName,
-			char[] declaringTypeName,
-			char[] selector,
-			int completionStart,
-			int completionEnd,
-			int relevance);
+    void acceptPotentialMethodDeclaration(
+            char[] declaringTypePackageName,
+            char[] declaringTypeName,
+            char[] selector,
+            int completionStart,
+            int completionEnd,
+            int relevance);
 }

@@ -26,37 +26,30 @@ import org.exoplatform.ide.extension.heroku.client.control.AbstractHerokuControl
 
 /**
  * Control for managing Heroku applications.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Mar 14, 2012 5:15:04 PM anya $
- * 
  */
-public class ManageApplicationsControl extends AbstractHerokuControl
-{
+public class ManageApplicationsControl extends AbstractHerokuControl {
 
-   public ManageApplicationsControl()
-   {
-      super(HerokuExtension.LOCALIZATION_CONSTANT.listApplicationsControlId());
-      setTitle(HerokuExtension.LOCALIZATION_CONSTANT.listApplicationsControlTitle());
-      setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.listApplicationsControlPrompt());
-      setEvent(new ManageApplicationsEvent());
-      setImages(HerokuClientBundle.INSTANCE.applicationsList(), HerokuClientBundle.INSTANCE.applicationsListDisabled());
-   }
+    public ManageApplicationsControl() {
+        super(HerokuExtension.LOCALIZATION_CONSTANT.listApplicationsControlId());
+        setTitle(HerokuExtension.LOCALIZATION_CONSTANT.listApplicationsControlTitle());
+        setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.listApplicationsControlPrompt());
+        setEvent(new ManageApplicationsEvent());
+        setImages(HerokuClientBundle.INSTANCE.applicationsList(), HerokuClientBundle.INSTANCE.applicationsListDisabled());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
 
-      setVisible(true);
-   }
+        setVisible(true);
+    }
 
-   protected void refresh()
-   {
-      setEnabled(vfsInfo != null);
-   }
+    protected void refresh() {
+        setEnabled(vfsInfo != null);
+    }
 
 }

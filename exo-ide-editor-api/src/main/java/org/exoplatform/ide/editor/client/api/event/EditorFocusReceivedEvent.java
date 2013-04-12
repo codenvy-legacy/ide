@@ -19,56 +19,49 @@
 
 package org.exoplatform.ide.editor.client.api.event;
 
-import org.exoplatform.ide.editor.client.api.Editor;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.editor.client.api.Editor;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version @version $Id: $
  */
 
-public class EditorFocusReceivedEvent extends GwtEvent<EditorFocusReceivedHandler>
-{
+public class EditorFocusReceivedEvent extends GwtEvent<EditorFocusReceivedHandler> {
 
-   public static final GwtEvent.Type<EditorFocusReceivedHandler> TYPE = new GwtEvent.Type<EditorFocusReceivedHandler>();
+    public static final GwtEvent.Type<EditorFocusReceivedHandler> TYPE = new GwtEvent.Type<EditorFocusReceivedHandler>();
 
-   /**
-    * {@link org.exoplatform.ide.editor.client.api.Editor} instance.
-    */
-   private Editor editor;
+    /** {@link org.exoplatform.ide.editor.client.api.Editor} instance. */
+    private Editor editor;
 
-   /**
-    * Creates new instance of {@link EditorFocusReceivedEvent}.
-    * 
-    * @param editorId 
-    */
-   public EditorFocusReceivedEvent(Editor editor)
-   {
-      this.editor = editor;
-   }
+    /**
+     * Creates new instance of {@link EditorFocusReceivedEvent}.
+     *
+     * @param editorId
+     */
+    public EditorFocusReceivedEvent(Editor editor) {
+        this.editor = editor;
+    }
 
-   /**
-    * Returns {@link Editor} instance.
-    * 
-    * @return
-    */
-   public Editor getEditor()
-   {
-      return editor;
-   }
+    /**
+     * Returns {@link Editor} instance.
+     *
+     * @return
+     */
+    public Editor getEditor() {
+        return editor;
+    }
 
-   @Override
-   protected void dispatch(EditorFocusReceivedHandler handler)
-   {
-      handler.onEditorFocusReceived(this);
-   }
+    @Override
+    protected void dispatch(EditorFocusReceivedHandler handler) {
+        handler.onEditorFocusReceived(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorFocusReceivedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorFocusReceivedHandler> getAssociatedType() {
+        return TYPE;
+    }
 }

@@ -18,45 +18,39 @@
  */
 package org.exoplatform.ide.client.ui.panel;
 
-import org.exoplatform.ide.client.framework.ui.api.Panel;
-
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.client.framework.ui.api.Panel;
+
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class RestorePanelEvent extends GwtEvent<RestorePanelHandler>
-{
+public class RestorePanelEvent extends GwtEvent<RestorePanelHandler> {
 
-   public static final GwtEvent.Type<RestorePanelHandler> TYPE = new GwtEvent.Type<RestorePanelHandler>();
+    public static final GwtEvent.Type<RestorePanelHandler> TYPE = new GwtEvent.Type<RestorePanelHandler>();
 
-   private Panel panel;
+    private Panel panel;
 
-   public RestorePanelEvent(Panel panel)
-   {
-      this.panel = panel;
-   }
+    public RestorePanelEvent(Panel panel) {
+        this.panel = panel;
+    }
 
-   public Panel getPanel()
-   {
-      return panel;
-   }
+    public Panel getPanel() {
+        return panel;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<RestorePanelHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<RestorePanelHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(RestorePanelHandler handler)
-   {
-      handler.onRestorePanel(this);
-   }
+    @Override
+    protected void dispatch(RestorePanelHandler handler) {
+        handler.onRestorePanel(this);
+    }
 
 }

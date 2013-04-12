@@ -20,11 +20,9 @@ package org.exoplatform.ide.client.framework.websocket.rest;
 
 /**
  * RESTful request message.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: RequestMessage.java Nov 6, 2012 12:35:20 PM azatsarynnyy $
- *
  */
-public interface RequestMessage extends RESTMessage
-{
+public interface RequestMessage extends RESTMessage {
 }

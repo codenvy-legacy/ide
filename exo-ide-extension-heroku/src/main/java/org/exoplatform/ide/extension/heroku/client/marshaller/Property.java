@@ -20,62 +20,51 @@ package org.exoplatform.ide.extension.heroku.client.marshaller;
 
 /**
  * Aplication's property.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 1, 2011 3:03:14 PM anya $
- * 
  */
-public class Property
-{
-   /**
-    * Property's name.
-    */
-   private String name;
+public class Property {
+    /** Property's name. */
+    private String name;
 
-   /**
-    * Property's value.
-    */
-   private String value;
+    /** Property's value. */
+    private String value;
 
-   /**
-    * @param name property's name
-    * @param value property's value
-    */
-   public Property(String name, String value)
-   {
-      this.name = name;
-      this.value = value;
-   }
+    /**
+     * @param name
+     *         property's name
+     * @param value
+     *         property's value
+     */
+    public Property(String name, String value) {
+        this.name = name;
+        this.value = value;
+    }
 
-   /**
-    * @return the name
-    */
-   public String getName()
-   {
-      return name;
-   }
+    /** @return the name */
+    public String getName() {
+        return name;
+    }
 
-   /**
-    * @param name the name to set
-    */
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    /**
+     * @param name
+     *         the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   /**
-    * @return the value
-    */
-   public String getValue()
-   {
-      return value;
-   }
+    /** @return the value */
+    public String getValue() {
+        return value;
+    }
 
-   /**
-    * @param value the value to set
-    */
-   public void setValue(String value)
-   {
-      this.value = value;
-   }
+    /**
+     * @param value
+     *         the value to set
+     */
+    public void setValue(String value) {
+        this.value = value;
+    }
 }

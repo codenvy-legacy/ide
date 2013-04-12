@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  10:46:40 AM Apr 4, 2012 evgen $
- *
  */
-public interface ShowFormatterProfilesHandler extends EventHandler
-{
+public interface ShowFormatterProfilesHandler extends EventHandler {
 
-   void onShowFormatterProfiles(ShowFormatterProfilesEvent event);
+    void onShowFormatterProfiles(ShowFormatterProfilesEvent event);
 
 }

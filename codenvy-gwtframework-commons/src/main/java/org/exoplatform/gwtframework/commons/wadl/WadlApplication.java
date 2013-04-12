@@ -31,9 +31,9 @@ import java.util.List;
 
 /**
  * <p>Java class for anonymous complex type.
- * 
+ * <p/>
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p/>
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -54,170 +54,145 @@ import java.util.List;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 
-public class WadlApplication
-{
+public class WadlApplication {
 
-   protected List<Doc> doc;
+    protected List<Doc> doc;
 
-   protected Grammars grammars;
+    protected Grammars grammars;
 
-   protected Resources resources;
+    protected Resources resources;
 
-   protected List<Object> resourceTypeOrMethodOrRepresentation;
+    protected List<Object> resourceTypeOrMethodOrRepresentation;
 
-   protected List<Object> any;
+    protected List<Object> any;
 
-   /**
-    * Gets the value of the doc property.
-    * 
-    * <p>
-    * This accessor method returns a reference to the live list,
-    * not a snapshot. Therefore any modification you make to the
-    * returned list will be present inside the JAXB object.
-    * This is why there is not a <CODE>set</CODE> method for the doc property.
-    * 
-    * <p>
-    * For example, to add a new item, do as follows:
-    * <pre>
-    *    getDoc().add(newItem);
-    * </pre>
-    * 
-    * 
-    * <p>
-    * Objects of the following type(s) are allowed in the list
-    * {@link Doc }
-    * 
-    * 
-    */
-   public List<Doc> getDoc()
-   {
-      if (doc == null)
-      {
-         doc = new ArrayList<Doc>();
-      }
-      return this.doc;
-   }
+    /**
+     * Gets the value of the doc property.
+     * <p/>
+     * <p/>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the doc property.
+     * <p/>
+     * <p/>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getDoc().add(newItem);
+     * </pre>
+     * <p/>
+     * <p/>
+     * <p/>
+     * Objects of the following type(s) are allowed in the list
+     * {@link Doc }
+     */
+    public List<Doc> getDoc() {
+        if (doc == null) {
+            doc = new ArrayList<Doc>();
+        }
+        return this.doc;
+    }
 
-   /**
-    * Gets the value of the grammars property.
-    * 
-    * @return
-    *     possible object is
-    *     {@link Grammars }
-    *     
-    */
-   public Grammars getGrammars()
-   {
-      return grammars;
-   }
+    /**
+     * Gets the value of the grammars property.
+     *
+     * @return possible object is
+     *         {@link Grammars }
+     */
+    public Grammars getGrammars() {
+        return grammars;
+    }
 
-   /**
-    * Sets the value of the grammars property.
-    * 
-    * @param value
-    *     allowed object is
-    *     {@link Grammars }
-    *     
-    */
-   public void setGrammars(Grammars value)
-   {
-      this.grammars = value;
-   }
+    /**
+     * Sets the value of the grammars property.
+     *
+     * @param value
+     *         allowed object is
+     *         {@link Grammars }
+     */
+    public void setGrammars(Grammars value) {
+        this.grammars = value;
+    }
 
-   /**
-    * Gets the value of the resources property.
-    * 
-    * @return
-    *     possible object is
-    *     {@link Resources }
-    *     
-    */
-   public Resources getResources()
-   {
-      return resources;
-   }
+    /**
+     * Gets the value of the resources property.
+     *
+     * @return possible object is
+     *         {@link Resources }
+     */
+    public Resources getResources() {
+        return resources;
+    }
 
-   /**
-    * Sets the value of the resources property.
-    * 
-    * @param value
-    *     allowed object is
-    *     {@link Resources }
-    *     
-    */
-   public void setResources(Resources value)
-   {
-      this.resources = value;
-   }
+    /**
+     * Sets the value of the resources property.
+     *
+     * @param value
+     *         allowed object is
+     *         {@link Resources }
+     */
+    public void setResources(Resources value) {
+        this.resources = value;
+    }
 
-   /**
-    * Gets the value of the resourceTypeOrMethodOrRepresentation property.
-    * 
-    * <p>
-    * This accessor method returns a reference to the live list,
-    * not a snapshot. Therefore any modification you make to the
-    * returned list will be present inside the JAXB object.
-    * This is why there is not a <CODE>set</CODE> method for the resourceTypeOrMethodOrRepresentation property.
-    * 
-    * <p>
-    * For example, to add a new item, do as follows:
-    * <pre>
-    *    getResourceTypeOrMethodOrRepresentation().add(newItem);
-    * </pre>
-    * 
-    * 
-    * <p>
-    * Objects of the following type(s) are allowed in the list
-    * {@link ResourceType }
-    * {@link Method }
-    * {@link JAXBElement }{@code <}{@link RepresentationType }{@code >}
-    * {@link JAXBElement }{@code <}{@link RepresentationType }{@code >}
-    * 
-    * 
-    */
-   public List<Object> getResourceTypeOrMethodOrRepresentation()
-   {
-      if (resourceTypeOrMethodOrRepresentation == null)
-      {
-         resourceTypeOrMethodOrRepresentation = new ArrayList<Object>();
-      }
-      return this.resourceTypeOrMethodOrRepresentation;
-   }
+    /**
+     * Gets the value of the resourceTypeOrMethodOrRepresentation property.
+     * <p/>
+     * <p/>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the resourceTypeOrMethodOrRepresentation property.
+     * <p/>
+     * <p/>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getResourceTypeOrMethodOrRepresentation().add(newItem);
+     * </pre>
+     * <p/>
+     * <p/>
+     * <p/>
+     * Objects of the following type(s) are allowed in the list
+     * {@link ResourceType }
+     * {@link Method }
+     * {@link JAXBElement }{@code <}{@link RepresentationType }{@code >}
+     * {@link JAXBElement }{@code <}{@link RepresentationType }{@code >}
+     */
+    public List<Object> getResourceTypeOrMethodOrRepresentation() {
+        if (resourceTypeOrMethodOrRepresentation == null) {
+            resourceTypeOrMethodOrRepresentation = new ArrayList<Object>();
+        }
+        return this.resourceTypeOrMethodOrRepresentation;
+    }
 
-   /**
-    * Gets the value of the any property.
-    * 
-    * <p>
-    * This accessor method returns a reference to the live list,
-    * not a snapshot. Therefore any modification you make to the
-    * returned list will be present inside the JAXB object.
-    * This is why there is not a <CODE>set</CODE> method for the any property.
-    * 
-    * <p>
-    * For example, to add a new item, do as follows:
-    * <pre>
-    *    getAny().add(newItem);
-    * </pre>
-    * 
-    * 
-    * <p>
-    * Objects of the following type(s) are allowed in the list
-    * {@link Object }
-    * {@link Element }
-    * 
-    * 
-    */
-   public List<Object> getAny()
-   {
-      if (any == null)
-      {
-         any = new ArrayList<Object>();
-      }
-      return this.any;
-   }
+    /**
+     * Gets the value of the any property.
+     * <p/>
+     * <p/>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the any property.
+     * <p/>
+     * <p/>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getAny().add(newItem);
+     * </pre>
+     * <p/>
+     * <p/>
+     * <p/>
+     * Objects of the following type(s) are allowed in the list
+     * {@link Object }
+     * {@link Element }
+     */
+    public List<Object> getAny() {
+        if (any == null) {
+            any = new ArrayList<Object>();
+        }
+        return this.any;
+    }
 
 }

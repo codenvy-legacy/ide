@@ -29,107 +29,79 @@ import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 23, 2012 12:14:23 PM anya $
- * 
  */
-public class MainTabPain extends Composite
-{
+public class MainTabPain extends Composite {
 
-   private static MainTabPainUiBinder uiBinder = GWT.create(MainTabPainUiBinder.class);
+    private static MainTabPainUiBinder uiBinder = GWT.create(MainTabPainUiBinder.class);
 
-   interface MainTabPainUiBinder extends UiBinder<Widget, MainTabPain>
-   {
-   }
+    interface MainTabPainUiBinder extends UiBinder<Widget, MainTabPain> {
+    }
 
-   @UiField
-   ImageButton updateApplicationButton;
+    @UiField
+    ImageButton updateApplicationButton;
 
-   @UiField
-   ImageButton rollbackApplicationButton;
+    @UiField
+    ImageButton rollbackApplicationButton;
 
-   @UiField
-   ImageButton getLogsButton;
+    @UiField
+    ImageButton getLogsButton;
 
-   @UiField
-   ImageButton updateDosButton;
+    @UiField
+    ImageButton updateDosButton;
 
-   @UiField
-   ImageButton updateIndexesButton;
+    @UiField
+    ImageButton updateIndexesButton;
 
-   @UiField
-   ImageButton vacuumIndexesButton;
+    @UiField
+    ImageButton vacuumIndexesButton;
 
-   @UiField
-   ImageButton updatePageSpeedButton;
+    @UiField
+    ImageButton updatePageSpeedButton;
 
-   @UiField
-   ImageButton updateQueuesButton;
+    @UiField
+    ImageButton updateQueuesButton;
 
-   public MainTabPain()
-   {
-      initWidget(uiBinder.createAndBindUi(this));
-   }
+    public MainTabPain() {
+        initWidget(uiBinder.createAndBindUi(this));
+    }
 
-   /**
-    * @return the updateApplicationButton
-    */
-   public ImageButton getUpdateApplicationButton()
-   {
-      return updateApplicationButton;
-   }
+    /** @return the updateApplicationButton */
+    public ImageButton getUpdateApplicationButton() {
+        return updateApplicationButton;
+    }
 
-   /**
-    * @return the rollbackApplicationButton
-    */
-   public ImageButton getRollbackApplicationButton()
-   {
-      return rollbackApplicationButton;
-   }
+    /** @return the rollbackApplicationButton */
+    public ImageButton getRollbackApplicationButton() {
+        return rollbackApplicationButton;
+    }
 
-   /**
-    * @return the getLogsButton
-    */
-   public ImageButton getGetLogsButton()
-   {
-      return getLogsButton;
-   }
+    /** @return the getLogsButton */
+    public ImageButton getGetLogsButton() {
+        return getLogsButton;
+    }
 
-   /**
-    * @return the updateDosButton
-    */
-   public ImageButton getUpdateDosButton()
-   {
-      return updateDosButton;
-   }
+    /** @return the updateDosButton */
+    public ImageButton getUpdateDosButton() {
+        return updateDosButton;
+    }
 
-   /**
-    * @return the updateIndexesButton
-    */
-   public ImageButton getUpdateIndexesButton()
-   {
-      return updateIndexesButton;
-   }
+    /** @return the updateIndexesButton */
+    public ImageButton getUpdateIndexesButton() {
+        return updateIndexesButton;
+    }
 
-   /**
-    * @return the vacuumIndexesButton
-    */
-   public ImageButton getVacuumIndexesButton()
-   {
-      return vacuumIndexesButton;
-   }
+    /** @return the vacuumIndexesButton */
+    public ImageButton getVacuumIndexesButton() {
+        return vacuumIndexesButton;
+    }
 
-   /**
-    * @return the updatePageSpeedButton
-    */
-   public ImageButton getUpdatePageSpeedButton()
-   {
-      return updatePageSpeedButton;
-   }
+    /** @return the updatePageSpeedButton */
+    public ImageButton getUpdatePageSpeedButton() {
+        return updatePageSpeedButton;
+    }
 
-   /**
-    * @return the updateQueuesButton
-    */
-   public ImageButton getUpdateQueuesButton()
-   {
-      return updateQueuesButton;
-   }
+    /** @return the updateQueuesButton */
+    public ImageButton getUpdateQueuesButton() {
+        return updateQueuesButton;
+    }
 }

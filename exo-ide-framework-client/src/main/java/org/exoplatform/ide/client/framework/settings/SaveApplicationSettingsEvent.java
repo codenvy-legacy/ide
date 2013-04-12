@@ -18,63 +18,54 @@
  */
 package org.exoplatform.ide.client.framework.settings;
 
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
-
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
 
-public class SaveApplicationSettingsEvent extends GwtEvent<SaveApplicationSettingsHandler>
-{
+public class SaveApplicationSettingsEvent extends GwtEvent<SaveApplicationSettingsHandler> {
 
-   public enum SaveType {
-      COOKIES, SERVER, BOTH
-   }
+    public enum SaveType {
+        COOKIES, SERVER, BOTH
+    }
 
-   public static final GwtEvent.Type<SaveApplicationSettingsHandler> TYPE =
-      new GwtEvent.Type<SaveApplicationSettingsHandler>();
+    public static final GwtEvent.Type<SaveApplicationSettingsHandler> TYPE =
+            new GwtEvent.Type<SaveApplicationSettingsHandler>();
 
-   private SaveType saveType;
+    private SaveType saveType;
 
-   private ApplicationSettings applicationSettings;
+    private ApplicationSettings applicationSettings;
 
-   public SaveApplicationSettingsEvent(ApplicationSettings applicationSettings)
-   {
-      this.applicationSettings = applicationSettings;
-      saveType = SaveType.BOTH;
-   }
+    public SaveApplicationSettingsEvent(ApplicationSettings applicationSettings) {
+        this.applicationSettings = applicationSettings;
+        saveType = SaveType.BOTH;
+    }
 
-   public SaveApplicationSettingsEvent(ApplicationSettings applicationSettings, SaveType saveType)
-   {
-      this.applicationSettings = applicationSettings;
-      this.saveType = saveType;
-   }
+    public SaveApplicationSettingsEvent(ApplicationSettings applicationSettings, SaveType saveType) {
+        this.applicationSettings = applicationSettings;
+        this.saveType = saveType;
+    }
 
-   public ApplicationSettings getApplicationSettings()
-   {
-      return applicationSettings;
-   }
+    public ApplicationSettings getApplicationSettings() {
+        return applicationSettings;
+    }
 
-   public SaveType getSaveType()
-   {
-      return saveType;
-   }
+    public SaveType getSaveType() {
+        return saveType;
+    }
 
-   @Override
-   protected void dispatch(SaveApplicationSettingsHandler handler)
-   {
-      handler.onSaveApplicationSettings(this);
-   }
+    @Override
+    protected void dispatch(SaveApplicationSettingsHandler handler) {
+        handler.onSaveApplicationSettings(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<SaveApplicationSettingsHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<SaveApplicationSettingsHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

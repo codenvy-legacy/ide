@@ -24,51 +24,50 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface RunInstanceRequest
-{
-   /**
-    * Get ID of AMI to run.
-    *
-    * @return ID of AMI to run
-    */
-   String getImageId();
+public interface RunInstanceRequest {
+    /**
+     * Get ID of AMI to run.
+     *
+     * @return ID of AMI to run
+     */
+    String getImageId();
 
-   /**
-    * Set ID of AMI to run.
-    *
-    * @param imageId
-    *    ID of AMI to run
-    */
-   void setImageId(String imageId);
+    /**
+     * Set ID of AMI to run.
+     *
+     * @param imageId
+     *         ID of AMI to run
+     */
+    void setImageId(String imageId);
 
-   /**
-    * Get type of instance. Must be one of the {@link org.exoplatform.ide.extension.aws.shared.ec2.Image#availableInstanceTypes()}
-    *
-    * @return instance type
-    */
-   String getInstanceType();
+    /**
+     * Get type of instance. Must be one of the {@link org.exoplatform.ide.extension.aws.shared.ec2.Image#availableInstanceTypes()}
+     *
+     * @return instance type
+     */
+    String getInstanceType();
 
-   /**
-    * Set type of instance. Must be one of the {@link org.exoplatform.ide.extension.aws.shared.ec2.Image#availableInstanceTypes()}
-    *
-    * @param instanceType
-    *    instance type
-    */
-   void setInstanceType(String instanceType);
+    /**
+     * Set type of instance. Must be one of the {@link org.exoplatform.ide.extension.aws.shared.ec2.Image#availableInstanceTypes()}
+     *
+     * @param instanceType
+     *         instance type
+     */
+    void setInstanceType(String instanceType);
 
-   int getNumberOfInstances();
+    int getNumberOfInstances();
 
-   void setNumberOfInstances(int numberOfInstances);
+    void setNumberOfInstances(int numberOfInstances);
 
-   String getKeyName();
+    String getKeyName();
 
-   void setKeyName(String keyName);
+    void setKeyName(String keyName);
 
-   List<String> getSecurityGroupsIds();
+    List<String> getSecurityGroupsIds();
 
-   void setSecurityGroupsIds(List<String> securityGroupsIds);
+    void setSecurityGroupsIds(List<String> securityGroupsIds);
 
-   String getAvailabilityZone();
+    String getAvailabilityZone();
 
-   void setAvailabilityZone(String availabilityZone);
+    void setAvailabilityZone(String availabilityZone);
 }

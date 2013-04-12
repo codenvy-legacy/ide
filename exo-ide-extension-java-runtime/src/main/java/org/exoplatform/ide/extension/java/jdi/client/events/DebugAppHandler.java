@@ -22,10 +22,10 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public interface DebugAppHandler extends EventHandler
-{
-   void onDebugApp(DebugAppEvent event);
+ */
+public interface DebugAppHandler extends EventHandler {
+    void onDebugApp(DebugAppEvent event);
 }

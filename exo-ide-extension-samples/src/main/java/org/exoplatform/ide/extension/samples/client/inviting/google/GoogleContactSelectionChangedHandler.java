@@ -23,11 +23,9 @@ import org.exoplatform.ide.client.framework.invite.GoogleContact;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public interface GoogleContactSelectionChangedHandler
-{
-   
-   void onGoogleContactSelectionChanged(GoogleContact contact, boolean selected);
+public interface GoogleContactSelectionChangedHandler {
+
+    void onGoogleContactSelectionChanged(GoogleContact contact, boolean selected);
 
 }

@@ -34,258 +34,234 @@ import java.util.List;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class IDEProject extends ProjectModel
-{
+public class IDEProject extends ProjectModel {
 
-   public interface LoadCompleteHandler
-   {
-      void onLoadComplete(Throwable error);
-   }
-   
-   public interface FolderChangedHandler
-   {
-      void onFolderChanged(FolderModel folder);
-   }
+    public interface LoadCompleteHandler {
+        void onLoadComplete(Throwable error);
+    }
 
-   private FolderChangedHandler folderChangedHandler;
-   
-   public IDEProject(ProjectModel project)
-   {
-      super(project);
-   }
-   
-   public void setFolderChangedHandler(FolderChangedHandler folderChangedHandler)
-   {
-      this.folderChangedHandler = folderChangedHandler;
-   }
+    public interface FolderChangedHandler {
+        void onFolderChanged(FolderModel folder);
+    }
 
-   public List<Item> getChildren(Folder parent)
-   {
-      if (parent instanceof FolderModel)
-      {
-         return ((FolderModel)parent).getChildren().getItems();
-      }
-      else if (parent instanceof ProjectModel)
-      {
-         return ((ProjectModel)parent).getChildren().getItems();
-      }
-      else
-      {
-         throw new IllegalArgumentException("Item " + parent.getPath() + " is not a folder");
-      }
-   }
+    private FolderChangedHandler folderChangedHandler;
 
-   public Item getChildByName(Folder parent, String name)
-   {
-      for (Item item : getChildren(parent))
-      {
-         if (item.getName().equals(name))
-         {
-            return item;
-         }
-      }
+    public IDEProject(ProjectModel project) {
+        super(project);
+    }
 
-      throw new IllegalArgumentException("Item " + name + " not found in folder " + parent.getPath());
-   }
+    public void setFolderChangedHandler(FolderChangedHandler folderChangedHandler) {
+        this.folderChangedHandler = folderChangedHandler;
+    }
 
-   public Item getResource(Folder parent, String path)
-   {
-      while (path.startsWith("/"))
-      {
-         path = path.substring(1);
-      }
+    public List<Item> getChildren(Folder parent) {
+        if (parent instanceof FolderModel) {
+            return ((FolderModel)parent).getChildren().getItems();
+        } else if (parent instanceof ProjectModel) {
+            return ((ProjectModel)parent).getChildren().getItems();
+        } else {
+            throw new IllegalArgumentException("Item " + parent.getPath() + " is not a folder");
+        }
+    }
 
-      while (path.endsWith("/"))
-      {
-         path = path.substring(0, path.length() - 1);
-      }
+    public Item getChildByName(Folder parent, String name) {
+        for (Item item : getChildren(parent)) {
+            if (item.getName().equals(name)) {
+                return item;
+            }
+        }
 
-      String[] parts = path.split("/");
-      for (int i = 0; i < parts.length; i++)
-      {
-         if (i == parts.length - 1)
-         {
-            return getChildByName(parent, parts[i]);
-         }
-         else
-         {
-            parent = (Folder)getChildByName(parent, parts[i]);
-         }
-      }
+        throw new IllegalArgumentException("Item " + name + " not found in folder " + parent.getPath());
+    }
 
-      throw new IllegalArgumentException("Item " + name + " not found in folder " + parent.getPath());
-   }
+    public Item getResource(Folder parent, String path) {
+        while (path.startsWith("/")) {
+            path = path.substring(1);
+        }
 
-   public Item getResource(String absolutePath)
-   {
-      if (!absolutePath.startsWith(getPath()))
-      {
-         throw new IllegalArgumentException("Item is out of the project's scope. Project : " + getName() + ", item path is : "
-            + absolutePath);
-      }
+        while (path.endsWith("/")) {
+            path = path.substring(0, path.length() - 1);
+        }
 
-      if (absolutePath.equals(getPath()))
-      {
-         return this;
-      }
+        String[] parts = path.split("/");
+        for (int i = 0; i < parts.length; i++) {
+            if (i == parts.length - 1) {
+                return getChildByName(parent, parts[i]);
+            } else {
+                parent = (Folder)getChildByName(parent, parts[i]);
+            }
+        }
 
-      absolutePath = absolutePath.substring(getPath().length());
-      String[] parts = absolutePath.split("/");
-      Folder parent = this;
-      for (int i = 1; i < parts.length; i++)
-      {
-         Item child = getResource(parent, parts[i]);
-         if (i < parts.length - 1 && !(child instanceof Folder))
-         {
-            throw new IllegalArgumentException("Item " + child.getPath() + " is not a folder");
-         }
+        throw new IllegalArgumentException("Item " + name + " not found in folder " + parent.getPath());
+    }
 
-         if (i == parts.length - 1)
-         {
-            return child;
-         }
+    public Item getResource(String absolutePath) {
+        if (!absolutePath.startsWith(getPath())) {
+            throw new IllegalArgumentException("Item is out of the project's scope. Project : " + getName() + ", item path is : "
+                                               + absolutePath);
+        }
 
-         parent = (Folder)child;
-      }
+        if (absolutePath.equals(getPath())) {
+            return this;
+        }
 
-      throw new IllegalArgumentException("Item " + absolutePath + " not found");
-   }
-   
-   public void addItem(Item item)
-   {
-      if (!(item instanceof ItemContext))
-      {
-         throw new IllegalArgumentException("Item " + item.getPath() + " is not ItemContext");
-      }
-      
-      String path = item.getPath();
-      path = path.substring(0, path.lastIndexOf("/"));
-      
-      Item parent = getResource(path);
-      if (parent == null)
-      {
-         throw new IllegalArgumentException("Resource " + path + " not found");
-      }
-      
-      if (!(parent instanceof FolderModel))
-      {
-         throw new IllegalArgumentException("Resource " + path + " is not a folder");
-      }
-      
-      FolderModel folder = (FolderModel)parent;
-      ProjectModel project = folder instanceof ProjectModel ? (ProjectModel)folder : folder.getProject();
-      
-      folder.getChildren().getItems().add(item);
-      ((ItemContext)item).setParent(folder);
-      ((ItemContext)item).setProject(project);
-      
-      if (folderChangedHandler != null)
-      {
-         folderChangedHandler.onFolderChanged(folder);
-      }
-   }
-   
-   public void removeItem(String path)
-   {
-      Item item = getResource(path);
-      if (item == null)
-      {
-         throw new IllegalArgumentException("Item " + path + " not found");
-      }
-      
-      FolderModel parent = ((ItemContext)item).getParent();
-      if (parent == null)
-      {
-         throw new IllegalArgumentException("Can't remove Project " + path);
-      }
+        absolutePath = absolutePath.substring(getPath().length());
+        String[] parts = absolutePath.split("/");
+        Folder parent = this;
+        for (int i = 1; i < parts.length; i++) {
+            Item child = getResource(parent, parts[i]);
+            if (i < parts.length - 1 && !(child instanceof Folder)) {
+                throw new IllegalArgumentException("Item " + child.getPath() + " is not a folder");
+            }
 
-      parent.getChildren().getItems().remove(item);
-      if (folderChangedHandler != null)
-      {
-         folderChangedHandler.onFolderChanged(parent);
-      }      
-   }
+            if (i == parts.length - 1) {
+                return child;
+            }
 
-   private void validateResource(Item item) throws Exception
-   {
-      if (item == null)
-      {
-         throw new Exception("Resource is null.");
-      }
+            parent = (Folder)child;
+        }
 
-      if (item.getId().equals(getId()))
-      {
-         return;
-      }
+        throw new IllegalArgumentException("Item " + absolutePath + " not found");
+    }
 
-      if (!(item instanceof ItemContext))
-      {
-         throw new Exception("Item is not implements ItemContext. Parent and Project not set.");
-      }
+    public void addItem(Item item) {
+        if (!(item instanceof ItemContext)) {
+            throw new IllegalArgumentException("Item " + item.getPath() + " is not ItemContext");
+        }
 
-      ItemContext itemContext = (ItemContext)item;
+        String path = item.getPath();
+        path = path.substring(0, path.lastIndexOf("/"));
 
-      if (itemContext.getParent() == null || !itemContext.getParent().getPath().startsWith(getPath()))
-      {
-         throw new Exception("Item has no parent.  Project : " + getName() + ", item path is : " + item.getPath());
-      }
-   }
-   
-   public void notifyFolderChanged(String path)
-   {
-      Item item = getResource(path);
-      if (item == null)
-      {
-         throw new IllegalArgumentException("Item " + path + " not found");
-      }
+        Item parent = getResource(path);
+        if (parent == null) {
+            throw new IllegalArgumentException("Resource " + path + " not found");
+        }
 
-      FolderModel parent = item instanceof FileModel ? ((ItemContext)item).getParent() : (FolderModel)item;
-      if (folderChangedHandler != null)
-      {
-         folderChangedHandler.onFolderChanged(parent);
-      }
-   }
-   
-   public void resourceChanged(Item resource)
-   {      
-   }
+        if (!(parent instanceof FolderModel)) {
+            throw new IllegalArgumentException("Resource " + path + " is not a folder");
+        }
 
-   public void refresh(final FolderModel folder, final AsyncCallback<Folder> callback)
-   {
-      try
-      {
-         validateResource(folder);
-         FolderModel target = (FolderModel)getResource(folder.getPath());
+        FolderModel folder = (FolderModel)parent;
+        ProjectModel project = folder instanceof ProjectModel ? (ProjectModel)folder : folder.getProject();
 
-         try
-         {
-            FolderTreeUnmarshaller unmarshaller = new FolderTreeUnmarshaller(target, this);
-            VirtualFileSystem.getInstance().getTree(target.getId(), new AsyncRequestCallback<Folder>(unmarshaller)
-            {
-               @Override
-               protected void onSuccess(Folder result)
-               {
-                  callback.onSuccess(result);
-               }
+        folder.getChildren().getItems().add(item);
+        ((ItemContext)item).setParent(folder);
+        ((ItemContext)item).setProject(project);
 
-               @Override
-               protected void onFailure(Throwable e)
-               {
-                  callback.onFailure(e);
-               }
-            });
-         }
-         catch (Exception e)
-         {
+        if (folderChangedHandler != null) {
+            folderChangedHandler.onFolderChanged(folder);
+        }
+    }
+
+    public void removeItem(String path) {
+        Item item = getResource(path);
+        if (item == null) {
+            throw new IllegalArgumentException("Item " + path + " not found");
+        }
+
+        FolderModel parent = ((ItemContext)item).getParent();
+        if (parent == null) {
+            throw new IllegalArgumentException("Can't remove Project " + path);
+        }
+
+        parent.getChildren().getItems().remove(item);
+        if (folderChangedHandler != null) {
+            folderChangedHandler.onFolderChanged(parent);
+        }
+    }
+
+    private void validateResource(Item item) throws Exception {
+        if (item == null) {
+            throw new Exception("Resource is null.");
+        }
+
+        if (item.getId().equals(getId())) {
+            return;
+        }
+
+        if (!(item instanceof ItemContext)) {
+            throw new Exception("Item is not implements ItemContext. Parent and Project not set.");
+        }
+
+        ItemContext itemContext = (ItemContext)item;
+
+        if (itemContext.getParent() == null || !itemContext.getParent().getPath().startsWith(getPath())) {
+            throw new Exception("Item has no parent.  Project : " + getName() + ", item path is : " + item.getPath());
+        }
+    }
+
+    public void notifyFolderChanged(String path) {
+        Item item = getResource(path);
+        if (item == null) {
+            throw new IllegalArgumentException("Item " + path + " not found");
+        }
+
+        FolderModel parent = item instanceof FileModel ? ((ItemContext)item).getParent() : (FolderModel)item;
+        if (folderChangedHandler != null) {
+            folderChangedHandler.onFolderChanged(parent);
+        }
+    }
+
+    public void resourceChanged(Item resource) {
+    }
+
+    public void refresh(final FolderModel folder, final AsyncCallback<Folder> callback) {
+        try {
+            validateResource(folder);
+            FolderModel target = (FolderModel)getResource(folder.getPath());
+
+            try {
+                FolderTreeUnmarshaller unmarshaller = new FolderTreeUnmarshaller(target);
+                VirtualFileSystem.getInstance().getTree(target.getId(), new AsyncRequestCallback<Folder>(unmarshaller) {
+                    @Override
+                    protected void onSuccess(Folder result) {
+                        callback.onSuccess(result);
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable e) {
+                        callback.onFailure(e);
+                    }
+                });
+            } catch (Exception e) {
+                callback.onFailure(e);
+            }
+        } catch (Exception e) {
             callback.onFailure(e);
-         }
-      }
-      catch (Exception e)
-      {
-         callback.onFailure(e);
-      }
-   }
+        }
+    }
+    
+    public void dump() {
+        System.out.println("-------------------------------------------------------------------");
+        System.out.println("Project " + getName() + ", id=" + getId() + ", path=" + getPath());
+        System.out.println("-------------------------------------------------------------------");
+        dump(this, 0);
+        System.out.println("-------------------------------------------------------------------");
+    }
+
+    private void dump(Item item, int depth) {
+        String prefix = "";
+        for (int i = 0; i < depth; i++) {
+            prefix += "    ";
+        }
+
+        if (item instanceof ProjectModel) {
+            System.out.println(prefix + "# " + item.getName() + ", id=" + item.getId() + ", path=" + item.getPath() + ", mime-type=" +
+                               item.getMimeType());
+            for (Item i : ((ProjectModel)item).getChildren().getItems()) {
+                dump(i, depth + 1);
+            }
+        } else if (item instanceof FolderModel) {
+            System.out.println(prefix + "> " + item.getName() + ", id=" + item.getId() + ", path=" + item.getPath() + ", mime-type=" +
+                               item.getMimeType());
+            for (Item i : ((FolderModel)item).getChildren().getItems()) {
+                dump(i, depth + 1);
+            }
+        } else if (item instanceof FileModel) {
+            System.out.println(prefix + "  " + item.getName() + ", id=" + item.getId() + ", path=" + item.getPath() + ", mime-type=" +
+                               item.getMimeType());
+        }
+    }
 
 }

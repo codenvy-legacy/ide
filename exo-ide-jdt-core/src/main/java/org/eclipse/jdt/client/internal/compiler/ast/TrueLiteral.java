@@ -16,53 +16,48 @@ import org.eclipse.jdt.client.internal.compiler.impl.BooleanConstant;
 import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 
-public class TrueLiteral extends MagicLiteral
-{
+public class TrueLiteral extends MagicLiteral {
 
-   static final char[] source = {'t', 'r', 'u', 'e'};
+    static final char[] source = {'t', 'r', 'u', 'e'};
 
-   public TrueLiteral(int s, int e)
-   {
-      super(s, e);
-   }
+    public TrueLiteral(int s, int e) {
+        super(s, e);
+    }
 
-   public void computeConstant()
-   {
-      this.constant = BooleanConstant.fromValue(true);
-   }
+    public void computeConstant() {
+        this.constant = BooleanConstant.fromValue(true);
+    }
 
-   /**
-    * Code generation for the true literal
-    *
-    * @param currentScope org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
-    * @param codeStream org.eclipse.jdt.client.internal.compiler.codegen.CodeStream
-    * @param valueRequired boolean
-    */
-   public void generateCode(BlockScope currentScope, boolean valueRequired)
-   {
-   }
+    /**
+     * Code generation for the true literal
+     *
+     * @param currentScope
+     *         org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
+     * @param codeStream
+     *         org.eclipse.jdt.client.internal.compiler.codegen.CodeStream
+     * @param valueRequired
+     *         boolean
+     */
+    public void generateCode(BlockScope currentScope, boolean valueRequired) {
+    }
 
-   public void generateOptimizedBoolean(BlockScope currentScope, BranchLabel trueLabel, BranchLabel falseLabel,
-      boolean valueRequired)
-   {
-   }
+    public void generateOptimizedBoolean(BlockScope currentScope, BranchLabel trueLabel, BranchLabel falseLabel,
+                                         boolean valueRequired) {
+    }
 
-   public TypeBinding literalType(BlockScope scope)
-   {
-      return TypeBinding.BOOLEAN;
-   }
+    public TypeBinding literalType(BlockScope scope) {
+        return TypeBinding.BOOLEAN;
+    }
 
-   /**
-    *
-    */
-   public char[] source()
-   {
-      return source;
-   }
+    /**
+     *
+     */
+    public char[] source() {
+        return source;
+    }
 
-   public void traverse(ASTVisitor visitor, BlockScope scope)
-   {
-      visitor.visit(this, scope);
-      visitor.endVisit(this, scope);
-   }
+    public void traverse(ASTVisitor visitor, BlockScope scope) {
+        visitor.visit(this, scope);
+        visitor.endVisit(this, scope);
+    }
 }

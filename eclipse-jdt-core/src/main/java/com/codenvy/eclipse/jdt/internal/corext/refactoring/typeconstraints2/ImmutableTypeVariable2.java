@@ -18,44 +18,37 @@ import com.codenvy.eclipse.jdt.internal.corext.refactoring.typeconstraints.types
  * immutable type (without an updatable Source location)
  */
 
-public final class ImmutableTypeVariable2 extends ConstraintVariable2
-{
+public final class ImmutableTypeVariable2 extends ConstraintVariable2 {
 
-   public ImmutableTypeVariable2(TType type)
-   {
-      super(type);
-   }
+    public ImmutableTypeVariable2(TType type) {
+        super(type);
+    }
 
-   /*
-    * @see java.lang.Object#hashCode()
-    */
-   @Override
-   public int hashCode()
-   {
-      return getType().hashCode();
-   }
+    /*
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return getType().hashCode();
+    }
 
-   /*
-    * @see java.lang.Object#equals(java.lang.Object)
-    */
-   @Override
-   public boolean equals(Object other)
-   {
-      if (this == other)
-      {
-         return true;
-      }
-      if (other.getClass() != ImmutableTypeVariable2.class)
-      {
-         return false;
-      }
+    /*
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other.getClass() != ImmutableTypeVariable2.class) {
+            return false;
+        }
 
-      return getType() == ((ImmutableTypeVariable2)other).getType();
-   }
+        return getType() == ((ImmutableTypeVariable2)other).getType();
+    }
 
-   @Override
-   public String toString()
-   {
-      return getType().getPrettySignature();
-   }
+    @Override
+    public String toString() {
+        return getType().getPrettySignature();
+    }
 }

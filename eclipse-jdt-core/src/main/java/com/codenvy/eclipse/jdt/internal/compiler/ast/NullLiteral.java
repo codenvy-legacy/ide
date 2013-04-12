@@ -17,64 +17,57 @@ import com.codenvy.eclipse.jdt.internal.compiler.impl.Constant;
 import com.codenvy.eclipse.jdt.internal.compiler.lookup.BlockScope;
 import com.codenvy.eclipse.jdt.internal.compiler.lookup.TypeBinding;
 
-public class NullLiteral extends MagicLiteral
-{
+public class NullLiteral extends MagicLiteral {
 
-   static final char[] source = {'n', 'u', 'l', 'l'};
+    static final char[] source = {'n', 'u', 'l', 'l'};
 
-   public NullLiteral(int s, int e)
-   {
+    public NullLiteral(int s, int e) {
 
-      super(s, e);
-   }
+        super(s, e);
+    }
 
-   public void computeConstant()
-   {
+    public void computeConstant() {
 
-      this.constant = Constant.NotAConstant;
-   }
+        this.constant = Constant.NotAConstant;
+    }
 
-   /**
-    * Code generation for the null literal
-    *
-    * @param currentScope  org.eclipse.jdt.internal.compiler.lookup.BlockScope
-    * @param codeStream    org.eclipse.jdt.internal.compiler.codegen.CodeStream
-    * @param valueRequired boolean
-    */
-   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-   {
-      int pc = codeStream.position;
-      if (valueRequired)
-      {
-         codeStream.aconst_null();
-         codeStream.generateImplicitConversion(this.implicitConversion);
-      }
-      codeStream.recordPositionsFrom(pc, this.sourceStart);
-   }
+    /**
+     * Code generation for the null literal
+     *
+     * @param currentScope
+     *         org.eclipse.jdt.internal.compiler.lookup.BlockScope
+     * @param codeStream
+     *         org.eclipse.jdt.internal.compiler.codegen.CodeStream
+     * @param valueRequired
+     *         boolean
+     */
+    public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired) {
+        int pc = codeStream.position;
+        if (valueRequired) {
+            codeStream.aconst_null();
+            codeStream.generateImplicitConversion(this.implicitConversion);
+        }
+        codeStream.recordPositionsFrom(pc, this.sourceStart);
+    }
 
-   public TypeBinding literalType(BlockScope scope)
-   {
-      return TypeBinding.NULL;
-   }
+    public TypeBinding literalType(BlockScope scope) {
+        return TypeBinding.NULL;
+    }
 
-   public int nullStatus(FlowInfo flowInfo)
-   {
-      return FlowInfo.NULL;
-   }
+    public int nullStatus(FlowInfo flowInfo) {
+        return FlowInfo.NULL;
+    }
 
-   public Object reusableJSRTarget()
-   {
-      return TypeBinding.NULL;
-   }
+    public Object reusableJSRTarget() {
+        return TypeBinding.NULL;
+    }
 
-   public char[] source()
-   {
-      return source;
-   }
+    public char[] source() {
+        return source;
+    }
 
-   public void traverse(ASTVisitor visitor, BlockScope scope)
-   {
-      visitor.visit(this, scope);
-      visitor.endVisit(this, scope);
-   }
+    public void traverse(ASTVisitor visitor, BlockScope scope) {
+        visitor.visit(this, scope);
+        visitor.endVisit(this, scope);
+    }
 }

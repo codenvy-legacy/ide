@@ -1,1 +1,1 @@
-["com/sun","java/awt", "javax/swing", "sun"]
+["com/sun", "java/awt", "javax/swing", "sun"]

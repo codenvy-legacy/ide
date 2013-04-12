@@ -16,20 +16,16 @@ import com.codenvy.eclipse.core.runtime.CoreException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class RefactoringProcessors
-{
+public class RefactoringProcessors {
 
-   public static String[] getNatures(IProject[] projects) throws CoreException
-   {
-      Set<String> result = new HashSet<String>();
-      for (int i = 0; i < projects.length; i++)
-      {
-         String[] pns = projects[i].getDescription().getNatureIds();
-         for (int p = 0; p < pns.length; p++)
-         {
-            result.add(pns[p]);
-         }
-      }
-      return result.toArray(new String[result.size()]);
-   }
+    public static String[] getNatures(IProject[] projects) throws CoreException {
+        Set<String> result = new HashSet<String>();
+        for (int i = 0; i < projects.length; i++) {
+            String[] pns = projects[i].getDescription().getNatureIds();
+            for (int p = 0; p < pns.length; p++) {
+                result.add(pns[p]);
+            }
+        }
+        return result.toArray(new String[result.size()]);
+    }
 }

@@ -25,32 +25,22 @@ import com.google.gwt.event.shared.GwtEvent;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 29, 2011 4:26:18 PM anya $
- * 
  */
-public class AddFilesEvent extends GwtEvent<AddFilesHandler>
-{
+public class AddFilesEvent extends GwtEvent<AddFilesHandler> {
 
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<AddFilesHandler> TYPE = new GwtEvent.Type<AddFilesHandler>();
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<AddFilesHandler> TYPE = new GwtEvent.Type<AddFilesHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<AddFilesHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<AddFilesHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(AddFilesHandler handler)
-   {
-      handler.onAddFiles(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(AddFilesHandler handler) {
+        handler.onAddFiles(this);
+    }
 
 }

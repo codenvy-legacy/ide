@@ -32,105 +32,85 @@ import com.codenvy.eclipse.ltk.core.refactoring.RefactoringDescriptorProxy;
  * @see IRefactoringHistoryService
  * @since 3.2
  */
-public final class RefactoringExecutionEvent
-{
+public final class RefactoringExecutionEvent {
 
-   /**
-    * Event type indicating that a refactoring is about to be performed (value 4)
-    */
-   public static final int ABOUT_TO_PERFORM = 4;
+    /** Event type indicating that a refactoring is about to be performed (value 4) */
+    public static final int ABOUT_TO_PERFORM = 4;
 
-   /**
-    * Event type indicating that a refactoring is about to be redone (value 6)
-    */
-   public static final int ABOUT_TO_REDO = 6;
+    /** Event type indicating that a refactoring is about to be redone (value 6) */
+    public static final int ABOUT_TO_REDO = 6;
 
-   /**
-    * Event type indicating that a refactoring is about to be undone (value 5)
-    */
-   public static final int ABOUT_TO_UNDO = 5;
+    /** Event type indicating that a refactoring is about to be undone (value 5) */
+    public static final int ABOUT_TO_UNDO = 5;
 
-   /**
-    * Event type indicating that a refactoring has been performed (value 1)
-    */
-   public static final int PERFORMED = 1;
+    /** Event type indicating that a refactoring has been performed (value 1) */
+    public static final int PERFORMED = 1;
 
-   /**
-    * Event type indicating that a refactoring has been performed (value 3)
-    */
-   public static final int REDONE = 3;
+    /** Event type indicating that a refactoring has been performed (value 3) */
+    public static final int REDONE = 3;
 
-   /**
-    * Event type indicating that a refactoring has been undone (value 2)
-    */
-   public static final int UNDONE = 2;
+    /** Event type indicating that a refactoring has been undone (value 2) */
+    public static final int UNDONE = 2;
 
-   /**
-    * The refactoring descriptor proxy
-    */
-   private final RefactoringDescriptorProxy fProxy;
+    /** The refactoring descriptor proxy */
+    private final RefactoringDescriptorProxy fProxy;
 
-   /**
-    * The refactoring history service
-    */
-   private final IRefactoringHistoryService fService;
+    /** The refactoring history service */
+    private final IRefactoringHistoryService fService;
 
-   /**
-    * The event type
-    */
-   private final int fType;
+    /** The event type */
+    private final int fType;
 
-   /**
-    * Creates a new refactoring execution event.
-    *
-    * @param service the refactoring history service
-    * @param type    the event type
-    * @param proxy   the refactoring descriptor proxy
-    */
-   public RefactoringExecutionEvent(final IRefactoringHistoryService service, final int type,
-      final RefactoringDescriptorProxy proxy)
-   {
-      Assert.isNotNull(service);
-      Assert.isNotNull(proxy);
-      fService = service;
-      fType = type;
-      fProxy = proxy;
-   }
+    /**
+     * Creates a new refactoring execution event.
+     *
+     * @param service
+     *         the refactoring history service
+     * @param type
+     *         the event type
+     * @param proxy
+     *         the refactoring descriptor proxy
+     */
+    public RefactoringExecutionEvent(final IRefactoringHistoryService service, final int type,
+                                     final RefactoringDescriptorProxy proxy) {
+        Assert.isNotNull(service);
+        Assert.isNotNull(proxy);
+        fService = service;
+        fType = type;
+        fProxy = proxy;
+    }
 
-   /**
-    * Returns the refactoring descriptor proxy.
-    * <p>
-    * Depending on the event, this proxy may refer to an inexisting refactoring
-    * and cannot be resolved to a refactoring descriptor. Clients should also
-    * be prepared to receive notifications for unknown refactorings, which are
-    * discriminated by their special id
-    * {@link com.codenvy.eclipse.ltk.core.refactoring.RefactoringDescriptor#ID_UNKNOWN};
-    * </p>
-    *
-    * @return the refactoring descriptor proxy
-    */
-   public RefactoringDescriptorProxy getDescriptor()
-   {
-      return fProxy;
-   }
+    /**
+     * Returns the refactoring descriptor proxy.
+     * <p>
+     * Depending on the event, this proxy may refer to an inexisting refactoring
+     * and cannot be resolved to a refactoring descriptor. Clients should also
+     * be prepared to receive notifications for unknown refactorings, which are
+     * discriminated by their special id
+     * {@link com.codenvy.eclipse.ltk.core.refactoring.RefactoringDescriptor#ID_UNKNOWN};
+     * </p>
+     *
+     * @return the refactoring descriptor proxy
+     */
+    public RefactoringDescriptorProxy getDescriptor() {
+        return fProxy;
+    }
 
-   /**
-    * Returns the event type.
-    *
-    * @return the event type
-    */
-   public int getEventType()
-   {
-      return fType;
-   }
+    /**
+     * Returns the event type.
+     *
+     * @return the event type
+     */
+    public int getEventType() {
+        return fType;
+    }
 
-   /**
-    * Returns the refactoring history service
-    *
-    * @return the refactoring history service
-    */
-   public IRefactoringHistoryService getHistoryService()
-   {
-      return fService;
-   }
+    /**
+     * Returns the refactoring history service
+     *
+     * @return the refactoring history service
+     */
+    public IRefactoringHistoryService getHistoryService() {
+        return fService;
+    }
 }

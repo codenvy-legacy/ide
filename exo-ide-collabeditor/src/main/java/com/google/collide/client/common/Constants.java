@@ -16,16 +16,13 @@ package com.google.collide.client.common;
 
 import com.codenvy.ide.client.util.BrowserUtils;
 
-/**
- * Constants that we can use in CssResource expressions.
- */
+/** Constants that we can use in CssResource expressions. */
 public final class Constants {
-  public static final int SCROLLBAR_SIZE = BrowserUtils.isFirefox() ? 17 : 16;
+    public static final int SCROLLBAR_SIZE = BrowserUtils.isFirefox() ? 17 : 16;
 
-  /**
-   * A timer delay for actions that happen after a "hover" period.
-   */
-  public static final int MOUSE_HOVER_DELAY = 600;
+    /** A timer delay for actions that happen after a "hover" period. */
+    public static final int MOUSE_HOVER_DELAY = 600;
 
-  private Constants() {} // COV_NF_LINE
+    private Constants() {
+    } // COV_NF_LINE
 }

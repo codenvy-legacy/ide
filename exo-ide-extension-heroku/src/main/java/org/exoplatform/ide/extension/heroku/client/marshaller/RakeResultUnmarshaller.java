@@ -26,49 +26,36 @@ import org.exoplatform.ide.extension.heroku.client.rake.RakeCommandResult;
 
 /**
  * Unmarshaller for the rake command execution result.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 20, 2011 9:46:43 AM anya $
- * 
  */
-public class RakeResultUnmarshaller implements Unmarshallable<RakeCommandResult>
-{
-   /**
-    * Rake command execution result.
-    */
-   private RakeCommandResult rakeCommandResult;
+public class RakeResultUnmarshaller implements Unmarshallable<RakeCommandResult> {
+    /** Rake command execution result. */
+    private RakeCommandResult rakeCommandResult;
 
-   /**
-    * @param rakeCommandResult rake command execution result
-    */
-   public RakeResultUnmarshaller(RakeCommandResult rakeCommandResult)
-   {
-      this.rakeCommandResult = rakeCommandResult;
-   }
+    /**
+     * @param rakeCommandResult
+     *         rake command execution result
+     */
+    public RakeResultUnmarshaller(RakeCommandResult rakeCommandResult) {
+        this.rakeCommandResult = rakeCommandResult;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      try
-      {
-         rakeCommandResult.setResult(response.getText());
-      }
-      catch (Exception e)
-      {
-         throw new UnmarshallerException(e.getMessage());
-      }
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        try {
+            rakeCommandResult.setResult(response.getText());
+        } catch (Exception e) {
+            throw new UnmarshallerException(e.getMessage());
+        }
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
-    */
-   @Override
-   public RakeCommandResult getPayload()
-   {
-      return rakeCommandResult;
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
+    @Override
+    public RakeCommandResult getPayload() {
+        return rakeCommandResult;
+    }
 
 }

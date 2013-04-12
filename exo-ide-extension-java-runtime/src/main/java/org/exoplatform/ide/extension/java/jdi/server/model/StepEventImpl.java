@@ -25,42 +25,35 @@ import org.exoplatform.ide.extension.java.jdi.shared.StepEvent;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class StepEventImpl implements StepEvent
-{
-   private Location location;
+public class StepEventImpl implements StepEvent {
+    private Location location;
 
-   public StepEventImpl(Location location)
-   {
-      this.location = location;
-   }
+    public StepEventImpl(Location location) {
+        this.location = location;
+    }
 
-   public StepEventImpl()
-   {
-   }
+    public StepEventImpl() {
+    }
 
-   @Override
-   public Location getLocation()
-   {
-      return location;
-   }
+    @Override
+    public Location getLocation() {
+        return location;
+    }
 
-   @Override
-   public void setLocation(Location location)
-   {
-      this.location = location;
-   }
+    @Override
+    public void setLocation(Location location) {
+        this.location = location;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "StepEventImpl{" +
-         "location=" + location +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "StepEventImpl{" +
+               "location=" + location +
+               '}';
+    }
 
-   @Override
-   public final int getType()
-   {
-      return STEP;
-   }
+    @Override
+    public final int getType() {
+        return STEP;
+    }
 }

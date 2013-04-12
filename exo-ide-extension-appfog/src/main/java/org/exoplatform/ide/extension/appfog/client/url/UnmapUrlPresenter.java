@@ -56,292 +56,237 @@ import java.util.List;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, ViewClosedHandler
-{
-   
-   interface Display extends IsView
-   {
-      HasValue<String> getMapUrlField();
+public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, ViewClosedHandler {
 
-      HasClickHandlers getMapUrlButton();
+    interface Display extends IsView {
+        HasValue<String> getMapUrlField();
 
-      HasClickHandlers getCloseButton();
+        HasClickHandlers getMapUrlButton();
 
-      ListGridItem<String> getRegisteredUrlsGrid();
+        HasClickHandlers getCloseButton();
 
-      HasUnmapClickHandler getUnmapUrlListGridButton();
+        ListGridItem<String> getRegisteredUrlsGrid();
 
-      void enableMapUrlButton(boolean enable);
-   }
+        HasUnmapClickHandler getUnmapUrlListGridButton();
 
-   private AppfogLocalizationConstant localeBundle = AppfogExtension.LOCALIZATION_CONSTANT;
+        void enableMapUrlButton(boolean enable);
+    }
 
-   private Display display;
+    private AppfogLocalizationConstant localeBundle = AppfogExtension.LOCALIZATION_CONSTANT;
 
-   private List<String> registeredUrls;
+    private Display display;
 
-   private String unregisterUrl;
+    private List<String> registeredUrls;
 
-   private String urlToMap;
+    private String unregisterUrl;
 
-   private boolean isBindingChanged = false;
+    private String urlToMap;
 
-   public UnmapUrlPresenter()
-   {
-      IDE.addHandler(UnmapUrlEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    private boolean isBindingChanged = false;
 
-   public void bindDisplay(List<String> urls)
-   {
-      registeredUrls = urls;
+    public UnmapUrlPresenter() {
+        IDE.addHandler(UnmapUrlEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-      display.getMapUrlField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            display.enableMapUrlButton((event.getValue() != null && !event.getValue().isEmpty()));
-         }
-      });
+    public void bindDisplay(List<String> urls) {
+        registeredUrls = urls;
 
-      display.getMapUrlButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            urlToMap = display.getMapUrlField().getValue();
-            if (urlToMap != null || !urlToMap.isEmpty())
-            {
-               for (String url : registeredUrls)
-               {
-                  if (url.equals(urlToMap) || ("http://" + url).equals(urlToMap))
-                  {
-                     Dialogs.getInstance().showError(localeBundle.mapUrlAlredyRegistered());
-                     return;
-                  }
-               }
-               if (urlToMap.startsWith("http://"))
-               {
-                  urlToMap = urlToMap.substring(7);
-               }
-               mapUrl(urlToMap);
+        display.getMapUrlField().addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                display.enableMapUrlButton((event.getValue() != null && !event.getValue().isEmpty()));
             }
-         }
-      });
+        });
 
-      display.getCloseButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
+        display.getMapUrlButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                urlToMap = display.getMapUrlField().getValue();
+                if (urlToMap != null || !urlToMap.isEmpty()) {
+                    for (String url : registeredUrls) {
+                        if (url.equals(urlToMap) || ("http://" + url).equals(urlToMap)) {
+                            Dialogs.getInstance().showError(localeBundle.mapUrlAlredyRegistered());
+                            return;
+                        }
+                    }
+                    if (urlToMap.startsWith("http://")) {
+                        urlToMap = urlToMap.substring(7);
+                    }
+                    mapUrl(urlToMap);
+                }
+            }
+        });
 
-      display.getUnmapUrlListGridButton().addUnmapClickHandler(new UnmapHandler()
-      {
+        display.getCloseButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
 
-         @Override
-         public void onUnmapUrl(String url)
-         {
-            askForUnmapUrl(url);
-         }
-      });
+        display.getUnmapUrlListGridButton().addUnmapClickHandler(new UnmapHandler() {
 
-      display.getRegisteredUrlsGrid().setValue(registeredUrls);
-   }
+            @Override
+            public void onUnmapUrl(String url) {
+                askForUnmapUrl(url);
+            }
+        });
 
-   /**
-    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
-    */
-   private LoggedInHandler mapUrlLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         mapUrl(urlToMap);
-      }
-   };
+        display.getRegisteredUrlsGrid().setValue(registeredUrls);
+    }
 
-   private void mapUrl(final String url)
-   {
+    /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
+    private LoggedInHandler mapUrlLoggedInHandler = new LoggedInHandler() {
+        @Override
+        public void onLoggedIn() {
+            mapUrl(urlToMap);
+        }
+    };
+
+    private void mapUrl(final String url) {
 //      ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
-      ProjectModel projectModel = getSelectedProject();
+        ProjectModel projectModel = getSelectedProject();
 
-      final String server = projectModel.getProperty("appfog-target").getValue().get(0);
-      final String appName = projectModel.getProperty("appfog-application").getValue().get(0);
+        final String server = projectModel.getProperty("appfog-target").getValue().get(0);
+        final String appName = projectModel.getProperty("appfog-application").getValue().get(0);
 
-      try
-      {
-         AppfogClientService.getInstance().mapUrl(null, null, appName, server, url,
-            new AppfogAsyncRequestCallback<String>(null, mapUrlLoggedInHandler, null)
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  isBindingChanged = true;
-                  String registeredUrl = url;
-                  if (!url.startsWith("http"))
-                  {
-                     registeredUrl = "http://" + url;
-                  }
-                  registeredUrl = "<a href=\"" + registeredUrl + "\" target=\"_blank\">" + registeredUrl + "</a>";
-                  String msg = localeBundle.mapUrlRegisteredSuccess(registeredUrl);
-                  IDE.fireEvent(new OutputEvent(msg));
-                  registeredUrls.add(url);
-                  display.getRegisteredUrlsGrid().setValue(registeredUrls);
-                  display.getMapUrlField().setValue("");
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+        try {
+            AppfogClientService.getInstance().mapUrl(null, null, appName, server, url,
+                                                     new AppfogAsyncRequestCallback<String>(null, mapUrlLoggedInHandler, null) {
+                                                         @Override
+                                                         protected void onSuccess(String result) {
+                                                             isBindingChanged = true;
+                                                             String registeredUrl = url;
+                                                             if (!url.startsWith("http")) {
+                                                                 registeredUrl = "http://" + url;
+                                                             }
+                                                             registeredUrl = "<a href=\"" + registeredUrl + "\" target=\"_blank\">" +
+                                                                             registeredUrl + "</a>";
+                                                             String msg = localeBundle.mapUrlRegisteredSuccess(registeredUrl);
+                                                             IDE.fireEvent(new OutputEvent(msg));
+                                                             registeredUrls.add(url);
+                                                             display.getRegisteredUrlsGrid().setValue(registeredUrls);
+                                                             display.getMapUrlField().setValue("");
+                                                         }
+                                                     });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   private void askForUnmapUrl(final String url)
-   {
-      Dialogs.getInstance().ask(localeBundle.unmapUrlConfirmationDialogTitle(),
-         localeBundle.unmapUrlConfirmationDialogMessage(), new BooleanValueReceivedHandler()
-      {
-         @Override
-         public void booleanValueReceived(Boolean value)
-         {
-            if (value == null || !value)
-            {
-               return;
+    private void askForUnmapUrl(final String url) {
+        Dialogs.getInstance().ask(localeBundle.unmapUrlConfirmationDialogTitle(),
+                                  localeBundle.unmapUrlConfirmationDialogMessage(), new BooleanValueReceivedHandler() {
+            @Override
+            public void booleanValueReceived(Boolean value) {
+                if (value == null || !value) {
+                    return;
+                }
+
+                unregisterUrl = url;
+                unregisterUrl(unregisterUrl);
             }
+        });
+    }
 
-            unregisterUrl = url;
+    LoggedInHandler unregisterUrlLoggedInHandler = new LoggedInHandler() {
+        @Override
+        public void onLoggedIn() {
             unregisterUrl(unregisterUrl);
-         }
-      });
-   }
+        }
+    };
 
-   LoggedInHandler unregisterUrlLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         unregisterUrl(unregisterUrl);
-      }
-   };
-
-   private void unregisterUrl(final String url)
-   {
+    private void unregisterUrl(final String url) {
 //      ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
-      ProjectModel projectModel = getSelectedProject();
+        ProjectModel projectModel = getSelectedProject();
 
-      final String server = projectModel.getProperty("appfog-target").getValue().get(0);
-      final String appName = projectModel.getProperty("appfog-application").getValue().get(0);
+        final String server = projectModel.getProperty("appfog-target").getValue().get(0);
+        final String appName = projectModel.getProperty("appfog-application").getValue().get(0);
 
-      try
-      {
-         AppfogClientService.getInstance().unmapUrl(null, null, appName, server, url,
-            new AppfogAsyncRequestCallback<Object>(null, unregisterUrlLoggedInHandler, null)
-            {
-               @Override
-               protected void onSuccess(Object result)
-               {
-                  isBindingChanged = true;
-                  registeredUrls.remove(url);
-                  display.getRegisteredUrlsGrid().setValue(registeredUrls);
-                  String unmappedUrl = url;
-                  if (!unmappedUrl.startsWith("http"))
-                  {
-                     unmappedUrl = "http://" + unmappedUrl;
-                  }
-                  String msg = localeBundle.unmapUrlSuccess(unmappedUrl);
-                  IDE.fireEvent(new OutputEvent(msg));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+        try {
+            AppfogClientService.getInstance().unmapUrl(null, null, appName, server, url,
+                                                       new AppfogAsyncRequestCallback<Object>(null, unregisterUrlLoggedInHandler, null) {
+                                                           @Override
+                                                           protected void onSuccess(Object result) {
+                                                               isBindingChanged = true;
+                                                               registeredUrls.remove(url);
+                                                               display.getRegisteredUrlsGrid().setValue(registeredUrls);
+                                                               String unmappedUrl = url;
+                                                               if (!unmappedUrl.startsWith("http")) {
+                                                                   unmappedUrl = "http://" + unmappedUrl;
+                                                               }
+                                                               String msg = localeBundle.unmapUrlSuccess(unmappedUrl);
+                                                               IDE.fireEvent(new OutputEvent(msg));
+                                                           }
+                                                       });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   LoggedInHandler appInfoLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         getAppRegisteredUrls();
-      }
-   };
+    LoggedInHandler appInfoLoggedInHandler = new LoggedInHandler() {
+        @Override
+        public void onLoggedIn() {
+            getAppRegisteredUrls();
+        }
+    };
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.start.RestartApplicationHandler#onRestartApplication(org.exoplatform.ide.extension.cloudfoundry.client.start.RestartApplicationEvent)
-    */
-   @Override
-   public void onUnmapUrl(UnmapUrlEvent event)
-   {
-      isBindingChanged = false;
-      if (makeSelectionCheck())
-      {
-         getAppRegisteredUrls();
-      }
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.start.RestartApplicationHandler#onRestartApplication(org.exoplatform.ide
+     * .extension.cloudfoundry.client.start.RestartApplicationEvent) */
+    @Override
+    public void onUnmapUrl(UnmapUrlEvent event) {
+        isBindingChanged = false;
+        if (makeSelectionCheck()) {
+            getAppRegisteredUrls();
+        }
+    }
 
-   private void getAppRegisteredUrls()
-   {
+    private void getAppRegisteredUrls() {
 //      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      String projectId = getSelectedProject().getId();
+        String projectId = getSelectedProject().getId();
 
-      try
-      {
-         AutoBean<AppfogApplication> appfogApplication =
-            AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
+        try {
+            AutoBean<AppfogApplication> appfogApplication =
+                    AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
 
-         AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
-            new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
+            AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
+                    new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
 
-         AppfogClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
-            new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, null, null)
-            {
-               @Override
-               protected void onSuccess(AppfogApplication result)
-               {
-                  openView(result.getUris());
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+            AppfogClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
+                                                                 new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, null,
+                                                                                                                   null) {
+                                                                     @Override
+                                                                     protected void onSuccess(AppfogApplication result) {
+                                                                         openView(result.getUris());
+                                                                     }
+                                                                 });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-         if (isBindingChanged)
-         {
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+            if (isBindingChanged) {
 //            String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-            String projectId = getSelectedProject().getId();
-            IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
-         }
-      }
-   }
+                String projectId = getSelectedProject().getId();
+                IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
+            }
+        }
+    }
 
-   private void openView(List<String> registeredUrls)
-   {
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         bindDisplay(registeredUrls);
-         IDE.getInstance().openView(display.asView());
-         display.enableMapUrlButton(false);
-      }
-   }
+    private void openView(List<String> registeredUrls) {
+        if (display == null) {
+            display = GWT.create(Display.class);
+            bindDisplay(registeredUrls);
+            IDE.getInstance().openView(display.asView());
+            display.enableMapUrlButton(false);
+        }
+    }
 
 }

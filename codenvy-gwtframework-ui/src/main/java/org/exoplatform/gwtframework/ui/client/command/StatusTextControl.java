@@ -19,105 +19,90 @@
  */
 package org.exoplatform.gwtframework.ui.client.command;
 
-import org.exoplatform.gwtframework.ui.client.component.TextButton.TextAlignment;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.gwtframework.ui.client.component.TextButton.TextAlignment;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class StatusTextControl extends Control<StatusTextControl>
-{
+public class StatusTextControl extends Control<StatusTextControl> {
 
-   private int size = -1;
+    private int size = -1;
 
-   private String text = "";
+    private String text = "";
 
-   private TextAlignment textAlignment = TextAlignment.LEFT;
+    private TextAlignment textAlignment = TextAlignment.LEFT;
 
-   private GwtEvent<?> event;
+    private GwtEvent<?> event;
 
-   private boolean fireEventOnSingleClick = false;
+    private boolean fireEventOnSingleClick = false;
 
-   public StatusTextControl(String id)
-   {
-      super(id);
-   }
+    public StatusTextControl(String id) {
+        super(id);
+    }
 
-   public int getSize()
-   {
-      return size;
-   }
+    public int getSize() {
+        return size;
+    }
 
-   public StatusTextControl setSize(int size)
-   {
-      this.size = size;
-      return this;
-   }
+    public StatusTextControl setSize(int size) {
+        this.size = size;
+        return this;
+    }
 
-   public String getText()
-   {
-      return text;
-   }
+    public String getText() {
+        return text;
+    }
 
-   public StatusTextControl setText(String text)
-   {
-      if (this.text.equals(text))
-      {
-         return this;
-      }
+    public StatusTextControl setText(String text) {
+        if (this.text.equals(text)) {
+            return this;
+        }
 
-      this.text = text;
+        this.text = text;
 
-      for (ControlStateListener listener : getStateListeners())
-      {
-         ((StatusTextControlStateListener)listener).updateStatusText(text);
-      }
+        for (ControlStateListener listener : getStateListeners()) {
+            ((StatusTextControlStateListener)listener).updateStatusText(text);
+        }
 
-      return this;
-   }
+        return this;
+    }
 
-   /**
-    * @return the event
-    */
-   public GwtEvent<?> getEvent()
-   {
-      return event;
-   }
+    /** @return the event */
+    public GwtEvent<?> getEvent() {
+        return event;
+    }
 
-   /**
-    * @param event the event to set
-    */
-   public StatusTextControl setEvent(GwtEvent<?> event)
-   {
-      this.event = event;
-      return this;
-   }
+    /**
+     * @param event
+     *         the event to set
+     */
+    public StatusTextControl setEvent(GwtEvent<?> event) {
+        this.event = event;
+        return this;
+    }
 
-   public boolean isFireEventOnSingleClick()
-   {
-      return fireEventOnSingleClick;
-   }
+    public boolean isFireEventOnSingleClick() {
+        return fireEventOnSingleClick;
+    }
 
-   public StatusTextControl setFireEventOnSingleClick(boolean fireEventOnSingleClick)
-   {
-      this.fireEventOnSingleClick = fireEventOnSingleClick;
-      return this;
-   }
+    public StatusTextControl setFireEventOnSingleClick(boolean fireEventOnSingleClick) {
+        this.fireEventOnSingleClick = fireEventOnSingleClick;
+        return this;
+    }
 
-   public TextAlignment getTextAlignment()
-   {
-      return textAlignment;
-   }
+    public TextAlignment getTextAlignment() {
+        return textAlignment;
+    }
 
-   public StatusTextControl setTextAlignment(TextAlignment textAlignment)
-   {
-      this.textAlignment = textAlignment;
-      return this;
-   }
+    public StatusTextControl setTextAlignment(TextAlignment textAlignment) {
+        this.textAlignment = textAlignment;
+        return this;
+    }
 
 }

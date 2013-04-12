@@ -24,29 +24,28 @@ package org.exoplatform.ide.extension.aws.shared.beanstalk;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface ApplicationVersionInfo
-{
-   String getApplicationName();
+public interface ApplicationVersionInfo {
+    String getApplicationName();
 
-   void setApplicationName(String name);
+    void setApplicationName(String name);
 
-   String getDescription();
+    String getDescription();
 
-   void setDescription(String description);
+    void setDescription(String description);
 
-   String getVersionLabel();
+    String getVersionLabel();
 
-   void setVersionLabel(String versionLabel);
+    void setVersionLabel(String versionLabel);
 
-   S3Item getS3Location();
+    S3Item getS3Location();
 
-   void setS3Location(S3Item s3Location);
+    void setS3Location(S3Item s3Location);
 
-   long getCreated();
+    long getCreated();
 
-   void setCreated(long created);
+    void setCreated(long created);
 
-   long getUpdated();
+    long getUpdated();
 
-   void setUpdated(long updated);
+    void setUpdated(long updated);
 }

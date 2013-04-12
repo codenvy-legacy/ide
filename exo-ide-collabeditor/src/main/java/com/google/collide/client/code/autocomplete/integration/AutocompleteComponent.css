@@ -1,44 +1,44 @@
-/* CSS for AutocompleteComponent.java */
+    /* CSS for AutocompleteComponent.java */
 
-@def maxHeight 300px;
+    @def maxHeight 300px;
 
-.container {
-  box-sizing: border-box;
-}
+    .container {
+        box-sizing: border-box;
+    }
 
-.items {
-  border-width: 0;
-  border-spacing: 0;
-  width: 100%;
-}
+    .items {
+        border-width: 0;
+        border-spacing: 0;
+        width: 100%;
+    }
 
-.hint {
-  overflow-x: hidden;
-  font-size: 11px;
-  font-family: 'Menlo', 'Monaco', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro',monospace;
-  color: #666;
-  background-color: #F7F7F7;
-  border-top: solid 1px #ECECEC;
-  text-align: center;
-  line-height: 16px;
-  padding: 0 3px;
-}
+    .hint {
+        overflow-x: hidden;
+        font-size: 11px;
+        font-family: 'Menlo', 'Monaco', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro', monospace;
+        color: #666;
+        background-color: #F7F7F7;
+        border-top: solid 1px #ECECEC;
+        text-align: center;
+        line-height: 16px;
+        padding: 0 3px;
+    }
 
-.proposalIcon {
-  max-width: 16px;
-}
+    .proposalIcon {
+        max-width: 16px;
+    }
 
-.proposalLabel {
-  max-width: 400px;
-}
+    .proposalLabel {
+        max-width: 400px;
+    }
 
-.cappedProposalLabel {
-  color: #999;
-}
+    .cappedProposalLabel {
+        color: #999;
+    }
 
-.proposalGroup {
-  padding-left: 5px;
-  color: grey;
-  text-align: right;
-  max-width: 250px;
-}
+    .proposalGroup {
+        padding-left: 5px;
+        color: grey;
+        text-align: right;
+        max-width: 250px;
+    }

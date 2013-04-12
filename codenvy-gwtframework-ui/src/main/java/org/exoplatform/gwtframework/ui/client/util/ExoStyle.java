@@ -23,42 +23,36 @@ import com.google.gwt.core.client.GWT;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ExoStyle
-{
+public class ExoStyle {
 
-   public static interface Style
-   {
+    public static interface Style {
 
-      static final String BLANK = "exo-blank";
+        static final String BLANK = "exo-blank";
 
-   }
+    }
 
-   private static String eXoStyleURL;
+    private static String eXoStyleURL;
 
-   public static String getEXoStyleURL()
-   {
-      return eXoStyleURL;
-   }
+    public static String getEXoStyleURL() {
+        return eXoStyleURL;
+    }
 
-   static
-   {
-      eXoStyleURL = GWT.getModuleBaseURL();
+    static {
+        eXoStyleURL = GWT.getModuleBaseURL();
 
-      if (eXoStyleURL.endsWith("/"))
-      {
-         eXoStyleURL = eXoStyleURL.substring(0, eXoStyleURL.length() - 1);
-      }
-      eXoStyleURL += "/eXoStyle/skin/default/images/";
-   }
+        if (eXoStyleURL.endsWith("/")) {
+            eXoStyleURL = eXoStyleURL.substring(0, eXoStyleURL.length() - 1);
+        }
+        eXoStyleURL += "/eXoStyle/skin/default/images/";
+    }
 
-   public static String getBlankImage()
-   {
-      return "<img src=\"" + eXoStyleURL + "blank.gif" + "\" class=\"" + Style.BLANK + "\" />";
-   }
+    public static String getBlankImage() {
+        return "<img src=\"" + eXoStyleURL + "blank.gif" + "\" class=\"" + Style.BLANK + "\" />";
+    }
 
 }

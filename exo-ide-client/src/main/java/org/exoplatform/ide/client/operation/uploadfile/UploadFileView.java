@@ -23,12 +23,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.Hidden;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
@@ -40,164 +35,141 @@ import org.exoplatform.ide.client.framework.ui.upload.FileUploadInput;
 import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class UploadFileView extends ViewImpl implements
-   org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display
-{
+                                             org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display {
 
-   private static final String MIME_TYPE_HIDDED_FIELD = "mimeType";
+    private static final String MIME_TYPE_HIDDED_FIELD = "mimeType";
 
-   private static final String NAME_HIDDED_FIELD = "name";
+    private static final String NAME_HIDDED_FIELD = "name";
 
-   private static final String OVERWRITE_HIDDED_FIELD = "overwrite";
+    private static final String OVERWRITE_HIDDED_FIELD = "overwrite";
 
-   public static final int WIDTH = 460;
+    public static final int WIDTH = 460;
 
-   public static final int HEIGHT = 200;
+    public static final int HEIGHT = 200;
 
-   private static final String ID = "ideUploadForm";
+    private static final String ID = "ideUploadForm";
 
-   private static final String TITLE = IDE.UPLOAD_CONSTANT.uploadFileTitle();
+    private static final String TITLE = IDE.UPLOAD_CONSTANT.uploadFileTitle();
 
-   private static UploadFileViewUiBinder uiBinder = GWT.create(UploadFileViewUiBinder.class);
+    private static UploadFileViewUiBinder uiBinder = GWT.create(UploadFileViewUiBinder.class);
 
-   interface UploadFileViewUiBinder extends UiBinder<Widget, UploadFileView>
-   {
-   }
+    interface UploadFileViewUiBinder extends UiBinder<Widget, UploadFileView> {
+    }
 
-   @UiField
-   ImageButton openButton, cancelButton;
+    @UiField
+    ImageButton openButton, cancelButton;
 
-   @UiField
-   TextInput fileNameField;
+    @UiField
+    TextInput fileNameField;
 
-   @UiField
-   HorizontalPanel postFieldsPanel;
+    @UiField
+    HorizontalPanel postFieldsPanel;
 
-   @UiField
-   FormPanel uploadForm;
+    @UiField
+    FormPanel uploadForm;
 
-   @UiField
-   FileUploadInput fileUploadInput;
+    @UiField
+    FileUploadInput fileUploadInput;
 
-   @UiField
-   ComboBoxField mimeTypesField;
+    @UiField
+    ComboBoxField mimeTypesField;
 
-   private Hidden nameHiddenField;
+    private Hidden nameHiddenField;
 
-   private Hidden mimeTypeHiddenField;
+    private Hidden mimeTypeHiddenField;
 
-   private Hidden overwriteHiddenField;
+    private Hidden overwriteHiddenField;
 
-   public UploadFileView()
-   {
-      super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.upload()), WIDTH, HEIGHT, false);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
+    public UploadFileView() {
+        super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.upload()), WIDTH, HEIGHT, false);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
 
-      nameHiddenField = new Hidden(NAME_HIDDED_FIELD);
-      mimeTypeHiddenField = new Hidden(MIME_TYPE_HIDDED_FIELD);
-      overwriteHiddenField = new Hidden(OVERWRITE_HIDDED_FIELD);
-   }
+        nameHiddenField = new Hidden(NAME_HIDDED_FIELD);
+        mimeTypeHiddenField = new Hidden(MIME_TYPE_HIDDED_FIELD);
+        overwriteHiddenField = new Hidden(OVERWRITE_HIDDED_FIELD);
+    }
 
-   @Override
-   public HasValue<String> getMimeTypeField()
-   {
-      return mimeTypesField;
-   }
+    @Override
+    public HasValue<String> getMimeTypeField() {
+        return mimeTypesField;
+    }
 
-   @Override
-   public void setSelectedMimeType(String mimeType)
-   {
-      mimeTypesField.setValue(mimeType);
-   }
+    @Override
+    public void setSelectedMimeType(String mimeType) {
+        mimeTypesField.setValue(mimeType);
+    }
 
-   @Override
-   public void setMimeTypes(String[] mimeTypes)
-   {
-      mimeTypesField.setValueMap(mimeTypes);
-   }
+    @Override
+    public void setMimeTypes(String[] mimeTypes) {
+        mimeTypesField.setValueMap(mimeTypes);
+    }
 
-   @Override
-   public void setMimeTypeFieldEnabled(boolean enabled)
-   {
-      mimeTypesField.setEnabled(enabled);
-   }
+    @Override
+    public void setMimeTypeFieldEnabled(boolean enabled) {
+        mimeTypesField.setEnabled(enabled);
+    }
 
-   @Override
-   public HasClickHandlers getOpenButton()
-   {
-      return openButton;
-   }
+    @Override
+    public HasClickHandlers getOpenButton() {
+        return openButton;
+    }
 
-   @Override
-   public void setOpenButtonEnabled(boolean enabled)
-   {
-      openButton.setEnabled(enabled);
-   }
+    @Override
+    public void setOpenButtonEnabled(boolean enabled) {
+        openButton.setEnabled(enabled);
+    }
 
-   @Override
-   public HasClickHandlers getCloseButton()
-   {
-      return cancelButton;
-   }
+    @Override
+    public HasClickHandlers getCloseButton() {
+        return cancelButton;
+    }
 
-   @Override
-   public FormPanel getUploadForm()
-   {
-      return uploadForm;
-   }
+    @Override
+    public FormPanel getUploadForm() {
+        return uploadForm;
+    }
 
-   @Override
-   public HasValue<String> getFileNameField()
-   {
-      return fileNameField;
-   }
+    @Override
+    public HasValue<String> getFileNameField() {
+        return fileNameField;
+    }
 
-   @Override
-   public HasFileSelectedHandler getFileUploadInput()
-   {
-      return fileUploadInput;
-   }
+    @Override
+    public HasFileSelectedHandler getFileUploadInput() {
+        return fileUploadInput;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display#setMimeTypeHiddedField(java.lang.String)
-    */
-   @Override
-   public void setMimeTypeHiddedField(String mimeType)
-   {
-      mimeTypeHiddenField.setValue(mimeType);
-      if (postFieldsPanel.getWidgetIndex(mimeTypeHiddenField) == -1)
-         postFieldsPanel.add(mimeTypeHiddenField);
+    /** @see org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display#setMimeTypeHiddedField(java.lang.String) */
+    @Override
+    public void setMimeTypeHiddedField(String mimeType) {
+        mimeTypeHiddenField.setValue(mimeType);
+        if (postFieldsPanel.getWidgetIndex(mimeTypeHiddenField) == -1)
+            postFieldsPanel.add(mimeTypeHiddenField);
 
-   }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display#setNameHiddedField(java.lang.String)
-    */
-   @Override
-   public void setNameHiddedField(String name)
-   {
-      nameHiddenField.setValue(name);
-      if (postFieldsPanel.getWidgetIndex(nameHiddenField) == -1)
-         postFieldsPanel.add(nameHiddenField);
-   }
+    /** @see org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display#setNameHiddedField(java.lang.String) */
+    @Override
+    public void setNameHiddedField(String name) {
+        nameHiddenField.setValue(name);
+        if (postFieldsPanel.getWidgetIndex(nameHiddenField) == -1)
+            postFieldsPanel.add(nameHiddenField);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display#setOverwriteHiddedField(java.lang.Boolean)
-    */
-   @Override
-   public void setOverwriteHiddedField(Boolean overwrite)
-   {
-      overwriteHiddenField.setValue(String.valueOf(overwrite));
-      if (postFieldsPanel.getWidgetIndex(overwriteHiddenField) == -1)
-         postFieldsPanel.add(overwriteHiddenField);
-   }
+    /** @see org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display#setOverwriteHiddedField(java.lang.Boolean) */
+    @Override
+    public void setOverwriteHiddedField(Boolean overwrite) {
+        overwriteHiddenField.setValue(String.valueOf(overwrite));
+        if (postFieldsPanel.getWidgetIndex(overwriteHiddenField) == -1)
+            postFieldsPanel.add(overwriteHiddenField);
+    }
 
 }

@@ -18,79 +18,63 @@
  */
 package org.exoplatform.ide.client;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
-import org.exoplatform.gwtframework.commons.exception.ServerDisconnectedException;
-import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.exception.UnauthorizedException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.util.Log;
-import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.exception.*;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.util.Log;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ExceptionThrownEventHandler implements ExceptionThrownHandler
-{
+public class ExceptionThrownEventHandler implements ExceptionThrownHandler {
 
-   private static final String EXIT_CODE = "X-Exit-Code";
+    private static final String EXIT_CODE = "X-Exit-Code";
 
-   public ExceptionThrownEventHandler()
-   {
-      IDE.addHandler(ExceptionThrownEvent.TYPE, this);
-   }
+    public ExceptionThrownEventHandler() {
+        IDE.addHandler(ExceptionThrownEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler#onError(org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent)
-    */
-   public void onError(ExceptionThrownEvent event)
-   {
-      Log.info("ExceptionThrownEventHandler.onError()");      
-      
-      Throwable error = event.getException();
-      Log.info(event.getErrorMessage());
-      error.printStackTrace();
+    /** @see org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler#onError(org.exoplatform.gwtframework.commons.exception
+     * .ExceptionThrownEvent) */
+    public void onError(ExceptionThrownEvent event) {
+        Log.info("ExceptionThrownEventHandler.onError()");
 
-      if (error instanceof UnauthorizedException)
-      {
-         return;
-      }
+        Throwable error = event.getException();
+        Log.info(event.getErrorMessage());
+        error.printStackTrace();
 
-      if (error instanceof ServerDisconnectedException)
-      {
-         showServerDisconnectedDialog((ServerDisconnectedException)error);
-         return;
-      }
+        if (error instanceof UnauthorizedException) {
+            return;
+        }
 
-      if (error instanceof ServerException)
-      {
-         ServerException serverException = (ServerException)error;
-         processServerError(serverException, event.getErrorMessage());
-      }
-      else
-      {
-         if (error != null)
-            Dialogs.getInstance().showError(error.getMessage());
-         else
-            Dialogs.getInstance().showError(event.getErrorMessage());
-      }
-   }
+        if (error instanceof ServerDisconnectedException) {
+            showServerDisconnectedDialog((ServerDisconnectedException)error);
+            return;
+        }
 
-   private void showServerDisconnectedDialog(final ServerDisconnectedException exception)
-   {
-      Log.info("Displays Server Disconnected Dialog....");
+        if (error instanceof ServerException) {
+            ServerException serverException = (ServerException)error;
+            processServerError(serverException, event.getErrorMessage());
+        } else {
+            if (error != null)
+                Dialogs.getInstance().showError(error.getMessage());
+            else
+                Dialogs.getInstance().showError(event.getErrorMessage());
+        }
+    }
 
-      String message = IDE.IDE_LOCALIZATION_CONSTANT.serverDisconnected();
-      Dialogs.getInstance().showError(message);
+    private void showServerDisconnectedDialog(final ServerDisconnectedException exception) {
+        Log.info("Displays Server Disconnected Dialog....");
+
+        String message = IDE.IDE_LOCALIZATION_CONSTANT.serverDisconnected();
+        Dialogs.getInstance().showError(message);
 //      Dialogs.getInstance().ask("IDE", message, new BooleanValueReceivedHandler()
 //      {
 //         @Override
@@ -117,45 +101,34 @@ public class ExceptionThrownEventHandler implements ExceptionThrownHandler
 //            }
 //         }
 //      });
-   }
+    }
 
-   private void sendAgain(AsyncRequest request)
-   {
-      try
-      {
-         request.send(request.getCallback());
-      }
-      catch (final Exception e)
-      {
-         Scheduler.get().scheduleDeferred(new ScheduledCommand()
-         {
-            @Override
-            public void execute()
-            {
-               onError(new ExceptionThrownEvent(e));
+    private void sendAgain(AsyncRequest request) {
+        try {
+            request.send(request.getCallback());
+        } catch (final Exception e) {
+            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    onError(new ExceptionThrownEvent(e));
+                }
+            });
+        }
+    }
+
+    private void processServerError(ServerException serverException, String errorMessage) {
+        if (serverException.isErrorMessageProvided()
+            || (serverException.getHeader(EXIT_CODE) != null && !"0".equals(serverException.getHeader(EXIT_CODE)))) {
+            String html =
+                    "" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText() + "<br><br><hr><br>"
+                    + serverException.getMessage();
+            Dialogs.getInstance().showError(html);
+        } else {
+            String html = "" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText();
+            if (errorMessage != null) {
+                html += "<br><hr><br>Possible reasons:<br>" + errorMessage;
             }
-         });
-      }
-   }
-
-   private void processServerError(ServerException serverException, String errorMessage)
-   {
-      if (serverException.isErrorMessageProvided()
-         || (serverException.getHeader(EXIT_CODE) != null && !"0".equals(serverException.getHeader(EXIT_CODE))))
-      {
-         String html =
-            "" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText() + "<br><br><hr><br>"
-               + serverException.getMessage();
-         Dialogs.getInstance().showError(html);
-      }
-      else
-      {
-         String html = "" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText();
-         if (errorMessage != null)
-         {
-            html += "<br><hr><br>Possible reasons:<br>" + errorMessage;
-         }
-         Dialogs.getInstance().showError(html);
-      }
-   }
+            Dialogs.getInstance().showError(html);
+        }
+    }
 }

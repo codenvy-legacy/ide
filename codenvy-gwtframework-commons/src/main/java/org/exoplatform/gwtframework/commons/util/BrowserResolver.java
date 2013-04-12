@@ -19,57 +19,49 @@
  */
 package org.exoplatform.gwtframework.commons.util;
 
-public class BrowserResolver
-{
-   public static final Browser CURRENT_BROWSER = getCurrentBrowser();
+public class BrowserResolver {
+    public static final Browser CURRENT_BROWSER = getCurrentBrowser();
 
-   private static Browser getCurrentBrowser()
-   {
-      for (Browser browser : Browser.values())
-      {
-         if (browser.isCurrent())
-         {
-            return browser;
-         }
-      }
+    private static Browser getCurrentBrowser() {
+        for (Browser browser : Browser.values()) {
+            if (browser.isCurrent()) {
+                return browser;
+            }
+        }
 
-      return null;
-   }
+        return null;
+    }
 
-	// http://www.javascripter.net/faq/operatin.htm
-   /**
-    * @return true if the browser is launched within the Mac OS
-    */
-   public native static boolean isMacOs() /*-{
-      return (navigator.appVersion.indexOf("Mac")!= -1);
-   }-*/;
+    // http://www.javascripter.net/faq/operatin.htm
 
-   // http://www.quirksmode.org/js/detect.html
-   public enum Browser 
-   {
-      IE("IE", "/MSIE/.test(navigator.userAgent)"), 
-      SAFARI("safari", "/Apple Computer, Inc/.test(navigator.vendor)"), 
-      CHROME("chrome", "/Google Inc./.test(navigator.vendor)"),
-      FIREFOX("firefox", "/Firefox/.test(navigator.userAgent)");
+    /** @return true if the browser is launched within the Mac OS */
+    public native static boolean isMacOs() /*-{
+        return (navigator.appVersion.indexOf("Mac") != -1);
+    }-*/;
 
-      private String browser;
+    // http://www.quirksmode.org/js/detect.html
+    public enum Browser {
+        IE("IE", "/MSIE/.test(navigator.userAgent)"),
+        SAFARI("safari", "/Apple Computer, Inc/.test(navigator.vendor)"),
+        CHROME("chrome", "/Google Inc./.test(navigator.vendor)"),
+        FIREFOX("firefox", "/Firefox/.test(navigator.userAgent)");
 
-      private String test;
+        private String browser;
 
-      Browser(String browser, String test)
-      {
-         this.browser = browser;
-         this.test = test;
-      }
+        private String test;
 
-      @Override
-      public String toString()
-      {
-         return this.browser;
-      }
+        Browser(String browser, String test) {
+            this.browser = browser;
+            this.test = test;
+        }
 
-      public native boolean isCurrent() /*-{
-         return eval(this.@org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::test);
-      }-*/;
-   }
+        @Override
+        public String toString() {
+            return this.browser;
+        }
+
+        public native boolean isCurrent() /*-{
+            return eval(this.@org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::test);
+        }-*/;
+    }
 }

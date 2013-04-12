@@ -12,7 +12,6 @@ package com.codenvy.eclipse.jdt.internal.corext.refactoring.reorg;
 
 import com.codenvy.eclipse.core.runtime.OperationCanceledException;
 
-public interface INewNameQuery
-{
-   public String getNewName() throws OperationCanceledException;
+public interface INewNameQuery {
+    public String getNewName() throws OperationCanceledException;
 }

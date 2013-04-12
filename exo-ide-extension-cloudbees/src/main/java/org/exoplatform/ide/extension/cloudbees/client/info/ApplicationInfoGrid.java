@@ -19,7 +19,6 @@
 package org.exoplatform.ide.extension.cloudbees.client.info;
 
 import com.google.gwt.cell.client.SafeHtmlCell;
-import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.cellview.client.Column;
 
@@ -30,74 +29,62 @@ import java.util.Map.Entry;
 
 /**
  * Grid for displaying application information.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 1, 2011 3:02:57 PM anya $
- * 
  */
-public class ApplicationInfoGrid extends ListGrid<Entry<String, String>>
-{
-   private final String ID = "ideCloudBeesApplicationInfoGrid";
+public class ApplicationInfoGrid extends ListGrid<Entry<String, String>> {
+    private final String ID = "ideCloudBeesApplicationInfoGrid";
 
-   private final String NAME = CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridNameField();
+    private final String NAME = CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridNameField();
 
-   private final String VALUE = CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridValueField();
+    private final String VALUE = CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridValueField();
 
-   public ApplicationInfoGrid()
-   {
-      super();
+    public ApplicationInfoGrid() {
+        super();
 
-      setID(ID);
+        setID(ID);
 
-      Column<Entry<String, String>, SafeHtml> nameColumn =
-         new Column<Entry<String, String>, SafeHtml>(new SafeHtmlCell())
-         {
+        Column<Entry<String, String>, SafeHtml> nameColumn =
+                new Column<Entry<String, String>, SafeHtml>(new SafeHtmlCell()) {
 
-            @Override
-            public SafeHtml getValue(final Entry<String, String> entry)
-            {
-               SafeHtml html = new SafeHtml()
-               {
-                  private static final long serialVersionUID = 1L;
+                    @Override
+                    public SafeHtml getValue(final Entry<String, String> entry) {
+                        SafeHtml html = new SafeHtml() {
+                            private static final long serialVersionUID = 1L;
 
-                  @Override
-                  public String asString()
-                  {
-                     return "<b>" + entry.getKey().toUpperCase() + "</b>";
-                  }
-               };
-               return html;
-            }
-         };
+                            @Override
+                            public String asString() {
+                                return "<b>" + entry.getKey().toUpperCase() + "</b>";
+                            }
+                        };
+                        return html;
+                    }
+                };
 
-      Column<Entry<String, String>, SafeHtml> valueColumn =
-         new Column<Entry<String, String>, SafeHtml>(new SafeHtmlCell())
-         {
+        Column<Entry<String, String>, SafeHtml> valueColumn =
+                new Column<Entry<String, String>, SafeHtml>(new SafeHtmlCell()) {
 
-            @Override
-            public SafeHtml getValue(final Entry<String, String> entry)
-            {
-               SafeHtml html = new SafeHtml()
-               {
-                  private static final long serialVersionUID = 1L;
+                    @Override
+                    public SafeHtml getValue(final Entry<String, String> entry) {
+                        SafeHtml html = new SafeHtml() {
+                            private static final long serialVersionUID = 1L;
 
-                  @Override
-                  public String asString()
-                  {
-                     if ("url".equalsIgnoreCase(entry.getKey()))
-                     {
-                        return "<a href =\"" + entry.getValue() + "\" target=\"_blank\">" + entry.getValue() + "</a>";
-                     }
-                     return entry.getValue();
-                  }
-               };
-               return html;
-            }
-         };
+                            @Override
+                            public String asString() {
+                                if ("url".equalsIgnoreCase(entry.getKey())) {
+                                    return "<a href =\"" + entry.getValue() + "\" target=\"_blank\">" + entry.getValue() + "</a>";
+                                }
+                                return entry.getValue();
+                            }
+                        };
+                        return html;
+                    }
+                };
 
-      getCellTable().addColumn(nameColumn, NAME);
-      getCellTable().setColumnWidth(nameColumn, "35%");
-      getCellTable().addColumn(valueColumn, VALUE);
-      getCellTable().setColumnWidth(valueColumn, "65%");
-   }
+        getCellTable().addColumn(nameColumn, NAME);
+        getCellTable().setColumnWidth(nameColumn, "35%");
+        getCellTable().addColumn(valueColumn, VALUE);
+        getCellTable().setColumnWidth(valueColumn, "65%");
+    }
 }

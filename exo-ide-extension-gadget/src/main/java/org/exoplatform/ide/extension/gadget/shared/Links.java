@@ -20,12 +20,10 @@ package org.exoplatform.ide.extension.gadget.shared;
 
 /**
  * Interface describes links of OpenSocial Gadget.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: Links.java Mar 20, 2012 17:55:11 PM azatsarynnyy $
- *
  */
 
-public interface Links
-{
+public interface Links {
 }

@@ -22,53 +22,44 @@ package org.exoplatform.ide.testframework.server.cloudfoundry.bean;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class ProvisionedService
-{
-   private String name;
+public class ProvisionedService {
+    private String name;
 
-   private String type;
+    private String type;
 
-   private String vendor;
+    private String vendor;
 
-   private String version;
+    private String version;
 
-   public String getName()
-   {
-      return name;
-   }
+    public String getName() {
+        return name;
+    }
 
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   public String getType()
-   {
-      return type;
-   }
+    public String getType() {
+        return type;
+    }
 
-   public void setType(String type)
-   {
-      this.type = type;
-   }
+    public void setType(String type) {
+        this.type = type;
+    }
 
-   public String getVendor()
-   {
-      return vendor;
-   }
+    public String getVendor() {
+        return vendor;
+    }
 
-   public void setVendor(String vendor)
-   {
-      this.vendor = vendor;
-   }
+    public void setVendor(String vendor) {
+        this.vendor = vendor;
+    }
 
-   public String getVersion()
-   {
-      return version;
-   }
+    public String getVersion() {
+        return version;
+    }
 
-   public void setVersion(String version)
-   {
-      this.version = version;
-   }
+    public void setVersion(String version) {
+        this.version = version;
+    }
 }

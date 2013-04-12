@@ -24,167 +24,134 @@ package org.exoplatform.ide.git.shared;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: GitHubUser.java Aug 6, 2012
  */
-public interface GitHubUser
-{
+public interface GitHubUser {
 
-   /**
-    * @return the type
-    */
-   public abstract String getType();
+    /** @return the type */
+    public abstract String getType();
 
-   /**
-    * @param type the type to set
-    */
-   public abstract void setType(String type);
+    /**
+     * @param type the type to set
+     */
+    public abstract void setType(String type);
 
-   /**
-    * @return the email
-    */
-   public abstract String getEmail();
+    /** @return the email */
+    public abstract String getEmail();
 
-   /**
-    * @param email the email to set
-    */
-   public abstract void setEmail(String email);
+    /**
+     * @param email the email to set
+     */
+    public abstract void setEmail(String email);
 
-   /**
-    * @return the company
-    */
-   public abstract String getCompany();
+    /** @return the company */
+    public abstract String getCompany();
 
-   /**
-    * @param company the company to set
-    */
-   public abstract void setCompany(String company);
+    /**
+     * @param company the company to set
+     */
+    public abstract void setCompany(String company);
 
-   /**
-    * @return the followers
-    */
-   public abstract int getFollowers();
+    /** @return the followers */
+    public abstract int getFollowers();
 
-   /**
-    * @param followers the followers to set
-    */
-   public abstract void setFollowers(int followers);
+    /**
+     * @param followers the followers to set
+     */
+    public abstract void setFollowers(int followers);
 
-   /**
-    * @return the avatar_url
-    */
-   public abstract String getAvatarUrl();
+    /** @return the avatar_url */
+    public abstract String getAvatarUrl();
 
-   /**
-    * @param avatarUrl the avatar_url to set
-    */
-   public abstract void setAvatarUrl(String avatarUrl);
+    /**
+     * @param avatarUrl the avatar_url to set
+     */
+    public abstract void setAvatarUrl(String avatarUrl);
 
-   /**
-    * @return the html_url
-    */
-   public abstract String getHtmlUrl();
+    /** @return the html_url */
+    public abstract String getHtmlUrl();
 
-   /**
-    * @param htmlUrl the html_url to set
-    */
-   public abstract void setHtmlUrl(String htmlUrl);
+    /**
+     * @param htmlUrl the html_url to set
+     */
+    public abstract void setHtmlUrl(String htmlUrl);
 
-   /**
-    * @return the bio
-    */
-   public abstract String getBio();
+    /** @return the bio */
+    public abstract String getBio();
 
-   /**
-    * @param bio the bio to set
-    */
-   public abstract void setBio(String bio);
+    /**
+     * @param bio the bio to set
+     */
+    public abstract void setBio(String bio);
 
-   /**
-    * @return the public_repos
-    */
-   public abstract int getPublicRepos();
+    /** @return the public_repos */
+    public abstract int getPublicRepos();
 
-   /**
-    * @param publicRepos the public_repos to set
-    */
-   public abstract void setPublicRepos(int publicRepos);
+    /**
+     * @param publicRepos the public_repos to set
+     */
+    public abstract void setPublicRepos(int publicRepos);
 
-   /**
-    * @return the public_gists
-    */
-   public abstract int getPublicGists();
+    /** @return the public_gists */
+    public abstract int getPublicGists();
 
-   /**
-    * @param public_gists the public_gists to set
-    */
-   public abstract void setPublicGists(int publicGists);
+    /**
+     * @param public_gists the public_gists to set
+     */
+    public abstract void setPublicGists(int publicGists);
 
-   /**
-    * @return the following
-    */
-   public abstract int getFollowing();
+    /** @return the following */
+    public abstract int getFollowing();
 
-   /**
-    * @param following the following to set
-    */
-   public abstract void setFollowing(int following);
+    /**
+     * @param following the following to set
+     */
+    public abstract void setFollowing(int following);
 
-   /**
-    * @return the location
-    */
-   public abstract String getLocation();
+    /** @return the location */
+    public abstract String getLocation();
 
-   /**
-    * @param location the location to set
-    */
-   public abstract void setLocation(String location);
+    /**
+     * @param location the location to set
+     */
+    public abstract void setLocation(String location);
 
-   /**
-    * @return the name
-    */
-   public abstract String getName();
+    /** @return the name */
+    public abstract String getName();
 
-   /**
-    * @param name the name to set
-    */
-   public abstract void setName(String name);
+    /**
+     * @param name the name to set
+     */
+    public abstract void setName(String name);
 
-   /**
-    * @return the url
-    */
-   public abstract String getUrl();
+    /** @return the url */
+    public abstract String getUrl();
 
-   /**
-    * @param url the url to set
-    */
-   public abstract void setUrl(String url);
+    /**
+     * @param url the url to set
+     */
+    public abstract void setUrl(String url);
 
-   /**
-    * @return the gravatar_id
-    */
-   public abstract String getGravatarId();
+    /** @return the gravatar_id */
+    public abstract String getGravatarId();
 
-   /**
-    * @param gravatarId the gravatar_id to set
-    */
-   public abstract void setGravatarId(String gravatarId);
+    /**
+     * @param gravatarId the gravatar_id to set
+     */
+    public abstract void setGravatarId(String gravatarId);
 
-   /**
-    * @return the id
-    */
-   public abstract String getId();
+    /** @return the id */
+    public abstract String getId();
 
-   /**
-    * @param id the id to set
-    */
-   public abstract void setId(String id);
+    /**
+     * @param id the id to set
+     */
+    public abstract void setId(String id);
 
-   /**
-    * @return the login
-    */
-   public abstract String getLogin();
+    /** @return the login */
+    public abstract String getLogin();
 
-   /**
-    * @param login the login to set
-    */
-   public abstract void setLogin(String login);
+    /**
+     * @param login the login to set
+     */
+    public abstract void setLogin(String login);
 
 }

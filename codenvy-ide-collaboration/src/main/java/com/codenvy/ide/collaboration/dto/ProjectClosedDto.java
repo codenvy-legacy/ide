@@ -26,11 +26,10 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
  * @version $Id:
  */
 @RoutingType(type = RoutingTypes.PROJECT_CLOSED)
-public interface ProjectClosedDto extends ClientToServerDto
-{
-   String projectPath();
+public interface ProjectClosedDto extends ClientToServerDto {
+    String projectPath();
 
-   String projectId();
+    String projectId();
 
-   String vfsId();
+    String vfsId();
 }

@@ -22,21 +22,21 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * This is an Handler of ViewActivated Event.
- * 
+ * <p/>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface ViewActivatedHandler extends EventHandler
-{
+public interface ViewActivatedHandler extends EventHandler {
 
-   /**
-    * Handle the event after View was activated.
-    * 
-    * @param event ViewActivated event
-    */
-   void onViewActivated(ViewActivatedEvent event);
+    /**
+     * Handle the event after View was activated.
+     *
+     * @param event
+     *         ViewActivated event
+     */
+    void onViewActivated(ViewActivatedEvent event);
 
 }

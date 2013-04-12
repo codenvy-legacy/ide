@@ -22,34 +22,24 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to create account on CloudBees.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 10, 2012 4:38:56 PM anya $
- * 
  */
-public class CreateAccountEvent extends GwtEvent<CreateAccountHandler>
-{
-   /**
-    * Type, used to register the event.
-    */
-   public static final GwtEvent.Type<CreateAccountHandler> TYPE = new GwtEvent.Type<CreateAccountHandler>();
+public class CreateAccountEvent extends GwtEvent<CreateAccountHandler> {
+    /** Type, used to register the event. */
+    public static final GwtEvent.Type<CreateAccountHandler> TYPE = new GwtEvent.Type<CreateAccountHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CreateAccountHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<CreateAccountHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(CreateAccountHandler handler)
-   {
-      handler.onCreateAccount(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(CreateAccountHandler handler) {
+        handler.onCreateAccount(this);
+    }
 
 }

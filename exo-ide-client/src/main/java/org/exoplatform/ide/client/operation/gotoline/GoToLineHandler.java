@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public interface GoToLineHandler extends EventHandler
-{
+public interface GoToLineHandler extends EventHandler {
 
-   void onGoToLine(GoToLineEvent event);
+    void onGoToLine(GoToLineEvent event);
 
 }

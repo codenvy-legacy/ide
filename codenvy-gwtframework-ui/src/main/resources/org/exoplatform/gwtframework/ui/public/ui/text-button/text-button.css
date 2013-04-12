@@ -2,20 +2,18 @@
 STATUS TEXT COMPONENT
 ****************************************************************************************/
 
-.exo-statusText-panel
-{
-	font-family:Verdana, Bitstream Vera Sans, sans-serif;
-    font-size:11px;
+.exo-statusText-panel {
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-size: 11px;
     font-weight: normal;
-    font-style: normal;	
-	cursor: default;
-	height: 24px;	
+    font-style: normal;
+    cursor: default;
+    height: 24px;
 }
 
-.exo-statusText-table
-{
-	height:24px;
-	border-collapse: collapse;
+.exo-statusText-table {
+    height: 24px;
+    border-collapse: collapse;
 }
 
 .exo-statusText-table-left,
@@ -26,87 +24,73 @@ STATUS TEXT COMPONENT
 .exo-statusText-table-middle-down,
 .exo-statusText-table-right,
 .exo-statusText-table-right-over,
-.exo-statusText-table-right-down
-{
-	height:24px;
+.exo-statusText-table-right-down {
+    height: 24px;
 }
 
 .exo-statusText-table-left,
 .exo-statusText-table-left-over,
-.exo-statusText-table-left-down
-{
-	background: url(statusTextLeft.png);
-	width: 3px;
+.exo-statusText-table-left-down {
+    background: url(statusTextLeft.png);
+    width: 3px;
 }
 
-.exo-statusText-table-left
-{
-	background-position: 0px 0px;
+.exo-statusText-table-left {
+    background-position: 0px 0px;
 }
 
-.exo-statusText-table-left-over
-{
-	background-position: 0px -24px;
+.exo-statusText-table-left-over {
+    background-position: 0px -24px;
 }
 
-.exo-statusText-table-left-down
-{
-	background-position: 0px -48px;
+.exo-statusText-table-left-down {
+    background-position: 0px -48px;
 }
 
 .exo-statusText-table-middle,
 .exo-statusText-table-middle-over,
-.exo-statusText-table-middle-down
-{
-	background: url(statusTextMiddle.png) repeat-x;
-	font-family:Verdana, Bitstream Vera Sans, sans-serif;
-    font-size:11px;
+.exo-statusText-table-middle-down {
+    background: url(statusTextMiddle.png) repeat-x;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-size: 11px;
     font-weight: normal;
     font-style: normal;
 }
 
-.exo-statusText-table-middle
-{
-	background-position: 0px 0px;
+.exo-statusText-table-middle {
+    background-position: 0px 0px;
 }
 
-.exo-statusText-table-middle-over
-{
-	background-position: 0px -24px;
+.exo-statusText-table-middle-over {
+    background-position: 0px -24px;
 }
 
-.exo-statusText-table-middle-down
-{
-	background-position: 0px -48px;
+.exo-statusText-table-middle-down {
+    background-position: 0px -48px;
 }
 
 .exo-statusText-table-right,
 .exo-statusText-table-right-over,
-.exo-statusText-table-right-down
-{
-	background: url(statusTextRight.png);
-	width: 3px;
+.exo-statusText-table-right-down {
+    background: url(statusTextRight.png);
+    width: 3px;
 }
 
-.exo-statusText-table-right
-{
-	background-position: 0px 0px;
+.exo-statusText-table-right {
+    background-position: 0px 0px;
 }
 
-.exo-statusText-table-right-over
-{
-	background-position: 0px -24px;
+.exo-statusText-table-right-over {
+    background-position: 0px -24px;
 }
 
-.exo-statusText-table-right-down
-{
-	background-position: 0px -48px;
+.exo-statusText-table-right-down {
+    background-position: 0px -48px;
 }
 
-.exo-statusText-table-middle
-{
-	font-family:Verdana, Bitstream Vera Sans, sans-serif;
-    font-size:11px;
+.exo-statusText-table-middle {
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-size: 11px;
     font-weight: normal;
-    font-style: normal;	
+    font-style: normal;
 }

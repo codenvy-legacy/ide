@@ -17,60 +17,56 @@ package org.exoplatform.ide.editor.javascript.client.contentassist;
 import com.google.collide.client.code.autocomplete.AbstractTrie;
 import com.google.collide.client.code.autocomplete.PrefixIndex;
 
-/**
- * Singleton that holds various JS-specific constants.
- */
+/** Singleton that holds various JS-specific constants. */
 class JsConstants {
 
-  private static JsConstants instance;
+    private static JsConstants instance;
 
-  /**
-   * @return the singleton instance of this class.
-   */
-  static JsConstants getInstance() {
-    if (instance == null) {
-      instance = new JsConstants();
+    /** @return the singleton instance of this class. */
+    static JsConstants getInstance() {
+        if (instance == null) {
+            instance = new JsConstants();
+        }
+        return instance;
     }
-    return instance;
-  }
 
-  private static void addProposal(AbstractTrie<TemplateProposal> to, String name, String template) {
-    to.put(name, new TemplateProposal(name, template));
-  }
+    private static void addProposal(AbstractTrie<TemplateProposal> to, String name, String template) {
+        to.put(name, new TemplateProposal(name, template));
+    }
 
-  private final PrefixIndex<TemplateProposal> templatesTrie;
+    private final PrefixIndex<TemplateProposal> templatesTrie;
 
-  private JsConstants() {
-    AbstractTrie<TemplateProposal> temp = new AbstractTrie<TemplateProposal>();
+    private JsConstants() {
+        AbstractTrie<TemplateProposal> temp = new AbstractTrie<TemplateProposal>();
 
-    addProposal(temp, "break", "break");
-    addProposal(temp, "case", "case %c:");
-    addProposal(temp, "continue", "continue");
-    addProposal(temp, "default", "default: ");
-    addProposal(temp, "delete", "delete ");
-    addProposal(temp, "do", "do {%i%c%n} while ()");
-    addProposal(temp, "else", "else {%n%c%n}");
-    addProposal(temp, "export", "export ");
-    addProposal(temp, "for", "for (%c;;) {%i%n}");
-    addProposal(temp, "function", "function %c() {%i%n}");
-    addProposal(temp, "if", "if (%c) {%i%n}");
-    addProposal(temp, "import", "import ");
-    addProposal(temp, "in", "in ");
-    addProposal(temp, "label", "label ");
-    addProposal(temp, "new", "new ");
-    addProposal(temp, "return", "return");
-    addProposal(temp, "switch", "switch (%c) {%i%n}");
-    addProposal(temp, "this", "this");
-    addProposal(temp, "typeof", "typeof");
-    addProposal(temp, "var", "var ");
-    addProposal(temp, "void", "void ");
-    addProposal(temp, "while", "while (%c) {%i%n}");
-    addProposal(temp, "with", "with ");
+        addProposal(temp, "break", "break");
+        addProposal(temp, "case", "case %c:");
+        addProposal(temp, "continue", "continue");
+        addProposal(temp, "default", "default: ");
+        addProposal(temp, "delete", "delete ");
+        addProposal(temp, "do", "do {%i%c%n} while ()");
+        addProposal(temp, "else", "else {%n%c%n}");
+        addProposal(temp, "export", "export ");
+        addProposal(temp, "for", "for (%c;;) {%i%n}");
+        addProposal(temp, "function", "function %c() {%i%n}");
+        addProposal(temp, "if", "if (%c) {%i%n}");
+        addProposal(temp, "import", "import ");
+        addProposal(temp, "in", "in ");
+        addProposal(temp, "label", "label ");
+        addProposal(temp, "new", "new ");
+        addProposal(temp, "return", "return");
+        addProposal(temp, "switch", "switch (%c) {%i%n}");
+        addProposal(temp, "this", "this");
+        addProposal(temp, "typeof", "typeof");
+        addProposal(temp, "var", "var ");
+        addProposal(temp, "void", "void ");
+        addProposal(temp, "while", "while (%c) {%i%n}");
+        addProposal(temp, "with", "with ");
 
-    templatesTrie = temp;
-  }
+        templatesTrie = temp;
+    }
 
-  PrefixIndex<TemplateProposal> getTemplatesTrie() {
-    return templatesTrie;
-  }
+    PrefixIndex<TemplateProposal> getTemplatesTrie() {
+        return templatesTrie;
+    }
 }

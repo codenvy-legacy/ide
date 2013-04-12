@@ -21,68 +21,58 @@ package org.exoplatform.gwtframework.ui.client.command;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class TextInputControl extends Control<TextInputControl>
-{
+public class TextInputControl extends Control<TextInputControl> {
 
-   public static final int DEFAULT_WIDTH = 100;
+    public static final int DEFAULT_WIDTH = 100;
 
-   private int size = DEFAULT_WIDTH;
+    private int size = DEFAULT_WIDTH;
 
-   private String text = "";
+    private String text = "";
 
-   private TextEnteredEvent<?> event;
+    private TextEnteredEvent<?> event;
 
-   public TextInputControl(String id)
-   {
-      super(id);
-   }
+    public TextInputControl(String id) {
+        super(id);
+    }
 
-   public int getSize()
-   {
-      return size;
-   }
+    public int getSize() {
+        return size;
+    }
 
-   public TextInputControl setSize(int size)
-   {
-      this.size = size;
-      return this;
-   }
+    public TextInputControl setSize(int size) {
+        this.size = size;
+        return this;
+    }
 
-   public String getText()
-   {
-      return text;
-   }
+    public String getText() {
+        return text;
+    }
 
-   public TextInputControl setText(String text)
-   {
-      if (this.text == text)
-      {
-         return this;
-      }
+    public TextInputControl setText(String text) {
+        if (this.text == text) {
+            return this;
+        }
 
-      this.text = text;
-      for (ControlStateListener listener : getStateListeners())
-      {
-         ((TextInputControlStateListener)listener).updateControlText(text);
-      }
-      
-      return this;
-   }
+        this.text = text;
+        for (ControlStateListener listener : getStateListeners()) {
+            ((TextInputControlStateListener)listener).updateControlText(text);
+        }
 
-   public TextEnteredEvent<?> getEvent()
-   {
-      return event;
-   }
+        return this;
+    }
 
-   public TextInputControl setEvent(TextEnteredEvent<?> event)
-   {
-      this.event = event;
-      return this;
-   }
+    public TextEnteredEvent<?> getEvent() {
+        return event;
+    }
+
+    public TextInputControl setEvent(TextEnteredEvent<?> event) {
+        this.event = event;
+        return this;
+    }
 
 }

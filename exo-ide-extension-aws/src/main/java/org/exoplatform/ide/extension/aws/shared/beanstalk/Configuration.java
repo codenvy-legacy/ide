@@ -24,41 +24,40 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface Configuration
-{
-   String getSolutionStackName();
+public interface Configuration {
+    String getSolutionStackName();
 
-   void setSolutionStackName(String solutionStackName);
+    void setSolutionStackName(String solutionStackName);
 
-   String getApplicationName();
+    String getApplicationName();
 
-   void setApplicationName(String applicationName);
+    void setApplicationName(String applicationName);
 
-   String getTemplateName();
+    String getTemplateName();
 
-   void setTemplateName(String templateName);
+    void setTemplateName(String templateName);
 
-   String getDescription();
+    String getDescription();
 
-   void setDescription(String description);
+    void setDescription(String description);
 
-   String getEnvironmentName();
+    String getEnvironmentName();
 
-   void setEnvironmentName(String environmentName);
+    void setEnvironmentName(String environmentName);
 
-   ConfigurationTemplateDeploymentStatus getDeploymentStatus();
+    ConfigurationTemplateDeploymentStatus getDeploymentStatus();
 
-   void setDeploymentStatus(ConfigurationTemplateDeploymentStatus deploymentStatus);
+    void setDeploymentStatus(ConfigurationTemplateDeploymentStatus deploymentStatus);
 
-   long getCreated();
+    long getCreated();
 
-   void setCreated(long created);
+    void setCreated(long created);
 
-   long getUpdated();
+    long getUpdated();
 
-   void setUpdated(long updated);
+    void setUpdated(long updated);
 
-   List<ConfigurationOption> getOptions();
+    List<ConfigurationOption> getOptions();
 
-   void setOptions(List<ConfigurationOption> options);
+    void setOptions(List<ConfigurationOption> options);
 }

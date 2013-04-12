@@ -26,70 +26,65 @@ import com.google.gwt.resources.client.CssResource;
 
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * A {@link LineRenderer} to render the syntax highlighting.
- *
- */
+/** A {@link LineRenderer} to render the syntax highlighting. */
 public class SyntaxHighlighterRenderer implements LineRenderer {
 
-  /**
-   * ClientBundle for the syntax highlighter renderer.
-   */
-  public interface Resources extends ClientBundle {
-    @Source("SyntaxHighlighterRenderer.css")
-    CssResource syntaxHighlighterRendererCss();
-  }
-
-  private final SelectionModel selection;
-  private final SyntaxHighlighter syntaxHighlighter;
-  private JsonArray<Token> tokens;
-  private int tokenPos;
-  private final Css editorCss;
-
-  SyntaxHighlighterRenderer(
-      SyntaxHighlighter syntaxHighlighter, SelectionModel selection, Editor.Css editorCss) {
-    this.syntaxHighlighter = syntaxHighlighter;
-    this.selection = selection;
-    this.editorCss = editorCss;
-  }
-
-  @Override
-  public void renderNextChunk(Target target) {
-    Token token = tokens.get(tokenPos++);
-    Preconditions.checkNotNull(token, "Token was null");
-    
-    String tokenValue = token.getValue();
-    
-    String style = "";
-    switch (token.getType()) {
-      case NEWLINE:
-        // we special case the NEWLINE token and do not append the default style.
-        style = null;
-        break;
-        
-      case ERROR:
-        style = editorCss.lineRendererError() + " ";
-        // Fall through to add the external stable class name too (unofficial color API)
-        
-      default:
-        style += token.getStyle();
+    /** ClientBundle for the syntax highlighter renderer. */
+    public interface Resources extends ClientBundle {
+        @Source("SyntaxHighlighterRenderer.css")
+        CssResource syntaxHighlighterRendererCss();
     }
-    
-    target.render(tokenValue.length(), style);
-  }
 
-  @Override
-  public boolean resetToBeginningOfLine(Line line, int lineNumber) {
+    private final SelectionModel    selection;
+    private final SyntaxHighlighter syntaxHighlighter;
+    private       JsonArray<Token>  tokens;
+    private       int               tokenPos;
+    private final Css               editorCss;
 
-    tokens = syntaxHighlighter.getTokens(line);
-    tokenPos = 0;
+    SyntaxHighlighterRenderer(
+            SyntaxHighlighter syntaxHighlighter, SelectionModel selection, Editor.Css editorCss) {
+        this.syntaxHighlighter = syntaxHighlighter;
+        this.selection = selection;
+        this.editorCss = editorCss;
+    }
 
-    // If we failed to get any tokens, don't try to render this line
-    return tokens != null;
-  }
+    @Override
+    public void renderNextChunk(Target target) {
+        Token token = tokens.get(tokenPos++);
+        Preconditions.checkNotNull(token, "Token was null");
 
-  @Override
-  public boolean shouldLastChunkFillToRight() {
-    return false;
-  }
+        String tokenValue = token.getValue();
+
+        String style = "";
+        switch (token.getType()) {
+            case NEWLINE:
+                // we special case the NEWLINE token and do not append the default style.
+                style = null;
+                break;
+
+            case ERROR:
+                style = editorCss.lineRendererError() + " ";
+                // Fall through to add the external stable class name too (unofficial color API)
+
+            default:
+                style += token.getStyle();
+        }
+
+        target.render(tokenValue.length(), style);
+    }
+
+    @Override
+    public boolean resetToBeginningOfLine(Line line, int lineNumber) {
+
+        tokens = syntaxHighlighter.getTokens(line);
+        tokenPos = 0;
+
+        // If we failed to get any tokens, don't try to render this line
+        return tokens != null;
+    }
+
+    @Override
+    public boolean shouldLastChunkFillToRight() {
+        return false;
+    }
 }

@@ -20,74 +20,62 @@ import com.codenvy.eclipse.jdt.core.util.IStackMapFrame;
  *
  * @see IStackMapAttribute
  */
-public class StackMapAttribute extends ClassFileAttribute implements IStackMapAttribute
-{
+public class StackMapAttribute extends ClassFileAttribute implements IStackMapAttribute {
 
-   private static final IStackMapFrame[] NO_FRAMES = new IStackMapFrame[0];
+    private static final IStackMapFrame[] NO_FRAMES = new IStackMapFrame[0];
 
-   private static final byte[] NO_ENTRIES = new byte[0];
+    private static final byte[] NO_ENTRIES = new byte[0];
 
-   private int numberOfEntries;
+    private int numberOfEntries;
 
-   private IStackMapFrame[] frames;
+    private IStackMapFrame[] frames;
 
-   private byte[] bytes;
+    private byte[] bytes;
 
-   /**
-    * Constructor for LineNumberAttribute.
-    *
-    * @param classFileBytes
-    * @param constantPool
-    * @param offset
-    * @throws ClassFormatException
-    */
-   public StackMapAttribute(byte[] classFileBytes, IConstantPool constantPool, int offset) throws ClassFormatException
-   {
-      super(classFileBytes, constantPool, offset);
+    /**
+     * Constructor for LineNumberAttribute.
+     *
+     * @param classFileBytes
+     * @param constantPool
+     * @param offset
+     * @throws ClassFormatException
+     */
+    public StackMapAttribute(byte[] classFileBytes, IConstantPool constantPool, int offset) throws ClassFormatException {
+        super(classFileBytes, constantPool, offset);
 
-      final int length = u2At(classFileBytes, 6, offset);
-      this.numberOfEntries = length;
-      if (length != 0)
-      {
-         int readOffset = 8;
-         this.frames = new IStackMapFrame[length];
-         for (int i = 0; i < length; i++)
-         {
-            DefaultStackMapFrame frame = new DefaultStackMapFrame(classFileBytes, constantPool, offset + readOffset);
-            this.frames[i] = frame;
-            readOffset += frame.sizeInBytes();
-         }
-      }
-      else
-      {
-         this.frames = NO_FRAMES;
-      }
-      final int byteLength = (int)u4At(classFileBytes, 2, offset);
+        final int length = u2At(classFileBytes, 6, offset);
+        this.numberOfEntries = length;
+        if (length != 0) {
+            int readOffset = 8;
+            this.frames = new IStackMapFrame[length];
+            for (int i = 0; i < length; i++) {
+                DefaultStackMapFrame frame = new DefaultStackMapFrame(classFileBytes, constantPool, offset + readOffset);
+                this.frames[i] = frame;
+                readOffset += frame.sizeInBytes();
+            }
+        } else {
+            this.frames = NO_FRAMES;
+        }
+        final int byteLength = (int)u4At(classFileBytes, 2, offset);
 
-      if (length != 0)
-      {
-         System.arraycopy(classFileBytes, offset + 6, this.bytes = new byte[byteLength], 0, byteLength);
-      }
-      else
-      {
-         this.bytes = NO_ENTRIES;
-      }
-   }
+        if (length != 0) {
+            System.arraycopy(classFileBytes, offset + 6, this.bytes = new byte[byteLength], 0, byteLength);
+        } else {
+            this.bytes = NO_ENTRIES;
+        }
+    }
 
-   public int getNumberOfEntries()
-   {
-      return this.numberOfEntries;
-   }
+    public int getNumberOfEntries() {
+        return this.numberOfEntries;
+    }
 
-   public IStackMapFrame[] getStackMapFrame()
-   {
-      return this.frames;
-   }
+    public IStackMapFrame[] getStackMapFrame() {
+        return this.frames;
+    }
 
-   /**
-    */
-   public byte[] getBytes()
-   {
-      return this.bytes;
-   }
+    /**
+     */
+    public byte[] getBytes() {
+        return this.bytes;
+    }
 }

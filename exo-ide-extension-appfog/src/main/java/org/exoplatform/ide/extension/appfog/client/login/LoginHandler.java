@@ -26,12 +26,11 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface LoginHandler extends EventHandler
-{
-   /**
-    * Perform actions when user tries to log in Appfog.
-    *
-    * @param event
-    */
-   void onLogin(LoginEvent event);
+public interface LoginHandler extends EventHandler {
+    /**
+     * Perform actions when user tries to log in Appfog.
+     *
+     * @param event
+     */
+    void onLogin(LoginEvent event);
 }

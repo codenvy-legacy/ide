@@ -25,119 +25,97 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class DirectoryFilter
-{
+public class DirectoryFilter {
 
-   private static DirectoryFilter instance;
+    private static DirectoryFilter instance;
 
-   public static DirectoryFilter get()
-   {
-      if (instance == null)
-      {
-         instance = new DirectoryFilter();
-      }
+    public static DirectoryFilter get() {
+        if (instance == null) {
+            instance = new DirectoryFilter();
+        }
 
-      return instance;
-   }
+        return instance;
+    }
 
-   private String[] parts = new String[0];
+    private String[] parts = new String[0];
 
-   public void setPattern(String pattern)
-   {
-      parts = pattern.split(";");
-   }
+    public void setPattern(String pattern) {
+        parts = pattern.split(";");
+    }
 
-   public List<Item> filter(List<Item> items)
-   {
-      List<Item> result = new ArrayList<Item>();
+    public List<Item> filter(List<Item> items) {
+        List<Item> result = new ArrayList<Item>();
 
-      for (Item item : items)
-      {
-         if (!matchWithPattern(item.getName()))
-         {
-            result.add(item);
-         }
+        for (Item item : items) {
+            if (!matchWithPattern(item.getName())) {
+                result.add(item);
+            }
 //         if (parts == null || parts.length == 0 || !matchWithPattern(item.getName()))
 //         {
 //            result.add(item);
 //         }
-      }
+        }
 
-      return result;
-   }
+        return result;
+    }
 
-   public boolean matchWithPattern(String text)
-   {
-      if (parts == null)
-      {
-         return false;
-      }
-      
-      if (parts.length == 0)
-      {
-         return false;
-      }
-      
-      try
-      {
-         for (String p : parts)
-         {
-            p = p.trim();
+    public boolean matchWithPattern(String text) {
+        if (parts == null) {
+            return false;
+        }
 
-            if (p == null || "".equals(p))
-            {
-               continue;
-            }
+        if (parts.length == 0) {
+            return false;
+        }
+
+        try {
+            for (String p : parts) {
+                p = p.trim();
+
+                if (p == null || "".equals(p)) {
+                    continue;
+                }
 
             /*
              * Matches for *characters
              */
-            if (p.startsWith("*"))
-            {
-               String work = p.substring(1);
-               if (text.toLowerCase().endsWith(work.toLowerCase()))
-               {
-                  return true;
-               }
-               continue;
-            }
+                if (p.startsWith("*")) {
+                    String work = p.substring(1);
+                    if (text.toLowerCase().endsWith(work.toLowerCase())) {
+                        return true;
+                    }
+                    continue;
+                }
 
             /*
              * Matches for characters*
              */
-            if (p.endsWith("*"))
-            {
-               String work = p.substring(0, p.length() - 1);
-               if (text.toLowerCase().startsWith(work.toLowerCase()))
-               {
-                  return true;
-               }
-               continue;
-            }
+                if (p.endsWith("*")) {
+                    String work = p.substring(0, p.length() - 1);
+                    if (text.toLowerCase().startsWith(work.toLowerCase())) {
+                        return true;
+                    }
+                    continue;
+                }
 
             /*
              * Matches for whole name
              */
-            if (text.equalsIgnoreCase(p))
-            {
-               return true;
+                if (text.equalsIgnoreCase(p)) {
+                    return true;
+                }
             }
-         }
 
-         return false;
-      }
-
-      catch (Exception e)
-      {
-         return false;
-      }
-   }
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
 }

@@ -1,53 +1,55 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
-   <ui:style>
-      .buttons {
-      	display: block;
-      	margin-left: 10px;
-      	margin-right: 10px;
-      }
-      
-      .floatRight {
-      	float: right;
-      }
-      
-      .floatLeft {
-      	float: left;
-      }
-      
-      .center {
-      	margin-left: auto;
-      	margin-right: auto;
-      }
-   </ui:style>
-   <f:Border borderColor="transparent">
-      <f:layer left="0px" top="6px" height="30px" right="16px">
-         <g:LayoutPanel width="100%" height="100%">
-            <g:layer left="0px" width="101px" top="11px" height="14px">
-               <g:Label text="Active Profile:" />
-            </g:layer>
-            <g:layer left="87px" width="248px" top="1px" height="31px">
-               <f:SelectItem ui:field="profilesSelect" height="24px" />
-            </g:layer>
-         </g:LayoutPanel>
-      </f:layer>
-      <f:layer height="22px" bottom="5px">
-         <f:ImageButton ui:field="okButton" width="90" height="22" text="Ok" addStyleNames="{style.center}" imageName="ok"></f:ImageButton>
-      </f:layer>
-      <f:layer top="43px" bottom="34px" left="1px" right="1px">
-         <g:DockLayoutPanel unit="PX">
-            <g:north size="20">
-               <g:Label text="Preview:" />
-            </g:north>
-            <g:center>
-               <f:Border borderSize="1">
-                  <f:layer>
-                     <g:FlowPanel ui:field="editorPanel" width="100%" height="100%">
-                     </g:FlowPanel>
-                  </f:layer>
-               </f:Border>
-            </g:center>
-         </g:DockLayoutPanel>
-      </f:layer>
-   </f:Border>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+    <ui:style>
+        .buttons {
+            display: block;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        .floatRight {
+            float: right;
+        }
+
+        .floatLeft {
+            float: left;
+        }
+
+        .center {
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </ui:style>
+    <f:Border borderColor="transparent">
+        <f:layer left="0px" top="6px" height="30px" right="16px">
+            <g:LayoutPanel width="100%" height="100%">
+                <g:layer left="0px" width="101px" top="11px" height="14px">
+                    <g:Label text="Active Profile:"/>
+                </g:layer>
+                <g:layer left="87px" width="248px" top="1px" height="31px">
+                    <f:SelectItem ui:field="profilesSelect" height="24px"/>
+                </g:layer>
+            </g:LayoutPanel>
+        </f:layer>
+        <f:layer height="22px" bottom="5px">
+            <f:ImageButton ui:field="okButton" width="90" height="22" text="Ok" addStyleNames="{style.center}"
+                           imageName="ok"></f:ImageButton>
+        </f:layer>
+        <f:layer top="43px" bottom="34px" left="1px" right="1px">
+            <g:DockLayoutPanel unit="PX">
+                <g:north size="20">
+                    <g:Label text="Preview:"/>
+                </g:north>
+                <g:center>
+                    <f:Border borderSize="1">
+                        <f:layer>
+                            <g:FlowPanel ui:field="editorPanel" width="100%" height="100%">
+                            </g:FlowPanel>
+                        </f:layer>
+                    </f:Border>
+                </g:center>
+            </g:DockLayoutPanel>
+        </f:layer>
+    </f:Border>
 </ui:UiBinder> 

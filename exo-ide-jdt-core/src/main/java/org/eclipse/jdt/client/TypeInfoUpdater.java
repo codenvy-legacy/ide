@@ -32,84 +32,68 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 4:19:16 PM 34360 evgen $
- * 
  */
-public class TypeInfoUpdater implements FileSavedHandler, ItemDeletedHandler, ItemMovedHandler
-{
+public class TypeInfoUpdater implements FileSavedHandler, ItemDeletedHandler, ItemMovedHandler {
 
-   /**
-    * Default Maven 'sourceDirectory' value
-    */
-   private static final String DEFAULT_SOURCE_FOLDER = "src/main/java";
+    /** Default Maven 'sourceDirectory' value */
+    private static final String DEFAULT_SOURCE_FOLDER = "src/main/java";
 
-   /**
-    * 
-    */
-   public TypeInfoUpdater()
-   {
-      IDE.addHandler(FileSavedEvent.TYPE, this);
-      IDE.addHandler(ItemDeletedEvent.TYPE, this);
-   }
+    /**
+     *
+     */
+    public TypeInfoUpdater() {
+        IDE.addHandler(FileSavedEvent.TYPE, this);
+        IDE.addHandler(ItemDeletedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.event.FileSavedHandler#onFileSaved(org.exoplatform.ide.client.framework.event.FileSavedEvent)
-    */
-   @Override
-   public void onFileSaved(FileSavedEvent event)
-   {
-      if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
-      {
-         deleteTypeFormStorage(event.getFile(), true);
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.event.FileSavedHandler#onFileSaved(org.exoplatform.ide.client.framework.event
+     * .FileSavedEvent) */
+    @Override
+    public void onFileSaved(FileSavedEvent event) {
+        if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA)) {
+            deleteTypeFormStorage(event.getFile(), true);
+        }
+    }
 
-   /**
-    * Delete type info from storage and receive new if needed.
-    * @param file The Java file that edited or deleted.
-    * @param isNeedUpdate is need to receive new type info for file 
-    */
-   private void deleteTypeFormStorage(FileModel file, boolean isNeedUpdate)
-   {
-      ProjectModel project = file.getProject();
-      if (project == null)
-         return;
-      String srcPath;
-      if (project.hasProperty("sourceFolder"))
-      {
-         srcPath = (String)project.getPropertyValue("sourceFolder");
-      }
-      else
-      {
-         srcPath = DEFAULT_SOURCE_FOLDER;
-      }
-      String fqn = file.getPath().substring((project.getPath() + "/" + srcPath).length() + 1);
-      fqn = fqn.substring(0, fqn.lastIndexOf('.'));
-      fqn = fqn.replaceAll("/", ".");
-      TypeInfoStorage.get().removeTypeInfo(fqn);
-      if (isNeedUpdate)
-         NameEnvironment.loadTypeInfo(fqn, project.getId());
-   }
+    /**
+     * Delete type info from storage and receive new if needed.
+     *
+     * @param file
+     *         The Java file that edited or deleted.
+     * @param isNeedUpdate
+     *         is need to receive new type info for file
+     */
+    private void deleteTypeFormStorage(FileModel file, boolean isNeedUpdate) {
+        ProjectModel project = file.getProject();
+        if (project == null)
+            return;
+        String srcPath;
+        if (project.hasProperty("sourceFolder")) {
+            srcPath = (String)project.getPropertyValue("sourceFolder");
+        } else {
+            srcPath = DEFAULT_SOURCE_FOLDER;
+        }
+        String fqn = file.getPath().substring((project.getPath() + "/" + srcPath).length() + 1);
+        fqn = fqn.substring(0, fqn.lastIndexOf('.'));
+        fqn = fqn.replaceAll("/", ".");
+        TypeInfoStorage.get().removeTypeInfo(fqn);
+        if (isNeedUpdate)
+            NameEnvironment.loadTypeInfo(fqn, project.getId());
+    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.client.event.ItemDeletedHandler#onItemDeleted(org.exoplatform.ide.vfs.client.event.ItemDeletedEvent)
-    */
-   @Override
-   public void onItemDeleted(ItemDeletedEvent event)
-   {
-      if (event.getItem().getMimeType().equals(MimeType.APPLICATION_JAVA))
-      {
-         deleteTypeFormStorage((FileModel)event.getItem(), false);
-      }
-   }
+    /** @see org.exoplatform.ide.vfs.client.event.ItemDeletedHandler#onItemDeleted(org.exoplatform.ide.vfs.client.event.ItemDeletedEvent) */
+    @Override
+    public void onItemDeleted(ItemDeletedEvent event) {
+        if (event.getItem().getMimeType().equals(MimeType.APPLICATION_JAVA)) {
+            deleteTypeFormStorage((FileModel)event.getItem(), false);
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.client.event.ItemMovedHandler#onItemMoved(org.exoplatform.ide.vfs.client.event.ItemMovedEvent)
-    */
-   @Override
-   public void onItemMoved(ItemMovedEvent event)
-   {
-      // TODO Auto-generated method stub
+    /** @see org.exoplatform.ide.vfs.client.event.ItemMovedHandler#onItemMoved(org.exoplatform.ide.vfs.client.event.ItemMovedEvent) */
+    @Override
+    public void onItemMoved(ItemMovedEvent event) {
+        // TODO Auto-generated method stub
 
-   }
+    }
 
 }

@@ -24,47 +24,41 @@ import org.exoplatform.ide.client.framework.settings.SaveApplicationSettingsEven
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ApplicationSettingsSavedEvent extends GwtEvent<ApplicationSettingsSavedHandler>
-{
+public class ApplicationSettingsSavedEvent extends GwtEvent<ApplicationSettingsSavedHandler> {
 
-   public static final GwtEvent.Type<ApplicationSettingsSavedHandler> TYPE =
-      new GwtEvent.Type<ApplicationSettingsSavedHandler>();
+    public static final GwtEvent.Type<ApplicationSettingsSavedHandler> TYPE =
+            new GwtEvent.Type<ApplicationSettingsSavedHandler>();
 
-   private ApplicationSettings applicationSettings;
+    private ApplicationSettings applicationSettings;
 
-   private SaveType saveType;
+    private SaveType saveType;
 
-   public ApplicationSettingsSavedEvent(ApplicationSettings applicationSettings, SaveType saveType)
-   {
-      this.applicationSettings = applicationSettings;
-      this.saveType = saveType;
-   }
+    public ApplicationSettingsSavedEvent(ApplicationSettings applicationSettings, SaveType saveType) {
+        this.applicationSettings = applicationSettings;
+        this.saveType = saveType;
+    }
 
-   @Override
-   protected void dispatch(ApplicationSettingsSavedHandler handler)
-   {
-      handler.onApplicationSettingsSaved(this);
-   }
+    @Override
+    protected void dispatch(ApplicationSettingsSavedHandler handler) {
+        handler.onApplicationSettingsSaved(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ApplicationSettingsSavedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ApplicationSettingsSavedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   public ApplicationSettings getApplicationSettings()
-   {
-      return applicationSettings;
-   }
+    public ApplicationSettings getApplicationSettings() {
+        return applicationSettings;
+    }
 
-   public SaveType getSaveType()
-   {
-      return saveType;
-   }
+    public SaveType getSaveType() {
+        return saveType;
+    }
 
 }

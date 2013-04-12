@@ -20,7 +20,7 @@ import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * Signals the beginning of an upload session.
- *
+ * <p/>
  * We must signal this out-of-band because their upload session
  * scope is per-file, and we need something with broader scope.
  */
@@ -28,15 +28,15 @@ import org.exoplatform.ide.json.shared.JsonArray;
 @RoutingType(type = RoutingTypes.BEGINUPLOADSESSION)
 public interface BeginUploadSession extends ClientToServerDto {
 
-  String getSessionId();
+    String getSessionId();
 
-  JsonArray<String> getWorkspacePathsToReplace();
+    JsonArray<String> getWorkspacePathsToReplace();
 
-  JsonArray<String> getWorkspacePathsToUnzip();
+    JsonArray<String> getWorkspacePathsToUnzip();
 
-  JsonArray<String> getWorkspaceDirsToCreate();
+    JsonArray<String> getWorkspaceDirsToCreate();
 
-  String getWorkspaceId();
+    String getWorkspaceId();
 
-  String getClientId();
+    String getClientId();
 }

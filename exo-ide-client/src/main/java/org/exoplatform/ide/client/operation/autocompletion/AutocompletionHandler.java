@@ -22,49 +22,41 @@ package org.exoplatform.ide.client.operation.autocompletion;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantEvent;
+import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class AutocompletionHandler implements AutocompleteCalledHandler, EditorActiveFileChangedHandler
-{
+public class AutocompletionHandler implements AutocompleteCalledHandler, EditorActiveFileChangedHandler {
 
-   private Editor activeEditor;
+    private Editor activeEditor;
 
-   public AutocompletionHandler()
-   {
+    public AutocompletionHandler() {
 //      IDE.getInstance().addControl(new OpenAutocompleteControl());
 
-      IDE.addHandler(AutocompleteCalledEvent.TYPE, this);
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-   }
+        IDE.addHandler(AutocompleteCalledEvent.TYPE, this);
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+    }
 
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      activeEditor = event.getEditor();
-   }
+    @Override
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        activeEditor = event.getEditor();
+    }
 
-   @Override
-   public void onAutocompleteCalled(AutocompleteCalledEvent event)
-   {
-      if (activeEditor != null && activeEditor instanceof CodeMirror)
-      {
-         CodeMirror codemirror = (CodeMirror)activeEditor;
-         codemirror.onAutocomplete();
-      }
-      else
-      {
-         IDE.fireEvent(new RunCodeAssistantEvent());
-      }
-   }
+    @Override
+    public void onAutocompleteCalled(AutocompleteCalledEvent event) {
+        if (activeEditor != null && activeEditor instanceof CodeMirror) {
+            CodeMirror codemirror = (CodeMirror)activeEditor;
+            codemirror.onAutocomplete();
+        } else {
+            IDE.fireEvent(new RunCodeAssistantEvent());
+        }
+    }
 
 }

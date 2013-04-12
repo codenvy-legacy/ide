@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link DeleteVersionEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 20, 2012 4:52:35 PM anya $
- * 
  */
-public interface DeleteVersionHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to delete application version.
-    * 
-    * @param event
-    */
-   void onDeleteVersion(DeleteVersionEvent event);
+public interface DeleteVersionHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to delete application version.
+     *
+     * @param event
+     */
+    void onDeleteVersion(DeleteVersionEvent event);
 }

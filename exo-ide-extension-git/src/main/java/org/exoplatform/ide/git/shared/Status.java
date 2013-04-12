@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -18,69 +18,56 @@
  */
 package org.exoplatform.ide.git.shared;
 
-import java.util.List;
+import java.util.Set;
 
 /**
- * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
+ * @author <a href="mailto:dvishinskiy@codenvy.com">Dmitriy Vyshinskiy</a>
  * @version $Id: Status.java 68135 2011-04-08 14:23:36Z andrew00x $
  */
-public class Status
-{
-   protected String branchName;
-   protected List<GitFile> changedNotUpdated;
-   protected List<GitFile> changedNotCommited;
-   protected List<GitFile> untracked;
+public interface Status {
 
-   public Status(String branchName, List<GitFile> changedNotUpdated, List<GitFile> changedNotCommited,
-      List<GitFile> untracked)
-   {
-      this.branchName = branchName;
-      this.changedNotUpdated = changedNotUpdated;
-      this.changedNotCommited = changedNotCommited;
-      this.untracked = untracked;
-   }
+    public boolean isClean();
 
-   public Status()
-   {
-   }
+    public void setClean(Boolean clean);
 
-   public String getBranchName()
-   {
-      return branchName;
-   }
+    public boolean getShortFormat();
 
-   public void setBranchName(String branchName)
-   {
-      this.branchName = branchName;
-   }
+    public void setShortFormat(Boolean shortFormat);
 
-   public List<GitFile> getChangedNotUpdated()
-   {
-      return changedNotUpdated;
-   }
+    public String getBranchName();
 
-   public void setChangedNotUpdated(List<GitFile> changedNotUpdated)
-   {
-      this.changedNotUpdated = changedNotUpdated;
-   }
+    public void setBranchName(String branchName);
 
-   public List<GitFile> getChangedNotCommited()
-   {
-      return changedNotCommited;
-   }
+    public Set<String> getAdded();
 
-   public void setChangedNotCommited(List<GitFile> changedNotCommited)
-   {
-      this.changedNotCommited = changedNotCommited;
-   }
+    public void setAdded(Set<String> added);
 
-   public List<GitFile> getUntracked()
-   {
-      return untracked;
-   }
+    public Set<String> getChanged();
 
-   public void setUntracked(List<GitFile> untracked)
-   {
-      this.untracked = untracked;
-   }
+    public void setChanged(Set<String> changed);
+
+    public Set<String> getRemoved();
+
+    public void setRemoved(Set<String> removed);
+
+    public Set<String> getMissing();
+
+    public void setMissing(Set<String> missing);
+
+    public Set<String> getModified();
+
+    public void setModified(Set<String> modified);
+
+    public Set<String> getUntracked();
+
+    public void setUntracked(Set<String> untracked);
+
+    public Set<String> getUntrackedFolders();
+
+    public void setUntrackedFolders(Set<String> untrackedFolders);
+
+    public Set<String> getConflicting();
+
+    public void setConflicting(Set<String> conflicting);
+
 }

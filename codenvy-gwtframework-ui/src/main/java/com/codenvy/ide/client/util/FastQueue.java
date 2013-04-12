@@ -24,151 +24,129 @@ import java.util.NoSuchElementException;
 /**
  * An efficent implementation of queue for use in GWT.
  * Its efficiency is due to using JSO maps.
- *
+ * <p/>
  * Against the advice of AbstractQueue, this class accepts null.
  */
-public class FastQueue<T> extends AbstractQueue<T>
-{
-   private final IntMapJsoView<T> contents = IntMapJsoView.create();
+public class FastQueue<T> extends AbstractQueue<T> {
+    private final IntMapJsoView<T> contents = IntMapJsoView.create();
 
-   private int currentGetIndex = 0;
+    private int currentGetIndex = 0;
 
-   private int currentPutIndex = 0;
+    private int currentPutIndex = 0;
 
-   private int numEntry = 0;
+    private int numEntry = 0;
 
-   @Override
-   public Iterator<T> iterator()
-   {
-      return new Iterator<T>()
-      {
-         int index = currentGetIndex;
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
+            int index = currentGetIndex;
 
-         int lastEntry = -1;
+            int lastEntry = -1;
 
-         @Override
-         public boolean hasNext()
-         {
-            index = forwardGetIndex(index);
-            return index < currentPutIndex;
-         }
-
-         @Override
-         public T next()
-         {
-            index = forwardGetIndex(index);
-            lastEntry = index;
-            return contents.get(index++);
-         }
-
-         @Override
-         public void remove()
-         {
-            if (lastEntry >= 0)
-            {
-               removeEntry(lastEntry);
+            @Override
+            public boolean hasNext() {
+                index = forwardGetIndex(index);
+                return index < currentPutIndex;
             }
-         }
-      };
-   }
 
-   @Override
-   public int size()
-   {
-      return numEntry;
-   }
+            @Override
+            public T next() {
+                index = forwardGetIndex(index);
+                lastEntry = index;
+                return contents.get(index++);
+            }
 
-   @Override
-   public boolean offer(T e)
-   {
-      addEntry(e);
-      return true;
-   }
+            @Override
+            public void remove() {
+                if (lastEntry >= 0) {
+                    removeEntry(lastEntry);
+                }
+            }
+        };
+    }
 
-   @Override
-   public T peek()
-   {
-      currentGetIndex = forwardGetIndex(currentGetIndex);
-      return currentGetIndex < currentPutIndex ? contents.get(currentGetIndex) : null;
-   }
+    @Override
+    public int size() {
+        return numEntry;
+    }
 
-   // This implementation of queue cannot use the inherited remove() method because a
-   // null element will be misinterpreted as the queue being empty.
-   @Override
-   public T remove()
-   {
-      if (isEmpty())
-      {
-         throw new NoSuchElementException();
-      }
-      return poll();
-   }
+    @Override
+    public boolean offer(T e) {
+        addEntry(e);
+        return true;
+    }
 
-   /**
-    * Move the index forward until it hit the next non empty index or the end.
-    */
-   private int forwardGetIndex(int index)
-   {
-      // the first possible index is the current get index.
-      index = Math.max(currentGetIndex, index);
-      while (index < currentPutIndex && !contents.has(index))
-      {
-         index++;
-      }
-      return index;
-   }
+    @Override
+    public T peek() {
+        currentGetIndex = forwardGetIndex(currentGetIndex);
+        return currentGetIndex < currentPutIndex ? contents.get(currentGetIndex) : null;
+    }
 
-   @Override
-   public T poll()
-   {
-      T ret = peek();
-      if (!isEmpty())
-      {
-         removeEntry(currentGetIndex);
-         currentGetIndex++;
-      }
-      return ret;
-   }
+    // This implementation of queue cannot use the inherited remove() method because a
+    // null element will be misinterpreted as the queue being empty.
+    @Override
+    public T remove() {
+        if (isEmpty()) {
+            throw new NoSuchElementException();
+        }
+        return poll();
+    }
 
-   /**
-    * Remove the entry with the given index
-    *
-    * @param index
-    */
-   protected T removeEntry(int index)
-   {
-      T ret = null;
-      if (contents.has(index))
-      {
-         numEntry--;
-         ret = contents.get(index);
-         contents.remove(index);
-      }
-      assert numEntry < currentPutIndex - currentGetIndex;
-      return ret;
-   }
+    /** Move the index forward until it hit the next non empty index or the end. */
+    private int forwardGetIndex(int index) {
+        // the first possible index is the current get index.
+        index = Math.max(currentGetIndex, index);
+        while (index < currentPutIndex && !contents.has(index)) {
+            index++;
+        }
+        return index;
+    }
 
-   /**
-    * Add an entry to the queue.
-    *
-    * @param e
-    * @return the index of the added entry.
-    */
-   protected int addEntry(T e)
-   {
-      numEntry++;
-      int putIndex = currentPutIndex++;
-      contents.put(putIndex, e);
-      assert numEntry <= currentPutIndex - currentGetIndex;
-      return putIndex;
-   }
+    @Override
+    public T poll() {
+        T ret = peek();
+        if (!isEmpty()) {
+            removeEntry(currentGetIndex);
+            currentGetIndex++;
+        }
+        return ret;
+    }
 
-   @Override
-   public void clear()
-   {
-      currentPutIndex = 0;
-      currentGetIndex = 0;
-      numEntry = 0;
-      contents.clear();
-   }
+    /**
+     * Remove the entry with the given index
+     *
+     * @param index
+     */
+    protected T removeEntry(int index) {
+        T ret = null;
+        if (contents.has(index)) {
+            numEntry--;
+            ret = contents.get(index);
+            contents.remove(index);
+        }
+        assert numEntry < currentPutIndex - currentGetIndex;
+        return ret;
+    }
+
+    /**
+     * Add an entry to the queue.
+     *
+     * @param e
+     * @return the index of the added entry.
+     */
+    protected int addEntry(T e) {
+        numEntry++;
+        int putIndex = currentPutIndex++;
+        contents.put(putIndex, e);
+        assert numEntry <= currentPutIndex - currentGetIndex;
+        return putIndex;
+    }
+
+    @Override
+    public void clear() {
+        currentPutIndex = 0;
+        currentGetIndex = 0;
+        numEntry = 0;
+        contents.clear();
+    }
 }

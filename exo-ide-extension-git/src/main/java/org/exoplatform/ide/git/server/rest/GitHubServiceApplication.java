@@ -18,45 +18,36 @@
  */
 package org.exoplatform.ide.git.server.rest;
 
+import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.ws.rs.core.Application;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SamplesServiceApplication.java Sep 2, 2011 12:20:58 PM vereshchaka $
  */
-public class GitHubServiceApplication extends Application
-{
-   private Set<Class<?>> classes;
+public class GitHubServiceApplication extends Application {
+    private Set<Class< ? >> classes;
 
-   private Set<Object> singletons;
+    private Set<Object>     singletons;
 
-   public GitHubServiceApplication()
-   {
-      classes = new HashSet<Class<?>>(1);
-      classes.add(GitHubService.class);
-      singletons = new HashSet<Object>(1);
-      singletons.add(new GitHubExceptionMapper());
-   }
+    public GitHubServiceApplication() {
+        classes = new HashSet<Class< ? >>(1);
+        classes.add(GitHubService.class);
+        singletons = new HashSet<Object>(1);
+        singletons.add(new GitHubExceptionMapper());
+    }
 
-   /**
-    * @see javax.ws.rs.core.Application#getClasses()
-    */
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      return classes;
-   }
+    /** @see javax.ws.rs.core.Application#getClasses() */
+    @Override
+    public Set<Class< ? >> getClasses() {
+        return classes;
+    }
 
-   /**
-    * @see javax.ws.rs.core.Application#getSingletons()
-    */
-   @Override
-   public Set<Object> getSingletons()
-   {
-      return singletons;
-   }
+    /** @see javax.ws.rs.core.Application#getSingletons() */
+    @Override
+    public Set<Object> getSingletons() {
+        return singletons;
+    }
 
 }

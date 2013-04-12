@@ -23,91 +23,76 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.*;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientBundle;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * Control for user to manage project, deployed on CloudBees.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 2, 2011 6:00:15 PM anya $
- * 
  */
 public class CloudBeesControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler,
-   FolderRefreshedHandler,ActiveProjectChangedHandler
-{
-   private static final String ID = "Project/PaaS/CloudBees";
+                                                               FolderRefreshedHandler, ActiveProjectChangedHandler {
+    private static final String ID = "Project/PaaS/CloudBees";
 
-   public CloudBeesControl()
-   {
-      super(ID);
-      setTitle(CloudBeesExtension.LOCALIZATION_CONSTANT.cloudBeesControlTitle());
-      setPrompt(CloudBeesExtension.LOCALIZATION_CONSTANT.cloudBeesControlPrompt());
-      setImages(CloudBeesClientBundle.INSTANCE.cloudBees(), CloudBeesClientBundle.INSTANCE.cloudBeesDisabled());
-      setEvent(new ManageCloudBeesProjectEvent());
-   }
+    public CloudBeesControl() {
+        super(ID);
+        setTitle(CloudBeesExtension.LOCALIZATION_CONSTANT.cloudBeesControlTitle());
+        setPrompt(CloudBeesExtension.LOCALIZATION_CONSTANT.cloudBeesControlPrompt());
+        setImages(CloudBeesClientBundle.INSTANCE.cloudBees(), CloudBeesClientBundle.INSTANCE.cloudBeesDisabled());
+        setEvent(new ManageCloudBeesProjectEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(FolderRefreshedEvent.TYPE, this);
-      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(FolderRefreshedEvent.TYPE, this);
+        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      setVisible(false);
-      setEnabled(false);
-   }
+    /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+     * .project.ProjectClosedEvent) */
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        setVisible(false);
+        setEnabled(false);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-   }
-   
-   @Override
-   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-   {
-      boolean isCloudBees = isCloudBees(event.getProject());
-      setVisible(isCloudBees);
-      setEnabled(isCloudBees);
-   }
+    /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
+     * .project.ProjectOpenedEvent) */
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        if (event.getProject()!= null) {
+            boolean enabled = isCloudBees(event.getProject());
+            setVisible(enabled);
+            setEnabled(enabled);
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler#onFolderRefreshed(org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent)
-    */
-   @Override
-   public void onFolderRefreshed(FolderRefreshedEvent event)
-   {
-      if (event.getFolder() instanceof ProjectModel)
-      {
-         boolean enabled = isCloudBees((ProjectModel)event.getFolder());
-         setVisible(enabled);
-         setEnabled(enabled);
-      }
-   }
+    @Override
+    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
+        boolean isCloudBees = isCloudBees(event.getProject());
+        setVisible(isCloudBees);
+        setEnabled(isCloudBees);
+    }
 
-   private boolean isCloudBees(ProjectModel project)
-   {
-      return project.getPropertyValue("cloudbees-application") != null;
-   }
+    /** @see org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler#onFolderRefreshed(org.exoplatform.ide.client
+     * .framework.navigation.event.FolderRefreshedEvent) */
+    @Override
+    public void onFolderRefreshed(FolderRefreshedEvent event) {
+        if (event.getFolder() instanceof ProjectModel) {
+            boolean enabled = isCloudBees((ProjectModel)event.getFolder());
+            setVisible(enabled);
+            setEnabled(enabled);
+        }
+    }
+
+    private boolean isCloudBees(ProjectModel project) {
+        return project.getPropertyValue("cloudbees-application") != null;
+    }
 }

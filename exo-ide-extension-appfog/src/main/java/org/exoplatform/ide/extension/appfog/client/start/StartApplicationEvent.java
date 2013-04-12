@@ -26,55 +26,39 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class StartApplicationEvent extends GwtEvent<StartApplicationHandler>
-{
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<StartApplicationHandler> TYPE = new GwtEvent.Type<StartApplicationHandler>();
+public class StartApplicationEvent extends GwtEvent<StartApplicationHandler> {
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<StartApplicationHandler> TYPE = new GwtEvent.Type<StartApplicationHandler>();
 
-   private String applicationName;
+    private String applicationName;
 
-   /**
-    *
-    */
-   public StartApplicationEvent()
-   {
-   }
+    /**
+     *
+     */
+    public StartApplicationEvent() {
+    }
 
-   /**
-    * @param applicationName
-    */
-   public StartApplicationEvent(String applicationName)
-   {
-      super();
-      this.applicationName = applicationName;
-   }
+    /** @param applicationName */
+    public StartApplicationEvent(String applicationName) {
+        super();
+        this.applicationName = applicationName;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<StartApplicationHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<StartApplicationHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(StartApplicationHandler handler)
-   {
-      handler.onStartApplication(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(StartApplicationHandler handler) {
+        handler.onStartApplication(this);
+    }
 
-   /**
-    * @return the applicationName
-    */
-   public String getApplicationName()
-   {
-      return applicationName;
-   }
+    /** @return the applicationName */
+    public String getApplicationName() {
+        return applicationName;
+    }
 
 }

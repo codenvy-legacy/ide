@@ -10,9 +10,8 @@
  *******************************************************************************/
 package org.exoplatform.ide.editor.client.api.contentassist;
 
-import com.google.gwt.user.client.ui.Widget;
-
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.ide.editor.shared.text.IDocument;
 
@@ -23,100 +22,105 @@ import org.exoplatform.ide.editor.shared.text.IDocument;
  * <p>
  * This interface can be implemented by clients
  * </p>
- * 
+ *
  * @see ContentAssistProcessor
  */
-public interface CompletionProposal
-{
+public interface CompletionProposal {
 
-   /**
-    * Inserts the proposed completion into the given document.
-    * 
-    * @param document the document into which to insert the proposed completion
-    */
-   void apply(IDocument document);
+    /**
+     * Inserts the proposed completion into the given document.
+     *
+     * @param document
+     *         the document into which to insert the proposed completion
+     */
+    void apply(IDocument document);
 
-   /**
-    * Returns the new selection after the proposal has been applied to the given document in absolute document coordinates. If it
-    * returns <code>null</code>, no new selection is set.
-    * 
-    * A document change can trigger other document changes, which have to be taken into account when calculating the new
-    * selection. Typically, this would be done by installing a document listener or by using a document position during
-    * {@link #apply(IDocument)}.
-    * 
-    * @param document the document into which the proposed completion has been inserted
-    * @return the new selection in absolute document coordinates
-    */
-   Point getSelection(IDocument document);
+    /**
+     * Returns the new selection after the proposal has been applied to the given document in absolute document coordinates. If it
+     * returns <code>null</code>, no new selection is set.
+     * <p/>
+     * A document change can trigger other document changes, which have to be taken into account when calculating the new
+     * selection. Typically, this would be done by installing a document listener or by using a document position during
+     * {@link #apply(IDocument)}.
+     *
+     * @param document
+     *         the document into which the proposed completion has been inserted
+     * @return the new selection in absolute document coordinates
+     */
+    Point getSelection(IDocument document);
 
-   /**
-    * Returns optional additional information about the proposal. The additional information will be presented to assist the user
-    * in deciding if the selected proposal is the desired choice.
-    * 
-    * @return the additional information or <code>null</code>
-    */
-   Widget getAdditionalProposalInfo();
+    /**
+     * Returns optional additional information about the proposal. The additional information will be presented to assist the user
+     * in deciding if the selected proposal is the desired choice.
+     *
+     * @return the additional information or <code>null</code>
+     */
+    Widget getAdditionalProposalInfo();
 
-   /**
-    * Returns the string to be displayed in the list of completion proposals.
-    * 
-    * @return the string to be displayed
-    * 
-    * @see ICompletionProposalExtension6#getStyledDisplayString()
-    */
-   String getDisplayString();
+    /**
+     * Returns the string to be displayed in the list of completion proposals.
+     *
+     * @return the string to be displayed
+     * @see ICompletionProposalExtension6#getStyledDisplayString()
+     */
+    String getDisplayString();
 
-   /**
-    * Returns the image to be displayed in the list of completion proposals. The image would typically be shown to the left of the
-    * display string.
-    * 
-    * @return the image to be shown or <code>null</code> if no image is desired
-    */
-   Image getImage();
+    /**
+     * Returns the image to be displayed in the list of completion proposals. The image would typically be shown to the left of the
+     * display string.
+     *
+     * @return the image to be shown or <code>null</code> if no image is desired
+     */
+    Image getImage();
 
-   /**
-    * Returns optional context information associated with this proposal. The context information will automatically be shown if
-    * the proposal has been applied.
-    * 
-    * @return the context information for this proposal or <code>null</code>
-    */
-   ContextInformation getContextInformation();
-   
-   /**
-    * Applies the proposed completion to the given document. The insertion has been triggered by entering the given character at
-    * the given offset. This method assumes that {@link #isValidFor(IDocument, int)} returns <code>true</code> if called for
-    * <code>offset</code>.
-    * 
-    * @param document the document into which to insert the proposed completion
-    * @param trigger the trigger to apply the completion
-    * @param offset the offset at which the trigger has been activated
-    */
-   void apply(IDocument document, char trigger, int offset);
+    /**
+     * Returns optional context information associated with this proposal. The context information will automatically be shown if
+     * the proposal has been applied.
+     *
+     * @return the context information for this proposal or <code>null</code>
+     */
+    ContextInformation getContextInformation();
 
-   /**
-    * Returns whether this completion proposal is valid for the given position in the given document.
-    * 
-    * @param document the document for which the proposal is tested
-    * @param offset the offset for which the proposal is tested
-    * @return <code>true</code> iff valid
-    */
-   boolean isValidFor(IDocument document, int offset);
+    /**
+     * Applies the proposed completion to the given document. The insertion has been triggered by entering the given character at
+     * the given offset. This method assumes that {@link #isValidFor(IDocument, int)} returns <code>true</code> if called for
+     * <code>offset</code>.
+     *
+     * @param document
+     *         the document into which to insert the proposed completion
+     * @param trigger
+     *         the trigger to apply the completion
+     * @param offset
+     *         the offset at which the trigger has been activated
+     */
+    void apply(IDocument document, char trigger, int offset);
 
-   /**
-    * Returns the characters which trigger the application of this completion proposal.
-    * 
-    * @return the completion characters for this completion proposal or <code>null</code> if no completion other than the new line
-    *         character is possible
-    */
-   char[] getTriggerCharacters();
-   
-   /**
-    * Returns <code>true</code> if the proposal may be automatically inserted, <code>false</code> otherwise. Automatic insertion
-    * can happen if the proposal is the only one being proposed, in which case the content assistant may decide to not prompt the
-    * user with a list of proposals, but simply insert the single proposal. A proposal may veto this behavior by returning
-    * <code>false</code> to a call to this method.
-    * 
-    * @return <code>true</code> if the proposal may be inserted automatically, <code>false</code> if not
-    */
-   boolean isAutoInsertable();
+    /**
+     * Returns whether this completion proposal is valid for the given position in the given document.
+     *
+     * @param document
+     *         the document for which the proposal is tested
+     * @param offset
+     *         the offset for which the proposal is tested
+     * @return <code>true</code> iff valid
+     */
+    boolean isValidFor(IDocument document, int offset);
+
+    /**
+     * Returns the characters which trigger the application of this completion proposal.
+     *
+     * @return the completion characters for this completion proposal or <code>null</code> if no completion other than the new line
+     *         character is possible
+     */
+    char[] getTriggerCharacters();
+
+    /**
+     * Returns <code>true</code> if the proposal may be automatically inserted, <code>false</code> otherwise. Automatic insertion
+     * can happen if the proposal is the only one being proposed, in which case the content assistant may decide to not prompt the
+     * user with a list of proposals, but simply insert the single proposal. A proposal may veto this behavior by returning
+     * <code>false</code> to a call to this method.
+     *
+     * @return <code>true</code> if the proposal may be inserted automatically, <code>false</code> if not
+     */
+    boolean isAutoInsertable();
 }

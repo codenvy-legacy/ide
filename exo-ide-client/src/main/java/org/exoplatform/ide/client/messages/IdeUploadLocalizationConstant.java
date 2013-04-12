@@ -24,89 +24,87 @@ import com.google.gwt.i18n.client.Constants;
  * Interface to represent the constants contained in resource bundle: 'IdeUploadLocalizationConstant.properties'.
  * <p/>
  * Localization message for form from upload group.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: IdePreferencesLocalizationConstant.java Jun 3, 2011 12:58:29 PM vereshchaka $
- * 
  */
-public interface IdeUploadLocalizationConstant extends Constants
-{
-   /*
-    * UploadForm
-    */
-   @Key("upload.button.browse")
-   String uploadBrowseBtn();
+public interface IdeUploadLocalizationConstant extends Constants {
+    /*
+     * UploadForm
+     */
+    @Key("upload.button.browse")
+    String uploadBrowseBtn();
 
-   @Key("upload.folder.title")
-   String uploadFolderTitle();
+    @Key("upload.folder.title")
+    String uploadFolderTitle();
 
-   @Key("upload.button")
-   String uploadButton();
+    @Key("upload.button")
+    String uploadButton();
 
-   @Key("upload.folderToUpload")
-   String folderToUpload();
+    @Key("upload.folderToUpload")
+    String folderToUpload();
 
-   /*
-    * UploadFileForm
-    */
-   @Key("uploadFile.title")
-   String uploadFileTitle();
+    /*
+     * UploadFileForm
+     */
+    @Key("uploadFile.title")
+    String uploadFileTitle();
 
-   @Key("uploadFile.fileToUpload")
-   String fileToUpload();
+    @Key("uploadFile.fileToUpload")
+    String fileToUpload();
 
-   @Key("uploadFile.mimeType")
-   String uploadFileMimeType();
+    @Key("uploadFile.mimeType")
+    String uploadFileMimeType();
 
-   /*
-    * OpenLocalFileForm
-    */
-   @Key("openLocalFile.title")
-   String openLocalFileTitle();
+    /*
+     * OpenLocalFileForm
+     */
+    @Key("openLocalFile.title")
+    String openLocalFileTitle();
 
-   @Key("openButton")
-   String openButton();
+    @Key("openButton")
+    String openButton();
 
-   @Key("fileToOpen")
-   String fileToOpen();
+    @Key("fileToOpen")
+    String fileToOpen();
 
-   /*
-    * OpenFileByPathForm
-    */
-   @Key("openFileByPath.title")
-   String openFileByPathTitle();
+    /*
+     * OpenFileByPathForm
+     */
+    @Key("openFileByPath.title")
+    String openFileByPathTitle();
 
-   @Key("openFileByPath.fileUrl")
-   String openFileByPathFileUrl();
+    @Key("openFileByPath.fileUrl")
+    String openFileByPathFileUrl();
 
-   /*
-    * UploadFilePresenter
-    */
-   @Key("upload.file.exist.title")
-   String uploadFileExistTitle();
+    /*
+     * UploadFilePresenter
+     */
+    @Key("upload.file.exist.title")
+    String uploadFileExistTitle();
 
-   @Key("upload.file.exist.text")
-   String uploadFileExistText();
+    @Key("upload.file.exist.text")
+    String uploadFileExistText();
 
-   /*
-    * DownloadForm
-    */
-   @Key("download.file.error")
-   String downloadFileError();
+    /*
+     * DownloadForm
+     */
+    @Key("download.file.error")
+    String downloadFileError();
 
-   @Key("download.zip.folder.error")
-   String downloadFolderError();
+    @Key("download.zip.folder.error")
+    String downloadFolderError();
 
-   @Key("upload.overwrite.title")
-   String uploadOverwriteTitle();
+    @Key("upload.overwrite.title")
+    String uploadOverwriteTitle();
 
-   @Key("upload.overwrite.ask")
-   String uploadOverwriteAsk();
+    @Key("upload.overwrite.ask")
+    String uploadOverwriteAsk();
 
-   /*
-    * UploadZipView
-    */
-   @Key("upload.overwriteAll.label")
-   String uploadOverwriteAllLabel();
+    /*
+     * UploadZipView
+     */
+    @Key("upload.overwriteAll.label")
+    String uploadOverwriteAllLabel();
 
 }

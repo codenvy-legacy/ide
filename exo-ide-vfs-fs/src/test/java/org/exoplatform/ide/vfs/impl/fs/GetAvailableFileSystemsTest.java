@@ -29,50 +29,44 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class GetAvailableFileSystemsTest extends LocalFileSystemTest
-{
-   @SuppressWarnings("unchecked")
-   public void testAvailableFS() throws Exception
-   {
-      String requestPath = BASE_URI + "/ide/vfs";
-      ByteArrayContainerResponseWriter wr = new ByteArrayContainerResponseWriter();
-      ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, wr, null);
-      //log.info(new String(wr.getBody()));
-      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
-      Collection<VirtualFileSystemInfo> entity = (Collection<VirtualFileSystemInfo>)response.getEntity();
-      assertNotNull(entity);
-      //assertEquals(1, entity.size());
-      VirtualFileSystemInfo vfsInfo = null;
-      for (VirtualFileSystemInfo e : entity)
-      {
-         if (e.getId().equals(VFS_ID))
-         {
-            if (vfsInfo != null)
-            {
-               fail("More then one VFS with the same ID found. ");
+public class GetAvailableFileSystemsTest extends LocalFileSystemTest {
+    @SuppressWarnings("unchecked")
+    public void testAvailableFS() throws Exception {
+        String requestPath = BASE_URI + "/ide/vfs";
+        ByteArrayContainerResponseWriter wr = new ByteArrayContainerResponseWriter();
+        ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, wr, null);
+        //log.info(new String(wr.getBody()));
+        assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
+        Collection<VirtualFileSystemInfo> entity = (Collection<VirtualFileSystemInfo>)response.getEntity();
+        assertNotNull(entity);
+        //assertEquals(1, entity.size());
+        VirtualFileSystemInfo vfsInfo = null;
+        for (VirtualFileSystemInfo e : entity) {
+            if (e.getId().equals(MY_WORKSPACE_ID)) {
+                if (vfsInfo != null) {
+                    fail("More then one VFS with the same ID found. ");
+                }
+                vfsInfo = e;
             }
-            vfsInfo = e;
-         }
-      }
-      assertNotNull(vfsInfo);
-      assertEquals(false, vfsInfo.isVersioningSupported());
-      assertEquals(true, vfsInfo.isLockSupported());
-      assertEquals(ACLCapability.MANAGE, vfsInfo.getAclCapability());
-      assertEquals(QueryCapability.NONE, vfsInfo.getQueryCapability()); // TODO : update when implement search
-      assertEquals(VirtualFileSystemInfo.ANONYMOUS_PRINCIPAL, vfsInfo.getAnonymousPrincipal());
-      assertEquals(VirtualFileSystemInfo.ANY_PRINCIPAL, vfsInfo.getAnyPrincipal());
-      assertEquals(VFS_ID, vfsInfo.getId());
-      BasicPermissions[] basicPermissions = BasicPermissions.values();
-      List<String> expectedPermissions = new ArrayList<String>(basicPermissions.length);
-      for (BasicPermissions bp : basicPermissions)
-      {
-         expectedPermissions.add(bp.value());
-      }
-      Collection<String> permissions = vfsInfo.getPermissions();
-      assertTrue(permissions.containsAll(expectedPermissions));
-      assertNotNull(vfsInfo.getRoot());
-      assertEquals("/", vfsInfo.getRoot().getPath());
-      validateLinks(vfsInfo.getRoot());
-      validateUrlTemplates(vfsInfo);
-   }
+        }
+        assertNotNull(vfsInfo);
+        assertEquals(false, vfsInfo.isVersioningSupported());
+        assertEquals(true, vfsInfo.isLockSupported());
+        assertEquals(ACLCapability.MANAGE, vfsInfo.getAclCapability());
+        assertEquals(QueryCapability.NONE, vfsInfo.getQueryCapability()); // TODO : update when implement search
+        assertEquals(VirtualFileSystemInfo.ANONYMOUS_PRINCIPAL, vfsInfo.getAnonymousPrincipal());
+        assertEquals(VirtualFileSystemInfo.ANY_PRINCIPAL, vfsInfo.getAnyPrincipal());
+        assertEquals(MY_WORKSPACE_ID, vfsInfo.getId());
+        BasicPermissions[] basicPermissions = BasicPermissions.values();
+        List<String> expectedPermissions = new ArrayList<String>(basicPermissions.length);
+        for (BasicPermissions bp : basicPermissions) {
+            expectedPermissions.add(bp.value());
+        }
+        Collection<String> permissions = vfsInfo.getPermissions();
+        assertTrue(permissions.containsAll(expectedPermissions));
+        assertNotNull(vfsInfo.getRoot());
+        assertEquals("/", vfsInfo.getRoot().getPath());
+        validateLinks(vfsInfo.getRoot());
+        validateUrlTemplates(vfsInfo);
+    }
 }

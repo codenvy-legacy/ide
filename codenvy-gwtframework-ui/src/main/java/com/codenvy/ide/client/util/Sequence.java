@@ -20,45 +20,37 @@ package com.codenvy.ide.client.util;
 /**
  * A sequence maintains an ordering of objects defined via successor and
  * predecessor relationships.
- *
+ * <p/>
  * This interface is intended to provide read-only access. It is up to each
  * implementation to define whether it can reflect live changes to the
  * underlying state.
  *
- * @param <T> type of item in this sequence.
+ * @param <T>
+ *         type of item in this sequence.
  */
-public interface Sequence<T>
-{
+public interface Sequence<T> {
 
-   /**
-    * @return true iff this sequence is empty.
-    */
-   boolean isEmpty();
+    /** @return true iff this sequence is empty. */
+    boolean isEmpty();
 
-   /**
-    * @return first object in this sequence.
-    */
-   T getFirst();
+    /** @return first object in this sequence. */
+    T getFirst();
 
-   /**
-    * @return the last object in this sequence.
-    */
-   T getLast();
+    /** @return the last object in this sequence. */
+    T getLast();
 
-   /**
-    * @return the object after {@code x}, or {@code null} if {@code x} is the
-    *         last item.
-    */
-   T getNext(T x);
+    /**
+     * @return the object after {@code x}, or {@code null} if {@code x} is the
+     *         last item.
+     */
+    T getNext(T x);
 
-   /**
-    * @return the object before {@code x}, or {@code null} if {@code x} is the
-    *         first item.
-    */
-   T getPrevious(T x);
+    /**
+     * @return the object before {@code x}, or {@code null} if {@code x} is the
+     *         first item.
+     */
+    T getPrevious(T x);
 
-   /**
-    * @return true if and only if {@code x} is in this sequence.
-    */
-   boolean contains(T x);
+    /** @return true if and only if {@code x} is in this sequence. */
+    boolean contains(T x);
 }

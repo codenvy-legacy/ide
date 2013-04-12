@@ -22,18 +22,17 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ApplicationClosingEvent} event.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: Apr 20, 2012 11:27:00 AM azatsarynnyy $
- * 
  */
-public interface ApplicationClosingHandler extends EventHandler
-{
-   /**
-    * Perform actions, before the browser window closes
-    * or navigates to a different site.
-    * 
-    * @param event the event
-    */
-   void onApplicationClosing(ApplicationClosingEvent event);
+public interface ApplicationClosingHandler extends EventHandler {
+    /**
+     * Perform actions, before the browser window closes
+     * or navigates to a different site.
+     *
+     * @param event
+     *         the event
+     */
+    void onApplicationClosing(ApplicationClosingEvent event);
 }

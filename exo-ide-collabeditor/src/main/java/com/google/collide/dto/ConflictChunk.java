@@ -14,21 +14,19 @@
 
 package com.google.collide.dto;
 
-/**
- * Conflict chunk in a text file, resulting from a 3-way merge.
- */
+/** Conflict chunk in a text file, resulting from a 3-way merge. */
 public interface ConflictChunk {
 
-  int getStartLineNumber();
+    int getStartLineNumber();
 
-  /** Inclusive (i.e. this is the last line inside the chunk). */
-  int getEndLineNumber();
+    /** Inclusive (i.e. this is the last line inside the chunk). */
+    int getEndLineNumber();
 
-  String getBaseText();
+    String getBaseText();
 
-  String getRemoteText();
+    String getRemoteText();
 
-  String getLocalText();
+    String getLocalText();
 
-  boolean isResolved();
+    boolean isResolved();
 }

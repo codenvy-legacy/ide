@@ -28,28 +28,24 @@ import org.exoplatform.ide.extension.appfog.client.apps.ShowApplicationsEvent;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class ApplicationsControl extends AbstractAppfogControl
-{
-   public ApplicationsControl()
-   {
-      super(AppfogExtension.LOCALIZATION_CONSTANT.appsControlId());
-      setTitle(AppfogExtension.LOCALIZATION_CONSTANT.appsControlTitle());
-      setPrompt(AppfogExtension.LOCALIZATION_CONSTANT.appsControlPrompt());
-      setEvent(new ShowApplicationsEvent());
-      setImages(AppfogClientBundle.INSTANCE.appsList(), AppfogClientBundle.INSTANCE.appsListDisabled());
-   }
+public class ApplicationsControl extends AbstractAppfogControl {
+    public ApplicationsControl() {
+        super(AppfogExtension.LOCALIZATION_CONSTANT.appsControlId());
+        setTitle(AppfogExtension.LOCALIZATION_CONSTANT.appsControlTitle());
+        setPrompt(AppfogExtension.LOCALIZATION_CONSTANT.appsControlPrompt());
+        setEvent(new ShowApplicationsEvent());
+        setImages(AppfogClientBundle.INSTANCE.appsList(), AppfogClientBundle.INSTANCE.appsListDisabled());
+    }
 
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
+    @Override
+    public void initialize() {
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
 
-      setVisible(true);
-   }
+        setVisible(true);
+    }
 
-   @Override
-   protected void refresh()
-   {
-      setEnabled(vfsInfo != null);
-   }
+    @Override
+    protected void refresh() {
+        setEnabled(vfsInfo != null);
+    }
 }

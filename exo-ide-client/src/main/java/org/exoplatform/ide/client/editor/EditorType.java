@@ -29,60 +29,49 @@ import org.exoplatform.ide.editor.codemirror.CodeMirror;
  */
 public enum EditorType {
 
-   SOURCE(org.exoplatform.ide.client.IDE.EDITOR_CONSTANT.editorControllerFileTabSourceView(), Images.Editor.SOURCE_BUTTON_ICON, 0),
-      
-   DESIGN(org.exoplatform.ide.client.IDE.EDITOR_CONSTANT.editorControllerFileTabDesignView(), Images.Editor.DESIGN_BUTTON_ICON, 1),
-   
-   DEFAULT(org.exoplatform.ide.client.IDE.EDITOR_CONSTANT.editorControllerFileTabSourceView(), Images.Editor.SOURCE_BUTTON_ICON, 0);
+    SOURCE(org.exoplatform.ide.client.IDE.EDITOR_CONSTANT.editorControllerFileTabSourceView(), Images.Editor.SOURCE_BUTTON_ICON, 0),
 
-   private String label;
+    DESIGN(org.exoplatform.ide.client.IDE.EDITOR_CONSTANT.editorControllerFileTabDesignView(), Images.Editor.DESIGN_BUTTON_ICON, 1),
 
-   private String iconUrl;
+    DEFAULT(org.exoplatform.ide.client.IDE.EDITOR_CONSTANT.editorControllerFileTabSourceView(), Images.Editor.SOURCE_BUTTON_ICON, 0);
 
-   /**
-    * Editor position within editor area started from 0.
-    */
-   private int position;
+    private String label;
 
-   EditorType(String label, String icon, int position)
-   {
-      this.label = label;
-      this.iconUrl = icon;
-      this.position = position;
-   }
+    private String iconUrl;
 
-   public String getLabel()
-   {
-      return label;
-   }
+    /** Editor position within editor area started from 0. */
+    private int position;
 
-   public String getIcon()
-   {
-      return iconUrl;
-   }
+    EditorType(String label, String icon, int position) {
+        this.label = label;
+        this.iconUrl = icon;
+        this.position = position;
+    }
 
-   /**
-    * Get editor position within editor area started from 0.
-    * 
-    * @return
-    */
-   public int getPosition()
-   {
-      return position;
-   }
+    public String getLabel() {
+        return label;
+    }
 
-   public static EditorType getType(String editorClassName)
-   {
-      if (CodeMirror.class.getName().equals(editorClassName))
-      {
-         return SOURCE;
-      }
+    public String getIcon() {
+        return iconUrl;
+    }
 
-      else if (CKEditor.class.getName().equals(editorClassName))
-      {
-         return DESIGN;
-      }
+    /**
+     * Get editor position within editor area started from 0.
+     *
+     * @return
+     */
+    public int getPosition() {
+        return position;
+    }
 
-      return DEFAULT;
-   }
+    public static EditorType getType(String editorClassName) {
+        if (CodeMirror.class.getName().equals(editorClassName)) {
+            return SOURCE;
+        } else if (CKEditor.class.getName().equals(editorClassName)) {
+            return DESIGN;
+        }
+
+        return DEFAULT;
+    }
 }

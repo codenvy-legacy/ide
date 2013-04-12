@@ -14,13 +14,12 @@ import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 
 /** This type is used to store all the constant pool entries. */
-public class ConstantPool implements ClassFileConstants, TypeIds
-{
-   public static final char[] Close = "close".toCharArray(); //$NON-NLS-1$
+public class ConstantPool implements ClassFileConstants, TypeIds {
+    public static final char[] Close = "close".toCharArray(); //$NON-NLS-1$
 
-   public static final char[] Init = "<init>".toCharArray(); //$NON-NLS-1$
+    public static final char[] Init = "<init>".toCharArray(); //$NON-NLS-1$
 
-   public static final char[] JavaLangStringSignature = "Ljava/lang/String;".toCharArray(); //$NON-NLS-1$
+    public static final char[] JavaLangStringSignature = "Ljava/lang/String;".toCharArray(); //$NON-NLS-1$
 
-   public static final char[] ObjectSignature = "Ljava/lang/Object;".toCharArray(); //$NON-NLS-1$
+    public static final char[] ObjectSignature = "Ljava/lang/Object;".toCharArray(); //$NON-NLS-1$
 }

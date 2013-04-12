@@ -23,17 +23,15 @@ import com.google.gwt.i18n.client.Messages;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public interface JavaScriptMessages extends Messages
-{
-   @Key("javascriptEditor")
-   String javaScriptEditor();
+public interface JavaScriptMessages extends Messages {
+    @Key("javascriptEditor")
+    String javaScriptEditor();
 
-   @Key("control.new.javascript.title")
-   String controlNewJavascriptTitle();
+    @Key("control.new.javascript.title")
+    String controlNewJavascriptTitle();
 
-   @Key("control.new.javascript.prompt")
-   String controlNewJavascriptPrompt();
+    @Key("control.new.javascript.prompt")
+    String controlNewJavascriptPrompt();
 
 }

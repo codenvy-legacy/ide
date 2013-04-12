@@ -31,39 +31,26 @@ import org.exoplatform.ide.git.shared.RemoteListRequest;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 4, 2011 1:52:47 PM anya $
- * 
  */
-public class RemoteListRequestMarshaller implements Marshallable, Constants
-{
-   /**
-    * Remote list request.
-    */
-   private RemoteListRequest remoteListRequest;
+public class RemoteListRequestMarshaller implements Marshallable, Constants {
+    /** Remote list request. */
+    private RemoteListRequest remoteListRequest;
 
-   /**
-    * @param remoteListRequest
-    */
-   public RemoteListRequestMarshaller(RemoteListRequest remoteListRequest)
-   {
-      this.remoteListRequest = remoteListRequest;
-   }
+    /** @param remoteListRequest */
+    public RemoteListRequestMarshaller(RemoteListRequest remoteListRequest) {
+        this.remoteListRequest = remoteListRequest;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
-    */
-   @Override
-   public String marshal()
-   {
-      JSONObject jsonObject = new JSONObject();
-      if (remoteListRequest.getRemote() != null)
-      {
-         jsonObject.put(REMOTE, new JSONString(remoteListRequest.getRemote()));
-      }
-      else
-      {
-         jsonObject.put(REMOTE, JSONNull.getInstance());
-      }
-      jsonObject.put(VERBOSE, JSONBoolean.getInstance(remoteListRequest.isVerbose()));
-      return jsonObject.toString();
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal() */
+    @Override
+    public String marshal() {
+        JSONObject jsonObject = new JSONObject();
+        if (remoteListRequest.getRemote() != null) {
+            jsonObject.put(REMOTE, new JSONString(remoteListRequest.getRemote()));
+        } else {
+            jsonObject.put(REMOTE, JSONNull.getInstance());
+        }
+        jsonObject.put(VERBOSE, JSONBoolean.getInstance(remoteListRequest.isVerbose()));
+        return jsonObject.toString();
+    }
 }

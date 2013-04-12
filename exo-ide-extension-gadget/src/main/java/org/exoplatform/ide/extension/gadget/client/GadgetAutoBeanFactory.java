@@ -28,38 +28,36 @@ import org.exoplatform.ide.extension.gadget.shared.TokenResponse;
 
 /**
  * The interface for the AutoBean generator.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: GadgetAutoBeanFactory.java Mar 20, 2012 4:31:48 PM azatsarynnyy $
- *
  */
-public interface GadgetAutoBeanFactory extends AutoBeanFactory
-{
-   /**
-    * A factory method for a token of request bean.
-    * 
-    * @return an {@link AutoBean} of type {@link TokenRequest}
-    */
-   AutoBean<TokenRequest> tokenRequest();
+public interface GadgetAutoBeanFactory extends AutoBeanFactory {
+    /**
+     * A factory method for a token of request bean.
+     *
+     * @return an {@link AutoBean} of type {@link TokenRequest}
+     */
+    AutoBean<TokenRequest> tokenRequest();
 
-   /**
-    * A factory method for a token of response bean.
-    * 
-    * @return an {@link AutoBean} of type {@link TokenResponse}
-    */
-   AutoBean<TokenResponse> tokenResponse();
+    /**
+     * A factory method for a token of response bean.
+     *
+     * @return an {@link AutoBean} of type {@link TokenResponse}
+     */
+    AutoBean<TokenResponse> tokenResponse();
 
-   /**
-    * A factory method for a OpenSocial gadget bean.
-    * 
-    * @return an {@link AutoBean} of type {@link Gadget}
-    */
-   AutoBean<Gadget> gadget();
+    /**
+     * A factory method for a OpenSocial gadget bean.
+     *
+     * @return an {@link AutoBean} of type {@link Gadget}
+     */
+    AutoBean<Gadget> gadget();
 
-   /**
-    * A factory method for a metadata of OpenSocial gadget bean.
-    * 
-    * @return an {@link AutoBean} of type {@link GadgetMetadata}
-    */
-   AutoBean<GadgetMetadata> gadgetMetadata();
+    /**
+     * A factory method for a metadata of OpenSocial gadget bean.
+     *
+     * @return an {@link AutoBean} of type {@link GadgetMetadata}
+     */
+    AutoBean<GadgetMetadata> gadgetMetadata();
 }

@@ -32,99 +32,91 @@ import com.codenvy.eclipse.ltk.core.refactoring.RefactoringDescriptorProxy;
  * @see IRefactoringHistoryService
  * @since 3.2
  */
-public final class RefactoringHistoryEvent
-{
+public final class RefactoringHistoryEvent {
 
-   /**
-    * Event type indicating that a refactoring descriptor has been added to its
-    * associated history (value 4)
-    */
-   public static final int ADDED = 4;
+    /**
+     * Event type indicating that a refactoring descriptor has been added to its
+     * associated history (value 4)
+     */
+    public static final int ADDED = 4;
 
-   /**
-    * Event type indicating that a refactoring descriptor has been deleted from
-    * its associated history (value 3)
-    */
-   public static final int DELETED = 3;
+    /**
+     * Event type indicating that a refactoring descriptor has been deleted from
+     * its associated history (value 3)
+     */
+    public static final int DELETED = 3;
 
-   /**
-    * Event type indicating that a refactoring descriptor has been popped from
-    * the history stack (value 2)
-    */
-   public static final int POPPED = 2;
+    /**
+     * Event type indicating that a refactoring descriptor has been popped from
+     * the history stack (value 2)
+     */
+    public static final int POPPED = 2;
 
-   /**
-    * Event type indicating that a refactoring descriptor has been pushed to
-    * the history stack (value 1)
-    */
-   public static final int PUSHED = 1;
+    /**
+     * Event type indicating that a refactoring descriptor has been pushed to
+     * the history stack (value 1)
+     */
+    public static final int PUSHED = 1;
 
-   /**
-    * The refactoring descriptor proxy
-    */
-   private final RefactoringDescriptorProxy fProxy;
+    /** The refactoring descriptor proxy */
+    private final RefactoringDescriptorProxy fProxy;
 
-   /**
-    * The refactoring history service
-    */
-   private final IRefactoringHistoryService fService;
+    /** The refactoring history service */
+    private final IRefactoringHistoryService fService;
 
-   /**
-    * The event type
-    */
-   private final int fType;
+    /** The event type */
+    private final int fType;
 
-   /**
-    * Creates a new refactoring history event.
-    *
-    * @param service the refactoring history service
-    * @param type    the event type
-    * @param proxy   the refactoring descriptor proxy
-    */
-   public RefactoringHistoryEvent(final IRefactoringHistoryService service, final int type,
-      final RefactoringDescriptorProxy proxy)
-   {
-      Assert.isNotNull(service);
-      Assert.isNotNull(proxy);
-      fService = service;
-      fType = type;
-      fProxy = proxy;
-   }
+    /**
+     * Creates a new refactoring history event.
+     *
+     * @param service
+     *         the refactoring history service
+     * @param type
+     *         the event type
+     * @param proxy
+     *         the refactoring descriptor proxy
+     */
+    public RefactoringHistoryEvent(final IRefactoringHistoryService service, final int type,
+                                   final RefactoringDescriptorProxy proxy) {
+        Assert.isNotNull(service);
+        Assert.isNotNull(proxy);
+        fService = service;
+        fType = type;
+        fProxy = proxy;
+    }
 
-   /**
-    * Returns the refactoring descriptor proxy.
-    * <p>
-    * Depending on the event, this proxy may refer to an inexisting refactoring
-    * and cannot be resolved to a refactoring descriptor. Clients should also
-    * be prepared to receive notifications for unknown refactorings, which are
-    * discriminated by their special id
-    * {@link RefactoringDescriptor#ID_UNKNOWN};
-    * </p>
-    *
-    * @return the refactoring descriptor proxy
-    */
-   public RefactoringDescriptorProxy getDescriptor()
-   {
-      return fProxy;
-   }
+    /**
+     * Returns the refactoring descriptor proxy.
+     * <p>
+     * Depending on the event, this proxy may refer to an inexisting refactoring
+     * and cannot be resolved to a refactoring descriptor. Clients should also
+     * be prepared to receive notifications for unknown refactorings, which are
+     * discriminated by their special id
+     * {@link RefactoringDescriptor#ID_UNKNOWN};
+     * </p>
+     *
+     * @return the refactoring descriptor proxy
+     */
+    public RefactoringDescriptorProxy getDescriptor() {
+        return fProxy;
+    }
 
-   /**
-    * Returns the event type.
-    *
-    * @return the event type
-    */
-   public int getEventType()
-   {
-      return fType;
-   }
+    /**
+     * Returns the event type.
+     *
+     * @return the event type
+     */
+    public int getEventType() {
+        return fType;
+    }
 
-   /**
-    * Returns the refactoring history service.
-    *
-    * @return the refactoring history service
-    */
-   public IRefactoringHistoryService getHistoryService()
-   {
-      return fService;
-   }
+    /**
+     * Returns the refactoring history service.
+     *
+     * @return the refactoring history service
+     */
+    public IRefactoringHistoryService getHistoryService() {
+        return fService;
+    }
 }

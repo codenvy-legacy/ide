@@ -22,17 +22,16 @@ package org.exoplatform.ide.extension.aws.shared.beanstalk;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface ConfigurationOption
-{
-   String getNamespace();
+public interface ConfigurationOption {
+    String getNamespace();
 
-   void setNamespace(String namespace);
+    void setNamespace(String namespace);
 
-   String getName();
+    String getName();
 
-   void setName(String name);
+    void setName(String name);
 
-   String getValue();
+    String getValue();
 
-   void setValue(String value);
+    void setValue(String value);
 }

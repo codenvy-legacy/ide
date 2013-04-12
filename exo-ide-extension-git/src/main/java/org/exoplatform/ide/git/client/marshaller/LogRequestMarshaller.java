@@ -28,31 +28,23 @@ import org.exoplatform.ide.git.shared.LogRequest;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 14, 2011 5:42:15 PM anya $
- * 
  */
-public class LogRequestMarshaller implements Marshallable, Constants
-{
-   /**
-    * Log request.
-    */
-   private LogRequest logRequest;
+public class LogRequestMarshaller implements Marshallable, Constants {
+    /** Log request. */
+    private LogRequest logRequest;
 
-   /**
-    * @param logRequest log request
-    */
-   public LogRequestMarshaller(LogRequest logRequest)
-   {
-      this.logRequest = logRequest;
-   }
+    /**
+     * @param logRequest log request
+     */
+    public LogRequestMarshaller(LogRequest logRequest) {
+        this.logRequest = logRequest;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
-    */
-   @Override
-   public String marshal()
-   {
-      JSONObject jsonObject = new JSONObject();
-      return jsonObject.toString();
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal() */
+    @Override
+    public String marshal() {
+        JSONObject jsonObject = new JSONObject();
+        return jsonObject.toString();
+    }
 
 }

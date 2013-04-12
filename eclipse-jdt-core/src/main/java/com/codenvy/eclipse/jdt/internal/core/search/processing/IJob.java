@@ -14,35 +14,30 @@ import com.codenvy.eclipse.core.runtime.IProgressMonitor;
 
 public interface IJob {
 
-	/* Waiting policies */
-	int ForceImmediate = 1;
-	int CancelIfNotReady = 2;
-	int WaitUntilReady = 3;
+    /* Waiting policies */
+    int ForceImmediate   = 1;
+    int CancelIfNotReady = 2;
+    int WaitUntilReady   = 3;
 
-	/* Job's result */
-	boolean FAILED = false;
-	boolean COMPLETE = true;
+    /* Job's result */
+    boolean FAILED   = false;
+    boolean COMPLETE = true;
 
-	/**
-	 * Answer true if the job belongs to a given family (tag)
-	 */
-	public boolean belongsTo(String jobFamily);
-	/**
-	 * Asks this job to cancel its execution. The cancellation
-	 * can take an undertermined amount of time.
-	 */
-	public void cancel();
-	/**
-	 * Ensures that this job is ready to run.
-	 */
-	public void ensureReadyToRun();
-	/**
-	 * Execute the current job, answer whether it was successful.
-	 */
-	public boolean execute(IProgressMonitor progress);
+    /** Answer true if the job belongs to a given family (tag) */
+    public boolean belongsTo(String jobFamily);
 
-	/**
-	 * Returns this job's family
-	 */
-	public String getJobFamily();
+    /**
+     * Asks this job to cancel its execution. The cancellation
+     * can take an undertermined amount of time.
+     */
+    public void cancel();
+
+    /** Ensures that this job is ready to run. */
+    public void ensureReadyToRun();
+
+    /** Execute the current job, answer whether it was successful. */
+    public boolean execute(IProgressMonitor progress);
+
+    /** Returns this job's family */
+    public String getJobFamily();
 }

@@ -26,58 +26,57 @@ import java.util.List;
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: Framework.java Mar 16, 2012 5:14:15 PM azatsarynnyy $
  */
-public interface Framework
-{
-   /**
-    * Get the framework name.
-    *
-    * @return framework name
-    */
-   String getName();
+public interface Framework {
+    /**
+     * Get the framework name.
+     *
+     * @return framework name
+     */
+    String getName();
 
-   /**
-    * Set the framework name.
-    *
-    * @param name
-    *    framework name
-    */
-   void setName(String name);
+    /**
+     * Set the framework name.
+     *
+     * @param name
+     *         framework name
+     */
+    void setName(String name);
 
-   List<Runtime> getRuntimes();
+    List<Runtime> getRuntimes();
 
-   void setRuntimes(List<Runtime> runtimes);
+    void setRuntimes(List<Runtime> runtimes);
 
-   /**
-    * Get framework description.
-    *
-    * @return framework description
-    */
-   String getDescription();
+    /**
+     * Get framework description.
+     *
+     * @return framework description
+     */
+    String getDescription();
 
-   /**
-    * Set framework description.
-    *
-    * @param description
-    *    framework description.
-    */
-   void setDescription(String description);
+    /**
+     * Set framework description.
+     *
+     * @param description
+     *         framework description.
+     */
+    void setDescription(String description);
 
-   /**
-    * Get default memory size in megabytes.
-    *
-    * @return memory size
-    */
-   int getMemory();
+    /**
+     * Get default memory size in megabytes.
+     *
+     * @return memory size
+     */
+    int getMemory();
 
-   /**
-    * Set memory size in megabytes.
-    *
-    * @param memory
-    *    memory size in megabytes
-    */
-   void setMemory(int memory);
+    /**
+     * Set memory size in megabytes.
+     *
+     * @param memory
+     *         memory size in megabytes
+     */
+    void setMemory(int memory);
 
-   String getDisplayName();
+    String getDisplayName();
 
-   void setDisplayName(String displayName);
+    void setDisplayName(String displayName);
 }

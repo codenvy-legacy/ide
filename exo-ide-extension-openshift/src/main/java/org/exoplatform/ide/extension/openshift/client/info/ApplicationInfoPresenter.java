@@ -52,162 +52,149 @@ import java.util.List;
 
 /**
  * Presenter for getting and displaying application's information. The view must be pointed in Views.gwt.xml.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 1, 2011 11:32:37 AM anya $
- * 
  */
 public class ApplicationInfoPresenter extends GitPresenter implements ShowApplicationInfoHandler, ViewClosedHandler,
-   LoggedInHandler
-{
+                                                                      LoggedInHandler {
 
-   interface Display extends IsView
-   {
-      HasClickHandlers getOkButton();
+    interface Display extends IsView {
+        HasClickHandlers getOkButton();
 
-      ListGridItem<Property> getApplicationInfoGrid();
-   }
+        ListGridItem<Property> getApplicationInfoGrid();
+    }
 
-   private Display display;
+    private Display display;
 
-   /**
-    *
-    */
-   public ApplicationInfoPresenter()
-   {
-      IDE.addHandler(ShowApplicationInfoEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    /**
+     *
+     */
+    public ApplicationInfoPresenter() {
+        IDE.addHandler(ShowApplicationInfoEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   /**
-    * Bind presenter with display.
-    */
-   public void bindDisplay()
-   {
-      display.getOkButton().addClickHandler(new ClickHandler()
-      {
+    /** Bind presenter with display. */
+    public void bindDisplay() {
+        display.getOkButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-   }
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.openshift.client.info.ShowApplicationInfoHandler#onShowApplicationInfo(org.exoplatform.ide.extension.openshift.client.info.ShowApplicationInfoEvent)
-    */
-   @Override
-   public void onShowApplicationInfo(ShowApplicationInfoEvent event)
-   {
-      if (makeSelectionCheck())
-      {
-         getApplicationInfo();
-      }
-   }
+    /** @see org.exoplatform.ide.extension.openshift.client.info.ShowApplicationInfoHandler#onShowApplicationInfo(org.exoplatform.ide
+     * .extension.openshift.client.info.ShowApplicationInfoEvent) */
+    @Override
+    public void onShowApplicationInfo(ShowApplicationInfoEvent event) {
+        if (makeSelectionCheck()) {
+            getApplicationInfo();
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
-   /**
-    * Get application's information.
-    */
-   public void getApplicationInfo()
-   {
+    /** Get application's information. */
+    public void getApplicationInfo() {
 //      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      String projectId = getSelectedProject().getId();
-      
-      try
-      {
-         AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
-         AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(appInfo);
-         OpenShiftClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId,
-            new AsyncRequestCallback<AppInfo>(unmarshaller)
-            {
-               @Override
-               protected void onSuccess(AppInfo result)
-               {
-                  if (display == null)
-                  {
-                     display = GWT.create(Display.class);
-                     bindDisplay();
-                     IDE.getInstance().openView(display.asView());
-                  }
+        String projectId = getSelectedProject().getId();
 
-                  List<Property> properties = new ArrayList<Property>();
-                  properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationName(), result
-                     .getName()));
-                  properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationType(), result
-                     .getType()));
-                  properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationPublicUrl(),
-                     "<a href =\"" + result.getPublicUrl() + "\" target=\"_blank\">" + result.getPublicUrl() + "</a>"));
-                  properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationGitUrl(), result
-                     .getGitUrl()));
-                  String time =
-                     DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM).format(
-                        new Date((long)result.getCreationTime()));
-                  properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationCreationTime(), time));
-                  display.getApplicationInfoGrid().setValue(properties);
-               }
+        try {
+            AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
+            AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(appInfo);
+            OpenShiftClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId,
+                                                                    new AsyncRequestCallback<AppInfo>(unmarshaller) {
+                                                                        @Override
+                                                                        protected void onSuccess(AppInfo result) {
+                                                                            if (display == null) {
+                                                                                display = GWT.create(Display.class);
+                                                                                bindDisplay();
+                                                                                IDE.getInstance().openView(display.asView());
+                                                                            }
 
-               /**
-                * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-                */
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  if (exception instanceof ServerException)
-                  {
-                     ServerException serverException = (ServerException)exception;
-                     if (HTTPStatus.OK == serverException.getHTTPStatus()
-                        && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
-                     {
-                        addLoggedInHandler();
-                        IDE.fireEvent(new LoginEvent());
-                        return;
-                     }
-                  }
-                  IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
-                     .getApplicationInfoFail()));
-               }
+                                                                            List<Property> properties = new ArrayList<Property>();
+                                                                            properties.add(new Property(
+                                                                                    OpenShiftExtension.LOCALIZATION_CONSTANT
+                                                                                                      .applicationName(), result
+                                                                                            .getName()));
+                                                                            properties.add(new Property(
+                                                                                    OpenShiftExtension.LOCALIZATION_CONSTANT
+                                                                                                      .applicationType(), result
+                                                                                            .getType()));
+                                                                            properties.add(new Property(
+                                                                                    OpenShiftExtension.LOCALIZATION_CONSTANT
+                                                                                                      .applicationPublicUrl(),
+                                                                                    "<a href =\"" + result.getPublicUrl() +
+                                                                                    "\" target=\"_blank\">" + result.getPublicUrl() +
+                                                                                    "</a>"));
+                                                                            properties.add(new Property(
+                                                                                    OpenShiftExtension.LOCALIZATION_CONSTANT
+                                                                                                      .applicationGitUrl(), result
+                                                                                            .getGitUrl()));
+                                                                            String time =
+                                                                                    DateTimeFormat
+                                                                                            .getFormat(PredefinedFormat.DATE_TIME_MEDIUM)
+                                                                                            .format(
+                                                                                                    new Date((long)result
+                                                                                                            .getCreationTime()));
+                                                                            properties.add(new Property(
+                                                                                    OpenShiftExtension.LOCALIZATION_CONSTANT
+                                                                                                      .applicationCreationTime(), time));
+                                                                            display.getApplicationInfoGrid().setValue(properties);
+                                                                        }
 
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
-            .getApplicationInfoFail()));
-      }
-   }
+                                                                        /**
+                                                                         * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+                                                                         */
+                                                                        @Override
+                                                                        protected void onFailure(Throwable exception) {
+                                                                            if (exception instanceof ServerException) {
+                                                                                ServerException serverException =
+                                                                                        (ServerException)exception;
+                                                                                if (HTTPStatus.OK == serverException.getHTTPStatus()
+                                                                                    && "Authentication-required".equals(serverException
+                                                                                                                                .getHeader(
+                                                                                                                                        HTTPHeader.JAXRS_BODY_PROVIDED))) {
+                                                                                    addLoggedInHandler();
+                                                                                    IDE.fireEvent(new LoginEvent());
+                                                                                    return;
+                                                                                }
+                                                                            }
+                                                                            IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception,
+                                                                                                                            OpenShiftExtension
+                                                                                                                                    .LOCALIZATION_CONSTANT
+                                                                                                                                    .getApplicationInfoFail()));
+                                                                        }
 
-   /**
-    * Register {@link LoggedInHandler} handler.
-    */
-   protected void addLoggedInHandler()
-   {
-      IDE.addHandler(LoggedInEvent.TYPE, this);
-   }
+                                                                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
+                                                                                 .getApplicationInfoFail()));
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent)
-    */
-   @Override
-   public void onLoggedIn(LoggedInEvent event)
-   {
-      IDE.removeHandler(LoggedInEvent.TYPE, this);
-      if (!event.isFailed())
-      {
-         getApplicationInfo();
-      }
-   }
+    /** Register {@link LoggedInHandler} handler. */
+    protected void addLoggedInHandler() {
+        IDE.addHandler(LoggedInEvent.TYPE, this);
+    }
+
+    /** @see org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.openshift
+     * .client.login.LoggedInEvent) */
+    @Override
+    public void onLoggedIn(LoggedInEvent event) {
+        IDE.removeHandler(LoggedInEvent.TYPE, this);
+        if (!event.isFailed()) {
+            getApplicationInfo();
+        }
+    }
 }

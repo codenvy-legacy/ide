@@ -23,23 +23,19 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class LoginCanceledEvent extends GwtEvent<LoginCanceledHandler>
-{
-   
-   public static final GwtEvent.Type<LoginCanceledHandler> TYPE = new GwtEvent.Type<LoginCanceledHandler>();
+public class LoginCanceledEvent extends GwtEvent<LoginCanceledHandler> {
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<LoginCanceledHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    public static final GwtEvent.Type<LoginCanceledHandler> TYPE = new GwtEvent.Type<LoginCanceledHandler>();
 
-   @Override
-   protected void dispatch(LoginCanceledHandler handler)
-   {
-      handler.onLoginCanceled(this);
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<LoginCanceledHandler> getAssociatedType() {
+        return TYPE;
+    }
+
+    @Override
+    protected void dispatch(LoginCanceledHandler handler) {
+        handler.onLoginCanceled(this);
+    }
 
 }

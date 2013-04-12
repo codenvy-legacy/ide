@@ -25,45 +25,33 @@ import org.exoplatform.ide.extension.logreader.client.event.ShowLogReaderEvent;
 
 /**
  * Control to open LogReader View
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class LogReaderControl extends SimpleControl implements IDEControl
-{
-   /**
-    * Control ID.
-    */
-   public static final String ID = "View/Log";
+public class LogReaderControl extends SimpleControl implements IDEControl {
+    /** Control ID. */
+    public static final String ID = "View/Log";
 
-   /**
-    * Control's title.
-    */
-   public static final String TITLE = "Log";
+    /** Control's title. */
+    public static final String TITLE = "Log";
 
-   /**
-    * Control's prompt, when user hovers the mouse on it.
-    */
-   public static final String PROMPT = "Show Log form";
+    /** Control's prompt, when user hovers the mouse on it. */
+    public static final String PROMPT = "Show Log form";
 
-   public LogReaderControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(LogReaderClientBundle.INSTANCE.logReader(), LogReaderClientBundle.INSTANCE.logReaderDisabled());
-      setEvent(new ShowLogReaderEvent());
-   }
+    public LogReaderControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(LogReaderClientBundle.INSTANCE.logReader(), LogReaderClientBundle.INSTANCE.logReaderDisabled());
+        setEvent(new ShowLogReaderEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(true);
+        setEnabled(true);
+    }
 
 }

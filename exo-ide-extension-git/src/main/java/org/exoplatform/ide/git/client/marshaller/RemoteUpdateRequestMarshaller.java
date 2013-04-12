@@ -29,35 +29,27 @@ import org.exoplatform.ide.git.shared.RemoteUpdateRequest;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 19, 2011 12:16:57 PM anya $
- * 
  */
-public class RemoteUpdateRequestMarshaller implements Marshallable, Constants
-{
+public class RemoteUpdateRequestMarshaller implements Marshallable, Constants {
 
-   /**
-    * Update remote repository request.
-    */
-   private RemoteUpdateRequest remoteUpdateRequest;
+    /** Update remote repository request. */
+    private RemoteUpdateRequest remoteUpdateRequest;
 
-   /**
-    * @param remoteUpdateRequest update remote repository request
-    */
-   public RemoteUpdateRequestMarshaller(RemoteUpdateRequest remoteUpdateRequest)
-   {
-      this.remoteUpdateRequest = remoteUpdateRequest;
-   }
+    /**
+     * @param remoteUpdateRequest update remote repository request
+     */
+    public RemoteUpdateRequestMarshaller(RemoteUpdateRequest remoteUpdateRequest) {
+        this.remoteUpdateRequest = remoteUpdateRequest;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
-    */
-   @Override
-   public String marshal()
-   {
-      JSONObject jsonObject = new JSONObject();
-      jsonObject.put(NAME, new JSONString(remoteUpdateRequest.getName()));
-      // TODO
+    /** @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal() */
+    @Override
+    public String marshal() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(NAME, new JSONString(remoteUpdateRequest.getName()));
+        // TODO
 
-      return jsonObject.toString();
-   }
+        return jsonObject.toString();
+    }
 
 }

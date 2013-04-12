@@ -27,93 +27,73 @@ import com.google.gwt.user.client.ui.Widget;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: LoadBalancerTabPain.java Oct 8, 2012 5:38:06 PM azatsarynnyy $
- *
  */
-public class LoadBalancerTabPain extends Composite
-{
+public class LoadBalancerTabPain extends Composite {
 
-   private static LoadBalancerTabPainUiBinder uiBinder = GWT.create(LoadBalancerTabPainUiBinder.class);
+    private static LoadBalancerTabPainUiBinder uiBinder = GWT.create(LoadBalancerTabPainUiBinder.class);
 
-   interface LoadBalancerTabPainUiBinder extends UiBinder<Widget, LoadBalancerTabPain>
-   {
-   }
+    interface LoadBalancerTabPainUiBinder extends UiBinder<Widget, LoadBalancerTabPain> {
+    }
 
-   private static final String APP_HEALTH_CHECK_URL_FIELD_ID = "ideLoadBalancerTabPainAppHealthCheckUrlField";
+    private static final String APP_HEALTH_CHECK_URL_FIELD_ID = "ideLoadBalancerTabPainAppHealthCheckUrlField";
 
-   private static final String HEALTH_CHECK_INTERVAL_FIELD_ID = "ideLoadBalancerTabPainHealthCheckIntervalField";
+    private static final String HEALTH_CHECK_INTERVAL_FIELD_ID = "ideLoadBalancerTabPainHealthCheckIntervalField";
 
-   private static final String HEALTH_CHECK_TIMEOUT_FIELD_ID = "ideLoadBalancerTabPainHealthCheckTimeoutField";
+    private static final String HEALTH_CHECK_TIMEOUT_FIELD_ID = "ideLoadBalancerTabPainHealthCheckTimeoutField";
 
-   private static final String HEALTHY_THRESHOLD_FIELD_ID = "ideLoadBalancerTabPainHealthyThresholdField";
+    private static final String HEALTHY_THRESHOLD_FIELD_ID = "ideLoadBalancerTabPainHealthyThresholdField";
 
-   private static final String UNHEALTHY_THRESHOLD_FIELD_ID = "ideLoadBalancerTabPainUnhealthyThresholdField";
+    private static final String UNHEALTHY_THRESHOLD_FIELD_ID = "ideLoadBalancerTabPainUnhealthyThresholdField";
 
-   @UiField
-   TextInput appHealthCheckUrlField;
+    @UiField
+    TextInput appHealthCheckUrlField;
 
-   @UiField
-   TextInput healthCheckIntervalField;
+    @UiField
+    TextInput healthCheckIntervalField;
 
-   @UiField
-   TextInput healthCheckTimeoutField;
+    @UiField
+    TextInput healthCheckTimeoutField;
 
-   @UiField
-   TextInput healthyThresholdField;
+    @UiField
+    TextInput healthyThresholdField;
 
-   @UiField
-   TextInput unhealthyThresholdField;
+    @UiField
+    TextInput unhealthyThresholdField;
 
-   public LoadBalancerTabPain()
-   {
-      initWidget(uiBinder.createAndBindUi(this));
+    public LoadBalancerTabPain() {
+        initWidget(uiBinder.createAndBindUi(this));
 
-      appHealthCheckUrlField.setName(APP_HEALTH_CHECK_URL_FIELD_ID);
-      healthCheckIntervalField.setName(HEALTH_CHECK_INTERVAL_FIELD_ID);
-      healthCheckTimeoutField.setName(HEALTH_CHECK_TIMEOUT_FIELD_ID);
-      healthyThresholdField.setName(HEALTHY_THRESHOLD_FIELD_ID);
-      unhealthyThresholdField.setName(UNHEALTHY_THRESHOLD_FIELD_ID);
-   }
+        appHealthCheckUrlField.setName(APP_HEALTH_CHECK_URL_FIELD_ID);
+        healthCheckIntervalField.setName(HEALTH_CHECK_INTERVAL_FIELD_ID);
+        healthCheckTimeoutField.setName(HEALTH_CHECK_TIMEOUT_FIELD_ID);
+        healthyThresholdField.setName(HEALTHY_THRESHOLD_FIELD_ID);
+        unhealthyThresholdField.setName(UNHEALTHY_THRESHOLD_FIELD_ID);
+    }
 
-   /**
-    * @return the appHealthCheckUrlField
-    */
-   public TextInput getAppHealthCheckUrlField()
-   {
-      return appHealthCheckUrlField;
-   }
+    /** @return the appHealthCheckUrlField */
+    public TextInput getAppHealthCheckUrlField() {
+        return appHealthCheckUrlField;
+    }
 
-   /**
-    * @return the healthCheckIntervalField
-    */
-   public TextInput getHealthCheckIntervalField()
-   {
-      return healthCheckIntervalField;
-   }
+    /** @return the healthCheckIntervalField */
+    public TextInput getHealthCheckIntervalField() {
+        return healthCheckIntervalField;
+    }
 
-   /**
-    * @return the healthCheckTimeoutField
-    */
-   public TextInput getHealthCheckTimeoutField()
-   {
-      return healthCheckTimeoutField;
-   }
+    /** @return the healthCheckTimeoutField */
+    public TextInput getHealthCheckTimeoutField() {
+        return healthCheckTimeoutField;
+    }
 
-   /**
-    * @return the healthyThresholdField
-    */
-   public TextInput getHealthyThresholdField()
-   {
-      return healthyThresholdField;
-   }
+    /** @return the healthyThresholdField */
+    public TextInput getHealthyThresholdField() {
+        return healthyThresholdField;
+    }
 
-   /**
-    * @return the unhealthyThresholdField
-    */
-   public TextInput getUnhealthyThresholdField()
-   {
-      return unhealthyThresholdField;
-   }
+    /** @return the unhealthyThresholdField */
+    public TextInput getUnhealthyThresholdField() {
+        return unhealthyThresholdField;
+    }
 }

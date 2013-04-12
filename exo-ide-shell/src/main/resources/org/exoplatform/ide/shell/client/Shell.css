@@ -1,94 +1,94 @@
-/**
- * Copyright (C) 2012 eXo Platform SAS.
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- */
-/** Add css rules here for your application. */
-/** Example rules used by the template application (remove for your app) */
-h1 {
-	font-size: 2em;
-	font-weight: bold;
-	color: #777777;
-	margin: 40px 0px 70px;
-	text-align: center;
-}
+    /**
+     * Copyright (C) 2012 eXo Platform SAS.
+     *
+     * This is free software; you can redistribute it and/or modify it
+     * under the terms of the GNU Lesser General Public License as
+     * published by the Free Software Foundation; either version 2.1 of
+     * the License, or (at your option) any later version.
+     *
+     * This software is distributed in the hope that it will be useful,
+     * but WITHOUT ANY WARRANTY; without even the implied warranty of
+     * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+     * Lesser General Public License for more details.
+     *
+     * You should have received a copy of the GNU Lesser General Public
+     * License along with this software; if not, write to the Free
+     * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+     * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+     */
+        /** Add css rules here for your application. */
+        /** Example rules used by the template application (remove for your app) */
+    h1 {
+        font-size: 2em;
+        font-weight: bold;
+        color: #777777;
+        margin: 40px 0px 70px;
+        text-align: center;
+    }
 
-html,body {
-	background: #000000 none repeat scroll 0 0;
-	height: 100%;
-	margin: 0px;
-	padding: 0px;
-	font-size: 12px;
-}
+    html, body {
+        background: #000000 none repeat scroll 0 0;
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+        font-size: 12px;
+    }
 
-.serverResponseLabelError {
-	color: red;
-}
+    .serverResponseLabelError {
+        color: red;
+    }
 
-.content {
-	outline: none;
-	width: 100%;
-	margin: 0;
-	float: left;
-}
+    .content {
+        outline: none;
+        width: 100%;
+        margin: 0;
+        float: left;
+    }
 
-.content pre {
-	margin: 0px;
-}
+    .content pre {
+        margin: 0px;
+    }
 
-.term {
-	outline: 0;
-	width: 100%;
-	margin: 0;
-	float: left;
-}
+    .term {
+        outline: 0;
+        width: 100%;
+        margin: 0;
+        float: left;
+    }
 
-.term span pre {
-	font-family: courier, monospace;
-	font-size: 12px;
-	outline: 0;
-}
+    .term span pre {
+        font-family: courier, monospace;
+        font-size: 12px;
+        outline: 0;
+    }
 
-#pasteBox {
-	padding: 0px;
-	border: none;
-	height: 1px;
-}
+    #pasteBox {
+        padding: 0px;
+        border: none;
+        height: 1px;
+    }
 
-.shellContainer {
-	background: #000000;
-	color: #1FBE1F;
-	font-family: courier, monospace;
-	font-size: 12px;
-	min-height: 100%;
-	display: block;
-	width: 99%;
-	margin: auto;
-	outline: none;
-}
+    .shellContainer {
+        background: #000000;
+        color: #1FBE1F;
+        font-family: courier, monospace;
+        font-size: 12px;
+        min-height: 100%;
+        display: block;
+        width: 99%;
+        margin: auto;
+        outline: none;
+    }
 
-.blink .cursor {
-	background: #1FBE1F;
-	color: black;
-}
+    .blink .cursor {
+        background: #1FBE1F;
+        color: black;
+    }
 
-.crashAutocomplete {
-	font-family: monospace !important;
-}
+    .crashAutocomplete {
+        font-family: monospace !important;
+    }
 
-.crashAutocomplete:hover {
-	font-weight: bold;
-}
+    .crashAutocomplete:hover {
+        font-weight: bold;
+    }

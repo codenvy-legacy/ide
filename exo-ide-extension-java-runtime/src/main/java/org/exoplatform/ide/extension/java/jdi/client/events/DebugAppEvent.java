@@ -22,24 +22,22 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public class DebugAppEvent extends GwtEvent<DebugAppHandler>
-{
+ */
+public class DebugAppEvent extends GwtEvent<DebugAppHandler> {
 
-     public static final GwtEvent.Type<DebugAppHandler> TYPE = new GwtEvent.Type<DebugAppHandler>();
+    public static final GwtEvent.Type<DebugAppHandler> TYPE = new GwtEvent.Type<DebugAppHandler>();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<DebugAppHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<DebugAppHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(DebugAppHandler handler)
-   {
-      handler.onDebugApp(this);
-   }
+    @Override
+    protected void dispatch(DebugAppHandler handler) {
+        handler.onDebugApp(this);
+    }
 
 }

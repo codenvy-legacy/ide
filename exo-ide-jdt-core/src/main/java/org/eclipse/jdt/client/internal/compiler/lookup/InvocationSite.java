@@ -10,28 +10,27 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.lookup;
 
-public interface InvocationSite
-{
+public interface InvocationSite {
 
-   TypeBinding[] genericTypeArguments();
+    TypeBinding[] genericTypeArguments();
 
-   boolean isSuperAccess();
+    boolean isSuperAccess();
 
-   boolean isTypeAccess();
+    boolean isTypeAccess();
 
-   // in case the receiver type does not match the actual receiver type
-   // e.g. pkg.Type.C (receiver type of C is type of source context,
-   // but actual receiver type is pkg.Type)
-   // e.g2. in presence of implicit access to enclosing type
-   void setActualReceiverType(ReferenceBinding receiverType);
+    // in case the receiver type does not match the actual receiver type
+    // e.g. pkg.Type.C (receiver type of C is type of source context,
+    // but actual receiver type is pkg.Type)
+    // e.g2. in presence of implicit access to enclosing type
+    void setActualReceiverType(ReferenceBinding receiverType);
 
-   void setDepth(int depth);
+    void setDepth(int depth);
 
-   void setFieldIndex(int depth);
+    void setFieldIndex(int depth);
 
-   int sourceEnd();
+    int sourceEnd();
 
-   int sourceStart();
+    int sourceStart();
 
-   TypeBinding expectedType();
+    TypeBinding expectedType();
 }

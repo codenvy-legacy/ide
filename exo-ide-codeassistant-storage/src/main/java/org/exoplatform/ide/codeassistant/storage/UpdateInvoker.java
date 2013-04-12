@@ -21,11 +21,9 @@ package org.exoplatform.ide.codeassistant.storage;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface UpdateInvoker
-{
+public interface UpdateInvoker {
 
-   public abstract UpdateStorageResult execute();
+    public abstract UpdateStorageResult execute();
 
 }

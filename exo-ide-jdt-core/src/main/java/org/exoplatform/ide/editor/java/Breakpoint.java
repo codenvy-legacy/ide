@@ -21,64 +21,51 @@ package org.exoplatform.ide.editor.java;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class Breakpoint
-{
-   public enum Type {
-      BREAKPOINT, DISABLED, CONDITIONAL, CURRENT
-   }
+public class Breakpoint {
+    public enum Type {
+        BREAKPOINT, DISABLED, CONDITIONAL, CURRENT
+    }
 
-   protected int lineNumber;
+    protected int lineNumber;
 
-   private Type type;
+    private Type type;
 
-   private String message;
+    private String message;
 
-   /**
-    * @param type
-    * @param lineNumber
-    */
-   public Breakpoint(Type type, int lineNumber)
-   {
-      this(type, lineNumber, null);
-   }
+    /**
+     * @param type
+     * @param lineNumber
+     */
+    public Breakpoint(Type type, int lineNumber) {
+        this(type, lineNumber, null);
+    }
 
-   /**
-    * @param type
-    * @param lineNumber
-    * @param message
-    */
-   public Breakpoint(Type type, int lineNumber, String message)
-   {
-      super();
-      this.type = type;
-      this.lineNumber = lineNumber;
-      this.message = message;
-   }
+    /**
+     * @param type
+     * @param lineNumber
+     * @param message
+     */
+    public Breakpoint(Type type, int lineNumber, String message) {
+        super();
+        this.type = type;
+        this.lineNumber = lineNumber;
+        this.message = message;
+    }
 
-   /**
-    * @return the type
-    */
-   public Type getType()
-   {
-      return type;
-   }
+    /** @return the type */
+    public Type getType() {
+        return type;
+    }
 
-   /**
-    * @return the lineNumber
-    */
-   public int getLineNumber()
-   {
-      return lineNumber;
-   }
+    /** @return the lineNumber */
+    public int getLineNumber() {
+        return lineNumber;
+    }
 
-   /**
-    * @return the message
-    */
-   public String getMessage()
-   {
-      return message;
-   }
+    /** @return the message */
+    public String getMessage() {
+        return message;
+    }
 
 }

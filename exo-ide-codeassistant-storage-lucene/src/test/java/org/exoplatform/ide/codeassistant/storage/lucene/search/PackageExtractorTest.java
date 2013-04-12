@@ -18,11 +18,6 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene.search;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.when;
-
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.index.IndexReader;
@@ -32,27 +27,29 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.when;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  11:02:46 AM Mar 6, 2012 evgen $
- *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class PackageExtractorTest
-{
-   @Mock
-   private IndexReader reader;
-   
-   private PackageExtractor extractor = new PackageExtractor();
-   
-   @Test
-   public void shouldReconstructPackage() throws Exception
-   {
-      String pack = "org.exoplatform";
-      Document luceneDocument = new DataIndexer().createPackageDocument(pack, "rt");
-      when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
-      String value = extractor.getValue(reader, 3);
-      assertEquals(pack, value);
-   }
+public class PackageExtractorTest {
+    @Mock
+    private IndexReader reader;
+
+    private PackageExtractor extractor = new PackageExtractor();
+
+    @Test
+    public void shouldReconstructPackage() throws Exception {
+        String pack = "org.exoplatform";
+        Document luceneDocument = new DataIndexer().createPackageDocument(pack, "rt");
+        when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
+        String value = extractor.getValue(reader, 3);
+        assertEquals(pack, value);
+    }
 
 }

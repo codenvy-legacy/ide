@@ -18,17 +18,12 @@
  */
 package org.eclipse.jdt.client.templates;
 
-import com.google.gwt.json.client.JSONArray;
-
-import com.google.gwt.json.client.JSONObject;
-
-import com.google.gwt.json.client.JSONParser;
-
 import com.google.gwt.core.client.GWT;
-
-import com.google.gwt.resources.client.TextResource;
-
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.TextResource;
 
 import org.eclipse.jdt.client.templates.api.Template;
 
@@ -38,108 +33,91 @@ import java.util.List;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 5:48:13 PM 34360 2009-07-22 23:58:59Z evgen $
- * 
  */
-public class TemplateStore
-{
+public class TemplateStore {
 
-   protected interface Templates extends ClientBundle
-   {
-      @Source("templates.js")
-      TextResource templatesText();
+    protected interface Templates extends ClientBundle {
+        @Source("templates.js")
+        TextResource templatesText();
 
-      @Source("codeTemplates.js")
-      TextResource codeTemplatesText();
-   }
+        @Source("codeTemplates.js")
+        TextResource codeTemplatesText();
+    }
 
-   private static Template[] templates;
+    private static Template[] templates;
 
-   private static Template[] codeTemplates;
+    private static Template[] codeTemplates;
 
-   /**
-    * 
-    */
-   public TemplateStore()
-   {
-      if (templates == null)
-      {
-         parseTemplates();
-      }
-   }
+    /**
+     *
+     */
+    public TemplateStore() {
+        if (templates == null) {
+            parseTemplates();
+        }
+    }
 
-   /**
-    * @return
-    */
-   public Template[] getTemplates()
-   {
-      return templates;
-   }
+    /** @return  */
+    public Template[] getTemplates() {
+        return templates;
+    }
 
-   /**
-    * 
-    */
-   private void parseTemplates()
-   {
-      Templates templatesText = GWT.create(Templates.class);
-      JSONObject jsonObject = JSONParser.parseLenient(templatesText.templatesText().getText()).isObject();
-      JSONArray templatesJson = jsonObject.get("templates").isArray();
-      templates = new Template[templatesJson.size()];
-      fillTemplates(templatesJson, templates);
+    /**
+     *
+     */
+    private void parseTemplates() {
+        Templates templatesText = GWT.create(Templates.class);
+        JSONObject jsonObject = JSONParser.parseLenient(templatesText.templatesText().getText()).isObject();
+        JSONArray templatesJson = jsonObject.get("templates").isArray();
+        templates = new Template[templatesJson.size()];
+        fillTemplates(templatesJson, templates);
 
-      jsonObject = JSONParser.parseLenient(templatesText.codeTemplatesText().getText()).isObject();
-      templatesJson = jsonObject.get("templates").isArray();
-      codeTemplates = new Template[templatesJson.size()];
-      fillTemplates(templatesJson, codeTemplates);
-   }
+        jsonObject = JSONParser.parseLenient(templatesText.codeTemplatesText().getText()).isObject();
+        templatesJson = jsonObject.get("templates").isArray();
+        codeTemplates = new Template[templatesJson.size()];
+        fillTemplates(templatesJson, codeTemplates);
+    }
 
-   /**
-    * @param templatesJson
-    */
-   private void fillTemplates(JSONArray templatesJson, Template[] templates)
-   {
-      String name, description, contextTypeId, pattern, id = null;
-      boolean isAutoInsertable = false;
-      for (int i = 0; i < templatesJson.size(); i++)
-      {
-         JSONObject tem = templatesJson.get(i).isObject();
-         name = tem.get("name").isString().stringValue();
-         description = tem.get("description").isString().stringValue();
-         contextTypeId = tem.get("context").isString().stringValue();
-         pattern = tem.get("text").isString().stringValue();
-         isAutoInsertable = tem.get("autoinsert").isBoolean().booleanValue();
-         id = tem.get("id").isString().stringValue();
-         templates[i] = new Template(id, name, description, contextTypeId, pattern, isAutoInsertable);
-      }
-   }
+    /** @param templatesJson */
+    private void fillTemplates(JSONArray templatesJson, Template[] templates) {
+        String name, description, contextTypeId, pattern, id = null;
+        boolean isAutoInsertable = false;
+        for (int i = 0; i < templatesJson.size(); i++) {
+            JSONObject tem = templatesJson.get(i).isObject();
+            name = tem.get("name").isString().stringValue();
+            description = tem.get("description").isString().stringValue();
+            contextTypeId = tem.get("context").isString().stringValue();
+            pattern = tem.get("text").isString().stringValue();
+            isAutoInsertable = tem.get("autoinsert").isBoolean().booleanValue();
+            id = tem.get("id").isString().stringValue();
+            templates[i] = new Template(id, name, description, contextTypeId, pattern, isAutoInsertable);
+        }
+    }
 
-   /**
-    * @param contextTypeId
-    * @return
-    */
-   public Template[] getTemplates(String contextTypeId)
-   {
-      List<Template> temList = new ArrayList<Template>();
-      for (Template t : templates)
-      {
-         if (t.getContextTypeId().equals(contextTypeId))
-            temList.add(t);
-      }
+    /**
+     * @param contextTypeId
+     * @return
+     */
+    public Template[] getTemplates(String contextTypeId) {
+        List<Template> temList = new ArrayList<Template>();
+        for (Template t : templates) {
+            if (t.getContextTypeId().equals(contextTypeId))
+                temList.add(t);
+        }
 
-      return temList.toArray(new Template[temList.size()]);
-   }
+        return temList.toArray(new Template[temList.size()]);
+    }
 
-   /**
-    * @param id
-    * @return
-    */
-   public Template findTemplateById(String id)
-   {
-      for (Template t : codeTemplates)
-      {
-         if (t.getId().equals(id))
-            return t;
-      }
-      return null;
-   }
+    /**
+     * @param id
+     * @return
+     */
+    public Template findTemplateById(String id) {
+        for (Template t : codeTemplates) {
+            if (t.getId().equals(id))
+                return t;
+        }
+        return null;
+    }
 
 }

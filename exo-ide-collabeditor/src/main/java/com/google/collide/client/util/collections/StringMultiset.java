@@ -19,21 +19,19 @@ import org.exoplatform.ide.json.shared.JsonArray;
 import javax.annotation.Nonnull;
 
 // TODO: Combine with JsonStringSet?
-/**
- * <a href="http://en.wikipedia.org/wiki/Multiset">Multiset</a> interface.
- *
- */
+
+/** <a href="http://en.wikipedia.org/wiki/Multiset">Multiset</a> interface. */
 public interface StringMultiset {
 
-  void addAll(@Nonnull JsonArray<String> items);
+    void addAll(@Nonnull JsonArray<String> items);
 
-  void add(@Nonnull String item);
+    void add(@Nonnull String item);
 
-  void removeAll(@Nonnull JsonArray<String> items);
+    void removeAll(@Nonnull JsonArray<String> items);
 
-  void remove(@Nonnull String item);
+    void remove(@Nonnull String item);
 
-  boolean contains(@Nonnull String item);
+    boolean contains(@Nonnull String item);
 
-  void clear();
+    void clear();
 }

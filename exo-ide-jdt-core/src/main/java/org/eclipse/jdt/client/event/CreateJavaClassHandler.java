@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Dec 1, 2011 4:34:31 PM evgen $
- * 
  */
-public interface CreateJavaClassHandler extends EventHandler
-{
+public interface CreateJavaClassHandler extends EventHandler {
 
-   void onCreateJavaClass(CreateJavaClassEvent event);
+    void onCreateJavaClass(CreateJavaClassEvent event);
 
 }

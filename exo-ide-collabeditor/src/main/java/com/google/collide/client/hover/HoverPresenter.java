@@ -18,15 +18,16 @@
  */
 package com.google.collide.client.hover;
 
+import elemental.html.Element;
+
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.client.CollabEditor;
 import com.google.collide.client.code.popup.EditorPopupController.PopupRenderer;
 import com.google.collide.client.code.popup.EditorPopupController.Remover;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.MouseHoverManager.MouseHoverListener;
 import com.google.collide.client.ui.menu.PositionController.VerticalAlign;
-import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.shared.document.LineInfo;
-import elemental.html.Element;
 
 import org.exoplatform.ide.editor.client.hover.TextHover;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
@@ -37,130 +38,104 @@ import org.exoplatform.ide.json.client.JsoStringMap;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class HoverPresenter
-{
+public class HoverPresenter {
 
-   private JsoStringMap<TextHover> hovers = JsoStringMap.create();
+    private JsoStringMap<TextHover> hovers = JsoStringMap.create();
 
-   private final IDocument document;
+    private final IDocument document;
 
-   private final CollabEditor collabEditor;
+    private final CollabEditor collabEditor;
 
-   private IRegion currentRegion;
+    private IRegion currentRegion;
 
-   private Remover currentPopup;
+    private Remover currentPopup;
 
-   /**
-    * @param collabEditor
-    */
-   public HoverPresenter(CollabEditor collabEditor, Editor editor, IDocument document)
-   {
-      this.collabEditor = collabEditor;
-      this.document = document;
-      editor.getMouseHoverManager().addMouseHoverListener(new MouseHoverListener()
-      {
+    /** @param collabEditor */
+    public HoverPresenter(CollabEditor collabEditor, Editor editor, IDocument document) {
+        this.collabEditor = collabEditor;
+        this.document = document;
+        editor.getMouseHoverManager().addMouseHoverListener(new MouseHoverListener() {
 
-         @Override
-         public void onMouseHover(int x, int y, LineInfo lineInfo, int column)
-         {
-            computateInformation(lineInfo, column);
-         }
-      });
-   }
+            @Override
+            public void onMouseHover(int x, int y, LineInfo lineInfo, int column) {
+                computateInformation(lineInfo, column);
+            }
+        });
+    }
 
-   /**
-    * @param lineInfo
-    * @param column
-    */
-   private void computateInformation(LineInfo lineInfo, int column)
-   {
-      int offset = 0;
-      String contentType = null;
-      try
-      {
-         offset = document.getLineOffset(lineInfo.number()) + column;
-         contentType = document.getContentType(offset);
-      }
-      catch (BadLocationException e)
-      {
-         Log.error(getClass(), e);
-         return;
-      }
-      TextHover hover = hovers.get(contentType);
-      if (hover == null)
-         return;
-      showHover(hover, offset, lineInfo);
-   }
-
-   /**
-    * @param hover
-    */
-   private void showHover(TextHover hover, int offset, LineInfo lineInfo)
-   {
-      IRegion hoverRegion = hover.getHoverRegion(collabEditor, offset);
-      if(hoverRegion == null)
-         return;
-      
-      if (hoverRegion.equals(currentRegion))
-      {
-         if (currentPopup != null && currentPopup.isVisibleOrPending())
+    /**
+     * @param lineInfo
+     * @param column
+     */
+    private void computateInformation(LineInfo lineInfo, int column) {
+        int offset = 0;
+        String contentType = null;
+        try {
+            offset = document.getLineOffset(lineInfo.number()) + column;
+            contentType = document.getContentType(offset);
+        } catch (BadLocationException e) {
+            Log.error(getClass(), e);
             return;
-      }
+        }
+        TextHover hover = hovers.get(contentType);
+        if (hover == null)
+            return;
+        showHover(hover, offset, lineInfo);
+    }
 
-      currentRegion = hoverRegion;
-      if (currentPopup != null)
-         currentPopup.remove();
+    /** @param hover */
+    private void showHover(TextHover hover, int offset, LineInfo lineInfo) {
+        IRegion hoverRegion = hover.getHoverRegion(collabEditor, offset);
+        if (hoverRegion == null)
+            return;
 
-      com.google.gwt.user.client.Element element = hover.getHoverInfo(collabEditor, hoverRegion);
-      if (element == null)
-         return;
-      int lineOffset;
-      try
-      {
-         lineOffset = document.getLineOffset(lineInfo.number());
-         currentPopup =
-            collabEditor
-               .getEditorBundle()
-               .getEditorPopupController()
-               .showPopup(lineInfo, hoverRegion.getOffset() - lineOffset,
-                  (hoverRegion.getOffset() + hoverRegion.getLength()) - lineOffset, null,
-                  new PopupRendererImpl((Element)element), null, VerticalAlign.BOTTOM, true, 400);
-      }
-      catch (BadLocationException e)
-      {
-         Log.error(getClass(), e);
-      }
+        if (hoverRegion.equals(currentRegion)) {
+            if (currentPopup != null && currentPopup.isVisibleOrPending())
+                return;
+        }
 
-   }
+        currentRegion = hoverRegion;
+        if (currentPopup != null)
+            currentPopup.remove();
 
-   public void addHover(String contentType, TextHover hover)
-   {
-      hovers.put(contentType, hover);
-   }
+        com.google.gwt.user.client.Element element = hover.getHoverInfo(collabEditor, hoverRegion);
+        if (element == null)
+            return;
+        int lineOffset;
+        try {
+            lineOffset = document.getLineOffset(lineInfo.number());
+            currentPopup =
+                    collabEditor
+                            .getEditorBundle()
+                            .getEditorPopupController()
+                            .showPopup(lineInfo, hoverRegion.getOffset() - lineOffset,
+                                       (hoverRegion.getOffset() + hoverRegion.getLength()) - lineOffset, null,
+                                       new PopupRendererImpl((Element)element), null, VerticalAlign.BOTTOM, true, 400);
+        } catch (BadLocationException e) {
+            Log.error(getClass(), e);
+        }
 
-   class PopupRendererImpl implements PopupRenderer
-   {
+    }
 
-      private Element element;
+    public void addHover(String contentType, TextHover hover) {
+        hovers.put(contentType, hover);
+    }
 
-      /**
-       * @param element
-       */
-      public PopupRendererImpl(Element element)
-      {
-         this.element = element;
-      }
+    class PopupRendererImpl implements PopupRenderer {
 
-      /**
-       * @see com.google.collide.client.code.popup.EditorPopupController.PopupRenderer#renderDom()
-       */
-      @Override
-      public Element renderDom()
-      {
-         return element;
-      }
+        private Element element;
 
-   }
+        /** @param element */
+        public PopupRendererImpl(Element element) {
+            this.element = element;
+        }
+
+        /** @see com.google.collide.client.code.popup.EditorPopupController.PopupRenderer#renderDom() */
+        @Override
+        public Element renderDom() {
+            return element;
+        }
+
+    }
 }

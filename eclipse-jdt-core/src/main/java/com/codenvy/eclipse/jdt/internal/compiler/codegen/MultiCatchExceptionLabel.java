@@ -14,58 +14,46 @@ import com.codenvy.eclipse.jdt.internal.compiler.ast.TypeReference;
 import com.codenvy.eclipse.jdt.internal.compiler.ast.UnionTypeReference;
 import com.codenvy.eclipse.jdt.internal.compiler.lookup.TypeBinding;
 
-public class MultiCatchExceptionLabel extends ExceptionLabel
-{
+public class MultiCatchExceptionLabel extends ExceptionLabel {
 
-   ExceptionLabel[] exceptionLabels;
+    ExceptionLabel[] exceptionLabels;
 
-   public MultiCatchExceptionLabel(CodeStream codeStream, TypeBinding exceptionType)
-   {
-      super(codeStream, exceptionType);
-   }
+    public MultiCatchExceptionLabel(CodeStream codeStream, TypeBinding exceptionType) {
+        super(codeStream, exceptionType);
+    }
 
-   public void initialize(UnionTypeReference typeReference)
-   {
-      TypeReference[] typeReferences = typeReference.typeReferences;
-      int length = typeReferences.length;
-      this.exceptionLabels = new ExceptionLabel[length];
-      for (int i = 0; i < length; i++)
-      {
-         this.exceptionLabels[i] = new ExceptionLabel(this.codeStream, typeReferences[i].resolvedType);
-      }
-   }
+    public void initialize(UnionTypeReference typeReference) {
+        TypeReference[] typeReferences = typeReference.typeReferences;
+        int length = typeReferences.length;
+        this.exceptionLabels = new ExceptionLabel[length];
+        for (int i = 0; i < length; i++) {
+            this.exceptionLabels[i] = new ExceptionLabel(this.codeStream, typeReferences[i].resolvedType);
+        }
+    }
 
-   public void place()
-   {
-      for (int i = 0, max = this.exceptionLabels.length; i < max; i++)
-      {
-         this.exceptionLabels[i].place();
-      }
-   }
+    public void place() {
+        for (int i = 0, max = this.exceptionLabels.length; i < max; i++) {
+            this.exceptionLabels[i].place();
+        }
+    }
 
-   public void placeEnd()
-   {
-      for (int i = 0, max = this.exceptionLabels.length; i < max; i++)
-      {
-         this.exceptionLabels[i].placeEnd();
-      }
-   }
+    public void placeEnd() {
+        for (int i = 0, max = this.exceptionLabels.length; i < max; i++) {
+            this.exceptionLabels[i].placeEnd();
+        }
+    }
 
-   public void placeStart()
-   {
-      for (int i = 0, max = this.exceptionLabels.length; i < max; i++)
-      {
-         this.exceptionLabels[i].placeStart();
-      }
-   }
+    public void placeStart() {
+        for (int i = 0, max = this.exceptionLabels.length; i < max; i++) {
+            this.exceptionLabels[i].placeStart();
+        }
+    }
 
-   public int getCount()
-   {
-      int temp = 0;
-      for (int i = 0, max = this.exceptionLabels.length; i < max; i++)
-      {
-         temp += this.exceptionLabels[i].getCount();
-      }
-      return temp;
-   }
+    public int getCount() {
+        int temp = 0;
+        for (int i = 0, max = this.exceptionLabels.length; i < max; i++) {
+            temp += this.exceptionLabels[i].getCount();
+        }
+        return temp;
+    }
 }

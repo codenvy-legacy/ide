@@ -22,18 +22,16 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link CreateApplicationEvent} event.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CreateApplicationHandler.java Jul 12, 2011 10:26:30 AM vereshchaka $
- *
  */
-public interface CreateApplicationHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to initialize application.
-    * 
-    * @param event
-    */
-   void onCreateApplication(CreateApplicationEvent event);
+public interface CreateApplicationHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to initialize application.
+     *
+     * @param event
+     */
+    void onCreateApplication(CreateApplicationEvent event);
 
 }

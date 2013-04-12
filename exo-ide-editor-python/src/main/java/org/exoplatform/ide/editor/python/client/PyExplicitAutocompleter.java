@@ -28,12 +28,10 @@ import com.google.collide.client.editor.selection.SelectionModel;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class PyExplicitAutocompleter extends ExplicitAutocompleter
-{
-   @Override
-   public ExplicitAction getExplicitAction(SelectionModel selectionModel, SignalEventEssence signal,
-      boolean popupIsShown, DocumentParser parser)
-   {
-      return super.getExplicitAction(selectionModel, signal, popupIsShown, parser);
-   }
+public class PyExplicitAutocompleter extends ExplicitAutocompleter {
+    @Override
+    public ExplicitAction getExplicitAction(SelectionModel selectionModel, SignalEventEssence signal,
+                                            boolean popupIsShown, DocumentParser parser) {
+        return super.getExplicitAction(selectionModel, signal, popupIsShown, parser);
+    }
 }

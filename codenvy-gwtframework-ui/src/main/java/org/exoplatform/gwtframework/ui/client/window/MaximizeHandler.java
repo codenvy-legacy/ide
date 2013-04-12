@@ -20,17 +20,13 @@ package org.exoplatform.gwtframework.ui.client.window;
 
 /**
  * Handler for user's maximize window action.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Mar 4, 2011 11:28:20 AM anya $
- *
  */
-public interface MaximizeHandler
-{
-   
-   /**
-    * Maximize window.
-    */
-   void onMaximize();
-   
+public interface MaximizeHandler {
+
+    /** Maximize window. */
+    void onMaximize();
+
 }

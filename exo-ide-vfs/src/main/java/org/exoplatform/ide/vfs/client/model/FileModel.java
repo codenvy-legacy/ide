@@ -20,201 +20,168 @@
 package org.exoplatform.ide.vfs.client.model;
 
 import com.google.gwt.json.client.JSONObject;
-import org.exoplatform.ide.vfs.client.JSONDeserializer;
-import org.exoplatform.ide.vfs.shared.File;
-import org.exoplatform.ide.vfs.shared.FileImpl;
-import org.exoplatform.ide.vfs.shared.Link;
-import org.exoplatform.ide.vfs.shared.Lock;
-import org.exoplatform.ide.vfs.shared.Property;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import org.exoplatform.ide.vfs.client.JSONDeserializer;
+import org.exoplatform.ide.vfs.shared.*;
+
+import java.util.*;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author eXo
  * @version $Id: $
  */
-public class FileModel extends FileImpl implements ItemContext
-{
-   private boolean persisted;
+public class FileModel extends FileImpl implements ItemContext {
+    private boolean persisted;
 
-   private String content = null;
+    private String content = null;
 
-   private boolean contentChanged = false;
+    private boolean contentChanged = false;
 
-   private HashSet<FileModel> versionHistory = new HashSet<FileModel>();
+    private HashSet<FileModel> versionHistory = new HashSet<FileModel>();
 
-   private Lock lock = null;
+    private Lock lock = null;
 
-   private ProjectModel project;
+    private ProjectModel project;
 
-   private FolderModel parent;
+    private FolderModel parent;
 
-   @SuppressWarnings("rawtypes")
-   public FileModel(String name, String mimeType, String content, FolderModel parent)
-   {
-      super(null, name, parent.createPath(name), parent.getId(), new Date().getTime(), new Date().getTime(),
-         null /* versionId */, mimeType, 0, false, new ArrayList<Property>(), new HashMap<String, Link>());
-      this.persisted = false;
-      this.content = content;
-      this.parent = parent;
+    @SuppressWarnings("rawtypes")
+    public FileModel(String name, String mimeType, String content, FolderModel parent) {
+        super(null, name, parent.createPath(name), parent.getId(), new Date().getTime(), new Date().getTime(),
+              null /* versionId */, mimeType, 0, false, new ArrayList<Property>(), new HashMap<String, Link>());
+        this.persisted = false;
+        this.content = content;
+        this.parent = parent;
 
-      fixMimeType();
-   }
+        fixMimeType();
+    }
 
-   public FileModel()
-   {
-      super();
-   }
+    public FileModel() {
+        super();
+    }
 
-   public FileModel(JSONObject itemObject)
-   {
-      super();
-      init(itemObject);
-   }
+    public FileModel(JSONObject itemObject) {
+        super();
+        init(itemObject);
+    }
 
-   public FileModel(File file)
-   {
-      super(file.getId(), file.getName(), file.getPath(), file.getParentId(), file.getCreationDate(), file
-         .getLastModificationDate(), file.getVersionId(), file.getMimeType(), file.getLength(), file.isLocked(), file
-         .getProperties(), file.getLinks());
-      fixMimeType();
-      this.persisted = true;
-   }
+    public FileModel(File file) {
+        super(file.getId(), file.getName(), file.getPath(), file.getParentId(), file.getCreationDate(), file
+                .getLastModificationDate(), file.getVersionId(), file.getMimeType(), file.getLength(), file.isLocked(), file
+                      .getProperties(), file.getLinks());
+        fixMimeType();
+        this.persisted = true;
+    }
 
-   private void fixMimeType()
-   {
-      // Firefox adds ";charset=utf-8" to mime-type. Lets clear it.
-      if (mimeType != null)
-      {
-         int index = mimeType.indexOf(';');
-         if (index > 0)
-            mimeType = mimeType.substring(0, index);
-      }
-   }
+    private void fixMimeType() {
+        // Firefox adds ";charset=utf-8" to mime-type. Lets clear it.
+        if (mimeType != null) {
+            int index = mimeType.indexOf(';');
+            if (index > 0)
+                mimeType = mimeType.substring(0, index);
+        }
+    }
 
-   @SuppressWarnings({"unchecked", "rawtypes"})
-   public void init(JSONObject itemObject)
-   {
-      id = itemObject.get("id").isString().stringValue();
-      name = itemObject.get("name").isString().stringValue();
-      mimeType = itemObject.get("mimeType").isString().stringValue();
-      path = itemObject.get("path").isString().stringValue();
-      parentId = itemObject.get("parentId").isString().stringValue();
-      creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
-      properties = (List)JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
-      links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
-      versionId = itemObject.get("versionId").isString().stringValue();
-      length = (long)itemObject.get("length").isNumber().doubleValue();
-      lastModificationDate = (long)itemObject.get("lastModificationDate").isNumber().doubleValue();
-      locked = itemObject.get("locked").isBoolean().booleanValue();
-      this.persisted = true;
-      this.contentChanged = false;
-      fixMimeType();
-   }
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public void init(JSONObject itemObject) {
+        id = itemObject.get("id").isString().stringValue();
+        name = itemObject.get("name").isString().stringValue();
+        mimeType = itemObject.get("mimeType").isString().stringValue();
+        path = itemObject.get("path").isString().stringValue();
+        parentId = itemObject.get("parentId").isString().stringValue();
+        creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
+        properties = (List)JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
+        links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
+        versionId = itemObject.get("versionId").isString().stringValue();
+        length = (long)itemObject.get("length").isNumber().doubleValue();
+        lastModificationDate = (long)itemObject.get("lastModificationDate").isNumber().doubleValue();
+        locked = itemObject.get("locked").isBoolean().booleanValue();
+        this.persisted = true;
+        this.contentChanged = false;
+        fixMimeType();
+    }
 
-   /**
-    * @return the content
-    */
-   public String getContent()
-   {
-      return content;
-   }
+    /** @return the content */
+    public String getContent() {
+        return content;
+    }
 
-   /**
-    * @param content the content to set
-    */
-   public void setContent(String content)
-   {
-      this.content = content;
-   }
+    /**
+     * @param content
+     *         the content to set
+     */
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-   public HashSet<FileModel> getVersionHistory()
-   {
-      return versionHistory;
-   }
+    public HashSet<FileModel> getVersionHistory() {
+        return versionHistory;
+    }
 
-   public void setVersionHistory(HashSet<FileModel> versionHistory)
-   {
-      this.versionHistory = versionHistory;
-   }
+    public void setVersionHistory(HashSet<FileModel> versionHistory) {
+        this.versionHistory = versionHistory;
+    }
 
-   public void clearVersionHistory()
-   {
+    public void clearVersionHistory() {
 
-      this.versionHistory = new HashSet<FileModel>();
-   }
+        this.versionHistory = new HashSet<FileModel>();
+    }
 
-   public Lock getLock()
-   {
-      return lock;
-   }
+    public Lock getLock() {
+        return lock;
+    }
 
-   public void setLock(Lock lock)
-   {
-      this.lock = lock;
-   }
+    public void setLock(Lock lock) {
+        this.lock = lock;
+    }
 
-   public boolean isLocked()
-   {
-      //IDE-1329
-      return locked; //lock != null;
-   }
+    public boolean isLocked() {
+        //IDE-1329
+        return locked; //lock != null;
+    }
 
-   /**
-    * @return the contentChanged
-    */
-   public boolean isContentChanged()
-   {
-      return contentChanged;
-   }
+    /** @return the contentChanged */
+    public boolean isContentChanged() {
+        return contentChanged;
+    }
 
-   /**
-    * @param contentChanged the contentChanged to set
-    */
-   public void setContentChanged(boolean contentChanged)
-   {
-      this.contentChanged = contentChanged;
-   }
+    /**
+     * @param contentChanged
+     *         the contentChanged to set
+     */
+    public void setContentChanged(boolean contentChanged) {
+        this.contentChanged = contentChanged;
+    }
 
-   @Override
-   public ProjectModel getProject()
-   {
-      return project;
-   }
+    @Override
+    public ProjectModel getProject() {
+        return project;
+    }
 
-   @Override
-   public void setProject(ProjectModel proj)
-   {
-      this.project = proj;
+    @Override
+    public void setProject(ProjectModel proj) {
+        this.project = proj;
 
-   }
+    }
 
-   @Override
-   public final FolderModel getParent()
-   {
-      return parent;
-   }
+    @Override
+    public final FolderModel getParent() {
+        return parent;
+    }
 
-   @Override
-   public void setParent(FolderModel parent)
-   {
-      this.parent = parent;
-   }
+    @Override
+    public void setParent(FolderModel parent) {
+        this.parent = parent;
+    }
 
-   @Override
-   public boolean isPersisted()
-   {
-      return persisted;
-   }
+    @Override
+    public boolean isPersisted() {
+        return persisted;
+    }
 
-   public boolean isVersion()
-   {
-      return versionId == null ? false : !versionId.equals("0");
-   }
+    public boolean isVersion() {
+        return versionId == null ? false : !versionId.equals("0");
+    }
 }

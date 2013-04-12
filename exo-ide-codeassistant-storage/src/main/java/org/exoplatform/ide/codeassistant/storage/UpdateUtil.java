@@ -29,111 +29,89 @@ import java.util.zip.ZipInputStream;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class UpdateUtil
-{
+public class UpdateUtil {
 
-   private static final String UPDATE_FILE_PREFIX = "update-";
+    private static final String UPDATE_FILE_PREFIX = "update-";
 
-   private static final SecureRandom gen = new SecureRandom();
+    private static final SecureRandom gen = new SecureRandom();
 
-   /**
-    * Create new directory with random name.
-    *
-    * @param parent
-    *    parent for creation directory
-    * @return newly created directory
-    */
-   public static File makeProjectDirectory(File parent)
-   {
-      File dir = new File(parent, UPDATE_FILE_PREFIX + Long.toString(Math.abs(gen.nextLong())));
-      if (!dir.mkdirs())
-      {
-         throw new RuntimeException("Unable create project directory. ");
-      }
-      return dir;
-   }
+    /**
+     * Create new directory with random name.
+     *
+     * @param parent
+     *         parent for creation directory
+     * @return newly created directory
+     */
+    public static File makeProjectDirectory(File parent) {
+        File dir = new File(parent, UPDATE_FILE_PREFIX + Long.toString(Math.abs(gen.nextLong())));
+        if (!dir.mkdirs()) {
+            throw new RuntimeException("Unable create project directory. ");
+        }
+        return dir;
+    }
 
-   /**
-    * Remove specified file or directory.
-    *
-    * @param fileOrDirectory
-    *    the file or directory to cancel
-    * @return <code>true</code> if specified File was deleted and <code>false</code> otherwise
-    */
-   public static boolean delete(File fileOrDirectory)
-   {
-      if (fileOrDirectory.isDirectory())
-      {
-         for (File f : fileOrDirectory.listFiles())
-         {
-            if (!delete(f))
-            {
-               return false;
+    /**
+     * Remove specified file or directory.
+     *
+     * @param fileOrDirectory
+     *         the file or directory to cancel
+     * @return <code>true</code> if specified File was deleted and <code>false</code> otherwise
+     */
+    public static boolean delete(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory()) {
+            for (File f : fileOrDirectory.listFiles()) {
+                if (!delete(f)) {
+                    return false;
+                }
             }
-         }
-      }
-      return !fileOrDirectory.exists() || fileOrDirectory.delete();
-   }
+        }
+        return !fileOrDirectory.exists() || fileOrDirectory.delete();
+    }
 
-   /**
-    * Unzip content of input stream in directory.
-    *
-    * @param in
-    *    zipped content
-    * @param targetDir
-    *    target directory
-    * @throws IOException
-    *    if any i/o error occurs
-    */
-   public static void unzip(InputStream in, File targetDir) throws IOException
-   {
-      ZipInputStream zipIn = null;
-      try
-      {
-         zipIn = new ZipInputStream(in);
-         byte[] b = new byte[8192];
-         ZipEntry zipEntry;
-         while ((zipEntry = zipIn.getNextEntry()) != null)
-         {
-            File file = new File(targetDir, zipEntry.getName());
-            if (!zipEntry.isDirectory())
-            {
-               File parent = file.getParentFile();
-               if (!parent.exists())
-               {
-                  parent.mkdirs();
-               }
-               FileOutputStream fos = new FileOutputStream(file);
-               try
-               {
-                  int r;
-                  while ((r = zipIn.read(b)) != -1)
-                  {
-                     fos.write(b, 0, r);
-                  }
-               }
-               finally
-               {
-                  fos.close();
-               }
+    /**
+     * Unzip content of input stream in directory.
+     *
+     * @param in
+     *         zipped content
+     * @param targetDir
+     *         target directory
+     * @throws IOException
+     *         if any i/o error occurs
+     */
+    public static void unzip(InputStream in, File targetDir) throws IOException {
+        ZipInputStream zipIn = null;
+        try {
+            zipIn = new ZipInputStream(in);
+            byte[] b = new byte[8192];
+            ZipEntry zipEntry;
+            while ((zipEntry = zipIn.getNextEntry()) != null) {
+                File file = new File(targetDir, zipEntry.getName());
+                if (!zipEntry.isDirectory()) {
+                    File parent = file.getParentFile();
+                    if (!parent.exists()) {
+                        parent.mkdirs();
+                    }
+                    FileOutputStream fos = new FileOutputStream(file);
+                    try {
+                        int r;
+                        while ((r = zipIn.read(b)) != -1) {
+                            fos.write(b, 0, r);
+                        }
+                    } finally {
+                        fos.close();
+                    }
+                } else {
+                    file.mkdirs();
+                }
+                zipIn.closeEntry();
             }
-            else
-            {
-               file.mkdirs();
+        } finally {
+            if (zipIn != null) {
+                zipIn.close();
             }
-            zipIn.closeEntry();
-         }
-      }
-      finally
-      {
-         if (zipIn != null)
-         {
-            zipIn.close();
-         }
-         in.close();
-      }
-   }
+            in.close();
+        }
+    }
 
 }

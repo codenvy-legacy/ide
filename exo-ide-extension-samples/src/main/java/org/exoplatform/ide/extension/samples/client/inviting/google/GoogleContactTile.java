@@ -24,12 +24,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 
 import org.exoplatform.ide.client.framework.invite.GoogleContact;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
@@ -37,117 +32,96 @@ import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class GoogleContactTile extends Composite
-{
+public class GoogleContactTile extends Composite {
 
-   private static GoogleContactTileUiBinder uiBinder = GWT.create(GoogleContactTileUiBinder.class);
+    private static GoogleContactTileUiBinder uiBinder = GWT.create(GoogleContactTileUiBinder.class);
 
-   interface GoogleContactTileUiBinder extends UiBinder<Widget, GoogleContactTile>
-   {
-   }
+    interface GoogleContactTileUiBinder extends UiBinder<Widget, GoogleContactTile> {
+    }
 
-   interface Style extends CssResource
-   {
-      String userFieldBody();
+    interface Style extends CssResource {
+        String userFieldBody();
 
-      String userFieldBodySelected();
-   }
+        String userFieldBodySelected();
+    }
 
-   @UiField
-   Style style;
+    @UiField
+    Style style;
 
-   @UiField
-   FlowPanel userFieldBody;
+    @UiField
+    FlowPanel userFieldBody;
 
-   @UiField
-   CheckBox checkBox;
+    @UiField
+    CheckBox checkBox;
 
-   @UiField
-   Image avatarImage;
+    @UiField
+    Image avatarImage;
 
-   @UiField
-   Label name, company, email;
+    @UiField
+    Label name, company, email;
 
-   private GoogleContact googleContact;
+    private GoogleContact googleContact;
 
-   private GoogleContactSelectionChangedHandler selectionChangedHandler;
+    private GoogleContactSelectionChangedHandler selectionChangedHandler;
 
-   public GoogleContactTile(GoogleContact contact)
-   {
-      googleContact = contact;
+    public GoogleContactTile(GoogleContact contact) {
+        googleContact = contact;
 
-      initWidget(uiBinder.createAndBindUi(this));
+        initWidget(uiBinder.createAndBindUi(this));
 
-      //avatarImage.setUrl(user.getAvatarUrl());
+        //avatarImage.setUrl(user.getAvatarUrl());
 
-      if (contact.getPhotoBase64() != null)
-      {
-         String url = "data:image/jpg;base64," + contact.getPhotoBase64();
-         avatarImage.setUrl(url);
-      }
-      else
-      {
-         avatarImage.setUrl(SamplesClientBundle.INSTANCE.userDefaultPhoto().getSafeUri());
-      }
+        if (contact.getPhotoBase64() != null) {
+            String url = "data:image/jpg;base64," + contact.getPhotoBase64();
+            avatarImage.setUrl(url);
+        } else {
+            avatarImage.setUrl(SamplesClientBundle.INSTANCE.userDefaultPhoto().getSafeUri());
+        }
 
-      name.setText(contact.getName());
-      name.setTitle(name.getText());
-      //company.setText(user. getCompany());
-      if (!contact.getEmailAddresses().isEmpty())
-      {
-         email.setText(contact.getEmailAddresses().get(0));
-         email.setTitle(email.getText());
-      }
+        name.setText(contact.getName());
+        name.setTitle(name.getText());
+        //company.setText(user. getCompany());
+        if (!contact.getEmailAddresses().isEmpty()) {
+            email.setText(contact.getEmailAddresses().get(0));
+            email.setTitle(email.getText());
+        }
 
-      checkBox.addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            setSelected(checkBox.getValue());
-            if (selectionChangedHandler != null)
-            {
-               selectionChangedHandler.onGoogleContactSelectionChanged(googleContact, checkBox.getValue().booleanValue());
+        checkBox.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                setSelected(checkBox.getValue());
+                if (selectionChangedHandler != null) {
+                    selectionChangedHandler.onGoogleContactSelectionChanged(googleContact, checkBox.getValue().booleanValue());
+                }
             }
-         }
-      });
+        });
 
-      avatarImage.addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            setSelected(!checkBox.getValue());
-            if (selectionChangedHandler != null)
-            {
-               selectionChangedHandler.onGoogleContactSelectionChanged(googleContact, checkBox.getValue().booleanValue());
+        avatarImage.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                setSelected(!checkBox.getValue());
+                if (selectionChangedHandler != null) {
+                    selectionChangedHandler.onGoogleContactSelectionChanged(googleContact, checkBox.getValue().booleanValue());
+                }
             }
-         }
-      });
-   }
+        });
+    }
 
-   public void setSelectionChangedHandler(GoogleContactSelectionChangedHandler selectionChangedHandler)
-   {
-      this.selectionChangedHandler = selectionChangedHandler;
-   }
+    public void setSelectionChangedHandler(GoogleContactSelectionChangedHandler selectionChangedHandler) {
+        this.selectionChangedHandler = selectionChangedHandler;
+    }
 
-   public boolean isSelected()
-   {
-      return checkBox.getValue();
-   }
+    public boolean isSelected() {
+        return checkBox.getValue();
+    }
 
-   public void setSelected(boolean selected)
-   {
-      checkBox.setValue(selected);
-      if (selected)
-      {
-         userFieldBody.setStyleName(style.userFieldBodySelected());
-      }
-      else
-      {
-         userFieldBody.setStyleName(style.userFieldBody());
-      }
-   }
+    public void setSelected(boolean selected) {
+        checkBox.setValue(selected);
+        if (selected) {
+            userFieldBody.setStyleName(style.userFieldBodySelected());
+        } else {
+            userFieldBody.setStyleName(style.userFieldBody());
+        }
+    }
 }

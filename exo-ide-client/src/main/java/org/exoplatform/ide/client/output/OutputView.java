@@ -43,91 +43,83 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class OutputView extends ViewImpl implements org.exoplatform.ide.client.output.OutputPresenter.Display
-{
+public class OutputView extends ViewImpl implements org.exoplatform.ide.client.output.OutputPresenter.Display {
 
-   private static final String ID = "ideOutputView";
+    private static final String ID = "ideOutputView";
 
-   private static final String CONTENT_ID = "ideOutputContent";
+    private static final String CONTENT_ID = "ideOutputContent";
 
-   public static final int WIDTH = 450;
+    public static final int WIDTH = 450;
 
-   public static final int HEIGHT = 250;
+    public static final int HEIGHT = 250;
 
-   private static OutputViewExUiBinder uiBinder = GWT.create(OutputViewExUiBinder.class);
+    private static OutputViewExUiBinder uiBinder = GWT.create(OutputViewExUiBinder.class);
 
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.outputTitle();
+    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.outputTitle();
 
-   private static final String CLEAR_OUTPUT = IDE.IDE_LOCALIZATION_CONSTANT.outputClear();
+    private static final String CLEAR_OUTPUT = IDE.IDE_LOCALIZATION_CONSTANT.outputClear();
 
-   interface OutputViewExUiBinder extends UiBinder<Widget, OutputView>
-   {
-   }
+    interface OutputViewExUiBinder extends UiBinder<Widget, OutputView> {
+    }
 
-   private IconButton clearOutputButton;
+    private IconButton clearOutputButton;
 
-   @UiField
-   ScrollPanel scrollPanel;
+    @UiField
+    ScrollPanel scrollPanel;
 
-   @UiField
-   FlowPanel contentPanel;
+    @UiField
+    FlowPanel contentPanel;
 
-   @UiField
-   Toolbar toolbar;
+    @UiField
+    Toolbar toolbar;
 
-   private boolean odd = true;
+    private boolean odd = true;
 
-   public OutputView()
-   {
-      super(ID, ViewType.OPERATION, TITLE, new Image(IDEImageBundle.INSTANCE.output()), WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
+    public OutputView() {
+        super(ID, ViewType.OPERATION, TITLE, new Image(IDEImageBundle.INSTANCE.output()), WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
 
-      String normalIcon = ImageHelper.getImageHTML(Images.OutputPanel.CLEAR_OUTPUT);
-      String disabledIcon = ImageHelper.getImageHTML(Images.OutputPanel.CLEAR_OUTPUT);
-      clearOutputButton = new IconButton(normalIcon, disabledIcon);
-      clearOutputButton.setTitle(CLEAR_OUTPUT);
-      clearOutputButton.setEnabled(true);
-      ToolbarItem toolbarItem = toolbar.addItem(clearOutputButton, true);
-      toolbarItem.getElement().getStyle().setPaddingTop(2, Unit.PX);
-      toolbarItem.getElement().getStyle().setPaddingRight(2, Unit.PX);
+        String normalIcon = ImageHelper.getImageHTML(Images.OutputPanel.CLEAR_OUTPUT);
+        String disabledIcon = ImageHelper.getImageHTML(Images.OutputPanel.CLEAR_OUTPUT);
+        clearOutputButton = new IconButton(normalIcon, disabledIcon);
+        clearOutputButton.setTitle(CLEAR_OUTPUT);
+        clearOutputButton.setEnabled(true);
+        ToolbarItem toolbarItem = toolbar.addItem(clearOutputButton, true);
+        toolbarItem.getElement().getStyle().setPaddingTop(2, Unit.PX);
+        toolbarItem.getElement().getStyle().setPaddingRight(2, Unit.PX);
 
-      contentPanel.getElement().setId(CONTENT_ID);
-   }
+        contentPanel.getElement().setId(CONTENT_ID);
+    }
 
-   @Override
-   public void clearOutput()
-   {
-      contentPanel.clear();
-      scrollPanel.scrollToTop();
-   }
+    @Override
+    public void clearOutput() {
+        contentPanel.clear();
+        scrollPanel.scrollToTop();
+    }
 
-   @Override
-   public void outMessage(OutputMessage message)
-   {
-      OutputRecord record = new OutputRecord(message, odd);
-      odd = !odd;
-      contentPanel.add(record);
-      scrollPanel.scrollToBottom();
+    @Override
+    public void outMessage(OutputMessage message) {
+        OutputRecord record = new OutputRecord(message, odd);
+        odd = !odd;
+        contentPanel.add(record);
+        scrollPanel.scrollToBottom();
 
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            scrollPanel.scrollToBottom();
-         }
-      });
-   }
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                scrollPanel.scrollToBottom();
+            }
+        });
+    }
 
-   @Override
-   public HasClickHandlers getClearOutputButton()
-   {
-      return clearOutputButton;
-   }
+    @Override
+    public HasClickHandlers getClearOutputButton() {
+        return clearOutputButton;
+    }
 
 }

@@ -41,103 +41,86 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 @RolesAllowed({"developer"})
 public class RefreshBrowserControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
-   ViewActivatedHandler, VfsChangedHandler
-{
+                                                                    ViewActivatedHandler, VfsChangedHandler {
 
-   private static final String ID = "File/Refresh Selected Folder";
+    private static final String ID = "File/Refresh Selected Folder";
 
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.refreshTitleControl();
+    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.refreshTitleControl();
 
-   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.refreshPromptControl();
+    private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.refreshPromptControl();
 
-   private boolean browserPanelSelected = false;
+    private boolean browserPanelSelected = false;
 
-   private List<Item> selectedItems;
+    private List<Item> selectedItems;
 
-   /**
-    * Current workspace's href.
-    */
-   private VirtualFileSystemInfo vfsInfo = null;
+    /** Current workspace's href. */
+    private VirtualFileSystemInfo vfsInfo = null;
 
-   /**
-    * 
-    */
-   public RefreshBrowserControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(IDEImageBundle.INSTANCE.refresh(), IDEImageBundle.INSTANCE.refreshDisabled());
-      setEvent(new RefreshBrowserEvent());
-   }
+    /**
+     *
+     */
+    public RefreshBrowserControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(IDEImageBundle.INSTANCE.refresh(), IDEImageBundle.INSTANCE.refreshDisabled());
+        setEvent(new RefreshBrowserEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(ViewActivatedEvent.TYPE, this);
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+        IDE.addHandler(ViewActivatedEvent.TYPE, this);
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      this.selectedItems = event.getSelectedItems();
-      updateState();
-   }
+    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     * .framework.navigation.event.ItemsSelectedEvent) */
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        this.selectedItems = event.getSelectedItems();
+        updateState();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      vfsInfo = event.getVfsInfo();
-      updateState();
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     * .application.event.VfsChangedEvent) */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        vfsInfo = event.getVfsInfo();
+        updateState();
+    }
 
-   @Override
-   public void onViewActivated(ViewActivatedEvent event)
-   {
-      View activeView = event.getView();
+    @Override
+    public void onViewActivated(ViewActivatedEvent event) {
+        View activeView = event.getView();
 
-      browserPanelSelected = activeView instanceof NavigatorDisplay || 
-               activeView instanceof ProjectExplorerDisplay ||
-               activeView instanceof PackageExplorerDisplay;
-      updateState();
-   }
+        browserPanelSelected = activeView instanceof NavigatorDisplay ||
+                               activeView instanceof ProjectExplorerDisplay ||
+                               activeView instanceof PackageExplorerDisplay;
+        updateState();
+    }
 
-   /**
-    * Update control's state.
-    */
-   protected void updateState()
-   {
-      if (vfsInfo == null)
-      {
-         setVisible(false);
-         return;
-      }
-      setVisible(true);
-      
-      if (selectedItems.size() != 1)
-      {
-         setEnabled(false);
-         return;
-      }
+    /** Update control's state. */
+    protected void updateState() {
+        if (vfsInfo == null) {
+            setVisible(false);
+            return;
+        }
+        setVisible(true);
 
-      setEnabled(browserPanelSelected);
-   }
+        if (selectedItems == null || selectedItems.size() != 1) {
+            setEnabled(false);
+            return;
+        }
+
+        setEnabled(browserPanelSelected);
+    }
 
 }

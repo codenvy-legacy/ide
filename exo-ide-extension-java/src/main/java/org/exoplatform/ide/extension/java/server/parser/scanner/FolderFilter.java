@@ -24,18 +24,13 @@ import org.exoplatform.ide.vfs.shared.ItemType;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  10:48:06 AM Mar 7, 2012 evgen $
- *
  */
-public class FolderFilter implements Filter
-{
+public class FolderFilter implements Filter {
 
-   /**
-    * @see org.exoplatform.ide.extension.java.server.parser.scanner.Filter#filter(org.exoplatform.ide.vfs.shared.Item)
-    */
-   @Override
-   public boolean filter(Item item)
-   {
-      return item.getItemType() == ItemType.FOLDER;
-   }
+    /** @see org.exoplatform.ide.extension.java.server.parser.scanner.Filter#filter(org.exoplatform.ide.vfs.shared.Item) */
+    @Override
+    public boolean filter(Item item) {
+        return item.getItemType() == ItemType.FOLDER;
+    }
 
 }

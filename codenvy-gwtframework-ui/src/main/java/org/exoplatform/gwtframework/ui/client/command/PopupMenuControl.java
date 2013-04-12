@@ -24,30 +24,26 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class PopupMenuControl extends Control<PopupMenuControl>
-{
+public class PopupMenuControl extends Control<PopupMenuControl> {
 
-   private List<SimpleControl> commands = new ArrayList<SimpleControl>();
+    private List<SimpleControl> commands = new ArrayList<SimpleControl>();
 
-   public PopupMenuControl(String id)
-   {
-      super(id);
-   }
+    public PopupMenuControl(String id) {
+        super(id);
+    }
 
-   public List<SimpleControl> getCommands()
-   {
-      return commands;
-   }
+    public List<SimpleControl> getCommands() {
+        return commands;
+    }
 
-   public PopupMenuControl addCommand(SimpleControl control)
-   {
-      commands.add(control);
-      return this;
-   }
+    public PopupMenuControl addCommand(SimpleControl control) {
+        commands.add(control);
+        return this;
+    }
 
 }

@@ -20,17 +20,13 @@ package org.exoplatform.gwtframework.ui.client.api;
 
 /**
  * Interface for callbacks, which return {@link String} value.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Feb 14, 2011 11:19:56 AM anya $
- *
  */
-public interface ValueCallback
-{
-   
-   /**
-    * @param value
-    */
-   void execute(String value);
-   
+public interface ValueCallback {
+
+    /** @param value */
+    void execute(String value);
+
 }

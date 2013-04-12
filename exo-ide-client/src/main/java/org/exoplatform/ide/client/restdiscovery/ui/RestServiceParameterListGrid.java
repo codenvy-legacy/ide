@@ -18,119 +18,102 @@
  */
 package org.exoplatform.ide.client.restdiscovery.ui;
 
-import org.exoplatform.gwtframework.ui.client.component.ListGrid;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.restdiscovery.ParamExt;
-
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.cellview.client.Column;
 
+import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.restdiscovery.ParamExt;
+
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-public class RestServiceParameterListGrid extends ListGrid<ParamExt>
-{
+public class RestServiceParameterListGrid extends ListGrid<ParamExt> {
 
-   private static final String NAME = IDE.PREFERENCES_CONSTANT.restServiceListGridNameColumn();
+    private static final String NAME = IDE.PREFERENCES_CONSTANT.restServiceListGridNameColumn();
 
-   private static final String TYPE = IDE.PREFERENCES_CONSTANT.restServiceListGridTypeColumn();
+    private static final String TYPE = IDE.PREFERENCES_CONSTANT.restServiceListGridTypeColumn();
 
-   private static final String DEFAULT = IDE.PREFERENCES_CONSTANT.restServiceListGridDefaultColumn();
+    private static final String DEFAULT = IDE.PREFERENCES_CONSTANT.restServiceListGridDefaultColumn();
 
-   public RestServiceParameterListGrid()
-   {
-      initColumns();
-   }
+    public RestServiceParameterListGrid() {
+        initColumns();
+    }
 
-   private void initColumns()
-   {
-      // name column
-      Column<ParamExt, SafeHtml> nameColumn = new Column<ParamExt, SafeHtml>(new SafeHtmlCell())
-      {
+    private void initColumns() {
+        // name column
+        Column<ParamExt, SafeHtml> nameColumn = new Column<ParamExt, SafeHtml>(new SafeHtmlCell()) {
 
-         @Override
-         public SafeHtml getValue(final ParamExt item)
-         {
-            SafeHtml html = new SafeHtml()
-            {
-               private static final long serialVersionUID = 1L;
+            @Override
+            public SafeHtml getValue(final ParamExt item) {
+                SafeHtml html = new SafeHtml() {
+                    private static final long serialVersionUID = 1L;
 
-               @Override
-               public String asString()
-               {
-                  if (item.getParam() == null)
-                  {
-                     String title = item.getTitle();
-                     title = getDivider(title);
-                     return title;
-                  }
-                  return item.getParam().getName();
-               }
-            };
-            return html;
-         }
-      };
-      getCellTable().addColumn(nameColumn, NAME);
+                    @Override
+                    public String asString() {
+                        if (item.getParam() == null) {
+                            String title = item.getTitle();
+                            title = getDivider(title);
+                            return title;
+                        }
+                        return item.getParam().getName();
+                    }
+                };
+                return html;
+            }
+        };
+        getCellTable().addColumn(nameColumn, NAME);
 
-      // type column
-      Column<ParamExt, SafeHtml> typeColumn = new Column<ParamExt, SafeHtml>(new SafeHtmlCell())
-      {
+        // type column
+        Column<ParamExt, SafeHtml> typeColumn = new Column<ParamExt, SafeHtml>(new SafeHtmlCell()) {
 
-         @Override
-         public SafeHtml getValue(final ParamExt item)
-         {
-            SafeHtml html = new SafeHtml()
-            {
-               private static final long serialVersionUID = 1L;
+            @Override
+            public SafeHtml getValue(final ParamExt item) {
+                SafeHtml html = new SafeHtml() {
+                    private static final long serialVersionUID = 1L;
 
-               @Override
-               public String asString()
-               {
-                  if (item.getParam() == null)
-                     return "";
-                  return item.getParam().getType().getLocalName();
-               }
-            };
-            return html;
-         }
+                    @Override
+                    public String asString() {
+                        if (item.getParam() == null)
+                            return "";
+                        return item.getParam().getType().getLocalName();
+                    }
+                };
+                return html;
+            }
 
-      };
-      getCellTable().addColumn(typeColumn, TYPE);
+        };
+        getCellTable().addColumn(typeColumn, TYPE);
 
-      // column By default
-      Column<ParamExt, SafeHtml> defaultColumn = new Column<ParamExt, SafeHtml>(new SafeHtmlCell())
-      {
+        // column By default
+        Column<ParamExt, SafeHtml> defaultColumn = new Column<ParamExt, SafeHtml>(new SafeHtmlCell()) {
 
-         @Override
-         public SafeHtml getValue(final ParamExt item)
-         {
-            SafeHtml html = new SafeHtml()
-            {
-               private static final long serialVersionUID = 1L;
+            @Override
+            public SafeHtml getValue(final ParamExt item) {
+                SafeHtml html = new SafeHtml() {
+                    private static final long serialVersionUID = 1L;
 
-               @Override
-               public String asString()
-               {
-                  if (item.getParam() == null)
-                     return "";
-                  return item.getParam().getDefault();
-               }
-            };
-            return html;
-         }
+                    @Override
+                    public String asString() {
+                        if (item.getParam() == null)
+                            return "";
+                        return item.getParam().getDefault();
+                    }
+                };
+                return html;
+            }
 
-      };
-      getCellTable().addColumn(defaultColumn, DEFAULT);
+        };
+        getCellTable().addColumn(defaultColumn, DEFAULT);
 
-   }
+    }
 
-   private String getDivider(String title)
-   {
-      return "<b><font color=\"#3764A3\">" + title + "</font></b>";
-   }
+    private String getDivider(String title) {
+        return "<b><font color=\"#3764A3\">" + title + "</font></b>";
+    }
 
 }

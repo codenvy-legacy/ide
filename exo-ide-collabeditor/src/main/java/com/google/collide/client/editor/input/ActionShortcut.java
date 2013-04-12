@@ -16,21 +16,19 @@ package com.google.collide.client.editor.input;
 
 import com.codenvy.ide.client.util.SignalEvent;
 
-/**
- * Implementation that delegates execution to action executor.
- */
+/** Implementation that delegates execution to action executor. */
 public class ActionShortcut extends EventShortcut {
 
-  private final String actionName;
+    private final String actionName;
 
-  public ActionShortcut(int modifiers, int charCode, String actionName) {
-    super(modifiers, charCode);
-    this.actionName = actionName;
-  }
+    public ActionShortcut(int modifiers, int charCode, String actionName) {
+        super(modifiers, charCode);
+        this.actionName = actionName;
+    }
 
-  @Override
-  public boolean event(InputScheme scheme, SignalEvent event) {
-    RootActionExecutor executor = scheme.getInputController().getActionExecutor();
-    return executor.execute(actionName, scheme, event);
-  }
+    @Override
+    public boolean event(InputScheme scheme, SignalEvent event) {
+        RootActionExecutor executor = scheme.getInputController().getActionExecutor();
+        return executor.execute(actionName, scheme, event);
+    }
 }

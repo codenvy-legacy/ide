@@ -21,57 +21,54 @@ import com.codenvy.eclipse.core.runtime.Assert;
  *
  * @since 3.0
  */
-public class MoveArguments extends RefactoringArguments
-{
+public class MoveArguments extends RefactoringArguments {
 
-   private Object fDestination;
+    private Object fDestination;
 
-   private boolean fUpdateReferences;
+    private boolean fUpdateReferences;
 
-   /**
-    * Creates new move arguments.
-    *
-    * @param destination      the destination of the move
-    * @param updateReferences <code>true</code> if reference
-    *                         updating is requested; <code>false</code> otherwise
-    */
-   public MoveArguments(Object destination, boolean updateReferences)
-   {
-      Assert.isNotNull(destination);
-      fDestination = destination;
-      fUpdateReferences = updateReferences;
-   }
+    /**
+     * Creates new move arguments.
+     *
+     * @param destination
+     *         the destination of the move
+     * @param updateReferences
+     *         <code>true</code> if reference
+     *         updating is requested; <code>false</code> otherwise
+     */
+    public MoveArguments(Object destination, boolean updateReferences) {
+        Assert.isNotNull(destination);
+        fDestination = destination;
+        fUpdateReferences = updateReferences;
+    }
 
-   /**
-    * Returns the destination of the move
-    *
-    * @return the move's destination
-    */
-   public Object getDestination()
-   {
-      return fDestination;
-   }
+    /**
+     * Returns the destination of the move
+     *
+     * @return the move's destination
+     */
+    public Object getDestination() {
+        return fDestination;
+    }
 
-   /**
-    * Returns whether reference updating is requested or not.
-    *
-    * @return returns <code>true</code> if reference
-    *         updating is requested; <code>false</code> otherwise
-    */
-   public boolean getUpdateReferences()
-   {
-      return fUpdateReferences;
-   }
+    /**
+     * Returns whether reference updating is requested or not.
+     *
+     * @return returns <code>true</code> if reference
+     *         updating is requested; <code>false</code> otherwise
+     */
+    public boolean getUpdateReferences() {
+        return fUpdateReferences;
+    }
 
-   /**
-    * {@inheritDoc}
-    *
-    * @since 3.2
-    */
-   public String toString()
-   {
-      return "move to " //$NON-NLS-1$
-         + (fUpdateReferences ? "(update references) " : "(don't update references) ")  //$NON-NLS-1$//$NON-NLS-2$
-         + fDestination.toString();
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @since 3.2
+     */
+    public String toString() {
+        return "move to " //$NON-NLS-1$
+               + (fUpdateReferences ? "(update references) " : "(don't update references) ")  //$NON-NLS-1$//$NON-NLS-2$
+               + fDestination.toString();
+    }
 }

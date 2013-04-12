@@ -21,147 +21,108 @@ import com.codenvy.eclipse.ltk.core.refactoring.participants.ReorgExecutionLog;
  *
  * @since 3.3
  */
-public final class LoggedNewNameQueries implements INewNameQueries
-{
+public final class LoggedNewNameQueries implements INewNameQueries {
 
-   /**
-    * Default implementation of a new name query
-    */
-   private final class NewNameQuery implements INewNameQuery
-   {
+    /** Default implementation of a new name query */
+    private final class NewNameQuery implements INewNameQuery {
 
-      /**
-       * The name
-       */
-      private final String fName;
+        /** The name */
+        private final String fName;
 
-      /**
-       * The object
-       */
-      private final Object fObject;
+        /** The object */
+        private final Object fObject;
 
-      /**
-       * Creates a new new name query.
-       *
-       * @param object the object
-       * @param name   the initial suggested name
-       */
-      public NewNameQuery(final Object object, String name)
-      {
-         fObject = object;
-         fName = name;
-      }
+        /**
+         * Creates a new new name query.
+         *
+         * @param object
+         *         the object
+         * @param name
+         *         the initial suggested name
+         */
+        public NewNameQuery(final Object object, String name) {
+            fObject = object;
+            fName = name;
+        }
 
-      /**
-       * Returns the new name of the compilation unit, without any extension.
-       *
-       * @return the new name, or <code>null</code>
-       */
-      private String getCompilationUnitName()
-      {
-         String name = fLog.getNewName(fObject);
-         if (name != null)
-         {
-            int index = name.lastIndexOf('.');
-            if (index > 0)
-            {
-               name = name.substring(0, index);
+        /**
+         * Returns the new name of the compilation unit, without any extension.
+         *
+         * @return the new name, or <code>null</code>
+         */
+        private String getCompilationUnitName() {
+            String name = fLog.getNewName(fObject);
+            if (name != null) {
+                int index = name.lastIndexOf('.');
+                if (index > 0) {
+                    name = name.substring(0, index);
+                }
             }
-         }
-         return name;
-      }
-
-      /**
-       * {@inheritDoc}
-       */
-      public String getNewName()
-      {
-         String name = null;
-         if (fObject instanceof ICompilationUnit)
-         {
-            name = getCompilationUnitName();
-         }
-         else
-         {
-            name = fLog.getNewName(fObject);
-         }
-         if (name == null)
-         {
-            name = fName;
-         }
-         return fName;
-      }
-   }
-
-   /**
-    * The reorg execution log
-    */
-   private final ReorgExecutionLog fLog;
-
-   /**
-    * Creates a new logged new name queries.
-    *
-    * @param log the reorg execution log
-    */
-   public LoggedNewNameQueries(final ReorgExecutionLog log)
-   {
-      fLog = log;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public INewNameQuery createNewCompilationUnitNameQuery(final ICompilationUnit unit,
-      final String initialSuggestedName)
-   {
-      return new NewNameQuery(unit, initialSuggestedName);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public INewNameQuery createNewPackageFragmentRootNameQuery(final IPackageFragmentRoot root,
-      final String initialSuggestedName)
-   {
-      return new NewNameQuery(root, initialSuggestedName);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public INewNameQuery createNewPackageNameQuery(final IPackageFragment fragment, final String initialSuggestedName)
-   {
-      return new NewNameQuery(fragment, initialSuggestedName);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public INewNameQuery createNewResourceNameQuery(final IResource resource, final String initialSuggestedName)
-   {
-      return new NewNameQuery(resource, initialSuggestedName);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public INewNameQuery createNullQuery()
-   {
-      return createStaticQuery(null);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public INewNameQuery createStaticQuery(final String name)
-   {
-      return new INewNameQuery()
-      {
-
-         public String getNewName()
-         {
             return name;
-         }
-      };
-   }
+        }
+
+        /** {@inheritDoc} */
+        public String getNewName() {
+            String name = null;
+            if (fObject instanceof ICompilationUnit) {
+                name = getCompilationUnitName();
+            } else {
+                name = fLog.getNewName(fObject);
+            }
+            if (name == null) {
+                name = fName;
+            }
+            return fName;
+        }
+    }
+
+    /** The reorg execution log */
+    private final ReorgExecutionLog fLog;
+
+    /**
+     * Creates a new logged new name queries.
+     *
+     * @param log
+     *         the reorg execution log
+     */
+    public LoggedNewNameQueries(final ReorgExecutionLog log) {
+        fLog = log;
+    }
+
+    /** {@inheritDoc} */
+    public INewNameQuery createNewCompilationUnitNameQuery(final ICompilationUnit unit,
+                                                           final String initialSuggestedName) {
+        return new NewNameQuery(unit, initialSuggestedName);
+    }
+
+    /** {@inheritDoc} */
+    public INewNameQuery createNewPackageFragmentRootNameQuery(final IPackageFragmentRoot root,
+                                                               final String initialSuggestedName) {
+        return new NewNameQuery(root, initialSuggestedName);
+    }
+
+    /** {@inheritDoc} */
+    public INewNameQuery createNewPackageNameQuery(final IPackageFragment fragment, final String initialSuggestedName) {
+        return new NewNameQuery(fragment, initialSuggestedName);
+    }
+
+    /** {@inheritDoc} */
+    public INewNameQuery createNewResourceNameQuery(final IResource resource, final String initialSuggestedName) {
+        return new NewNameQuery(resource, initialSuggestedName);
+    }
+
+    /** {@inheritDoc} */
+    public INewNameQuery createNullQuery() {
+        return createStaticQuery(null);
+    }
+
+    /** {@inheritDoc} */
+    public INewNameQuery createStaticQuery(final String name) {
+        return new INewNameQuery() {
+
+            public String getNewName() {
+                return name;
+            }
+        };
+    }
 }

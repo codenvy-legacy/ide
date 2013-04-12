@@ -31,79 +31,68 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @version $Id:$
- */
-public class ProjectModel extends FolderModel implements Project
-{
-   
-   protected String projectType;
+/** @version $Id:$ */
+public class ProjectModel extends FolderModel implements Project {
 
-   public ProjectModel()
-   {
-      super();
-   }
+    protected String projectType;
 
-   @SuppressWarnings("rawtypes")
-   public ProjectModel(String name, FolderModel parent, String projectType, List<Property> properties)
-   {
-      this(null, name, PROJECT_MIME_TYPE, parent.createPath(name), parent.getId(), new Date().getTime(),
-         properties, new HashMap<String, Link>(), projectType);
-      this.parent = parent;
-   }
+    public ProjectModel() {
+        super();
+    }
 
-   public ProjectModel(ProjectModel project)
-   {
-      this(project.getId(), project.getName(), PROJECT_MIME_TYPE, project.getPath(), project.getParentId(), project
-         .getCreationDate(), project.getProperties(), project.getLinks(), project.getProjectType());
-   }
+    @SuppressWarnings("rawtypes")
+    public ProjectModel(String name, FolderModel parent, String projectType, List<Property> properties) {
+        this(null, name, PROJECT_MIME_TYPE, parent.createPath(name), parent.getId(), new Date().getTime(),
+             properties, new HashMap<String, Link>(), projectType);
+        this.parent = parent;
+    }
 
-   @SuppressWarnings("rawtypes")
-   public ProjectModel(String id, String name, String mimeType, String path, String parentId, long creationDate,
-                      List<Property> properties, Map<String, Link> links, String projectType)
-   {
-      super(id, name, ItemType.PROJECT, mimeType, path, parentId, creationDate, properties, links);
-      this.projectType = projectType;
-   }
+    public ProjectModel(ProjectModel project) {
+        this(project.getId(), project.getName(), PROJECT_MIME_TYPE, project.getPath(), project.getParentId(), project
+                .getCreationDate(), project.getProperties(), project.getLinks(), project.getProjectType());
+    }
 
-   public ProjectModel(JSONObject itemObject)
-   {
-      super();
-      init(itemObject);
-   }
+    @SuppressWarnings("rawtypes")
+    public ProjectModel(String id, String name, String mimeType, String path, String parentId, long creationDate,
+                        List<Property> properties, Map<String, Link> links, String projectType) {
+        super(id, name, ItemType.PROJECT, mimeType, path, parentId, creationDate, properties, links);
+        this.projectType = projectType;
+    }
 
-   @SuppressWarnings({"unchecked", "rawtypes"})
-   public void init(JSONObject itemObject)
-   {
-      super.init(itemObject);
-      
-      id = itemObject.get("id").isString().stringValue();
-      name = itemObject.get("name").isString().stringValue();
-      mimeType = itemObject.get("mimeType").isString().stringValue();
-      path = itemObject.get("path").isString().stringValue();
-      parentId = itemObject.get("parentId").isString().stringValue();
-      try {
-         creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
-      } catch (Exception e) {
-         e.printStackTrace();
-      }
-      properties = (List)JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
-      links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
-      projectType =
-         (itemObject.get("projectType") != null) ? itemObject.get("projectType").isString().stringValue() : null;
-      this.persisted = true;
-   }
-   
-   @Override
-   public String getProjectType()
-   {
-      return projectType;
-   }
+    public ProjectModel(JSONObject itemObject) {
+        super();
+        init(itemObject);
+    }
 
-   @Override
-   public void setProjectType(String projectType)
-   {
-      this.projectType = projectType;
-   }
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public void init(JSONObject itemObject) {
+        super.init(itemObject);
+
+        id = itemObject.get("id").isString().stringValue();
+        name = itemObject.get("name").isString().stringValue();
+        mimeType = itemObject.get("mimeType").isString().stringValue();
+        path = itemObject.get("path").isString().stringValue();
+        parentId = itemObject.get("parentId").isString().stringValue();
+        try {
+            creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        properties = (List)JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
+        links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
+        projectType =
+                (itemObject.get("projectType") != null) ? itemObject.get("projectType").isString().stringValue() : null;
+        this.persisted = true;
+    }
+
+    @Override
+    public String getProjectType() {
+        return projectType;
+    }
+
+    @Override
+    public void setProjectType(String projectType) {
+        this.projectType = projectType;
+    }
 
 }

@@ -32,67 +32,54 @@ import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  * @see OpenShiftRESTfulRequestCallback
  */
-public abstract class OpenShiftAsyncRequestCallback<T> extends AsyncRequestCallback<T>
-{
+public abstract class OpenShiftAsyncRequestCallback<T> extends AsyncRequestCallback<T> {
 
-   private LoggedInHandler loggedInHandler;
+    private LoggedInHandler loggedInHandler;
 
-   private LoginCanceledHandler loginCanceledHandler;
+    private LoginCanceledHandler loginCanceledHandler;
 
-   private String errorMessage;
+    private String errorMessage;
 
-   public OpenShiftAsyncRequestCallback(Unmarshallable<T> unmarshaller)
-   {
-      super(unmarshaller);
-   }
+    public OpenShiftAsyncRequestCallback(Unmarshallable<T> unmarshaller) {
+        super(unmarshaller);
+    }
 
-   public OpenShiftAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedInHandler,
-      LoginCanceledHandler loginCanceledHandler)
-   {
-      super(unmarshaller);
+    public OpenShiftAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedInHandler,
+                                         LoginCanceledHandler loginCanceledHandler) {
+        super(unmarshaller);
 
-      this.loggedInHandler = loggedInHandler;
-      this.loginCanceledHandler = loginCanceledHandler;
-   }
+        this.loggedInHandler = loggedInHandler;
+        this.loginCanceledHandler = loginCanceledHandler;
+    }
 
-   public OpenShiftAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedInHandler,
-      LoginCanceledHandler loginCanceledHandler, String errorMessage)
-   {
-      super(unmarshaller);
+    public OpenShiftAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedInHandler,
+                                         LoginCanceledHandler loginCanceledHandler, String errorMessage) {
+        super(unmarshaller);
 
-      this.loggedInHandler = loggedInHandler;
-      this.loginCanceledHandler = loginCanceledHandler;
-      this.errorMessage = errorMessage;
-   }
+        this.loggedInHandler = loggedInHandler;
+        this.loginCanceledHandler = loginCanceledHandler;
+        this.errorMessage = errorMessage;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-    */
-   @Override
-   protected void onFailure(Throwable exception)
-   {
-      if (exception instanceof ServerException)
-      {
-         ServerException serverException = (ServerException)exception;
-         if (HTTPStatus.OK == serverException.getHTTPStatus()
-            && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
-         {
-            IDE.fireEvent(new LoginEvent(loggedInHandler, loginCanceledHandler));
-            return;
-         }
-      }
+    /** @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable) */
+    @Override
+    protected void onFailure(Throwable exception) {
+        if (exception instanceof ServerException) {
+            ServerException serverException = (ServerException)exception;
+            if (HTTPStatus.OK == serverException.getHTTPStatus()
+                && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED))) {
+                IDE.fireEvent(new LoginEvent(loggedInHandler, loginCanceledHandler));
+                return;
+            }
+        }
 
-      if (errorMessage != null)
-      {
-         IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, errorMessage));
-      }
-      else
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(exception));
-      }
-   }
+        if (errorMessage != null) {
+            IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, errorMessage));
+        } else {
+            IDE.fireEvent(new ExceptionThrownEvent(exception));
+        }
+    }
 
 }

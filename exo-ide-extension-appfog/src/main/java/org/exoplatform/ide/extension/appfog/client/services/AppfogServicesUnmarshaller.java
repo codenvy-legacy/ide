@@ -37,86 +37,64 @@ import org.exoplatform.ide.extension.appfog.shared.AppfogSystemService;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class AppfogServicesUnmarshaller implements Unmarshallable<AppfogServices>
-{
-   /**
-    * Appfog services (system and provisioned).
-    */
-   private AppfogServices appfogServices;
+public class AppfogServicesUnmarshaller implements Unmarshallable<AppfogServices> {
+    /** Appfog services (system and provisioned). */
+    private AppfogServices appfogServices;
 
-   private final class Keys
-   {
-      public static final String SYSTEM = "appfogSystemService";
+    private final class Keys {
+        public static final String SYSTEM = "appfogSystemService";
 
-      public static final String PROVISIONED = "appfogProvisionedService";
-   }
+        public static final String PROVISIONED = "appfogProvisionedService";
+    }
 
-   public AppfogServicesUnmarshaller()
-   {
-      appfogServices = AppfogExtension.AUTO_BEAN_FACTORY.services().as();
-   }
+    public AppfogServicesUnmarshaller() {
+        appfogServices = AppfogExtension.AUTO_BEAN_FACTORY.services().as();
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      if (response.getText() == null || response.getText().isEmpty())
-      {
-         return;
-      }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        if (response.getText() == null || response.getText().isEmpty()) {
+            return;
+        }
 
-      JSONObject jsonObject = JSONParser.parseStrict(response.getText()).isObject();
+        JSONObject jsonObject = JSONParser.parseStrict(response.getText()).isObject();
 
-      if (jsonObject.containsKey(Keys.SYSTEM))
-      {
-         JSONArray systemServices = jsonObject.get(Keys.SYSTEM).isArray();
-         if (systemServices.size() > 0)
-         {
-            AppfogSystemService[] services = new AppfogSystemService[systemServices.size()];
-            for (int i = 0; i < systemServices.size(); i++)
-            {
-               String value = systemServices.get(i).isObject().toString();
-               services[i] =
-                  AutoBeanCodex.decode(AppfogExtension.AUTO_BEAN_FACTORY, AppfogSystemService.class, value).as();
+        if (jsonObject.containsKey(Keys.SYSTEM)) {
+            JSONArray systemServices = jsonObject.get(Keys.SYSTEM).isArray();
+            if (systemServices.size() > 0) {
+                AppfogSystemService[] services = new AppfogSystemService[systemServices.size()];
+                for (int i = 0; i < systemServices.size(); i++) {
+                    String value = systemServices.get(i).isObject().toString();
+                    services[i] =
+                            AutoBeanCodex.decode(AppfogExtension.AUTO_BEAN_FACTORY, AppfogSystemService.class, value).as();
+                }
+                appfogServices.setAppfogSystemService(services);
+            } else {
+                appfogServices.setAppfogSystemService(new AppfogSystemService[0]);
             }
-            appfogServices.setAppfogSystemService(services);
-         }
-         else
-         {
-            appfogServices.setAppfogSystemService(new AppfogSystemService[0]);
-         }
-      }
+        }
 
-      if (jsonObject.containsKey(Keys.PROVISIONED))
-      {
-         JSONArray provisionedServices = jsonObject.get(Keys.PROVISIONED).isArray();
-         if (provisionedServices.size() > 0)
-         {
-            AppfogProvisionedService[] services = new AppfogProvisionedService[provisionedServices.size()];
-            for (int i = 0; i < provisionedServices.size(); i++)
-            {
-               String value = provisionedServices.get(i).isObject().toString();
-               services[i] =
-                  AutoBeanCodex.decode(AppfogExtension.AUTO_BEAN_FACTORY, AppfogProvisionedService.class, value).as();
+        if (jsonObject.containsKey(Keys.PROVISIONED)) {
+            JSONArray provisionedServices = jsonObject.get(Keys.PROVISIONED).isArray();
+            if (provisionedServices.size() > 0) {
+                AppfogProvisionedService[] services = new AppfogProvisionedService[provisionedServices.size()];
+                for (int i = 0; i < provisionedServices.size(); i++) {
+                    String value = provisionedServices.get(i).isObject().toString();
+                    services[i] =
+                            AutoBeanCodex.decode(AppfogExtension.AUTO_BEAN_FACTORY, AppfogProvisionedService.class, value).as();
+                }
+                appfogServices.setAppfogProvisionedService(services);
+            } else {
+                appfogServices.setAppfogProvisionedService(new AppfogProvisionedService[0]);
             }
-            appfogServices.setAppfogProvisionedService(services);
-         }
-         else
-         {
-            appfogServices.setAppfogProvisionedService(new AppfogProvisionedService[0]);
-         }
-      }
+        }
 
-   }
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#getPayload()
-    */
-   @Override
-   public AppfogServices getPayload()
-   {
-      return appfogServices;
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#getPayload() */
+    @Override
+    public AppfogServices getPayload() {
+        return appfogServices;
+    }
 }

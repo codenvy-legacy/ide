@@ -20,68 +20,59 @@
 
 -->
 <web-app xmlns="http://java.sun.com/xml/ns/javaee"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
                       http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-  version="3.0"
-  metadata-complete="true">
-  
-   <display-name>rest</display-name>
+         version="3.0"
+         metadata-complete="true">
 
-  <filter>
-    <filter-name>SetCurrentIdentityFilter</filter-name>
-    <filter-class>org.exoplatform.services.security.web.SetCurrentIdentityFilter</filter-class>
-  </filter>
-  <filter>
-    <filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
-    <filter-class>org.exoplatform.frameworks.jcr.web.ThreadLocalSessionProviderInitializedFilter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>SetCurrentIdentityFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
-  
- <servlet>
-      <servlet-name>EverrestServlet</servlet-name>
-      <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
-   </servlet>
- 
-  
-  <servlet-mapping>
-    <servlet-name>EverrestServlet</servlet-name>
-    <url-pattern>/private/*</url-pattern>
-  </servlet-mapping>
-  
-  <servlet-mapping>
-    <servlet-name>EverrestServlet</servlet-name>
-    <url-pattern>/*</url-pattern>
-  </servlet-mapping>
+    <display-name>rest</display-name>
 
-  <security-constraint>
-    <web-resource-collection>
-      <web-resource-name>rest</web-resource-name>
-      <url-pattern>/private/*</url-pattern>      	            
-    </web-resource-collection>
-    <auth-constraint>
-      <role-name>developer</role-name>
-    </auth-constraint>
-    <user-data-constraint>
-      <transport-guarantee>NONE</transport-guarantee>
-    </user-data-constraint>
-  </security-constraint>
+    <filter>
+        <filter-name>SetCurrentIdentityFilter</filter-name>
+        <filter-class>org.exoplatform.services.security.web.SetCurrentIdentityFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>SetCurrentIdentityFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <servlet>
+        <servlet-name>EverrestServlet</servlet-name>
+        <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
+    </servlet>
 
-  <login-config>
-	  <auth-method>BASIC</auth-method> 
-	  <realm-name>exo-git</realm-name> 		
-	</login-config>
 
-  <security-role>
-    <description>the user role</description>
-    <role-name>developer</role-name>
-  </security-role>
+    <servlet-mapping>
+        <servlet-name>EverrestServlet</servlet-name>
+        <url-pattern>/private/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EverrestServlet</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>rest</web-resource-name>
+            <url-pattern>/private/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>developer</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>NONE</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>exo-git</realm-name>
+    </login-config>
+
+    <security-role>
+        <description>the user role</description>
+        <role-name>developer</role-name>
+    </security-role>
 </web-app>
 

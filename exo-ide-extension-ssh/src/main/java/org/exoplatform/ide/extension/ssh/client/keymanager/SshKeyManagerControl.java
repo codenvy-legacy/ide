@@ -26,42 +26,30 @@ import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowSshKeyManag
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: SshKeyManagerControl May 17, 2011 5:22:50 PM evgen $
- * 
  */
-public class SshKeyManagerControl extends SimpleControl implements IDEControl
-{
-   /**
-    * Control ID.
-    */
-   public static final String ID = "Window/Ssh Key Manager";
+public class SshKeyManagerControl extends SimpleControl implements IDEControl {
+    /** Control ID. */
+    public static final String ID = "Window/Ssh Key Manager";
 
-   /**
-    * Control's title.
-    */
-   public static final String TITLE = "Ssh Key Manager";
+    /** Control's title. */
+    public static final String TITLE = "Ssh Key Manager";
 
-   /**
-    * Control's prompt, when user hovers the mouse on it.
-    */
-   public static final String PROMPT = "Open Ssh Key Manager";
+    /** Control's prompt, when user hovers the mouse on it. */
+    public static final String PROMPT = "Open Ssh Key Manager";
 
-   public SshKeyManagerControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setEvent(new ShowSshKeyManagerEvent());
-      setImages(SshClientBundle.INSTANCE.sshKeyManager(), SshClientBundle.INSTANCE.sshKeyManagerDisabled());
-   }
+    public SshKeyManagerControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setEvent(new ShowSshKeyManagerEvent());
+        setImages(SshClientBundle.INSTANCE.sshKeyManager(), SshClientBundle.INSTANCE.sshKeyManagerDisabled());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(true);
+        setEnabled(true);
+    }
 
 }

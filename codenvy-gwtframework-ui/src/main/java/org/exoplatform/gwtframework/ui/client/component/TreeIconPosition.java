@@ -20,29 +20,20 @@ package org.exoplatform.gwtframework.ui.client.component;
 
 
 /**
- * use to indicate where in the  display icons 
+ * use to indicate where in the  display icons
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:musienko.maxim@gmail.com">Musienko Maxim</a>
  * @version $Id: $
- * 
- * 
- * */
+ */
 public enum TreeIconPosition {
-   /**
-    Position left icon at the top of your folder. Now not used.
-    */
-   TOPLEFT,
-   /**
-   Position right icon at the top of your folder.
-   */
-   TOPRIGHT,
-   /**
-    Position left icon at the bottom of the folder Now not used. 
-    */
-   BOTTOMLEFT,
-   /**
-     Position right icon at the bottom of the folder.
-    */
-   BOTTOMRIGHT
+    /** Position left icon at the top of your folder. Now not used. */
+    TOPLEFT,
+    /** Position right icon at the top of your folder. */
+    TOPRIGHT,
+    /** Position left icon at the bottom of the folder Now not used. */
+    BOTTOMLEFT,
+    /** Position right icon at the bottom of the folder. */
+    BOTTOMRIGHT
 
 }

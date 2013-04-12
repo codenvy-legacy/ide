@@ -36,156 +36,116 @@ import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 
 /**
  * View for log in Heroku.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 26, 2011 10:54:35 AM anya $
- * 
  */
-public class LoginView extends ViewImpl implements LoginPresenter.Display
-{
-   private static final String ID = "ideLoginView";
+public class LoginView extends ViewImpl implements LoginPresenter.Display {
+    private static final String ID = "ideLoginView";
 
-   private static final int WIDTH = 410;
+    private static final int WIDTH = 410;
 
-   private static final int HEIGHT = 200;
+    private static final int HEIGHT = 200;
 
-   private static final String LOGIN_BUTTON_ID = "ideLoginViewLoginButton";
+    private static final String LOGIN_BUTTON_ID = "ideLoginViewLoginButton";
 
-   /**
-    * Button for login as user "Demo".
-    */
-   private static final String LOGIN_DEMO_BUTTON_ID = "ideLoginDemoViewLoginButton";
+    /** Button for login as user "Demo". */
+    private static final String LOGIN_DEMO_BUTTON_ID = "ideLoginDemoViewLoginButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideLoginViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideLoginViewCancelButton";
 
-   private static final String EMAIL_FIELD_ID = "ideLoginViewEmailField";
+    private static final String EMAIL_FIELD_ID = "ideLoginViewEmailField";
 
-   private static final String PASSWORD_FIELD_ID = "ideLoginViewPasswordField";
+    private static final String PASSWORD_FIELD_ID = "ideLoginViewPasswordField";
 
-   private static final String LOGIN_RESULT_ID = "ideLoginViewLoginResult";
+    private static final String LOGIN_RESULT_ID = "ideLoginViewLoginResult";
 
-   /**
-    * UI binder for this view.
-    */
-   private static LoginViewUiBinder uiBinder = GWT.create(LoginViewUiBinder.class);
+    /** UI binder for this view. */
+    private static LoginViewUiBinder uiBinder = GWT.create(LoginViewUiBinder.class);
 
-   interface LoginViewUiBinder extends UiBinder<Widget, LoginView>
-   {
-   }
+    interface LoginViewUiBinder extends UiBinder<Widget, LoginView> {
+    }
 
-   /**
-    * Email field.
-    */
-   @UiField
-   TextInput emailField;
+    /** Email field. */
+    @UiField
+    TextInput emailField;
 
-   /**
-    * Password field.
-    */
-   @UiField
-   PasswordTextInput passwordField;
+    /** Password field. */
+    @UiField
+    PasswordTextInput passwordField;
 
-   /**
-    * Login button.
-    */
-   @UiField
-   ImageButton loginButton;
+    /** Login button. */
+    @UiField
+    ImageButton loginButton;
 
-   /**
-    * Cancel button.
-    */
-   @UiField
-   ImageButton cancelButton;
+    /** Cancel button. */
+    @UiField
+    ImageButton cancelButton;
 
-   @UiField
-   ImageButton loginDemoButton;
+    @UiField
+    ImageButton loginDemoButton;
 
-   @UiField
-   Label loginResult;
+    @UiField
+    Label loginResult;
 
-   public LoginView()
-   {
-      super(ID, ViewType.MODAL, HerokuExtension.LOCALIZATION_CONSTANT.loginViewTitle(), null, WIDTH, HEIGHT, false);
-      add(uiBinder.createAndBindUi(this));
+    public LoginView() {
+        super(ID, ViewType.MODAL, HerokuExtension.LOCALIZATION_CONSTANT.loginViewTitle(), null, WIDTH, HEIGHT, false);
+        add(uiBinder.createAndBindUi(this));
 
-      emailField.setName(EMAIL_FIELD_ID);
-      passwordField.setName(PASSWORD_FIELD_ID);
-      loginButton.setButtonId(LOGIN_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-      loginDemoButton.setButtonId(LOGIN_DEMO_BUTTON_ID);
-      loginResult.setID(LOGIN_RESULT_ID);
-   }
+        emailField.setName(EMAIL_FIELD_ID);
+        passwordField.setName(PASSWORD_FIELD_ID);
+        loginButton.setButtonId(LOGIN_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+        loginDemoButton.setButtonId(LOGIN_DEMO_BUTTON_ID);
+        loginResult.setID(LOGIN_RESULT_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.login.LoginPresenter.Display#getLoginButton()
-    */
-   @Override
-   public HasClickHandlers getLoginButton()
-   {
-      return loginButton;
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.login.LoginPresenter.Display#getLoginButton() */
+    @Override
+    public HasClickHandlers getLoginButton() {
+        return loginButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.login.LoginPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.login.LoginPresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.login.LoginPresenter.Display#getEmailField()
-    */
-   @Override
-   public HasValue<String> getEmailField()
-   {
-      return emailField;
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.login.LoginPresenter.Display#getEmailField() */
+    @Override
+    public HasValue<String> getEmailField() {
+        return emailField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.login.LoginPresenter.Display#getPasswordField()
-    */
-   @Override
-   public TextFieldItem getPasswordField()
-   {
-      return passwordField;
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.login.LoginPresenter.Display#getPasswordField() */
+    @Override
+    public TextFieldItem getPasswordField() {
+        return passwordField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.login.LoginPresenter.Display#enableLoginButton(boolean)
-    */
-   @Override
-   public void enableLoginButton(boolean enabled)
-   {
-      loginButton.setEnabled(enabled);
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.login.LoginPresenter.Display#enableLoginButton(boolean) */
+    @Override
+    public void enableLoginButton(boolean enabled) {
+        loginButton.setEnabled(enabled);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.login.LoginPresenter.Display#focusInEmailField()
-    */
-   @Override
-   public void focusInEmailField()
-   {
-      emailField.focus();
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.login.LoginPresenter.Display#focusInEmailField() */
+    @Override
+    public void focusInEmailField() {
+        emailField.focus();
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.login.LoginPresenter.Display#getLoginDemoButton()
-    */
-   @Override
-   public HasClickHandlers getLoginDemoButton()
-   {
-      return loginDemoButton;
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.login.LoginPresenter.Display#getLoginDemoButton() */
+    @Override
+    public HasClickHandlers getLoginDemoButton() {
+        return loginDemoButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.login.LoginPresenter.Display#getLoginResult()
-    */
-   @Override
-   public HasValue<String> getLoginResult()
-   {
-      return loginResult;
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.login.LoginPresenter.Display#getLoginResult() */
+    @Override
+    public HasValue<String> getLoginResult() {
+        return loginResult;
+    }
 
 }

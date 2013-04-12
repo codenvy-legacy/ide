@@ -12,7 +12,9 @@ package com.codenvy.eclipse.jdt.internal.codeassist.complete;
 
 public interface CompletionOnKeyword {
 
-	char[] getToken();
-	char[][] getPossibleKeywords();
-	boolean canCompleteEmptyToken();
+    char[] getToken();
+
+    char[][] getPossibleKeywords();
+
+    boolean canCompleteEmptyToken();
 }

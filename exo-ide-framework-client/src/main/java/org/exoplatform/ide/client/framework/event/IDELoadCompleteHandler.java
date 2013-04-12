@@ -22,16 +22,14 @@ package org.exoplatform.ide.client.framework.event;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface IDELoadCompleteHandler extends EventHandler
-{
-   
-   void onIDELoadComplete(IDELoadCompleteEvent event);
+public interface IDELoadCompleteHandler extends EventHandler {
+
+    void onIDELoadComplete(IDELoadCompleteEvent event);
 
 }

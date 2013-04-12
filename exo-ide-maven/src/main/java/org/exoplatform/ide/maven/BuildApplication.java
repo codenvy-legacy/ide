@@ -18,10 +18,9 @@
  */
 package org.exoplatform.ide.maven;
 
+import javax.ws.rs.core.Application;
 import java.util.Collections;
 import java.util.Set;
-
-import javax.ws.rs.core.Application;
 
 /**
  * Builder application deployer.
@@ -29,12 +28,10 @@ import javax.ws.rs.core.Application;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class BuildApplication extends Application
-{
-   /** @see javax.ws.rs.core.Application#getClasses() */
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      return Collections.<Class<?>>singleton(Builder.class);
-   }
+public class BuildApplication extends Application {
+    /** @see javax.ws.rs.core.Application#getClasses() */
+    @Override
+    public Set<Class<?>> getClasses() {
+        return Collections.<Class<?>>singleton(Builder.class);
+    }
 }

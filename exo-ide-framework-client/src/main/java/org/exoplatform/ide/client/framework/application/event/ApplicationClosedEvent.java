@@ -22,33 +22,23 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event is fired, when application window is closed.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Apr 5, 2012 11:18:13 AM anya $
- * 
  */
-public class ApplicationClosedEvent extends GwtEvent<ApplicationClosedHandler>
-{
-   /**
-    * Type, used to register event.
-    */
-   public static final GwtEvent.Type<ApplicationClosedHandler> TYPE = new GwtEvent.Type<ApplicationClosedHandler>();
+public class ApplicationClosedEvent extends GwtEvent<ApplicationClosedHandler> {
+    /** Type, used to register event. */
+    public static final GwtEvent.Type<ApplicationClosedHandler> TYPE = new GwtEvent.Type<ApplicationClosedHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ApplicationClosedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ApplicationClosedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ApplicationClosedHandler handler)
-   {
-      handler.onApplicationClosed(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ApplicationClosedHandler handler) {
+        handler.onApplicationClosed(this);
+    }
 }

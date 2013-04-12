@@ -34,70 +34,52 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 
 /**
  * View for show keyboard shortcuts.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: ShowHotKeysView.java May 10, 2012 11:28:21 AM azatsarynnyy $
- *
  */
 
-public class ShowHotKeysView extends ViewImpl implements ShowHotKeysPresenter.Display
-{
+public class ShowHotKeysView extends ViewImpl implements ShowHotKeysPresenter.Display {
 
-   /**
-    * View's identifier.
-    */
-   public static final String ID = "ideShowHotKeysView";
+    /** View's identifier. */
+    public static final String ID = "ideShowHotKeysView";
 
-   /**
-    * View's title.
-    */
-   private static final String TITLE = IDE.PREFERENCES_CONSTANT.showHotKeysTitle();
+    /** View's title. */
+    private static final String TITLE = IDE.PREFERENCES_CONSTANT.showHotKeysTitle();
 
-   /**
-    * Initial width of this view
-    */
-   private static final int WIDTH = 640;
+    /** Initial width of this view */
+    private static final int WIDTH = 640;
 
-   /**
-    * Initial height of this view
-    */
-   private static final int HEIGHT = 300;
+    /** Initial height of this view */
+    private static final int HEIGHT = 300;
 
-   private static ShowHotKeysViewUiBinder uiBinder = GWT.create(ShowHotKeysViewUiBinder.class);
+    private static ShowHotKeysViewUiBinder uiBinder = GWT.create(ShowHotKeysViewUiBinder.class);
 
-   interface ShowHotKeysViewUiBinder extends UiBinder<Widget, ShowHotKeysView>
-   {
-   }
+    interface ShowHotKeysViewUiBinder extends UiBinder<Widget, ShowHotKeysView> {
+    }
 
-   @UiField
-   ImageButton closeButton;
+    @UiField
+    ImageButton closeButton;
 
-   @UiField
-   HotKeyItemListGrid hotKeyItemListGrid;
+    @UiField
+    HotKeyItemListGrid hotKeyItemListGrid;
 
-   public ShowHotKeysView()
-   {
-      super(ID, ViewType.POPUP, TITLE, new Image(IDEImageBundle.INSTANCE.showHotKeys()), WIDTH, HEIGHT);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
-   }
+    public ShowHotKeysView() {
+        super(ID, ViewType.POPUP, TITLE, new Image(IDEImageBundle.INSTANCE.showHotKeys()), WIDTH, HEIGHT);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.hotkeys.show.ShowHotKeysPresenter.Display#getCloseButton()
-    */
-   @Override
-   public HasClickHandlers getCloseButton()
-   {
-      return closeButton;
-   }
+    /** @see org.exoplatform.ide.client.hotkeys.show.ShowHotKeysPresenter.Display#getCloseButton() */
+    @Override
+    public HasClickHandlers getCloseButton() {
+        return closeButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.hotkeys.show.ShowHotKeysPresenter.Display#getHotKeyItemListGrid()
-    */
-   @Override
-   public ListGridItem<HotKeyItem> getHotKeyItemListGrid()
-   {
-      return hotKeyItemListGrid;
-   }
+    /** @see org.exoplatform.ide.client.hotkeys.show.ShowHotKeysPresenter.Display#getHotKeyItemListGrid() */
+    @Override
+    public ListGridItem<HotKeyItem> getHotKeyItemListGrid() {
+        return hotKeyItemListGrid;
+    }
 
 }

@@ -22,15 +22,11 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link LaunchEnvironmentEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 21, 2012 2:57:49 PM anya $
- * 
  */
-public interface LaunchEnvironmentHandler extends EventHandler
-{
-   /**
-    * @param event
-    */
-   void onLaunchEnvironment(LaunchEnvironmentEvent event);
+public interface LaunchEnvironmentHandler extends EventHandler {
+    /** @param event */
+    void onLaunchEnvironment(LaunchEnvironmentEvent event);
 }

@@ -19,28 +19,23 @@ import com.codenvy.eclipse.jdt.internal.corext.refactoring.RefactoringCoreMessag
 import com.codenvy.eclipse.jdt.internal.corext.refactoring.base.JavaStatusContext;
 import com.codenvy.eclipse.ltk.core.refactoring.RefactoringStatus;
 
-public class CodeAnalyzer extends StatementAnalyzer
-{
+public class CodeAnalyzer extends StatementAnalyzer {
 
-   public CodeAnalyzer(ICompilationUnit cunit, Selection selection, boolean traverseSelectedNode) throws CoreException
-   {
-      super(cunit, selection, traverseSelectedNode);
-   }
+    public CodeAnalyzer(ICompilationUnit cunit, Selection selection, boolean traverseSelectedNode) throws CoreException {
+        super(cunit, selection, traverseSelectedNode);
+    }
 
-   @Override
-   protected final void checkSelectedNodes()
-   {
-      super.checkSelectedNodes();
-      RefactoringStatus status = getStatus();
-      if (status.hasFatalError())
-      {
-         return;
-      }
-      ASTNode node = getFirstSelectedNode();
-      if (node instanceof ArrayInitializer)
-      {
-         status.addFatalError(RefactoringCoreMessages.CodeAnalyzer_array_initializer,
-            JavaStatusContext.create(fCUnit, node));
-      }
-   }
+    @Override
+    protected final void checkSelectedNodes() {
+        super.checkSelectedNodes();
+        RefactoringStatus status = getStatus();
+        if (status.hasFatalError()) {
+            return;
+        }
+        ASTNode node = getFirstSelectedNode();
+        if (node instanceof ArrayInitializer) {
+            status.addFatalError(RefactoringCoreMessages.CodeAnalyzer_array_initializer,
+                                 JavaStatusContext.create(fCUnit, node));
+        }
+    }
 }

@@ -19,40 +19,33 @@ import com.codenvy.eclipse.jdt.core.IPackageFragmentRoot;
 import java.util.Arrays;
 import java.util.List;
 
-class ArrayTypeConverter
-{
+class ArrayTypeConverter {
 
-   private ArrayTypeConverter()
-   {
-   }
+    private ArrayTypeConverter() {
+    }
 
-   static IFile[] toFileArray(Object[] objects)
-   {
-      List<?> l = Arrays.asList(objects);
-      return l.toArray(new IFile[l.size()]);
-   }
+    static IFile[] toFileArray(Object[] objects) {
+        List<?> l = Arrays.asList(objects);
+        return l.toArray(new IFile[l.size()]);
+    }
 
-   static IFolder[] toFolderArray(Object[] objects)
-   {
-      List<?> l = Arrays.asList(objects);
-      return l.toArray(new IFolder[l.size()]);
-   }
+    static IFolder[] toFolderArray(Object[] objects) {
+        List<?> l = Arrays.asList(objects);
+        return l.toArray(new IFolder[l.size()]);
+    }
 
-   static ICompilationUnit[] toCuArray(Object[] objects)
-   {
-      List<?> l = Arrays.asList(objects);
-      return l.toArray(new ICompilationUnit[l.size()]);
-   }
+    static ICompilationUnit[] toCuArray(Object[] objects) {
+        List<?> l = Arrays.asList(objects);
+        return l.toArray(new ICompilationUnit[l.size()]);
+    }
 
-   static IPackageFragmentRoot[] toPackageFragmentRootArray(Object[] objects)
-   {
-      List<?> l = Arrays.asList(objects);
-      return l.toArray(new IPackageFragmentRoot[l.size()]);
-   }
+    static IPackageFragmentRoot[] toPackageFragmentRootArray(Object[] objects) {
+        List<?> l = Arrays.asList(objects);
+        return l.toArray(new IPackageFragmentRoot[l.size()]);
+    }
 
-   static IPackageFragment[] toPackageArray(Object[] objects)
-   {
-      List<?> l = Arrays.asList(objects);
-      return l.toArray(new IPackageFragment[l.size()]);
-   }
+    static IPackageFragment[] toPackageArray(Object[] objects) {
+        List<?> l = Arrays.asList(objects);
+        return l.toArray(new IPackageFragment[l.size()]);
+    }
 }

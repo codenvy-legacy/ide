@@ -36,117 +36,108 @@ import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
  *
  * @since 3.1
  */
-public abstract class AbstractSerialVersionOperation extends CompilationUnitRewriteOperation
-{
+public abstract class AbstractSerialVersionOperation extends CompilationUnitRewriteOperation {
 
-   /** The long literal suffix */
-   protected static final String LONG_SUFFIX = "L"; //$NON-NLS-1$
+    /** The long literal suffix */
+    protected static final String LONG_SUFFIX = "L"; //$NON-NLS-1$
 
-   /** The default serial value */
-   public static final long SERIAL_VALUE = 1;
+    /** The default serial value */
+    public static final long SERIAL_VALUE = 1;
 
-   /** The default serial id expression */
-   protected static final String DEFAULT_EXPRESSION = SERIAL_VALUE + LONG_SUFFIX;
+    /** The default serial id expression */
+    protected static final String DEFAULT_EXPRESSION = SERIAL_VALUE + LONG_SUFFIX;
 
-   /** The name of the serial version field */
-   protected static final String NAME_FIELD = "serialVersionUID"; //$NON-NLS-1$
+    /** The name of the serial version field */
+    protected static final String NAME_FIELD = "serialVersionUID"; //$NON-NLS-1$
 
-   /** The originally selected node */
-   private final ASTNode[] fNodes;
+    /** The originally selected node */
+    private final ASTNode[] fNodes;
 
-   protected AbstractSerialVersionOperation(final ASTNode[] node)
-   {
-      fNodes = node;
-   }
+    protected AbstractSerialVersionOperation(final ASTNode[] node) {
+        fNodes = node;
+    }
 
-   /**
-    * Adds an initializer to the specified variable declaration fragment.
-    * 
-    * @param fragment the variable declaration fragment to add an initializer
-    * @param declarationNode the declartion node
-    * @return false if no id could be calculated
-    */
-   protected abstract boolean addInitializer(final VariableDeclarationFragment fragment, final ASTNode declarationNode);
+    /**
+     * Adds an initializer to the specified variable declaration fragment.
+     *
+     * @param fragment
+     *         the variable declaration fragment to add an initializer
+     * @param declarationNode
+     *         the declartion node
+     * @return false if no id could be calculated
+     */
+    protected abstract boolean addInitializer(final VariableDeclarationFragment fragment, final ASTNode declarationNode);
 
-   //   /**
-   //    * Adds the necessary linked positions for the specified fragment.
-   //    *
-   //    * @param rewrite the ast rewrite to operate on
-   //    * @param fragment the fragment to add linked positions to
-   //    * @param positionGroups the list of {@link LinkedProposalPositionGroup}s
-   //    */
-   //   protected abstract void addLinkedPositions(final ASTRewrite rewrite, final VariableDeclarationFragment fragment,
-   //      final LinkedProposalModel positionGroups);
+    //   /**
+    //    * Adds the necessary linked positions for the specified fragment.
+    //    *
+    //    * @param rewrite the ast rewrite to operate on
+    //    * @param fragment the fragment to add linked positions to
+    //    * @param positionGroups the list of {@link LinkedProposalPositionGroup}s
+    //    */
+    //   protected abstract void addLinkedPositions(final ASTRewrite rewrite, final VariableDeclarationFragment fragment,
+    //      final LinkedProposalModel positionGroups);
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void rewriteAST(CompilationUnitRewrite cuRewrite) throws CoreException
-   {
-      final ASTRewrite rewrite = cuRewrite.getASTRewrite();
-      VariableDeclarationFragment fragment = null;
-      for (int i = 0; i < fNodes.length; i++)
-      {
-         final ASTNode node = fNodes[i];
+    /** {@inheritDoc} */
+    @Override
+    public void rewriteAST(CompilationUnitRewrite cuRewrite) throws CoreException {
+        final ASTRewrite rewrite = cuRewrite.getASTRewrite();
+        VariableDeclarationFragment fragment = null;
+        for (int i = 0; i < fNodes.length; i++) {
+            final ASTNode node = fNodes[i];
 
-         final AST ast = node.getAST();
+            final AST ast = node.getAST();
 
-         fragment = ast.newVariableDeclarationFragment();
-         fragment.setName(ast.newSimpleName(NAME_FIELD));
+            fragment = ast.newVariableDeclarationFragment();
+            fragment.setName(ast.newSimpleName(NAME_FIELD));
 
-         final FieldDeclaration declaration = ast.newFieldDeclaration(fragment);
-         declaration.setType(ast.newPrimitiveType(PrimitiveType.LONG));
-         declaration.modifiers().addAll(
-            ASTNodeFactory.newModifiers(ast, Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL));
+            final FieldDeclaration declaration = ast.newFieldDeclaration(fragment);
+            declaration.setType(ast.newPrimitiveType(PrimitiveType.LONG));
+            declaration.modifiers().addAll(
+                    ASTNodeFactory.newModifiers(ast, Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL));
 
-         if (!addInitializer(fragment, node))
-            continue;
+            if (!addInitializer(fragment, node))
+                continue;
 
-         if (fragment.getInitializer() != null)
-         {
+            if (fragment.getInitializer() != null) {
 
-            final TextEditGroup editGroup =
-               createTextEditGroup(FixMessages.INSTANCE.SerialVersion_group_description(), cuRewrite);
-            if (node instanceof AbstractTypeDeclaration)
-               rewrite.getListRewrite(node, ((AbstractTypeDeclaration)node).getBodyDeclarationsProperty()).insertAt(
-                  declaration, 0, editGroup);
-            else if (node instanceof AnonymousClassDeclaration)
-               rewrite.getListRewrite(node, AnonymousClassDeclaration.BODY_DECLARATIONS_PROPERTY).insertAt(declaration,
-                  0, editGroup);
-            else if (node instanceof ParameterizedType)
-            {
-               final ParameterizedType type = (ParameterizedType)node;
-               final ASTNode parent = type.getParent();
-               if (parent instanceof ClassInstanceCreation)
-               {
-                  final ClassInstanceCreation creation = (ClassInstanceCreation)parent;
-                  final AnonymousClassDeclaration anonymous = creation.getAnonymousClassDeclaration();
-                  if (anonymous != null)
-                     rewrite.getListRewrite(anonymous, AnonymousClassDeclaration.BODY_DECLARATIONS_PROPERTY).insertAt(
-                        declaration, 0, editGroup);
-               }
+                final TextEditGroup editGroup =
+                        createTextEditGroup(FixMessages.INSTANCE.SerialVersion_group_description(), cuRewrite);
+                if (node instanceof AbstractTypeDeclaration)
+                    rewrite.getListRewrite(node, ((AbstractTypeDeclaration)node).getBodyDeclarationsProperty()).insertAt(
+                            declaration, 0, editGroup);
+                else if (node instanceof AnonymousClassDeclaration)
+                    rewrite.getListRewrite(node, AnonymousClassDeclaration.BODY_DECLARATIONS_PROPERTY).insertAt(declaration,
+                                                                                                                0, editGroup);
+                else if (node instanceof ParameterizedType) {
+                    final ParameterizedType type = (ParameterizedType)node;
+                    final ASTNode parent = type.getParent();
+                    if (parent instanceof ClassInstanceCreation) {
+                        final ClassInstanceCreation creation = (ClassInstanceCreation)parent;
+                        final AnonymousClassDeclaration anonymous = creation.getAnonymousClassDeclaration();
+                        if (anonymous != null)
+                            rewrite.getListRewrite(anonymous, AnonymousClassDeclaration.BODY_DECLARATIONS_PROPERTY).insertAt(
+                                    declaration, 0, editGroup);
+                    }
+                } else
+                    Assert.isTrue(false);
+
+                //            addLinkedPositions(rewrite, fragment, positionGroups);
             }
-            else
-               Assert.isTrue(false);
 
-            //            addLinkedPositions(rewrite, fragment, positionGroups);
-         }
+            final String comment =
+                    StubUtility.getFieldComment(declaration.getType().toString(), NAME_FIELD, String.valueOf('\n'));
+            //            CodeGeneration.getFieldComment(fUnit, declaration.getType().toString(), NAME_FIELD,
+            //               StubUtility.getLineDelimiterUsed(fUnit));
+            if (comment != null && comment.length() > 0) {
+                final Javadoc doc = (Javadoc)rewrite.createStringPlaceholder(comment, ASTNode.JAVADOC);
+                declaration.setJavadoc(doc);
+            }
+        }
+        //      if (fragment == null)
+        //         return;
 
-         final String comment =
-            StubUtility.getFieldComment(declaration.getType().toString(), NAME_FIELD, String.valueOf('\n'));
-         //            CodeGeneration.getFieldComment(fUnit, declaration.getType().toString(), NAME_FIELD,
-         //               StubUtility.getLineDelimiterUsed(fUnit));
-         if (comment != null && comment.length() > 0)
-         {
-            final Javadoc doc = (Javadoc)rewrite.createStringPlaceholder(comment, ASTNode.JAVADOC);
-            declaration.setJavadoc(doc);
-         }
-      }
-      //      if (fragment == null)
-      //         return;
-
-      //      positionGroups.setEndPosition(rewrite.track(fragment));
-   }
+        //      positionGroups.setEndPosition(rewrite.track(fragment));
+    }
 
 }

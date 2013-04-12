@@ -11,68 +11,68 @@
 	http://www.fsf.org. -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
-	xmlns:w="urn:import:com.google.gwt.widget.client">
+             xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
+        >
 
-	<ui:with type="org.exoplatform.ide.client.IDEImageBundle"
-		field="res"></ui:with>
-	<ui:style>
-		.center {
-			margin-left: auto;
-			margin-right: auto;
-		}
-		
-		.floatLeft {
-			float: left;
-		}
-		
-		.labelH {
-			margin-right: 5px;
-			font-size: 11px;
-			font-family: Verdana, Bitstream Vera Sans, sans-serif;
-			float: left;
-		}
-	</ui:style>
+    <ui:with type="org.exoplatform.ide.client.IDEImageBundle"
+             field="res"></ui:with>
+    <ui:style>
+        .center {
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-	<c:Border margin="15" borderColor="transparent">
-      <c:layer top="0" height="84px">
-			<g:VerticalPanel ui:field="verticalPanel" width="490px" height="84px" />
-		</c:layer>
+        .floatLeft {
+            float: left;
+        }
 
-		<c:layer top="98" height="60px">
-			<g:FlowPanel width="80%" styleName="{style.center}">
-				<g:FlowPanel width="100%" height="28px">
-					<g:Label text="User ID:" addStyleNames="{style.labelH}"
-						width="20%"></g:Label>
-					<c:TextInput ui:field="loginField" width="77%" height="22px"
-						addStyleNames="{style.floatLeft}"></c:TextInput>
-				</g:FlowPanel>
-				<g:FlowPanel width="100%" height="28px">
-					<g:Label text="Password:" addStyleNames="{style.labelH}"
-						width="20%"></g:Label>
-					<c:PasswordTextInput ui:field="passwordField"
-						width="77%" height="22px" addStyleNames="{style.floatLeft}"></c:PasswordTextInput>
-				</g:FlowPanel>
-			</g:FlowPanel>
-		</c:layer>
+        .labelH {
+            margin-right: 5px;
+            font-size: 11px;
+            font-family: Verdana, Bitstream Vera Sans, sans-serif;
+            float: left;
+        }
+    </ui:style>
 
-		<c:layer height="120px" top="150">
-			<g:VerticalPanel width="100%" styleName="{style.center}"
-				verticalAlignment="ALIGN_MIDDLE" horizontalAlignment="ALIGN_CENTER"
-				spacing="5">
-				<g:HorizontalPanel spacing="5" verticalAlignment="ALIGN_MIDDLE">
-					<c:ImageButton ui:field="loginButton" width="90px"
-						buttonId="ideLoginViewLoginButton" text="Login" imageName="ok"/>
-					<g:Label text="or"></g:Label>
-					<c:ImageButton ui:field="loginGoogleButton" width="160px"
-						buttonId="ideLoginViewLoginGoogleButton" text="Use Google Account"/>
-					<c:ImageButton ui:field="loginGitHubButton" width="160px"
-						buttonId="ideLoginViewLoginGoogleButton" text="Use GitHub Account"/>	
-				</g:HorizontalPanel>
-				<c:ImageButton ui:field="cancelButton" text="Cancel"
-					width="90px" buttonId="ideLoginViewCancelButton" imageName="cancel" />
-			</g:VerticalPanel>
-		</c:layer>
-	</c:Border>
+    <c:Border margin="15" borderColor="transparent">
+        <c:layer top="0" height="84px">
+            <g:VerticalPanel ui:field="verticalPanel" width="490px" height="84px"/>
+        </c:layer>
+
+        <c:layer top="98" height="60px">
+            <g:FlowPanel width="80%" styleName="{style.center}">
+                <g:FlowPanel width="100%" height="28px">
+                    <g:Label text="User ID:" addStyleNames="{style.labelH}"
+                             width="20%"></g:Label>
+                    <c:TextInput ui:field="loginField" width="77%" height="22px"
+                                 addStyleNames="{style.floatLeft}"></c:TextInput>
+                </g:FlowPanel>
+                <g:FlowPanel width="100%" height="28px">
+                    <g:Label text="Password:" addStyleNames="{style.labelH}"
+                             width="20%"></g:Label>
+                    <c:PasswordTextInput ui:field="passwordField"
+                                         width="77%" height="22px" addStyleNames="{style.floatLeft}"></c:PasswordTextInput>
+                </g:FlowPanel>
+            </g:FlowPanel>
+        </c:layer>
+
+        <c:layer height="120px" top="150">
+            <g:VerticalPanel width="100%" styleName="{style.center}"
+                             verticalAlignment="ALIGN_MIDDLE" horizontalAlignment="ALIGN_CENTER"
+                             spacing="5">
+                <g:HorizontalPanel spacing="5" verticalAlignment="ALIGN_MIDDLE">
+                    <c:ImageButton ui:field="loginButton" width="90px"
+                                   buttonId="ideLoginViewLoginButton" text="Login" imageName="ok"/>
+                    <g:Label text="or"></g:Label>
+                    <c:ImageButton ui:field="loginGoogleButton" width="160px"
+                                   buttonId="ideLoginViewLoginGoogleButton" text="Use Google Account"/>
+                    <c:ImageButton ui:field="loginGitHubButton" width="160px"
+                                   buttonId="ideLoginViewLoginGoogleButton" text="Use GitHub Account"/>
+                </g:HorizontalPanel>
+                <c:ImageButton ui:field="cancelButton" text="Cancel"
+                               width="90px" buttonId="ideLoginViewCancelButton" imageName="cancel"/>
+            </g:VerticalPanel>
+        </c:layer>
+    </c:Border>
 
 </ui:UiBinder>

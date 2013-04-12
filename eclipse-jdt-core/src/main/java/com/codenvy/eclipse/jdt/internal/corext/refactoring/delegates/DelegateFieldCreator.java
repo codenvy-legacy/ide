@@ -32,97 +32,82 @@ import com.codenvy.eclipse.jdt.internal.corext.refactoring.RefactoringCoreMessag
  *
  * @since 3.2
  */
-public class DelegateFieldCreator extends DelegateCreator
-{
+public class DelegateFieldCreator extends DelegateCreator {
 
-   private VariableDeclarationFragment fOldFieldFragment;
+    private VariableDeclarationFragment fOldFieldFragment;
 
-   @Override
-   protected void initialize()
-   {
+    @Override
+    protected void initialize() {
 
-      Assert.isTrue(getDeclaration() instanceof FieldDeclaration);
-      Assert.isTrue(((FieldDeclaration)getDeclaration()).fragments().size() == 1);
+        Assert.isTrue(getDeclaration() instanceof FieldDeclaration);
+        Assert.isTrue(((FieldDeclaration)getDeclaration()).fragments().size() == 1);
 
-      fOldFieldFragment = (VariableDeclarationFragment)((FieldDeclaration)getDeclaration()).fragments().get(0);
-      if (getNewElementName() == null)
-      {
-         setNewElementName(fOldFieldFragment.getName().getIdentifier());
-      }
+        fOldFieldFragment = (VariableDeclarationFragment)((FieldDeclaration)getDeclaration()).fragments().get(0);
+        if (getNewElementName() == null) {
+            setNewElementName(fOldFieldFragment.getName().getIdentifier());
+        }
 
-      setInsertBefore(
-         false); // delegate must be inserted after the original field that is referenced in the initializer
-   }
+        setInsertBefore(
+                false); // delegate must be inserted after the original field that is referenced in the initializer
+    }
 
-   @Override
-   protected ASTNode createBody(BodyDeclaration fd) throws JavaModelException
-   {
-      FieldDeclaration result = (FieldDeclaration)fd;
-      Expression initializer = createDelegateFieldInitializer(result);
-      return initializer;
-   }
+    @Override
+    protected ASTNode createBody(BodyDeclaration fd) throws JavaModelException {
+        FieldDeclaration result = (FieldDeclaration)fd;
+        Expression initializer = createDelegateFieldInitializer(result);
+        return initializer;
+    }
 
-   @Override
-   protected ASTNode createDocReference(BodyDeclaration declaration)
-   {
-      MemberRef ref = getAst().newMemberRef();
-      ref.setName(getAst().newSimpleName(getNewElementName()));
+    @Override
+    protected ASTNode createDocReference(BodyDeclaration declaration) {
+        MemberRef ref = getAst().newMemberRef();
+        ref.setName(getAst().newSimpleName(getNewElementName()));
 
-      if (isMoveToAnotherFile())
-      {
-         ref.setQualifier(createDestinationTypeName());
-      }
-      return ref;
-   }
+        if (isMoveToAnotherFile()) {
+            ref.setQualifier(createDestinationTypeName());
+        }
+        return ref;
+    }
 
-   @Override
-   protected ASTNode getBodyHead(BodyDeclaration result)
-   {
-      return fOldFieldFragment;
-   }
+    @Override
+    protected ASTNode getBodyHead(BodyDeclaration result) {
+        return fOldFieldFragment;
+    }
 
-   @Override
-   protected ChildPropertyDescriptor getJavaDocProperty()
-   {
-      return FieldDeclaration.JAVADOC_PROPERTY;
-   }
+    @Override
+    protected ChildPropertyDescriptor getJavaDocProperty() {
+        return FieldDeclaration.JAVADOC_PROPERTY;
+    }
 
-   @Override
-   protected ChildPropertyDescriptor getBodyProperty()
-   {
-      return VariableDeclarationFragment.INITIALIZER_PROPERTY;
-   }
+    @Override
+    protected ChildPropertyDescriptor getBodyProperty() {
+        return VariableDeclarationFragment.INITIALIZER_PROPERTY;
+    }
 
-   @Override
-   protected IBinding getDeclarationBinding()
-   {
-      return fOldFieldFragment.resolveBinding();
-   }
+    @Override
+    protected IBinding getDeclarationBinding() {
+        return fOldFieldFragment.resolveBinding();
+    }
 
-   @Override
-   protected String getTextEditGroupLabel()
-   {
-      return RefactoringCoreMessages.DelegateFieldCreator_text_edit_group_label;
-   }
+    @Override
+    protected String getTextEditGroupLabel() {
+        return RefactoringCoreMessages.DelegateFieldCreator_text_edit_group_label;
+    }
 
-   // ******************* INTERNAL HELPERS ***************************
+    // ******************* INTERNAL HELPERS ***************************
 
-   private Expression createDelegateFieldInitializer(final FieldDeclaration declaration) throws JavaModelException
-   {
-      Assert.isNotNull(declaration);
+    private Expression createDelegateFieldInitializer(final FieldDeclaration declaration) throws JavaModelException {
+        Assert.isNotNull(declaration);
 
-      Expression qualification = getAccess();
-      if (qualification != null)
-      {
-         FieldAccess access = getAst().newFieldAccess();
-         access.setExpression(qualification);
-         access.setName(getAst().newSimpleName(getNewElementName()));
-         return access;
-      }
-      else
-      {
-         SimpleName access = getAst().newSimpleName(getNewElementName());
-         return access;
-      }
-   }
+        Expression qualification = getAccess();
+        if (qualification != null) {
+            FieldAccess access = getAst().newFieldAccess();
+            access.setExpression(qualification);
+            access.setName(getAst().newSimpleName(getNewElementName()));
+            return access;
+        } else {
+            SimpleName access = getAst().newSimpleName(getNewElementName());
+            return access;
+        }
+    }
 }

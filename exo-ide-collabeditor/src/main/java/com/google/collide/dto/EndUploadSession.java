@@ -17,17 +17,12 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Signals the end of an upload session.
- *
- */
+/** Signals the end of an upload session. */
 @RoutingType(type = RoutingTypes.ENDUPLOADSESSION)
 public interface EndUploadSession extends ClientToServerDto {
 
-  /**
-   * Returns the unique global ID for this upload session.
-   */
-  String getSessionId();
+    /** Returns the unique global ID for this upload session. */
+    String getSessionId();
 
-  String getWorkspaceId();
+    String getWorkspaceId();
 }

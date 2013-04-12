@@ -26,24 +26,23 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface ItemList<T extends Item>
-{
-   /** @return set of items */
-   List<T> getItems();
+public interface ItemList<T extends Item> {
+    /** @return set of items */
+    List<T> getItems();
 
-   void setItems(List<T> list);
+    void setItems(List<T> list);
 
-   /**
-    * @return total number of items. It is not need to be equals to number of items in current list {@link #getItems()}.
-    *         It may be equals to number of items in current list only if this list contains all requested items and no
-    *         more pages available. This method must return -1 if total number of items in unknown.
-    */
-   int getNumItems();
+    /**
+     * @return total number of items. It is not need to be equals to number of items in current list {@link #getItems()}.
+     *         It may be equals to number of items in current list only if this list contains all requested items and no
+     *         more pages available. This method must return -1 if total number of items in unknown.
+     */
+    int getNumItems();
 
-   void setNumItems(int numItems);
+    void setNumItems(int numItems);
 
-   /** @return <code>false</code> if this is last sub-set of items in paging */
-   boolean isHasMoreItems();
+    /** @return <code>false</code> if this is last sub-set of items in paging */
+    boolean isHasMoreItems();
 
-   void setHasMoreItems(boolean hasMoreItems);
+    void setHasMoreItems(boolean hasMoreItems);
 }

@@ -23,9 +23,7 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 21, 2012 11:45:32 AM anya $
- * 
  */
-public interface VersionCreatedHandler
-{
-   void onVersionCreate(ApplicationVersionInfo version);
+public interface VersionCreatedHandler {
+    void onVersionCreate(ApplicationVersionInfo version);
 }

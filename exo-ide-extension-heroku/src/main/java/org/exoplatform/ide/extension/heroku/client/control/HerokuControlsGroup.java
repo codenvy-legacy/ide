@@ -24,43 +24,31 @@ import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
 
 /**
  * Control for grouping all Heroku controls.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 31, 2011 3:32:33 PM anya $
- * 
  */
-public class HerokuControlsGroup extends SimpleControl implements IDEControl
-{
-   /**
-    * Control ID.
-    */
-   public static final String ID = "PaaS/Heroku";
+public class HerokuControlsGroup extends SimpleControl implements IDEControl {
+    /** Control ID. */
+    public static final String ID = "PaaS/Heroku";
 
-   /**
-    * Control's title.
-    */
-   public static final String TITLE = "Heroku";
+    /** Control's title. */
+    public static final String TITLE = "Heroku";
 
-   /**
-    * Control's prompt, when user hovers the mouse on it.
-    */
-   public static final String PROMPT = "Heroku";
+    /** Control's prompt, when user hovers the mouse on it. */
+    public static final String PROMPT = "Heroku";
 
-   public HerokuControlsGroup()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(HerokuClientBundle.INSTANCE.heroku(), HerokuClientBundle.INSTANCE.herokuDisabled());
-   }
+    public HerokuControlsGroup() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(HerokuClientBundle.INSTANCE.heroku(), HerokuClientBundle.INSTANCE.herokuDisabled());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(true);
+        setEnabled(true);
+    }
 }

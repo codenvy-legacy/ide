@@ -24,18 +24,17 @@
                xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
+
   <component>
       <key>org.exoplatform.ide.invite.InviteUserService</key>
       <type>org.exoplatform.ide.invite.IdeInviteUserService</type>
    </component>
 
-   <!--
-   ***************************************************************************************
-   ********************** Codenvy Commons Components *************************************
-   ***************************************************************************************
-   -->
-   <!-- IDE commons -->
-
+<!-- 
+***************************************************************************************
+********************** eXo IDE Commons Components *************************************
+***************************************************************************************
+-->
    <component>
       <type>org.exoplatform.ide.IDEServiceApplication</type>
       <init-params>
@@ -76,7 +75,7 @@
       <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
    </component>
 
-   <component>
+   <!--component>
       <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemInitializer</type>
       <init-params>
          <values-param>
@@ -85,9 +84,23 @@
             <value>production</value>
          </values-param>
       </init-params>
-   </component>
+   </component-->
 
-   <component>
+  <component>
+     <type>org.exoplatform.ide.vfs.impl.fs.LocalFileSystemInitializer</type>
+     <init-params>
+        <values-param>
+           <name>ids</name>
+           <value>dev-monit</value>
+        </values-param>
+     </init-params>
+  </component>
+   
+  <component>
+     <type>org.exoplatform.ide.vfs.impl.fs.EnvironmentContextLocalFSMountStrategy</type>
+  </component>
+
+  <component>
       <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
    </component>
 
@@ -100,14 +113,10 @@
    <!-- End VirtualFileSystem -->
 
    <!-- LogReader -->
-   <component>
-      <type>org.exoplatform.logreader.LogReaderServiceApplication</type>
-   </component>
-
-   <component>
-      <key>org.exoplatform.logreader.LogPathProvider</key>
-      <type>org.exoplatform.logreader.SystemLogPathProvider</type>
-   </component>
+    <component>
+        <key>com.codenvy.logreader.LogPathProvider</key>
+        <type>com.codenvy.logreader.SystemLogPathProvider</type>
+    </component>
    <!-- End LogReader -->
 
    <!-- SSH Keys -->
@@ -144,66 +153,6 @@
    ***************************************************************************************
    -->
 
-   <!-- Groovy Support -->
-   <component>
-      <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyCompiler</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyClassLoaderProvider</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyCompiler</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyClassLoaderProvider</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.groovy.server.GroovyCodeAssistant</type>
-   </component>
-
-   <!-- End Groovy Support -->
-
-   <!-- Chromattic Support -->
-   <component>
-      <type>org.chromattic.dataobject.DataObjectService</type>
-   </component>
-
-   <component>
-      <type>org.chromattic.dataobject.runtime.ChromatticSessionProvider</type>
-      <init-params>
-         <value-param>
-            <name>rootNodePath</name>
-            <value>/data/</value>
-         </value-param>
-         <value-param>
-            <name>workspaceName</name>
-            <value>production</value>
-         </value-param>
-         <value-param>
-            <name>rootNodeType</name>
-            <value>nt:unstructured</value>
-         </value-param>
-      </init-params>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.chromattic.server.ChromatticServiceApplication</type>
-   </component>
-
-   <!-- End Chromattic Support -->
-
    <!--  Java  Support-->
    <component>
       <type>org.exoplatform.ide.extension.java.server.JavaServiceApplication</type>
@@ -222,7 +171,7 @@
       <init-params>
          <value-param>
             <name>codeassistant-storage-base-url</name>
-            <value>http://localhost:8080/codeassistant-storage </value>
+            <value>http://localhost:8080/codeassistant-storage</value>
          </value-param>
       </init-params>
    </component>
@@ -250,7 +199,7 @@
    <!-- Google Gadgets support-->
 
    <!--component>
-      <type>org.exoplatform.ide.extension.gadget.server.rest.GadgetExtenshionApplication</type>
+      <type>org.exoplatform.ide.extension.gadget.server.rest.GadgetExtensionApplication</type>
    </component-->
 
    <!-- End Google Gadgets support-->
@@ -362,6 +311,7 @@
          </value-param>
       </init-params>
    </component>
+
    <!-- End Cloudbees -->
 
    <!-- CloudFoundry -->
@@ -378,26 +328,50 @@
       <type>org.exoplatform.ide.extension.cloudfoundry.server.rest.CloudfoundryServiceApplication</type>
    </component>
 
+   
    <component>
-      <type>org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryPool</type>
-      <init-params>
-         <object-param>
-            <name>CF1</name>
-            <object type="org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryServerConfiguration">
-               <field name="target">
-                  <string>http://api.cfet.exoplatform.org</string>
-               </field>
-               <field name="user">
-                  <string>support@cloud-ide.com</string>
-               </field>
-               <field name="password">
-                  <string>eXoAdmin12321</string>
-               </field>
-            </object>
-         </object-param>
-      </init-params>
-   </component>
 
+<type>org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryPool</type>
+
+<init-params>
+
+<object-param>
+
+<name>CF0</name>
+
+<object type="org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryServerConfiguration">
+
+<field name="target">
+
+<string>http://api.javarun4.exoplatform.com</string>
+
+
+
+</field>
+
+<field name="user">
+
+<string>exoidedev@exoplatform.com</string>
+
+
+
+</field>
+
+<field name="password">
+
+<string>1234qwer</string>
+
+</field>
+
+</object>
+
+</object-param>
+
+
+
+</init-params>
+
+</component>
    <!-- End CloudFoundry -->
 
    <component>
@@ -406,12 +380,12 @@
 
    <component>
       <key>org.exoplatform.ide.vfs.server.LocalPathResolver</key>
-      <type>org.exoplatform.ide.vfs.impl.jcr.LocalPathResolverJcrImpl</type>
+      <type>org.exoplatform.ide.vfs.impl.fs.LocalPathResolverImpl</type>
    </component>
 
    <component>
       <key>org.exoplatform.ide.vfs.server.GitUrlResolver</key>
-      <type>org.exoplatform.ide.vfs.impl.jcr.GitUrlResolverJcrImpl</type>
+      <type>org.exoplatform.ide.vfs.impl.fs.GitUrlResolverFsImpl</type>
    </component>
 
    <!-- Heroku -->
@@ -458,14 +432,24 @@
 
    <!-- End OpenShift -->
 
+   <!-- Google AppEngine  -->
+   <component>
+      <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineClient</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineApplication</type>
+   </component>
+
+   <!-- End Google AppEngine  -->
 
    <!-- Amazon Web Services -->
 
    <component>
-		<type>org.exoplatform.ide.extension.aws.server.rest.AWSApplication</type>
-	</component>
-	
-	<component>
+      <type>org.exoplatform.ide.extension.aws.server.rest.AWSApplication</type>
+   </component>
+   
+   <component>
       <key>org.exoplatform.ide.extension.aws.server.AWSAuthenticator</key>
       <type>org.exoplatform.ide.extension.aws.server.AWSAuthenticatorImpl</type>
    </component>
@@ -492,6 +476,39 @@
    <!-- End EC2 -->
 
    <!-- End Amazon Web Services -->
+
+
+   <!--
+   ***************************************************************************************
+   ********************************* IDE Shell *******************************************
+   ***************************************************************************************
+   -->
+
+   <component>
+      <type>org.exoplatform.ide.shell.server.rest.ShellApplication</type>
+      <init-params>
+         <value-param>
+            <name>defaultEntryPoint</name>
+            <value>dev-monit</value>
+         </value-param>
+         <value-param>
+            <name>discoverable</name>
+            <value>true</value>
+         </value-param>
+         <value-param>
+            <name>workspace</name>
+            <value>production</value>
+         </value-param>
+         <value-param>
+            <name>user-config</name>
+            <value>/ide-home/users/</value>
+         </value-param>
+      </init-params>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.shell.server.CLIResourceFactory</type>
+   </component>
 
    <!-- Google AppEngine  -->
    <component>

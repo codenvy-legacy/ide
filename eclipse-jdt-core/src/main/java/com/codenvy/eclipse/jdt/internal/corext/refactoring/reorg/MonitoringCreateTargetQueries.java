@@ -15,64 +15,56 @@ package com.codenvy.eclipse.jdt.internal.corext.refactoring.reorg;
  *
  * @since 3.3
  */
-public final class MonitoringCreateTargetQueries implements ICreateTargetQueries
-{
+public final class MonitoringCreateTargetQueries implements ICreateTargetQueries {
 
-   private final ICreateTargetQueries fDelegate;
+    private final ICreateTargetQueries fDelegate;
 
-   private final CreateTargetExecutionLog fLog;
+    private final CreateTargetExecutionLog fLog;
 
-   /**
-    * Creates a new monitoring create target queries.
-    *
-    * @param delegate the delegate
-    * @param log      the creation log
-    */
-   public MonitoringCreateTargetQueries(ICreateTargetQueries delegate, CreateTargetExecutionLog log)
-   {
-      fDelegate = delegate;
-      fLog = log;
-   }
+    /**
+     * Creates a new monitoring create target queries.
+     *
+     * @param delegate
+     *         the delegate
+     * @param log
+     *         the creation log
+     */
+    public MonitoringCreateTargetQueries(ICreateTargetQueries delegate, CreateTargetExecutionLog log) {
+        fDelegate = delegate;
+        fLog = log;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public ICreateTargetQuery createNewPackageQuery()
-   {
-      return new ICreateTargetQuery()
-      {
+    /** {@inheritDoc} */
+    public ICreateTargetQuery createNewPackageQuery() {
+        return new ICreateTargetQuery() {
 
-         public Object getCreatedTarget(Object selection)
-         {
-            final Object target = fDelegate.createNewPackageQuery().getCreatedTarget(selection);
-            fLog.markAsCreated(selection, target);
-            return target;
-         }
+            public Object getCreatedTarget(Object selection) {
+                final Object target = fDelegate.createNewPackageQuery().getCreatedTarget(selection);
+                fLog.markAsCreated(selection, target);
+                return target;
+            }
 
-         public String getNewButtonLabel()
-         {
-            return fDelegate.createNewPackageQuery().getNewButtonLabel();
-         }
-      };
-   }
+            public String getNewButtonLabel() {
+                return fDelegate.createNewPackageQuery().getNewButtonLabel();
+            }
+        };
+    }
 
-   /**
-    * Returns the create target execution log.
-    *
-    * @return the create target execution log
-    */
-   public CreateTargetExecutionLog getCreateTargetExecutionLog()
-   {
-      return fLog;
-   }
+    /**
+     * Returns the create target execution log.
+     *
+     * @return the create target execution log
+     */
+    public CreateTargetExecutionLog getCreateTargetExecutionLog() {
+        return fLog;
+    }
 
-   /**
-    * Returns the delegate queries.
-    *
-    * @return the delegate queries
-    */
-   public ICreateTargetQueries getDelegate()
-   {
-      return fDelegate;
-   }
+    /**
+     * Returns the delegate queries.
+     *
+     * @return the delegate queries
+     */
+    public ICreateTargetQueries getDelegate() {
+        return fDelegate;
+    }
 }

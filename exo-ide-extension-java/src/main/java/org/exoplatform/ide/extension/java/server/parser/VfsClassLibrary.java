@@ -38,70 +38,54 @@ import java.util.List;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Nov 28, 2011 3:08:29 PM evgen $
- * 
  */
-public class VfsClassLibrary extends ClassLibrary
-{
+public class VfsClassLibrary extends ClassLibrary {
 
-   private VirtualFileSystem vfs;
+    private VirtualFileSystem vfs;
 
-   private List<Folder> sourceFolders = new ArrayList<Folder>();
+    private List<Folder> sourceFolders = new ArrayList<Folder>();
 
-   /** Logger. */
-   private static final Log LOG = ExoLogger.getLogger(VfsClassLibrary.class);
+    /** Logger. */
+    private static final Log LOG = ExoLogger.getLogger(VfsClassLibrary.class);
 
-   /**
-    * @param vfs
-    */
-   public VfsClassLibrary(VirtualFileSystem vfs)
-   {
-      this.vfs = vfs;
-   }
+    /** @param vfs */
+    public VfsClassLibrary(VirtualFileSystem vfs) {
+        this.vfs = vfs;
+    }
 
-   /**
-    * 
-    */
-   private static final long serialVersionUID = -4177400811232878566L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -4177400811232878566L;
 
-   public void addSourceFolder(Folder folder)
-   {
-      sourceFolders.add(folder);
-   }
+    public void addSourceFolder(Folder folder) {
+        sourceFolders.add(folder);
+    }
 
-   public InputStream getSourceFileContent(String className)
-   {
-      String mainClassName = className.split("\\$")[0];
-      String path = mainClassName.replace('.', '/') + ".java";
-      for (Folder f : sourceFolders)
-      {
+    public InputStream getSourceFileContent(String className) {
+        String mainClassName = className.split("\\$")[0];
+        String path = mainClassName.replace('.', '/') + ".java";
+        for (Folder f : sourceFolders) {
 
-         try
-         {
-            Item i = vfs.getItemByPath(f + "/" + path, null, PropertyFilter.NONE_FILTER);
-            if (i instanceof File)
-            {
-               return vfs.getContent(i.getId()).getStream();
+            try {
+                Item i = vfs.getItemByPath(f + "/" + path, null, PropertyFilter.NONE_FILTER);
+                if (i instanceof File) {
+                    return vfs.getContent(i.getId()).getStream();
+                }
+            } catch (ItemNotFoundException e) {
+                if (LOG.isDebugEnabled())
+                    LOG.debug(e);
+                continue;
+            } catch (PermissionDeniedException e) {
+                if (LOG.isWarnEnabled())
+                    LOG.warn(e);
+            } catch (VirtualFileSystemException e) {
+                if (LOG.isWarnEnabled())
+                    LOG.warn(e);
             }
-         }
-         catch (ItemNotFoundException e)
-         {
-            if (LOG.isDebugEnabled())
-               LOG.debug(e);
-            continue;
-         }
-         catch (PermissionDeniedException e)
-         {
-            if (LOG.isWarnEnabled())
-               LOG.warn(e);
-         }
-         catch (VirtualFileSystemException e)
-         {
-            if (LOG.isWarnEnabled())
-               LOG.warn(e);
-         }
 
-      }
-      return null;
-   }
+        }
+        return null;
+    }
 
 }

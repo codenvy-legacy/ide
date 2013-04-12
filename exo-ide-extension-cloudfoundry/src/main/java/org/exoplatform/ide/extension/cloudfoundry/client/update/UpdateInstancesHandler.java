@@ -22,18 +22,16 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link UpdateMemoryEvent} event.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: RestartApplicationHandler.java Jul 12, 2011 3:51:51 PM vereshchaka $
- *
  */
-public interface UpdateInstancesHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to restart application.
-    * 
-    * @param event
-    */
-   void onUpdateInstances(UpdateInstancesEvent event);
+public interface UpdateInstancesHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to restart application.
+     *
+     * @param event
+     */
+    void onUpdateInstances(UpdateInstancesEvent event);
 
 }

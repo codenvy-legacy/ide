@@ -27,274 +27,249 @@ import java.util.Map;
  * A super fast and memory efficient map (directly uses a js object as the map,
  * and requires only 1 object). Only allows int keys, thus taking advantage of
  * the "perfect hashing" of ints with respect to javascript.
- *
+ * <p/>
  * No one other than JsoIntMap should use this class.
  * TODO(danilatos): Move the clever logic into JsoIntMap and delete this file.
- *
+ * <p/>
  * NOTE(danilatos): Does not use hasOwnProperty semantics. So it's possible for
  * spurious entries to appear in the map if we're not careful. Easily fixable,
  * but would incur a slight performance hit (I'm now just handwaving).
- *
+ * <p/>
  * TODO(dan): Use a different version from the GWT team once it is available
  *
- * @param <T> Type of values in the map. Keys are always ints.
+ * @param <T>
+ *         Type of values in the map. Keys are always ints.
  * @author danilatos@google.com (Daniel Danilatos)
  */
-final class IntMapJsoView<T> extends JsoMapBase
-{
-   /**
-    * A function that accepts an accumulated value, a key and the corresponding
-    * item from the map and returns the new accumulated value.
-    *
-    * @param <E> int map's type parameter
-    * @param <R> The type of the value being accumulated
-    * @see IntMapJsoView#reduce(Object, IntMapJsoView.Reduce)
-    */
-   public interface Reduce<E, R>
-   {
-      /**
-       * The function
-       */
-      public R apply(R soFar, int key, E item);
-   }
+final class IntMapJsoView<T> extends JsoMapBase {
+    /**
+     * A function that accepts an accumulated value, a key and the corresponding
+     * item from the map and returns the new accumulated value.
+     *
+     * @param <E>
+     *         int map's type parameter
+     * @param <R>
+     *         The type of the value being accumulated
+     * @see IntMapJsoView#reduce(Object, IntMapJsoView.Reduce)
+     */
+    public interface Reduce<E, R> {
+        /** The function */
+        public R apply(R soFar, int key, E item);
+    }
 
-   /**
-    * Construct an empty IntMap
-    */
-   public static native <T> IntMapJsoView<T> create() /*-{
-      return {};
-   }-*/;
+    /** Construct an empty IntMap */
+    public static native <T> IntMapJsoView<T> create() /*-{
+        return {};
+    }-*/;
 
 
-   /**
-    * Represent a java script native function that change the integer key into index key.
-    * This is done because in chrome, it is 20 times faster to store string index than to store
-    * numeric index if the number is > 2^15.
-    *
-    * The following time are recorded under chrome linux  4.0.266.0
-    * The recorderd time are in ms.
-    *
-    * iterations  Numeric Index  String index Hybrid time
-    * 1024        1               2           0
-    * 2048        0               5           1
-    * 4096        1               14          1
-    * 8192        4               30          4
-    * 16384       8               63          9
-    * 32768       20              132         24
-    * 65536       266             264         148
-    * 131072      5551            513         404
-    * 262144      16719           1036        976
-    *
-    * for numeric index < 2^15, it is 6 times faster to use numeric index
-    * for string index > 2^15, it is 20 times faster to use string index
-    * hybrid approach represents what we are doing here, i.e. use numeric index for value < 2^15 and
-    * string index for value > 2^15
-    *
-    * DESPITE THIS RESULT, it is very bad to use numeric index at all.  Using the numeric index
-    * slows down the javascript engine.  We always uses String index in chrome.  So DO NOT change
-    * the code to do the hybrid approach.
-    *
-    * This function must be represented by JavaScriptObject and not normal java interfaces because
-    * it's return data of different type depends on the input value.
-    */
-   @SuppressWarnings("unused") // used in native method
-   private static JavaScriptObject prefixer;
+    /**
+     * Represent a java script native function that change the integer key into index key.
+     * This is done because in chrome, it is 20 times faster to store string index than to store
+     * numeric index if the number is > 2^15.
+     * <p/>
+     * The following time are recorded under chrome linux  4.0.266.0
+     * The recorderd time are in ms.
+     * <p/>
+     * iterations  Numeric Index  String index Hybrid time
+     * 1024        1               2           0
+     * 2048        0               5           1
+     * 4096        1               14          1
+     * 8192        4               30          4
+     * 16384       8               63          9
+     * 32768       20              132         24
+     * 65536       266             264         148
+     * 131072      5551            513         404
+     * 262144      16719           1036        976
+     * <p/>
+     * for numeric index < 2^15, it is 6 times faster to use numeric index
+     * for string index > 2^15, it is 20 times faster to use string index
+     * hybrid approach represents what we are doing here, i.e. use numeric index for value < 2^15 and
+     * string index for value > 2^15
+     * <p/>
+     * DESPITE THIS RESULT, it is very bad to use numeric index at all.  Using the numeric index
+     * slows down the javascript engine.  We always uses String index in chrome.  So DO NOT change
+     * the code to do the hybrid approach.
+     * <p/>
+     * This function must be represented by JavaScriptObject and not normal java interfaces because
+     * it's return data of different type depends on the input value.
+     */
+    @SuppressWarnings("unused") // used in native method
+    private static JavaScriptObject prefixer;
 
-   @SuppressWarnings("unused") // used in native method
-   private static JavaScriptObject evaler;
+    @SuppressWarnings("unused") // used in native method
+    private static JavaScriptObject evaler;
 
-   static
-   {
-      setupPrefix(UserAgent.isChrome());
-   }
+    static {
+        setupPrefix(UserAgent.isChrome());
+    }
 
-   private static native void setupPrefix(boolean usePrefix) /*-{
-      if (usePrefix)
-      {
-         @com.codenvy.ide.client.util.IntMapJsoView::prefixer = function (a)
-         {
-            return "a" + a;
-         };
-         @com.codenvy.ide.client.util.IntMapJsoView::evaler = function (a)
-         {
-            return a[0] == "a" ? parseInt(a.substr(1, a.length)) : parseInt(a);
-         }
-      }
-      else
-      {
-         @com.codenvy.ide.client.util.IntMapJsoView::prefixer = function (a)
-         {
-            return a;
-         };
-         @com.codenvy.ide.client.util.IntMapJsoView::evaler = function (a)
-         {
-            return parseInt(a);
-         }
-      }
-   }-*/;
+    private static native void setupPrefix(boolean usePrefix) /*-{
+        if (usePrefix) {
+            @com.codenvy.ide.client.util.IntMapJsoView::prefixer = function (a) {
+                return "a" + a;
+            };
+            @com.codenvy.ide.client.util.IntMapJsoView::evaler = function (a) {
+                return a[0] == "a" ? parseInt(a.substr(1, a.length)) : parseInt(a);
+            }
+        }
+        else {
+            @com.codenvy.ide.client.util.IntMapJsoView::prefixer = function (a) {
+                return a;
+            };
+            @com.codenvy.ide.client.util.IntMapJsoView::evaler = function (a) {
+                return parseInt(a);
+            }
+        }
+    }-*/;
 
-   /**
-    * Construct a IntMap from a java Map
-    */
-   public static <T> IntMapJsoView<T> fromMap(Map<Integer, T> map)
-   {
-      IntMapJsoView<T> intMap = create();
-      for (int key : map.keySet())
-      {
-         intMap.put(key, map.get(key));
-      }
-      return intMap;
-   }
+    /** Construct a IntMap from a java Map */
+    public static <T> IntMapJsoView<T> fromMap(Map<Integer, T> map) {
+        IntMapJsoView<T> intMap = create();
+        for (int key : map.keySet()) {
+            intMap.put(key, map.get(key));
+        }
+        return intMap;
+    }
 
-   protected IntMapJsoView()
-   {
-   }
+    protected IntMapJsoView() {
+    }
 
-   /**
-    * @param key
-    * @return true if a value indexed by the given key is in the map
-    */
-   public native boolean has(int key) /*-{
-      var prefixer = @com.codenvy.ide.client.util.IntMapJsoView::prefixer;
-      return this[prefixer(key)] !== undefined;
-   }-*/;
+    /**
+     * @param key
+     * @return true if a value indexed by the given key is in the map
+     */
+    public native boolean has(int key) /*-{
+        var prefixer = @com.codenvy.ide.client.util.IntMapJsoView::prefixer;
+        return this[prefixer(key)] !== undefined;
+    }-*/;
 
-   /**
-    * @param key
-    * @return The value with the given key, or null if not present
-    */
-   public native T get(int key) /*-{
-      var prefixer = @com.codenvy.ide.client.util.IntMapJsoView::prefixer;
-      return this[prefixer(key)];
-   }-*/;
+    /**
+     * @param key
+     * @return The value with the given key, or null if not present
+     */
+    public native T get(int key) /*-{
+        var prefixer = @com.codenvy.ide.client.util.IntMapJsoView::prefixer;
+        return this[prefixer(key)];
+    }-*/;
 
-   /**
-    * Put the value in the map at the given key. Note: Does not return the old
-    * value.
-    *
-    * @param key
-    * @param value
-    */
-   public native void put(int key, T value) /*-{
-      var prefixer = @com.codenvy.ide.client.util.IntMapJsoView::prefixer;
-      this[prefixer(key)] = value;
-   }-*/;
+    /**
+     * Put the value in the map at the given key. Note: Does not return the old
+     * value.
+     *
+     * @param key
+     * @param value
+     */
+    public native void put(int key, T value) /*-{
+        var prefixer = @com.codenvy.ide.client.util.IntMapJsoView::prefixer;
+        this[prefixer(key)] = value;
+    }-*/;
 
-   /**
-    * Remove the value with the given key from the map. Note: does not return the
-    * old value.
-    *
-    * @param key
-    */
-   public native void remove(int key) /*-{
-      var prefixer = @com.codenvy.ide.client.util.IntMapJsoView::prefixer;
-      delete this[prefixer(key)];
-   }-*/;
+    /**
+     * Remove the value with the given key from the map. Note: does not return the
+     * old value.
+     *
+     * @param key
+     */
+    public native void remove(int key) /*-{
+        var prefixer = @com.codenvy.ide.client.util.IntMapJsoView::prefixer;
+        delete this[prefixer(key)];
+    }-*/;
 
-   /**
-    * Same as {@link #remove(int)}, but returns what was previously there, if
-    * anything.
-    *
-    * @param key
-    * @return what was previously there or null
-    */
-   public final T removeAndReturn(int key)
-   {
-      T val = get(key);
-      remove(key);
-      return val;
-   }
+    /**
+     * Same as {@link #remove(int)}, but returns what was previously there, if
+     * anything.
+     *
+     * @param key
+     * @return what was previously there or null
+     */
+    public final T removeAndReturn(int key) {
+        T val = get(key);
+        remove(key);
+        return val;
+    }
 
-   /**
-    * Ruby/prototype.js style iterating idiom, using a callbak. Equivalent to a
-    * for-each loop. TODO(danilatos): Implement break and through a la
-    * prototype.js if needed.
-    *
-    * @param proc
-    */
-   public final native void each(ProcV<? super T> proc) /*-{
-      var evaler = @com.codenvy.ide.client.util.IntMapJsoView::evaler;
-      for (var k in this)
-      {
-         proc.
-            @com.codenvy.ide.client.util.ReadableIntMap.ProcV::apply(ILjava/lang/Object;)
-            (evaler(k), this[k]);
-      }
-   }-*/;
+    /**
+     * Ruby/prototype.js style iterating idiom, using a callbak. Equivalent to a
+     * for-each loop. TODO(danilatos): Implement break and through a la
+     * prototype.js if needed.
+     *
+     * @param proc
+     */
+    public final native void each(ProcV<? super T> proc) /*-{
+        var evaler = @com.codenvy.ide.client.util.IntMapJsoView::evaler;
+        for (var k in this) {
+            proc.
+                @com.codenvy.ide.client.util.ReadableIntMap.ProcV::apply(ILjava/lang/Object;)
+                (evaler(k), this[k]);
+        }
+    }-*/;
 
-   public final native T someValue() /*-{
-      for (var k in this)
-      {
-         return this[k]
-      }
-      return null;
-   }-*/;
+    public final native T someValue() /*-{
+        for (var k in this) {
+            return this[k]
+        }
+        return null;
+    }-*/;
 
 
-   /**
-    * Same as ruby/prototype reduce. Same as functional foldl. Apply a function
-    * to an accumulator and key/value in the map. The function returns the new
-    * accumulated value. TODO(danilatos): Implement break and through a la
-    * prototype.js if needed.
-    *
-    * @param initial
-    * @param proc
-    * @param <R>     The accumulating type
-    * @return The accumulated value
-    */
-   public final native <R> R reduce(R initial, Reduce<T, R> proc) /*-{
-      var reduction = initial;
-      var evaler = @com.codenvy.ide.client.util.IntMapJsoView::evaler;
-      for (var k in this)
-      {
-         reduction = proc.
-            @com.codenvy.ide.client.util.IntMapJsoView.Reduce::apply(Ljava/lang/Object;ILjava/lang/Object;)
-            (reduction, evaler(k), this[k]);
-      }
-      return reduction;
-   }-*/;
+    /**
+     * Same as ruby/prototype reduce. Same as functional foldl. Apply a function
+     * to an accumulator and key/value in the map. The function returns the new
+     * accumulated value. TODO(danilatos): Implement break and through a la
+     * prototype.js if needed.
+     *
+     * @param initial
+     * @param proc
+     * @param <R>
+     *         The accumulating type
+     * @return The accumulated value
+     */
+    public final native <R> R reduce(R initial, Reduce<T, R> proc) /*-{
+        var reduction = initial;
+        var evaler = @com.codenvy.ide.client.util.IntMapJsoView::evaler;
+        for (var k in this) {
+            reduction = proc.
+                @com.codenvy.ide.client.util.IntMapJsoView.Reduce::apply(Ljava/lang/Object;ILjava/lang/Object;)
+                (reduction, evaler(k), this[k]);
+        }
+        return reduction;
+    }-*/;
 
-   /**
-    * Convert to a java Map
-    */
-   public final Map<Integer, T> toMap()
-   {
-      return addToMap(new HashMap<Integer, T>());
-   }
+    /** Convert to a java Map */
+    public final Map<Integer, T> toMap() {
+        return addToMap(new HashMap<Integer, T>());
+    }
 
-   /**
-    * Add all values to a java map.
-    *
-    * @param map The map to add values to
-    * @return The same map, for convenience.
-    */
-   public final Map<Integer, T> addToMap(final Map<Integer, T> map)
-   {
-      each(new ProcV<T>()
-      {
-         public void apply(int key, T item)
-         {
-            map.put(key, item);
-         }
-      });
-      return map;
-   }
+    /**
+     * Add all values to a java map.
+     *
+     * @param map
+     *         The map to add values to
+     * @return The same map, for convenience.
+     */
+    public final Map<Integer, T> addToMap(final Map<Integer, T> map) {
+        each(new ProcV<T>() {
+            public void apply(int key, T item) {
+                map.put(key, item);
+            }
+        });
+        return map;
+    }
 
-   /**
-    * Add all values to a IntMap.
-    *
-    * @param map The map to add values to
-    * @return The same map, for convenience.
-    */
-   public final IntMapJsoView<T> addToMap(final IntMapJsoView<T> map)
-   {
-      each(new ProcV<T>()
-      {
-         public void apply(int key, T item)
-         {
-            map.put(key, item);
-         }
-      });
-      return map;
-   }
+    /**
+     * Add all values to a IntMap.
+     *
+     * @param map
+     *         The map to add values to
+     * @return The same map, for convenience.
+     */
+    public final IntMapJsoView<T> addToMap(final IntMapJsoView<T> map) {
+        each(new ProcV<T>() {
+            public void apply(int key, T item) {
+                map.put(key, item);
+            }
+        });
+        return map;
+    }
 }

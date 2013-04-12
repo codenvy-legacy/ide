@@ -18,125 +18,101 @@
  */
 package org.exoplatform.ide.client.framework.ui.impl;
 
-import org.exoplatform.ide.client.framework.ui.api.View;
-import org.exoplatform.ide.client.framework.ui.api.event.BeforeViewLoseActivityEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewLostActivityEvent;
-
 import com.google.gwt.event.shared.HandlerManager;
 
+import org.exoplatform.ide.client.framework.ui.api.View;
+import org.exoplatform.ide.client.framework.ui.api.event.*;
+
 /**
- * 
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 3, 2010 $
- * 
  */
-public class ViewHighlightManager implements ViewClosedHandler
-{
+public class ViewHighlightManager implements ViewClosedHandler {
 
-   /**
-    * Instance of this Highlighting Manager.
-    */
-   private static ViewHighlightManager instance;
+    /** Instance of this Highlighting Manager. */
+    private static ViewHighlightManager instance;
 
-   /**
-    * Currently active view.
-    */
-   private View currentActiveView;
+    /** Currently active view. */
+    private View currentActiveView;
 
-   /**
-    * Previous active view.
-    */
-   private View previousActiveView;
+    /** Previous active view. */
+    private View previousActiveView;
 
-   /**
-    * Event Bus.
-    */
-   private HandlerManager eventBus;
+    /** Event Bus. */
+    private HandlerManager eventBus;
 
-   /**
-    * Creates new instance of this Highlighting Manager.
-    * 
-    * @param eventBus event bus
-    */
-   public ViewHighlightManager(HandlerManager eventBus)
-   {
-      this.eventBus = eventBus;
-      instance = this;
+    /**
+     * Creates new instance of this Highlighting Manager.
+     *
+     * @param eventBus
+     *         event bus
+     */
+    public ViewHighlightManager(HandlerManager eventBus) {
+        this.eventBus = eventBus;
+        instance = this;
 
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-   }
+        eventBus.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   /**
-    * Sets view activated.
-    * 
-    * @param view view to be activated
-    */
-   public void activateView(View view)
-   {
-      if (currentActiveView == view)
-      {
-         return;
-      }
+    /**
+     * Sets view activated.
+     *
+     * @param view
+     *         view to be activated
+     */
+    public void activateView(View view) {
+        if (currentActiveView == view) {
+            return;
+        }
 
-      previousActiveView = currentActiveView;
-      if (currentActiveView != null)
-      {
-         currentActiveView.fireEvent(new BeforeViewLoseActivityEvent(currentActiveView));
-         ((ViewImpl)currentActiveView).setActivated(false);
-         currentActiveView.fireEvent(new ViewLostActivityEvent(currentActiveView));
-      }
+        previousActiveView = currentActiveView;
+        if (currentActiveView != null) {
+            currentActiveView.fireEvent(new BeforeViewLoseActivityEvent(currentActiveView));
+            ((ViewImpl)currentActiveView).setActivated(false);
+            currentActiveView.fireEvent(new ViewLostActivityEvent(currentActiveView));
+        }
 
-      currentActiveView = view;
-      ((ViewImpl)currentActiveView).setActivated(true);
+        currentActiveView = view;
+        ((ViewImpl)currentActiveView).setActivated(true);
 
-      eventBus.fireEvent(new ViewActivatedEvent(view));
-   }
+        eventBus.fireEvent(new ViewActivatedEvent(view));
+    }
 
-   /**
-    * Get instance of this Highlighting manager.
-    * 
-    * @return the instance
-    */
-   public static ViewHighlightManager getInstance()
-   {
-      if (instance == null)
-      {
-         new ViewHighlightManager(null);
-      }
+    /**
+     * Get instance of this Highlighting manager.
+     *
+     * @return the instance
+     */
+    public static ViewHighlightManager getInstance() {
+        if (instance == null) {
+            new ViewHighlightManager(null);
+        }
 
-      return instance;
-   }
+        return instance;
+    }
 
-   /**
-    * View Closed Handler
-    * 
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() != currentActiveView)
-      {
-         return;
-      }
+    /**
+     * View Closed Handler
+     *
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent)
+     */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() != currentActiveView) {
+            return;
+        }
 
-      if (previousActiveView != null)
-      {
-         ((ViewImpl)previousActiveView).setActivated(false);
-         currentActiveView = previousActiveView;
-         ((ViewImpl)currentActiveView).setActivated(true);
-         eventBus.fireEvent(new ViewActivatedEvent(currentActiveView));
-      }
-      else
-      {
-         currentActiveView = null;
-      }
-   }
+        if (previousActiveView != null) {
+            ((ViewImpl)previousActiveView).setActivated(false);
+            currentActiveView = previousActiveView;
+            ((ViewImpl)currentActiveView).setActivated(true);
+            eventBus.fireEvent(new ViewActivatedEvent(currentActiveView));
+        } else {
+            currentActiveView = null;
+        }
+    }
 
 }

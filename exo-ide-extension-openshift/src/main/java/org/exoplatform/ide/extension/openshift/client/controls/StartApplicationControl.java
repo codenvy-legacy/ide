@@ -24,21 +24,19 @@ import org.exoplatform.ide.extension.openshift.client.start.StartApplicationEven
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class StartApplicationControl extends AbstractOpenShiftControl
-{
+public class StartApplicationControl extends AbstractOpenShiftControl {
 
-   private static final String ID = "PaaS/OpenShift/StartApp";
+    private static final String ID = "PaaS/OpenShift/StartApp";
 
-   private static final String TITLE = "Start Application";
+    private static final String TITLE = "Start Application";
 
-   private static final String PROMPT = "Start Application";
+    private static final String PROMPT = "Start Application";
 
-   public StartApplicationControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setEvent(new StartApplicationEvent());
-      setDelimiterBefore(true);
-   }
+    public StartApplicationControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setEvent(new StartApplicationEvent());
+        setDelimiterBefore(true);
+    }
 }

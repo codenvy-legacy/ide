@@ -22,26 +22,23 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public class CreateFolderEvent extends GwtEvent<CreateFolderHandler>
-{
+public class CreateFolderEvent extends GwtEvent<CreateFolderHandler> {
 
-   public static final GwtEvent.Type<CreateFolderHandler> TYPE = new GwtEvent.Type<CreateFolderHandler>();
+    public static final GwtEvent.Type<CreateFolderHandler> TYPE = new GwtEvent.Type<CreateFolderHandler>();
 
-   @Override
-   protected void dispatch(CreateFolderHandler handler)
-   {
-      handler.onCreateFolder(this);
-   }
+    @Override
+    protected void dispatch(CreateFolderHandler handler) {
+        handler.onCreateFolder(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CreateFolderHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<CreateFolderHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

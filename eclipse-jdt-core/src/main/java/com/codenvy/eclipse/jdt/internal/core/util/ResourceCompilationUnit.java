@@ -18,35 +18,27 @@ import com.codenvy.eclipse.jdt.internal.compiler.batch.CompilationUnit;
 import java.net.URI;
 
 
-/**
- * An ICompilationUnit that retrieves its contents using an IFile
- */
-public class ResourceCompilationUnit extends CompilationUnit
-{
+/** An ICompilationUnit that retrieves its contents using an IFile */
+public class ResourceCompilationUnit extends CompilationUnit {
 
-   private IFile file;
+    private IFile file;
 
-   public ResourceCompilationUnit(IFile file, URI location)
-   {
-      super(null/*no contents*/, location == null ? file.getFullPath().toString() : location.getPath(), null/*encoding is used only when retrieving the contents*/);
-      this.file = file;
-   }
+    public ResourceCompilationUnit(IFile file, URI location) {
+        super(null/*no contents*/, location == null ? file.getFullPath().toString() : location.getPath(),
+              null/*encoding is used only when retrieving the contents*/);
+        this.file = file;
+    }
 
-   public char[] getContents()
-   {
-      if (this.contents != null)
-      {
-         return this.contents;   // answer the cached source
-      }
+    public char[] getContents() {
+        if (this.contents != null) {
+            return this.contents;   // answer the cached source
+        }
 
-      // otherwise retrieve it
-      try
-      {
-         return Util.getResourceContentsAsCharArray(this.file);
-      }
-      catch (CoreException e)
-      {
-         return CharOperation.NO_CHAR;
-      }
-   }
+        // otherwise retrieve it
+        try {
+            return Util.getResourceContentsAsCharArray(this.file);
+        } catch (CoreException e) {
+            return CharOperation.NO_CHAR;
+        }
+    }
 }

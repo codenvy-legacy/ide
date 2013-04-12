@@ -18,51 +18,42 @@
  */
 package org.exoplatform.ide.client;
 
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.gwt.event.shared.UmbrellaException;
 
 import org.exoplatform.gwtframework.commons.util.Log;
 
 import java.util.Set;
 
-import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
-
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
  */
-public class IDEShell implements EntryPoint
-{
+public class IDEShell implements EntryPoint {
 
-   public void onModuleLoad()
-   {
-      GWT.setUncaughtExceptionHandler(new H());
-      new IDE();
-   }
+    public void onModuleLoad() {
+        GWT.setUncaughtExceptionHandler(new H());
+        new IDE();
+    }
 
-   private class H implements UncaughtExceptionHandler
-   {
+    private class H implements UncaughtExceptionHandler {
 
-      public void onUncaughtException(Throwable e)
-      {
-         Log.info(e.getMessage());
-         if (e instanceof UmbrellaException)
-         {
-            Set<Throwable> set = ((UmbrellaException)e).getCauses();
-            for(Throwable t : set)
-            {
-               Log.info(t.getMessage());
-               t.printStackTrace();
+        public void onUncaughtException(Throwable e) {
+            Log.info(e.getMessage());
+            if (e instanceof UmbrellaException) {
+                Set<Throwable> set = ((UmbrellaException)e).getCauses();
+                for (Throwable t : set) {
+                    Log.info(t.getMessage());
+                    t.printStackTrace();
+                }
+            } else {
+                e.printStackTrace();
             }
-         }
-         else
-         {
-            e.printStackTrace();
-         }
-      }
-   }
+        }
+    }
 
 }

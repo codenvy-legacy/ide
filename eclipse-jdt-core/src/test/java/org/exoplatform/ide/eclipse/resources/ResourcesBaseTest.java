@@ -52,71 +52,64 @@ import org.junit.Before;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public abstract class ResourcesBaseTest
-{
+public abstract class ResourcesBaseTest {
 
-   protected static final String ID = "memory";
+    protected static final String ID = "memory";
 
-   protected static EventListenerList eventListenerList;
+    protected static EventListenerList eventListenerList;
 
-   protected static VirtualFileSystemRegistry virtualFileSystemRegistry = new VirtualFileSystemRegistry();
+    protected static VirtualFileSystemRegistry virtualFileSystemRegistry = new VirtualFileSystemRegistry();
 
-   static
-   {
-      URLHandlerFactorySetup.setup(virtualFileSystemRegistry, eventListenerList);
-   }
+    static {
+        URLHandlerFactorySetup.setup(virtualFileSystemRegistry, eventListenerList);
+    }
 
 
-   protected static MemoryFileSystemContext memoryContext;
+    protected static MemoryFileSystemContext memoryContext;
 
 
-   protected static VirtualFileSystem vfs;
+    protected static VirtualFileSystem vfs;
 
-   protected static WorkspaceResource ws;
+    protected static WorkspaceResource ws;
 
-   @Before
-   public void setUp() throws Exception
-   {
+    @Before
+    public void setUp() throws Exception {
 
-      System.setProperty("org.exoplatform.mimetypes", "conf/mimetypes.properties");
+        System.setProperty("org.exoplatform.mimetypes", "conf/mimetypes.properties");
 
-      eventListenerList = new EventListenerList();
-      memoryContext = new MemoryFileSystemContext();
+        eventListenerList = new EventListenerList();
+        memoryContext = new MemoryFileSystemContext();
 
-      virtualFileSystemRegistry.registerProvider(ID, new MemoryFileSystemProvider(ID, memoryContext));
-      vfs = virtualFileSystemRegistry.getProvider(ID).newInstance(null, eventListenerList);
-      if (ws == null)
-      {
-         ws = new WorkspaceResource(vfs);
-         ResourcesPlugin.setDefaultWorkspace(ws);
-      }
-      else
-      {
-         ws.setVfs(vfs);
-      }
-      ConversationState.setCurrent(new ConversationState(new Identity("test")));
-      DependencySupplierImpl dependencies = new DependencySupplierImpl();
-      dependencies.addComponent(VirtualFileSystemRegistry.class, virtualFileSystemRegistry);
-      dependencies.addComponent(EventListenerList.class, eventListenerList);
-      ResourceBinder resources = new ResourceBinderImpl();
-      ProviderBinder providers = new ApplicationProviderBinder();
-      RequestHandler requestHandler = new RequestHandlerImpl(new RequestDispatcher(resources), providers, dependencies,
-         new EverrestConfiguration());
-      ApplicationContextImpl.setCurrent(new ApplicationContextImpl(null, null, ProviderBinder.getInstance()));
-      ResourceLauncher launcher = new ResourceLauncher(requestHandler);
+        virtualFileSystemRegistry.registerProvider(ID, new MemoryFileSystemProvider(ID, memoryContext));
+        vfs = virtualFileSystemRegistry.getProvider(ID).newInstance(null, eventListenerList);
+        if (ws == null) {
+            ws = new WorkspaceResource(vfs);
+            ResourcesPlugin.setDefaultWorkspace(ws);
+        } else {
+            ws.setVfs(vfs);
+        }
+        ConversationState.setCurrent(new ConversationState(new Identity("test")));
+        DependencySupplierImpl dependencies = new DependencySupplierImpl();
+        dependencies.addComponent(VirtualFileSystemRegistry.class, virtualFileSystemRegistry);
+        dependencies.addComponent(EventListenerList.class, eventListenerList);
+        ResourceBinder resources = new ResourceBinderImpl();
+        ProviderBinder providers = new ApplicationProviderBinder();
+        RequestHandler requestHandler = new RequestHandlerImpl(new RequestDispatcher(resources), providers, dependencies,
+                                                               new EverrestConfiguration());
+        ApplicationContextImpl.setCurrent(new ApplicationContextImpl(null, null, ProviderBinder.getInstance()));
+        ResourceLauncher launcher = new ResourceLauncher(requestHandler);
 
-      ApplicationPublisher deployer = new ApplicationPublisher(resources, providers);
-      deployer.publish(new VirtualFileSystemApplication());
+        ApplicationPublisher deployer = new ApplicationPublisher(resources, providers);
+        deployer.publish(new VirtualFileSystemApplication());
 
-      // RUNTIME VARIABLES
-      ConversationState user = new ConversationState(new Identity("john"));
-      ConversationState.setCurrent(user);
+        // RUNTIME VARIABLES
+        ConversationState user = new ConversationState(new Identity("john"));
+        ConversationState.setCurrent(user);
 
-   }
+    }
 
-   @After
-   public void clean() throws VirtualFileSystemException
-   {
-      virtualFileSystemRegistry.unregisterProvider(ID);
-   }
+    @After
+    public void clean() throws VirtualFileSystemException {
+        virtualFileSystemRegistry.unregisterProvider(ID);
+    }
 }

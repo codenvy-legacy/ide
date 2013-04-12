@@ -24,46 +24,36 @@ package org.exoplatform.ide.extension.aws.shared.s3;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public enum S3VersioningStatus
-{
-   /**
-    * By default, for new S3 Buckets versioning value is off.
-    * Once versioning is enabled, it can never be reverted to status "Off", it's can be changed to "Suspend".
-    */
-   OFF("Off"),
+public enum S3VersioningStatus {
+    /**
+     * By default, for new S3 Buckets versioning value is off.
+     * Once versioning is enabled, it can never be reverted to status "Off", it's can be changed to "Suspend".
+     */
+    OFF("Off"),
 
-   /**
-    * Indicating that versioning is disabled for S3 bucked that has enabled value before.
-    */
-   SUSPENDED("Suspended"),
+    /** Indicating that versioning is disabled for S3 bucked that has enabled value before. */
+    SUSPENDED("Suspended"),
 
-   /**
-    * Indicating that versioning is enabled for S3 bucket.
-    */
-   ENABLED("Enabled");
+    /** Indicating that versioning is enabled for S3 bucket. */
+    ENABLED("Enabled");
 
-   private final String value;
+    private final String value;
 
-   private S3VersioningStatus(String value)
-   {
-      this.value = value;
-   }
+    private S3VersioningStatus(String value) {
+        this.value = value;
+    }
 
-   @Override
-   public String toString()
-   {
-      return value;
-   }
+    @Override
+    public String toString() {
+        return value;
+    }
 
-   public static S3VersioningStatus fromValue(String value)
-   {
-      for (S3VersioningStatus v : S3VersioningStatus.values())
-      {
-         if (v.value.equals(value))
-         {
-            return v;
-         }
-      }
-      throw new IllegalArgumentException("Invalid value '" + value + "' ");
-   }
+    public static S3VersioningStatus fromValue(String value) {
+        for (S3VersioningStatus v : S3VersioningStatus.values()) {
+            if (v.value.equals(value)) {
+                return v;
+            }
+        }
+        throw new IllegalArgumentException("Invalid value '" + value + "' ");
+    }
 }

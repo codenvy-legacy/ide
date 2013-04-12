@@ -24,32 +24,31 @@ import com.google.gwt.resources.client.ImageResource;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
 
-public interface GadgetClientBundle extends ClientBundle
-{
+public interface GadgetClientBundle extends ClientBundle {
 
-   public static final GadgetClientBundle INSTANCE = GWT.create(GadgetClientBundle.class);
+    public static final GadgetClientBundle INSTANCE = GWT.create(GadgetClientBundle.class);
 
-   @Source("bundled/deploy_gadget.png")
-   ImageResource deployGadget();
+    @Source("bundled/deploy_gadget.png")
+    ImageResource deployGadget();
 
-   @Source("bundled/deploy_gadget_Disabled.png")
-   ImageResource deployGadgetDisabled();
+    @Source("bundled/deploy_gadget_Disabled.png")
+    ImageResource deployGadgetDisabled();
 
-   @Source("bundled/undeploy_gadget.png")
-   ImageResource undeployGadget();
+    @Source("bundled/undeploy_gadget.png")
+    ImageResource undeployGadget();
 
-   @Source("bundled/undeploy_gadget_Disabled.png")
-   ImageResource undeployGadgetDisabled();
+    @Source("bundled/undeploy_gadget_Disabled.png")
+    ImageResource undeployGadgetDisabled();
 
-   @Source("bundled/preview.png")
-   ImageResource preview();
+    @Source("bundled/preview.png")
+    ImageResource preview();
 
-   @Source("bundled/preview_Disabled.png")
-   ImageResource previewDisabled();
+    @Source("bundled/preview_Disabled.png")
+    ImageResource previewDisabled();
 
 }

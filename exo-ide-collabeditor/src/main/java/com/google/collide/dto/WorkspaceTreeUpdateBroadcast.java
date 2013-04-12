@@ -18,19 +18,13 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * A list of mutations to the file tree that have been recorded on the sever.
- */
+/** A list of mutations to the file tree that have been recorded on the sever. */
 @RoutingType(type = RoutingTypes.WORKSPACETREEUPDATEBROADCAST)
 public interface WorkspaceTreeUpdateBroadcast extends ServerToClientDto {
 
-  /**
-   * The mutations that were performed.
-   */
-  JsonArray<Mutation> getMutations();
+    /** The mutations that were performed. */
+    JsonArray<Mutation> getMutations();
 
-  /**
-   * The tree version after these mutations were applied.
-   */
-  String getNewTreeVersion();
+    /** The tree version after these mutations were applied. */
+    String getNewTreeVersion();
 }

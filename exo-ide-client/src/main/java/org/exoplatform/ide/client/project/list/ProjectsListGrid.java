@@ -29,53 +29,44 @@ import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ProjectsListGrid extends ListGrid<ProjectModel>
-{
+public class ProjectsListGrid extends ListGrid<ProjectModel> {
 
-   public ProjectsListGrid()
-   {
-      Column<ProjectModel, ImageResource> iconColumn = new Column<ProjectModel, ImageResource>(new ImageResourceCell())
-      {
-         @Override
-         public ImageResource getValue(ProjectModel object)
-         {
-            return ProjectResolver.getImageForProject(object.getProjectType());
-         }
-      };
+    public ProjectsListGrid() {
+        Column<ProjectModel, ImageResource> iconColumn = new Column<ProjectModel, ImageResource>(new ImageResourceCell()) {
+            @Override
+            public ImageResource getValue(ProjectModel object) {
+                return ProjectResolver.getImageForProject(object.getProjectType());
+            }
+        };
 
-      Column<ProjectModel, String> nameColumn = new Column<ProjectModel, String>(new TextCell())
-      {
-         @Override
-         public String getValue(ProjectModel object)
-         {
-            return object.getName();
-         }
-      };
+        Column<ProjectModel, String> nameColumn = new Column<ProjectModel, String>(new TextCell()) {
+            @Override
+            public String getValue(ProjectModel object) {
+                return object.getName();
+            }
+        };
 
-      Column<ProjectModel, String> typeColumn = new Column<ProjectModel, String>(new TextCell())
-      {
-         @Override
-         public String getValue(ProjectModel object)
-         {
-            return object.getProjectType();
-         }
-      };
+        Column<ProjectModel, String> typeColumn = new Column<ProjectModel, String>(new TextCell()) {
+            @Override
+            public String getValue(ProjectModel object) {
+                return object.getProjectType();
+            }
+        };
 
-      nameColumn.setCellStyleNames("default-cursor");
-      typeColumn.setCellStyleNames("default-cursor");
+        nameColumn.setCellStyleNames("default-cursor");
+        typeColumn.setCellStyleNames("default-cursor");
 
-      getCellTable().addColumn(iconColumn, "");
-      getCellTable().setColumnWidth(iconColumn, "20px");
+        getCellTable().addColumn(iconColumn, "");
+        getCellTable().setColumnWidth(iconColumn, "20px");
 
-      getCellTable().addColumn(nameColumn, "Name");
-      getCellTable().addColumn(typeColumn, "Type");
-   }
+        getCellTable().addColumn(nameColumn, "Name");
+        getCellTable().addColumn(typeColumn, "Type");
+    }
 
 }

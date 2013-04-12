@@ -24,25 +24,22 @@ import org.exoplatform.ide.extension.heroku.client.delete.DeleteApplicationEvent
 
 /**
  * Control for deleting application on Heroku.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 26, 2011 5:10:21 PM anya $
- * 
  */
-public class DeleteApplicationControl extends AbstractHerokuControl
-{
+public class DeleteApplicationControl extends AbstractHerokuControl {
 
-   /**
-    * 
-    */
-   public DeleteApplicationControl()
-   {
-      super(HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationControlId());
-      setTitle(HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationControlTitle());
-      setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationControlPrompt());
-      setEvent(new DeleteApplicationEvent());
-      setImages(HerokuClientBundle.INSTANCE.destroyApplication(),
-         HerokuClientBundle.INSTANCE.destroyApplicationDisabled());
-   }
+    /**
+     *
+     */
+    public DeleteApplicationControl() {
+        super(HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationControlId());
+        setTitle(HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationControlTitle());
+        setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationControlPrompt());
+        setEvent(new DeleteApplicationEvent());
+        setImages(HerokuClientBundle.INSTANCE.destroyApplication(),
+                  HerokuClientBundle.INSTANCE.destroyApplicationDisabled());
+    }
 
 }

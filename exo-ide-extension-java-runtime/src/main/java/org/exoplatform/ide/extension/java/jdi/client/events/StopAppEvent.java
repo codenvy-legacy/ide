@@ -22,24 +22,22 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public class StopAppEvent extends GwtEvent<StopAppHandler>
-{
+ */
+public class StopAppEvent extends GwtEvent<StopAppHandler> {
 
-   public static final GwtEvent.Type<StopAppHandler> TYPE = new GwtEvent.Type<StopAppHandler>();
+    public static final GwtEvent.Type<StopAppHandler> TYPE = new GwtEvent.Type<StopAppHandler>();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<StopAppHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<StopAppHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(StopAppHandler handler)
-   {
-      handler.onStopApp(this);
-   }
+    @Override
+    protected void dispatch(StopAppHandler handler) {
+        handler.onStopApp(this);
+    }
 
 }

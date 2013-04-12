@@ -15,109 +15,79 @@
 package com.codenvy.ide.client.util;
 
 import com.codenvy.ide.client.util.logging.Log;
+import com.google.gwt.core.client.GWT;
 
-import org.exoplatform.ide.json.client.JsIntegerMap;
-import org.exoplatform.ide.json.shared.JsonCollections;
-
+import org.exoplatform.ide.json.client.*;
+import org.exoplatform.ide.json.shared.*;
 import org.exoplatform.ide.shared.util.SharedLogUtils;
 import org.exoplatform.ide.shared.util.StringUtils;
 
-import com.google.gwt.core.client.GWT;
-
-import org.exoplatform.ide.json.client.Jso;
-import org.exoplatform.ide.json.client.JsoArray;
-import org.exoplatform.ide.json.client.JsoStringMap;
-import org.exoplatform.ide.json.client.JsoStringSet;
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonIntegerMap;
-import org.exoplatform.ide.json.shared.JsonStringMap;
-import org.exoplatform.ide.json.shared.JsonStringSet;
-
-/**
- * Injects delegates for optimized client implementations.
- */
-public final class ClientImplementationsInjector
-{
-   public static void inject()
-   {
-      SharedLogUtils.setImplementation(new SharedLogUtils.Implementation()
-      {
-         @Override
-         public void markTimeline(Class<?> clazz, String label)
-         {
-            Log.markTimeline(clazz, label);
-         }
-
-         @Override
-         public void info(Class<?> clazz, Object... objects)
-         {
-            Log.info(clazz, objects);
-         }
-
-         @Override
-         public void debug(Class<?> clazz, Object... objects)
-         {
-            Log.debug(clazz, objects);
-         }
-
-         @Override
-         public void error(Class<?> clazz, Object... objects)
-         {
-            Log.error(clazz, objects);
-         }
-
-         @Override
-         public void warn(Class<?> clazz, Object... objects)
-         {
-            Log.warn(clazz, objects);
-         }
-      });
-
-      if (GWT.isScript())
-      {
-         JsonCollections.setImplementation(new JsonCollections.Implementation()
-         {
+/** Injects delegates for optimized client implementations. */
+public final class ClientImplementationsInjector {
+    public static void inject() {
+        SharedLogUtils.setImplementation(new SharedLogUtils.Implementation() {
             @Override
-            public <T> JsonStringMap<T> createMap()
-            {
-               return JsoStringMap.create();
+            public void markTimeline(Class<?> clazz, String label) {
+                Log.markTimeline(clazz, label);
             }
 
             @Override
-            public JsonStringSet createStringSet()
-            {
-               return JsoStringSet.create();
+            public void info(Class<?> clazz, Object... objects) {
+                Log.info(clazz, objects);
             }
 
             @Override
-            public <T> JsonArray<T> createArray()
-            {
-               return Jso.createArray().<JsoArray<T>>cast();
+            public void debug(Class<?> clazz, Object... objects) {
+                Log.debug(clazz, objects);
             }
 
             @Override
-            public <T> JsonIntegerMap<T> createIntegerMap()
-            {
-               return JsIntegerMap.create();
+            public void error(Class<?> clazz, Object... objects) {
+                Log.error(clazz, objects);
             }
-         });
+
+            @Override
+            public void warn(Class<?> clazz, Object... objects) {
+                Log.warn(clazz, objects);
+            }
+        });
+
+        if (GWT.isScript()) {
+            JsonCollections.setImplementation(new JsonCollections.Implementation() {
+                @Override
+                public <T> JsonStringMap<T> createMap() {
+                    return JsoStringMap.create();
+                }
+
+                @Override
+                public JsonStringSet createStringSet() {
+                    return JsoStringSet.create();
+                }
+
+                @Override
+                public <T> JsonArray<T> createArray() {
+                    return Jso.createArray().<JsoArray<T>>cast();
+                }
+
+                @Override
+                public <T> JsonIntegerMap<T> createIntegerMap() {
+                    return JsIntegerMap.create();
+                }
+            });
 
       /*
        * Only use the faster native JS collections if running as compiled output
        * (so, use JRE collections in dev mode)
        */
-         StringUtils.setImplementation(new StringUtils.Implementation()
-         {
-            @Override
-            public JsonArray<String> split(String string, String separator)
-            {
-               return ClientStringUtils.split(string, separator).<JsoArray<String>>cast();
-            }
-         });
-      }
-   }
+            StringUtils.setImplementation(new StringUtils.Implementation() {
+                @Override
+                public JsonArray<String> split(String string, String separator) {
+                    return ClientStringUtils.split(string, separator).<JsoArray<String>>cast();
+                }
+            });
+        }
+    }
 
-   private ClientImplementationsInjector()
-   {
-   }
+    private ClientImplementationsInjector() {
+    }
 }

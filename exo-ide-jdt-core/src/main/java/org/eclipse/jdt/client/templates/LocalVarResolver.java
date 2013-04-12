@@ -14,34 +14,28 @@ import org.eclipse.jdt.client.templates.CompilationUnitCompletion.Variable;
 
 /**
  * Resolves template variables to a local variable that is assignment-compatible with the variable instance' class parameter.
- * 
+ *
  * @since 3.3
  */
-public class LocalVarResolver extends AbstractVariableResolver
-{
+public class LocalVarResolver extends AbstractVariableResolver {
 
-   /**
-    * Default ctor for instantiation by the extension point.
-    */
-   public LocalVarResolver()
-   {
-      this("java.lang.Object"); //$NON-NLS-1$
-   }
+    /** Default ctor for instantiation by the extension point. */
+    public LocalVarResolver() {
+        this("java.lang.Object"); //$NON-NLS-1$
+    }
 
-   LocalVarResolver(String defaultType)
-   {
-      super(defaultType);
-   }
+    LocalVarResolver(String defaultType) {
+        super(defaultType);
+    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.eclipse.jdt.internal.corext.template.java.AbstractVariableResolver#getVisibleVariables(java.lang.String,
-    * org.eclipse.jdt.internal.corext.template.java.JavaContext)
-    */
-   @Override
-   protected Variable[] getVisibleVariables(String type, JavaContext context)
-   {
-      return context.getLocalVariables(type);
-   }
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.jdt.internal.corext.template.java.AbstractVariableResolver#getVisibleVariables(java.lang.String,
+     * org.eclipse.jdt.internal.corext.template.java.JavaContext)
+     */
+    @Override
+    protected Variable[] getVisibleVariables(String type, JavaContext context) {
+        return context.getLocalVariables(type);
+    }
 
 }

@@ -35,102 +35,85 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class ShowProjectsControl extends SimpleControl implements IDEControl, VfsChangedHandler, ViewActivatedHandler,
-   ItemsSelectedHandler
-{
+                                                                  ItemsSelectedHandler {
 
-   public static final String ID = "Project/Open...";
+    public static final String ID = "Project/Open...";
 
-   private static final String TITLE = "Open...";
+    private static final String TITLE = "Open...";
 
-   private static final String PROMPT = "Open Project...";
+    private static final String PROMPT = "Open Project...";
 
-   private VirtualFileSystemInfo vfsInfo;
+    private VirtualFileSystemInfo vfsInfo;
 
-   private boolean projectExplorerSelected = false;
+    private boolean projectExplorerSelected = false;
 
-   /**
-    * 
-    */
-   public ShowProjectsControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(IDEImageBundle.INSTANCE.projectOpened(), IDEImageBundle.INSTANCE.projectOpenedDisabled());
-      setEvent(new ShowProjectsEvent());
-      // setDelimiterBefore(true);
-      setGroupName(GroupNames.ACTIONS);
-   }
+    /**
+     *
+     */
+    public ShowProjectsControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(IDEImageBundle.INSTANCE.projectOpened(), IDEImageBundle.INSTANCE.projectOpenedDisabled());
+        setEvent(new ShowProjectsEvent());
+        // setDelimiterBefore(true);
+        setGroupName(GroupNames.ACTIONS);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(ViewActivatedEvent.TYPE, this);
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      update();
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+        IDE.addHandler(ViewActivatedEvent.TYPE, this);
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+        update();
+    }
 
-   /**
-    * 
-    */
-   private void update()
-   {
-      if (vfsInfo == null)
-      {
-         setVisible(false);
-         setEnabled(false);
-         return;
-      }
-      setEnabled(true);
-      setVisible(true);
-   }
+    /**
+     *
+     */
+    private void update() {
+        if (vfsInfo == null) {
+            setVisible(false);
+            setEnabled(false);
+            return;
+        }
+        setEnabled(true);
+        setVisible(true);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      vfsInfo = event.getVfsInfo();
-      update();
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     * .application.event.VfsChangedEvent) */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        vfsInfo = event.getVfsInfo();
+        update();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
+    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     * .framework.navigation.event.ItemsSelectedEvent) */
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
 
-      if (projectExplorerSelected && !event.getSelectedItems().isEmpty())
-      {
-         setShowInContextMenu(event.getSelectedItems().get(0) instanceof ProjectModel);
-      }
-      else
-      {
-         setShowInContextMenu(false);
-      }
-   }
+        if (projectExplorerSelected && !event.getSelectedItems().isEmpty()) {
+            setShowInContextMenu(event.getSelectedItems().get(0) instanceof ProjectModel);
+        } else {
+            setShowInContextMenu(false);
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent)
-    */
-   @Override
-   public void onViewActivated(ViewActivatedEvent event)
-   {
-      projectExplorerSelected = event.getView() instanceof ProjectExplorerDisplay;
-   }
-   
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework
+     * .ui.api.event.ViewActivatedEvent) */
+    @Override
+    public void onViewActivated(ViewActivatedEvent event) {
+        projectExplorerSelected = event.getView() instanceof ProjectExplorerDisplay;
+    }
+
 }

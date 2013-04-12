@@ -13,25 +13,20 @@ package com.codenvy.eclipse.ltk.internal.core.refactoring;
 import com.codenvy.eclipse.core.commands.operations.IUndoContext;
 import com.codenvy.eclipse.core.resources.ResourcesPlugin;
 
-public class RefactoringUndoContext implements IUndoContext
-{
+public class RefactoringUndoContext implements IUndoContext {
 
-   public String getLabel()
-   {
-      return RefactoringCoreMessages.RefactoringUndoContext_label;
-   }
+    public String getLabel() {
+        return RefactoringCoreMessages.RefactoringUndoContext_label;
+    }
 
-   public boolean matches(IUndoContext context)
-   {
-      if (this == context)
-      {
-         return true;
-      }
-      IUndoContext workspaceContext = (IUndoContext)ResourcesPlugin.getWorkspace().getAdapter(IUndoContext.class);
-      if (workspaceContext == null)
-      {
-         return false;
-      }
-      return workspaceContext.matches(context);
-   }
+    public boolean matches(IUndoContext context) {
+        if (this == context) {
+            return true;
+        }
+        IUndoContext workspaceContext = (IUndoContext)ResourcesPlugin.getWorkspace().getAdapter(IUndoContext.class);
+        if (workspaceContext == null) {
+            return false;
+        }
+        return workspaceContext.matches(context);
+    }
 }

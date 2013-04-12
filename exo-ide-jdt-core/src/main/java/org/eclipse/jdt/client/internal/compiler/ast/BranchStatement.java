@@ -13,39 +13,33 @@ package org.eclipse.jdt.client.internal.compiler.ast;
 import org.eclipse.jdt.client.internal.compiler.codegen.BranchLabel;
 import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
 
-public abstract class BranchStatement extends Statement
-{
+public abstract class BranchStatement extends Statement {
 
-   public char[] label;
+    public char[] label;
 
-   public BranchLabel targetLabel;
+    public BranchLabel targetLabel;
 
-   public SubRoutineStatement[] subroutines;
+    public SubRoutineStatement[] subroutines;
 
-   public int initStateIndex = -1;
+    public int initStateIndex = -1;
 
-   /**
-    * BranchStatement constructor comment.
-    */
-   public BranchStatement(char[] label, int sourceStart, int sourceEnd)
-   {
-      this.label = label;
-      this.sourceStart = sourceStart;
-      this.sourceEnd = sourceEnd;
-   }
+    /** BranchStatement constructor comment. */
+    public BranchStatement(char[] label, int sourceStart, int sourceEnd) {
+        this.label = label;
+        this.sourceStart = sourceStart;
+        this.sourceEnd = sourceEnd;
+    }
 
-   /**
-    * Branch code generation
-    *
-    *   generate the finallyInvocationSequence.
-    */
-   public void generateCode(BlockScope currentScope)
-   {
+    /**
+     * Branch code generation
+     * <p/>
+     * generate the finallyInvocationSequence.
+     */
+    public void generateCode(BlockScope currentScope) {
 
-   }
+    }
 
-   public void resolve(BlockScope scope)
-   {
-      // nothing to do during name resolution
-   }
+    public void resolve(BlockScope scope) {
+        // nothing to do during name resolution
+    }
 }

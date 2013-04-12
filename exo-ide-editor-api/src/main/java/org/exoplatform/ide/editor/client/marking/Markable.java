@@ -23,60 +23,59 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * This interface determines that its implementor (usually editor) can mark problems.
- * 
+ * <p/>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 8, 2012 4:45:51 PM anya $
- * 
  */
-public interface Markable
-{
-    
-   void addProblems(Marker[] problems);
-   
-   /**
-    * Marks problem
-    * 
-    * @param problem
-    */
-   void markProblem(Marker problem);
+public interface Markable {
 
-   /**
-    * Remove problem
-    * 
-    * @param problem
-    */
-   void unmarkProblem(Marker problem);
+    void addProblems(Marker[] problems);
 
-   /**
-    * Unmarks all problems
-    */
-   void unmarkAllProblems();
+    /**
+     * Marks problem
+     *
+     * @param problem
+     */
+    void markProblem(Marker problem);
 
-   /**
-    * Adds handler for {@link ProblemClickEvent}
-    * 
-    * @param handler handler of {@link ProblemClickEvent}
-    * @return {@link HandlerRegistration} of {@link ProblemClickHandler}
-    */
-   HandlerRegistration addProblemClickHandler(ProblemClickHandler handler);
+    /**
+     * Remove problem
+     *
+     * @param problem
+     */
+    void unmarkProblem(Marker problem);
 
-   /**
-    * Adds handler for {@link EditorLineNumberDoubleClickEvent}
-    * 
-    * @param handler handler of {@link EditorLineNumberDoubleClickEvent}
-    * @return {@link HandlerRegistration}
-    */
-   HandlerRegistration addLineNumberDoubleClickHandler(EditorLineNumberDoubleClickHandler handler);
+    /** Unmarks all problems */
+    void unmarkAllProblems();
 
-   /**
-    * Adds handler for {@link EditorLineNumberContextMenuEvent} event.
-    * 
-    * @param handler handler for {@link EditorLineNumberContextMenuEvent}
-    * @return {@link HandlerRegistration}
-    */
-   HandlerRegistration addLineNumberContextMenuHandler(EditorLineNumberContextMenuHandler handler);
-   
+    /**
+     * Adds handler for {@link ProblemClickEvent}
+     *
+     * @param handler
+     *         handler of {@link ProblemClickEvent}
+     * @return {@link HandlerRegistration} of {@link ProblemClickHandler}
+     */
+    HandlerRegistration addProblemClickHandler(ProblemClickHandler handler);
+
+    /**
+     * Adds handler for {@link EditorLineNumberDoubleClickEvent}
+     *
+     * @param handler
+     *         handler of {@link EditorLineNumberDoubleClickEvent}
+     * @return {@link HandlerRegistration}
+     */
+    HandlerRegistration addLineNumberDoubleClickHandler(EditorLineNumberDoubleClickHandler handler);
+
+    /**
+     * Adds handler for {@link EditorLineNumberContextMenuEvent} event.
+     *
+     * @param handler
+     *         handler for {@link EditorLineNumberContextMenuEvent}
+     * @return {@link HandlerRegistration}
+     */
+    HandlerRegistration addLineNumberContextMenuHandler(EditorLineNumberContextMenuHandler handler);
+
 }

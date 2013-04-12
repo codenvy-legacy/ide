@@ -38,93 +38,69 @@ import java.util.List;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 8, 2011 11:31:09 AM anya $
- * 
  */
-public class BranchGrid extends ListGrid<Branch>
-{
-   /**
-    * Grid's ID.
-    */
-   private static final String ID = "ideBranchGrid";
+public class BranchGrid extends ListGrid<Branch> {
+    /** Grid's ID. */
+    private static final String ID   = "ideBranchGrid";
 
-   /**
-    * Name column's name.
-    */
-   private final String NAME = GitExtension.MESSAGES.branchGridNameColumn();
+    /** Name column's name. */
+    private final String        NAME = GitExtension.MESSAGES.branchGridNameColumn();
 
-   /**
-    * Name column.
-    */
-   Column<Branch, SafeHtml> nameColumn;
+    /** Name column. */
+    Column<Branch, SafeHtml>    nameColumn;
 
-   public BranchGrid()
-   {
-      super();
-      setID(ID);
-      initColumns();
-   }
+    public BranchGrid() {
+        super();
+        setID(ID);
+        initColumns();
+    }
 
-   /**
-    * Initialize the colums of the grid.
-    */
-   private void initColumns()
-   {
-      CellTable<Branch> cellTable = getCellTable();
+    /** Initialize the colums of the grid. */
+    private void initColumns() {
+        CellTable<Branch> cellTable = getCellTable();
 
-      nameColumn = new Column<Branch, SafeHtml>(new SafeHtmlCell())
-      {
+        nameColumn = new Column<Branch, SafeHtml>(new SafeHtmlCell()) {
 
-         @Override
-         public SafeHtml getValue(final Branch branch)
-         {
-            SafeHtml html = new SafeHtml()
-            {
-               private static final long serialVersionUID = 1L;
+            @Override
+            public SafeHtml getValue(final Branch branch) {
+                SafeHtml html = new SafeHtml() {
+                    private static final long serialVersionUID = 1L;
 
-               @Override
-               public String asString()
-               {
-                  if (branch.isActive())
-                  {
-                     return branch.getDisplayName() + "&nbsp;" + new Image(GitClientBundle.INSTANCE.currentBranch());
-                  }
-                  else
-                  {
-                     return branch.getDisplayName();
-                  }
-               }
-            };
-            return html;
-         }
+                    @Override
+                    public String asString() {
+                        if (branch.isActive()) {
+                            return branch.getDisplayName() + "&nbsp;" + new Image(GitClientBundle.INSTANCE.currentBranch());
+                        } else {
+                            return branch.getDisplayName();
+                        }
+                    }
+                };
+                return html;
+            }
 
-      };
+        };
 
-      nameColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-      cellTable.addColumn(nameColumn, NAME);
-      cellTable.setColumnWidth(nameColumn, 35, Unit.PCT);
-   }
+        nameColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+        cellTable.addColumn(nameColumn, NAME);
+        cellTable.setColumnWidth(nameColumn, 35, Unit.PCT);
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.ui.client.component.ListGrid#setValue(java.util.List)
-    */
-   @Override
-   public void setValue(List<Branch> value)
-   {
-      super.setValue(value);
-      if (value != null && value.size() > 0)
-      {
-         selectItem(value.get(0));
-         updateGrid();
-      }
-   }
+    /** @see org.exoplatform.gwtframework.ui.client.component.ListGrid#setValue(java.util.List) */
+    @Override
+    public void setValue(List<Branch> value) {
+        super.setValue(value);
+        if (value != null && value.size() > 0) {
+            selectItem(value.get(0));
+            updateGrid();
+        }
+    }
 
-   /**
-    * Returns selected branch in branches grid.
-    * 
-    * @return {@link Branch} selected branch
-    */
-   public Branch getSelectedBranch()
-   {
-      return super.getSelectedItems().get(0);
-   }
+    /**
+     * Returns selected branch in branches grid.
+     * 
+     * @return {@link Branch} selected branch
+     */
+    public Branch getSelectedBranch() {
+        return super.getSelectedItems().get(0);
+    }
 }

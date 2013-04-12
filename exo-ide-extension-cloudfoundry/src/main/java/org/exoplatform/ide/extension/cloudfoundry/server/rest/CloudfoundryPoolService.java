@@ -21,19 +21,13 @@ package org.exoplatform.ide.extension.cloudfoundry.server.rest;
 import org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryPool;
 import org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryServerConfiguration;
 
-import java.security.Principal;
-
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import java.security.Principal;
 
 /**
  * RESTful front-end for CloudfoundryPool.
@@ -42,44 +36,38 @@ import javax.ws.rs.core.SecurityContext;
  * @version $Id: $
  */
 @Path("ide/cloudfoundry/pool")
-public class CloudfoundryPoolService
-{
-   @Inject
-   private CloudfoundryPool pool;
+public class CloudfoundryPoolService {
+    @Inject
+    private CloudfoundryPool pool;
 
-   @Path("add")
-   @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void addConfiguration(@Context SecurityContext sctx, CloudfoundryServerConfiguration config)
-   {
-      checkPrivileges(sctx);
-      pool.addConfiguration(config);
-   }
+    @Path("add")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void addConfiguration(@Context SecurityContext sctx, CloudfoundryServerConfiguration config) {
+        checkPrivileges(sctx);
+        pool.addConfiguration(config);
+    }
 
-   @Path("remove")
-   @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void removeConfiguration(@Context SecurityContext sctx, CloudfoundryServerConfiguration config)
-   {
-      checkPrivileges(sctx);
-      pool.removeConfiguration(config);
-   }
+    @Path("remove")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void removeConfiguration(@Context SecurityContext sctx, CloudfoundryServerConfiguration config) {
+        checkPrivileges(sctx);
+        pool.removeConfiguration(config);
+    }
 
-   @GET
-   @Produces(MediaType.APPLICATION_JSON)
-   public CloudfoundryServerConfiguration[] getConfigurations(@Context SecurityContext sctx)
-   {
-      checkPrivileges(sctx);
-      return pool.getConfigurations();
-   }
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public CloudfoundryServerConfiguration[] getConfigurations(@Context SecurityContext sctx) {
+        checkPrivileges(sctx);
+        return pool.getConfigurations();
+    }
 
-   private void checkPrivileges(SecurityContext sctx)
-   {
-      Principal user = sctx.getUserPrincipal();
-      if (user == null || !"cldadmin".equals(user.getName()))
-      {
-         throw new WebApplicationException(Response.status(403).entity("Operation not allowed.\n")
-            .type(MediaType.TEXT_PLAIN).build());
-      }
-   }
+    private void checkPrivileges(SecurityContext sctx) {
+        Principal user = sctx.getUserPrincipal();
+        if (user == null || !"cldadmin".equals(user.getName())) {
+            throw new WebApplicationException(Response.status(403).entity("Operation not allowed.\n")
+                                                      .type(MediaType.TEXT_PLAIN).build());
+        }
+    }
 }

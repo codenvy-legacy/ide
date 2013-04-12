@@ -20,54 +20,55 @@ package org.exoplatform.ide.client.framework.discovery;
 
 /**
  * Interface describe REST-service.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: IRestService.java Mar 26, 2012 10:55:52 AM azatsarynnyy $
- *
  */
-public interface IRestService
-{
+public interface IRestService {
 
-   /**
-    * Returns full qualified name of REST-service.
-    * 
-    * @return full qualified name
-    */
-   public String getFqn();
+    /**
+     * Returns full qualified name of REST-service.
+     *
+     * @return full qualified name
+     */
+    public String getFqn();
 
-   /**
-    * Set full qualified name of REST-service.
-    * 
-    * @param fqn full qualified name
-    */
-   public void setFqn(String fqn);
+    /**
+     * Set full qualified name of REST-service.
+     *
+     * @param fqn
+     *         full qualified name
+     */
+    public void setFqn(String fqn);
 
-   /**
-    * Returns REST-service path.
-    * 
-    * @return the REST-service path
-    */
-   public String getPath();
+    /**
+     * Returns REST-service path.
+     *
+     * @return the REST-service path
+     */
+    public String getPath();
 
-   /**
-    * Set REST-service path.
-    * 
-    * @param path the REST-service path to set
-    */
-   public void setPath(String path);
+    /**
+     * Set REST-service path.
+     *
+     * @param path
+     *         the REST-service path to set
+     */
+    public void setPath(String path);
 
-   /**
-    * Returns regex of REST-service.
-    * 
-    * @return the REST-service regex
-    */
-   public String getRegex();
+    /**
+     * Returns regex of REST-service.
+     *
+     * @return the REST-service regex
+     */
+    public String getRegex();
 
-   /**
-    * Set regex of REST-service.
-    * 
-    * @param the REST-service regex
-    */
-   public void setRegex(String regex);
+    /**
+     * Set regex of REST-service.
+     *
+     * @param the
+     *         REST-service regex
+     */
+    public void setRegex(String regex);
 
 }

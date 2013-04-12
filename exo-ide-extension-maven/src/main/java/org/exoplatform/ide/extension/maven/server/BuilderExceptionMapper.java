@@ -27,14 +27,12 @@ import javax.ws.rs.ext.Provider;
  * @version $Id: $
  */
 @Provider
-public class BuilderExceptionMapper implements ExceptionMapper<BuilderException>
-{
-   @Override
-   public Response toResponse(BuilderException exception)
-   {
-      return Response
-         .status(exception.getResponseStatus())
-         .entity(exception.getMessage())
-         .type(exception.getContentType()).build();
-   }
+public class BuilderExceptionMapper implements ExceptionMapper<BuilderException> {
+    @Override
+    public Response toResponse(BuilderException exception) {
+        return Response
+                .status(exception.getResponseStatus())
+                .entity(exception.getMessage())
+                .type(exception.getContentType()).build();
+    }
 }

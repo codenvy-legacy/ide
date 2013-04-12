@@ -29,31 +29,23 @@ import org.exoplatform.ide.git.shared.MergeRequest;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 20, 2011 11:56:09 AM anya $
- * 
  */
-public class MergeRequestMarshaller implements Marshallable, Constants
-{
-   /**
-    * Request for merge.
-    */
-   private MergeRequest mergeRequest;
+public class MergeRequestMarshaller implements Marshallable, Constants {
+    /** Request for merge. */
+    private MergeRequest mergeRequest;
 
-   /**
-    * @param mergeRequest request for merge
-    */
-   public MergeRequestMarshaller(MergeRequest mergeRequest)
-   {
-      this.mergeRequest = mergeRequest;
-   }
+    /**
+     * @param mergeRequest request for merge
+     */
+    public MergeRequestMarshaller(MergeRequest mergeRequest) {
+        this.mergeRequest = mergeRequest;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
-    */
-   @Override
-   public String marshal()
-   {
-      JSONObject json = new JSONObject();
-      json.put(COMMIT, new JSONString(mergeRequest.getCommit()));
-      return json.toString();
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal() */
+    @Override
+    public String marshal() {
+        JSONObject json = new JSONObject();
+        json.put(COMMIT, new JSONString(mergeRequest.getCommit()));
+        return json.toString();
+    }
 }

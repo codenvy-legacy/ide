@@ -19,93 +19,99 @@ import com.codenvy.eclipse.jdt.internal.compiler.lookup.TypeBinding;
 
 public class TypeDeclarationLocator extends PatternLocator {
 
-protected TypeDeclarationPattern pattern; // can be a QualifiedTypeDeclarationPattern
+    protected TypeDeclarationPattern pattern; // can be a QualifiedTypeDeclarationPattern
 
-public TypeDeclarationLocator(TypeDeclarationPattern pattern) {
-	super(pattern);
+    public TypeDeclarationLocator(TypeDeclarationPattern pattern) {
+        super(pattern);
 
-	this.pattern = pattern;
-}
-//public int match(ASTNode node, MatchingNodeSet nodeSet) - SKIP IT
+        this.pattern = pattern;
+    }
+
+    //public int match(ASTNode node, MatchingNodeSet nodeSet) - SKIP IT
 //public int match(ConstructorDeclaration node, MatchingNodeSet nodeSet) - SKIP IT
 //public int match(Expression node, MatchingNodeSet nodeSet) - SKIP IT
 //public int match(FieldDeclaration node, MatchingNodeSet nodeSet) - SKIP IT
 //public int match(MethodDeclaration node, MatchingNodeSet nodeSet) - SKIP IT
 //public int match(MessageSend node, MatchingNodeSet nodeSet) - SKIP IT
 //public int match(Reference node, MatchingNodeSet nodeSet) - SKIP IT
-public int match(TypeDeclaration node, MatchingNodeSet nodeSet) {
-	if (this.pattern.simpleName == null || matchesName(this.pattern.simpleName, node.name))
-		return nodeSet.addMatch(node, this.pattern.mustResolve ? POSSIBLE_MATCH : ACCURATE_MATCH);
+    public int match(TypeDeclaration node, MatchingNodeSet nodeSet) {
+        if (this.pattern.simpleName == null || matchesName(this.pattern.simpleName, node.name))
+            return nodeSet.addMatch(node, this.pattern.mustResolve ? POSSIBLE_MATCH : ACCURATE_MATCH);
 
-	return IMPOSSIBLE_MATCH;
-}
+        return IMPOSSIBLE_MATCH;
+    }
 //public int match(TypeReference node, MatchingNodeSet nodeSet) - SKIP IT
 
-public int resolveLevel(ASTNode node) {
-	if (!(node instanceof TypeDeclaration)) return IMPOSSIBLE_MATCH;
+    public int resolveLevel(ASTNode node) {
+        if (!(node instanceof TypeDeclaration)) return IMPOSSIBLE_MATCH;
 
-	return resolveLevel(((TypeDeclaration) node).binding);
-}
-public int resolveLevel(Binding binding) {
-	if (binding == null) return INACCURATE_MATCH;
-	if (!(binding instanceof TypeBinding)) return IMPOSSIBLE_MATCH;
+        return resolveLevel(((TypeDeclaration)node).binding);
+    }
 
-	TypeBinding type = (TypeBinding) binding;
+    public int resolveLevel(Binding binding) {
+        if (binding == null) return INACCURATE_MATCH;
+        if (!(binding instanceof TypeBinding)) return IMPOSSIBLE_MATCH;
 
-	switch (this.pattern.typeSuffix) {
-		case CLASS_SUFFIX:
-			if (!type.isClass()) return IMPOSSIBLE_MATCH;
-			break;
-		case CLASS_AND_INTERFACE_SUFFIX:
-			if (!(type.isClass() || (type.isInterface() && !type.isAnnotationType()))) return IMPOSSIBLE_MATCH;
-			break;
-		case CLASS_AND_ENUM_SUFFIX:
-			if (!(type.isClass() || type.isEnum())) return IMPOSSIBLE_MATCH;
-			break;
-		case INTERFACE_SUFFIX:
-			if (!type.isInterface() || type.isAnnotationType()) return IMPOSSIBLE_MATCH;
-			break;
-		case INTERFACE_AND_ANNOTATION_SUFFIX:
-			if (!(type.isInterface() || type.isAnnotationType())) return IMPOSSIBLE_MATCH;
-			break;
-		case ENUM_SUFFIX:
-			if (!type.isEnum()) return IMPOSSIBLE_MATCH;
-			break;
-		case ANNOTATION_TYPE_SUFFIX:
-			if (!type.isAnnotationType()) return IMPOSSIBLE_MATCH;
-			break;
-		case TYPE_SUFFIX : // nothing
-	}
+        TypeBinding type = (TypeBinding)binding;
 
-	// fully qualified name
-	if (this.pattern instanceof QualifiedTypeDeclarationPattern) {
-		QualifiedTypeDeclarationPattern qualifiedPattern = (QualifiedTypeDeclarationPattern) this.pattern;
-		return resolveLevelForType(qualifiedPattern.simpleName, qualifiedPattern.qualification, type);
-	} else {
-		char[] enclosingTypeName = this.pattern.enclosingTypeNames == null ? null : CharOperation.concatWith(this.pattern.enclosingTypeNames, '.');
-		return resolveLevelForType(this.pattern.simpleName, this.pattern.pkg, enclosingTypeName, type);
-	}
-}
-/**
- * Returns whether the given type binding matches the given simple name pattern
- * qualification pattern and enclosing type name pattern.
- */
-protected int resolveLevelForType(char[] simpleNamePattern, char[] qualificationPattern, char[] enclosingNamePattern, TypeBinding type) {
-	if (enclosingNamePattern == null)
-		return resolveLevelForType(simpleNamePattern, qualificationPattern, type);
-	if (qualificationPattern == null)
-		return resolveLevelForType(simpleNamePattern, enclosingNamePattern, type);
+        switch (this.pattern.typeSuffix) {
+            case CLASS_SUFFIX:
+                if (!type.isClass()) return IMPOSSIBLE_MATCH;
+                break;
+            case CLASS_AND_INTERFACE_SUFFIX:
+                if (!(type.isClass() || (type.isInterface() && !type.isAnnotationType()))) return IMPOSSIBLE_MATCH;
+                break;
+            case CLASS_AND_ENUM_SUFFIX:
+                if (!(type.isClass() || type.isEnum())) return IMPOSSIBLE_MATCH;
+                break;
+            case INTERFACE_SUFFIX:
+                if (!type.isInterface() || type.isAnnotationType()) return IMPOSSIBLE_MATCH;
+                break;
+            case INTERFACE_AND_ANNOTATION_SUFFIX:
+                if (!(type.isInterface() || type.isAnnotationType())) return IMPOSSIBLE_MATCH;
+                break;
+            case ENUM_SUFFIX:
+                if (!type.isEnum()) return IMPOSSIBLE_MATCH;
+                break;
+            case ANNOTATION_TYPE_SUFFIX:
+                if (!type.isAnnotationType()) return IMPOSSIBLE_MATCH;
+                break;
+            case TYPE_SUFFIX: // nothing
+        }
 
-	// case of an import reference while searching for ALL_OCCURENCES of a type (see bug 37166)
-	if (type instanceof ProblemReferenceBinding) return IMPOSSIBLE_MATCH;
+        // fully qualified name
+        if (this.pattern instanceof QualifiedTypeDeclarationPattern) {
+            QualifiedTypeDeclarationPattern qualifiedPattern = (QualifiedTypeDeclarationPattern)this.pattern;
+            return resolveLevelForType(qualifiedPattern.simpleName, qualifiedPattern.qualification, type);
+        } else {
+            char[] enclosingTypeName =
+                    this.pattern.enclosingTypeNames == null ? null : CharOperation.concatWith(this.pattern.enclosingTypeNames, '.');
+            return resolveLevelForType(this.pattern.simpleName, this.pattern.pkg, enclosingTypeName, type);
+        }
+    }
 
-	// pattern was created from a Java element: qualification is the package name.
-	char[] fullQualificationPattern = CharOperation.concat(qualificationPattern, enclosingNamePattern, '.');
-	if (CharOperation.equals(this.pattern.pkg, CharOperation.concatWith(type.getPackage().compoundName, '.')))
-		return resolveLevelForType(simpleNamePattern, fullQualificationPattern, type);
-	return IMPOSSIBLE_MATCH;
-}
-public String toString() {
-	return "Locator for " + this.pattern.toString(); //$NON-NLS-1$
-}
+    /**
+     * Returns whether the given type binding matches the given simple name pattern
+     * qualification pattern and enclosing type name pattern.
+     */
+    protected int resolveLevelForType(char[] simpleNamePattern, char[] qualificationPattern, char[] enclosingNamePattern,
+                                      TypeBinding type) {
+        if (enclosingNamePattern == null)
+            return resolveLevelForType(simpleNamePattern, qualificationPattern, type);
+        if (qualificationPattern == null)
+            return resolveLevelForType(simpleNamePattern, enclosingNamePattern, type);
+
+        // case of an import reference while searching for ALL_OCCURENCES of a type (see bug 37166)
+        if (type instanceof ProblemReferenceBinding) return IMPOSSIBLE_MATCH;
+
+        // pattern was created from a Java element: qualification is the package name.
+        char[] fullQualificationPattern = CharOperation.concat(qualificationPattern, enclosingNamePattern, '.');
+        if (CharOperation.equals(this.pattern.pkg, CharOperation.concatWith(type.getPackage().compoundName, '.')))
+            return resolveLevelForType(simpleNamePattern, fullQualificationPattern, type);
+        return IMPOSSIBLE_MATCH;
+    }
+
+    public String toString() {
+        return "Locator for " + this.pattern.toString(); //$NON-NLS-1$
+    }
 }

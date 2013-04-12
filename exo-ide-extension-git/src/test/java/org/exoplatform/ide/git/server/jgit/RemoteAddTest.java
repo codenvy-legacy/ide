@@ -32,44 +32,41 @@ import java.net.URL;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: RemoteAddTest.java 70163 2011-06-03 13:37:45Z andrew00x $
  */
-public class RemoteAddTest extends BaseTest
-{
-   private Repository repo;
+public class RemoteAddTest extends BaseTest {
+    private Repository repo;
 
-   @Override
-   protected void setUp() throws Exception
-   {
-      super.setUp();
-      
-      // Create clean repository instead use default one.
-      URL testCls = Thread.currentThread().getContextClassLoader().getResource(".");
-      File target = new File(testCls.toURI()).getParentFile();
-      File repoDir = new File(target, "RemoteAddTest");
-      repoDir.mkdir();
-      forClean.add(repoDir);
-      repo = new FileRepository(new File(repoDir, ".git"));
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+
+        // Create clean repository instead use default one.
+        URL testCls = Thread.currentThread().getContextClassLoader().getResource(".");
+        File target = new File(testCls.toURI()).getParentFile();
+        File repoDir = new File(target, "RemoteAddTest");
+        repoDir.mkdir();
+        forClean.add(repoDir);
+        repo = new FileRepository(new File(repoDir, ".git"));
       /* May be empty request in this impl. 
        * Working directory already specified but may be not initialized yet.
        * Directory .git does not exists yet. */
-      InitRequest request = new InitRequest();
-      new JGitConnection(repo, new GitUser("andrey", "andrey@mail.com")).init(request);
-   }
+        InitRequest request = new InitRequest();
+        new JGitConnection(repo, new GitUser("andrey", "andrey@mail.com")).init(request);
+    }
 
-   public void testRemoteAdd() throws Exception
-   {
-      String remoteUrl = getDefaultRepository().getWorkTree().getAbsolutePath();
-      new JGitConnection(repo, new GitUser("andrey", "andrey@mail.com")).remoteAdd(new RemoteAddRequest("origin", remoteUrl));
-      StoredConfig config = repo.getConfig();
-      assertEquals(remoteUrl, config.getString("remote", "origin", "url"));
-      assertEquals("+refs/heads/*:refs/remotes/origin/*", config.getString("remote", "origin", "fetch"));
-   }
+    public void testRemoteAdd() throws Exception {
+        String remoteUrl = getDefaultRepository().getWorkTree().getAbsolutePath();
+        new JGitConnection(repo, new GitUser("andrey", "andrey@mail.com")).remoteAdd(new RemoteAddRequest("origin", remoteUrl));
+        StoredConfig config = repo.getConfig();
+        assertEquals(remoteUrl, config.getString("remote", "origin", "url"));
+        assertEquals("+refs/heads/*:refs/remotes/origin/*", config.getString("remote", "origin", "fetch"));
+    }
 
-   public void testRemoteAddWithBranches() throws Exception
-   {
-      String remoteUrl = getDefaultRepository().getWorkTree().getAbsolutePath();
-      new JGitConnection(repo, new GitUser("andrey", "andrey@mail.com")).remoteAdd(new RemoteAddRequest("origin", remoteUrl, new String[]{"test"}));
-      StoredConfig config = repo.getConfig();
-      assertEquals(remoteUrl, config.getString("remote", "origin", "url"));
-      assertEquals("+refs/heads/test:refs/remotes/origin/test", config.getString("remote", "origin", "fetch"));
-   }
+    public void testRemoteAddWithBranches() throws Exception {
+        String remoteUrl = getDefaultRepository().getWorkTree().getAbsolutePath();
+        new JGitConnection(repo, new GitUser("andrey", "andrey@mail.com"))
+                .remoteAdd(new RemoteAddRequest("origin", remoteUrl, new String[]{"test"}));
+        StoredConfig config = repo.getConfig();
+        assertEquals(remoteUrl, config.getString("remote", "origin", "url"));
+        assertEquals("+refs/heads/test:refs/remotes/origin/test", config.getString("remote", "origin", "fetch"));
+    }
 }

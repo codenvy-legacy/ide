@@ -18,29 +18,25 @@
  */
 package com.codenvy.ide.collaboration.chat.server;
 
+import javax.ws.rs.core.Application;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.ws.rs.core.Application;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class ChatApplication extends Application
-{
-   @Override
-   public Set<Object> getSingletons()
-   {
-      return Collections.emptySet();
-   }
+public class ChatApplication extends Application {
+    @Override
+    public Set<Object> getSingletons() {
+        return Collections.emptySet();
+    }
 
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      Set<Class<?>> classes = new HashSet<Class<?>>();
-      classes.add(ChatService.class);
-      return classes;
-   }
+    @Override
+    public Set<Class<?>> getClasses() {
+        Set<Class<?>> classes = new HashSet<Class<?>>();
+        classes.add(ChatService.class);
+        return classes;
+    }
 }

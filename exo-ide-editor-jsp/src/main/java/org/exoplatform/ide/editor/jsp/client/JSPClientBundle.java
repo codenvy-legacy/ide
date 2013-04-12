@@ -24,22 +24,20 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface JSPClientBundle extends ClientBundle
-{
+public interface JSPClientBundle extends ClientBundle {
 
-   JSPClientBundle INSTANCE = GWT.create(JSPClientBundle.class);
+    JSPClientBundle INSTANCE = GWT.create(JSPClientBundle.class);
 
-   @Source("org/exoplatform/ide/editor/jsp/client/jsp-file.png")
-   ImageResource jspFile();
+    @Source("org/exoplatform/ide/editor/jsp/client/jsp-file.png")
+    ImageResource jspFile();
 
-   @Source("org/exoplatform/ide/editor/jsp/client/jsp-file-disabled.png")
-   ImageResource jspFileDisabled();
+    @Source("org/exoplatform/ide/editor/jsp/client/jsp-file-disabled.png")
+    ImageResource jspFileDisabled();
 
 }

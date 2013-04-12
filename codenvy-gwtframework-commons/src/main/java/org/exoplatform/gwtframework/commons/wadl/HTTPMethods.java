@@ -28,9 +28,9 @@ package org.exoplatform.gwtframework.commons.wadl;
 
 /**
  * <p>Java class for HTTPMethods.
- * 
+ * <p/>
  * <p>The following schema fragment specifies the expected content contained within this class.
- * <p>
+ * <p/>
  * <pre>
  * &lt;simpleType name="HTTPMethods">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}NMTOKEN">
@@ -42,21 +42,17 @@ package org.exoplatform.gwtframework.commons.wadl;
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
- * 
  */
-public enum HTTPMethods 
-{
+public enum HTTPMethods {
 
-   GET, POST, PUT, HEAD, DELETE;
+    GET, POST, PUT, HEAD, DELETE;
 
-   public String value()
-   {
-      return name();
-   }
+    public String value() {
+        return name();
+    }
 
-   public static HTTPMethods fromValue(String v)
-   {
-      return valueOf(v);
-   }
+    public static HTTPMethods fromValue(String v) {
+        return valueOf(v);
+    }
 
 }

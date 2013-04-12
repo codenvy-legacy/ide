@@ -17,64 +17,53 @@ import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.editor.shared.text.IDocumentListener;
 
 
-class UndoCollector implements IDocumentListener
-{
+class UndoCollector implements IDocumentListener {
 
-   protected UndoEdit undo;
+    protected UndoEdit undo;
 
-   private int fOffset;
+    private int fOffset;
 
-   private int fLength;
+    private int fLength;
 
-   /**
-    */
-   private String fLastCurrentText;
+    /**
+     */
+    private String fLastCurrentText;
 
-   public UndoCollector(TextEdit root)
-   {
-      fOffset = root.getOffset();
-      fLength = root.getLength();
-   }
+    public UndoCollector(TextEdit root) {
+        fOffset = root.getOffset();
+        fLength = root.getLength();
+    }
 
-   public void connect(IDocument document)
-   {
-      document.addDocumentListener(this);
-      undo = new UndoEdit();
-   }
+    public void connect(IDocument document) {
+        document.addDocumentListener(this);
+        undo = new UndoEdit();
+    }
 
-   public void disconnect(IDocument document)
-   {
-      if (undo != null)
-      {
-         document.removeDocumentListener(this);
-         undo.defineRegion(fOffset, fLength);
-      }
-   }
+    public void disconnect(IDocument document) {
+        if (undo != null) {
+            document.removeDocumentListener(this);
+            undo.defineRegion(fOffset, fLength);
+        }
+    }
 
-   public void documentChanged(DocumentEvent event)
-   {
-      fLength += getDelta(event);
-   }
+    public void documentChanged(DocumentEvent event) {
+        fLength += getDelta(event);
+    }
 
-   private static int getDelta(DocumentEvent event)
-   {
-      String text = event.getText();
-      return text == null ? -event.getLength() : (text.length() - event.getLength());
-   }
+    private static int getDelta(DocumentEvent event) {
+        String text = event.getText();
+        return text == null ? -event.getLength() : (text.length() - event.getLength());
+    }
 
-   public void documentAboutToBeChanged(DocumentEvent event)
-   {
-      int offset = event.getOffset();
-      int currentLength = event.getLength();
-      String currentText = null;
-      try
-      {
-         currentText = event.getDocument().get(offset, currentLength);
-      }
-      catch (BadLocationException cannotHappen)
-      {
-         Assert.isTrue(false, "Can't happen"); //$NON-NLS-1$
-      }
+    public void documentAboutToBeChanged(DocumentEvent event) {
+        int offset = event.getOffset();
+        int currentLength = event.getLength();
+        String currentText = null;
+        try {
+            currentText = event.getDocument().get(offset, currentLength);
+        } catch (BadLocationException cannotHappen) {
+            Assert.isTrue(false, "Can't happen"); //$NON-NLS-1$
+        }
 
 		/*
        * see https://bugs.eclipse.org/bugs/show_bug.cgi?id=93634
@@ -83,16 +72,13 @@ class UndoCollector implements IDocumentListener
 		 * String instance in all edits, instead of using the unique String
 		 * returned from IDocument.get(int, int).
 		 */
-      if (fLastCurrentText != null && fLastCurrentText.equals(currentText))
-      {
-         currentText = fLastCurrentText;
-      }
-      else
-      {
-         fLastCurrentText = currentText;
-      }
+        if (fLastCurrentText != null && fLastCurrentText.equals(currentText)) {
+            currentText = fLastCurrentText;
+        } else {
+            fLastCurrentText = currentText;
+        }
 
-      String newText = event.getText();
-      undo.add(new ReplaceEdit(offset, newText != null ? newText.length() : 0, currentText));
-   }
+        String newText = event.getText();
+        undo.add(new ReplaceEdit(offset, newText != null ? newText.length() : 0, currentText));
+    }
 }

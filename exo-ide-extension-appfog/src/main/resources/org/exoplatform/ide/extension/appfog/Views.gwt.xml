@@ -19,48 +19,48 @@
 
 -->
 <module>
-   <inherits name='com.google.gwt.user.User'/>
-   <replace-with class="org.exoplatform.ide.extension.appfog.client.deploy.DeployApplicationView">
-      <when-type-is class="org.exoplatform.ide.extension.appfog.client.deploy.DeployApplicationPresenter.Display"/>
-   </replace-with>
+    <inherits name='com.google.gwt.user.User'/>
+    <replace-with class="org.exoplatform.ide.extension.appfog.client.deploy.DeployApplicationView">
+        <when-type-is class="org.exoplatform.ide.extension.appfog.client.deploy.DeployApplicationPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.appfog.client.login.LoginView">
-      <when-type-is class="org.exoplatform.ide.extension.appfog.client.login.LoginPresenter.Display"/>
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.extension.appfog.client.login.LoginView">
+        <when-type-is class="org.exoplatform.ide.extension.appfog.client.login.LoginPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.appfog.client.create.CreateApplicationView">
-      <when-type-is class="org.exoplatform.ide.extension.appfog.client.create.CreateApplicationPresenter.Display"/>
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.extension.appfog.client.create.CreateApplicationView">
+        <when-type-is class="org.exoplatform.ide.extension.appfog.client.create.CreateApplicationPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.appfog.client.info.ApplicationInfoView">
-      <when-type-is class="org.exoplatform.ide.extension.appfog.client.info.ApplicationInfoPresenter.Display"/>
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.extension.appfog.client.info.ApplicationInfoView">
+        <when-type-is class="org.exoplatform.ide.extension.appfog.client.info.ApplicationInfoPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.appfog.client.rename.RenameApplicationView">
-      <when-type-is class="org.exoplatform.ide.extension.appfog.client.rename.RenameApplicationPresenter.Display"/>
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.extension.appfog.client.rename.RenameApplicationView">
+        <when-type-is class="org.exoplatform.ide.extension.appfog.client.rename.RenameApplicationPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.appfog.client.delete.DeleteApplicationView">
-      <when-type-is class="org.exoplatform.ide.extension.appfog.client.delete.DeleteApplicationPresenter.Display"/>
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.extension.appfog.client.delete.DeleteApplicationView">
+        <when-type-is class="org.exoplatform.ide.extension.appfog.client.delete.DeleteApplicationPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.appfog.client.url.UnmapUrlView">
-      <when-type-is class="org.exoplatform.ide.extension.appfog.client.url.UnmapUrlPresenter.Display"/>
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.extension.appfog.client.url.UnmapUrlView">
+        <when-type-is class="org.exoplatform.ide.extension.appfog.client.url.UnmapUrlPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.appfog.client.apps.ApplicationsView">
-      <when-type-is class="org.exoplatform.ide.extension.appfog.client.apps.ApplicationsPresenter.Display"/>
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.extension.appfog.client.apps.ApplicationsView">
+        <when-type-is class="org.exoplatform.ide.extension.appfog.client.apps.ApplicationsPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.appfog.client.project.AppfogProjectView">
-      <when-type-is class="org.exoplatform.ide.extension.appfog.client.project.AppfogProjectPresenter.Display"/>
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.extension.appfog.client.project.AppfogProjectView">
+        <when-type-is class="org.exoplatform.ide.extension.appfog.client.project.AppfogProjectPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.appfog.client.services.ManageServicesView">
-      <when-type-is class="org.exoplatform.ide.extension.appfog.client.services.ManageServicesPresenter.Display"/>
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.extension.appfog.client.services.ManageServicesView">
+        <when-type-is class="org.exoplatform.ide.extension.appfog.client.services.ManageServicesPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.appfog.client.services.CreateServiceView">
-      <when-type-is class="org.exoplatform.ide.extension.appfog.client.services.CreateServicePresenter.Display"/>
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.extension.appfog.client.services.CreateServiceView">
+        <when-type-is class="org.exoplatform.ide.extension.appfog.client.services.CreateServicePresenter.Display"/>
+    </replace-with>
 </module>

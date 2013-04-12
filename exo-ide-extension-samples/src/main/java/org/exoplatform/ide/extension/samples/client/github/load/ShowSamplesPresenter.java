@@ -55,328 +55,264 @@ import java.util.List;
  *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: GithubSamplesPresenter.java Aug 30, 2011 12:12:39 PM vereshchaka $
- *
  */
 public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandler, ItemsSelectedHandler,
-   ImportSampleStep<ProjectData>
-{
+                                             ImportSampleStep<ProjectData> {
 
-   public interface Display extends IsView
-   {
-      HasClickHandlers getNextButton();
+    public interface Display extends IsView {
+        HasClickHandlers getNextButton();
 
-      HasClickHandlers getCancelButton();
+        HasClickHandlers getCancelButton();
 
-      ListGridItem<ProjectData> getSamplesListGrid();
+        ListGridItem<ProjectData> getSamplesListGrid();
 
-      List<ProjectData> getSelectedItems();
+        List<ProjectData> getSelectedItems();
 
-      HasValue<String> getProjectNameField();
+        HasValue<String> getProjectNameField();
 
-      void enableNextButton(boolean enable);
+        void enableNextButton(boolean enable);
 
-      /**
-       * Give focus to name field.
-       */
-      void focusInNameField();
-   }
+        /** Give focus to name field. */
+        void focusInNameField();
+    }
 
-   private static SamplesLocalizationConstant lb = SamplesExtension.LOCALIZATION_CONSTANT;
+    private static SamplesLocalizationConstant lb = SamplesExtension.LOCALIZATION_CONSTANT;
 
-   private Display display;
+    private Display display;
 
-   List<Item> selectedItems;
+    List<Item> selectedItems;
 
-   private List<ProjectData> selectedProjects;
+    private List<ProjectData> selectedProjects;
 
-   private ProjectData selectedProjectData;
+    private ProjectData selectedProjectData;
 
-   private ImportSampleStep<ProjectData> nextStep;
+    private ImportSampleStep<ProjectData> nextStep;
 
-   public ShowSamplesPresenter()
-   {
-      IDE.addHandler(ShowSamplesEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-   }
+    public ShowSamplesPresenter() {
+        IDE.addHandler(ShowSamplesEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+    }
 
-   private void bindDisplay()
-   {
-      display.getNextButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            if (selectedProjects == null || selectedProjects.isEmpty())
-            {
-               Dialogs.getInstance().showError(lb.showSamplesErrorSelectRepository());
-               return;
+    private void bindDisplay() {
+        display.getNextButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                if (selectedProjects == null || selectedProjects.isEmpty()) {
+                    Dialogs.getInstance().showError(lb.showSamplesErrorSelectRepository());
+                    return;
+                }
+
+                selectedProjectData = selectedProjects.get(0);
+                String name = display.getProjectNameField().getValue();
+                if (name != null && !name.isEmpty()) {
+                    selectedProjectData.setName(name);
+                }
+                nextStep.onOpen(selectedProjectData);
+                closeView();
             }
+        });
 
-            selectedProjectData = selectedProjects.get(0);
-            String name = display.getProjectNameField().getValue();
-            if (name != null && !name.isEmpty())
-            {
-               selectedProjectData.setName(name);
+        display.getCancelButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                closeView();
             }
-            nextStep.onOpen(selectedProjectData);
-            closeView();
-         }
-      });
+        });
 
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            closeView();
-         }
-      });
-
-      display.getSamplesListGrid().addSelectionHandler(new SelectionHandler<ProjectData>()
-      {
-         @Override
-         public void onSelection(SelectionEvent<ProjectData> event)
-         {
-            selectedProjects = display.getSelectedItems();
-            if (selectedProjects == null || selectedProjects.isEmpty())
-            {
-               display.getProjectNameField().setValue("");
-               display.enableNextButton(false);
+        display.getSamplesListGrid().addSelectionHandler(new SelectionHandler<ProjectData>() {
+            @Override
+            public void onSelection(SelectionEvent<ProjectData> event) {
+                selectedProjects = display.getSelectedItems();
+                if (selectedProjects == null || selectedProjects.isEmpty()) {
+                    display.getProjectNameField().setValue("");
+                    display.enableNextButton(false);
+                } else {
+                    String name = selectedProjects.get(0).getName();
+                    display.getProjectNameField().setValue(name);
+                    display.enableNextButton(true);
+                }
             }
-            else
-            {
-               String name = selectedProjects.get(0).getName();
-               display.getProjectNameField().setValue(name);
-               display.enableNextButton(true);
+        });
+    }
+
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
+
+    /** @see org.exoplatform.ide.git.client.github.GitHubCollaboratorsHandler.samples.GithubSamplesShowHandler#onShowSamples(org
+     * .exoplatform.ide.client.GetCollboratorsEvent.samples.ShowGithubSamplesEvent) */
+    @Override
+    public void onShowSamples(ShowSamplesEvent event) {
+        try {
+            // User's name will be taken from configuration:
+            GitHubClientService.getInstance().getRepositoriesByUser(
+                    null,
+                    new AsyncRequestCallback<List<GitHubRepository>>(new RepositoriesUnmarshaller(
+                            new ArrayList<GitHubRepository>())) {
+                        @Override
+                        protected void onSuccess(List<GitHubRepository> result) {
+                            openView();
+                            List<ProjectData> projectDataList = new ArrayList<ProjectData>();
+                            for (GitHubRepository repo : result) {
+                                ProjectData projectData =
+                                        new ProjectData(repo.getName(), null, null, null, repo.getCloneUrl(), repo.getGitUrl());
+                                processDescription(projectData, repo.getDescription());
+                                projectDataList.add(projectData);
+                            }
+                            display.getSamplesListGrid().setValue(projectDataList);
+                            display.enableNextButton(false);
+                            display.focusInNameField();
+                        }
+
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            IDE.fireEvent(new ExceptionThrownEvent(exception));
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    private void openView() {
+        if (display == null) {
+            Display d = GWT.create(Display.class);
+            IDE.getInstance().openView((View)d);
+            display = d;
+            bindDisplay();
+            return;
+        } else {
+            IDE.fireEvent(new ExceptionThrownEvent("Show Samples View must be null"));
+        }
+    }
+
+    private void closeView() {
+        IDE.getInstance().closeView(display.asView().getId());
+    }
+
+    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     * .framework.navigation.event.ItemsSelectedEvent) */
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        this.selectedItems = event.getSelectedItems();
+    }
+
+    /**
+     * Parse description of repository on GitHub, that store in such form:
+     * <p/>
+     * <code>Type: &lt;project type&gt; Desc: &lt;project description&gt;</code>
+     * <p/>
+     * Return an array with 2 elements, where element[0] is the type of project and element[1] is the description
+     *
+     * @param text
+     * @return
+     */
+    private void processDescription(ProjectData projectData, String text) {
+        if (text.contains("Targets: ")) {
+            String[] res = text.split("^Type: | Desc: | Targets: ");
+            if (res.length < 4) {
+                projectData.setType(ProjectResolver.getProjectsTypes().toArray(new String[1])[0]);
+                projectData.setDescription(text);
+                Dialogs
+                        .getInstance()
+                        .showError(
+                                "Can't parse project description: "
+                                + text
+                                +
+                                ". <br/> It must be in format: Type: &lt;project type&gt; Desc: &lt;project description&gt; Targets: &lt;" +
+                                "space separated targets&gt;");
+            } else {
+                projectData.setType(res[1]);
+                projectData.setDescription(res[2]);
+                projectData.setTargets(parseTargets(res[3]));
             }
-         }
-      });
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.git.client.github.GitHubCollaboratorsHandler.samples.GithubSamplesShowHandler#onShowSamples(org.exoplatform.ide.client.GetCollboratorsEvent.samples.ShowGithubSamplesEvent)
-    */
-   @Override
-   public void onShowSamples(ShowSamplesEvent event)
-   {
-      try
-      {
-         // User's name will be taken from configuration:
-         GitHubClientService.getInstance().getRepositoriesByUser(
-            null,
-            new AsyncRequestCallback<List<GitHubRepository>>(new RepositoriesUnmarshaller(
-               new ArrayList<GitHubRepository>()))
-            {
-               @Override
-               protected void onSuccess(List<GitHubRepository> result)
-               {
-                  openView();
-                  List<ProjectData> projectDataList = new ArrayList<ProjectData>();
-                  for (GitHubRepository repo : result)
-                  {
-                     ProjectData projectData = new ProjectData(repo.getName(), null, null, null, repo.getCloneUrl(), repo.getGitUrl());
-                     processDescription(projectData, repo.getDescription());
-                     projectDataList.add(projectData);
-                  }
-                  display.getSamplesListGrid().setValue(projectDataList);
-                  display.enableNextButton(false);
-                  display.focusInNameField();
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   private void openView()
-   {
-      if (display == null)
-      {
-         Display d = GWT.create(Display.class);
-         IDE.getInstance().openView((View)d);
-         display = d;
-         bindDisplay();
-         return;
-      }
-      else
-      {
-         IDE.fireEvent(new ExceptionThrownEvent("Show Samples View must be null"));
-      }
-   }
-
-   private void closeView()
-   {
-      IDE.getInstance().closeView(display.asView().getId());
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      this.selectedItems = event.getSelectedItems();
-   }
-
-   /**
-    * Parse description of repository on GitHub, that store in such form:
-    * <p/>
-    * <code>Type: &lt;project type&gt; Desc: &lt;project description&gt;</code>
-    * <p/>
-    * Return an array with 2 elements, where element[0] is the type of project and element[1] is the description
-    *
-    * @param text
-    * @return
-    */
-   private void processDescription(ProjectData projectData, String text)
-   {
-      if (text.contains("Targets: "))
-      {
-         String[] res = text.split("^Type: | Desc: | Targets: ");
-         if (res.length < 4)
-         {
-            projectData.setType(ProjectResolver.getProjectsTypes().toArray(new String[1])[0]);
-            projectData.setDescription(text);
-            Dialogs
-               .getInstance()
-               .showError(
-                  "Can't parse project description: "
-                     + text
-                     + ". <br/> It must be in format: Type: &lt;project type&gt; Desc: &lt;project description&gt; Targets: &lt;space separated targets&gt;");
-         }
-         else
-         {
-            projectData.setType(res[1]);
-            projectData.setDescription(res[2]);
-            projectData.setTargets(parseTargets(res[3]));
-         }
-      }
-      else
-      {
-         String[] res = text.split("^Type: | Desc:");
-         if (res.length < 3)
-         {
-            projectData.setType(ProjectResolver.getProjectsTypes().toArray(new String[1])[0]);
-            projectData.setDescription(text);
-            Dialogs.getInstance().showError(
-               "Can't parse project description: " + text
-                  + ". <br/> It must be in format: Type: &lt;project type&gt; Desc: &lt;project description&gt;");
-         }
-         else
-         {
-            projectData.setType(res[1]);
-            projectData.setDescription(res[2]);
-         }
-      }
-   }
-
-   private List<String> parseTargets(String targetsStr)
-   {
-      ArrayList<String> targets = new ArrayList<String>();
-      if (targetsStr != null && !targetsStr.isEmpty())
-      {
-         String[] parts = targetsStr.split(" ");
-         for (String part : parts)
-         {
-            String target = part.trim();
-            if (!target.isEmpty())
-            {
-               targets.add(target);
+        } else {
+            String[] res = text.split("^Type: | Desc:");
+            if (res.length < 3) {
+                projectData.setType(ProjectResolver.getProjectsTypes().toArray(new String[1])[0]);
+                projectData.setDescription(text);
+                Dialogs.getInstance().showError(
+                        "Can't parse project description: " + text
+                        + ". <br/> It must be in format: Type: &lt;project type&gt; Desc: &lt;project description&gt;");
+            } else {
+                projectData.setType(res[1]);
+                projectData.setDescription(res[2]);
             }
-         }
-      }
-      return targets;
-   }
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.ImportSampleStep#onOpen(java.lang.Object)
-    */
-   @Override
-   public void onOpen(ProjectData value)
-   {
-      // it is the first step
-   }
+    private List<String> parseTargets(String targetsStr) {
+        ArrayList<String> targets = new ArrayList<String>();
+        if (targetsStr != null && !targetsStr.isEmpty()) {
+            String[] parts = targetsStr.split(" ");
+            for (String part : parts) {
+                String target = part.trim();
+                if (!target.isEmpty()) {
+                    targets.add(target);
+                }
+            }
+        }
+        return targets;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.ImportSampleStep#onReturn()
-    */
-   @Override
-   public void onReturn()
-   {
-      try
-      {
-         // User's name will be taken from configuration:
-         GitHubClientService.getInstance().getRepositoriesByUser(
-            null,
-            new AsyncRequestCallback<List<GitHubRepository>>(new RepositoriesUnmarshaller(
-               new ArrayList<GitHubRepository>()))
-            {
-               @Override
-               protected void onSuccess(List<GitHubRepository> result)
-               {
-                  openView();
-                  List<ProjectData> projectDataList = new ArrayList<ProjectData>();
-                  for (GitHubRepository repo : result)
-                  {
-                     ProjectData projectData = new ProjectData(repo.getName(), null, null, null, repo.getCloneUrl(),repo.getGitUrl());
-                     processDescription(projectData, repo.getDescription());
-                     projectDataList.add(projectData);
-                  }
-                  display.getSamplesListGrid().setValue(projectDataList);
-                  display.enableNextButton(false);
-               }
+    /** @see org.exoplatform.ide.extension.samples.client.github.deploy.ImportSampleStep#onOpen(java.lang.Object) */
+    @Override
+    public void onOpen(ProjectData value) {
+        // it is the first step
+    }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+    /** @see org.exoplatform.ide.extension.samples.client.github.deploy.ImportSampleStep#onReturn() */
+    @Override
+    public void onReturn() {
+        try {
+            // User's name will be taken from configuration:
+            GitHubClientService.getInstance().getRepositoriesByUser(
+                    null,
+                    new AsyncRequestCallback<List<GitHubRepository>>(new RepositoriesUnmarshaller(
+                            new ArrayList<GitHubRepository>())) {
+                        @Override
+                        protected void onSuccess(List<GitHubRepository> result) {
+                            openView();
+                            List<ProjectData> projectDataList = new ArrayList<ProjectData>();
+                            for (GitHubRepository repo : result) {
+                                ProjectData projectData =
+                                        new ProjectData(repo.getName(), null, null, null, repo.getCloneUrl(), repo.getGitUrl());
+                                processDescription(projectData, repo.getDescription());
+                                projectDataList.add(projectData);
+                            }
+                            display.getSamplesListGrid().setValue(projectDataList);
+                            display.enableNextButton(false);
+                        }
 
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.ImportSampleStep#setNextStep(org.exoplatform.ide.extension.samples.client.github.deploy.ImportSampleStep)
-    */
-   @Override
-   public void setNextStep(ImportSampleStep<ProjectData> step)
-   {
-      nextStep = step;
-   }
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            IDE.fireEvent(new ExceptionThrownEvent(exception));
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.ImportSampleStep#setPreviousStep(org.exoplatform.ide.extension.samples.client.github.deploy.ImportSampleStep)
-    */
-   @Override
-   public void setPreviousStep(ImportSampleStep<ProjectData> step)
-   {
-      // has no prev step
-   }
+    /** @see org.exoplatform.ide.extension.samples.client.github.deploy.ImportSampleStep#setNextStep(org.exoplatform.ide.extension.samples
+     * .client.github.deploy.ImportSampleStep) */
+    @Override
+    public void setNextStep(ImportSampleStep<ProjectData> step) {
+        nextStep = step;
+    }
+
+    /** @see org.exoplatform.ide.extension.samples.client.github.deploy.ImportSampleStep#setPreviousStep(org.exoplatform.ide.extension
+     * .samples.client.github.deploy.ImportSampleStep) */
+    @Override
+    public void setPreviousStep(ImportSampleStep<ProjectData> step) {
+        // has no prev step
+    }
 
 }

@@ -16,22 +16,18 @@ import com.codenvy.eclipse.jdt.internal.corext.refactoring.typeconstraints2.Cons
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/*package*/ final class ElementStructureEnvironment
-{
-   private final Map<ConstraintVariable2, ParametricStructure> fElemStructure;
+/*package*/ final class ElementStructureEnvironment {
+    private final Map<ConstraintVariable2, ParametricStructure> fElemStructure;
 
-   public ElementStructureEnvironment()
-   {
-      fElemStructure = new LinkedHashMap<ConstraintVariable2, ParametricStructure>();
-   }
+    public ElementStructureEnvironment() {
+        fElemStructure = new LinkedHashMap<ConstraintVariable2, ParametricStructure>();
+    }
 
-   public void setElemStructure(ConstraintVariable2 v, ParametricStructure t)
-   {
-      fElemStructure.put(v, t);
-   }
+    public void setElemStructure(ConstraintVariable2 v, ParametricStructure t) {
+        fElemStructure.put(v, t);
+    }
 
-   public ParametricStructure elemStructure(ConstraintVariable2 v)
-   {
-      return fElemStructure.get(v);
-   }
+    public ParametricStructure elemStructure(ConstraintVariable2 v) {
+        return fElemStructure.get(v);
+    }
 }

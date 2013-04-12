@@ -38,94 +38,80 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class GetItemURLPresenter implements GetItemURLHandler, ItemsSelectedHandler, ViewClosedHandler
-{
+public class GetItemURLPresenter implements GetItemURLHandler, ItemsSelectedHandler, ViewClosedHandler {
 
-   public interface Display extends IsView
-   {
+    public interface Display extends IsView {
 
-      HasClickHandlers getOkButton();
+        HasClickHandlers getOkButton();
 
-      HasValue<String> getPrivateURLField();
+        HasValue<String> getPrivateURLField();
 
-      HasValue<String> getPublicURLField();
+        HasValue<String> getPublicURLField();
 
-   }
+    }
 
-   private Display display;
+    private Display display;
 
-   private List<Item> selectedItems = new ArrayList<Item>();
+    private List<Item> selectedItems = new ArrayList<Item>();
 
-   public GetItemURLPresenter()
-   {
-      IDE.getInstance().addControl(new GetItemURLControl());
+    public GetItemURLPresenter() {
+        IDE.getInstance().addControl(new GetItemURLControl());
 
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(GetItemURLEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+        IDE.addHandler(GetItemURLEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
-      updateURLFields();
-   }
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        selectedItems = event.getSelectedItems();
+        updateURLFields();
+    }
 
-   @Override
-   public void onGetItemURL(GetItemURLEvent event)
-   {
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         IDE.getInstance().openView(display.asView());
-         bindDisplay();
-      }
-   }
+    @Override
+    public void onGetItemURL(GetItemURLEvent event) {
+        if (display == null) {
+            display = GWT.create(Display.class);
+            IDE.getInstance().openView(display.asView());
+            bindDisplay();
+        }
+    }
 
-   private void updateURLFields()
-   {
-      if (display != null && !selectedItems.isEmpty())
-      {
-         Item item = selectedItems.get(0);
-         Link link = item.getLinkByRelation(Link.REL_CONTENT_BY_PATH);
-         if (link != null)
-         {
-            String privateUrl = link.getHref();
-            display.getPrivateURLField().setValue(privateUrl);
+    private void updateURLFields() {
+        if (display != null && !selectedItems.isEmpty()) {
+            Item item = selectedItems.get(0);
+            Link link = item.getLinkByRelation(Link.REL_CONTENT_BY_PATH);
+            if (link != null) {
+                String privateUrl = link.getHref();
+                display.getPrivateURLField().setValue(privateUrl);
 
-            String publicUrl = privateUrl.replaceFirst("/IDE/rest/private/ide/vfs", "/IDE/rest/ide/vfs");
-            display.getPublicURLField().setValue(publicUrl);
-         }
-      }
-   }
+                String publicUrl = privateUrl.replaceFirst("/IDE/rest/private/ide/vfs", "/IDE/rest/ide/vfs");
+                display.getPublicURLField().setValue(publicUrl);
+            }
+        }
+    }
 
-   public void bindDisplay()
-   {
-      display.getOkButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
+    public void bindDisplay() {
+        display.getOkButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
 
-      updateURLFields();
-   }
+        updateURLFields();
+    }
 
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
 }

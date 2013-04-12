@@ -21,12 +21,9 @@ package org.exoplatform.ide.codeassistant.asm.test;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class WithNestedTypes
-{
-   public interface Nested1
-   {
-      
-   }
+public class WithNestedTypes {
+    public interface Nested1 {
+
+    }
 }

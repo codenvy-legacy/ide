@@ -15,14 +15,14 @@ package com.codenvy.eclipse.jdt.core;
  * all (and only) the import declarations. If a compilation unit has no import
  * declarations, no import container will be present.
  */
-public interface IImportContainer extends IJavaElement, IParent, ISourceReference
-{
-   /**
-    * Returns the first import declaration in this import container with the given name.
-    * This is a handle-only method. The import declaration may or may not exist.
-    *
-    * @param name the given name
-    * @return the first import declaration in this import container with the given name
-    */
-   IImportDeclaration getImport(String name);
+public interface IImportContainer extends IJavaElement, IParent, ISourceReference {
+    /**
+     * Returns the first import declaration in this import container with the given name.
+     * This is a handle-only method. The import declaration may or may not exist.
+     *
+     * @param name
+     *         the given name
+     * @return the first import declaration in this import container with the given name
+     */
+    IImportDeclaration getImport(String name);
 }

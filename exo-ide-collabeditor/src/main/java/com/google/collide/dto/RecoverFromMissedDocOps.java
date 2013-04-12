@@ -21,14 +21,14 @@ import org.exoplatform.ide.json.shared.JsonArray;
 /**
  * Lets a client re-synchronize with the server's version of a file after being
  * momentarily offline or missing a doc op broadcast.
- *
- * <p>
+ * <p/>
+ * <p/>
  * To catch up to the server, the client needs to first ensure that his unacked
  * doc ops were applied. He can resend those via {@link #getClientId()} and
  * {@link #getDocOps2()}. The server will ignore the doc ops if has already seen
  * them.
- *
- * <p>
+ * <p/>
+ * <p/>
  * The client also needs to catch up with recent changes made by others. The
  * server will provide all doc ops applied from {@link #getCurrentCcRevision()}
  * +1 onwards in the {@link RecoverFromMissedDocOpsResponse#getDocOps()}. That
@@ -39,28 +39,26 @@ import org.exoplatform.ide.json.shared.JsonArray;
  */
 @RoutingType(type = RoutingTypes.RECOVERFROMMISSEDDOCOPS)
 public interface RecoverFromMissedDocOps extends ClientToServerDto {
-  String getWorkspaceId();
+    String getWorkspaceId();
 
-  String getFileEditSessionKey();
+    String getFileEditSessionKey();
 
-  /**
-   * Revision of the client's document. This will be the intended revision for
-   * any doc ops being re-sent. Also, the list of applied doc ops in the
-   * {@link RecoverFromMissedDocOpsResponse} will start (exclusive) at this
-   * revision.
-   */
-  int getCurrentCcRevision();
+    /**
+     * Revision of the client's document. This will be the intended revision for
+     * any doc ops being re-sent. Also, the list of applied doc ops in the
+     * {@link RecoverFromMissedDocOpsResponse} will start (exclusive) at this
+     * revision.
+     */
+    int getCurrentCcRevision();
 
-  /**
-   * Optional. Set when the client needs to resend un-acked doc ops.
-   */
-  String getClientId();
+    /** Optional. Set when the client needs to resend un-acked doc ops. */
+    String getClientId();
 
-  /**
-   * Optional. Unacked doc-ops that may need to be applied (depending on whether
-   * the server received them prior to the client disconnection).
-   * 
-   * These are the serialized {@link DocOp}s.
-   */
-  JsonArray<String> getDocOps2();
+    /**
+     * Optional. Unacked doc-ops that may need to be applied (depending on whether
+     * the server received them prior to the client disconnection).
+     * <p/>
+     * These are the serialized {@link DocOp}s.
+     */
+    JsonArray<String> getDocOps2();
 }

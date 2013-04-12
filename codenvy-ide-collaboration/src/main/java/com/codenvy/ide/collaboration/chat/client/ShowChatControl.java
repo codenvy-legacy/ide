@@ -30,58 +30,50 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class ShowChatControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler
-{
-   public static final String ID = "View/Collaboration";
+public class ShowChatControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler {
+    public static final String ID = "View/Collaboration";
 
-   private ChatResources resources;
+    private ChatResources resources;
 
 
-   public ShowChatControl(ChatResources resources)
-   {
-      super(ID);
-      this.resources = resources;
-      setTitle("Collaboration");
-      setPrompt("Collaboration");
-      setImages(resources.collaborators(), resources.collaboratorsDisabled());
-      setEvent(new ShowHideChatEvent(true));
-      setCanBeSelected(true);
-      setVisible(true);
-      setEnabled(false);
-   }
+    public ShowChatControl(ChatResources resources) {
+        super(ID);
+        this.resources = resources;
+        setTitle("Collaboration");
+        setPrompt("Collaboration");
+        setImages(resources.collaborators(), resources.collaboratorsDisabled());
+        setEvent(new ShowHideChatEvent(true));
+        setCanBeSelected(true);
+        setVisible(true);
+        setEnabled(false);
+    }
 
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-   }
+    @Override
+    public void initialize() {
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
+    }
 
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      setEnabled(false);
-   }
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        setEnabled(false);
+    }
 
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      setEnabled(true);
-   }
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        setEnabled(true);
+    }
 
-   public void chatOpened(boolean opened)
-   {
-      setEvent(new ShowHideChatEvent(!opened));
-      setSelected(opened);
-   }
+    public void chatOpened(boolean opened) {
+        setEvent(new ShowHideChatEvent(!opened));
+        setSelected(opened);
+    }
 
-   public void startBlink()
-   {
-      setImages(resources.collaboratorsAnimation(), resources.collaboratorsDisabled());
-   }
+    public void startBlink() {
+        setImages(resources.collaboratorsAnimation(), resources.collaboratorsDisabled());
+    }
 
-   public void stopBlink()
-   {
-      setImages(resources.collaborators(), resources.collaboratorsDisabled());
-   }
+    public void stopBlink() {
+        setImages(resources.collaborators(), resources.collaboratorsDisabled());
+    }
 }

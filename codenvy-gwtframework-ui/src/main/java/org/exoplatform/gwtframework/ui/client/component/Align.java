@@ -20,11 +20,10 @@ package org.exoplatform.gwtframework.ui.client.component;
 
 /**
  * The Alignment enumeration.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Feb 22, 2011 10:37:02 AM anya $
- *
  */
 public enum Align {
-   LEFT, RIGHT, CENTER;
+    LEFT, RIGHT, CENTER;
 }

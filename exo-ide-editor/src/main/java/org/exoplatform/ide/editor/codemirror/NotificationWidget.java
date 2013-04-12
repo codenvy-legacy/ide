@@ -29,85 +29,75 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class NotificationWidget
-{
+public class NotificationWidget {
 
-   private Element targetElement;
+    private Element targetElement;
 
-   private FlowPanel notificationPanel;
+    private FlowPanel notificationPanel;
 
-   private String title;
+    private String title;
 
-   public NotificationWidget(Element targetElement, int offsetLeft, int offsetTop)
-   {
-      this.targetElement = targetElement;
+    public NotificationWidget(Element targetElement, int offsetLeft, int offsetTop) {
+        this.targetElement = targetElement;
 
-      title = targetElement.getAttribute("title");
-      targetElement.removeAttribute("title");
+        title = targetElement.getAttribute("title");
+        targetElement.removeAttribute("title");
 
-      notificationPanel = new FlowPanel();
-      notificationPanel.setStyleName("editor-notification");
-      notificationPanel.getElement().getStyle().setVisibility(Visibility.HIDDEN);
+        notificationPanel = new FlowPanel();
+        notificationPanel.setStyleName("editor-notification");
+        notificationPanel.getElement().getStyle().setVisibility(Visibility.HIDDEN);
 
-      RootPanel.get().add(notificationPanel);
-      int left = targetElement.getAbsoluteLeft() + targetElement.getOffsetWidth() + 5;
-      int top = targetElement.getAbsoluteTop();
-      
-      notificationPanel.getElement().getStyle().setLeft(left + offsetLeft, Unit.PX);
-      notificationPanel.getElement().getStyle().setTop(top + offsetTop, Unit.PX);
+        RootPanel.get().add(notificationPanel);
+        int left = targetElement.getAbsoluteLeft() + targetElement.getOffsetWidth() + 5;
+        int top = targetElement.getAbsoluteTop();
 
-      notificationPanel.getElement().setInnerHTML(title);
+        notificationPanel.getElement().getStyle().setLeft(left + offsetLeft, Unit.PX);
+        notificationPanel.getElement().getStyle().setTop(top + offsetTop, Unit.PX);
 
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            correctPosition();
-         }
-      });
-   }
+        notificationPanel.getElement().setInnerHTML(title);
 
-   public void destroy()
-   {
-      if (!targetElement.hasAttribute("title") || targetElement.getAttribute("title").isEmpty())
-         targetElement.setAttribute("title", title);
-      notificationPanel.removeFromParent();
-   }
-   
-   private void correctPosition()
-   {
-      if (notificationPanel.getAbsoluteTop() + notificationPanel.getOffsetHeight() > Window.getClientHeight())
-      {
-         int top = Window.getClientHeight() - notificationPanel.getOffsetHeight();
-         // int top = targetElement.getAbsoluteTop() - notificationPanel.getOffsetHeight();
-         notificationPanel.getElement().getStyle().setTop(top, Unit.PX);
-      }
-      notificationPanel.getElement().getStyle().setVisibility(Visibility.VISIBLE);
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                correctPosition();
+            }
+        });
+    }
 
-      if (notificationPanel.getAbsoluteLeft() + notificationPanel.getOffsetWidth() > Window.getClientWidth())
-      {
-         notificationPanel.getElement().getStyle().clearLeft();
-         notificationPanel.getElement().getStyle()
-            .setRight(Window.getClientWidth() - targetElement.getAbsoluteLeft() + 10, Unit.PX);
-      }
-   }
+    public void destroy() {
+        if (!targetElement.hasAttribute("title") || targetElement.getAttribute("title").isEmpty())
+            targetElement.setAttribute("title", title);
+        notificationPanel.removeFromParent();
+    }
 
-   /**
-    * 
-    */
-   public void update()
-   {
-      title = targetElement.getAttribute("title");
-      targetElement.setAttribute("title", null);
-      notificationPanel.getElement().setInnerHTML(title);
-   }
+    private void correctPosition() {
+        if (notificationPanel.getAbsoluteTop() + notificationPanel.getOffsetHeight() > Window.getClientHeight()) {
+            int top = Window.getClientHeight() - notificationPanel.getOffsetHeight();
+            // int top = targetElement.getAbsoluteTop() - notificationPanel.getOffsetHeight();
+            notificationPanel.getElement().getStyle().setTop(top, Unit.PX);
+        }
+        notificationPanel.getElement().getStyle().setVisibility(Visibility.VISIBLE);
+
+        if (notificationPanel.getAbsoluteLeft() + notificationPanel.getOffsetWidth() > Window.getClientWidth()) {
+            notificationPanel.getElement().getStyle().clearLeft();
+            notificationPanel.getElement().getStyle()
+                             .setRight(Window.getClientWidth() - targetElement.getAbsoluteLeft() + 10, Unit.PX);
+        }
+    }
+
+    /**
+     *
+     */
+    public void update() {
+        title = targetElement.getAttribute("title");
+        targetElement.setAttribute("title", null);
+        notificationPanel.getElement().setInnerHTML(title);
+    }
 
 }

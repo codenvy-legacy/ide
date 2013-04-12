@@ -24,41 +24,34 @@ import org.exoplatform.ide.extension.appfog.server.InfraImpl;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public enum InfraType
-{
-   //TODO maybe add description to infras?
-   aws("aws"),
-   eu_aws("eu-aws"),
-   ap_aws("ap-aws"),
-   rs("rs"),
-   hp("hp");
+public enum InfraType {
+    //TODO maybe add description to infras?
+    aws("aws"),
+    eu_aws("eu-aws"),
+    ap_aws("ap-aws"),
+    rs("rs"),
+    hp("hp");
 
-   private final String value;
+    private final String value;
 
-   private InfraType(String value)
-   {
-      this.value = value;
-   }
+    private InfraType(String value) {
+        this.value = value;
+    }
 
-   public String toString()
-   {
-      return value;
-   }
+    public String toString() {
+        return value;
+    }
 
-   public Infra getInfra()
-   {
-      return new InfraImpl(value, value);
-   }
+    public Infra getInfra() {
+        return new InfraImpl(value, value);
+    }
 
-   public static InfraType fromValue(String value)
-   {
-      for (InfraType v : InfraType.values())
-      {
-         if (v.value.equals(value))
-         {
-            return v;
-         }
-      }
-      throw new IllegalArgumentException("Invalid value '" + value + "' ");
-   }
+    public static InfraType fromValue(String value) {
+        for (InfraType v : InfraType.values()) {
+            if (v.value.equals(value)) {
+                return v;
+            }
+        }
+        throw new IllegalArgumentException("Invalid value '" + value + "' ");
+    }
 }

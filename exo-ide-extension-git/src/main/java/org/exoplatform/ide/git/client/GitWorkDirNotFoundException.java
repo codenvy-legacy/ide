@@ -23,26 +23,20 @@ package org.exoplatform.ide.git.client;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 28, 2011 11:40:33 AM anya $
- * 
  */
-public class GitWorkDirNotFoundException extends Exception
-{
+public class GitWorkDirNotFoundException extends Exception {
 
-   private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-   /**
-    * Default constructor.
-    */
-   public GitWorkDirNotFoundException()
-   {
-   }
+    /** Default constructor. */
+    public GitWorkDirNotFoundException() {
+    }
 
-   /**
-    * @param errorMessage error message of the exception
-    */
-   public GitWorkDirNotFoundException(String errorMessage)
-   {
-      super(errorMessage);
-   }
+    /**
+     * @param errorMessage error message of the exception
+     */
+    public GitWorkDirNotFoundException(String errorMessage) {
+        super(errorMessage);
+    }
 
 }

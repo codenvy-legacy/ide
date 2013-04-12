@@ -18,55 +18,41 @@
  */
 package org.exoplatform.ide.extension.jenkins.client.event;
 
-import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class ApplicationBuiltEvent extends GwtEvent<ApplicationBuiltHandler>
-{
+public class ApplicationBuiltEvent extends GwtEvent<ApplicationBuiltHandler> {
 
-   public static final GwtEvent.Type<ApplicationBuiltHandler> TYPE = new Type<ApplicationBuiltHandler>();
+    public static final GwtEvent.Type<ApplicationBuiltHandler> TYPE = new Type<ApplicationBuiltHandler>();
 
-   private JobStatus jobStatus;
+    private JobStatus jobStatus;
 
-   /**
-    * @param jobStatus
-    */
-   public ApplicationBuiltEvent(JobStatus jobStatus)
-   {
-      super();
-      this.jobStatus = jobStatus;
-   }
+    /** @param jobStatus */
+    public ApplicationBuiltEvent(JobStatus jobStatus) {
+        super();
+        this.jobStatus = jobStatus;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ApplicationBuiltHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ApplicationBuiltHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ApplicationBuiltHandler handler)
-   {
-      handler.onApplicationBuilt(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ApplicationBuiltHandler handler) {
+        handler.onApplicationBuilt(this);
+    }
 
-   /**
-    * @return the jobStatus
-    */
-   public JobStatus getJobStatus()
-   {
-      return jobStatus;
-   }
+    /** @return the jobStatus */
+    public JobStatus getJobStatus() {
+        return jobStatus;
+    }
 
 }

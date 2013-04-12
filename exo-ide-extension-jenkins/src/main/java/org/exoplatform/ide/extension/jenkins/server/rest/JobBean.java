@@ -24,70 +24,49 @@ import org.exoplatform.ide.extension.jenkins.shared.Job;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class JobBean implements Job
-{
-   private String name;
+public class JobBean implements Job {
+    private String name;
 
-   private String buildUrl;
+    private String buildUrl;
 
-   private String statusUrl;
+    private String statusUrl;
 
-   public JobBean(String name, String buildUrl, String statusUrl)
-   {
-      this.name = name;
-      this.buildUrl = buildUrl;
-      this.statusUrl = statusUrl;
-   }
+    public JobBean(String name, String buildUrl, String statusUrl) {
+        this.name = name;
+        this.buildUrl = buildUrl;
+        this.statusUrl = statusUrl;
+    }
 
-   public JobBean()
-   {
-   }
+    public JobBean() {
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.jenkins.shared.Job#getName()
-    */
-   public String getName()
-   {
-      return name;
-   }
+    /** @see org.exoplatform.ide.extension.jenkins.shared.Job#getName() */
+    public String getName() {
+        return name;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.jenkins.shared.Job#setName(java.lang.String)
-    */
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    /** @see org.exoplatform.ide.extension.jenkins.shared.Job#setName(java.lang.String) */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.jenkins.shared.Job#getBuildUrl()
-    */
-   public String getBuildUrl()
-   {
-      return buildUrl;
-   }
+    /** @see org.exoplatform.ide.extension.jenkins.shared.Job#getBuildUrl() */
+    public String getBuildUrl() {
+        return buildUrl;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.jenkins.shared.Job#setBuildUrl(java.lang.String)
-    */
-   public void setBuildUrl(String buildUrl)
-   {
-      this.buildUrl = buildUrl;
-   }
+    /** @see org.exoplatform.ide.extension.jenkins.shared.Job#setBuildUrl(java.lang.String) */
+    public void setBuildUrl(String buildUrl) {
+        this.buildUrl = buildUrl;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.jenkins.shared.Job#getStatusUrl()
-    */
-   public String getStatusUrl()
-   {
-      return statusUrl;
-   }
+    /** @see org.exoplatform.ide.extension.jenkins.shared.Job#getStatusUrl() */
+    public String getStatusUrl() {
+        return statusUrl;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.jenkins.shared.Job#setStatusUrl(java.lang.String)
-    */
-   public void setStatusUrl(String statusUrl)
-   {
-      this.statusUrl = statusUrl;
-   }
+    /** @see org.exoplatform.ide.extension.jenkins.shared.Job#setStatusUrl(java.lang.String) */
+    public void setStatusUrl(String statusUrl) {
+        this.statusUrl = statusUrl;
+    }
 }

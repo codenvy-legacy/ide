@@ -21,7 +21,6 @@ package org.exoplatform.ide.client.framework.navigation.event;
 import com.google.gwt.event.shared.GwtEvent;
 
 import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.shared.Folder;
 
 /**
  * Event occurs when folder content is refreshed in browser tree. It is needed to known when the content in browser
@@ -33,50 +32,36 @@ import org.exoplatform.ide.vfs.shared.Folder;
  * @version $Id: Apr 6, 2011 4:10:23 PM anya $
  * @deprecated
  */
-public class FolderRefreshedEvent extends GwtEvent<FolderRefreshedHandler>
-{
+public class FolderRefreshedEvent extends GwtEvent<FolderRefreshedHandler> {
 
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<FolderRefreshedHandler> TYPE = new GwtEvent.Type<FolderRefreshedHandler>();
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<FolderRefreshedHandler> TYPE = new GwtEvent.Type<FolderRefreshedHandler>();
 
-   /**
-    * Refreshed folder.
-    */
-   private FolderModel folder;
+    /** Refreshed folder. */
+    private FolderModel folder;
 
-   /**
-    * @param folder refreshed folder
-    */
-   public FolderRefreshedEvent(FolderModel folder)
-   {
-      this.folder = folder;
-   }
+    /**
+     * @param folder
+     *         refreshed folder
+     */
+    public FolderRefreshedEvent(FolderModel folder) {
+        this.folder = folder;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<FolderRefreshedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<FolderRefreshedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(FolderRefreshedHandler handler)
-   {
-      handler.onFolderRefreshed(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(FolderRefreshedHandler handler) {
+        handler.onFolderRefreshed(this);
+    }
 
-   /**
-    * @return the folder
-    */
-   public FolderModel getFolder()
-   {
-      return folder;
-   }
+    /** @return the folder */
+    public FolderModel getFolder() {
+        return folder;
+    }
 }

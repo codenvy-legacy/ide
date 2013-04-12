@@ -20,11 +20,7 @@ package test;
 
 import test.annotations.CTestAnnotation;
 import test.annotations.DTestAnnotation;
-import test.classes.ATestClass;
-import test.classes.ATestClass2;
-import test.classes.BTestClass;
-import test.classes.CTestClass;
-import test.classes.DTestClass;
+import test.classes.*;
 import test.classes2.ITestClass;
 import test.interfaces.DTestInterface;
 import test.interfaces.ETestInterface;
@@ -43,58 +39,46 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Test classes enumerator
- */
-public class ClassManager
-{
-   //disable instance creation
-   private ClassManager()
-   {
-   }
+/** Test classes enumerator */
+public class ClassManager {
+    //disable instance creation
+    private ClassManager() {
+    }
 
-   /**
-    * 
-    * @return array of all test classes.
-    */
-   public static Class<?>[] getAllTestClasses()
-   {
-      return new Class[]{CTestAnnotation.class, DTestAnnotation.class, ATestClass.class, ATestClass2.class,
-         BTestClass.class, ITestClass.class, DTestInterface.class, ETestInterface.class, ETestInterface2.class,
-         CTestClass.class, DTestClass.class};
-   }
+    /** @return array of all test classes. */
+    public static Class<?>[] getAllTestClasses() {
+        return new Class[]{CTestAnnotation.class, DTestAnnotation.class, ATestClass.class, ATestClass2.class,
+                           BTestClass.class, ITestClass.class, DTestInterface.class, ETestInterface.class, ETestInterface2.class,
+                           CTestClass.class, DTestClass.class};
+    }
 
-   /**
-    * @param className
-    *           TODO
-    * @throws IOException
-    * @throws SaveDataIndexException
-    */
-   public static void createIndexForClass(LuceneDataWriter typeWriter, Class<?>... classesToIndex) throws IOException,
-      SaveDataIndexException
-   {
+    /**
+     * @param className
+     *         TODO
+     * @throws IOException
+     * @throws SaveDataIndexException
+     */
+    public static void createIndexForClass(LuceneDataWriter typeWriter, Class<?>... classesToIndex) throws IOException,
+                                                                                                           SaveDataIndexException {
 
-      List<TypeInfo> typeInfos = new ArrayList<TypeInfo>();
+        List<TypeInfo> typeInfos = new ArrayList<TypeInfo>();
 
-      for (Class<?> classToIndex : classesToIndex)
-      {
-         typeInfos.add(ClassParser.parse(ClassParser.getClassFile(classToIndex)));
-      }
+        for (Class<?> classToIndex : classesToIndex) {
+            typeInfos.add(ClassParser.parse(ClassParser.getClassFile(classToIndex)));
+        }
 
-      typeWriter.addTypeInfo(typeInfos, "rt");
-   }
+        typeWriter.addTypeInfo(typeInfos, "rt");
+    }
 
-   public static void createIndexForSources(LuceneDataWriter dataWriter, String... sources) throws IOException,
-      SaveDataIndexException
-   {
-      Map<String, String> javaDocs = new HashMap<String, String>();
-      for (String source : sources)
-      {
-         QDoxJavaDocExtractor javaDocExtractor = new QDoxJavaDocExtractor();
-         javaDocs.putAll(javaDocExtractor.extractSource(new FileInputStream(source)));
-      }
+    public static void createIndexForSources(LuceneDataWriter dataWriter, String... sources) throws IOException,
+                                                                                                    SaveDataIndexException {
+        Map<String, String> javaDocs = new HashMap<String, String>();
+        for (String source : sources) {
+            QDoxJavaDocExtractor javaDocExtractor = new QDoxJavaDocExtractor();
+            javaDocs.putAll(javaDocExtractor.extractSource(new FileInputStream(source)));
+        }
 
-      dataWriter.addJavaDocs(javaDocs, "rt");
-   }
+        dataWriter.addJavaDocs(javaDocs, "rt");
+    }
 
 }

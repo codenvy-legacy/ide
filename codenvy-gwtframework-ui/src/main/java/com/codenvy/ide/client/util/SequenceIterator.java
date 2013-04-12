@@ -19,43 +19,35 @@ package com.codenvy.ide.client.util;
 
 import java.util.Iterator;
 
-/**
- * An iterator over a {@link Sequence}.
- */
-public final class SequenceIterator<T> implements Iterator<T>
-{
-   private final Sequence<T> sequence;
+/** An iterator over a {@link Sequence}. */
+public final class SequenceIterator<T> implements Iterator<T> {
+    private final Sequence<T> sequence;
 
-   private T next;
+    private T next;
 
-   private SequenceIterator(Sequence<T> sequence, T next)
-   {
-      this.sequence = sequence;
-      this.next = next;
-   }
+    private SequenceIterator(Sequence<T> sequence, T next) {
+        this.sequence = sequence;
+        this.next = next;
+    }
 
-   public static <T> SequenceIterator<T> create(Sequence<T> sequence)
-   {
-      return new SequenceIterator<T>(sequence, sequence.getFirst());
-   }
+    public static <T> SequenceIterator<T> create(Sequence<T> sequence) {
+        return new SequenceIterator<T>(sequence, sequence.getFirst());
+    }
 
-   @Override
-   public boolean hasNext()
-   {
-      return next != null;
-   }
+    @Override
+    public boolean hasNext() {
+        return next != null;
+    }
 
-   @Override
-   public T next()
-   {
-      T toReturn = next;
-      next = sequence.getNext(next);
-      return toReturn;
-   }
+    @Override
+    public T next() {
+        T toReturn = next;
+        next = sequence.getNext(next);
+        return toReturn;
+    }
 
-   @Override
-   public void remove()
-   {
-      throw new UnsupportedOperationException();
-   }
+    @Override
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
 }

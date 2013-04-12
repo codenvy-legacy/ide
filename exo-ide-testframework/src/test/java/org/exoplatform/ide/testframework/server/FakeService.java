@@ -20,12 +20,11 @@ package org.exoplatform.ide.testframework.server;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class FakeService
-{
+public class FakeService {
 
 }

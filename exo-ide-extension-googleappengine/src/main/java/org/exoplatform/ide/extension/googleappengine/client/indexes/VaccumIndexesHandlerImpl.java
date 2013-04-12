@@ -32,52 +32,42 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePrese
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public class VaccumIndexesHandlerImpl extends GoogleAppEnginePresenter implements VacuumIndexesHandler
-{
+ */
+public class VaccumIndexesHandlerImpl extends GoogleAppEnginePresenter implements VacuumIndexesHandler {
 
-   public VaccumIndexesHandlerImpl()
-   {
-      IDE.addHandler(VacuumIndexesEvent.TYPE, this);
-   }
-   
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onVacuumIndexes(VacuumIndexesEvent vacuumIndexesEvent)
-   {
-      if (isAppEngineProject())
-      {
-         onVacuum();
-      }
-      else
-      {
-         Dialogs.getInstance().showError(GoogleAppEngineExtension.GAE_LOCALIZATION.notAppEngineProjectError());
-      }
-   }
+    public VaccumIndexesHandlerImpl() {
+        IDE.addHandler(VacuumIndexesEvent.TYPE, this);
+    }
 
-   public void onVacuum()
-   {
-      try
-      {
-         GoogleAppEngineClientService.getInstance().vacuumIndexes(currentVfs.getId(), currentProject.getId(), new GoogleAppEngineAsyncRequestCallback<Object>()
-            {
+    /** {@inheritDoc} */
+    @Override
+    public void onVacuumIndexes(VacuumIndexesEvent vacuumIndexesEvent) {
+        if (isAppEngineProject()) {
+            onVacuum();
+        } else {
+            Dialogs.getInstance().showError(GoogleAppEngineExtension.GAE_LOCALIZATION.notAppEngineProjectError());
+        }
+    }
 
-               @Override
-               protected void onSuccess(Object result)
-               {
-                  IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.vacuumIndexesSuccessfully(),
-                     Type.INFO));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+    public void onVacuum() {
+        try {
+            GoogleAppEngineClientService.getInstance().vacuumIndexes(currentVfs.getId(), currentProject.getId(),
+                                                                     new GoogleAppEngineAsyncRequestCallback<Object>() {
+
+                                                                         @Override
+                                                                         protected void onSuccess(Object result) {
+                                                                             IDE.fireEvent(new OutputEvent(
+                                                                                     GoogleAppEngineExtension.GAE_LOCALIZATION
+                                                                                                             .vacuumIndexesSuccessfully(),
+                                                                                     Type.INFO));
+                                                                         }
+                                                                     });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
 }

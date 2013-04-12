@@ -36,141 +36,105 @@ import org.exoplatform.ide.git.shared.Branch;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 8, 2011 9:50:54 AM anya $
- * 
  */
-public class BranchView extends ViewImpl implements BranchPresenter.Display
-{
-   private static final int HEIGHT = 300;
+public class BranchView extends ViewImpl implements BranchPresenter.Display {
+    private static final int    HEIGHT             = 300;
 
-   private static final int WIDTH = 470;
+    private static final int    WIDTH              = 470;
 
-   public static final String ID = "ideBranchView";
+    public static final String  ID                 = "ideBranchView";
 
-   /* Elements IDs */
+    /* Elements IDs */
 
-   private static final String CREATE_BUTTON_ID = "ideBranchViewCreateButton";
+    private static final String CREATE_BUTTON_ID   = "ideBranchViewCreateButton";
 
-   private static final String CHECKOUT_BUTTON_ID = "ideBranchViewCheckoutButton";
+    private static final String CHECKOUT_BUTTON_ID = "ideBranchViewCheckoutButton";
 
-   private static final String DELETE_BUTTON_ID = "ideBranchViewDeleteButton";
+    private static final String DELETE_BUTTON_ID   = "ideBranchViewDeleteButton";
 
-   private static final String CLOSE_BUTTON_ID = "ideBranchViewCloseButton";
+    private static final String CLOSE_BUTTON_ID    = "ideBranchViewCloseButton";
 
-   /**
-    * Create branch button.
-    */
-   @UiField
-   ImageButton createButton;
+    /** Create branch button. */
+    @UiField
+    ImageButton                 createButton;
 
-   /**
-    * Checkout branch button.
-    */
-   @UiField
-   ImageButton checkoutButton;
+    /** Checkout branch button. */
+    @UiField
+    ImageButton                 checkoutButton;
 
-   /**
-    * Delete branch button.
-    */
-   @UiField
-   ImageButton deleteButton;
+    /** Delete branch button. */
+    @UiField
+    ImageButton                 deleteButton;
 
-   /**
-    * Cancel button.
-    */
-   @UiField
-   ImageButton closeButton;
+    /** Cancel button. */
+    @UiField
+    ImageButton                 closeButton;
 
-   @UiField
-   BranchGrid branchGrid;
+    @UiField
+    BranchGrid                  branchGrid;
 
-   interface BranchViewUiBinder extends UiBinder<Widget, BranchView>
-   {
-   }
+    interface BranchViewUiBinder extends UiBinder<Widget, BranchView> {
+    }
 
-   private static BranchViewUiBinder uiBinder = GWT.create(BranchViewUiBinder.class);
+    private static BranchViewUiBinder uiBinder = GWT.create(BranchViewUiBinder.class);
 
-   public BranchView()
-   {
-      super(ID, ViewType.MODAL, GitExtension.MESSAGES.branchTitle(), null, WIDTH, HEIGHT);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
+    public BranchView() {
+        super(ID, ViewType.MODAL, GitExtension.MESSAGES.branchTitle(), null, WIDTH, HEIGHT);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
 
-      checkoutButton.setButtonId(CHECKOUT_BUTTON_ID);
-      createButton.setButtonId(CREATE_BUTTON_ID);
-      deleteButton.setButtonId(DELETE_BUTTON_ID);
-      closeButton.setButtonId(CLOSE_BUTTON_ID);
-   }
+        checkoutButton.setButtonId(CHECKOUT_BUTTON_ID);
+        createButton.setButtonId(CREATE_BUTTON_ID);
+        deleteButton.setButtonId(DELETE_BUTTON_ID);
+        closeButton.setButtonId(CLOSE_BUTTON_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.branch.BranchPresenter.Display#getCreateBranchButton()
-    */
-   @Override
-   public HasClickHandlers getCreateBranchButton()
-   {
-      return createButton;
-   }
+    /** @see org.exoplatform.ide.git.client.branch.BranchPresenter.Display#getCreateBranchButton() */
+    @Override
+    public HasClickHandlers getCreateBranchButton() {
+        return createButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.branch.BranchPresenter.Display#getCheckoutBranchButton()
-    */
-   @Override
-   public HasClickHandlers getCheckoutBranchButton()
-   {
-      return checkoutButton;
-   }
+    /** @see org.exoplatform.ide.git.client.branch.BranchPresenter.Display#getCheckoutBranchButton() */
+    @Override
+    public HasClickHandlers getCheckoutBranchButton() {
+        return checkoutButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.branch.BranchPresenter.Display#getDeleteBranchButton()
-    */
-   @Override
-   public HasClickHandlers getDeleteBranchButton()
-   {
-      return deleteButton;
-   }
+    /** @see org.exoplatform.ide.git.client.branch.BranchPresenter.Display#getDeleteBranchButton() */
+    @Override
+    public HasClickHandlers getDeleteBranchButton() {
+        return deleteButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.branch.BranchPresenter.Display#getCloseButton()
-    */
-   @Override
-   public HasClickHandlers getCloseButton()
-   {
-      return closeButton;
-   }
+    /** @see org.exoplatform.ide.git.client.branch.BranchPresenter.Display#getCloseButton() */
+    @Override
+    public HasClickHandlers getCloseButton() {
+        return closeButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.branch.BranchPresenter.Display#getBranchesGrid()
-    */
-   @Override
-   public ListGridItem<Branch> getBranchesGrid()
-   {
-      return branchGrid;
-   }
+    /** @see org.exoplatform.ide.git.client.branch.BranchPresenter.Display#getBranchesGrid() */
+    @Override
+    public ListGridItem<Branch> getBranchesGrid() {
+        return branchGrid;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.branch.BranchPresenter.Display#getSelectedBranch()
-    */
-   @Override
-   public Branch getSelectedBranch()
-   {
-      return branchGrid.getSelectedBranch();
-   }
+    /** @see org.exoplatform.ide.git.client.branch.BranchPresenter.Display#getSelectedBranch() */
+    @Override
+    public Branch getSelectedBranch() {
+        return branchGrid.getSelectedBranch();
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.branch.BranchPresenter.Display#enableDeleteButton(boolean)
-    */
-   @Override
-   public void enableDeleteButton(boolean enabled)
-   {
-      deleteButton.setEnabled(enabled);
-   }
+    /** @see org.exoplatform.ide.git.client.branch.BranchPresenter.Display#enableDeleteButton(boolean) */
+    @Override
+    public void enableDeleteButton(boolean enabled) {
+        deleteButton.setEnabled(enabled);
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.branch.BranchPresenter.Display#enableCheckoutButton(boolean)
-    */
-   @Override
-   public void enableCheckoutButton(boolean enabled)
-   {
-      checkoutButton.setEnabled(enabled);
-   }
+    /** @see org.exoplatform.ide.git.client.branch.BranchPresenter.Display#enableCheckoutButton(boolean) */
+    @Override
+    public void enableCheckoutButton(boolean enabled) {
+        checkoutButton.setEnabled(enabled);
+    }
 
 }

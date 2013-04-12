@@ -18,21 +18,18 @@
  */
 package org.exoplatform.gwtframework.commons.wadl;
 
-public class IllegalWADLException extends Exception
-{
-   /**
-    * 
-    */
-   private static final long serialVersionUID = 1L;
+public class IllegalWADLException extends Exception {
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-   public IllegalWADLException(String msg)
-   {
-      super(msg);
-   }
+    public IllegalWADLException(String msg) {
+        super(msg);
+    }
 
-   public IllegalWADLException()
-   {
+    public IllegalWADLException() {
 
-   }
+    }
 
 }

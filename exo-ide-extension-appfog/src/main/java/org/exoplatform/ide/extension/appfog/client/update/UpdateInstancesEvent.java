@@ -26,29 +26,20 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class UpdateInstancesEvent extends GwtEvent<UpdateInstancesHandler>
-{
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<UpdateInstancesHandler> TYPE = new GwtEvent.Type<UpdateInstancesHandler>();
+public class UpdateInstancesEvent extends GwtEvent<UpdateInstancesHandler> {
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<UpdateInstancesHandler> TYPE = new GwtEvent.Type<UpdateInstancesHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<UpdateInstancesHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<UpdateInstancesHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(UpdateInstancesHandler handler)
-   {
-      handler.onUpdateInstances(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(UpdateInstancesHandler handler) {
+        handler.onUpdateInstances(this);
+    }
 
 }

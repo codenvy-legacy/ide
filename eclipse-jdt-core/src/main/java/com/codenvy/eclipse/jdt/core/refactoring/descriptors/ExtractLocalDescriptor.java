@@ -31,35 +31,35 @@ import java.util.Map;
  *
  * @since 1.1
  */
-public final class ExtractLocalDescriptor extends JavaRefactoringDescriptor
-{
+public final class ExtractLocalDescriptor extends JavaRefactoringDescriptor {
 
-   /**
-    * Creates a new refactoring descriptor.
-    */
-   public ExtractLocalDescriptor()
-   {
-      super(IJavaRefactorings.EXTRACT_LOCAL_VARIABLE);
-   }
+    /** Creates a new refactoring descriptor. */
+    public ExtractLocalDescriptor() {
+        super(IJavaRefactorings.EXTRACT_LOCAL_VARIABLE);
+    }
 
-   /**
-    * Creates a new refactoring descriptor.
-    *
-    * @param project     the non-empty name of the project associated with this
-    *                    refactoring, or <code>null</code> for a workspace
-    *                    refactoring
-    * @param description a non-empty human-readable description of the particular
-    *                    refactoring instance
-    * @param comment     the human-readable comment of the particular refactoring
-    *                    instance, or <code>null</code> for no comment
-    * @param arguments   a map of arguments that will be persisted and describes
-    *                    all settings for this refactoring
-    * @param flags       the flags of the refactoring descriptor
-    * @since 1.2
-    */
-   public ExtractLocalDescriptor(String project, String description, String comment, Map arguments, int flags)
-   {
-      super(IJavaRefactorings.EXTRACT_LOCAL_VARIABLE, project, description, comment, arguments, flags);
-   }
+    /**
+     * Creates a new refactoring descriptor.
+     *
+     * @param project
+     *         the non-empty name of the project associated with this
+     *         refactoring, or <code>null</code> for a workspace
+     *         refactoring
+     * @param description
+     *         a non-empty human-readable description of the particular
+     *         refactoring instance
+     * @param comment
+     *         the human-readable comment of the particular refactoring
+     *         instance, or <code>null</code> for no comment
+     * @param arguments
+     *         a map of arguments that will be persisted and describes
+     *         all settings for this refactoring
+     * @param flags
+     *         the flags of the refactoring descriptor
+     * @since 1.2
+     */
+    public ExtractLocalDescriptor(String project, String description, String comment, Map arguments, int flags) {
+        super(IJavaRefactorings.EXTRACT_LOCAL_VARIABLE, project, description, comment, arguments, flags);
+    }
 
 }

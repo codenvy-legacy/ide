@@ -18,35 +18,30 @@
  */
 package org.exoplatform.ide.editor.css.client.outline;
 
+import com.google.gwt.resources.client.ImageResource;
+
 import org.exoplatform.ide.client.framework.outline.OutlineItemCreatorImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.css.client.CssEditorExtension;
 
-import com.google.gwt.resources.client.ImageResource;
-
 /**
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
- * 
  */
-public class CssOutlineItemCreator extends OutlineItemCreatorImpl
-{
-   @Override
-   public ImageResource getTokenIcon(TokenBeenImpl token)
-   {
-      switch (token.getType())
-      {
-         case TAG :
-            return CssEditorExtension.RESOURCES.tag();
+public class CssOutlineItemCreator extends OutlineItemCreatorImpl {
+    @Override
+    public ImageResource getTokenIcon(TokenBeenImpl token) {
+        switch (token.getType()) {
+            case TAG:
+                return CssEditorExtension.RESOURCES.tag();
 
-         default :
-            return null;
-      }
-   }
+            default:
+                return null;
+        }
+    }
 
-   @Override
-   public String getTokenDisplayTitle(TokenBeenImpl token)
-   {
-      return token.getName();
-   }
+    @Override
+    public String getTokenDisplayTitle(TokenBeenImpl token) {
+        return token.getName();
+    }
 }

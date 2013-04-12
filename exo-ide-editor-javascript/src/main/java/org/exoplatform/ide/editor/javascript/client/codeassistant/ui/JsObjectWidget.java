@@ -29,36 +29,31 @@ import org.exoplatform.ide.editor.javascript.client.JavaScriptEditorExtension;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: JsObjectWidjet Feb 24, 2011 4:10:26 PM evgen $
- * 
  */
-public class JsObjectWidget extends JSBaseWidget
-{
+public class JsObjectWidget extends JSBaseWidget {
 
-   /**
-    * @param token
-    */
-   public JsObjectWidget(Token token)
-   {
-      super(token);
-      grid = new Grid(1, 2);
-      grid.setStyleName(JavaScriptEditorExtension.RESOURCES.css().item());
-      grid.setWidth("100%");
+    /** @param token */
+    public JsObjectWidget(Token token) {
+        super(token);
+        grid = new Grid(1, 2);
+        grid.setStyleName(JavaScriptEditorExtension.RESOURCES.css().item());
+        grid.setWidth("100%");
 
-      Image i = new Image(JavaScriptEditorExtension.RESOURCES.classItem());
-      i.setHeight("16px");
-      grid.setWidget(0, 0, i);
+        Image i = new Image(JavaScriptEditorExtension.RESOURCES.classItem());
+        i.setHeight("16px");
+        grid.setWidget(0, 0, i);
 
-      String name = token.getName();
+        String name = token.getName();
 
-      Label nameLabel = new Label(name, false);
+        Label nameLabel = new Label(name, false);
 
-      grid.setWidget(0, 1, nameLabel);
+        grid.setWidget(0, 1, nameLabel);
 
-      grid.getCellFormatter().setWidth(0, 0, "16px");
-      grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
+        grid.getCellFormatter().setWidth(0, 0, "16px");
+        grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
+        grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
 
-      initWidget(grid);
-   }
+        initWidget(grid);
+    }
 
 }

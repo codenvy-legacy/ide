@@ -23,26 +23,21 @@ package com.codenvy.eclipse.ltk.core.refactoring.participants;
  *
  * @since 3.0
  */
-public abstract class MoveParticipant extends RefactoringParticipant
-{
+public abstract class MoveParticipant extends RefactoringParticipant {
 
-   private MoveArguments fArguments;
+    private MoveArguments fArguments;
 
-   /**
-    * {@inheritDoc}
-    */
-   protected final void initialize(RefactoringArguments arguments)
-   {
-      fArguments = (MoveArguments)arguments;
-   }
+    /** {@inheritDoc} */
+    protected final void initialize(RefactoringArguments arguments) {
+        fArguments = (MoveArguments)arguments;
+    }
 
-   /**
-    * Returns the move arguments.
-    *
-    * @return the move arguments
-    */
-   public MoveArguments getArguments()
-   {
-      return fArguments;
-   }
+    /**
+     * Returns the move arguments.
+     *
+     * @return the move arguments
+     */
+    public MoveArguments getArguments() {
+        return fArguments;
+    }
 }

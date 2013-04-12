@@ -23,29 +23,21 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class AddGetterSetterEvent extends GwtEvent<AddGetterSetterHandler>
-{
+public class AddGetterSetterEvent extends GwtEvent<AddGetterSetterHandler> {
 
-   public static final GwtEvent.Type<AddGetterSetterHandler> TYPE = new Type<AddGetterSetterHandler>();
+    public static final GwtEvent.Type<AddGetterSetterHandler> TYPE = new Type<AddGetterSetterHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<AddGetterSetterHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<AddGetterSetterHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(AddGetterSetterHandler handler)
-   {
-      handler.onAddGetterSetter(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(AddGetterSetterHandler handler) {
+        handler.onAddGetterSetter(this);
+    }
 
 }

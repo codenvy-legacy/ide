@@ -18,15 +18,14 @@
  */
 package org.exoplatform.ide.extension.appfog.client.services;
 
-import org.exoplatform.ide.extension.appfog.shared.AppfogProvisionedService;
-
 import com.google.gwt.event.logical.shared.SelectionHandler;
+
+import org.exoplatform.ide.extension.appfog.shared.AppfogProvisionedService;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface HasBindServiceHandler
-{
-   void addBindServiceHandler(SelectionHandler<AppfogProvisionedService> handler);
+public interface HasBindServiceHandler {
+    void addBindServiceHandler(SelectionHandler<AppfogProvisionedService> handler);
 }

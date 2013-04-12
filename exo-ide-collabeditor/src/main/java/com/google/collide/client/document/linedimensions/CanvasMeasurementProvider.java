@@ -14,17 +14,14 @@
 
 package com.google.collide.client.document.linedimensions;
 
-import com.codenvy.ide.client.util.Elements;
-import com.google.collide.client.util.dom.FontDimensionsCalculator;
-
 import elemental.canvas.CanvasRenderingContext2D;
 import elemental.canvas.TextMetrics;
 import elemental.html.CanvasElement;
 
-/**
- * A measurement provider which utilizes an in-memory canvas to measure text.
- *
- */
+import com.codenvy.ide.client.util.Elements;
+import com.google.collide.client.util.dom.FontDimensionsCalculator;
+
+/** A measurement provider which utilizes an in-memory canvas to measure text. */
 /*
  * TODO: This is currently unused though it would be preferred. There is
  * a rounding bug in webkit which causes zoom levels to minutely change the
@@ -38,25 +35,25 @@ import elemental.html.CanvasElement;
  * More Specifically: https://bugs.webkit.org/show_bug.cgi?id=71143
  */
 public class CanvasMeasurementProvider implements MeasurementProvider {
-  
-  private final FontDimensionsCalculator calculator;
-  private final CanvasElement canvas;
 
-  public CanvasMeasurementProvider(FontDimensionsCalculator calculator) {
-    this.calculator = calculator;
-    canvas = Elements.createCanvas();
-  }
+    private final FontDimensionsCalculator calculator;
+    private final CanvasElement            canvas;
 
-  @Override
-  public double getCharacterWidth() {
-    return calculator.getFontDimensions().getCharacterWidth();
-  }
+    public CanvasMeasurementProvider(FontDimensionsCalculator calculator) {
+        this.calculator = calculator;
+        canvas = Elements.createCanvas();
+    }
 
-  @Override
-  public double measureStringWidth(String text) {
-    CanvasRenderingContext2D context = (CanvasRenderingContext2D) canvas.getContext("2d");
-    context.setFont(calculator.getFont());
-    TextMetrics metrics = context.measureText(text);
-    return metrics.getWidth();
-  }
+    @Override
+    public double getCharacterWidth() {
+        return calculator.getFontDimensions().getCharacterWidth();
+    }
+
+    @Override
+    public double measureStringWidth(String text) {
+        CanvasRenderingContext2D context = (CanvasRenderingContext2D)canvas.getContext("2d");
+        context.setFont(calculator.getFont());
+        TextMetrics metrics = context.measureText(text);
+        return metrics.getWidth();
+    }
 }

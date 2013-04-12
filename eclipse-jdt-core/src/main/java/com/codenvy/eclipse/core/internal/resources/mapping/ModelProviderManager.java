@@ -19,72 +19,63 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class ModelProviderManager
-{
+public class ModelProviderManager {
 
-   private static Map<String, IModelProviderDescriptor> descriptors;
+    private static Map<String, IModelProviderDescriptor> descriptors;
 
-   private static ModelProviderManager instance;
+    private static ModelProviderManager instance;
 
-   public synchronized static ModelProviderManager getDefault()
-   {
-      if (instance == null)
-      {
-         instance = new ModelProviderManager();
-      }
-      return instance;
-   }
+    public synchronized static ModelProviderManager getDefault() {
+        if (instance == null) {
+            instance = new ModelProviderManager();
+        }
+        return instance;
+    }
 
-   private void detectCycles()
-   {
-      // TODO Auto-generated method stub
+    private void detectCycles() {
+        // TODO Auto-generated method stub
 
-   }
+    }
 
-   public IModelProviderDescriptor getDescriptor(String id)
-   {
-      lazyInitialize();
-      return descriptors.get(id);
-   }
+    public IModelProviderDescriptor getDescriptor(String id) {
+        lazyInitialize();
+        return descriptors.get(id);
+    }
 
-   public IModelProviderDescriptor[] getDescriptors()
-   {
-      lazyInitialize();
-      return descriptors.values().toArray(new IModelProviderDescriptor[descriptors.size()]);
-   }
+    public IModelProviderDescriptor[] getDescriptors() {
+        lazyInitialize();
+        return descriptors.values().toArray(new IModelProviderDescriptor[descriptors.size()]);
+    }
 
-   public ModelProvider getModelProvider(String modelProviderId) throws CoreException
-   {
-      IModelProviderDescriptor desc = getDescriptor(modelProviderId);
-      if (desc == null)
-      {
-         return null;
-      }
-      return desc.getModelProvider();
-   }
+    public ModelProvider getModelProvider(String modelProviderId) throws CoreException {
+        IModelProviderDescriptor desc = getDescriptor(modelProviderId);
+        if (desc == null) {
+            return null;
+        }
+        return desc.getModelProvider();
+    }
 
-   protected void lazyInitialize()
-   {
-      if (descriptors != null)
-      {
-         return;
-      }
-      //		IExtensionPoint point = Platform.getExtensionRegistry().getExtensionPoint(ResourcesPlugin.PI_RESOURCES, ResourcesPlugin.PT_MODEL_PROVIDERS);
-      //		IExtension[] extensions = point.getExtensions();
-      descriptors = new HashMap<String, IModelProviderDescriptor>(0);
-      //		for (int i = 0, imax = extensions.length; i < imax; i++) {
-      //			IModelProviderDescriptor desc = null;
-      //			try {
-      //				desc = new ModelProviderDescriptor(extensions[i]);
-      //			} catch (CoreException e) {
-      //				Policy.log(e);
-      //			}
-      //			if (desc != null)
-      //				descriptors.put(desc.getId(), desc);
-      //		}
-      //do cycle detection now so it only has to be done once
-      //cycle detection on a graph subset is a pain
-      detectCycles();
-   }
+    protected void lazyInitialize() {
+        if (descriptors != null) {
+            return;
+        }
+        //		IExtensionPoint point = Platform.getExtensionRegistry().getExtensionPoint(ResourcesPlugin.PI_RESOURCES,
+        // ResourcesPlugin.PT_MODEL_PROVIDERS);
+        //		IExtension[] extensions = point.getExtensions();
+        descriptors = new HashMap<String, IModelProviderDescriptor>(0);
+        //		for (int i = 0, imax = extensions.length; i < imax; i++) {
+        //			IModelProviderDescriptor desc = null;
+        //			try {
+        //				desc = new ModelProviderDescriptor(extensions[i]);
+        //			} catch (CoreException e) {
+        //				Policy.log(e);
+        //			}
+        //			if (desc != null)
+        //				descriptors.put(desc.getId(), desc);
+        //		}
+        //do cycle detection now so it only has to be done once
+        //cycle detection on a graph subset is a pain
+        detectCycles();
+    }
 
 }

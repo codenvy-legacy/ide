@@ -16,30 +16,25 @@
  */
 package com.codenvy.ide.client.util;
 
-/**
- * String functions.
- */
-public class StringUtil
-{
+/** String functions. */
+public class StringUtil {
 
-   /**
-    * @param xml
-    * @return XML-escaped string
-    */
-   public static String xmlEscape(String xml)
-   {
-      return xml.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-   }
+    /**
+     * @param xml
+     * @return XML-escaped string
+     */
+    public static String xmlEscape(String xml) {
+        return xml.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+    }
 
-   /**
-    * Notice that this function only escape entity reference and not character reference.
-    *
-    * @param xml
-    * @return the unescaped xml string.
-    */
-   public static String xmlUnescape(String xml)
-   {
-      return xml.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&quot;", "\"").replaceAll("&apos;",
-         "'").replaceAll("&amp;", "&");
-   }
+    /**
+     * Notice that this function only escape entity reference and not character reference.
+     *
+     * @param xml
+     * @return the unescaped xml string.
+     */
+    public static String xmlUnescape(String xml) {
+        return xml.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&quot;", "\"").replaceAll("&apos;",
+                                                                                                         "'").replaceAll("&amp;", "&");
+    }
 }

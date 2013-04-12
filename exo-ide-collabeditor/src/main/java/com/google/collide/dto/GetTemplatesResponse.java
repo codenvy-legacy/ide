@@ -21,9 +21,8 @@ import org.exoplatform.ide.json.shared.JsonStringMap;
 /**
  * Tells the client about templates. The template map is indexed by human name,
  * with the value being the tag used to request that template.
- *
  */
 @RoutingType(type = RoutingTypes.GETTEMPLATESRESPONSE)
 public interface GetTemplatesResponse extends ServerToClientDto {
-  JsonStringMap<String> getTemplates();
+    JsonStringMap<String> getTemplates();
 }

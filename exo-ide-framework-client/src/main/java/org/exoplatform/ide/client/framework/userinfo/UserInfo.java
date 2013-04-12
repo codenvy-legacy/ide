@@ -24,60 +24,61 @@ import java.util.List;
 
 /**
  * Interface describe information about user.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: UserInfo.java Mar 28, 2012 14:55:45 PM azatsarynnyy $
- *
  */
-public interface UserInfo
-{
+public interface UserInfo {
 
-   /**
-    * Returns the user's name.
-    * 
-    * @return user's name
-    */
-   @PropertyName(value = "userId")
-   public String getName();
+    /**
+     * Returns the user's name.
+     *
+     * @return user's name
+     */
+    @PropertyName(value = "userId")
+    public String getName();
 
-   /**
-    * Change the user's name.
-    * 
-    * @param name user's name
-    */
-   @PropertyName(value = "userId")
-   public void setName(String name);
+    /**
+     * Change the user's name.
+     *
+     * @param name
+     *         user's name
+     */
+    @PropertyName(value = "userId")
+    public void setName(String name);
 
-   /**
-    * Returns the list of the user's groups.
-    * 
-    * @return the user's groups
-    */
-   public List<String> getGroups();
+    /**
+     * Returns the list of the user's groups.
+     *
+     * @return the user's groups
+     */
+    public List<String> getGroups();
 
-   /**
-    * Sets the list of the user's groups.
-    * 
-    * @param groups the user's groups
-    */
-   public void setGroups(List<String> groups);
+    /**
+     * Sets the list of the user's groups.
+     *
+     * @param groups
+     *         the user's groups
+     */
+    public void setGroups(List<String> groups);
 
-   /**
-    * Returns the list of the user's roles.
-    * 
-    * @return the user's roles
-    */
-   public List<String> getRoles();
+    /**
+     * Returns the list of the user's roles.
+     *
+     * @return the user's roles
+     */
+    public List<String> getRoles();
 
-   /**
-    * Sets the list of the user's roles.
-    * 
-    * @param roles the user's roles
-    */
-   public void setRoles(List<String> roles);
+    /**
+     * Sets the list of the user's roles.
+     *
+     * @param roles
+     *         the user's roles
+     */
+    public void setRoles(List<String> roles);
 
-   public String getClientId();
+    public String getClientId();
 
-   public void setClientId(String clientId);
+    public void setClientId(String clientId);
 
 }

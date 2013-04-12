@@ -28,55 +28,46 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class ValueImpl implements Value
-{
-   private List<Variable> variables;
-   private String value;
+public class ValueImpl implements Value {
+    private List<Variable> variables;
+    private String         value;
 
-   public ValueImpl(List<Variable> variables, String value)
-   {
-      this.variables = variables;
-      this.value = value;
-   }
+    public ValueImpl(List<Variable> variables, String value) {
+        this.variables = variables;
+        this.value = value;
+    }
 
-   public ValueImpl()
-   {
-   }
+    public ValueImpl() {
+    }
 
-   @Override
-   public List<Variable> getVariables()
-   {
-      if (variables == null)
-      {
-         variables = new ArrayList<Variable>();
-      }
-      return variables;
-   }
+    @Override
+    public List<Variable> getVariables() {
+        if (variables == null) {
+            variables = new ArrayList<Variable>();
+        }
+        return variables;
+    }
 
-   @Override
-   public void setVariables(List<Variable> variables)
-   {
-      this.variables = variables;
-   }
+    @Override
+    public void setVariables(List<Variable> variables) {
+        this.variables = variables;
+    }
 
-   @Override
-   public String getValue()
-   {
-      return value;
-   }
+    @Override
+    public String getValue() {
+        return value;
+    }
 
-   @Override
-   public void setValue(String value)
-   {
-      this.value = value;
-   }
+    @Override
+    public void setValue(String value) {
+        this.value = value;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "ValueImpl{" +
-         "variables=" + variables +
-         ", value='" + value + '\'' +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "ValueImpl{" +
+               "variables=" + variables +
+               ", value='" + value + '\'' +
+               '}';
+    }
 }

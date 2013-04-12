@@ -17,29 +17,34 @@ package org.exoplatform.ide.editor.shared.text;
  */
 public class SlaveDocumentEvent extends DocumentEvent {
 
-	/** The master document event */
-	private DocumentEvent fMasterEvent;
+    /** The master document event */
+    private DocumentEvent fMasterEvent;
 
-	/**
-	 * Creates a new slave document event.
-	 *
-	 * @param doc the slave document
-	 * @param offset the offset in the slave document
-	 * @param length the length in the slave document
-	 * @param text the substitution text
-	 * @param masterEvent the master document event
-	 */
-	public SlaveDocumentEvent(IDocument doc, int offset, int length, String text, DocumentEvent masterEvent) {
-		super(doc, offset, length, text);
-		fMasterEvent= masterEvent;
-	}
+    /**
+     * Creates a new slave document event.
+     *
+     * @param doc
+     *         the slave document
+     * @param offset
+     *         the offset in the slave document
+     * @param length
+     *         the length in the slave document
+     * @param text
+     *         the substitution text
+     * @param masterEvent
+     *         the master document event
+     */
+    public SlaveDocumentEvent(IDocument doc, int offset, int length, String text, DocumentEvent masterEvent) {
+        super(doc, offset, length, text);
+        fMasterEvent = masterEvent;
+    }
 
-	/**
-	 * Returns this event's master event.
-	 *
-	 * @return this event's master event
-	 */
-	public DocumentEvent getMasterEvent() {
-		return fMasterEvent;
-	}
+    /**
+     * Returns this event's master event.
+     *
+     * @return this event's master event
+     */
+    public DocumentEvent getMasterEvent() {
+        return fMasterEvent;
+    }
 }

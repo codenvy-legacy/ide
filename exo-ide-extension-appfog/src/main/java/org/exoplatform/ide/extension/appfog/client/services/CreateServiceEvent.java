@@ -26,49 +26,35 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class CreateServiceEvent extends GwtEvent<CreateServiceHandler>
-{
-   /**
-    * Type, used to register the event.
-    */
-   public static final GwtEvent.Type<CreateServiceHandler> TYPE = new GwtEvent.Type<CreateServiceHandler>();
+public class CreateServiceEvent extends GwtEvent<CreateServiceHandler> {
+    /** Type, used to register the event. */
+    public static final GwtEvent.Type<CreateServiceHandler> TYPE = new GwtEvent.Type<CreateServiceHandler>();
 
-   /**
-    * Handler for successful provisioned service creation.
-    */
-   private ProvisionedServiceCreatedHandler provisionedServiceCreatedHandler;
+    /** Handler for successful provisioned service creation. */
+    private ProvisionedServiceCreatedHandler provisionedServiceCreatedHandler;
 
-   /**
-    * @param provisionedServiceCreatedHandler handler for successful provisioned service creation
-    */
-   public CreateServiceEvent(ProvisionedServiceCreatedHandler provisionedServiceCreatedHandler)
-   {
-      this.provisionedServiceCreatedHandler = provisionedServiceCreatedHandler;
-   }
+    /**
+     * @param provisionedServiceCreatedHandler
+     *         handler for successful provisioned service creation
+     */
+    public CreateServiceEvent(ProvisionedServiceCreatedHandler provisionedServiceCreatedHandler) {
+        this.provisionedServiceCreatedHandler = provisionedServiceCreatedHandler;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CreateServiceHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<CreateServiceHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(CreateServiceHandler handler)
-   {
-      handler.onCreateService(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(CreateServiceHandler handler) {
+        handler.onCreateService(this);
+    }
 
-   /**
-    * @return the provisionedServiceCreatedHandler
-    */
-   public ProvisionedServiceCreatedHandler getProvisionedServiceCreatedHandler()
-   {
-      return provisionedServiceCreatedHandler;
-   }
+    /** @return the provisionedServiceCreatedHandler */
+    public ProvisionedServiceCreatedHandler getProvisionedServiceCreatedHandler() {
+        return provisionedServiceCreatedHandler;
+    }
 }

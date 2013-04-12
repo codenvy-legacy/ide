@@ -22,40 +22,40 @@ import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public interface SystemInfo
-{
-   SystemResources getUsage();
+public interface SystemInfo {
+    SystemResources getUsage();
 
-   void setUsage(SystemResources usage);
+    void setUsage(SystemResources usage);
 
-   SystemResources getLimits();
+    SystemResources getLimits();
 
-   void setLimits(SystemResources limits);
+    void setLimits(SystemResources limits);
 
-   String getDescription();
+    String getDescription();
 
-   void setDescription(String description);
+    void setDescription(String description);
 
-   String getUser();
+    String getUser();
 
-   void setUser(String user);
+    void setUser(String user);
 
-   String getVersion();
+    String getVersion();
 
-   void setVersion(String version);
+    void setVersion(String version);
 
-   String getName();
+    String getName();
 
-   void setName(String name);
+    void setName(String name);
 
-   String getSupport();
+    String getSupport();
 
-   void setSupport(String support);
+    void setSupport(String support);
 
-   Map<String, Framework> getFrameworks();
+    Map<String, Framework> getFrameworks();
 
-   void setFrameworks(Map<String, Framework> frameworks);
+    void setFrameworks(Map<String, Framework> frameworks);
 }

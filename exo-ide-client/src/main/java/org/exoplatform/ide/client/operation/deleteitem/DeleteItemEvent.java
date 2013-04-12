@@ -22,26 +22,23 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public class DeleteItemEvent extends GwtEvent<DeleteItemHandler>
-{
+public class DeleteItemEvent extends GwtEvent<DeleteItemHandler> {
 
-   public static final GwtEvent.Type<DeleteItemHandler> TYPE = new GwtEvent.Type<DeleteItemHandler>();
+    public static final GwtEvent.Type<DeleteItemHandler> TYPE = new GwtEvent.Type<DeleteItemHandler>();
 
-   @Override
-   protected void dispatch(DeleteItemHandler handler)
-   {
-      handler.onDeleteItem(this);
-   }
+    @Override
+    protected void dispatch(DeleteItemHandler handler) {
+        handler.onDeleteItem(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<DeleteItemHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<DeleteItemHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

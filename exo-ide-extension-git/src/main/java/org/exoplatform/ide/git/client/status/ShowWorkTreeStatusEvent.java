@@ -25,31 +25,21 @@ import com.google.gwt.event.shared.GwtEvent;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 28, 2011 3:04:41 PM anya $
- * 
  */
-public class ShowWorkTreeStatusEvent extends GwtEvent<ShowWorkTreeStatusHandler>
-{
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<ShowWorkTreeStatusHandler> TYPE = new GwtEvent.Type<ShowWorkTreeStatusHandler>();
+public class ShowWorkTreeStatusEvent extends GwtEvent<ShowWorkTreeStatusHandler> {
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<ShowWorkTreeStatusHandler> TYPE = new GwtEvent.Type<ShowWorkTreeStatusHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public Type<ShowWorkTreeStatusHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public Type<ShowWorkTreeStatusHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ShowWorkTreeStatusHandler handler)
-   {
-      handler.onShowWorkTreeStatus(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ShowWorkTreeStatusHandler handler) {
+        handler.onShowWorkTreeStatus(this);
+    }
 
 }

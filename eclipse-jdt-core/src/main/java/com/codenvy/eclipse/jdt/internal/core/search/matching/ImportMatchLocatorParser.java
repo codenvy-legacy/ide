@@ -15,35 +15,40 @@ import com.codenvy.eclipse.jdt.internal.compiler.problem.ProblemReporter;
 
 class ImportMatchLocatorParser extends MatchLocatorParser {
 
-	boolean reportImportMatch;
+    boolean reportImportMatch;
 
-protected ImportMatchLocatorParser(ProblemReporter problemReporter, MatchLocator locator) {
-	super(problemReporter, locator);
-	this.reportImportMatch = this.patternFineGrain == 0 || (this.patternFineGrain & IJavaSearchConstants.IMPORT_DECLARATION_TYPE_REFERENCE) != 0;
-}
-protected void consumeStaticImportOnDemandDeclarationName() {
-	super.consumeStaticImportOnDemandDeclarationName();
-	if (this.reportImportMatch) {
-		this.patternLocator.match(this.astStack[this.astPtr], this.nodeSet);
-	}
-}
-protected void consumeSingleStaticImportDeclarationName() {
-	super.consumeSingleStaticImportDeclarationName();
-	if (this.reportImportMatch) {
-		this.patternLocator.match(this.astStack[this.astPtr], this.nodeSet);
-	}
-}
-protected void consumeSingleTypeImportDeclarationName() {
-	super.consumeSingleTypeImportDeclarationName();
-	if (this.reportImportMatch) {
-		this.patternLocator.match(this.astStack[this.astPtr], this.nodeSet);
-	}
-}
-protected void consumeTypeImportOnDemandDeclarationName() {
-	super.consumeTypeImportOnDemandDeclarationName();
-	if (this.reportImportMatch) {
-		this.patternLocator.match(this.astStack[this.astPtr], this.nodeSet);
-	}
-}
+    protected ImportMatchLocatorParser(ProblemReporter problemReporter, MatchLocator locator) {
+        super(problemReporter, locator);
+        this.reportImportMatch =
+                this.patternFineGrain == 0 || (this.patternFineGrain & IJavaSearchConstants.IMPORT_DECLARATION_TYPE_REFERENCE) != 0;
+    }
+
+    protected void consumeStaticImportOnDemandDeclarationName() {
+        super.consumeStaticImportOnDemandDeclarationName();
+        if (this.reportImportMatch) {
+            this.patternLocator.match(this.astStack[this.astPtr], this.nodeSet);
+        }
+    }
+
+    protected void consumeSingleStaticImportDeclarationName() {
+        super.consumeSingleStaticImportDeclarationName();
+        if (this.reportImportMatch) {
+            this.patternLocator.match(this.astStack[this.astPtr], this.nodeSet);
+        }
+    }
+
+    protected void consumeSingleTypeImportDeclarationName() {
+        super.consumeSingleTypeImportDeclarationName();
+        if (this.reportImportMatch) {
+            this.patternLocator.match(this.astStack[this.astPtr], this.nodeSet);
+        }
+    }
+
+    protected void consumeTypeImportOnDemandDeclarationName() {
+        super.consumeTypeImportOnDemandDeclarationName();
+        if (this.reportImportMatch) {
+            this.patternLocator.match(this.astStack[this.astPtr], this.nodeSet);
+        }
+    }
 
 }

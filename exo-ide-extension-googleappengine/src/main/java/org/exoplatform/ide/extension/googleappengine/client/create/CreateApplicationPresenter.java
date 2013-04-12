@@ -38,6 +38,7 @@ import org.exoplatform.ide.client.framework.project.api.FolderTreeUnmarshaller;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
@@ -50,267 +51,221 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 21, 2012 2:27:42 PM anya $
- *
  */
 public class CreateApplicationPresenter extends GoogleAppEnginePresenter implements CreateApplicationHandler,
-   ViewClosedHandler
-{
-   interface Display extends IsView
-   {
-      /**
-       * @return {@link HasClickHandlers} handler for ready button click
-       */
-      HasClickHandlers getDeployButton();
+                                                                                    ViewClosedHandler {
+    interface Display extends IsView {
+        /** @return {@link HasClickHandlers} handler for ready button click */
+        HasClickHandlers getDeployButton();
 
-      /**
-       * @return {@link HasClickHandlers} handler for cancel button click
-       */
-      HasClickHandlers getCancelButton();
+        /** @return {@link HasClickHandlers} handler for cancel button click */
+        HasClickHandlers getCancelButton();
 
-      /**
-       * @return {@link HasClickHandlers} handler for cancel button click
-       */
-      HasClickHandlers getCreateButton();
+        /** @return {@link HasClickHandlers} handler for cancel button click */
+        HasClickHandlers getCreateButton();
 
-      /**
-       *
-       */
-      void enableDeployButton(boolean enable);
+        /**
+         *
+         */
+        void enableDeployButton(boolean enable);
 
-      /**
-       *
-       */
-      void enableCreateButton(boolean enable);
+        /**
+         *
+         */
+        void enableCreateButton(boolean enable);
 
-      void setUserInstructions(String instructions);
-   }
+        void setUserInstructions(String instructions);
+    }
 
-   private Display display;
+    private Display display;
 
-   private static final String GOOGLE_APP_ENGINE_URL = "https://appengine.google.com/start/createapp";
+    private static final String GOOGLE_APP_ENGINE_URL = "https://appengine.google.com/start/createapp";
 
-   private final String restContext;
+    private final String restContext;
 
-   public CreateApplicationPresenter(String restContext)
-   {
-      this.restContext = restContext;
+    public CreateApplicationPresenter(String restContext) {
+        this.restContext = restContext;
 
-      IDE.addHandler(CreateApplicationEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+        IDE.addHandler(CreateApplicationEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   public void bindDisplay()
-   {
+    public void bindDisplay() {
 
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-
-      display.getDeployButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            onDeploy();
-         }
-      });
-
-      display.getCreateButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            startCreateApp();
-         }
-      });
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationHandler#onCreateApplication(org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationEvent)
-    */
-   @Override
-   public void onCreateApplication(CreateApplicationEvent event)
-   {
-      currentProject = (event.getProject() != null) ? event.getProject() : currentProject;
-
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-      }
-
-      isUserLogged();
-   }
-
-   private void checkIfAppengineWebXmlExist()
-   {
-      final Loader loader = new GWTLoader();
-
-      try
-      {
-         loader.setMessage("Searching for appengine-web.xml...");
-         loader.show();
-         FolderModel target = currentProject;
-         FolderTreeUnmarshaller unmarshaller = new FolderTreeUnmarshaller(target, currentProject);
-         VirtualFileSystem.getInstance().getTree(target.getId(), new AsyncRequestCallback<Folder>(unmarshaller)
-         {
-            @Override
-            protected void onSuccess(Folder result)
-            {
-               Item item = result;
-               List<Item> q = new ArrayList<Item>();
-               q.addAll(((FolderModel)item).getChildren().getItems());
-               while (!q.isEmpty())
-               {
-                  Item current = q.remove(0);
-
-                  if (current instanceof FolderModel)
-                  {
-                     if (((FolderModel)current).getChildren().getItems().size() > 0)
-                     {
-                        q.addAll(((FolderModel)current).getChildren().getItems());
-                     }
-                  }
-                  else
-                  {
-                     if ("appengine-web.xml".equals(current.getName())
-                        && "WEB-INF".equals(((FileModel)current).getParent().getName()))
-                     {
-                        loader.hide();
-                        bindDisplay();
-                        IDE.getInstance().openView(display.asView());
-                        return;
-                     }
-                  }
-               }
-
-               loader.hide();
-               Dialogs.getInstance().showError("File appengine-web.xml not found. Creating application failed.");
-            }
+        display.getCancelButton().addClickHandler(new ClickHandler() {
 
             @Override
-            protected void onFailure(Throwable exception)
-            {
-               loader.hide();
-               IDE.fireEvent(new ExceptionThrownEvent(exception));
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
             }
-         });
-      }
-      catch (RequestException e)
-      {
-         loader.hide();
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+        });
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+        display.getDeployButton().addClickHandler(new ClickHandler() {
 
-   /**
-    * Perform actions, when user is ready.
-    */
-   public void onDeploy()
-   {
-      if (isAppEngineProject())
-      {
-         IDE.fireEvent(new DeployApplicationEvent(currentProject));
-      }
-      else
-      {
-         Dialogs.getInstance().showError(GoogleAppEngineExtension.GAE_LOCALIZATION.createApplicationCannotDeploy());
-      }
-      IDE.getInstance().closeView(display.asView().getId());
-   }
+            @Override
+            public void onClick(ClickEvent event) {
+                onDeploy();
+            }
+        });
 
-   /**
-    * Will be opened Google AppEngine page for create new application with redirection url in query parameter (e.g.
-    * https://appengine.google.com/start/createapp?redirect_url=http://tenant.cloud-ide.com/rest/service After creation new
-    * Application Google will call http://tenant.cloud-ide.com/rest/service?app_id=s~new-app&foo=bar IDE can get new application
-    * id in this case.
-    */
-   private void startCreateApp()
-   {
-      display.enableDeployButton(true);
-      display.enableCreateButton(false);
-      display.setUserInstructions(GoogleAppEngineExtension.GAE_LOCALIZATION.deployApplicationInstruction());
+        display.getCreateButton().addClickHandler(new ClickHandler() {
 
-      String projectId = currentProject.getId();
-      String vfsId = currentVfs.getId();
-      UrlBuilder builder = new UrlBuilder();
-      String redirectUrl = builder.setProtocol(Window.Location.getProtocol())//
-         .setHost(Window.Location.getHost())//
-         .setPath(restContext + "/ide/appengine/change-appid/" + vfsId + "/" + projectId).buildString();
+            @Override
+            public void onClick(ClickEvent event) {
+                startCreateApp();
+            }
+        });
+    }
 
-      String url = GOOGLE_APP_ENGINE_URL + "?redirect_url=" + redirectUrl;
+    /** @see org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationHandler#onCreateApplication(org.exoplatform.ide
+     * .extension.googleappengine.client.create.CreateApplicationEvent) */
+    @Override
+    public void onCreateApplication(CreateApplicationEvent event) {
+        currentProject = (event.getProject() != null) ? event.getProject() : currentProject;
 
-      clickToCreate(url);
-   }
+        if (display == null) {
+            display = GWT.create(Display.class);
+        }
 
-   private static native void clickToCreate(String url)
+        isUserLogged();
+    }
+
+    private void checkIfAppengineWebXmlExist() {
+        final Loader loader = new GWTLoader();
+        try {
+            loader.setMessage("Searching for appengine-web.xml...");
+            loader.show();
+            FolderModel target = currentProject;
+            FolderTreeUnmarshaller unmarshaller = new FolderTreeUnmarshaller(target);
+            VirtualFileSystem.getInstance().getTree(target.getId(), new AsyncRequestCallback<Folder>(unmarshaller) {
+                @Override
+                protected void onSuccess(Folder result) {
+                    Item item = result;
+                    List<Item> q = new ArrayList<Item>();
+                    q.addAll(((FolderModel)item).getChildren().getItems());
+                    while (!q.isEmpty()) {
+                        Item current = q.remove(0);
+
+                        if (current instanceof FolderModel) {
+                            if (((FolderModel)current).getChildren().getItems().size() > 0) {
+                                q.addAll(((FolderModel)current).getChildren().getItems());
+                            }
+                        } else {
+                            if ("appengine-web.xml".equals(current.getName())
+                                && "WEB-INF".equals(((FileModel)current).getParent().getName())) {
+                                loader.hide();
+                                bindDisplay();
+                                IDE.getInstance().openView(display.asView());
+                                return;
+                            }
+                        }
+                    }
+
+                    loader.hide();
+                    Dialogs.getInstance().showError("File appengine-web.xml not found. Creating application failed.");
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    loader.hide();
+                    IDE.fireEvent(new ExceptionThrownEvent(exception));
+                }
+            });
+        } catch (RequestException e) {
+            loader.hide();
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
+
+    /** Perform actions, when user is ready. */
+    public void onDeploy() {
+        if (isAppEngineProject()) {
+            IDE.fireEvent(new DeployApplicationEvent(currentProject));
+        } else {
+            Dialogs.getInstance().showError(GoogleAppEngineExtension.GAE_LOCALIZATION.createApplicationCannotDeploy());
+        }
+        IDE.getInstance().closeView(display.asView().getId());
+    }
+
+    /**
+     * Will be opened Google AppEngine page for create new application with redirection url in query parameter (e.g.
+     * https://appengine.google.com/start/createapp?redirect_url=http://tenant.cloud-ide.com/rest/service After creation new
+     * Application Google will call http://tenant.cloud-ide.com/rest/service?app_id=s~new-app&foo=bar IDE can get new application
+     * id in this case.
+     */
+    private void startCreateApp() {
+        display.enableDeployButton(true);
+        display.enableCreateButton(false);
+        display.setUserInstructions(GoogleAppEngineExtension.GAE_LOCALIZATION.deployApplicationInstruction());
+
+        String projectId = currentProject.getId();
+        String vfsId = currentVfs.getId();
+        UrlBuilder builder = new UrlBuilder();
+        String redirectUrl = builder.setProtocol(Window.Location.getProtocol())//
+                .setHost(Window.Location.getHost())//
+                .setPath(restContext + "/ide/appengine/change-appid/" + vfsId + "/" + projectId).buildString();
+
+        String url = GOOGLE_APP_ENGINE_URL + "?redirect_url=" + redirectUrl;
+
+        clickToCreate(url);
+    }
+
+    private static native void clickToCreate(String url)
    /*-{
-      $wnd.open(url, "_blank");
+       $wnd.open(url, "_blank");
    }-*/;
 
-   private void isUserLogged()
-   {
-      AutoBean<GaeUser> user = GoogleAppEngineExtension.AUTO_BEAN_FACTORY.user();
-      AutoBeanUnmarshaller<GaeUser> unmarshaller = new AutoBeanUnmarshaller<GaeUser>(user);
-      try
-      {
-         GoogleAppEngineClientService.getInstance().getLoggedUser(
-            new GoogleAppEngineAsyncRequestCallback<GaeUser>(unmarshaller)
-            {
+    private void isUserLogged() {
+        AutoBean<GaeUser> user = GoogleAppEngineExtension.AUTO_BEAN_FACTORY.user();
+        AutoBeanUnmarshaller<GaeUser> unmarshaller = new AutoBeanUnmarshaller<GaeUser>(user);
+        try {
+            GoogleAppEngineClientService.getInstance().getLoggedUser(
+                    new GoogleAppEngineAsyncRequestCallback<GaeUser>(unmarshaller) {
 
-               @Override
-               protected void onSuccess(GaeUser result)
-               {
-                  if (!result.isAuthenticated())
-                  {
-                     // IDE.fireEvent(new LoginEvent());
-                     new OAuthLoginView();
-                  }
-                  else
-                  {
-                     checkIfAppengineWebXmlExist();
-                  }
-               }
+                        @Override
+                        protected void onSuccess(GaeUser result) {
+                            if (!result.isAuthenticated()) {
+                                // IDE.fireEvent(new LoginEvent());
+                                new OAuthLoginView();
+                            } else {
+                                if (ProjectResolver.APP_ENGINE_JAVA.equals(currentProject.getProjectType()))
+                                  checkIfAppengineWebXmlExist();
+                                else
+                                {
+                                    bindDisplay();
+                                    IDE.getInstance().openView(display.asView());
+                                }
+                            }
+                        }
 
-               /**
-                * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback#onFailure(java.lang.Throwable)
-                */
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  super.onFailure(exception);
-                  // TODO
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         // TODO
-      }
-   }
+                        /**
+                         * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback#onFailure(java
+                         * .lang.Throwable)
+                         */
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            super.onFailure(exception);
+                            // TODO
+                        }
+                    });
+        } catch (RequestException e) {
+            // TODO
+        }
+    }
 }

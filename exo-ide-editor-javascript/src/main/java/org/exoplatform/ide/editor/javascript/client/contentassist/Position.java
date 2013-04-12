@@ -23,24 +23,21 @@ import com.google.gwt.core.client.JavaScriptObject;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-final class Position extends JavaScriptObject
-{
+final class Position extends JavaScriptObject {
 
-   /**
-    * 
-    */
-   protected Position()
-   {
-   }
-   
-   public native int getOffset()/*-{
-      return this.offset;
-   }-*/;
-   
-   public native int getLenhth()/*-{
-      return this.length;
-   }-*/;
+    /**
+     *
+     */
+    protected Position() {
+    }
+
+    public native int getOffset()/*-{
+        return this.offset;
+    }-*/;
+
+    public native int getLenhth()/*-{
+        return this.length;
+    }-*/;
 
 }

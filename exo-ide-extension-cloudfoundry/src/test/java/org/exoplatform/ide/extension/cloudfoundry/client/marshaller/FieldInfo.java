@@ -30,72 +30,52 @@ package org.exoplatform.ide.extension.cloudfoundry.client.marshaller;
  * "type": "Comparator"
  * }
  * </code>
- * 
+ * <p/>
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class FieldInfo extends Member implements IFieldInfo
-{
-   /**
-    * Short Class Name <code>Comparator</code>
-    */
-   private String type;
+public class FieldInfo extends Member implements IFieldInfo {
+    /** Short Class Name <code>Comparator</code> */
+    private String type;
 
-   /**
-    * Full Qualified Class Name where field declared
-    */
-   private String declaringClass;
+    /** Full Qualified Class Name where field declared */
+    private String declaringClass;
 
-   public FieldInfo(String type, Integer modifiers, String name, String declaringClass)
-   {
-      super(modifiers, name);
-      this.type = type;
-      this.declaringClass = declaringClass;
-   }
+    public FieldInfo(String type, Integer modifiers, String name, String declaringClass) {
+        super(modifiers, name);
+        this.type = type;
+        this.declaringClass = declaringClass;
+    }
 
-   public FieldInfo()
-   {
+    public FieldInfo() {
 
-   }
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getType()
-   {
-      return type;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getType() {
+        return type;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setType(String type)
-   {
-      this.type = type;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setType(String type) {
+        this.type = type;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getDeclaringClass()
-   {
-      return declaringClass;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getDeclaringClass() {
+        return declaringClass;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setDeclaringClass(String declaringClass)
-   {
-      this.declaringClass = declaringClass;
-   }
-
+    /** {@inheritDoc} */
+    @Override
+    public void setDeclaringClass(String declaringClass) {
+        this.declaringClass = declaringClass;
+    }
 
 
 }

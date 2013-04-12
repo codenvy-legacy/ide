@@ -17,86 +17,76 @@
 
 package com.codenvy.ide.client.util;
 
-/**
- * Can render each kind of JsoMapBase as a string.
- */
+/** Can render each kind of JsoMapBase as a string. */
 public final class JsoMapStringBuilder implements
  /*   ReadableStringMap.ProcV<Object>,*/ ReadableIntMap.ProcV<Object>
-    /* ReadableNumberMap.ProcV<Object>, IdentityMap.ProcV<Object, Object> */
-{
+    /* ReadableNumberMap.ProcV<Object>, IdentityMap.ProcV<Object, Object> */ {
 
-   /**
-    * Singleton used by statics.
-    */
-   private static final JsoMapStringBuilder INSTANCE = new JsoMapStringBuilder();
+    /** Singleton used by statics. */
+    private static final JsoMapStringBuilder INSTANCE = new JsoMapStringBuilder();
 
-   /**
-    * Builder used during lifetime of each doString.
-    */
-   private StringBuilder builder = null;
+    /** Builder used during lifetime of each doString. */
+    private StringBuilder builder = null;
 
-   public static String toString(IntMapJsoView<?> m)
-   {
-      return INSTANCE.doString(m);
-   }
+    public static String toString(IntMapJsoView<?> m) {
+        return INSTANCE.doString(m);
+    }
 
-   //  public static String toString(NumberMapJsoView<?> m) {
-   //    return INSTANCE.doString(m);
-   //  }
-   //
-   //  public static String toString(IdentityMap<?,?> m) {
-   //    return INSTANCE.doString(m);
-   //  }
+    //  public static String toString(NumberMapJsoView<?> m) {
+    //    return INSTANCE.doString(m);
+    //  }
+    //
+    //  public static String toString(IdentityMap<?,?> m) {
+    //    return INSTANCE.doString(m);
+    //  }
 
-   public String doString(IntMapJsoView<?> m)
-   {
-      builder = new StringBuilder();
-      builder.append("{");
-      m.each(this);
-      builder.append("}");
-      String result = builder.toString();
-      builder = null;
-      return result;
-   }
+    public String doString(IntMapJsoView<?> m) {
+        builder = new StringBuilder();
+        builder.append("{");
+        m.each(this);
+        builder.append("}");
+        String result = builder.toString();
+        builder = null;
+        return result;
+    }
 
-   //  public String doString(NumberMapJsoView<?> m) {
-   //    builder = new StringBuilder();
-   //    builder.append("{");
-   //    m.each(this);
-   //    builder.append("}");
-   //    String result = builder.toString();
-   //    builder = null;
-   //    return result;
-   //  }
+    //  public String doString(NumberMapJsoView<?> m) {
+    //    builder = new StringBuilder();
+    //    builder.append("{");
+    //    m.each(this);
+    //    builder.append("}");
+    //    String result = builder.toString();
+    //    builder = null;
+    //    return result;
+    //  }
 
-   //  public String doString(IdentityMap<?,?> m) {
-   //    builder = new StringBuilder();
-   //    builder.append("{");
-   //    m.each(this);
-   //    builder.append("}");
-   //    String result = builder.toString();
-   //    builder = null;
-   //    return result;
-   //  }
-   //
-   //  @Override
-   //  public void apply(String key, Object item) {
-   //    builder.append(" " + key + ": " + item + "; ");
-   //  }
-   //
-   //  @Override
-   //  public void apply(double key, Object item) {
-   //    builder.append(" " + key + ": " + item + "; ");
-   //  }
+    //  public String doString(IdentityMap<?,?> m) {
+    //    builder = new StringBuilder();
+    //    builder.append("{");
+    //    m.each(this);
+    //    builder.append("}");
+    //    String result = builder.toString();
+    //    builder = null;
+    //    return result;
+    //  }
+    //
+    //  @Override
+    //  public void apply(String key, Object item) {
+    //    builder.append(" " + key + ": " + item + "; ");
+    //  }
+    //
+    //  @Override
+    //  public void apply(double key, Object item) {
+    //    builder.append(" " + key + ": " + item + "; ");
+    //  }
 
-   @Override
-   public void apply(int key, Object item)
-   {
-      builder.append(" " + key + ": " + item + "; ");
-   }
+    @Override
+    public void apply(int key, Object item) {
+        builder.append(" " + key + ": " + item + "; ");
+    }
 
-   //  @Override
-   //  public void apply(Object key, Object item) {
-   //    builder.append(" " + key + ": " + item + "; ");
-   //  }
+    //  @Override
+    //  public void apply(Object key, Object item) {
+    //    builder.append(" " + key + ": " + item + "; ");
+    //  }
 }

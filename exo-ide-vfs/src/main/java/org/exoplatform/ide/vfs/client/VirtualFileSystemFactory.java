@@ -18,9 +18,8 @@
  */
 package org.exoplatform.ide.vfs.client;
 
-import com.google.gwt.http.client.RequestException;
-
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -31,36 +30,27 @@ import java.util.List;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Sep 26, 2011 5:00:39 PM anya $
- * 
  */
-public class VirtualFileSystemFactory
-{
-   /**
-    * VFS factory instance.
-    */
-   private static VirtualFileSystemFactory instance;
+public class VirtualFileSystemFactory {
+    /** VFS factory instance. */
+    private static VirtualFileSystemFactory instance;
 
-   private final String VFS_URL = "/ide/vfs";
+    private final String VFS_URL = "/ide/vfs";
 
-   private String restContext;
+    private String restContext;
 
-   public static VirtualFileSystemFactory getInstance()
-   {
-      return instance;
-   }
+    public static VirtualFileSystemFactory getInstance() {
+        return instance;
+    }
 
-   /**
-    * @param workspaceURL
-    */
-   public VirtualFileSystemFactory(String restContext)
-   {
-      instance = this;
-      this.restContext = restContext;
-   }
+    /** @param workspaceURL */
+    public VirtualFileSystemFactory(String restContext) {
+        instance = this;
+        this.restContext = restContext;
+    }
 
-   public void getAvailableFileSystems(AsyncRequestCallback<List<VirtualFileSystemInfo>> callback)
-      throws RequestException
-   {
-      AsyncRequest.build(RequestBuilder.GET, restContext + VFS_URL).send(callback);
-   }
+    public void getAvailableFileSystems(AsyncRequestCallback<List<VirtualFileSystemInfo>> callback)
+            throws RequestException {
+        AsyncRequest.build(RequestBuilder.GET, restContext + VFS_URL).send(callback);
+    }
 }

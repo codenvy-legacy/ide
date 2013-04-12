@@ -14,70 +14,57 @@ import com.codenvy.eclipse.jdt.core.dom.ITypeBinding;
 import com.codenvy.eclipse.jdt.internal.corext.dom.Bindings;
 import com.codenvy.eclipse.jdt.internal.corext.dom.TypeRules;
 
-public abstract class ConstraintVariable
-{
-   /**
-    * The type binding, or <code>null</code>.
-    */
-   private final ITypeBinding fTypeBinding;
+public abstract class ConstraintVariable {
+    /** The type binding, or <code>null</code>. */
+    private final ITypeBinding fTypeBinding;
 
-   /**
-    * @param binding the type binding, or <code>null</code>
-    */
-   protected ConstraintVariable(ITypeBinding binding)
-   {
-      fTypeBinding = binding;
-   }
+    /**
+     * @param binding
+     *         the type binding, or <code>null</code>
+     */
+    protected ConstraintVariable(ITypeBinding binding) {
+        fTypeBinding = binding;
+    }
 
-   public boolean canBeAssignedTo(ConstraintVariable targetVariable)
-   {
-      if (fTypeBinding == null || targetVariable.fTypeBinding == null)
-      {
-         return false;
-      }
-      return TypeRules.canAssign(fTypeBinding, targetVariable.fTypeBinding);
-   }
+    public boolean canBeAssignedTo(ConstraintVariable targetVariable) {
+        if (fTypeBinding == null || targetVariable.fTypeBinding == null) {
+            return false;
+        }
+        return TypeRules.canAssign(fTypeBinding, targetVariable.fTypeBinding);
+    }
 
-   public String toResolvedString()
-   {
-      if (fTypeBinding == null)
-      {
-         return "<NULL BINDING>"; //$NON-NLS-1$
-      }
-      return Bindings.asString(fTypeBinding);
-   }
+    public String toResolvedString() {
+        if (fTypeBinding == null) {
+            return "<NULL BINDING>"; //$NON-NLS-1$
+        }
+        return Bindings.asString(fTypeBinding);
+    }
 
-   /* (non-Javadoc)
-    * @see java.lang.Object#toString()
-    */
-   @Override
-   public String toString()
-   {
-      return toResolvedString();
-   }
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return toResolvedString();
+    }
 
-   /**
-    * @return the type binding or <code>null</code>
-    */
-   //TODO: rename to getTypeBinding()
-   public ITypeBinding getBinding()
-   {
-      return fTypeBinding;
-   }
+    /** @return the type binding or <code>null</code> */
+    //TODO: rename to getTypeBinding()
+    public ITypeBinding getBinding() {
+        return fTypeBinding;
+    }
 
-   /**
-    * For storing additional information associated with constraint variables.
-    * Added in anticipation of the generics-related refactorings.
-    */
-   private Object fData;
+    /**
+     * For storing additional information associated with constraint variables.
+     * Added in anticipation of the generics-related refactorings.
+     */
+    private Object fData;
 
-   public Object getData()
-   {
-      return fData;
-   }
+    public Object getData() {
+        return fData;
+    }
 
-   public void setData(Object data)
-   {
-      fData = data;
-   }
+    public void setData(Object data) {
+        fData = data;
+    }
 }

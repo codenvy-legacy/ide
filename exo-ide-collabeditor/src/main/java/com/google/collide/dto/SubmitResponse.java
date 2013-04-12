@@ -20,15 +20,12 @@ import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 /**
  * Response to submitting a workspace. Information that is not available in the
  * cached version of the workspace is provided.
- *
  */
 @RoutingType(type = RoutingTypes.SUBMITRESPONSE)
 public interface SubmitResponse extends ServerToClientDto {
 
-  /**
-   * @return the user details of the user who submitted the workspace
-   */
-  UserDetails getSubmitter();
+    /** @return the user details of the user who submitted the workspace */
+    UserDetails getSubmitter();
 
-  String getSubmissionTime();
+    String getSubmissionTime();
 }

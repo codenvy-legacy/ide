@@ -26,29 +26,26 @@ import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class DocumentationControl extends SimpleControl implements IDEControl
-{
-   private static final String ID = "Help/Documentation";
+public class DocumentationControl extends SimpleControl implements IDEControl {
+    private static final String ID = "Help/Documentation";
 
-   private static final String TITLE = "Documentation";
+    private static final String TITLE = "Documentation";
 
-   public static final String SUPPORT_GROUP_ID = "Support";
+    public static final String SUPPORT_GROUP_ID = "Support";
 
-   public DocumentationControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setGroupName(SUPPORT_GROUP_ID);
-      setVisible(true);
-      setEnabled(true);
-      setImages(SamplesClientBundle.INSTANCE.help(), SamplesClientBundle.INSTANCE.helpDisabled());
+    public DocumentationControl() {
+        super(ID);
+        setTitle(TITLE);
+        setGroupName(SUPPORT_GROUP_ID);
+        setVisible(true);
+        setEnabled(true);
+        setImages(SamplesClientBundle.INSTANCE.help(), SamplesClientBundle.INSTANCE.helpDisabled());
 
-      getAttributes().put("onClick", "javascript:window.open('https://codenvy.com/docs/');");
-   }
+        getAttributes().put("onClick", "javascript:window.open('https://codenvy.com/docs/');");
+    }
 
 
-   @Override
-   public void initialize()
-   {
-   }
+    @Override
+    public void initialize() {
+    }
 }

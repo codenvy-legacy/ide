@@ -21,20 +21,16 @@ import org.exoplatform.ide.json.shared.JsonArray;
 /**
  * A list of mutations to the workspace tree to perform.These get sent to the FE, applied to the
  * file tree, and then broadcast to other active clients in the workspace.
- *
+ * <p/>
  * A rename is just a type of MOVE operation.
  */
 @RoutingType(type = RoutingTypes.WORKSPACETREEUPDATE)
 public interface WorkspaceTreeUpdate extends ClientToServerDto {
 
-  /**
-   * The active client ID of the author of the mutation.
-   */
-  String getAuthorClientId();
+    /** The active client ID of the author of the mutation. */
+    String getAuthorClientId();
 
-  /**
-   * The mutations
-   */
-  JsonArray<Mutation> getMutations();
+    /** The mutations */
+    JsonArray<Mutation> getMutations();
 }
 

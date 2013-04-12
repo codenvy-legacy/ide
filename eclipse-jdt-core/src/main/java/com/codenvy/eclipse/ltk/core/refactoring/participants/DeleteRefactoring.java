@@ -21,28 +21,24 @@ import com.codenvy.eclipse.core.runtime.Assert;
  *
  * @since 3.0
  */
-public class DeleteRefactoring extends ProcessorBasedRefactoring
-{
+public class DeleteRefactoring extends ProcessorBasedRefactoring {
 
-   private DeleteProcessor fProcessor;
+    private DeleteProcessor fProcessor;
 
-   /**
-    * Constructs a new delete refactoring for the given processor.
-    *
-    * @param processor the delete processor
-    */
-   public DeleteRefactoring(DeleteProcessor processor)
-   {
-      super(processor);
-      Assert.isNotNull(processor);
-      fProcessor = processor;
-   }
+    /**
+     * Constructs a new delete refactoring for the given processor.
+     *
+     * @param processor
+     *         the delete processor
+     */
+    public DeleteRefactoring(DeleteProcessor processor) {
+        super(processor);
+        Assert.isNotNull(processor);
+        fProcessor = processor;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public RefactoringProcessor getProcessor()
-   {
-      return fProcessor;
-   }
+    /** {@inheritDoc} */
+    public RefactoringProcessor getProcessor() {
+        return fProcessor;
+    }
 }

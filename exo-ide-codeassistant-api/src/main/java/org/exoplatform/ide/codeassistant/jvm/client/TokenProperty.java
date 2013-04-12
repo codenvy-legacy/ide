@@ -21,31 +21,22 @@ package org.exoplatform.ide.codeassistant.jvm.client;
 /**
  * Abstract {@link Token} property class. <br>
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public abstract class TokenProperty
-{
+public abstract class TokenProperty {
 
-   /**
-    * @return instance of {@link StringProperty} or <code>null</code>
-    */
-   public abstract StringProperty isStringProperty();
+    /** @return instance of {@link StringProperty} or <code>null</code> */
+    public abstract StringProperty isStringProperty();
 
-   /**
-    * @return instance of {@link NumericProperty} or <code>null</code>
-    */
-   public abstract NumericProperty isNumericProperty();
+    /** @return instance of {@link NumericProperty} or <code>null</code> */
+    public abstract NumericProperty isNumericProperty();
 
-   /**
-    * @return instance of {@link ArrayProperty} or <code>null</code>
-    */
-   public abstract ArrayProperty isArrayProperty();
+    /** @return instance of {@link ArrayProperty} or <code>null</code> */
+    public abstract ArrayProperty isArrayProperty();
 
-   /**
-    * @return instance of {@link ObjectProperty} or <code>null</code>
-    */
-   public abstract ObjectProperty isObjectProperty();
+    /** @return instance of {@link ObjectProperty} or <code>null</code> */
+    public abstract ObjectProperty isObjectProperty();
 
 }

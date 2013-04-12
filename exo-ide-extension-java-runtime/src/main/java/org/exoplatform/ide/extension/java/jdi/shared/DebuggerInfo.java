@@ -24,25 +24,24 @@ package org.exoplatform.ide.extension.java.jdi.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface DebuggerInfo
-{
-   String getHost();
+public interface DebuggerInfo {
+    String getHost();
 
-   int getPort();
+    int getPort();
 
-   String getId();
+    String getId();
 
-   String getVmName();
+    String getVmName();
 
-   String getVmVersion();
+    String getVmVersion();
 
-   void setHost(String host);
+    void setHost(String host);
 
-   void setPort(int port);
+    void setPort(int port);
 
-   void setId(String id);
+    void setId(String id);
 
-   void setVmName(String vmName);
+    void setVmName(String vmName);
 
-   void setVmVersion(String vmVersion);
+    void setVmVersion(String vmVersion);
 }

@@ -28,11 +28,11 @@ import org.exoplatform.ide.json.shared.JsonStringMap;
  * @version $Id:
  */
 @RoutingType(type = RoutingTypes.GETOPENEDFILESINWORKSPACERESPONSE)
-public interface GetOpenedFilesInWorkspaceResponse extends ServerToClientDto
-{
-   /**
-    * Key is file path, value array of users that open this file
-    * @return the JsonStringMap
-    */
-   JsonStringMap<JsonArray<ParticipantUserDetails>> getOpenedFiles();
+public interface GetOpenedFilesInWorkspaceResponse extends ServerToClientDto {
+    /**
+     * Key is file path, value array of users that open this file
+     *
+     * @return the JsonStringMap
+     */
+    JsonStringMap<JsonArray<ParticipantUserDetails>> getOpenedFiles();
 }

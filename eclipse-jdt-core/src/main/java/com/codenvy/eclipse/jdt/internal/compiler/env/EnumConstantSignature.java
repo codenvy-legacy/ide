@@ -20,72 +20,57 @@ import java.util.Arrays;
  * Represents a reference to a enum constant in the class file.
  * One of the possible results for the default value of an annotation method.
  */
-public class EnumConstantSignature
-{
+public class EnumConstantSignature {
 
-   char[] typeName;
+    char[] typeName;
 
-   char[] constName;
+    char[] constName;
 
-   public EnumConstantSignature(char[] typeName, char[] constName)
-   {
-      this.typeName = typeName;
-      this.constName = constName;
-   }
+    public EnumConstantSignature(char[] typeName, char[] constName) {
+        this.typeName = typeName;
+        this.constName = constName;
+    }
 
-   /**
-    * @return name of the type in the class file format
-    */
-   public char[] getTypeName()
-   {
-      return this.typeName;
-   }
+    /** @return name of the type in the class file format */
+    public char[] getTypeName() {
+        return this.typeName;
+    }
 
-   /**
-    * @return the name of the enum constant reference.
-    */
-   public char[] getEnumConstantName()
-   {
-      return this.constName;
-   }
+    /** @return the name of the enum constant reference. */
+    public char[] getEnumConstantName() {
+        return this.constName;
+    }
 
-   public String toString()
-   {
-      StringBuffer buffer = new StringBuffer();
-      buffer.append(this.typeName);
-      buffer.append('.');
-      buffer.append(this.constName);
-      return buffer.toString();
-   }
+    public String toString() {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(this.typeName);
+        buffer.append('.');
+        buffer.append(this.constName);
+        return buffer.toString();
+    }
 
-   public int hashCode()
-   {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + CharOperation.hashCode(this.constName);
-      result = prime * result + CharOperation.hashCode(this.typeName);
-      return result;
-   }
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + CharOperation.hashCode(this.constName);
+        result = prime * result + CharOperation.hashCode(this.typeName);
+        return result;
+    }
 
-   public boolean equals(Object obj)
-   {
-      if (this == obj)
-      {
-         return true;
-      }
-      if (obj == null)
-      {
-         return false;
-      }
-      if (getClass() != obj.getClass())
-      {
-         return false;
-      }
-      EnumConstantSignature other = (EnumConstantSignature)obj;
-      if (!Arrays.equals(this.constName, other.constName))
-      {
-         return false;
-      }
-      return Arrays.equals(this.typeName, other.typeName);
-   }
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        EnumConstantSignature other = (EnumConstantSignature)obj;
+        if (!Arrays.equals(this.constName, other.constName)) {
+            return false;
+        }
+        return Arrays.equals(this.typeName, other.typeName);
+    }
 }

@@ -22,60 +22,60 @@ import java.util.Map;
 
 
 public class AssistSourceField extends ResolvedSourceField {
-	private Map bindingCache;
-	private Map infoCache;
+    private Map bindingCache;
+    private Map infoCache;
 
-	private String uniqueKey;
-	private boolean isResolved;
+    private String  uniqueKey;
+    private boolean isResolved;
 
-	public AssistSourceField(JavaElement parent, String name, Map bindingCache, Map infoCache) {
-		super(parent, name, null);
-		this.bindingCache = bindingCache;
-		this.infoCache = infoCache;
-	}
+    public AssistSourceField(JavaElement parent, String name, Map bindingCache, Map infoCache) {
+        super(parent, name, null);
+        this.bindingCache = bindingCache;
+        this.infoCache = infoCache;
+    }
 
-	public Object getElementInfo(IProgressMonitor monitor) throws JavaModelException {
-		return this.infoCache.get(this);
-	}
+    public Object getElementInfo(IProgressMonitor monitor) throws JavaModelException {
+        return this.infoCache.get(this);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.core.SourceField#getKey()
-	 */
-	public String getKey() {
-		if (this.uniqueKey == null) {
-			Binding binding = (Binding) this.bindingCache.get(this);
-			if (binding != null) {
-				this.isResolved = true;
-				this.uniqueKey = new String(binding.computeUniqueKey());
-			} else {
-				this.isResolved = false;
-				try {
-					this.uniqueKey = getKey(this, false/*don't open*/);
-				} catch (JavaModelException e) {
-					// happen only if force open is true
-					return null;
-				}
-			}
-		}
-		return this.uniqueKey;
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.jdt.internal.core.SourceField#getKey()
+     */
+    public String getKey() {
+        if (this.uniqueKey == null) {
+            Binding binding = (Binding)this.bindingCache.get(this);
+            if (binding != null) {
+                this.isResolved = true;
+                this.uniqueKey = new String(binding.computeUniqueKey());
+            } else {
+                this.isResolved = false;
+                try {
+                    this.uniqueKey = getKey(this, false/*don't open*/);
+                } catch (JavaModelException e) {
+                    // happen only if force open is true
+                    return null;
+                }
+            }
+        }
+        return this.uniqueKey;
+    }
 
-	public boolean isResolved() {
-		getKey();
-		return this.isResolved;
-	}
+    public boolean isResolved() {
+        getKey();
+        return this.isResolved;
+    }
 
-	protected void toStringInfo(int tab, StringBuffer buffer, Object info,boolean showResolvedInfo) {
-		super.toStringInfo(tab, buffer, info, showResolvedInfo && isResolved());
-	}
+    protected void toStringInfo(int tab, StringBuffer buffer, Object info, boolean showResolvedInfo) {
+        super.toStringInfo(tab, buffer, info, showResolvedInfo && isResolved());
+    }
 
-	public IAnnotation getAnnotation(String annotationName) {
-		return new AssistAnnotation(this, annotationName, this.infoCache);
-	}
+    public IAnnotation getAnnotation(String annotationName) {
+        return new AssistAnnotation(this, annotationName, this.infoCache);
+    }
 
-	public IType getType(String typeName, int count) {
-		AssistSourceType type = new AssistSourceType(this, typeName, this.bindingCache, this.infoCache);
-		type.occurrenceCount = count;
-		return type;
-	}
+    public IType getType(String typeName, int count) {
+        AssistSourceType type = new AssistSourceType(this, typeName, this.bindingCache, this.infoCache);
+        type.occurrenceCount = count;
+        return type;
+    }
 }

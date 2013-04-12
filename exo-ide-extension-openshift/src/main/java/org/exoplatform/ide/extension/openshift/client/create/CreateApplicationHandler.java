@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link CreateApplicationHandler} handler.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 7, 2011 5:44:49 PM anya $
- * 
  */
-public interface CreateApplicationHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to create application on OpenShift.
-    * 
-    * @param event
-    */
-   void onCreateApplication(CreateApplicationEvent event);
+public interface CreateApplicationHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to create application on OpenShift.
+     *
+     * @param event
+     */
+    void onCreateApplication(CreateApplicationEvent event);
 }

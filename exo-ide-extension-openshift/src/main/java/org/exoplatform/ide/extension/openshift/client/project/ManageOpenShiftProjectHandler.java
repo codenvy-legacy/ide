@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ManageOpenShiftProjectEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 5, 2011 12:34:43 PM anya $
- * 
  */
-public interface ManageOpenShiftProjectHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to manage project deployed to OpenShift.
-    * 
-    * @param event
-    */
-   void onManageOpenShiftProject(ManageOpenShiftProjectEvent event);
+public interface ManageOpenShiftProjectHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to manage project deployed to OpenShift.
+     *
+     * @param event
+     */
+    void onManageOpenShiftProject(ManageOpenShiftProjectEvent event);
 }

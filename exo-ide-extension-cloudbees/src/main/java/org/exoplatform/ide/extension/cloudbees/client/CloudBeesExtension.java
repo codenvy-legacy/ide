@@ -50,60 +50,50 @@ import java.util.List;
  *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudBeesExtension.java Jun 23, 2011 10:11:59 AM vereshchaka $
- *
  */
-public class CloudBeesExtension extends Extension implements InitializeServicesHandler
-{
+public class CloudBeesExtension extends Extension implements InitializeServicesHandler {
 
-   /**
-    * The generator of an {@link AutoBean}.
-    */
-   public static final CloudBeesAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(CloudBeesAutoBeanFactory.class);
+    /** The generator of an {@link AutoBean}. */
+    public static final CloudBeesAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(CloudBeesAutoBeanFactory.class);
 
-   public static final CloudBeesLocalizationConstant LOCALIZATION_CONSTANT = GWT
-      .create(CloudBeesLocalizationConstant.class);
+    public static final CloudBeesLocalizationConstant LOCALIZATION_CONSTANT = GWT
+            .create(CloudBeesLocalizationConstant.class);
 
-   private static final String ID = "CloudBees";
+    private static final String ID = "CloudBees";
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
-    */
-   @Override
-   public void onInitializeServices(InitializeServicesEvent event)
-   {
-      new CloudBeesClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader(), IDE.messageBus());
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
+     * .client.framework.application.event.InitializeServicesEvent) */
+    @Override
+    public void onInitializeServices(InitializeServicesEvent event) {
+        new CloudBeesClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader(), IDE.messageBus());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.getInstance().registerPaaS(
-         new PaaS("CloudBees", "CloudBees", new Image(CloudBeesClientBundle.INSTANCE.cloudBees48()), new Image(
-            CloudBeesClientBundle.INSTANCE.cloudBees48Disabled()), Arrays.asList(ProjectType.JSP, ProjectType.WAR),
-            new org.exoplatform.ide.extension.cloudbees.client.deploy.DeployApplicationPresenter()));
+    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
+    @Override
+    public void initialize() {
+        IDE.getInstance().registerPaaS(
+                new PaaS("CloudBees", "CloudBees", new Image(CloudBeesClientBundle.INSTANCE.cloudBees48()), new Image(
+                        CloudBeesClientBundle.INSTANCE.cloudBees48Disabled()), Arrays.asList(ProjectType.JSP, ProjectType.WAR),
+                         new org.exoplatform.ide.extension.cloudbees.client.deploy.DeployApplicationPresenter()));
 
-      IDE.addHandler(InitializeServicesEvent.TYPE, this);
+        IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
-      IDE.getInstance().addControl(new CloudBeesControl());
-      IDE.getInstance().addControl(new InitializeApplicationControl());
-      IDE.getInstance().addControl(new ApplicationListControl());
+        IDE.getInstance().addControl(new CloudBeesControl());
+        IDE.getInstance().addControl(new InitializeApplicationControl());
+        IDE.getInstance().addControl(new ApplicationListControl());
 
-      new InitializeApplicationPresenter();
-      new LoginPresenter();
-      new ApplicationInfoPresenter();
-      new DeleteApplicationPresenter();
-      new ApplicationListPresenter();
-      new UpdateApplicationPresenter();
-      new CloudBeesProjectPresenter();
-      new CreateAccountPresenter();
-   }
+        new InitializeApplicationPresenter();
+        new LoginPresenter();
+        new ApplicationInfoPresenter();
+        new DeleteApplicationPresenter();
+        new ApplicationListPresenter();
+        new UpdateApplicationPresenter();
+        new CloudBeesProjectPresenter();
+        new CreateAccountPresenter();
+    }
 
-   public static boolean canBeDeployedToCB(ProjectModel project)
-   {
-      List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());
-      return (targets != null && targets.contains(ID));
-   }
+    public static boolean canBeDeployedToCB(ProjectModel project) {
+        List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());
+        return (targets != null && targets.contains(ID));
+    }
 }

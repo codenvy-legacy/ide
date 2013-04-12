@@ -29,54 +29,46 @@ import static org.exoplatform.ide.vfs.server.observation.ChangeEvent.ChangeType;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public final class TypeFilter extends ChangeEventFilter
-{
-   private final Set<ChangeType> types;
+public final class TypeFilter extends ChangeEventFilter {
+    private final Set<ChangeType> types;
 
-   public TypeFilter(ChangeType type)
-   {
-      this.types = EnumSet.of(type);
-   }
+    public TypeFilter(ChangeType type) {
+        this.types = EnumSet.of(type);
+    }
 
-   public TypeFilter(ChangeType type1,
-                     ChangeType type2)
-   {
-      this.types = EnumSet.of(type1, type2);
-   }
+    public TypeFilter(ChangeType type1,
+                      ChangeType type2) {
+        this.types = EnumSet.of(type1, type2);
+    }
 
-   public TypeFilter(ChangeType type1,
-                     ChangeType type2,
-                     ChangeType type3)
-   {
-      this.types = EnumSet.of(type1, type2, type3);
-   }
+    public TypeFilter(ChangeType type1,
+                      ChangeType type2,
+                      ChangeType type3) {
+        this.types = EnumSet.of(type1, type2, type3);
+    }
 
-   public TypeFilter(ChangeType type1,
-                     ChangeType type2,
-                     ChangeType type3,
-                     ChangeType type4)
-   {
-      this.types = EnumSet.of(type1, type2, type3, type4);
-   }
+    public TypeFilter(ChangeType type1,
+                      ChangeType type2,
+                      ChangeType type3,
+                      ChangeType type4) {
+        this.types = EnumSet.of(type1, type2, type3, type4);
+    }
 
-   public TypeFilter(ChangeType type1,
-                     ChangeType type2,
-                     ChangeType type3,
-                     ChangeType type4,
-                     ChangeType type5)
-   {
-      this.types = EnumSet.of(type1, type2, type3, type4, type5);
-   }
+    public TypeFilter(ChangeType type1,
+                      ChangeType type2,
+                      ChangeType type3,
+                      ChangeType type4,
+                      ChangeType type5) {
+        this.types = EnumSet.of(type1, type2, type3, type4, type5);
+    }
 
-   public TypeFilter(Set<ChangeType> types)
-   {
-      this.types = EnumSet.copyOf(types);
-   }
+    public TypeFilter(Set<ChangeType> types) {
+        this.types = EnumSet.copyOf(types);
+    }
 
-   @Override
-   public boolean matched(ChangeEvent event)
-   {
-      ChangeType eventType = event.getType();
-      return eventType != null && this.types.contains(eventType);
-   }
+    @Override
+    public boolean matched(ChangeEvent event) {
+        ChangeType eventType = event.getType();
+        return eventType != null && this.types.contains(eventType);
+    }
 }

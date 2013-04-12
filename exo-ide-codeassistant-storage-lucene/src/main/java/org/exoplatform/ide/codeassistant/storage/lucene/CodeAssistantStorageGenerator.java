@@ -24,11 +24,7 @@ import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -47,139 +43,111 @@ import java.util.Set;
  * If there arguments were not specified then will be used default values.
  * </p>
  */
-public class CodeAssistantStorageGenerator
-{
-   private static final Logger LOG = LoggerFactory.getLogger(CodeAssistantStorageGenerator.class);
+public class CodeAssistantStorageGenerator {
+    private static final Logger LOG = LoggerFactory.getLogger(CodeAssistantStorageGenerator.class);
 
-   private static final String DEFAULT_INDEX_DIRECTORY = "ide-codeassistant-lucene-index";
+    private static final String DEFAULT_INDEX_DIRECTORY = "ide-codeassistant-lucene-index";
 
-   private static final String DEFAULT_JAR_FILES_LIST = "codeassistant/jar-files.txt";
+    private static final String DEFAULT_JAR_FILES_LIST = "codeassistant/jar-files.txt";
 
-   private static final String DEFAULT_SOURCE_ARCHIVE_FILES_LIST = "codeassistant/source-jar-files.txt";
+    private static final String DEFAULT_SOURCE_ARCHIVE_FILES_LIST = "codeassistant/source-jar-files.txt";
 
-   private static final String DEFAULT_PACKAGE_IGNORED_LIST = "codeassistant/ignored-packages.js";
+    private static final String DEFAULT_PACKAGE_IGNORED_LIST = "codeassistant/ignored-packages.js";
 
-   private final DataStorageWriter storageWriter;
+    private final DataStorageWriter storageWriter;
 
-   private final String jarFilesList;
+    private final String jarFilesList;
 
-   private final String sourceArchiveFilesList;
+    private final String sourceArchiveFilesList;
 
-   private final String ignoredPackagesList;
+    private final String ignoredPackagesList;
 
-   public CodeAssistantStorageGenerator(String indexDirectory, String jarFilesList, String sourceArchiveFilesList,
-      String ignoredPackagesList)
-   {
-      this.jarFilesList = jarFilesList;
-      this.sourceArchiveFilesList = sourceArchiveFilesList;
-      this.ignoredPackagesList = ignoredPackagesList;
-      this.storageWriter = new DataStorageWriter(indexDirectory);
-   }
+    public CodeAssistantStorageGenerator(String indexDirectory, String jarFilesList, String sourceArchiveFilesList,
+                                         String ignoredPackagesList) {
+        this.jarFilesList = jarFilesList;
+        this.sourceArchiveFilesList = sourceArchiveFilesList;
+        this.ignoredPackagesList = ignoredPackagesList;
+        this.storageWriter = new DataStorageWriter(indexDirectory);
+    }
 
-   private void writeDataToStorage() throws IOException, SaveDataIndexException
-   {
-      ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-      InputStream io = contextClassLoader.getResourceAsStream(ignoredPackagesList);
-      JsonParser p = new JsonParser();
-      if (io == null)
-         io = new FileInputStream(new File(ignoredPackagesList));
-      String[] ignored = null;
-      try
-      {
-         p.parse(io);
-         ignored = (String[])ObjectBuilder.createArray(String[].class, p.getJsonObject());
+    private void writeDataToStorage() throws IOException, SaveDataIndexException {
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+        InputStream io = contextClassLoader.getResourceAsStream(ignoredPackagesList);
+        JsonParser p = new JsonParser();
+        if (io == null)
+            io = new FileInputStream(new File(ignoredPackagesList));
+        String[] ignored = null;
+        try {
+            p.parse(io);
+            ignored = (String[])ObjectBuilder.createArray(String[].class, p.getJsonObject());
 
-      }
-      catch (JsonException e)
-      {
-         e.printStackTrace();
-      }
-      finally
-      {
-         io.close();
-      }
-      Set<String> ignoredPackages = new HashSet<String>();
-      ignoredPackages.addAll(Arrays.asList(ignored));
-      storageWriter.writeBinaryJarsToIndex(getJarFilesList(jarFilesList), ignoredPackages);
-      storageWriter.writeSourceJarsToIndex(getJarFilesList(sourceArchiveFilesList), ignoredPackages);
-   }
+        } catch (JsonException e) {
+            e.printStackTrace();
+        } finally {
+            io.close();
+        }
+        Set<String> ignoredPackages = new HashSet<String>();
+        ignoredPackages.addAll(Arrays.asList(ignored));
+        storageWriter.writeBinaryJarsToIndex(getJarFilesList(jarFilesList), ignoredPackages);
+        storageWriter.writeSourceJarsToIndex(getJarFilesList(sourceArchiveFilesList), ignoredPackages);
+    }
 
-   private Artifact[] getJarFilesList(String jarFilesList) throws IOException
-   {
-      ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-      InputStream io = contextClassLoader.getResourceAsStream(jarFilesList);
-      JsonParser p = new JsonParser();
-      if (io == null)
-         io = new FileInputStream(new File(jarFilesList));
+    private Artifact[] getJarFilesList(String jarFilesList) throws IOException {
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+        InputStream io = contextClassLoader.getResourceAsStream(jarFilesList);
+        JsonParser p = new JsonParser();
+        if (io == null)
+            io = new FileInputStream(new File(jarFilesList));
 
-      try
-      {
-         p.parse(io);
-         return (Artifact[])ObjectBuilder.createArray(Artifact[].class, p.getJsonObject());
+        try {
+            p.parse(io);
+            return (Artifact[])ObjectBuilder.createArray(Artifact[].class, p.getJsonObject());
 
-      }
-      catch (JsonException e)
-      {
-         e.printStackTrace();
-      }
-      finally
-      {
-         io.close();
-      }
-      return null;
-   }
+        } catch (JsonException e) {
+            e.printStackTrace();
+        } finally {
+            io.close();
+        }
+        return null;
+    }
 
-   public static void main(String[] args)
-   {
-      String indexDirectory = DEFAULT_INDEX_DIRECTORY;
-      if (args.length == 0)
-      {
-         LOG.info("Arguments list wasn't specified, will be used default values");
-      }
-      else if (args.length >= 1)
-      {
-         indexDirectory = args[0];
-      }
-      String jarFilesList = DEFAULT_JAR_FILES_LIST;
-      if (args.length >= 2)
-      {
-         jarFilesList = args[1];
-      }
-      String sourceArchiveFilesList = DEFAULT_SOURCE_ARCHIVE_FILES_LIST;
-      if (args.length == 3)
-      {
-         sourceArchiveFilesList = args[2];
-      }
+    public static void main(String[] args) {
+        String indexDirectory = DEFAULT_INDEX_DIRECTORY;
+        if (args.length == 0) {
+            LOG.info("Arguments list wasn't specified, will be used default values");
+        } else if (args.length >= 1) {
+            indexDirectory = args[0];
+        }
+        String jarFilesList = DEFAULT_JAR_FILES_LIST;
+        if (args.length >= 2) {
+            jarFilesList = args[1];
+        }
+        String sourceArchiveFilesList = DEFAULT_SOURCE_ARCHIVE_FILES_LIST;
+        if (args.length == 3) {
+            sourceArchiveFilesList = args[2];
+        }
 
-      String ignoredPackagesList = DEFAULT_PACKAGE_IGNORED_LIST;
-      if (args.length == 4)
-      {
-         sourceArchiveFilesList = args[3];
-      }
+        String ignoredPackagesList = DEFAULT_PACKAGE_IGNORED_LIST;
+        if (args.length == 4) {
+            sourceArchiveFilesList = args[3];
+        }
 
-      LOG.info("Index will be created in " + indexDirectory + " directory");
-      LOG.info("Jar files list will be read from " + jarFilesList + " file");
-      LOG.info("Source archives list will be read from " + sourceArchiveFilesList + " file");
+        LOG.info("Index will be created in " + indexDirectory + " directory");
+        LOG.info("Jar files list will be read from " + jarFilesList + " file");
+        LOG.info("Source archives list will be read from " + sourceArchiveFilesList + " file");
 
-      CodeAssistantStorageGenerator codeAssistantStorageGenerator =
-         new CodeAssistantStorageGenerator(indexDirectory, jarFilesList, sourceArchiveFilesList, ignoredPackagesList);
-      try
-      {
-         codeAssistantStorageGenerator.writeDataToStorage();
-         LOG.info("Index created successfully");
-      }
-      catch (FileNotFoundException e)
-      {
-         LOG.error(e.getMessage(), e);
-      }
-      catch (IOException e)
-      {
-         LOG.error("Error while writing data to lucene storage!", e);
-      }
-      catch (SaveDataIndexException e)
-      {
-         LOG.error("Error while writing data to lucene storage!", e);
-      }
-   }
+        CodeAssistantStorageGenerator codeAssistantStorageGenerator =
+                new CodeAssistantStorageGenerator(indexDirectory, jarFilesList, sourceArchiveFilesList, ignoredPackagesList);
+        try {
+            codeAssistantStorageGenerator.writeDataToStorage();
+            LOG.info("Index created successfully");
+        } catch (FileNotFoundException e) {
+            LOG.error(e.getMessage(), e);
+        } catch (IOException e) {
+            LOG.error("Error while writing data to lucene storage!", e);
+        } catch (SaveDataIndexException e) {
+            LOG.error("Error while writing data to lucene storage!", e);
+        }
+    }
 
 }

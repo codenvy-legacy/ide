@@ -26,62 +26,51 @@ import org.exoplatform.ide.client.framework.websocket.rest.ResponseMessage;
 
 /**
  * Thrown when there was an any exception was received from the server over WebSocket.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ServerException.java Nov 9, 2012 5:20:18 PM azatsarynnyy $
- *
  */
 @SuppressWarnings("serial")
-public class ServerException extends Exception
-{
-   private ResponseMessage response;
+public class ServerException extends Exception {
+    private ResponseMessage response;
 
-   private boolean errorMessageProvided;
+    private boolean errorMessageProvided;
 
-   public ServerException(ResponseMessage response)
-   {
-      this.response = response;
-      this.errorMessageProvided = checkErrorMessageProvided();
-   }
+    public ServerException(ResponseMessage response) {
+        this.response = response;
+        this.errorMessageProvided = checkErrorMessageProvided();
+    }
 
-   @Override
-   public String getMessage()
-   {
-      if (response.getBody() == null || response.getBody().isEmpty())
-         return null;
-      return response.getBody();
-   }
+    @Override
+    public String getMessage() {
+        if (response.getBody() == null || response.getBody().isEmpty())
+            return null;
+        return response.getBody();
+    }
 
-   public int getHTTPStatus()
-   {
-      return response.getResponseCode();
-   }
+    public int getHTTPStatus() {
+        return response.getResponseCode();
+    }
 
-   public String getHeader(String key)
-   {
-      for (Pair header : response.getHeaders())
-      {
-         if (key.equals(header.getName()))
-         {
-            return header.getValue();
-         }
-      }
+    public String getHeader(String key) {
+        for (Pair header : response.getHeaders()) {
+            if (key.equals(header.getName())) {
+                return header.getValue();
+            }
+        }
 
-      return null;
-   }
+        return null;
+    }
 
-   private boolean checkErrorMessageProvided()
-   {
-      String value = getHeader(HTTPHeader.JAXRS_BODY_PROVIDED);
-      if (value != null)
-      {
-         return true;
-      }
-      return false;
-   }
+    private boolean checkErrorMessageProvided() {
+        String value = getHeader(HTTPHeader.JAXRS_BODY_PROVIDED);
+        if (value != null) {
+            return true;
+        }
+        return false;
+    }
 
-   public boolean isErrorMessageProvided()
-   {
-      return errorMessageProvided;
-   }
+    public boolean isErrorMessageProvided() {
+        return errorMessageProvided;
+    }
 }

@@ -36,102 +36,91 @@ import static org.junit.Assert.*;
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: DeleteTest.java Jan 3, 2013 11:10:48 AM azatsarynnyy $
  */
-public class DeleteTest extends ResourcesBaseTest
-{
-   private IWorkspaceRoot workspaceRootResource;
+public class DeleteTest extends ResourcesBaseTest {
+    private IWorkspaceRoot workspaceRootResource;
 
-   private IProject projectResource;
+    private IProject projectResource;
 
-   private IFolder emptyFolderResource;
+    private IFolder emptyFolderResource;
 
-   private IFolder nonEmptyFolderResource;
+    private IFolder nonEmptyFolderResource;
 
-   private IFile fileResource;
+    private IFile fileResource;
 
-   @Override
-   public void setUp() throws Exception
-   {
-      super.setUp();
-      workspaceRootResource = (IWorkspaceRoot)ws.newResource(new Path("/"), IResource.ROOT);
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        workspaceRootResource = (IWorkspaceRoot)ws.newResource(new Path("/"), IResource.ROOT);
 
-      projectResource = (IProject)ws.newResource(new Path("/project"), IResource.PROJECT);
-      projectResource.create(new NullProgressMonitor());
+        projectResource = (IProject)ws.newResource(new Path("/project"), IResource.PROJECT);
+        projectResource.create(new NullProgressMonitor());
 
-      emptyFolderResource = (IFolder)ws.newResource(projectResource.getFullPath().append("empty_folder"),
-         IResource.FOLDER);
-      emptyFolderResource.create(true, true, new NullProgressMonitor());
+        emptyFolderResource = (IFolder)ws.newResource(projectResource.getFullPath().append("empty_folder"),
+                                                      IResource.FOLDER);
+        emptyFolderResource.create(true, true, new NullProgressMonitor());
 
-      nonEmptyFolderResource = (IFolder)ws.newResource(projectResource.getFullPath().append("non_empty_folder"),
-         IResource.FOLDER);
-      nonEmptyFolderResource.create(true, true, new NullProgressMonitor());
-      ((IFile)ws.newResource(nonEmptyFolderResource.getFullPath().append("file"), IResource.FILE)).create(null, true,
-         new NullProgressMonitor());
+        nonEmptyFolderResource = (IFolder)ws.newResource(projectResource.getFullPath().append("non_empty_folder"),
+                                                         IResource.FOLDER);
+        nonEmptyFolderResource.create(true, true, new NullProgressMonitor());
+        ((IFile)ws.newResource(nonEmptyFolderResource.getFullPath().append("file"), IResource.FILE)).create(null, true,
+                                                                                                            new NullProgressMonitor());
 
-      fileResource = (IFile)ws.newResource(projectResource.getFullPath().append("file"), IResource.FILE);
-      fileResource.create(null, true, new NullProgressMonitor());
-   }
+        fileResource = (IFile)ws.newResource(projectResource.getFullPath().append("file"), IResource.FILE);
+        fileResource.create(null, true, new NullProgressMonitor());
+    }
 
-   @Test
-   public void testDeleteWorkspaceRoot() throws Exception
-   {
-      assertTrue(workspaceRootResource.members().length > 0);
-      workspaceRootResource.delete(true, true, new NullProgressMonitor());
-      assertEquals(0, workspaceRootResource.members().length);
-   }
+    @Test
+    public void testDeleteWorkspaceRoot() throws Exception {
+        assertTrue(workspaceRootResource.members().length > 0);
+        workspaceRootResource.delete(true, true, new NullProgressMonitor());
+        assertEquals(0, workspaceRootResource.members().length);
+    }
 
-   @Test
-   public void testDeleteProject() throws Exception
-   {
-      assertTrue(projectResource.exists());
-      IResource[] members = projectResource.members();
-      assertTrue(members.length > 0);
-      for (IResource member : members)
-      {
-         assertTrue(member.exists());
-      }
+    @Test
+    public void testDeleteProject() throws Exception {
+        assertTrue(projectResource.exists());
+        IResource[] members = projectResource.members();
+        assertTrue(members.length > 0);
+        for (IResource member : members) {
+            assertTrue(member.exists());
+        }
 
-      projectResource.delete(true, new NullProgressMonitor());
-      assertFalse(projectResource.exists());
-      for (IResource member : members)
-      {
-         assertFalse(member.exists());
-      }
-   }
+        projectResource.delete(true, new NullProgressMonitor());
+        assertFalse(projectResource.exists());
+        for (IResource member : members) {
+            assertFalse(member.exists());
+        }
+    }
 
-   @Test
-   public void testDeleteEmptyFolder() throws Exception
-   {
-      assertTrue(emptyFolderResource.exists());
-      assertEquals(0, emptyFolderResource.members().length);
-      emptyFolderResource.delete(true, new NullProgressMonitor());
-      assertFalse(emptyFolderResource.exists());
-   }
+    @Test
+    public void testDeleteEmptyFolder() throws Exception {
+        assertTrue(emptyFolderResource.exists());
+        assertEquals(0, emptyFolderResource.members().length);
+        emptyFolderResource.delete(true, new NullProgressMonitor());
+        assertFalse(emptyFolderResource.exists());
+    }
 
-   @Test
-   public void testDeleteNonEmptyFolder() throws Exception
-   {
-      assertTrue(nonEmptyFolderResource.exists());
-      IResource[] members = nonEmptyFolderResource.members();
-      assertTrue(members.length > 0);
-      for (IResource member : members)
-      {
-         assertTrue(member.exists());
-      }
+    @Test
+    public void testDeleteNonEmptyFolder() throws Exception {
+        assertTrue(nonEmptyFolderResource.exists());
+        IResource[] members = nonEmptyFolderResource.members();
+        assertTrue(members.length > 0);
+        for (IResource member : members) {
+            assertTrue(member.exists());
+        }
 
-      nonEmptyFolderResource.delete(true, new NullProgressMonitor());
-      assertFalse(nonEmptyFolderResource.exists());
-      for (IResource member : members)
-      {
-         assertFalse(member.exists());
-      }
-   }
+        nonEmptyFolderResource.delete(true, new NullProgressMonitor());
+        assertFalse(nonEmptyFolderResource.exists());
+        for (IResource member : members) {
+            assertFalse(member.exists());
+        }
+    }
 
-   @Test
-   public void testDeleteFile() throws Exception
-   {
-      assertTrue(fileResource.exists());
-      fileResource.delete(true, new NullProgressMonitor());
-      assertFalse(fileResource.exists());
-   }
+    @Test
+    public void testDeleteFile() throws Exception {
+        assertTrue(fileResource.exists());
+        fileResource.delete(true, new NullProgressMonitor());
+        assertFalse(fileResource.exists());
+    }
 
 }

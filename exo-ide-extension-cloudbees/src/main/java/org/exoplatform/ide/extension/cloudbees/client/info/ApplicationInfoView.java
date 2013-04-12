@@ -34,58 +34,44 @@ import java.util.Map.Entry;
 
 /**
  * Application information view.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 1, 2011 2:57:22 PM anya $
- * 
  */
-public class ApplicationInfoView extends ViewImpl implements ApplicationInfoPresenter.Display
-{
-   public static final String ID = "ideCloudBeesApplicationInfoView";
+public class ApplicationInfoView extends ViewImpl implements ApplicationInfoPresenter.Display {
+    public static final String ID = "ideCloudBeesApplicationInfoView";
 
-   private static final int HEIGHT = 345;
+    private static final int HEIGHT = 345;
 
-   private static final int WIDTH = 460;
+    private static final int WIDTH = 460;
 
-   private static ApplicationInfoViewUiBinder uiBinder = GWT.create(ApplicationInfoViewUiBinder.class);
+    private static ApplicationInfoViewUiBinder uiBinder = GWT.create(ApplicationInfoViewUiBinder.class);
 
-   /**
-    * Ok button.
-    */
-   @UiField
-   ImageButton okButton;
+    /** Ok button. */
+    @UiField
+    ImageButton okButton;
 
-   /**
-    * Application's information grid.
-    */
-   @UiField
-   ApplicationInfoGrid applicationInfoGrid;
+    /** Application's information grid. */
+    @UiField
+    ApplicationInfoGrid applicationInfoGrid;
 
-   interface ApplicationInfoViewUiBinder extends UiBinder<Widget, ApplicationInfoView>
-   {
-   }
+    interface ApplicationInfoViewUiBinder extends UiBinder<Widget, ApplicationInfoView> {
+    }
 
-   public ApplicationInfoView()
-   {
-      super(ID, ViewType.MODAL, CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoTitle(), null, WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
-   }
+    public ApplicationInfoView() {
+        super(ID, ViewType.MODAL, CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoTitle(), null, WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.info.ApplicationInfoPresenter.Display#getOkButton()
-    */
-   @Override
-   public HasClickHandlers getOkButton()
-   {
-      return okButton;
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.info.ApplicationInfoPresenter.Display#getOkButton() */
+    @Override
+    public HasClickHandlers getOkButton() {
+        return okButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfoPresenter.Display#getApplicationInfoGrid()
-    */
-   @Override
-   public ListGridItem<Entry<String, String>> getApplicationInfoGrid()
-   {
-      return applicationInfoGrid;
-   }
+    /** @see org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfoPresenter.Display#getApplicationInfoGrid() */
+    @Override
+    public ListGridItem<Entry<String, String>> getApplicationInfoGrid() {
+        return applicationInfoGrid;
+    }
 }

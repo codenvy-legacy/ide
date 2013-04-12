@@ -24,107 +24,106 @@ package org.exoplatform.ide.extension.cloudbees.shared;
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: ApplicationInfo.java Mar 15, 2012 9:25:11 AM azatsarynnyy $
  */
-public interface ApplicationInfo
-{
+public interface ApplicationInfo {
 
-   /** @return the id */
-   String getId();
+    /** @return the id */
+    String getId();
 
-   /**
-    * @param id
-    *    the id to set
-    */
-   void setId(String id);
+    /**
+     * @param id
+     *         the id to set
+     */
+    void setId(String id);
 
-   /** @return the title */
-   String getTitle();
+    /** @return the title */
+    String getTitle();
 
-   /**
-    * @param title
-    *    the title to set
-    */
-   void setTitle(String title);
+    /**
+     * @param title
+     *         the title to set
+     */
+    void setTitle(String title);
 
-   /** @return the status */
-   String getStatus();
+    /** @return the status */
+    String getStatus();
 
-   /**
-    * @param status
-    *    the status to set
-    */
-   void setStatus(String status);
+    /**
+     * @param status
+     *         the status to set
+     */
+    void setStatus(String status);
 
-   /** @return the url */
-   String getUrl();
+    /** @return the url */
+    String getUrl();
 
-   /**
-    * @param url
-    *    the url to set
-    */
-   void setUrl(String url);
+    /**
+     * @param url
+     *         the url to set
+     */
+    void setUrl(String url);
 
-   /** @return the instances */
-   @Deprecated
-   String getInstances();
+    /** @return the instances */
+    @Deprecated
+    String getInstances();
 
-   /**
-    * @param instances
-    *    the instances to set
-    */
-   @Deprecated
-   void setInstances(String instances);
+    /**
+     * @param instances
+     *         the instances to set
+     */
+    @Deprecated
+    void setInstances(String instances);
 
-   /** @return the securityMode */
-   String getSecurityMode();
+    /** @return the securityMode */
+    String getSecurityMode();
 
-   /**
-    * @param securityMode
-    *    the securityMode to set
-    */
-   void setSecurityMode(String securityMode);
+    /**
+     * @param securityMode
+     *         the securityMode to set
+     */
+    void setSecurityMode(String securityMode);
 
-   /** @return the maxMemory */
-   String getMaxMemory();
+    /** @return the maxMemory */
+    String getMaxMemory();
 
-   /**
-    * @param maxMemory
-    *    the maxMemory to set
-    */
-   void setMaxMemory(String maxMemory);
+    /**
+     * @param maxMemory
+     *         the maxMemory to set
+     */
+    void setMaxMemory(String maxMemory);
 
-   /** @return the idleTimeout */
-   String getIdleTimeout();
+    /** @return the idleTimeout */
+    String getIdleTimeout();
 
-   /**
-    * @param idleTimeout
-    *    the idleTimeout to set
-    */
-   void setIdleTimeout(String idleTimeout);
+    /**
+     * @param idleTimeout
+     *         the idleTimeout to set
+     */
+    void setIdleTimeout(String idleTimeout);
 
-   /** @return the serverPull */
-   String getServerPool();
+    /** @return the serverPull */
+    String getServerPool();
 
-   /**
-    * @param serverPool
-    *    the serverPull to set
-    */
-   void setServerPool(String serverPool);
+    /**
+     * @param serverPool
+     *         the serverPull to set
+     */
+    void setServerPool(String serverPool);
 
-   /** @return the container */
-   String getContainer();
+    /** @return the container */
+    String getContainer();
 
-   /**
-    * @param container
-    *    the container to set
-    */
-   void setContainer(String container);
+    /**
+     * @param container
+     *         the container to set
+     */
+    void setContainer(String container);
 
-   /** @return size of the cluster */
-   String getClusterSize();
+    /** @return size of the cluster */
+    String getClusterSize();
 
-   /**
-    * @param clusterSize
-    *    size of the cluster to set
-    */
-   void setClusterSize(String clusterSize);
+    /**
+     * @param clusterSize
+     *         size of the cluster to set
+     */
+    void setClusterSize(String clusterSize);
 }

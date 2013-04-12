@@ -34,147 +34,120 @@ import org.exoplatform.ide.git.shared.Remote;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 19, 2011 11:12:44 AM anya $
- * 
  */
-public abstract class AddRemoteRepositoryPresenter
-{
-   interface Display extends IsView
-   {
-      /**
-       * Get cancel button's click handler.
-       * 
-       * @return {@link HasClickHandlers} click handler
-       */
-      HasClickHandlers getCancelButton();
+public abstract class AddRemoteRepositoryPresenter {
+    interface Display extends IsView {
+        /**
+         * Get cancel button's click handler.
+         * 
+         * @return {@link HasClickHandlers} click handler
+         */
+        HasClickHandlers getCancelButton();
 
-      /**
-       * Get ok button's click handler.
-       * 
-       * @return {@link HasClickHandlers} click handler
-       */
-      HasClickHandlers getOkButton();
+        /**
+         * Get ok button's click handler.
+         * 
+         * @return {@link HasClickHandlers} click handler
+         */
+        HasClickHandlers getOkButton();
 
-      /**
-       * Change the enable state of the ok button.
-       * 
-       * @param enable enable state of the ok button
-       */
-      void enableOkButton(boolean enable);
+        /**
+         * Change the enable state of the ok button.
+         * 
+         * @param enable enable state of the ok button
+         */
+        void enableOkButton(boolean enable);
 
-      /**
-       * Get name field.
-       * 
-       * @return {@link HasValue} name field
-       */
-      HasValue<String> getName();
+        /**
+         * Get name field.
+         * 
+         * @return {@link HasValue} name field
+         */
+        HasValue<String> getName();
 
-      /**
-       * Get URL field.
-       * 
-       * @return {@link HasValue} url field
-       */
-      HasValue<String> getUrl();
-   }
+        /**
+         * Get URL field.
+         * 
+         * @return {@link HasValue} url field
+         */
+        HasValue<String> getUrl();
+    }
 
-   /**
-    * Presenter's display.
-    */
-   private Display display;
+    /** Presenter's display. */
+    private Display display;
 
-   /**
-    * @param remote remote repository
-    * @param title view's title
-    */
-   public AddRemoteRepositoryPresenter(Remote remote, String title)
-   {
-      if (display == null)
-      {
-         display = new AddRemoteRepositoryView(title);
-         bindDisplay();
-      }
-      else
-      {
-         display.asView().setTitle(title);
-      }
+    /**
+     * @param remote remote repository
+     * @param title view's title
+     */
+    public AddRemoteRepositoryPresenter(Remote remote, String title) {
+        if (display == null) {
+            display = new AddRemoteRepositoryView(title);
+            bindDisplay();
+        } else {
+            display.asView().setTitle(title);
+        }
 
-      display.enableOkButton(false);
-      if (remote != null)
-      {
-         display.getName().setValue(remote.getName());
-         display.getUrl().setValue(remote.getUrl());
-      }
+        display.enableOkButton(false);
+        if (remote != null) {
+            display.getName().setValue(remote.getName());
+            display.getUrl().setValue(remote.getUrl());
+        }
 
-      IDE.getInstance().openView(display.asView());
-   }
+        IDE.getInstance().openView(display.asView());
+    }
 
-   /**
-    * Bind display with presenter.
-    */
-   public void bindDisplay()
-   {
-      display.getOkButton().addClickHandler(new ClickHandler()
-      {
+    /** Bind display with presenter. */
+    public void bindDisplay() {
+        display.getOkButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            onSubmit();
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
+            @Override
+            public void onClick(ClickEvent event) {
+                onSubmit();
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
 
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
+        display.getCancelButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
 
-      display.getName().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
+        display.getName().addValueChangeHandler(new ValueChangeHandler<String>() {
 
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            display.enableOkButton(checkNotEmpty());
-         }
-      });
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                display.enableOkButton(checkNotEmpty());
+            }
+        });
 
-      display.getUrl().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
+        display.getUrl().addValueChangeHandler(new ValueChangeHandler<String>() {
 
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            display.enableOkButton(checkNotEmpty());
-         }
-      });
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                display.enableOkButton(checkNotEmpty());
+            }
+        });
 
-   }
+    }
 
-   /**
-    * Checks name and url fields are not empty.
-    * 
-    * @return boolean <code>true</code> if fields are not empty(full filled)
-    */
-   private boolean checkNotEmpty()
-   {
-      return display.getName().getValue() != null && display.getName().getValue().length() > 0
-         && display.getUrl().getValue() != null && display.getUrl().getValue().length() > 0;
-   }
+    /**
+     * Checks name and url fields are not empty.
+     * 
+     * @return boolean <code>true</code> if fields are not empty(full filled)
+     */
+    private boolean checkNotEmpty() {
+        return display.getName().getValue() != null && display.getName().getValue().length() > 0
+               && display.getUrl().getValue() != null && display.getUrl().getValue().length() > 0;
+    }
 
-   /**
-    * @return {@link Display}
-    */
-   public Display getDisplay()
-   {
-      return display;
-   }
+    /** @return {@link Display} */
+    public Display getDisplay() {
+        return display;
+    }
 
-   /**
-    * This method is called, when user submits adding remote repository.
-    */
-   public abstract void onSubmit();
+    /** This method is called, when user submits adding remote repository. */
+    public abstract void onSubmit();
 }

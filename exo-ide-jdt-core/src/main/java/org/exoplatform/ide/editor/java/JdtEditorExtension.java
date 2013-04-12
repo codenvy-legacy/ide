@@ -31,36 +31,27 @@ import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: GroovyEditorExtension Mar 10, 2011 3:48:59 PM evgen $
- * 
  */
-public class JdtEditorExtension extends Extension implements InitializeServicesHandler
-{
+public class JdtEditorExtension extends Extension implements InitializeServicesHandler {
 
-   /**
-    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(InitializeServicesEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(InitializeServicesEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
-    */
-   @Override
-   public void onInitializeServices(InitializeServicesEvent event)
-   {
-      IDE.getInstance().getFileTypeRegistry().addFileType(
-         new FileType(MimeType.APPLICATION_JAVA, "java", JavaClientBundle.INSTANCE.java()),
-         new EditorCreator()
-         {
-            @Override
-            public Editor createEditor()
-            {
-                return new JavaEditor(MimeType.APPLICATION_JAVA);
-            }
-         });
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
+     * .client.framework.application.event.InitializeServicesEvent) */
+    @Override
+    public void onInitializeServices(InitializeServicesEvent event) {
+        IDE.getInstance().getFileTypeRegistry().addFileType(
+                new FileType(MimeType.APPLICATION_JAVA, "java", JavaClientBundle.INSTANCE.java()),
+                new EditorCreator() {
+                    @Override
+                    public Editor createEditor() {
+                        return new JavaEditor(MimeType.APPLICATION_JAVA);
+                    }
+                });
+    }
 
 }

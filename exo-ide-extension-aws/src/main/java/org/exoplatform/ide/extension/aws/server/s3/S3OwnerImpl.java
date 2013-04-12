@@ -24,51 +24,43 @@ import org.exoplatform.ide.extension.aws.shared.s3.S3Owner;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class S3OwnerImpl implements S3Owner
-{
-   private String id;
-   private String name;
+public class S3OwnerImpl implements S3Owner {
+    private String id;
+    private String name;
 
-   public S3OwnerImpl()
-   {
-   }
+    public S3OwnerImpl() {
+    }
 
-   public S3OwnerImpl(String id, String name)
-   {
-      this.id = id;
-      this.name = name;
-   }
+    public S3OwnerImpl(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
-   @Override
-   public String getId()
-   {
-      return id;
-   }
+    @Override
+    public String getId() {
+        return id;
+    }
 
-   @Override
-   public void setId(String id)
-   {
-      this.id = id;
-   }
+    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
 
-   @Override
-   public String getName()
-   {
-      return name;
-   }
+    @Override
+    public String getName() {
+        return name;
+    }
 
-   @Override
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "S3OwnerImpl{" +
-         "id='" + id + '\'' +
-         ", name='" + name + '\'' +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "S3OwnerImpl{" +
+               "id='" + id + '\'' +
+               ", name='" + name + '\'' +
+               '}';
+    }
 }

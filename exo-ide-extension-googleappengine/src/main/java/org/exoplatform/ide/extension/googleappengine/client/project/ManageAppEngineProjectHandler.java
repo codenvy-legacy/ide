@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ManageAppEngineProjectEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 22, 2012 5:17:48 PM anya $
- * 
  */
-public interface ManageAppEngineProjectHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to manage project on Google App Engine.
-    * 
-    * @param event
-    */
-   void onManageAppEngineProject(ManageAppEngineProjectEvent event);
+public interface ManageAppEngineProjectHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to manage project on Google App Engine.
+     *
+     * @param event
+     */
+    void onManageAppEngineProject(ManageAppEngineProjectEvent event);
 }

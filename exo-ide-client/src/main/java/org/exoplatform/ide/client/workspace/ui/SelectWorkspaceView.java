@@ -34,82 +34,67 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class SelectWorkspaceView extends ViewImpl implements
-   org.exoplatform.ide.client.workspace.SelectWorkspacePresenter.Display
-{
+                                                  org.exoplatform.ide.client.workspace.SelectWorkspacePresenter.Display {
 
-   /*
-    * Id of Select Workspace View
-    */
-   public static final String ID = "ideSelectWorkspaceView";
+    /*
+     * Id of Select Workspace View
+     */
+    public static final String ID = "ideSelectWorkspaceView";
 
-   /**
-    * Initial width of this view.
-    */
-   private static final int WIDTH = 450;
+    /** Initial width of this view. */
+    private static final int WIDTH = 450;
 
-   /**
-    * Initial height of this view.
-    */
-   private static final int HEIGHT = 320;
+    /** Initial height of this view. */
+    private static final int HEIGHT = 320;
 
-   private static final String TITLE = IDE.PREFERENCES_CONSTANT.workspaceTitle();
+    private static final String TITLE = IDE.PREFERENCES_CONSTANT.workspaceTitle();
 
-   /**
-    * UIBinder instance
-    */
-   private static SelectWorkspaceViewUiBinder uiBinder = GWT.create(SelectWorkspaceViewUiBinder.class);
+    /** UIBinder instance */
+    private static SelectWorkspaceViewUiBinder uiBinder = GWT.create(SelectWorkspaceViewUiBinder.class);
 
-   /**
-    * 
-    */
-   interface SelectWorkspaceViewUiBinder extends UiBinder<Widget, SelectWorkspaceView>
-   {
-   }
+    /**
+     *
+     */
+    interface SelectWorkspaceViewUiBinder extends UiBinder<Widget, SelectWorkspaceView> {
+    }
 
-   /**
-    * Grid for displaying list of available workspaces.
-    */
-   @UiField
-   VFSListGrid entryPointListGrid;
+    /** Grid for displaying list of available workspaces. */
+    @UiField
+    VFSListGrid entryPointListGrid;
 
-   @UiField
-   ImageButton okButton;
+    @UiField
+    ImageButton okButton;
 
-   public SelectWorkspaceView()
-   {
-      super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.workspace()), WIDTH, HEIGHT);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
-   }
+    public SelectWorkspaceView() {
+        super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.workspace()), WIDTH, HEIGHT);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
+    }
 
-   @Override
-   public ListGridItem<VirtualFileSystemInfo> getWorkspaceListGrid()
-   {
-      return entryPointListGrid;
-   }
+    @Override
+    public ListGridItem<VirtualFileSystemInfo> getWorkspaceListGrid() {
+        return entryPointListGrid;
+    }
 
-   @Override
-   public HasClickHandlers getOkButton()
-   {
-      return okButton;
-   }
+    @Override
+    public HasClickHandlers getOkButton() {
+        return okButton;
+    }
 
-   @Override
-   public void setSelectedItem(VirtualFileSystemInfo item)
-   {
-      entryPointListGrid.selectItem(item);
-   }
+    @Override
+    public void setSelectedItem(VirtualFileSystemInfo item) {
+        entryPointListGrid.selectItem(item);
+    }
 
-   @Override
-   public void setOkButtonEnabled(boolean enabled)
-   {
-      okButton.setEnabled(enabled);
-   }
+    @Override
+    public void setOkButtonEnabled(boolean enabled) {
+        okButton.setEnabled(enabled);
+    }
 
 }

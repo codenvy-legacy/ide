@@ -14,15 +14,16 @@
 
 package com.google.collide.client.editor;
 
-import com.google.collide.client.editor.Buffer.ScrollListener;
-import com.codenvy.ide.client.util.BrowserUtils;
 import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.events.MouseWheelEvent;
 import elemental.html.Element;
 
-import org.exoplatform.ide.json.client.Jso;
+import com.codenvy.ide.client.util.BrowserUtils;
 import com.codenvy.ide.client.util.UserAgent;
+import com.google.collide.client.editor.Buffer.ScrollListener;
+
+import org.exoplatform.ide.json.client.Jso;
 
 /*
  * We want to behave as close to native scrolling as possible, but still prevent
@@ -37,10 +38,11 @@ import com.codenvy.ide.client.util.UserAgent;
  * behavior which allows ChromeOS to have native-feeling scrolling (albeit
  * with flicker.)
  */
+
 /**
  * An object that intercepts mousewheel events that would have otherwise gone to
  * the scrollable layer in the buffer. Instead, we manually scroll the buffer
- * 
+ * <p/>
  * <p>The purpose is to prevent flickering of the newly scrolled region. If the
  * scrollable element takes the scroll, that element will be scrolled before we
  * can fill it with contents. Therefore, there will be white displayed for a
@@ -48,69 +50,69 @@ import com.codenvy.ide.client.util.UserAgent;
  */
 class MouseWheelRedirector {
 
-  public static void redirect(Buffer buffer, Element scrollableElement) {
-    // ChromeOS early exit (see class implementation comment)
-    if (BrowserUtils.isChromeOs()) {
-      return;
+    public static void redirect(Buffer buffer, Element scrollableElement) {
+        // ChromeOS early exit (see class implementation comment)
+        if (BrowserUtils.isChromeOs()) {
+            return;
+        }
+
+        new MouseWheelRedirector(buffer).attachEventHandlers(scrollableElement);
     }
-    
-    new MouseWheelRedirector(buffer).attachEventHandlers(scrollableElement);
-  }
 
-  /**
-   * Default value for {@link #mouseWheelToScrollDelta} indicating it has not
-   * been defined yet.
-   */
-  private static final int UNDEFINED = 0;
-  
-  private final Buffer buffer;
-  
-  /**
-   * The magnitude to scroll per wheelDelta unit. Even though mousewheel events
-   * have wheelDelta in multiples of 120, this is the magnitude of a scroll
-   * corresponding to 1.
-   */
-  private double mouseWheelToScrollDelta = UNDEFINED;
+    /**
+     * Default value for {@link #mouseWheelToScrollDelta} indicating it has not
+     * been defined yet.
+     */
+    private static final int UNDEFINED = 0;
 
-  private MouseWheelRedirector(Buffer buffer) {
-    this.buffer = buffer;
-  }
+    private final Buffer buffer;
 
-  private static native int getWheelDeltaX(Event event) /*-{
-    // if using webkit (such as in Chrome) we can detect horizontal scroll
-    if (event.wheelDeltaX) {
-      return event.wheelDeltaX;
-    } else {
-      return 0;
+    /**
+     * The magnitude to scroll per wheelDelta unit. Even though mousewheel events
+     * have wheelDelta in multiples of 120, this is the magnitude of a scroll
+     * corresponding to 1.
+     */
+    private double mouseWheelToScrollDelta = UNDEFINED;
+
+    private MouseWheelRedirector(Buffer buffer) {
+        this.buffer = buffer;
     }
-  }-*/;
 
-  private void attachEventHandlers(Element scrollableElement) {
+    private static native int getWheelDeltaX(Event event) /*-{
+        // if using webkit (such as in Chrome) we can detect horizontal scroll
+        if (event.wheelDeltaX) {
+            return event.wheelDeltaX;
+        } else {
+            return 0;
+        }
+    }-*/;
+
+    private void attachEventHandlers(Element scrollableElement) {
     /*
      * The MOUSEWHEEL does not exist on FF (it has DOMMouseScroll which we don't
      * bother to support). This means FF mousewheel scrolling will flicker.
      */
-    scrollableElement.addEventListener(Event.MOUSEWHEEL, new EventListener() {
-      @Override
-      public void handleEvent(Event evt) {
-        MouseWheelEvent mouseWheelEvent = (MouseWheelEvent) evt;
+        scrollableElement.addEventListener(Event.MOUSEWHEEL, new EventListener() {
+            @Override
+            public void handleEvent(Event evt) {
+                MouseWheelEvent mouseWheelEvent = (MouseWheelEvent)evt;
         
         /*
          * The negative is so the deltaX,Y are positive when the scroll delta
          * is. That is, a positive "deltaY" will scroll down.
          */
-        int deltaY = -((Jso) mouseWheelEvent).getIntField("wheelDeltaY");
-        int deltaX = -((Jso) mouseWheelEvent).getIntField("wheelDeltaX");
+                int deltaY = -((Jso)mouseWheelEvent).getIntField("wheelDeltaY");
+                int deltaX = -((Jso)mouseWheelEvent).getIntField("wheelDeltaX");
         
         /*
          * If the deltaY is 0, this is probably a horizontal-only scroll, in
          * which case we let it proceed as normal (no preventDefault, no manual
          * scrolling, etc.)
          */
-        if (deltaY != 0) {
-          if (mouseWheelToScrollDelta == UNDEFINED) {
-            captureFirstMouseWheelToScrollDelta(deltaY);
-          } else {
+                if (deltaY != 0) {
+                    if (mouseWheelToScrollDelta == UNDEFINED) {
+                        captureFirstMouseWheelToScrollDelta(deltaY);
+                    } else {
             /*
              * There is a chance that we have both a horizontal and vertical
              * scroll here. For vertical scroll, we must manually scroll to
@@ -118,19 +120,19 @@ class MouseWheelRedirector {
              * must scroll the event's horizontal component too (otherwise
              * the intended horizontal scroll would be lost.)
              */
-            buffer.setScrollTop(buffer.getScrollTop() + (int) (mouseWheelToScrollDelta * deltaY));
-            buffer.setScrollLeft(buffer.getScrollLeft() + (int) (mouseWheelToScrollDelta * deltaX));
-            evt.preventDefault();
-          }
-        }
-      }
+                        buffer.setScrollTop(buffer.getScrollTop() + (int)(mouseWheelToScrollDelta * deltaY));
+                        buffer.setScrollLeft(buffer.getScrollLeft() + (int)(mouseWheelToScrollDelta * deltaX));
+                        evt.preventDefault();
+                    }
+                }
+            }
 
-    }, false);
-  }
+        }, false);
+    }
 
-  private void captureFirstMouseWheelToScrollDelta(final int wheelDelta) {
-    if (UserAgent.debugUserAgentString().contains("Chrome/17") && UserAgent.isMac()
-        && (wheelDelta < 120 || (wheelDelta % 120) != 0)) {
+    private void captureFirstMouseWheelToScrollDelta(final int wheelDelta) {
+        if (UserAgent.debugUserAgentString().contains("Chrome/17") && UserAgent.isMac()
+            && (wheelDelta < 120 || (wheelDelta % 120) != 0)) {
       /*
        * This is a workaround for Mac trackpads that typically send the actual pixel scroll amount
        * instead of a factor of 120. It seems like without this special check, we would still get a
@@ -140,18 +142,18 @@ class MouseWheelRedirector {
        * Chrome 18 and above fix this with a fixed constant of 1 to 3, so we don't need special
        * casing. (17 is stable at the time of this writing.)
        */
-      mouseWheelToScrollDelta = 1;
-      
-    } else {
-      final int initialScrollTop = buffer.getScrollTop();
+            mouseWheelToScrollDelta = 1;
 
-      buffer.getScrollListenerRegistrar().add(new ScrollListener() {
-        @Override
-        public void onScroll(Buffer buffer, int scrollTop) {
-          mouseWheelToScrollDelta = Math.abs(((float) scrollTop - initialScrollTop) / wheelDelta);
-          buffer.getScrollListenerRegistrar().remove(this);
+        } else {
+            final int initialScrollTop = buffer.getScrollTop();
+
+            buffer.getScrollListenerRegistrar().add(new ScrollListener() {
+                @Override
+                public void onScroll(Buffer buffer, int scrollTop) {
+                    mouseWheelToScrollDelta = Math.abs(((float)scrollTop - initialScrollTop) / wheelDelta);
+                    buffer.getScrollListenerRegistrar().remove(this);
+                }
+            });
         }
-      });
     }
-  }
 }

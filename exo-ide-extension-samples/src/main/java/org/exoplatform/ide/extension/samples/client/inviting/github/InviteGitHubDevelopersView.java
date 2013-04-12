@@ -43,149 +43,135 @@ import java.util.Map;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- *
  */
 public class InviteGitHubDevelopersView extends ViewImpl implements
-   org.exoplatform.ide.extension.samples.client.inviting.github.InviteGitHubDevelopersPresenter.Display
-{
+                                                         org.exoplatform.ide.extension.samples.client.inviting.github
+                                                                 .InviteGitHubDevelopersPresenter.Display {
 
-   private static final String ID = "ide.inviteGitHubDevelopersView";
+    private static final String ID = "ide.inviteGitHubDevelopersView";
 
-   private static final String TITLE = "Invite GitHub Developers";
+    private static final String TITLE = "Invite GitHub Developers";
 
-   private static final int WIDTH = 800;
+    private static final int WIDTH = 800;
 
-   private static final int HEIGHT = 500;
+    private static final int HEIGHT = 500;
 
-   private static InviteGitHubDevelopersViewUiBinder uiBinder = GWT.create(InviteGitHubDevelopersViewUiBinder.class);
+    private static InviteGitHubDevelopersViewUiBinder uiBinder = GWT.create(InviteGitHubDevelopersViewUiBinder.class);
 
-   interface InviteGitHubDevelopersViewUiBinder extends UiBinder<Widget, InviteGitHubDevelopersView>
-   {
-   }
+    interface InviteGitHubDevelopersViewUiBinder extends UiBinder<Widget, InviteGitHubDevelopersView> {
+    }
 
-   private class UserListWidget extends Widget
-   {
-      public UserListWidget(Element e)
-      {
-         setElement(e);
-      }
+    private class UserListWidget extends Widget {
+        public UserListWidget(Element e) {
+            setElement(e);
+        }
 
-      /**
-       * Adds a new child widget
-       *
-       * @param w the widget to be added
-       */
-      public void add(Widget w)
-      {
-         add(w, getElement());
-      }
+        /**
+         * Adds a new child widget
+         *
+         * @param w
+         *         the widget to be added
+         */
+        public void add(Widget w) {
+            add(w, getElement());
+        }
 
-      /**
-       * Adds a new child widget to the panel, attaching its Element to the
-       * specified container Element.
-       *
-       * @param child the child widget to be added
-       * @param container the element within which the child will be contained
-       */
-      protected void add(Widget child, Element container)
-      {
-         // Detach new child.
-         child.removeFromParent();
+        /**
+         * Adds a new child widget to the panel, attaching its Element to the
+         * specified container Element.
+         *
+         * @param child
+         *         the child widget to be added
+         * @param container
+         *         the element within which the child will be contained
+         */
+        protected void add(Widget child, Element container) {
+            // Detach new child.
+            child.removeFromParent();
 
-         // Logical attach.
-         getChildren().add(child);
+            // Logical attach.
+            getChildren().add(child);
 
-         // Physical attach.
-         DOM.appendChild(container, child.getElement());
+            // Physical attach.
+            DOM.appendChild(container, child.getElement());
 
-         // Adopt.
-         adopt(child);
-      }
+            // Adopt.
+            adopt(child);
+        }
 
-   }
+    }
 
-   UserListWidget userListWidget;
+    UserListWidget userListWidget;
 
-   @UiField
-   DivElement userListElement;
+    @UiField
+    DivElement userListElement;
 
-   @UiField
-   CheckBox checkAll;
+    @UiField
+    CheckBox checkAll;
 
-   @UiField
-   ImageButton inviteButton, cancelButton;
+    @UiField
+    ImageButton inviteButton, cancelButton;
 
-   @UiField
-   TextAreaElement inviteMessage;
+    @UiField
+    TextAreaElement inviteMessage;
 
-   public InviteGitHubDevelopersView()
-   {
-      super(ID, "modal", TITLE, new Image(SamplesClientBundle.INSTANCE.invite()), WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
-      setCloseOnEscape(true);
-   }
+    public InviteGitHubDevelopersView() {
+        super(ID, "modal", TITLE, new Image(SamplesClientBundle.INSTANCE.invite()), WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
+        setCloseOnEscape(true);
+    }
 
-   private Map<GitHubUser, GitHubUserTile> cards = new HashMap<GitHubUser, GitHubUserTile>();
+    private Map<GitHubUser, GitHubUserTile> cards = new HashMap<GitHubUser, GitHubUserTile>();
 
-   @Override
-   public void setDevelopers(List<GitHubUser> userList, GitHubUserSelectionChangedHandler selectionChangedHandler)
-   {
-      if (userListWidget != null)
-      {
-         userListWidget.removeFromParent();
-      }
-      userListWidget = new UserListWidget((Element)userListElement.cast());
+    @Override
+    public void setDevelopers(List<GitHubUser> userList, GitHubUserSelectionChangedHandler selectionChangedHandler) {
+        if (userListWidget != null) {
+            userListWidget.removeFromParent();
+        }
+        userListWidget = new UserListWidget((Element)userListElement.cast());
 
-      cards.clear();
-      for (GitHubUser user : userList)
-      {
-         GitHubUserTile card = new GitHubUserTile(user);
-         card.setSelectionChangedHandler(selectionChangedHandler);
-         userListWidget.add(card);
-         cards.put(user, card);
-      }
-   }
+        cards.clear();
+        for (GitHubUser user : userList) {
+            GitHubUserTile card = new GitHubUserTile(user);
+            card.setSelectionChangedHandler(selectionChangedHandler);
+            userListWidget.add(card);
+            cards.put(user, card);
+        }
+    }
 
-   @Override
-   public boolean isSelected(GitHubUser user)
-   {
-      return cards.get(user).isSelected();
-   }
+    @Override
+    public boolean isSelected(GitHubUser user) {
+        return cards.get(user).isSelected();
+    }
 
-   @Override
-   public void setSelected(GitHubUser user, boolean selected)
-   {
-      cards.get(user).setSelected(selected);
-   }
+    @Override
+    public void setSelected(GitHubUser user, boolean selected) {
+        cards.get(user).setSelected(selected);
+    }
 
-   @Override
-   public HasValue<Boolean> getSelectAllCheckBox()
-   {
-      return checkAll;
-   }
+    @Override
+    public HasValue<Boolean> getSelectAllCheckBox() {
+        return checkAll;
+    }
 
-   @Override
-   public HasClickHandlers getInviteButton()
-   {
-      return inviteButton;
-   }
+    @Override
+    public HasClickHandlers getInviteButton() {
+        return inviteButton;
+    }
 
-   @Override
-   public HasClickHandlers getCloseButton()
-   {
-      return cancelButton;
-   }
+    @Override
+    public HasClickHandlers getCloseButton() {
+        return cancelButton;
+    }
 
-   @Override
-   public String getInviteMessage()
-   {
-      return inviteMessage.getValue();
-   }
+    @Override
+    public String getInviteMessage() {
+        return inviteMessage.getValue();
+    }
 
-   @Override
-   public void setInviteButtonEnabled(boolean enabled)
-   {
-      inviteButton.setEnabled(enabled);
-   }
+    @Override
+    public void setInviteButtonEnabled(boolean enabled) {
+        inviteButton.setEnabled(enabled);
+    }
 
 }

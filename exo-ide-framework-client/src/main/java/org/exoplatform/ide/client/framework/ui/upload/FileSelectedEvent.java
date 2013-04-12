@@ -22,38 +22,33 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class FileSelectedEvent extends GwtEvent<FileSelectedHandler>
-{
+public class FileSelectedEvent extends GwtEvent<FileSelectedHandler> {
 
-   public static final GwtEvent.Type<FileSelectedHandler> TYPE = new GwtEvent.Type<FileSelectedHandler>();
+    public static final GwtEvent.Type<FileSelectedHandler> TYPE = new GwtEvent.Type<FileSelectedHandler>();
 
-   private String fileName;
+    private String fileName;
 
-   public FileSelectedEvent(String fileName)
-   {
-      this.fileName = fileName;
-   }
+    public FileSelectedEvent(String fileName) {
+        this.fileName = fileName;
+    }
 
-   public String getFileName()
-   {
-      return fileName;
-   }
+    public String getFileName() {
+        return fileName;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<FileSelectedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<FileSelectedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(FileSelectedHandler handler)
-   {
-      handler.onFileSelected(this);
-   }
+    @Override
+    protected void dispatch(FileSelectedHandler handler) {
+        handler.onFileSelected(this);
+    }
 
 }

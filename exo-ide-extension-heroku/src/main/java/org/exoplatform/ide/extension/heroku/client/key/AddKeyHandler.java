@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link AddKeyEvent} event.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 31, 2011 10:14:19 AM anya $
- * 
  */
-public interface AddKeyHandler extends EventHandler
-{
-   /**
-    * Performs actions, when user tries to add keys on Heroku.
-    * 
-    * @param event
-    */
-   void onAddKey(AddKeyEvent event);
+public interface AddKeyHandler extends EventHandler {
+    /**
+     * Performs actions, when user tries to add keys on Heroku.
+     *
+     * @param event
+     */
+    void onAddKey(AddKeyEvent event);
 }

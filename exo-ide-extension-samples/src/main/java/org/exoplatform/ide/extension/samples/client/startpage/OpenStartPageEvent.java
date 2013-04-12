@@ -23,25 +23,19 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: WelcomeViewOpen.java Aug 25, 2011 1:11:16 PM vereshchaka $
- * 
  */
-public class OpenStartPageEvent extends GwtEvent<OpenStartPageHandler>
-{
-   public static final GwtEvent.Type<OpenStartPageHandler> TYPE = new GwtEvent.Type<OpenStartPageHandler>();
+public class OpenStartPageEvent extends GwtEvent<OpenStartPageHandler> {
+    public static final GwtEvent.Type<OpenStartPageHandler> TYPE = new GwtEvent.Type<OpenStartPageHandler>();
 
-   @Override
-   protected void dispatch(OpenStartPageHandler handler)
-   {
-      handler.onOpenStartPage(this);
-   }
+    @Override
+    protected void dispatch(OpenStartPageHandler handler) {
+        handler.onOpenStartPage(this);
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<OpenStartPageHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<OpenStartPageHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

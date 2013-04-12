@@ -19,24 +19,26 @@
 
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
-   xmlns:t="urn:import:org.exoplatform.gwtframework.ui.client.tablayout">
-   <ui:with field='resource' type='org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle' />
-   <ui:with field='locale' type='org.exoplatform.ide.extension.googleappengine.client.GAELocalization' />
-   <ui:style>
-      .center {
-      	margin: auto;
-      }
-   </ui:style>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
+             xmlns:t="urn:import:org.exoplatform.gwtframework.ui.client.tablayout">
+    <ui:with field='resource' type='org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle'/>
+    <ui:with field='locale' type='org.exoplatform.ide.extension.googleappengine.client.GAELocalization'/>
+    <ui:style>
+        .center {
+            margin: auto;
+        }
+    </ui:style>
 
-   <f:Border margin="15" borderColor="transparent">
-      <f:layer top="0" bottom="37">
-         <t:TabPanel ui:field="applicationTabPanel"></t:TabPanel>
-      </f:layer>
-      <f:layer height="22px" bottom="0">
-         <g:FlowPanel>
-            <f:ImageButton ui:field="closeButton" imageName="cancel" width="90px" height="22px" text="{locale.closeButton}" styleName="{style.center}"></f:ImageButton>
-         </g:FlowPanel>
-      </f:layer>
-   </f:Border>
+    <f:Border margin="15" borderColor="transparent">
+        <f:layer top="0" bottom="37">
+            <t:TabPanel ui:field="applicationTabPanel"></t:TabPanel>
+        </f:layer>
+        <f:layer height="22px" bottom="0">
+            <g:FlowPanel>
+                <f:ImageButton ui:field="closeButton" imageName="cancel" width="90px" height="22px" text="{locale.closeButton}"
+                               styleName="{style.center}"></f:ImageButton>
+            </g:FlowPanel>
+        </f:layer>
+    </f:Border>
 </ui:UiBinder> 

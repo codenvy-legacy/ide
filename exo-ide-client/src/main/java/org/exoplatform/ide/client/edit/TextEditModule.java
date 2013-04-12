@@ -19,21 +19,7 @@
 package org.exoplatform.ide.client.edit;
 
 import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.edit.control.AddBlockCommentControl;
-import org.exoplatform.ide.client.edit.control.DeleteCurrentLineControl;
-import org.exoplatform.ide.client.edit.control.DeleteTextControl;
-import org.exoplatform.ide.client.edit.control.FoldingCollapseAllControl;
-import org.exoplatform.ide.client.edit.control.FoldingCollapseControl;
-import org.exoplatform.ide.client.edit.control.FoldingExpandAllControl;
-import org.exoplatform.ide.client.edit.control.FoldingExpandControl;
-import org.exoplatform.ide.client.edit.control.FormatSourceControl;
-import org.exoplatform.ide.client.edit.control.LockUnlockFileControl;
-import org.exoplatform.ide.client.edit.control.RedoTypingControl;
-import org.exoplatform.ide.client.edit.control.RemoveBlockCommentControl;
-import org.exoplatform.ide.client.edit.control.SelectAllTextControl;
-import org.exoplatform.ide.client.edit.control.ShowLineNumbersControl;
-import org.exoplatform.ide.client.edit.control.ToggleCommentControl;
-import org.exoplatform.ide.client.edit.control.UndoTypingControl;
+import org.exoplatform.ide.client.edit.control.*;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersHandler;
 import org.exoplatform.ide.client.edit.switching.SwitchingEditorCommandHandler;
@@ -52,72 +38,67 @@ import org.exoplatform.ide.client.operation.gotoline.GoToLinePresenter;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettingsReceivedHandler
-{
+public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettingsReceivedHandler {
 
-   private ApplicationSettings applicationSettings;
+    private ApplicationSettings applicationSettings;
 
-   public TextEditModule()
-   {
-      IDE.getInstance().addControl(new UndoTypingControl(), Docking.TOOLBAR);
-      IDE.getInstance().addControl(new RedoTypingControl(), Docking.TOOLBAR);
-      IDE.getInstance().addControl(new FormatSourceControl(), Docking.TOOLBAR);
+    public TextEditModule() {
+        IDE.getInstance().addControl(new UndoTypingControl(), Docking.TOOLBAR);
+        IDE.getInstance().addControl(new RedoTypingControl(), Docking.TOOLBAR);
+        IDE.getInstance().addControl(new FormatSourceControl(), Docking.TOOLBAR);
 
-     /* IDE.getInstance().addControl(new CutTextControl());
-      IDE.getInstance().addControl(new CopyTextControl());
-      IDE.getInstance().addControl(new PasteTextControl());*/
-      IDE.getInstance().addControl(new DeleteTextControl());
-      IDE.getInstance().addControl(new SelectAllTextControl());
-      IDE.getInstance().addControl(new ToggleCommentControl());
-      IDE.getInstance().addControl(new AddBlockCommentControl());
-      IDE.getInstance().addControl(new RemoveBlockCommentControl());
-      
-      new MoveLineUpDownManager();
+        /*
+         * IDE.getInstance().addControl(new CutTextControl()); IDE.getInstance().addControl(new CopyTextControl());
+         * IDE.getInstance().addControl(new PasteTextControl());
+         */
+        IDE.getInstance().addControl(new DeleteTextControl());
+        IDE.getInstance().addControl(new SelectAllTextControl());
+        IDE.getInstance().addControl(new ToggleCommentControl());
+        IDE.getInstance().addControl(new AddBlockCommentControl());
+        IDE.getInstance().addControl(new RemoveBlockCommentControl());
 
-      new FindTextPresenter();
+        new MoveLineUpDownManager();
 
-      IDE.getInstance().addControl(new ShowLineNumbersControl());
-      IDE.getInstance().addControl(new DeleteCurrentLineControl());
-//      IDE.getInstance().addControl(new FoldingCollapseControl());
-//      IDE.getInstance().addControl(new FoldingExpandControl());
-//      IDE.getInstance().addControl(new FoldingCollapseAllControl());
-//      IDE.getInstance().addControl(new FoldingExpandAllControl());
+        new FindTextPresenter();
 
-      new GoToLinePresenter();
+        IDE.getInstance().addControl(new ShowLineNumbersControl());
+        IDE.getInstance().addControl(new DeleteCurrentLineControl());
+//        IDE.getInstance().addControl(new CollapseFoldControl());
+//        IDE.getInstance().addControl(new ExpandFoldControl());
+        // IDE.getInstance().addControl(new CollapseAllFoldsControl());
+        // IDE.getInstance().addControl(new ExpandAllFoldsControl());
+        IDE.getInstance().addControl(new FoldSelectionControl());
 
-//      IDE.getInstance().addControl(new LockUnlockFileControl(), Docking.TOOLBAR);
-//      new LockUnlockFileHandler();
+        new GoToLinePresenter();
 
-      IDE.addHandler(ShowLineNumbersEvent.TYPE, this);
-      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+        // IDE.getInstance().addControl(new LockUnlockFileControl(), Docking.TOOLBAR);
+        // new LockUnlockFileHandler();
 
-      new CloseAllFilesEventHandler();
-      new CodeFormatterManager(IDE.eventBus());
-      new CodeCommentsManager();
+        IDE.addHandler(ShowLineNumbersEvent.TYPE, this);
+        IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
 
-      new SwitchingEditorCommandHandler();
-      new CloseEditorController();
-   }
+        new CloseAllFilesEventHandler();
+        new CodeFormatterManager(IDE.eventBus());
+        new CodeCommentsManager();
+
+        new SwitchingEditorCommandHandler();
+        new CloseEditorController();
+    }
 
 
-   /**
-    * {@inheritDoc}
-    */
-   public void onShowLineNumbers(ShowLineNumbersEvent event)
-   {
-      applicationSettings.setValue("line-numbers", Boolean.valueOf(event.isShowLineNumber()), Store.COOKIES);
-      SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
-      /*
-       * fire event for show-hide line numbers command be able to update state.
-       */
-      IDE.fireEvent(new ApplicationSettingsSavedEvent(applicationSettings, SaveType.COOKIES));
-   }
+    /** {@inheritDoc} */
+    public void onShowLineNumbers(ShowLineNumbersEvent event) {
+        applicationSettings.setValue("line-numbers", Boolean.valueOf(event.isShowLineNumber()), Store.COOKIES);
+        SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
+        /*
+         * fire event for show-hide line numbers command be able to update state.
+         */
+        IDE.fireEvent(new ApplicationSettingsSavedEvent(applicationSettings, SaveType.COOKIES));
+    }
 
-   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
-   {
-      applicationSettings = event.getApplicationSettings();
-   }
+    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event) {
+        applicationSettings = event.getApplicationSettings();
+    }
 
 }

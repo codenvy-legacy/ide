@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client.ui;
 
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.view.client.ListDataProvider;
+import com.google.web.bindery.autobean.shared.AutoBean;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
@@ -28,49 +32,38 @@ import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.Value;
 import org.exoplatform.ide.extension.java.jdi.shared.Variable;
 
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.view.client.ListDataProvider;
-import com.google.web.bindery.autobean.shared.AutoBean;
-
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public class ValueDataProvider extends ListDataProvider<Variable>
-{
+ */
+public class ValueDataProvider extends ListDataProvider<Variable> {
 
-   public ValueDataProvider(Variable var, DebuggerInfo debuggerInfo)
-   {
-      AutoBean<Value> autoBean = DebuggerExtension.AUTO_BEAN_FACTORY.create(Value.class);
-      AutoBeanUnmarshaller<Value> unmarshaller = new AutoBeanUnmarshaller<Value>(autoBean);
-      try
-      {
-         DebuggerClientService.getInstance().getValue(debuggerInfo.getId(), var,
-            new AsyncRequestCallback<Value>(unmarshaller)
-            {
+    public ValueDataProvider(Variable var, DebuggerInfo debuggerInfo) {
+        AutoBean<Value> autoBean = DebuggerExtension.AUTO_BEAN_FACTORY.create(Value.class);
+        AutoBeanUnmarshaller<Value> unmarshaller = new AutoBeanUnmarshaller<Value>(autoBean);
+        try {
+            DebuggerClientService.getInstance().getValue(debuggerInfo.getId(), var,
+                                                         new AsyncRequestCallback<Value>(unmarshaller) {
 
-               @Override
-               protected void onSuccess(Value result)
-               {
-                  if (result != null)
-                  {
-                     if (!(result.getVariables() == null  || result.getVariables().isEmpty()))
-                       setList(result.getVariables());
-                  }
-               }
+                                                             @Override
+                                                             protected void onSuccess(Value result) {
+                                                                 if (result != null) {
+                                                                     if (!(result.getVariables() == null ||
+                                                                           result.getVariables().isEmpty()))
+                                                                         setList(result.getVariables());
+                                                                 }
+                                                             }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.eventBus().fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.eventBus().fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                                                             @Override
+                                                             protected void onFailure(Throwable exception) {
+                                                                 IDE.eventBus().fireEvent(new ExceptionThrownEvent(exception));
+                                                             }
+                                                         });
+        } catch (RequestException e) {
+            IDE.eventBus().fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
 }

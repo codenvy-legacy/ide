@@ -30,62 +30,44 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class JavaControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler, ViewActivatedHandler
-{
+public class JavaControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler, ViewActivatedHandler {
 
-   /**
-    * @param id
-    */
-   public JavaControl(String id)
-   {
-      super(id);
-   }
+    /** @param id */
+    public JavaControl(String id) {
+        super(id);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      IDE.addHandler(ViewActivatedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+        IDE.addHandler(ViewActivatedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
-    */
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      if (event.getEditor() == null)
-      {
-         setEnabled(false);
-         setVisible(false);
-      }
-      else
-      {
-         if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
-         {
-            setEnabled(true);
-            setVisible(true);
-         }
-         else
-         {
+    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    @Override
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        if (event.getEditor() == null) {
             setEnabled(false);
             setVisible(false);
-         }
-      }
-   }
+        } else {
+            if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA)) {
+                setEnabled(true);
+                setVisible(true);
+            } else {
+                setEnabled(false);
+                setVisible(false);
+            }
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent)
-    */
-   @Override
-   public void onViewActivated(ViewActivatedEvent event)
-   {
-      setVisible(event.getView().getId().contains("editor"));
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework
+     * .ui.api.event.ViewActivatedEvent) */
+    @Override
+    public void onViewActivated(ViewActivatedEvent event) {
+        setVisible(event.getView().getId().contains("editor"));
+    }
 
 }

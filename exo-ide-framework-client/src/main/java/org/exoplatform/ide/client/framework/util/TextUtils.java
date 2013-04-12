@@ -20,28 +20,27 @@ package org.exoplatform.ide.client.framework.util;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class TextUtils
-{
+public class TextUtils {
 
-   public static native String javaScriptDecodeURI(String text) /*-{
-                                                                return decodeURI(text);
-                                                                }-*/;
+    public static native String javaScriptDecodeURI(String text) /*-{
+        return decodeURI(text);
+    }-*/;
 
-   public static native String javaScriptEncodeURI(String text) /*-{
-                                                                return encodeURI(text);
-                                                                }-*/;
+    public static native String javaScriptEncodeURI(String text) /*-{
+        return encodeURI(text);
+    }-*/;
 
-   public static native String javaScriptDecodeURIComponent(String text) /*-{
-                                                                         return decodeURIComponent(text);
-                                                                         }-*/;
+    public static native String javaScriptDecodeURIComponent(String text) /*-{
+        return decodeURIComponent(text);
+    }-*/;
 
-   public static native String javaScriptEncodeURIComponent(String text) /*-{
-                                                                         return encodeURIComponent(text);
-                                                                         }-*/;
+    public static native String javaScriptEncodeURIComponent(String text) /*-{
+        return encodeURIComponent(text);
+    }-*/;
 
 }

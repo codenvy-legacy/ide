@@ -22,14 +22,13 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
 
-public interface EditorFileClosedHandler extends EventHandler
-{
+public interface EditorFileClosedHandler extends EventHandler {
 
-   void onEditorFileClosed(EditorFileClosedEvent event);
+    void onEditorFileClosed(EditorFileClosedEvent event);
 
 }

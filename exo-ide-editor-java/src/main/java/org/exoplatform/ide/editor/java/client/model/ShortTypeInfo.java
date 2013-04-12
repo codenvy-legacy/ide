@@ -21,108 +21,88 @@ package org.exoplatform.ide.editor.java.client.model;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Dec 2, 2011 12:34:20 PM evgen $
- * 
  */
-public class ShortTypeInfo
-{
-   private Integer modifiers;
+public class ShortTypeInfo {
+    private Integer modifiers;
 
-   private String name;
+    private String name;
 
-   /**
-    * Full Qualified Class Name
-    */
-   private String qualifiedName;
+    /** Full Qualified Class Name */
+    private String qualifiedName;
 
-   /**
-    * Means this is CLASS, INTERFACE or ANNOTATION
-    */
-   private Types type;
+    /** Means this is CLASS, INTERFACE or ANNOTATION */
+    private Types type;
 
-   /**
-    * 
-    */
-   public ShortTypeInfo()
-   {
-   }
+    /**
+     *
+     */
+    public ShortTypeInfo() {
+    }
 
-   /**
-    * @param modifiers
-    * @param name
-    * @param qualifiedName
-    * @param type
-    */
-   public ShortTypeInfo(Integer modifiers, String name, String qualifiedName, Types type)
-   {
-      super();
-      this.modifiers = modifiers;
-      this.name = name;
-      this.qualifiedName = qualifiedName;
-      this.type = type;
-   }
+    /**
+     * @param modifiers
+     * @param name
+     * @param qualifiedName
+     * @param type
+     */
+    public ShortTypeInfo(Integer modifiers, String name, String qualifiedName, Types type) {
+        super();
+        this.modifiers = modifiers;
+        this.name = name;
+        this.qualifiedName = qualifiedName;
+        this.type = type;
+    }
 
-   /**
-    * @return the modifiers
-    */
-   public Integer getModifiers()
-   {
-      return modifiers;
-   }
+    /** @return the modifiers */
+    public Integer getModifiers() {
+        return modifiers;
+    }
 
-   /**
-    * @param modifiers the modifiers to set
-    */
-   public void setModifiers(Integer modifiers)
-   {
-      this.modifiers = modifiers;
-   }
+    /**
+     * @param modifiers
+     *         the modifiers to set
+     */
+    public void setModifiers(Integer modifiers) {
+        this.modifiers = modifiers;
+    }
 
-   /**
-    * @return the name
-    */
-   public String getName()
-   {
-      return name;
-   }
+    /** @return the name */
+    public String getName() {
+        return name;
+    }
 
-   /**
-    * @param name the name to set
-    */
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    /**
+     * @param name
+     *         the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   /**
-    * @return the qualifiedName
-    */
-   public String getQualifiedName()
-   {
-      return qualifiedName;
-   }
+    /** @return the qualifiedName */
+    public String getQualifiedName() {
+        return qualifiedName;
+    }
 
-   /**
-    * @param qualifiedName the qualifiedName to set
-    */
-   public void setQualifiedName(String qualifiedName)
-   {
-      this.qualifiedName = qualifiedName;
-   }
+    /**
+     * @param qualifiedName
+     *         the qualifiedName to set
+     */
+    public void setQualifiedName(String qualifiedName) {
+        this.qualifiedName = qualifiedName;
+    }
 
-   /**
-    * @return the type
-    */
-   public Types getType()
-   {
-      return type;
-   }
+    /** @return the type */
+    public Types getType() {
+        return type;
+    }
 
-   /**
-    * @param type the type to set
-    */
-   public void setType(Types type)
-   {
-      this.type = type;
-   }
+    /**
+     * @param type
+     *         the type to set
+     */
+    public void setType(Types type) {
+        this.type = type;
+    }
 
 }

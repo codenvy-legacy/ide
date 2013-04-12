@@ -22,18 +22,16 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link AddCommentsModifierEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Apr 6, 2012 4:45:24 PM anya $
- * 
  */
-public interface AddCommentsModifierHandler extends EventHandler
-{
+public interface AddCommentsModifierHandler extends EventHandler {
 
-   /**
-    * Register comments modifier.
-    * 
-    * @param event
-    */
-   void onAddCommentsModifier(AddCommentsModifierEvent event);
+    /**
+     * Register comments modifier.
+     *
+     * @param event
+     */
+    void onAddCommentsModifier(AddCommentsModifierEvent event);
 }

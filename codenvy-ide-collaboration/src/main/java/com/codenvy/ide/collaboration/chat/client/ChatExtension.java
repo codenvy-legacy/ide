@@ -48,125 +48,113 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  *
  */
 public class ChatExtension extends Extension
-   implements ConnectionOpenedHandler, ProjectOpenedHandler, ProjectClosedHandler, UserInfoReceivedHandler
-{
+        implements ConnectionOpenedHandler, ProjectOpenedHandler, ProjectClosedHandler, UserInfoReceivedHandler {
 
-   public static final ChatResources resources = GWT.create(ChatResources.class);
+    public static final ChatResources resources = GWT.create(ChatResources.class);
 
-   private ShowChatControl chatControl;
+    private ShowChatControl chatControl;
 
-   private MessageFilter messageFilter = new MessageFilter();
+    private MessageFilter messageFilter = new MessageFilter();
 
-   private MessageHandler handler = new MessageHandler()
-   {
-      @Override
-      public void onMessage(String message)
-      {
-         ServerToClientDto dto = (ServerToClientDto)Jso.deserialize(message).<RoutableDtoClientImpl>cast();
-         messageFilter.dispatchMessage(dto);
-      }
-   };
+    private MessageHandler handler = new MessageHandler() {
+        @Override
+        public void onMessage(String message) {
+            ServerToClientDto dto = (ServerToClientDto)Jso.deserialize(message).<RoutableDtoClientImpl>cast();
+            messageFilter.dispatchMessage(dto);
+        }
+    };
 
-   private ChatApi chatApi;
+    private ChatApi chatApi;
 
-   private ProjectChatPresenter chatPresenter;
+    private ProjectChatPresenter chatPresenter;
 
-   private UserInfo userInfo;
+    private UserInfo userInfo;
 
-   private ProjectModel currentProject;
+    private ProjectModel currentProject;
 
-   private boolean subscribeOnReady = false;
+    private boolean subscribeOnReady = false;
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void initialize()
-   {
-      resources.chatCss().ensureInjected();
-      chatControl = new ShowChatControl(resources);
-      IDE.getInstance().addControl(chatControl, Docking.TOOLBAR_RIGHT);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
-   }
+    private SendCodePointerControl pointerControl;
 
-   private void createPresenter()
-   {
-      if (chatPresenter != null)
-      {
-         return;
-      }
-      chatApi = new ChatApi(IDE.messageBus());
-      chatPresenter = new ProjectChatPresenter(chatApi, messageFilter, IDE.getInstance(), chatControl,
-         userInfo.getName(), CollabEditorExtension.get());
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void initialize() {
+        resources.chatCss().ensureInjected();
+        chatControl = new ShowChatControl(resources);
+        IDE.getInstance().addControl(chatControl, Docking.TOOLBAR_RIGHT);
+        pointerControl = new SendCodePointerControl(resources);
+        IDE.getInstance().addControl(pointerControl);
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
+    }
 
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      IDE.messageBus().unsubscribe("project_chat." + event.getProject().getId(), handler);
-      currentProject = null;
-      chatPresenter.projectClosed();
-   }
+    private void createPresenter() {
+        if (chatPresenter != null) {
+            return;
+        }
+        chatApi = new ChatApi(IDE.messageBus());
+        chatPresenter = new ProjectChatPresenter(chatApi, messageFilter, IDE.getInstance(), chatControl, pointerControl,
+                                                 userInfo.getName(), CollabEditorExtension.get());
+    }
 
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      currentProject = event.getProject();
-      if (IDE.messageBus().getReadyState() != ReadyState.OPEN)
-      {
-         subscribeOnReady = true;
-      }
-      else
-      {
-         subscribeToChanel();
-      }
-   }
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        try {
+            IDE.messageBus().unsubscribe("project_chat." + event.getProject().getId(), handler);            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        currentProject = null;
+        chatPresenter.projectClosed();
+    }
 
-   private void subscribeToChanel()
-   {
-      final String projectId = currentProject.getId();
-      IDE.messageBus().subscribe("project_chat." + projectId, handler);
-      GetChatParticipantsImpl request = GetChatParticipantsImpl.make();
-      request.setProjectId(projectId);
-      chatApi.GET_CHAT_PARTISIPANTS.send(request, new ApiCallback<GetChatParticipantsResponse>()
-      {
-         @Override
-         public void onFail(FailureReason reason)
-         {
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        currentProject = event.getProject();
+        if (IDE.messageBus().getReadyState() != ReadyState.OPEN) {
+            subscribeOnReady = true;
+        } else {
+            subscribeToChanel();
+        }
+    }
 
-         }
+    private void subscribeToChanel() {
+        final String projectId = currentProject.getId();
+        IDE.messageBus().subscribe("project_chat." + projectId, handler);
+        GetChatParticipantsImpl request = GetChatParticipantsImpl.make();
+        request.setProjectId(projectId);
+        chatApi.GET_CHAT_PARTISIPANTS.send(request, new ApiCallback<GetChatParticipantsResponse>() {
+            @Override
+            public void onFail(FailureReason reason) {
 
-         @Override
-         public void onMessageReceived(GetChatParticipantsResponse message)
-         {
-            chatPresenter.setProjectId(currentProject);
-            chatPresenter.setChatParticipants(message.getParticipants());
-         }
-      });
-   }
+            }
 
-   @Override
-   public void onUserInfoReceived(UserInfoReceivedEvent event)
-   {
-      userInfo = event.getUserInfo();
-      if (IDE.messageBus().getReadyState() != ReadyState.OPEN)
-      {
-         IDE.messageBus().setOnOpenHandler(this);
-         return;
-      }
+            @Override
+            public void onMessageReceived(GetChatParticipantsResponse message) {
+                chatPresenter.setProjectId(currentProject);
+                chatPresenter.setChatParticipants(message.getParticipants());
+            }
+        });
+    }
 
-      createPresenter();
-   }
+    @Override
+    public void onUserInfoReceived(UserInfoReceivedEvent event) {
+        userInfo = event.getUserInfo();
+        if (IDE.messageBus().getReadyState() != ReadyState.OPEN) {
+            IDE.messageBus().setOnOpenHandler(this);
+            return;
+        }
 
-   @Override
-   public void onOpen()
-   {
-      if (subscribeOnReady && currentProject != null)
-      {
-         subscribeToChanel();
-      }
-      createPresenter();
-   }
+        createPresenter();
+    }
+
+    @Override
+    public void onOpen() {
+        if (subscribeOnReady && currentProject != null) {
+            subscribeToChanel();
+        }
+        createPresenter();
+    }
 }

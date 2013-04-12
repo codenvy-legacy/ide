@@ -24,33 +24,32 @@ package org.exoplatform.ide.extension.aws.shared.beanstalk;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface Event
-{
-   long getEventDate();
+public interface Event {
+    long getEventDate();
 
-   void setEventDate(long eventDate);
+    void setEventDate(long eventDate);
 
-   String getMessage();
+    String getMessage();
 
-   void setMessage(String message);
+    void setMessage(String message);
 
-   String getApplicationName();
+    String getApplicationName();
 
-   void setApplicationName(String applicationName);
+    void setApplicationName(String applicationName);
 
-   String getVersionLabel();
+    String getVersionLabel();
 
-   void setVersionLabel(String versionLabel);
+    void setVersionLabel(String versionLabel);
 
-   String getTemplateName();
+    String getTemplateName();
 
-   void setTemplateName(String templateName);
+    void setTemplateName(String templateName);
 
-   String getEnvironmentName();
+    String getEnvironmentName();
 
-   void setEnvironmentName(String environmentName);
+    void setEnvironmentName(String environmentName);
 
-   EventsSeverity getSeverity();
+    EventsSeverity getSeverity();
 
-   void setSeverity(EventsSeverity severity);
+    void setSeverity(EventsSeverity severity);
 }

@@ -21,30 +21,28 @@ package com.google.collide.dto;
  */
 public interface ProjectInfo {
 
-  /**
-   * The user-specific state of the workspace.
-   */
-  public enum UserProjectState {
-    ACTIVE, ARCHIVED
-  }
+    /** The user-specific state of the workspace. */
+    public enum UserProjectState {
+        ACTIVE, ARCHIVED
+    }
 
-  String getLogoUrl();
+    String getLogoUrl();
 
-  String getId();
+    String getId();
 
-  String getName();
+    String getName();
 
-  String getSummary();
+    String getSummary();
 
-  /*
-   * TODO: Make this a list of roots when we support them.
-   */
-  String getRootWsId();
+    /*
+     * TODO: Make this a list of roots when we support them.
+     */
+    String getRootWsId();
 
-  /**
-   * Returns the current user's {@link Role} for this project. If the
-   * user is not a member of the project, the return value will be
-   * {@value Role#NONE}.
-   */
-  Role getCurrentUserRole();
+    /**
+     * Returns the current user's {@link Role} for this project. If the
+     * user is not a member of the project, the return value will be
+     * {@value Role#NONE}.
+     */
+    Role getCurrentUserRole();
 }

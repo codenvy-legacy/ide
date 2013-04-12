@@ -22,13 +22,12 @@ package org.exoplatform.ide.extension.appfog.shared;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface Infra
-{
-   String getProvider();
+public interface Infra {
+    String getProvider();
 
-   void setProvider(String provider);
+    void setProvider(String provider);
 
-   String getName();
+    String getName();
 
-   void setName(String name);
+    void setName(String name);
 }

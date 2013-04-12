@@ -21,10 +21,7 @@ package org.exoplatform.ide.git.client;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
-import org.exoplatform.ide.git.shared.Collaborators;
-import org.exoplatform.ide.git.shared.Commiters;
-import org.exoplatform.ide.git.shared.Credentials;
-import org.exoplatform.ide.git.shared.GitHubRepository;
+import org.exoplatform.ide.git.shared.*;
 
 /**
  * Created by The eXo Platform SAS.
@@ -32,24 +29,25 @@ import org.exoplatform.ide.git.shared.GitHubRepository;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: GitAutoBeanFactory.java Aug 3, 2012
  */
-public interface GitAutoBeanFactory extends AutoBeanFactory
-{
-   AutoBean<Commiters> commiters();
+public interface GitAutoBeanFactory extends AutoBeanFactory {
+    AutoBean<Commiters> commiters();
 
-   /**
-    * A factory method for a log entry bean.
-    * 
-    * @return an {@link AutoBean} of type {@link GitHubRepository}
-    */
-   AutoBean<GitHubRepository> repositoryExt();
+    /**
+     * A factory method for a log entry bean.
+     * 
+     * @return an {@link AutoBean} of type {@link GitHubRepository}
+     */
+    AutoBean<GitHubRepository> repositoryExt();
 
-   /**
-    * Factory method for GitHub credentials bean.
-    * 
-    * @return {@link AutoBean} of type {@link Credentials}
-    */
-   AutoBean<Credentials> githubCredentials();
+    /**
+     * Factory method for GitHub credentials bean.
+     * 
+     * @return {@link AutoBean} of type {@link Credentials}
+     */
+    AutoBean<Credentials> githubCredentials();
 
-   AutoBean<Collaborators> collaborators();
+    AutoBean<Collaborators> collaborators();
+
+    AutoBean<Status> status();
 
 }

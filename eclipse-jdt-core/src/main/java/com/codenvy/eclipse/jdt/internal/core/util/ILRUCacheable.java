@@ -17,13 +17,12 @@ package com.codenvy.eclipse.jdt.internal.core.util;
  *
  * @see LRUCache
  */
-public interface ILRUCacheable
-{
-   /**
-    * Returns the space the receiver consumes in an LRU Cache.  The default space
-    * value is 1.
-    *
-    * @return int Amount of cache space taken by the receiver
-    */
-   public int getCacheFootprint();
+public interface ILRUCacheable {
+    /**
+     * Returns the space the receiver consumes in an LRU Cache.  The default space
+     * value is 1.
+     *
+     * @return int Amount of cache space taken by the receiver
+     */
+    public int getCacheFootprint();
 }

@@ -17,49 +17,49 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 .ideMenuAdditions {
-	position: absolute;
-	top: 0px;
-	right: 0px;
-	height: 20px;
-	z-index: 999999;
-	padding: 0px;
-	-moz-box-sizing: border-box;
-	overflow: hidden;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    height: 20px;
+    z-index: 999999;
+    padding: 0px;
+    -moz-box-sizing: border-box;
+    overflow: hidden;
 }
 
 .ideMenuAdditionsTable {
-	height: 20px;
+    height: 20px;
 }
 
 .ideMenuAdditionsTable td {
-	height: 20px;
-	color: #333333;
-	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-	font-size: 11px;
-	font-style: normal;
-	font-weight: normal;
-	padding-left: 8px;
-	padding-right: 8px;
-	cursor: default;
+    height: 20px;
+    color: #333333;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: normal;
+    padding-left: 8px;
+    padding-right: 8px;
+    cursor: default;
 }
 
 .ideMenuAdditionsTable td:HOVER {
-	background: url('ui/menu/menu-item-over.png');
+    background: url('ui/menu/menu-item-over.png');
 }
 
 .ideMenuAdditionsTable td:ACTIVE {
-	background: url('ui/menu/menu-item-selected.png');
+    background: url('ui/menu/menu-item-selected.png');
 }
 
 .ideMenuAdditionsTable td a {
-	height: 20px;
-	color: #333333;
-	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-	font-size: 11px;
-	font-style: normal;
-	font-weight: normal;
-	padding-left: 8px;
-	padding-right: 8px;
-	cursor: default;
-	text-decoration:none;
+    height: 20px;
+    color: #333333;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: normal;
+    padding-left: 8px;
+    padding-right: 8px;
+    cursor: default;
+    text-decoration: none;
 }

@@ -22,161 +22,136 @@ package org.exoplatform.ide.testframework.server.cloudfoundry.bean;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class CloudfoundryApplicationStatistics
-{
-   /** Application name. */
-   private String name;
+public class CloudfoundryApplicationStatistics {
+    /** Application name. */
+    private String name;
 
-   /** Application state. */
-   private String state;
+    /** Application state. */
+    private String state;
 
-   /** IP address. */
-   private String host;
+    /** IP address. */
+    private String host;
 
-   /** Port. */
-   private int port = -1;
+    /** Port. */
+    private int port = -1;
 
-   /** Application URLs. */
-   private String[] uris;
+    /** Application URLs. */
+    private String[] uris;
 
-   /** Application uptime. If format X?d:XXh:XXm:XXs. */
-   private String uptime;
+    /** Application uptime. If format X?d:XXh:XXm:XXs. */
+    private String uptime;
 
-   /** CPU cores. */
-   private int cpuCores = -1;
+    /** CPU cores. */
+    private int cpuCores = -1;
 
-   /** CPU usage in percents. */
-   private double cpu = -1;
+    /** CPU usage in percents. */
+    private double cpu = -1;
 
-   /** Used memory (in MB). */
-   private int mem = -1;
+    /** Used memory (in MB). */
+    private int mem = -1;
 
-   /** Used disk (in MB). */
-   private int disk = -1;
+    /** Used disk (in MB). */
+    private int disk = -1;
 
-   /** Memory limit (in MB). */
-   private int memLimit = -1;
+    /** Memory limit (in MB). */
+    private int memLimit = -1;
 
-   /** Disk limit (in MB). */
-   private int diskLimit = -1;
+    /** Disk limit (in MB). */
+    private int diskLimit = -1;
 
-   public String getName()
-   {
-      return name;
-   }
+    public String getName() {
+        return name;
+    }
 
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   public String getState()
-   {
-      return state;
-   }
+    public String getState() {
+        return state;
+    }
 
-   public void setState(String state)
-   {
-      this.state = state;
-   }
+    public void setState(String state) {
+        this.state = state;
+    }
 
-   public String getHost()
-   {
-      return host;
-   }
+    public String getHost() {
+        return host;
+    }
 
-   public void setHost(String host)
-   {
-      this.host = host;
-   }
+    public void setHost(String host) {
+        this.host = host;
+    }
 
-   public int getPort()
-   {
-      return port;
-   }
+    public int getPort() {
+        return port;
+    }
 
-   public void setPort(int port)
-   {
-      this.port = port;
-   }
+    public void setPort(int port) {
+        this.port = port;
+    }
 
-   public String[] getUris()
-   {
-      return uris;
-   }
+    public String[] getUris() {
+        return uris;
+    }
 
-   public void setUris(String[] uris)
-   {
-      this.uris = uris;
-   }
+    public void setUris(String[] uris) {
+        this.uris = uris;
+    }
 
-   public String getUptime()
-   {
-      return uptime;
-   }
+    public String getUptime() {
+        return uptime;
+    }
 
-   public void setUptime(String uptime)
-   {
-      this.uptime = uptime;
-   }
+    public void setUptime(String uptime) {
+        this.uptime = uptime;
+    }
 
-   public int getCpuCores()
-   {
-      return cpuCores;
-   }
+    public int getCpuCores() {
+        return cpuCores;
+    }
 
-   public void setCpuCores(int cores)
-   {
-      this.cpuCores = cores;
-   }
+    public void setCpuCores(int cores) {
+        this.cpuCores = cores;
+    }
 
-   public double getCpu()
-   {
-      return cpu;
-   }
+    public double getCpu() {
+        return cpu;
+    }
 
-   public void setCpu(double cpu)
-   {
-      this.cpu = cpu;
-   }
+    public void setCpu(double cpu) {
+        this.cpu = cpu;
+    }
 
-   public int getMem()
-   {
-      return mem;
-   }
+    public int getMem() {
+        return mem;
+    }
 
-   public void setMem(int mem)
-   {
-      this.mem = mem;
-   }
+    public void setMem(int mem) {
+        this.mem = mem;
+    }
 
-   public int getDisk()
-   {
-      return disk;
-   }
+    public int getDisk() {
+        return disk;
+    }
 
-   public void setDisk(int disk)
-   {
-      this.disk = disk;
-   }
+    public void setDisk(int disk) {
+        this.disk = disk;
+    }
 
-   public int getMemLimit()
-   {
-      return memLimit;
-   }
+    public int getMemLimit() {
+        return memLimit;
+    }
 
-   public void setMemLimit(int memLimit)
-   {
-      this.memLimit = memLimit;
-   }
+    public void setMemLimit(int memLimit) {
+        this.memLimit = memLimit;
+    }
 
-   public int getDiskLimit()
-   {
-      return diskLimit;
-   }
+    public int getDiskLimit() {
+        return diskLimit;
+    }
 
-   public void setDiskLimit(int diskLimit)
-   {
-      this.diskLimit = diskLimit;
-   }
+    public void setDiskLimit(int diskLimit) {
+        this.diskLimit = diskLimit;
+    }
 }

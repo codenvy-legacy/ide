@@ -28,28 +28,23 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class DebuggerEventListImpl implements DebuggerEventList
-{
-   private List<DebuggerEvent> events;
+public class DebuggerEventListImpl implements DebuggerEventList {
+    private List<DebuggerEvent> events;
 
-   public DebuggerEventListImpl(List<DebuggerEvent> events)
-   {
-      this.events = events;
-   }
+    public DebuggerEventListImpl(List<DebuggerEvent> events) {
+        this.events = events;
+    }
 
-   @Override
-   public List<DebuggerEvent> getEvents()
-   {
-      if (events == null)
-      {
-         events = new ArrayList<DebuggerEvent>();
-      }
-      return events;
-   }
+    @Override
+    public List<DebuggerEvent> getEvents() {
+        if (events == null) {
+            events = new ArrayList<DebuggerEvent>();
+        }
+        return events;
+    }
 
-   @Override
-   public void setEvents(List<DebuggerEvent> events)
-   {
-      this.events = events;
-   }
+    @Override
+    public void setEvents(List<DebuggerEvent> events) {
+        this.events = events;
+    }
 }

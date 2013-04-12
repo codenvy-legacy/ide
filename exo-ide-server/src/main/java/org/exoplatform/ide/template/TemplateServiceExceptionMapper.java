@@ -25,25 +25,20 @@ import javax.ws.rs.ext.Provider;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Jan 13, 2011 10:40:56 AM evgen $
- * 
  */
 @Provider
-public class TemplateServiceExceptionMapper implements ExceptionMapper<TemplateServiceException>
-{
+public class TemplateServiceExceptionMapper implements ExceptionMapper<TemplateServiceException> {
 
-   /**
-    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
-    */
-   public Response toResponse(TemplateServiceException exception)
-   {
-      String message = exception.getMessage();
-      if (message != null)
-         return Response.status(exception.getStatus()).entity(message).type(MediaType.TEXT_HTML).build();
+    /** @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable) */
+    public Response toResponse(TemplateServiceException exception) {
+        String message = exception.getMessage();
+        if (message != null)
+            return Response.status(exception.getStatus()).entity(message).type(MediaType.TEXT_HTML).build();
 
-      return Response.status(exception.getStatus()).entity(exception.getCause()).type(MediaType.TEXT_HTML).build();
-   }
+        return Response.status(exception.getStatus()).entity(exception.getCause()).type(MediaType.TEXT_HTML).build();
+    }
 
 }

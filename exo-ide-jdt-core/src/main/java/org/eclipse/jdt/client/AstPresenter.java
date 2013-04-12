@@ -33,60 +33,52 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 20, 2012 1:28:01 PM evgen $
  */
-public class AstPresenter implements ShowAstHandler, ViewClosedHandler, UpdateOutlineHandler
-{
+public class AstPresenter implements ShowAstHandler, ViewClosedHandler, UpdateOutlineHandler {
 
-   public interface Display extends IsView
-   {
-      String id = "AstView";
+    public interface Display extends IsView {
+        String id = "AstView";
 
-      void drawAst(CompilationUnit cUnit);
-   }
+        void drawAst(CompilationUnit cUnit);
+    }
 
-   private Display display;
+    private Display display;
 
-   private CompilationUnit unit;
+    private CompilationUnit unit;
 
-   /**
-    * 
-    */
-   public AstPresenter(HandlerManager eventBus)
-   {
-      eventBus.addHandler(ShowAstEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(UpdateOutlineEvent.TYPE, this);
+    /**
+     *
+     */
+    public AstPresenter(HandlerManager eventBus) {
+        eventBus.addHandler(ShowAstEvent.TYPE, this);
+        eventBus.addHandler(ViewClosedEvent.TYPE, this);
+        eventBus.addHandler(UpdateOutlineEvent.TYPE, this);
 
-   }
+    }
 
-   /** @see org.eclipse.jdt.client.event.ShowAstHandler#onShowAst(org.eclipse.jdt.client.event.ShowAstEvent) */
-   @Override
-   public void onShowAst(ShowAstEvent event)
-   {
+    /** @see org.eclipse.jdt.client.event.ShowAstHandler#onShowAst(org.eclipse.jdt.client.event.ShowAstEvent) */
+    @Override
+    public void onShowAst(ShowAstEvent event) {
 
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         IDE.getInstance().openView(display.asView());
-      }
-      if (unit != null)
-         display.drawAst(unit);
-   }
+        if (display == null) {
+            display = GWT.create(Display.class);
+            IDE.getInstance().openView(display.asView());
+        }
+        if (unit != null)
+            display.drawAst(unit);
+    }
 
-   /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent) */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-         display = null;
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display)
+            display = null;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.UpdateOutlineHandler#onUpdateOutline(org.eclipse.jdt.client.UpdateOutlineEvent)
-    */
-   @Override
-   public void onUpdateOutline(UpdateOutlineEvent event)
-   {
-      unit = event.getCompilationUnit();
-   }
+    /** @see org.eclipse.jdt.client.UpdateOutlineHandler#onUpdateOutline(org.eclipse.jdt.client.UpdateOutlineEvent) */
+    @Override
+    public void onUpdateOutline(UpdateOutlineEvent event) {
+        unit = event.getCompilationUnit();
+    }
 
 }

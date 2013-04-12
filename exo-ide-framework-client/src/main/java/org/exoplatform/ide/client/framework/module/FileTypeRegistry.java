@@ -23,19 +23,17 @@ import org.exoplatform.ide.editor.client.api.Editor;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public interface FileTypeRegistry
-{
+public interface FileTypeRegistry {
 
-   void addFileType(FileType fileType, EditorCreator... editors);
+    void addFileType(FileType fileType, EditorCreator... editors);
 
-   FileType getFileType(String mimeType);
+    FileType getFileType(String mimeType);
 
-   FileType[] getSupportedFileTypes();
-   
-   Editor[] getEditors(String mimeType) throws EditorNotFoundException;
-   
-   Editor getEditor(String mimeType) throws EditorNotFoundException;
+    FileType[] getSupportedFileTypes();
+
+    Editor[] getEditors(String mimeType) throws EditorNotFoundException;
+
+    Editor getEditor(String mimeType) throws EditorNotFoundException;
 
 }

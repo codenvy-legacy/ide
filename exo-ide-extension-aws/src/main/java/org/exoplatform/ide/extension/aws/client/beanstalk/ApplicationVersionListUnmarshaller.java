@@ -35,46 +35,35 @@ import java.util.List;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 18, 2012 10:33:01 AM anya $
- * 
  */
-public class ApplicationVersionListUnmarshaller implements Unmarshallable<List<ApplicationVersionInfo>>
-{
-   private List<ApplicationVersionInfo> versionsList = new ArrayList<ApplicationVersionInfo>();
+public class ApplicationVersionListUnmarshaller implements Unmarshallable<List<ApplicationVersionInfo>> {
+    private List<ApplicationVersionInfo> versionsList = new ArrayList<ApplicationVersionInfo>();
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      if (response.getText() == null || response.getText().isEmpty())
-      {
-         return;
-      }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        if (response.getText() == null || response.getText().isEmpty()) {
+            return;
+        }
 
-      JSONArray value = JSONParser.parseLenient(response.getText()).isArray();
+        JSONArray value = JSONParser.parseLenient(response.getText()).isArray();
 
-      if (value == null)
-      {
-         return;
-      }
+        if (value == null) {
+            return;
+        }
 
-      for (int i = 0; i < value.size(); i++)
-      {
-         String payload = value.get(i).isObject().toString();
+        for (int i = 0; i < value.size(); i++) {
+            String payload = value.get(i).isObject().toString();
 
-         AutoBean<ApplicationVersionInfo> applicationVersionInfoBean =
-            AutoBeanCodex.decode(AWSExtension.AUTO_BEAN_FACTORY, ApplicationVersionInfo.class, payload);
-         versionsList.add(applicationVersionInfoBean.as());
-      }
-   }
+            AutoBean<ApplicationVersionInfo> applicationVersionInfoBean =
+                    AutoBeanCodex.decode(AWSExtension.AUTO_BEAN_FACTORY, ApplicationVersionInfo.class, payload);
+            versionsList.add(applicationVersionInfoBean.as());
+        }
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#getPayload()
-    */
-   @Override
-   public List<ApplicationVersionInfo> getPayload()
-   {
-      return versionsList;
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#getPayload() */
+    @Override
+    public List<ApplicationVersionInfo> getPayload() {
+        return versionsList;
+    }
 }

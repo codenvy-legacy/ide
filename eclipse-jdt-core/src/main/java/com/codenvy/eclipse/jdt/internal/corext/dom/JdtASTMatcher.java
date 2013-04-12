@@ -17,46 +17,36 @@ import com.codenvy.eclipse.jdt.core.dom.IBinding;
 import com.codenvy.eclipse.jdt.core.dom.SimpleName;
 
 
-public class JdtASTMatcher extends ASTMatcher
-{
+public class JdtASTMatcher extends ASTMatcher {
 
-   @Override
-   public boolean match(SimpleName node, Object other)
-   {
-      boolean isomorphic = super.match(node, other);
-      if (!isomorphic || !(other instanceof SimpleName))
-      {
-         return false;
-      }
-      SimpleName name = (SimpleName)other;
-      IBinding nodeBinding = node.resolveBinding();
-      IBinding otherBinding = name.resolveBinding();
-      if (nodeBinding == null)
-      {
-         if (otherBinding != null)
-         {
+    @Override
+    public boolean match(SimpleName node, Object other) {
+        boolean isomorphic = super.match(node, other);
+        if (!isomorphic || !(other instanceof SimpleName)) {
             return false;
-         }
-      }
-      else
-      {
-         if (nodeBinding != otherBinding)
-         {
+        }
+        SimpleName name = (SimpleName)other;
+        IBinding nodeBinding = node.resolveBinding();
+        IBinding otherBinding = name.resolveBinding();
+        if (nodeBinding == null) {
+            if (otherBinding != null) {
+                return false;
+            }
+        } else {
+            if (nodeBinding != otherBinding) {
+                return false;
+            }
+        }
+        if (node.resolveTypeBinding() != name.resolveTypeBinding()) {
             return false;
-         }
-      }
-      if (node.resolveTypeBinding() != name.resolveTypeBinding())
-      {
-         return false;
-      }
-      return true;
-   }
+        }
+        return true;
+    }
 
-   public static boolean doNodesMatch(ASTNode one, ASTNode other)
-   {
-      Assert.isNotNull(one);
-      Assert.isNotNull(other);
+    public static boolean doNodesMatch(ASTNode one, ASTNode other) {
+        Assert.isNotNull(one);
+        Assert.isNotNull(other);
 
-      return one.subtreeMatch(new JdtASTMatcher(), other);
-   }
+        return one.subtreeMatch(new JdtASTMatcher(), other);
+    }
 }

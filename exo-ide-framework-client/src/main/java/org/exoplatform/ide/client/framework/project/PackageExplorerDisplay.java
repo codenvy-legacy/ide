@@ -18,16 +18,14 @@
  */
 package org.exoplatform.ide.client.framework.project;
 
-import com.google.gwt.resources.client.ImageResource;
-
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.resources.client.ImageResource;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
+import org.exoplatform.ide.client.framework.project.api.IDEProject;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
@@ -36,82 +34,89 @@ import java.util.Map;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public interface PackageExplorerDisplay extends IsView
-{
+public interface PackageExplorerDisplay extends IsView {
 
-   /**
-    * Change tree visibility.
-    * 
-    * @param visible <code>true</code> if visible
-    */
-   void setPackageExplorerTreeVisible(boolean visible);
+    /**
+     * @return
+     */
+    TreeGridItem<Item> getBrowserTree();
 
-   /**
-    * @return {@link TreeGridItem}
-    */
-   TreeGridItem<Item> getBrowserTree();
-   
-   boolean selectItem(Item item);
-   
-   Object getSelectedObject();
+    /**
+     * Set new project in Package Explorer tree.
+     * 
+     * @param project project
+     */
+    void setProject(IDEProject project);
 
-   void goToItem(List<Object> itemList, boolean collapseBranches);
-   
-   List<Item> getTreeChildren(FolderModel folder);
-   
-   List<Item> getVisibleItems();
-   
-   void refreshTree();
+    /**
+     * Search and select specified item in Project Explorer tree.
+     * 
+     * @param item
+     * @return
+     */
+    boolean selectItem(Item item);
 
-   /*
-    * Link with Editor
-    */
+    /**
+     * Returns selected item in Project Explorer tree.
+     * 
+     * @return
+     */
+    Item getSelectedItem();
 
-   /**
-    * Returns Link with Editor button.
-    * 
-    * @return Link with Editor button
-    */
-   HasClickHandlers getLinkWithEditorButton();
+    /**
+     * Returns children of specified filder.
+     * 
+     * @param folder folder
+     * @return folder's children
+     */
+    List<Item> getTreeChildren(FolderModel folder);
 
-   /**
-    * Enables or disables Link with Editor button.
-    * 
-    * @param enabled <b>true</b> makes Link with Editor button enabled, <b>false</b> makes disabled
-    */
-   void setLinkWithEditorButtonEnabled(boolean enabled);
+    /**
+     * Returns all visible items from Project Explorer tree.
+     * 
+     * @return
+     */
+    List<Item> getVisibleItems();
 
-   /**
-    * Adds or removes selection of Link with Editor button.
-    * 
-    * @param selected <b>true</b> makes button selected, <b>false</b> otherwise
-    */
-   void setLinkWithEditorButtonSelected(boolean selected);
+    /**
+     * Refreshes Package Explorer tree.
+     */
+    void refreshTree();
 
-   /**
-    * Update the state of the item in the tree.
-    * 
-    * @param file
-    */
-   void updateItemState(FileModel file);   
+    /**
+     * Returns Link with Editor button.
+     * 
+     * @return Link with Editor button
+     */
+    HasClickHandlers getLinkWithEditorButton();
 
-   /**
-    * Set lock tokens to the items in the tree.
-    * 
-    * @param locktokens
-    */
-   void setLockTokens(Map<String, String> locktokens);
-   
-   /**
-    * Add info icons to main item icon.
-    */
-   void addItemsIcons(Map<Item, Map<TreeIconPosition, ImageResource>> itemsIcons);
-   
-   /**
-    * Remove additional icons from items.
-    */
-   void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons);
-   
+    /**
+     * Enables or disables Link with Editor button.
+     * 
+     * @param enabled <b>true</b> makes Link with Editor button enabled, <b>false</b> makes disabled
+     */
+    void setLinkWithEditorButtonEnabled(boolean enabled);
+
+    /**
+     * Adds or removes selection of Link with Editor button.
+     * 
+     * @param selected <b>true</b> makes button selected, <b>false</b> otherwise
+     */
+    void setLinkWithEditorButtonSelected(boolean selected);
+
+    /**
+     * Add additional icons to tree items.
+     * 
+     * @param itemsIcons
+     */
+    void addItemsIcons(Map<Item, Map<TreeIconPosition, ImageResource>> itemsIcons);
+
+    /**
+     * Remove additional icons from tree items.
+     * 
+     * @param itemsIcons
+     */
+    void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons);
+
 }

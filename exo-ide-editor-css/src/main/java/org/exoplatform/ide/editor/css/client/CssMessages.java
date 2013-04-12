@@ -23,18 +23,16 @@ import com.google.gwt.i18n.client.Messages;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public interface CssMessages extends Messages
-{
+public interface CssMessages extends Messages {
 
-   @Key("codeMirror.cssEditor")
-   String cssEditor();
+    @Key("codeMirror.cssEditor")
+    String cssEditor();
 
-   @Key("control.new.css.title")
-   String controlNewCssTitle();
+    @Key("control.new.css.title")
+    String controlNewCssTitle();
 
-   @Key("control.new.css.prompt")
-   String controlNewCssPrompt();
+    @Key("control.new.css.prompt")
+    String controlNewCssPrompt();
 
 }

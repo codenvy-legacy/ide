@@ -12,62 +12,54 @@ package com.codenvy.eclipse.jdt.internal.corext.refactoring.typeconstraints2;
 
 import com.codenvy.eclipse.core.runtime.Assert;
 
-public final class SubTypeConstraint2 implements ITypeConstraint2
-{
+public final class SubTypeConstraint2 implements ITypeConstraint2 {
 
-   private final ConstraintVariable2 fAncestor;
+    private final ConstraintVariable2 fAncestor;
 
-   private final ConstraintVariable2 fDescendant;
+    private final ConstraintVariable2 fDescendant;
 
-   public SubTypeConstraint2(final ConstraintVariable2 descendant, final ConstraintVariable2 ancestor)
-   {
-      Assert.isNotNull(descendant);
-      Assert.isNotNull(ancestor);
-      fDescendant = descendant;
-      fAncestor = ancestor;
-   }
+    public SubTypeConstraint2(final ConstraintVariable2 descendant, final ConstraintVariable2 ancestor) {
+        Assert.isNotNull(descendant);
+        Assert.isNotNull(ancestor);
+        fDescendant = descendant;
+        fAncestor = ancestor;
+    }
 
-   /*
-    * @see java.lang.Object#equals(java.lang.Object)
-    */
-   @Override
-   public final boolean equals(Object other)
-   {
-      // can use object identity on ConstraintVariables, since we have the stored (or to be stored) objects
-      if (other.getClass() != SubTypeConstraint2.class)
-      {
-         return false;
-      }
+    /*
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public final boolean equals(Object other) {
+        // can use object identity on ConstraintVariables, since we have the stored (or to be stored) objects
+        if (other.getClass() != SubTypeConstraint2.class) {
+            return false;
+        }
 
-      ITypeConstraint2 otherTC = (ITypeConstraint2)other;
-      return fDescendant == otherTC.getLeft() && fAncestor == otherTC.getRight();
-   }
+        ITypeConstraint2 otherTC = (ITypeConstraint2)other;
+        return fDescendant == otherTC.getLeft() && fAncestor == otherTC.getRight();
+    }
 
-   public final ConstraintVariable2 getLeft()
-   {
-      return fDescendant;
-   }
+    public final ConstraintVariable2 getLeft() {
+        return fDescendant;
+    }
 
-   public final ConstraintVariable2 getRight()
-   {
-      return fAncestor;
-   }
+    public final ConstraintVariable2 getRight() {
+        return fAncestor;
+    }
 
-   /*
-    * @see java.lang.Object#hashCode()
-    */
-   @Override
-   public final int hashCode()
-   {
-      return fDescendant.hashCode() ^ 37 * fAncestor.hashCode();
-   }
+    /*
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public final int hashCode() {
+        return fDescendant.hashCode() ^ 37 * fAncestor.hashCode();
+    }
 
-   /*
-    * @see java.lang.Object#toString()
-    */
-   @Override
-   public final String toString()
-   {
-      return fDescendant.toString() + " <= " + fAncestor.toString(); //$NON-NLS-1$
-   }
+    /*
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public final String toString() {
+        return fDescendant.toString() + " <= " + fAncestor.toString(); //$NON-NLS-1$
+    }
 }

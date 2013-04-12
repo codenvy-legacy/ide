@@ -24,121 +24,107 @@ import com.codenvy.eclipse.ltk.core.refactoring.IUndoManager;
 import com.codenvy.eclipse.ltk.core.refactoring.RefactoringCore;
 import com.codenvy.eclipse.ltk.core.refactoring.history.IRefactoringHistoryListener;
 
-public class RefactoringCorePlugin
-{
+public class RefactoringCorePlugin {
 
-   private static RefactoringCorePlugin fgDefault;
+    private static RefactoringCorePlugin fgDefault;
 
-   private static IUndoManager fgUndoManager = null;
+    private static IUndoManager fgUndoManager = null;
 
-   private static IUndoContext fRefactoringUndoContext;
+    private static IUndoContext fRefactoringUndoContext;
 
-   private IRefactoringHistoryListener fRefactoringHistoryListener = null;
+    private IRefactoringHistoryListener fRefactoringHistoryListener = null;
 
-   public RefactoringCorePlugin()
-   {
-      fgDefault = this;
-   }
+    public RefactoringCorePlugin() {
+        fgDefault = this;
+    }
 
-   public static RefactoringCorePlugin getDefault()
-   {
-      return fgDefault;
-   }
+    public static RefactoringCorePlugin getDefault() {
+        return fgDefault;
+    }
 
-   public static String getPluginId()
-   {
-      return RefactoringCore.ID_PLUGIN;
-   }
+    public static String getPluginId() {
+        return RefactoringCore.ID_PLUGIN;
+    }
 
-   public static IUndoContext getUndoContext()
-   {
-      if (fRefactoringUndoContext == null)
-      {
-         fRefactoringUndoContext = new RefactoringUndoContext();
-         IUndoContext workspaceContext = (IUndoContext)ResourcesPlugin.getWorkspace().getAdapter(IUndoContext.class);
-         if (workspaceContext instanceof ObjectUndoContext)
-         {
-            ((ObjectUndoContext)workspaceContext).addMatch(fRefactoringUndoContext);
-         }
-         IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
-         operationHistory.setLimit(fRefactoringUndoContext, 5);
-      }
-      return fRefactoringUndoContext;
-   }
+    public static IUndoContext getUndoContext() {
+        if (fRefactoringUndoContext == null) {
+            fRefactoringUndoContext = new RefactoringUndoContext();
+            IUndoContext workspaceContext = (IUndoContext)ResourcesPlugin.getWorkspace().getAdapter(IUndoContext.class);
+            if (workspaceContext instanceof ObjectUndoContext) {
+                ((ObjectUndoContext)workspaceContext).addMatch(fRefactoringUndoContext);
+            }
+            IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
+            operationHistory.setLimit(fRefactoringUndoContext, 5);
+        }
+        return fRefactoringUndoContext;
+    }
 
-   public static void log(IStatus status)
-   {
-      //		getDefault().getLog().log(status);
-   }
+    public static void log(IStatus status) {
+        //		getDefault().getLog().log(status);
+    }
 
-   public static void log(Throwable t)
-   {
-      IStatus status = new Status(IStatus.ERROR, getPluginId(), IRefactoringCoreStatusCodes.INTERNAL_ERROR,
-         RefactoringCoreMessages.RefactoringCorePlugin_internal_error, t);
-      //		ResourcesPlugin.getPlugin().getLog().log(status);
-   }
+    public static void log(Throwable t) {
+        IStatus status = new Status(IStatus.ERROR, getPluginId(), IRefactoringCoreStatusCodes.INTERNAL_ERROR,
+                                    RefactoringCoreMessages.RefactoringCorePlugin_internal_error, t);
+        //		ResourcesPlugin.getPlugin().getLog().log(status);
+    }
 
-   public static void logRemovedListener(Throwable t)
-   {
-      IStatus status = new Status(IStatus.ERROR, getPluginId(), IRefactoringCoreStatusCodes.INTERNAL_ERROR,
-         RefactoringCoreMessages.RefactoringCorePlugin_listener_removed, t);
-      //		ResourcesPlugin.getPlugin().getLog().log(status);
-   }
+    public static void logRemovedListener(Throwable t) {
+        IStatus status = new Status(IStatus.ERROR, getPluginId(), IRefactoringCoreStatusCodes.INTERNAL_ERROR,
+                                    RefactoringCoreMessages.RefactoringCorePlugin_listener_removed, t);
+        //		ResourcesPlugin.getPlugin().getLog().log(status);
+    }
 
-   public static void logRemovedParticipant(ParticipantDescriptor descriptor, Throwable t)
-   {
-      IStatus status = new Status(IStatus.ERROR, getPluginId(), IRefactoringCoreStatusCodes.PARTICIPANT_DISABLED,
-         Messages.format(RefactoringCoreMessages.RefactoringCorePlugin_participant_removed, descriptor.getId()), t);
-      //		ResourcesPlugin.getPlugin().getLog().log(status);
-   }
+    public static void logRemovedParticipant(ParticipantDescriptor descriptor, Throwable t) {
+        IStatus status = new Status(IStatus.ERROR, getPluginId(), IRefactoringCoreStatusCodes.PARTICIPANT_DISABLED,
+                                    Messages.format(RefactoringCoreMessages.RefactoringCorePlugin_participant_removed, descriptor.getId()),
+                                    t);
+        //		ResourcesPlugin.getPlugin().getLog().log(status);
+    }
 
-   public static void logErrorMessage(String message)
-   {
-      log(new Status(IStatus.ERROR, getPluginId(), IRefactoringCoreStatusCodes.INTERNAL_ERROR, message, null));
-   }
+    public static void logErrorMessage(String message) {
+        log(new Status(IStatus.ERROR, getPluginId(), IRefactoringCoreStatusCodes.INTERNAL_ERROR, message, null));
+    }
 
-   public static IUndoManager getUndoManager()
-   {
-      if (fgUndoManager == null)
-      {
-         fgUndoManager = createUndoManager();
-      }
-      return fgUndoManager;
-   }
+    public static IUndoManager getUndoManager() {
+        if (fgUndoManager == null) {
+            fgUndoManager = createUndoManager();
+        }
+        return fgUndoManager;
+    }
 
-   //	public void start(BundleContext context) throws Exception {
-   //		super.start(context);
-   //		RefactoringContributionManager.getInstance().connect();
-   //		final RefactoringHistoryService service= RefactoringHistoryService.getInstance();
-   //		service.connect();
-   //		fRefactoringHistoryListener= new RefactoringHistorySerializer();
-   //		service.addHistoryListener(fRefactoringHistoryListener);
-   //	}
-   //
-   //	public void stop(BundleContext context) throws Exception {
-   //		if (fRefactoringUndoContext != null) {
-   //			IUndoContext workspaceContext= (IUndoContext)ResourcesPlugin.getWorkspace().getAdapter(IUndoContext.class);
-   //			if (workspaceContext instanceof ObjectUndoContext) {
-   //				((ObjectUndoContext)workspaceContext).removeMatch(fRefactoringUndoContext);
-   //			}
-   //		}
-   //		if (fgUndoManager != null)
-   //			fgUndoManager.shutdown();
-   //		final RefactoringHistoryService service= RefactoringHistoryService.getInstance();
-   //		service.disconnect();
-   //		if (fRefactoringHistoryListener != null)
-   //			service.removeHistoryListener(fRefactoringHistoryListener);
-   //		RefactoringContributionManager.getInstance().disconnect();
-   //		super.stop(context);
-   //	}
+    //	public void start(BundleContext context) throws Exception {
+    //		super.start(context);
+    //		RefactoringContributionManager.getInstance().connect();
+    //		final RefactoringHistoryService service= RefactoringHistoryService.getInstance();
+    //		service.connect();
+    //		fRefactoringHistoryListener= new RefactoringHistorySerializer();
+    //		service.addHistoryListener(fRefactoringHistoryListener);
+    //	}
+    //
+    //	public void stop(BundleContext context) throws Exception {
+    //		if (fRefactoringUndoContext != null) {
+    //			IUndoContext workspaceContext= (IUndoContext)ResourcesPlugin.getWorkspace().getAdapter(IUndoContext.class);
+    //			if (workspaceContext instanceof ObjectUndoContext) {
+    //				((ObjectUndoContext)workspaceContext).removeMatch(fRefactoringUndoContext);
+    //			}
+    //		}
+    //		if (fgUndoManager != null)
+    //			fgUndoManager.shutdown();
+    //		final RefactoringHistoryService service= RefactoringHistoryService.getInstance();
+    //		service.disconnect();
+    //		if (fRefactoringHistoryListener != null)
+    //			service.removeHistoryListener(fRefactoringHistoryListener);
+    //		RefactoringContributionManager.getInstance().disconnect();
+    //		super.stop(context);
+    //	}
 
-   /**
-    * Creates a new empty undo manager.
-    *
-    * @return a new undo manager
-    */
-   private static IUndoManager createUndoManager()
-   {
-      return new UndoManager2();
-   }
+    /**
+     * Creates a new empty undo manager.
+     *
+     * @return a new undo manager
+     */
+    private static IUndoManager createUndoManager() {
+        return new UndoManager2();
+    }
 }

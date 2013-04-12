@@ -22,6 +22,7 @@ package org.exoplatform.ide.editor.php.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -40,100 +41,103 @@ import org.exoplatform.ide.editor.php.client.codemirror.PhpOutlineItemCreator;
 import org.exoplatform.ide.editor.php.client.codemirror.PhpParser;
 
 /**
- * 
  * Provides a text editing area along with UI for executing text commands on the.<br>
- * 
+ *
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Revision$
  */
-public class PhpEditorExtension extends Extension implements InitializeServicesHandler
-{
+public class PhpEditorExtension extends Extension implements InitializeServicesHandler {
 
-   interface DefaultContent extends ClientBundle
-   {
-      @Source("hello.php")
-      TextResource getSource();
-   }
+    interface DefaultContent extends ClientBundle {
+        @Source("hello.php")
+        TextResource getSource();
+    }
 
-   public final static DefaultContent DEFAULT_CONTENT = GWT.create(DefaultContent.class);
+    public final static DefaultContent DEFAULT_CONTENT = GWT.create(DefaultContent.class);
 
-   /**
-    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(InitializeServicesEvent.TYPE, this);
+    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
-      IDE.getInstance().addControl(
-         new NewItemControl("File/New/New PHP File", "PHP File", "Create PHP File", PhpClientBundle.INSTANCE.php(),
-            PhpClientBundle.INSTANCE.phpDisabled(), MimeType.APPLICATION_PHP).setGroupName(GroupNames.NEW_SCRIPT));
+        IDE.getInstance().addControl(
+                new NewItemControl("File/New/New PHP File", "PHP File", "Create PHP File", PhpClientBundle.INSTANCE.php(),
+                                   PhpClientBundle.INSTANCE.phpDisabled(), MimeType.APPLICATION_PHP).setGroupName(GroupNames.NEW_SCRIPT));
 
-      PhpClientBundle.INSTANCE.css().ensureInjected();
-   }
+        PhpClientBundle.INSTANCE.css().ensureInjected();
+    }
 
-   public void onInitializeServices(InitializeServicesEvent event)
-   {
-      
-      IDE.getInstance().getFileTypeRegistry().addFileType(
-         new FileType(MimeType.APPLICATION_PHP, "php", Images.INSTANCE.php()),
-         new EditorCreator()
-         {
-            @Override
-            public Editor createEditor()
-            {
-               return new CodeMirror(MimeType.APPLICATION_PHP, new CodeMirrorConfiguration()
-                  .setGenericParsers("['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizephp.js', 'parsephp.js', 'parsephphtmlmixed.js']")
-                  .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '" + CodeMirrorConfiguration.PATH + "css/phpcolors.css']")
-                  .setParser(new PhpParser())
-                  .setCanBeOutlined(true)
-                  .setAutocompleteHelper(new PhpAutocompleteHelper())
-                  .setCodeAssistant(new PhpCodeAssistant())
-                  .setCanHaveSeveralMimeTypes(true));
-            }
-         });
-      
-      IDE.getInstance().getFileTypeRegistry().addFileType(
-         new FileType(MimeType.APPLICATION_X_PHP, "php", Images.INSTANCE.php()),
-         new EditorCreator()
-         {
-            @Override
-            public Editor createEditor()
-            {
-               return new CodeMirror(MimeType.APPLICATION_X_PHP, new CodeMirrorConfiguration()
-               .setGenericParsers("['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizephp.js', 'parsephp.js', 'parsephphtmlmixed.js']")
-               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '" + CodeMirrorConfiguration.PATH + "css/phpcolors.css']")
-               .setParser(new PhpParser())
-               .setCanBeOutlined(true)
-               .setAutocompleteHelper(new PhpAutocompleteHelper())
-               .setCodeAssistant(new PhpCodeAssistant())
-               .setCanHaveSeveralMimeTypes(true));
-            }
-         });
+    public void onInitializeServices(InitializeServicesEvent event) {
 
-      IDE.getInstance().getFileTypeRegistry().addFileType(
-         new FileType(MimeType.APPLICATION_X_HTTPD_PHP, "php", Images.INSTANCE.php()),
-         new EditorCreator()
-         {
-            @Override
-            public Editor createEditor()
-            {
-               return new CodeMirror(MimeType.APPLICATION_X_HTTPD_PHP, new CodeMirrorConfiguration()
-               .setGenericParsers("['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizephp.js', 'parsephp.js', 'parsephphtmlmixed.js']")
-               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '" + CodeMirrorConfiguration.PATH + "css/phpcolors.css']")
-               .setParser(new PhpParser())
-               .setCanBeOutlined(true)
-               .setAutocompleteHelper(new PhpAutocompleteHelper())
-               .setCodeAssistant(new PhpCodeAssistant())
-               .setCanHaveSeveralMimeTypes(true));
-            }
-         });
-      
-      
+        IDE.getInstance().getFileTypeRegistry().addFileType(
+                new FileType(MimeType.APPLICATION_PHP, "php", Images.INSTANCE.php()),
+                new EditorCreator() {
+                    @Override
+                    public Editor createEditor() {
+                        return new CodeMirror(MimeType.APPLICATION_PHP, new CodeMirrorConfiguration()
+                                .setGenericParsers(
+                                        "['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizephp.js', " +
+                                        "'parsephp.js', 'parsephphtmlmixed.js']")
+                                .setGenericStyles(
+                                        "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH +
+                                        "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '" +
+                                        CodeMirrorConfiguration.PATH + "css/phpcolors.css']")
+                                .setParser(new PhpParser())
+                                .setCanBeOutlined(true)
+                                .setAutocompleteHelper(new PhpAutocompleteHelper())
+                                .setCodeAssistant(new PhpCodeAssistant())
+                                .setCanHaveSeveralMimeTypes(true));
+                    }
+                });
+
+        IDE.getInstance().getFileTypeRegistry().addFileType(
+                new FileType(MimeType.APPLICATION_X_PHP, "php", Images.INSTANCE.php()),
+                new EditorCreator() {
+                    @Override
+                    public Editor createEditor() {
+                        return new CodeMirror(MimeType.APPLICATION_X_PHP, new CodeMirrorConfiguration()
+                                .setGenericParsers(
+                                        "['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizephp.js', " +
+                                        "'parsephp.js', 'parsephphtmlmixed.js']")
+                                .setGenericStyles(
+                                        "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH +
+                                        "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '" +
+                                        CodeMirrorConfiguration.PATH + "css/phpcolors.css']")
+                                .setParser(new PhpParser())
+                                .setCanBeOutlined(true)
+                                .setAutocompleteHelper(new PhpAutocompleteHelper())
+                                .setCodeAssistant(new PhpCodeAssistant())
+                                .setCanHaveSeveralMimeTypes(true));
+                    }
+                });
+
+        IDE.getInstance().getFileTypeRegistry().addFileType(
+                new FileType(MimeType.APPLICATION_X_HTTPD_PHP, "php", Images.INSTANCE.php()),
+                new EditorCreator() {
+                    @Override
+                    public Editor createEditor() {
+                        return new CodeMirror(MimeType.APPLICATION_X_HTTPD_PHP, new CodeMirrorConfiguration()
+                                .setGenericParsers(
+                                        "['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizephp.js', " +
+                                        "'parsephp.js', 'parsephphtmlmixed.js']")
+                                .setGenericStyles(
+                                        "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH +
+                                        "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '" +
+                                        CodeMirrorConfiguration.PATH + "css/phpcolors.css']")
+                                .setParser(new PhpParser())
+                                .setCanBeOutlined(true)
+                                .setAutocompleteHelper(new PhpAutocompleteHelper())
+                                .setCodeAssistant(new PhpCodeAssistant())
+                                .setCanHaveSeveralMimeTypes(true));
+                    }
+                });
+
+
 //      CodeMirrorConfiguration phpCodeMirrorConfiguration =
 //         new CodeMirrorConfiguration()
 //            .setGenericParsers(
-//               "['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizephp.js', 'parsephp.js', 'parsephphtmlmixed.js']")
+//               "['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizephp.js', 'parsephp.js',
+// 'parsephphtmlmixed.js']")
 //            .setGenericStyles(
 //               "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH
 //                  + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '"
@@ -143,8 +147,9 @@ public class PhpEditorExtension extends Extension implements InitializeServicesH
 //
 //      IDE.getInstance().addEditor(new CodeMirror(MimeType.APPLICATION_PHP, "CodeMirror PHP editor", "php", phpCodeMirrorConfiguration));
 //      IDE.getInstance().addEditor(new CodeMirror(MimeType.APPLICATION_X_PHP, "CodeMirror PHP editor", "php", phpCodeMirrorConfiguration));
-//      IDE.getInstance().addEditor(new CodeMirror(MimeType.APPLICATION_X_HTTPD_PHP, "CodeMirror PHP editor", "php", phpCodeMirrorConfiguration));
-      
+//      IDE.getInstance().addEditor(new CodeMirror(MimeType.APPLICATION_X_HTTPD_PHP, "CodeMirror PHP editor", "php",
+// phpCodeMirrorConfiguration));
+
 //      IDE.getInstance().addEditor(
 //         new CodeMirrorProducer(MimeType.APPLICATION_PHP, "CodeMirror PHP editor", "php", Images.INSTANCE.php(), true,
 //            phpCodeMirrorConfiguration));
@@ -157,15 +162,15 @@ public class PhpEditorExtension extends Extension implements InitializeServicesH
 //         new CodeMirrorProducer(MimeType.APPLICATION_X_HTTPD_PHP, "CodeMirror PHP editor", "php",
 //            Images.INSTANCE.php(), true, phpCodeMirrorConfiguration));
 
-      PhpOutlineItemCreator phpOutlineItemCreator = new PhpOutlineItemCreator();
-      IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_PHP, phpOutlineItemCreator);
-      IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_X_PHP, phpOutlineItemCreator);
-      IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_X_HTTPD_PHP, phpOutlineItemCreator);
+        PhpOutlineItemCreator phpOutlineItemCreator = new PhpOutlineItemCreator();
+        IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_PHP, phpOutlineItemCreator);
+        IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_X_PHP, phpOutlineItemCreator);
+        IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_X_HTTPD_PHP, phpOutlineItemCreator);
 
       /* PhpCommentsModifier commentsModifier = new PhpCommentsModifier();
       IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_PHP, commentsModifier));
       IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_X_PHP, commentsModifier));
       IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_X_HTTPD_PHP, commentsModifier));*/
-   }
+    }
 
 }

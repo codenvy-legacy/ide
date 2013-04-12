@@ -39,21 +39,22 @@ import com.codenvy.eclipse.jdt.internal.compiler.lookup.BlockScope;
 import com.codenvy.eclipse.jdt.internal.compiler.lookup.TypeBinding;
 
 public class SelectionOnQualifiedSuperReference extends QualifiedSuperReference {
-public SelectionOnQualifiedSuperReference(TypeReference name, int pos, int sourceEnd) {
-	super(name, pos, sourceEnd);
-}
-public StringBuffer printExpression(int indent, StringBuffer output) {
+    public SelectionOnQualifiedSuperReference(TypeReference name, int pos, int sourceEnd) {
+        super(name, pos, sourceEnd);
+    }
 
-	output.append("<SelectOnQualifiedSuper:"); //$NON-NLS-1$
-	return super.printExpression(0, output).append('>');
-}
+    public StringBuffer printExpression(int indent, StringBuffer output) {
 
-public TypeBinding resolveType(BlockScope scope) {
-	TypeBinding binding = super.resolveType(scope);
+        output.append("<SelectOnQualifiedSuper:"); //$NON-NLS-1$
+        return super.printExpression(0, output).append('>');
+    }
 
-	if (binding == null || !binding.isValidBinding())
-		throw new SelectionNodeFound();
-	else
-		throw new SelectionNodeFound(binding);
-}
+    public TypeBinding resolveType(BlockScope scope) {
+        TypeBinding binding = super.resolveType(scope);
+
+        if (binding == null || !binding.isValidBinding())
+            throw new SelectionNodeFound();
+        else
+            throw new SelectionNodeFound(binding);
+    }
 }

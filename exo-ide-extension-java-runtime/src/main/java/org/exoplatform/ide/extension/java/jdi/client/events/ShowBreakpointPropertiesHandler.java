@@ -22,15 +22,14 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ShowBreakpointPropertiesEvent} event.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: ShowBreakpointPropertiesHandler.java May 8, 2012 13:00:25 PM azatsarynnyy $
- *
  */
-public interface ShowBreakpointPropertiesHandler extends EventHandler
-{
-   /**
-    * @param event {@link ShowBreakpointPropertiesEvent}
-    */
-   void onShowBreakpointProperties(ShowBreakpointPropertiesEvent e);
+public interface ShowBreakpointPropertiesHandler extends EventHandler {
+    /**
+     * @param event
+     *         {@link ShowBreakpointPropertiesEvent}
+     */
+    void onShowBreakpointProperties(ShowBreakpointPropertiesEvent e);
 }

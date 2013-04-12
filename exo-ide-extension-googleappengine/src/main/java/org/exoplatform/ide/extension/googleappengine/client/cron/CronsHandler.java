@@ -33,49 +33,38 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePrese
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 25, 2012 4:19:20 PM anya $
- * 
  */
-public class CronsHandler extends GoogleAppEnginePresenter implements UpdateCronHandler
-{
-   public CronsHandler()
-   {
-      IDE.addHandler(UpdateCronEvent.TYPE, this);
-   }
+public class CronsHandler extends GoogleAppEnginePresenter implements UpdateCronHandler {
+    public CronsHandler() {
+        IDE.addHandler(UpdateCronEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.cron.UpdateCronHandler#onUpdateCron(org.exoplatform.ide.extension.googleappengine.client.cron.UpdateCronEvent)
-    */
-   @Override
-   public void onUpdateCron(UpdateCronEvent event)
-   {
-      if (isAppEngineProject())
-      {
-         updateCrons();
-      }
-      else
-      {
-         Dialogs.getInstance().showError(GoogleAppEngineExtension.GAE_LOCALIZATION.notAppEngineProjectError());
-      }
-   }
+    /** @see org.exoplatform.ide.extension.googleappengine.client.cron.UpdateCronHandler#onUpdateCron(org.exoplatform.ide.extension
+     * .googleappengine.client.cron.UpdateCronEvent) */
+    @Override
+    public void onUpdateCron(UpdateCronEvent event) {
+        if (isAppEngineProject()) {
+            updateCrons();
+        } else {
+            Dialogs.getInstance().showError(GoogleAppEngineExtension.GAE_LOCALIZATION.notAppEngineProjectError());
+        }
+    }
 
-   public void updateCrons()
-   {
-      try
-      {
-         GoogleAppEngineClientService.getInstance().updateCron(currentVfs.getId(), currentProject.getId(), new GoogleAppEngineAsyncRequestCallback<Object>()
-            {
+    public void updateCrons() {
+        try {
+            GoogleAppEngineClientService.getInstance().updateCron(currentVfs.getId(), currentProject.getId(),
+                                                                  new GoogleAppEngineAsyncRequestCallback<Object>() {
 
-               @Override
-               protected void onSuccess(Object result)
-               {
-                  IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.updateCronsSuccessfully(),
-                     Type.INFO));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                                                                      @Override
+                                                                      protected void onSuccess(Object result) {
+                                                                          IDE.fireEvent(new OutputEvent(
+                                                                                  GoogleAppEngineExtension.GAE_LOCALIZATION
+                                                                                                          .updateCronsSuccessfully(),
+                                                                                  Type.INFO));
+                                                                      }
+                                                                  });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 }

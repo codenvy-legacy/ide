@@ -21,26 +21,23 @@ import org.exoplatform.ide.json.shared.JsonArray;
 /**
  * Response to {@link RecoverFromDroppedTangoInvalidation} that contains the
  * payloads requested by the client.
- *
  */
 @RoutingType(type = RoutingTypes.RECOVERFROMDROPPEDTANGOINVALIDATIONRESPONSE)
 public interface RecoverFromDroppedTangoInvalidationResponse extends ServerToClientDto {
 
-  /**
-   * Small DTO representing a recovered payload
-   */
-  public interface RecoveredPayload {
-    public int getPayloadVersion();
+    /** Small DTO representing a recovered payload */
+    public interface RecoveredPayload {
+        public int getPayloadVersion();
 
-    public String getPayload();
-  }
+        public String getPayload();
+    }
 
-  /**
-   * List of payloads recovered from the server. Is always monotonically
-   * increasing but may have holes if there was no payload for a given version.
-   */
-  JsonArray<RecoveredPayload> getPayloads();
+    /**
+     * List of payloads recovered from the server. Is always monotonically
+     * increasing but may have holes if there was no payload for a given version.
+     */
+    JsonArray<RecoveredPayload> getPayloads();
 
-  /** The current version of the object */
-  int getCurrentObjectVersion();
+    /** The current version of the object */
+    int getCurrentObjectVersion();
 }

@@ -25,8 +25,8 @@ import org.exoplatform.ide.client.framework.module.EditorCreator;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.ckeditor.CKEditor;
+import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.gadget.client.codemirror.GoogleGadgetParser;
@@ -37,42 +37,62 @@ import org.exoplatform.ide.editor.html.client.codemirror.HtmlOutlineItemCreator;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: GadgetEditor Mar 10, 2011 11:10:28 AM evgen $
- *
  */
-public class GadgetEditorExtension extends Extension
-{
+public class GadgetEditorExtension extends Extension {
 
-   /**
-    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.getInstance().getFileTypeRegistry().addFileType(new FileType(MimeType.GOOGLE_GADGET, "gadget", Images.INSTANCE.gadgetImage()),
-         new EditorCreator()
-         {
-            @Override
-            public Editor createEditor()
-            {
-               return new CodeMirror(MimeType.GOOGLE_GADGET, new CodeMirrorConfiguration()
-                 .setGenericParsers("['parsegadgetxml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']")
-                 .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css']")
-                 .setParser(new GoogleGadgetParser())
-                 .setCanBeOutlined(true)
-                 .setAutocompleteHelper(new HtmlAutocompleteHelper())
-                 .setCodeAssistant(new HtmlCodeAssistant())
-                 .setCanHaveSeveralMimeTypes(true)
-               );
-            }
-         },
-         new EditorCreator()
-         {
-            @Override
-            public Editor createEditor()
-            {
-               return new CKEditor(MimeType.GOOGLE_GADGET);
-            }
-         });
+    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
+    @Override
+    public void initialize() {
+        IDE.getInstance().getFileTypeRegistry().addFileType(new FileType(MimeType.GOOGLE_GADGET, "gadget", Images.INSTANCE.gadgetImage()),
+                                                            new EditorCreator() {
+                                                                @Override
+                                                                public Editor createEditor() {
+                                                                    return new CodeMirror(MimeType.GOOGLE_GADGET,
+                                                                                          new CodeMirrorConfiguration()
+                                                                                                  .setGenericParsers(
+                                                                                                          "['parsegadgetxml.js', " +
+                                                                                                          "'parsecss.js', " +
+                                                                                                          "'tokenizejavascript.js', " +
+                                                                                                          "'parsejavascript.js', " +
+                                                                                                          "'parsehtmlmixed.js']")
+                                                                                                  .setGenericStyles("['" +
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                                                    CodeMirrorConfiguration.PATH +
+                                                                                                                    "css/xmlcolors.css', '" +
+                                                                                                                    CodeMirrorConfiguration.PATH +
+                                                                                                                    "css/jscolors.css', '" +
+                                                                                                                    CodeMirrorConfiguration.PATH +
+                                                                                                                    "css/csscolors.css']")
+                                                                                                  .setParser(new GoogleGadgetParser())
+                                                                                                  .setCanBeOutlined(true)
+                                                                                                  .setAutocompleteHelper(
+                                                                                                          new HtmlAutocompleteHelper())
+                                                                                                  .setCodeAssistant(new HtmlCodeAssistant())
+                                                                                                  .setCanHaveSeveralMimeTypes(true)
+                                                                    );
+                                                                }
+                                                            },
+                                                            new EditorCreator() {
+                                                                @Override
+                                                                public Editor createEditor() {
+                                                                    return new CKEditor(MimeType.GOOGLE_GADGET);
+                                                                }
+                                                            }
+                                                           );
 
 //      IDE.getInstance().addEditor(new CodeMirror(MimeType.GOOGLE_GADGET, "CodeMirror OpenSocial Gadget editor", "gadget",
 //         new CodeMirrorConfiguration()
@@ -103,10 +123,11 @@ public class GadgetEditorExtension extends Extension
 //      );      
 //      IDE.getInstance().addEditor(producer);
 
-      IDE.getInstance().addControl(new NewItemControl("File/New/New OpenSocial Gadget", "OpenSocial Gadget",
-         "Create New OpenSocial Gadget", Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET).setGroupName(GroupNames.NEW_FILE));
-      
-      IDE.getInstance().addOutlineItemCreator(MimeType.GOOGLE_GADGET, new HtmlOutlineItemCreator());
-   }
+        IDE.getInstance().addControl(new NewItemControl("File/New/New OpenSocial Gadget", "OpenSocial Gadget",
+                                                        "Create New OpenSocial Gadget", Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET)
+                                             .setGroupName(GroupNames.NEW_FILE));
+
+        IDE.getInstance().addOutlineItemCreator(MimeType.GOOGLE_GADGET, new HtmlOutlineItemCreator());
+    }
 
 }

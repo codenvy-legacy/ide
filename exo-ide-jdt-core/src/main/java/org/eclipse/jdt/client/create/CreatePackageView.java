@@ -37,99 +37,76 @@ import org.exoplatform.ide.editor.java.client.JavaEditorExtension;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class CreatePackageView extends ViewImpl implements Display
-{
-   
-   private static final String ID = "ideCreatePackageView";
+public class CreatePackageView extends ViewImpl implements Display {
 
-   private static CreatePackageViewUiBinder uiBinder = GWT.create(CreatePackageViewUiBinder.class);
+    private static final String ID = "ideCreatePackageView";
 
-   @UiField
-   TextInput packageField;
+    private static CreatePackageViewUiBinder uiBinder = GWT.create(CreatePackageViewUiBinder.class);
 
-   @UiField
-   ImageButton createButton;
+    @UiField
+    TextInput packageField;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton createButton;
 
-   @UiField
-   Label errorLabel;
+    @UiField
+    ImageButton cancelButton;
 
-   @UiField
-   Label warningLabel;
+    @UiField
+    Label errorLabel;
 
-   interface CreatePackageViewUiBinder extends UiBinder<Widget, CreatePackageView>
-   {
-   }
+    @UiField
+    Label warningLabel;
 
-   public CreatePackageView()
-   {
-      super(ID, ViewType.MODAL, JavaEditorExtension.MESSAGES.createPackageTitle(), null, 400, 128, false);
-      add(uiBinder.createAndBindUi(this));
-   }
+    interface CreatePackageViewUiBinder extends UiBinder<Widget, CreatePackageView> {
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.create.CreatePackagePresenter.Display#getPackageNameField()
-    */
-   @Override
-   public HasValue<String> getPackageNameField()
-   {
-      return packageField;
-   }
+    public CreatePackageView() {
+        super(ID, ViewType.MODAL, JavaEditorExtension.MESSAGES.createPackageTitle(), null, 400, 128, false);
+        add(uiBinder.createAndBindUi(this));
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.create.CreatePackagePresenter.Display#getOkButton()
-    */
-   @Override
-   public HasClickHandlers getOkButton()
-   {
-      return createButton;
-   }
+    /** @see org.eclipse.jdt.client.create.CreatePackagePresenter.Display#getPackageNameField() */
+    @Override
+    public HasValue<String> getPackageNameField() {
+        return packageField;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.create.CreatePackagePresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.eclipse.jdt.client.create.CreatePackagePresenter.Display#getOkButton() */
+    @Override
+    public HasClickHandlers getOkButton() {
+        return createButton;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.create.CreatePackagePresenter.Display#getErrorLabel()
-    */
-   @Override
-   public HasText getErrorLabel()
-   {
-      return errorLabel;
-   }
+    /** @see org.eclipse.jdt.client.create.CreatePackagePresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.create.CreatePackagePresenter.Display#setOkButtonEnabled(boolean)
-    */
-   @Override
-   public void setOkButtonEnabled(boolean enabled)
-   {
-      createButton.setEnabled(enabled);
-   }
+    /** @see org.eclipse.jdt.client.create.CreatePackagePresenter.Display#getErrorLabel() */
+    @Override
+    public HasText getErrorLabel() {
+        return errorLabel;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.create.CreatePackagePresenter.Display#getWarningLabel()
-    */
-   @Override
-   public HasText getWarningLabel()
-   {
-      return warningLabel;
-   }
+    /** @see org.eclipse.jdt.client.create.CreatePackagePresenter.Display#setOkButtonEnabled(boolean) */
+    @Override
+    public void setOkButtonEnabled(boolean enabled) {
+        createButton.setEnabled(enabled);
+    }
 
-   @Override
-   public void focusInPackageNameField()
-   {
-      packageField.selectAll();
-      packageField.focus();
-   }
+    /** @see org.eclipse.jdt.client.create.CreatePackagePresenter.Display#getWarningLabel() */
+    @Override
+    public HasText getWarningLabel() {
+        return warningLabel;
+    }
+
+    @Override
+    public void focusInPackageNameField() {
+        packageField.selectAll();
+        packageField.focus();
+    }
 
 }

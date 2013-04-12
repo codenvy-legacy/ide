@@ -26,12 +26,11 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface ApplicationDeletedHandler extends EventHandler
-{
-   /**
-    * Perform actions when CloudFoundry application is deleted.
-    *
-    * @param event
-    */
-   void onApplicationDeleted(ApplicationDeletedEvent event);
+public interface ApplicationDeletedHandler extends EventHandler {
+    /**
+     * Perform actions when CloudFoundry application is deleted.
+     *
+     * @param event
+     */
+    void onApplicationDeleted(ApplicationDeletedEvent event);
 }

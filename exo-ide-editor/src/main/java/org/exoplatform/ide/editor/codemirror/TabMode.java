@@ -21,24 +21,19 @@ package org.exoplatform.ide.editor.codemirror;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
 public enum TabMode {
-   INDENT("indent"), SPACES("spaces"), DEFAULT("default"), SHIFT("shift");
+    INDENT("indent"), SPACES("spaces"), DEFAULT("default"), SHIFT("shift");
 
-   private String value;
+    private String value;
 
-   TabMode(String value)
-   {
-      this.value = value;
-   }
+    TabMode(String value) {
+        this.value = value;
+    }
 
-   /**
-    * @see java.lang.Enum#toString()
-    */
-   @Override
-   public String toString()
-   {
-      return value;
-   }
+    /** @see java.lang.Enum#toString() */
+    @Override
+    public String toString() {
+        return value;
+    }
 }

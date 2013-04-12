@@ -18,69 +18,47 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server.expression;
 
-import com.sun.jdi.ClassNotLoadedException;
-import com.sun.jdi.Field;
-import com.sun.jdi.InvalidTypeException;
-import com.sun.jdi.ObjectReference;
-import com.sun.jdi.VMCannotBeModifiedException;
-import com.sun.jdi.Value;
+import com.sun.jdi.*;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class InstanceValue implements ExpressionValue
-{
-   private final ObjectReference instance;
-   private final Field field;
-   private Value value;
+public class InstanceValue implements ExpressionValue {
+    private final ObjectReference instance;
+    private final Field           field;
+    private       Value           value;
 
-   public InstanceValue(ObjectReference instance, Field field)
-   {
-      this.instance = instance;
-      this.field = field;
-   }
+    public InstanceValue(ObjectReference instance, Field field) {
+        this.instance = instance;
+        this.field = field;
+    }
 
-   @Override
-   public Value getValue()
-   {
-      if (value == null)
-      {
-         try
-         {
-            value = instance.getValue(field);
-         }
-         catch (IllegalArgumentException e)
-         {
+    @Override
+    public Value getValue() {
+        if (value == null) {
+            try {
+                value = instance.getValue(field);
+            } catch (IllegalArgumentException e) {
+                throw new ExpressionException(e.getMessage(), e);
+            }
+        }
+        return value;
+    }
+
+    @Override
+    public void setValue(Value value) {
+        try {
+            instance.setValue(field, value);
+        } catch (InvalidTypeException e) {
             throw new ExpressionException(e.getMessage(), e);
-         }
-      }
-      return value;
-   }
-
-   @Override
-   public void setValue(Value value)
-   {
-      try
-      {
-         instance.setValue(field, value);
-      }
-      catch (InvalidTypeException e)
-      {
-         throw new ExpressionException(e.getMessage(), e);
-      }
-      catch (ClassNotLoadedException e)
-      {
-         throw new ExpressionException(e.getMessage(), e);
-      }
-      catch (VMCannotBeModifiedException e)
-      {
-         throw new ExpressionException(e.getMessage(), e);
-      }
-      catch (IllegalArgumentException e)
-      {
-         throw new ExpressionException(e.getMessage(), e);
-      }
-      this.value = value;
-   }
+        } catch (ClassNotLoadedException e) {
+            throw new ExpressionException(e.getMessage(), e);
+        } catch (VMCannotBeModifiedException e) {
+            throw new ExpressionException(e.getMessage(), e);
+        } catch (IllegalArgumentException e) {
+            throw new ExpressionException(e.getMessage(), e);
+        }
+        this.value = value;
+    }
 }

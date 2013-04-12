@@ -23,62 +23,53 @@ package org.exoplatform.ide.client.framework.project;
  *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 24, 2012 12:15:43 PM anya $
- *
  */
-public enum ProjectType
-{
-   PHP("PHP"), //
-   JSP("Servlet/JSP"), //
-   JAVA("Java"), //
-   JAR("Jar"), //
-   WAR("War"), //
-   JAVASCRIPT("JavaScript"), //
-   NODE_JS("nodejs"), //
-   PYTHON("Python"), //
-   DJANGO("Django"), //
-   RUBY_ON_RAILS("Rails"), //
-   RUBY("Ruby"), //
-   SPRING("Spring"), //
-   EXO("eXo"), //
-   UNDEFINED("Undefined"), //
-   DEFAULT("default"), //
-   AWS("Amazon Web Services"),//
-   MultiModule("Maven Multi-module");
+public enum ProjectType {
+    PHP("PHP"), //
+    JSP("Servlet/JSP"), //
+    JAVA("Java"), //
+    JAR("Jar"), //
+    WAR("War"), //
+    JAVASCRIPT("JavaScript"), //
+    NODE_JS("nodejs"), //
+    PYTHON("Python"), //
+    DJANGO("Django"), //
+    RUBY_ON_RAILS("Rails"), //
+    RUBY("Ruby"), //
+    SPRING("Spring"), //
+    EXO("eXo"), //
+    UNDEFINED("Undefined"), //
+    DEFAULT("default"), //
+    AWS("Amazon Web Services"),//
+    MultiModule("Maven Multi-module");
 
-   /**
-    * Project's type name.
-    */
-   private String type;
+    /** Project's type name. */
+    private String type;
 
-   /**
-    * @param type project's type name
-    */
-   private ProjectType(String type)
-   {
-      this.type = type;
-   }
+    /**
+     * @param type
+     *         project's type name
+     */
+    private ProjectType(String type) {
+        this.type = type;
+    }
 
-   /**
-    * @return {@link String} project's type value
-    */
-   public String value()
-   {
-      return type;
-   }
+    /** @return {@link String} project's type value */
+    public String value() {
+        return type;
+    }
 
-   /**
-    * @param v project's type value
-    * @return {@link ProjectType}
-    */
-   public static ProjectType fromValue(String v)
-   {
-      for (ProjectType c : ProjectType.values())
-      {
-         if (c.type.equals(v))
-         {
-            return c;
-         }
-      }
-      throw new IllegalArgumentException(v);
-   }
+    /**
+     * @param v
+     *         project's type value
+     * @return {@link ProjectType}
+     */
+    public static ProjectType fromValue(String v) {
+        for (ProjectType c : ProjectType.values()) {
+            if (c.type.equals(v)) {
+                return c;
+            }
+        }
+        throw new IllegalArgumentException(v);
+    }
 }

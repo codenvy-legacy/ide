@@ -21,7 +21,6 @@ package test.interfaces;
 /**
  *
  */
-public interface DTestInterface
-{
-   String getName();
+public interface DTestInterface {
+    String getName();
 }

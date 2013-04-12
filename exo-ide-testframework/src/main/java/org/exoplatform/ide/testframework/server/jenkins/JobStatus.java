@@ -21,100 +21,85 @@ package org.exoplatform.ide.testframework.server.jenkins;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: JobStatus.java Aug 23, 2011 12:19:17 PM vereshchaka $
- * 
  */
-public class JobStatus
-{
-   public enum Status {
-      QUEUE("In queue..."), //
-      BUILD("Building..."), //
-      END("End."); //
+public class JobStatus {
+    public enum Status {
+        QUEUE("In queue..."), //
+        BUILD("Building..."), //
+        END("End."); //
 
-      private final String value;
+        private final String value;
 
-      private Status(String value)
-      {
-         this.value = value;
-      }
+        private Status(String value) {
+            this.value = value;
+        }
 
-      @Override
-      public String toString()
-      {
-         return value;
-      }
-   }
+        @Override
+        public String toString() {
+            return value;
+        }
+    }
 
-   /** Job name. */
-   private String name;
+    /** Job name. */
+    private String name;
 
-   /** Current job status. */
-   private Status status;
+    /** Current job status. */
+    private Status status;
 
-   /** Result of last build. Should be always <code>null</code> if {@link #status} other then {@link Status#END}. */
-   private String lastBuildResult;
+    /** Result of last build. Should be always <code>null</code> if {@link #status} other then {@link Status#END}. */
+    private String lastBuildResult;
 
-   /**
-    * URL to download artifact. Should be always <code>null</code> if {@link #status} other then {@link Status#END} and
-    * {@link #lastBuildResult} other then 'SUCCESS'.
-    */
-   private String artifactUrl;
+    /**
+     * URL to download artifact. Should be always <code>null</code> if {@link #status} other then {@link Status#END} and
+     * {@link #lastBuildResult} other then 'SUCCESS'.
+     */
+    private String artifactUrl;
 
-   public JobStatus(String name, Status status, String lastBuildResult, String artifactUrl)
-   {
-      this.name = name;
-      this.status = status;
-      this.lastBuildResult = lastBuildResult;
-      this.artifactUrl = artifactUrl;
-   }
+    public JobStatus(String name, Status status, String lastBuildResult, String artifactUrl) {
+        this.name = name;
+        this.status = status;
+        this.lastBuildResult = lastBuildResult;
+        this.artifactUrl = artifactUrl;
+    }
 
-   public JobStatus()
-   {
-   }
+    public JobStatus() {
+    }
 
-   public String getName()
-   {
-      return name;
-   }
+    public String getName() {
+        return name;
+    }
 
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   public Status getStatus()
-   {
-      return status;
-   }
+    public Status getStatus() {
+        return status;
+    }
 
-   public void setStatus(Status status)
-   {
-      this.status = status;
-   }
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
-   public String getLastBuildResult()
-   {
-      return lastBuildResult;
-   }
+    public String getLastBuildResult() {
+        return lastBuildResult;
+    }
 
-   public void setLastBuildResult(String lastBuildResult)
-   {
-      this.lastBuildResult = lastBuildResult;
-   }
+    public void setLastBuildResult(String lastBuildResult) {
+        this.lastBuildResult = lastBuildResult;
+    }
 
-   public String getArtifactUrl()
-   {
-      return artifactUrl;
-   }
+    public String getArtifactUrl() {
+        return artifactUrl;
+    }
 
-   public void setArtifactUrl(String artifactUrl)
-   {
-      this.artifactUrl = artifactUrl;
-   }
+    public void setArtifactUrl(String artifactUrl) {
+        this.artifactUrl = artifactUrl;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "JobStatus [name=" + name + ", status=" + status + ", lastBuildResult=" + lastBuildResult
-         + ", artifactUrl=" + artifactUrl + "]";
-   }
+    @Override
+    public String toString() {
+        return "JobStatus [name=" + name + ", status=" + status + ", lastBuildResult=" + lastBuildResult
+               + ", artifactUrl=" + artifactUrl + "]";
+    }
 }

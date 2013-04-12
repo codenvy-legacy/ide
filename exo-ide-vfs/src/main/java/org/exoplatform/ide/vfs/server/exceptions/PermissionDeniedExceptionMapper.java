@@ -30,15 +30,11 @@ import javax.ws.rs.ext.Provider;
  * @version $Id: PermissionDeniedExceptionMapper.java 74306 2011-09-29 13:55:18Z andrew00x $
  */
 @Provider
-public class PermissionDeniedExceptionMapper implements ExceptionMapper<PermissionDeniedException>
-{
-   /**
-    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
-    */
-   @Override
-   public Response toResponse(PermissionDeniedException exception)
-   {
-      return Response.status(Response.Status.FORBIDDEN).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
-         .header("X-Exit-Code", Integer.toString(ExitCodes.NOT_PERMITTED)).build();
-   }
+public class PermissionDeniedExceptionMapper implements ExceptionMapper<PermissionDeniedException> {
+    /** @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable) */
+    @Override
+    public Response toResponse(PermissionDeniedException exception) {
+        return Response.status(Response.Status.FORBIDDEN).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
+                       .header("X-Exit-Code", Integer.toString(ExitCodes.NOT_PERMITTED)).build();
+    }
 }

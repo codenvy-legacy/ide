@@ -18,42 +18,34 @@
  */
 package org.exoplatform.ide.extension.appfog.server.rest;
 
+import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
-import javax.ws.rs.core.Application;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class AppfogServiceApplication extends Application
-{
-   private Set<Class<?>> classes;
-   private Set<Object> singletons;
+public class AppfogServiceApplication extends Application {
+    private Set<Class<?>> classes;
+    private Set<Object>   singletons;
 
-   public AppfogServiceApplication()
-   {
-      classes = new HashSet<Class<?>>(2);
-      classes.add(AppfogService.class);
-      singletons = new HashSet<Object>(1);
-      singletons.add(new AppfogExceptionMapper());
-   }
+    public AppfogServiceApplication() {
+        classes = new HashSet<Class<?>>(2);
+        classes.add(AppfogService.class);
+        singletons = new HashSet<Object>(1);
+        singletons.add(new AppfogExceptionMapper());
+    }
 
-   /**
-    * @see javax.ws.rs.core.Application#getClasses()
-    */
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      return classes;
-   }
+    /** @see javax.ws.rs.core.Application#getClasses() */
+    @Override
+    public Set<Class<?>> getClasses() {
+        return classes;
+    }
 
-   /**
-    * @see javax.ws.rs.core.Application#getSingletons()
-    */
-   @Override
-   public Set<Object> getSingletons()
-   {
-      return singletons;
-   }
+    /** @see javax.ws.rs.core.Application#getSingletons() */
+    @Override
+    public Set<Object> getSingletons() {
+        return singletons;
+    }
 }

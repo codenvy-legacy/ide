@@ -23,11 +23,9 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 26, 2012 5:56:12 PM anya $
- * 
  */
-public interface DeployResultHandler
-{
-   void onDeployFinished(boolean success);
+public interface DeployResultHandler {
+    void onDeployFinished(boolean success);
 
-   void onProjectCreated(ProjectModel project);
+    void onProjectCreated(ProjectModel project);
 }

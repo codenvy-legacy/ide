@@ -22,28 +22,24 @@ package org.exoplatform.ide.client.project.list;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ShowProjectsEvent extends GwtEvent<ShowProjectsHandler>
-{
+public class ShowProjectsEvent extends GwtEvent<ShowProjectsHandler> {
 
-   public static final GwtEvent.Type<ShowProjectsHandler> TYPE = new GwtEvent.Type<ShowProjectsHandler>();
+    public static final GwtEvent.Type<ShowProjectsHandler> TYPE = new GwtEvent.Type<ShowProjectsHandler>();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowProjectsHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowProjectsHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(ShowProjectsHandler handler)
-   {
-      handler.onShowProjects(this);
-   }
+    @Override
+    protected void dispatch(ShowProjectsHandler handler) {
+        handler.onShowProjects(this);
+    }
 
 }

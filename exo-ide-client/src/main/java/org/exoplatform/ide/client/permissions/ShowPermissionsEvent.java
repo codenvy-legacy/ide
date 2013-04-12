@@ -23,32 +23,24 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * This event fires by {@link ShowPermissionsControl}<br>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Oct 19, 2010 $
- * 
  */
-public class ShowPermissionsEvent extends GwtEvent<ShowPermissionsHandler>
-{
+public class ShowPermissionsEvent extends GwtEvent<ShowPermissionsHandler> {
 
-   public static final GwtEvent.Type<ShowPermissionsHandler> TYPE = new Type<ShowPermissionsHandler>();
+    public static final GwtEvent.Type<ShowPermissionsHandler> TYPE = new Type<ShowPermissionsHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowPermissionsHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowPermissionsHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ShowPermissionsHandler handler)
-   {
-      handler.onShowPermissions(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ShowPermissionsHandler handler) {
+        handler.onShowPermissions(this);
+    }
 
 }

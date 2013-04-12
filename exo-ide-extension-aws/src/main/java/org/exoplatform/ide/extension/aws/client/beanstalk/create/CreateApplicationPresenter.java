@@ -41,14 +41,7 @@ import org.exoplatform.ide.client.framework.job.JobManager;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
-import org.exoplatform.ide.client.framework.project.Language;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectType;
+import org.exoplatform.ide.client.framework.project.*;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -60,11 +53,7 @@ import org.exoplatform.ide.extension.aws.client.beanstalk.SolutionStackListUnmar
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentRequestStatusHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentStatusChecker;
 import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
-import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationRequest;
-import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest;
-import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
-import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.*;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
@@ -77,424 +66,350 @@ import java.util.List;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 17, 2012 11:54:00 AM anya $
- * 
  */
 public class CreateApplicationPresenter implements ProjectOpenedHandler, ProjectClosedHandler, VfsChangedHandler,
-   CreateApplicationHandler, ViewClosedHandler, ProjectBuiltHandler, ActiveProjectChangedHandler
-{
+                                                   CreateApplicationHandler, ViewClosedHandler, ProjectBuiltHandler,
+                                                   ActiveProjectChangedHandler {
 
-   interface Display extends IsView
-   {
-      // Create Application step
+    interface Display extends IsView {
+        // Create Application step
 
-      TextFieldItem getNameField();
+        TextFieldItem getNameField();
 
-      TextFieldItem getDescriptionField();
+        TextFieldItem getDescriptionField();
 
-      TextFieldItem getS3BucketField();
+        TextFieldItem getS3BucketField();
 
-      TextFieldItem getS3KeyField();
+        TextFieldItem getS3KeyField();
 
-      // Create Environment step
+        // Create Environment step
 
-      TextFieldItem getEnvNameField();
+        TextFieldItem getEnvNameField();
 
-      TextFieldItem getEnvDescriptionField();
+        TextFieldItem getEnvDescriptionField();
 
-      HasValue<String> getSolutionStackField();
+        HasValue<String> getSolutionStackField();
 
-      HasValue<Boolean> getLaunchEnvField();
+        HasValue<Boolean> getLaunchEnvField();
 
-      void setSolutionStackValues(String[] values);
+        void setSolutionStackValues(String[] values);
 
-      HasClickHandlers getNextButton();
+        HasClickHandlers getNextButton();
 
-      HasClickHandlers getBackButton();
+        HasClickHandlers getBackButton();
 
-      HasClickHandlers getFinishButton();
+        HasClickHandlers getFinishButton();
 
-      HasClickHandlers getCancelButton();
+        HasClickHandlers getCancelButton();
 
-      void enableCreateEnvironmentStep(boolean enabled);
+        void enableCreateEnvironmentStep(boolean enabled);
 
-      void focusInApplicationNameField();
+        void focusInApplicationNameField();
 
-      void showCreateApplicationStep();
+        void showCreateApplicationStep();
 
-      void showCreateEnvironmentStep();
-   }
+        void showCreateEnvironmentStep();
+    }
 
-   private Display display;
+    private Display display;
 
-   private ProjectModel openedProject;
+    private ProjectModel openedProject;
 
-   private VirtualFileSystemInfo vfsInfo;
+    private VirtualFileSystemInfo vfsInfo;
 
-   private String warUrl = null;
+    private String warUrl = null;
 
-   private boolean launchEnvironment;
+    private boolean launchEnvironment;
 
-   /**
-    * Time of last received event.
-    */
-   protected long lastReceivedEventTime;
+    /** Time of last received event. */
+    protected long lastReceivedEventTime;
 
-   public CreateApplicationPresenter()
-   {
-      IDE.getInstance().addControl(new CreateApplicationControl());
+    public CreateApplicationPresenter() {
+        IDE.getInstance().addControl(new CreateApplicationControl());
 
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(CreateApplicationEvent.TYPE, this);
-      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
-   }
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(CreateApplicationEvent.TYPE, this);
+        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
+    }
 
-   public void bindDisplay()
-   {
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
+    public void bindDisplay() {
+        display.getCancelButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-
-      display.getNextButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            String appName = display.getNameField().getValue();
-            if (appName == null || appName.length() == 0)
-            {
-               Dialogs.getInstance().showError(AWSExtension.LOCALIZATION_CONSTANT.validationErrorTitile(),
-                  AWSExtension.LOCALIZATION_CONSTANT.validationErrorSpecifyAppName());
-               return;
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
             }
+        });
 
-            display.showCreateEnvironmentStep();
-         }
-      });
+        display.getNextButton().addClickHandler(new ClickHandler() {
 
-      display.getBackButton().addClickHandler(new ClickHandler()
-      {
+            @Override
+            public void onClick(ClickEvent event) {
+                String appName = display.getNameField().getValue();
+                if (appName == null || appName.length() == 0) {
+                    Dialogs.getInstance().showError(AWSExtension.LOCALIZATION_CONSTANT.validationErrorTitile(),
+                                                    AWSExtension.LOCALIZATION_CONSTANT.validationErrorSpecifyAppName());
+                    return;
+                }
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            display.showCreateApplicationStep();
-         }
-      });
-
-      display.getFinishButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            if (display.getLaunchEnvField().getValue())
-            {
-               String envName = display.getEnvNameField().getValue();
-               if (envName == null || envName.length() < 4 || envName.length() > 23)
-               {
-                  Dialogs.getInstance().showError(AWSExtension.LOCALIZATION_CONSTANT.validationErrorTitile(),
-                     AWSExtension.LOCALIZATION_CONSTANT.validationErrorEnvNameLength());
-                  return;
-               }
-               else if (envName.startsWith("-") || envName.endsWith("-"))
-               {
-                  Dialogs.getInstance().showError(AWSExtension.LOCALIZATION_CONSTANT.validationErrorTitile(),
-                     AWSExtension.LOCALIZATION_CONSTANT.validationErrorEnvNameHyphen());
-                  return;
-               }
+                display.showCreateEnvironmentStep();
             }
+        });
 
-            warUrl = null;
-            launchEnvironment = display.getLaunchEnvField().getValue();
-            beforeCreation();
-         }
-      });
+        display.getBackButton().addClickHandler(new ClickHandler() {
 
-      display.getLaunchEnvField().addValueChangeHandler(new ValueChangeHandler<Boolean>()
-      {
+            @Override
+            public void onClick(ClickEvent event) {
+                display.showCreateApplicationStep();
+            }
+        });
 
-         @Override
-         public void onValueChange(ValueChangeEvent<Boolean> event)
-         {
-            display.enableCreateEnvironmentStep(event.getValue());
-         }
-      });
-   }
+        display.getFinishButton().addClickHandler(new ClickHandler() {
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationHandler#onCreateApplication(org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationEvent)
-    */
-   @Override
-   public void onCreateApplication(CreateApplicationEvent event)
-   {
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         IDE.getInstance().openView(display.asView());
-         bindDisplay();
-      }
-      display.showCreateApplicationStep();
-      display.focusInApplicationNameField();
-      display.getLaunchEnvField().setValue(true);
+            @Override
+            public void onClick(ClickEvent event) {
+                if (display.getLaunchEnvField().getValue()) {
+                    String envName = display.getEnvNameField().getValue();
+                    if (envName == null || envName.length() < 4 || envName.length() > 23) {
+                        Dialogs.getInstance().showError(AWSExtension.LOCALIZATION_CONSTANT.validationErrorTitile(),
+                                                        AWSExtension.LOCALIZATION_CONSTANT.validationErrorEnvNameLength());
+                        return;
+                    } else if (envName.startsWith("-") || envName.endsWith("-")) {
+                        Dialogs.getInstance().showError(AWSExtension.LOCALIZATION_CONSTANT.validationErrorTitile(),
+                                                        AWSExtension.LOCALIZATION_CONSTANT.validationErrorEnvNameHyphen());
+                        return;
+                    }
+                }
 
-      getSolutionStacks();
-   }
+                warUrl = null;
+                launchEnvironment = display.getLaunchEnvField().getValue();
+                beforeCreation();
+            }
+        });
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      this.vfsInfo = event.getVfsInfo();
-   }
+        display.getLaunchEnvField().addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      this.openedProject = null;
-   }
+            @Override
+            public void onValueChange(ValueChangeEvent<Boolean> event) {
+                display.enableCreateEnvironmentStep(event.getValue());
+            }
+        });
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      this.openedProject = event.getProject();
-   }
-   
-   
-   @Override
-   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-   {
-      this.openedProject = event.getProject();
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationHandler#onCreateApplication(org.exoplatform.ide
+     * .extension.aws.client.beanstalk.create.CreateApplicationEvent) */
+    @Override
+    public void onCreateApplication(CreateApplicationEvent event) {
+        if (display == null) {
+            display = GWT.create(Display.class);
+            IDE.getInstance().openView(display.asView());
+            bindDisplay();
+        }
+        display.showCreateApplicationStep();
+        display.focusInApplicationNameField();
+        display.getLaunchEnvField().setValue(true);
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+        getSolutionStacks();
+    }
 
-   private void beforeCreation()
-   {
-      ProjectType projectType = ProjectType.fromValue(openedProject.getProjectType());
-      if (ProjectResolver.getProjectTypesByLanguage(Language.JAVA).contains(projectType))
-      {
-         IDE.addHandler(ProjectBuiltEvent.TYPE, this);
-         JobManager.get().showJobSeparated();
-         IDE.fireEvent(new BuildProjectEvent(openedProject));
-      }
-      else
-      {
-         createApplication();
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     * .application.event.VfsChangedEvent) */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        this.vfsInfo = event.getVfsInfo();
+    }
 
-   public void createApplication()
-   {
-      final String applicationName = display.getNameField().getValue();
-      CreateApplicationRequest createApplicationRequest =
-         AWSExtension.AUTO_BEAN_FACTORY.createApplicationRequest().as();
-      createApplicationRequest.setApplicationName(applicationName);
-      createApplicationRequest.setDescription(display.getDescriptionField().getValue());
-      createApplicationRequest.setS3Bucket(display.getS3BucketField().getValue());
-      createApplicationRequest.setS3Key(display.getS3KeyField().getValue());
-      createApplicationRequest.setWar(warUrl);
+    /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+     * .project.ProjectClosedEvent) */
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        this.openedProject = null;
+    }
 
-      AutoBean<ApplicationInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.applicationInfo();
+    /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
+     * .project.ProjectOpenedEvent) */
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        this.openedProject = event.getProject();
+    }
 
-      try
-      {
-         BeanstalkClientService.getInstance().createApplication(
-            vfsInfo.getId(),
-            openedProject.getId(),
-            createApplicationRequest,
-            new AwsAsyncRequestCallback<ApplicationInfo>(new AutoBeanUnmarshaller<ApplicationInfo>(autoBean),
-               new LoggedInHandler()
-               {
-                  @Override
-                  public void onLoggedIn()
-                  {
-                     createApplication();
-                  }
-               })
-            {
 
-               @Override
-               protected void onSuccess(ApplicationInfo result)
-               {
-                  IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT.createApplicationSuccess(result
-                     .getName()), Type.INFO));
-                  if (launchEnvironment)
-                  {
-                     createEnvironment(result.getName());
-                  }
-                  else
-                  {
-                     IDE.getInstance().closeView(display.asView().getId());
-                  }
-                  IDE.fireEvent(new RefreshBrowserEvent(openedProject));
-               }
+    @Override
+    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
+        this.openedProject = event.getProject();
+    }
 
-               @Override
-               protected void processFail(Throwable exception)
-               {
-                  String message = AWSExtension.LOCALIZATION_CONSTANT.createApplicationFailed(applicationName);
-                  if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null)
-                  {
-                     message += "<br>" + ((ServerException)exception).getMessage();
-                  }
-                  Dialogs.getInstance().showError(message);
-                  IDE.fireEvent(new OutputEvent(message, Type.ERROR));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
-   private void getSolutionStacks()
-   {
-      try
-      {
-         BeanstalkClientService.getInstance().getAvailableSolutionStacks(
-            new AwsAsyncRequestCallback<List<SolutionStack>>(new SolutionStackListUnmarshaller(), new LoggedInHandler()
-            {
-               @Override
-               public void onLoggedIn()
-               {
-                  getSolutionStacks();
-               }
-            })
-            {
-               @Override
-               protected void onSuccess(List<SolutionStack> result)
-               {
-                  List<String> values = new ArrayList<String>();
-                  for (SolutionStack solutionStack : result)
-                  {
-                     //For detail see https://jira.exoplatform.org/browse/IDE-1951
-                     if (solutionStack.getPermittedFileTypes().contains("war"))
-                        values.add(solutionStack.getName());
-                  }
-                  display.setSolutionStackValues(values.toArray(new String[values.size()]));
-               }
+    private void beforeCreation() {
+        ProjectType projectType = ProjectType.fromValue(openedProject.getProjectType());
+        if (ProjectResolver.getProjectTypesByLanguage(Language.JAVA).contains(projectType)) {
+            IDE.addHandler(ProjectBuiltEvent.TYPE, this);
+            JobManager.get().showJobSeparated();
+            IDE.fireEvent(new BuildProjectEvent(openedProject));
+        } else {
+            createApplication();
+        }
+    }
 
-               @Override
-               protected void processFail(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+    public void createApplication() {
+        final String applicationName = display.getNameField().getValue();
+        CreateApplicationRequest createApplicationRequest =
+                AWSExtension.AUTO_BEAN_FACTORY.createApplicationRequest().as();
+        createApplicationRequest.setApplicationName(applicationName);
+        createApplicationRequest.setDescription(display.getDescriptionField().getValue());
+        createApplicationRequest.setS3Bucket(display.getS3BucketField().getValue());
+        createApplicationRequest.setS3Key(display.getS3KeyField().getValue());
+        createApplicationRequest.setWar(warUrl);
 
-   public void createEnvironment(final String applicationName)
-   {
-      final String environmentName = display.getEnvNameField().getValue();
-      CreateEnvironmentRequest createEnvironmentRequest =
-         AWSExtension.AUTO_BEAN_FACTORY.createEnvironmentRequest().as();
-      createEnvironmentRequest.setApplicationName(applicationName);
-      createEnvironmentRequest.setDescription(display.getEnvDescriptionField().getValue());
-      createEnvironmentRequest.setEnvironmentName(environmentName);
-      createEnvironmentRequest.setVersionLabel(AWSExtension.INIT_VER_LABEL);
-      createEnvironmentRequest.setSolutionStackName(display.getSolutionStackField().getValue());
+        AutoBean<ApplicationInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.applicationInfo();
 
-      AutoBean<EnvironmentInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.environmentInfo();
-      try
-      {
-         BeanstalkClientService.getInstance().createEnvironment(
-            vfsInfo.getId(),
-            openedProject.getId(),
-            createEnvironmentRequest,
-            new AwsAsyncRequestCallback<EnvironmentInfo>(new AutoBeanUnmarshaller<EnvironmentInfo>(autoBean),
-               new LoggedInHandler()
-               {
-                  @Override
-                  public void onLoggedIn()
-                  {
-                     createEnvironment(applicationName);
-                  }
-               })
-            {
+        try {
+            BeanstalkClientService.getInstance().createApplication(
+                    vfsInfo.getId(),
+                    openedProject.getId(),
+                    createApplicationRequest,
+                    new AwsAsyncRequestCallback<ApplicationInfo>(new AutoBeanUnmarshaller<ApplicationInfo>(autoBean),
+                                                                 new LoggedInHandler() {
+                                                                     @Override
+                                                                     public void onLoggedIn() {
+                                                                         createApplication();
+                                                                     }
+                                                                 }, null) {
 
-               @Override
-               protected void processFail(Throwable exception)
-               {
-                  String message = AWSExtension.LOCALIZATION_CONSTANT.launchEnvironmentFailed(environmentName);
-                  if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null)
-                  {
-                     message += "<br>" + ((ServerException)exception).getMessage();
-                  }
-                  IDE.fireEvent(new OutputEvent(message, Type.ERROR));
-               }
+                        @Override
+                        protected void onSuccess(ApplicationInfo result) {
+                            IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT.createApplicationSuccess(result
+                                                                                                                              .getName()),
+                                                          Type.INFO));
+                            if (launchEnvironment) {
+                                createEnvironment(result.getName());
+                            } else {
+                                IDE.getInstance().closeView(display.asView().getId());
+                            }
+                            IDE.fireEvent(new RefreshBrowserEvent(openedProject));
+                        }
 
-               @Override
-               protected void onSuccess(EnvironmentInfo result)
-               {
-                  if (display != null)
-                  {
-                     IDE.getInstance().closeView(display.asView().getId());
-                  }
-                  IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT
-                     .launchEnvironmentLaunching(environmentName), Type.INFO));
+                        @Override
+                        protected void processFail(Throwable exception) {
+                            String message = AWSExtension.LOCALIZATION_CONSTANT.createApplicationFailed(applicationName);
+                            if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null) {
+                                message += "<br>" + ((ServerException)exception).getMessage();
+                            }
+                            Dialogs.getInstance().showError(message);
+                            IDE.fireEvent(new OutputEvent(message, Type.ERROR));
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-                  RequestStatusHandler environmentStatusHandler =
-                     new EnvironmentRequestStatusHandler(AWSExtension.LOCALIZATION_CONSTANT
-                        .launchEnvironmentLaunching(result.getName()), AWSExtension.LOCALIZATION_CONSTANT
-                        .launchEnvironmentSuccess(result.getName()));
+    private void getSolutionStacks() {
+        try {
+            BeanstalkClientService.getInstance().getAvailableSolutionStacks(
+                    new AwsAsyncRequestCallback<List<SolutionStack>>(new SolutionStackListUnmarshaller(), new LoggedInHandler() {
+                        @Override
+                        public void onLoggedIn() {
+                            getSolutionStacks();
+                        }
+                    }, null) {
+                        @Override
+                        protected void onSuccess(List<SolutionStack> result) {
+                            List<String> values = new ArrayList<String>();
+                            for (SolutionStack solutionStack : result) {
+                                //For detail see https://jira.exoplatform.org/browse/IDE-1951
+                                if (solutionStack.getPermittedFileTypes().contains("war"))
+                                    values.add(solutionStack.getName());
+                            }
+                            display.setSolutionStackValues(values.toArray(new String[values.size()]));
+                        }
 
-                  new EnvironmentStatusChecker(vfsInfo, openedProject, result, true, environmentStatusHandler)
-                     .startChecking();
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                        @Override
+                        protected void processFail(Throwable exception) {
+                            IDE.fireEvent(new ExceptionThrownEvent(exception));
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler#onProjectBuilt(org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent)
-    */
-   @Override
-   public void onProjectBuilt(ProjectBuiltEvent event)
-   {
-      IDE.removeHandler(event.getAssociatedType(), this);
-      if (event.getBuildStatus().getDownloadUrl() != null)
-      {
-         warUrl = event.getBuildStatus().getDownloadUrl();
-         createApplication();
-      }
-   }
+    public void createEnvironment(final String applicationName) {
+        final String environmentName = display.getEnvNameField().getValue();
+        CreateEnvironmentRequest createEnvironmentRequest =
+                AWSExtension.AUTO_BEAN_FACTORY.createEnvironmentRequest().as();
+        createEnvironmentRequest.setApplicationName(applicationName);
+        createEnvironmentRequest.setDescription(display.getEnvDescriptionField().getValue());
+        createEnvironmentRequest.setEnvironmentName(environmentName);
+        createEnvironmentRequest.setVersionLabel(AWSExtension.INIT_VER_LABEL);
+        createEnvironmentRequest.setSolutionStackName(display.getSolutionStackField().getValue());
+
+        AutoBean<EnvironmentInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.environmentInfo();
+        try {
+            BeanstalkClientService.getInstance().createEnvironment(
+                    vfsInfo.getId(),
+                    openedProject.getId(),
+                    createEnvironmentRequest,
+                    new AwsAsyncRequestCallback<EnvironmentInfo>(new AutoBeanUnmarshaller<EnvironmentInfo>(autoBean),
+                                                                 new LoggedInHandler() {
+                                                                     @Override
+                                                                     public void onLoggedIn() {
+                                                                         createEnvironment(applicationName);
+                                                                     }
+                                                                 }, null) {
+
+                        @Override
+                        protected void processFail(Throwable exception) {
+                            String message = AWSExtension.LOCALIZATION_CONSTANT.launchEnvironmentFailed(environmentName);
+                            if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null) {
+                                message += "<br>" + ((ServerException)exception).getMessage();
+                            }
+                            IDE.fireEvent(new OutputEvent(message, Type.ERROR));
+                        }
+
+                        @Override
+                        protected void onSuccess(EnvironmentInfo result) {
+                            if (display != null) {
+                                IDE.getInstance().closeView(display.asView().getId());
+                            }
+                            IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT
+                                                                      .launchEnvironmentLaunching(environmentName), Type.INFO));
+
+                            RequestStatusHandler environmentStatusHandler =
+                                    new EnvironmentRequestStatusHandler(AWSExtension.LOCALIZATION_CONSTANT
+                                                                                    .launchEnvironmentLaunching(result.getName()),
+                                                                        AWSExtension.LOCALIZATION_CONSTANT
+                                                                                    .launchEnvironmentSuccess(result.getName()));
+
+                            new EnvironmentStatusChecker(vfsInfo, openedProject, result, true, environmentStatusHandler)
+                                    .startChecking();
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /** @see org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler#onProjectBuilt(org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent) */
+    @Override
+    public void onProjectBuilt(ProjectBuiltEvent event) {
+        IDE.removeHandler(event.getAssociatedType(), this);
+        if (event.getBuildStatus().getDownloadUrl() != null) {
+            warUrl = event.getBuildStatus().getDownloadUrl();
+            createApplication();
+        }
+    }
 
 }

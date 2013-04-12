@@ -16,29 +16,33 @@ import com.codenvy.eclipse.jdt.internal.compiler.lookup.Scope;
 
 public class CompletionNodeFound extends RuntimeException {
 
-	public ASTNode astNode;
-	public Binding qualifiedBinding;
-	public Scope scope;
-	public boolean insideTypeAnnotation = false;
+    public ASTNode astNode;
+    public Binding qualifiedBinding;
+    public Scope   scope;
+    public boolean insideTypeAnnotation = false;
 
-	private static final long serialVersionUID = 6981437684184091462L; // backward compatible
+    private static final long serialVersionUID = 6981437684184091462L; // backward compatible
 
-public CompletionNodeFound() {
-	this(null, null, null, false); // we found a problem in the completion node
-}
-public CompletionNodeFound(ASTNode astNode, Binding qualifiedBinding, Scope scope) {
-	this(astNode, qualifiedBinding, scope, false);
-}
-public CompletionNodeFound(ASTNode astNode, Binding qualifiedBinding, Scope scope, boolean insideTypeAnnotation) {
-	this.astNode = astNode;
-	this.qualifiedBinding = qualifiedBinding;
-	this.scope = scope;
-	this.insideTypeAnnotation = insideTypeAnnotation;
-}
-public CompletionNodeFound(ASTNode astNode, Scope scope) {
-	this(astNode, null, scope, false);
-}
-public CompletionNodeFound(ASTNode astNode, Scope scope, boolean insideTypeAnnotation) {
-	this(astNode, null, scope, insideTypeAnnotation);
-}
+    public CompletionNodeFound() {
+        this(null, null, null, false); // we found a problem in the completion node
+    }
+
+    public CompletionNodeFound(ASTNode astNode, Binding qualifiedBinding, Scope scope) {
+        this(astNode, qualifiedBinding, scope, false);
+    }
+
+    public CompletionNodeFound(ASTNode astNode, Binding qualifiedBinding, Scope scope, boolean insideTypeAnnotation) {
+        this.astNode = astNode;
+        this.qualifiedBinding = qualifiedBinding;
+        this.scope = scope;
+        this.insideTypeAnnotation = insideTypeAnnotation;
+    }
+
+    public CompletionNodeFound(ASTNode astNode, Scope scope) {
+        this(astNode, null, scope, false);
+    }
+
+    public CompletionNodeFound(ASTNode astNode, Scope scope, boolean insideTypeAnnotation) {
+        this(astNode, null, scope, insideTypeAnnotation);
+    }
 }

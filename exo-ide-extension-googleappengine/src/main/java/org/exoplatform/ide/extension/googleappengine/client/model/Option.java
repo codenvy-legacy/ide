@@ -21,8 +21,7 @@ package org.exoplatform.ide.extension.googleappengine.client.model;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 23, 2012 5:18:21 PM anya $
- * 
  */
 public enum Option {
-   DYNAMIC, FAIL_FAST, PUBLIC;
+    DYNAMIC, FAIL_FAST, PUBLIC;
 }

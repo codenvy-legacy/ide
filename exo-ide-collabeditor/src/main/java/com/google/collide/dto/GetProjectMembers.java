@@ -17,11 +17,8 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Request the list of project members and pending project members.
- * 
- */
+/** Request the list of project members and pending project members. */
 @RoutingType(type = RoutingTypes.GETPROJECTMEMBERS)
 public interface GetProjectMembers extends ClientToServerDto {
-  String getProjectId();
+    String getProjectId();
 }

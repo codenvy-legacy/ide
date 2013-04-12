@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link EditorDeleteTextEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 4, 2012 9:55:39 AM anya $
- * 
  */
-public interface EditorDeleteTextHandler extends EventHandler
-{
-   /**
-    * Perform deleting selected text in editor.
-    * 
-    * @param event
-    */
-   void onEditorDeleteText(EditorDeleteTextEvent event);
+public interface EditorDeleteTextHandler extends EventHandler {
+    /**
+     * Perform deleting selected text in editor.
+     *
+     * @param event
+     */
+    void onEditorDeleteText(EditorDeleteTextEvent event);
 }

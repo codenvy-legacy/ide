@@ -22,47 +22,40 @@ import com.google.gwt.http.client.Header;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class MockHeader extends Header
-{
+public class MockHeader extends Header {
 
-   private String name;
+    private String name;
 
-   private String value;
+    private String value;
 
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   public void setValue(String value)
-   {
-      this.value = value;
-   }
+    public void setValue(String value) {
+        this.value = value;
+    }
 
-   public MockHeader()
-   {
-   }
+    public MockHeader() {
+    }
 
-   public MockHeader(String name, String value)
-   {
-      this.name = name;
-      this.value = value;
-   }
+    public MockHeader(String name, String value) {
+        this.name = name;
+        this.value = value;
+    }
 
-   @Override
-   public String getName()
-   {
-      return name;
-   }
+    @Override
+    public String getName() {
+        return name;
+    }
 
-   @Override
-   public String getValue()
-   {
-      return value;
-   }
+    @Override
+    public String getValue() {
+        return value;
+    }
 
 }

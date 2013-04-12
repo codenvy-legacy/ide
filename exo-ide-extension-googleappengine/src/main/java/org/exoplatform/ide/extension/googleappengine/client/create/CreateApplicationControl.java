@@ -30,60 +30,52 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExten
 
 /**
  * Control for creating new application on Google App Engine.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 21, 2012 2:11:53 PM anya $
- * 
  */
 public class CreateApplicationControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-   ProjectClosedHandler
+                                                                       ProjectClosedHandler
 //   , ActiveProjectChangedHandler
 {
-   private static final String ID = "PaaS/Google App Engine/Create";
+    private static final String ID = "PaaS/Google App Engine/Create";
 
-   private static final String TITLE = GoogleAppEngineExtension.GAE_LOCALIZATION.createApplicationControlTitle();
+    private static final String TITLE = GoogleAppEngineExtension.GAE_LOCALIZATION.createApplicationControlTitle();
 
-   private static final String PROMPT = GoogleAppEngineExtension.GAE_LOCALIZATION.createApplicationControlPrompt();
+    private static final String PROMPT = GoogleAppEngineExtension.GAE_LOCALIZATION.createApplicationControlPrompt();
 
-   public CreateApplicationControl()
-   {
-      super(ID);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+    public CreateApplicationControl() {
+        super(ID);
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
 //      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(GAEClientBundle.INSTANCE.createApplicationConrtol(),
-         GAEClientBundle.INSTANCE.createApplicationConrtolDisabled());
-      setEvent(new CreateApplicationEvent());
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(GAEClientBundle.INSTANCE.createApplicationConrtol(),
+                  GAEClientBundle.INSTANCE.createApplicationConrtolDisabled());
+        setEvent(new CreateApplicationEvent());
 
-   }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(false);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(true);
+        setEnabled(false);
+    }
 
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      setEnabled(false);
-   }
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        setEnabled(false);
+    }
 
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      if (event.getProject() != null && GoogleAppEngineExtension.isAppEngineProject(event.getProject()))
-      {
-         setEnabled(true);
-      }
-   }
-   
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        if (event.getProject() != null && GoogleAppEngineExtension.isAppEngineProject(event.getProject())) {
+            setEnabled(true);
+        }
+    }
+
 //   @Override
 //   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
 //   {

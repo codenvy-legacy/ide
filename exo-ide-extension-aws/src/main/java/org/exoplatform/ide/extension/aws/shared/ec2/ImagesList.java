@@ -26,85 +26,79 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface ImagesList
-{
-   /**
-    * Get list of AMIs.
-    *
-    * @return
-    *    list of AMIs
-    */
-   List<ImageInfo> getImages();
+public interface ImagesList {
+    /**
+     * Get list of AMIs.
+     *
+     * @return list of AMIs
+     */
+    List<ImageInfo> getImages();
 
-   /**
-    * Set list of AMIs.
-    *
-    * @param images
-    *    list of AMIs
-    */
-   void setImages(List<ImageInfo> images);
+    /**
+     * Set list of AMIs.
+     *
+     * @param images
+     *         list of AMIs
+     */
+    void setImages(List<ImageInfo> images);
 
-   /**
-    * Get count of described AMIs.
-    *
-    * @return
-    *    total count of AMIs
-    */
-   int getTotal();
+    /**
+     * Get count of described AMIs.
+     *
+     * @return total count of AMIs
+     */
+    int getTotal();
 
-   /**
-    * Set count of described AMIs.
-    *
-    * @param total
-    *    total count of described AMIs
-    */
-   void setTotal(int total);
+    /**
+     * Set count of described AMIs.
+     *
+     * @param total
+     *         total count of described AMIs
+     */
+    void setTotal(int total);
 
-   /**
-    * Get true if there are more images available to show in result set if max items less then all images count.
-    *
-    * @return
-    *    true if there are more images available to show if max items less then all images count otherwise false
-    */
-   boolean isHasMore();
+    /**
+     * Get true if there are more images available to show in result set if max items less then all images count.
+     *
+     * @return true if there are more images available to show if max items less then all images count otherwise false
+     */
+    boolean isHasMore();
 
-   /**
-    * Set true if there are more images available to show in result set if max items less then all images count.
-    *
-    * @param hasMore
-    *    true if there are more images available to show if max items less then all images count otherwise false
-    */
-   void setHasMore(boolean hasMore);
+    /**
+     * Set true if there are more images available to show in result set if max items less then all images count.
+     *
+     * @param hasMore
+     *         true if there are more images available to show if max items less then all images count otherwise false
+     */
+    void setHasMore(boolean hasMore);
 
-   /**
-    * Get value from which should skipped images while viewing result set
-    *
-    * @return
-    *    skip count
-    */
-   int getNextSkip();
+    /**
+     * Get value from which should skipped images while viewing result set
+     *
+     * @return skip count
+     */
+    int getNextSkip();
 
-   /**
-    * Set value from which should skipped images while viewing result set
-    *
-    * @param skip
-    *    skip count
-    */
-   void setNextSkip(int skip);
+    /**
+     * Set value from which should skipped images while viewing result set
+     *
+     * @param skip
+     *         skip count
+     */
+    void setNextSkip(int skip);
 
-   /**
-    * Get items count which will be included in result set.
-    *
-    * @return
-    *    items count which will be included in result set
-    */
-   int getMaxItems();
+    /**
+     * Get items count which will be included in result set.
+     *
+     * @return items count which will be included in result set
+     */
+    int getMaxItems();
 
-   /**
-    * Set items count which will be included in result set.
-    *
-    * @param maxItems
-    *    items count which will be included in result set, if maxItems -1 then include all available images
-    */
-   void setMaxItems(int maxItems);
+    /**
+     * Set items count which will be included in result set.
+     *
+     * @param maxItems
+     *         items count which will be included in result set, if maxItems -1 then include all available images
+     */
+    void setMaxItems(int maxItems);
 }

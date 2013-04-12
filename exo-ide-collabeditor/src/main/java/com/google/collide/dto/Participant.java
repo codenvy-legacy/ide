@@ -16,8 +16,8 @@ package com.google.collide.dto;
 
 /**
  * Represents a participant in a Workspace session.
- * 
- * <p>
+ * <p/>
+ * <p/>
  * The participant does not include any private information about the user, just
  * the user's ID. Each client must request the participants UserInfo separately
  * so the frontend can customize the results based on the participants privacy
@@ -26,13 +26,9 @@ package com.google.collide.dto;
 // TODO: Rename to ParticipantInfo to be consistent with WorkspaceInfo/ProjectInfo.
 public interface Participant {
 
-  /**
-   * Returns a unique ID for the user.
-   */
-  String getUserId();
+    /** Returns a unique ID for the user. */
+    String getUserId();
 
-  /**
-   * @return the active client ID for this participant
-   */
-  String getId();
+    /** @return the active client ID for this participant */
+    String getId();
 }

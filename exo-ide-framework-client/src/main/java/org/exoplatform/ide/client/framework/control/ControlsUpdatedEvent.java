@@ -18,46 +18,41 @@
  */
 package org.exoplatform.ide.client.framework.control;
 
-import java.util.List;
+import com.google.gwt.event.shared.GwtEvent;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 
-import com.google.gwt.event.shared.GwtEvent;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
 
-public class ControlsUpdatedEvent extends GwtEvent<ControlsUpdatedHandler>
-{
+public class ControlsUpdatedEvent extends GwtEvent<ControlsUpdatedHandler> {
 
-   public static final GwtEvent.Type<ControlsUpdatedHandler> TYPE = new GwtEvent.Type<ControlsUpdatedHandler>();
+    public static final GwtEvent.Type<ControlsUpdatedHandler> TYPE = new GwtEvent.Type<ControlsUpdatedHandler>();
 
-   private List<Control> controls;
+    private List<Control> controls;
 
-   public ControlsUpdatedEvent(List<Control> controls)
-   {
-      this.controls = controls;
-   }
+    public ControlsUpdatedEvent(List<Control> controls) {
+        this.controls = controls;
+    }
 
-   public List<Control> getControls()
-   {
-      return controls;
-   }
+    public List<Control> getControls() {
+        return controls;
+    }
 
-   @Override
-   protected void dispatch(ControlsUpdatedHandler handler)
-   {
-      handler.onControlsUpdated(this);
-   }
+    @Override
+    protected void dispatch(ControlsUpdatedHandler handler) {
+        handler.onControlsUpdated(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ControlsUpdatedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ControlsUpdatedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

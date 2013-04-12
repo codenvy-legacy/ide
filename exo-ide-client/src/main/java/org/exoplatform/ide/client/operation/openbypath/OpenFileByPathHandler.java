@@ -22,14 +22,13 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmitry Nochevnov</a>
  * @version $
  */
 
-public interface OpenFileByPathHandler extends EventHandler
-{
+public interface OpenFileByPathHandler extends EventHandler {
 
-   void onOpenFileByPath(OpenFileByPathEvent event);
+    void onOpenFileByPath(OpenFileByPathEvent event);
 
 }

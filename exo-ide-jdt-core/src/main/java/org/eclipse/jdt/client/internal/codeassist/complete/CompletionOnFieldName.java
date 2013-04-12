@@ -14,37 +14,32 @@ import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.ast.FieldDeclaration;
 import org.eclipse.jdt.client.internal.compiler.lookup.MethodScope;
 
-public class CompletionOnFieldName extends FieldDeclaration
-{
-   private static final char[] FAKENAMESUFFIX = " ".toCharArray(); //$NON-NLS-1$
+public class CompletionOnFieldName extends FieldDeclaration {
+    private static final char[] FAKENAMESUFFIX = " ".toCharArray(); //$NON-NLS-1$
 
-   public char[] realName;
+    public char[] realName;
 
-   public CompletionOnFieldName(char[] name, int sourceStart, int sourceEnd)
-   {
-      super(CharOperation.concat(name, FAKENAMESUFFIX), sourceStart, sourceEnd);
-      this.realName = name;
-   }
+    public CompletionOnFieldName(char[] name, int sourceStart, int sourceEnd) {
+        super(CharOperation.concat(name, FAKENAMESUFFIX), sourceStart, sourceEnd);
+        this.realName = name;
+    }
 
-   public StringBuffer printStatement(int tab, StringBuffer output)
-   {
+    public StringBuffer printStatement(int tab, StringBuffer output) {
 
-      printIndent(tab, output).append("<CompleteOnFieldName:"); //$NON-NLS-1$
-      if (this.type != null)
-         this.type.print(0, output).append(' ');
-      output.append(this.realName);
-      if (this.initialization != null)
-      {
-         output.append(" = "); //$NON-NLS-1$
-         this.initialization.printExpression(0, output);
-      }
-      return output.append(">;"); //$NON-NLS-1$
-   }
+        printIndent(tab, output).append("<CompleteOnFieldName:"); //$NON-NLS-1$
+        if (this.type != null)
+            this.type.print(0, output).append(' ');
+        output.append(this.realName);
+        if (this.initialization != null) {
+            output.append(" = "); //$NON-NLS-1$
+            this.initialization.printExpression(0, output);
+        }
+        return output.append(">;"); //$NON-NLS-1$
+    }
 
-   public void resolve(MethodScope initializationScope)
-   {
-      super.resolve(initializationScope);
+    public void resolve(MethodScope initializationScope) {
+        super.resolve(initializationScope);
 
-      throw new CompletionNodeFound(this, initializationScope);
-   }
+        throw new CompletionNodeFound(this, initializationScope);
+    }
 }

@@ -19,10 +19,9 @@
 package org.exoplatform.ide.codeassistant.asm.test;
 
 /**
-*/
-public interface I
-{
-   
-   String getName();
+ */
+public interface I {
+
+    String getName();
 
 }

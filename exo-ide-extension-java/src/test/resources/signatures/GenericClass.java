@@ -17,12 +17,11 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 package test;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  11:22:51 AM Mar 13, 2012 evgen $
- *
  */
-public class GenericClass<E>
-{
+public class GenericClass<E> {
 
 }

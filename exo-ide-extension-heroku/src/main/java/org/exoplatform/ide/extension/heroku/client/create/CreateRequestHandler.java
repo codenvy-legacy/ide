@@ -27,38 +27,29 @@ import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 
 /**
  * Handler for Heroku application request.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 12, 2011 12:45:04 PM anya $
- * 
  */
-public class CreateRequestHandler extends RequestStatusHandlerBase
-{
-   public CreateRequestHandler()
-   {
-      super(null);
-   }
+public class CreateRequestHandler extends RequestStatusHandlerBase {
+    public CreateRequestHandler() {
+        super(null);
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestInProgress(java.lang.String)
-    */
-   @Override
-   public void requestInProgress(String id)
-   {
-      Job job = new Job(id, JobStatus.STARTED);
-      job.setStartMessage(HerokuExtension.LOCALIZATION_CONSTANT.creatingApplication());
-      IDE.fireEvent(new JobChangeEvent(job));
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestInProgress(java.lang.String) */
+    @Override
+    public void requestInProgress(String id) {
+        Job job = new Job(id, JobStatus.STARTED);
+        job.setStartMessage(HerokuExtension.LOCALIZATION_CONSTANT.creatingApplication());
+        IDE.fireEvent(new JobChangeEvent(job));
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestFinished(java.lang.String)
-    */
-   @Override
-   public void requestFinished(String id)
-   {
-      Job job = new Job(id, JobStatus.FINISHED);
-      job.setFinishMessage(HerokuExtension.LOCALIZATION_CONSTANT.applicationCreated());
-      IDE.fireEvent(new JobChangeEvent(job));
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestFinished(java.lang.String) */
+    @Override
+    public void requestFinished(String id) {
+        Job job = new Job(id, JobStatus.FINISHED);
+        job.setFinishMessage(HerokuExtension.LOCALIZATION_CONSTANT.applicationCreated());
+        IDE.fireEvent(new JobChangeEvent(job));
+    }
 
 }

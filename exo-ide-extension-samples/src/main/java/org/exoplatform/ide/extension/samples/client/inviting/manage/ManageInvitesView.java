@@ -43,142 +43,129 @@ import java.util.Map;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class ManageInvitesView extends ViewImpl implements ManageInvitePresenter.Display
-{
-   private static final String ID = "ideManageInvitesView";
+public class ManageInvitesView extends ViewImpl implements ManageInvitePresenter.Display {
+    private static final String ID = "ideManageInvitesView";
 
-   private static final String TITLE = "Manage access";
+    private static final String TITLE = "Manage access";
 
-   private static final int WIDTH = 800;
+    private static final int WIDTH = 800;
 
-   private static final int HEIGHT = 400;
+    private static final int HEIGHT = 400;
 
-   private static final String CLOSE_BUTTON_ID = "ideManageInvitesViewCloseButton";
+    private static final String CLOSE_BUTTON_ID = "ideManageInvitesViewCloseButton";
 
-   private static final String USER_LIST_ELEMENT = "ideManageInvitesViewUserListElement";
+    private static final String USER_LIST_ELEMENT = "ideManageInvitesViewUserListElement";
 
-   private static ManageAccessViewUiBinder uiBinder = GWT.create(ManageAccessViewUiBinder.class);
+    private static ManageAccessViewUiBinder uiBinder = GWT.create(ManageAccessViewUiBinder.class);
 
-   interface ManageAccessViewUiBinder extends UiBinder<Widget, ManageInvitesView>
-   {
-   }
+    interface ManageAccessViewUiBinder extends UiBinder<Widget, ManageInvitesView> {
+    }
 
-   private class UserListWidget extends Widget
-   {
-      public UserListWidget(Element e)
-      {
-         setElement(e);
-      }
+    private class UserListWidget extends Widget {
+        public UserListWidget(Element e) {
+            setElement(e);
+        }
 
-      /**
-       * Adds a new child widget
-       *
-       * @param w the widget to be added
-       */
-      public void add(Widget w)
-      {
-         add(w, getElement());
-      }
+        /**
+         * Adds a new child widget
+         *
+         * @param w
+         *         the widget to be added
+         */
+        public void add(Widget w) {
+            add(w, getElement());
+        }
 
-      public void clear()
-      {
-         for (int i = 0; i < getChildren().size(); i++)
-         {
-            getChildren().remove(i);
-         }
-         getElement().setInnerHTML("");
-      }
+        public void clear() {
+            for (int i = 0; i < getChildren().size(); i++) {
+                getChildren().remove(i);
+            }
+            getElement().setInnerHTML("");
+        }
 
-      /**
-       * Adds a new child widget to the panel, attaching its Element to the
-       * specified container Element.
-       *
-       * @param child the child widget to be added
-       * @param container the element within which the child will be contained
-       */
-      protected void add(Widget child, Element container)
-      {
-         // Detach new child.
-         child.removeFromParent();
+        /**
+         * Adds a new child widget to the panel, attaching its Element to the
+         * specified container Element.
+         *
+         * @param child
+         *         the child widget to be added
+         * @param container
+         *         the element within which the child will be contained
+         */
+        protected void add(Widget child, Element container) {
+            // Detach new child.
+            child.removeFromParent();
 
-         // Logical attach.
-         getChildren().add(child);
+            // Logical attach.
+            getChildren().add(child);
 
-         // Physical attach.
-         DOM.appendChild(container, child.getElement());
+            // Physical attach.
+            DOM.appendChild(container, child.getElement());
 
-         // Adopt.
-         adopt(child);
-      }
+            // Adopt.
+            adopt(child);
+        }
 
-   }
+    }
 
-   public ManageInvitesView()
-   {
-      super(ID, "modal", TITLE, new Image(SamplesClientBundle.INSTANCE.manageInvite()), WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
-      setCloseOnEscape(true);
+    public ManageInvitesView() {
+        super(ID, "modal", TITLE, new Image(SamplesClientBundle.INSTANCE.manageInvite()), WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
+        setCloseOnEscape(true);
 
-      closeButton.setId(CLOSE_BUTTON_ID);
-      userListElement.setId(USER_LIST_ELEMENT);
-   }
+        closeButton.setId(CLOSE_BUTTON_ID);
+        userListElement.setId(USER_LIST_ELEMENT);
+    }
 
-   interface Style extends CssResource
-   {
-      String inviteTopbarTextInput();
+    interface Style extends CssResource {
+        String inviteTopbarTextInput();
 
-      String inviteTopbarTextInputWithHint();
-   }
+        String inviteTopbarTextInputWithHint();
+    }
 
-   @UiField
-   Style style;
+    @UiField
+    Style style;
 
-   @UiField
-   ImageButton closeButton;
+    @UiField
+    ImageButton closeButton;
 
-   UserListWidget userListWidget;
+    UserListWidget userListWidget;
 
-   @UiField
-   DivElement userListElement;
+    @UiField
+    DivElement userListElement;
 
-   private Map<String, InvitedDeveloperTile> cards = new HashMap<String, InvitedDeveloperTile>();
+    private Map<String, InvitedDeveloperTile> cards = new HashMap<String, InvitedDeveloperTile>();
 
-   @Override
-   public void setInvitedDevelopers(List<Invite> invites, RevokeInviteHandler revokeInviteHandler)
-   {
-      if (userListWidget != null)
-      {
-         userListWidget.removeFromParent();
-      }
+    @Override
+    public void setInvitedDevelopers(List<UserInvitations> invites) {
+        if (userListWidget != null) {
+            userListWidget.removeFromParent();
+        }
 
-      userListWidget = new UserListWidget((Element)userListElement.cast());
+        userListWidget = new UserListWidget((Element)userListElement.cast());
 
-      //add self to invites for indicating that we are owner of this workspace
-      invites.add(new InvitedDeveloper(IDE.userId, null, null, null));
-      Collections.sort(invites, new InvitesComparator());
+        //add self to invites for indicating that we are owner of this workspace
+        invites.add(new UserInvitations("owner", IDE.userId, "OWNER"));
 
-      cards.clear();
-      for (Invite invite : invites)
-      {
-         InvitedDeveloperTile card = new InvitedDeveloperTile(invite);
-         card.setRevokeInviteHandler(revokeInviteHandler);
-         userListWidget.add(card);
-         cards.put(invite.getUuid(), card);
-      }
-   }
+        Collections.sort(invites, new InvitesComparator());
 
-   @Override
-   public HasClickHandlers getCloseButton()
-   {
-      return closeButton;
-   }
+        cards.clear();
+        for (UserInvitations invite : invites) {
+            InvitedDeveloperTile card = new InvitedDeveloperTile(invite);
+            userListWidget.add(card);
+            cards.put(invite.getId(), card);
+        }
+    }
 
-   @Override
-   public void clearInvitedDevelopers()
-   {
-      if (userListWidget != null)
-      {
-         userListWidget.clear();
-      }
-   }
+    @Override
+    public HasClickHandlers getCloseButton() {
+        return closeButton;
+    }
+
+    @Override
+    public void clearInvitedDevelopers() {
+        if (userListWidget != null) {
+            userListWidget.clear();
+        }
+    }
 }

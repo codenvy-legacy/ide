@@ -27,31 +27,29 @@ import org.exoplatform.ide.extension.heroku.shared.Stack;
 
 /**
  * The interface for the {@link AutoBean} generator.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: HerokuAutoBeanFactory.java Mar 19, 2012 11:27:42 AM azatsarynnyy $
- *
  */
-public interface HerokuAutoBeanFactory extends AutoBeanFactory
-{
-   /**
-    * A factory method for a Heroku stack bean.
-    * 
-    * @return an {@link AutoBean} of type {@link Stack}
-    */
-   AutoBean<Stack> stack();
+public interface HerokuAutoBeanFactory extends AutoBeanFactory {
+    /**
+     * A factory method for a Heroku stack bean.
+     *
+     * @return an {@link AutoBean} of type {@link Stack}
+     */
+    AutoBean<Stack> stack();
 
-   /**
-    * A factory method for a credentials bean.
-    * 
-    * @return an {@link AutoBean} of type {@link Credentials}
-    */
-   AutoBean<Credentials> credentials();
+    /**
+     * A factory method for a credentials bean.
+     *
+     * @return an {@link AutoBean} of type {@link Credentials}
+     */
+    AutoBean<Credentials> credentials();
 
-   /**
-    * A factory method for a rake command result bean.
-    * 
-    * @return an {@link AutoBean} of type {@link RakeCommandResult}
-    */
-   AutoBean<RakeCommandResult> rakeCommandResult();
+    /**
+     * A factory method for a rake command result bean.
+     *
+     * @return an {@link AutoBean} of type {@link RakeCommandResult}
+     */
+    AutoBean<RakeCommandResult> rakeCommandResult();
 }

@@ -29,37 +29,29 @@ import org.exoplatform.ide.client.framework.module.IDE;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class JdtModule extends AbstractGinModule
-{
+public class JdtModule extends AbstractGinModule {
 
-   /**
-    * @see com.google.gwt.inject.client.AbstractGinModule#configure()
-    */
-   @Override
-   protected void configure()
-   {
-   }
+    /** @see com.google.gwt.inject.client.AbstractGinModule#configure() */
+    @Override
+    protected void configure() {
+    }
 
-   @Provides
-   @Singleton
-   public HandlerManager getEventBus()
-   {
-      return IDE.eventBus();
-   }
+    @Provides
+    @Singleton
+    public HandlerManager getEventBus() {
+        return IDE.eventBus();
+    }
 
-   @Provides
-   @Singleton
-   public IDE getIDE()
-   {
-      return IDE.getInstance();
-   }
+    @Provides
+    @Singleton
+    public IDE getIDE() {
+        return IDE.getInstance();
+    }
 
-   @Provides
-   @Singleton
-   public Dialogs getDialogs()
-   {
-      return Dialogs.getInstance();
-   }
+    @Provides
+    @Singleton
+    public Dialogs getDialogs() {
+        return Dialogs.getInstance();
+    }
 }

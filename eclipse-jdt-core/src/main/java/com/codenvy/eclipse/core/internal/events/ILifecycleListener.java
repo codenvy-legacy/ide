@@ -16,7 +16,6 @@ import com.codenvy.eclipse.core.runtime.CoreException;
  * Interface for clients interested in receiving notification of workspace
  * lifecycle events.
  */
-public interface ILifecycleListener
-{
-   public void handleEvent(LifecycleEvent event) throws CoreException;
+public interface ILifecycleListener {
+    public void handleEvent(LifecycleEvent event) throws CoreException;
 }

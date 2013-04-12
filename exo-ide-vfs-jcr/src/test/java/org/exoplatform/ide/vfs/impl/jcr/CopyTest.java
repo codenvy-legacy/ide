@@ -84,30 +84,18 @@ public class CopyTest extends JcrFileSystemTest
 
    public void testCopyFile() throws Exception
    {
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("copy/") //
-         .append(fileId) //
-         .append("?") //
-         .append("parentId=") //
-         .append(((ExtendedNode)copyTestDestinationNode).getIdentifier()).toString();
+      String path = SERVICE_URI + "copy/" + fileId + '?' + "parentId=" + ((ExtendedNode)copyTestDestinationNode).getIdentifier();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
-      String expectedPath = copyTestDestinationNode.getPath() + "/" + fileNode.getName();
+      String expectedPath = copyTestDestinationNode.getPath() + '/' + fileNode.getName();
       assertTrue("Source file not found. ", session.itemExists(fileNode.getPath()));
       assertTrue("Not found file in destination location. ", session.itemExists(expectedPath));
    }
 
    public void testCopyFileAlreadyExist() throws Exception
    {
-      session.getWorkspace().copy(fileNode.getPath(), copyTestDestinationNode.getPath() + "/" + fileNode.getName());
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("copy/") //
-         .append(fileId) //
-         .append("?") //
-         .append("parentId=") //
-         .append(((ExtendedNode)copyTestDestinationNode).getIdentifier()).toString();
+      session.getWorkspace().copy(fileNode.getPath(), copyTestDestinationNode.getPath() + '/' + fileNode.getName());
+      String path = SERVICE_URI + "copy/" + fileId + '?' + "parentId=" + ((ExtendedNode)copyTestDestinationNode).getIdentifier();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(400, response.getStatus());
       assertEquals(ExitCodes.ITEM_EXISTS, Integer.parseInt((String)response.getHttpHeaders().getFirst("X-Exit-Code")));
@@ -122,13 +110,7 @@ public class CopyTest extends JcrFileSystemTest
       session.save();
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("copy/") //
-         .append(fileId) //
-         .append("?") //
-         .append("parentId=") //
-         .append(((ExtendedNode)copyTestDestinationNode).getIdentifier()).toString();
+      String path = SERVICE_URI + "copy/" + fileId + '?' + "parentId=" + ((ExtendedNode)copyTestDestinationNode).getIdentifier();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
       assertEquals(403, response.getStatus());
@@ -139,16 +121,10 @@ public class CopyTest extends JcrFileSystemTest
 
    public void testCopyFolder() throws Exception
    {
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("copy/") //
-         .append(folderId) //
-         .append("?") //
-         .append("parentId=") //
-         .append(((ExtendedNode)copyTestDestinationNode).getIdentifier()).toString();
+      String path = SERVICE_URI + "copy/" + folderId + '?' + "parentId=" + ((ExtendedNode)copyTestDestinationNode).getIdentifier();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
-      String expectedPath = copyTestDestinationNode.getPath() + "/" + folderNode.getName();
+      String expectedPath = copyTestDestinationNode.getPath() + '/' + folderNode.getName();
       assertTrue("Source folder not found. ", session.itemExists(folderNode.getPath()));
       assertTrue("Not found folder in destination location. ", session.itemExists(expectedPath));
       assertTrue("Child of folder missing after coping. ", session.itemExists(expectedPath + "/file"));
@@ -156,14 +132,8 @@ public class CopyTest extends JcrFileSystemTest
 
    public void testCopyFolderAlreadyExist() throws Exception
    {
-      session.getWorkspace().copy(folderNode.getPath(), copyTestDestinationNode.getPath() + "/" + folderNode.getName());
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("copy/") //
-         .append(folderId) //
-         .append("?") //
-         .append("parentId=") //
-         .append(((ExtendedNode)copyTestDestinationNode).getIdentifier()).toString();
+      session.getWorkspace().copy(folderNode.getPath(), copyTestDestinationNode.getPath() + '/' + folderNode.getName());
+      String path = SERVICE_URI + "copy/" + folderId + '?' + "parentId=" + ((ExtendedNode)copyTestDestinationNode).getIdentifier();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(400, response.getStatus());
       assertEquals(ExitCodes.ITEM_EXISTS, Integer.parseInt((String)response.getHttpHeaders().getFirst("X-Exit-Code")));

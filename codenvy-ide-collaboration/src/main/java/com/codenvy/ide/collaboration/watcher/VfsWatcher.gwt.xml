@@ -1,5 +1,5 @@
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.0//EN"
-   "http://google-web-toolkit.googlecode.com/svn/releases/2.0/distro-source/core/src/gwt-module.dtd">
+        "http://google-web-toolkit.googlecode.com/svn/releases/2.0/distro-source/core/src/gwt-module.dtd">
 <!--
 
  Copyright (C) 2013 eXo Platform SAS.
@@ -22,13 +22,13 @@
 -->
 <module>
 
-  <inherits name='com.google.gwt.user.User'/>
-  <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
-  <inherits name="org.exoplatform.ide.dtogen.DtoGen"/>
-  <inherits name="org.exoplatform.ide.json.Json"/>
-  <inherits name="com.codenvy.ide.collaboration.dto.Dto"/>
+    <inherits name='com.google.gwt.user.User'/>
+    <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework'/>
+    <inherits name="org.exoplatform.ide.dtogen.DtoGen"/>
+    <inherits name="org.exoplatform.ide.json.Json"/>
+    <inherits name="com.codenvy.ide.collaboration.dto.Dto"/>
 
-  <entry-point class='com.codenvy.ide.collaboration.watcher.client.VfsWatcherExtension'/>
-  <source path="client"/>
+    <entry-point class='com.codenvy.ide.collaboration.watcher.client.VfsWatcherExtension'/>
+    <source path="client"/>
 
 </module>

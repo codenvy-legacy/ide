@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ApplicationRenamedEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 8, 2011 2:24:35 PM anya $
- * 
  */
-public interface ApplicationRenamedHandler extends EventHandler
-{
-   /**
-    * Perform actions after Heroku application had been renamed.
-    * 
-    * @param event
-    */
-   void onApplicationRenamed(ApplicationRenamedEvent event);
+public interface ApplicationRenamedHandler extends EventHandler {
+    /**
+     * Perform actions after Heroku application had been renamed.
+     *
+     * @param event
+     */
+    void onApplicationRenamed(ApplicationRenamedEvent event);
 }

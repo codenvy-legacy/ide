@@ -26,17 +26,14 @@ import java.io.IOException;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class AccessControlListSerializer implements DataSerializer<AccessControlList>
-{
-   @Override
-   public void write(DataOutput output, AccessControlList value) throws IOException
-   {
-      value.write(output);
-   }
+public class AccessControlListSerializer implements DataSerializer<AccessControlList> {
+    @Override
+    public void write(DataOutput output, AccessControlList value) throws IOException {
+        value.write(output);
+    }
 
-   @Override
-   public AccessControlList read(DataInput input) throws IOException
-   {
-      return AccessControlList.read(input);
-   }
+    @Override
+    public AccessControlList read(DataInput input) throws IOException {
+        return AccessControlList.read(input);
+    }
 }

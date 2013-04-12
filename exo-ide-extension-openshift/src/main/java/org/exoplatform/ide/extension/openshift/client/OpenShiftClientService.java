@@ -33,146 +33,175 @@ import java.util.List;
  *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 6, 2011 5:49:43 PM anya $
- *
  */
-public abstract class OpenShiftClientService
-{
-   /**
-    * OpenShift client service.
-    */
-   private static OpenShiftClientService instance;
+public abstract class OpenShiftClientService {
+    /** OpenShift client service. */
+    private static OpenShiftClientService instance;
 
-   /**
-    * @return {@link OpenShiftClientService} OpenShiftClientService client service
-    */
-   public static OpenShiftClientService getInstance()
-   {
-      return instance;
-   }
+    /** @return {@link OpenShiftClientService} OpenShiftClientService client service */
+    public static OpenShiftClientService getInstance() {
+        return instance;
+    }
 
-   protected OpenShiftClientService()
-   {
-      instance = this;
-   }
+    protected OpenShiftClientService() {
+        instance = this;
+    }
 
-   /**
-    * Performs log in OpenShift.
-    *
-    * @param login user's email
-    * @param password user's password
-    * @param callback callback
-    */
-   public abstract void login(String login, String password, AsyncRequestCallback<String> callback)
-      throws RequestException;
+    /**
+     * Performs log in OpenShift.
+     *
+     * @param login
+     *         user's email
+     * @param password
+     *         user's password
+     * @param callback
+     *         callback
+     */
+    public abstract void login(String login, String password, AsyncRequestCallback<String> callback)
+            throws RequestException;
 
-   /**
-    * Creates new domain name. A domain name is a requirement for each new application that you create in the cloud and is part of
-    * the application name.
-    *
-    * @param name domain's name
-    * @param alter alter namespace (will change urls) and/or ssh key
-    * @param callback callback
-    */
-   public abstract void createDomain(String name, boolean alter, AsyncRequestCallback<String> callback)
-      throws RequestException;
+    /**
+     * Creates new domain name. A domain name is a requirement for each new application that you create in the cloud and is part of
+     * the application name.
+     *
+     * @param name
+     *         domain's name
+     * @param alter
+     *         alter namespace (will change urls) and/or ssh key
+     * @param callback
+     *         callback
+     */
+    public abstract void createDomain(String name, boolean alter, AsyncRequestCallback<String> callback)
+            throws RequestException;
 
-   /**
-    * Creates OpenShift application.
-    *
-    * @param name application's name
-    * @param vfsId virtual file system's id
-    * @param projectId project's id
-    * @param type application's type
-    * @param workdir application's working directory
-    * @param callback callback
-    */
-   public abstract void createApplication(String name, String vfsId, String projectId, String type,
-                                          AsyncRequestCallback<AppInfo> callback) throws RequestException;
-
-   /**
-    * Creates OpenShift application by sending request over WebSocket.
-    *
-    * @param name application's name
-    * @param vfsId virtual file system's id
-    * @param projectId project's id
-    * @param type application's type
-    * @param workdir application's working directory
-    * @param callback callback
-    */
-   public abstract void createApplicationWS(String name, String vfsId, String projectId, String type,
-                                            RequestCallback<AppInfo> callback) throws WebSocketException;
-
-   /**
-    * Destroys application with pointed name from OpenShift.
-    *
-    * @param name application's name
-    * @param vfsId virtual file system's id
-    * @param projectId project's id
-    * @param callback callback
-    */
-   public abstract void destroyApplication(String name, String vfsId, String projectId,
-                                           AsyncRequestCallback<String> callback) throws RequestException;
-
-   /**
-    * Get user's information. You can view the Framework Type, Creation Date, GitURL and PublicURL details for each application.
-    *
-    * @param appsInfo if <code>true</code>, then list applications
-    * @param callback callback
-    */
-   public abstract void getUserInfo(boolean appsInfo, AsyncRequestCallback<RHUserInfo> callback)
-      throws RequestException;
-
-   /**
-    * Get application's information.
-    *
-    * @param applicationName application name
-    * @param vfsId virtual file system's id
-    * @param projectId project's id
-    * @param callback callback
-    */
-   public abstract void getApplicationInfo(String applicationName, String vfsId, String projectId,
+    /**
+     * Creates OpenShift application.
+     *
+     * @param name
+     *         application's name
+     * @param vfsId
+     *         virtual file system's id
+     * @param projectId
+     *         project's id
+     * @param type
+     *         application's type
+     * @param workdir
+     *         application's working directory
+     * @param callback
+     *         callback
+     */
+    public abstract void createApplication(String name, String vfsId, String projectId, String type,
                                            AsyncRequestCallback<AppInfo> callback) throws RequestException;
 
-   /**
-    * Get types of allowed applications.
-    *
-    * @param callback callback
-    */
-   public abstract void getApplicationTypes(AsyncRequestCallback<List<String>> callback) throws RequestException;
+    /**
+     * Creates OpenShift application by sending request over WebSocket.
+     *
+     * @param name
+     *         application's name
+     * @param vfsId
+     *         virtual file system's id
+     * @param projectId
+     *         project's id
+     * @param type
+     *         application's type
+     * @param workdir
+     *         application's working directory
+     * @param callback
+     *         callback
+     */
+    public abstract void createApplicationWS(String name, String vfsId, String projectId, String type,
+                                             RequestCallback<AppInfo> callback) throws WebSocketException;
 
-   /**
-    * Get application state STARTED/STOPPED.
-    *
-    * @param appName application name
-    * @param callback callback
-    * @throws RequestException
-    */
-   public abstract void getApplicationHealth(String appName, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+    /**
+     * Destroys application with pointed name from OpenShift.
+     *
+     * @param name
+     *         application's name
+     * @param vfsId
+     *         virtual file system's id
+     * @param projectId
+     *         project's id
+     * @param callback
+     *         callback
+     */
+    public abstract void destroyApplication(String name, String vfsId, String projectId,
+                                            AsyncRequestCallback<String> callback) throws RequestException;
 
-   /**
-    * Start application.
-    *
-    * @param appName application name
-    * @param callback calback
-    * @throws RequestException
-    */
-   public abstract void startApplication(String appName, AsyncRequestCallback<Void> callback) throws RequestException;
+    /**
+     * Get user's information. You can view the Framework Type, Creation Date, GitURL and PublicURL details for each application.
+     *
+     * @param appsInfo
+     *         if <code>true</code>, then list applications
+     * @param callback
+     *         callback
+     */
+    public abstract void getUserInfo(boolean appsInfo, AsyncRequestCallback<RHUserInfo> callback)
+            throws RequestException;
 
-   /**
-    * Stop application.
-    *
-    * @param appName application name
-    * @param callback callback
-    * @throws RequestException
-    */
-   public abstract void stopApplication(String appName, AsyncRequestCallback<Void> callback) throws RequestException;
+    /**
+     * Get application's information.
+     *
+     * @param applicationName
+     *         application name
+     * @param vfsId
+     *         virtual file system's id
+     * @param projectId
+     *         project's id
+     * @param callback
+     *         callback
+     */
+    public abstract void getApplicationInfo(String applicationName, String vfsId, String projectId,
+                                            AsyncRequestCallback<AppInfo> callback) throws RequestException;
 
-   /**
-    * Restart application.
-    *
-    * @param appName application name
-    * @param callback callback
-    * @throws RequestException
-    */
-   public abstract void restartApplication(String appName, AsyncRequestCallback<Void> callback) throws RequestException;
+    /**
+     * Get types of allowed applications.
+     *
+     * @param callback
+     *         callback
+     */
+    public abstract void getApplicationTypes(AsyncRequestCallback<List<String>> callback) throws RequestException;
+
+    /**
+     * Get application state STARTED/STOPPED.
+     *
+     * @param appName
+     *         application name
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
+    public abstract void getApplicationHealth(String appName, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+
+    /**
+     * Start application.
+     *
+     * @param appName
+     *         application name
+     * @param callback
+     *         calback
+     * @throws RequestException
+     */
+    public abstract void startApplication(String appName, AsyncRequestCallback<Void> callback) throws RequestException;
+
+    /**
+     * Stop application.
+     *
+     * @param appName
+     *         application name
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
+    public abstract void stopApplication(String appName, AsyncRequestCallback<Void> callback) throws RequestException;
+
+    /**
+     * Restart application.
+     *
+     * @param appName
+     *         application name
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
+    public abstract void restartApplication(String appName, AsyncRequestCallback<Void> callback) throws RequestException;
 }

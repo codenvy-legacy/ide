@@ -18,18 +18,15 @@ import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * A signal for the server to retry saving previously-transferred files to persistence.
-
- */
+/** A signal for the server to retry saving previously-transferred files to persistence. */
 @RoutingType(type = RoutingTypes.RETRYALREADYTRANSFERREDUPLOAD)
 public interface RetryAlreadyTransferredUpload extends ClientToServerDto {
 
-  String getSessionId();
-  
-  String getWorkspaceId();
-  
-  JsonArray<String> getUnzipWorkspacePaths();
-  
-  JsonArray<String> getFileWorkspacePaths();
+    String getSessionId();
+
+    String getWorkspaceId();
+
+    JsonArray<String> getUnzipWorkspacePaths();
+
+    JsonArray<String> getFileWorkspacePaths();
 }

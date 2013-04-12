@@ -24,22 +24,17 @@ import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class AddGetterSetterControl extends JavaControl
-{
+public class AddGetterSetterControl extends JavaControl {
 
-   /**
-    * @param id
-    */
-   public AddGetterSetterControl()
-   {
-      super("Edit/Source/Generate Getters and Setters");
-      setTitle("Generate Getters and Setters");
-      setPrompt("Generate Getters and Setters");
-      setEvent(new AddGetterSetterEvent());
-      setImages(JavaClientBundle.INSTANCE.blankImage(), JavaClientBundle.INSTANCE.blankImage());
-      setShowInContextMenu(true);
-   }
+    /** @param id */
+    public AddGetterSetterControl() {
+        super("Edit/Source/Generate Getters and Setters");
+        setTitle("Generate Getters and Setters");
+        setPrompt("Generate Getters and Setters");
+        setEvent(new AddGetterSetterEvent());
+        setImages(JavaClientBundle.INSTANCE.blankImage(), JavaClientBundle.INSTANCE.blankImage());
+        setShowInContextMenu(true);
+    }
 
 }

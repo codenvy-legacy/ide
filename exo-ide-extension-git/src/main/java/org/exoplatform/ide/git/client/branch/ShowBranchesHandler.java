@@ -25,14 +25,12 @@ import com.google.gwt.event.shared.EventHandler;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 8, 2011 12:13:12 PM anya $
- * 
  */
-public interface ShowBranchesHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to view the branches of the repository.
-    * 
-    * @param event
-    */
-   void onShowBranches(ShowBranchesEvent event);
+public interface ShowBranchesHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to view the branches of the repository.
+     * 
+     * @param event
+     */
+    void onShowBranches(ShowBranchesEvent event);
 }

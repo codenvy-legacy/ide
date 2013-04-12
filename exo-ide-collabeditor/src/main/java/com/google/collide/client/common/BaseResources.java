@@ -16,128 +16,103 @@ package com.google.collide.client.common;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
-import com.google.gwt.resources.client.DataResource;
-import com.google.gwt.resources.client.ImageResource;
 
-/**
- * ClientBundle resources that are shared across multiple top level presenters.
- *
- */
+/** ClientBundle resources that are shared across multiple top level presenters. */
 public class BaseResources {
 
-  public interface Css extends CssResource {
+    public interface Css extends CssResource {
 
-    /**
-     * Returns the left and right side padding on buttons.
-     */
-    int buttonHorizontalPadding();
+        /** Returns the left and right side padding on buttons. */
+        int buttonHorizontalPadding();
 
-    /**
-     * Applies to internally linking anchor elements.
-     */
-    // TODO: see if this style can be removed after project membership
-    // flow is reworked (Only place used is the membership requests link).
-    String anchor();
+        /** Applies to internally linking anchor elements. */
+        // TODO: see if this style can be removed after project membership
+        // flow is reworked (Only place used is the membership requests link).
+        String anchor();
 
-    /**
-     * The class name to apply to buttons.
-     *
-     * Recommended to use an anchor element. Adding <code>
-     *href = &quot;javascript:;&quot;</code> to the anchor element ensures that
-     * it triggers a click event when the ENTER key is pressed. This is useful for keyboard
-     * navigation through a form.
-     */
-    String button();
-    
-    /**
-     * A smaller button variant.
-     */
-    String buttonSmall();
+        /**
+         * The class name to apply to buttons.
+         * <p/>
+         * Recommended to use an anchor element. Adding <code>
+         * href = &quot;javascript:;&quot;</code> to the anchor element ensures that
+         * it triggers a click event when the ENTER key is pressed. This is useful for keyboard
+         * navigation through a form.
+         */
+        String button();
 
-    /**
-     * Append this class to the button class to make a blue button.
-     */
-    String buttonBlue();
+        /** A smaller button variant. */
+        String buttonSmall();
 
-    /**
-     * Append this class to the button class to make a red button.
-     */
-    String buttonRed();
-    
-    /**
-     * Append this class to the button class to make a green button.
-     */
-    String buttonGreen();
+        /** Append this class to the button class to make a blue button. */
+        String buttonBlue();
 
-    /**
-     * Append this class to an inner button div that is only a
-     * background image rendered using the @sprite command. This will style it
-     * like a native img tag inside a button.
-     */
-    String buttonImage();
+        /** Append this class to the button class to make a red button. */
+        String buttonRed();
 
-    /**
-     * Append this class to make the element appear hovered.
-     */
-    String buttonHover();
+        /** Append this class to the button class to make a green button. */
+        String buttonGreen();
 
-    /**
-     * Append this class to make the element appear active.
-     */
-    String buttonActive();
+        /**
+         * Append this class to an inner button div that is only a
+         * background image rendered using the @sprite command. This will style it
+         * like a native img tag inside a button.
+         */
+        String buttonImage();
 
-    /**
-     * Returns the style to apply to drawer icon buttons, which are used to show sub content.
-     */
-    String drawerIconButton();
+        /** Append this class to make the element appear hovered. */
+        String buttonHover();
 
-    /**
-     * Returns the style to apply to drawer icon buttons that are active.
-     */
-    String drawerIconButtonActive();
+        /** Append this class to make the element appear active. */
+        String buttonActive();
 
-    /**
-     * Returns the style to apply to drawer icon buttons that are active, using
-     * a slightly lighter background if the default active style blends with the
-     * surrounding contents too much.
-     */
-    String drawerIconButtonActiveLight();
+        /** Returns the style to apply to drawer icon buttons, which are used to show sub content. */
+        String drawerIconButton();
 
-    String documentScrollable();
-    
-    String checkbox();
-    
-    String radio();
+        /** Returns the style to apply to drawer icon buttons that are active. */
+        String drawerIconButtonActive();
 
-    String textArea();
+        /**
+         * Returns the style to apply to drawer icon buttons that are active, using
+         * a slightly lighter background if the default active style blends with the
+         * surrounding contents too much.
+         */
+        String drawerIconButtonActiveLight();
 
-    String textInput();
-    
-    String textInputSmall();
+        String documentScrollable();
 
-    String closeX();
+        String checkbox();
 
-    String headerBg();
+        String radio();
 
-    String modalDialogTitle();
+        String textArea();
 
-    String modalDialogMessage();
+        String textInput();
 
-    String searchBox();
+        String textInputSmall();
 
-    /* Tabs */
-    String tabOuterContainer();
+        String closeX();
 
-    String tabContainer();
+        String headerBg();
 
-    String tab();
+        String modalDialogTitle();
 
-    String activeTab();
-  }
+        String modalDialogMessage();
 
-  public interface Resources extends ClientBundle {
+        String searchBox();
 
-    @Source({"base.css", "com/google/collide/client/common/constants.css"})
-    Css baseCss();
-  }
+        /* Tabs */
+        String tabOuterContainer();
+
+        String tabContainer();
+
+        String tab();
+
+        String activeTab();
+    }
+
+    public interface Resources extends ClientBundle {
+
+        @Source({"base.css", "com/google/collide/client/common/constants.css"})
+        Css baseCss();
+    }
 }

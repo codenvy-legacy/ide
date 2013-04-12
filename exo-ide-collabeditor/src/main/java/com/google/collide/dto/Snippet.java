@@ -15,12 +15,9 @@
 package com.google.collide.dto;
 
 
-/**
- * Snippet of a search results
- *
- */
+/** Snippet of a search results */
 public interface Snippet {
-  int getLineNumber();
+    int getLineNumber();
 
-  String getSnippetText();
+    String getSnippetText();
 }

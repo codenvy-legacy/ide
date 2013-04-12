@@ -35,72 +35,61 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class ResourceLocked extends ViewImpl implements ResourceLockedView
-{
-   interface ResourceLockedUiBinder
-      extends UiBinder<DockLayoutPanel, ResourceLocked>
-   {
-   }
+public class ResourceLocked extends ViewImpl implements ResourceLockedView {
+    interface ResourceLockedUiBinder
+            extends UiBinder<DockLayoutPanel, ResourceLocked> {
+    }
 
-   private static ResourceLockedUiBinder ourUiBinder = GWT.create(ResourceLockedUiBinder.class);
+    private static ResourceLockedUiBinder ourUiBinder = GWT.create(ResourceLockedUiBinder.class);
 
-   private ActionDelegate delegate;
+    private ActionDelegate delegate;
 
-   @UiField
-   ImageButton notifyButton;
+    @UiField
+    ImageButton notifyButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   @UiField
-   HTML messageLabel;
+    @UiField
+    HTML messageLabel;
 
-   @UiField
-   HTML userList;
+    @UiField
+    HTML userList;
 
-   public ResourceLocked()
-   {
-      super(ID, ViewType.MODAL, "Warning", null, 350, 100, false);
-      add(ourUiBinder.createAndBindUi(this));
+    public ResourceLocked() {
+        super(ID, ViewType.MODAL, "Warning", null, 350, 100, false);
+        add(ourUiBinder.createAndBindUi(this));
 
-   }
+    }
 
-   @Override
-   public void setDelegate(ActionDelegate delegate)
-   {
-      this.delegate = delegate;
-   }
+    @Override
+    public void setDelegate(ActionDelegate delegate) {
+        this.delegate = delegate;
+    }
 
-   @Override
-   public void setMessageText(SafeHtml message)
-   {
-      messageLabel.setHTML(message);
-   }
+    @Override
+    public void setMessageText(SafeHtml message) {
+        messageLabel.setHTML(message);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setUserList(SafeHtml userList)
-   {
-      this.userList.setHTML(userList);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setUserList(SafeHtml userList) {
+        this.userList.setHTML(userList);
+    }
 
-   @Override
-   public void setNotifyButtonEnabled(boolean enabled)
-   {
-      notifyButton.setEnabled(enabled);
-   }
+    @Override
+    public void setNotifyButtonEnabled(boolean enabled) {
+        notifyButton.setEnabled(enabled);
+    }
 
-   @UiHandler("cancelButton")
-   void onOkButtonClicked(ClickEvent event)
-   {
-      delegate.onClose();
-   }
+    @UiHandler("cancelButton")
+    void onOkButtonClicked(ClickEvent event) {
+        delegate.onClose();
+    }
 
-   @UiHandler("notifyButton")
-   void onNotifyButtonClicked(ClickEvent event)
-   {
-      delegate.onNotify();
-   }
+    @UiHandler("notifyButton")
+    void onNotifyButtonClicked(ClickEvent event) {
+        delegate.onNotify();
+    }
 }

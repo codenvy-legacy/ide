@@ -26,36 +26,25 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: SshPublicKeyUnmarshaller May 19, 2011 2:28:26 PM evgen $
- * 
  */
-public class SshPublicKeyUnmarshaller implements Unmarshallable<StringBuilder>
-{
-   
-   private StringBuilder publicKey;
-   
-   /**
-    * @param callback
-    */
-   public SshPublicKeyUnmarshaller(StringBuilder publicKey)
-   {
-      this.publicKey = publicKey;
-   }
+public class SshPublicKeyUnmarshaller implements Unmarshallable<StringBuilder> {
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      publicKey.append(response.getText());
-   }
-   
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
-    */
-   @Override
-   public StringBuilder getPayload()
-   {
-      return publicKey;
-   }
+    private StringBuilder publicKey;
+
+    /** @param callback */
+    public SshPublicKeyUnmarshaller(StringBuilder publicKey) {
+        this.publicKey = publicKey;
+    }
+
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        publicKey.append(response.getText());
+    }
+
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
+    @Override
+    public StringBuilder getPayload() {
+        return publicKey;
+    }
 }

@@ -26,14 +26,12 @@ import com.google.gwt.user.cellview.client.CellTree;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CellTableResource.java Mar 11, 2011 11:33:27 AM vereshchaka $
- * 
  */
-public interface CellTreeResource extends CellTree.Resources
-{
-   @Source("eXoStyle/skin/default/CellTree.css")
-   CellTree.Style cellTreeStyle();
+public interface CellTreeResource extends CellTree.Resources {
+    @Source("eXoStyle/skin/default/CellTree.css")
+    CellTree.Style cellTreeStyle();
 
-   @Source("eXoStyle/skin/default/images/tree/cellTreeSelectedBackground.png")
-   @ImageOptions(repeatStyle = RepeatStyle.Horizontal)
-   ImageResource cellTreeSelectedBackground();
+    @Source("eXoStyle/skin/default/images/tree/cellTreeSelectedBackground.png")
+    @ImageOptions(repeatStyle = RepeatStyle.Horizontal)
+    ImageResource cellTreeSelectedBackground();
 }

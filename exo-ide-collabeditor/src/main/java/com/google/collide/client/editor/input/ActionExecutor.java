@@ -16,10 +16,8 @@ package com.google.collide.client.editor.input;
 
 import com.codenvy.ide.client.util.SignalEvent;
 
-/**
- * Interface used to resolve and execute action.
- */
+/** Interface used to resolve and execute action. */
 public interface ActionExecutor {
 
-  boolean execute(String actionName, InputScheme scheme, SignalEvent event);
+    boolean execute(String actionName, InputScheme scheme, SignalEvent event);
 }

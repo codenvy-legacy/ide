@@ -16,36 +16,32 @@ package com.google.collide.shared.ot;
 
 import com.google.collide.dto.DocOp;
 
-/**
- * A pair of document operations.
- */
+/** A pair of document operations. */
 public final class OperationPair {
 
-  private final DocOp clientOp;
-  private final DocOp serverOp;
+    private final DocOp clientOp;
+    private final DocOp serverOp;
 
-  /**
-   * Constructs an OperationPair from a client operation and a server operation.
-   *
-   * @param clientOp The client's operation.
-   * @param serverOp The server's operation.
-   */
-  public OperationPair(DocOp clientOp, DocOp serverOp) {
-    this.clientOp = clientOp;
-    this.serverOp = serverOp;
-  }
+    /**
+     * Constructs an OperationPair from a client operation and a server operation.
+     *
+     * @param clientOp
+     *         The client's operation.
+     * @param serverOp
+     *         The server's operation.
+     */
+    public OperationPair(DocOp clientOp, DocOp serverOp) {
+        this.clientOp = clientOp;
+        this.serverOp = serverOp;
+    }
 
-  /**
-   * @return The client's operation.
-   */
-  public DocOp clientOp() {
-    return clientOp;
-  }
+    /** @return The client's operation. */
+    public DocOp clientOp() {
+        return clientOp;
+    }
 
-  /**
-   * @return The server's operation.
-   */
-  public DocOp serverOp() {
-    return serverOp;
-  }
+    /** @return The server's operation. */
+    public DocOp serverOp() {
+        return serverOp;
+    }
 }

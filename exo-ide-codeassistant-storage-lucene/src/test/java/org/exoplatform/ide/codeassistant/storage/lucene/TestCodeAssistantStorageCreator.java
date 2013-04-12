@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene;
 
-import static org.junit.Assert.assertTrue;
-
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -28,30 +26,30 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertTrue;
+
 /**
- * 
+ *
  */
 @Ignore
-public class TestCodeAssistantStorageCreator
-{
-   private static final String FILE_SEPARATOR = System.getProperty("file.separator");
+public class TestCodeAssistantStorageCreator {
+    private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
-   private static final String PATH_TO_RT_JAR = System.getProperty("java.home") + FILE_SEPARATOR + "lib"
-      + FILE_SEPARATOR + "rt.jar";
+    private static final String PATH_TO_RT_JAR = System.getProperty("java.home") + FILE_SEPARATOR + "lib"
+                                                 + FILE_SEPARATOR + "rt.jar";
 
-   @Test
-   public void testClassStorageCreation() throws IOException, CodeAssistantException, SaveDataIndexException
-   {
-      List<String> jars = new ArrayList<String>();
-      jars.add(PATH_TO_RT_JAR);
-      String pathToIndex = "target/index";
+    @Test
+    public void testClassStorageCreation() throws IOException, CodeAssistantException, SaveDataIndexException {
+        List<String> jars = new ArrayList<String>();
+        jars.add(PATH_TO_RT_JAR);
+        String pathToIndex = "target/index";
 
-      DataStorageWriter storageWriter = new DataStorageWriter(pathToIndex);
+        DataStorageWriter storageWriter = new DataStorageWriter(pathToIndex);
 //      storageWriter.writeBinaryJarsToIndex(jars);
 
-      LuceneInfoStorage luceneInfoStorage = new LuceneInfoStorage(pathToIndex);
-      LuceneCodeAssistantStorage storage = new LuceneCodeAssistantStorage(luceneInfoStorage);
+        LuceneInfoStorage luceneInfoStorage = new LuceneInfoStorage(pathToIndex);
+        LuceneCodeAssistantStorage storage = new LuceneCodeAssistantStorage(luceneInfoStorage);
 
-      assertTrue(storage.getClasses("").size() > 0);
-   }
+        assertTrue(storage.getClasses("").size() > 0);
+    }
 }

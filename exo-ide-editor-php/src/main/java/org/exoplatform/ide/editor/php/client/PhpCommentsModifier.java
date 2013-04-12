@@ -23,36 +23,25 @@ import org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Apr 11, 2012 12:18:12 PM anya $
- *
  */
-public class PhpCommentsModifier extends AbstractCommentsModifier
-{
+public class PhpCommentsModifier extends AbstractCommentsModifier {
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#getOpenBlockComment()
-    */
-   @Override
-   public String getOpenBlockComment()
-   {
-      return "/*";
-   }
+    /** @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#getOpenBlockComment() */
+    @Override
+    public String getOpenBlockComment() {
+        return "/*";
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#getCloseBlockComment()
-    */
-   @Override
-   public String getCloseBlockComment()
-   {
-      return "*/";
-   }
+    /** @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#getCloseBlockComment() */
+    @Override
+    public String getCloseBlockComment() {
+        return "*/";
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#getSingleLineComment()
-    */
-   @Override
-   public String getSingleLineComment()
-   {
-      return "//";
-   }
+    /** @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#getSingleLineComment() */
+    @Override
+    public String getSingleLineComment() {
+        return "//";
+    }
 
 }

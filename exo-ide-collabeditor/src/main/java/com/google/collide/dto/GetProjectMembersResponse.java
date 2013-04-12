@@ -18,21 +18,19 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * Response for requesting project members, and users requesting membership.
- */
+/** Response for requesting project members, and users requesting membership. */
 @RoutingType(type = RoutingTypes.GETPROJECTMEMBERSRESPONSE)
 public interface GetProjectMembersResponse extends ServerToClientDto {
 
-  /**
-   * Returns the list of current project members. This should always be
-   * non-null.
-   */
-  JsonArray<UserDetailsWithRole> getMembers();
+    /**
+     * Returns the list of current project members. This should always be
+     * non-null.
+     */
+    JsonArray<UserDetailsWithRole> getMembers();
 
-  /**
-   * Returns the list of users requesting project membership. This should always
-   * be non-null.
-   */
-  JsonArray<UserDetailsWithRole> getPendingMembers();
+    /**
+     * Returns the list of users requesting project membership. This should always
+     * be non-null.
+     */
+    JsonArray<UserDetailsWithRole> getPendingMembers();
 }

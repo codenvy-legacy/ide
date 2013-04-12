@@ -26,31 +26,25 @@ import org.exoplatform.ide.extension.aws.client.AWSExtension;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 17, 2012 10:15:42 AM anya $
- * 
  */
-public class BeanstalkControl extends SimpleControl implements IDEControl
-{
-   private static final String ID = AWSExtension.LOCALIZATION_CONSTANT.beanstalkControlId();
+public class BeanstalkControl extends SimpleControl implements IDEControl {
+    private static final String ID = AWSExtension.LOCALIZATION_CONSTANT.beanstalkControlId();
 
-   private static final String TITLE = AWSExtension.LOCALIZATION_CONSTANT.beanstalkControlTitle();
+    private static final String TITLE = AWSExtension.LOCALIZATION_CONSTANT.beanstalkControlTitle();
 
-   private static final String PROMPT = AWSExtension.LOCALIZATION_CONSTANT.beanstalkControlPrompt();
+    private static final String PROMPT = AWSExtension.LOCALIZATION_CONSTANT.beanstalkControlPrompt();
 
-   public BeanstalkControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(AWSClientBundle.INSTANCE.elasticBeanstalk(), AWSClientBundle.INSTANCE.elasticBeanstalkDisabled());
-   }
+    public BeanstalkControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(AWSClientBundle.INSTANCE.elasticBeanstalk(), AWSClientBundle.INSTANCE.elasticBeanstalkDisabled());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(true);
+        setEnabled(true);
+    }
 }

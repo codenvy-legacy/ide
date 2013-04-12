@@ -18,33 +18,33 @@ import com.codenvy.eclipse.jdt.internal.compiler.lookup.TypeBinding;
 
 public class SelectionOnArgumentName extends Argument {
 
-	public SelectionOnArgumentName(char[] name , long posNom , TypeReference tr , int modifiers){
+    public SelectionOnArgumentName(char[] name, long posNom, TypeReference tr, int modifiers) {
 
-		super(name, posNom, tr, modifiers);
-	}
+        super(name, posNom, tr, modifiers);
+    }
 
-	public void bind(MethodScope scope, TypeBinding typeBinding, boolean used) {
+    public void bind(MethodScope scope, TypeBinding typeBinding, boolean used) {
 
-		super.bind(scope, typeBinding, used);
-		throw new SelectionNodeFound(this.binding);
-	}
+        super.bind(scope, typeBinding, used);
+        throw new SelectionNodeFound(this.binding);
+    }
 
-	public StringBuffer print(int indent, StringBuffer output) {
+    public StringBuffer print(int indent, StringBuffer output) {
 
-		printIndent(indent, output);
-		output.append("<SelectionOnArgumentName:"); //$NON-NLS-1$
-		if (this.type != null) this.type.print(0, output).append(' ');
-		output.append(this.name);
-		if (this.initialization != null) {
-			output.append(" = ");//$NON-NLS-1$
-			this.initialization.printExpression(0, output);
-		}
-		return output.append('>');
-	}
+        printIndent(indent, output);
+        output.append("<SelectionOnArgumentName:"); //$NON-NLS-1$
+        if (this.type != null) this.type.print(0, output).append(' ');
+        output.append(this.name);
+        if (this.initialization != null) {
+            output.append(" = ");//$NON-NLS-1$
+            this.initialization.printExpression(0, output);
+        }
+        return output.append('>');
+    }
 
-	public void resolve(BlockScope scope) {
+    public void resolve(BlockScope scope) {
 
-		super.resolve(scope);
-		throw new SelectionNodeFound(this.binding);
-	}
+        super.resolve(scope);
+        throw new SelectionNodeFound(this.binding);
+    }
 }

@@ -28,17 +28,14 @@ import org.exoplatform.ide.git.client.reset.ResetToCommitEvent;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 14, 2011 5:58:58 PM anya $
- * 
  */
-public class ResetToCommitControl extends GitControl
-{
-   public ResetToCommitControl()
-   {
-      super(GitExtension.MESSAGES.resetToCommitControlId());
-      setTitle(GitExtension.MESSAGES.resetToCommitControlTitle());
-      setPrompt(GitExtension.MESSAGES.resetToCommitControlPrompt());
-      setEvent(new ResetToCommitEvent());
-      setImages(GitClientBundle.INSTANCE.revert(), GitClientBundle.INSTANCE.revertDisabled());
-      setGroupName(GroupNames.COMMANDS);
-   }
+public class ResetToCommitControl extends GitControl {
+    public ResetToCommitControl() {
+        super(GitExtension.MESSAGES.resetToCommitControlId());
+        setTitle(GitExtension.MESSAGES.resetToCommitControlTitle());
+        setPrompt(GitExtension.MESSAGES.resetToCommitControlPrompt());
+        setEvent(new ResetToCommitEvent());
+        setImages(GitClientBundle.INSTANCE.revert(), GitClientBundle.INSTANCE.revertDisabled());
+        setGroupName(GroupNames.COMMANDS);
+    }
 }

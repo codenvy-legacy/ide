@@ -55,393 +55,320 @@ import java.util.List;
  * @version $Id: $
  */
 public class ManageServicesPresenter implements ManageServicesHandler, ViewClosedHandler,
-   ProvisionedServiceCreatedHandler
-{
-   interface Display extends IsView
-   {
-      HasClickHandlers getAddButton();
+                                                ProvisionedServiceCreatedHandler {
+    interface Display extends IsView {
+        HasClickHandlers getAddButton();
 
-      HasClickHandlers getDeleteButton();
+        HasClickHandlers getDeleteButton();
 
-      HasClickHandlers getCancelButton();
+        HasClickHandlers getCancelButton();
 
-      HasUnbindServiceHandler getUnbindServiceHandler();
+        HasUnbindServiceHandler getUnbindServiceHandler();
 
-      HasBindServiceHandler getBindServiceHandler();
+        HasBindServiceHandler getBindServiceHandler();
 
-      ListGridItem<AppfogProvisionedService> getProvisionedServicesGrid();
+        ListGridItem<AppfogProvisionedService> getProvisionedServicesGrid();
 
-      ListGridItem<String> getBoundedServicesGrid();
+        ListGridItem<String> getBoundedServicesGrid();
 
-      void enableDeleteButton(boolean enabled);
+        void enableDeleteButton(boolean enabled);
 
-   }
+    }
 
-   private Display display;
+    private Display display;
 
-   /**
-    * Application, for which need to bind service.
-    */
-   private AppfogApplication application;
+    /** Application, for which need to bind service. */
+    private AppfogApplication application;
 
-   /**
-    * Selected provisioned service.
-    */
-   private AppfogProvisionedService selectedService;
+    /** Selected provisioned service. */
+    private AppfogProvisionedService selectedService;
 
-   /**
-    * Selected provisioned service.
-    */
-   private String selectedBoundedService;
+    /** Selected provisioned service. */
+    private String selectedBoundedService;
 
-   private LoggedInHandler deleteServiceLoggedInHandler = new LoggedInHandler()
-   {
+    private LoggedInHandler deleteServiceLoggedInHandler = new LoggedInHandler() {
 
-      @Override
-      public void onLoggedIn()
-      {
-         deleteService(selectedService);
-      }
-   };
+        @Override
+        public void onLoggedIn() {
+            deleteService(selectedService);
+        }
+    };
 
-   private LoggedInHandler bindServiceLoggedInHandler = new LoggedInHandler()
-   {
+    private LoggedInHandler bindServiceLoggedInHandler = new LoggedInHandler() {
 
-      @Override
-      public void onLoggedIn()
-      {
-         bindService(selectedService);
-      }
-   };
+        @Override
+        public void onLoggedIn() {
+            bindService(selectedService);
+        }
+    };
 
-   private LoggedInHandler unBindServiceLoggedInHandler = new LoggedInHandler()
-   {
+    private LoggedInHandler unBindServiceLoggedInHandler = new LoggedInHandler() {
 
-      @Override
-      public void onLoggedIn()
-      {
-         unbindService(selectedBoundedService);
-      }
-   };
+        @Override
+        public void onLoggedIn() {
+            unbindService(selectedBoundedService);
+        }
+    };
 
-   private LoggedInHandler getApplicationInfoLoggedInHandler = new LoggedInHandler()
-   {
+    private LoggedInHandler getApplicationInfoLoggedInHandler = new LoggedInHandler() {
 
-      @Override
-      public void onLoggedIn()
-      {
-         getApplicationInfo();
-      }
-   };
+        @Override
+        public void onLoggedIn() {
+            getApplicationInfo();
+        }
+    };
 
-   public ManageServicesPresenter()
-   {
-      IDE.addHandler(ManageServicesEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    public ManageServicesPresenter() {
+        IDE.addHandler(ManageServicesEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   public void bindDisplay()
-   {
-      display.getProvisionedServicesGrid().addSelectionHandler(new SelectionHandler<AppfogProvisionedService>()
-      {
-         @Override
-         public void onSelection(SelectionEvent<AppfogProvisionedService> event)
-         {
-            selectedService = event.getSelectedItem();
-            boolean enable = (selectedService != null);
-            display.enableDeleteButton(enable);
-         }
-      });
+    public void bindDisplay() {
+        display.getProvisionedServicesGrid().addSelectionHandler(new SelectionHandler<AppfogProvisionedService>() {
+            @Override
+            public void onSelection(SelectionEvent<AppfogProvisionedService> event) {
+                selectedService = event.getSelectedItem();
+                boolean enable = (selectedService != null);
+                display.enableDeleteButton(enable);
+            }
+        });
 
-      display.getBoundedServicesGrid().addSelectionHandler(new SelectionHandler<String>()
-      {
-
-         @Override
-         public void onSelection(SelectionEvent<String> event)
-         {
-            selectedBoundedService = event.getSelectedItem();
-         }
-      });
-
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-
-      display.getDeleteButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            askBeforeDelete(selectedService);
-         }
-      });
-
-      display.getAddButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            doAdd();
-         }
-      });
-
-      display.getBindServiceHandler().addBindServiceHandler(new SelectionHandler<AppfogProvisionedService>()
-      {
-
-         @Override
-         public void onSelection(SelectionEvent<AppfogProvisionedService> event)
-         {
-            bindService(event.getSelectedItem());
-         }
-      });
-
-      display.getUnbindServiceHandler().addUnbindServiceHandler(new SelectionHandler<String>()
-      {
-         public void onSelection(SelectionEvent<String> event)
-         {
-            unbindService(event.getSelectedItem());
-         }
-      });
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.services.ManageServicesHandler#onManageServices(org.exoplatform.ide.extension.cloudfoundry.client.services.ManageServicesEvent)
-    */
-   @Override
-   public void onManageServices(ManageServicesEvent event)
-   {
-      this.application = event.getApplication();
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         IDE.getInstance().openView(display.asView());
-         bindDisplay();
-      }
-      display.enableDeleteButton(false);
-      getApplicationInfo();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
-
-   /**
-    * Get the list of Appfog services (system and provisioned).
-    */
-   private void getServices()
-   {
-      try
-      {
-         AppfogClientService.getInstance().services(AppfogExtension.DEFAULT_SERVER,
-            new AsyncRequestCallback<AppfogServices>(new AppfogServicesUnmarshaller())
-            {
-
-               @Override
-               protected void onSuccess(AppfogServices result)
-               {
-                  List<AppfogProvisionedService> filteredServices = new ArrayList<AppfogProvisionedService>();
-
-                  for (AppfogProvisionedService service : result.getAppfogProvisionedService())
-                  {
-                     if (service.getInfra().getName().equals(application.getInfra().getName()))
-                     {
-                        filteredServices.add(service);
-                     }
-                  }
-
-                  display.getProvisionedServicesGrid().setValue(filteredServices);
-                  display.enableDeleteButton(false);
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  Dialogs.getInstance().showError(AppfogExtension.LOCALIZATION_CONSTANT.retrieveServicesFailed());
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   /**
-    * Perform adding new provisioned service.
-    */
-   private void doAdd()
-   {
-      IDE.fireEvent(new CreateServiceEvent(this));
-   }
-
-   /**
-    * Delete provisioned service.
-    *
-    * @param service service to delete
-    */
-   private void deleteService(final AppfogProvisionedService service)
-   {
-      try
-      {
-         AppfogClientService.getInstance().deleteService(AppfogExtension.DEFAULT_SERVER, service.getName(),
-            new AppfogAsyncRequestCallback<Object>(null, deleteServiceLoggedInHandler, null)
-            {
-               @Override
-               protected void onSuccess(Object result)
-               {
-                  getServices();
-                  if (application.getServices().contains(service.getName()))
-                  {
-                     getApplicationInfo();
-                  }
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   /**
-    * Bind service to application.
-    *
-    * @param service service to bind
-    */
-   private void bindService(final AppfogProvisionedService service)
-   {
-      try
-      {
-         AppfogClientService.getInstance().bindService(AppfogExtension.DEFAULT_SERVER, service.getName(), application.getName(), null,
-            null, new AppfogAsyncRequestCallback<Object>(null, bindServiceLoggedInHandler, null)
-         {
+        display.getBoundedServicesGrid().addSelectionHandler(new SelectionHandler<String>() {
 
             @Override
-            protected void onSuccess(Object result)
-            {
-               getApplicationInfo();
+            public void onSelection(SelectionEvent<String> event) {
+                selectedBoundedService = event.getSelectedItem();
             }
+        });
 
-            /**
-             * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback#onFailure(java.lang.Throwable)
-             */
+        display.getCancelButton().addClickHandler(new ClickHandler() {
             @Override
-            protected void onFailure(Throwable exception)
-            {
-               //Maybe appear 502 unexpected gateway response from appfog while bind mysql service
-               //that's why we showing user error dialog that his service can't bind
-               Dialogs.getInstance().showError("Can't bind " + service.getName() + " service.");
-               getApplicationInfo();
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
             }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+        });
 
-   /**
-    * Unbind service from application.
-    *
-    * @param service
-    */
-   private void unbindService(String service)
-   {
-      try
-      {
-         AppfogClientService.getInstance().unbindService(AppfogExtension.DEFAULT_SERVER, service, application.getName(), null, null,
-            new AppfogAsyncRequestCallback<Object>(null, unBindServiceLoggedInHandler, null)
-            {
+        display.getDeleteButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                askBeforeDelete(selectedService);
+            }
+        });
 
-               @Override
-               protected void onSuccess(Object result)
-               {
-                  getApplicationInfo();
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+        display.getAddButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                doAdd();
+            }
+        });
 
-   /**
-    * Ask user before deleting service.
-    *
-    * @param service
-    */
-   private void askBeforeDelete(final AppfogProvisionedService service)
-   {
-      Dialogs.getInstance().ask(AppfogExtension.LOCALIZATION_CONSTANT.deleteServiceTitle(),
-         AppfogExtension.LOCALIZATION_CONSTANT.deleteServiceQuestion(service.getName()),
-         new BooleanValueReceivedHandler()
-         {
+        display.getBindServiceHandler().addBindServiceHandler(new SelectionHandler<AppfogProvisionedService>() {
 
             @Override
-            public void booleanValueReceived(Boolean value)
-            {
-               if (value != null && value)
-               {
-                  deleteService(service);
-               }
+            public void onSelection(SelectionEvent<AppfogProvisionedService> event) {
+                bindService(event.getSelectedItem());
             }
-         });
-   }
+        });
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.services.ProvisionedServiceCreatedHandler#onProvisionedServiceCreated(org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService)
-    */
-   @Override
-   public void onProvisionedServiceCreated(AppfogProvisionedService service)
-   {
-      getServices();
-   }
+        display.getUnbindServiceHandler().addUnbindServiceHandler(new SelectionHandler<String>() {
+            public void onSelection(SelectionEvent<String> event) {
+                unbindService(event.getSelectedItem());
+            }
+        });
+    }
 
-   private void getApplicationInfo()
-   {
-      AutoBean<AppfogApplication> appfogApplication =
-         AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.services.ManageServicesHandler#onManageServices(org.exoplatform.ide
+     * .extension.cloudfoundry.client.services.ManageServicesEvent) */
+    @Override
+    public void onManageServices(ManageServicesEvent event) {
+        this.application = event.getApplication();
+        if (display == null) {
+            display = GWT.create(Display.class);
+            IDE.getInstance().openView(display.asView());
+            bindDisplay();
+        }
+        display.enableDeleteButton(false);
+        getApplicationInfo();
+    }
 
-      AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
-         new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
-      try
-      {
-         AppfogClientService.getInstance().getApplicationInfo(
-            null,
-            null,
-            application.getName(),
-            AppfogExtension.DEFAULT_SERVER,
-            new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller,
-               getApplicationInfoLoggedInHandler, null)
-            {
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
-               @Override
-               protected void onSuccess(AppfogApplication result)
-               {
-                  application = result;
-                  getServices();
-                  display.getBoundedServicesGrid().setValue(result.getServices());
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+    /** Get the list of Appfog services (system and provisioned). */
+    private void getServices() {
+        try {
+            AppfogClientService.getInstance().services(AppfogExtension.DEFAULT_SERVER,
+                                                       new AsyncRequestCallback<AppfogServices>(new AppfogServicesUnmarshaller()) {
+
+                                                           @Override
+                                                           protected void onSuccess(AppfogServices result) {
+                                                               List<AppfogProvisionedService> filteredServices =
+                                                                       new ArrayList<AppfogProvisionedService>();
+
+                                                               for (AppfogProvisionedService service : result
+                                                                       .getAppfogProvisionedService()) {
+                                                                   if (service.getInfra().getName()
+                                                                              .equals(application.getInfra().getName())) {
+                                                                       filteredServices.add(service);
+                                                                   }
+                                                               }
+
+                                                               display.getProvisionedServicesGrid().setValue(filteredServices);
+                                                               display.enableDeleteButton(false);
+                                                           }
+
+                                                           @Override
+                                                           protected void onFailure(Throwable exception) {
+                                                               Dialogs.getInstance().showError(
+                                                                       AppfogExtension.LOCALIZATION_CONSTANT.retrieveServicesFailed());
+                                                           }
+                                                       });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /** Perform adding new provisioned service. */
+    private void doAdd() {
+        IDE.fireEvent(new CreateServiceEvent(this));
+    }
+
+    /**
+     * Delete provisioned service.
+     *
+     * @param service
+     *         service to delete
+     */
+    private void deleteService(final AppfogProvisionedService service) {
+        try {
+            AppfogClientService.getInstance().deleteService(AppfogExtension.DEFAULT_SERVER, service.getName(),
+                                                            new AppfogAsyncRequestCallback<Object>(null, deleteServiceLoggedInHandler,
+                                                                                                   null) {
+                                                                @Override
+                                                                protected void onSuccess(Object result) {
+                                                                    getServices();
+                                                                    if (application.getServices().contains(service.getName())) {
+                                                                        getApplicationInfo();
+                                                                    }
+                                                                }
+                                                            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /**
+     * Bind service to application.
+     *
+     * @param service
+     *         service to bind
+     */
+    private void bindService(final AppfogProvisionedService service) {
+        try {
+            AppfogClientService.getInstance().bindService(AppfogExtension.DEFAULT_SERVER, service.getName(), application.getName(), null,
+                                                          null,
+                                                          new AppfogAsyncRequestCallback<Object>(null, bindServiceLoggedInHandler, null) {
+
+                                                              @Override
+                                                              protected void onSuccess(Object result) {
+                                                                  getApplicationInfo();
+                                                              }
+
+                                                              /**
+                                                               * @see org.exoplatform.ide.extension.cloudfoundry.client
+                                                               * .CloudFoundryAsyncRequestCallback#onFailure(java.lang.Throwable)
+                                                               */
+                                                              @Override
+                                                              protected void onFailure(Throwable exception) {
+                                                                  //Maybe appear 502 unexpected gateway response from appfog while bind
+                                                                  // mysql service
+                                                                  //that's why we showing user error dialog that his service can't bind
+                                                                  Dialogs.getInstance()
+                                                                         .showError("Can't bind " + service.getName() + " service.");
+                                                                  getApplicationInfo();
+                                                              }
+                                                          });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /**
+     * Unbind service from application.
+     *
+     * @param service
+     */
+    private void unbindService(String service) {
+        try {
+            AppfogClientService.getInstance().unbindService(AppfogExtension.DEFAULT_SERVER, service, application.getName(), null, null,
+                                                            new AppfogAsyncRequestCallback<Object>(null, unBindServiceLoggedInHandler,
+                                                                                                   null) {
+
+                                                                @Override
+                                                                protected void onSuccess(Object result) {
+                                                                    getApplicationInfo();
+                                                                }
+                                                            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /**
+     * Ask user before deleting service.
+     *
+     * @param service
+     */
+    private void askBeforeDelete(final AppfogProvisionedService service) {
+        Dialogs.getInstance().ask(AppfogExtension.LOCALIZATION_CONSTANT.deleteServiceTitle(),
+                                  AppfogExtension.LOCALIZATION_CONSTANT.deleteServiceQuestion(service.getName()),
+                                  new BooleanValueReceivedHandler() {
+
+                                      @Override
+                                      public void booleanValueReceived(Boolean value) {
+                                          if (value != null && value) {
+                                              deleteService(service);
+                                          }
+                                      }
+                                  });
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.services.ProvisionedServiceCreatedHandler#onProvisionedServiceCreated(org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService) */
+    @Override
+    public void onProvisionedServiceCreated(AppfogProvisionedService service) {
+        getServices();
+    }
+
+    private void getApplicationInfo() {
+        AutoBean<AppfogApplication> appfogApplication =
+                AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
+
+        AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
+                new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
+        try {
+            AppfogClientService.getInstance().getApplicationInfo(
+                    null,
+                    null,
+                    application.getName(),
+                    AppfogExtension.DEFAULT_SERVER,
+                    new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller,
+                                                                      getApplicationInfoLoggedInHandler, null) {
+
+                        @Override
+                        protected void onSuccess(AppfogApplication result) {
+                            application = result;
+                            getServices();
+                            display.getBoundedServicesGrid().setValue(result.getServices());
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 }

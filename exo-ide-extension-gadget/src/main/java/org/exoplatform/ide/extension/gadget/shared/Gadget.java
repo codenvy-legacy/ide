@@ -22,25 +22,24 @@ import java.util.List;
 
 /**
  * Representation of OpenSocial Gadget.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: Gedget.java Mar 21, 2012 3:34:23 PM azatsarynnyy $
- *
  */
-public interface Gadget
-{
+public interface Gadget {
 
-   /**
-    * Returns {@link List} of gadgets.
-    * 
-    * @return {@link List} of gadgets.
-    */
-   List<GadgetMetadata> getGadgets();
+    /**
+     * Returns {@link List} of gadgets.
+     *
+     * @return {@link List} of gadgets.
+     */
+    List<GadgetMetadata> getGadgets();
 
-   /**
-    * Set the {@link List} of gadgets.
-    * 
-    * @param gadgetMetadata {@link List} of gadgets.
-    */
-   void setGadgets(List<GadgetMetadata> gadgetMetadata);
+    /**
+     * Set the {@link List} of gadgets.
+     *
+     * @param gadgetMetadata
+     *         {@link List} of gadgets.
+     */
+    void setGadgets(List<GadgetMetadata> gadgetMetadata);
 }

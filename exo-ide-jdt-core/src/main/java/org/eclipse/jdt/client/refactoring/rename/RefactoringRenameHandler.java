@@ -21,14 +21,11 @@ package org.eclipse.jdt.client.refactoring.rename;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: RefactoringRenameHandler.java Jan 17, 2013 4:51:04 PM azatsarynnyy $
- *
  */
-public interface RefactoringRenameHandler extends EventHandler
-{
+public interface RefactoringRenameHandler extends EventHandler {
 
-   void onRename(RefactoringRenameEvent event);
+    void onRename(RefactoringRenameEvent event);
 
 }

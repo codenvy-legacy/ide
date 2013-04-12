@@ -16,42 +16,35 @@ import com.codenvy.eclipse.jdt.core.util.IConstantPoolConstant;
 import com.codenvy.eclipse.jdt.core.util.IConstantPoolEntry;
 import com.codenvy.eclipse.jdt.core.util.ISignatureAttribute;
 
-/**
- * @since 3.0
- */
-public class SignatureAttribute extends ClassFileAttribute implements ISignatureAttribute
-{
+/** @since 3.0 */
+public class SignatureAttribute extends ClassFileAttribute implements ISignatureAttribute {
 
-   private int signatureIndex;
+    private int signatureIndex;
 
-   private char[] signature;
+    private char[] signature;
 
-   SignatureAttribute(byte[] classFileBytes, IConstantPool constantPool, int offset) throws ClassFormatException
-   {
-      super(classFileBytes, constantPool, offset);
-      final int index = u2At(classFileBytes, 6, offset);
-      this.signatureIndex = index;
-      IConstantPoolEntry constantPoolEntry = constantPool.decodeEntry(index);
-      if (constantPoolEntry.getKind() != IConstantPoolConstant.CONSTANT_Utf8)
-      {
-         throw new ClassFormatException(ClassFormatException.INVALID_CONSTANT_POOL_ENTRY);
-      }
-      this.signature = constantPoolEntry.getUtf8Value();
-   }
+    SignatureAttribute(byte[] classFileBytes, IConstantPool constantPool, int offset) throws ClassFormatException {
+        super(classFileBytes, constantPool, offset);
+        final int index = u2At(classFileBytes, 6, offset);
+        this.signatureIndex = index;
+        IConstantPoolEntry constantPoolEntry = constantPool.decodeEntry(index);
+        if (constantPoolEntry.getKind() != IConstantPoolConstant.CONSTANT_Utf8) {
+            throw new ClassFormatException(ClassFormatException.INVALID_CONSTANT_POOL_ENTRY);
+        }
+        this.signature = constantPoolEntry.getUtf8Value();
+    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.core.util.ISignatureAttribute#getSignatureIndex()
-    */
-   public int getSignatureIndex()
-   {
-      return this.signatureIndex;
-   }
+    /* (non-Javadoc)
+     * @see org.eclipse.jdt.core.util.ISignatureAttribute#getSignatureIndex()
+     */
+    public int getSignatureIndex() {
+        return this.signatureIndex;
+    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.core.util.ISignatureAttribute#getSignature()
-    */
-   public char[] getSignature()
-   {
-      return this.signature;
-   }
+    /* (non-Javadoc)
+     * @see org.eclipse.jdt.core.util.ISignatureAttribute#getSignature()
+     */
+    public char[] getSignature() {
+        return this.signature;
+    }
 }

@@ -31,124 +31,99 @@ import java.util.List;
 
 /**
  * <p>This operation creates an instance method.
- *
+ * <p/>
  * <p>Required Attributes:<ul>
  * <li>Containing type
  * <li>The source code for the method. No verification of the source is
  * performed.
  * </ul>
  */
-public class CreateMethodOperation extends CreateTypeMemberOperation
-{
+public class CreateMethodOperation extends CreateTypeMemberOperation {
 
-   protected String[] parameterTypes;
+    protected String[] parameterTypes;
 
-   /**
-    * When executed, this operation will create a method
-    * in the given type with the specified source.
-    */
-   public CreateMethodOperation(IType parentElement, String source, boolean force)
-   {
-      super(parentElement, source, force);
-   }
+    /**
+     * When executed, this operation will create a method
+     * in the given type with the specified source.
+     */
+    public CreateMethodOperation(IType parentElement, String source, boolean force) {
+        super(parentElement, source, force);
+    }
 
-   /**
-    * Returns the type signatures of the parameter types of the
-    * current <code>MethodDeclaration</code>
-    */
-   protected String[] convertASTMethodTypesToSignatures()
-   {
-      if (this.parameterTypes == null)
-      {
-         if (this.createdNode != null)
-         {
-            MethodDeclaration methodDeclaration = (MethodDeclaration)this.createdNode;
-            List parameters = methodDeclaration.parameters();
-            int size = parameters.size();
-            this.parameterTypes = new String[size];
-            Iterator iterator = parameters.iterator();
-            // convert the AST types to signatures
-            for (int i = 0; i < size; i++)
-            {
-               SingleVariableDeclaration parameter = (SingleVariableDeclaration)iterator.next();
-               String typeSig = Util.getSignature(parameter.getType());
-               int extraDimensions = parameter.getExtraDimensions();
-               if (methodDeclaration.isVarargs() && i == size - 1)
-               {
-                  extraDimensions++;
-               }
-               this.parameterTypes[i] = Signature.createArraySignature(typeSig, extraDimensions);
+    /**
+     * Returns the type signatures of the parameter types of the
+     * current <code>MethodDeclaration</code>
+     */
+    protected String[] convertASTMethodTypesToSignatures() {
+        if (this.parameterTypes == null) {
+            if (this.createdNode != null) {
+                MethodDeclaration methodDeclaration = (MethodDeclaration)this.createdNode;
+                List parameters = methodDeclaration.parameters();
+                int size = parameters.size();
+                this.parameterTypes = new String[size];
+                Iterator iterator = parameters.iterator();
+                // convert the AST types to signatures
+                for (int i = 0; i < size; i++) {
+                    SingleVariableDeclaration parameter = (SingleVariableDeclaration)iterator.next();
+                    String typeSig = Util.getSignature(parameter.getType());
+                    int extraDimensions = parameter.getExtraDimensions();
+                    if (methodDeclaration.isVarargs() && i == size - 1) {
+                        extraDimensions++;
+                    }
+                    this.parameterTypes[i] = Signature.createArraySignature(typeSig, extraDimensions);
+                }
             }
-         }
-      }
-      return this.parameterTypes;
-   }
+        }
+        return this.parameterTypes;
+    }
 
-   protected ASTNode generateElementAST(ASTRewrite rewriter, ICompilationUnit cu) throws JavaModelException
-   {
-      ASTNode node = super.generateElementAST(rewriter, cu);
-      if (node.getNodeType() != ASTNode.METHOD_DECLARATION)
-      {
-         throw new JavaModelException(new JavaModelStatus(IJavaModelStatusConstants.INVALID_CONTENTS));
-      }
-      return node;
-   }
+    protected ASTNode generateElementAST(ASTRewrite rewriter, ICompilationUnit cu) throws JavaModelException {
+        ASTNode node = super.generateElementAST(rewriter, cu);
+        if (node.getNodeType() != ASTNode.METHOD_DECLARATION) {
+            throw new JavaModelException(new JavaModelStatus(IJavaModelStatusConstants.INVALID_CONTENTS));
+        }
+        return node;
+    }
 
-   /**
-    * @see CreateElementInCUOperation#generateResultHandle
-    */
-   protected IJavaElement generateResultHandle()
-   {
-      String[] types = convertASTMethodTypesToSignatures();
-      String name = getASTNodeName();
-      return getType().getMethod(name, types);
-   }
+    /** @see CreateElementInCUOperation#generateResultHandle */
+    protected IJavaElement generateResultHandle() {
+        String[] types = convertASTMethodTypesToSignatures();
+        String name = getASTNodeName();
+        return getType().getMethod(name, types);
+    }
 
-   private String getASTNodeName()
-   {
-      return ((MethodDeclaration)this.createdNode).getName().getIdentifier();
-   }
+    private String getASTNodeName() {
+        return ((MethodDeclaration)this.createdNode).getName().getIdentifier();
+    }
 
-   /**
-    * @see CreateElementInCUOperation#getMainTaskName()
-    */
-   public String getMainTaskName()
-   {
-      return Messages.operation_createMethodProgress;
-   }
+    /** @see CreateElementInCUOperation#getMainTaskName() */
+    public String getMainTaskName() {
+        return Messages.operation_createMethodProgress;
+    }
 
-   protected SimpleName rename(ASTNode node, SimpleName newName)
-   {
-      MethodDeclaration method = (MethodDeclaration)node;
-      SimpleName oldName = method.getName();
-      method.setName(newName);
-      return oldName;
-   }
+    protected SimpleName rename(ASTNode node, SimpleName newName) {
+        MethodDeclaration method = (MethodDeclaration)node;
+        SimpleName oldName = method.getName();
+        method.setName(newName);
+        return oldName;
+    }
 
-   /**
-    * @see CreateTypeMemberOperation#verifyNameCollision
-    */
-   protected IJavaModelStatus verifyNameCollision()
-   {
-      if (this.createdNode != null)
-      {
-         IType type = getType();
-         String name;
-         if (((MethodDeclaration)this.createdNode).isConstructor())
-         {
-            name = type.getElementName();
-         }
-         else
-         {
-            name = getASTNodeName();
-         }
-         String[] types = convertASTMethodTypesToSignatures();
-         if (type.getMethod(name, types).exists())
-         {
-            return new JavaModelStatus(IJavaModelStatusConstants.NAME_COLLISION,
-               Messages.bind(Messages.status_nameCollision, name));
-         }
-      }
-      return JavaModelStatus.VERIFIED_OK;
-   }
+    /** @see CreateTypeMemberOperation#verifyNameCollision */
+    protected IJavaModelStatus verifyNameCollision() {
+        if (this.createdNode != null) {
+            IType type = getType();
+            String name;
+            if (((MethodDeclaration)this.createdNode).isConstructor()) {
+                name = type.getElementName();
+            } else {
+                name = getASTNodeName();
+            }
+            String[] types = convertASTMethodTypesToSignatures();
+            if (type.getMethod(name, types).exists()) {
+                return new JavaModelStatus(IJavaModelStatusConstants.NAME_COLLISION,
+                                           Messages.bind(Messages.status_nameCollision, name));
+            }
+        }
+        return JavaModelStatus.VERIFIED_OK;
+    }
 }

@@ -20,13 +20,10 @@ import com.google.gson.JsonElement;
  * An entity that may serialize itself to JSON.
  * Now used only for server-side DTOs.
  */
-public interface JsonSerializable
-{
+public interface JsonSerializable {
 
-   /**
-    * Serializes DTO to JSON format.
-    */
-   String toJson();
+    /** Serializes DTO to JSON format. */
+    String toJson();
 
-   JsonElement toJsonElement();
+    JsonElement toJsonElement();
 }

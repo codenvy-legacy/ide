@@ -17,17 +17,12 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Code Errors request from client to frontend.
- *
- */
+/** Code Errors request from client to frontend. */
 @RoutingType(type = RoutingTypes.CODEERRORSREQUEST)
 public interface CodeErrorsRequest extends ClientToServerDto {
 
-  String getWorkspaceId();
+    String getWorkspaceId();
 
-  /**
-   * @return file edit session key of file to return code errors for
-   */
-  String getFileEditSessionKey();
+    /** @return file edit session key of file to return code errors for */
+    String getFileEditSessionKey();
 }

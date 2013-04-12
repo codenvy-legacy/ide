@@ -23,9 +23,8 @@ package com.codenvy.ide.collaboration.dto;
  * @version $Id:
  */
 
-public interface ParticipantInfo
-{
-   String getClientId();
+public interface ParticipantInfo {
+    String getClientId();
 
-   UserDetails getUserDetails();
+    UserDetails getUserDetails();
 }

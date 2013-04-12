@@ -22,21 +22,20 @@ package org.exoplatform.ide.extension.cloudfoundry.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface Instance
-{
-   String getConsoleHost();
+public interface Instance {
+    String getConsoleHost();
 
-   void setConsoleHost(String host);
+    void setConsoleHost(String host);
 
-   int getConsolePort();
+    int getConsolePort();
 
-   void setConsolePort(int port);
+    void setConsolePort(int port);
 
-   String getDebugHost();
+    String getDebugHost();
 
-   void setDebugHost(String host);
+    void setDebugHost(String host);
 
-   int getDebugPort();
+    int getDebugPort();
 
-   void setDebugPort(int port);
+    void setDebugPort(int port);
 }

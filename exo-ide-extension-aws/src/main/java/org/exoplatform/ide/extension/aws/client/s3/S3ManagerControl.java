@@ -27,34 +27,29 @@ import org.exoplatform.ide.extension.aws.client.s3.events.ShowS3ManagerEvent;
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: S3ManagerControl.java Sep 19, 2012 vetal $
- *
  */
 public class S3ManagerControl extends SimpleControl implements IDEControl
-   
+
 {
-   private static final String ID = AWSExtension.LOCALIZATION_CONSTANT.s3ManagementControlId();
+    private static final String ID = AWSExtension.LOCALIZATION_CONSTANT.s3ManagementControlId();
 
-   private static final String TITLE = AWSExtension.LOCALIZATION_CONSTANT.s3ManagementControlTitle();
+    private static final String TITLE = AWSExtension.LOCALIZATION_CONSTANT.s3ManagementControlTitle();
 
-   private static final String PROMPT = AWSExtension.LOCALIZATION_CONSTANT.s3ManagementControlPrompt();
+    private static final String PROMPT = AWSExtension.LOCALIZATION_CONSTANT.s3ManagementControlPrompt();
 
-   public S3ManagerControl()
-   {
-      super(ID);
-      setImages(AWSClientBundle.INSTANCE.s3(), AWSClientBundle.INSTANCE.s3());
-      setTitle(TITLE);
-      setPrompt(PROMPT);
+    public S3ManagerControl() {
+        super(ID);
+        setImages(AWSClientBundle.INSTANCE.s3(), AWSClientBundle.INSTANCE.s3());
+        setTitle(TITLE);
+        setPrompt(PROMPT);
 
-      setEvent(new ShowS3ManagerEvent());
-   }
+        setEvent(new ShowS3ManagerEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(true);
+        setEnabled(true);
+    }
 }

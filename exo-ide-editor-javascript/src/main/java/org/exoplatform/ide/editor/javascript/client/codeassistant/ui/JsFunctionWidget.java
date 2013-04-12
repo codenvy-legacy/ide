@@ -29,52 +29,44 @@ import org.exoplatform.ide.editor.javascript.client.JavaScriptEditorExtension;
 /**
  * @author <a href="mailto:dnochevnov@gmail.com">Dmytro Nochevnov</a>
  * @version $Id:
- * 
  */
-public class JsFunctionWidget extends JSBaseWidget
-{
+public class JsFunctionWidget extends JSBaseWidget {
 
-   /**
-    * @param token
-    */
-   public JsFunctionWidget(Token token)
-   {
-      super(token);
-      grid = new Grid(1, 3);
-      grid.setStyleName(JavaScriptEditorExtension.RESOURCES.css().item());
-      grid.setWidth("100%");
+    /** @param token */
+    public JsFunctionWidget(Token token) {
+        super(token);
+        grid = new Grid(1, 3);
+        grid.setStyleName(JavaScriptEditorExtension.RESOURCES.css().item());
+        grid.setWidth("100%");
 
-      Image i = new Image(JavaScriptEditorExtension.RESOURCES.functionItem());
-      i.setHeight("16px");
-      grid.setWidget(0, 0, i);
+        Image i = new Image(JavaScriptEditorExtension.RESOURCES.functionItem());
+        i.setHeight("16px");
+        grid.setWidget(0, 0, i);
 
-      String name = token.getName() + "()";
+        String name = token.getName() + "()";
 
-      Label nameLabel = new Label(name, false);
+        Label nameLabel = new Label(name, false);
 
-      grid.setWidget(0, 1, nameLabel);
-      String pack = "";
+        grid.setWidget(0, 1, nameLabel);
+        String pack = "";
 
-      Label l = new Label(pack, false);
-      l.setStyleName(JavaScriptEditorExtension.RESOURCES.css().fqn());
-      grid.setWidget(0, 2, l);
+        Label l = new Label(pack, false);
+        l.setStyleName(JavaScriptEditorExtension.RESOURCES.css().fqn());
+        grid.setWidget(0, 2, l);
 
-      grid.getCellFormatter().setWidth(0, 0, "16px");
-      grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setHorizontalAlignment(0, 2, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setWidth(0, 2, "100%");
+        grid.getCellFormatter().setWidth(0, 0, "16px");
+        grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
+        grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
+        grid.getCellFormatter().setHorizontalAlignment(0, 2, HasHorizontalAlignment.ALIGN_LEFT);
+        grid.getCellFormatter().setWidth(0, 2, "100%");
 
-      initWidget(grid);
-      setWidth("100%");
-   }
+        initWidget(grid);
+        setWidth("100%");
+    }
 
-   /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget#getTokenValue()
-    */
-   @Override
-   public String getTokenValue()
-   {
-      return token.getName() + "()";
-   }
+    /** @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget#getTokenValue() */
+    @Override
+    public String getTokenValue() {
+        return token.getName() + "()";
+    }
 }

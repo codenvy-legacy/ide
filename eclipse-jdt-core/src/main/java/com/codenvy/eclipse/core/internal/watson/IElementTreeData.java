@@ -10,14 +10,11 @@
  *******************************************************************************/
 package com.codenvy.eclipse.core.internal.watson;
 
-/**
- * User data that can be attached to the element tree itself.
- */
-public interface IElementTreeData extends Cloneable
-{
-   /**
-    * ElementTreeData must define a publicly accessible clone method.
-    * This method can simply invoke Object's clone method.
-    */
-   public Object clone();
+/** User data that can be attached to the element tree itself. */
+public interface IElementTreeData extends Cloneable {
+    /**
+     * ElementTreeData must define a publicly accessible clone method.
+     * This method can simply invoke Object's clone method.
+     */
+    public Object clone();
 }

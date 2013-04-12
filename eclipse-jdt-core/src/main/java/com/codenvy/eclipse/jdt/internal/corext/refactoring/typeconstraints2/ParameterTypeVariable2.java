@@ -19,76 +19,65 @@ import com.codenvy.eclipse.jdt.internal.corext.refactoring.typeconstraints.types
  * A ParameterTypeVariable is a ConstraintVariable which stands for
  * the type of a method parameter.
  */
-public final class ParameterTypeVariable2 extends ConstraintVariable2 implements ISourceConstraintVariable
-{
+public final class ParameterTypeVariable2 extends ConstraintVariable2 implements ISourceConstraintVariable {
 
-   private final int fParameterIndex;
+    private final int fParameterIndex;
 
-   private final String fKey;
+    private final String fKey;
 
-   private ICompilationUnit fCompilationUnit;
+    private ICompilationUnit fCompilationUnit;
 
-   public ParameterTypeVariable2(TType type, int index, IMethodBinding binding)
-   {
-      super(type);
-      Assert.isNotNull(binding);
-      Assert.isTrue(0 <= index);
-      fParameterIndex = index;
-      fKey = binding.getKey();
-   }
+    public ParameterTypeVariable2(TType type, int index, IMethodBinding binding) {
+        super(type);
+        Assert.isNotNull(binding);
+        Assert.isTrue(0 <= index);
+        fParameterIndex = index;
+        fKey = binding.getKey();
+    }
 
-   public void setCompilationUnit(ICompilationUnit cu)
-   {
-      fCompilationUnit = cu;
-   }
+    public void setCompilationUnit(ICompilationUnit cu) {
+        fCompilationUnit = cu;
+    }
 
-   public ICompilationUnit getCompilationUnit()
-   {
-      return fCompilationUnit;
-   }
+    public ICompilationUnit getCompilationUnit() {
+        return fCompilationUnit;
+    }
 
-   public int getParameterIndex()
-   {
-      return fParameterIndex;
-   }
+    public int getParameterIndex() {
+        return fParameterIndex;
+    }
 
-   public String getKey()
-   {
-      return fKey;
-   }
+    public String getKey() {
+        return fKey;
+    }
 
-   /*
-    * @see java.lang.Object#hashCode()
-    */
-   @Override
-   public int hashCode()
-   {
-      return getParameterIndex() ^ getKey().hashCode();
-   }
+    /*
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return getParameterIndex() ^ getKey().hashCode();
+    }
 
-   /*
-    * @see java.lang.Object#equals(java.lang.Object)
-    */
-   @Override
-   public boolean equals(Object other)
-   {
-      if (this == other)
-      {
-         return true;
-      }
-      if (other.getClass() != ParameterTypeVariable2.class)
-      {
-         return false;
-      }
+    /*
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other.getClass() != ParameterTypeVariable2.class) {
+            return false;
+        }
 
-      ParameterTypeVariable2 other2 = (ParameterTypeVariable2)other;
-      return getParameterIndex() == other2.getParameterIndex() && getKey().equals(other2.getKey());
-   }
+        ParameterTypeVariable2 other2 = (ParameterTypeVariable2)other;
+        return getParameterIndex() == other2.getParameterIndex() && getKey().equals(other2.getKey());
+    }
 
-   @Override
-   public String toString()
-   {
-      String toString = (String)getData(TO_STRING);
-      return toString == null ? "[Parameter(" + fParameterIndex + "," + fKey + ")]" : toString; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-   }
+    @Override
+    public String toString() {
+        String toString = (String)getData(TO_STRING);
+        return toString == null ? "[Parameter(" + fParameterIndex + "," + fKey + ")]" : toString; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+    }
 }

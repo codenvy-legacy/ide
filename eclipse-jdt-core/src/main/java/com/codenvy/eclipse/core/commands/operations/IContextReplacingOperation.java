@@ -19,18 +19,19 @@ package com.codenvy.eclipse.core.commands.operations;
  *
  * @since 3.2
  */
-public interface IContextReplacingOperation
-{
+public interface IContextReplacingOperation {
 
-   /**
-    * Replace the undo context of the receiver with the provided replacement
-    * undo context.
-    * <p>
-    * This message has no effect if the original undo context is not present in
-    * the receiver.
-    *
-    * @param original    the undo context which is to be replaced
-    * @param replacement the undo context which is replacing the original
-    */
-   void replaceContext(IUndoContext original, IUndoContext replacement);
+    /**
+     * Replace the undo context of the receiver with the provided replacement
+     * undo context.
+     * <p/>
+     * This message has no effect if the original undo context is not present in
+     * the receiver.
+     *
+     * @param original
+     *         the undo context which is to be replaced
+     * @param replacement
+     *         the undo context which is replacing the original
+     */
+    void replaceContext(IUndoContext original, IUndoContext replacement);
 }

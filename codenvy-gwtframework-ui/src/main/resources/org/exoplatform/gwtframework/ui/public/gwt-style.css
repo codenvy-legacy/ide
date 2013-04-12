@@ -148,6 +148,7 @@
 	font-weight: normal;
 	font-style: normal;
 	white-space: nowrap;
+	cursor: default;
 }
 
 .gwt-Tree .gwt-TreeItem-selected {
@@ -194,14 +195,12 @@
 	border-width: 1px;
 }
 
-.gwt-PasswordTextBox
-{
+.gwt-PasswordTextBox {
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	border-width: 1px;
 }
-
 
 .gwt-CheckBox {
 	font-size: 11px;
@@ -209,4 +208,8 @@
 	font-weight: normal;
 	font-style: normal;
 	white-space: nowrap;
+}
+
+.gwt-SuggestBox {
+	padding: 0 0 0 2px !important;
 }

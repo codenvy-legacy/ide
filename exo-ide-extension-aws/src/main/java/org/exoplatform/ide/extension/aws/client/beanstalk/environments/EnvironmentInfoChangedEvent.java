@@ -24,57 +24,42 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 
 /**
  * Event occurs, when AWS application's environment info were changed.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: EnvironmentStatusChangedEvent.java Oct 2, 2012 10:50:18 AM azatsarynnyy $
- *
  */
-public class EnvironmentInfoChangedEvent extends GwtEvent<EnvironmentInfoChangedHandler>
-{
+public class EnvironmentInfoChangedEvent extends GwtEvent<EnvironmentInfoChangedHandler> {
 
-   /**
-    * Environment.
-    */
-   private EnvironmentInfo environment;
+    /** Environment. */
+    private EnvironmentInfo environment;
 
-   /**
-    * Type used to register event.
-    */
-   public static final GwtEvent.Type<EnvironmentInfoChangedHandler> TYPE =
-      new GwtEvent.Type<EnvironmentInfoChangedHandler>();
+    /** Type used to register event. */
+    public static final GwtEvent.Type<EnvironmentInfoChangedHandler> TYPE =
+            new GwtEvent.Type<EnvironmentInfoChangedHandler>();
 
-   /**
-    * @param environment environment
-    */
-   public EnvironmentInfoChangedEvent(EnvironmentInfo environment)
-   {
-      this.environment = environment;
-   }
+    /**
+     * @param environment
+     *         environment
+     */
+    public EnvironmentInfoChangedEvent(EnvironmentInfo environment) {
+        this.environment = environment;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EnvironmentInfoChangedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EnvironmentInfoChangedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(EnvironmentInfoChangedHandler handler)
-   {
-      handler.onEnvironmentInfoChanged(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(EnvironmentInfoChangedHandler handler) {
+        handler.onEnvironmentInfoChanged(this);
+    }
 
-   /**
-    * @return the environment
-    */
-   public EnvironmentInfo getEnvironment()
-   {
-      return environment;
-   }
+    /** @return the environment */
+    public EnvironmentInfo getEnvironment() {
+        return environment;
+    }
 
 }

@@ -14,33 +14,28 @@ package com.codenvy.eclipse.jdt.internal.corext.refactoring;
 import com.codenvy.eclipse.jdt.core.ICompilationUnit;
 
 
-public class StubTypeContext
-{
-   private String fBeforeString;
+public class StubTypeContext {
+    private String fBeforeString;
 
-   private String fAfterString;
+    private String fAfterString;
 
-   private final ICompilationUnit fCuHandle;
+    private final ICompilationUnit fCuHandle;
 
-   public StubTypeContext(ICompilationUnit cuHandle, String beforeString, String afterString)
-   {
-      fCuHandle = cuHandle;
-      fBeforeString = beforeString;
-      fAfterString = afterString;
-   }
+    public StubTypeContext(ICompilationUnit cuHandle, String beforeString, String afterString) {
+        fCuHandle = cuHandle;
+        fBeforeString = beforeString;
+        fAfterString = afterString;
+    }
 
-   public ICompilationUnit getCuHandle()
-   {
-      return fCuHandle;
-   }
+    public ICompilationUnit getCuHandle() {
+        return fCuHandle;
+    }
 
-   public String getBeforeString()
-   {
-      return fBeforeString;
-   }
+    public String getBeforeString() {
+        return fBeforeString;
+    }
 
-   public String getAfterString()
-   {
-      return fAfterString;
-   }
+    public String getAfterString() {
+        return fAfterString;
+    }
 }

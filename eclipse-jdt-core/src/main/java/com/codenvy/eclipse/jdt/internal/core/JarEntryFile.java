@@ -29,65 +29,52 @@ import java.util.zip.ZipFile;
  *
  * @see IStorage
  */
-public class JarEntryFile extends JarEntryResource
-{
-   private static final IJarEntryResource[] NO_CHILDREN = new IJarEntryResource[0];
+public class JarEntryFile extends JarEntryResource {
+    private static final IJarEntryResource[] NO_CHILDREN = new IJarEntryResource[0];
 
-   public JarEntryFile(String simpleName)
-   {
-      super(simpleName);
-   }
+    public JarEntryFile(String simpleName) {
+        super(simpleName);
+    }
 
-   public JarEntryResource clone(Object newParent)
-   {
-      JarEntryFile file = new JarEntryFile(this.simpleName);
-      file.setParent(newParent);
-      return file;
-   }
+    public JarEntryResource clone(Object newParent) {
+        JarEntryFile file = new JarEntryFile(this.simpleName);
+        file.setParent(newParent);
+        return file;
+    }
 
-   public InputStream getContents() throws CoreException
-   {
-      ZipFile zipFile = null;
-      try
-      {
-         zipFile = getZipFile();
-         if (JavaModelManager.ZIP_ACCESS_VERBOSE)
-         {
-            System.out.println(
-               "(" + Thread.currentThread() + ") [JarEntryFile.getContents()] Creating ZipFile on " + zipFile.getName()); //$NON-NLS-1$	//$NON-NLS-2$
-         }
-         String entryName = getEntryName();
-         ZipEntry zipEntry = zipFile.getEntry(entryName);
-         if (zipEntry == null)
-         {
-            throw new JavaModelException(new JavaModelStatus(IJavaModelStatusConstants.INVALID_PATH, entryName));
-         }
-         byte[] contents = Util.getZipEntryByteContent(zipEntry, zipFile);
-         return new ByteArrayInputStream(contents);
-      }
-      catch (IOException e)
-      {
-         throw new JavaModelException(e, IJavaModelStatusConstants.IO_EXCEPTION);
-      }
-      finally
-      {
-         // avoid leaking ZipFiles
-         JavaModelManager.getJavaModelManager().closeZipFile(zipFile);
-      }
-   }
+    public InputStream getContents() throws CoreException {
+        ZipFile zipFile = null;
+        try {
+            zipFile = getZipFile();
+            if (JavaModelManager.ZIP_ACCESS_VERBOSE) {
+                System.out.println(
+                        "(" + Thread.currentThread() + ") [JarEntryFile.getContents()] Creating ZipFile on " +
+                        zipFile.getName()); //$NON-NLS-1$	//$NON-NLS-2$
+            }
+            String entryName = getEntryName();
+            ZipEntry zipEntry = zipFile.getEntry(entryName);
+            if (zipEntry == null) {
+                throw new JavaModelException(new JavaModelStatus(IJavaModelStatusConstants.INVALID_PATH, entryName));
+            }
+            byte[] contents = Util.getZipEntryByteContent(zipEntry, zipFile);
+            return new ByteArrayInputStream(contents);
+        } catch (IOException e) {
+            throw new JavaModelException(e, IJavaModelStatusConstants.IO_EXCEPTION);
+        } finally {
+            // avoid leaking ZipFiles
+            JavaModelManager.getJavaModelManager().closeZipFile(zipFile);
+        }
+    }
 
-   public IJarEntryResource[] getChildren()
-   {
-      return NO_CHILDREN;
-   }
+    public IJarEntryResource[] getChildren() {
+        return NO_CHILDREN;
+    }
 
-   public boolean isFile()
-   {
-      return true;
-   }
+    public boolean isFile() {
+        return true;
+    }
 
-   public String toString()
-   {
-      return "JarEntryFile[" + getEntryName() + "]"; //$NON-NLS-2$ //$NON-NLS-1$
-   }
+    public String toString() {
+        return "JarEntryFile[" + getEntryName() + "]"; //$NON-NLS-2$ //$NON-NLS-1$
+    }
 }

@@ -27,17 +27,14 @@ import org.exoplatform.ide.client.framework.preference.PreferencePerformer;
 
 /**
  * Formatter preference item.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 23, 2012 11:33:13 AM anya $
- * 
  */
-public class FormatterPreferenceItem extends AbstractPreferenceItem
-{
-   private static final String NAME = Messages.INSTANCE.formatterTitle();
+public class FormatterPreferenceItem extends AbstractPreferenceItem {
+    private static final String NAME = Messages.INSTANCE.formatterTitle();
 
-   public FormatterPreferenceItem(PreferencePerformer performer)
-   {
-      super(NAME, new Image(JdtClientBundle.INSTANCE.formatterProfiles()), performer);
-   }
+    public FormatterPreferenceItem(PreferencePerformer performer) {
+        super(NAME, new Image(JdtClientBundle.INSTANCE.formatterProfiles()), performer);
+    }
 }

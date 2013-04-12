@@ -18,19 +18,13 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * Response to adding project or workspace members.
- */
+/** Response to adding project or workspace members. */
 @RoutingType(type = RoutingTypes.ADDMEMBERSRESPONSE)
 public interface AddMembersResponse extends ServerToClientDto {
 
-  /**
-   * Returns an array of users who's membership was modified.
-   */
-  JsonArray<UserDetailsWithRole> getNewMembers();
+    /** Returns an array of users who's membership was modified. */
+    JsonArray<UserDetailsWithRole> getNewMembers();
 
-  /**
-   * Returns an array of emails that could not be found.
-   */
-  JsonArray<String> getInvalidEmails();
+    /** Returns an array of emails that could not be found. */
+    JsonArray<String> getInvalidEmails();
 }

@@ -23,14 +23,12 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Sep 21, 2012 2:58:09 PM anya $
- *
  */
-public interface LaunchEnvironmentStartedHandler
-{
-   /**
-    * Perform actions, when launching of environment is started.
-    * 
-    * @param environmentInfo
-    */
-   void onLaunchEnvironmentStarted(EnvironmentInfo environmentInfo);
+public interface LaunchEnvironmentStartedHandler {
+    /**
+     * Perform actions, when launching of environment is started.
+     *
+     * @param environmentInfo
+     */
+    void onLaunchEnvironmentStarted(EnvironmentInfo environmentInfo);
 }

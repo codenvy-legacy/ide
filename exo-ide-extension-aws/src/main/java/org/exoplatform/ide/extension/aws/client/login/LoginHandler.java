@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link LoginEvent}.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 14, 2012 3:04:53 PM anya $
- * 
  */
-public interface LoginHandler extends EventHandler
-{
-   /**
-    * Perform login operations.
-    * 
-    * @param event
-    */
-   void onLogin(LoginEvent event);
+public interface LoginHandler extends EventHandler {
+    /**
+     * Perform login operations.
+     *
+     * @param event
+     */
+    void onLogin(LoginEvent event);
 }

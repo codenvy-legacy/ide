@@ -1,91 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<artifactId>exo-ide-parent</artifactId>
-		<groupId>org.exoplatform.ide</groupId>
-		<version>2.0.1-SNAPSHOT</version>
-	</parent>
-	<groupId>org.exoplatform.ide</groupId>
-	<artifactId>exo-ide-editor-php</artifactId>
-	<name>Codenvy IDE :: Editor :: PHP</name>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>exo-ide-parent</artifactId>
+        <groupId>org.exoplatform.ide</groupId>
+        <version>2.1.0-SNAPSHOT</version>
+    </parent>
+    <groupId>org.exoplatform.ide</groupId>
+    <artifactId>exo-ide-editor-php</artifactId>
 
-	<properties>
-		<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
-	</properties>
+    <name>Codenvy IDE :: Editor :: PHP</name>
 
-	<dependencies>
-		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-servlet</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-user</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.exoplatform.ide</groupId>
-			<artifactId>exo-ide-editor-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.exoplatform.ide</groupId>
-			<artifactId>exo-ide-editor</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.exoplatform.gwt</groupId>
-			<artifactId>codenvy-gwtframework-commons</artifactId>
-		</dependency>
+    <properties>
+        <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
+    </properties>
 
-		<dependency>
-			<groupId>org.exoplatform.gwt</groupId>
-			<artifactId>codenvy-gwtframework-ui</artifactId>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-servlet</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.gwt</groupId>
+            <artifactId>codenvy-gwtframework-commons</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.exoplatform.ide</groupId>
-			<artifactId>exo-ide-framework-client</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.exoplatform.gwt</groupId>
+            <artifactId>codenvy-gwtframework-ui</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.exoplatform.ide</groupId>
-			<artifactId>exo-ide-editor-xml</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-framework-client</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.exoplatform.ide</groupId>
-			<artifactId>exo-ide-editor-html</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor-xml</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.exoplatform.ide</groupId>
-			<artifactId>exo-ide-editor-css</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor-html</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.exoplatform.ide</groupId>
-			<artifactId>exo-ide-editor-javascript</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor-css</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.exoplatform.ide</groupId>
-			<artifactId>exo-ide-editor-java</artifactId>
-		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor-javascript</artifactId>
+        </dependency>
 
-	<build>
-		<resources>
-			<resource>
-				<directory>src/main/java</directory>
-			</resource>
-			<resource>
-				<directory>src/main/resources</directory>
-			</resource>
-		</resources>
-		<sourceDirectory>src/main/java</sourceDirectory>
-		<outputDirectory>target/classes</outputDirectory>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor-java</artifactId>
+        </dependency>
+    </dependencies>
 
-	</build>
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <outputDirectory>target/classes</outputDirectory>
+
+    </build>
 </project>

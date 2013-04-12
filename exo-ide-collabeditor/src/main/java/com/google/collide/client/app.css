@@ -1,24 +1,23 @@
-/* Global styles and external GWT styles. */
+    /* Global styles and external GWT styles. */
 
-body,td {
-  font-size: 13px;
-  font-family: arial, sans-serif;
-  color: #222;
-  
-  /* We turn off document level scrolling all together for the outer page. */
-  overflow: hidden;
-}
+    body, td {
+        font-size: 13px;
+        font-family: arial, sans-serif;
+        color: #222;
 
-/* We must override the user agent stylesheet which sets textarea font to monospace. */
-textarea {
-  font-family: inherit;
-}
+        /* We turn off document level scrolling all together for the outer page. */
+        overflow: hidden;
+    }
 
+        /* We must override the user agent stylesheet which sets textarea font to monospace. */
+    textarea {
+        font-family: inherit;
+    }
 
-#talk_roster {
-  display: none;
-}
+    #talk_roster {
+        display: none;
+    }
 
-a {
-  outline: none;
-}
+    a {
+        outline: none;
+    }

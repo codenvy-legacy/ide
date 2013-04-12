@@ -24,51 +24,35 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication
 
 /**
  * Event occurs, when user tries to manage CloudFoundr services.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 13, 2012 10:40:23 AM anya $
- * 
  */
-public class ManageServicesEvent extends GwtEvent<ManageServicesHandler>
-{
-   /**
-    * Type, used to register the event.
-    */
-   public static final GwtEvent.Type<ManageServicesHandler> TYPE = new GwtEvent.Type<ManageServicesHandler>();
+public class ManageServicesEvent extends GwtEvent<ManageServicesHandler> {
+    /** Type, used to register the event. */
+    public static final GwtEvent.Type<ManageServicesHandler> TYPE = new GwtEvent.Type<ManageServicesHandler>();
 
-   /**
-    * Application.
-    */
-   private CloudFoundryApplication application;
+    /** Application. */
+    private CloudFoundryApplication application;
 
-   public ManageServicesEvent(CloudFoundryApplication application)
-   {
-      this.application = application;
-   }
+    public ManageServicesEvent(CloudFoundryApplication application) {
+        this.application = application;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ManageServicesHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ManageServicesHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ManageServicesHandler handler)
-   {
-      handler.onManageServices(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ManageServicesHandler handler) {
+        handler.onManageServices(this);
+    }
 
-   /**
-    * @return {@link CloudFoundryApplication application} application
-    */
-   public CloudFoundryApplication getApplication()
-   {
-      return application;
-   }
+    /** @return {@link CloudFoundryApplication application} application */
+    public CloudFoundryApplication getApplication() {
+        return application;
+    }
 }

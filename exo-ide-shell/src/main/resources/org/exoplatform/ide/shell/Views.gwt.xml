@@ -19,8 +19,8 @@
 
 -->
 <module>
-   <inherits name='com.google.gwt.user.User' />
-   <replace-with class="org.exoplatform.ide.shell.client.ShellView">
-      <when-type-is class="org.exoplatform.ide.shell.client.ShellPresenter.Display" />
-   </replace-with>
+    <inherits name='com.google.gwt.user.User'/>
+    <replace-with class="org.exoplatform.ide.shell.client.ShellView">
+        <when-type-is class="org.exoplatform.ide.shell.client.ShellPresenter.Display"/>
+    </replace-with>
 </module>

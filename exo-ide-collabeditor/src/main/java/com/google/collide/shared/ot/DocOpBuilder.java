@@ -17,69 +17,66 @@ package com.google.collide.shared.ot;
 import com.google.collide.dto.DocOp;
 import com.google.collide.dto.shared.DocOpFactory;
 
-/**
- * Helper to create document operations via a builder pattern.
- *
- */
+/** Helper to create document operations via a builder pattern. */
 public class DocOpBuilder {
 
-  private DocOpCapturer capturer;
-  private final Runnable createCapturer;
+    private       DocOpCapturer capturer;
+    private final Runnable      createCapturer;
 
-  public DocOpBuilder(final DocOpFactory factory, final boolean shouldCompact) {
-    createCapturer = new Runnable() {
-      @Override
-      public void run() {
-        capturer = new DocOpCapturer(factory, shouldCompact);
-      }
-    };
+    public DocOpBuilder(final DocOpFactory factory, final boolean shouldCompact) {
+        createCapturer = new Runnable() {
+            @Override
+            public void run() {
+                capturer = new DocOpCapturer(factory, shouldCompact);
+            }
+        };
 
-    createCapturer.run();
-  }
+        createCapturer.run();
+    }
 
-  /**
-   * Builds and returns the document operation, and prepares the builder for
-   * another building sequence.
-   */
-  public DocOp build() {
-    DocOp op = capturer.getDocOp();
-    createCapturer.run();
-    return op;
-  }
+    /**
+     * Builds and returns the document operation, and prepares the builder for
+     * another building sequence.
+     */
+    public DocOp build() {
+        DocOp op = capturer.getDocOp();
+        createCapturer.run();
+        return op;
+    }
 
-  /**
-   * Adds a delete component for the given {@code text} to the document
-   * operation being built.
-   */
-  public DocOpBuilder delete(String text) {
-    capturer.delete(text);
-    return this;
-  }
+    /**
+     * Adds a delete component for the given {@code text} to the document
+     * operation being built.
+     */
+    public DocOpBuilder delete(String text) {
+        capturer.delete(text);
+        return this;
+    }
 
-  /**
-   * Adds an insert component for the given {@code text} to the document
-   * operation being built.
-   */
-  public DocOpBuilder insert(String text) {
-    capturer.insert(text);
-    return this;
-  }
+    /**
+     * Adds an insert component for the given {@code text} to the document
+     * operation being built.
+     */
+    public DocOpBuilder insert(String text) {
+        capturer.insert(text);
+        return this;
+    }
 
-  /**
-   * Adds a retain component for the given number of characters to the document
-   * operation being built.
-   */
-  public DocOpBuilder retain(int count, boolean hasTrailingNewline) {
-    capturer.retain(count, hasTrailingNewline);
-    return this;
-  }
+    /**
+     * Adds a retain component for the given number of characters to the document
+     * operation being built.
+     */
+    public DocOpBuilder retain(int count, boolean hasTrailingNewline) {
+        capturer.retain(count, hasTrailingNewline);
+        return this;
+    }
 
-  /**
-   * Adds a retain line component for the given number of lines to the document
-   * operation being built.
-   */
-  public DocOpBuilder retainLine(int lineCount) {
-    capturer.retainLine(lineCount);
-    return this;
-  }
+    /**
+     * Adds a retain line component for the given number of lines to the document
+     * operation being built.
+     */
+    public DocOpBuilder retainLine(int lineCount) {
+        capturer.retainLine(lineCount);
+        return this;
+    }
 }

@@ -24,32 +24,26 @@ package org.exoplatform.ide.extension.aws.shared.ec2;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public enum ImageState
-{
-   available("available"), deregistered("deregistered");
+public enum ImageState {
+    available("available"), deregistered("deregistered");
 
-   private final String value;
+    private final String value;
 
-   private ImageState(String value)
-   {
-      this.value = value;
-   }
+    private ImageState(String value) {
+        this.value = value;
+    }
 
-   @Override
-   public String toString()
-   {
-      return value;
-   }
+    @Override
+    public String toString() {
+        return value;
+    }
 
-   public static ImageState fromValue(String value)
-   {
-      for (ImageState v : ImageState.values())
-      {
-         if (v.value.equals(value))
-         {
-            return v;
-         }
-      }
-      throw new IllegalArgumentException("Invalid value '" + value + "' ");
-   }
+    public static ImageState fromValue(String value) {
+        for (ImageState v : ImageState.values()) {
+            if (v.value.equals(value)) {
+                return v;
+            }
+        }
+        throw new IllegalArgumentException("Invalid value '" + value + "' ");
+    }
 }

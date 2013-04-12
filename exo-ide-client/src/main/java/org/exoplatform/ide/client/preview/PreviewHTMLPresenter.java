@@ -34,121 +34,104 @@ import org.exoplatform.ide.vfs.shared.Link;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandler, EditorActiveFileChangedHandler
-{
+public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandler, EditorActiveFileChangedHandler {
 
-   public interface Display extends IsView
-   {
+    public interface Display extends IsView {
 
-      /**
-       * Shows preview
-       * 
-       * @param url
-       */
-      void showPreview(String url);
+        /**
+         * Shows preview
+         *
+         * @param url
+         */
+        void showPreview(String url);
 
-      /**
-       * Sets is preview available
-       * 
-       * @param available
-       */
-      void setPreviewAvailable(boolean available);
+        /**
+         * Sets is preview available
+         *
+         * @param available
+         */
+        void setPreviewAvailable(boolean available);
 
-      void setMessage(String message);
+        void setMessage(String message);
 
-   }
+    }
 
-   private static final String PREVIEW_NOT_AVAILABLE_SAVE_FILE = org.exoplatform.ide.client.IDE.OPERATION_CONSTANT
-      .previewNotAvailableSaveFile();
+    private static final String PREVIEW_NOT_AVAILABLE_SAVE_FILE = org.exoplatform.ide.client.IDE.OPERATION_CONSTANT
+                                                                                                .previewNotAvailableSaveFile();
 
-   /**
-    * Instance of attached Display
-    */
-   private Display display;
+    /** Instance of attached Display */
+    private Display display;
 
-   private FileModel activeFile;
+    private FileModel activeFile;
 
-   public PreviewHTMLPresenter()
-   {
-      IDE.addHandler(PreviewHTMLEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+    public PreviewHTMLPresenter() {
+        IDE.addHandler(PreviewHTMLEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
-      IDE.getInstance().addControl(new PreviewHTMLControl(), Docking.TOOLBAR_RIGHT);
-   }
+        IDE.getInstance().addControl(new PreviewHTMLControl(), Docking.TOOLBAR_RIGHT);
+    }
 
-   /**
-    * Do preview HTML file
-    * 
-    * @see org.exoplatform.ide.client.preview.event.PreviewHTMLHandler#onPreviewHTMLFile(org.exoplatform.ide.client.preview.event.PreviewHTMLEvent)
-    */
-   @Override
-   public void onPreviewHTMLFile(PreviewHTMLEvent event)
-   {
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         IDE.getInstance().openView((View)display);
-      }
-      display.asView().setViewVisible();
-      previewActiveFile();
-   }
+    /**
+     * Do preview HTML file
+     *
+     * @see org.exoplatform.ide.client.preview.event.PreviewHTMLHandler#onPreviewHTMLFile(org.exoplatform.ide.client.preview.event
+     * .PreviewHTMLEvent)
+     */
+    @Override
+    public void onPreviewHTMLFile(PreviewHTMLEvent event) {
+        if (display == null) {
+            display = GWT.create(Display.class);
+            IDE.getInstance().openView((View)display);
+        }
+        display.asView().setViewVisible();
+        previewActiveFile();
+    }
 
-   private void previewActiveFile()
-   {
-      if (activeFile == null)
-      {
-         IDE.getInstance().closeView(display.asView().getId());
-         return;
-      }
+    private void previewActiveFile() {
+        if (activeFile == null) {
+            IDE.getInstance().closeView(display.asView().getId());
+            return;
+        }
 
-      if (MimeType.TEXT_HTML.equals(activeFile.getMimeType()))
-      {
-         if (!activeFile.isPersisted())
-         {
-            display.setPreviewAvailable(false);
-            display.setMessage(PREVIEW_NOT_AVAILABLE_SAVE_FILE);
-         }
-         else
-         {
-            display.setPreviewAvailable(true);
-            display.showPreview(activeFile.getLinkByRelation(Link.REL_CONTENT_BY_PATH).getHref());
-         }
-      }
-      else
-      {
-         IDE.getInstance().closeView(display.asView().getId());
-      }
-   }
+        if (MimeType.TEXT_HTML.equals(activeFile.getMimeType())) {
+            if (!activeFile.isPersisted()) {
+                display.setPreviewAvailable(false);
+                display.setMessage(PREVIEW_NOT_AVAILABLE_SAVE_FILE);
+            } else {
+                display.setPreviewAvailable(true);
+                display.showPreview(activeFile.getLinkByRelation(Link.REL_CONTENT_BY_PATH).getHref());
+            }
+        } else {
+            IDE.getInstance().closeView(display.asView().getId());
+        }
+    }
 
-   /**
-    * Handler of ViewClosed event. Clear display instance if closed view is Preview.
-    * 
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+    /**
+     * Handler of ViewClosed event. Clear display instance if closed view is Preview.
+     *
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent)
+     */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      activeFile = event.getFile();
+    @Override
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        activeFile = event.getFile();
 
-      if (display != null)
-      {
-         previewActiveFile();
-      }
-   }
+        if (display != null) {
+            previewActiveFile();
+        }
+    }
 
 }

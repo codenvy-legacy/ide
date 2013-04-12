@@ -24,41 +24,39 @@ import org.exoplatform.ide.dtogen.shared.ServerError;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class ServerErrorImpl extends RoutableDtoClientImpl implements ServerError
-{
+public class ServerErrorImpl extends RoutableDtoClientImpl implements ServerError {
 
-   protected ServerErrorImpl()
-   {
+    protected ServerErrorImpl() {
 
-   }
+    }
 
-   @Override
-   public final native String getDetails() /*-{
-      return this["details"];
-   }-*/;
+    @Override
+    public final native String getDetails() /*-{
+        return this["details"];
+    }-*/;
 
-   public final native ServerErrorImpl setDetails(String details) /*-{
-      this["details"] = details;
-      return this;
-   }-*/;
+    public final native ServerErrorImpl setDetails(String details) /*-{
+        this["details"] = details;
+        return this;
+    }-*/;
 
-   public final native boolean hasDetails() /*-{
-      return this.hasOwnProperty("details");
-   }-*/;
+    public final native boolean hasDetails() /*-{
+        return this.hasOwnProperty("details");
+    }-*/;
 
-   @Override
-   public final native FailureReason getFailureReason() /*-{
-      return @org.exoplatform.ide.dtogen.shared.ServerError.FailureReason::valueOf(Ljava/lang/String;)(this["failureReason"]);
-   }-*/;
+    @Override
+    public final native FailureReason getFailureReason() /*-{
+        return @org.exoplatform.ide.dtogen.shared.ServerError.FailureReason::valueOf(Ljava/lang/String;)(this["failureReason"]);
+    }-*/;
 
-   public final native ServerErrorImpl setFailureReason(FailureReason failureReason) /*-{
-      failureReason = failureReason.@org.exoplatform.ide.dtogen.shared.ServerError.FailureReason::toString()();
-      this["failureReason"] = failureReason;
-      return this;
-   }-*/;
+    public final native ServerErrorImpl setFailureReason(FailureReason failureReason) /*-{
+        failureReason = failureReason.@org.exoplatform.ide.dtogen.shared.ServerError.FailureReason::toString()();
+        this["failureReason"] = failureReason;
+        return this;
+    }-*/;
 
-   public final native boolean hasFailureReason() /*-{
-      return this.hasOwnProperty("failureReason");
-   }-*/;
+    public final native boolean hasFailureReason() /*-{
+        return this.hasOwnProperty("failureReason");
+    }-*/;
 
 }

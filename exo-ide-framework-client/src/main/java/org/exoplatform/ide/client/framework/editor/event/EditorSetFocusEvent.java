@@ -23,29 +23,21 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class EditorSetFocusEvent extends GwtEvent<EditorSetFocusHandler>
-{
+public class EditorSetFocusEvent extends GwtEvent<EditorSetFocusHandler> {
 
-   public static final GwtEvent.Type<EditorSetFocusHandler> TYPE = new GwtEvent.Type<EditorSetFocusHandler>();
+    public static final GwtEvent.Type<EditorSetFocusHandler> TYPE = new GwtEvent.Type<EditorSetFocusHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(EditorSetFocusHandler handler)
-   {
-      handler.onEditorSetFocus(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(EditorSetFocusHandler handler) {
+        handler.onEditorSetFocus(this);
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorSetFocusHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorSetFocusHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

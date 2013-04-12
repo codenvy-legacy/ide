@@ -22,16 +22,16 @@ package org.exoplatform.ide.extension.cloudfoundry.client.url;
 /**
  * A widget that implements this interface provides registration for
  * Unmap button click handler instance.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: HasUnmapClickHandler.java Aug 19, 2011 11:47:14 AM vereshchaka $
  */
-public interface HasUnmapClickHandler
-{
-   /**
-    * Adds a {@link UnmapHandler} handler.
-    * 
-    * @param handler the unmap button click handler
-    */
-   void addUnmapClickHandler(UnmapHandler handler);
+public interface HasUnmapClickHandler {
+    /**
+     * Adds a {@link UnmapHandler} handler.
+     *
+     * @param handler
+     *         the unmap button click handler
+     */
+    void addUnmapClickHandler(UnmapHandler handler);
 }

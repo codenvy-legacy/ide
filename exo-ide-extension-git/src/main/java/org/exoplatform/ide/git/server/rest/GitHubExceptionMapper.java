@@ -29,17 +29,13 @@ import javax.ws.rs.ext.Provider;
  * @version $Id: SamplesServiceExceptionMapper.java Sep 2, 2011 12:22:10 PM vereshchaka $
  */
 @Provider
-public class GitHubExceptionMapper implements ExceptionMapper<GitHubException>
-{
+public class GitHubExceptionMapper implements ExceptionMapper<GitHubException> {
 
-   /**
-    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
-    */
-   @Override
-   public Response toResponse(GitHubException e)
-   {
-      return Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Error-Message")
-         .entity(e.getMessage()).type(e.getContentType()).build();
-   }
+    /** @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable) */
+    @Override
+    public Response toResponse(GitHubException e) {
+        return Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Error-Message")
+                       .entity(e.getMessage()).type(e.getContentType()).build();
+    }
 
 }

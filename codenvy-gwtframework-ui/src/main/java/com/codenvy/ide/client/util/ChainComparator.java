@@ -23,29 +23,24 @@ import java.util.Comparator;
  * Used to chain comparators. First compare the arguments using the first
  * comparator. If non-zero, return the result. Return the results of the second
  * comparator.
- *
+ * <p/>
  * This can be nested to combine arbitrary number of comparators.
  *
  * @param <T>
  */
-public final class ChainComparator<T> implements Comparator<T>
-{
-   private final Comparator<? super T> firstComparator;
+public final class ChainComparator<T> implements Comparator<T> {
+    private final Comparator<? super T> firstComparator;
 
-   private final Comparator<? super T> secondComparator;
+    private final Comparator<? super T> secondComparator;
 
-   public ChainComparator(Comparator<? super T> firstComparator, Comparator<? super T> secondComparator)
-   {
-      this.firstComparator = firstComparator;
-      this.secondComparator = secondComparator;
-   }
+    public ChainComparator(Comparator<? super T> firstComparator, Comparator<? super T> secondComparator) {
+        this.firstComparator = firstComparator;
+        this.secondComparator = secondComparator;
+    }
 
-   /**
-    * {@inheritDoc} *
-    */
-   public int compare(T o1, T o2)
-   {
-      int cmp = firstComparator.compare(o1, o2);
-      return cmp != 0 ? cmp : secondComparator.compare(o1, o2);
-   }
+    /** {@inheritDoc} * */
+    public int compare(T o1, T o2) {
+        int cmp = firstComparator.compare(o1, o2);
+        return cmp != 0 ? cmp : secondComparator.compare(o1, o2);
+    }
 }

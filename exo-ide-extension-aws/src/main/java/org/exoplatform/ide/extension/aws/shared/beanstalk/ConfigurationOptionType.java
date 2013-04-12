@@ -24,36 +24,30 @@ package org.exoplatform.ide.extension.aws.shared.beanstalk;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public enum ConfigurationOptionType
-{
-   Boolean("Boolean"),
-   Scalar("Scalar"),
-   List("List"),
-   KeyValueList("KeyValueList"),
-   CommaSeparatedList("CommaSeparatedList");
+public enum ConfigurationOptionType {
+    Boolean("Boolean"),
+    Scalar("Scalar"),
+    List("List"),
+    KeyValueList("KeyValueList"),
+    CommaSeparatedList("CommaSeparatedList");
 
-   private final String value;
+    private final String value;
 
-   private ConfigurationOptionType(String value)
-   {
-      this.value = value;
-   }
+    private ConfigurationOptionType(String value) {
+        this.value = value;
+    }
 
-   @Override
-   public String toString()
-   {
-      return value;
-   }
+    @Override
+    public String toString() {
+        return value;
+    }
 
-   public static ConfigurationOptionType fromValue(String value)
-   {
-      for (ConfigurationOptionType v : ConfigurationOptionType.values())
-      {
-         if (v.value.equals(value))
-         {
-            return v;
-         }
-      }
-      throw new IllegalArgumentException("Invalid value '" + value + "' ");
-   }
+    public static ConfigurationOptionType fromValue(String value) {
+        for (ConfigurationOptionType v : ConfigurationOptionType.values()) {
+            if (v.value.equals(value)) {
+                return v;
+            }
+        }
+        throw new IllegalArgumentException("Invalid value '" + value + "' ");
+    }
 }

@@ -45,228 +45,216 @@ import java.util.HashMap;
  * @see CompilationParticipant#reconcile(ReconcileContext)
  * @since 3.2
  */
-public class ReconcileContext
-{
+public class ReconcileContext {
 
-   private ReconcileWorkingCopyOperation operation;
+    private ReconcileWorkingCopyOperation operation;
 
-   private CompilationUnit workingCopy;
+    private CompilationUnit workingCopy;
 
-   /**
-    * Creates a reconcile context for the given reconcile operation.
-    *
-    * @param operation the reconcile operation
-    */
-   public ReconcileContext(ReconcileWorkingCopyOperation operation, CompilationUnit workingCopy)
-   {
-      this.operation = operation;
-      this.workingCopy = workingCopy;
-   }
+    /**
+     * Creates a reconcile context for the given reconcile operation.
+     *
+     * @param operation
+     *         the reconcile operation
+     */
+    public ReconcileContext(ReconcileWorkingCopyOperation operation, CompilationUnit workingCopy) {
+        this.operation = operation;
+        this.workingCopy = workingCopy;
+    }
 
-   /**
-    * Returns a resolved AST with {@link AST#JLS3 JLS3} level.
-    * It is created from the current state of the working copy.
-    * Creates one if none exists yet.
-    * Returns <code>null</code> if the current state of the working copy
-    * doesn't allow the AST to be created (e.g. if the working copy's content
-    * cannot be parsed).
-    * <p>
-    * If the AST level requested during reconciling is not {@link AST#JLS3}
-    * or if binding resolutions was not requested, then a different AST is created.
-    * Note that this AST does not become the current AST and it is only valid for
-    * the requestor.
-    * </p>
-    *
-    * @return the AST created from the current state of the working copy,
-    *         or <code>null</code> if none could be created
-    * @throws JavaModelException if the contents of the working copy
-    *                            cannot be accessed. Reasons include:
-    *                            <ul>
-    *                            <li> The working copy does not exist (ELEMENT_DOES_NOT_EXIST)</li>
-    *                            </ul>
-    * @deprecated JLS3 has been deprecated. This method has been replaced by {@link #getAST4()} which returns an AST
-    *             with JLS4 level.
-    */
-   public com.codenvy.eclipse.jdt.core.dom.CompilationUnit getAST3() throws JavaModelException
-   {
-      if (this.operation.astLevel != AST.JLS3 || !this.operation.resolveBindings)
-      {
-         // create AST (optionally resolving bindings)
-         ASTParser parser = ASTParser.newParser(AST.JLS3);
-         parser.setCompilerOptions(this.workingCopy.getJavaProject().getOptions(true));
-         if (JavaProject.hasJavaNature(this.workingCopy.getJavaProject().getProject()))
-         {
-            parser.setResolveBindings(true);
-         }
-         parser.setStatementsRecovery(
-            (this.operation.reconcileFlags & ICompilationUnit.ENABLE_STATEMENTS_RECOVERY) != 0);
-         parser.setBindingsRecovery((this.operation.reconcileFlags & ICompilationUnit.ENABLE_BINDINGS_RECOVERY) != 0);
-         parser.setSource(this.workingCopy);
-         parser.setIgnoreMethodBodies((this.operation.reconcileFlags & ICompilationUnit.IGNORE_METHOD_BODIES) != 0);
-         return (com.codenvy.eclipse.jdt.core.dom.CompilationUnit)parser.createAST(this.operation.progressMonitor);
-      }
-      return this.operation.makeConsistent(this.workingCopy);
-   }
+    /**
+     * Returns a resolved AST with {@link AST#JLS3 JLS3} level.
+     * It is created from the current state of the working copy.
+     * Creates one if none exists yet.
+     * Returns <code>null</code> if the current state of the working copy
+     * doesn't allow the AST to be created (e.g. if the working copy's content
+     * cannot be parsed).
+     * <p>
+     * If the AST level requested during reconciling is not {@link AST#JLS3}
+     * or if binding resolutions was not requested, then a different AST is created.
+     * Note that this AST does not become the current AST and it is only valid for
+     * the requestor.
+     * </p>
+     *
+     * @return the AST created from the current state of the working copy,
+     *         or <code>null</code> if none could be created
+     * @throws JavaModelException
+     *         if the contents of the working copy
+     *         cannot be accessed. Reasons include:
+     *         <ul>
+     *         <li> The working copy does not exist (ELEMENT_DOES_NOT_EXIST)</li>
+     *         </ul>
+     * @deprecated JLS3 has been deprecated. This method has been replaced by {@link #getAST4()} which returns an AST
+     *             with JLS4 level.
+     */
+    public com.codenvy.eclipse.jdt.core.dom.CompilationUnit getAST3() throws JavaModelException {
+        if (this.operation.astLevel != AST.JLS3 || !this.operation.resolveBindings) {
+            // create AST (optionally resolving bindings)
+            ASTParser parser = ASTParser.newParser(AST.JLS3);
+            parser.setCompilerOptions(this.workingCopy.getJavaProject().getOptions(true));
+            if (JavaProject.hasJavaNature(this.workingCopy.getJavaProject().getProject())) {
+                parser.setResolveBindings(true);
+            }
+            parser.setStatementsRecovery(
+                    (this.operation.reconcileFlags & ICompilationUnit.ENABLE_STATEMENTS_RECOVERY) != 0);
+            parser.setBindingsRecovery((this.operation.reconcileFlags & ICompilationUnit.ENABLE_BINDINGS_RECOVERY) != 0);
+            parser.setSource(this.workingCopy);
+            parser.setIgnoreMethodBodies((this.operation.reconcileFlags & ICompilationUnit.IGNORE_METHOD_BODIES) != 0);
+            return (com.codenvy.eclipse.jdt.core.dom.CompilationUnit)parser.createAST(this.operation.progressMonitor);
+        }
+        return this.operation.makeConsistent(this.workingCopy);
+    }
 
-   /**
-    * Returns a resolved AST with {@link AST#JLS4 JLS4} level.
-    * It is created from the current state of the working copy.
-    * Creates one if none exists yet.
-    * Returns <code>null</code> if the current state of the working copy
-    * doesn't allow the AST to be created (e.g. if the working copy's content
-    * cannot be parsed).
-    * <p>
-    * If the AST level requested during reconciling is not {@link AST#JLS4}
-    * or if binding resolutions was not requested, then a different AST is created.
-    * Note that this AST does not become the current AST and it is only valid for
-    * the requestor.
-    * </p>
-    *
-    * @return the AST created from the current state of the working copy,
-    *         or <code>null</code> if none could be created
-    * @throws JavaModelException if the contents of the working copy
-    *                            cannot be accessed. Reasons include:
-    *                            <ul>
-    *                            <li> The working copy does not exist (ELEMENT_DOES_NOT_EXIST)</li>
-    *                            </ul>
-    * @since 3.7.1
-    */
-   public com.codenvy.eclipse.jdt.core.dom.CompilationUnit getAST4() throws JavaModelException
-   {
-      if (this.operation.astLevel != AST.JLS4 || !this.operation.resolveBindings)
-      {
-         // create AST (optionally resolving bindings)
-         ASTParser parser = ASTParser.newParser(AST.JLS4);
-         parser.setCompilerOptions(this.workingCopy.getJavaProject().getOptions(true));
-         if (JavaProject.hasJavaNature(this.workingCopy.getJavaProject().getProject()))
-         {
-            parser.setResolveBindings(true);
-         }
-         parser.setStatementsRecovery(
-            (this.operation.reconcileFlags & ICompilationUnit.ENABLE_STATEMENTS_RECOVERY) != 0);
-         parser.setBindingsRecovery((this.operation.reconcileFlags & ICompilationUnit.ENABLE_BINDINGS_RECOVERY) != 0);
-         parser.setSource(this.workingCopy);
-         parser.setIgnoreMethodBodies((this.operation.reconcileFlags & ICompilationUnit.IGNORE_METHOD_BODIES) != 0);
-         return (com.codenvy.eclipse.jdt.core.dom.CompilationUnit)parser.createAST(this.operation.progressMonitor);
-      }
-      return this.operation.makeConsistent(this.workingCopy);
-   }
+    /**
+     * Returns a resolved AST with {@link AST#JLS4 JLS4} level.
+     * It is created from the current state of the working copy.
+     * Creates one if none exists yet.
+     * Returns <code>null</code> if the current state of the working copy
+     * doesn't allow the AST to be created (e.g. if the working copy's content
+     * cannot be parsed).
+     * <p>
+     * If the AST level requested during reconciling is not {@link AST#JLS4}
+     * or if binding resolutions was not requested, then a different AST is created.
+     * Note that this AST does not become the current AST and it is only valid for
+     * the requestor.
+     * </p>
+     *
+     * @return the AST created from the current state of the working copy,
+     *         or <code>null</code> if none could be created
+     * @throws JavaModelException
+     *         if the contents of the working copy
+     *         cannot be accessed. Reasons include:
+     *         <ul>
+     *         <li> The working copy does not exist (ELEMENT_DOES_NOT_EXIST)</li>
+     *         </ul>
+     * @since 3.7.1
+     */
+    public com.codenvy.eclipse.jdt.core.dom.CompilationUnit getAST4() throws JavaModelException {
+        if (this.operation.astLevel != AST.JLS4 || !this.operation.resolveBindings) {
+            // create AST (optionally resolving bindings)
+            ASTParser parser = ASTParser.newParser(AST.JLS4);
+            parser.setCompilerOptions(this.workingCopy.getJavaProject().getOptions(true));
+            if (JavaProject.hasJavaNature(this.workingCopy.getJavaProject().getProject())) {
+                parser.setResolveBindings(true);
+            }
+            parser.setStatementsRecovery(
+                    (this.operation.reconcileFlags & ICompilationUnit.ENABLE_STATEMENTS_RECOVERY) != 0);
+            parser.setBindingsRecovery((this.operation.reconcileFlags & ICompilationUnit.ENABLE_BINDINGS_RECOVERY) != 0);
+            parser.setSource(this.workingCopy);
+            parser.setIgnoreMethodBodies((this.operation.reconcileFlags & ICompilationUnit.IGNORE_METHOD_BODIES) != 0);
+            return (com.codenvy.eclipse.jdt.core.dom.CompilationUnit)parser.createAST(this.operation.progressMonitor);
+        }
+        return this.operation.makeConsistent(this.workingCopy);
+    }
 
-   /**
-    * Returns the AST level requested by the reconcile operation.
-    * It is either {@link ICompilationUnit#NO_AST}, or one of the JLS constants defined on {@link AST}.
-    *
-    * @return the AST level requested by the reconcile operation
-    */
-   public int getASTLevel()
-   {
-      return this.operation.astLevel;
-   }
+    /**
+     * Returns the AST level requested by the reconcile operation.
+     * It is either {@link ICompilationUnit#NO_AST}, or one of the JLS constants defined on {@link AST}.
+     *
+     * @return the AST level requested by the reconcile operation
+     */
+    public int getASTLevel() {
+        return this.operation.astLevel;
+    }
 
-   /**
-    * Returns whether the reconcile operation is resolving bindings.
-    *
-    * @return whether the reconcile operation is resolving bindings
-    */
-   public boolean isResolvingBindings()
-   {
-      return this.operation.resolveBindings;
-   }
+    /**
+     * Returns whether the reconcile operation is resolving bindings.
+     *
+     * @return whether the reconcile operation is resolving bindings
+     */
+    public boolean isResolvingBindings() {
+        return this.operation.resolveBindings;
+    }
 
-   /**
-    * Returns the reconcile flag of this context. This flag is a bitwise value of the constant defined
-    * in {@link ICompilationUnit}.
-    *
-    * @return the reconcile flag of this context
-    * @see ICompilationUnit#ENABLE_BINDINGS_RECOVERY
-    * @see ICompilationUnit#ENABLE_STATEMENTS_RECOVERY
-    * @see ICompilationUnit#IGNORE_METHOD_BODIES
-    * @since 3.6
-    */
-   public int getReconcileFlags()
-   {
-      return this.operation.reconcileFlags;
-   }
+    /**
+     * Returns the reconcile flag of this context. This flag is a bitwise value of the constant defined
+     * in {@link ICompilationUnit}.
+     *
+     * @return the reconcile flag of this context
+     * @see ICompilationUnit#ENABLE_BINDINGS_RECOVERY
+     * @see ICompilationUnit#ENABLE_STATEMENTS_RECOVERY
+     * @see ICompilationUnit#IGNORE_METHOD_BODIES
+     * @since 3.6
+     */
+    public int getReconcileFlags() {
+        return this.operation.reconcileFlags;
+    }
 
-   /**
-    * Returns the delta describing the change to the working copy being reconciled.
-    * Returns <code>null</code> if there is no change.
-    * Note that the delta's AST is not yet positioned at this stage. Use {@link #getAST4()}
-    * to get the current AST.
-    *
-    * @return the delta describing the change, or <code>null</code> if none
-    */
-   public IJavaElementDelta getDelta()
-   {
-      return this.operation.deltaBuilder.delta;
-   }
+    /**
+     * Returns the delta describing the change to the working copy being reconciled.
+     * Returns <code>null</code> if there is no change.
+     * Note that the delta's AST is not yet positioned at this stage. Use {@link #getAST4()}
+     * to get the current AST.
+     *
+     * @return the delta describing the change, or <code>null</code> if none
+     */
+    public IJavaElementDelta getDelta() {
+        return this.operation.deltaBuilder.delta;
+    }
 
-   /**
-    * Returns the problems to be reported to the problem requestor of the reconcile operation
-    * for the given marker type.
-    * Returns <code>null</code> if no problems need to be reported for this marker type.
-    *
-    * @param markerType the given marker type
-    * @return problems to be reported to the problem requestor
-    */
-   public CategorizedProblem[] getProblems(String markerType)
-   {
-      if (this.operation.problems == null)
-      {
-         return null;
-      }
-      return (CategorizedProblem[])this.operation.problems.get(markerType);
-   }
+    /**
+     * Returns the problems to be reported to the problem requestor of the reconcile operation
+     * for the given marker type.
+     * Returns <code>null</code> if no problems need to be reported for this marker type.
+     *
+     * @param markerType
+     *         the given marker type
+     * @return problems to be reported to the problem requestor
+     */
+    public CategorizedProblem[] getProblems(String markerType) {
+        if (this.operation.problems == null) {
+            return null;
+        }
+        return (CategorizedProblem[])this.operation.problems.get(markerType);
+    }
 
-   /**
-    * Returns the working copy this context refers to.
-    *
-    * @return the working copy this context refers to
-    */
-   public ICompilationUnit getWorkingCopy()
-   {
-      return this.workingCopy;
-   }
+    /**
+     * Returns the working copy this context refers to.
+     *
+     * @return the working copy this context refers to
+     */
+    public ICompilationUnit getWorkingCopy() {
+        return this.workingCopy;
+    }
 
-   /**
-    * Resets the AST carried by this context.
-    * A compilation participant that modifies the environment that would result in different
-    * bindings for the AST is expected to reset the AST on this context, so that other
-    * participants don't get a stale AST.
-    * <p>
-    * Note that resetting the AST will not restart the reconcile process. Only further
-    * participants will see the new AST. Thus participants running before the one that
-    * resets the AST will have a stale view of the AST and its problems. Use
-    * the compilation participant extension point to order the participants.
-    * </p>
-    */
-   public void resetAST()
-   {
-      this.operation.ast = null;
-      putProblems(IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER, null);
-      putProblems(IJavaModelMarker.TASK_MARKER, null);
-   }
+    /**
+     * Resets the AST carried by this context.
+     * A compilation participant that modifies the environment that would result in different
+     * bindings for the AST is expected to reset the AST on this context, so that other
+     * participants don't get a stale AST.
+     * <p>
+     * Note that resetting the AST will not restart the reconcile process. Only further
+     * participants will see the new AST. Thus participants running before the one that
+     * resets the AST will have a stale view of the AST and its problems. Use
+     * the compilation participant extension point to order the participants.
+     * </p>
+     */
+    public void resetAST() {
+        this.operation.ast = null;
+        putProblems(IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER, null);
+        putProblems(IJavaModelMarker.TASK_MARKER, null);
+    }
 
-   /**
-    * Sets the problems to be reported to the problem requestor of the reconcile operation
-    * for the given marker type.
-    * <code>null</code> indicates that no problems need to be reported.
-    * <p>
-    * Using this functionality, a participant that resolves problems for a given marker type
-    * can hide those problems since they don't exist any longer.
-    * </p>
-    *
-    * @param markerType the marker type of the given problems
-    * @param problems   the problems to be reported to the problem requestor of the reconcile operation,
-    *                   or <code>null</code> if none
-    */
-   public void putProblems(String markerType, CategorizedProblem[] problems)
-   {
-      if (this.operation.problems == null)
-      {
-         this.operation.problems = new HashMap();
-      }
-      this.operation.problems.put(markerType, problems);
-   }
+    /**
+     * Sets the problems to be reported to the problem requestor of the reconcile operation
+     * for the given marker type.
+     * <code>null</code> indicates that no problems need to be reported.
+     * <p>
+     * Using this functionality, a participant that resolves problems for a given marker type
+     * can hide those problems since they don't exist any longer.
+     * </p>
+     *
+     * @param markerType
+     *         the marker type of the given problems
+     * @param problems
+     *         the problems to be reported to the problem requestor of the reconcile operation,
+     *         or <code>null</code> if none
+     */
+    public void putProblems(String markerType, CategorizedProblem[] problems) {
+        if (this.operation.problems == null) {
+            this.operation.problems = new HashMap();
+        }
+        this.operation.problems.put(markerType, problems);
+    }
 
 }

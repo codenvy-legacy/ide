@@ -19,86 +19,83 @@ import com.codenvy.eclipse.ltk.core.refactoring.history.RefactoringHistoryEvent;
  *
  * @since 3.2
  */
-public final class RefactoringHistorySerializer implements IRefactoringHistoryListener
-{
+public final class RefactoringHistorySerializer implements IRefactoringHistoryListener {
 
-   /**
-    * {@inheritDoc}
-    */
-   public void historyNotification(final RefactoringHistoryEvent event)
-   {
-      //		Assert.isNotNull(event);
-      //		switch (event.getEventType()) {
-      //			case RefactoringHistoryEvent.ADDED:
-      //			case RefactoringHistoryEvent.PUSHED:
-      //			case RefactoringHistoryEvent.POPPED: {
-      //				final RefactoringDescriptorProxy proxy= event.getDescriptor();
-      //				final long stamp= proxy.getTimeStamp();
-      //				if (stamp >= 0) {
-      //					final String name= proxy.getProject();
-      //					final IFileStore store= EFS.getLocalFileSystem().getStore(RefactoringCorePlugin.getDefault().getStateLocation()).getChild(
-      //                  RefactoringHistoryService.NAME_HISTORY_FOLDER);
-      //					if (name != null && !"".equals(name)) { //$NON-NLS-1$
-      //						final IProject project= ResourcesPlugin.getWorkspace().getRoot().getProject(name);
-      //						if (project.isAccessible()) {
-      //							if (RefactoringHistoryService.hasSharedRefactoringHistory(project)) {
-      //								final URI uri= project.getLocationURI();
-      //								if (uri != null) {
-      //									try {
-      //										processHistoryNotification(EFS.getStore(uri).getChild(RefactoringHistoryService.NAME_HISTORY_FOLDER), event, name);
-      //									} catch (CoreException exception) {
-      //										RefactoringCorePlugin.log(exception);
-      //									} finally {
-      //										try {
-      //											project.refreshLocal(IResource.DEPTH_INFINITE, null);
-      //										} catch (CoreException exception) {
-      //											RefactoringCorePlugin.log(exception);
-      //										}
-      //									}
-      //								}
-      //							} else {
-      //								try {
-      //									processHistoryNotification(store.getChild(name), event, name);
-      //								} catch (CoreException exception) {
-      //									RefactoringCorePlugin.log(exception);
-      //								}
-      //							}
-      //						}
-      //					} else {
-      //						try {
-      //							processHistoryNotification(store.getChild(RefactoringHistoryService.NAME_WORKSPACE_PROJECT), event, name);
-      //						} catch (CoreException exception) {
-      //							RefactoringCorePlugin.log(exception);
-      //						}
-      //					}
-      //				}
-      //			}
-      //		}
-   }
+    /** {@inheritDoc} */
+    public void historyNotification(final RefactoringHistoryEvent event) {
+        //		Assert.isNotNull(event);
+        //		switch (event.getEventType()) {
+        //			case RefactoringHistoryEvent.ADDED:
+        //			case RefactoringHistoryEvent.PUSHED:
+        //			case RefactoringHistoryEvent.POPPED: {
+        //				final RefactoringDescriptorProxy proxy= event.getDescriptor();
+        //				final long stamp= proxy.getTimeStamp();
+        //				if (stamp >= 0) {
+        //					final String name= proxy.getProject();
+        //					final IFileStore store= EFS.getLocalFileSystem().getStore(RefactoringCorePlugin.getDefault().getStateLocation()).getChild(
+        //                  RefactoringHistoryService.NAME_HISTORY_FOLDER);
+        //					if (name != null && !"".equals(name)) { //$NON-NLS-1$
+        //						final IProject project= ResourcesPlugin.getWorkspace().getRoot().getProject(name);
+        //						if (project.isAccessible()) {
+        //							if (RefactoringHistoryService.hasSharedRefactoringHistory(project)) {
+        //								final URI uri= project.getLocationURI();
+        //								if (uri != null) {
+        //									try {
+        //										processHistoryNotification(EFS.getStore(uri).getChild(RefactoringHistoryService.NAME_HISTORY_FOLDER), event, name);
+        //									} catch (CoreException exception) {
+        //										RefactoringCorePlugin.log(exception);
+        //									} finally {
+        //										try {
+        //											project.refreshLocal(IResource.DEPTH_INFINITE, null);
+        //										} catch (CoreException exception) {
+        //											RefactoringCorePlugin.log(exception);
+        //										}
+        //									}
+        //								}
+        //							} else {
+        //								try {
+        //									processHistoryNotification(store.getChild(name), event, name);
+        //								} catch (CoreException exception) {
+        //									RefactoringCorePlugin.log(exception);
+        //								}
+        //							}
+        //						}
+        //					} else {
+        //						try {
+        //							processHistoryNotification(store.getChild(RefactoringHistoryService.NAME_WORKSPACE_PROJECT), event, name);
+        //						} catch (CoreException exception) {
+        //							RefactoringCorePlugin.log(exception);
+        //						}
+        //					}
+        //				}
+        //			}
+        //		}
+    }
 
-   //	/**
-   //	 * Processes the history event.
-   //	 *
-   //	 * @param store
-   //	 *            the file store
-   //	 * @param event
-   //	 *            the history event
-   //	 * @param name
-   //	 *            the project name, or <code>null</code>
-   //	 * @throws org.eclipse.core.runtime.CoreException
-   //	 *             if an error occurs
-   //	 */
-   //	private void processHistoryNotification(final IFileStore store, final RefactoringHistoryEvent event, final String name) throws CoreException
-   //   {
-   //		final RefactoringDescriptorProxy proxy= event.getDescriptor();
-   //		final int type= event.getEventType();
-   //		final RefactoringHistoryManager manager= new RefactoringHistoryManager(store, name);
-   //		final NullProgressMonitor monitor= new NullProgressMonitor();
-   //		if (type == RefactoringHistoryEvent.PUSHED || type == RefactoringHistoryEvent.ADDED) {
-   //			final RefactoringDescriptor descriptor= proxy.requestDescriptor(monitor);
-   //			if (descriptor != null)
-   //				manager.addRefactoringDescriptor(descriptor, type == RefactoringHistoryEvent.ADDED, monitor);
-   //		} else if (type == RefactoringHistoryEvent.POPPED)
-   //			manager.removeRefactoringDescriptors(new RefactoringDescriptorProxy[] { proxy}, monitor, RefactoringCoreMessages.RefactoringHistoryService_updating_history);
-   //	}
+    //	/**
+    //	 * Processes the history event.
+    //	 *
+    //	 * @param store
+    //	 *            the file store
+    //	 * @param event
+    //	 *            the history event
+    //	 * @param name
+    //	 *            the project name, or <code>null</code>
+    //	 * @throws org.eclipse.core.runtime.CoreException
+    //	 *             if an error occurs
+    //	 */
+    //	private void processHistoryNotification(final IFileStore store, final RefactoringHistoryEvent event,
+    // final String name) throws CoreException
+    //   {
+    //		final RefactoringDescriptorProxy proxy= event.getDescriptor();
+    //		final int type= event.getEventType();
+    //		final RefactoringHistoryManager manager= new RefactoringHistoryManager(store, name);
+    //		final NullProgressMonitor monitor= new NullProgressMonitor();
+    //		if (type == RefactoringHistoryEvent.PUSHED || type == RefactoringHistoryEvent.ADDED) {
+    //			final RefactoringDescriptor descriptor= proxy.requestDescriptor(monitor);
+    //			if (descriptor != null)
+    //				manager.addRefactoringDescriptor(descriptor, type == RefactoringHistoryEvent.ADDED, monitor);
+    //		} else if (type == RefactoringHistoryEvent.POPPED)
+    //			manager.removeRefactoringDescriptors(new RefactoringDescriptorProxy[] { proxy}, monitor, RefactoringCoreMessages.RefactoringHistoryService_updating_history);
+    //	}
 }

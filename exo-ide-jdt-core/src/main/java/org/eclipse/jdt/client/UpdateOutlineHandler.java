@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link UpdateOutlineEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Feb 6, 2012 5:26:21 PM anya $
- * 
  */
-public interface UpdateOutlineHandler extends EventHandler
-{
-   /**
-    * Perform actions to update Outline.
-    * 
-    * @param event
-    */
-   void onUpdateOutline(UpdateOutlineEvent event);
+public interface UpdateOutlineHandler extends EventHandler {
+    /**
+     * Perform actions to update Outline.
+     *
+     * @param event
+     */
+    void onUpdateOutline(UpdateOutlineEvent event);
 }

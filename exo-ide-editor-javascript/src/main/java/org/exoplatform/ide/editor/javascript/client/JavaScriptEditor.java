@@ -26,23 +26,21 @@ import org.exoplatform.ide.editor.shared.text.IDocument;
 
 /**
  * JavaScript editor based on {@link CollabEditor}.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: JavaScriptEditor.java Aug 27, 2012 4:21:04 PM azatsarynnyy $
- *
  */
-public class JavaScriptEditor extends CollabEditor
-{
-   /**
-    * Constructs new instance of {@link JavaScriptEditor} for a specific MIME-type.
-    * 
-    * @param mimeType MIME-type
-    */
-   public JavaScriptEditor(String mimeType)
-   {
-      super(mimeType);
-      editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(new JavaScriptAutocompleter());
-      editorBundle.getAutocompleter().addContentAssitProcessor(IDocument.DEFAULT_CONTENT_TYPE,
-         new JavaScriptContentAssistProcessor());
-   }
+public class JavaScriptEditor extends CollabEditor {
+    /**
+     * Constructs new instance of {@link JavaScriptEditor} for a specific MIME-type.
+     *
+     * @param mimeType
+     *         MIME-type
+     */
+    public JavaScriptEditor(String mimeType) {
+        super(mimeType);
+        editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(new JavaScriptAutocompleter());
+        editorBundle.getAutocompleter().addContentAssitProcessor(IDocument.DEFAULT_CONTENT_TYPE,
+                                                                 new JavaScriptContentAssistProcessor());
+    }
 }

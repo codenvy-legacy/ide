@@ -28,17 +28,14 @@ import org.exoplatform.ide.git.client.commit.CommitEvent;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 31, 2011 9:21:04 AM anya $
- * 
  */
-public class CommitControl extends GitControl
-{
-   public CommitControl()
-   {
-      super(GitExtension.MESSAGES.commitControlId());
-      setTitle(GitExtension.MESSAGES.commitControlTitle());
-      setPrompt(GitExtension.MESSAGES.commitControlPrompt());
-      setEvent(new CommitEvent());
-      setImages(GitClientBundle.INSTANCE.commit(), GitClientBundle.INSTANCE.commitDisabled());
-      setGroupName(GroupNames.COMMANDS);
-   }
+public class CommitControl extends GitControl {
+    public CommitControl() {
+        super(GitExtension.MESSAGES.commitControlId());
+        setTitle(GitExtension.MESSAGES.commitControlTitle());
+        setPrompt(GitExtension.MESSAGES.commitControlPrompt());
+        setEvent(new CommitEvent());
+        setImages(GitClientBundle.INSTANCE.commit(), GitClientBundle.INSTANCE.commitDisabled());
+        setGroupName(GroupNames.COMMANDS);
+    }
 }

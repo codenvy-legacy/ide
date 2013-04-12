@@ -22,15 +22,14 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link EvaluateExpressionEvent} event.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: EvaluateExpressionHandler.java May 7, 2012 12:39:25 PM azatsarynnyy $
- *
  */
-public interface EvaluateExpressionHandler extends EventHandler
-{
-   /**
-    * @param event {@link EvaluateExpressionEvent}
-    */
-   void onEvaluateExpression(EvaluateExpressionEvent e);
+public interface EvaluateExpressionHandler extends EventHandler {
+    /**
+     * @param event
+     *         {@link EvaluateExpressionEvent}
+     */
+    void onEvaluateExpression(EvaluateExpressionEvent e);
 }

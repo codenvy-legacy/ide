@@ -23,315 +23,313 @@ package org.exoplatform.ide.git.shared;
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Mar 29, 2012 12:41:47 PM anya $
- * 
  */
-public interface GitHubRepository
-{
-   /**
-    * Get repository's name.
-    * 
-    * @return {@link String} name
-    */
-   String getName();
+public interface GitHubRepository {
+    /**
+     * Get repository's name.
+     * 
+     * @return {@link String} name
+     */
+    String getName();
 
-   /**
-    * Set repository's name.
-    * 
-    * @param name repository's name
-    */
-   void setName(String name);
+    /**
+     * Set repository's name.
+     * 
+     * @param name repository's name
+     */
+    void setName(String name);
 
-   /**
-    * Get repository's location.
-    * 
-    * @return {@link String} url
-    */
-   String getUrl();
+    /**
+     * Get repository's location.
+     * 
+     * @return {@link String} url
+     */
+    String getUrl();
 
-   /**
-    * Set repository's URL.
-    * 
-    * @param url repository's URL
-    */
-   void setUrl(String url);
+    /**
+     * Set repository's URL.
+     * 
+     * @param url repository's URL
+     */
+    void setUrl(String url);
 
-   /**
-    * Get repository's home page.
-    * 
-    * @return {@link String} home page
-    */
-   String getHomepage();
+    /**
+     * Get repository's home page.
+     * 
+     * @return {@link String} home page
+     */
+    String getHomepage();
 
-   /**
-    * Set repository's home page.
-    * 
-    * @param homepage home page
-    */
-   void setHomepage(String homepage);
+    /**
+     * Set repository's home page.
+     * 
+     * @param homepage home page
+     */
+    void setHomepage(String homepage);
 
-   /**
-    * Get the number of repository's forks.
-    * 
-    * @return forks
-    */
-   int getForks();
+    /**
+     * Get the number of repository's forks.
+     * 
+     * @return forks
+     */
+    int getForks();
 
-   /**
-    * Set the number of repository's forks.
-    * 
-    * @param forks number of forks
-    */
-   void setForks(int forks);
+    /**
+     * Set the number of repository's forks.
+     * 
+     * @param forks number of forks
+     */
+    void setForks(int forks);
 
-   /**
-    * Get repository's language.
-    * 
-    * @return {@link String} language
-    */
-   String getLanguage();
+    /**
+     * Get repository's language.
+     * 
+     * @return {@link String} language
+     */
+    String getLanguage();
 
-   /**
-    * Set repository's language.
-    * 
-    * @param language language
-    */
-   void setLanguage(String language);
+    /**
+     * Set repository's language.
+     * 
+     * @param language language
+     */
+    void setLanguage(String language);
 
-   /**
-    * Get fork state.
-    * 
-    * @return {@link Boolean} <code>true</code> id forked
-    */
-   boolean isFork();
+    /**
+     * Get fork state.
+     * 
+     * @return {@link Boolean} <code>true</code> id forked
+     */
+    boolean isFork();
 
-   /**
-    * Set fork state.
-    * 
-    * @param fork fork
-    */
-   void setFork(boolean fork);
+    /**
+     * Set fork state.
+     * 
+     * @param fork fork
+     */
+    void setFork(boolean fork);
 
-   /**
-    * Get the number of repository's watchers.
-    * 
-    * @return {@link Integer} the number of watchers
-    */
-   int getWatchers();
+    /**
+     * Get the number of repository's watchers.
+     * 
+     * @return {@link Integer} the number of watchers
+     */
+    int getWatchers();
 
-   /**
-    * Set the number of repository's watchers.
-    * 
-    * @param watchers wathers
-    */
-   void setWatchers(int watchers);
+    /**
+     * Set the number of repository's watchers.
+     * 
+     * @param watchers wathers
+     */
+    void setWatchers(int watchers);
 
-   /**
-    * Get private state of the repository.
-    * 
-    * @return {@link Boolean} private state of the repository
-    */
-   boolean isPrivate();
+    /**
+     * Get private state of the repository.
+     * 
+     * @return {@link Boolean} private state of the repository
+     */
+    boolean isPrivate();
 
-   /**
-    * Set private state of the repository.
-    * 
-    * @param isPrivate private
-    */
-   void setPrivate(boolean isPrivate);
+    /**
+     * Set private state of the repository.
+     * 
+     * @param isPrivate private
+     */
+    void setPrivate(boolean isPrivate);
 
-   /**
-    * Get repository's size.
-    * 
-    * @return {@link Integer} size
-    */
-   int getSize();
+    /**
+     * Get repository's size.
+     * 
+     * @return {@link Integer} size
+     */
+    int getSize();
 
-   /**
-    * Set repository's size.
-    * 
-    * @param size size
-    */
-   void setSize(int size);
+    /**
+     * Set repository's size.
+     * 
+     * @param size size
+     */
+    void setSize(int size);
 
-   /**
-    * Get repository's description.
-    * 
-    * @return {@link String} description
-    */
-   String getDescription();
+    /**
+     * Get repository's description.
+     * 
+     * @return {@link String} description
+     */
+    String getDescription();
 
-   /**
-    * Set repository's description.
-    * 
-    * @param description
-    */
-   void setDescription(String description);
+    /**
+     * Set repository's description.
+     * 
+     * @param description
+     */
+    void setDescription(String description);
 
-   /**
-    * Get SSH URL.
-    * 
-    * @return {@link String} SSH URL
-    */
-   String getSshUrl();
+    /**
+     * Get SSH URL.
+     * 
+     * @return {@link String} SSH URL
+     */
+    String getSshUrl();
 
-   /**
-    * Set SSH URL.
-    * 
-    * @param sshUrl
-    */
-   void setSshUrl(String sshUrl);
+    /**
+     * Set SSH URL.
+     * 
+     * @param sshUrl
+     */
+    void setSshUrl(String sshUrl);
 
-   /**
-    * Get HTML URL.
-    * 
-    * @return {@link String} HTML URL
-    */
-   String getHtmlUrl();
+    /**
+     * Get HTML URL.
+     * 
+     * @return {@link String} HTML URL
+     */
+    String getHtmlUrl();
 
-   /**
-    * Set HTML URL.
-    * 
-    * @param htmlUrl
-    */
-   void setHtmlUrl(String htmlUrl);
+    /**
+     * Set HTML URL.
+     * 
+     * @param htmlUrl
+     */
+    void setHtmlUrl(String htmlUrl);
 
-   /**
-    * Get updated date.
-    * 
-    * @return {@link String}
-    */
-   String getUpdatedAt();
+    /**
+     * Get updated date.
+     * 
+     * @return {@link String}
+     */
+    String getUpdatedAt();
 
-   /**
-    * Set updated date.
-    * 
-    * @param updatedAt
-    */
-   void setUpdatedAt(String updatedAt);
+    /**
+     * Set updated date.
+     * 
+     * @param updatedAt
+     */
+    void setUpdatedAt(String updatedAt);
 
-   /**
-    * Get Git URL.
-    * 
-    * @return {@link String} Git URL
-    */
-   String getGitUrl();
+    /**
+     * Get Git URL.
+     * 
+     * @return {@link String} Git URL
+     */
+    String getGitUrl();
 
-   /**
-    * Set Git URL.
-    * 
-    * @param gitUrl
-    */
-   void setGitUrl(String gitUrl);
+    /**
+     * Set Git URL.
+     * 
+     * @param gitUrl
+     */
+    void setGitUrl(String gitUrl);
 
-   /**
-    * Get whether repository has wiki.
-    * 
-    * @return {@link Boolean} <code> true</code> - has wiki
-    */
-   boolean isHasWiki();
+    /**
+     * Get whether repository has wiki.
+     * 
+     * @return {@link Boolean} <code> true</code> - has wiki
+     */
+    boolean isHasWiki();
 
-   /**
-    * Set whether repository has wiki.
-    * 
-    * @param hasWiki
-    */
-   void setHasWiki(boolean hasWiki);
+    /**
+     * Set whether repository has wiki.
+     * 
+     * @param hasWiki
+     */
+    void setHasWiki(boolean hasWiki);
 
-   /**
-    * Get clone URL.
-    * 
-    * @return {@link String} clone URL
-    */
-   String getCloneUrl();
+    /**
+     * Get clone URL.
+     * 
+     * @return {@link String} clone URL
+     */
+    String getCloneUrl();
 
-   /**
-    * Set clone URL.
-    * 
-    * @param cloneUrl
-    */
-   void setCloneUrl(String cloneUrl);
+    /**
+     * Set clone URL.
+     * 
+     * @param cloneUrl
+     */
+    void setCloneUrl(String cloneUrl);
 
-   /**
-    * Get SVN URL.
-    * 
-    * @return {@link String} SVN URL
-    */
-   String getSvnUrl();
+    /**
+     * Get SVN URL.
+     * 
+     * @return {@link String} SVN URL
+     */
+    String getSvnUrl();
 
-   /**
-    * Set SVN URL.
-    * 
-    * @param svnUrl
-    */
-   void setSvnUrl(String svnUrl);
+    /**
+     * Set SVN URL.
+     * 
+     * @param svnUrl
+     */
+    void setSvnUrl(String svnUrl);
 
-   /**
-    * Get the number of opened issues.
-    * 
-    * @return {@link Integer} number of opened issues
-    */
-   int getOpenedIssues();
+    /**
+     * Get the number of opened issues.
+     * 
+     * @return {@link Integer} number of opened issues
+     */
+    int getOpenedIssues();
 
-   /**
-    * Set the number of opened issues.
-    * 
-    * @param openedIssues
-    */
-   void setOpenedIssues(int openedIssues);
+    /**
+     * Set the number of opened issues.
+     * 
+     * @param openedIssues
+     */
+    void setOpenedIssues(int openedIssues);
 
-   /**
-    * Get repository's created date.
-    * 
-    * @return {@link String} created date
-    */
-   String getCreatedAt();
+    /**
+     * Get repository's created date.
+     * 
+     * @return {@link String} created date
+     */
+    String getCreatedAt();
 
-   /**
-    * Set repository's created date.
-    * 
-    * @param createdAt
-    */
-   void setCreatedAt(String createdAt);
+    /**
+     * Set repository's created date.
+     * 
+     * @param createdAt
+     */
+    void setCreatedAt(String createdAt);
 
-   /**
-    * Get repository's pushed date.
-    * 
-    * @return {@link String} pushed date
-    */
-   String getPushedAt();
+    /**
+     * Get repository's pushed date.
+     * 
+     * @return {@link String} pushed date
+     */
+    String getPushedAt();
 
-   /**
-    * Set repository's pushed date.
-    * 
-    * @param pushedAt
-    */
-   void setPushedAt(String pushedAt);
+    /**
+     * Set repository's pushed date.
+     * 
+     * @param pushedAt
+     */
+    void setPushedAt(String pushedAt);
 
-   /**
-    * Get whether repository has downloads.
-    * 
-    * @return {@link Boolean} <code> true</code> - has downloads
-    */
-   boolean isHasDownloads();
+    /**
+     * Get whether repository has downloads.
+     * 
+     * @return {@link Boolean} <code> true</code> - has downloads
+     */
+    boolean isHasDownloads();
 
-   /**
-    * Set whether repository has downloads.
-    * 
-    * @param hasDownloads
-    */
-   void setHasDownloads(boolean hasDownloads);
+    /**
+     * Set whether repository has downloads.
+     * 
+     * @param hasDownloads
+     */
+    void setHasDownloads(boolean hasDownloads);
 
-   /**
-    * Get whether repository has issues.
-    * 
-    * @return {@link Boolean} <code> true</code> - has issues
-    */
-   boolean isHasIssues();
+    /**
+     * Get whether repository has issues.
+     * 
+     * @return {@link Boolean} <code> true</code> - has issues
+     */
+    boolean isHasIssues();
 
-   /**
-    * Set whether repository has issues.
-    * 
-    * @param hasIssues
-    */
-   void setHasIssues(boolean hasIssues);
+    /**
+     * Set whether repository has issues.
+     * 
+     * @param hasIssues
+     */
+    void setHasIssues(boolean hasIssues);
 }

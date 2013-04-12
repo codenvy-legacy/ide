@@ -24,12 +24,10 @@ import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
 @RoutingType(type = RoutingTypes.USERLOGOUT)
-public interface UserLogOutDto extends ServerToClientDto
-{
+public interface UserLogOutDto extends ServerToClientDto {
 
-   Participant getParticipant();
+    Participant getParticipant();
 
 }

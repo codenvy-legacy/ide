@@ -26,29 +26,20 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class UnmapUrlEvent extends GwtEvent<UnmapUrlHandler>
-{
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<UnmapUrlHandler> TYPE = new GwtEvent.Type<UnmapUrlHandler>();
+public class UnmapUrlEvent extends GwtEvent<UnmapUrlHandler> {
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<UnmapUrlHandler> TYPE = new GwtEvent.Type<UnmapUrlHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<UnmapUrlHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<UnmapUrlHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(UnmapUrlHandler handler)
-   {
-      handler.onUnmapUrl(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(UnmapUrlHandler handler) {
+        handler.onUnmapUrl(this);
+    }
 
 }

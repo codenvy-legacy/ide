@@ -22,11 +22,10 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link UpdateApplicationEvent}.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: UpdateApplicationHandler.java Oct 10, 2011 5:07:32 PM vereshchaka $
  */
-public interface UpdateApplicationHandler extends EventHandler
-{
-   void onUpdateApplication(UpdateApplicationEvent event);
+public interface UpdateApplicationHandler extends EventHandler {
+    void onUpdateApplication(UpdateApplicationEvent event);
 }

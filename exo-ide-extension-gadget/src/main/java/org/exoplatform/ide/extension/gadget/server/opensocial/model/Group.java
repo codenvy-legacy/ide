@@ -20,73 +20,56 @@ package org.exoplatform.ide.extension.gadget.server.opensocial.model;
 
 /**
  * Groups are owned by people, and are used to tag or categorize people and their relationships.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 19, 2010 $
- * 
  */
-public class Group
-{
-   /**
-    * Unique ID for this group (required).
-    */
-   private String id;
+public class Group {
+    /** Unique ID for this group (required). */
+    private String id;
 
-   /**
-    * Title of group (required).
-    */
-   private String title;
+    /** Title of group (required). */
+    private String title;
 
-   /**
-    * Description of group (optional).
-    */
-   private String description;
+    /** Description of group (optional). */
+    private String description;
 
-   /**
-    * @return the id
-    */
-   public String getId()
-   {
-      return id;
-   }
+    /** @return the id */
+    public String getId() {
+        return id;
+    }
 
-   /**
-    * @param id the id to set
-    */
-   public void setId(String id)
-   {
-      this.id = id;
-   }
+    /**
+     * @param id
+     *         the id to set
+     */
+    public void setId(String id) {
+        this.id = id;
+    }
 
-   /**
-    * @return the title
-    */
-   public String getTitle()
-   {
-      return title;
-   }
+    /** @return the title */
+    public String getTitle() {
+        return title;
+    }
 
-   /**
-    * @param title the title to set
-    */
-   public void setTitle(String title)
-   {
-      this.title = title;
-   }
+    /**
+     * @param title
+     *         the title to set
+     */
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-   /**
-    * @return the description
-    */
-   public String getDescription()
-   {
-      return description;
-   }
+    /** @return the description */
+    public String getDescription() {
+        return description;
+    }
 
-   /**
-    * @param description the description to set
-    */
-   public void setDescription(String description)
-   {
-      this.description = description;
-   }
+    /**
+     * @param description
+     *         the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

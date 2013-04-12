@@ -22,99 +22,71 @@ import java.util.Collection;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class IdeUser
-{
-   private String userId;
+public class IdeUser {
+    private String userId;
 
-   private Collection<String> groups;
+    private Collection<String> roles;
 
-   private Collection<String> roles;
+    private String clientId;
 
-   private String clientId;
+    public IdeUser() {
+    }
 
-   public IdeUser()
-   {
-   }
+    /**
+     * @param userId
+     *         the userId to set
+     * @param groups
+     *         the groups to set
+     * @param roles
+     *         the roles to set
+     * @param clientId
+     */
+    public IdeUser(String userId, Collection<String> roles, String clientId) {
+        this.userId = userId;
+        this.roles = roles;
+        this.clientId = clientId;
+    }
 
-   /**
-    * @param userId the userId to set
-    * @param groups the groups to set
-    * @param roles the roles to set
-    * @param clientId
-    */
-   public IdeUser(String userId, Collection<String> groups, Collection<String> roles, String clientId)
-   {
-      this.userId = userId;
-      this.groups = groups;
-      this.roles = roles;
-      this.clientId = clientId;
-   }
+    /** @return the userId */
+    public String getUserId() {
+        return userId;
+    }
 
-   /**
-    * @return the userId
-    */
-   public String getUserId()
-   {
-      return userId;
-   }
+    /**
+     * @param userId
+     *         the userId to set
+     */
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
-   /**
-    * @param userId the userId to set
-    */
-   public void setUserId(String userId)
-   {
-      this.userId = userId;
-   }
+    /** @return the roles */
+    public Collection<String> getRoles() {
+        return roles;
+    }
 
-   /**
-    * @return the groups
-    */
-   public Collection<String> getGroups()
-   {
-      return groups;
-   }
+    /**
+     * @param roles
+     *         the roles to set
+     */
+    public void setRoles(Collection<String> roles) {
+        this.roles = roles;
+    }
 
-   /**
-    * @param groups the groups to set
-    */
-   public void setGroups(Collection<String> groups)
-   {
-      this.groups = groups;
-   }
+    /** @return the client id */
+    public String getClientId() {
+        return clientId;
+    }
 
-   /**
-    * @return the roles
-    */
-   public Collection<String> getRoles()
-   {
-      return roles;
-   }
-
-   /**
-    * @param roles the roles to set
-    */
-   public void setRoles(Collection<String> roles)
-   {
-      this.roles = roles;
-   }
-
-   /**
-    * @return the client id
-    */
-   public String getClientId()
-   {
-      return clientId;
-   }
-
-   /**
-    * @param clientId the client id to set
-    */
-   public void setClientId(String clientId)
-   {
-      this.clientId = clientId;
-   }
+    /**
+     * @param clientId
+     *         the client id to set
+     */
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
 }

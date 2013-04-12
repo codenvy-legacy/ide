@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public interface EditorDeleteCurrentLineHandler extends EventHandler
-{
+public interface EditorDeleteCurrentLineHandler extends EventHandler {
 
-   void onEditorDeleteCurrentLine(EditorDeleteCurrentLineEvent event);
+    void onEditorDeleteCurrentLine(EditorDeleteCurrentLineEvent event);
 
 }

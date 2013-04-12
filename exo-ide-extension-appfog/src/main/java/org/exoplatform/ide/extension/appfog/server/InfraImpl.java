@@ -24,51 +24,43 @@ import org.exoplatform.ide.extension.appfog.shared.Infra;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class InfraImpl implements Infra
-{
-   private String name;
-   private String provider;
+public class InfraImpl implements Infra {
+    private String name;
+    private String provider;
 
-   public InfraImpl()
-   {
-   }
+    public InfraImpl() {
+    }
 
-   public InfraImpl(String name, String provider)
-   {
-      this.name = name;
-      this.provider = provider;
-   }
+    public InfraImpl(String name, String provider) {
+        this.name = name;
+        this.provider = provider;
+    }
 
-   @Override
-   public String getName()
-   {
-      return name;
-   }
+    @Override
+    public String getName() {
+        return name;
+    }
 
-   @Override
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   @Override
-   public String getProvider()
-   {
-      return provider;
-   }
+    @Override
+    public String getProvider() {
+        return provider;
+    }
 
-   @Override
-   public void setProvider(String provider)
-   {
-      this.provider = provider;
-   }
+    @Override
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "InfraImpl{" +
-         "name='" + name + '\'' +
-         ", provider='" + provider + '\'' +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "InfraImpl{" +
+               "name='" + name + '\'' +
+               ", provider='" + provider + '\'' +
+               '}';
+    }
 }

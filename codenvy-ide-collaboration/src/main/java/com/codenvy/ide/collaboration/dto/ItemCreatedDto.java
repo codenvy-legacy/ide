@@ -26,9 +26,8 @@ import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
  * @version $Id:
  */
 @RoutingType(type = RoutingTypes.ITEM_CREATED)
-public interface ItemCreatedDto extends ServerToClientDto
-{
-   Item getItem();
+public interface ItemCreatedDto extends ServerToClientDto {
+    Item getItem();
 
-   String getUserId();
+    String getUserId();
 }

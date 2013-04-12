@@ -22,15 +22,14 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link UpdateVariableValueInTreeEvent} event.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: UpdateVariableValueInTreeHandler.java Apr 28, 2012 10:03:43 AM azatsarynnyy $
- *
  */
-public interface UpdateVariableValueInTreeHandler extends EventHandler
-{
-   /**
-    * @param event {@link UpdateVariableValueInTreeEvent}
-    */
-   void onUpdateVariableValueInTree(UpdateVariableValueInTreeEvent e);
+public interface UpdateVariableValueInTreeHandler extends EventHandler {
+    /**
+     * @param event
+     *         {@link UpdateVariableValueInTreeEvent}
+     */
+    void onUpdateVariableValueInTree(UpdateVariableValueInTreeEvent e);
 }

@@ -28,22 +28,20 @@ import org.exoplatform.ide.extension.appfog.client.rename.RenameApplicationEvent
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class RenameApplicationControl extends AbstractAppfogControl
-{
+public class RenameApplicationControl extends AbstractAppfogControl {
 
-   private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.renameAppControlId();
+    private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.renameAppControlId();
 
-   private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.renameAppControlTitle();
+    private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.renameAppControlTitle();
 
-   private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.renameAppControlPrompt();
+    private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.renameAppControlPrompt();
 
-   public RenameApplicationControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(AppfogClientBundle.INSTANCE.renameApplication(),
-         AppfogClientBundle.INSTANCE.renameApplicationDisabled());
-      setEvent(new RenameApplicationEvent());
-   }
+    public RenameApplicationControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(AppfogClientBundle.INSTANCE.renameApplication(),
+                  AppfogClientBundle.INSTANCE.renameApplicationDisabled());
+        setEvent(new RenameApplicationEvent());
+    }
 }

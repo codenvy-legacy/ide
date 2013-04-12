@@ -26,44 +26,33 @@ import com.google.gwt.user.client.ui.LayoutPanel;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
  */
-public class Border extends LayoutPanel
-{
+public class Border extends LayoutPanel {
 
-   /**
-    * Default color of border
-    */
-   private static final String DEFAULT_BORDER_COLOR = "#A7ABB4";
-   
-   /**
-    * Default size of border
-    */
-   private static final int DEFAULT_BORDER_SIZE = 1;
+    /** Default color of border */
+    private static final String DEFAULT_BORDER_COLOR = "#A7ABB4";
 
-   /**
-    * Size of border
-    */
-   private int borderSize = DEFAULT_BORDER_SIZE;
-   
-   /**
-    * Color of border
-    */
-   private String borderColor = DEFAULT_BORDER_COLOR;
-   
-   /**
-    * 
-    */
-   public Border()
-   {
-      getElement().setAttribute("component", "Border");
-      DOM.setStyleAttribute(getElement(), "overflow", "hidden");
-      getElement().getStyle().setBorderColor(borderColor);
-      getElement().getStyle().setBorderWidth(borderSize, Unit.PX);
-      getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
+    /** Default size of border */
+    private static final int DEFAULT_BORDER_SIZE = 1;
+
+    /** Size of border */
+    private int borderSize = DEFAULT_BORDER_SIZE;
+
+    /** Color of border */
+    private String borderColor = DEFAULT_BORDER_COLOR;
+
+    /**
+     *
+     */
+    public Border() {
+        getElement().setAttribute("component", "Border");
+        DOM.setStyleAttribute(getElement(), "overflow", "hidden");
+        getElement().getStyle().setBorderColor(borderColor);
+        getElement().getStyle().setBorderWidth(borderSize, Unit.PX);
+        getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
 //      setWidth("100%");
 //      setHeight("100%");
-   }
+    }
 //   /**
 //    * @see com.google.gwt.user.client.ui.RequiresResize#onResize()
 //    */
@@ -75,39 +64,38 @@ public class Border extends LayoutPanel
 //      resize(width, height);
 //      
 //   }
-   
-   /**
-    * Sets new border's size
-    * 
-    * @param borderSize new border's size
-    */
-   public void setBorderSize(int borderSize)
-   {
-      this.borderSize = borderSize;
-      getElement().getStyle().setBorderWidth(borderSize, Unit.PX);
-      
-   }
 
-   /**
-    * Sets new border's color
-    * 
-    * @param borderColor new border's color
-    */
-   public void setBorderColor(String borderColor)
-   {
-      this.borderColor = borderColor;
-      getElement().getStyle().setBorderColor(borderColor);
-   }
+    /**
+     * Sets new border's size
+     *
+     * @param borderSize
+     *         new border's size
+     */
+    public void setBorderSize(int borderSize) {
+        this.borderSize = borderSize;
+        getElement().getStyle().setBorderWidth(borderSize, Unit.PX);
 
-   /**
-    * Get border's color.
-    * 
-    * @return border's color
-    */
-   public String getBorderColor()
-   {
-      return borderColor;
-   }
+    }
+
+    /**
+     * Sets new border's color
+     *
+     * @param borderColor
+     *         new border's color
+     */
+    public void setBorderColor(String borderColor) {
+        this.borderColor = borderColor;
+        getElement().getStyle().setBorderColor(borderColor);
+    }
+
+    /**
+     * Get border's color.
+     *
+     * @return border's color
+     */
+    public String getBorderColor() {
+        return borderColor;
+    }
 
 //   /**
 //    * @see org.exoplatform.gwtframework.ui.client.Resizeable#resize(int, int)
@@ -149,9 +137,8 @@ public class Border extends LayoutPanel
 //   }
 
 
-   public void setMargin(int margin)
-   {
-      getElement().getStyle().setMargin(margin, Unit.PX);
-   }
+    public void setMargin(int margin) {
+        getElement().getStyle().setMargin(margin, Unit.PX);
+    }
 
 }

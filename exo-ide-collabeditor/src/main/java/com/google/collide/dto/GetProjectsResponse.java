@@ -18,27 +18,21 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * Response with a set of projects.
- */
+/** Response with a set of projects. */
 @RoutingType(type = RoutingTypes.GETPROJECTSRESPONSE)
 public interface GetProjectsResponse extends ServerToClientDto {
 
-  JsonArray<ProjectInfo> getProjects();
+    JsonArray<ProjectInfo> getProjects();
 
-  /**
-   * Returns the IDs of hidden projects.
-   */
-  JsonArray<String> getHiddenProjectIds();
+    /** Returns the IDs of hidden projects. */
+    JsonArray<String> getHiddenProjectIds();
 
-  /**
-   * Returns the ID of the last project that the user viewed.
-   */
-  String getActiveProjectId();
-  
-  /**
-   * Returns the next version of the tango object representing this user's
-   * membership change events.
-   */
-  String getUserMembershipChangeNextVersion();
+    /** Returns the ID of the last project that the user viewed. */
+    String getActiveProjectId();
+
+    /**
+     * Returns the next version of the tango object representing this user's
+     * membership change events.
+     */
+    String getUserMembershipChangeNextVersion();
 }

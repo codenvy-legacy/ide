@@ -29,10 +29,13 @@ import com.google.api.client.json.jackson.JacksonFactory;
 
 import org.exoplatform.ide.security.shared.User;
 
-import java.util.Collections;
-import java.util.HashSet;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Collections;
+import java.util.HashSet;
 
 /**
  * OAuth authentication  for github account.
@@ -40,49 +43,69 @@ import javax.mail.internet.InternetAddress;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladyslav Zhukovskii</a>
  * @version $Id: $
  */
-public class GitHubOAuthAuthenticator extends OAuthAuthenticator
-{
-   protected GitHubOAuthAuthenticator(CredentialStore credentialStore, GoogleClientSecrets clientSecrets)
-   {
-      super(
-         new AuthorizationCodeFlow.Builder(BearerToken.authorizationHeaderAccessMethod(),
-            new NetHttpTransport(),
-            new JacksonFactory(),
-            new GenericUrl(clientSecrets.getDetails().getTokenUri()),
-            new ClientParametersAuthentication(
-               clientSecrets.getDetails().getClientId(),
-               clientSecrets.getDetails().getClientSecret()),
-            clientSecrets.getDetails().getClientId(),
-            clientSecrets.getDetails().getAuthUri())
-            .setScopes(Collections.<String>emptyList())
-            .setCredentialStore(credentialStore).build(),
-         new HashSet<String>(clientSecrets.getDetails().getRedirectUris()));
-   }
+public class GitHubOAuthAuthenticator extends OAuthAuthenticator {
+    public GitHubOAuthAuthenticator(CredentialStore credentialStore, GoogleClientSecrets clientSecrets) {
+        super(
+                new AuthorizationCodeFlow.Builder(BearerToken.authorizationHeaderAccessMethod(),
+                                                  new NetHttpTransport(),
+                                                  new JacksonFactory(),
+                                                  new GenericUrl(clientSecrets.getDetails().getTokenUri()),
+                                                  new ClientParametersAuthentication(
+                                                          clientSecrets.getDetails().getClientId(),
+                                                          clientSecrets.getDetails().getClientSecret()),
+                                                  clientSecrets.getDetails().getClientId(),
+                                                  clientSecrets.getDetails().getAuthUri())
+                        .setScopes(Collections.<String>emptyList())
+                        .setCredentialStore(credentialStore).build(),
+                new HashSet<String>(clientSecrets.getDetails().getRedirectUris()));
+    }
 
-   @Override
-   public User getUser(String accessToken) throws OAuthAuthenticationException
-   {
-      GitHubUser user = getJson("https://api.github.com/user?access_token=" + accessToken, GitHubUser.class);
-      final String email = user.getEmail();
-      if (email == null || email.isEmpty())
-      {
-         throw new OAuthAuthenticationException("Codenvy tries to use your GitHub public e-mail as a user identifier but it is not set. " +
-            "Please fill the e-mail in your public GitHub profile and return back here.");
-      }
-      try
-      {
-         new InternetAddress(email).validate();
-      }
-      catch (AddressException e)
-      {
-         throw new OAuthAuthenticationException(e.getMessage());
-      }
-      return user;
-   }
+    @Override
+    public User getUser(String accessToken) throws OAuthAuthenticationException {
+        GitHubUser user = getJson("https://api.github.com/user?access_token=" + accessToken, GitHubUser.class);
+        final String email = user.getEmail();
+        if (email == null || email.isEmpty()) {
+            throw new OAuthAuthenticationException(
+                    "Codenvy tries to use your GitHub public e-mail as a user identifier but it is not set. " +
+                    "Please fill the e-mail in your public GitHub profile and return back here.");
+        }
+        try {
+            new InternetAddress(email).validate();
+        } catch (AddressException e) {
+            throw new OAuthAuthenticationException(e.getMessage());
+        }
+        return user;
+    }
 
-   @Override
-   public final String getOAuthProvider()
-   {
-      return "github";
-   }
+    @Override
+    public final String getOAuthProvider() {
+        return "github";
+    }
+
+    @Override
+    public String getToken(String userId) throws IOException {
+        final String token = super.getToken(userId);
+        if (!(token == null || token.isEmpty())) {
+            // Need to check if token which stored is valid for requests, then if valid - we returns it to caller
+            String tokenVerifyUrl = "https://api.github.com/?access_token=" + token;
+            HttpURLConnection http = null;
+            try {
+                http = (HttpURLConnection)new URL(tokenVerifyUrl).openConnection();
+                http.setInstanceFollowRedirects(false);
+                http.setRequestMethod("GET");
+                http.setRequestProperty("Accept", "application/json");
+
+                if (http.getResponseCode() == 401) {
+                    return null;
+                }
+            } finally {
+                if (http != null) {
+                    http.disconnect();
+                }
+            }
+
+            return token;
+        }
+        return null;
+    }
 }

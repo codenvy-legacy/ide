@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client.indexes;
 
+import com.google.gwt.http.client.RequestException;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -28,58 +30,44 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClien
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
 
-import com.google.gwt.http.client.RequestException;
-
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class UpdateIndexesHandlerImpl extends GoogleAppEnginePresenter implements UpdateIndexesHandler
-{
+public class UpdateIndexesHandlerImpl extends GoogleAppEnginePresenter implements UpdateIndexesHandler {
 
-   public UpdateIndexesHandlerImpl()
-   {
-      IDE.addHandler(UpdateIndexesEvent.TYPE, this);
-   }
+    public UpdateIndexesHandlerImpl() {
+        IDE.addHandler(UpdateIndexesEvent.TYPE, this);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onUpdateIndexes(UpdateIndexesEvent updateIndexesEvent)
-   {
-      if (isAppEngineProject())
-      {
-         onUpdate();
-      }
-      else
-      {
-         Dialogs.getInstance().showError(GoogleAppEngineExtension.GAE_LOCALIZATION.notAppEngineProjectError());
-      }
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void onUpdateIndexes(UpdateIndexesEvent updateIndexesEvent) {
+        if (isAppEngineProject()) {
+            onUpdate();
+        } else {
+            Dialogs.getInstance().showError(GoogleAppEngineExtension.GAE_LOCALIZATION.notAppEngineProjectError());
+        }
+    }
 
-   public void onUpdate()
-   {
-      try
-      {
-         GoogleAppEngineClientService.getInstance().updateIndexes(currentVfs.getId(), currentProject.getId(),
-            new GoogleAppEngineAsyncRequestCallback<Object>()
-            {
+    public void onUpdate() {
+        try {
+            GoogleAppEngineClientService.getInstance().updateIndexes(currentVfs.getId(), currentProject.getId(),
+                                                                     new GoogleAppEngineAsyncRequestCallback<Object>() {
 
-               @Override
-               protected void onSuccess(Object result)
-               {
-                  IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.updateIndexesSuccessfully(),
-                     Type.INFO));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                                                                         @Override
+                                                                         protected void onSuccess(Object result) {
+                                                                             IDE.fireEvent(new OutputEvent(
+                                                                                     GoogleAppEngineExtension.GAE_LOCALIZATION
+                                                                                                             .updateIndexesSuccessfully(),
+                                                                                     Type.INFO));
+                                                                         }
+                                                                     });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
 }

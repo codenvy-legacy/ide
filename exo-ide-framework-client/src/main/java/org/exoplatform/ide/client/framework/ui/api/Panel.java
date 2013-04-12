@@ -25,45 +25,44 @@ import java.util.Map;
 
 /**
  * This interface describes a visual component that can display views in tabs or in any other form.
- * 
+ * <p/>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface Panel extends HasViews, IsWidget
-{
+public interface Panel extends HasViews, IsWidget {
 
-   /**
-    * Returns the ID of this panel.
-    * 
-    * @return id of this panel
-    */
-   String getPanelId();
+    /**
+     * Returns the ID of this panel.
+     *
+     * @return id of this panel
+     */
+    String getPanelId();
 
-   /**
-    * Adds a view to the panel.
-    * 
-    * @see org.exoplatform.ide.client.framework.ui.api.HasViews#addView(org.exoplatform.ide.client.framework.ui.api.View)
-    */
-   void addView(View view);
+    /**
+     * Adds a view to the panel.
+     *
+     * @see org.exoplatform.ide.client.framework.ui.api.HasViews#addView(org.exoplatform.ide.client.framework.ui.api.View)
+     */
+    void addView(View view);
 
-   /**
-    * Removes view from the panel.
-    * 
-    * @see org.exoplatform.ide.client.framework.ui.api.HasViews#removeView(org.exoplatform.ide.client.framework.ui.api.View)
-    */
-   boolean removeView(View view);
+    /**
+     * Removes view from the panel.
+     *
+     * @see org.exoplatform.ide.client.framework.ui.api.HasViews#removeView(org.exoplatform.ide.client.framework.ui.api.View)
+     */
+    boolean removeView(View view);
 
-   Map<String, View> getViews();
+    Map<String, View> getViews();
 
-   List<String> getAcceptedTypes();
+    List<String> getAcceptedTypes();
 
-   void acceptType(String viewType);
+    void acceptType(String viewType);
 
-   void setPanelHidden(boolean panelHidden);
+    void setPanelHidden(boolean panelHidden);
 
-   boolean isPanelHidden();
+    boolean isPanelHidden();
 
 }

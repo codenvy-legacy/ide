@@ -21,18 +21,13 @@ import org.exoplatform.ide.json.shared.JsonArray;
  * Information about coding errors for a single file.
  *
  * @see CodeError
- *
  */
 @RoutingType(type = RoutingTypes.CODEERRORS)
 public interface CodeErrors extends ServerToClientDto {
 
-  /**
-   * @return key of the file edit session of the file containing errors
-   */
-  String getFileEditSessionKey();
+    /** @return key of the file edit session of the file containing errors */
+    String getFileEditSessionKey();
 
-  /**
-   * @return array of all errors found in a file
-   */
-  JsonArray<CodeError> getCodeErrors();
+    /** @return array of all errors found in a file */
+    JsonArray<CodeError> getCodeErrors();
 }

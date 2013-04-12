@@ -35,40 +35,40 @@ import com.codenvy.eclipse.jdt.internal.compiler.lookup.ProblemReasons;
 
 public class SelectionOnExplicitConstructorCall extends ExplicitConstructorCall {
 
-	public SelectionOnExplicitConstructorCall(int accessMode) {
+    public SelectionOnExplicitConstructorCall(int accessMode) {
 
-		super(accessMode);
-	}
+        super(accessMode);
+    }
 
-	public StringBuffer printStatement(int tab, StringBuffer output) {
+    public StringBuffer printStatement(int tab, StringBuffer output) {
 
-		printIndent(tab, output);
-		output.append("<SelectOnExplicitConstructorCall:"); //$NON-NLS-1$
-		if (this.qualification != null) this.qualification.printExpression(0, output).append('.');
-		if (this.accessMode == This) {
-			output.append("this("); //$NON-NLS-1$
-		} else {
-			output.append("super("); //$NON-NLS-1$
-		}
-		if (this.arguments != null) {
-			for (int i = 0; i < this.arguments.length; i++) {
-				if (i > 0) output.append(", "); //$NON-NLS-1$
-				this.arguments[i].printExpression(0, output);
-			}
-		}
-		return output.append(")>;"); //$NON-NLS-1$
-	}
+        printIndent(tab, output);
+        output.append("<SelectOnExplicitConstructorCall:"); //$NON-NLS-1$
+        if (this.qualification != null) this.qualification.printExpression(0, output).append('.');
+        if (this.accessMode == This) {
+            output.append("this("); //$NON-NLS-1$
+        } else {
+            output.append("super("); //$NON-NLS-1$
+        }
+        if (this.arguments != null) {
+            for (int i = 0; i < this.arguments.length; i++) {
+                if (i > 0) output.append(", "); //$NON-NLS-1$
+                this.arguments[i].printExpression(0, output);
+            }
+        }
+        return output.append(")>;"); //$NON-NLS-1$
+    }
 
-	public void resolve(BlockScope scope) {
+    public void resolve(BlockScope scope) {
 
-		super.resolve(scope);
+        super.resolve(scope);
 
-		// tolerate some error cases
-		if (this.binding == null ||
-				!(this.binding.isValidBinding() ||
-					this.binding.problemId() == ProblemReasons.NotVisible))
-			throw new SelectionNodeFound();
-		else
-			throw new SelectionNodeFound(this.binding);
-	}
+        // tolerate some error cases
+        if (this.binding == null ||
+            !(this.binding.isValidBinding() ||
+              this.binding.problemId() == ProblemReasons.NotVisible))
+            throw new SelectionNodeFound();
+        else
+            throw new SelectionNodeFound(this.binding);
+    }
 }

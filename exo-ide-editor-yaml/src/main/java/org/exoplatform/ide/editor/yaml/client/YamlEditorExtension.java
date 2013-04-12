@@ -35,40 +35,31 @@ import org.exoplatform.ide.editor.codemirror.CodeMirror;
  *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: YamlEditorExtension.java May 29, 2012 3:07:18 PM azatsarynnyy $
- *
  */
-public class YamlEditorExtension extends Extension implements InitializeServicesHandler
-{
-   /**
-    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(InitializeServicesEvent.TYPE, this);
+public class YamlEditorExtension extends Extension implements InitializeServicesHandler {
+    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
-      IDE.getInstance().addControl(
-         new NewItemControl("File/New/New YAML File", "YAML File", "Create YAML File",
-            YamlClientBundle.INSTANCE.yaml(), YamlClientBundle.INSTANCE.yamlDisabled(), MimeType.TEXT_YAML)
-            .setGroupName(GroupNames.NEW_SCRIPT));
-   }
+        IDE.getInstance().addControl(
+                new NewItemControl("File/New/New YAML File", "YAML File", "Create YAML File",
+                                   YamlClientBundle.INSTANCE.yaml(), YamlClientBundle.INSTANCE.yamlDisabled(), MimeType.TEXT_YAML)
+                        .setGroupName(GroupNames.NEW_SCRIPT));
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
-    */
-   @Override
-   public void onInitializeServices(InitializeServicesEvent event)
-   {
-      IDE.getInstance().getFileTypeRegistry().addFileType(
-         new FileType(MimeType.TEXT_YAML, "yaml", Images.INSTANCE.yamlImage()),
-         new EditorCreator()
-         {
-            @Override
-            public Editor createEditor()
-            {
-               return new CodeMirror(MimeType.TEXT_YAML);
-            }
-         });
+    /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
+     * .client.framework.application.event.InitializeServicesEvent) */
+    @Override
+    public void onInitializeServices(InitializeServicesEvent event) {
+        IDE.getInstance().getFileTypeRegistry().addFileType(
+                new FileType(MimeType.TEXT_YAML, "yaml", Images.INSTANCE.yamlImage()),
+                new EditorCreator() {
+                    @Override
+                    public Editor createEditor() {
+                        return new CodeMirror(MimeType.TEXT_YAML);
+                    }
+                });
 
 //      IDE.getInstance().addEditor(new CodeMirror(MimeType.TEXT_YAML, "CodeMirror YAML editor", "yml",
 //         new CodeMirrorConfiguration()
@@ -77,6 +68,6 @@ public class YamlEditorExtension extends Extension implements InitializeServices
 //      IDE.getInstance().addEditor(
 //         new CodeMirrorProducer(MimeType.TEXT_YAML, "CodeMirror YAML editor", "yml", Images.INSTANCE.yamlImage(), true,
 //            new CodeMirrorConfiguration()));
-   }
+    }
 
 }

@@ -26,11 +26,10 @@ import java.util.List;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: ICollaborators.java Aug 6, 2012
  */
-public interface Collaborators
-{
+public interface Collaborators {
 
-   public abstract List<GitHubUser> getCollaborators();
+    public abstract List<GitHubUser> getCollaborators();
 
-   public abstract void setCollaborators(List<GitHubUser> collaborators);
+    public abstract void setCollaborators(List<GitHubUser> collaborators);
 
 }

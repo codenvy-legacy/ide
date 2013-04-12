@@ -21,16 +21,14 @@ package org.exoplatform.ide.client.ui.panel;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface ShowPanelHandler extends EventHandler
-{
+public interface ShowPanelHandler extends EventHandler {
 
-   void onShowPanel(ShowPanelEvent event);
+    void onShowPanel(ShowPanelEvent event);
 
 }

@@ -20,17 +20,18 @@ import java.util.Map;
 
 
 public class AssistPackageDeclaration extends PackageDeclaration {
-	private Map infoCache;
-	public AssistPackageDeclaration(CompilationUnit parent, String name, Map infoCache) {
-		super(parent, name);
-		this.infoCache = infoCache;
-	}
+    private Map infoCache;
 
-	public Object getElementInfo(IProgressMonitor monitor) throws JavaModelException {
-		return this.infoCache.get(this);
-	}
+    public AssistPackageDeclaration(CompilationUnit parent, String name, Map infoCache) {
+        super(parent, name);
+        this.infoCache = infoCache;
+    }
 
-	public IAnnotation getAnnotation(String name) {
-		return new AssistAnnotation(this, name, this.infoCache);
-	}
+    public Object getElementInfo(IProgressMonitor monitor) throws JavaModelException {
+        return this.infoCache.get(this);
+    }
+
+    public IAnnotation getAnnotation(String name) {
+        return new AssistAnnotation(this, name, this.infoCache);
+    }
 }

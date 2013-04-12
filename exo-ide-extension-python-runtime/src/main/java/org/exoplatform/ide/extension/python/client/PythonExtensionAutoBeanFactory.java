@@ -25,12 +25,10 @@ import org.exoplatform.ide.extension.python.shared.ApplicationInstance;
 
 /**
  * The interface for the {@link AutoBean} generator.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 16, 2012 11:25:04 AM anya $
- * 
  */
-public interface PythonExtensionAutoBeanFactory extends AutoBeanFactory
-{
-   AutoBean<ApplicationInstance> applicationInstance();
+public interface PythonExtensionAutoBeanFactory extends AutoBeanFactory {
+    AutoBean<ApplicationInstance> applicationInstance();
 }

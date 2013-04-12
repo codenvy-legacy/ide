@@ -18,68 +18,56 @@
  */
 package org.exoplatform.ide.client.framework.ui.api.event;
 
-import org.exoplatform.ide.client.framework.ui.api.View;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.client.framework.ui.api.View;
 
 /**
  * This event generates after closing of any View.
- * 
+ * <p/>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ViewClosedEvent extends GwtEvent<ViewClosedHandler>
-{
+public class ViewClosedEvent extends GwtEvent<ViewClosedHandler> {
 
-   /**
-    * Type of this event.
-    */
-   public static final GwtEvent.Type<ViewClosedHandler> TYPE = new GwtEvent.Type<ViewClosedHandler>();
+    /** Type of this event. */
+    public static final GwtEvent.Type<ViewClosedHandler> TYPE = new GwtEvent.Type<ViewClosedHandler>();
 
-   /**
-    * View which was closed.
-    */
-   private View view;
+    /** View which was closed. */
+    private View view;
 
-   /**
-    * Creates a new instance of this event
-    * 
-    * @param view view which was closed
-    */
-   public ViewClosedEvent(View view)
-   {
-      this.view = view;
-   }
+    /**
+     * Creates a new instance of this event
+     *
+     * @param view
+     *         view which was closed
+     */
+    public ViewClosedEvent(View view) {
+        this.view = view;
+    }
 
-   /**
-    * Gets view which was closed.
-    * 
-    * @return view instance which was closed
-    */
-   public View getView()
-   {
-      return view;
-   }
+    /**
+     * Gets view which was closed.
+     *
+     * @return view instance which was closed
+     */
+    public View getView() {
+        return view;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ViewClosedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ViewClosedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ViewClosedHandler handler)
-   {
-      handler.onViewClosed(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ViewClosedHandler handler) {
+        handler.onViewClosed(this);
+    }
 
 }

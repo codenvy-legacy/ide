@@ -24,44 +24,38 @@ package org.exoplatform.ide.extension.aws.shared.beanstalk;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public enum ConfigurationOptionChangeSeverity
-{
-   /** There is no interruption to the environment or application availability. */
-   NoInterruption("NoInterruption"),
+public enum ConfigurationOptionChangeSeverity {
+    /** There is no interruption to the environment or application availability. */
+    NoInterruption("NoInterruption"),
 
-   /** Application server on the running Amazon EC2 instance is restarted. */
-   RestartApplicationServer("RestartApplicationServer"),
+    /** Application server on the running Amazon EC2 instance is restarted. */
+    RestartApplicationServer("RestartApplicationServer"),
 
-   /**
-    * The environment is entirely restarted. All AWS resources are deleted and recreated, and the environment is
-    * unavailable during the process.
-    */
-   RestartEnvironment("RestartEnvironment"),
+    /**
+     * The environment is entirely restarted. All AWS resources are deleted and recreated, and the environment is
+     * unavailable during the process.
+     */
+    RestartEnvironment("RestartEnvironment"),
 
-   Unknown("Unknown");
+    Unknown("Unknown");
 
-   private final String value;
+    private final String value;
 
-   private ConfigurationOptionChangeSeverity(String value)
-   {
-      this.value = value;
-   }
+    private ConfigurationOptionChangeSeverity(String value) {
+        this.value = value;
+    }
 
-   @Override
-   public String toString()
-   {
-      return this.value;
-   }
+    @Override
+    public String toString() {
+        return this.value;
+    }
 
-   public static ConfigurationOptionChangeSeverity fromValue(String value)
-   {
-      for (ConfigurationOptionChangeSeverity v : ConfigurationOptionChangeSeverity.values())
-      {
-         if (v.value.equals(value))
-         {
-            return v;
-         }
-      }
-      throw new IllegalArgumentException("Invalid value '" + value + "' ");
-   }
+    public static ConfigurationOptionChangeSeverity fromValue(String value) {
+        for (ConfigurationOptionChangeSeverity v : ConfigurationOptionChangeSeverity.values()) {
+            if (v.value.equals(value)) {
+                return v;
+            }
+        }
+        throw new IllegalArgumentException("Invalid value '" + value + "' ");
+    }
 }

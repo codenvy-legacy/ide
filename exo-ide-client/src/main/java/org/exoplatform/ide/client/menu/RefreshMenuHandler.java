@@ -22,14 +22,13 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface RefreshMenuHandler extends EventHandler
-{
+public interface RefreshMenuHandler extends EventHandler {
 
-   void onRefreshMenu(RefreshMenuEvent event);
+    void onRefreshMenu(RefreshMenuEvent event);
 
 }

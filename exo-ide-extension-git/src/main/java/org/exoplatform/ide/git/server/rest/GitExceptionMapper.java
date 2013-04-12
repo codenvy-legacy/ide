@@ -27,20 +27,18 @@ import javax.ws.rs.ext.Provider;
 
 /**
  * Exception mapper for GitException.
- *
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
 @Provider
-public class GitExceptionMapper implements ExceptionMapper<GitException>
-{
-   /** @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable) */
-   @Override
-   public Response toResponse(GitException e)
-   {
-      // Insert error message in <pre> tags even content-type is text/plain.
-      // Message will be included in HTML page by client.
-      return Response.status(500).header("JAXRS-Body-Provided", "Error-Message")
-         .entity("<pre>" + e.getMessage() + "</pre>").type(MediaType.TEXT_PLAIN).build();
-   }
+public class GitExceptionMapper implements ExceptionMapper<GitException> {
+    /** @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable) */
+    @Override
+    public Response toResponse(GitException e) {
+        // Insert error message in <pre> tags even content-type is text/plain.
+        // Message will be included in HTML page by client.
+        return Response.status(500).header("JAXRS-Body-Provided", "Error-Message")
+                       .entity("<pre>" + e.getMessage() + "</pre>").type(MediaType.TEXT_PLAIN).build();
+    }
 }

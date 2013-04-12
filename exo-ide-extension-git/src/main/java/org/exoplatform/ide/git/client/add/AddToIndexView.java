@@ -37,87 +37,71 @@ import org.exoplatform.ide.git.client.GitExtension;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 30, 2011 9:25:02 AM anya $
- * 
  */
-public class AddToIndexView extends ViewImpl implements AddToIndexPresenter.Display
-{
-   public static final int HEIGHT = 180;
+public class AddToIndexView extends ViewImpl implements AddToIndexPresenter.Display {
+    public static final int     HEIGHT           = 180;
 
-   public static final int WIDTH = 420;
+    public static final int     WIDTH            = 420;
 
-   public static final String ID = "ideAddToIndexView";
+    public static final String  ID               = "ideAddToIndexView";
 
-   private static final String ADD_BUTTON_ID = "ideAddToIndexViewAddButton";
+    private static final String ADD_BUTTON_ID    = "ideAddToIndexViewAddButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideAddToIndexViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideAddToIndexViewCancelButton";
 
-   private static final String UPDATE_FIELD_ID = "ideAddToIndexViewUpdaterField";
+    private static final String UPDATE_FIELD_ID  = "ideAddToIndexViewUpdaterField";
 
-   private static final String MESSAGE_FIELD_ID = "ideAddToIndexViewMessageField";
+    private static final String MESSAGE_FIELD_ID = "ideAddToIndexViewMessageField";
 
-   /* Elements titles */
-   @UiField
-   ImageButton addButton;
+    /* Elements titles */
+    @UiField
+    ImageButton                 addButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton                 cancelButton;
 
-   @UiField
-   CheckBox updateField;
+    @UiField
+    CheckBox                    updateField;
 
-   @UiField
-   Label messageField;
+    @UiField
+    Label                       messageField;
 
-   interface AddToIndexViewUiBinder extends UiBinder<Widget, AddToIndexView>
-   {
-   }
+    interface AddToIndexViewUiBinder extends UiBinder<Widget, AddToIndexView> {
+    }
 
-   private static AddToIndexViewUiBinder uiBinder = GWT.create(AddToIndexViewUiBinder.class);
+    private static AddToIndexViewUiBinder uiBinder = GWT.create(AddToIndexViewUiBinder.class);
 
-   public AddToIndexView()
-   {
-      super(ID, ViewType.MODAL, GitExtension.MESSAGES.addToIndexTitle(), null, WIDTH, HEIGHT);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
-      messageField.getElement().setId(MESSAGE_FIELD_ID);
-      updateField.setName(UPDATE_FIELD_ID);
-      addButton.setButtonId(ADD_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-   }
+    public AddToIndexView() {
+        super(ID, ViewType.MODAL, GitExtension.MESSAGES.addToIndexTitle(), null, WIDTH, HEIGHT);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
+        messageField.getElement().setId(MESSAGE_FIELD_ID);
+        updateField.setName(UPDATE_FIELD_ID);
+        addButton.setButtonId(ADD_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.add.AddToIndexPresenter.Display#getAddButton()
-    */
-   @Override
-   public HasClickHandlers getAddButton()
-   {
-      return addButton;
-   }
+    /** @see org.exoplatform.ide.git.client.add.AddToIndexPresenter.Display#getAddButton() */
+    @Override
+    public HasClickHandlers getAddButton() {
+        return addButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.add.AddToIndexPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.git.client.add.AddToIndexPresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.add.AddToIndexPresenter.Display#getUpdateValue()
-    */
-   @Override
-   public HasValue<Boolean> getUpdateValue()
-   {
-      return updateField;
-   }
+    /** @see org.exoplatform.ide.git.client.add.AddToIndexPresenter.Display#getUpdateValue() */
+    @Override
+    public HasValue<Boolean> getUpdateValue() {
+        return updateField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.add.AddToIndexPresenter.Display#getMessage()
-    */
-   @Override
-   public HasValue<String> getMessage()
-   {
-      return messageField;
-   }
+    /** @see org.exoplatform.ide.git.client.add.AddToIndexPresenter.Display#getMessage() */
+    @Override
+    public HasValue<String> getMessage() {
+        return messageField;
+    }
 }

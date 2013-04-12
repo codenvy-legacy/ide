@@ -26,54 +26,48 @@ import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 
 /**
  * Client service for refactoring features.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: RefactoringClientService.java Jan 17, 2013 4:11:22 PM azatsarynnyy $
- *
  */
-public abstract class RefactoringClientService
-{
+public abstract class RefactoringClientService {
 
-   private static RefactoringClientService instance;
+    private static RefactoringClientService instance;
 
-   public static RefactoringClientService getInstance()
-   {
-      return instance;
-   }
+    public static RefactoringClientService getInstance() {
+        return instance;
+    }
 
-   protected RefactoringClientService()
-   {
-      instance = this;
-   }
+    protected RefactoringClientService() {
+        instance = this;
+    }
 
-   /**
-    * Rename a Java element using refactoring. Send request over WebSocket.
-    * 
-    * @param vfsId
-    * @param projectId
-    * @param fqn
-    * @param offset
-    * @param newName
-    * @param callback
-    * 
-    * @throws WebSocketException
-    */
-   public abstract void renameWS(String vfsId, String projectId, String fqn, int offset, String newName,
-      RequestCallback<Object> callback) throws WebSocketException;
+    /**
+     * Rename a Java element using refactoring. Send request over WebSocket.
+     *
+     * @param vfsId
+     * @param projectId
+     * @param fqn
+     * @param offset
+     * @param newName
+     * @param callback
+     * @throws WebSocketException
+     */
+    public abstract void renameWS(String vfsId, String projectId, String fqn, int offset, String newName,
+                                  RequestCallback<Object> callback) throws WebSocketException;
 
-   /**
-    * Rename a Java element using refactoring. Send request over HTTP.
-    * 
-    * @param vfsId
-    * @param projectId
-    * @param fqn
-    * @param offset
-    * @param newName
-    * @param callback
-    * 
-    * @throws RequestException
-    */
-   public abstract void rename(String vfsId, String projectId, String fqn, int offset, String newName,
-      AsyncRequestCallback<Object> callback) throws RequestException;
+    /**
+     * Rename a Java element using refactoring. Send request over HTTP.
+     *
+     * @param vfsId
+     * @param projectId
+     * @param fqn
+     * @param offset
+     * @param newName
+     * @param callback
+     * @throws RequestException
+     */
+    public abstract void rename(String vfsId, String projectId, String fqn, int offset, String newName,
+                                AsyncRequestCallback<Object> callback) throws RequestException;
 
 }

@@ -30,126 +30,99 @@ import java.util.zip.ZipInputStream;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 2:34:18 PM Mar 5, 2012 evgen $
- * 
  */
-public class PackageParser
-{
-   private PackageParser()
-   {
-   }
+public class PackageParser {
+    private PackageParser() {
+    }
 
-   public static Set<String> parse(InputStream jar) throws IOException
-   {
-      Set<String> packages = new HashSet<String>();
-      ZipInputStream zip = new ZipInputStream(jar);
-      try
-      {
-         ZipEntry entry = zip.getNextEntry();
-         while (entry != null)
-         {
-
-            String name = entry.getName();
-            if (name.endsWith(".class"))
-            {
-
-               packages.addAll(parsePath(name));
-            }
-            entry = zip.getNextEntry();
-         }
-      }
-      finally
-      {
-         zip.close();
-      }
-
-      return packages;
-   }
-
-   /**
-    * @param name
-    * @return
-    */
-   private static Set<String> parsePath(String name)
-   {
-
-      String[] segments = name.split("/");
-      Set<String> packageSegment = new HashSet<String>();
-      StringBuilder first = new StringBuilder(segments[0]);
-      packageSegment.add(first.toString());
-      for (int i = 1; i < segments.length - 1; i++)
-      {
-         first.append('.').append(segments[i]);
-         packageSegment.add(first.toString());
-      }
-      return packageSegment;
-   }
-
-   /**
-    * @param jarFile
-    * @return
-    * @throws IOException 
-    */
-   public static Set<String> parse(File jarFile) throws IOException
-   {
-      FileInputStream jarStream = new FileInputStream(jarFile);
-      try
-      {
-         return parse(jarStream);
-      }
-      finally
-      {
-         jarStream.close();
-      }
-   }
-
-   /**
-    * @param jarFile
-    * @param ignoredPackages
-    * @return
-    */
-   public static Set<String> parse(File jarFile, Set<String> ignoredPackages) throws IOException
-   {
-      FileInputStream jarStream = new FileInputStream(jarFile);
-      try
-      {
-         Set<String> packages = new HashSet<String>();
-         ZipInputStream zip = new ZipInputStream(jarStream);
-         try
-         {
+    public static Set<String> parse(InputStream jar) throws IOException {
+        Set<String> packages = new HashSet<String>();
+        ZipInputStream zip = new ZipInputStream(jar);
+        try {
             ZipEntry entry = zip.getNextEntry();
-            boolean ignore = false;
-            while (entry != null)
-            {
+            while (entry != null) {
 
-               String name = entry.getName();
-               if (name.endsWith(".class"))
-               {
-                  ignore = false;
-                  for (String s : ignoredPackages)
-                  {
-                     if (entry.getName().startsWith(s))
-                     {
-                        ignore = true;
-                        break;
-                     }
-                  }
-                  if (!ignore)
-                  {
-                     packages.addAll(parsePath(name));
-                  }
-               }
-               entry = zip.getNextEntry();
+                String name = entry.getName();
+                if (name.endsWith(".class")) {
+
+                    packages.addAll(parsePath(name));
+                }
+                entry = zip.getNextEntry();
             }
-         }
-         finally
-         {
+        } finally {
             zip.close();
-         }
-         return packages;
-      }
-      finally
-      {
-         jarStream.close();
-      }
-   }
+        }
+
+        return packages;
+    }
+
+    /**
+     * @param name
+     * @return
+     */
+    private static Set<String> parsePath(String name) {
+
+        String[] segments = name.split("/");
+        Set<String> packageSegment = new HashSet<String>();
+        StringBuilder first = new StringBuilder(segments[0]);
+        packageSegment.add(first.toString());
+        for (int i = 1; i < segments.length - 1; i++) {
+            first.append('.').append(segments[i]);
+            packageSegment.add(first.toString());
+        }
+        return packageSegment;
+    }
+
+    /**
+     * @param jarFile
+     * @return
+     * @throws IOException
+     */
+    public static Set<String> parse(File jarFile) throws IOException {
+        FileInputStream jarStream = new FileInputStream(jarFile);
+        try {
+            return parse(jarStream);
+        } finally {
+            jarStream.close();
+        }
+    }
+
+    /**
+     * @param jarFile
+     * @param ignoredPackages
+     * @return
+     */
+    public static Set<String> parse(File jarFile, Set<String> ignoredPackages) throws IOException {
+        FileInputStream jarStream = new FileInputStream(jarFile);
+        try {
+            Set<String> packages = new HashSet<String>();
+            ZipInputStream zip = new ZipInputStream(jarStream);
+            try {
+                ZipEntry entry = zip.getNextEntry();
+                boolean ignore = false;
+                while (entry != null) {
+
+                    String name = entry.getName();
+                    if (name.endsWith(".class")) {
+                        ignore = false;
+                        for (String s : ignoredPackages) {
+                            if (entry.getName().startsWith(s)) {
+                                ignore = true;
+                                break;
+                            }
+                        }
+                        if (!ignore) {
+                            packages.addAll(parsePath(name));
+                        }
+                    }
+                    entry = zip.getNextEntry();
+                }
+            } finally {
+                zip.close();
+            }
+            return packages;
+        } finally {
+            jarStream.close();
+        }
+    }
 }

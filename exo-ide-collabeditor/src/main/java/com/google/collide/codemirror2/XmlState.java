@@ -13,16 +13,13 @@
 // limitations under the License.
 package com.google.collide.codemirror2;
 
-/**
- * Object that represents xml-parser state.
- *
- */
+/** Object that represents xml-parser state. */
 public class XmlState extends CmState {
 
-  protected XmlState() {
-  }
+    protected XmlState() {
+    }
 
-  public final native XmlContext getContext() /*-{
-    return this.context;
-  }-*/;
+    public final native XmlContext getContext() /*-{
+        return this.context;
+    }-*/;
 }

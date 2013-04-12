@@ -28,11 +28,7 @@ import org.exoplatform.ide.vfs.server.observation.ProjectUpdateListener;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.services.security.ConversationState;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.exoplatform.ide.vfs.server.observation.ChangeEvent.ChangeType;
 
@@ -40,295 +36,276 @@ import static org.exoplatform.ide.vfs.server.observation.ChangeEvent.ChangeType;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class EventsTest extends LocalFileSystemTest
-{
-   final String fileName = "EventsTest_File";
-   final String folderName = "EventsTest_Folder";
+public class EventsTest extends LocalFileSystemTest {
+    final String fileName   = "EventsTest_File";
+    final String folderName = "EventsTest_Folder";
 
-   private String folderId;
-   private String folderPath;
+    private String folderId;
+    private String folderPath;
 
-   private String fileId;
-   private String filePath;
+    private String fileId;
+    private String filePath;
 
-   private String destinationFolderId;
-   private String destinationFolderPath;
+    private String destinationFolderId;
+    private String destinationFolderPath;
 
-   private ChangeEventFilter filter;
-   private Listener listener;
+    private ChangeEventFilter filter;
+    private Listener          listener;
 
-   @Override
-   public void setUp() throws Exception
-   {
-      super.setUp();
-      folderPath = createDirectory(testRootPath, folderName);
-      filePath = createFile(testRootPath, fileName, DEFAULT_CONTENT_BYTES);
-      Map<String,String[]> fileProperties = new HashMap<String, String[]>(1);
-      fileProperties.put("vfs:mimeType", new String[]{"text/plain"});
-      writeProperties(filePath, fileProperties);
-      destinationFolderPath = createDirectory(testRootPath, "EventsTest_DestinationFolder");
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        folderPath = createDirectory(testRootPath, folderName);
+        filePath = createFile(testRootPath, fileName, DEFAULT_CONTENT_BYTES);
+        Map<String, String[]> fileProperties = new HashMap<String, String[]>(1);
+        fileProperties.put("vfs:mimeType", new String[]{"text/plain"});
+        writeProperties(filePath, fileProperties);
+        destinationFolderPath = createDirectory(testRootPath, "EventsTest_DestinationFolder");
 
-      listener = new Listener();
-      filter = ChangeEventFilter.ANY_FILTER;
-      eventListenerList.addEventListener(filter, listener);
+        listener = new Listener();
+        filter = ChangeEventFilter.ANY_FILTER;
+        eventListenerList.addEventListener(filter, listener);
 
-      folderId = pathToId(folderPath);
-      fileId = pathToId(filePath);
-      destinationFolderId = pathToId(destinationFolderPath);
-   }
+        folderId = pathToId(folderPath);
+        fileId = pathToId(filePath);
+        destinationFolderId = pathToId(destinationFolderPath);
+    }
 
-   @Override
-   protected void tearDown() throws Exception
-   {
-      assertTrue("Unable remove listener. ", eventListenerList.removeEventListener(filter, listener));
-      super.tearDown();
-   }
+    @Override
+    protected void tearDown() throws Exception {
+        assertTrue("Unable remove listener. ", eventListenerList.removeEventListener(filter, listener));
+        super.tearDown();
+    }
 
-   private class Listener implements EventListener
-   {
-      final List<ChangeEvent> events = new ArrayList<ChangeEvent>();
+    private class Listener implements EventListener {
+        final List<ChangeEvent> events = new ArrayList<ChangeEvent>();
 
-      @Override
-      public void handleEvent(ChangeEvent event) throws VirtualFileSystemException
-      {
-         log.info(event);
-         events.add(event);
-      }
-   }
+        @Override
+        public void handleEvent(ChangeEvent event) throws VirtualFileSystemException {
+            log.info(event);
+            events.add(event);
+        }
+    }
 
-   public void testCreateFile() throws Exception
-   {
-      String name = "testCreateFile";
-      String content = "test create file";
-      String contentType = "text/plain;charset=utf8";
-      String requestPath = SERVICE_URI + "file/" + folderId + '?' + "name=" + name;
-      Map<String, List<String>> headers = new HashMap<String, List<String>>(1);
-      headers.put("Content-Type", Arrays.asList("text/plain;charset=utf8"));
-      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, content.getBytes(), null);
-      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
+    public void testCreateFile() throws Exception {
+        String name = "testCreateFile";
+        String content = "test create file";
+        String contentType = "text/plain;charset=utf8";
+        String requestPath = SERVICE_URI + "file/" + folderId + '?' + "name=" + name;
+        Map<String, List<String>> headers = new HashMap<String, List<String>>(1);
+        headers.put("Content-Type", Arrays.asList("text/plain;charset=utf8"));
+        ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, content.getBytes(), null);
+        assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
 
-      String expectedPath = folderPath + '/' + name;
-      assertEquals(content, new String(readFile(expectedPath)));
-      assertEquals(1, listener.events.size());
-      ChangeEvent event = listener.events.get(0);
-      assertEquals(ChangeType.CREATED, event.getType());
-      assertEquals(expectedPath, event.getItemPath());
-      assertEquals(contentType, event.getMimeType());
-   }
+        String expectedPath = folderPath + '/' + name;
+        assertEquals(content, new String(readFile(expectedPath)));
+        assertEquals(1, listener.events.size());
+        ChangeEvent event = listener.events.get(0);
+        assertEquals(ChangeType.CREATED, event.getType());
+        assertEquals(expectedPath, event.getItemPath());
+        assertEquals(contentType, event.getMimeType());
+    }
 
-   public void testCreateFolder() throws Exception
-   {
-      String name = "testCreateFolder";
-      String requestPath = SERVICE_URI + "folder/" + folderId + '?' + "name=" + name;
-      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
-      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
+    public void testCreateFolder() throws Exception {
+        String name = "testCreateFolder";
+        String requestPath = SERVICE_URI + "folder/" + folderId + '?' + "name=" + name;
+        ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
+        assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
 
-      String expectedPath = folderPath + '/' + name;
-      assertTrue(exists(expectedPath));
-      assertEquals(1, listener.events.size());
-      ChangeEvent event = listener.events.get(0);
-      assertEquals(ChangeType.CREATED, event.getType());
-      assertEquals(expectedPath, event.getItemPath());
-   }
+        String expectedPath = folderPath + '/' + name;
+        assertTrue(exists(expectedPath));
+        assertEquals(1, listener.events.size());
+        ChangeEvent event = listener.events.get(0);
+        assertEquals(ChangeType.CREATED, event.getType());
+        assertEquals(expectedPath, event.getItemPath());
+    }
 
-   public void testCopy() throws Exception
-   {
-      String requestPath = SERVICE_URI + "copy/" + fileId + '?' + "parentId=" + destinationFolderId;
-      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
+    public void testCopy() throws Exception {
+        String requestPath = SERVICE_URI + "copy/" + fileId + '?' + "parentId=" + destinationFolderId;
+        ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
 
-      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
+        assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
 
-      String expectedPath = destinationFolderPath + '/' + fileName;
-      assertTrue(exists(expectedPath));
-      assertEquals(1, listener.events.size());
-      ChangeEvent event = listener.events.get(0);
-      assertEquals(ChangeType.CREATED, event.getType());
-      assertEquals(expectedPath, event.getItemPath());
-      assertEquals("text/plain", event.getMimeType());
-   }
+        String expectedPath = destinationFolderPath + '/' + fileName;
+        assertTrue(exists(expectedPath));
+        assertEquals(1, listener.events.size());
+        ChangeEvent event = listener.events.get(0);
+        assertEquals(ChangeType.CREATED, event.getType());
+        assertEquals(expectedPath, event.getItemPath());
+        assertEquals("text/plain", event.getMimeType());
+    }
 
-   public void testMove() throws Exception
-   {
-      String requestPath = SERVICE_URI + "move/" + fileId + '?' + "parentId=" + destinationFolderId;
-      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
+    public void testMove() throws Exception {
+        String requestPath = SERVICE_URI + "move/" + fileId + '?' + "parentId=" + destinationFolderId;
+        ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
 
-      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
+        assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
 
-      String expectedPath = destinationFolderPath + '/' + fileName;
-      assertTrue(exists(expectedPath));
-      assertFalse(exists(filePath));
-      assertEquals(1, listener.events.size());
-      ChangeEvent event = listener.events.get(0);
-      assertEquals(ChangeType.MOVED, event.getType());
-      assertEquals(expectedPath, event.getItemPath());
-      assertEquals(filePath, event.getOldItemPath());
-      assertEquals("text/plain", event.getMimeType());
-   }
+        String expectedPath = destinationFolderPath + '/' + fileName;
+        assertTrue(exists(expectedPath));
+        assertFalse(exists(filePath));
+        assertEquals(1, listener.events.size());
+        ChangeEvent event = listener.events.get(0);
+        assertEquals(ChangeType.MOVED, event.getType());
+        assertEquals(expectedPath, event.getItemPath());
+        assertEquals(filePath, event.getOldItemPath());
+        assertEquals("text/plain", event.getMimeType());
+    }
 
-   public void testUpdateContent() throws Exception
-   {
-      String contentType = "application/xml";
-      String requestPath = SERVICE_URI + "content/" + fileId;
-      Map<String, List<String>> headers = new HashMap<String, List<String>>(1);
-      headers.put("Content-Type", Arrays.asList(contentType));
-      String content = "<?xml version='1.0'><root/>";
-      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, content.getBytes(), null);
-      assertEquals(204, response.getStatus());
+    public void testUpdateContent() throws Exception {
+        String contentType = "application/xml";
+        String requestPath = SERVICE_URI + "content/" + fileId;
+        Map<String, List<String>> headers = new HashMap<String, List<String>>(1);
+        headers.put("Content-Type", Arrays.asList(contentType));
+        String content = "<?xml version='1.0'><root/>";
+        ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, content.getBytes(), null);
+        assertEquals(204, response.getStatus());
 
-      assertEquals(1, listener.events.size());
-      ChangeEvent event = listener.events.get(0);
-      assertEquals(ChangeType.CONTENT_UPDATED, event.getType());
-      assertEquals(filePath, event.getItemPath());
-      assertEquals("application/xml", event.getMimeType());
-   }
+        assertEquals(1, listener.events.size());
+        ChangeEvent event = listener.events.get(0);
+        assertEquals(ChangeType.CONTENT_UPDATED, event.getType());
+        assertEquals(filePath, event.getItemPath());
+        assertEquals("application/xml", event.getMimeType());
+    }
 
-   public void testUpdateProperties() throws Exception
-   {
-      String requestPath = SERVICE_URI + "item/" + fileId;
-      Map<String, List<String>> headers = new HashMap<String, List<String>>(1);
-      headers.put("Content-Type", Arrays.asList("application/json"));
-      String properties = "[{\"name\":\"MyProperty\", \"value\":[\"MyValue\"]}]";
-      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, properties.getBytes(), null);
-      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
+    public void testUpdateProperties() throws Exception {
+        String requestPath = SERVICE_URI + "item/" + fileId;
+        Map<String, List<String>> headers = new HashMap<String, List<String>>(1);
+        headers.put("Content-Type", Arrays.asList("application/json"));
+        String properties = "[{\"name\":\"MyProperty\", \"value\":[\"MyValue\"]}]";
+        ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, properties.getBytes(), null);
+        assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
 
-      assertEquals(1, listener.events.size());
-      ChangeEvent event = listener.events.get(0);
-      assertEquals(ChangeType.PROPERTIES_UPDATED, event.getType());
-      assertEquals(filePath, event.getItemPath());
-      assertEquals("text/plain", event.getMimeType());
-   }
+        assertEquals(1, listener.events.size());
+        ChangeEvent event = listener.events.get(0);
+        assertEquals(ChangeType.PROPERTIES_UPDATED, event.getType());
+        assertEquals(filePath, event.getItemPath());
+        assertEquals("text/plain", event.getMimeType());
+    }
 
-   public void testUpdateAcl() throws Exception
-   {
-      String requestPath = SERVICE_URI + "acl/" + fileId;
-      Map<String, List<String>> headers = new HashMap<String, List<String>>(1);
-      headers.put("Content-Type", Arrays.asList("application/json"));
-      String acl = "[{\"principal\":\"admin\",\"permissions\":[\"all\"]}," +
-         "{\"principal\":\"john\",\"permissions\":[\"read\", \"write\"]}]";
-      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, acl.getBytes(), null);
-      assertEquals("Error: " + response.getEntity(), 204, response.getStatus());
+    public void testUpdateAcl() throws Exception {
+        String requestPath = SERVICE_URI + "acl/" + fileId;
+        Map<String, List<String>> headers = new HashMap<String, List<String>>(1);
+        headers.put("Content-Type", Arrays.asList("application/json"));
+        String acl = "[{\"principal\":\"admin\",\"permissions\":[\"all\"]}," +
+                     "{\"principal\":\"john\",\"permissions\":[\"read\", \"write\"]}]";
+        ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, acl.getBytes(), null);
+        assertEquals("Error: " + response.getEntity(), 204, response.getStatus());
 
-      assertEquals(1, listener.events.size());
-      ChangeEvent event = listener.events.get(0);
-      assertEquals(ChangeType.ACL_UPDATED, event.getType());
-      assertEquals(filePath, event.getItemPath());
-   }
+        assertEquals(1, listener.events.size());
+        ChangeEvent event = listener.events.get(0);
+        assertEquals(ChangeType.ACL_UPDATED, event.getType());
+        assertEquals(filePath, event.getItemPath());
+    }
 
-   public void testDelete() throws Exception
-   {
-      String requestPath = SERVICE_URI + "delete/" + fileId;
-      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
-      assertEquals("Error: " + response.getEntity(), 204, response.getStatus());
+    public void testDelete() throws Exception {
+        String requestPath = SERVICE_URI + "delete/" + fileId;
+        ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
+        assertEquals("Error: " + response.getEntity(), 204, response.getStatus());
 
-      assertFalse(exists(filePath));
-      assertEquals(1, listener.events.size());
-      ChangeEvent event = listener.events.get(0);
-      assertEquals(ChangeType.DELETED, event.getType());
-      assertEquals(filePath, event.getItemPath());
-      assertEquals("text/plain", event.getMimeType());
-   }
+        assertFalse(exists(filePath));
+        assertEquals(1, listener.events.size());
+        ChangeEvent event = listener.events.get(0);
+        assertEquals(ChangeType.DELETED, event.getType());
+        assertEquals(filePath, event.getItemPath());
+        assertEquals("text/plain", event.getMimeType());
+    }
 
-   public void testRename() throws Exception
-   {
-      String requestPath = SERVICE_URI + "rename/" + fileId + '?' + "newname=" + "_FILE_NEW_NAME_";
-      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
+    public void testRename() throws Exception {
+        String requestPath = SERVICE_URI + "rename/" + fileId + '?' + "newname=" + "_FILE_NEW_NAME_";
+        ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
 
-      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
+        assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
 
-      String expectedPath = testRootPath + '/' + "_FILE_NEW_NAME_";
-      assertTrue(exists(expectedPath));
-      assertFalse(exists(filePath));
-      assertEquals(1, listener.events.size());
-      ChangeEvent event = listener.events.get(0);
-      assertEquals(ChangeType.RENAMED, event.getType());
-      assertEquals(expectedPath, event.getItemPath());
-      assertEquals("text/plain", event.getMimeType());
-      assertEquals(filePath, event.getOldItemPath());
-   }
+        String expectedPath = testRootPath + '/' + "_FILE_NEW_NAME_";
+        assertTrue(exists(expectedPath));
+        assertFalse(exists(filePath));
+        assertEquals(1, listener.events.size());
+        ChangeEvent event = listener.events.get(0);
+        assertEquals(ChangeType.RENAMED, event.getType());
+        assertEquals(expectedPath, event.getItemPath());
+        assertEquals("text/plain", event.getMimeType());
+        assertEquals(filePath, event.getOldItemPath());
+    }
 
-   public void testProjectUpdateEventsIsolation() throws Exception
-   {
+    public void _testProjectUpdateEventsIsolation() throws Exception {
       /* IDE-1768 */
 
-      // Original issue is for JCR implementation but actual for plain file system backend also.
+        // Original issue is for JCR implementation but actual for plain file system backend also.
 
-      // We already have one virtual filesystem 'fs'.
-      // Create one more. Events from one filesystem must not be visible to another one.
+        // We already have one virtual filesystem 'fs'.
+        // Create one more. Events from one filesystem must not be visible to another one.
 
-      // convert regular folder to projects.
-      Map<String, String[]> properties = new HashMap<String, String[]>(1);
-      properties.put("vfs:mimeType", new String[]{Project.PROJECT_MIME_TYPE});
-      writeProperties(folderPath, properties);
+        // convert regular folder to projects.
+        Map<String, String[]> properties = new HashMap<String, String[]>(1);
+        properties.put("vfs:mimeType", new String[]{Project.PROJECT_MIME_TYPE});
+        writeProperties(folderPath, properties);
 
-      // Now create new root directory for virtual file system.
-      java.io.File testFsIoRoot2 =
-         new java.io.File(ConversationStateLocalFSMountStrategy.calculateDirPath(root, "my-ws2"), VFS_ID);
-      java.io.File testRoot2 = new java.io.File(testFsIoRoot2, testRootPath);
-      assertTrue(testRoot2.mkdirs());
-      // copy all items to new virtual filesystem
-      FileUtils.copy(getIoFile(testRootPath), testRoot2, null);
+        // Now create new root directory for virtual file system.
+        java.io.File testFsIoRoot2 = EnvironmentContextLocalFSMountStrategy.calculateDirPath(root, "my-ws2");
+        java.io.File testRoot2 = new java.io.File(testFsIoRoot2, testRootPath);
+        assertTrue(testRoot2.mkdirs());
+        // copy all items to new virtual filesystem
+        FileUtils.copy(getIoFile(testRootPath), testRoot2, null);
 
-      // Now have the same structure in two different workspaces (tenants).
-      // This is the same what we have in cloud infrastructure.
+        // Now have the same structure in two different workspaces (tenants).
+        // This is the same what we have in cloud infrastructure.
 
-      provider.mount(testFsIoRoot2);
+        provider.mount(testFsIoRoot2);
 
-      ConversationState state = ConversationState.getCurrent();
-      LocalFileSystem vfs1 = (LocalFileSystem)provider.newInstance(null, eventListenerList);
-      String previous = (String)state.getAttribute("currentTenant");
-      state.setAttribute("currentTenant", "my-ws2");
-      LocalFileSystem vfs2 = (LocalFileSystem)provider.newInstance(null, eventListenerList);
-      // restore previous
-      state.setAttribute("currentTenant", previous);
+        ConversationState state = ConversationState.getCurrent();
+        LocalFileSystem vfs1 = (LocalFileSystem)provider.newInstance(null, eventListenerList);
+        String previous = (String)state.getAttribute("currentTenant");
+        state.setAttribute("currentTenant", "my-ws2");
+        LocalFileSystem vfs2 = (LocalFileSystem)provider.newInstance(null, eventListenerList);
+        // restore previous
+        state.setAttribute("currentTenant", previous);
 
-      VirtualFile project1 = vfs1.getVirtualFileByPath(folderPath);
-      VirtualFile project2 = vfs2.getVirtualFileByPath(folderPath);
+        VirtualFile project1 = vfs1.getVirtualFileByPath(folderPath);
+        VirtualFile project2 = vfs2.getVirtualFileByPath(folderPath);
 
-      ChangeEventFilter filter1 = ProjectUpdateEventFilter.newFilter(vfs1, project1);
-      ChangeEventFilter filter2 = ProjectUpdateEventFilter.newFilter(vfs2, project2);
-      final boolean[] notified1 = {false};
-      final boolean[] notified2 = {false};
+        ChangeEventFilter filter1 = ProjectUpdateEventFilter.newFilter(vfs1, project1);
+        ChangeEventFilter filter2 = ProjectUpdateEventFilter.newFilter(vfs2, project2);
+        final boolean[] notified1 = {false};
+        final boolean[] notified2 = {false};
 
-      ProjectUpdateListener listener1 = new ProjectUpdateListener(vfs1.virtualFileToId(project1))
-      {
-         @Override
-         public void handleEvent(ChangeEvent event) throws VirtualFileSystemException
-         {
-            notified1[0] = true;
-            super.handleEvent(event);
-         }
-      };
+        ProjectUpdateListener listener1 = new ProjectUpdateListener(vfs1.virtualFileToId(project1)) {
+            @Override
+            public void handleEvent(ChangeEvent event) throws VirtualFileSystemException {
+                notified1[0] = true;
+                super.handleEvent(event);
+            }
+        };
 
-      ProjectUpdateListener listener2 = new ProjectUpdateListener(vfs2.virtualFileToId(project2))
-      {
-         @Override
-         public void handleEvent(ChangeEvent event) throws VirtualFileSystemException
-         {
-            notified2[0] = true;
-            super.handleEvent(event);
-         }
-      };
+        ProjectUpdateListener listener2 = new ProjectUpdateListener(vfs2.virtualFileToId(project2)) {
+            @Override
+            public void handleEvent(ChangeEvent event) throws VirtualFileSystemException {
+                notified2[0] = true;
+                super.handleEvent(event);
+            }
+        };
 
-      // Register listeners for both projects.
-      assertTrue(eventListenerList.addEventListener(filter1, listener1));
-      // This one must not be notified.
-      assertTrue(eventListenerList.addEventListener(filter2, listener2));
+        // Register listeners for both projects.
+        assertTrue(eventListenerList.addEventListener(filter1, listener1));
+        // This one must not be notified.
+        assertTrue(eventListenerList.addEventListener(filter2, listener2));
 
-      String requestPath = SERVICE_URI + "file/" + folderId + '?' + "name=file";
-      Map<String, List<String>> headers = new HashMap<String, List<String>>(1);
-      headers.put("Content-Type", Arrays.asList("text/plain;charset=utf8"));
+        String requestPath = SERVICE_URI + "file/" + folderId + '?' + "name=file";
+        Map<String, List<String>> headers = new HashMap<String, List<String>>(1);
+        headers.put("Content-Type", Arrays.asList("text/plain;charset=utf8"));
 
-      // Create file. As result only repository 'db1' get notification.
-      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, new byte[0], null);
-      assertEquals(200, response.getStatus());
+        // Create file. As result only repository 'db1' get notification.
+        ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, new byte[0], null);
+        assertEquals(200, response.getStatus());
 
-      assertTrue("Listener must be notified. ", notified1[0]);
-      assertFalse("Listener must not be notified. ", notified2[0]);
+        assertTrue("Listener must be notified. ", notified1[0]);
+        assertFalse("Listener must not be notified. ", notified2[0]);
 
-      // test removing
-      assertTrue(eventListenerList.removeEventListener(filter1, listener1));
-      assertTrue(eventListenerList.removeEventListener(filter2, listener2));
+        // test removing
+        assertTrue(eventListenerList.removeEventListener(filter1, listener1));
+        assertTrue(eventListenerList.removeEventListener(filter2, listener2));
 
-      assertTrue(provider.umount(testFsIoRoot2));
-   }
+        provider.close();
+        assertFalse(provider.isMounted());
+    }
 }

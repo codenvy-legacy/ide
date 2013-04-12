@@ -26,9 +26,6 @@ import com.google.collide.server.participants.Participants;
 
 import org.everrest.websockets.WSConnection;
 
-import java.security.Principal;
-import java.util.Set;
-
 import javax.inject.Inject;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -36,35 +33,36 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
+import java.security.Principal;
+import java.util.Set;
 
 @Path("ide/collab_editor/participants")
-public class ParticipantsService
-{
-   @Inject
-   private Participants participants;
+public class ParticipantsService {
+    @Inject
+    private Participants participants;
 
-   @POST
-   @Produces(MediaType.APPLICATION_JSON)
-   @Path("list")
-   public String getParticipants()
-   {
-      return ((GetWorkspaceParticipantsResponseImpl)participants.getParticipants()).toJson();
-   }
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("list")
+    public String getParticipants() {
+        return ((GetWorkspaceParticipantsResponseImpl)participants.getParticipants()).toJson();
+    }
 
-   @POST
-   @Produces(MediaType.APPLICATION_JSON)
-   @Path("add")
-   public String addParticipant(@Context SecurityContext securityContext, @Context WSConnection connection)
-   {
-      Principal principal = securityContext.getUserPrincipal();
-      LoggedInUser user = new LoggedInUser(principal != null ? principal.getName() : "anonymous",
-         connection.getHttpSession().getId()); // HTTP session ID is easiest way to identify users with the same name, if they use different browsers.
-      Set<String> participantsToBroadcast = participants.getAllParticipantId();
-      participants.addParticipant(user);
-      ParticipantUserDetailsImpl participant = participants.getParticipant(user.getId());
-      UserLogInDtoImpl userLogInDto = UserLogInDtoImpl.make();
-      userLogInDto.setParticipant(participant);
-      WSUtil.broadcastToClients(userLogInDto.toJson(), participantsToBroadcast);
-      return String.format("{\"userId\":\"%s\",\"activeClientId\":\"%s\"}", user.getName(), user.getId());
-   }
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("add")
+    public String addParticipant(@Context SecurityContext securityContext, @Context WSConnection connection) {
+        Principal principal = securityContext.getUserPrincipal();
+        LoggedInUser user = new LoggedInUser(principal != null ? principal.getName() : "anonymous",
+                                             connection.getHttpSession()
+                                                       .getId()); // HTTP session ID is easiest way to identify users with the same name,
+                                                       // if they use different browsers.
+        Set<String> participantsToBroadcast = participants.getAllParticipantId();
+        participants.addParticipant(user);
+        ParticipantUserDetailsImpl participant = participants.getParticipant(user.getId());
+        UserLogInDtoImpl userLogInDto = UserLogInDtoImpl.make();
+        userLogInDto.setParticipant(participant);
+        WSUtil.broadcastToClients(userLogInDto.toJson(), participantsToBroadcast);
+        return String.format("{\"userId\":\"%s\",\"activeClientId\":\"%s\"}", user.getName(), user.getId());
+    }
 }

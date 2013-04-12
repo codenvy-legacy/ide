@@ -18,8 +18,7 @@
  */
 package org.exoplatform.ide.editor.html.client.codemirror;
 
-import java.util.LinkedList;
-import java.util.List;
+import com.google.gwt.core.client.JavaScriptObject;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
@@ -28,45 +27,40 @@ import org.exoplatform.ide.editor.codemirror.AutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.CodeValidator;
 import org.exoplatform.ide.editor.javascript.client.codemirror.JavaScriptAutocompleteHelper;
 
-import com.google.gwt.core.client.JavaScriptObject;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id
- * 
  */
-public class HtmlAutocompleteHelper extends AutocompleteHelper
-{
+public class HtmlAutocompleteHelper extends AutocompleteHelper {
 
-   List<? extends Token> javaScriptCode;
+    List<? extends Token> javaScriptCode;
 
-   JavaScriptAutocompleteHelper javaScriptAutocompleteHelper = new JavaScriptAutocompleteHelper();
+    JavaScriptAutocompleteHelper javaScriptAutocompleteHelper = new JavaScriptAutocompleteHelper();
 
-   public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition,
-      List<? extends Token> tokenList, String currentLineMimeType)
-   {
-      if (MimeType.APPLICATION_JAVASCRIPT.equals(currentLineMimeType))
-      {
-         javaScriptCode =
-            CodeValidator.extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(),
-               MimeType.APPLICATION_JAVASCRIPT);
+    public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition,
+                                      List<? extends Token> tokenList, String currentLineMimeType) {
+        if (MimeType.APPLICATION_JAVASCRIPT.equals(currentLineMimeType)) {
+            javaScriptCode =
+                    CodeValidator.extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(),
+                                              MimeType.APPLICATION_JAVASCRIPT);
 
-         return javaScriptAutocompleteHelper.getTokenBeforeCursor(node, lineNumber, cursorPosition, javaScriptCode,
-            currentLineMimeType);
+            return javaScriptAutocompleteHelper.getTokenBeforeCursor(node, lineNumber, cursorPosition, javaScriptCode,
+                                                                     currentLineMimeType);
 
-      }
+        }
 
-      return null;
-   }
+        return null;
+    }
 
-   public boolean isVariable(String nodeType)
-   {
-      return false;
-   }
+    public boolean isVariable(String nodeType) {
+        return false;
+    }
 
-   public boolean isPoint(String nodeType, String nodeContent)
-   {
-      return false;
-   }
+    public boolean isPoint(String nodeType, String nodeContent) {
+        return false;
+    }
 }

@@ -29,10 +29,8 @@ import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesAccount;
  * @see CloudBees#createAccount(String, org.exoplatform.ide.extension.cloudbees.shared.CloudBeesAccount)
  */
 @SuppressWarnings("serial")
-public final class AccountAlreadyExistsException extends Exception
-{
-   public AccountAlreadyExistsException(CloudBeesAccount account)
-   {
-      super("Account " + account.getName() + " already registered. ");
-   }
+public final class AccountAlreadyExistsException extends Exception {
+    public AccountAlreadyExistsException(CloudBeesAccount account) {
+        super("Account " + account.getName() + " already registered. ");
+    }
 }

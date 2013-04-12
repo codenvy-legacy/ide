@@ -32,74 +32,66 @@ import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class GWTLoader extends Loader
-{
-   private static final String LOADER_ID = "GWTLoaderId";
+public class GWTLoader extends Loader {
+    private static final String LOADER_ID = "GWTLoaderId";
 
-   public static final String LOADER_BACKGROUND = "loader/loader-background.png";
+    public static final String LOADER_BACKGROUND = "loader/loader-background.png";
 
-   public static final String LOADER_BACKIMAGE = "loader/loader-background-element.png";
+    public static final String LOADER_BACKIMAGE = "loader/loader-background-element.png";
 
-   //public static final String LOADER_PROGRESSIMAGE = "loader/ajax-loader.gif";
+    //public static final String LOADER_PROGRESSIMAGE = "loader/ajax-loader.gif";
 
-   public static final String LOADER_PROGRESSIMAGE = "loader/ajax-loader-new.gif";
+    public static final String LOADER_PROGRESSIMAGE = "loader/ajax-loader-new.gif";
 
-   private PopupPanel loader;
+    private PopupPanel loader;
 
-   private FlowPanel loaderContent;
+    private FlowPanel loaderContent;
 
-   private Element messageElement;
+    private Element messageElement;
 
-   /**
-    * 
-    */
-   public GWTLoader()
-   {
-      GwtResources.INSTANCE.css().ensureInjected();
-      String loadingMessage = getMessage();
-      loaderContent = new FlowPanel();
-      loaderContent.getElement().setId(LOADER_ID);
-      DOM.setStyleAttribute(loaderContent.getElement(), "backgroundImage", "url(" + UIHelper.getGadgetImagesURL()
-         + LOADER_BACKIMAGE + ")");
-      loaderContent.setStyleName(GwtResources.INSTANCE.css().loaderCenteredContent());
+    /**
+     *
+     */
+    public GWTLoader() {
+        GwtResources.INSTANCE.css().ensureInjected();
+        String loadingMessage = getMessage();
+        loaderContent = new FlowPanel();
+        loaderContent.getElement().setId(LOADER_ID);
+        DOM.setStyleAttribute(loaderContent.getElement(), "backgroundImage", "url(" + UIHelper.getGadgetImagesURL()
+                                                                             + LOADER_BACKIMAGE + ")");
+        loaderContent.setStyleName(GwtResources.INSTANCE.css().loaderCenteredContent());
 
-      Image image = new Image(UIHelper.getGadgetImagesURL() + LOADER_PROGRESSIMAGE);
-      image.setStyleName(GwtResources.INSTANCE.css().loaderImage());
+        Image image = new Image(UIHelper.getGadgetImagesURL() + LOADER_PROGRESSIMAGE);
+        image.setStyleName(GwtResources.INSTANCE.css().loaderImage());
 
-      messageElement = DOM.createSpan();
-      messageElement.setInnerHTML(loadingMessage);
+        messageElement = DOM.createSpan();
+        messageElement.setInnerHTML(loadingMessage);
 
-      loaderContent.add(image);
-      loaderContent.getElement().appendChild(com.google.gwt.dom.client.Document.get().createBRElement());
-      loaderContent.getElement().appendChild(messageElement);
+        loaderContent.add(image);
+        loaderContent.getElement().appendChild(com.google.gwt.dom.client.Document.get().createBRElement());
+        loaderContent.getElement().appendChild(messageElement);
 
-      loader = new PopupPanel();
-      loader.setWidget(loaderContent);
-      loader.setStyleName(GwtResources.INSTANCE.css().loaderBackground());
-   }
+        loader = new PopupPanel();
+        loader.setWidget(loaderContent);
+        loader.setStyleName(GwtResources.INSTANCE.css().loaderBackground());
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestLoader#show()
-    */
-   public void show()
-   {
-      loader.show();
-      String message = getMessage();
-      messageElement.setInnerHTML(message);
-      DOM.setStyleAttribute(loader.getElement(), "zIndex", (Integer.MAX_VALUE - 1) + "");
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.AsyncRequestLoader#show() */
+    public void show() {
+        loader.show();
+        String message = getMessage();
+        messageElement.setInnerHTML(message);
+        DOM.setStyleAttribute(loader.getElement(), "zIndex", (Integer.MAX_VALUE - 1) + "");
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestLoader#hide()
-    */
-   public void hide()
-   {
-      loader.hide();
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.AsyncRequestLoader#hide() */
+    public void hide() {
+        loader.hide();
+    }
 
 }

@@ -1,9 +1,9 @@
 <module>
-    <inherits name='com.google.gwt.user.User' />
-   <source path="" />
+    <inherits name='com.google.gwt.user.User'/>
+    <source path=""/>
 
-   <replace-with class="com.codenvy.ide.collaboration.ResourceLocked">
-      <when-type-is class="com.codenvy.ide.collaboration.ResourceLockedView" />
-   </replace-with>
-   
+    <replace-with class="com.codenvy.ide.collaboration.ResourceLocked">
+        <when-type-is class="com.codenvy.ide.collaboration.ResourceLockedView"/>
+    </replace-with>
+
 </module>

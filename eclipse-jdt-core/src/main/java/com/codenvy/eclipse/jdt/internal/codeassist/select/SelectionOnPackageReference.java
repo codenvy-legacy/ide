@@ -33,15 +33,16 @@ import com.codenvy.eclipse.jdt.internal.compiler.ast.ImportReference;
 import com.codenvy.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
 
 public class SelectionOnPackageReference extends ImportReference {
-public SelectionOnPackageReference(char[][] tokens , long[] positions) {
-	super(tokens, positions, false, ClassFileConstants.AccDefault);
-}
-public StringBuffer print(int tab, StringBuffer output, boolean withOnDemand) {
-	printIndent(tab, output).append("<SelectOnPackage:"); //$NON-NLS-1$
-	for (int i = 0; i < this.tokens.length; i++) {
-		if (i > 0) output.append('.');
-		output.append(this.tokens[i]);
-	}
-	return output.append('>');
-}
+    public SelectionOnPackageReference(char[][] tokens, long[] positions) {
+        super(tokens, positions, false, ClassFileConstants.AccDefault);
+    }
+
+    public StringBuffer print(int tab, StringBuffer output, boolean withOnDemand) {
+        printIndent(tab, output).append("<SelectOnPackage:"); //$NON-NLS-1$
+        for (int i = 0; i < this.tokens.length; i++) {
+            if (i > 0) output.append('.');
+            output.append(this.tokens[i]);
+        }
+        return output.append('>');
+    }
 }

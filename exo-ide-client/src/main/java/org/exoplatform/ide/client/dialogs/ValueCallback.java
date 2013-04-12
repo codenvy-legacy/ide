@@ -20,18 +20,17 @@ package org.exoplatform.ide.client.dialogs;
 
 /**
  * Interface for feedback from dialog window (which ask for value).
- * 
+ * <p/>
  * Used for two simple actions: take value and execute some action or cancel (when value is null).
- * 
+ * <p/>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public interface ValueCallback
-{
+public interface ValueCallback {
 
-   void execute(String value);
+    void execute(String value);
 
 }

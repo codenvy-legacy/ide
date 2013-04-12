@@ -22,31 +22,23 @@ import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 
-public class StringUnmarshaller implements Unmarshallable<StringBuilder>
-{
+public class StringUnmarshaller implements Unmarshallable<StringBuilder> {
 
-   protected StringBuilder builder;
+    protected StringBuilder builder;
 
-   /**
-    * @param callback
-    */
-   public StringUnmarshaller(StringBuilder builder)
-   {
-      this.builder = builder;
-   }
+    /** @param callback */
+    public StringUnmarshaller(StringBuilder builder) {
+        this.builder = builder;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response)
-   {
-      builder.append(response.getText());
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) {
+        builder.append(response.getText());
+    }
 
-   @Override
-   public StringBuilder getPayload()
-   {
-      return builder;
-   }
+    @Override
+    public StringBuilder getPayload() {
+        return builder;
+    }
 }

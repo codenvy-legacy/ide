@@ -24,21 +24,18 @@ import org.exoplatform.ide.extension.heroku.client.info.ShowApplicationInfoEvent
 
 /**
  * Control for displaying application information.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 1, 2011 11:18:56 AM anya $
- * 
  */
-public class ShowApplicationInfoControl extends AbstractHerokuControl
-{
+public class ShowApplicationInfoControl extends AbstractHerokuControl {
 
-   public ShowApplicationInfoControl()
-   {
-      super(HerokuExtension.LOCALIZATION_CONSTANT.showApplicationInfoControlId());
-      setTitle(HerokuExtension.LOCALIZATION_CONSTANT.showApplicationInfoControlTitle());
-      setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.showApplicationInfoControlPrompt());
-      setEvent(new ShowApplicationInfoEvent());
-      setImages(HerokuClientBundle.INSTANCE.applicationInfo(), HerokuClientBundle.INSTANCE.applicationInfoDisabled());
-   }
+    public ShowApplicationInfoControl() {
+        super(HerokuExtension.LOCALIZATION_CONSTANT.showApplicationInfoControlId());
+        setTitle(HerokuExtension.LOCALIZATION_CONSTANT.showApplicationInfoControlTitle());
+        setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.showApplicationInfoControlPrompt());
+        setEvent(new ShowApplicationInfoEvent());
+        setImages(HerokuClientBundle.INSTANCE.applicationInfo(), HerokuClientBundle.INSTANCE.applicationInfoDisabled());
+    }
 
 }

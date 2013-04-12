@@ -30,329 +30,307 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 import org.exoplatform.ide.extension.heroku.client.create.CreateRequestHandler;
 import org.exoplatform.ide.extension.heroku.shared.Credentials;
 
 /**
  * Implementation of {@link HerokuClientService} service.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 25, 2011 12:23:29 PM anya $
- * 
  */
-public class HerokuClientServiceImpl extends HerokuClientService
-{
-   private static final String LOGIN_PATH = "/ide/heroku/login";
+public class HerokuClientServiceImpl extends HerokuClientService {
+    private static final String LOGIN_PATH = "/ide/heroku/login";
 
-   private static final String LOGOUT_PATH = "/ide/heroku/logout";
+    private static final String LOGOUT_PATH = "/ide/heroku/logout";
 
-   private static final String CREATE_APPLICATION = "/ide/heroku/apps/create";
+    private static final String CREATE_APPLICATION = "/ide/heroku/apps/create";
 
-   private static final String DESTROY_APPLICATION = "/ide/heroku/apps/destroy";
+    private static final String DESTROY_APPLICATION = "/ide/heroku/apps/destroy";
 
-   private static final String LOGS = "/ide/heroku/apps/logs";
+    private static final String LOGS = "/ide/heroku/apps/logs";
 
-   private static final String RENAME_APPLICATION = "/ide/heroku/apps/rename";
+    private static final String RENAME_APPLICATION = "/ide/heroku/apps/rename";
 
-   private static final String RUN = "/ide/heroku/apps/run";
+    private static final String RUN = "/ide/heroku/apps/run";
 
-   private static final String ADD_KEY = "/ide/heroku/keys/add";
+    private static final String ADD_KEY = "/ide/heroku/keys/add";
 
-   private static final String CLEAR_KEYS = "/ide/heroku/keys/clear";
+    private static final String CLEAR_KEYS = "/ide/heroku/keys/clear";
 
-   private static final String APPLICATION_INFO = "/ide/heroku/apps/info";
+    private static final String APPLICATION_INFO = "/ide/heroku/apps/info";
 
-   private static final String LIST_APPLICATIONS = "/ide/heroku/apps";
+    private static final String LIST_APPLICATIONS = "/ide/heroku/apps";
 
-   private static final String GET_STACKS = "/ide/heroku/apps/stack";
+    private static final String GET_STACKS = "/ide/heroku/apps/stack";
 
-   private static final String STACK_MIGRATE = "/ide/heroku/apps/stack-migrate";
+    private static final String STACK_MIGRATE = "/ide/heroku/apps/stack-migrate";
 
-   /**
-    * REST service context.
-    */
-   private String restServiceContext;
+    /** REST service context. */
+    private String restServiceContext;
 
-   /**
-    * Loader to be displayed.
-    */
-   private Loader loader;
+    /** Loader to be displayed. */
+    private Loader loader;
 
-   /**
-    * WebSocket message bus.
-    */
-   private MessageBus wsMessageBus;
+    /** WebSocket message bus. */
+    private MessageBus wsMessageBus;
 
-   /**
-    * @param restContext rest context
-    * @param loader loader to show on server request
-    * @param wsMessageBus {@link MessageBus} to send messages over WebSocket
-    */
-   public HerokuClientServiceImpl(String restContext, Loader loader, MessageBus wsMessageBus)
-   {
-      this.loader = loader;
-      this.restServiceContext = restContext;
-      this.wsMessageBus = wsMessageBus;
-   }
+    /**
+     * @param restContext
+     *         rest context
+     * @param loader
+     *         loader to show on server request
+     * @param wsMessageBus
+     *         {@link MessageBus} to send messages over WebSocket
+     */
+    public HerokuClientServiceImpl(String restContext, Loader loader, MessageBus wsMessageBus) {
+        this.loader = loader;
+        this.restServiceContext = restContext;
+        this.wsMessageBus = wsMessageBus;
+    }
 
-   /**
-    * @throws RequestException
-    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#login(java.lang.String, java.lang.String)
-    */
-   @Override
-   public void login(String login, String password, AsyncRequestCallback<String> callback) throws RequestException
-   {
-      String url = restServiceContext + LOGIN_PATH;
+    /**
+     * @throws RequestException
+     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#login(java.lang.String, java.lang.String)
+     */
+    @Override
+    public void login(String login, String password, AsyncRequestCallback<String> callback) throws RequestException {
+        String url = restServiceContext + LOGIN_PATH;
 
-      Credentials credentialsBean = HerokuExtension.AUTO_BEAN_FACTORY.credentials().as();
-      credentialsBean.setEmail(login);
-      credentialsBean.setPassword(password);
-      String credentials = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(credentialsBean)).getPayload();
+        Credentials credentialsBean = HerokuExtension.AUTO_BEAN_FACTORY.credentials().as();
+        credentialsBean.setEmail(login);
+        credentialsBean.setPassword(password);
+        String credentials = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(credentialsBean)).getPayload();
 
-      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(credentials)
-         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
-   }
+        AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(credentials)
+                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+                    .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+    }
 
-   @Override
-   public void logout(AsyncRequestCallback<String> callback) throws RequestException
-   {
-      String url = restServiceContext + LOGOUT_PATH;
-      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
-   }
+    @Override
+    public void logout(AsyncRequestCallback<String> callback) throws RequestException {
+        String url = restServiceContext + LOGOUT_PATH;
+        AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
+    }
 
-   /**
-    * @throws RequestException
-    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#createApplication(java.lang.String, java.lang.String,
-    *      java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
-    */
-   @Override
-   public void createApplication(String applicationName, String vfsId, String projectid, String remoteName,
-      HerokuAsyncRequestCallback callback) throws RequestException
-   {
-      String url = restServiceContext + CREATE_APPLICATION;
-      String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
-      params += (remoteName != null && !remoteName.trim().isEmpty()) ? "remote=" + remoteName + "&" : "";
-      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
-      params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid + "&" : "";
+    /**
+     * @throws RequestException
+     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#createApplication(java.lang.String, java.lang.String,
+     *      java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
+     */
+    @Override
+    public void createApplication(String applicationName, String vfsId, String projectid, String remoteName,
+                                  HerokuAsyncRequestCallback callback) throws RequestException {
+        String url = restServiceContext + CREATE_APPLICATION;
+        String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
+        params += (remoteName != null && !remoteName.trim().isEmpty()) ? "remote=" + remoteName + "&" : "";
+        params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
+        params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid + "&" : "";
 
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true).loader(loader)
-         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).requestStatusHandler(new CreateRequestHandler())
-         .send(callback);
-   }
+        AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true).loader(loader)
+                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+                    .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).requestStatusHandler(new CreateRequestHandler())
+                    .send(callback);
+    }
 
-   /**
-    * @throws WebSocketException
-    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#createApplicationWS(java.lang.String, java.lang.String,
-    *       java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.HerokuRESTfulRequestCallback)
-    */
-   @Override
-   public void createApplicationWS(String applicationName, String vfsId, String projectid, String remoteName,
-      HerokuRESTfulRequestCallback callback) throws WebSocketException
-   {
-      String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
-      params += (remoteName != null && !remoteName.trim().isEmpty()) ? "remote=" + remoteName + "&" : "";
-      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
-      params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid + "&" : "";
+    /**
+     * @throws WebSocketException
+     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#createApplicationWS(java.lang.String, java.lang.String,
+     *      java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.HerokuRESTfulRequestCallback)
+     */
+    @Override
+    public void createApplicationWS(String applicationName, String vfsId, String projectid, String remoteName,
+                                    HerokuRESTfulRequestCallback callback) throws WebSocketException {
+        String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
+        params += (remoteName != null && !remoteName.trim().isEmpty()) ? "remote=" + remoteName + "&" : "";
+        params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
+        params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid + "&" : "";
 
-      callback.setStatusHandler(new CreateRequestHandler());
-      callback.setLoader(loader);
+        callback.setStatusHandler(new CreateRequestHandler());
+        callback.setLoader(loader);
 
-      RequestMessage message =
-         RequestMessageBuilder.build(RequestBuilder.POST, CREATE_APPLICATION + '?' + params)
-            .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-            .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).getRequestMessage();
-      wsMessageBus.send(message, callback);
-   }
+        RequestMessage message =
+                RequestMessageBuilder.build(RequestBuilder.POST, CREATE_APPLICATION + '?' + params)
+                                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+                                     .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).getRequestMessage();
+        wsMessageBus.send(message, callback);
+    }
 
-   /**
-    * @throws RequestException
-    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#deleteApplication(java.lang.String,
-    *      java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-    */
-   @Override
-   public void deleteApplication(String applicationName, String vfsId, String projectid,
-      HerokuAsyncRequestCallback callback) throws RequestException
-   {
-      String url = restServiceContext + DESTROY_APPLICATION;
-      String params = (applicationName != null) ? "name=" + applicationName + "&" : "";
-      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
-      params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
+    /**
+     * @throws RequestException
+     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#deleteApplication(java.lang.String,
+     *      java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+     */
+    @Override
+    public void deleteApplication(String applicationName, String vfsId, String projectid,
+                                  HerokuAsyncRequestCallback callback) throws RequestException {
+        String url = restServiceContext + DESTROY_APPLICATION;
+        String params = (applicationName != null) ? "name=" + applicationName + "&" : "";
+        params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
+        params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
 
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader)
-         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
-   }
+        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader)
+                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+                    .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+    }
 
-   /**
-    * @throws RequestException
-    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#addKey()
-    */
-   @Override
-   public void addKey(HerokuAsyncRequestCallback callback) throws RequestException
-   {
-      String url = restServiceContext + ADD_KEY;
-      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
-   }
+    /**
+     * @throws RequestException
+     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#addKey()
+     */
+    @Override
+    public void addKey(HerokuAsyncRequestCallback callback) throws RequestException {
+        String url = restServiceContext + ADD_KEY;
+        AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
+    }
 
-   /**
-    * @throws RequestException
-    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#clearKeys(org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
-    */
-   @Override
-   public void clearKeys(HerokuAsyncRequestCallback callback) throws RequestException
-   {
-      String url = restServiceContext + CLEAR_KEYS;
-      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
-   }
+    /**
+     * @throws RequestException
+     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#clearKeys(org.exoplatform.ide.extension.heroku.client
+     * .HerokuAsyncRequestCallback)
+     */
+    @Override
+    public void clearKeys(HerokuAsyncRequestCallback callback) throws RequestException {
+        String url = restServiceContext + CLEAR_KEYS;
+        AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
+    }
 
-   /**
-    * @throws RequestException
-    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#getApplicationInfo(java.lang.String, java.lang.String,
-    *      org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
-    */
-   @Override
-   public void getApplicationInfo(String applicationName, String vfsId, String projectid, boolean isRaw,
-      HerokuAsyncRequestCallback callback) throws RequestException
-   {
-      String url = restServiceContext + APPLICATION_INFO;
+    /**
+     * @throws RequestException
+     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#getApplicationInfo(java.lang.String, java.lang.String,
+     *      org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
+     */
+    @Override
+    public void getApplicationInfo(String applicationName, String vfsId, String projectid, boolean isRaw,
+                                   HerokuAsyncRequestCallback callback) throws RequestException {
+        String url = restServiceContext + APPLICATION_INFO;
 
-      String params = (applicationName != null) ? "name=" + applicationName + "&" : "";
-      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
-      params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
+        String params = (applicationName != null) ? "name=" + applicationName + "&" : "";
+        params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
+        params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
 
-      AsyncRequest.build(RequestBuilder.GET, url + "?" + params).loader(loader)
-         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
-   }
+        AsyncRequest.build(RequestBuilder.GET, url + "?" + params).loader(loader)
+                    .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+    }
 
-   /**
-    * @throws RequestException
-    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#renameApplication(java.lang.String, java.lang.String,
-    *      java.lang.String, org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
-    */
-   @Override
-   public void renameApplication(String applicationName, String vfsId, String projectid, String newName,
-      HerokuAsyncRequestCallback callback) throws RequestException
-   {
-      String url = restServiceContext + RENAME_APPLICATION;
+    /**
+     * @throws RequestException
+     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#renameApplication(java.lang.String, java.lang.String,
+     *      java.lang.String, org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
+     */
+    @Override
+    public void renameApplication(String applicationName, String vfsId, String projectid, String newName,
+                                  HerokuAsyncRequestCallback callback) throws RequestException {
+        String url = restServiceContext + RENAME_APPLICATION;
 
-      String params = (applicationName != null) ? "name=" + applicationName + "&" : "";
-      params += (newName != null) ? "newname=" + newName + "&" : "";
-      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
-      params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
+        String params = (applicationName != null) ? "name=" + applicationName + "&" : "";
+        params += (newName != null) ? "newname=" + newName + "&" : "";
+        params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
+        params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
 
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader)
-         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
-   }
+        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader)
+                    .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+    }
 
-   /**
-    * @throws RequestException
-    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#run(java.lang.String, java.lang.String,
-    *      java.lang.String, org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
-    */
-   @Override
-   public void run(String applicationName, String vfsId, String projectid, String command,
-      RakeCommandAsyncRequestCallback callback) throws RequestException
-   {
-      String url = restServiceContext + RUN;
+    /**
+     * @throws RequestException
+     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#run(java.lang.String, java.lang.String,
+     *      java.lang.String, org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
+     */
+    @Override
+    public void run(String applicationName, String vfsId, String projectid, String command,
+                    RakeCommandAsyncRequestCallback callback) throws RequestException {
+        String url = restServiceContext + RUN;
 
-      String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
-      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
-      params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
+        String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
+        params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
+        params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
 
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + params).header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN)
-         .header(HTTPHeader.CONTENT_TYPE, MimeType.TEXT_PLAIN).loader(loader).data(command).send(callback);
-   }
+        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN)
+                    .header(HTTPHeader.CONTENT_TYPE, MimeType.TEXT_PLAIN).loader(loader).data(command).send(callback);
+    }
 
-   /**
-    * @throws RequestException
-    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#help(java.lang.String, java.lang.String,
-    *      org.exoplatform.ide.extension.heroku.client.RakeCommandAsyncRequestCallback)
-    */
-   @Override
-   public void help(String applicationName, String vfsId, String projectid, RakeCommandAsyncRequestCallback callback)
-      throws RequestException
-   {
-      String url = restServiceContext + RUN;
+    /**
+     * @throws RequestException
+     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#help(java.lang.String, java.lang.String,
+     *      org.exoplatform.ide.extension.heroku.client.RakeCommandAsyncRequestCallback)
+     */
+    @Override
+    public void help(String applicationName, String vfsId, String projectid, RakeCommandAsyncRequestCallback callback)
+            throws RequestException {
+        String url = restServiceContext + RUN;
 
-      String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
-      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
-      params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
+        String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
+        params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
+        params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
 
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + params).header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN)
-         .header(HTTPHeader.CONTENT_TYPE, MimeType.TEXT_PLAIN).loader(loader).data("rake -H").send(callback);
-   }
+        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN)
+                    .header(HTTPHeader.CONTENT_TYPE, MimeType.TEXT_PLAIN).loader(loader).data("rake -H").send(callback);
+    }
 
-   /**
-    * @throws RequestException
-    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#getStackList(java.lang.String, java.lang.String,
-    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-    */
-   @Override
-   public void getStackList(String applicationName, String vfsId, String projectid,
-      StackListAsyncRequestCallback callback) throws RequestException
-   {
-      String url = restServiceContext + GET_STACKS;
+    /**
+     * @throws RequestException
+     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#getStackList(java.lang.String, java.lang.String,
+     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+     */
+    @Override
+    public void getStackList(String applicationName, String vfsId, String projectid,
+                             StackListAsyncRequestCallback callback) throws RequestException {
+        String url = restServiceContext + GET_STACKS;
 
-      String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
-      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
-      params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
+        String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
+        params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
+        params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
 
-      AsyncRequest.build(RequestBuilder.GET, url + "?" + params).loader(loader)
-         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
-   }
+        AsyncRequest.build(RequestBuilder.GET, url + "?" + params).loader(loader)
+                    .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+    }
 
-   /**
-    * @throws RequestException
-    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#migrateStack(java.lang.String, java.lang.String,
-    *      java.lang.String, org.exoplatform.ide.extension.heroku.client.StackListAsyncRequestCallback)
-    */
-   @Override
-   public void migrateStack(String applicationName, String vfsId, String projectid, String stack,
-      StackMigrationAsyncRequestCallback callback) throws RequestException
-   {
-      String url = restServiceContext + STACK_MIGRATE;
+    /**
+     * @throws RequestException
+     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#migrateStack(java.lang.String, java.lang.String,
+     *      java.lang.String, org.exoplatform.ide.extension.heroku.client.StackListAsyncRequestCallback)
+     */
+    @Override
+    public void migrateStack(String applicationName, String vfsId, String projectid, String stack,
+                             StackMigrationAsyncRequestCallback callback) throws RequestException {
+        String url = restServiceContext + STACK_MIGRATE;
 
-      String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
-      params += (stack != null && !stack.isEmpty()) ? "stack=" + stack + "&" : "";
-      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
-      params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
+        String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
+        params += (stack != null && !stack.isEmpty()) ? "stack=" + stack + "&" : "";
+        params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
+        params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
 
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).send(callback);
-   }
+        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).send(callback);
+    }
 
-   /**
-    * @throws RequestException
-    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#logs(java.lang.String, java.lang.String,
-    *      org.exoplatform.ide.extension.heroku.client.LogsAsyncRequestCallback)
-    */
-   @Override
-   public void logs(String applicationName, String vfsId, String projectid, int logLines,
-      LogsAsyncRequestCallback callback) throws RequestException
-   {
-      String url = restServiceContext + LOGS;
+    /**
+     * @throws RequestException
+     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#logs(java.lang.String, java.lang.String,
+     *      org.exoplatform.ide.extension.heroku.client.LogsAsyncRequestCallback)
+     */
+    @Override
+    public void logs(String applicationName, String vfsId, String projectid, int logLines,
+                     LogsAsyncRequestCallback callback) throws RequestException {
+        String url = restServiceContext + LOGS;
 
-      String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
-      params += "num=" + logLines + "&";
-      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
-      params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
+        String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
+        params += "num=" + logLines + "&";
+        params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
+        params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
 
-      AsyncRequest.build(RequestBuilder.GET, url + "?" + params).loader(loader).send(callback);
-   }
+        AsyncRequest.build(RequestBuilder.GET, url + "?" + params).loader(loader).send(callback);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#listApplications(org.exoplatform.ide.extension.heroku.client.ApplicationListAsyncRequestCallback)
-    */
-   @Override
-   public void listApplications(ApplicationListAsyncRequestCallback callback) throws RequestException
-   {
-      String url = restServiceContext + LIST_APPLICATIONS;
+    /** @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#listApplications(org.exoplatform.ide.extension.heroku.client.ApplicationListAsyncRequestCallback) */
+    @Override
+    public void listApplications(ApplicationListAsyncRequestCallback callback) throws RequestException {
+        String url = restServiceContext + LIST_APPLICATIONS;
 
-      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
-         .send(callback);
-   }
+        AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+                    .send(callback);
+    }
 
 }

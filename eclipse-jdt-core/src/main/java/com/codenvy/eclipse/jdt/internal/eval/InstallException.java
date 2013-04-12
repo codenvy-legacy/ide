@@ -14,27 +14,23 @@ package com.codenvy.eclipse.jdt.internal.eval;
  * A <code>InstallException</code> is thrown when installing class files on a target has failed
  * for any reason.
  */
-public class InstallException extends Exception
-{
+public class InstallException extends Exception {
 
-   private static final long serialVersionUID = -5870897747810654203L;   // backward compatible
+    private static final long serialVersionUID = -5870897747810654203L;   // backward compatible
 
-   /**
-    * Constructs a <code>InstallException</code> with no detail  message.
-    */
-   public InstallException()
-   {
-      super();
-   }
+    /** Constructs a <code>InstallException</code> with no detail  message. */
+    public InstallException() {
+        super();
+    }
 
-   /**
-    * Constructs a <code>InstallException</code> with the specified
-    * detail message.
-    *
-    * @param s the detail message.
-    */
-   public InstallException(String s)
-   {
-      super(s);
-   }
+    /**
+     * Constructs a <code>InstallException</code> with the specified
+     * detail message.
+     *
+     * @param s
+     *         the detail message.
+     */
+    public InstallException(String s) {
+        super(s);
+    }
 }

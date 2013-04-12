@@ -23,43 +23,41 @@ import java.util.Set;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 23, 2012 4:45:33 PM anya $
- * 
  */
-public interface Backend
-{
-   public String getInstanceClass();
+public interface Backend {
+    public String getInstanceClass();
 
-   public Integer getInstances();
+    public Integer getInstances();
 
-   public Integer getMaxConcurrentRequests();
+    public Integer getMaxConcurrentRequests();
 
-   public String getName();
+    public String getName();
 
-   public Set<Option> getOptions();
+    public Set<Option> getOptions();
 
-   public State getState();
+    public State getState();
 
-   public Boolean isDynamic();
+    public Boolean isDynamic();
 
-   public Boolean isFailFast();
+    public Boolean isFailFast();
 
-   public Boolean isPublic();
+    public Boolean isPublic();
 
-   public void setInstanceClass(String instanceClass);
+    public void setInstanceClass(String instanceClass);
 
-   public void setInstances(Integer number);
+    public void setInstances(Integer number);
 
-   public void setMaxConcurrentRequests(Integer number);
+    public void setMaxConcurrentRequests(Integer number);
 
-   public void setName(String name);
+    public void setName(String name);
 
-   public void setOptions(Set<Option> options);
+    public void setOptions(Set<Option> options);
 
-   public void setState(State state);
+    public void setState(State state);
 
-   public void setDynamic(Boolean isDynamic);
+    public void setDynamic(Boolean isDynamic);
 
-   public void setFailFast(Boolean isFailFast);
+    public void setFailFast(Boolean isFailFast);
 
-   public void setPublic(Boolean isPublic);
+    public void setPublic(Boolean isPublic);
 }

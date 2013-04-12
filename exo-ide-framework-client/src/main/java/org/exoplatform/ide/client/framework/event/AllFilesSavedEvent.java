@@ -22,28 +22,24 @@ package org.exoplatform.ide.client.framework.event;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class AllFilesSavedEvent extends GwtEvent<AllFilesSavedHandler>
-{
+public class AllFilesSavedEvent extends GwtEvent<AllFilesSavedHandler> {
 
-   public static final GwtEvent.Type<AllFilesSavedHandler> TYPE = new GwtEvent.Type<AllFilesSavedHandler>();
+    public static final GwtEvent.Type<AllFilesSavedHandler> TYPE = new GwtEvent.Type<AllFilesSavedHandler>();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<AllFilesSavedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<AllFilesSavedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(AllFilesSavedHandler handler)
-   {
-      handler.onAllFilesSaved(this);
-   }
+    @Override
+    protected void dispatch(AllFilesSavedHandler handler) {
+        handler.onAllFilesSaved(this);
+    }
 
 }

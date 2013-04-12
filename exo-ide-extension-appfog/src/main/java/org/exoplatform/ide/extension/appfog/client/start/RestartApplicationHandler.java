@@ -26,13 +26,12 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface RestartApplicationHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to restart application.
-    *
-    * @param event
-    */
-   void onRestartApplication(RestartApplicationEvent event);
+public interface RestartApplicationHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to restart application.
+     *
+     * @param event
+     */
+    void onRestartApplication(RestartApplicationEvent event);
 
 }

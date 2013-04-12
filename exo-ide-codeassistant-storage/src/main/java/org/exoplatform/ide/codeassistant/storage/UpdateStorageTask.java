@@ -25,78 +25,63 @@ import java.util.concurrent.Future;
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: UpdateStorageTask.java Oct 29, 2012 vetal $
- *
  */
-public class UpdateStorageTask
-{
-   private final String id;
-   private final Future<UpdateStorageResult> f;
+public class UpdateStorageTask {
+    private final String                      id;
+    private final Future<UpdateStorageResult> f;
 
-   public UpdateStorageTask(String id, Future<UpdateStorageResult> f)
-   {
-      this.id = id;
-      this.f = f;
-   }
+    public UpdateStorageTask(String id, Future<UpdateStorageResult> f) {
+        this.id = id;
+        this.f = f;
+    }
 
-   /**
-    * Get build unique ID.
-    *
-    * @return build ID
-    */
-   public String getId()
-   {
-      return id;
-   }
+    /**
+     * Get build unique ID.
+     *
+     * @return build ID
+     */
+    public String getId() {
+        return id;
+    }
 
-   /**
-    * Check is update done or not. Note update may be successful or failed.
-    *
-    * @return <code>true</code> if build is done and <code>false</code> otherwise
-    */
-   public boolean isDone()
-   {
-      return f.isDone();
-   }
+    /**
+     * Check is update done or not. Note update may be successful or failed.
+     *
+     * @return <code>true</code> if build is done and <code>false</code> otherwise
+     */
+    public boolean isDone() {
+        return f.isDone();
+    }
 
-   /** Cancel update. */
-   public void cancel()
-   {
-      f.cancel(true);
-   }
+    /** Cancel update. */
+    public void cancel() {
+        f.cancel(true);
+    }
 
-   /**
-    * Get result of maven build.
-    *
-    * @return result of maven build. <b>NOTE</b> If build is not finished yet this method returns <code>null</code>
-    * @throws MavenInvocationException
-    *    if maven task cannot be run because to incorrect input parameters
-    */
-   public UpdateStorageResult getResult() 
-   {
-      if (f.isDone())
-      {
-         try
-         {
-            return f.get();
-         }
-         catch (InterruptedException e)
-         {
-            // Should not happen since we checked is task done or not.
-            Thread.currentThread().interrupt();
-         }
-         catch (ExecutionException e)
-         {
-            final Throwable cause = e.getCause();
-            if (cause instanceof Error)
-            {
-               throw (Error)cause;
+    /**
+     * Get result of maven build.
+     *
+     * @return result of maven build. <b>NOTE</b> If build is not finished yet this method returns <code>null</code>
+     * @throws MavenInvocationException
+     *         if maven task cannot be run because to incorrect input parameters
+     */
+    public UpdateStorageResult getResult() {
+        if (f.isDone()) {
+            try {
+                return f.get();
+            } catch (InterruptedException e) {
+                // Should not happen since we checked is task done or not.
+                Thread.currentThread().interrupt();
+            } catch (ExecutionException e) {
+                final Throwable cause = e.getCause();
+                if (cause instanceof Error) {
+                    throw (Error)cause;
+                }
+                if (cause instanceof RuntimeException) {
+                    throw (RuntimeException)cause;
+                }
             }
-            if (cause instanceof RuntimeException)
-            {
-               throw (RuntimeException)cause;
-            }
-         }
-      }
-      return null;
-   }
+        }
+        return null;
+    }
 }

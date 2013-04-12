@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.aws.server.rest;
 
 import com.amazonaws.AmazonServiceException;
+
 import org.exoplatform.ide.extension.aws.server.AWSException;
 
 import javax.ws.rs.core.MediaType;
@@ -33,37 +34,32 @@ import javax.ws.rs.ext.Provider;
  * @version $Id: AmazonWebServiceExceptionMapper.java Aug 23, 2012
  */
 @Provider
-public class AWSExceptionMapper implements ExceptionMapper<AWSException>
-{
-   /** @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable) */
-   @Override
-   public Response toResponse(AWSException e)
-   {
-      Throwable cause = e.getCause();
-      if (cause instanceof AmazonServiceException)
-      {
-         AmazonServiceException awsException = (AmazonServiceException)cause;
-         return Response.status(awsException.getStatusCode())
-            .header("JAXRS-Body-Provided", "Error-Message")
-            .header("AWS-Error-Code", awsException.getErrorCode())
-            .header("AWS-Error-Type", awsException.getErrorType().toString())
-            .header("AWS-Service-Name", awsException.getServiceName())
-            .entity(awsException.getMessage())
-            .type(MediaType.TEXT_PLAIN)
-            .build();
-      }
-      else if ("Authentication required.".equals(e.getMessage()))
-      {
-         return Response.ok()
-            .header("JAXRS-Body-Provided", "Authentication-required")
-            .entity(e.getMessage())
-            .type(MediaType.TEXT_PLAIN)
-            .build();
-      }
-      return Response.status(500)
-         .header("JAXRS-Body-Provided", "Error-Message")
-         .entity(e.getMessage())
-         .type(MediaType.TEXT_PLAIN)
-         .build();
-   }
+public class AWSExceptionMapper implements ExceptionMapper<AWSException> {
+    /** @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable) */
+    @Override
+    public Response toResponse(AWSException e) {
+        Throwable cause = e.getCause();
+        if (cause instanceof AmazonServiceException) {
+            AmazonServiceException awsException = (AmazonServiceException)cause;
+            return Response.status(awsException.getStatusCode())
+                           .header("JAXRS-Body-Provided", "Error-Message")
+                           .header("AWS-Error-Code", awsException.getErrorCode())
+                           .header("AWS-Error-Type", awsException.getErrorType().toString())
+                           .header("AWS-Service-Name", awsException.getServiceName())
+                           .entity(awsException.getMessage())
+                           .type(MediaType.TEXT_PLAIN)
+                           .build();
+        } else if ("Authentication required.".equals(e.getMessage())) {
+            return Response.ok()
+                           .header("JAXRS-Body-Provided", "Authentication-required")
+                           .entity(e.getMessage())
+                           .type(MediaType.TEXT_PLAIN)
+                           .build();
+        }
+        return Response.status(500)
+                       .header("JAXRS-Body-Provided", "Error-Message")
+                       .entity(e.getMessage())
+                       .type(MediaType.TEXT_PLAIN)
+                       .build();
+    }
 }

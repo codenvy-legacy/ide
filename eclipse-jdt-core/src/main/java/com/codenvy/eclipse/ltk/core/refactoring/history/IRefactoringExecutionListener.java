@@ -25,20 +25,20 @@ import com.codenvy.eclipse.ltk.core.refactoring.RefactoringCore;
  * @see RefactoringExecutionEvent
  * @since 3.2
  */
-public interface IRefactoringExecutionListener
-{
+public interface IRefactoringExecutionListener {
 
-   /**
-    * Gets called if a refactoring execution event happened.
-    * <p>
-    * Implementors of this method should not rely on a fixed set of event
-    * types.
-    * </p>
-    * <p>
-    * The event object is valid only for the duration of this method.
-    * </p>
-    *
-    * @param event the refactoring execution event
-    */
-   public void executionNotification(RefactoringExecutionEvent event);
+    /**
+     * Gets called if a refactoring execution event happened.
+     * <p>
+     * Implementors of this method should not rely on a fixed set of event
+     * types.
+     * </p>
+     * <p>
+     * The event object is valid only for the duration of this method.
+     * </p>
+     *
+     * @param event
+     *         the refactoring execution event
+     */
+    public void executionNotification(RefactoringExecutionEvent event);
 }

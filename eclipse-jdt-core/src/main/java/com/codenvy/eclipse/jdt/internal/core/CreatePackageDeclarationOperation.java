@@ -34,124 +34,99 @@ import com.codenvy.eclipse.jdt.internal.core.util.Messages;
  * <p>This operation adds/replaces a package declaration in an existing compilation unit.
  * If the compilation unit already includes the specified package declaration,
  * it is not generated (it does not generate duplicates).
- *
+ * <p/>
  * <p>Required Attributes:<ul>
  * <li>Compilation unit element
  * <li>Package name
  * </ul>
  */
-public class CreatePackageDeclarationOperation extends CreateElementInCUOperation
-{
-   /**
-    * The name of the package declaration being created
-    */
-   protected String name = null;
+public class CreatePackageDeclarationOperation extends CreateElementInCUOperation {
+    /** The name of the package declaration being created */
+    protected String name = null;
 
-   /**
-    * When executed, this operation will add a package declaration to the given compilation unit.
-    */
-   public CreatePackageDeclarationOperation(String name, ICompilationUnit parentElement)
-   {
-      super(parentElement);
-      this.name = name;
-   }
+    /** When executed, this operation will add a package declaration to the given compilation unit. */
+    public CreatePackageDeclarationOperation(String name, ICompilationUnit parentElement) {
+        super(parentElement);
+        this.name = name;
+    }
 
-   protected StructuralPropertyDescriptor getChildPropertyDescriptor(ASTNode parent)
-   {
-      return CompilationUnit.PACKAGE_PROPERTY;
-   }
+    protected StructuralPropertyDescriptor getChildPropertyDescriptor(ASTNode parent) {
+        return CompilationUnit.PACKAGE_PROPERTY;
+    }
 
-   protected ASTNode generateElementAST(ASTRewrite rewriter, ICompilationUnit cu) throws JavaModelException
-   {
-      //look for an existing package declaration
-      IJavaElement[] children = getCompilationUnit().getChildren();
-      for (int i = 0; i < children.length; i++)
-      {
-         if (children[i].getElementType() == IJavaElement.PACKAGE_DECLARATION && this.name.equals(
-            children[i].getElementName()))
-         {
-            //equivalent package declaration already exists
-            this.creationOccurred = false;
-            return null;
-         }
-      }
-      AST ast = this.cuAST.getAST();
-      PackageDeclaration pkgDeclaration = ast.newPackageDeclaration();
-      Name astName = ast.newName(this.name);
-      pkgDeclaration.setName(astName);
-      return pkgDeclaration;
-   }
+    protected ASTNode generateElementAST(ASTRewrite rewriter, ICompilationUnit cu) throws JavaModelException {
+        //look for an existing package declaration
+        IJavaElement[] children = getCompilationUnit().getChildren();
+        for (int i = 0; i < children.length; i++) {
+            if (children[i].getElementType() == IJavaElement.PACKAGE_DECLARATION && this.name.equals(
+                    children[i].getElementName())) {
+                //equivalent package declaration already exists
+                this.creationOccurred = false;
+                return null;
+            }
+        }
+        AST ast = this.cuAST.getAST();
+        PackageDeclaration pkgDeclaration = ast.newPackageDeclaration();
+        Name astName = ast.newName(this.name);
+        pkgDeclaration.setName(astName);
+        return pkgDeclaration;
+    }
 
-   /**
-    * Creates and returns the handle for the element this operation created.
-    */
-   protected IJavaElement generateResultHandle()
-   {
-      return getCompilationUnit().getPackageDeclaration(this.name);
-   }
+    /** Creates and returns the handle for the element this operation created. */
+    protected IJavaElement generateResultHandle() {
+        return getCompilationUnit().getPackageDeclaration(this.name);
+    }
 
-   /**
-    * @see CreateElementInCUOperation#getMainTaskName()
-    */
-   public String getMainTaskName()
-   {
-      return Messages.operation_createPackageProgress;
-   }
+    /** @see CreateElementInCUOperation#getMainTaskName() */
+    public String getMainTaskName() {
+        return Messages.operation_createPackageProgress;
+    }
 
-   /**
-    * Sets the correct position for new package declaration:<ul>
-    * <li> before the first import
-    * <li> if no imports, before the first type
-    * <li> if no type - first thing in the CU
-    * <li>
-    */
-   protected void initializeDefaultPosition()
-   {
-      try
-      {
-         ICompilationUnit cu = getCompilationUnit();
-         IImportDeclaration[] imports = cu.getImports();
-         if (imports.length > 0)
-         {
-            createBefore(imports[0]);
-            return;
-         }
-         IType[] types = cu.getTypes();
-         if (types.length > 0)
-         {
-            createBefore(types[0]);
-            return;
-         }
-      }
-      catch (JavaModelException e)
-      {
-         // cu doesn't exist: ignore
-      }
-   }
+    /**
+     * Sets the correct position for new package declaration:<ul>
+     * <li> before the first import
+     * <li> if no imports, before the first type
+     * <li> if no type - first thing in the CU
+     * <li>
+     */
+    protected void initializeDefaultPosition() {
+        try {
+            ICompilationUnit cu = getCompilationUnit();
+            IImportDeclaration[] imports = cu.getImports();
+            if (imports.length > 0) {
+                createBefore(imports[0]);
+                return;
+            }
+            IType[] types = cu.getTypes();
+            if (types.length > 0) {
+                createBefore(types[0]);
+                return;
+            }
+        } catch (JavaModelException e) {
+            // cu doesn't exist: ignore
+        }
+    }
 
-   /**
-    * Possible failures: <ul>
-    * <li>NO_ELEMENTS_TO_PROCESS - no compilation unit was supplied to the operation
-    * <li>INVALID_NAME - a name supplied to the operation was not a valid
-    * package declaration name.
-    * </ul>
-    *
-    * @see IJavaModelStatus
-    * @see JavaConventions
-    */
-   public IJavaModelStatus verify()
-   {
-      IJavaModelStatus status = super.verify();
-      if (!status.isOK())
-      {
-         return status;
-      }
-      IJavaProject project = getParentElement().getJavaProject();
-      if (JavaConventions.validatePackageName(this.name, project.getOption(JavaCore.COMPILER_SOURCE, true),
-         project.getOption(JavaCore.COMPILER_COMPLIANCE, true)).getSeverity() == IStatus.ERROR)
-      {
-         return new JavaModelStatus(IJavaModelStatusConstants.INVALID_NAME, this.name);
-      }
-      return JavaModelStatus.VERIFIED_OK;
-   }
+    /**
+     * Possible failures: <ul>
+     * <li>NO_ELEMENTS_TO_PROCESS - no compilation unit was supplied to the operation
+     * <li>INVALID_NAME - a name supplied to the operation was not a valid
+     * package declaration name.
+     * </ul>
+     *
+     * @see IJavaModelStatus
+     * @see JavaConventions
+     */
+    public IJavaModelStatus verify() {
+        IJavaModelStatus status = super.verify();
+        if (!status.isOK()) {
+            return status;
+        }
+        IJavaProject project = getParentElement().getJavaProject();
+        if (JavaConventions.validatePackageName(this.name, project.getOption(JavaCore.COMPILER_SOURCE, true),
+                                                project.getOption(JavaCore.COMPILER_COMPLIANCE, true)).getSeverity() == IStatus.ERROR) {
+            return new JavaModelStatus(IJavaModelStatusConstants.INVALID_NAME, this.name);
+        }
+        return JavaModelStatus.VERIFIED_OK;
+    }
 }

@@ -21,27 +21,23 @@ import com.codenvy.eclipse.jdt.internal.corext.util.Messages;
 import com.codenvy.eclipse.jdt.ui.JavaElementLabels;
 import com.codenvy.eclipse.ltk.core.refactoring.Change;
 
-public class CopyPackageChange extends PackageReorgChange
-{
+public class CopyPackageChange extends PackageReorgChange {
 
-   public CopyPackageChange(IPackageFragment pack, IPackageFragmentRoot dest, INewNameQuery nameQuery)
-   {
-      super(pack, dest, nameQuery);
-   }
+    public CopyPackageChange(IPackageFragment pack, IPackageFragmentRoot dest, INewNameQuery nameQuery) {
+        super(pack, dest, nameQuery);
+    }
 
-   @Override
-   protected Change doPerformReorg(IProgressMonitor pm) throws JavaModelException, OperationCanceledException
-   {
-      getPackage().copy(getDestination(), null, getNewName(), true, pm);
-      return null;
-   }
+    @Override
+    protected Change doPerformReorg(IProgressMonitor pm) throws JavaModelException, OperationCanceledException {
+        getPackage().copy(getDestination(), null, getNewName(), true, pm);
+        return null;
+    }
 
-   @Override
-   public String getName()
-   {
-      String packageName = JavaElementLabels.getElementLabel(getPackage(), JavaElementLabels.ALL_DEFAULT);
-      String destinationName = JavaElementLabels.getElementLabel(getDestination(), JavaElementLabels.ALL_DEFAULT);
-      return Messages.format(RefactoringCoreMessages.CopyPackageChange_copy,
-         new String[]{packageName, destinationName});
-   }
+    @Override
+    public String getName() {
+        String packageName = JavaElementLabels.getElementLabel(getPackage(), JavaElementLabels.ALL_DEFAULT);
+        String destinationName = JavaElementLabels.getElementLabel(getDestination(), JavaElementLabels.ALL_DEFAULT);
+        return Messages.format(RefactoringCoreMessages.CopyPackageChange_copy,
+                               new String[]{packageName, destinationName});
+    }
 }

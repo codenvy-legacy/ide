@@ -21,51 +21,46 @@ import java.nio.charset.UnmappableCharacterException;
  *
  * @since 3.1
  */
-public interface IFileBufferStatusCodes
-{
+public interface IFileBufferStatusCodes {
 
-   /**
-    * Changing the content of a file buffer failed.
-    */
-   int CONTENT_CHANGE_FAILED = 1;
+    /** Changing the content of a file buffer failed. */
+    int CONTENT_CHANGE_FAILED = 1;
 
-   /**
-    * Creation of file buffer failed.
-    */
-   int CREATION_FAILED = 2;
+    /** Creation of file buffer failed. */
+    int CREATION_FAILED = 2;
 
-   /**
-    * File buffer status code indicating that an operation failed
-    * because a character could not be mapped using the given
-    * charset.
-    * <p>
-    * Value: {@value}</p>
-    *
-    * @see UnmappableCharacterException
-    * @since 3.2
-    */
-   int CHARSET_MAPPING_FAILED = 3;
+    /**
+     * File buffer status code indicating that an operation failed
+     * because a character could not be mapped using the given
+     * charset.
+     * <p>
+     * Value: {@value}</p>
+     *
+     * @see UnmappableCharacterException
+     * @since 3.2
+     */
+    int CHARSET_MAPPING_FAILED = 3;
 
-   /**
-    * File buffer status code indicating that state
-    * validation failed.
-    * <p>
-    * Value: {@value}</p>
-    *
-    * @see IFileBuffer#validateState(com.codenvy.eclipse.core.runtime.IProgressMonitor, Object)
-    * @since 3.3
-    */
-   int STATE_VALIDATION_FAILED = 4;
+    /**
+     * File buffer status code indicating that state
+     * validation failed.
+     * <p>
+     * Value: {@value}</p>
+     *
+     * @see IFileBuffer#validateState(com.codenvy.eclipse.core.runtime.IProgressMonitor, Object)
+     * @since 3.3
+     */
+    int STATE_VALIDATION_FAILED = 4;
 
-   /**
-    * File buffer status code indicating that
-    * a resource is marked derived.
-    * <p>
-    * Value: {@value}</p>
-    *
-    * @see com.codenvy.eclipse.core.resources.IResource#isDerived()
-    * @since 3.3
-    */
-   int DERIVED_FILE = 5;
+    /**
+     * File buffer status code indicating that
+     * a resource is marked derived.
+     * <p>
+     * Value: {@value}</p>
+     *
+     * @see com.codenvy.eclipse.core.resources.IResource#isDerived()
+     * @since 3.3
+     */
+    int DERIVED_FILE = 5;
 
 }

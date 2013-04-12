@@ -20,16 +20,14 @@
 package org.exoplatform.gwtframework.ui.client.api;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface HasSelectedItem<T>
-{
-   
-   void selectItem(T item);
-   
+public interface HasSelectedItem<T> {
+
+    void selectItem(T item);
+
 }

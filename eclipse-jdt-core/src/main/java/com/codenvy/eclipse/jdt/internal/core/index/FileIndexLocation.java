@@ -21,79 +21,79 @@ import java.net.URL;
 
 
 public class FileIndexLocation extends IndexLocation {
-	File indexFile;
+    File indexFile;
 
-	public FileIndexLocation(File file) {
-		super(file);
-		this.indexFile = file;
-	}
+    public FileIndexLocation(File file) {
+        super(file);
+        this.indexFile = file;
+    }
 
-	public FileIndexLocation(URL url, File file) {
-		super(url);
-		this.indexFile = file;
-	}
+    public FileIndexLocation(URL url, File file) {
+        super(url);
+        this.indexFile = file;
+    }
 
-	public FileIndexLocation(File file, boolean participantIndex) {
-		this(file);
-		this.participantIndex = true;
-	}
+    public FileIndexLocation(File file, boolean participantIndex) {
+        this(file);
+        this.participantIndex = true;
+    }
 
-	public boolean createNewFile() throws IOException {
-		return this.indexFile.createNewFile();
-	}
+    public boolean createNewFile() throws IOException {
+        return this.indexFile.createNewFile();
+    }
 
-	public boolean delete() {
-		return this.indexFile.delete();
-	}
+    public boolean delete() {
+        return this.indexFile.delete();
+    }
 
-	public boolean equals(Object other) {
-		if (!(other instanceof FileIndexLocation)) return false;
-		return this.indexFile.equals(((FileIndexLocation) other).indexFile);
-	}
+    public boolean equals(Object other) {
+        if (!(other instanceof FileIndexLocation)) return false;
+        return this.indexFile.equals(((FileIndexLocation)other).indexFile);
+    }
 
-	public boolean exists() {
-		return this.indexFile.exists();
-	}
+    public boolean exists() {
+        return this.indexFile.exists();
+    }
 
-	public String fileName() {
-		return this.indexFile.getName();
-	}
-	
-	public File getIndexFile() {
-		return this.indexFile;
-	}
+    public String fileName() {
+        return this.indexFile.getName();
+    }
 
-	InputStream getInputStream() throws IOException {
-		return new FileInputStream(this.indexFile);
-	}
+    public File getIndexFile() {
+        return this.indexFile;
+    }
 
-	public String getCanonicalFilePath() {
-		try {
-			return this.indexFile.getCanonicalPath();
-		} catch (IOException e) {
-			// ignore
-		}
-		return null;
-	}
+    InputStream getInputStream() throws IOException {
+        return new FileInputStream(this.indexFile);
+    }
 
-	public int hashCode() {
-		return this.indexFile.hashCode();
-	}
+    public String getCanonicalFilePath() {
+        try {
+            return this.indexFile.getCanonicalPath();
+        } catch (IOException e) {
+            // ignore
+        }
+        return null;
+    }
 
-	public long lastModified() {
-		return this.indexFile.lastModified();
-	}
+    public int hashCode() {
+        return this.indexFile.hashCode();
+    }
 
-	public long length() {
-		return this.indexFile.length();
-	}
+    public long lastModified() {
+        return this.indexFile.lastModified();
+    }
 
-	public boolean startsWith(IPath path) {
-		try {
-			return path.isPrefixOf(new Path(this.indexFile.getCanonicalPath()));
-		} catch (IOException e) {
-			return false;
-		}
-	}
+    public long length() {
+        return this.indexFile.length();
+    }
+
+    public boolean startsWith(IPath path) {
+        try {
+            return path.isPrefixOf(new Path(this.indexFile.getCanonicalPath()));
+        } catch (IOException e) {
+            return false;
+        }
+    }
 
 }

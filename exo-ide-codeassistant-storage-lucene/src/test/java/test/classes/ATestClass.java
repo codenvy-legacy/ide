@@ -21,23 +21,19 @@ package test.classes;
 /**
  *
  */
-public class ATestClass
-{
-   public int FIELD_1 = 1;
+public class ATestClass {
+    public int FIELD_1 = 1;
 
-   protected String FIELD_2 = "2";
+    protected String FIELD_2 = "2";
 
-   private String FIELD_3 = "3";
+    private String FIELD_3 = "3";
 
-   public void method1()
-   {
-   }
+    public void method1() {
+    }
 
-   public void method2()
-   {
-   }
+    public void method2() {
+    }
 
-   private void method3()
-   {
-   }
+    private void method3() {
+    }
 }

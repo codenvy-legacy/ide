@@ -26,24 +26,19 @@ import org.exoplatform.ide.editor.java.client.JavaEditorExtension;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class CreatePackageControl extends JavaControl
-{
+public class CreatePackageControl extends JavaControl {
 
-   private static final String ID = "File/New/New Package";
+    private static final String ID = "File/New/New Package";
 
-   /**
-    * @param id
-    */
-   public CreatePackageControl()
-   {
-      super(ID);
-      setTitle(JavaEditorExtension.MESSAGES.controlPackageTitle());
-      setPrompt(JavaEditorExtension.MESSAGES.controlPackagePrompt());
-      setImages(JavaClientBundle.INSTANCE.packageItem(), JavaClientBundle.INSTANCE.packageDisabled());
-      setEvent(new CreatePackageEvent());
-      setGroupName(GroupNames.NEW_COLLECTION);
-   }
+    /** @param id */
+    public CreatePackageControl() {
+        super(ID);
+        setTitle(JavaEditorExtension.MESSAGES.controlPackageTitle());
+        setPrompt(JavaEditorExtension.MESSAGES.controlPackagePrompt());
+        setImages(JavaClientBundle.INSTANCE.packageItem(), JavaClientBundle.INSTANCE.packageDisabled());
+        setEvent(new CreatePackageEvent());
+        setGroupName(GroupNames.NEW_COLLECTION);
+    }
 
 }

@@ -26,70 +26,51 @@ import java.util.List;
 
 /**
  * Event occurs after rename Heroku application operation.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 8, 2011 2:24:25 PM anya $
- * 
  */
-public class ApplicationRenamedEvent extends GwtEvent<ApplicationRenamedHandler>
-{
+public class ApplicationRenamedEvent extends GwtEvent<ApplicationRenamedHandler> {
 
-   /**
-    * Type used to register event.
-    */
-   public static final GwtEvent.Type<ApplicationRenamedHandler> TYPE = new GwtEvent.Type<ApplicationRenamedHandler>();
+    /** Type used to register event. */
+    public static final GwtEvent.Type<ApplicationRenamedHandler> TYPE = new GwtEvent.Type<ApplicationRenamedHandler>();
 
-   /**
-    * Application properties after rename.
-    */
-   private List<Property> properties;
+    /** Application properties after rename. */
+    private List<Property> properties;
 
-   /**
-    * Previous application's name.
-    */
-   private String oldName;
+    /** Previous application's name. */
+    private String oldName;
 
-   /**
-    * @param oldName previous application's name
-    * @param properties application properties after rename
-    */
-   public ApplicationRenamedEvent(List<Property> properties, String oldName)
-   {
-      this.oldName = oldName;
-      this.properties = properties;
-   }
+    /**
+     * @param oldName
+     *         previous application's name
+     * @param properties
+     *         application properties after rename
+     */
+    public ApplicationRenamedEvent(List<Property> properties, String oldName) {
+        this.oldName = oldName;
+        this.properties = properties;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ApplicationRenamedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ApplicationRenamedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ApplicationRenamedHandler handler)
-   {
-      handler.onApplicationRenamed(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ApplicationRenamedHandler handler) {
+        handler.onApplicationRenamed(this);
+    }
 
-   /**
-    * @return the properties application's properties
-    */
-   public List<Property> getProperties()
-   {
-      return properties;
-   }
+    /** @return the properties application's properties */
+    public List<Property> getProperties() {
+        return properties;
+    }
 
-   /**
-    * @return {@link String} previous application's name
-    */
-   public String getOldName()
-   {
-      return oldName;
-   }
+    /** @return {@link String} previous application's name */
+    public String getOldName() {
+        return oldName;
+    }
 }

@@ -17,19 +17,14 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Message used to set the project role for one user.
- * 
- */
+/** Message used to set the project role for one user. */
 @RoutingType(type = RoutingTypes.SETPROJECTROLE)
 public interface SetProjectRole extends ClientToServerDto {
 
-  String getProjectId();
+    String getProjectId();
 
-  /**
-   * Returns the user ID whose role is to be updated.
-   */
-  String getUserId();
+    /** Returns the user ID whose role is to be updated. */
+    String getUserId();
 
-  ChangeRoleInfo getChangeRoleInfo();
+    ChangeRoleInfo getChangeRoleInfo();
 }

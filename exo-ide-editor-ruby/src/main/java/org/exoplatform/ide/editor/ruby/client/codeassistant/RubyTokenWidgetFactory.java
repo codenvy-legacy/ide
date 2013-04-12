@@ -22,56 +22,47 @@ import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
 import org.exoplatform.ide.editor.ruby.client.RubyClientBundle;
-import org.exoplatform.ide.editor.ruby.client.codeassistant.ui.RubyClassWidget;
-import org.exoplatform.ide.editor.ruby.client.codeassistant.ui.RubyConstantWidget;
-import org.exoplatform.ide.editor.ruby.client.codeassistant.ui.RubyKeyWordWidget;
-import org.exoplatform.ide.editor.ruby.client.codeassistant.ui.RubyMethodWidget;
-import org.exoplatform.ide.editor.ruby.client.codeassistant.ui.RubyVariableWidget;
+import org.exoplatform.ide.editor.ruby.client.codeassistant.ui.*;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: RubyTokenWidgetFactory Apr 28, 2011 5:37:38 PM evgen $
- * 
  */
-public class RubyTokenWidgetFactory implements TokenWidgetFactory
-{
+public class RubyTokenWidgetFactory implements TokenWidgetFactory {
 
-   /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory#buildTokenWidget(org.exoplatform.ide.editor.api.codeassitant.Token)
-    */
-   @Override
-   public TokenWidget buildTokenWidget(Token token)
-   {
-      switch (token.getType())
-      {
-         case KEYWORD :
-            return new RubyKeyWordWidget(token);
+    /** @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory#buildTokenWidget(org.exoplatform.ide.editor.api
+     * .codeassitant.Token) */
+    @Override
+    public TokenWidget buildTokenWidget(Token token) {
+        switch (token.getType()) {
+            case KEYWORD:
+                return new RubyKeyWordWidget(token);
 
-         case METHOD :
-            return new RubyMethodWidget(token);
+            case METHOD:
+                return new RubyMethodWidget(token);
 
-         case CLASS :
-            return new RubyClassWidget(token);
+            case CLASS:
+                return new RubyClassWidget(token);
 
-         case CONSTANT :
-            return new RubyConstantWidget(token);
+            case CONSTANT:
+                return new RubyConstantWidget(token);
 
-         case VARIABLE :
-         case LOCAL_VARIABLE :
-            return new RubyVariableWidget(token, RubyClientBundle.INSTANCE.variable());
+            case VARIABLE:
+            case LOCAL_VARIABLE:
+                return new RubyVariableWidget(token, RubyClientBundle.INSTANCE.variable());
 
-         case INSTANCE_VARIABLE :
-            return new RubyVariableWidget(token, RubyClientBundle.INSTANCE.rubyObjectVariable());
+            case INSTANCE_VARIABLE:
+                return new RubyVariableWidget(token, RubyClientBundle.INSTANCE.rubyObjectVariable());
 
-         case CLASS_VARIABLE :
-            return new RubyVariableWidget(token, RubyClientBundle.INSTANCE.rubyClassVariable());
+            case CLASS_VARIABLE:
+                return new RubyVariableWidget(token, RubyClientBundle.INSTANCE.rubyClassVariable());
 
-         case GLOBAL_VARIABLE :
-            return new RubyVariableWidget(token, RubyClientBundle.INSTANCE.rubyGlobalVariable());
+            case GLOBAL_VARIABLE:
+                return new RubyVariableWidget(token, RubyClientBundle.INSTANCE.rubyGlobalVariable());
 
-         default :
-            return new RubyKeyWordWidget(token);
-      }
-   }
+            default:
+                return new RubyKeyWordWidget(token);
+        }
+    }
 
 }

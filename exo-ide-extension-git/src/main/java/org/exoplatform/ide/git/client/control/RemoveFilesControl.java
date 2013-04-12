@@ -28,17 +28,14 @@ import org.exoplatform.ide.git.client.remove.RemoveFilesEvent;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 12, 2011 3:33:56 PM anya $
- * 
  */
-public class RemoveFilesControl extends GitControl
-{
-   public RemoveFilesControl()
-   {
-      super(GitExtension.MESSAGES.removeControlId());
-      setTitle(GitExtension.MESSAGES.removeControlTitle());
-      setPrompt(GitExtension.MESSAGES.removeControlPrompt());
-      setImages(GitClientBundle.INSTANCE.removeFiles(), GitClientBundle.INSTANCE.removeFilesDisabled());
-      setEvent(new RemoveFilesEvent());
-      setGroupName(GroupNames.COMMANDS);
-   }
+public class RemoveFilesControl extends GitControl {
+    public RemoveFilesControl() {
+        super(GitExtension.MESSAGES.removeControlId());
+        setTitle(GitExtension.MESSAGES.removeControlTitle());
+        setPrompt(GitExtension.MESSAGES.removeControlPrompt());
+        setImages(GitClientBundle.INSTANCE.removeFiles(), GitClientBundle.INSTANCE.removeFilesDisabled());
+        setEvent(new RemoveFilesEvent());
+        setGroupName(GroupNames.COMMANDS);
+    }
 }

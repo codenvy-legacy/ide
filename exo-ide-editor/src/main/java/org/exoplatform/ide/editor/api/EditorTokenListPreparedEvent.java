@@ -19,55 +19,49 @@
 
 package org.exoplatform.ide.editor.api;
 
-import java.util.List;
+import com.google.gwt.event.shared.GwtEvent;
 
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 
-import com.google.gwt.event.shared.GwtEvent;
+import java.util.List;
 
 /**
  * Fires just after opened in editor content had been changed. Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version @version $Id: $
  */
 
-public class EditorTokenListPreparedEvent extends GwtEvent<EditorTokenListPreparedHandler>
-{
+public class EditorTokenListPreparedEvent extends GwtEvent<EditorTokenListPreparedHandler> {
 
-   public static final GwtEvent.Type<EditorTokenListPreparedHandler> TYPE =
-      new GwtEvent.Type<EditorTokenListPreparedHandler>();
+    public static final GwtEvent.Type<EditorTokenListPreparedHandler> TYPE =
+            new GwtEvent.Type<EditorTokenListPreparedHandler>();
 
-   private String editorId;
+    private String editorId;
 
-   private List<? extends Token> tokenList;
+    private List<? extends Token> tokenList;
 
-   public EditorTokenListPreparedEvent(String editorId, List<? extends Token> tokenList)
-   {
-      this.editorId = editorId;
-      this.tokenList = tokenList;
-   }
+    public EditorTokenListPreparedEvent(String editorId, List<? extends Token> tokenList) {
+        this.editorId = editorId;
+        this.tokenList = tokenList;
+    }
 
-   public String getEditorId()
-   {
-      return editorId;
-   }
+    public String getEditorId() {
+        return editorId;
+    }
 
-   public List<? extends Token> getTokenList()
-   {
-      return tokenList;
-   }
+    public List<? extends Token> getTokenList() {
+        return tokenList;
+    }
 
-   @Override
-   protected void dispatch(EditorTokenListPreparedHandler handler)
-   {
-      handler.onEditorTokenListPrepared(this);
-   }
+    @Override
+    protected void dispatch(EditorTokenListPreparedHandler handler) {
+        handler.onEditorTokenListPrepared(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorTokenListPreparedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorTokenListPreparedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

@@ -18,48 +18,43 @@
  */
 package org.exoplatform.ide.client.navigation;
 
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+
 /**
  * This class updates link to working directory which uses by Shell.
- * 
+ * <p/>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-public class ShellLinkUpdater implements ItemsSelectedHandler
-{
+public class ShellLinkUpdater implements ItemsSelectedHandler {
 
-   public ShellLinkUpdater()
-   {
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-   }
+    public ShellLinkUpdater() {
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+    }
 
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      if (event.getSelectedItems().isEmpty())
-      {
-         return;
-      }
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        if (event.getSelectedItems().isEmpty()) {
+            return;
+        }
 
-      String path = event.getSelectedItems().get(0).getId();
-      Element ae = DOM.getElementById("shell-link");
-      if (ae == null)
-      {
-         return;
-      }
+        String path = event.getSelectedItems().get(0).getId();
+        Element ae = DOM.getElementById("shell-link");
+        if (ae == null) {
+            return;
+        }
 
-      AnchorElement a = AnchorElement.as(ae);
-      String newHref = "/IDE/shell/Shell.html?workdir=" + path;
-      a.setHref(newHref);
-   }
+        AnchorElement a = AnchorElement.as(ae);
+        String newHref = "/IDE/shell/Shell.html?workdir=" + path;
+        a.setHref(newHref);
+    }
 
 }

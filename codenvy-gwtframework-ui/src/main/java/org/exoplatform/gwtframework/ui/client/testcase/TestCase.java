@@ -37,148 +37,124 @@ import com.google.gwt.user.client.ui.Widget;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public abstract class TestCase extends Composite
-{
+public abstract class TestCase extends Composite {
 
-   interface TestCaseUiBinder extends UiBinder<Widget, TestCase>
-   {
-   }
+    interface TestCaseUiBinder extends UiBinder<Widget, TestCase> {
+    }
 
-   private static TestCaseUiBinder uiBinder = GWT.create(TestCaseUiBinder.class);
+    private static TestCaseUiBinder uiBinder = GWT.create(TestCaseUiBinder.class);
 
-   protected FlowPanel buttonGroup;
+    protected FlowPanel buttonGroup;
 
-   @UiField
-   FlowPanel controlsPanel;
+    @UiField
+    FlowPanel controlsPanel;
 
-   @UiField
-   FlowPanel testCasePanel;
+    @UiField
+    FlowPanel testCasePanel;
 
-   @UiField
-   TableCellElement controlsElement;
+    @UiField
+    TableCellElement controlsElement;
 
-   public abstract void draw();
+    public abstract void draw();
 
-   @Override
-   protected void onAttach()
-   {
-      super.onAttach();
-      draw();
-   }
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        draw();
+    }
 
-   @Override
-   protected void onDetach()
-   {
-      super.onDetach();
+    @Override
+    protected void onDetach() {
+        super.onDetach();
 
-      while (DOM.getChildCount(testCasePanel.getElement()) > 0)
-      {
-         Element e = DOM.getChild(testCasePanel.getElement(), 0);
-         DOM.removeChild(testCasePanel.getElement(), e);
-      }
-   }
+        while (DOM.getChildCount(testCasePanel.getElement()) > 0) {
+            Element e = DOM.getChild(testCasePanel.getElement(), 0);
+            DOM.removeChild(testCasePanel.getElement(), e);
+        }
+    }
 
-   public TestCase()
-   {
-      initWidget(uiBinder.createAndBindUi(this));
-   }
+    public TestCase() {
+        initWidget(uiBinder.createAndBindUi(this));
+    }
 
-   protected void addButtonDelimiter()
-   {
-      HTML html = new HTML("<hr>");
-      controlsPanel.add(html);
-   }
+    protected void addButtonDelimiter() {
+        HTML html = new HTML("<hr>");
+        controlsPanel.add(html);
+    }
 
-   protected void addButtonDelimiter(String title)
-   {
-      HTML html = new HTML("<hr><font color=\"#008800\"><b>" + title + "</b></font><br>");
-      controlsPanel.add(html);
-   }
+    protected void addButtonDelimiter(String title) {
+        HTML html = new HTML("<hr><font color=\"#008800\"><b>" + title + "</b></font><br>");
+        controlsPanel.add(html);
+    }
 
-   protected void addButtonHeader(String title)
-   {
-      HTML html = new HTML("<font color=\"#008800\"><b>" + title + "</b></font><br>");
-      controlsPanel.add(html);
-   }
+    protected void addButtonHeader(String title) {
+        HTML html = new HTML("<font color=\"#008800\"><b>" + title + "</b></font><br>");
+        controlsPanel.add(html);
+    }
 
-   public FlowPanel buttonsPanel()
-   {
-      return controlsPanel;
-   }
+    public FlowPanel buttonsPanel() {
+        return controlsPanel;
+    }
 
-   protected ImageButton createButton(String text, boolean enabled, ClickHandler clickHandler)
-   {
-      ImageButton button = new ImageButton(text);
-      button.setEnabled(enabled);
-      button.addClickHandler(clickHandler);
+    protected ImageButton createButton(String text, boolean enabled, ClickHandler clickHandler) {
+        ImageButton button = new ImageButton(text);
+        button.setEnabled(enabled);
+        button.addClickHandler(clickHandler);
 
-      if (buttonGroup != null)
-      {
-         buttonGroup.add(button);
-         DOM.setStyleAttribute(button.getElement(), "float", "left");
-         button.removeStyleName("gwt-Label");
-      }
-      else
-      {
-         controlsPanel.add(button);
+        if (buttonGroup != null) {
+            buttonGroup.add(button);
+            DOM.setStyleAttribute(button.getElement(), "float", "left");
+            button.removeStyleName("gwt-Label");
+        } else {
+            controlsPanel.add(button);
 
-         HTML html = new HTML("<br>");
-         DOM.setStyleAttribute(html.getElement(), "height", "5px");
-         controlsPanel.add(html);
-      }
+            HTML html = new HTML("<br>");
+            DOM.setStyleAttribute(html.getElement(), "height", "5px");
+            controlsPanel.add(html);
+        }
 
-      return button;
-   }
+        return button;
+    }
 
-   protected ImageButton createButton(String text, ClickHandler clickHandler)
-   {
-      return createButton(text, true, clickHandler);
-   }
+    protected ImageButton createButton(String text, ClickHandler clickHandler) {
+        return createButton(text, true, clickHandler);
+    }
 
-   protected Widget createButton(String text, final Command command)
-   {
-      return createButton(text, new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            command.execute();
-         }
-      });
-   }
+    protected Widget createButton(String text, final Command command) {
+        return createButton(text, new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                command.execute();
+            }
+        });
+    }
 
-   protected void createButtonGroup()
-   {
-      buttonGroup = new FlowPanel();
-      DOM.setStyleAttribute(buttonGroup.getElement(), "display", "inline");
-      DOM.setStyleAttribute(buttonGroup.getElement(), "height", "30px");
-      controlsPanel.add(buttonGroup);
-   }
+    protected void createButtonGroup() {
+        buttonGroup = new FlowPanel();
+        DOM.setStyleAttribute(buttonGroup.getElement(), "display", "inline");
+        DOM.setStyleAttribute(buttonGroup.getElement(), "height", "30px");
+        controlsPanel.add(buttonGroup);
+    }
 
-   protected void endButtonGroup()
-   {
-      buttonGroup = null;
-   }
+    protected void endButtonGroup() {
+        buttonGroup = null;
+    }
 
-   public FlowPanel testCasePanel()
-   {
-      return testCasePanel;
-   }
+    public FlowPanel testCasePanel() {
+        return testCasePanel;
+    }
 
-   public FlowPanel controlsPanel()
-   {
-      return controlsPanel;
-   }
+    public FlowPanel controlsPanel() {
+        return controlsPanel;
+    }
 
-   public void hideControlsPanel()
-   {
-      controlsElement.getStyle().setProperty("display", "none");
-   }
+    public void hideControlsPanel() {
+        controlsElement.getStyle().setProperty("display", "none");
+    }
 
 }

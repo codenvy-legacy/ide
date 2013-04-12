@@ -25,14 +25,12 @@ import com.google.gwt.event.shared.EventHandler;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 22, 2011 4:07:45 PM anya $
- * 
  */
-public interface CloneRepositoryHandler extends EventHandler
-{
-   /**
-    * Perform actions on try to clone repository.
-    * 
-    * @param event
-    */
-   void onCloneRepository(CloneRepositoryEvent event);
+public interface CloneRepositoryHandler extends EventHandler {
+    /**
+     * Perform actions on try to clone repository.
+     * 
+     * @param event
+     */
+    void onCloneRepository(CloneRepositoryEvent event);
 }

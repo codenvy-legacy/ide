@@ -25,68 +25,56 @@
                       http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0"
          metadata-complete="true">
-   <display-name>Codenvy Shell</display-name>
+    <display-name>Codenvy Shell</display-name>
 
-   <context-param>
-      <param-name>crash.vfs.refresh_period</param-name>
-      <param-value>1</param-value>
-      <description>The vfs refresh rate</description>
-   </context-param>
+    <context-param>
+        <param-name>crash.vfs.refresh_period</param-name>
+        <param-value>1</param-value>
+        <description>The vfs refresh rate</description>
+    </context-param>
 
-   <filter>
-      <filter-name>SetCurrentIdentityFilter</filter-name>
-      <filter-class>org.exoplatform.services.security.web.SetCurrentIdentityFilter</filter-class>
-   </filter>
+    <filter>
+        <filter-name>SetCurrentIdentityFilter</filter-name>
+        <filter-class>org.exoplatform.services.security.web.SetCurrentIdentityFilter</filter-class>
+    </filter>
 
-   <filter>
-      <filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
-      <filter-class>org.exoplatform.frameworks.jcr.web.ThreadLocalSessionProviderInitializedFilter</filter-class>
-   </filter>
 
-   <listener>
-      <listener-class>org.crsh.plugin.WebPluginLifeCycle</listener-class>
-   </listener>
+    <context-param>
+        <param-name>everrest.exoplatform.standalone.config</param-name>
+        <param-value>war:/WEB-INF/classes/conf/exo-configuration.xml</param-value>
+    </context-param>
 
-   <context-param>
-      <param-name>everrest.exoplatform.standalone.config</param-name>
-      <param-value>war:/WEB-INF/classes/conf/exo-configuration.xml</param-value>
-   </context-param>
-   
-   <listener>
-      <listener-class>org.everrest.exoplatform.servlet.EverrestExoContextListener$StandaloneContainerStarter</listener-class>
-   </listener>
-   
-   <servlet>
-      <servlet-name>RestServer</servlet-name>
-      <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
-   </servlet>
-   
-   <filter-mapping>
-      <filter-name>SetCurrentIdentityFilter</filter-name>
-      <url-pattern>Shell/rest/*</url-pattern>
-   </filter-mapping>
-   
-   <filter>
-      <filter-name>BasicAuthFilter</filter-name>
-      <filter-class>org.exoplatform.ide.authentication.BasicAuthFilter</filter-class>
-   </filter>
-   <filter-mapping>
-      <filter-name>BasicAuthFilter</filter-name>
-      <url-pattern>Shell/rest/private/*</url-pattern>
-   </filter-mapping>
+    <listener>
+        <listener-class>org.everrest.exoplatform.servlet.EverrestExoContextListener$StandaloneContainerStarter</listener-class>
+    </listener>
 
-   <filter-mapping>
-      <filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
-      <url-pattern>Shell/rest/*</url-pattern>
-   </filter-mapping>
-   
-   <servlet-mapping>
-      <servlet-name>RestServer</servlet-name>
-      <url-pattern>/rest/private/*</url-pattern>
-   </servlet-mapping>
-   <servlet-mapping>
-      <servlet-name>RestServer</servlet-name>
-      <url-pattern>Shell/rest/private/*</url-pattern>
-   </servlet-mapping>
+    <servlet>
+        <servlet-name>RestServer</servlet-name>
+        <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
+    </servlet>
+
+    <filter-mapping>
+        <filter-name>SetCurrentIdentityFilter</filter-name>
+        <url-pattern>Shell/rest/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>BasicAuthFilter</filter-name>
+        <filter-class>org.exoplatform.ide.authentication.BasicAuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>BasicAuthFilter</filter-name>
+        <url-pattern>Shell/rest/private/*</url-pattern>
+    </filter-mapping>
+
+
+    <servlet-mapping>
+        <servlet-name>RestServer</servlet-name>
+        <url-pattern>/rest/private/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RestServer</servlet-name>
+        <url-pattern>Shell/rest/private/*</url-pattern>
+    </servlet-mapping>
 
 </web-app>

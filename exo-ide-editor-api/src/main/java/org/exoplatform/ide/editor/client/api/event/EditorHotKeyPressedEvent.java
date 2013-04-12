@@ -22,76 +22,65 @@ package org.exoplatform.ide.editor.client.api.event;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class EditorHotKeyPressedEvent extends GwtEvent<EditorHotKeyPressedHandler>
-{
+public class EditorHotKeyPressedEvent extends GwtEvent<EditorHotKeyPressedHandler> {
 
-   public static final GwtEvent.Type<EditorHotKeyPressedHandler> TYPE = new GwtEvent.Type<EditorHotKeyPressedHandler>();
+    public static final GwtEvent.Type<EditorHotKeyPressedHandler> TYPE = new GwtEvent.Type<EditorHotKeyPressedHandler>();
 
-   private boolean hotKeyHandled = false;
+    private boolean hotKeyHandled = false;
 
-   private boolean isCtrl;
+    private boolean isCtrl;
 
-   private boolean isAlt;
+    private boolean isAlt;
 
-   private boolean isShift;
+    private boolean isShift;
 
-   private int keyCode;
+    private int keyCode;
 
-   public EditorHotKeyPressedEvent(boolean isCtrl, boolean isAlt, boolean isShift, int keyCode)
-   {
-      this.isCtrl = isCtrl;
-      this.isAlt = isAlt;
-      this.isShift = isShift;
-      this.keyCode = keyCode;
-   }
+    public EditorHotKeyPressedEvent(boolean isCtrl, boolean isAlt, boolean isShift, int keyCode) {
+        this.isCtrl = isCtrl;
+        this.isAlt = isAlt;
+        this.isShift = isShift;
+        this.keyCode = keyCode;
+    }
 
-   public boolean isCtrl()
-   {
-      return isCtrl;
-   }
+    public boolean isCtrl() {
+        return isCtrl;
+    }
 
-   public boolean isAlt()
-   {
-      return isAlt;
-   }
+    public boolean isAlt() {
+        return isAlt;
+    }
 
-   public boolean isShift()
-   {
-      return isShift;
-   }
+    public boolean isShift() {
+        return isShift;
+    }
 
-   public int getKeyCode()
-   {
-      return keyCode;
-   }
+    public int getKeyCode() {
+        return keyCode;
+    }
 
-   public void setHotKeyHandled(boolean hotKeyHandled)
-   {
-      this.hotKeyHandled = hotKeyHandled;
-   }
+    public void setHotKeyHandled(boolean hotKeyHandled) {
+        this.hotKeyHandled = hotKeyHandled;
+    }
 
-   public boolean isHotKeyHandled()
-   {
-      return hotKeyHandled;
-   }
+    public boolean isHotKeyHandled() {
+        return hotKeyHandled;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorHotKeyPressedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorHotKeyPressedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(EditorHotKeyPressedHandler handler)
-   {
-      handler.onEditorHotKeyPressed(this);
-   }
+    @Override
+    protected void dispatch(EditorHotKeyPressedHandler handler) {
+        handler.onEditorHotKeyPressed(this);
+    }
 
 }

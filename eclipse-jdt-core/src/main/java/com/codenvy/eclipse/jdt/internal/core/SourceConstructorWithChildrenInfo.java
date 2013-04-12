@@ -12,19 +12,16 @@ package com.codenvy.eclipse.jdt.internal.core;
 
 import com.codenvy.eclipse.jdt.core.IJavaElement;
 
-public class SourceConstructorWithChildrenInfo extends SourceConstructorInfo
-{
+public class SourceConstructorWithChildrenInfo extends SourceConstructorInfo {
 
-   protected IJavaElement[] children;
+    protected IJavaElement[] children;
 
-   public SourceConstructorWithChildrenInfo(IJavaElement[] children)
-   {
-      this.children = children;
-   }
+    public SourceConstructorWithChildrenInfo(IJavaElement[] children) {
+        this.children = children;
+    }
 
-   public IJavaElement[] getChildren()
-   {
-      return this.children;
-   }
+    public IJavaElement[] getChildren() {
+        return this.children;
+    }
 
 }

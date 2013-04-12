@@ -20,51 +20,45 @@ package org.exoplatform.ide.extension.gadget.shared;
 
 /**
  * Interface describe OpenSocial Gadget views.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: Views.java Mar 20, 2012 17:23:11 PM azatsarynnyy $
- *
  */
 
-public interface Views
-{
-   /**
-    * @return preferred height
-    */
-   public double getPreferredHeight();
+public interface Views {
+    /** @return preferred height */
+    public double getPreferredHeight();
 
-   /**
-    * @param preferredHeight height to set
-    */
-   public void setPreferredHeight(double preferredHeight);
+    /**
+     * @param preferredHeight
+     *         height to set
+     */
+    public void setPreferredHeight(double preferredHeight);
 
-   /**
-    * @return preferred width
-    */
-   public double getPreferredWidth();
+    /** @return preferred width */
+    public double getPreferredWidth();
 
-   /**
-    * @param preferredWidth width to set 
-    */
-   public void setPreferredWidth(double preferredWidth);
+    /**
+     * @param preferredWidth
+     *         width to set
+     */
+    public void setPreferredWidth(double preferredWidth);
 
-   /**
-    * @return quirks
-    */
-   public boolean getQuirks();
+    /** @return quirks */
+    public boolean getQuirks();
 
-   /**
-    * @param quirks quirks to set
-    */
-   public void setQuirks(boolean quirks);
+    /**
+     * @param quirks
+     *         quirks to set
+     */
+    public void setQuirks(boolean quirks);
 
-   /**
-    * @return type
-    */
-   public String getType();
+    /** @return type */
+    public String getType();
 
-   /**
-    * @param type type to set
-    */
-   public void setType(String type);
+    /**
+     * @param type
+     *         type to set
+     */
+    public void setType(String type);
 }

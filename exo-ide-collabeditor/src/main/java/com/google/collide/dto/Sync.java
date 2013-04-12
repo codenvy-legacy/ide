@@ -17,14 +17,11 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * DTO used for attempt a workspace sync from parent.
- *
- */
+/** DTO used for attempt a workspace sync from parent. */
 @RoutingType(type = RoutingTypes.SYNC)
 public interface Sync extends ClientToServerDto {
 
-  String getWorkspaceId();
+    String getWorkspaceId();
 
-  String getClientId();
+    String getClientId();
 }

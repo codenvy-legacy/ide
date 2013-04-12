@@ -21,36 +21,26 @@ package org.exoplatform.ide.git.client.reset;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user wants to reset the current branch head to commit. Implement {@link ResetToCommitHandler} handler to
- * process event.
+ * Event occurs, when user wants to reset the current branch head to commit. Implement {@link ResetToCommitHandler} handler to process
+ * event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 15, 2011 9:50:14 AM anya $
- * 
  */
-public class ResetToCommitEvent extends GwtEvent<ResetToCommitHandler>
-{
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<ResetToCommitHandler> TYPE = new GwtEvent.Type<ResetToCommitHandler>();
+public class ResetToCommitEvent extends GwtEvent<ResetToCommitHandler> {
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<ResetToCommitHandler> TYPE = new GwtEvent.Type<ResetToCommitHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ResetToCommitHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ResetToCommitHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ResetToCommitHandler handler)
-   {
-      handler.onResetToCommit(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ResetToCommitHandler handler) {
+        handler.onResetToCommit(this);
+    }
 
 }

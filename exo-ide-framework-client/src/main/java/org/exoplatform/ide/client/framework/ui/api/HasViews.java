@@ -20,29 +20,31 @@ package org.exoplatform.ide.client.framework.ui.api;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface HasViews
-{
+public interface HasViews {
 
-   /**
-    * Adds a view.
-    * 
-    * @param view the view to be added
-    * @throws UnsupportedOperationException if this method is not supported (most often this means that a specific overload must
-    *            be called)
-    */
-   void addView(View view);
+    /**
+     * Adds a view.
+     *
+     * @param view
+     *         the view to be added
+     * @throws UnsupportedOperationException
+     *         if this method is not supported (most often this means that a specific overload must
+     *         be called)
+     */
+    void addView(View view);
 
-   /**
-    * Removes a view.
-    * 
-    * @param view the view to be removed
-    * @return <code>true</code> if the view was present
-    */
-   boolean removeView(View view);
+    /**
+     * Removes a view.
+     *
+     * @param view
+     *         the view to be removed
+     * @return <code>true</code> if the view was present
+     */
+    boolean removeView(View view);
 
 }

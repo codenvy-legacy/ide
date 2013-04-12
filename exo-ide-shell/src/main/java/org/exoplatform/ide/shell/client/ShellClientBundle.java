@@ -24,41 +24,32 @@ import com.google.gwt.resources.client.CssResource;
 
 /**
  * Client bundle for Shell application.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Mar 6, 2012 12:08:36 PM anya $
- * 
  */
-public interface ShellClientBundle extends ClientBundle
-{
-   /**
-    * Instance of {@link ShellClientBundle}.
-    */
-   ShellClientBundle INSTANCE = GWT.<ShellClientBundle> create(ShellClientBundle.class);
+public interface ShellClientBundle extends ClientBundle {
+    /** Instance of {@link ShellClientBundle}. */
+    ShellClientBundle INSTANCE = GWT.<ShellClientBundle>create(ShellClientBundle.class);
 
-   /**
-    * CSS resources for console.
-    */
-   @Source("org/exoplatform/ide/shell/client/Shell.css")
-   Style css();
+    /** CSS resources for console. */
+    @Source("org/exoplatform/ide/shell/client/Shell.css")
+    Style css();
 
-   /**
-    * CSS styles.
-    */
-   public interface Style extends CssResource
-   {
-      String shellContainer();
-      
-      String content();
-      
-      String term();
-      
-      String serverResponseLabelError();
+    /** CSS styles. */
+    public interface Style extends CssResource {
+        String shellContainer();
 
-      String blink();
+        String content();
 
-      String cursor();
+        String term();
 
-      String crashAutocomplete();
-   }
+        String serverResponseLabelError();
+
+        String blink();
+
+        String cursor();
+
+        String crashAutocomplete();
+    }
 }

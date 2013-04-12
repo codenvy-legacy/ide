@@ -21,7 +21,6 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
  * perspective, source type extends target type. From code completion
  * perspective the semantics is "source code block contains all children
  * defined in the target code block"
- *
  */
 @RoutingType(type = RoutingTypes.INHERITANCEASSOCIATION)
 public interface InheritanceAssociation extends CodeBlockAssociation {

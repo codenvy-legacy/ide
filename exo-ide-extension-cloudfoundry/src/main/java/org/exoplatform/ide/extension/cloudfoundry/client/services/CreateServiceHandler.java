@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link CreateServiceEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 16, 2012 12:32:03 PM anya $
- * 
  */
-public interface CreateServiceHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to create new service.
-    * 
-    * @param event
-    */
-   void onCreateService(CreateServiceEvent event);
+public interface CreateServiceHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to create new service.
+     *
+     * @param event
+     */
+    void onCreateService(CreateServiceEvent event);
 }

@@ -22,37 +22,28 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tryes to open file by URL.
- * 
+ * <p/>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class OpenFileByURLEvent extends GwtEvent<OpenFileByURLHandler>
-{
+public class OpenFileByURLEvent extends GwtEvent<OpenFileByURLHandler> {
 
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<OpenFileByURLHandler> TYPE = new GwtEvent.Type<OpenFileByURLHandler>();
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<OpenFileByURLHandler> TYPE = new GwtEvent.Type<OpenFileByURLHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<OpenFileByURLHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<OpenFileByURLHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(OpenFileByURLHandler handler)
-   {
-      handler.onOpenFileByURL(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(OpenFileByURLHandler handler) {
+        handler.onOpenFileByURL(this);
+    }
 
 }

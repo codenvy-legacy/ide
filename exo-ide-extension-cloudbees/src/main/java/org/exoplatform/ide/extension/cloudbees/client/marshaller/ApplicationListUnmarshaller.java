@@ -34,55 +34,41 @@ import java.util.List;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Sep 21, 2011 evgen $
- * 
  */
-public class ApplicationListUnmarshaller implements Unmarshallable<List<ApplicationInfo>>
-{
+public class ApplicationListUnmarshaller implements Unmarshallable<List<ApplicationInfo>> {
 
-   private List<ApplicationInfo> apps;
+    private List<ApplicationInfo> apps;
 
-   /**
-    * @param apps
-    */
-   public ApplicationListUnmarshaller(List<ApplicationInfo> apps)
-   {
-      this.apps = apps;
-   }
+    /** @param apps */
+    public ApplicationListUnmarshaller(List<ApplicationInfo> apps) {
+        this.apps = apps;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      if (response.getText() == null || response.getText().isEmpty())
-      {
-         return;
-      }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        if (response.getText() == null || response.getText().isEmpty()) {
+            return;
+        }
 
-      JSONArray value = JSONParser.parseLenient(response.getText()).isArray();
+        JSONArray value = JSONParser.parseLenient(response.getText()).isArray();
 
-      if (value == null)
-      {
-         return;
-      }
+        if (value == null) {
+            return;
+        }
 
-      for (int i = 0; i < value.size(); i++)
-      {
-         String payload = value.get(i).isObject().toString();
-         
-         AutoBean<ApplicationInfo> appInfoBean =
-            AutoBeanCodex.decode(CloudBeesExtension.AUTO_BEAN_FACTORY, ApplicationInfo.class, payload);
-         apps.add(appInfoBean.as());
-      }
-   }
+        for (int i = 0; i < value.size(); i++) {
+            String payload = value.get(i).isObject().toString();
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
-    */
-   @Override
-   public List<ApplicationInfo> getPayload()
-   {
-      return apps;
-   }
+            AutoBean<ApplicationInfo> appInfoBean =
+                    AutoBeanCodex.decode(CloudBeesExtension.AUTO_BEAN_FACTORY, ApplicationInfo.class, payload);
+            apps.add(appInfoBean.as());
+        }
+    }
+
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
+    @Override
+    public List<ApplicationInfo> getPayload() {
+        return apps;
+    }
 }

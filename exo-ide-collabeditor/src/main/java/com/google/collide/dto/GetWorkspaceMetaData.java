@@ -17,9 +17,7 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Request for workspace meta data.
- */
+/** Request for workspace meta data. */
 @RoutingType(type = RoutingTypes.GETWORKSPACEMETADATA)
 public interface GetWorkspaceMetaData extends ClientToServerDto {
 

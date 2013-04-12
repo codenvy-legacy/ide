@@ -23,34 +23,32 @@ import com.google.gwt.resources.client.CssResource;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface NotificationCss extends CssResource
-{
-   @ClassName("warning-mark")
-   String markWarning();
+public interface NotificationCss extends CssResource {
+    @ClassName("warning-mark")
+    String markWarning();
 
-   @ClassName("mark-error")
-   String markError();
-   
-   @ClassName("overview-mark-error")
-   String overviewMarkError();
-   
-   @ClassName("overview-bottom-mark-error")
-   String overviewBottomMarkError();
-   
-   @ClassName("overview-mark-warning")
-   String overviewMarkWarning();
-   
-   @ClassName("overview-bottom-mark-warning")
-   String overviewBottomMarkWarning();
-   
-   @ClassName("popup-notification")
-   String popupNotification();
+    @ClassName("mark-error")
+    String markError();
 
-   @ClassName("mark-task")
-   String markTask();
-   
-   @ClassName("overview-mark-task")
-   String overviewMarkTask();
+    @ClassName("overview-mark-error")
+    String overviewMarkError();
+
+    @ClassName("overview-bottom-mark-error")
+    String overviewBottomMarkError();
+
+    @ClassName("overview-mark-warning")
+    String overviewMarkWarning();
+
+    @ClassName("overview-bottom-mark-warning")
+    String overviewBottomMarkWarning();
+
+    @ClassName("popup-notification")
+    String popupNotification();
+
+    @ClassName("mark-task")
+    String markTask();
+
+    @ClassName("overview-mark-task")
+    String overviewMarkTask();
 }

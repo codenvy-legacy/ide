@@ -1,65 +1,66 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-   xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component" xmlns:p1="urn:import:com.google.gwt.user.cellview.client">
-   <ui:style>
-      /* Add CSS here. See the GWT docs on UI Binder for more details */
-   </ui:style>
-   <f:Border borderColor="transparent" margin="5">
-   	<f:layer left="0px" top="25px" height="31px" right="0px">
-   		<g:ListBox width="100%" height="24px" ui:field="superConstructorBox"/>
-   	</f:layer>
-   	<f:layer left="0px" width="227px" top="5px" height="14px">
-   		<g:Label text="Select Super constructor to invoke"/>
-   	</f:layer>
-   	<f:layer left="0px" right="0px" top="55px" height="254px">
-   		<g:DockLayoutPanel unit="PX" width="100%" height="250px">
-   			<g:center>
-   				<g:ScrollPanel styleName="exo-popupMenuTable">
-   					<p1:CellList width="100%" height="100%" ui:field="cellList"/>
-   				</g:ScrollPanel>
-   			</g:center>
-   			<g:east size="101.0">
-   				<g:AbsolutePanel>
-   					<g:at left="10" top="0">
-   						<f:ImageButton ui:field="selectAllButton" text="Select All"/>
-   					</g:at>
-   					<g:at left="10" top="28">
-   						<f:ImageButton ui:field="deselectAllButton" text="Deselect All"/>
-   					</g:at>
-   				</g:AbsolutePanel>
-   			</g:east>
-   		</g:DockLayoutPanel>
-   	</f:layer>
-   	<f:layer left="0px" top="331px" height="29px" right="0px">
-   		<f:Border borderSize="1">
-   			<f:layer left="0px" width="72px" top="0px" height="21px">
-   				<g:RadioButton name="new name" text="public" checked="true" ui:field="publicRadio"/>
-   			</f:layer>
-   			<f:layer left="68px" width="94px" top="0px" height="21px">
-   				<g:RadioButton name="new name" text="protected" ui:field="protectedRadio"/>
-   			</f:layer>
-   			<f:layer left="163px" width="77px" top="0px" height="21px">
-   				<g:RadioButton name="new name" text="default" ui:field="defaultRadio"/>
-   			</f:layer>
-   			<f:layer left="237px" width="77px" top="0px" height="21px">
-   				<g:RadioButton name="new name" text="private" ui:field="privateRadio"/>
-   			</f:layer>
-   		</f:Border>
-   	</f:layer>
-   	<f:layer left="0px" width="111px" top="311px" height="14px">
-   		<g:Label text="Access modifier"/>
-   	</f:layer>
-   	<f:layer left="0px" width="310px" top="366px" height="21px">
-   		<g:CheckBox text="Generate constructor comments" value="true" ui:field="generateCommentsBox"/>
-   	</f:layer>
-   	<f:layer left="0px" width="306px" top="393px" height="21px">
-   		<g:CheckBox text="Omit call to default constructor super()" ui:field="omitCallSuperBox"/>
-   	</f:layer>
-   	<f:layer right="0px" width="90px" top="426px" height="22px">
-   		<f:ImageButton text="Ok" ui:field="okButton"/>
-   	</f:layer>
-   	<f:layer width="90px" top="426px" height="22px" right="110px">
-   		<f:ImageButton text="Cancel" ui:field="cancelButton"/>
-   	</f:layer>
-   </f:Border>
+             xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
+             xmlns:p1="urn:import:com.google.gwt.user.cellview.client">
+    <ui:style>
+            /* Add CSS here. See the GWT docs on UI Binder for more details */
+    </ui:style>
+    <f:Border borderColor="transparent" margin="5">
+        <f:layer left="0px" top="25px" height="31px" right="0px">
+            <g:ListBox width="100%" height="24px" ui:field="superConstructorBox"/>
+        </f:layer>
+        <f:layer left="0px" width="227px" top="5px" height="14px">
+            <g:Label text="Select Super constructor to invoke"/>
+        </f:layer>
+        <f:layer left="0px" right="0px" top="55px" height="254px">
+            <g:DockLayoutPanel unit="PX" width="100%" height="250px">
+                <g:center>
+                    <g:ScrollPanel styleName="exo-popupMenuTable">
+                        <p1:CellList width="100%" height="100%" ui:field="cellList"/>
+                    </g:ScrollPanel>
+                </g:center>
+                <g:east size="101.0">
+                    <g:AbsolutePanel>
+                        <g:at left="10" top="0">
+                            <f:ImageButton ui:field="selectAllButton" text="Select All"/>
+                        </g:at>
+                        <g:at left="10" top="28">
+                            <f:ImageButton ui:field="deselectAllButton" text="Deselect All"/>
+                        </g:at>
+                    </g:AbsolutePanel>
+                </g:east>
+            </g:DockLayoutPanel>
+        </f:layer>
+        <f:layer left="0px" top="331px" height="29px" right="0px">
+            <f:Border borderSize="1">
+                <f:layer left="0px" width="72px" top="0px" height="21px">
+                    <g:RadioButton name="new name" text="public" checked="true" ui:field="publicRadio"/>
+                </f:layer>
+                <f:layer left="68px" width="94px" top="0px" height="21px">
+                    <g:RadioButton name="new name" text="protected" ui:field="protectedRadio"/>
+                </f:layer>
+                <f:layer left="163px" width="77px" top="0px" height="21px">
+                    <g:RadioButton name="new name" text="default" ui:field="defaultRadio"/>
+                </f:layer>
+                <f:layer left="237px" width="77px" top="0px" height="21px">
+                    <g:RadioButton name="new name" text="private" ui:field="privateRadio"/>
+                </f:layer>
+            </f:Border>
+        </f:layer>
+        <f:layer left="0px" width="111px" top="311px" height="14px">
+            <g:Label text="Access modifier"/>
+        </f:layer>
+        <f:layer left="0px" width="310px" top="366px" height="21px">
+            <g:CheckBox text="Generate constructor comments" value="true" ui:field="generateCommentsBox"/>
+        </f:layer>
+        <f:layer left="0px" width="306px" top="393px" height="21px">
+            <g:CheckBox text="Omit call to default constructor super()" ui:field="omitCallSuperBox"/>
+        </f:layer>
+        <f:layer right="0px" width="90px" top="426px" height="22px">
+            <f:ImageButton text="Ok" ui:field="okButton"/>
+        </f:layer>
+        <f:layer width="90px" top="426px" height="22px" right="110px">
+            <f:ImageButton text="Cancel" ui:field="cancelButton"/>
+        </f:layer>
+    </f:Border>
 </ui:UiBinder> 

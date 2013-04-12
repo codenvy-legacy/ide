@@ -15,10 +15,12 @@ import com.codenvy.eclipse.jdt.internal.compiler.env.AccessRestriction;
 /**
  * A <code>IRestrictedAccessTypeRequestor</code> collects search results from a <code>searchAllTypeNames</code>
  * query to a <code>SearchBasicEngine</code> providing restricted access information when a type is accepted.
+ *
  * @see com.codenvy.eclipse.jdt.core.search.TypeNameRequestor
  */
 public interface IRestrictedAccessTypeRequestor {
 
-	public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path, AccessRestriction access);
+    public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path,
+                           AccessRestriction access);
 
 }

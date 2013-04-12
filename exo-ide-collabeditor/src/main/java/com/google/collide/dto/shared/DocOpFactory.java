@@ -21,16 +21,17 @@ import com.google.collide.dto.DocOpComponent.Retain;
 import com.google.collide.dto.DocOpComponent.RetainLine;
 
 // TODO: These should be moved to an Editor2-specific package
+
 /**
  */
 public interface DocOpFactory {
-  Delete createDelete(String text);
+    Delete createDelete(String text);
 
-  DocOp createDocOp();
+    DocOp createDocOp();
 
-  Insert createInsert(String text);
+    Insert createInsert(String text);
 
-  Retain createRetain(int count, boolean hasTrailingNewline);
+    Retain createRetain(int count, boolean hasTrailingNewline);
 
-  RetainLine createRetainLine(int lineCount);
+    RetainLine createRetainLine(int lineCount);
 }

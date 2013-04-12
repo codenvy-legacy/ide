@@ -23,11 +23,9 @@ import org.exoplatform.ide.git.shared.GitHubUser;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public interface GitHubUserSelectionChangedHandler
-{
-   
-   void onGitHubUserSelectionChanged(GitHubUser user, boolean selected);
+public interface GitHubUserSelectionChangedHandler {
+
+    void onGitHubUserSelectionChanged(GitHubUser user, boolean selected);
 
 }

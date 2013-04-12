@@ -17,49 +17,44 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
-/**
- * Request the current sync state of a workspace.
- *
- */
+/** Request the current sync state of a workspace. */
 @RoutingType(type = RoutingTypes.GETSYNCSTATERESPONSE)
 public interface GetSyncStateResponse extends ServerToClientDto {
 
-  /**
-   * The states that the syncing process can be in. Default is SHOULD_SYNC,
-   * which is before the user selects to sync from parent.
-   */
-  public enum SyncState {
     /**
-     * We have no changes, and there is nothing to pull in from the parent.
+     * The states that the syncing process can be in. Default is SHOULD_SYNC,
+     * which is before the user selects to sync from parent.
      */
-    NOTHING_TO_SUBMIT,
+    public enum SyncState {
+        /** We have no changes, and there is nothing to pull in from the parent. */
+        NOTHING_TO_SUBMIT,
 
-    /**
-     * There are changes available in the parent to be pulled in. Those changes
-     * don't conflict with anything in our workspace.
-     */
-    SHOULD_SYNC,
+        /**
+         * There are changes available in the parent to be pulled in. Those changes
+         * don't conflict with anything in our workspace.
+         */
+        SHOULD_SYNC,
 
-    // TODO: SHOULD_SYNC_HAS_CONFLICTS is unused until we have
-    // the FE notifications of changes in parent.
-    /**
-     * There are changes available in the parent to be pulled in. Those changes
-     * have one or more conflicts with changes in our workspace.
-     */
-    SHOULD_SYNC_HAS_CONFLICTS,
+        // TODO: SHOULD_SYNC_HAS_CONFLICTS is unused until we have
+        // the FE notifications of changes in parent.
+        /**
+         * There are changes available in the parent to be pulled in. Those changes
+         * have one or more conflicts with changes in our workspace.
+         */
+        SHOULD_SYNC_HAS_CONFLICTS,
 
-    /**
-     * We have synced, but there were conflicts. We are in the process of
-     * resolving them.
-     */
-    RESOLVING_CONFLICTS,
+        /**
+         * We have synced, but there were conflicts. We are in the process of
+         * resolving them.
+         */
+        RESOLVING_CONFLICTS,
 
-    /**
-     * We have all the parents changes (synced to parent's tip), and have
-     * changes to submit.
-     */
-    READY_TO_SUBMIT;
-  }
+        /**
+         * We have all the parents changes (synced to parent's tip), and have
+         * changes to submit.
+         */
+        READY_TO_SUBMIT;
+    }
 
-  SyncState getSyncState();
+    SyncState getSyncState();
 }

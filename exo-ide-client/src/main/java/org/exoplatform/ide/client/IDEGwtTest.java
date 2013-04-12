@@ -22,19 +22,14 @@ import com.google.gwt.core.client.EntryPoint;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: ${date} ${time}
- * 
  */
-public class IDEGwtTest implements EntryPoint
-{
+public class IDEGwtTest implements EntryPoint {
 
-   /**
-    * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()
-    */
-   public void onModuleLoad()
-   {
-   }
+    /** @see com.google.gwt.core.client.EntryPoint#onModuleLoad() */
+    public void onModuleLoad() {
+    }
 
 }

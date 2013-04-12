@@ -23,35 +23,29 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class ThemeChangedEvent extends GwtEvent<ThemeChangedHandler>
-{
+public class ThemeChangedEvent extends GwtEvent<ThemeChangedHandler> {
 
-   public static final GwtEvent.Type<ThemeChangedHandler> TYPE = new GwtEvent.Type<ThemeChangedHandler>();
+    public static final GwtEvent.Type<ThemeChangedHandler> TYPE = new GwtEvent.Type<ThemeChangedHandler>();
 
-   private String theme;
+    private String theme;
 
-   public ThemeChangedEvent(String theme)
-   {
-      this.theme = theme;
-   }
+    public ThemeChangedEvent(String theme) {
+        this.theme = theme;
+    }
 
-   public String getTheme()
-   {
-      return theme;
-   }
+    public String getTheme() {
+        return theme;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ThemeChangedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ThemeChangedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(ThemeChangedHandler handler)
-   {
-      handler.onThemeChanged(this);
-   }
+    @Override
+    protected void dispatch(ThemeChangedHandler handler) {
+        handler.onThemeChanged(this);
+    }
 
 }

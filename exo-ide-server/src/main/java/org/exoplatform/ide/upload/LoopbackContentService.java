@@ -18,6 +18,15 @@
  */
 package org.exoplatform.ide.upload;
 
+import org.apache.commons.fileupload.FileItem;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,82 +34,62 @@ import java.io.InputStreamReader;
 import java.net.URLEncoder;
 import java.util.Iterator;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
-import org.apache.commons.fileupload.FileItem;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-
 /**
  * Uses for receiving the content of local file through server.
- * 
+ * <p/>
  * Created by The eXo Platform SAS
- * 
+ *
  * @author <a href="work.visor.ck@gmail.com">Dmytro Katayev</a> ${date}
  */
 
 @Path("/ide/loopbackcontent")
-public class LoopbackContentService
-{
+public class LoopbackContentService {
 
-   private static Log log = ExoLogger.getLogger(LoopbackContentService.class);
+    private static Log log = ExoLogger.getLogger(LoopbackContentService.class);
 
-   /**
-    * POST method that gets the request body and returns it wrapped in the JavaScript.
-    * 
-    * @param items file items form the request body.
-    * @return the request body content wrapped with JavaScript.
-    * @throws UploadServiceException
-    */
-   @POST
-   @Consumes({"multipart/*"})
-   @Produces(MediaType.TEXT_HTML)
-   public String post(Iterator<FileItem> items) throws UploadServiceException
-   {
-      InputStream stream = null;
-      while (items.hasNext())
-      {
-         FileItem fitem = items.next();
-         if (!fitem.isFormField())
-         {
-            try
-            {
-               stream = fitem.getInputStream();
+    /**
+     * POST method that gets the request body and returns it wrapped in the JavaScript.
+     *
+     * @param items
+     *         file items form the request body.
+     * @return the request body content wrapped with JavaScript.
+     * @throws UploadServiceException
+     */
+    @POST
+    @Consumes({"multipart/*"})
+    @Produces(MediaType.TEXT_HTML)
+    public String post(Iterator<FileItem> items) throws UploadServiceException {
+        InputStream stream = null;
+        while (items.hasNext()) {
+            FileItem fitem = items.next();
+            if (!fitem.isFormField()) {
+                try {
+                    stream = fitem.getInputStream();
+                } catch (IOException ioe) {
+                    log.error(ioe.getMessage(), ioe);
+                    throw new UploadServiceException(ioe.getMessage());
+                }
             }
-            catch (IOException ioe)
-            {
-               log.error(ioe.getMessage(), ioe);
-               throw new UploadServiceException(ioe.getMessage());
+        }
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+        StringBuilder sb = new StringBuilder();
+
+        String line = null;
+
+        try {
+            while ((line = reader.readLine()) != null) {
+                String str = URLEncoder.encode(line + "\n", "UTF-8");
+                sb.append(str);
             }
-         }
-      }
+        } catch (IOException ioe) {
+            log.error(ioe.getMessage(), ioe);
+            throw new UploadServiceException(ioe.getMessage());
+        }
 
-      BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-      StringBuilder sb = new StringBuilder();
+        String bodyString = sb.toString();
 
-      String line = null;
-
-      try
-      {
-         while ((line = reader.readLine()) != null)
-         {
-            String str = URLEncoder.encode(line + "\n", "UTF-8");
-            sb.append(str);
-         }
-      }
-      catch (IOException ioe)
-      {
-         log.error(ioe.getMessage(), ioe);
-         throw new UploadServiceException(ioe.getMessage());
-      }
-
-      String bodyString = sb.toString();
-
-      return "<filecontent>" + bodyString + "</filecontent>";
-   }
+        return "<filecontent>" + bodyString + "</filecontent>";
+    }
 
 }

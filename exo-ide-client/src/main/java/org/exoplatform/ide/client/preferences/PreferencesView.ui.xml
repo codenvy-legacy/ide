@@ -1,39 +1,41 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
-   <ui:with type="org.exoplatform.ide.client.IdeLocalizationConstant" field="idelocal"></ui:with>
-   <ui:with type="org.exoplatform.ide.client.messages.IdePreferencesLocalizationConstant" field="preflocal"></ui:with>
-   <ui:style>
-      .floatRight {
-      	margin-left: auto;
-      }
-   </ui:style>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+    <ui:with type="org.exoplatform.ide.client.IdeLocalizationConstant" field="idelocal"></ui:with>
+    <ui:with type="org.exoplatform.ide.client.messages.IdePreferencesLocalizationConstant" field="preflocal"></ui:with>
+    <ui:style>
+        .floatRight {
+            margin-left: auto;
+        }
+    </ui:style>
 
-   <f:Border margin="15" borderColor="transparent">
-      <f:layer top="0" bottom="35">
-         <g:DockLayoutPanel unit="PX">
-            <g:west size="160">
-               <f:Border>
-                  <f:layer>
-                     <g:ScrollPanel ui:field="treePanel">
-                     </g:ScrollPanel>
-                  </f:layer>
-               </f:Border>
-            </g:west>
-            <g:west size="10">
-               <g:FlowPanel></g:FlowPanel>
-            </g:west>
-            <g:center>
-               <f:Border>
-                  <f:layer>
-                     <g:ScrollPanel ui:field="viewPanel">
-                     </g:ScrollPanel>
-                  </f:layer>
-               </f:Border>
-            </g:center>
-         </g:DockLayoutPanel>
-      </f:layer>
-      <f:layer height="22px" bottom="0">
-         <f:ImageButton ui:field="closeButton" width="90" height="22" text="{idelocal.closeButton}" imageName="cancel" addStyleNames="{style.floatRight}"></f:ImageButton>
-      </f:layer>
-   </f:Border>
+    <f:Border margin="15" borderColor="transparent">
+        <f:layer top="0" bottom="35">
+            <g:DockLayoutPanel unit="PX">
+                <g:west size="160">
+                    <f:Border>
+                        <f:layer>
+                            <g:ScrollPanel ui:field="treePanel">
+                            </g:ScrollPanel>
+                        </f:layer>
+                    </f:Border>
+                </g:west>
+                <g:west size="10">
+                    <g:FlowPanel></g:FlowPanel>
+                </g:west>
+                <g:center>
+                    <f:Border>
+                        <f:layer>
+                            <g:ScrollPanel ui:field="viewPanel">
+                            </g:ScrollPanel>
+                        </f:layer>
+                    </f:Border>
+                </g:center>
+            </g:DockLayoutPanel>
+        </f:layer>
+        <f:layer height="22px" bottom="0">
+            <f:ImageButton ui:field="closeButton" width="90" height="22" text="{idelocal.closeButton}" imageName="cancel"
+                           addStyleNames="{style.floatRight}"></f:ImageButton>
+        </f:layer>
+    </f:Border>
 </ui:UiBinder> 

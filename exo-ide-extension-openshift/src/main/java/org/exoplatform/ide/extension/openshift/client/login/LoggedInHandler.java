@@ -22,19 +22,17 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link LoggedInEvent} event.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 31, 2011 11:15:46 AM anya $
- * 
  */
-public interface LoggedInHandler extends EventHandler
-{
-   
-   /**
-    * Perform actions after user's try to log in OpenShift.
-    * 
-    * @param event
-    */
-   void onLoggedIn(LoggedInEvent event);
-   
+public interface LoggedInHandler extends EventHandler {
+
+    /**
+     * Perform actions after user's try to log in OpenShift.
+     *
+     * @param event
+     */
+    void onLoggedIn(LoggedInEvent event);
+
 }

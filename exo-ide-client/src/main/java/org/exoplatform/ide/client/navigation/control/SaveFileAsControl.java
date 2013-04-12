@@ -45,121 +45,98 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 @RolesAllowed({"developer"})
 public class SaveFileAsControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-   ItemsSelectedHandler, VfsChangedHandler, ViewVisibilityChangedHandler
-{
+                                                                ItemsSelectedHandler, VfsChangedHandler, ViewVisibilityChangedHandler {
 
-   private static final String ID = "File/Save As...";
+    private static final String ID = "File/Save As...";
 
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.saveFileAsControl();
+    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.saveFileAsControl();
 
-   /**
-    * Current workspace's href.
-    */
-   private VirtualFileSystemInfo vfsInfo;
+    /** Current workspace's href. */
+    private VirtualFileSystemInfo vfsInfo;
 
-   private List<Item> selectedItems = new ArrayList<Item>();
+    private List<Item> selectedItems = new ArrayList<Item>();
 
-   private FileModel activeFile;
+    private FileModel activeFile;
 
-   private boolean browserPanelSelected = true;
+    private boolean browserPanelSelected = true;
 
-   /**
-    * 
-    */
-   public SaveFileAsControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.saveAs(), IDEImageBundle.INSTANCE.saveAsDisabled());
-      setEvent(new SaveFileAsEvent(SaveFileAsEvent.SaveDialogType.YES_CANCEL, null, null));
-      setGroupName(GroupNames.SAVE);
-   }
+    /**
+     *
+     */
+    public SaveFileAsControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setImages(IDEImageBundle.INSTANCE.saveAs(), IDEImageBundle.INSTANCE.saveAsDisabled());
+        setEvent(new SaveFileAsEvent(SaveFileAsEvent.SaveDialogType.YES_CANCEL, null, null));
+        setGroupName(GroupNames.SAVE);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+        IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+    }
 
-   /**
-    * Update control's state.
-    */
-   private void updateState()
-   {
-      if (vfsInfo == null)
-      {
-         setVisible(false);
-         return;
-      }
-      setVisible(true);
+    /** Update control's state. */
+    private void updateState() {
+        if (vfsInfo == null) {
+            setVisible(false);
+            return;
+        }
+        setVisible(true);
 
-      if (browserPanelSelected && selectedItems.size() == 1 && activeFile != null)
-      {
-         setEnabled(true);
-      }
-      else
-      {
-         setEnabled(false);
-      }
-   }
+        if (browserPanelSelected && selectedItems.size() == 1 && activeFile != null) {
+            setEnabled(true);
+        } else {
+            setEnabled(false);
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
-    */
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      activeFile = event.getFile();
-      updateState();
-   }
+    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    @Override
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        activeFile = event.getFile();
+        updateState();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
-      updateState();
-   }
+    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     * .framework.navigation.event.ItemsSelectedEvent) */
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        selectedItems = event.getSelectedItems();
+        updateState();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      vfsInfo = event.getVfsInfo();
-      updateState();
-      setEnabled(false);
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     * .application.event.VfsChangedEvent) */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        vfsInfo = event.getVfsInfo();
+        updateState();
+        setEnabled(false);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
-    */
-   @Override
-   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
-   {
-      if (event.getView() instanceof NavigatorDisplay || 
-               event.getView() instanceof ProjectExplorerDisplay ||
-               event.getView() instanceof PackageExplorerDisplay)
-      {
-         browserPanelSelected = event.getView().isViewVisible();
-         updateState();
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide
+     * .client.framework.ui.api.event.ViewVisibilityChangedEvent) */
+    @Override
+    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event) {
+        if (event.getView() instanceof NavigatorDisplay ||
+            event.getView() instanceof ProjectExplorerDisplay ||
+            event.getView() instanceof PackageExplorerDisplay) {
+            browserPanelSelected = event.getView().isViewVisible();
+            updateState();
+        }
+    }
 
 }

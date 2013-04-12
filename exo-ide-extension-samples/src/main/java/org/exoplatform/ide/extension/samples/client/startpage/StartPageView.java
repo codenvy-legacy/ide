@@ -23,7 +23,6 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -34,79 +33,65 @@ import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: WelcomeView.java Aug 25, 2011 12:33:32 PM vereshchaka $
- *
  */
-public class StartPageView extends ViewImpl implements StartPagePresenter.Display
-{
+public class StartPageView extends ViewImpl implements StartPagePresenter.Display {
 
-   private static final String ID = "WelcomeViewId";
+    private static final String ID = "WelcomeViewId";
 
-   private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.welcomeTitle();
+    private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.welcomeTitle();
 
-   private static StartPageViewUiBinder uiBinder = GWT.create(StartPageViewUiBinder.class);
+    private static StartPageViewUiBinder uiBinder = GWT.create(StartPageViewUiBinder.class);
 
-   interface StartPageViewUiBinder extends UiBinder<Widget, StartPageView>
-   {
-   }
+    interface StartPageViewUiBinder extends UiBinder<Widget, StartPageView> {
+    }
 
-   @UiField
-   Button invitationsLink;
-   
-   @UiField
-   Button samplesLink;
+    @UiField
+    Anchor invitationsLink;
 
-   @UiField
-   Button projectLink;
+    @UiField
+    Anchor cloneLink;
 
-   @UiField
-   Button importLink;
+    @UiField
+    Anchor projectLink;
 
-   @UiField
-   Anchor documentationLink;
+    @UiField
+    Anchor importLink;
 
-   @UiField
-   Anchor supportLink;
+    @UiField
+    Anchor documentationLink;
 
-   @UiField
-   Image logo;
+    @UiField
+    Anchor supportLink;
 
-   public StartPageView()
-   {
-      super(ID, "editor", TITLE, new Image(SamplesClientBundle.INSTANCE.welcome()));
-      add(uiBinder.createAndBindUi(this));
-   }
+    @UiField
+    Image logo;
 
-   /**
-    * @see org.exoplatform.ide.client.StartPagePresenter.WelcomePresenter.Display#getSamplesLink()
-    */
-   @Override
-   public HasClickHandlers getSamplesLink()
-   {
-      return samplesLink;
-   }
+    public StartPageView() {
+        super(ID, "editor", TITLE, new Image(SamplesClientBundle.INSTANCE.welcome()));
+        add(uiBinder.createAndBindUi(this));
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter.Display#getProjectLink()
-    */
-   @Override
-   public HasClickHandlers getProjectLink()
-   {
-      return projectLink;
-   }
+    /** @see org.exoplatform.ide.client.StartPagePresenter.WelcomePresenter.Display#getCloneLink() */
+    @Override
+    public HasClickHandlers getCloneLink() {
+        return cloneLink;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter.Display#getImportLink()
-    */
-   @Override
-   public HasClickHandlers getImportLink()
-   {
-      return importLink;
-   }
+    /** @see org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter.Display#getProjectLink() */
+    @Override
+    public HasClickHandlers getProjectLink() {
+        return projectLink;
+    }
 
-   @Override
-   public HasClickHandlers getInvitationsLink()
-   {
-      return invitationsLink;
-   }
+    /** @see org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter.Display#getImportLink() */
+    @Override
+    public HasClickHandlers getImportLink() {
+        return importLink;
+    }
+
+    @Override
+    public HasClickHandlers getInvitationsLink() {
+        return invitationsLink;
+    }
 
 }

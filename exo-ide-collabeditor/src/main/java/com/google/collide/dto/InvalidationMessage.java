@@ -17,25 +17,16 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
-/**
- * A message meant to emulate a Tango invalidation using the push channel as the transport.
- *
- */
+/** A message meant to emulate a Tango invalidation using the push channel as the transport. */
 @RoutingType(type = RoutingTypes.INVALIDATIONMESSAGE)
 public interface InvalidationMessage extends ServerToClientDto {
-  
-  /**
-   * Returns the Tango object name.
-   */
-  public String getObjectName();
-  
-  /**
-   * Returns the version encoded in a string representation of the long value.
-   */
-  public String getVersion();
-  
-  /**
-   * Returns the payload, or null if it was too large.
-   */
-  public String getPayload();
+
+    /** Returns the Tango object name. */
+    public String getObjectName();
+
+    /** Returns the version encoded in a string representation of the long value. */
+    public String getVersion();
+
+    /** Returns the payload, or null if it was too large. */
+    public String getPayload();
 }

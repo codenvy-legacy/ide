@@ -31,62 +31,47 @@ import org.exoplatform.ide.git.shared.Branch;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 11, 2011 12:29:46 PM anya $
- * 
  */
-public class BranchUnmarshaller implements Unmarshallable<Branch>, Constants
-{
-   /**
-    * Branch.
-    */
-   private Branch branch;
+public class BranchUnmarshaller implements Unmarshallable<Branch>, Constants {
+    /** Branch. */
+    private Branch branch;
 
-   /**
-    * @param branch branch
-    */
-   public BranchUnmarshaller(Branch branch)
-   {
-      this.branch = branch;
-   }
+    /**
+     * @param branch branch
+     */
+    public BranchUnmarshaller(Branch branch) {
+        this.branch = branch;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      if (response.getText() == null || response.getText().isEmpty())
-      {
-         return;
-      }
-      
-      JSONObject object = JSONParser.parseStrict(response.getText()).isObject();
-      if (object == null)
-         return;
-      if (object.containsKey(ACTIVE))
-      {
-         boolean active =
-            (object.get(ACTIVE).isBoolean() != null) ? object.get(ACTIVE).isBoolean().booleanValue() : false;
-         branch.setActive(active);
-      }
-      if (object.containsKey(NAME))
-      {
-         String name = (object.get(NAME).isString() != null) ? object.get(NAME).isString().stringValue() : "";
-         branch.setName(name);
-      }
-      if (object.containsKey(DISPLAY_NAME))
-      {
-         String displayName =
-            (object.get(DISPLAY_NAME).isString() != null) ? object.get(DISPLAY_NAME).isString().stringValue() : "";
-         branch.setDisplayName(displayName);
-      }
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        if (response.getText() == null || response.getText().isEmpty()) {
+            return;
+        }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
-    */
-   @Override
-   public Branch getPayload()
-   {
-      return branch;
-   }
+        JSONObject object = JSONParser.parseStrict(response.getText()).isObject();
+        if (object == null)
+            return;
+        if (object.containsKey(ACTIVE)) {
+            boolean active =
+                             (object.get(ACTIVE).isBoolean() != null) ? object.get(ACTIVE).isBoolean().booleanValue() : false;
+            branch.setActive(active);
+        }
+        if (object.containsKey(NAME)) {
+            String name = (object.get(NAME).isString() != null) ? object.get(NAME).isString().stringValue() : "";
+            branch.setName(name);
+        }
+        if (object.containsKey(DISPLAY_NAME)) {
+            String displayName =
+                                 (object.get(DISPLAY_NAME).isString() != null) ? object.get(DISPLAY_NAME).isString().stringValue() : "";
+            branch.setDisplayName(displayName);
+        }
+    }
+
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
+    @Override
+    public Branch getPayload() {
+        return branch;
+    }
 }

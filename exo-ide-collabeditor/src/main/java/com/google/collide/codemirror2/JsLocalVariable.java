@@ -16,19 +16,17 @@ package com.google.collide.codemirror2;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-/**
- * Element of linked list of local variables in {@link JsState}.
- */
+/** Element of linked list of local variables in {@link JsState}. */
 public class JsLocalVariable extends JavaScriptObject {
 
-  protected JsLocalVariable() {
-  }
+    protected JsLocalVariable() {
+    }
 
-  public final native String getName() /*-{
-    return this.name;
-  }-*/;
+    public final native String getName() /*-{
+        return this.name;
+    }-*/;
 
-  public final native JsLocalVariable getNext() /*-{
-    return this.next;
-  }-*/;
+    public final native JsLocalVariable getNext() /*-{
+        return this.next;
+    }-*/;
 }

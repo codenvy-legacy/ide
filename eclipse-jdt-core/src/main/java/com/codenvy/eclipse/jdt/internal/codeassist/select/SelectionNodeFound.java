@@ -14,18 +14,20 @@ import com.codenvy.eclipse.jdt.internal.compiler.lookup.Binding;
 
 public class SelectionNodeFound extends RuntimeException {
 
-	public Binding binding;
-	public boolean isDeclaration;
-	private static final long serialVersionUID = -7335444736618092295L; // backward compatible
+    public Binding binding;
+    public boolean isDeclaration;
+    private static final long serialVersionUID = -7335444736618092295L; // backward compatible
 
-public SelectionNodeFound() {
-	this(null, false); // we found a problem in the selection node
-}
-public SelectionNodeFound(Binding binding) {
-	this(binding, false);
-}
-public SelectionNodeFound(Binding binding, boolean isDeclaration) {
-	this.binding = binding;
-	this.isDeclaration = isDeclaration;
-}
+    public SelectionNodeFound() {
+        this(null, false); // we found a problem in the selection node
+    }
+
+    public SelectionNodeFound(Binding binding) {
+        this(binding, false);
+    }
+
+    public SelectionNodeFound(Binding binding, boolean isDeclaration) {
+        this.binding = binding;
+        this.isDeclaration = isDeclaration;
+    }
 }

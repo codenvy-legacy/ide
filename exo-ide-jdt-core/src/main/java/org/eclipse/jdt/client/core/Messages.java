@@ -23,57 +23,43 @@ import com.google.gwt.core.client.GWT;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- * 
  */
-public interface Messages extends com.google.gwt.i18n.client.Messages
-{
+public interface Messages extends com.google.gwt.i18n.client.Messages {
 
-   Messages INSTANCE = GWT.create(Messages.class);
+    Messages INSTANCE = GWT.create(Messages.class);
 
-   /**
-    * @return
-    */
-   String convention_package_nullName();
+    /** @return  */
+    String convention_package_nullName();
 
-   /**
-    * @return
-    */
-   String convention_package_emptyName();
+    /** @return  */
+    String convention_package_emptyName();
 
-   /**
-    * @return
-    */
-   String convention_package_dotName();
+    /** @return  */
+    String convention_package_dotName();
 
-   /**
-    * @return
-    */
-   String convention_package_nameWithBlanks();
+    /** @return  */
+    String convention_package_nameWithBlanks();
 
-   /**
-    * @return
-    */
-   String convention_package_consecutiveDotsName();
+    /** @return  */
+    String convention_package_consecutiveDotsName();
 
-   /**
-    * @param typeName
-    * @return
-    */
-   String convention_illegalIdentifier(String typeName);
+    /**
+     * @param typeName
+     * @return
+     */
+    String convention_illegalIdentifier(String typeName);
 
-   /**
-    * @return
-    */
-   String convention_package_uppercaseName();
+    /** @return  */
+    String convention_package_uppercaseName();
 
-   String GetterSetterCompletionProposal_getter_label(String str);
+    String GetterSetterCompletionProposal_getter_label(String str);
 
-   String GetterSetterCompletionProposal_setter_label(String str);
+    String GetterSetterCompletionProposal_setter_label(String str);
 
-   String MethodCompletionProposal_constructor_label();
+    String MethodCompletionProposal_constructor_label();
 
-   String MethodCompletionProposal_method_label();
+    String MethodCompletionProposal_method_label();
 
-   @Key("formatter.title")
-   String formatterTitle();
+    @Key("formatter.title")
+    String formatterTitle();
 }

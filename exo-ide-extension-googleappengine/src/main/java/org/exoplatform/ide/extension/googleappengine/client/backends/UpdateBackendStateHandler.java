@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link UpdateBackendStateEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 30, 2012 2:59:56 PM anya $
- * 
  */
-public interface UpdateBackendStateHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to update backend's state.
-    * 
-    * @param event
-    */
-   void onUpdateBackendState(UpdateBackendStateEvent event);
+public interface UpdateBackendStateHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to update backend's state.
+     *
+     * @param event
+     */
+    void onUpdateBackendState(UpdateBackendStateEvent event);
 }

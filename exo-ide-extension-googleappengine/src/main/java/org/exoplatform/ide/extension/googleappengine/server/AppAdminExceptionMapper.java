@@ -31,34 +31,29 @@ import javax.ws.rs.ext.Provider;
  * @version $Id: $
  */
 @Provider
-public class AppAdminExceptionMapper implements ExceptionMapper<AdminException>
-{
-   @Override
-   public Response toResponse(AdminException exception)
-   {
-      String causeMessage = null;
-      Throwable cause = exception.getCause();
-      int status = 500;
-      if (cause != null)
-      {
-         causeMessage = cause.getMessage();
-         if (cause instanceof HttpIoException)
-         {
-            status = ((HttpIoException)cause).getResponseCode();
-         }
-      }
-      if (causeMessage != null)
-      {
-         return Response
-            .status(status)
-            .entity(exception.getMessage() + ' ' + causeMessage)
-            .type(MediaType.TEXT_PLAIN)
-            .build();
-      }
-      return Response
-         .status(status)
-         .entity(exception.getMessage())
-         .type(MediaType.TEXT_PLAIN)
-         .build();
-   }
+public class AppAdminExceptionMapper implements ExceptionMapper<AdminException> {
+    @Override
+    public Response toResponse(AdminException exception) {
+        String causeMessage = null;
+        Throwable cause = exception.getCause();
+        int status = 500;
+        if (cause != null) {
+            causeMessage = cause.getMessage();
+            if (cause instanceof HttpIoException) {
+                status = ((HttpIoException)cause).getResponseCode();
+            }
+        }
+        if (causeMessage != null) {
+            return Response
+                    .status(status)
+                    .entity(exception.getMessage() + ' ' + causeMessage)
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
+        return Response
+                .status(status)
+                .entity(exception.getMessage())
+                .type(MediaType.TEXT_PLAIN)
+                .build();
+    }
 }

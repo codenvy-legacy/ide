@@ -24,17 +24,14 @@ import com.google.gwt.core.client.EntryPoint;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class Commons implements EntryPoint
-{
+public class Commons implements EntryPoint {
 
-   /**
-    * {@inheritDoc}
-    */
-   public void onModuleLoad()
-   {
-   }
+    /** {@inheritDoc} */
+    public void onModuleLoad() {
+    }
 
 }

@@ -18,90 +18,78 @@
  */
 package org.exoplatform.ide.client.framework.control;
 
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.resources.client.ImageResource;
+
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.resources.client.ImageResource;
-
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
 @RolesAllowed({"developer"})
-public class NewItemControl extends SimpleControl implements IDEControl
-{
+public class NewItemControl extends SimpleControl implements IDEControl {
 
-   private String mimeType;
+    private String mimeType;
 
-   public NewItemControl(String id, String title, String prompt, ImageResource icon, ImageResource disabledIcon,
-      GwtEvent<?> event)
-   {
-      super(id);
+    public NewItemControl(String id, String title, String prompt, ImageResource icon, ImageResource disabledIcon,
+                          GwtEvent<?> event) {
+        super(id);
 
-      setTitle(title);
-      setPrompt(prompt);
-      setNormalImage(icon);
-      setDisabledImage(disabledIcon);
-      setEvent(event);
-   }
+        setTitle(title);
+        setPrompt(prompt);
+        setNormalImage(icon);
+        setDisabledImage(disabledIcon);
+        setEvent(event);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   public void initialize()
-   {
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    public void initialize() {
+    }
 
-   public NewItemControl(String id, String title, String prompt, String icon, GwtEvent<?> event)
-   {
-      super(id);
+    public NewItemControl(String id, String title, String prompt, String icon, GwtEvent<?> event) {
+        super(id);
 
-      setTitle(title);
-      setPrompt(prompt);
-      setIcon(icon);
-      setEvent(event);
-   }
+        setTitle(title);
+        setPrompt(prompt);
+        setIcon(icon);
+        setEvent(event);
+    }
 
-   public NewItemControl(String id, String title, String prompt, String icon, String mimeType)
-   {
-      super(id);
+    public NewItemControl(String id, String title, String prompt, String icon, String mimeType) {
+        super(id);
 
-      setTitle(title);
-      setPrompt(prompt);
-      setIcon(icon);
-      this.mimeType = mimeType;
-   }
+        setTitle(title);
+        setPrompt(prompt);
+        setIcon(icon);
+        this.mimeType = mimeType;
+    }
 
-   public NewItemControl(String id, String title, String prompt, String icon, String mimeType,
-      boolean hasDelimiterBefore)
-   {
-      this(id, title, prompt, icon, mimeType);
-      setDelimiterBefore(hasDelimiterBefore);
-   }
+    public NewItemControl(String id, String title, String prompt, String icon, String mimeType,
+                          boolean hasDelimiterBefore) {
+        this(id, title, prompt, icon, mimeType);
+        setDelimiterBefore(hasDelimiterBefore);
+    }
 
-   public NewItemControl(String id, String title, String prompt, ImageResource icon, ImageResource disabledIcon,
-      String mimeType)
-   {
-      super(id);
+    public NewItemControl(String id, String title, String prompt, ImageResource icon, ImageResource disabledIcon,
+                          String mimeType) {
+        super(id);
 
-      setTitle(title);
-      setPrompt(prompt);
-      setNormalImage(icon);
-      setDisabledImage(disabledIcon);
-      this.mimeType = mimeType;
-   }
+        setTitle(title);
+        setPrompt(prompt);
+        setNormalImage(icon);
+        setDisabledImage(disabledIcon);
+        this.mimeType = mimeType;
+    }
 
-   public String getMimeType()
-   {
-      return mimeType;
-   }
+    public String getMimeType() {
+        return mimeType;
+    }
 
-   public void setMimeType(String mimeType)
-   {
-      this.mimeType = mimeType;
-   }
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
 }

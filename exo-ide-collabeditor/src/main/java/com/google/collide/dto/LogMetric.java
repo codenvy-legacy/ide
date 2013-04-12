@@ -17,19 +17,16 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Encapsulates the data used for logging metrics.
- *
- */
+/** Encapsulates the data used for logging metrics. */
 @RoutingType(type = RoutingTypes.LOGMETRIC)
 public interface LogMetric extends ClientToServerDto {
 
-  String getAction();
+    String getAction();
 
-  String getEvent();
+    String getEvent();
 
-  double getTimestamp();
+    double getTimestamp();
 
-  String getMessage();
+    String getMessage();
 
 }

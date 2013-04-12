@@ -26,7 +26,6 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -38,93 +37,70 @@ import org.exoplatform.ide.extension.appfog.shared.AppfogApplication;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class ApplicationsView extends ViewImpl implements ApplicationsPresenter.Display
-{
-   interface ApplicationsViewUiBinder extends UiBinder<Widget, ApplicationsView>
-   {
-   }
+public class ApplicationsView extends ViewImpl implements ApplicationsPresenter.Display {
+    interface ApplicationsViewUiBinder extends UiBinder<Widget, ApplicationsView> {
+    }
 
-   private static ApplicationsViewUiBinder uiBinder = GWT.create(ApplicationsViewUiBinder.class);
+    private static ApplicationsViewUiBinder uiBinder = GWT.create(ApplicationsViewUiBinder.class);
 
 
-   private static final int HEIGHT = 300;
+    private static final int HEIGHT = 300;
 
-   private static final int WIDTH = 850;
+    private static final int WIDTH = 850;
 
-   /**
-    * Close button.
-    */
-   @UiField
-   ImageButton closeButton;
+    /** Close button. */
+    @UiField
+    ImageButton closeButton;
 
-   @UiField
-   ImageButton showButton;
+    @UiField
+    ImageButton showButton;
 
-   @UiField
-   ApplicationsListGrid applicationsGrid;
+    @UiField
+    ApplicationsListGrid applicationsGrid;
 
-   @UiField
-   TextInput serverField;
+    @UiField
+    TextInput serverField;
 
-   public ApplicationsView()
-   {
-      super(ID, ViewType.MODAL, AppfogExtension.LOCALIZATION_CONSTANT.appsViewTitle(), null, WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
-      serverField.setReadOnly(true);
-   }
+    public ApplicationsView() {
+        super(ID, ViewType.MODAL, AppfogExtension.LOCALIZATION_CONSTANT.appsViewTitle(), null, WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
+        serverField.setReadOnly(true);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter.Display#getCloseButton()
-    */
-   @Override
-   public HasClickHandlers getCloseButton()
-   {
-      return closeButton;
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter.Display#getCloseButton() */
+    @Override
+    public HasClickHandlers getCloseButton() {
+        return closeButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter.Display#getAppsGrid()
-    */
-   @Override
-   public ListGridItem<AppfogApplication> getAppsGrid()
-   {
-      return applicationsGrid;
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter.Display#getAppsGrid() */
+    @Override
+    public ListGridItem<AppfogApplication> getAppsGrid() {
+        return applicationsGrid;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter.Display#getActions()
-    */
-   @Override
-   public HasApplicationsActions getActions()
-   {
-      return applicationsGrid;
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter.Display#getActions() */
+    @Override
+    public HasApplicationsActions getActions() {
+        return applicationsGrid;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter.Display#getServerSelectField()
-    */
-   @Override
-   public HasValue<String> getServerSelectField()
-   {
-      return serverField;
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter.Display#getServerSelectField() */
+    @Override
+    public HasValue<String> getServerSelectField() {
+        return serverField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter.Display#setServerValues(java.lang.String[])
-    */
-   @Override
-   public void setServerValue(String server)
-   {
-      serverField.setValue(server);
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter.Display#setServerValues(java.lang.String[]) */
+    @Override
+    public void setServerValue(String server) {
+        serverField.setValue(server);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter.Display#getShowButton()
-    */
-   @Override
-   public HasClickHandlers getShowButton()
-   {
-      return showButton;
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter.Display#getShowButton() */
+    @Override
+    public HasClickHandlers getShowButton() {
+        return showButton;
+    }
 
 }

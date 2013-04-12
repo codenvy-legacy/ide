@@ -14,17 +14,15 @@
 
 package com.google.collide.dto;
 
-/**
- * A DTO that models a selection within a document.
- */
+/** A DTO that models a selection within a document. */
 public interface DocumentSelection {
 
-  /** Returns the position of the anchor of the selection */
-  FilePosition getBasePosition();
+    /** Returns the position of the anchor of the selection */
+    FilePosition getBasePosition();
 
-  /** Returns the position of the cursor */
-  FilePosition getCursorPosition();
-  
-  /** Returns the user's ID */
-  String getUserId();
+    /** Returns the position of the cursor */
+    FilePosition getCursorPosition();
+
+    /** Returns the user's ID */
+    String getUserId();
 }

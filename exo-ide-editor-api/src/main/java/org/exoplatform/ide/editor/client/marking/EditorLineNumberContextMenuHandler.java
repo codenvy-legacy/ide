@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link EditorLineNumberContextMenuEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 8, 2012 4:35:57 PM anya $
- * 
  */
-public interface EditorLineNumberContextMenuHandler extends EventHandler
-{
-   /**
-    * Perform actions on line number right mouse click.
-    * 
-    * @param event
-    */
-   void onEditorLineNumberContextMenu(EditorLineNumberContextMenuEvent event);
+public interface EditorLineNumberContextMenuHandler extends EventHandler {
+    /**
+     * Perform actions on line number right mouse click.
+     *
+     * @param event
+     */
+    void onEditorLineNumberContextMenu(EditorLineNumberContextMenuEvent event);
 }

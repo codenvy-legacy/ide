@@ -25,35 +25,29 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class ModuleCreatedEvent extends GwtEvent<ModuleCreatedHandler>
-{
+public class ModuleCreatedEvent extends GwtEvent<ModuleCreatedHandler> {
 
-   public static final GwtEvent.Type<ModuleCreatedHandler> TYPE = new GwtEvent.Type<ModuleCreatedHandler>();
+    public static final GwtEvent.Type<ModuleCreatedHandler> TYPE = new GwtEvent.Type<ModuleCreatedHandler>();
 
-   private ProjectModel module;
+    private ProjectModel module;
 
-   public ModuleCreatedEvent(ProjectModel module)
-   {
-      this.module = module;
-   }
+    public ModuleCreatedEvent(ProjectModel module) {
+        this.module = module;
+    }
 
-   public ProjectModel getModule()
-   {
-      return module;
-   }
+    public ProjectModel getModule() {
+        return module;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ModuleCreatedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ModuleCreatedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(ModuleCreatedHandler handler)
-   {
-      handler.onModuleCreated(this);
-   }
+    @Override
+    protected void dispatch(ModuleCreatedHandler handler) {
+        handler.onModuleCreated(this);
+    }
 
 }

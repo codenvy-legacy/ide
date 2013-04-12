@@ -14,6 +14,7 @@
 
 package com.google.collide.client.code.autocomplete.integration;
 
+import com.codenvy.ide.client.util.SignalEvent;
 import com.google.collide.client.CollabEditor;
 import com.google.collide.client.Resources;
 import com.google.collide.client.code.autocomplete.AutocompleteBox;
@@ -24,21 +25,18 @@ import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.shared.document.TextChange;
-import org.exoplatform.ide.shared.util.ListenerRegistrar.RemoverManager;
 
 import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor;
 import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistant;
-import com.codenvy.ide.client.util.SignalEvent;
+import org.exoplatform.ide.shared.util.ListenerRegistrar.RemoverManager;
 
-/**
- * This class isolates {@link Autocompleter} from the UI.
- */
+/** This class isolates {@link Autocompleter} from the UI. */
 public class AutocompleterFacade {
 
-  private final Autocompleter autocompleter;
-  private final Editor editor;
-  private final RemoverManager instanceListeners = new RemoverManager();
-  private final RemoverManager documentListeners = new RemoverManager();
+    private final Autocompleter autocompleter;
+    private final Editor        editor;
+    private final RemoverManager instanceListeners = new RemoverManager();
+    private final RemoverManager documentListeners = new RemoverManager();
 
 //  private final Document.LineListener lineListener = new Document.LineListener() {
 //    @Override
@@ -56,87 +54,78 @@ public class AutocompleterFacade {
 //    }
 //  };
 
-  /**
-   * A listener that receives and translates keyboard events.
-   */
-  private final Editor.KeyListener keyListener = new Editor.KeyListener() {
-    @Override
-    public boolean onKeyPress(SignalEvent event) {
-      return autocompleter.processKeyPress(new SignalEventEssence(event));
-    }
-  };
+    /** A listener that receives and translates keyboard events. */
+    private final Editor.KeyListener keyListener = new Editor.KeyListener() {
+        @Override
+        public boolean onKeyPress(SignalEvent event) {
+            return autocompleter.processKeyPress(new SignalEventEssence(event));
+        }
+    };
 
-  /**
-   * A listener that dismisses the autocomplete box when the editor is scrolled.
-   */
-  private final Buffer.ScrollListener dismissingScrollListener = new Buffer.ScrollListener() {
-    @Override
-    public void onScroll(Buffer buffer, int scrollTop) {
-      autocompleter.dismissAutocompleteBox();
-    }
-  };
+    /** A listener that dismisses the autocomplete box when the editor is scrolled. */
+    private final Buffer.ScrollListener dismissingScrollListener = new Buffer.ScrollListener() {
+        @Override
+        public void onScroll(Buffer buffer, int scrollTop) {
+            autocompleter.dismissAutocompleteBox();
+        }
+    };
 
-  /**
-   * A listener for user modifications in the editor.
-   */
-  private final Editor.TextListener textListener = new Editor.TextListener() {
-    @Override
-    public void onTextChange(TextChange textChange) {
-      autocompleter.refresh();
-    }
-  };
+    /** A listener for user modifications in the editor. */
+    private final Editor.TextListener textListener = new Editor.TextListener() {
+        @Override
+        public void onTextChange(TextChange textChange) {
+            autocompleter.refresh();
+        }
+    };
 
 //  private final DocumentParser.Listener parseListener;
 
-  public static AutocompleterFacade create(
-      Editor editor, CollabEditor collEditor, Resources resources) {
-     AutocompleteBox  popup = new AutocompleteUiController(editor, resources);
-    Autocompleter autocompleter = Autocompleter.create(editor, popup, collEditor);
-    return new AutocompleterFacade(editor, autocompleter);
-  }
+    public static AutocompleterFacade create(
+            Editor editor, CollabEditor collEditor, Resources resources) {
+        AutocompleteBox popup = new AutocompleteUiController(editor, resources);
+        Autocompleter autocompleter = Autocompleter.create(editor, popup, collEditor);
+        return new AutocompleterFacade(editor, autocompleter);
+    }
 
-  public AutocompleterFacade(Editor editor, Autocompleter autocompleter) {
-    this.editor = editor;
-    this.autocompleter = autocompleter;
+    public AutocompleterFacade(Editor editor, Autocompleter autocompleter) {
+        this.editor = editor;
+        this.autocompleter = autocompleter;
 
 //    this.parseListener = new DocumentParserListenerAdapter(autocompleter, editor);
 
-    instanceListeners.track(editor.getTextListenerRegistrar().add(textListener));
-    instanceListeners.track(editor.getKeyListenerRegistrar().add(keyListener));
-    instanceListeners.track(
-        editor.getBuffer().getScrollListenerRegistrar().add(dismissingScrollListener));
-  }
+        instanceListeners.track(editor.getTextListenerRegistrar().add(textListener));
+        instanceListeners.track(editor.getKeyListenerRegistrar().add(keyListener));
+        instanceListeners.track(
+                editor.getBuffer().getScrollListenerRegistrar().add(dismissingScrollListener));
+    }
 
-  public void cleanup() {
-    pause();
-    instanceListeners.remove();
-    autocompleter.cleanup();
-  }
+    public void cleanup() {
+        pause();
+        instanceListeners.remove();
+        autocompleter.cleanup();
+    }
 
-  private void pause() {
-    documentListeners.remove();
-  }
+    private void pause() {
+        documentListeners.remove();
+    }
 
-  public void editorContentsReplaced(DocumentParser parser) {
-    pause();
+    public void editorContentsReplaced(DocumentParser parser) {
+        pause();
 //    documentListeners.track(editor.getDocument().getLineListenerRegistrar().add(lineListener));
 //    documentListeners.track(parser.getListenerRegistrar().add(parseListener));
 
-    autocompleter.reset(parser);
-  }
-  
-  public void addLanguageSpecificAutocompleter(LanguageSpecificAutocompleter autocompleter)
-  {
-     this.autocompleter.addAutocompleter(autocompleter);
-  }
+        autocompleter.reset(parser);
+    }
 
-  public ContentAssistant getContentAssistant()
-  {
-     return autocompleter;
-  }
+    public void addLanguageSpecificAutocompleter(LanguageSpecificAutocompleter autocompleter) {
+        this.autocompleter.addAutocompleter(autocompleter);
+    }
 
-  public void addContentAssitProcessor(String contentType, ContentAssistProcessor processor)
-  {
-     this.autocompleter.addContentAssitProcessor(contentType, processor);
-  }
+    public ContentAssistant getContentAssistant() {
+        return autocompleter;
+    }
+
+    public void addContentAssitProcessor(String contentType, ContentAssistProcessor processor) {
+        this.autocompleter.addContentAssitProcessor(contentType, processor);
+    }
 }

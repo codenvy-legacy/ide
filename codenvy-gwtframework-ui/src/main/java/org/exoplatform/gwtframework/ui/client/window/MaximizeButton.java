@@ -18,115 +18,87 @@
  */
 package org.exoplatform.gwtframework.ui.client.window;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ImageResource;
 
 import org.exoplatform.gwtframework.ui.client.WindowResource;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-
 /**
  * Button for maximizing window (displayed at the right upper corner).
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Mar 4, 2011 11:25:26 AM anya $
- *
  */
-public class MaximizeButton extends WindowButton
-{
-   /**
-    * Maximize handler.
-    */
-   private MaximizeHandler maximizeHandler;
+public class MaximizeButton extends WindowButton {
+    /** Maximize handler. */
+    private MaximizeHandler maximizeHandler;
 
-   /**
-    * Restore handler.
-    */
-   private RestoreHandler restoreHandler;
+    /** Restore handler. */
+    private RestoreHandler restoreHandler;
 
-   /**
-    * Used for toggling button.
-    */
-   private boolean isMaximized = false;
+    /** Used for toggling button. */
+    private boolean isMaximized = false;
 
-   /**
-    * Restore button's icon.
-    */
-   private static final ImageResource iconRestore = WindowResource.INSTANCE.minimizeWindowButton();
+    /** Restore button's icon. */
+    private static final ImageResource iconRestore = WindowResource.INSTANCE.minimizeWindowButton();
 
-   /**
-    * Restore button's icon with over state.
-    */
-   private static final ImageResource iconRestoreOver = WindowResource.INSTANCE.minimizeWindowButtonOver();
+    /** Restore button's icon with over state. */
+    private static final ImageResource iconRestoreOver = WindowResource.INSTANCE.minimizeWindowButtonOver();
 
-   /**
-    * Restore button's icon with disabled state.
-    */
-   private static final ImageResource iconRestoreDisabled = WindowResource.INSTANCE.minimizeWindowButtonDisabled();
+    /** Restore button's icon with disabled state. */
+    private static final ImageResource iconRestoreDisabled = WindowResource.INSTANCE.minimizeWindowButtonDisabled();
 
-   /**
-    * Maximize button's icon.
-    */
-   private static final ImageResource iconMaximize = WindowResource.INSTANCE.maximizeWindowButton();
+    /** Maximize button's icon. */
+    private static final ImageResource iconMaximize = WindowResource.INSTANCE.maximizeWindowButton();
 
-   /**
-    * Maximize button's icon with over state.
-    */
-   private static final ImageResource iconMaximizeOver = WindowResource.INSTANCE.maximizeWindowButtonOver();
+    /** Maximize button's icon with over state. */
+    private static final ImageResource iconMaximizeOver = WindowResource.INSTANCE.maximizeWindowButtonOver();
 
-   /**
-    * Maximize button's icon with disabled state.
-    */
-   private static final ImageResource iconMaximizeDisabled = WindowResource.INSTANCE.maximizeWindowButtonDisabled();
+    /** Maximize button's icon with disabled state. */
+    private static final ImageResource iconMaximizeDisabled = WindowResource.INSTANCE.maximizeWindowButtonDisabled();
 
-   /**
-    * @param maximizeHandler maximize window handler
-    * @param restoreHandler restore window handler
-    */
-   public MaximizeButton(MaximizeHandler maximizeHandler, RestoreHandler restoreHandler)
-   {
-      super(iconMaximize, iconMaximizeOver, iconMaximizeDisabled);
-      this.restoreHandler = restoreHandler;
-      this.maximizeHandler = maximizeHandler;
-      setPrompt("Maximize");
+    /**
+     * @param maximizeHandler
+     *         maximize window handler
+     * @param restoreHandler
+     *         restore window handler
+     */
+    public MaximizeButton(MaximizeHandler maximizeHandler, RestoreHandler restoreHandler) {
+        super(iconMaximize, iconMaximizeOver, iconMaximizeDisabled);
+        this.restoreHandler = restoreHandler;
+        this.maximizeHandler = maximizeHandler;
+        setPrompt("Maximize");
 
-      addClickHandler(new ClickHandler()
-      {
+        addClickHandler(new ClickHandler() {
 
-         public void onClick(ClickEvent event)
-         {
-            doClick();
-         }
-      });
-   }
+            public void onClick(ClickEvent event) {
+                doClick();
+            }
+        });
+    }
 
-   /**
-    * Perform actions on button's click.
-    */
-   public void doClick()
-   {
-      if (isMaximized)
-      {
-         isMaximized = false;
-         setIcon(iconMaximize);
-         setIconOver(iconMaximizeOver);
-         setIconDisabled(iconMaximizeDisabled);
-         setPrompt("Maximize");
-         restoreHandler.onRestore();
-      }
-      else
-      {
-         isMaximized = true;
-         setIcon(iconRestore);
-         setIconOver(iconRestoreOver);
-         setIconDisabled(iconRestoreDisabled);
-         setPrompt("Restore");
-         maximizeHandler.onMaximize();
-      }
-   }
-   
-   public boolean isMaximized() {
-      return isMaximized;
-   }
-   
+    /** Perform actions on button's click. */
+    public void doClick() {
+        if (isMaximized) {
+            isMaximized = false;
+            setIcon(iconMaximize);
+            setIconOver(iconMaximizeOver);
+            setIconDisabled(iconMaximizeDisabled);
+            setPrompt("Maximize");
+            restoreHandler.onRestore();
+        } else {
+            isMaximized = true;
+            setIcon(iconRestore);
+            setIconOver(iconRestoreOver);
+            setIconDisabled(iconRestoreDisabled);
+            setPrompt("Restore");
+            maximizeHandler.onMaximize();
+        }
+    }
+
+    public boolean isMaximized() {
+        return isMaximized;
+    }
+
 }

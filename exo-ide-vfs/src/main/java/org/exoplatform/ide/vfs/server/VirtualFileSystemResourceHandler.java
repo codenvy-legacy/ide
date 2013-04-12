@@ -31,23 +31,23 @@ import java.net.URLStreamHandler;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public final class VirtualFileSystemResourceHandler extends URLStreamHandler
-{
-   private final VirtualFileSystemRegistry registry;
-   private final EventListenerList listeners;
+public final class VirtualFileSystemResourceHandler extends URLStreamHandler {
+    private final VirtualFileSystemRegistry registry;
+    private final EventListenerList         listeners;
 
-   /** @param registry virtual file system registry */
-   public VirtualFileSystemResourceHandler(VirtualFileSystemRegistry registry,
-                                           EventListenerList listeners)
-   {
-      this.registry = registry;
-      this.listeners = listeners;
-   }
+    /**
+     * @param registry
+     *         virtual file system registry
+     */
+    public VirtualFileSystemResourceHandler(VirtualFileSystemRegistry registry,
+                                            EventListenerList listeners) {
+        this.registry = registry;
+        this.listeners = listeners;
+    }
 
-   /** @see java.net.URLStreamHandler#openConnection(java.net.URL) */
-   @Override
-   protected URLConnection openConnection(URL url) throws IOException
-   {
-      return new VirtualFileSystemURLConnection(url, registry, listeners);
-   }
+    /** @see java.net.URLStreamHandler#openConnection(java.net.URL) */
+    @Override
+    protected URLConnection openConnection(URL url) throws IOException {
+        return new VirtualFileSystemURLConnection(url, registry, listeners);
+    }
 }

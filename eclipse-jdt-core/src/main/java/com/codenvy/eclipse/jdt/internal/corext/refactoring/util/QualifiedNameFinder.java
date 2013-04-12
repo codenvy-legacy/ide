@@ -39,152 +39,131 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
-public class QualifiedNameFinder
-{
+public class QualifiedNameFinder {
 
-   private static final GroupCategorySet QUALIFIED_NAMES = new GroupCategorySet(
-      new GroupCategory("org.eclipse.jdt.internal.corext.qualifiedNames", //$NON-NLS-1$
-         RefactoringCoreMessages.QualifiedNameFinder_qualifiedNames_name,
-         RefactoringCoreMessages.QualifiedNameFinder_qualifiedNames_description));
+    private static final GroupCategorySet QUALIFIED_NAMES = new GroupCategorySet(
+            new GroupCategory("org.eclipse.jdt.internal.corext.qualifiedNames", //$NON-NLS-1$
+                              RefactoringCoreMessages.QualifiedNameFinder_qualifiedNames_name,
+                              RefactoringCoreMessages.QualifiedNameFinder_qualifiedNames_description));
 
-   private static class ResultCollector extends TextSearchRequestor
-   {
+    private static class ResultCollector extends TextSearchRequestor {
 
-      private String fNewValue;
+        private String fNewValue;
 
-      private QualifiedNameSearchResult fResult;
+        private QualifiedNameSearchResult fResult;
 
-      public ResultCollector(QualifiedNameSearchResult result, String newValue)
-      {
-         fResult = result;
-         fNewValue = newValue;
-      }
+        public ResultCollector(QualifiedNameSearchResult result, String newValue) {
+            fResult = result;
+            fNewValue = newValue;
+        }
 
-      @Override
-      public boolean acceptFile(IFile file) throws CoreException
-      {
-         IJavaElement element = JavaCore.create(file);
-         if ((element != null && element.exists()))
-         {
-            return false;
-         }
-
-         // Only touch text files (see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=114153 ):
-         if (!FileBuffers.getTextFileBufferManager().isTextFileLocation(file.getFullPath(), false))
-         {
-            return false;
-         }
-
-         IPath path = file.getProjectRelativePath();
-         String segment = path.segment(0);
-         if (segment != null && (segment.startsWith(".refactorings") || segment.startsWith(
-            ".deprecations"))) //$NON-NLS-1$ //$NON-NLS-2$
-         {
-            return false;
-         }
-
-         return true;
-      }
-
-      @Override
-      public boolean acceptPatternMatch(TextSearchMatchAccess matchAccess) throws CoreException
-      {
-         int start = matchAccess.getMatchOffset();
-         int length = matchAccess.getMatchLength();
-
-         // skip embedded FQNs (bug 130764):
-         if (start > 0)
-         {
-            char before = matchAccess.getFileContentChar(start - 1);
-            if (before == '.' || Character.isJavaIdentifierPart(before))
-            {
-               return true;
+        @Override
+        public boolean acceptFile(IFile file) throws CoreException {
+            IJavaElement element = JavaCore.create(file);
+            if ((element != null && element.exists())) {
+                return false;
             }
-         }
-         int fileContentLength = matchAccess.getFileContentLength();
-         int end = start + length;
-         if (end < fileContentLength)
-         {
-            char after = matchAccess.getFileContentChar(end);
-            if (Character.isJavaIdentifierPart(after))
-            {
-               return true;
+
+            // Only touch text files (see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=114153 ):
+            if (!FileBuffers.getTextFileBufferManager().isTextFileLocation(file.getFullPath(), false)) {
+                return false;
             }
-         }
 
-         IFile file = matchAccess.getFile();
-         TextChange change = fResult.getChange(file);
-         TextChangeCompatibility.addTextEdit(change, RefactoringCoreMessages.QualifiedNameFinder_update_name,
-            new ReplaceEdit(start, length, fNewValue), QUALIFIED_NAMES);
+            IPath path = file.getProjectRelativePath();
+            String segment = path.segment(0);
+            if (segment != null && (segment.startsWith(".refactorings") || segment.startsWith(
+                    ".deprecations"))) //$NON-NLS-1$ //$NON-NLS-2$
+            {
+                return false;
+            }
 
-         return true;
-      }
-   }
+            return true;
+        }
 
-   public QualifiedNameFinder()
-   {
-   }
+        @Override
+        public boolean acceptPatternMatch(TextSearchMatchAccess matchAccess) throws CoreException {
+            int start = matchAccess.getMatchOffset();
+            int length = matchAccess.getMatchLength();
 
-   public static void process(QualifiedNameSearchResult result, String pattern, String newValue, String filePatterns,
-      IProject root, IProgressMonitor monitor)
-   {
-      Assert.isNotNull(pattern);
-      Assert.isNotNull(newValue);
-      Assert.isNotNull(root);
+            // skip embedded FQNs (bug 130764):
+            if (start > 0) {
+                char before = matchAccess.getFileContentChar(start - 1);
+                if (before == '.' || Character.isJavaIdentifierPart(before)) {
+                    return true;
+                }
+            }
+            int fileContentLength = matchAccess.getFileContentLength();
+            int end = start + length;
+            if (end < fileContentLength) {
+                char after = matchAccess.getFileContentChar(end);
+                if (Character.isJavaIdentifierPart(after)) {
+                    return true;
+                }
+            }
 
-      if (monitor == null)
-      {
-         monitor = new NullProgressMonitor();
-      }
+            IFile file = matchAccess.getFile();
+            TextChange change = fResult.getChange(file);
+            TextChangeCompatibility.addTextEdit(change, RefactoringCoreMessages.QualifiedNameFinder_update_name,
+                                                new ReplaceEdit(start, length, fNewValue), QUALIFIED_NAMES);
 
-      if (filePatterns == null || filePatterns.length() == 0)
-      {
-         // Eat progress.
-         monitor.beginTask("", 1); //$NON-NLS-1$
-         monitor.worked(1);
-         return;
-      }
+            return true;
+        }
+    }
 
-      ResultCollector collector = new ResultCollector(result, newValue);
-      TextSearchEngine engine = TextSearchEngine.create();
-      Pattern searchPattern = PatternConstructor.createPattern(pattern, true, false);
+    public QualifiedNameFinder() {
+    }
 
-      engine.search(createScope(filePatterns, root), collector, searchPattern, monitor);
-   }
+    public static void process(QualifiedNameSearchResult result, String pattern, String newValue, String filePatterns,
+                               IProject root, IProgressMonitor monitor) {
+        Assert.isNotNull(pattern);
+        Assert.isNotNull(newValue);
+        Assert.isNotNull(root);
 
-   private static TextSearchScope createScope(String filePatterns, IProject root)
-   {
-      HashSet<IProject> res = new HashSet<IProject>();
-      res.add(root);
-      addReferencingProjects(root, res);
-      IResource[] resArr = res.toArray(new IResource[res.size()]);
-      Pattern filePattern = getFilePattern(filePatterns);
+        if (monitor == null) {
+            monitor = new NullProgressMonitor();
+        }
 
-      return TextSearchScope.newSearchScope(resArr, filePattern, false);
-   }
+        if (filePatterns == null || filePatterns.length() == 0) {
+            // Eat progress.
+            monitor.beginTask("", 1); //$NON-NLS-1$
+            monitor.worked(1);
+            return;
+        }
 
-   private static Pattern getFilePattern(String filePatterns)
-   {
-      StringTokenizer tokenizer = new StringTokenizer(filePatterns, ","); //$NON-NLS-1$
-      String[] filePatternArray = new String[tokenizer.countTokens()];
-      int i = 0;
-      while (tokenizer.hasMoreTokens())
-      {
-         filePatternArray[i++] = tokenizer.nextToken().trim();
-      }
-      return PatternConstructor.createPattern(filePatternArray, true, false);
-   }
+        ResultCollector collector = new ResultCollector(result, newValue);
+        TextSearchEngine engine = TextSearchEngine.create();
+        Pattern searchPattern = PatternConstructor.createPattern(pattern, true, false);
 
-   private static void addReferencingProjects(IProject root, Set<IProject> res)
-   {
-      IProject[] projects = root.getReferencingProjects();
-      for (int i = 0; i < projects.length; i++)
-      {
-         IProject project = projects[i];
-         if (res.add(project))
-         {
-            addReferencingProjects(project, res);
-         }
-      }
-   }
+        engine.search(createScope(filePatterns, root), collector, searchPattern, monitor);
+    }
+
+    private static TextSearchScope createScope(String filePatterns, IProject root) {
+        HashSet<IProject> res = new HashSet<IProject>();
+        res.add(root);
+        addReferencingProjects(root, res);
+        IResource[] resArr = res.toArray(new IResource[res.size()]);
+        Pattern filePattern = getFilePattern(filePatterns);
+
+        return TextSearchScope.newSearchScope(resArr, filePattern, false);
+    }
+
+    private static Pattern getFilePattern(String filePatterns) {
+        StringTokenizer tokenizer = new StringTokenizer(filePatterns, ","); //$NON-NLS-1$
+        String[] filePatternArray = new String[tokenizer.countTokens()];
+        int i = 0;
+        while (tokenizer.hasMoreTokens()) {
+            filePatternArray[i++] = tokenizer.nextToken().trim();
+        }
+        return PatternConstructor.createPattern(filePatternArray, true, false);
+    }
+
+    private static void addReferencingProjects(IProject root, Set<IProject> res) {
+        IProject[] projects = root.getReferencingProjects();
+        for (int i = 0; i < projects.length; i++) {
+            IProject project = projects[i];
+            if (res.add(project)) {
+                addReferencingProjects(project, res);
+            }
+        }
+    }
 }

@@ -25,26 +25,24 @@ package com.codenvy.eclipse.ltk.core.refactoring;
  *
  * @since 3.0
  */
-public abstract class RefactoringStatusContext
-{
-   /**
-    * Returns the element that corresponds directly to this context,
-    * or <code>null</code> if there is no corresponding element.
-    * <p>
-    * For example, the corresponding element of a context for a problem
-    * detected in an <code>IResource</code> would be the resource itself.
-    * <p>
-    *
-    * @return the corresponding element
-    */
-   public abstract Object getCorrespondingElement();
+public abstract class RefactoringStatusContext {
+    /**
+     * Returns the element that corresponds directly to this context,
+     * or <code>null</code> if there is no corresponding element.
+     * <p/>
+     * For example, the corresponding element of a context for a problem
+     * detected in an <code>IResource</code> would be the resource itself.
+     * <p/>
+     *
+     * @return the corresponding element
+     */
+    public abstract Object getCorrespondingElement();
 
-   /*
-    * @see java.lang.Object#toString()
-    */
-   public String toString()
-   {
-      Object element = getCorrespondingElement();
-      return element == null ? null : element.toString();
-   }
+    /*
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        Object element = getCorrespondingElement();
+        return element == null ? null : element.toString();
+    }
 }

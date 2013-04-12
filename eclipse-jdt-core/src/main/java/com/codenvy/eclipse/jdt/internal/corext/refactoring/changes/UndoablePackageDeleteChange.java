@@ -20,40 +20,35 @@ import com.codenvy.eclipse.ui.ide.undo.ResourceDescription;
 
 import java.util.List;
 
-public class UndoablePackageDeleteChange extends DynamicValidationStateChange
-{
+public class UndoablePackageDeleteChange extends DynamicValidationStateChange {
 
-   private final List<IResource> fPackageDeletes;
+    private final List<IResource> fPackageDeletes;
 
-   public UndoablePackageDeleteChange(String name, List<IResource> packageDeletes)
-   {
-      super(name);
-      fPackageDeletes = packageDeletes;
-   }
+    public UndoablePackageDeleteChange(String name, List<IResource> packageDeletes) {
+        super(name);
+        fPackageDeletes = packageDeletes;
+    }
 
-   @Override
-   public Change perform(IProgressMonitor pm) throws CoreException
-   {
-      int count = fPackageDeletes.size();
-      pm.beginTask("", count * 3); //$NON-NLS-1$
-      ResourceDescription[] packageDeleteDescriptions = new ResourceDescription[fPackageDeletes.size()];
-      for (int i = 0; i < fPackageDeletes.size(); i++)
-      {
-         IResource resource = fPackageDeletes.get(i);
-         packageDeleteDescriptions[i] = ResourceDescription.fromResource(resource);
-         pm.worked(1);
-      }
+    @Override
+    public Change perform(IProgressMonitor pm) throws CoreException {
+        int count = fPackageDeletes.size();
+        pm.beginTask("", count * 3); //$NON-NLS-1$
+        ResourceDescription[] packageDeleteDescriptions = new ResourceDescription[fPackageDeletes.size()];
+        for (int i = 0; i < fPackageDeletes.size(); i++) {
+            IResource resource = fPackageDeletes.get(i);
+            packageDeleteDescriptions[i] = ResourceDescription.fromResource(resource);
+            pm.worked(1);
+        }
 
-      DynamicValidationStateChange result = (DynamicValidationStateChange)super.perform(
-         new SubProgressMonitor(pm, count));
+        DynamicValidationStateChange result = (DynamicValidationStateChange)super.perform(
+                new SubProgressMonitor(pm, count));
 
-      for (int i = 0; i < fPackageDeletes.size(); i++)
-      {
-         IResource resource = fPackageDeletes.get(i);
-         ResourceDescription resourceDescription = packageDeleteDescriptions[i];
-         resourceDescription.recordStateFromHistory(resource, new SubProgressMonitor(pm, 1));
-         result.add(new UndoDeleteResourceChange(resourceDescription));
-      }
-      return result;
-   }
+        for (int i = 0; i < fPackageDeletes.size(); i++) {
+            IResource resource = fPackageDeletes.get(i);
+            ResourceDescription resourceDescription = packageDeleteDescriptions[i];
+            resourceDescription.recordStateFromHistory(resource, new SubProgressMonitor(pm, 1));
+            result.add(new UndoDeleteResourceChange(resourceDescription));
+        }
+        return result;
+    }
 }

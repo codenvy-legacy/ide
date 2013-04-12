@@ -81,8 +81,8 @@ public class ResourceLoaderTest extends JcrFileSystemTest
 
    public void testLoadFileByID() throws Exception
    {
-      URL file = new URI("ide+vfs", "/" + WORKSPACE_NAME, fileId).toURL();
-      final String expectedURL = "ide+vfs:/" + WORKSPACE_NAME + "#" + fileId;
+      URL file = new URI("ide+vfs", '/' + REPOSITORY_NAME, fileId).toURL();
+      final String expectedURL = "ide+vfs:/" + REPOSITORY_NAME + '#' + fileId;
       assertEquals(expectedURL, file.toString());
       byte[] b = new byte[128];
       InputStream in = file.openStream();
@@ -93,8 +93,8 @@ public class ResourceLoaderTest extends JcrFileSystemTest
 
    public void testLoadFileByPath() throws Exception
    {
-      URL file = new URI("ide+vfs", "/" + WORKSPACE_NAME, filePath).toURL();
-      final String expectedURL = "ide+vfs:/" + WORKSPACE_NAME + "#" + filePath;
+      URL file = new URI("ide+vfs", '/' + REPOSITORY_NAME, filePath).toURL();
+      final String expectedURL = "ide+vfs:/" + REPOSITORY_NAME + '#' + filePath;
       assertEquals(expectedURL, file.toString());
       byte[] b = new byte[128];
       InputStream in = file.openStream();
@@ -105,8 +105,8 @@ public class ResourceLoaderTest extends JcrFileSystemTest
 
    public void testLoadFolderByID() throws Exception
    {
-      URL folder = new URI("ide+vfs", "/" + WORKSPACE_NAME, folderId).toURL();
-      final String expectedURL = "ide+vfs:/" + WORKSPACE_NAME + "#" + folderId;
+      URL folder = new URI("ide+vfs", '/' + REPOSITORY_NAME, folderId).toURL();
+      final String expectedURL = "ide+vfs:/" + REPOSITORY_NAME + '#' + folderId;
       assertEquals(expectedURL, folder.toString());
       byte[] b = new byte[128];
       InputStream in = folder.openStream();
@@ -117,8 +117,8 @@ public class ResourceLoaderTest extends JcrFileSystemTest
 
    public void testLoadFolderByPath() throws Exception
    {
-      URL folder = new URI("ide+vfs", "/" + WORKSPACE_NAME, folderPath).toURL();
-      final String expectedURL = "ide+vfs:/" + WORKSPACE_NAME + "#" + folderPath;
+      URL folder = new URI("ide+vfs", '/' + REPOSITORY_NAME, folderPath).toURL();
+      final String expectedURL = "ide+vfs:/" + REPOSITORY_NAME + '#' + folderPath;
       assertEquals(expectedURL, folder.toString());
       byte[] b = new byte[128];
       InputStream in = folder.openStream();

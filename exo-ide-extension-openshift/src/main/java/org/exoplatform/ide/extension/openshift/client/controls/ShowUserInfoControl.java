@@ -26,40 +26,33 @@ import org.exoplatform.ide.extension.openshift.client.user.ShowUserInfoEvent;
 
 /**
  * Control is used for showing OpenShift user's information.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 14, 2011 10:47:04 AM anya $
- * 
  */
-public class ShowUserInfoControl extends AbstractOpenShiftControl
-{
+public class ShowUserInfoControl extends AbstractOpenShiftControl {
 
-   public ShowUserInfoControl()
-   {
-      super(OpenShiftExtension.LOCALIZATION_CONSTANT.showUserInfoControlId());
-      setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.showUserInfoControlTitle());
-      setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.showUserInfoControlPrompt());
-      setImages(OpenShiftClientBundle.INSTANCE.userInfoControl(),
-         OpenShiftClientBundle.INSTANCE.userInfoControlDisabled());
-      setEvent(new ShowUserInfoEvent());
-   }
+    public ShowUserInfoControl() {
+        super(OpenShiftExtension.LOCALIZATION_CONSTANT.showUserInfoControlId());
+        setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.showUserInfoControlTitle());
+        setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.showUserInfoControlPrompt());
+        setImages(OpenShiftClientBundle.INSTANCE.userInfoControl(),
+                  OpenShiftClientBundle.INSTANCE.userInfoControlDisabled());
+        setEvent(new ShowUserInfoEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
 
-      setVisible(true);
-   }
+        setVisible(true);
+    }
 
-   /**
-    * 
-    */
-   protected void refresh()
-   {
-      setEnabled(vfsInfo != null);
-   }
+    /**
+     *
+     */
+    protected void refresh() {
+        setEnabled(vfsInfo != null);
+    }
 }

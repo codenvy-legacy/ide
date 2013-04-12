@@ -23,35 +23,25 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * Event occurs, when user tries to switch OpenShift account.
  * Implement {@link SwitchAccountHandler} to handle the event.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: SwitchAccountEvent.java Feb 7, 2012 12:57:05 PM azatsarynnyy $
- * 
  */
-public class SwitchAccountEvent extends GwtEvent<SwitchAccountHandler>
-{
+public class SwitchAccountEvent extends GwtEvent<SwitchAccountHandler> {
 
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<SwitchAccountHandler> TYPE = new GwtEvent.Type<SwitchAccountHandler>();
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<SwitchAccountHandler> TYPE = new GwtEvent.Type<SwitchAccountHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<SwitchAccountHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<SwitchAccountHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(SwitchAccountHandler handler)
-   {
-      handler.onSwitchAccount(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(SwitchAccountHandler handler) {
+        handler.onSwitchAccount(this);
+    }
 
 }

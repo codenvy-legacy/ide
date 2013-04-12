@@ -26,27 +26,21 @@ import java.util.Map;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: GitRequest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
-public abstract class GitRequest
-{
-   /**
-    * Opaque set of request attributes. If some attribute not need value then
-    * empty string or <code>null</code> may be used.
-    */
-   private Map<String, String> attributes;
+public abstract class GitRequest {
+    /**
+     * Opaque set of request attributes. If some attribute not need value then empty string or <code>null</code> may be used.
+     */
+    private Map<String, String> attributes;
 
-   /**
-    * @return set of request attributes
-    */
-   public Map<String, String> getAttributes()
-   {
-      return attributes;
-   }
+    /** @return set of request attributes */
+    public Map<String, String> getAttributes() {
+        return attributes;
+    }
 
-   /**
-    * @param attributes set of request attributes
-    */
-   public void setAttributes(Map<String, String> attributes)
-   {
-      this.attributes = attributes;
-   }
+    /**
+     * @param attributes set of request attributes
+     */
+    public void setAttributes(Map<String, String> attributes) {
+        this.attributes = attributes;
+    }
 }

@@ -25,108 +25,80 @@ import org.exoplatform.ide.git.shared.MergeResult;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 20, 2011 11:47:56 AM anya $
- * 
  */
-public class Merge implements MergeResult
-{
-   /**
-    * Commit head after merge.
-    */
-   private String newHead;
+public class Merge implements MergeResult {
+    /** Commit head after merge. */
+    private String      newHead;
 
-   /**
-    * Status of merge operation.
-    */
-   private MergeStatus mergeStatus;
+    /** Status of merge operation. */
+    private MergeStatus mergeStatus;
 
-   /**
-    * List of merged commits.
-    */
-   private String[] mergedCommits;
+    /** List of merged commits. */
+    private String[]    mergedCommits;
 
-   /**
-    * List of files with conflicts.
-    */
-   private String[] conflicts;
+    /** List of files with conflicts. */
+    private String[]    conflicts;
 
-   private String[] failed;
+    private String[]    failed;
 
-   /**
-    * @see org.exoplatform.ide.git.shared.MergeResult#getNewHead()
-    */
-   @Override
-   public String getNewHead()
-   {
-      return newHead;
-   }
+    /** @see org.exoplatform.ide.git.shared.MergeResult#getNewHead() */
+    @Override
+    public String getNewHead() {
+        return newHead;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.shared.MergeResult#getMergeStatus()
-    */
-   @Override
-   public MergeStatus getMergeStatus()
-   {
-      return mergeStatus;
-   }
+    /** @see org.exoplatform.ide.git.shared.MergeResult#getMergeStatus() */
+    @Override
+    public MergeStatus getMergeStatus() {
+        return mergeStatus;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.shared.MergeResult#getMergedCommits()
-    */
-   @Override
-   public String[] getMergedCommits()
-   {
-      return mergedCommits;
-   }
+    /** @see org.exoplatform.ide.git.shared.MergeResult#getMergedCommits() */
+    @Override
+    public String[] getMergedCommits() {
+        return mergedCommits;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.shared.MergeResult#getConflicts()
-    */
-   @Override
-   public String[] getConflicts()
-   {
-      return conflicts;
-   }
+    /** @see org.exoplatform.ide.git.shared.MergeResult#getConflicts() */
+    @Override
+    public String[] getConflicts() {
+        return conflicts;
+    }
 
-   @Override
-   public String[] getFailed()
-   {
-      return failed;
-   }
+    @Override
+    public String[] getFailed() {
+        return failed;
+    }
 
-   /**
-    * @param newHead the newHead to set
-    */
-   public void setNewHead(String newHead)
-   {
-      this.newHead = newHead;
-   }
+    /**
+     * @param newHead the newHead to set
+     */
+    public void setNewHead(String newHead) {
+        this.newHead = newHead;
+    }
 
-   /**
-    * @param mergeStatus the mergeStatus to set
-    */
-   public void setMergeStatus(MergeStatus mergeStatus)
-   {
-      this.mergeStatus = mergeStatus;
-   }
+    /**
+     * @param mergeStatus the mergeStatus to set
+     */
+    public void setMergeStatus(MergeStatus mergeStatus) {
+        this.mergeStatus = mergeStatus;
+    }
 
-   /**
-    * @param mergedCommits the mergedCommits to set
-    */
-   public void setMergedCommits(String[] mergedCommits)
-   {
-      this.mergedCommits = mergedCommits;
-   }
+    /**
+     * @param mergedCommits the mergedCommits to set
+     */
+    public void setMergedCommits(String[] mergedCommits) {
+        this.mergedCommits = mergedCommits;
+    }
 
-   /**
-    * @param conflicts the conflicts to set
-    */
-   public void setConflicts(String[] conflicts)
-   {
-      this.conflicts = conflicts;
-   }
+    /**
+     * @param conflicts the conflicts to set
+     */
+    public void setConflicts(String[] conflicts) {
+        this.conflicts = conflicts;
+    }
 
-   public void setFailed(String[] failed)
-   {
-      this.failed = failed;
-   }
+    public void setFailed(String[] failed) {
+        this.failed = failed;
+    }
 }

@@ -20,29 +20,30 @@ import java.io.IOException;
 
 public class SecondaryTypeDeclarationPattern extends TypeDeclarationPattern {
 
-	private final static char[] SECONDARY_PATTERN_KEY = "*/S".toCharArray(); //$NON-NLS-1$
+    private final static char[] SECONDARY_PATTERN_KEY = "*/S".toCharArray(); //$NON-NLS-1$
 
-public SecondaryTypeDeclarationPattern() {
-	super(null, null, null, IIndexConstants.SECONDARY_SUFFIX, R_EXACT_MATCH | R_CASE_SENSITIVE);
-}
+    public SecondaryTypeDeclarationPattern() {
+        super(null, null, null, IIndexConstants.SECONDARY_SUFFIX, R_EXACT_MATCH | R_CASE_SENSITIVE);
+    }
 
-public SecondaryTypeDeclarationPattern(int matchRule) {
-	super(matchRule);
-}
+    public SecondaryTypeDeclarationPattern(int matchRule) {
+        super(matchRule);
+    }
 
-public SearchPattern getBlankPattern() {
-	return new SecondaryTypeDeclarationPattern(R_EXACT_MATCH | R_CASE_SENSITIVE);
-}
-protected StringBuffer print(StringBuffer output) {
-	output.append("Secondary"); //$NON-NLS-1$
-	return super.print(output);
-}
+    public SearchPattern getBlankPattern() {
+        return new SecondaryTypeDeclarationPattern(R_EXACT_MATCH | R_CASE_SENSITIVE);
+    }
 
-/* (non-Javadoc)
- * @see org.eclipse.jdt.internal.core.search.matching.TypeDeclarationPattern#queryIn(org.eclipse.jdt.internal.core.index.Index)
- */
-public EntryResult[] queryIn(Index index) throws IOException {
-	return index.query(CATEGORIES, SECONDARY_PATTERN_KEY, R_PATTERN_MATCH | R_CASE_SENSITIVE);
-}
+    protected StringBuffer print(StringBuffer output) {
+        output.append("Secondary"); //$NON-NLS-1$
+        return super.print(output);
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jdt.internal.core.search.matching.TypeDeclarationPattern#queryIn(org.eclipse.jdt.internal.core.index.Index)
+     */
+    public EntryResult[] queryIn(Index index) throws IOException {
+        return index.query(CATEGORIES, SECONDARY_PATTERN_KEY, R_PATTERN_MATCH | R_CASE_SENSITIVE);
+    }
 
 }

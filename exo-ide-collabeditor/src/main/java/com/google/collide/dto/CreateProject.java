@@ -17,14 +17,11 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Creates a project.
- *
- */
+/** Creates a project. */
 @RoutingType(type = RoutingTypes.CREATEPROJECT)
 public interface CreateProject extends ClientToServerDto {
 
-  String getName();
+    String getName();
 
-  String getSummary();
+    String getSummary();
 }

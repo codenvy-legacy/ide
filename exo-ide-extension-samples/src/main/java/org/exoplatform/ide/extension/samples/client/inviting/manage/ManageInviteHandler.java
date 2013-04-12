@@ -24,7 +24,6 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface ManageInviteHandler extends EventHandler
-{
-   public void onManageInvite(ManageInviteEvent event);
+public interface ManageInviteHandler extends EventHandler {
+    public void onManageInvite(ManageInviteEvent event);
 }

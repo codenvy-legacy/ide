@@ -23,69 +23,56 @@ import com.codenvy.eclipse.ltk.core.refactoring.RefactoringStatus;
 import com.codenvy.eclipse.ltk.core.refactoring.resource.DeleteResourceChange;
 import com.codenvy.eclipse.ltk.core.refactoring.resource.ResourceChange;
 
-public class CreatePackageChange extends ResourceChange
-{
+public class CreatePackageChange extends ResourceChange {
 
-   private IPackageFragment fPackageFragment;
+    private IPackageFragment fPackageFragment;
 
-   public CreatePackageChange(IPackageFragment pack)
-   {
-      fPackageFragment = pack;
-   }
+    public CreatePackageChange(IPackageFragment pack) {
+        fPackageFragment = pack;
+    }
 
-   @Override
-   public RefactoringStatus isValid(IProgressMonitor pm)
-   {
-      // Don't do any checking. Peform handles the case
-      // that the package already exists. Furthermore
-      // create package change isn't used as a undo
-      // redo change right now
-      return new RefactoringStatus();
-   }
+    @Override
+    public RefactoringStatus isValid(IProgressMonitor pm) {
+        // Don't do any checking. Peform handles the case
+        // that the package already exists. Furthermore
+        // create package change isn't used as a undo
+        // redo change right now
+        return new RefactoringStatus();
+    }
 
-   @Override
-   public Change perform(IProgressMonitor pm) throws CoreException
-   {
-      try
-      {
-         pm.beginTask(RefactoringCoreMessages.CreatePackageChange_Creating_package, 1);
+    @Override
+    public Change perform(IProgressMonitor pm) throws CoreException {
+        try {
+            pm.beginTask(RefactoringCoreMessages.CreatePackageChange_Creating_package, 1);
 
-         if (fPackageFragment.exists())
-         {
-            return new NullChange();
-         }
-         else
-         {
-            IPackageFragmentRoot root = (IPackageFragmentRoot)fPackageFragment.getParent();
-            root.createPackageFragment(fPackageFragment.getElementName(), false, pm);
+            if (fPackageFragment.exists()) {
+                return new NullChange();
+            } else {
+                IPackageFragmentRoot root = (IPackageFragmentRoot)fPackageFragment.getParent();
+                root.createPackageFragment(fPackageFragment.getElementName(), false, pm);
 
-            return new DeleteResourceChange(fPackageFragment.getPath(), true);
-         }
-      }
-      finally
-      {
-         pm.done();
-      }
-   }
+                return new DeleteResourceChange(fPackageFragment.getPath(), true);
+            }
+        } finally {
+            pm.done();
+        }
+    }
 
-   @Override
-   public String getName()
-   {
-      return RefactoringCoreMessages.CreatePackageChange_Create_package;
-   }
+    @Override
+    public String getName() {
+        return RefactoringCoreMessages.CreatePackageChange_Create_package;
+    }
 
-   @Override
-   public Object getModifiedElement()
-   {
-      return fPackageFragment;
-   }
+    @Override
+    public Object getModifiedElement() {
+        return fPackageFragment;
+    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.corext.refactoring.base.JDTChange#getModifiedResource()
-    */
-   @Override
-   protected IResource getModifiedResource()
-   {
-      return fPackageFragment.getResource();
-   }
+    /* (non-Javadoc)
+     * @see org.eclipse.jdt.internal.corext.refactoring.base.JDTChange#getModifiedResource()
+     */
+    @Override
+    protected IResource getModifiedResource() {
+        return fPackageFragment.getResource();
+    }
 }

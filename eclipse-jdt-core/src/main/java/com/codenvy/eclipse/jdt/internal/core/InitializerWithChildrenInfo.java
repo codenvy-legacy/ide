@@ -12,19 +12,16 @@ package com.codenvy.eclipse.jdt.internal.core;
 
 import com.codenvy.eclipse.jdt.core.IJavaElement;
 
-public class InitializerWithChildrenInfo extends InitializerElementInfo
-{
+public class InitializerWithChildrenInfo extends InitializerElementInfo {
 
-   protected IJavaElement[] children;
+    protected IJavaElement[] children;
 
-   public InitializerWithChildrenInfo(IJavaElement[] children)
-   {
-      this.children = children;
-   }
+    public InitializerWithChildrenInfo(IJavaElement[] children) {
+        this.children = children;
+    }
 
-   public IJavaElement[] getChildren()
-   {
-      return this.children;
-   }
+    public IJavaElement[] getChildren() {
+        return this.children;
+    }
 
 }

@@ -1,26 +1,22 @@
-.exo-blank
-{
-	width: 1px;
-	height: 1px;
+.exo-blank {
+    width: 1px;
+    height: 1px;
 }
 
-.exo-lockLayer
-{
-	
- 	background: url("images/blank.png") repeat;
-						 	
- 	/*
- 	background: url("images/blank_alpha.png") repeat;
- 	*/
+.exo-lockLayer {
+
+    background: url("images/blank.png") repeat;
+
+    /*
+    background: url("images/blank_alpha.png") repeat;
+    */
 }
 
-.exo-icon-16
-{
-	width: 16px;
-	height: 16px;
+.exo-icon-16 {
+    width: 16px;
+    height: 16px;
 }
 
-.exo-canvas
-{
-	position: absolute;	
+.exo-canvas {
+    position: absolute;
 }

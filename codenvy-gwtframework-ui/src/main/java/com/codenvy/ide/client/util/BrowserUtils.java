@@ -14,68 +14,54 @@
 
 package com.codenvy.ide.client.util;
 
-import org.exoplatform.ide.shared.util.StringUtils;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 
-/**
- * Utility methods relating to the browser.
- */
-public abstract class BrowserUtils
-{
+import org.exoplatform.ide.shared.util.StringUtils;
 
-   private static final BrowserUtils INSTANCE = GWT.create(BrowserUtils.class);
+/** Utility methods relating to the browser. */
+public abstract class BrowserUtils {
 
-   abstract boolean isFFox();
+    private static final BrowserUtils INSTANCE = GWT.create(BrowserUtils.class);
 
-   static class Chrome extends BrowserUtils
-   {
-      Chrome()
-      {
-      }
+    abstract boolean isFFox();
 
-      @Override
-      boolean isFFox()
-      {
-         return false;
-      }
-   }
+    static class Chrome extends BrowserUtils {
+        Chrome() {
+        }
 
-   static class Firefox extends BrowserUtils
-   {
-      Firefox()
-      {
-      }
+        @Override
+        boolean isFFox() {
+            return false;
+        }
+    }
 
-      @Override
-      boolean isFFox()
-      {
-         return true;
-      }
-   }
+    static class Firefox extends BrowserUtils {
+        Firefox() {
+        }
 
-   public static boolean isFirefox()
-   {
-      return INSTANCE.isFFox();
-   }
+        @Override
+        boolean isFFox() {
+            return true;
+        }
+    }
 
-   public static boolean isChromeOs()
-   {
-      return Window.Navigator.getUserAgent().contains(" CrOS ");
-   }
+    public static boolean isFirefox() {
+        return INSTANCE.isFFox();
+    }
 
-   public static boolean hasUrlParameter(String parameter)
-   {
-      return Window.Location.getParameter(parameter) != null;
-   }
+    public static boolean isChromeOs() {
+        return Window.Navigator.getUserAgent().contains(" CrOS ");
+    }
 
-   public static boolean hasUrlParameter(String parameter, String value)
-   {
-      return StringUtils.equalNonEmptyStrings(Window.Location.getParameter(parameter), value);
-   }
+    public static boolean hasUrlParameter(String parameter) {
+        return Window.Location.getParameter(parameter) != null;
+    }
 
-   private BrowserUtils()
-   {
-   }
+    public static boolean hasUrlParameter(String parameter, String value) {
+        return StringUtils.equalNonEmptyStrings(Window.Location.getParameter(parameter), value);
+    }
+
+    private BrowserUtils() {
+    }
 }

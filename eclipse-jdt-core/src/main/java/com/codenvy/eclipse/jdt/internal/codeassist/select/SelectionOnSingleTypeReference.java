@@ -21,6 +21,7 @@ package com.codenvy.eclipse.jdt.internal.codeassist.select;
  *	---> class X extends <SelectOnType:Object>
  *
  */
+
 import com.codenvy.eclipse.jdt.internal.compiler.ast.SingleTypeReference;
 import com.codenvy.eclipse.jdt.internal.compiler.lookup.Binding;
 import com.codenvy.eclipse.jdt.internal.compiler.lookup.BlockScope;
@@ -32,39 +33,44 @@ import com.codenvy.eclipse.jdt.internal.compiler.lookup.Scope;
 import com.codenvy.eclipse.jdt.internal.compiler.lookup.TypeBinding;
 
 public class SelectionOnSingleTypeReference extends SingleTypeReference {
-public SelectionOnSingleTypeReference(char[] source, long pos) {
-	super(source, pos);
-}
-public void aboutToResolve(Scope scope) {
-	getTypeBinding(scope.parent); // step up from the ClassScope
-}
-protected TypeBinding getTypeBinding(Scope scope) {
-	// it can be a package, type or member type
-	Binding binding = scope.getTypeOrPackage(new char[][] {this.token});
-	if (!binding.isValidBinding()) {
-		if (binding instanceof TypeBinding) {
-			scope.problemReporter().invalidType(this, (TypeBinding) binding);
-		} else if (binding instanceof PackageBinding) {
-			ProblemReferenceBinding problemBinding = new ProblemReferenceBinding(((PackageBinding)binding).compoundName, null, binding.problemId());
-			scope.problemReporter().invalidType(this, problemBinding);
-		}
-		throw new SelectionNodeFound();
-	}
-	throw new SelectionNodeFound(binding);
-}
-public StringBuffer printExpression(int indent, StringBuffer output) {
+    public SelectionOnSingleTypeReference(char[] source, long pos) {
+        super(source, pos);
+    }
 
-	return output.append("<SelectOnType:").append(this.token).append('>');//$NON-NLS-1$
-}
-public TypeBinding resolveTypeEnclosing(BlockScope scope, ReferenceBinding enclosingType) {
-	super.resolveTypeEnclosing(scope, enclosingType);
+    public void aboutToResolve(Scope scope) {
+        getTypeBinding(scope.parent); // step up from the ClassScope
+    }
 
-		// tolerate some error cases
-		if (this.resolvedType == null ||
-				!(this.resolvedType.isValidBinding() ||
-					this.resolvedType.problemId() == ProblemReasons.NotVisible))
-		throw new SelectionNodeFound();
-	else
-		throw new SelectionNodeFound(this.resolvedType);
-}
+    protected TypeBinding getTypeBinding(Scope scope) {
+        // it can be a package, type or member type
+        Binding binding = scope.getTypeOrPackage(new char[][]{this.token});
+        if (!binding.isValidBinding()) {
+            if (binding instanceof TypeBinding) {
+                scope.problemReporter().invalidType(this, (TypeBinding)binding);
+            } else if (binding instanceof PackageBinding) {
+                ProblemReferenceBinding problemBinding =
+                        new ProblemReferenceBinding(((PackageBinding)binding).compoundName, null, binding.problemId());
+                scope.problemReporter().invalidType(this, problemBinding);
+            }
+            throw new SelectionNodeFound();
+        }
+        throw new SelectionNodeFound(binding);
+    }
+
+    public StringBuffer printExpression(int indent, StringBuffer output) {
+
+        return output.append("<SelectOnType:").append(this.token).append('>');//$NON-NLS-1$
+    }
+
+    public TypeBinding resolveTypeEnclosing(BlockScope scope, ReferenceBinding enclosingType) {
+        super.resolveTypeEnclosing(scope, enclosingType);
+
+        // tolerate some error cases
+        if (this.resolvedType == null ||
+            !(this.resolvedType.isValidBinding() ||
+              this.resolvedType.problemId() == ProblemReasons.NotVisible))
+            throw new SelectionNodeFound();
+        else
+            throw new SelectionNodeFound(this.resolvedType);
+    }
 }

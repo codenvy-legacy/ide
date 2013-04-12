@@ -25,33 +25,32 @@ package org.exoplatform.ide.extension.maven.server;
  * @version $Id: $
  */
 @SuppressWarnings("serial")
-public class BuilderException extends Exception
-{
-   /** HTTP status of response from builder. */
-   private final int responseStatus;
+public class BuilderException extends Exception {
+    /** HTTP status of response from builder. */
+    private final int responseStatus;
 
-   /** Content type of response from builder. */
-   private final String contentType;
+    /** Content type of response from builder. */
+    private final String contentType;
 
-   /**
-    * @param responseStatus HTTP status of response from builder
-    * @param message text message
-    * @param contentType content type of response from builder
-    */
-   public BuilderException(int responseStatus, String message, String contentType)
-   {
-      super(message);
-      this.responseStatus = responseStatus;
-      this.contentType = contentType;
-   }
+    /**
+     * @param responseStatus
+     *         HTTP status of response from builder
+     * @param message
+     *         text message
+     * @param contentType
+     *         content type of response from builder
+     */
+    public BuilderException(int responseStatus, String message, String contentType) {
+        super(message);
+        this.responseStatus = responseStatus;
+        this.contentType = contentType;
+    }
 
-   public int getResponseStatus()
-   {
-      return responseStatus;
-   }
+    public int getResponseStatus() {
+        return responseStatus;
+    }
 
-   public String getContentType()
-   {
-      return contentType;
-   }
+    public String getContentType() {
+        return contentType;
+    }
 }

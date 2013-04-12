@@ -13,24 +13,21 @@
 // limitations under the License.
 package com.google.collide.codemirror2;
 
-/**
- * Object that represents html-parser state.
- *
- */
+/** Object that represents html-parser state. */
 public class HtmlState extends CmState {
 
-  protected HtmlState() {
-  }
-
-  public final native XmlState getXmlState() /*-{
-    return this.htmlState;
-  }-*/;
-
-  final native CssState getCssState() /*-{
-    if (this.mode == "css") {
-      return this.localState;
-    } else {
-      return null;
+    protected HtmlState() {
     }
-  }-*/;
+
+    public final native XmlState getXmlState() /*-{
+        return this.htmlState;
+    }-*/;
+
+    final native CssState getCssState() /*-{
+        if (this.mode == "css") {
+            return this.localState;
+        } else {
+            return null;
+        }
+    }-*/;
 }

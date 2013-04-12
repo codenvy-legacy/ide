@@ -27,33 +27,27 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Sep 20, 2011 evgen $
- * 
  */
 @RolesAllowed({"developer"})
-public class ShowProgressControl extends SimpleControl implements IDEControl
-{
+public class ShowProgressControl extends SimpleControl implements IDEControl {
 
-   /**
-    * 
-    */
-   public ShowProgressControl()
-   {
-      super(IDE.IDE_LOCALIZATION_CONSTANT.progressControlId());
-      setTitle(IDE.IDE_LOCALIZATION_CONSTANT.progressControlTitle());
-      setPrompt(IDE.IDE_LOCALIZATION_CONSTANT.progressControlPrompt());
-      setImages(IDEImageBundle.INSTANCE.progresImage(), IDEImageBundle.INSTANCE.progresImage());
-      setDelimiterBefore(true);
-      setEvent(new ShowProgressEvent());
-   }
+    /**
+     *
+     */
+    public ShowProgressControl() {
+        super(IDE.IDE_LOCALIZATION_CONSTANT.progressControlId());
+        setTitle(IDE.IDE_LOCALIZATION_CONSTANT.progressControlTitle());
+        setPrompt(IDE.IDE_LOCALIZATION_CONSTANT.progressControlPrompt());
+        setImages(IDEImageBundle.INSTANCE.progresImage(), IDEImageBundle.INSTANCE.progresImage());
+        setDelimiterBefore(true);
+        setEvent(new ShowProgressEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(true);
+        setEnabled(true);
+    }
 
 }

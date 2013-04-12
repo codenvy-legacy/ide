@@ -19,51 +19,40 @@
 package org.exoplatform.gwtframework.ui.client.component;
 
 import com.google.gwt.user.client.DOM;
-
 import com.google.gwt.user.client.ui.FormPanel;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Feb 21, 2011 4:15:54 PM anya $
- *
  */
-public class DynamicForm extends FormPanel
-{
+public class DynamicForm extends FormPanel {
 
-   private String id;
+    private String id;
 
-   public void setWidth(int width)
-   {
-      setWidth(width + "px");
-   }
+    public void setWidth(int width) {
+        setWidth(width + "px");
+    }
 
-   public void setHeight(int height)
-   {
-      setHeight(height + "px");
-   }
+    public void setHeight(int height) {
+        setHeight(height + "px");
+    }
 
-   public void setMargin(int marging)
-   {
-      DOM.setStyleAttribute(getElement(), "margin", marging + "px");
-   }
+    public void setMargin(int marging) {
+        DOM.setStyleAttribute(getElement(), "margin", marging + "px");
+    }
 
-   public void setPadding(int padding)
-   {
-      DOM.setStyleAttribute(getElement(), "padding", padding + "px");
-   }
+    public void setPadding(int padding) {
+        DOM.setStyleAttribute(getElement(), "padding", padding + "px");
+    }
 
-   public void setID(String id)
-   {
-      this.id = id;
-      getElement().setAttribute("id", id);
-   }
+    public void setID(String id) {
+        this.id = id;
+        getElement().setAttribute("id", id);
+    }
 
-   /**
-    * @return the id
-    */
-   public String getId()
-   {
-      return id;
-   }
+    /** @return the id */
+    public String getId() {
+        return id;
+    }
 
 }

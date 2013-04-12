@@ -32,84 +32,65 @@ import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginEvent;
 /**
  * WebSocket CloudFoundry request. The {@link #onFailure(Throwable)} method contains the check for user not authorized
  * exception, in this case - the {@link LoginEvent} is fired.
- * 
- * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
- * @version $Id: CloudFoundryRESTfulRequestCallback.java Nov 30, 2012 9:58:20 AM azatsarynnyy $
  *
  * @param <T>
- * 
+ * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
+ * @version $Id: CloudFoundryRESTfulRequestCallback.java Nov 30, 2012 9:58:20 AM azatsarynnyy $
  * @see CloudFoundryAsyncRequestCallback
  */
-public abstract class CloudFoundryRESTfulRequestCallback<T> extends RequestCallback<T>
-{
-   private LoggedInHandler loggedIn;
+public abstract class CloudFoundryRESTfulRequestCallback<T> extends RequestCallback<T> {
+    private LoggedInHandler loggedIn;
 
-   private LoginCanceledHandler loginCanceled;
+    private LoginCanceledHandler loginCanceled;
 
-   private String loginUrl;
+    private String loginUrl;
 
-   private final static String CLOUDFOUNDRY_EXIT_CODE = "Cloudfoundry-Exit-Code";
+    private final static String CLOUDFOUNDRY_EXIT_CODE = "Cloudfoundry-Exit-Code";
 
-   public CloudFoundryRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
-      LoginCanceledHandler loginCanceled)
-   {
-      this(unmarshaller, loggedIn, loginCanceled, null);
-   }
+    public CloudFoundryRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
+                                              LoginCanceledHandler loginCanceled) {
+        this(unmarshaller, loggedIn, loginCanceled, null);
+    }
 
-   public CloudFoundryRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
-      LoginCanceledHandler loginCanceled, String loginUrl)
-   {
-      super(unmarshaller);
-      this.loggedIn = loggedIn;
-      this.loginCanceled = loginCanceled;
-      this.loginUrl = loginUrl;
-   }
+    public CloudFoundryRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
+                                              LoginCanceledHandler loginCanceled, String loginUrl) {
+        super(unmarshaller);
+        this.loggedIn = loggedIn;
+        this.loginCanceled = loginCanceled;
+        this.loginUrl = loginUrl;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.websocket.rest.RequestCallback#onFailure(java.lang.Throwable)
-    */
-   @Override
-   protected void onFailure(Throwable exception)
-   {
-      if (exception instanceof ServerException)
-      {
-         ServerException serverException = (ServerException)exception;
-         if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
-            && serverException.getMessage().contains("Authentication required."))
-         {
-            IDE.fireEvent(new LoginEvent(loggedIn, loginCanceled, loginUrl));
-            return;
-         }
-         else if (HTTPStatus.FORBIDDEN == serverException.getHTTPStatus()
-            && serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE) != null
-            && "200".equals(serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE)))
-         {
-            IDE.fireEvent(new LoginEvent(loggedIn, loginCanceled, loginUrl));
-            return;
-         }
-         else if (HTTPStatus.NOT_FOUND == serverException.getHTTPStatus()
-            && serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE) != null
-            && "301".equals(serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE)))
-         {
-            Dialogs.getInstance().showError(CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationNotFound());
-            return;
-         }
-         else
-         {
-            String msg = "";
-            if (serverException.isErrorMessageProvided())
-            {
-               msg = serverException.getLocalizedMessage();
+    /** @see org.exoplatform.ide.client.framework.websocket.rest.RequestCallback#onFailure(java.lang.Throwable) */
+    @Override
+    protected void onFailure(Throwable exception) {
+        if (exception instanceof ServerException) {
+            ServerException serverException = (ServerException)exception;
+            if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
+                && serverException.getMessage().contains("Authentication required.")) {
+                IDE.fireEvent(new LoginEvent(loggedIn, loginCanceled, loginUrl));
+                return;
+            } else if (HTTPStatus.FORBIDDEN == serverException.getHTTPStatus()
+                       && serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE) != null
+                       && "200".equals(serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE))) {
+                IDE.fireEvent(new LoginEvent(loggedIn, loginCanceled, loginUrl));
+                return;
+            } else if (HTTPStatus.NOT_FOUND == serverException.getHTTPStatus()
+                       && serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE) != null
+                       && "301".equals(serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE))) {
+                Dialogs.getInstance().showError(CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationNotFound());
+                return;
+            } else {
+                String msg = "";
+                if (serverException.isErrorMessageProvided()) {
+                    msg = serverException.getLocalizedMessage();
+                } else {
+                    msg = "Status:&nbsp;" + serverException.getHTTPStatus();// + "&nbsp;" + serverException.getStatusText();
+                }
+                Dialogs.getInstance().showError(msg);
+                return;
             }
-            else
-            {
-               msg = "Status:&nbsp;" + serverException.getHTTPStatus();// + "&nbsp;" + serverException.getStatusText();
-            }
-            Dialogs.getInstance().showError(msg);
-            return;
-         }
-      }
-      IDE.fireEvent(new ExceptionThrownEvent(exception));
-   }
+        }
+        IDE.fireEvent(new ExceptionThrownEvent(exception));
+    }
 
 }

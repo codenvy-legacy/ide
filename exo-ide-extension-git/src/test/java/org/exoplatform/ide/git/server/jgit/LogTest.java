@@ -28,19 +28,17 @@ import java.io.File;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: LogTest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
-public class LogTest extends BaseTest
-{
-   public void testLog() throws Exception
-   {
-      Git git = new Git(getDefaultRepository());
-      File workDir = git.getRepository().getWorkTree();
-      addFile(workDir, "t-log1", "AAA\n");
-      git.add().addFilepattern(".").call();
-      git.commit().setMessage("log\ntest").setCommitter("andrey", "andrey@mail.com").call();
-      
-      ByteArrayOutputStream out = new ByteArrayOutputStream();
-      getDefaultConnection().log(new LogRequest()).writeTo(out);
-      // TODO test output.
-      System.out.println(new String(out.toByteArray()));
-   }
+public class LogTest extends BaseTest {
+    public void testLog() throws Exception {
+        Git git = new Git(getDefaultRepository());
+        File workDir = git.getRepository().getWorkTree();
+        addFile(workDir, "t-log1", "AAA\n");
+        git.add().addFilepattern(".").call();
+        git.commit().setMessage("log\ntest").setCommitter("andrey", "andrey@mail.com").call();
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        getDefaultConnection().log(new LogRequest()).writeTo(out);
+        // TODO test output.
+        System.out.println(new String(out.toByteArray()));
+    }
 }

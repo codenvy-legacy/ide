@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link UpdateApplicationEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 19, 2012 4:31:55 PM anya $
- * 
  */
-public interface UpdateApplicationHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to update application.
-    * 
-    * @param event
-    */
-   void onUpdateApplication(UpdateApplicationEvent event);
+public interface UpdateApplicationHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to update application.
+     *
+     * @param event
+     */
+    void onUpdateApplication(UpdateApplicationEvent event);
 }

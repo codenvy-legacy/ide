@@ -10,12 +10,10 @@
  *******************************************************************************/
 package com.codenvy.eclipse.jdt.internal.corext.refactoring.code.flow;
 
-class BlockFlowInfo extends GenericSequentialFlowInfo
-{
+class BlockFlowInfo extends GenericSequentialFlowInfo {
 
-   public BlockFlowInfo()
-   {
-   }
+    public BlockFlowInfo() {
+    }
 }
 
 

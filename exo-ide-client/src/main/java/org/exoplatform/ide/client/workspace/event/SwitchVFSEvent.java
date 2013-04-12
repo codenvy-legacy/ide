@@ -22,47 +22,39 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public class SwitchVFSEvent extends GwtEvent<SwitchVFSHandler>
-{
+public class SwitchVFSEvent extends GwtEvent<SwitchVFSHandler> {
 
-   public static final GwtEvent.Type<SwitchVFSHandler> TYPE = new GwtEvent.Type<SwitchVFSHandler>();
+    public static final GwtEvent.Type<SwitchVFSHandler> TYPE = new GwtEvent.Type<SwitchVFSHandler>();
 
-   /**
-    * Virtual file system id.
-    */
-   private String vfsID;
+    /** Virtual file system id. */
+    private String vfsID;
 
-   /**
-    * @param vfsID virtual file system id
-    */
-   public SwitchVFSEvent(String vfsID)
-   {
-      this.vfsID = vfsID;
-   }
+    /**
+     * @param vfsID
+     *         virtual file system id
+     */
+    public SwitchVFSEvent(String vfsID) {
+        this.vfsID = vfsID;
+    }
 
-   @Override
-   protected void dispatch(SwitchVFSHandler handler)
-   {
-      handler.onSwitchVFS(this);
-   }
+    @Override
+    protected void dispatch(SwitchVFSHandler handler) {
+        handler.onSwitchVFS(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<SwitchVFSHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<SwitchVFSHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @return the ID of virtual file system
-    */
-   public String getVfsID()
-   {
-      return vfsID;
-   }
+    /** @return the ID of virtual file system */
+    public String getVfsID() {
+        return vfsID;
+    }
 
 }

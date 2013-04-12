@@ -1,6 +1,6 @@
 <module>
-	<inherits name="com.google.gwt.user.User"/>
-	<inherits name="com.codenvy.ide.client.util.Util"/>
-	<source path=""/>
+    <inherits name="com.google.gwt.user.User"/>
+    <inherits name="com.codenvy.ide.client.util.Util"/>
+    <source path=""/>
 
 </module>

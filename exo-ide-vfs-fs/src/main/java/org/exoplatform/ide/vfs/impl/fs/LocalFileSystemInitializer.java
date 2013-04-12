@@ -34,102 +34,93 @@ import java.util.Set;
 import static org.exoplatform.ide.commons.ContainerUtils.readValuesParam;
 
 /**
+ * Useful for local build if we have limited and known set of available virtual file systems. Do not use this component
+ * when run in cloud environment. In cloud environment virtual file systems should be added dynamically when new
+ * workspace is up and removed when workspace goes down.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
+ * @see org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry
+ * @see org.exoplatform.ide.vfs.server.VirtualFileSystemFactory
  */
-public final class LocalFileSystemInitializer implements Startable
-{
-   private static final Log LOG = ExoLogger.getExoLogger(LocalFileSystemInitializer.class);
+public final class LocalFileSystemInitializer implements Startable {
+    private static final Log LOG = ExoLogger.getExoLogger(LocalFileSystemInitializer.class);
 
-   private final VirtualFileSystemRegistry registry;
-   private final Set<String> vfsIds;
-   private final EventListenerList listeners;
-   private final LocalFSMountStrategy mountStrategy;
-   private final SearcherProvider searcherProvider;
+    private final VirtualFileSystemRegistry registry;
+    private final Set<String>               vfsIds;
+    private final EventListenerList         listeners;
+    private final LocalFSMountStrategy      mountStrategy;
+    private final SearcherProvider          searcherProvider;
 
-   public LocalFileSystemInitializer(InitParams initParams,
-                                     VirtualFileSystemRegistry registry,
-                                     EventListenerList listeners,
-                                     LocalFSMountStrategy mountStrategy,
-                                     SearcherProvider searcherProvider)
-   {
-      this(readValuesParam(initParams, "id"), registry, listeners, mountStrategy, searcherProvider);
-   }
+    public LocalFileSystemInitializer(InitParams initParams,
+                                      VirtualFileSystemRegistry registry,
+                                      EventListenerList listeners,
+                                      LocalFSMountStrategy mountStrategy,
+                                      SearcherProvider searcherProvider) {
+        this(readValuesParam(initParams, "ids"), registry, listeners, mountStrategy, searcherProvider);
+    }
 
-   public LocalFileSystemInitializer(InitParams initParams,
-                                     VirtualFileSystemRegistry registry,
-                                     EventListenerList listeners,
-                                     LocalFSMountStrategy mountStrategy)
-   {
-      this(readValuesParam(initParams, "id"), registry, listeners, mountStrategy, null);
-   }
+    public LocalFileSystemInitializer(InitParams initParams,
+                                      VirtualFileSystemRegistry registry,
+                                      EventListenerList listeners,
+                                      LocalFSMountStrategy mountStrategy) {
+        this(readValuesParam(initParams, "ids"), registry, listeners, mountStrategy, null);
+    }
 
-   public LocalFileSystemInitializer(InitParams initParams,
-                                     VirtualFileSystemRegistry registry,
-                                     LocalFSMountStrategy mountStrategy)
-   {
-      this(readValuesParam(initParams, "id"), registry, null, mountStrategy, null);
-   }
+    public LocalFileSystemInitializer(InitParams initParams,
+                                      VirtualFileSystemRegistry registry,
+                                      LocalFSMountStrategy mountStrategy) {
+        this(readValuesParam(initParams, "ids"), registry, null, mountStrategy, null);
+    }
 
-   /**
-    * @param vfsIds
-    *    ids of available file systems
-    * @param registry
-    *    VirtualFileSystemRegistry
-    * @param listeners
-    *    notification listeners, may be <code>null</code>
-    * @param mountStrategy
-    *    LocalFSMountStrategy
-    * @param searcherProvider
-    *    SearcherProvider, may be <code>null</code>
-    * @see VirtualFileSystemRegistry
-    * @see EventListenerList
-    * @see LocalFSMountStrategy
-    * @see SearcherProvider
-    */
-   public LocalFileSystemInitializer(Collection<String> vfsIds,
-                                     VirtualFileSystemRegistry registry,
-                                     EventListenerList listeners,
-                                     LocalFSMountStrategy mountStrategy,
-                                     SearcherProvider searcherProvider)
-   {
-      this.mountStrategy = mountStrategy;
-      this.vfsIds = new HashSet<String>(vfsIds);
-      this.registry = registry;
-      this.listeners = listeners;
-      this.searcherProvider = searcherProvider;
-   }
+    /**
+     * @param vfsIds
+     *         ids of available file systems
+     * @param registry
+     *         VirtualFileSystemRegistry
+     * @param listeners
+     *         notification listeners, may be <code>null</code>
+     * @param mountStrategy
+     *         LocalFSMountStrategy
+     * @param searcherProvider
+     *         SearcherProvider, may be <code>null</code>
+     * @see VirtualFileSystemRegistry
+     * @see EventListenerList
+     * @see LocalFSMountStrategy
+     * @see SearcherProvider
+     */
+    public LocalFileSystemInitializer(Collection<String> vfsIds,
+                                      VirtualFileSystemRegistry registry,
+                                      EventListenerList listeners,
+                                      LocalFSMountStrategy mountStrategy,
+                                      SearcherProvider searcherProvider) {
+        this.mountStrategy = mountStrategy;
+        this.vfsIds = new HashSet<String>(vfsIds);
+        this.registry = registry;
+        this.listeners = listeners;
+        this.searcherProvider = searcherProvider;
+    }
 
-   @Override
-   public void start()
-   {
-      URLHandlerFactorySetup.setup(registry, listeners);
-      for (String id : vfsIds)
-      {
-         try
-         {
-            registry.registerProvider(id, new LocalFileSystemProvider(id, mountStrategy, searcherProvider));
-         }
-         catch (VirtualFileSystemException e)
-         {
-            LOG.error(e.getMessage(), e);
-         }
-      }
-   }
+    @Override
+    public void start() {
+        URLHandlerFactorySetup.setup(registry, listeners);
+        for (String id : vfsIds) {
+            try {
+                registry.registerProvider(id, new LocalFileSystemProvider(id, mountStrategy, searcherProvider));
+            } catch (VirtualFileSystemException e) {
+                LOG.error(e.getMessage(), e);
+            }
+        }
+    }
 
-   @Override
-   public void stop()
-   {
-      for (String id : vfsIds)
-      {
-         try
-         {
-            registry.unregisterProvider(id);
-         }
-         catch (VirtualFileSystemException e)
-         {
-            LOG.error(e.getMessage(), e);
-         }
-      }
-   }
+    @Override
+    public void stop() {
+        for (String id : vfsIds) {
+            try {
+                registry.unregisterProvider(id);
+            } catch (VirtualFileSystemException e) {
+                LOG.error(e.getMessage(), e);
+            }
+        }
+    }
 }

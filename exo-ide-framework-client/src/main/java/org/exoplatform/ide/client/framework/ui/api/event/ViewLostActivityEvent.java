@@ -18,44 +18,39 @@
  */
 package org.exoplatform.ide.client.framework.ui.api.event;
 
-import org.exoplatform.ide.client.framework.ui.api.View;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.client.framework.ui.api.View;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ViewLostActivityEvent extends GwtEvent<ViewLostActivityHandler>
-{
+public class ViewLostActivityEvent extends GwtEvent<ViewLostActivityHandler> {
 
-   public static final GwtEvent.Type<ViewLostActivityHandler> TYPE = new GwtEvent.Type<ViewLostActivityHandler>();
+    public static final GwtEvent.Type<ViewLostActivityHandler> TYPE = new GwtEvent.Type<ViewLostActivityHandler>();
 
-   private View view;
+    private View view;
 
-   public ViewLostActivityEvent(View view)
-   {
-      this.view = view;
-   }
+    public ViewLostActivityEvent(View view) {
+        this.view = view;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ViewLostActivityHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ViewLostActivityHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(ViewLostActivityHandler handler)
-   {
-      handler.onViewLostActivity(this);
-   }
+    @Override
+    protected void dispatch(ViewLostActivityHandler handler) {
+        handler.onViewLostActivity(this);
+    }
 
-   public View getView()
-   {
-      return view;
-   }
+    public View getView() {
+        return view;
+    }
 
 }

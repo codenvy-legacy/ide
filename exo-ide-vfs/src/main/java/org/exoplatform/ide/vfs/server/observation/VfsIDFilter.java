@@ -27,19 +27,16 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
  * @version $Id: $
  * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getInfo()
  */
-public final class VfsIDFilter extends ChangeEventFilter
-{
-   private final String vfsId;
+public final class VfsIDFilter extends ChangeEventFilter {
+    private final String vfsId;
 
-   public VfsIDFilter(String vfsId)
-   {
-      this.vfsId = vfsId;
-   }
+    public VfsIDFilter(String vfsId) {
+        this.vfsId = vfsId;
+    }
 
-   @Override
-   public boolean matched(ChangeEvent event) throws VirtualFileSystemException
-   {
-      final String theVfsId = event.getVirtualFileSystem().getInfo().getId();
-      return vfsId == null ? theVfsId == null : vfsId.equals(theVfsId);
-   }
+    @Override
+    public boolean matched(ChangeEvent event) throws VirtualFileSystemException {
+        final String theVfsId = event.getVirtualFileSystem().getInfo().getId();
+        return vfsId == null ? theVfsId == null : vfsId.equals(theVfsId);
+    }
 }

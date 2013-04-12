@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link CreateApplicationEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 17, 2012 11:32:40 AM anya $
- * 
  */
-public interface CreateApplicationHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to create application on Elastic Beanstalk.
-    * 
-    * @param event
-    */
-   void onCreateApplication(CreateApplicationEvent event);
+public interface CreateApplicationHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to create application on Elastic Beanstalk.
+     *
+     * @param event
+     */
+    void onCreateApplication(CreateApplicationEvent event);
 }

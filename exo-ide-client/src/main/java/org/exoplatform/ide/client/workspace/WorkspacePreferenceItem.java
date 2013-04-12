@@ -27,17 +27,14 @@ import org.exoplatform.ide.client.framework.preference.PreferencePerformer;
 
 /**
  * Managing workspace preference item.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 20, 2012 3:15:23 PM anya $
- * 
  */
-public class WorkspacePreferenceItem extends AbstractPreferenceItem
-{
-   private static final String NAME = IDE.PREFERENCES_CONSTANT.workspaceTitle();
+public class WorkspacePreferenceItem extends AbstractPreferenceItem {
+    private static final String NAME = IDE.PREFERENCES_CONSTANT.workspaceTitle();
 
-   public WorkspacePreferenceItem(PreferencePerformer performer)
-   {
-      super(NAME, new Image(IDEImageBundle.INSTANCE.workspace()), performer);
-   }
+    public WorkspacePreferenceItem(PreferencePerformer performer) {
+        super(NAME, new Image(IDEImageBundle.INSTANCE.workspace()), performer);
+    }
 }

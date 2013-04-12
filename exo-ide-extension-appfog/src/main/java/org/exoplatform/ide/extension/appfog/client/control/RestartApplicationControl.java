@@ -28,21 +28,19 @@ import org.exoplatform.ide.extension.appfog.client.start.RestartApplicationEvent
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class RestartApplicationControl extends AbstractAppfogControl
-{
+public class RestartApplicationControl extends AbstractAppfogControl {
 
-   private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.restartAppControlId();
+    private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.restartAppControlId();
 
-   private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.restartAppControlTitle();
+    private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.restartAppControlTitle();
 
-   private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.restartAppControlPrompt();
+    private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.restartAppControlPrompt();
 
-   public RestartApplicationControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(AppfogClientBundle.INSTANCE.restartApp(), AppfogClientBundle.INSTANCE.restartAppDisabled());
-      setEvent(new RestartApplicationEvent());
-   }
+    public RestartApplicationControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(AppfogClientBundle.INSTANCE.restartApp(), AppfogClientBundle.INSTANCE.restartAppDisabled());
+        setEvent(new RestartApplicationEvent());
+    }
 }

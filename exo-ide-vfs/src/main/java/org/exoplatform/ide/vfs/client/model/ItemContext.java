@@ -18,18 +18,15 @@
  */
 package org.exoplatform.ide.vfs.client.model;
 
-/**
- * @version $Id:$
- */
-public interface ItemContext
-{
-   ProjectModel getProject();
+/** @version $Id:$ */
+public interface ItemContext {
+    ProjectModel getProject();
 
-   void setProject(ProjectModel project);
+    void setProject(ProjectModel project);
 
-   FolderModel getParent();
+    FolderModel getParent();
 
-   void setParent(FolderModel parent);
+    void setParent(FolderModel parent);
 
-   boolean isPersisted();
+    boolean isPersisted();
 }

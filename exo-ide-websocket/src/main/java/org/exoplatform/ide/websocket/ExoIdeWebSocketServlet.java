@@ -18,14 +18,12 @@
  */
 package org.exoplatform.ide.websocket;
 
+import com.codenvy.commons.env.EnvironmentContext;
+
 import org.apache.catalina.websocket.StreamInbound;
 import org.everrest.core.DependencySupplier;
 import org.everrest.core.ResourceBinder;
-import org.everrest.core.impl.EverrestConfiguration;
-import org.everrest.core.impl.EverrestProcessor;
-import org.everrest.core.impl.ProviderBinder;
-import org.everrest.core.impl.RequestDispatcher;
-import org.everrest.core.impl.RequestHandlerImpl;
+import org.everrest.core.impl.*;
 import org.everrest.core.impl.async.AsynchronousJobPool;
 import org.everrest.websockets.EverrestWebSocketServlet;
 import org.everrest.websockets.WSConnectionImpl;
@@ -43,50 +41,47 @@ import javax.ws.rs.ext.ContextResolver;
  * @version $Id: ExoIdeWebSocketServlet.java Nov 7, 2012 4:29:51 PM azatsarynnyy $
  */
 @SuppressWarnings("serial")
-public class ExoIdeWebSocketServlet extends EverrestWebSocketServlet
-{
-   static final String CONVERSATION_STATE_SESSION_ATTRIBUTE_NAME = "ide.websocket." + ConversationState.class.getName();
+public class ExoIdeWebSocketServlet extends EverrestWebSocketServlet {
+    static final String CONVERSATION_STATE_SESSION_ATTRIBUTE_NAME = "ide.websocket." + ConversationState.class.getName();
+    static final String ENVIRONMENT_SESSION_ATTRIBUTE_NAME        = "ide.websocket." + EnvironmentContext.class.getName();
 
-   @Override
-   protected EverrestProcessor getEverrestProcessor()
-   {
-      final ExoContainer container = ExoContainerContext.getCurrentContainer();
-      ResourceBinder resources = ((ResourceBinder)container.getComponentInstanceOfType(ResourceBinder.class));
-      RequestDispatcher dispatcher = ((RequestDispatcher)container.getComponentInstanceOfType(RequestDispatcher.class));
-      DependencySupplier dependencies = ((DependencySupplier)container.getComponentInstanceOfType(DependencySupplier.class));
-      EverrestConfiguration config = new EverrestConfiguration();
-      config.setProperty(EverrestConfiguration.METHOD_INVOKER_DECORATOR_FACTORY,
-         WebSocketMethodInvokerDecoratorFactory.class.getName());
-      ProviderBinder providers = ProviderBinder.getInstance();
-      return new EverrestProcessor(new RequestHandlerImpl(dispatcher, providers, dependencies, config),
-         resources,
-         providers,
-         null);
-   }
+    @Override
+    protected EverrestProcessor getEverrestProcessor() {
+        final ExoContainer container = ExoContainerContext.getCurrentContainer();
+        ResourceBinder resources = ((ResourceBinder)container.getComponentInstanceOfType(ResourceBinder.class));
+        RequestDispatcher dispatcher = ((RequestDispatcher)container.getComponentInstanceOfType(RequestDispatcher.class));
+        DependencySupplier dependencies = ((DependencySupplier)container.getComponentInstanceOfType(DependencySupplier.class));
+        EverrestConfiguration config = new EverrestConfiguration();
+        config.setProperty(EverrestConfiguration.METHOD_INVOKER_DECORATOR_FACTORY,
+                           WebSocketMethodInvokerDecoratorFactory.class.getName());
+        ProviderBinder providers = ProviderBinder.getInstance();
+        return new EverrestProcessor(new RequestHandlerImpl(dispatcher, providers, dependencies, config),
+                                     resources,
+                                     providers,
+                                     null);
+    }
 
-   @Override
-   protected AsynchronousJobPool getAsynchronousJobPool()
-   {
-      ProviderBinder providers = ProviderBinder.getInstance();
-      if (providers != null)
-      {
-         ContextResolver<AsynchronousJobPool> asyncJobsResolver =
-            providers.getContextResolver(AsynchronousJobPool.class, null);
-         if (asyncJobsResolver != null)
-         {
-            return asyncJobsResolver.getContext(null);
-         }
-      }
-      throw new IllegalStateException(
-         "Unable get web socket connection. Asynchronous jobs feature is not configured properly. ");
-   }
+    @Override
+    protected AsynchronousJobPool getAsynchronousJobPool() {
+        ProviderBinder providers = ProviderBinder.getInstance();
+        if (providers != null) {
+            ContextResolver<AsynchronousJobPool> asyncJobsResolver =
+                    providers.getContextResolver(AsynchronousJobPool.class, null);
+            if (asyncJobsResolver != null) {
+                return asyncJobsResolver.getContext(null);
+            }
+        }
+        throw new IllegalStateException(
+                "Unable get web socket connection. Asynchronous jobs feature is not configured properly. ");
+    }
 
-   @Override
-   protected StreamInbound createWebSocketInbound(String s, HttpServletRequest req)
-   {
-      WSConnectionImpl wsConnection = (WSConnectionImpl)super.createWebSocketInbound(s, req);
-      ConversationState conversationState = ConversationState.getCurrent();
-      wsConnection.getHttpSession().setAttribute(CONVERSATION_STATE_SESSION_ATTRIBUTE_NAME, conversationState);
-      return wsConnection;
-   }
+    @Override
+    protected StreamInbound createWebSocketInbound(String s, HttpServletRequest req) {
+        WSConnectionImpl wsConnection = (WSConnectionImpl)super.createWebSocketInbound(s, req);
+        ConversationState conversationState = ConversationState.getCurrent();
+        wsConnection.getHttpSession().setAttribute(CONVERSATION_STATE_SESSION_ATTRIBUTE_NAME, conversationState);
+        EnvironmentContext environmentContext = EnvironmentContext.getCurrent();
+        wsConnection.getHttpSession().setAttribute(ENVIRONMENT_SESSION_ATTRIBUTE_NAME, environmentContext);
+        return wsConnection;
+    }
 }

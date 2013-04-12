@@ -30,43 +30,33 @@ import java.util.List;
 
 /**
  * Unmarshaller for the list of targets, received from server.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: TargetsUnmarshaller.java Sep 21, 2011 5:34:51 PM vereshchaka $
  */
-public class TargetsUnmarshaller implements Unmarshallable<List<String>>
-{
-   private List<String> targets;
+public class TargetsUnmarshaller implements Unmarshallable<List<String>> {
+    private List<String> targets;
 
-   public TargetsUnmarshaller(List<String> targets)
-   {
-      this.targets = targets;
-   }
+    public TargetsUnmarshaller(List<String> targets) {
+        this.targets = targets;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
 
-      for (int i = 0; i < jsonArray.size(); i++)
-      {
-         JSONValue value = jsonArray.get(i);
-         if (value.isString() != null)
-         {
-            targets.add(value.isString().stringValue());
-         }
-      }
-   }
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JSONValue value = jsonArray.get(i);
+            if (value.isString() != null) {
+                targets.add(value.isString().stringValue());
+            }
+        }
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
-    */
-   @Override
-   public List<String> getPayload()
-   {
-      return targets;
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
+    @Override
+    public List<String> getPayload() {
+        return targets;
+    }
 }

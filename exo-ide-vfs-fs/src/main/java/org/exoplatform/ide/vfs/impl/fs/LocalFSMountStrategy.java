@@ -26,21 +26,20 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface LocalFSMountStrategy
-{
-   /**
-    * Get 'mount point' for specified <code>workspace</code>. In this case <code>workspace</code> minds abstraction to
-    * isolated few environments when we use virtual filesystem in cloud infrastructure. If <code>workspace</code> is
-    * <code>null</code>, it is assumed that <code>workspace</code> can be obtained from existed context. This part is
-    * implementation specific.
-    *
-    * @param workspace
-    *    name of workspace or <code>null</code>
-    * @return location on local file system where virtual filesystem should be mounter
-    * @throws VirtualFileSystemException
-    */
-   java.io.File getMountPath(String workspace) throws VirtualFileSystemException;
+public interface LocalFSMountStrategy {
+    /**
+     * Get 'mount point' for specified <code>workspace</code>. In this case <code>workspace</code> minds abstraction to
+     * isolated few environments when we use virtual filesystem in cloud infrastructure. If <code>workspace</code> is
+     * <code>null</code>, it is assumed that <code>workspace</code> can be obtained from existed context. This part is
+     * implementation specific.
+     *
+     * @param workspace
+     *         name of workspace or <code>null</code>
+     * @return location on local file system where virtual filesystem should be mounter
+     * @throws VirtualFileSystemException
+     */
+    java.io.File getMountPath(String workspace) throws VirtualFileSystemException;
 
-   /** This is shortcut for <code>getMountPath(null)</code> */
-   java.io.File getMountPath() throws VirtualFileSystemException;
+    /** This is shortcut for <code>getMountPath(null)</code> */
+    java.io.File getMountPath() throws VirtualFileSystemException;
 }

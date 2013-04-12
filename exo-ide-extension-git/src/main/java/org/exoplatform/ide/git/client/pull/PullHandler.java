@@ -25,14 +25,12 @@ import com.google.gwt.event.shared.EventHandler;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 20, 2011 12:04:05 PM anya $
- * 
  */
-public interface PullHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to pull changes from remote repository.
-    * 
-    * @param event
-    */
-   void onPull(PullEvent event);
+public interface PullHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to pull changes from remote repository.
+     * 
+     * @param event
+     */
+    void onPull(PullEvent event);
 }

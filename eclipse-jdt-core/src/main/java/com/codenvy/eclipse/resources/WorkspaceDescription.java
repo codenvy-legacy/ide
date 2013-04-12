@@ -24,165 +24,116 @@ import com.codenvy.eclipse.core.resources.IWorkspaceDescription;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class WorkspaceDescription implements IWorkspaceDescription
-{
+public class WorkspaceDescription implements IWorkspaceDescription {
 
-   private long fileStateLongevity;
+    private long fileStateLongevity;
 
-   private int maxBuildIterations;
+    private int maxBuildIterations;
 
-   private long maxFileStateSize;
+    private long maxFileStateSize;
 
-   private boolean applyFileStatePolicy;
+    private boolean applyFileStatePolicy;
 
-   private long snapshotInterval;
+    private long snapshotInterval;
 
-   private String[] buildOrder;
+    private String[] buildOrder;
 
-   private boolean autoBuilding;
+    private boolean autoBuilding;
 
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String[] getBuildOrder()
-   {
-      return buildOrder;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String[] getBuildOrder() {
+        return buildOrder;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public long getFileStateLongevity()
-   {
-      return fileStateLongevity;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public long getFileStateLongevity() {
+        return fileStateLongevity;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public int getMaxBuildIterations()
-   {
-      return maxBuildIterations;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public int getMaxBuildIterations() {
+        return maxBuildIterations;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public int getMaxFileStates()
-   {
-      return maxBuildIterations;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public int getMaxFileStates() {
+        return maxBuildIterations;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public long getMaxFileStateSize()
-   {
-      return maxFileStateSize;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public long getMaxFileStateSize() {
+        return maxFileStateSize;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean isApplyFileStatePolicy()
-   {
-      return applyFileStatePolicy;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public boolean isApplyFileStatePolicy() {
+        return applyFileStatePolicy;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public long getSnapshotInterval()
-   {
-      return snapshotInterval;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public long getSnapshotInterval() {
+        return snapshotInterval;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean isAutoBuilding()
-   {
-      return autoBuilding;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public boolean isAutoBuilding() {
+        return autoBuilding;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setAutoBuilding(boolean value)
-   {
-      this.autoBuilding = value;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setAutoBuilding(boolean value) {
+        this.autoBuilding = value;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setBuildOrder(String[] value)
-   {
-      this.buildOrder = value;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setBuildOrder(String[] value) {
+        this.buildOrder = value;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setFileStateLongevity(long time)
-   {
-      this.fileStateLongevity = time;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setFileStateLongevity(long time) {
+        this.fileStateLongevity = time;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setMaxBuildIterations(int number)
-   {
-      this.maxBuildIterations = number;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setMaxBuildIterations(int number) {
+        this.maxBuildIterations = number;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setMaxFileStates(int number)
-   {
-      this.maxBuildIterations = number;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setMaxFileStates(int number) {
+        this.maxBuildIterations = number;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setMaxFileStateSize(long size)
-   {
-      this.maxFileStateSize = size;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setMaxFileStateSize(long size) {
+        this.maxFileStateSize = size;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setApplyFileStatePolicy(boolean apply)
-   {
-      this.applyFileStatePolicy = apply;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setApplyFileStatePolicy(boolean apply) {
+        this.applyFileStatePolicy = apply;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setSnapshotInterval(long delay)
-   {
-      this.snapshotInterval = delay;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setSnapshotInterval(long delay) {
+        this.snapshotInterval = delay;
+    }
 }

@@ -27,40 +27,33 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class VariablePathImpl implements VariablePath
-{
-   private List<String> path;
+public class VariablePathImpl implements VariablePath {
+    private List<String> path;
 
-   public VariablePathImpl(List<String> path)
-   {
-      this.path = path;
-   }
+    public VariablePathImpl(List<String> path) {
+        this.path = path;
+    }
 
-   public VariablePathImpl()
-   {
-   }
+    public VariablePathImpl() {
+    }
 
-   @Override
-   public List<String> getPath()
-   {
-      if (path == null)
-      {
-         path = new ArrayList<String>();
-      }
-      return path;
-   }
+    @Override
+    public List<String> getPath() {
+        if (path == null) {
+            path = new ArrayList<String>();
+        }
+        return path;
+    }
 
-   @Override
-   public void setPath(List<String> path)
-   {
-      this.path = path;
-   }
+    @Override
+    public void setPath(List<String> path) {
+        this.path = path;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "VariablePathImpl{" +
-         "path=" + path +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "VariablePathImpl{" +
+               "path=" + path +
+               '}';
+    }
 }

@@ -22,17 +22,16 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link RebuildEnvironmentEvent} event.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: RebuildEnvironmentHandler.java Sep 28, 2012 3:48:36 PM azatsarynnyy $
- *
  */
-public interface RebuildEnvironmentHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to rebuild environment.
-    * 
-    * @param event {@link RebuildEnvironmentEvent}
-    */
-   void onRebuildEnvironment(RebuildEnvironmentEvent event);
+public interface RebuildEnvironmentHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to rebuild environment.
+     *
+     * @param event
+     *         {@link RebuildEnvironmentEvent}
+     */
+    void onRebuildEnvironment(RebuildEnvironmentEvent event);
 }

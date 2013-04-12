@@ -20,18 +20,17 @@ package org.exoplatform.ide.vfs.server.exceptions;
 
 /**
  * Thrown if performed action is not allowed for caller.
- * 
+ *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: PermissionDeniedException.java 68071 2011-04-07 13:11:47Z vitalka $
  */
 @SuppressWarnings("serial")
-public class PermissionDeniedException extends VirtualFileSystemException
-{
-   /**
-    * @param message the message
-    */
-   public PermissionDeniedException(String message)
-   {
-      super(message);
-   }
+public class PermissionDeniedException extends VirtualFileSystemException {
+    /**
+     * @param message
+     *         the message
+     */
+    public PermissionDeniedException(String message) {
+        super(message);
+    }
 }

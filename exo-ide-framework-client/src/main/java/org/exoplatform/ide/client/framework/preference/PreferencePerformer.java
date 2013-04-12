@@ -23,15 +23,11 @@ import org.exoplatform.ide.client.framework.ui.api.View;
 /**
  * Has method for recieving preference's view. {@link PreferencePerformer} is implemented by view's presenter. The
  * {@link PreferencePerformer#getPreference()} must contain view creation, binding with presenter and view's filling.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 19, 2012 9:58:29 AM anya $
- * 
  */
-public interface PreferencePerformer
-{
-   /**
-    * @return {@link View} preference's view
-    */
-   View getPreference();
+public interface PreferencePerformer {
+    /** @return {@link View} preference's view */
+    View getPreference();
 }

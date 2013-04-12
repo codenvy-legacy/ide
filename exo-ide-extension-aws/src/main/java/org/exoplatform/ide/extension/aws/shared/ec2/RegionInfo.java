@@ -24,35 +24,34 @@ package org.exoplatform.ide.extension.aws.shared.ec2;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface RegionInfo
-{
-   /**
-    * Get region name.
-    *
-    * @return region name
-    */
-   String getName();
+public interface RegionInfo {
+    /**
+     * Get region name.
+     *
+     * @return region name
+     */
+    String getName();
 
-   /**
-    * Set region name.
-    *
-    * @param name
-    *    region name
-    */
-   void setName(String name);
+    /**
+     * Set region name.
+     *
+     * @param name
+     *         region name
+     */
+    void setName(String name);
 
-   /**
-    * Get region service endpoint.
-    *
-    * @return region service endpoint
-    */
-   String getEndpoint();
+    /**
+     * Get region service endpoint.
+     *
+     * @return region service endpoint
+     */
+    String getEndpoint();
 
-   /**
-    * Set region service endpoint.
-    *
-    * @param endpoint
-    *    region service endpoint
-    */
-   void setEndpoint(String endpoint);
+    /**
+     * Set region service endpoint.
+     *
+     * @param endpoint
+     *         region service endpoint
+     */
+    void setEndpoint(String endpoint);
 }

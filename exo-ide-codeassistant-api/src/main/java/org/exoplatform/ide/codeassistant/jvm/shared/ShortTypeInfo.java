@@ -22,25 +22,22 @@ package org.exoplatform.ide.codeassistant.jvm.shared;
  * Short information about class or interface. Contain fqn, short name,
  * modifiers Example : { "name": "java.lang.String", "modifiers": 0, "type":
  * "CLASS" }
- * 
  */
-public interface ShortTypeInfo extends Member
-{
+public interface ShortTypeInfo extends Member {
 
-   String getType();
+    String getType();
 
-   void setType(String type);
-   
-   /**
-    * return the signature of the class. May be <tt>null</tt>.
-    */
-   String getSignature();
-   
-   
-   /**
-    * set signature of the class. May be <tt>null</tt>.
-    * @param signature
-    */
-   void setSignature(String signature);
+    void setType(String type);
+
+    /** return the signature of the class. May be <tt>null</tt>. */
+    String getSignature();
+
+
+    /**
+     * set signature of the class. May be <tt>null</tt>.
+     *
+     * @param signature
+     */
+    void setSignature(String signature);
 
 }

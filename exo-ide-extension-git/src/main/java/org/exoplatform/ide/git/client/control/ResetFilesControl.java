@@ -28,17 +28,14 @@ import org.exoplatform.ide.git.client.reset.ResetFilesEvent;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 13, 2011 4:00:45 PM anya $
- * 
  */
-public class ResetFilesControl extends GitControl
-{
-   public ResetFilesControl()
-   {
-      super(GitExtension.MESSAGES.resetFilesControlId());
-      setTitle(GitExtension.MESSAGES.resetFilesControlTitle());
-      setPrompt(GitExtension.MESSAGES.resetFilesControlPrompt());
-      setImages(GitClientBundle.INSTANCE.reset(), GitClientBundle.INSTANCE.resetDisabled());
-      setEvent(new ResetFilesEvent());
-      setGroupName(GroupNames.COMMANDS);
-   }
+public class ResetFilesControl extends GitControl {
+    public ResetFilesControl() {
+        super(GitExtension.MESSAGES.resetFilesControlId());
+        setTitle(GitExtension.MESSAGES.resetFilesControlTitle());
+        setPrompt(GitExtension.MESSAGES.resetFilesControlPrompt());
+        setImages(GitClientBundle.INSTANCE.reset(), GitClientBundle.INSTANCE.resetDisabled());
+        setEvent(new ResetFilesEvent());
+        setGroupName(GroupNames.COMMANDS);
+    }
 }

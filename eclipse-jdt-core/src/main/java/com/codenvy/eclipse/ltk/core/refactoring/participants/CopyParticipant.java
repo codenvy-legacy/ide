@@ -23,26 +23,21 @@ package com.codenvy.eclipse.ltk.core.refactoring.participants;
  *
  * @since 3.1
  */
-public abstract class CopyParticipant extends RefactoringParticipant
-{
+public abstract class CopyParticipant extends RefactoringParticipant {
 
-   private CopyArguments fArguments;
+    private CopyArguments fArguments;
 
-   /**
-    * {@inheritDoc}
-    */
-   protected final void initialize(RefactoringArguments arguments)
-   {
-      fArguments = (CopyArguments)arguments;
-   }
+    /** {@inheritDoc} */
+    protected final void initialize(RefactoringArguments arguments) {
+        fArguments = (CopyArguments)arguments;
+    }
 
-   /**
-    * Returns the copy arguments.
-    *
-    * @return the copy arguments
-    */
-   public CopyArguments getArguments()
-   {
-      return fArguments;
-   }
+    /**
+     * Returns the copy arguments.
+     *
+     * @return the copy arguments
+     */
+    public CopyArguments getArguments() {
+        return fArguments;
+    }
 }

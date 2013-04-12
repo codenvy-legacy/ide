@@ -27,16 +27,15 @@ import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
  * @version $Id:
  */
 @RoutingType(type = RoutingTypes.CHAT_MESSAGE)
-public interface ChatMessage extends ClientToServerDto, ServerToClientDto
-{
+public interface ChatMessage extends ClientToServerDto, ServerToClientDto {
 
-   String getClientId();
+    String getClientId();
 
-   String getUserId();
+    String getUserId();
 
-   String getMessage();
+    String getMessage();
 
-   String getProjectId();
-   
-   String getDateTime();
+    String getProjectId();
+
+    String getDateTime();
 }

@@ -27,54 +27,46 @@ import org.exoplatform.ide.git.shared.AddRequest;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 27, 2011 11:49:37 AM anya $
- * 
  */
-public class AddRequestMarshallerGwtTest extends BaseGwtTest
-{
+public class AddRequestMarshallerGwtTest extends BaseGwtTest {
 
-   /**
-    * Test add request with default file pattern.
-    */
-   public void testAddAllRequestMarshaller()
-   {
-      AddRequest addRequest = new AddRequest();
-      addRequest.setUpdate(true);
-      String json = new AddRequestMarshaller(addRequest).marshal();
-      assertNotNull(json);
+    /** Test add request with default file pattern. */
+    public void testAddAllRequestMarshaller() {
+        AddRequest addRequest = new AddRequest();
+        addRequest.setUpdate(true);
+        String json = new AddRequestMarshaller(addRequest).marshal();
+        assertNotNull(json);
 
-      JSONObject jsonObject = new JSONObject(build(json));
-      assertNotNull(jsonObject);
-      assertTrue(jsonObject.containsKey(Constants.UPDATE));
-      assertTrue(jsonObject.get(Constants.UPDATE).isBoolean().booleanValue());
+        JSONObject jsonObject = new JSONObject(build(json));
+        assertNotNull(jsonObject);
+        assertTrue(jsonObject.containsKey(Constants.UPDATE));
+        assertTrue(jsonObject.get(Constants.UPDATE).isBoolean().booleanValue());
 
-      assertTrue(jsonObject.containsKey(Constants.FILE_PATTERN));
-      assertNotNull(jsonObject.get(Constants.FILE_PATTERN).isArray());
-      assertEquals(1, jsonObject.get(Constants.FILE_PATTERN).isArray().size());
-      assertEquals(".", jsonObject.get(Constants.FILE_PATTERN).isArray().get(0).isString().stringValue());
-   }
+        assertTrue(jsonObject.containsKey(Constants.FILE_PATTERN));
+        assertNotNull(jsonObject.get(Constants.FILE_PATTERN).isArray());
+        assertEquals(1, jsonObject.get(Constants.FILE_PATTERN).isArray().size());
+        assertEquals(".", jsonObject.get(Constants.FILE_PATTERN).isArray().get(0).isString().stringValue());
+    }
 
-   /**
-    * Test add request with set file patterns.
-    */
-   public void testAddFilesRequestMarshaller()
-   {
-      String firstPattern = "text.txt";
-      String secondPattern = "test/abs.txt";
-      String[] filePatterns = new String[]{firstPattern, secondPattern};
+    /** Test add request with set file patterns. */
+    public void testAddFilesRequestMarshaller() {
+        String firstPattern = "text.txt";
+        String secondPattern = "test/abs.txt";
+        String[] filePatterns = new String[]{firstPattern, secondPattern};
 
-      AddRequest addRequest = new AddRequest(filePatterns, false);
-      String json = new AddRequestMarshaller(addRequest).marshal();
-      assertNotNull(json);
+        AddRequest addRequest = new AddRequest(filePatterns, false);
+        String json = new AddRequestMarshaller(addRequest).marshal();
+        assertNotNull(json);
 
-      JSONObject jsonObject = new JSONObject(build(json));
-      assertNotNull(jsonObject);
-      assertTrue(jsonObject.containsKey(Constants.UPDATE));
-      assertFalse(jsonObject.get(Constants.UPDATE).isBoolean().booleanValue());
+        JSONObject jsonObject = new JSONObject(build(json));
+        assertNotNull(jsonObject);
+        assertTrue(jsonObject.containsKey(Constants.UPDATE));
+        assertFalse(jsonObject.get(Constants.UPDATE).isBoolean().booleanValue());
 
-      assertTrue(jsonObject.containsKey(Constants.FILE_PATTERN));
-      assertNotNull(jsonObject.get(Constants.FILE_PATTERN).isArray());
-      assertEquals(2, jsonObject.get(Constants.FILE_PATTERN).isArray().size());
-      assertEquals(firstPattern, jsonObject.get(Constants.FILE_PATTERN).isArray().get(0).isString().stringValue());
-      assertEquals(secondPattern, jsonObject.get(Constants.FILE_PATTERN).isArray().get(1).isString().stringValue());
-   }
+        assertTrue(jsonObject.containsKey(Constants.FILE_PATTERN));
+        assertNotNull(jsonObject.get(Constants.FILE_PATTERN).isArray());
+        assertEquals(2, jsonObject.get(Constants.FILE_PATTERN).isArray().size());
+        assertEquals(firstPattern, jsonObject.get(Constants.FILE_PATTERN).isArray().get(0).isString().stringValue());
+        assertEquals(secondPattern, jsonObject.get(Constants.FILE_PATTERN).isArray().get(1).isString().stringValue());
+    }
 }

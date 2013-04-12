@@ -26,68 +26,68 @@ import org.exoplatform.ide.extension.aws.shared.ec2.InstanceInfo;
 import java.util.List;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: EC2ClientService.java Sep 21, 2012 12:24:54 PM azatsarynnyy $
- *
  */
-public abstract class EC2ClientService
-{
-   private static EC2ClientService instance;
+public abstract class EC2ClientService {
+    private static EC2ClientService instance;
 
-   public static EC2ClientService getInstance()
-   {
-      return instance;
-   }
+    public static EC2ClientService getInstance() {
+        return instance;
+    }
 
-   protected EC2ClientService()
-   {
-      instance = this;
-   }
+    protected EC2ClientService() {
+        instance = this;
+    }
 
-   /**
-    * Returns the list of EC2 instances.
-    * 
-    * @param callback
-    * @throws RequestException
-    */
-   public abstract void getInstances(AsyncRequestCallback<List<InstanceInfo>> callback) throws RequestException;
+    /**
+     * Returns the list of EC2 instances.
+     *
+     * @param callback
+     * @throws RequestException
+     */
+    public abstract void getInstances(AsyncRequestCallback<List<InstanceInfo>> callback) throws RequestException;
 
-   /**
-    * Terminate the specified EC2 instance.
-    * 
-    * @param id EC2 instance identifier
-    * @param callback
-    * @throws RequestException
-    */
-   public abstract void terminateInstance(String id, AsyncRequestCallback<Object> callback) throws RequestException;
+    /**
+     * Terminate the specified EC2 instance.
+     *
+     * @param id
+     *         EC2 instance identifier
+     * @param callback
+     * @throws RequestException
+     */
+    public abstract void terminateInstance(String id, AsyncRequestCallback<Object> callback) throws RequestException;
 
-   /**
-    * Reboot the specified EC2 instance.
-    * 
-    * @param id EC2 instance identifier
-    * @param callback
-    * @throws RequestException
-    */
-   public abstract void rebootInstance(String id, AsyncRequestCallback<Object> callback) throws RequestException;
+    /**
+     * Reboot the specified EC2 instance.
+     *
+     * @param id
+     *         EC2 instance identifier
+     * @param callback
+     * @throws RequestException
+     */
+    public abstract void rebootInstance(String id, AsyncRequestCallback<Object> callback) throws RequestException;
 
-   /**
-    * Stop the specified EC2 instance.
-    * 
-    * @param id EC2 instance identifier
-    * @param force forces the instance to stop
-    * @param callback
-    * @throws RequestException
-    */
-   public abstract void stopInstance(String id, boolean force, AsyncRequestCallback<Object> callback)
-      throws RequestException;
+    /**
+     * Stop the specified EC2 instance.
+     *
+     * @param id
+     *         EC2 instance identifier
+     * @param force
+     *         forces the instance to stop
+     * @param callback
+     * @throws RequestException
+     */
+    public abstract void stopInstance(String id, boolean force, AsyncRequestCallback<Object> callback)
+            throws RequestException;
 
-   /**
-    * Start the specified EC2 instance.
-    * 
-    * @param id EC2 instance identifier
-    * @param callback
-    * @throws RequestException
-    */
-   public abstract void startInstance(String id, AsyncRequestCallback<Object> callback) throws RequestException;
+    /**
+     * Start the specified EC2 instance.
+     *
+     * @param id
+     *         EC2 instance identifier
+     * @param callback
+     * @throws RequestException
+     */
+    public abstract void startInstance(String id, AsyncRequestCallback<Object> callback) throws RequestException;
 }

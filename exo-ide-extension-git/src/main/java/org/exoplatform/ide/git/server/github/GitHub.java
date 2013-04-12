@@ -18,29 +18,19 @@
  */
 package org.exoplatform.ide.git.server.github;
 
-import static org.apache.commons.codec.binary.Base64.encodeBase64;
-
-import org.everrest.core.impl.provider.json.ArrayValue;
-import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonValue;
-import org.everrest.core.impl.provider.json.ObjectBuilder;
-import org.everrest.core.impl.provider.json.ObjectValue;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.container.xml.ValueParam;
+import org.exoplatform.ide.commons.ContainerUtils;
 import org.exoplatform.ide.commons.JsonHelper;
+import org.exoplatform.ide.commons.JsonNameConventions;
+import org.exoplatform.ide.commons.JsonParseException;
 import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.ssh.server.SshKey;
-import org.exoplatform.ide.extension.ssh.server.SshKeyProvider;
+import org.exoplatform.ide.extension.ssh.server.SshKeyStore;
+import org.exoplatform.ide.extension.ssh.server.SshKeyStoreException;
 import org.exoplatform.ide.git.shared.Collaborators;
-import org.exoplatform.ide.git.shared.Credentials;
-import org.exoplatform.ide.git.shared.GitHubCredentials;
 import org.exoplatform.ide.git.shared.GitHubRepository;
-import org.exoplatform.ide.invite.Invite;
-import org.exoplatform.ide.invite.InviteException;
-import org.exoplatform.ide.invite.InviteService;
 import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
-import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.services.security.ConversationState;
 
 import java.io.BufferedWriter;
@@ -48,526 +38,352 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Github.java Sep 5, 2011 12:08:04 PM vereshchaka $
  */
-public class GitHub
-{
-   private String userName;
+public class GitHub {
+    /** Predefined name of GitHub user. Use it to make possible for users to clone repositories with samples. */
+    private final String             myGitHubUser;
+    private final SshKeyStore        sshKeyStore;
+    private final OAuthTokenProvider oauthTokenProvider;
 
-   private Pattern pattern = Pattern.compile("_");
+    public GitHub(InitParams initParams,
+                  OAuthTokenProvider oauthTokenProvider,
+                  SshKeyStore sshKeyStore) {
+        this(ContainerUtils.readValueParam(initParams, "github-user"), oauthTokenProvider, sshKeyStore);
+    }
 
-   private final GitHubAuthenticator authenticator;
-   private final SshKeyProvider sshKeyProvider;
+    public GitHub(String myGitHubUser,
+                  OAuthTokenProvider oauthTokenProvider,
+                  SshKeyStore sshKeyStore) {
+        this.myGitHubUser = myGitHubUser;
+        this.oauthTokenProvider = oauthTokenProvider;
+        this.sshKeyStore = sshKeyStore;
+    }
 
-   private final OAuthTokenProvider oauthTokenProvider;
+    /**
+     * Get the list of public repositories by user's name.
+     * 
+     * @param user name of user
+     * @return an array of repositories
+     * @throws IOException if any i/o errors occurs
+     * @throws GitHubException if GitHub server return unexpected or error status for request
+     * @throws org.exoplatform.ide.commons.ParsingResponseException if any error occurs when parse response body
+     */
+    public GitHubRepository[] listUserPublicRepositories(String user) throws IOException, GitHubException, ParsingResponseException {
+        user = (user == null || user.isEmpty()) ? myGitHubUser : user;
+        if (user == null) {
+            throw new IllegalArgumentException("User's name must not be null.");
+        }
+        final String url = "https://api.github.com/users/" + user + "/repos";
+        final String method = "GET";
+        String response = doJsonRequest(url, method, 200);
+        return parseJsonResponse(response, GitHubRepository[].class, null);
+    }
 
-   private final InviteService inviteService;
+    /**
+     * Get the list of all (private + public) repositories by user's name.
+     * 
+     * @param user name of user
+     * @return an array of repositories
+     * @throws IOException if any i/o errors occurs
+     * @throws GitHubException if GitHub server return unexpected or error status for request
+     * @throws org.exoplatform.ide.commons.ParsingResponseException if any error occurs when parse response body
+     */
+    public GitHubRepository[] listAllUserRepositories(String user) throws IOException, GitHubException, ParsingResponseException {
+        final String oauthToken = getToken();
+        final String url = "https://api.github.com/users/" + user + "/repos?access_token=" + oauthToken;
+        final String method = "GET";
+        final String response = doJsonRequest(url, method, 200);
+        return parseJsonResponse(response, GitHubRepository[].class, null);
+    }
 
-   public GitHub(InitParams initParams,
-                 GitHubAuthenticator authenticator,
-                 OAuthTokenProvider oauthTokenProvider,
-                 InviteService inviteService,
-                 SshKeyProvider sshKeyProvider)
-   {
-      this(readValueParam(initParams, "github-user"), authenticator, oauthTokenProvider, inviteService, sshKeyProvider);
-   }
+    /**
+     * Get the list of all (private + public) repositories by organization name.
+     * 
+     * @param organization name of user
+     * @return an array of repositories
+     * @throws IOException if any i/o errors occurs
+     * @throws GitHubException if GitHub server return unexpected or error status for request
+     * @throws org.exoplatform.ide.commons.ParsingResponseException if any error occurs when parse response body
+     */
+    public GitHubRepository[] listAllOrganizationRepositories(String organization) throws IOException,
+                                                                                  GitHubException,
+                                                                                  ParsingResponseException {
+        final String oauthToken = getToken();
+        final String url = "https://api.github.com/orgs/" + organization + "/repos?access_token=" + oauthToken;
+        final String method = "GET";
+        final String response = doJsonRequest(url, method, 200);
+        return parseJsonResponse(response, GitHubRepository[].class, null);
+    }
 
-   public GitHub(String userName,
-                 GitHubAuthenticator authenticator,
-                 OAuthTokenProvider oauthTokenProvider,
-                 InviteService inviteService,
-                 SshKeyProvider sshKeyProvider)
-   {
-      this.userName = userName;
-      this.authenticator = authenticator;
-      this.oauthTokenProvider = oauthTokenProvider;
-      this.sshKeyProvider = sshKeyProvider;
-      this.inviteService = inviteService;
-   }
+    /**
+     * Get the array of the extended repositories of the current authorized user.
+     * 
+     * @return array of the repositories
+     * @throws IOException if any i/o errors occurs
+     * @throws GitHubException if GitHub server return unexpected or error status for request
+     * @throws org.exoplatform.ide.commons.ParsingResponseException if any error occurs when parse response body
+     */
+    public GitHubRepository[] listCurrentUserRepositories() throws IOException, GitHubException, ParsingResponseException {
+        final String oauthToken = getToken();
+        final String url = "https://api.github.com/user/repos?access_token=" + oauthToken;
+        final String method = "GET";
+        final String response = doJsonRequest(url, method, 200);
+        return parseJsonResponse(response, GitHubRepository[].class, null);
+    }
 
-   private static String readValueParam(InitParams initParams, String paramName)
-   {
-      if (initParams != null)
-      {
-         ValueParam vp = initParams.getValueParam(paramName);
-         if (vp != null)
-         {
-            return vp.getValue();
-         }
-      }
-      return null;
-   }
-
-   /**
-    * Get the list of public repositories by user's name.
-    *
-    * @param user name of user
-    * @return an array of repositories
-    * @throws IOException if any i/o errors occurs
-    * @throws GitHubException if GitHub server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
-    * @throws InvalidArgumentException
-    */
-   public GitHubRepository[] listRepositories(String user) throws IOException, GitHubException,
-      ParsingResponseException, InvalidArgumentException
-   {
-      user = (user == null || user.isEmpty()) ? userName : user;
-      if (user == null)
-      {
-         throw new InvalidArgumentException("'User's name must not be null.");
-      }
-
-      String url = "https://api.github.com/users/" + user + "/repos";
-      String method = "GET";
-      String response = doJsonRequest(url, method, null, 200);
-      JsonValue reposArray = JsonHelper.parseJson(response);
-      reposArray = formatJsonArray(reposArray);
-      if (reposArray == null || !reposArray.isArray())
-      {
-         return null;
-      }
-
-      try
-      {
-         GitHubRepository[] repos = (GitHubRepository[])ObjectBuilder.createArray(GitHubRepository[].class, reposArray);
-         return repos;
-      }
-      catch (JsonException jsone)
-      {
-         throw new ParsingResponseException(jsone.getMessage(), jsone);
-      }
-   }
-
-   public Collaborators getCollaborators(String user, String repository) throws IOException, ParsingResponseException,
-      GitHubException
-   {
-      String url = "https://api.github.com/repos/" + user + "/" + repository + "/collaborators";
-      String method = "GET";
-      String response = doJsonRequest(url, method, null, 200);
-      JsonValue jsonArray = JsonHelper.parseJson(response);
-      jsonArray = formatJsonArray(jsonArray);
-      String userId = ConversationState.getCurrent().getIdentity().getUserId();
-      try
-      {
-         Iterator<JsonValue> iterator = jsonArray.getElements();
-         Collaborators collaborators = new CollaboratorsImpl();
-         while (iterator.hasNext())
-         {
-            JsonValue obj = iterator.next();
-            if (obj.isObject())
-            {
-               url = obj.getElement("url").getStringValue();
-               response = doJsonRequest(url, method, null, 200);
-               JsonValue jsonUser = JsonHelper.parseJson(response);
-               jsonUser = formatObject(jsonUser);
-               GitHubUserImpl gitHubUser = ObjectBuilder.createObject(GitHubUserImpl.class, jsonUser);
-               if (gitHubUser.getEmail() != null && !gitHubUser.getEmail().isEmpty()
-                  && !gitHubUser.getEmail().equals(userId) && !isAlreadyInvited(gitHubUser.getEmail()))
-               {
-                  collaborators.getCollaborators().add(gitHubUser);
-               }
+    /**
+     * Get the Map which contains available repositories in format Map<Organization name, List<Available repositories>>.
+     * 
+     * @return ap which contains available repositories in format Map<Organization name, List<Available repositories>>
+     * @throws IOException if any i/o errors occurs
+     * @throws GitHubException if GitHub server return unexpected or error status for request
+     * @throws org.exoplatform.ide.commons.ParsingResponseException if any error occurs when parse response body
+     */
+    public Map<String, List<GitHubRepository>> availableRepositoriesList() throws IOException, GitHubException,
+                                                                          ParsingResponseException {
+        Map<String, List<GitHubRepository>> repoList = new HashMap<String, List<GitHubRepository>>();
+        try {
+            repoList.put(getGithubUserId(), Arrays.asList(this.listCurrentUserRepositories()));
+            for (String organizationId : this.listOrganizations()) {
+                repoList.put(organizationId, Arrays.asList(this.listAllOrganizationRepositories(organizationId)));
             }
-         }
-         return collaborators;
-      }
-      catch (JsonException jsone)
-      {
-         throw new ParsingResponseException(jsone.getMessage(), jsone);
-      }
-   }
+        } catch (JsonParseException e) {
+            throw new ParsingResponseException(e);
+        }
+        return repoList;
+    }
 
-   private boolean isAlreadyInvited(String collaborator) throws GitHubException
-   {
-      try
-      {
-         if (ConversationState.getCurrent() == null)
-         {
-            throw new GitHubException(500, "Error getting current user id.", "text/plain");
-         }
-
-         String currentId = ConversationState.getCurrent().getIdentity().getUserId();
-
-         for (Invite invite : inviteService.getInvites(false))
-         {
-            if (invite.getFrom() != null && invite.getFrom().equals(currentId) && invite.getEmail().equals(collaborator))
-            {
-               return true;
+    /**
+     * Get the array of the organizations of the authorized user.
+     * 
+     * @return array of the organizations
+     * @throws IOException if any i/o errors occurs
+     * @throws GitHubException if GitHub server return unexpected or error status for request
+     * @throws org.exoplatform.ide.commons.ParsingResponseException if any error occurs when parse response body
+     */
+    public List<String> listOrganizations() throws IOException, GitHubException, ParsingResponseException {
+        final String oauthToken = getToken();
+        final List<String> result = new ArrayList<String>();
+        final String url = "https://api.github.com/user/orgs?access_token=" + oauthToken;
+        final String method = "GET";
+        final String response = doJsonRequest(url, method, 200);
+        try {
+            JsonValue rootEl = JsonHelper.parseJson(response);
+            if (rootEl.isArray()) {
+                Iterator<JsonValue> iter = rootEl.getElements();
+                while (iter.hasNext()) {
+                    result.add(iter.next().getElement("login").getStringValue());
+                }
             }
-         }
-         return false;
-      }
-      catch (InviteException e)
-      {
-         throw new GitHubException(500, e.getMessage(), "text/plain");
-      }
-   }
 
-   /**
-    * Log in GitHub.
-    *
-    * @param credentials user's credentials
-    * @throws IOException
-    * @throws GitHubException
-    * @throws VirtualFileSystemException
-    */
-   public void login(Credentials credentials) throws IOException, GitHubException, VirtualFileSystemException
-   {
-      HttpURLConnection http = null;
-      try
-      {
-         http = (HttpURLConnection)new URL("https://api.github.com").openConnection();
-         http.setInstanceFollowRedirects(false);
-         http.setRequestMethod("GET");
-         authenticate(credentials, http);
+        } catch (JsonParseException e) {
+            throw new ParsingResponseException(e);
+        }
+        return result;
+    }
 
-         if (http.getResponseCode() != 204)
-         {
-            throw fault(http);
-         }
-         authenticator.writeCredentials(credentials);
-      }
-      finally
-      {
-         if (http != null)
-         {
-            http.disconnect();
-         }
-      }
-   }
-
-   /**
-    * Get the array of the extended repositories of the authorized user.
-    *
-    * @return array of the repositories
-    * @throws IOException
-    * @throws GitHubException
-    * @throws ParsingResponseException
-    * @throws VirtualFileSystemException
-    */
-   public GitHubRepository[] listRepositories() throws IOException, GitHubException, ParsingResponseException,
-      VirtualFileSystemException
-   {
-      String oauthToken = oauthTokenProvider.getToken("github", getUserId());
-      GitHubCredentials credentials = authenticator.readCredentials();
-
-      if (credentials == null && (oauthToken == null || oauthToken.isEmpty()))
-      {
-         throw new GitHubException(401, "Authentication required.\n", "text/plain");
-      }
-
-      return getRepositories(credentials, oauthToken);
-   }
-
-   /**
-    * @param credentials
-    * @return
-    * @throws ParsingResponseException
-    * @throws IOException
-    * @throws GitHubException
-    */
-   private GitHubRepository[] getRepositories(GitHubCredentials credentials, String oauthToken)
-      throws ParsingResponseException, IOException, GitHubException
-   {
-      String url = "https://api.github.com/user/repos";
-      url += (oauthToken != null) ? "?access_token=" + oauthToken : "";
-
-      String response = doJsonRequest(url, "GET", credentials, 200);
-      JsonValue reposArray = JsonHelper.parseJson(response);
-      if (reposArray == null || !reposArray.isArray())
-      {
-         return null;
-      }
-      reposArray = formatJsonArray(reposArray);
-      try
-      {
-         GitHubRepository[] repos = (GitHubRepository[])ObjectBuilder.createArray(GitHubRepository[].class, reposArray);
-         return repos;
-      }
-      catch (JsonException jsone)
-      {
-         throw new ParsingResponseException(jsone.getMessage(), jsone);
-      }
-
-   }
-
-   public void generateGitHubSshKey() throws IOException, VirtualFileSystemException, GitHubException, ParsingResponseException
-   {
-      String oauthToken = oauthTokenProvider.getToken("github", getUserId());
-      GitHubCredentials credentials = authenticator.readCredentials();
-
-      if (credentials == null && (oauthToken == null || oauthToken.isEmpty()))
-      {
-         throw new GitHubException(401, "Authentication required.\n", "text/plain");
-      }
-
-      generateGitHubSshKey(credentials, oauthToken);
-   }
-
-   private void generateGitHubSshKey(GitHubCredentials credentials, String oauthToken)
-      throws IOException, VirtualFileSystemException, GitHubException, ParsingResponseException
-   {
-      String url = "https://api.github.com/user/keys";
-      url += (oauthToken != null) ? "?access_token=" + oauthToken : "";
-
-      sshKeyProvider.removeKeys("github.com");
-      sshKeyProvider.genKeyPair("github.com", null, null);
-      SshKey sshKey = sshKeyProvider.getPublicKey("github.com");
-
-      String keyContent = new String(sshKey.getBytes());
-
-      Map<String, String> params = new HashMap<String, String>(2);
-      params.put("title", keyContent.split("\\s")[2]);
-      params.put("key", keyContent);
-
-      String jsonRequest = JsonHelper.toJson(params);
-
-      doJsonRequest(url, "POST", credentials, 200, jsonRequest);
-
-   }
-
-   /**
-    * Formats the keys of JSON array objects for them to be represented as beans.
-    *
-    * @param source JSON value
-    * @return {@link JsonValue} formated JSON array
-    */
-   private JsonValue formatJsonArray(JsonValue source)
-   {
-      ArrayValue array = new ArrayValue();
-      if (!source.isArray())
-      {
-         return array;
-      }
-
-      Iterator<JsonValue> objIterator = source.getElements();
-
-      while (objIterator.hasNext())
-      {
-         JsonValue obj = objIterator.next();
-         if (obj.isObject())
-         {
-            ObjectValue objectValue = formatObject(obj);
-            array.addElement(objectValue);
-         }
-      }
-      return array;
-   }
-
-   private ObjectValue formatObject(JsonValue obj)
-   {
-      Iterator<String> keysIterator = obj.getKeys();
-      ObjectValue objectValue = new ObjectValue();
-      while (keysIterator.hasNext())
-      {
-         String key = keysIterator.next();
-         objectValue.addElement(formatKey(key), obj.getElement(key));
-      }
-      return objectValue;
-   }
-
-   /**
-    * Format key in the following way: <code>ssh_url</code> to <code>sshUrl</code>, <code>pushed_at</code> to
-    * <code>pushedAt</code>.
-    *
-    * @param key source key
-    * @return {@link String} formated key
-    */
-   private String formatKey(String key)
-   {
-      if (key.contains("_"))
-      {
-         String[] parts = pattern.split(key);
-         StringBuilder str = new StringBuilder(parts[0]);
-         for (int i = 1; i < parts.length; i++)
-         {
-            if ((parts[i].length() > 1))
-            {
-               str.append(Character.toUpperCase(parts[i].charAt(0))).append(parts[i].substring(1));
+    public Collaborators getCollaborators(String user, String repository) throws IOException, ParsingResponseException, GitHubException {
+        final String url = "https://api.github.com/repos/" + user + '/' + repository + "/collaborators";
+        final String method = "GET";
+        String response = doJsonRequest(url, method, 200);
+        // It seems that collaborators response does not contains all required fields.
+        // Iterate over list and request more info about each user.
+        final GitHubUserImpl[] collaborators = parseJsonResponse(response, GitHubUserImpl[].class, null);
+        final String userId = getUserId();
+        final Collaborators myCollaborators = new CollaboratorsImpl();
+        for (GitHubUserImpl collaborator : collaborators) {
+            response = doJsonRequest(collaborator.getUrl(), method, 200);
+            GitHubUserImpl gitHubUser = parseJsonResponse(response, GitHubUserImpl.class, null);
+            String email = gitHubUser.getEmail();
+            if (!(email == null || email.isEmpty() || email.equals(userId) || isAlreadyInvited(email))) {
+                myCollaborators.getCollaborators().add(gitHubUser);
             }
-            else
-            {
-               str.append(parts[i].toUpperCase());
+        }
+        return myCollaborators;
+    }
+
+    private boolean isAlreadyInvited(String collaborator) throws GitHubException {
+        /*
+         * try { String currentId = getUserId(); for (Invite invite : inviteService.getInvites(false)) { if (invite.getFrom() != null &&
+         * invite.getFrom().equals(currentId) && invite.getEmail().equals(collaborator)) { return true; } } return false; } catch
+         * (InviteException e) { throw new GitHubException(500, e.getMessage(), "text/plain"); }
+         */
+        // TODO : temporary, just to be able compile. Re-work it after update invitation mechanism.
+        return false;
+    }
+
+
+    public void generateGitHubSshKey() throws IOException, SshKeyStoreException, GitHubException, ParsingResponseException {
+        final String oauthToken = getToken();
+        final String url = "https://api.github.com/user/keys?access_token=" + oauthToken;
+
+        sshKeyStore.removeKeys("github.com");
+        sshKeyStore.genKeyPair("github.com", null, null);
+        SshKey sshKey = sshKeyStore.getPublicKey("github.com");
+
+        String keyContent = new String(sshKey.getBytes());
+
+        Map<String, String> params = new HashMap<String, String>(2);
+        params.put("title", keyContent.split("\\s")[2]);
+        params.put("key", keyContent);
+
+        String jsonRequest = JsonHelper.toJson(params);
+
+        doJsonRequest(url, "POST", 200, jsonRequest);
+    }
+
+    /**
+     * Do json request (without authorization!)
+     * 
+     * @param url the request url
+     * @param method the request method
+     * @param success expected success code of request
+     * @return response
+     * @throws IOException
+     * @throws GitHubException
+     */
+    private String doJsonRequest(String url, String method, int success) throws IOException, GitHubException {
+        return doJsonRequest(url, method, success, null);
+    }
+
+    /**
+     * Do json request (without authorization!)
+     * 
+     * @param url the request url
+     * @param method the request method
+     * @param success expected success code of request
+     * @param postData post data represented by json string
+     * @return response
+     * @throws IOException
+     * @throws GitHubException
+     */
+    private String doJsonRequest(String url, String method, int success, String postData) throws IOException, GitHubException {
+        HttpURLConnection http = null;
+        try {
+            http = (HttpURLConnection)new URL(url).openConnection();
+            http.setInstanceFollowRedirects(false);
+            http.setRequestMethod(method);
+            http.setRequestProperty("Accept", "application/json");
+            if (postData != null && !postData.isEmpty()) {
+                http.setRequestProperty("Content-Type", "application/json");
+                http.setDoOutput(true);
+
+                BufferedWriter writer = null;
+                try {
+                    writer = new BufferedWriter(new OutputStreamWriter(http.getOutputStream()));
+                    writer.write(postData);
+                } finally {
+                    if (writer != null) {
+                        writer.close();
+                    }
+                }
             }
-         }
-         return str.toString();
-      }
-      else
-      {
-         return key;
-      }
-   }
 
-   // ---------Implementation-----------------
-
-   /**
-    * Do json request (without authorization!)
-    *
-    * @param url the request url
-    * @param method the request method
-    * @param success expected success code of request
-    * @return response
-    * @throws IOException
-    * @throws GitHubException
-    */
-   private String doJsonRequest(String url, String method, GitHubCredentials credentials, int success)
-      throws IOException, GitHubException
-   {
-      return doJsonRequest(url, method, credentials, success, null);
-   }
-
-   /**
-    * Do json request (without authorization!)
-    *
-    * @param url the request url
-    * @param method the request method
-    * @param success expected success code of request
-    * @param postData post data represented by json string
-    * @return response
-    * @throws IOException
-    * @throws GitHubException
-    */
-   private String doJsonRequest(String url, String method, GitHubCredentials credentials, int success, String postData)
-      throws IOException, GitHubException
-   {
-      HttpURLConnection http = null;
-      try
-      {
-         http = (HttpURLConnection)new URL(url).openConnection();
-         http.setInstanceFollowRedirects(false);
-         http.setRequestMethod(method);
-         http.setRequestProperty("Accept", "application/json");
-         if (credentials != null)
-         {
-            authenticate(credentials, http);
-         }
-
-         if (postData != null && !postData.isEmpty())
-         {
-            http.setRequestProperty("Content-Type", "application/json");
-            http.setDoOutput(true);
-
-            BufferedWriter writer = null;
-            try
-            {
-               writer = new BufferedWriter(new OutputStreamWriter(http.getOutputStream()));
-               writer.write(postData);
+            if (http.getResponseCode() != success) {
+                throw fault(http);
             }
-            finally
-            {
-               if (writer != null)
-               {
-                  writer.close();
-               }
+
+            InputStream input = http.getInputStream();
+            String result;
+            try {
+                result = readBody(input, http.getContentLength());
+            } finally {
+                input.close();
             }
-         }
+            return result;
+        } finally {
+            if (http != null) {
+                http.disconnect();
+            }
+        }
+    }
 
-         if (http.getResponseCode() != success)
-         {
-            throw fault(http);
-         }
+    private <O> O parseJsonResponse(String json, Class<O> clazz, Type type) throws ParsingResponseException {
+        try {
+            return JsonHelper.fromJson(json, clazz, type, JsonNameConventions.CAMEL_UNDERSCORE);
+        } catch (JsonParseException e) {
+            throw new ParsingResponseException(e.getMessage(), e);
+        }
+    }
 
-         InputStream input = http.getInputStream();
-         String result;
-         try
-         {
-            result = readBody(input, http.getContentLength());
-         }
-         finally
-         {
-            input.close();
-         }
-         return result;
-      }
-      finally
-      {
-         if (http != null)
-         {
-            http.disconnect();
-         }
-      }
-   }
+    private GitHubException fault(HttpURLConnection http) throws IOException {
+        InputStream errorStream = null;
+        try {
+            int responseCode = http.getResponseCode();
+            errorStream = http.getErrorStream();
+            if (errorStream == null) {
+                return new GitHubException(responseCode, null, null);
+            }
 
-   static GitHubException fault(HttpURLConnection http) throws IOException
-   {
-      InputStream errorStream = null;
-      try
-      {
-         int responseCode = http.getResponseCode();
-         errorStream = http.getErrorStream();
-         if (errorStream == null)
-         {
+            int length = http.getContentLength();
+            String body = readBody(errorStream, length);
+
+            if (body != null) {
+                return new GitHubException(responseCode, body, http.getContentType());
+            }
+
             return new GitHubException(responseCode, null, null);
-         }
+        } finally {
+            if (errorStream != null) {
+                errorStream.close();
+            }
+        }
+    }
 
-         int length = http.getContentLength();
-         String body = readBody(errorStream, length);
+    private static String readBody(InputStream input, int contentLength) throws IOException {
+        String body = null;
+        if (contentLength > 0) {
+            byte[] b = new byte[contentLength];
+            int off = 0;
+            int i;
+            while ((i = input.read(b, off, contentLength - off)) > 0) {
+                off += i;
+            }
+            body = new String(b);
+        } else if (contentLength < 0) {
+            ByteArrayOutputStream bout = new ByteArrayOutputStream();
+            byte[] buf = new byte[1024];
+            int point;
+            while ((point = input.read(buf)) != -1) {
+                bout.write(buf, 0, point);
+            }
+            body = bout.toString();
+        }
+        return body;
+    }
 
-         if (body != null)
-         {
-            return new GitHubException(responseCode, body, http.getContentType());
-         }
+    private String getToken() throws GitHubException, IOException {
+        String oauthToken = oauthTokenProvider.getToken("github", getUserId());
+        if (oauthToken == null || oauthToken.isEmpty())
+        {
+            throw new GitHubException(401, "Authentication required.\n", "text/plain");
+        }
+        return oauthToken;
+    }
 
-         return new GitHubException(responseCode, null, null);
-      }
-      finally
-      {
-         if (errorStream != null)
-         {
-            errorStream.close();
-         }
-      }
-   }
+    private String getUserId() {
+        return ConversationState.getCurrent().getIdentity().getUserId();
+    }
 
-   private static String readBody(InputStream input, int contentLength) throws IOException
-   {
-      String body = null;
-      if (contentLength > 0)
-      {
-         byte[] b = new byte[contentLength];
-         for (int point = -1, off = 0; (point = input.read(b, off, contentLength - off)) > 0; off += point) //
-         {
-            ;
-         }
-         body = new String(b);
-      }
-      else if (contentLength < 0)
-      {
-         ByteArrayOutputStream bout = new ByteArrayOutputStream();
-         byte[] buf = new byte[1024];
-         int point = -1;
-         while ((point = input.read(buf)) != -1)
-         {
-            bout.write(buf, 0, point);
-         }
-         body = bout.toString();
-      }
-      return body;
-   }
-
-   /**
-    * Add Basic authentication headers to HttpURLConnection.
-    *
-    * @param credentials GitHub account credentials
-    * @param http HttpURLConnection
-    * @throws IOException if any i/o errors occurs
-    */
-   private static void authenticate(Credentials credentials, HttpURLConnection http) throws IOException
-   {
-      byte[] base64 = encodeBase64((credentials.getLogin() + ":" + credentials.getPassword()).getBytes("ISO-8859-1"));
-      http.setRequestProperty("Authorization", "Basic " + new String(base64, "ISO-8859-1"));
-   }
-
-   private String getUserId()
-   {
-      return ConversationState.getCurrent().getIdentity().getUserId();
-   }
+    private String getGithubUserId() throws IOException, JsonParseException, GitHubException {
+        final String oauthToken = oauthTokenProvider.getToken("github", getUserId());
+        final String url = "https://api.github.com/user?access_token=" + oauthToken;
+        final String method = "GET";
+        final String response = doJsonRequest(url, method, 200);
+        JsonValue rootEl = JsonHelper.parseJson(response);
+        return rootEl.getElement("login").getStringValue();
+    }
 }

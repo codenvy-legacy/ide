@@ -22,13 +22,12 @@ package org.exoplatform.ide.extension.appfog.shared;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface AppfogServices
-{
-   AppfogSystemService[] getAppfogSystemService();
+public interface AppfogServices {
+    AppfogSystemService[] getAppfogSystemService();
 
-   void setAppfogSystemService(AppfogSystemService[] system);
+    void setAppfogSystemService(AppfogSystemService[] system);
 
-   AppfogProvisionedService[] getAppfogProvisionedService();
+    AppfogProvisionedService[] getAppfogProvisionedService();
 
-   void setAppfogProvisionedService(AppfogProvisionedService[] provisioned);
+    void setAppfogProvisionedService(AppfogProvisionedService[] provisioned);
 }

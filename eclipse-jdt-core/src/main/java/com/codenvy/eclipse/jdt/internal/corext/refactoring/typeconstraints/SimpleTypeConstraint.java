@@ -12,82 +12,70 @@ package com.codenvy.eclipse.jdt.internal.corext.refactoring.typeconstraints;
 
 import com.codenvy.eclipse.core.runtime.Assert;
 
-public final class SimpleTypeConstraint implements ITypeConstraint
-{
+public final class SimpleTypeConstraint implements ITypeConstraint {
 
-   private final ConstraintVariable fLeft;
+    private final ConstraintVariable fLeft;
 
-   private final ConstraintVariable fRight;
+    private final ConstraintVariable fRight;
 
-   private final ConstraintOperator fOperator;
+    private final ConstraintOperator fOperator;
 
-   /* package */ SimpleTypeConstraint(ConstraintVariable left, ConstraintVariable right, ConstraintOperator operator)
-   {
-      Assert.isNotNull(left);
-      Assert.isNotNull(right);
-      Assert.isNotNull(operator);
-      fLeft = left;
-      fRight = right;
-      fOperator = operator;
-   }
+    /* package */ SimpleTypeConstraint(ConstraintVariable left, ConstraintVariable right, ConstraintOperator operator) {
+        Assert.isNotNull(left);
+        Assert.isNotNull(right);
+        Assert.isNotNull(operator);
+        fLeft = left;
+        fRight = right;
+        fOperator = operator;
+    }
 
-   public ConstraintVariable getLeft()
-   {
-      return fLeft;
-   }
+    public ConstraintVariable getLeft() {
+        return fLeft;
+    }
 
-   public ConstraintVariable getRight()
-   {
-      return fRight;
-   }
+    public ConstraintVariable getRight() {
+        return fRight;
+    }
 
-   public ConstraintOperator getOperator()
-   {
-      return fOperator;
-   }
+    public ConstraintOperator getOperator() {
+        return fOperator;
+    }
 
-   /* (non-Javadoc)
-    * @see java.lang.Object#toString()
-    */
-   @Override
-   public String toString()
-   {
-      return getLeft().toString() + " " + fOperator.toString() + " " + getRight().toString(); //$NON-NLS-1$ //$NON-NLS-2$
-   }
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return getLeft().toString() + " " + fOperator.toString() + " " + getRight().toString(); //$NON-NLS-1$ //$NON-NLS-2$
+    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.corext.refactoring.experiments.TypeConstraint#toResolvedString()
-    */
-   public String toResolvedString()
-   {
-      return getLeft().toResolvedString() + " " + fOperator.toString() + " " + getRight().toResolvedString(); //$NON-NLS-1$ //$NON-NLS-2$
-   }
+    /* (non-Javadoc)
+     * @see org.eclipse.jdt.internal.corext.refactoring.experiments.TypeConstraint#toResolvedString()
+     */
+    public String toResolvedString() {
+        return getLeft().toResolvedString() + " " + fOperator.toString() + " " + getRight().toResolvedString(); //$NON-NLS-1$ //$NON-NLS-2$
+    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.corext.refactoring.experiments.ITypeConstraint#isSimpleTypeConstraint()
-    */
-   public boolean isSimpleTypeConstraint()
-   {
-      return true;
-   }
+    /* (non-Javadoc)
+     * @see org.eclipse.jdt.internal.corext.refactoring.experiments.ITypeConstraint#isSimpleTypeConstraint()
+     */
+    public boolean isSimpleTypeConstraint() {
+        return true;
+    }
 
-   public boolean isSubtypeConstraint()
-   {
-      return fOperator.isSubtypeOperator();
-   }
+    public boolean isSubtypeConstraint() {
+        return fOperator.isSubtypeOperator();
+    }
 
-   public boolean isStrictSubtypeConstraint()
-   {
-      return fOperator.isStrictSubtypeOperator();
-   }
+    public boolean isStrictSubtypeConstraint() {
+        return fOperator.isStrictSubtypeOperator();
+    }
 
-   public boolean isEqualsConstraint()
-   {
-      return fOperator.isEqualsOperator();
-   }
+    public boolean isEqualsConstraint() {
+        return fOperator.isEqualsOperator();
+    }
 
-   public boolean isDefinesConstraint()
-   {
-      return fOperator.isDefinesOperator();
-   }
+    public boolean isDefinesConstraint() {
+        return fOperator.isDefinesOperator();
+    }
 }

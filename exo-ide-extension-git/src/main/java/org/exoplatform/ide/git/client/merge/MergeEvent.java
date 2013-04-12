@@ -25,31 +25,21 @@ import com.google.gwt.event.shared.GwtEvent;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 20, 2011 12:25:30 PM anya $
- * 
  */
-public class MergeEvent extends GwtEvent<MergeHandler>
-{
-   /**
-    * Type used to register the event.
-    */
-   public static final GwtEvent.Type<MergeHandler> TYPE = new GwtEvent.Type<MergeHandler>();
+public class MergeEvent extends GwtEvent<MergeHandler> {
+    /** Type used to register the event. */
+    public static final GwtEvent.Type<MergeHandler> TYPE = new GwtEvent.Type<MergeHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<MergeHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<MergeHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(MergeHandler handler)
-   {
-      handler.onMerge(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(MergeHandler handler) {
+        handler.onMerge(this);
+    }
 
 }

@@ -19,20 +19,19 @@
 package org.exoplatform.gwtframework.ui.client.window;
 
 /**
- *  Implementer will contain registered {@link RestoreHandler} handlers.
- * 
+ * Implementer will contain registered {@link RestoreHandler} handlers.
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Mar 4, 2011 11:30:30 AM anya $
- *
  */
-public interface HasRestoreHandlers
-{
-   
-   /**
-    * Adds {@link RestoreHandler} handler.
-    * 
-    * @param handler restore window handler
-    */
-   void addRestoreHandler(RestoreHandler handler);
-   
+public interface HasRestoreHandlers {
+
+    /**
+     * Adds {@link RestoreHandler} handler.
+     *
+     * @param handler
+     *         restore window handler
+     */
+    void addRestoreHandler(RestoreHandler handler);
+
 }

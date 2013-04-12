@@ -22,21 +22,20 @@ package org.exoplatform.ide.extension.java.jdi.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface Field extends Variable
-{
-   boolean isFinal();
+public interface Field extends Variable {
+    boolean isFinal();
 
-   boolean isStatic();
+    boolean isStatic();
 
-   boolean isTransient();
+    boolean isTransient();
 
-   boolean isVolatile();
+    boolean isVolatile();
 
-   void setFinal(boolean value);
+    void setFinal(boolean value);
 
-   void setStatic(boolean value);
+    void setStatic(boolean value);
 
-   void setTransient(boolean value);
+    void setTransient(boolean value);
 
-   void setVolatile(boolean value);
+    void setVolatile(boolean value);
 }

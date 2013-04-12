@@ -14,42 +14,41 @@
 
 package com.google.collide.codemirror2;
 
-import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.common.base.Preconditions;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import org.exoplatform.ide.json.shared.JsonStringMap;
 
-/**
- * Syntax types (languages / file formats) enumeration.
- */
+/** Syntax types (languages / file formats) enumeration. */
 public enum SyntaxType {
 
-  CPP("clike", "text/x-c++src", State.class, new BasicTokenFactory(), false),
-  CSS("css", "text/css", CssState.class, new CssTokenFactory(), true),
-  DART("dart", "text/dart", State.class, new BasicTokenFactory(), false),
-  GO("go", "text/x-go", State.class, new BasicTokenFactory(), false),
-  HTML("html", "text/html", HtmlState.class, new HtmlTokenFactory(), true),
-  JAVA("clike", "text/x-java", State.class, new BasicTokenFactory(), false),
-  JS("javascript", "text/javascript", JsState.class, new BasicTokenFactory(), true),
-  NONE("unknown", "text/plain", State.class, new BasicTokenFactory(), true),
-  PHP("php", "text/x-php", State.class, new BasicTokenFactory(), false),
-  PY("python", "text/x-python", PyState.class, new PyTokenFactory(), false),
-  SVG("xml", "application/xml", State.class, new BasicTokenFactory(), true),
-  XML("xml", "application/xml", State.class, new BasicTokenFactory(), true),
-  YAML("yaml", "text/x-yaml", State.class, new BasicTokenFactory(), true);
+    CPP("clike", "text/x-c++src", State.class, new BasicTokenFactory(), false),
+    CSS("css", "text/css", CssState.class, new CssTokenFactory(), true),
+    DART("dart", "text/dart", State.class, new BasicTokenFactory(), false),
+    GO("go", "text/x-go", State.class, new BasicTokenFactory(), false),
+    HTML("html", "text/html", HtmlState.class, new HtmlTokenFactory(), true),
+    JAVA("clike", "text/x-java", State.class, new BasicTokenFactory(), false),
+    JS("javascript", "text/javascript", JsState.class, new BasicTokenFactory(), true),
+    NONE("unknown", "text/plain", State.class, new BasicTokenFactory(), true),
+    PHP("php", "text/x-php", State.class, new BasicTokenFactory(), false),
+    PY("python", "text/x-python", PyState.class, new PyTokenFactory(), false),
+    SVG("xml", "application/xml", State.class, new BasicTokenFactory(), true),
+    XML("xml", "application/xml", State.class, new BasicTokenFactory(), true),
+    YAML("yaml", "text/x-yaml", State.class, new BasicTokenFactory(), true);
 
-  /**
-   * Guesses syntax type by mimetype
-   * @param mimeType
-   * @return
-  */
-  public static SyntaxType syntaxTypeByMimeType(String mimeType){
-     Preconditions.checkNotNull(mimeType);
-     SyntaxType syntaxType = extensionToSyntaxType.get(mimeType);
-     return (syntaxType != null) ? syntaxType : SyntaxType.NONE;
-  }
-  
+    /**
+     * Guesses syntax type by mimetype
+     *
+     * @param mimeType
+     * @return
+     */
+    public static SyntaxType syntaxTypeByMimeType(String mimeType) {
+        Preconditions.checkNotNull(mimeType);
+        SyntaxType syntaxType = extensionToSyntaxType.get(mimeType);
+        return (syntaxType != null) ? syntaxType : SyntaxType.NONE;
+    }
+
 //  /**
 //   * Guesses syntax type by file path.
 //   */
@@ -69,59 +68,60 @@ public enum SyntaxType {
 //    return (syntaxType != null) ? syntaxType : SyntaxType.NONE;
 //  }
 
-  private final String mimeType;
+    private final String mimeType;
 
-  private final TokenFactory tokenFactory;
+    private final TokenFactory tokenFactory;
 
-  private final Class stateClass;
+    private final Class stateClass;
 
-  private final String name;
+    private final String name;
 
-  private final boolean hasGlobalNamespace;
+    private final boolean hasGlobalNamespace;
 
-  private static final JsonStringMap<SyntaxType> extensionToSyntaxType =
-      createMimeTypeToSyntaxTypeMap();
+    private static final JsonStringMap<SyntaxType> extensionToSyntaxType =
+            createMimeTypeToSyntaxTypeMap();
 
-  public String getMimeType() {
-    return mimeType;
-  }
+    public String getMimeType() {
+        return mimeType;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  @SuppressWarnings("unchecked")
-  public <T extends State> TokenFactory<T> getTokenFactory() {
-    return tokenFactory;
-  }
+    @SuppressWarnings("unchecked")
+    public <T extends State> TokenFactory<T> getTokenFactory() {
+        return tokenFactory;
+    }
 
-  SyntaxType(String name, String mimeType, Class<? extends State> stateClass,
-      TokenFactory tokenFactory, boolean hasGlobalNamespace) {
-    this.name = name;
-    this.mimeType = mimeType;
-    this.tokenFactory = tokenFactory;
-    this.stateClass = stateClass;
-    this.hasGlobalNamespace = hasGlobalNamespace;
-  }
+    SyntaxType(String name, String mimeType, Class<? extends State> stateClass,
+               TokenFactory tokenFactory, boolean hasGlobalNamespace) {
+        this.name = name;
+        this.mimeType = mimeType;
+        this.tokenFactory = tokenFactory;
+        this.stateClass = stateClass;
+        this.hasGlobalNamespace = hasGlobalNamespace;
+    }
 
-  /**
-   * Checks if specified class can be cast form parser state corresponding to
-   * this syntax type.
-   *
-   * @param stateClass class we are going to (down)cast to
-   * @return {@code true} is cast can be performed safely
-   */
-  public boolean checkStateClass(Class stateClass) {
-    return stateClass == this.stateClass || stateClass == State.class;
-  }
+    /**
+     * Checks if specified class can be cast form parser state corresponding to
+     * this syntax type.
+     *
+     * @param stateClass
+     *         class we are going to (down)cast to
+     * @return {@code true} is cast can be performed safely
+     */
+    public boolean checkStateClass(Class stateClass) {
+        return stateClass == this.stateClass || stateClass == State.class;
+    }
 
-  /**
-   * @return {@code true} if this syntax type has a notion of global namespace, as opposed
-   *         to the notion of modules and explicit importing
-   */
-  public boolean hasGlobalNamespace() {
-    return hasGlobalNamespace;
-  }
+    /**
+     * @return {@code true} if this syntax type has a notion of global namespace, as opposed
+     *         to the notion of modules and explicit importing
+     */
+    public boolean hasGlobalNamespace() {
+        return hasGlobalNamespace;
+    }
 
 //  /**
 //   * Initializes extension -> syntax type map. <b>All extension keys must be lowercase</b>.
@@ -148,22 +148,24 @@ public enum SyntaxType {
 //    tmp.put("yaml", SyntaxType.YAML);
 //    return tmp;
 //  }
-  /**
-   * Initializes mimeType -> syntax type map.
-   * @return a new map instance with all supported languages.
-   */
-  private static JsonStringMap<SyntaxType> createMimeTypeToSyntaxTypeMap() {
-    JsonStringMap<SyntaxType> tmp = JsonCollections.createMap();
-    tmp.put(MimeType.TEXT_CSS, SyntaxType.CSS);
-    tmp.put(MimeType.TEXT_HTML, SyntaxType.HTML);
-    tmp.put(MimeType.APPLICATION_JAVA, SyntaxType.JAVA);
-    tmp.put(MimeType.APPLICATION_JAVASCRIPT, SyntaxType.JS);
-    tmp.put(MimeType.APPLICATION_X_JAVASCRIPT, SyntaxType.JS);
-    tmp.put(MimeType.TEXT_JAVASCRIPT, SyntaxType.JS);
-    tmp.put(MimeType.APPLICATION_PHP, SyntaxType.PHP);
-    tmp.put(MimeType.TEXT_X_PYTHON, SyntaxType.PY);
-    tmp.put(MimeType.TEXT_XML, SyntaxType.XML);
-    tmp.put(MimeType.TEXT_YAML, SyntaxType.YAML);
-    return tmp;
-  }
+
+    /**
+     * Initializes mimeType -> syntax type map.
+     *
+     * @return a new map instance with all supported languages.
+     */
+    private static JsonStringMap<SyntaxType> createMimeTypeToSyntaxTypeMap() {
+        JsonStringMap<SyntaxType> tmp = JsonCollections.createMap();
+        tmp.put(MimeType.TEXT_CSS, SyntaxType.CSS);
+        tmp.put(MimeType.TEXT_HTML, SyntaxType.HTML);
+        tmp.put(MimeType.APPLICATION_JAVA, SyntaxType.JAVA);
+        tmp.put(MimeType.APPLICATION_JAVASCRIPT, SyntaxType.JS);
+        tmp.put(MimeType.APPLICATION_X_JAVASCRIPT, SyntaxType.JS);
+        tmp.put(MimeType.TEXT_JAVASCRIPT, SyntaxType.JS);
+        tmp.put(MimeType.APPLICATION_PHP, SyntaxType.PHP);
+        tmp.put(MimeType.TEXT_X_PYTHON, SyntaxType.PY);
+        tmp.put(MimeType.TEXT_XML, SyntaxType.XML);
+        tmp.put(MimeType.TEXT_YAML, SyntaxType.YAML);
+        return tmp;
+    }
 }

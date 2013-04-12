@@ -20,6 +20,7 @@
 
 -->
 <Module>
-<ModulePrefs title="Hello World!" />
-<Content type="html">
-<![CDATA[ Hello, world! ]]></Content></Module>
+    <ModulePrefs title="Hello World!"/>
+    <Content type="html">
+        <![CDATA[ Hello, world! ]]></Content>
+</Module>

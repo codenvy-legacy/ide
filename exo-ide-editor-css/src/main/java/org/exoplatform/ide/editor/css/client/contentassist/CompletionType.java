@@ -13,13 +13,10 @@
 // limitations under the License.
 package org.exoplatform.ide.editor.css.client.contentassist;
 
-/**
- * An enumeration of css types of autocompletions.
- *
- */
+/** An enumeration of css types of autocompletions. */
 public enum CompletionType {
-  CLASS,
-  PROPERTY,
-  VALUE,
-  NONE
+    CLASS,
+    PROPERTY,
+    VALUE,
+    NONE
 }

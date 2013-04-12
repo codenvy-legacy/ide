@@ -24,114 +24,94 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * Event occurs, when user tries to build project by maven builder.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuildProjectEvent.java Feb 17, 2012 4:04:56 PM azatsarynnyy $
- *
  */
-public class BuildProjectEvent extends GwtEvent<BuildProjectHandler>
-{
-   /**
-    * Project for build.
-    */
-   private ProjectModel project;
+public class BuildProjectEvent extends GwtEvent<BuildProjectHandler> {
+    /** Project for build. */
+    private ProjectModel project;
 
-   private final boolean publish;
-   
-   private final boolean force;
-   
-   public BuildProjectEvent()
-   {
-      this(false);
-   }
+    private final boolean publish;
 
-   /**
-    * If <code>publish</code> artifact will be in public repository after build.
-    * By default set to false
-    * @param publish
-    */
-   public BuildProjectEvent(boolean publish)
-   {
-      this(null, publish);
-   }
-   
-   /**
-    * If <code>publish</code> artifact will be in public repository after build.
-    * <code>force</code> project will be build  even if it not change from last build
-    * By default set to false
-    * @param publish
-    */
-   public BuildProjectEvent(boolean publish, boolean force)
-   {
-      this(null, publish, force);
-   }
+    private final boolean force;
 
-   /**
-    * @param project
-    */
-   public BuildProjectEvent(ProjectModel project)
-   {
-      this(project, false);
-   }
+    public BuildProjectEvent() {
+        this(false);
+    }
 
-   /**
-    * If <code>publish</code> artifact will be in public repository after build.
-    * By default set to false
-    * @param project
-    * @param publish
-    */
-   public BuildProjectEvent(ProjectModel project, boolean publish)
-   {
-      this(project, publish, false);
-   }
+    /**
+     * If <code>publish</code> artifact will be in public repository after build.
+     * By default set to false
+     *
+     * @param publish
+     */
+    public BuildProjectEvent(boolean publish) {
+        this(null, publish);
+    }
 
-   public BuildProjectEvent(ProjectModel project, boolean publish, boolean force)
-   {
-      this.project = project;
-      this.publish = publish;
-      this.force = force;
-   }
+    /**
+     * If <code>publish</code> artifact will be in public repository after build.
+     * <code>force</code> project will be build  even if it not change from last build
+     * By default set to false
+     *
+     * @param publish
+     */
+    public BuildProjectEvent(boolean publish, boolean force) {
+        this(null, publish, force);
+    }
 
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<BuildProjectHandler> TYPE = new GwtEvent.Type<BuildProjectHandler>();
+    /** @param project */
+    public BuildProjectEvent(ProjectModel project) {
+        this(project, false);
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<BuildProjectHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /**
+     * If <code>publish</code> artifact will be in public repository after build.
+     * By default set to false
+     *
+     * @param project
+     * @param publish
+     */
+    public BuildProjectEvent(ProjectModel project, boolean publish) {
+        this(project, publish, false);
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(BuildProjectHandler handler)
-   {
-      handler.onBuildProject(this);
-   }
+    public BuildProjectEvent(ProjectModel project, boolean publish, boolean force) {
+        this.project = project;
+        this.publish = publish;
+        this.force = force;
+    }
 
-   /**
-    * Get the project for build.
-    * 
-    * @return the project
-    */
-   public ProjectModel getProject()
-   {
-      return project;
-   }
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<BuildProjectHandler> TYPE = new GwtEvent.Type<BuildProjectHandler>();
 
-   public boolean isPublish()
-   {
-      return publish;
-   }
-   
-   public boolean isForce()
-   {
-      return force;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<BuildProjectHandler> getAssociatedType() {
+        return TYPE;
+    }
+
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(BuildProjectHandler handler) {
+        handler.onBuildProject(this);
+    }
+
+    /**
+     * Get the project for build.
+     *
+     * @return the project
+     */
+    public ProjectModel getProject() {
+        return project;
+    }
+
+    public boolean isPublish() {
+        return publish;
+    }
+
+    public boolean isForce() {
+        return force;
+    }
 }

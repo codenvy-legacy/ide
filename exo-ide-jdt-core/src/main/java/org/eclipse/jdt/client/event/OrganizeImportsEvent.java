@@ -23,29 +23,21 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class OrganizeImportsEvent extends GwtEvent<OrganizeImportsHandler>
-{
+public class OrganizeImportsEvent extends GwtEvent<OrganizeImportsHandler> {
 
-   public static final GwtEvent.Type<OrganizeImportsHandler> TYPE = new Type<OrganizeImportsHandler>();
+    public static final GwtEvent.Type<OrganizeImportsHandler> TYPE = new Type<OrganizeImportsHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<OrganizeImportsHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<OrganizeImportsHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(OrganizeImportsHandler handler)
-   {
-      handler.onOrganizeImports(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(OrganizeImportsHandler handler) {
+        handler.onOrganizeImports(this);
+    }
 
 }

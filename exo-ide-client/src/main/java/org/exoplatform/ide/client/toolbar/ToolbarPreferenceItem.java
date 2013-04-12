@@ -27,18 +27,15 @@ import org.exoplatform.ide.client.framework.preference.PreferencePerformer;
 
 /**
  * Toolbar preference item.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 19, 2012 10:23:48 AM anya $
- * 
  */
-public class ToolbarPreferenceItem extends AbstractPreferenceItem
-{
-   private static final String NAME = IDE.PREFERENCES_CONSTANT.customizeToolbarTitle();
+public class ToolbarPreferenceItem extends AbstractPreferenceItem {
+    private static final String NAME = IDE.PREFERENCES_CONSTANT.customizeToolbarTitle();
 
-   public ToolbarPreferenceItem(PreferencePerformer performer)
-   {
-      super(NAME, new Image(IDEImageBundle.INSTANCE.customizeToolbar()), performer);
-   }
+    public ToolbarPreferenceItem(PreferencePerformer performer) {
+        super(NAME, new Image(IDEImageBundle.INSTANCE.customizeToolbar()), performer);
+    }
 
 }

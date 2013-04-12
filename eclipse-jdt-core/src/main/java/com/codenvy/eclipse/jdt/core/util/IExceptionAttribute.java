@@ -13,36 +13,35 @@ package com.codenvy.eclipse.jdt.core.util;
 /**
  * Description of a constant value attribute as described in the JVM
  * specifications.
- *
+ * <p/>
  * This interface may be implemented by clients.
  *
  * @since 2.0
  */
-public interface IExceptionAttribute extends IClassFileAttribute
-{
+public interface IExceptionAttribute extends IClassFileAttribute {
 
-   /**
-    * Answer back the number of exceptions of the exception attribute.
-    *
-    * @return the number of exceptions of the exception attribute
-    */
-   int getExceptionsNumber();
+    /**
+     * Answer back the number of exceptions of the exception attribute.
+     *
+     * @return the number of exceptions of the exception attribute
+     */
+    int getExceptionsNumber();
 
-   /**
-    * Answer back the exception names of the exception attribute. Answers an
-    * empty collection if none.
-    *
-    * @return the exception names of the exception attribute. Answers an
-    *         empty collection if none
-    */
-   char[][] getExceptionNames();
+    /**
+     * Answer back the exception names of the exception attribute. Answers an
+     * empty collection if none.
+     *
+     * @return the exception names of the exception attribute. Answers an
+     *         empty collection if none
+     */
+    char[][] getExceptionNames();
 
-   /**
-    * Answer back the exception indexes of the exception attribute. Answers an
-    * empty collection if none.
-    *
-    * @return the exception indexes of the exception attribute. Answers an
-    *         empty collection if none
-    */
-   int[] getExceptionIndexes();
+    /**
+     * Answer back the exception indexes of the exception attribute. Answers an
+     * empty collection if none.
+     *
+     * @return the exception indexes of the exception attribute. Answers an
+     *         empty collection if none
+     */
+    int[] getExceptionIndexes();
 }

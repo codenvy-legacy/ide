@@ -20,17 +20,15 @@ import com.google.gwt.event.logical.shared.OpenEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public class OpenEventImpl<T> extends OpenEvent<T>
-{
+public class OpenEventImpl<T> extends OpenEvent<T> {
 
-   public OpenEventImpl(T target)
-   {
-      super(target);
-   }
+    public OpenEventImpl(T target) {
+        super(target);
+    }
 
 }

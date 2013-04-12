@@ -35,126 +35,98 @@ import org.exoplatform.ide.extension.java.jdi.client.DebuggerExtension;
 
 /**
  * View for change variable value.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: ChangeValueView.java Apr 28, 2012 9:47:19 AM azatsarynnyy $
- *
  */
-public class ChangeValueView extends ViewImpl implements ChangeValuePresenter.Display
-{
+public class ChangeValueView extends ViewImpl implements ChangeValuePresenter.Display {
 
-   public static final int HEIGHT = 240;
+    public static final int HEIGHT = 240;
 
-   public static final int WIDTH = 460;
+    public static final int WIDTH = 460;
 
-   public static final String ID = "ideChangeVariableValueView";
+    public static final String ID = "ideChangeVariableValueView";
 
-   private static final String CHANGE_BUTTON_ID = "ideChangeVariableValueViewChangeButton";
+    private static final String CHANGE_BUTTON_ID = "ideChangeVariableValueViewChangeButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideChangeVariableValueViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideChangeVariableValueViewCancelButton";
 
-   private static final String EXPRESSION_FIELD_ID = "ideChangeVariableValueViewExpressionField";
+    private static final String EXPRESSION_FIELD_ID = "ideChangeVariableValueViewExpressionField";
 
-   @UiField
-   ImageButton changeButton;
+    @UiField
+    ImageButton changeButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   @UiField
-   Label expressionFieldLabel;
+    @UiField
+    Label expressionFieldLabel;
 
-   @UiField
-   TextAreaInput expressionField;
+    @UiField
+    TextAreaInput expressionField;
 
-   interface ChangeVariableValueViewUiBinder extends UiBinder<Widget, ChangeValueView>
-   {
-   }
+    interface ChangeVariableValueViewUiBinder extends UiBinder<Widget, ChangeValueView> {
+    }
 
-   private static ChangeVariableValueViewUiBinder uiBinder = GWT.create(ChangeVariableValueViewUiBinder.class);
+    private static ChangeVariableValueViewUiBinder uiBinder = GWT.create(ChangeVariableValueViewUiBinder.class);
 
-   public ChangeValueView()
-   {
-      super(ID, ViewType.MODAL, DebuggerExtension.LOCALIZATION_CONSTANT.changeValueViewTitle(), null, WIDTH, HEIGHT);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
+    public ChangeValueView() {
+        super(ID, ViewType.MODAL, DebuggerExtension.LOCALIZATION_CONSTANT.changeValueViewTitle(), null, WIDTH, HEIGHT);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
 
-      expressionField.setName(EXPRESSION_FIELD_ID);
-      changeButton.setButtonId(CHANGE_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-   }
+        expressionField.setName(EXPRESSION_FIELD_ID);
+        changeButton.setButtonId(CHANGE_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display#getChangeButton()
-    */
-   @Override
-   public HasClickHandlers getChangeButton()
-   {
-      return changeButton;
-   }
+    /** @see org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display#getChangeButton() */
+    @Override
+    public HasClickHandlers getChangeButton() {
+        return changeButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display#getExpression()
-    */
-   @Override
-   public HasValue<String> getExpression()
-   {
-      return expressionField;
-   }
+    /** @see org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display#getExpression() */
+    @Override
+    public HasValue<String> getExpression() {
+        return expressionField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display#setExpression(java.lang.String)
-    */
-   @Override
-   public void setExpression(String expression)
-   {
-      expressionField.setValue(expression);
-   }
+    /** @see org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display#setExpression(java.lang.String) */
+    @Override
+    public void setExpression(String expression) {
+        expressionField.setValue(expression);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display#focusInExpressionField()
-    */
-   @Override
-   public void focusInExpressionField()
-   {
-      expressionField.focus();
-   }
+    /** @see org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display#focusInExpressionField() */
+    @Override
+    public void focusInExpressionField() {
+        expressionField.focus();
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display#setChangeButtonEnable(boolean)
-    */
-   @Override
-   public void setChangeButtonEnable(boolean isEnable)
-   {
-      changeButton.setEnabled(isEnable);
-   }
+    /** @see org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display#setChangeButtonEnable(boolean) */
+    @Override
+    public void setChangeButtonEnable(boolean isEnable) {
+        changeButton.setEnabled(isEnable);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display#selectAllText()
-    */
-   @Override
-   public void selectAllText()
-   {
-      expressionField.selectAll();
-   }
+    /** @see org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display#selectAllText() */
+    @Override
+    public void selectAllText() {
+        expressionField.selectAll();
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display#setExpressionFieldTitle(java.lang.String)
-    */
-   @Override
-   public void setExpressionFieldTitle(String title)
-   {
-      expressionFieldLabel.setIsHTML(true);
-      expressionFieldLabel.setValue(title);
-   }
+    /** @see org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display#setExpressionFieldTitle(java.lang.String) */
+    @Override
+    public void setExpressionFieldTitle(String title) {
+        expressionFieldLabel.setIsHTML(true);
+        expressionFieldLabel.setValue(title);
+    }
 
 }

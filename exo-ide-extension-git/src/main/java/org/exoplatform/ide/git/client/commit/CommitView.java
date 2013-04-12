@@ -37,111 +37,100 @@ import org.exoplatform.ide.git.client.GitExtension;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 31, 2011 10:38:47 AM anya $
- * 
  */
-public class CommitView extends ViewImpl implements CommitPresenter.Display
-{
-   private static final int HEIGHT = 240;
+public class CommitView extends ViewImpl implements CommitPresenter.Display {
+    private static final int    HEIGHT           = 240;
 
-   private static final int WIDTH = 460;
+    private static final int    WIDTH            = 460;
 
-   public static final String ID = "ideCommitView";
+    public static final String  ID               = "ideCommitView";
 
-   /* Elements IDs */
+    /* Elements IDs */
 
-   private static final String COMMIT_BUTTON_ID = "ideCommitViewCommitButton";
+    private static final String COMMIT_BUTTON_ID = "ideCommitViewCommitButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideCommitViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideCommitViewCancelButton";
 
-   private static final String MESSAGE_FIELD_ID = "ideCommitViewMessageField";
+    private static final String MESSAGE_FIELD_ID = "ideCommitViewMessageField";
 
-   private static final String ALL_FIELD_ID = "ideCommitViewAllField";
+    private static final String ALL_FIELD_ID     = "ideCommitViewAllField";
 
-   /* Elements titles */
+    private static final String AMEND_FIELD_ID   = "ideCommitViewAmendField";
 
-   @UiField
-   ImageButton commitButton;
+    /* Elements titles */
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton                 commitButton;
 
-   @UiField
-   TextAreaInput messageField;
+    @UiField
+    ImageButton                 cancelButton;
 
-   @UiField
-   CheckBox allField;
+    @UiField
+    TextAreaInput               messageField;
 
-   interface CommitViewUiBinder extends UiBinder<Widget, CommitView>
-   {
-   }
+    @UiField
+    CheckBox                    allField;
 
-   private static CommitViewUiBinder uiBinder = GWT.create(CommitViewUiBinder.class);
+    @UiField
+    CheckBox                    amendField;
 
-   public CommitView()
-   {
-      super(ID, ViewType.MODAL, GitExtension.MESSAGES.commitTitle(), null, WIDTH, HEIGHT);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
+    interface CommitViewUiBinder extends UiBinder<Widget, CommitView> {
+    }
 
-      allField.setName(ALL_FIELD_ID);
+    private static CommitViewUiBinder uiBinder = GWT.create(CommitViewUiBinder.class);
 
-      messageField.setName(MESSAGE_FIELD_ID);
-      // ,GitExtension.MESSAGES.commitMessageFieldTitle());
-      commitButton.setButtonId(COMMIT_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-   }
+    public CommitView() {
+        super(ID, ViewType.MODAL, GitExtension.MESSAGES.commitTitle(), null, WIDTH, HEIGHT);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
 
-   /**
-    * @see org.exoplatform.ide.git.client.commit.CommitPresenter.Display#getCommitButton()
-    */
-   @Override
-   public HasClickHandlers getCommitButton()
-   {
-      return commitButton;
-   }
+        allField.setName(ALL_FIELD_ID);
+        amendField.setName(AMEND_FIELD_ID);
 
-   /**
-    * @see org.exoplatform.ide.git.client.commit.CommitPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+        messageField.setName(MESSAGE_FIELD_ID);
+        commitButton.setButtonId(COMMIT_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.commit.CommitPresenter.Display#getMessage()
-    */
-   @Override
-   public HasValue<String> getMessage()
-   {
-      return messageField;
-   }
+    /** @see org.exoplatform.ide.git.client.commit.CommitPresenter.Display#getCommitButton() */
+    @Override
+    public HasClickHandlers getCommitButton() {
+        return commitButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.commit.CommitPresenter.Display#enableCommitButton(boolean)
-    */
-   @Override
-   public void enableCommitButton(boolean enable)
-   {
-      commitButton.setEnabled(enable);
-   }
+    /** @see org.exoplatform.ide.git.client.commit.CommitPresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.commit.CommitPresenter.Display#focusInMessageField()
-    */
-   @Override
-   public void focusInMessageField()
-   {
-      messageField.focus();
-   }
+    /** @see org.exoplatform.ide.git.client.commit.CommitPresenter.Display#getMessage() */
+    @Override
+    public HasValue<String> getMessage() {
+        return messageField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.commit.CommitPresenter.Display#getAllField()
-    */
-   @Override
-   public HasValue<Boolean> getAllField()
-   {
-      return allField;
-   }
+    /** @see org.exoplatform.ide.git.client.commit.CommitPresenter.Display#enableCommitButton(boolean) */
+    @Override
+    public void enableCommitButton(boolean enable) {
+        commitButton.setEnabled(enable);
+    }
+
+    /** @see org.exoplatform.ide.git.client.commit.CommitPresenter.Display#focusInMessageField() */
+    @Override
+    public void focusInMessageField() {
+        messageField.focus();
+    }
+
+    /** @see org.exoplatform.ide.git.client.commit.CommitPresenter.Display#getAllField() */
+    @Override
+    public HasValue<Boolean> getAllField() {
+        return allField;
+    }
+
+    /** @see org.exoplatform.ide.git.client.commit.CommitPresenter.Display#getAmendField() */
+    @Override
+    public HasValue<Boolean> getAmendField() {
+        return amendField;
+    }
 }

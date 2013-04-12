@@ -25,18 +25,16 @@ import com.google.gwt.junit.tools.GWTTestSuite;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class GwtTestSuiteVfs extends GWTTestSuite
-{
-   public static Test suite()
-   {
-      TestSuite suite = new TestSuite("vfs test suite");
+public class GwtTestSuiteVfs extends GWTTestSuite {
+    public static Test suite() {
+        TestSuite suite = new TestSuite("vfs test suite");
       /*
        * suite.addTestSuite(GwtTestVfsSerializer.class); suite.addTestSuite(GwtTestVirtualFileSystem.class);
        */
-      return suite;
-   }
+        return suite;
+    }
 }

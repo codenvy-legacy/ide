@@ -19,48 +19,48 @@
 
 -->
 <module>
-   <inherits name='com.google.gwt.user.User' />
-   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationView">
-      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display" />
-   </replace-with>
-   
-   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.login.LoginView">
-      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.login.LoginPresenter.Display" />
-   </replace-with>
+    <inherits name='com.google.gwt.user.User'/>
+    <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationView">
+        <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationView">
-      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display" />
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.login.LoginView">
+        <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.login.LoginPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoView">
-      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter.Display" />
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationView">
+        <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.rename.RenameApplicationView">
-      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.rename.RenameApplicationPresenter.Display" />
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoView">
+        <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationView">
-      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationPresenter.Display" />
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.rename.RenameApplicationView">
+        <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.rename.RenameApplicationPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlView">
-      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display" />
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationView">
+        <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsView">
-      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter.Display" />
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlView">
+        <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectView">
-      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectPresenter.Display" />
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsView">
+        <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.services.ManageServicesView">
-      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.services.ManageServicesPresenter.Display" />
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectView">
+        <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServiceView">
-      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServicePresenter.Display" />
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.services.ManageServicesView">
+        <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.services.ManageServicesPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServiceView">
+        <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServicePresenter.Display"/>
+    </replace-with>
 </module>

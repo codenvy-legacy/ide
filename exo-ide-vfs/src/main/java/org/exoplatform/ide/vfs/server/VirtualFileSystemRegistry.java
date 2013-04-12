@@ -32,45 +32,36 @@ import java.util.concurrent.ConcurrentMap;
  * @version $Id: $
  * @see VirtualFileSystemFactory
  */
-public class VirtualFileSystemRegistry
-{
-   private final ConcurrentMap<String, VirtualFileSystemProvider> providers =
-      new ConcurrentHashMap<String, VirtualFileSystemProvider>();
+public class VirtualFileSystemRegistry {
+    private final ConcurrentMap<String, VirtualFileSystemProvider> providers =
+            new ConcurrentHashMap<String, VirtualFileSystemProvider>();
 
-   public void registerProvider(String vfsId, VirtualFileSystemProvider provider) throws VirtualFileSystemException
-   {
-      if (providers.putIfAbsent(vfsId, provider) != null)
-      {
-         throw new VirtualFileSystemException("Virtual file system " + vfsId + " already registered. ");
-      }
-   }
+    public void registerProvider(String vfsId, VirtualFileSystemProvider provider) throws VirtualFileSystemException {
+        if (providers.putIfAbsent(vfsId, provider) != null) {
+            throw new VirtualFileSystemException("Virtual file system " + vfsId + " already registered. ");
+        }
+    }
 
-   public void unregisterProvider(String vfsId) throws VirtualFileSystemException
-   {
-      final VirtualFileSystemProvider removed = providers.remove(id(vfsId));
-      if (removed != null)
-      {
-         removed.close();
-      }
-   }
+    public void unregisterProvider(String vfsId) throws VirtualFileSystemException {
+        final VirtualFileSystemProvider removed = providers.remove(id(vfsId));
+        if (removed != null) {
+            removed.close();
+        }
+    }
 
-   public VirtualFileSystemProvider getProvider(String vfsId) throws VirtualFileSystemException
-   {
-      VirtualFileSystemProvider provider = providers.get(id(vfsId));
-      if (provider == null)
-      {
-         throw new VirtualFileSystemException("Virtual file system " + vfsId + " does not exist. ");
-      }
-      return provider;
-   }
+    public VirtualFileSystemProvider getProvider(String vfsId) throws VirtualFileSystemException {
+        VirtualFileSystemProvider provider = providers.get(id(vfsId));
+        if (provider == null) {
+            throw new VirtualFileSystemException("Virtual file system " + vfsId + " does not exist. ");
+        }
+        return provider;
+    }
 
-   public Collection<VirtualFileSystemProvider> getRegisteredProviders() throws VirtualFileSystemException
-   {
-      return Collections.unmodifiableCollection(providers.values());
-   }
+    public Collection<VirtualFileSystemProvider> getRegisteredProviders() throws VirtualFileSystemException {
+        return Collections.unmodifiableCollection(providers.values());
+    }
 
-   private String id(String vfsId)
-   {
-      return vfsId == null ? "default" : vfsId;
-   }
+    private String id(String vfsId) {
+        return vfsId == null ? "default" : vfsId;
+    }
 }

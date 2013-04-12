@@ -18,29 +18,27 @@
  */
 package org.exoplatform.ide.editor.css.client.codemirror;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.JavaScriptObject;
 
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorParserImpl;
 
-import com.google.gwt.core.client.JavaScriptObject;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
- * 
  */
-public class CssParser extends CodeMirrorParserImpl
-{
+public class CssParser extends CodeMirrorParserImpl {
 
-   /**
-    * @see org.exoplatform.ide.editor.codemirror.CodeMirrorParserImpl#getTokenList(java.lang.String, com.google.gwt.core.client.JavaScriptObject)
-    */
-   @Override
-   public List<TokenBeenImpl> getTokenList(String editorId, JavaScriptObject editor)
-   {
-      return new ArrayList<TokenBeenImpl>();
-   }
+    /**
+     * @see org.exoplatform.ide.editor.codemirror.CodeMirrorParserImpl#getTokenList(java.lang.String,
+     *      com.google.gwt.core.client.JavaScriptObject)
+     */
+    @Override
+    public List<TokenBeenImpl> getTokenList(String editorId, JavaScriptObject editor) {
+        return new ArrayList<TokenBeenImpl>();
+    }
 
 }

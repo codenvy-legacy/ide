@@ -13,18 +13,17 @@ package com.codenvy.eclipse.jdt.core.util;
 /**
  * Description of a annotation default attribute as described in the JVM
  * specifications (added in J2SE 1.5).
- *
+ * <p/>
  * This interface may be implemented by clients.
  *
  * @since 3.0
  */
-public interface IAnnotationDefaultAttribute extends IClassFileAttribute
-{
+public interface IAnnotationDefaultAttribute extends IClassFileAttribute {
 
-   /**
-    * Answer back the member value as described in the JVM specifications.
-    *
-    * @return the member value
-    */
-   IAnnotationComponentValue getMemberValue();
+    /**
+     * Answer back the member value as described in the JVM specifications.
+     *
+     * @return the member value
+     */
+    IAnnotationComponentValue getMemberValue();
 }

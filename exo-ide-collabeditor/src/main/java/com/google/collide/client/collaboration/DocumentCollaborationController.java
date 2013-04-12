@@ -33,232 +33,229 @@ import com.google.collide.shared.ot.Composer.ComposeException;
 import com.google.collide.shared.ot.DocOpApplier;
 import com.google.collide.shared.ot.DocOpBuilder;
 import com.google.collide.shared.ot.DocOpUtils;
-import org.exoplatform.ide.shared.util.ErrorCallback;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.shared.util.ListenerRegistrar.RemoverManager;
 
 import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import org.exoplatform.ide.json.shared.JsonStringMap;
+import org.exoplatform.ide.shared.util.ErrorCallback;
+import org.exoplatform.ide.shared.util.ListenerRegistrar.RemoverManager;
 
 /**
  * Controller that adds real-time collaboration at the document level.
- *
- *  This controller attaches to the document to broadcast any local changes to other collaborators.
+ * <p/>
+ * This controller attaches to the document to broadcast any local changes to other collaborators.
  * Conversely, it receives other collaborators' changes and applies them to the local document.
- *
+ * <p/>
  * Clients must call {@link #initialize}.
  */
 public class DocumentCollaborationController implements DocOpRecoveryInitiator {
 
-  private final AppContext appContext;
-  private final ParticipantModel participantModel;
-  private final Document document;
-  private final RemoverManager removerManager = new RemoverManager();
+    private final AppContext       appContext;
+    private final ParticipantModel participantModel;
+    private final Document         document;
+    private final RemoverManager removerManager = new RemoverManager();
 
-  private AckWatchdog ackWatchdog;
-  private FileConcurrencyController fileConcurrencyController;
+    private AckWatchdog               ackWatchdog;
+    private FileConcurrencyController fileConcurrencyController;
 
-  private Editor editor;
-  private LocalCursorTracker localCursorTracker;
+    private Editor             editor;
+    private LocalCursorTracker localCursorTracker;
 
-  /** Saves the collaborators' selections to display when we attach to an editor */
-  private JsonStringMap<DocumentSelection> collaboratorSelections = JsonCollections.createMap();
-  private CollaboratorCursorController collaboratorCursorController;
-  private final IncomingDocOpDemultiplexer docOpDemux;
+    /** Saves the collaborators' selections to display when we attach to an editor */
+    private JsonStringMap<DocumentSelection> collaboratorSelections = JsonCollections.createMap();
+    private       CollaboratorCursorController collaboratorCursorController;
+    private final IncomingDocOpDemultiplexer   docOpDemux;
 
-  /**
-   * Used to prevent remote doc ops from being considered as local user edits inside the document
-   * callback
-   */
-  private boolean isConsumingRemoteDocOp;
-  private final CollaboratorDocOpSink remoteOpSink = new CollaboratorDocOpSink() {
-    @Override
-    public void consume(DocOp docOp, String clientId, DocumentSelection selection) {
-      isConsumingRemoteDocOp = true;
-      try {
-        DocOpApplier.apply(docOp, document);
+    /**
+     * Used to prevent remote doc ops from being considered as local user edits inside the document
+     * callback
+     */
+    private boolean isConsumingRemoteDocOp;
+    private final CollaboratorDocOpSink remoteOpSink = new CollaboratorDocOpSink() {
+        @Override
+        public void consume(DocOp docOp, String clientId, DocumentSelection selection) {
+            isConsumingRemoteDocOp = true;
+            try {
+                DocOpApplier.apply(docOp, document);
 
-        if (editor == null) {
-          if (selection != null) {
-            collaboratorSelections.put(selection.getUserId(), selection);
-          }
-        } else {
-          collaboratorCursorController.handleSelectionChange(clientId, selection);
+                if (editor == null) {
+                    if (selection != null) {
+                        collaboratorSelections.put(selection.getUserId(), selection);
+                    }
+                } else {
+                    collaboratorCursorController.handleSelectionChange(clientId, selection);
+                }
+
+            } finally {
+                isConsumingRemoteDocOp = false;
+            }
         }
+    };
 
-      } finally {
-        isConsumingRemoteDocOp = false;
-      }
-    }
-  };
-
-  private final TextListener localTextListener = new TextListener() {
-    @Override
-    public void onTextChange(Document document, JsonArray<TextChange> textChanges) {
-      if (isConsumingRemoteDocOp) {
+    private final TextListener localTextListener = new TextListener() {
+        @Override
+        public void onTextChange(Document document, JsonArray<TextChange> textChanges) {
+            if (isConsumingRemoteDocOp) {
         /*
          * These text changes are being caused by the consumption of the remote doc ops. We don't
          * want to rebroadcast these.
          */
-        return;
-      }
+                return;
+            }
 
-      DocOp op = null;
+            DocOp op = null;
 
-      for (int i = 0, n = textChanges.size(); i < n; i++) {
-        TextChange textChange = textChanges.get(i);
-        DocOp curOp = DocOpUtils.createFromTextChange(ClientDocOpFactory.INSTANCE, textChange);
-        try {
-          op = op != null ? Composer.compose(ClientDocOpFactory.INSTANCE, op, curOp) : curOp;
-        } catch (ComposeException e) {
-          if (editor != null) {
-            editor.setReadOnly(true);
-          }
-          new StatusMessage(appContext.getStatusManager(), MessageType.FATAL,
-              "Problem processing the text changes, please reload.").fire();
-          return;
+            for (int i = 0, n = textChanges.size(); i < n; i++) {
+                TextChange textChange = textChanges.get(i);
+                DocOp curOp = DocOpUtils.createFromTextChange(ClientDocOpFactory.INSTANCE, textChange);
+                try {
+                    op = op != null ? Composer.compose(ClientDocOpFactory.INSTANCE, op, curOp) : curOp;
+                } catch (ComposeException e) {
+                    if (editor != null) {
+                        editor.setReadOnly(true);
+                    }
+                    new StatusMessage(appContext.getStatusManager(), MessageType.FATAL,
+                                      "Problem processing the text changes, please reload.").fire();
+                    return;
+                }
+            }
+
+            fileConcurrencyController.consumeLocalDocOp(op);
         }
-      }
+    };
 
-      fileConcurrencyController.consumeLocalDocOp(op);
+    private String fileEditSessionKey;
+
+    /** Creates an instance of the {@link com.google.collide.client.collaboration.DocumentCollaborationController}. */
+    public DocumentCollaborationController(AppContext appContext, ParticipantModel participantModel,
+                                           IncomingDocOpDemultiplexer docOpDemux, Document document,
+                                           JsonArray<DocumentSelection> selections) {
+        this.appContext = appContext;
+        this.participantModel = participantModel;
+        this.docOpDemux = docOpDemux;
+        this.document = document;
+
+        for (int i = 0, n = selections.size(); i < n; i++) {
+            DocumentSelection selection = selections.get(i);
+            collaboratorSelections.put(selection.getUserId(), selection);
+        }
     }
-  };
 
-   private String fileEditSessionKey;
+    public void initialize(String fileEditSessionKey, int ccRevision) {
+        this.fileEditSessionKey = fileEditSessionKey;
+        ackWatchdog = new AckWatchdog(
+                appContext.getStatusManager(), appContext.getWindowUnloadingController(), this);
 
-   /**
-   * Creates an instance of the {@link com.google.collide.client.collaboration.DocumentCollaborationController}.
-   */
-  public DocumentCollaborationController(AppContext appContext, ParticipantModel participantModel,
-      IncomingDocOpDemultiplexer docOpDemux, Document document,
-      JsonArray<DocumentSelection> selections) {
-    this.appContext = appContext;
-    this.participantModel = participantModel;
-    this.docOpDemux = docOpDemux;
-    this.document = document;
+        fileConcurrencyController = FileConcurrencyController.create(appContext,
+                                                                     fileEditSessionKey,
+                                                                     document.getId(),
+                                                                     docOpDemux,
+                                                                     remoteOpSink,
+                                                                     ackWatchdog,
+                                                                     this);
+        fileConcurrencyController.start(ccRevision);
 
-    for (int i = 0, n = selections.size(); i < n; i++) {
-      DocumentSelection selection = selections.get(i);
-      collaboratorSelections.put(selection.getUserId(), selection);
+        removerManager.track(document.getTextListenerRegistrar().add(localTextListener));
     }
-  }
 
-  public void initialize(String fileEditSessionKey, int ccRevision) {
-     this.fileEditSessionKey = fileEditSessionKey;
-     ackWatchdog = new AckWatchdog(
-        appContext.getStatusManager(), appContext.getWindowUnloadingController(), this);
+    @Override
+    public void teardown() {
+        detachFromEditor();
 
-    fileConcurrencyController = FileConcurrencyController.create(appContext,
-        fileEditSessionKey,
-        document.getId(),
-        docOpDemux,
-        remoteOpSink,
-        ackWatchdog,
-        this);
-    fileConcurrencyController.start(ccRevision);
-
-    removerManager.track(document.getTextListenerRegistrar().add(localTextListener));
-  }
-
-  @Override
-  public void teardown() {
-    detachFromEditor();
-
-    removerManager.remove();
+        removerManager.remove();
 
     /*
      * Replace the concurrency controller instance to ensure there isn't any internal state leftover
      * from the previous file. (At the time of this writing, the concurrency control library has
      * internal state that cannot be reset completely via its public API.)
      */
-    fileConcurrencyController.stop();
-    fileConcurrencyController = null;
+        fileConcurrencyController.stop();
+        fileConcurrencyController = null;
 
-    ackWatchdog.teardown();
-    ackWatchdog = null;
-  }
+        ackWatchdog.teardown();
+        ackWatchdog = null;
+    }
 
-  public void attachToEditor(Editor editor) {
-    this.editor = editor;
-    ackWatchdog.setEditor(editor);
+    public void attachToEditor(Editor editor) {
+        this.editor = editor;
+        ackWatchdog.setEditor(editor);
 
     /*
      * TODO: when supporting multiple editors, we'll need to encapsulate these in a
      * POJO keyed off editor ID. For now, assume only a single editor.
      */
-    localCursorTracker = new LocalCursorTracker(this, editor.getSelection());
-    localCursorTracker.forceSendingSelection();
+        localCursorTracker = new LocalCursorTracker(this, editor.getSelection());
+        localCursorTracker.forceSendingSelection();
 
-    collaboratorCursorController = new CollaboratorCursorController(
-        appContext, document, editor.getBuffer(), participantModel, collaboratorSelections);
+        collaboratorCursorController = new CollaboratorCursorController(
+                appContext, document, editor.getBuffer(), participantModel, collaboratorSelections);
 
-    fileConcurrencyController.setDocOpCreationParticipant(localCursorTracker);
+        fileConcurrencyController.setDocOpCreationParticipant(localCursorTracker);
 
-    // Send our document selection
-    ensureQueuedDocOp();
-  }
+        // Send our document selection
+        ensureQueuedDocOp();
+    }
 
-  public void detachFromEditor() {
+    public void detachFromEditor() {
     /*
      * The "!= null" checks are for when detachFromEditor is called from teardown because we can be
      * torndown before the document is detached from the editor.
      */
 
-     DtoClientImpls.CloseEditorImpl closeEditor = DtoClientImpls.CloseEditorImpl.make();
-     closeEditor.setClientId(BootstrapSession.getBootstrapSession().getActiveClientId());
-     closeEditor.setFileEditSessionKey(fileEditSessionKey);
-     appContext.getFrontendApi().CLOSE_EDITOR.send(closeEditor);
-    fileConcurrencyController.setDocOpCreationParticipant(null);
+        DtoClientImpls.CloseEditorImpl closeEditor = DtoClientImpls.CloseEditorImpl.make();
+        closeEditor.setClientId(BootstrapSession.getBootstrapSession().getActiveClientId());
+        closeEditor.setFileEditSessionKey(fileEditSessionKey);
+        appContext.getFrontendApi().CLOSE_EDITOR.send(closeEditor);
+        fileConcurrencyController.setDocOpCreationParticipant(null);
 
-    if (collaboratorCursorController != null) {
-      collaboratorSelections = collaboratorCursorController.getSelectionsMap();
-      collaboratorCursorController.teardown();
-      collaboratorCursorController = null;
+        if (collaboratorCursorController != null) {
+            collaboratorSelections = collaboratorCursorController.getSelectionsMap();
+            collaboratorCursorController.teardown();
+            collaboratorCursorController = null;
+        }
+
+        if (localCursorTracker != null) {
+            localCursorTracker.teardown();
+            localCursorTracker = null;
+        }
+
+        ackWatchdog.setEditor(null);
+        this.editor = null;
     }
 
-    if (localCursorTracker != null) {
-      localCursorTracker.teardown();
-      localCursorTracker = null;
+    FileConcurrencyController getFileConcurrencyController() {
+        return fileConcurrencyController;
     }
 
-    ackWatchdog.setEditor(null);
-    this.editor = null;
-  }
-
-  FileConcurrencyController getFileConcurrencyController() {
-    return fileConcurrencyController;
-  }
-
-  void ensureQueuedDocOp() {
-    if (fileConcurrencyController.getQueuedClientOpCount() == 0) {
-      // There aren't any queued doc ops, create and send a noop doc op
-      DocOp noopDocOp = new DocOpBuilder(ClientDocOpFactory.INSTANCE, false).retainLine(
-          document.getLineCount()).build();
-      fileConcurrencyController.consumeLocalDocOp(noopDocOp);
+    void ensureQueuedDocOp() {
+        if (fileConcurrencyController.getQueuedClientOpCount() == 0) {
+            // There aren't any queued doc ops, create and send a noop doc op
+            DocOp noopDocOp = new DocOpBuilder(ClientDocOpFactory.INSTANCE, false).retainLine(
+                    document.getLineCount()).build();
+            fileConcurrencyController.consumeLocalDocOp(noopDocOp);
+        }
     }
-  }
 
-  @Override
-  public void recover() {
+    @Override
+    public void recover() {
 
-    fileConcurrencyController.recover(new ErrorCallback() {
-      @Override
-      public void onError() {
-        StatusMessage fatal = new StatusMessage(appContext.getStatusManager(), MessageType.FATAL,
-            "There was a problem synchronizing with the server.");
-        fatal.addAction(StatusMessage.RELOAD_ACTION);
-        fatal.setDismissable(false);
-        fatal.fire();
-      }
-    });
-  }
+        fileConcurrencyController.recover(new ErrorCallback() {
+            @Override
+            public void onError() {
+                StatusMessage fatal = new StatusMessage(appContext.getStatusManager(), MessageType.FATAL,
+                                                        "There was a problem synchronizing with the server.");
+                fatal.addAction(StatusMessage.RELOAD_ACTION);
+                fatal.setDismissable(false);
+                fatal.fire();
+            }
+        });
+    }
 
-  void handleTransportReconnectedSuccessfully() {
-    recover();
-  }
+    void handleTransportReconnectedSuccessfully() {
+        recover();
+    }
 
-   public ParticipantModel getParticipantModel()
-   {
-      return participantModel;
-   }
+    public ParticipantModel getParticipantModel() {
+        return participantModel;
+    }
 }

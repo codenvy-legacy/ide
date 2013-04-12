@@ -22,18 +22,16 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link StopApplicationEvent} event.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: StopApplicationHandler.java Jul 12, 2011 3:56:17 PM vereshchaka $
- *
  */
-public interface StopApplicationHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to stop application.
-    * 
-    * @param event
-    */
-   void onStopApplication(StopApplicationEvent event);
+public interface StopApplicationHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to stop application.
+     *
+     * @param event
+     */
+    void onStopApplication(StopApplicationEvent event);
 
 }

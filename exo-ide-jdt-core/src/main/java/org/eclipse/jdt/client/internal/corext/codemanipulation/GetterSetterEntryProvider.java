@@ -25,11 +25,9 @@ import java.util.Map;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface GetterSetterEntryProvider
-{
-   Map<IVariableBinding, GetterSetterEntry[]> getFields();
+public interface GetterSetterEntryProvider {
+    Map<IVariableBinding, GetterSetterEntry[]> getFields();
 
-   boolean allowSetterForFinalFields();
+    boolean allowSetterForFinalFields();
 }

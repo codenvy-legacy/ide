@@ -26,39 +26,33 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 21, 2010 5:50:35 PM evgen $
- * 
  */
 @RolesAllowed({"developer"})
-public class RestServicesDiscoveryControl extends SimpleControl implements IDEControl
-{
-   public static final String ID = "Help/REST Services Discovery";
+public class RestServicesDiscoveryControl extends SimpleControl implements IDEControl {
+    public static final String ID = "Help/REST Services Discovery";
 
-   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.restServicesDiscoveryControl();
+    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.restServicesDiscoveryControl();
 
-   /**
-    * 
-    */
-   public RestServicesDiscoveryControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.restServicesDiscovery(),
-         IDEImageBundle.INSTANCE.restServicesDiscoveryDisabled());
-      setEvent(new ShowRestServicesDiscoveryEvent());
-   }
+    /**
+     *
+     */
+    public RestServicesDiscoveryControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setImages(IDEImageBundle.INSTANCE.restServicesDiscovery(),
+                  IDEImageBundle.INSTANCE.restServicesDiscoveryDisabled());
+        setEvent(new ShowRestServicesDiscoveryEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(true);
+        setEnabled(true);
+    }
 
 }

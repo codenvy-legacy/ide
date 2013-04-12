@@ -28,26 +28,24 @@ import org.exoplatform.ide.git.client.clone.CloneRepositoryEvent;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 22, 2011 3:49:23 PM anya $
- * 
  */
-public class CloneRepositoryControl extends GitControl
-{
-   public CloneRepositoryControl()
-   {
-      super(GitExtension.MESSAGES.cloneControlId());
-      setTitle(GitExtension.MESSAGES.cloneControlTitle());
-      setPrompt(GitExtension.MESSAGES.cloneControlPrompt());
-      setImages(GitClientBundle.INSTANCE.cloneRepo(), GitClientBundle.INSTANCE.cloneRepoDisabled());
-      setEvent(new CloneRepositoryEvent());
-      setEnableState(EnableState.BEFORE_INIT);
-      setGroupName(GroupNames.ACTIONS);
-   }
-   
-   
-   @Override
-   protected void updateControlState()
-   {
-       setVisible(true);
-       setEnabled(true);
-   }
+public class CloneRepositoryControl extends GitControl {
+
+    public CloneRepositoryControl() {
+        super(GitExtension.MESSAGES.cloneControlId());
+        setTitle(GitExtension.MESSAGES.cloneControlTitle());
+        setPrompt(GitExtension.MESSAGES.cloneControlPrompt());
+        setImages(GitClientBundle.INSTANCE.cloneRepo(), GitClientBundle.INSTANCE.cloneRepoDisabled());
+        setEvent(new CloneRepositoryEvent());
+        setEnableState(EnableState.BEFORE_INIT);
+        setGroupName(GroupNames.ACTIONS);
+    }
+
+
+    @Override
+    protected void updateControlState() {
+        setEnabled(vfsInfo != null);
+        setVisible(vfsInfo != null);
+    }
+
 }

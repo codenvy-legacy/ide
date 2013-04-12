@@ -22,60 +22,43 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event, occurs after pressing Restart Application command.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: RestartApplicationEvent.java Jul 12, 2011 3:51:16 PM vereshchaka $
- *
  */
-public class RestartApplicationEvent extends GwtEvent<RestartApplicationHandler>
-{
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<RestartApplicationHandler> TYPE = new GwtEvent.Type<RestartApplicationHandler>();
+public class RestartApplicationEvent extends GwtEvent<RestartApplicationHandler> {
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<RestartApplicationHandler> TYPE = new GwtEvent.Type<RestartApplicationHandler>();
 
-   private String applicationName;
+    private String applicationName;
 
-   /**
-    * 
-    */
-   public RestartApplicationEvent()
-   {
-   }
+    /**
+     *
+     */
+    public RestartApplicationEvent() {
+    }
 
-   /**
-    * @param applicationName
-    */
-   public RestartApplicationEvent(String applicationName)
-   {
-      super();
-      this.applicationName = applicationName;
-   }
+    /** @param applicationName */
+    public RestartApplicationEvent(String applicationName) {
+        super();
+        this.applicationName = applicationName;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<RestartApplicationHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<RestartApplicationHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(RestartApplicationHandler handler)
-   {
-      handler.onRestartApplication(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(RestartApplicationHandler handler) {
+        handler.onRestartApplication(this);
+    }
 
-   /**
-    * @return the applicationName
-    */
-   public String getApplicationName()
-   {
-      return applicationName;
-   }
+    /** @return the applicationName */
+    public String getApplicationName() {
+        return applicationName;
+    }
 
 }

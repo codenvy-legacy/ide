@@ -14,55 +14,46 @@ import com.codenvy.eclipse.core.runtime.Assert;
 import com.codenvy.eclipse.jdt.core.dom.ITypeBinding;
 
 
-public class ReturnTypeInfo
-{
+public class ReturnTypeInfo {
 
-   private final String fOldTypeName;
+    private final String fOldTypeName;
 
-   private String fNewTypeName;
+    private String fNewTypeName;
 
-   private ITypeBinding fNewTypeBinding;
+    private ITypeBinding fNewTypeBinding;
 
-   public ReturnTypeInfo(String returnType)
-   {
-      fOldTypeName = returnType;
-      fNewTypeName = returnType;
-   }
+    public ReturnTypeInfo(String returnType) {
+        fOldTypeName = returnType;
+        fNewTypeName = returnType;
+    }
 
-   public String getOldTypeName()
-   {
-      return fOldTypeName;
-   }
+    public String getOldTypeName() {
+        return fOldTypeName;
+    }
 
-   public String getNewTypeName()
-   {
-      return fNewTypeName;
-   }
+    public String getNewTypeName() {
+        return fNewTypeName;
+    }
 
-   public void setNewTypeName(String type)
-   {
-      Assert.isNotNull(type);
-      fNewTypeName = type;
-   }
+    public void setNewTypeName(String type) {
+        Assert.isNotNull(type);
+        fNewTypeName = type;
+    }
 
-   public ITypeBinding getNewTypeBinding()
-   {
-      return fNewTypeBinding;
-   }
+    public ITypeBinding getNewTypeBinding() {
+        return fNewTypeBinding;
+    }
 
-   public void setNewTypeBinding(ITypeBinding typeBinding)
-   {
-      fNewTypeBinding = typeBinding;
-   }
+    public void setNewTypeBinding(ITypeBinding typeBinding) {
+        fNewTypeBinding = typeBinding;
+    }
 
-   public boolean isTypeNameChanged()
-   {
-      return !fOldTypeName.equals(fNewTypeName);
-   }
+    public boolean isTypeNameChanged() {
+        return !fOldTypeName.equals(fNewTypeName);
+    }
 
-   @Override
-   public String toString()
-   {
-      return fOldTypeName + " -> " + fNewTypeName; //$NON-NLS-1$
-   }
+    @Override
+    public String toString() {
+        return fOldTypeName + " -> " + fNewTypeName; //$NON-NLS-1$
+    }
 }

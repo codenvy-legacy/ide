@@ -21,19 +21,18 @@ package org.exoplatform.gwtframework.ui.client.window;
 
 /**
  * Implementer will contain registered {@link CloseClickHandler} handlers.
- *  
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Mar 3, 2011 2:33:57 PM anya $
- *
  */
-public interface HasCloseClickHandlers
-{
-   
-   /**
-    * Adds {@link CloseClickHandler} handler.
-    * 
-    * @param handler close window click handler
-    */
-   void addCloseClickHandler(CloseClickHandler handler);
-   
+public interface HasCloseClickHandlers {
+
+    /**
+     * Adds {@link CloseClickHandler} handler.
+     *
+     * @param handler
+     *         close window click handler
+     */
+    void addCloseClickHandler(CloseClickHandler handler);
+
 }

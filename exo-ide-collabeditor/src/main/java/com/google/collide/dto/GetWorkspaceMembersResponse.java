@@ -18,15 +18,13 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * Response for requesting workspace members.
- */
+/** Response for requesting workspace members. */
 @RoutingType(type = RoutingTypes.GETWORKSPACEMEMBERSRESPONSE)
 public interface GetWorkspaceMembersResponse extends ServerToClientDto {
 
-  /**
-   * Returns the list of current workspace members. This should always be
-   * non-null.
-   */
-  JsonArray<UserDetailsWithRole> getMembers();
+    /**
+     * Returns the list of current workspace members. This should always be
+     * non-null.
+     */
+    JsonArray<UserDetailsWithRole> getMembers();
 }

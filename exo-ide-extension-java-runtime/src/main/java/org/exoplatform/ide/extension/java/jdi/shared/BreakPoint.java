@@ -24,17 +24,16 @@ package org.exoplatform.ide.extension.java.jdi.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface BreakPoint
-{
-   Location getLocation();
+public interface BreakPoint {
+    Location getLocation();
 
-   void setLocation(Location location);
+    void setLocation(Location location);
 
-   boolean isEnabled();
+    boolean isEnabled();
 
-   void setEnabled(boolean enabled);
+    void setEnabled(boolean enabled);
 
-   String getCondition();
+    String getCondition();
 
-   void setCondition(String expression);
+    void setCondition(String expression);
 }

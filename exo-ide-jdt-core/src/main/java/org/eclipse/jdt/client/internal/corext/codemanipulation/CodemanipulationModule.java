@@ -27,29 +27,22 @@ import com.google.inject.TypeLiteral;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class CodemanipulationModule extends AbstractGinModule
-{
+public class CodemanipulationModule extends AbstractGinModule {
 
-   /**
-    * @see com.google.gwt.inject.client.AbstractGinModule#configure()
-    */
-   @Override
-   protected void configure()
-   {
-      bind(AddGetterSetterPresenter.Display.class).to(AddGetterSetterView.class);
-      bind(new TypeLiteral<MultiSelectionModel<Object>>()
-      {
-      });
-      bind(GetterSetterTreeModel.class);
-      bind(GenerateNewConstructorUsingFieldsPresenter.Display.class).to(GenerateNewConstructorUsingFieldsView.class);
-   }
+    /** @see com.google.gwt.inject.client.AbstractGinModule#configure() */
+    @Override
+    protected void configure() {
+        bind(AddGetterSetterPresenter.Display.class).to(AddGetterSetterView.class);
+        bind(new TypeLiteral<MultiSelectionModel<Object>>() {
+        });
+        bind(GetterSetterTreeModel.class);
+        bind(GenerateNewConstructorUsingFieldsPresenter.Display.class).to(GenerateNewConstructorUsingFieldsView.class);
+    }
 
-   @Provides
-   @Singleton
-   GetterSetterEntryProvider provide()
-   {
-      return AddGetterSetterPresenter.get();
-   }
+    @Provides
+    @Singleton
+    GetterSetterEntryProvider provide() {
+        return AddGetterSetterPresenter.get();
+    }
 }

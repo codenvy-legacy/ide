@@ -24,29 +24,28 @@ import com.google.gwt.resources.client.ImageResource;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public interface PythonExtensionClientBundle extends ClientBundle
-{
-   PythonExtensionClientBundle INSTANCE = GWT.<PythonExtensionClientBundle> create(PythonExtensionClientBundle.class);
+public interface PythonExtensionClientBundle extends ClientBundle {
+    PythonExtensionClientBundle INSTANCE = GWT.<PythonExtensionClientBundle>create(PythonExtensionClientBundle.class);
 
-   @Source("org/exoplatform/ide/extension/python/images/stopApp.png")
-   ImageResource stopApp();
+    @Source("org/exoplatform/ide/extension/python/images/stopApp.png")
+    ImageResource stopApp();
 
-   @Source("org/exoplatform/ide/extension/python/images/stopApp_Disabled.png")
-   ImageResource stopAppDisabled();
+    @Source("org/exoplatform/ide/extension/python/images/stopApp_Disabled.png")
+    ImageResource stopAppDisabled();
 
-   @Source("org/exoplatform/ide/extension/python/images/runApp.png")
-   ImageResource runApp();
+    @Source("org/exoplatform/ide/extension/python/images/runApp.png")
+    ImageResource runApp();
 
-   @Source("org/exoplatform/ide/extension/python/images/runApp_Disabled.png")
-   ImageResource runAppDisabled();
-   
-   @Source("org/exoplatform/ide/extension/python/images/logs.png")
-   ImageResource logs();
+    @Source("org/exoplatform/ide/extension/python/images/runApp_Disabled.png")
+    ImageResource runAppDisabled();
 
-   @Source("org/exoplatform/ide/extension/python/images/logs_Disabled.png")
-   ImageResource logsDisabled();
+    @Source("org/exoplatform/ide/extension/python/images/logs.png")
+    ImageResource logs();
+
+    @Source("org/exoplatform/ide/extension/python/images/logs_Disabled.png")
+    ImageResource logsDisabled();
 }

@@ -19,12 +19,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Annotation for associating a routing type with a dto interface.
- */
+/** Annotation for associating a routing type with a dto interface. */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface RoutingType
-{
-   int type();
+public @interface RoutingType {
+    int type();
 }

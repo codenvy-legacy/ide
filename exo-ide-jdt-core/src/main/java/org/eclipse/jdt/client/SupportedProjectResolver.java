@@ -22,11 +22,9 @@ package org.eclipse.jdt.client;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface SupportedProjectResolver
-{
-   
-   boolean isProjectSupported(String projectType);
-   
+public interface SupportedProjectResolver {
+
+    boolean isProjectSupported(String projectType);
+
 }

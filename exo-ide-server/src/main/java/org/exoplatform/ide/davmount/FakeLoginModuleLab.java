@@ -24,77 +24,63 @@ import org.exoplatform.services.security.PasswordCredential;
 import org.exoplatform.services.security.UsernameCredential;
 import org.exoplatform.services.security.j2ee.TomcatLoginModule;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-public class FakeLoginModuleLab extends TomcatLoginModule
-{
-   /**
-    * The list of users.
-    */
-   private List<String> users = new ArrayList<String>();
+public class FakeLoginModuleLab extends TomcatLoginModule {
+    /** The list of users. */
+    private List<String> users = new ArrayList<String>();
 
-   private String _password;
+    private String _password;
 
-   @Override
-   public void afterInitialize()
-   {
-      super.afterInitialize();
-      users.add((String)options.get("username"));
-      users.add("exo");
-      users.add("root");
-      _password = (String)options.get("password");
-      if (_password == null || _password.isEmpty())
-         _password = "exo";
-   }
+    @Override
+    public void afterInitialize() {
+        super.afterInitialize();
+        users.add((String)options.get("username"));
+        users.add("exo");
+        users.add("root");
+        _password = (String)options.get("password");
+        if (_password == null || _password.isEmpty())
+            _password = "exo";
+    }
 
-   @SuppressWarnings("unchecked")
-   @Override
-   public boolean login() throws LoginException
-   {
-      try
-      {
-         Callback[] callbacks = new Callback[2];
-         callbacks[0] = new NameCallback("Username");
-         callbacks[1] = new PasswordCallback("Password", false);
+    @SuppressWarnings("unchecked")
+    @Override
+    public boolean login() throws LoginException {
+        try {
+            Callback[] callbacks = new Callback[2];
+            callbacks[0] = new NameCallback("Username");
+            callbacks[1] = new PasswordCallback("Password", false);
 
-         callbackHandler.handle(callbacks);
-         String username = ((NameCallback)callbacks[0]).getName();
-         String password = new String(((PasswordCallback)callbacks[1]).getPassword());
-         ((PasswordCallback)callbacks[1]).clearPassword();
-         if (users.contains(username))
-         {
-            Set<MembershipEntry> entries = new HashSet<MembershipEntry>(1);
-            entries.add(new MembershipEntry(username));
-            entries.add(new MembershipEntry("/ide/administrators"));
-            Set<String> roles = new HashSet<String>(2);
-            roles.add("developer");
-            identity = new Identity(username, entries, roles);
-            sharedState.put("javax.security.auth.login.name", username);
-            subject.getPrivateCredentials().add(new PasswordCredential(password));
-            subject.getPublicCredentials().add(new UsernameCredential(username));
-         }
-         else
-         {
-            throw new LoginException("Login failed for " + username + ". ");
-         }
-      }
-      catch (UnsupportedCallbackException e)
-      {
-         throw new LoginException(e.getMessage());
-      }
-      catch (Exception e)
-      {
-         throw new LoginException(e.getMessage());
-      }
-      return true;
-   }
+            callbackHandler.handle(callbacks);
+            String username = ((NameCallback)callbacks[0]).getName();
+            String password = new String(((PasswordCallback)callbacks[1]).getPassword());
+            ((PasswordCallback)callbacks[1]).clearPassword();
+            if (users.contains(username)) {
+                Set<MembershipEntry> entries = new HashSet<MembershipEntry>(1);
+                entries.add(new MembershipEntry(username));
+                entries.add(new MembershipEntry("/ide/administrators"));
+                Set<String> roles = new HashSet<String>(2);
+                roles.add("developer");
+                identity = new Identity(username, entries, roles);
+                sharedState.put("javax.security.auth.login.name", username);
+                subject.getPrivateCredentials().add(new PasswordCredential(password));
+                subject.getPublicCredentials().add(new UsernameCredential(username));
+            } else {
+                throw new LoginException("Login failed for " + username + ". ");
+            }
+        } catch (UnsupportedCallbackException e) {
+            throw new LoginException(e.getMessage());
+        } catch (Exception e) {
+            throw new LoginException(e.getMessage());
+        }
+        return true;
+    }
 }

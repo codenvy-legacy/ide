@@ -41,70 +41,54 @@ import org.exoplatform.ide.editor.shared.text.IDocument;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 10:09:02 AM Apr 4, 2012 evgen $
- * 
  */
-public class FormatterProfileView extends ViewImpl implements Display
-{
+public class FormatterProfileView extends ViewImpl implements Display {
 
-   private static FormatterProfileViewUiBinder uiBinder = GWT.create(FormatterProfileViewUiBinder.class);
+    private static FormatterProfileViewUiBinder uiBinder = GWT.create(FormatterProfileViewUiBinder.class);
 
-   @UiField
-   FlowPanel editorPanel;
+    @UiField
+    FlowPanel editorPanel;
 
-   @UiField
-   SelectItem profilesSelect;
+    @UiField
+    SelectItem profilesSelect;
 
-   @UiField
-   ImageButton okButton;
+    @UiField
+    ImageButton okButton;
 
-   private Editor editor;
+    private Editor editor;
 
-   interface FormatterProfileViewUiBinder extends UiBinder<Widget, FormatterProfileView>
-   {
-   }
+    interface FormatterProfileViewUiBinder extends UiBinder<Widget, FormatterProfileView> {
+    }
 
-   public FormatterProfileView()
-   {
-      super(ID, ViewType.MODAL, "Formatter", null, 725, 390, true);
-      add(uiBinder.createAndBindUi(this));
+    public FormatterProfileView() {
+        super(ID, ViewType.MODAL, "Formatter", null, 725, 390, true);
+        add(uiBinder.createAndBindUi(this));
 
-      try
-      {
-         editor = IDE.getInstance().getFileTypeRegistry().getEditor(MimeType.APPLICATION_JAVA);
-         editor.asWidget().setSize("100%", "100%");
-         editorPanel.add(editor);
-         editor.setText(JdtClientBundle.INSTANCE.formatterSample().getText());
-      }
-      catch (EditorNotFoundException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e.getMessage()));
-      }
-   }
+        try {
+            editor = IDE.getInstance().getFileTypeRegistry().getEditor(MimeType.APPLICATION_JAVA);
+            editor.asWidget().setSize("100%", "100%");
+            editorPanel.add(editor);
+            editor.setText(JdtClientBundle.INSTANCE.formatterSample().getText());
+        } catch (EditorNotFoundException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e.getMessage()));
+        }
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.core.formatter.FormatterProfilePresenter.Display#getOkButton()
-    */
-   @Override
-   public HasClickHandlers getOkButton()
-   {
-      return okButton;
-   }
+    /** @see org.eclipse.jdt.client.core.formatter.FormatterProfilePresenter.Display#getOkButton() */
+    @Override
+    public HasClickHandlers getOkButton() {
+        return okButton;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.core.formatter.FormatterProfilePresenter.Display#getProfilesSelect()
-    */
-   @Override
-   public SelectItem getProfilesSelect()
-   {
-      return profilesSelect;
-   }
+    /** @see org.eclipse.jdt.client.core.formatter.FormatterProfilePresenter.Display#getProfilesSelect() */
+    @Override
+    public SelectItem getProfilesSelect() {
+        return profilesSelect;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.core.formatter.FormatterProfilePresenter.Display#getDocument()
-    */
-   @Override
-   public IDocument getDocument()
-   {
-      return editor.getDocument();
-   }
+    /** @see org.eclipse.jdt.client.core.formatter.FormatterProfilePresenter.Display#getDocument() */
+    @Override
+    public IDocument getDocument() {
+        return editor.getDocument();
+    }
 }

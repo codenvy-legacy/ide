@@ -25,14 +25,12 @@ import com.google.gwt.event.shared.EventHandler;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 31, 2011 9:42:18 AM anya $
- * 
  */
-public interface CommitHandler extends EventHandler
-{
-   /**
-    * Perform actions, on user's try to do commit.
-    * 
-    * @param event
-    */
-   void onCommit(CommitEvent event);
+public interface CommitHandler extends EventHandler {
+    /**
+     * Perform actions, on user's try to do commit.
+     * 
+     * @param event
+     */
+    void onCommit(CommitEvent event);
 }

@@ -29,43 +29,36 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class ProjectUpdateListener implements EventListener
-{
-   private final String projectId;
+public class ProjectUpdateListener implements EventListener {
+    private final String projectId;
 
-   public ProjectUpdateListener(String projectId)
-   {
-      this.projectId = projectId;
-   }
+    public ProjectUpdateListener(String projectId) {
+        this.projectId = projectId;
+    }
 
-   @Override
-   public void handleEvent(ChangeEvent event) throws VirtualFileSystemException
-   {
-      List<Property> properties = new ArrayList<Property>(1);
-      properties.add(new PropertyImpl("vfs:lastUpdateTime", Long.toString(System.currentTimeMillis())));
-      event.getVirtualFileSystem().updateItem(projectId, properties, null);
-   }
+    @Override
+    public void handleEvent(ChangeEvent event) throws VirtualFileSystemException {
+        List<Property> properties = new ArrayList<Property>(1);
+        properties.add(new PropertyImpl("vfs:lastUpdateTime", Long.toString(System.currentTimeMillis())));
+        event.getVirtualFileSystem().updateItem(projectId, properties, null);
+    }
 
-   @Override
-   public final boolean equals(Object o)
-   {
-      if (this == o)
-      {
-         return true;
-      }
-      if (!(o instanceof ProjectUpdateListener))
-      {
-         return false;
-      }
-      ProjectUpdateListener other = (ProjectUpdateListener)o;
-      return projectId.equals(other.projectId);
-   }
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ProjectUpdateListener)) {
+            return false;
+        }
+        ProjectUpdateListener other = (ProjectUpdateListener)o;
+        return projectId.equals(other.projectId);
+    }
 
-   @Override
-   public final int hashCode()
-   {
-      int hash = 7;
-      hash = 31 * hash + projectId.hashCode();
-      return hash;
-   }
+    @Override
+    public final int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + projectId.hashCode();
+        return hash;
+    }
 }

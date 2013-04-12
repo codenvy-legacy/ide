@@ -19,11 +19,14 @@
 package org.exoplatform.ide.extension.cloudfoundry.client.project;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -57,380 +60,330 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
+import java.util.List;
+
 /**
  * Presenter for managing project, deployed on CloudFoundry.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 2, 2011 5:54:50 PM anya $
- * 
  */
 public class CloudFoundryProjectPresenter extends GitPresenter implements
-   ManageCloudFoundryProjectHandler, ViewClosedHandler, ApplicationDeletedHandler, ApplicationInfoChangedHandler
-   
-//   ProjectOpenedHandler, ProjectClosedHandler, , ActiveProjectChangedHandler
+                                                               ManageCloudFoundryProjectHandler, ViewClosedHandler,
+                                                               ApplicationDeletedHandler, ApplicationInfoChangedHandler
 {
-   interface Display extends IsView
-   {
-      HasClickHandlers getCloseButton();
+    interface Display extends IsView {
+        HasClickHandlers getCloseButton();
 
-      HasClickHandlers getUpdateButton();
+        HasClickHandlers getUpdateButton();
 
-      HasClickHandlers getLogsButton();
+        HasClickHandlers getLogsButton();
 
-      HasClickHandlers getServicesButton();
+        HasClickHandlers getServicesButton();
 
-      HasClickHandlers getDeleteButton();
+        HasClickHandlers getDeleteButton();
 
-      HasClickHandlers getInfoButton();
+        HasClickHandlers getInfoButton();
 
-      HasValue<String> getApplicationName();
+        HasValue<String> getApplicationName();
 
-      void setApplicationURL(String url);
+        void setApplicationURL(String url);
 
-      HasValue<String> getApplicationModel();
+        HasValue<String> getApplicationModel();
 
-      HasValue<String> getApplicationStack();
+        HasValue<String> getApplicationStack();
 
-      HasValue<String> getApplicationInstances();
+        HasValue<String> getApplicationInstances();
 
-      HasValue<String> getApplicationMemory();
+        HasValue<String> getApplicationMemory();
 
-      HasValue<String> getApplicationStatus();
+        HasValue<String> getApplicationStatus();
 
-      HasClickHandlers getStartButton();
+        HasClickHandlers getStartButton();
 
-      HasClickHandlers getStopButton();
+        HasClickHandlers getStopButton();
 
-      HasClickHandlers getRestartButton();
+        HasClickHandlers getRestartButton();
 
-      HasClickHandlers getEditMemoryButton();
+        HasClickHandlers getEditMemoryButton();
 
-      HasClickHandlers getEditURLButton();
+        HasClickHandlers getEditURLButton();
 
-      HasClickHandlers getEditInstancesButton();
+        HasClickHandlers getEditInstancesButton();
 
-      void setStartButtonEnabled(boolean enabled);
+        HasClickHandlers getShowUrisAnchor();
 
-      void setStopButtonEnabled(boolean enabled);
+        void setStartButtonEnabled(boolean enabled);
 
-      void setRestartButtonEnabled(boolean enabled);
-   }
+        void setStopButtonEnabled(boolean enabled);
 
-   /**
-    * Presenter's display.
-    */
-   private Display display;
+        void setRestartButtonEnabled(boolean enabled);
 
-//   /**
-//    * Opened project in Project Explorer.
-//    */
-//   private ProjectModel openedProject;
+        void setUrisPopupVisible(boolean visible);
+    }
 
-   private CloudFoundryApplication application;
+    /** Presenter's display. */
+    private Display display;
 
-   public CloudFoundryProjectPresenter()
-   {
-      IDE.getInstance().addControl(new CloudFoundryControl());
+    private CloudFoundryApplication application;
 
-//      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-//      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-//      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
-      IDE.addHandler(ManageCloudFoundryProjectEvent.TYPE, this);
-      IDE.addHandler(ApplicationDeletedEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(ApplicationInfoChangedEvent.TYPE, this);
-   }
+    private List<String> appUris;
 
-   /**
-    * Bind display with presenter.
-    */
-   public void bindDisplay()
-   {
-      display.getDeleteButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.eventBus().fireEvent(new DeleteApplicationEvent());
-         }
-      });
+    public CloudFoundryProjectPresenter() {
+        IDE.getInstance().addControl(new CloudFoundryControl());
 
-      display.getUpdateButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.eventBus().fireEvent(new UpdateApplicationEvent());
-         }
-      });
+        IDE.addHandler(ManageCloudFoundryProjectEvent.TYPE, this);
+        IDE.addHandler(ApplicationDeletedEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(ApplicationInfoChangedEvent.TYPE, this);
+    }
 
-      display.getLogsButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            getLogs();
-         }
-      });
+    /** Bind display with presenter. */
+    public void bindDisplay() {
+        display.getDeleteButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.eventBus().fireEvent(new DeleteApplicationEvent());
+            }
+        });
 
-      display.getServicesButton().addClickHandler(new ClickHandler()
-      {
+        display.getUpdateButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.eventBus().fireEvent(new UpdateApplicationEvent());
+            }
+        });
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.fireEvent(new ManageServicesEvent(application));
-         }
-      });
+        display.getLogsButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                getLogs();
+            }
+        });
 
-      display.getCloseButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
+        display.getServicesButton().addClickHandler(new ClickHandler() {
 
-      display.getInfoButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.eventBus().fireEvent(new ApplicationInfoEvent());
-         }
-      });
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.fireEvent(new ManageServicesEvent(application));
+            }
+        });
 
-      display.getStartButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.eventBus().fireEvent(new StartApplicationEvent());
-         }
-      });
+        display.getCloseButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
 
-      display.getStopButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.eventBus().fireEvent(new StopApplicationEvent());
-         }
-      });
+        display.getInfoButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.eventBus().fireEvent(new ApplicationInfoEvent());
+            }
+        });
 
-      display.getRestartButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.eventBus().fireEvent(new RestartApplicationEvent());
-         }
-      });
+        display.getStartButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.eventBus().fireEvent(new StartApplicationEvent());
+            }
+        });
 
-      display.getEditInstancesButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.eventBus().fireEvent(new UpdateInstancesEvent());
-         }
-      });
+        display.getStopButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.eventBus().fireEvent(new StopApplicationEvent());
+            }
+        });
 
-      display.getEditMemoryButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.eventBus().fireEvent(new UpdateMemoryEvent());
-         }
-      });
+        display.getRestartButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.eventBus().fireEvent(new RestartApplicationEvent());
+            }
+        });
 
-      display.getEditURLButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.eventBus().fireEvent(new UnmapUrlEvent());
-         }
-      });
+        display.getEditInstancesButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.eventBus().fireEvent(new UpdateInstancesEvent());
+            }
+        });
 
-   }
+        display.getEditMemoryButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.eventBus().fireEvent(new UpdateMemoryEvent());
+            }
+        });
 
-   protected void getLogs()
-   {
-      ProjectModel project = getSelectedProject();
-      try
-      {
-         CloudFoundryClientService.getInstance().getLogs(vfs.getId(), project.getId(),
-            new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
-            {
+        display.getEditURLButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.eventBus().fireEvent(new UnmapUrlEvent());
+            }
+        });
 
-               @Override
-               protected void onSuccess(StringBuilder result)
-               {
-                  IDE.fireEvent(new OutputEvent("<pre>" + result.toString() + "</pre>", Type.OUTPUT));
-               }
+        display.getShowUrisAnchor().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                final PopupPanel simplePopup = new PopupPanel();
+                simplePopup.ensureDebugId("cfUrisPopup");
+                simplePopup.setWidth("auto");
+                simplePopup.getElement().getStyle().setPadding(5.0, Style.Unit.PX);
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception.getMessage()));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e.getMessage()));
-         e.printStackTrace();
-      }
-   }
+                StringBuilder uris = new StringBuilder();
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+                //need to fill uris list from second uri, cause first uri is filled in project info window
+                for (int i = 1; i < appUris.size(); i++)
+                {
+                    uris.append("<div><a href=\"");
+                    uris.append("http://" + appUris.get(i));
+                    uris.append("\" target=\"_blank\">http://");
+                    uris.append(appUris.get(i));
+                    uris.append("</a></div>\n");
+                }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.project.ManageCloudFoundryProjectHandler#onManageCloudFoundryProject(org.exoplatform.ide.extension.cloudfoundry.client.project.ManageCloudFoundryProjectEvent)
-    */
-   @Override
-   public void onManageCloudFoundryProject(ManageCloudFoundryProjectEvent event)
-   {
-      //getApplicationInfo(openedProject);
-      getApplicationInfo(getSelectedProject());
-   }
+                simplePopup.setWidget(new HTML("<div>" + uris.toString() + "</div>"));
 
-//   /**
-//    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-//    */
-//   @Override
-//   public void onProjectClosed(ProjectClosedEvent event)
-//   {
-//      openedProject = null;
-//   }
-//
-//   /**
-//    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-//    */
-//   @Override
-//   public void onProjectOpened(ProjectOpenedEvent event)
-//   {
-//      openedProject = event.getProject();
-//   }
-//   
-//   @Override
-//   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-//   {
-//      openedProject = event.getProject();
-//   }
+                int left = event.getClientX() + 10;
+                int top = event.getClientY() + 10;
+                simplePopup.setPopupPosition(left, top);
+                simplePopup.show();
+                simplePopup.setAutoHideEnabled(true);
+            }
+        });
+    }
 
-   /**
-    * Get application properties.
-    * 
-    * @param project
-    */
-   protected void getApplicationInfo(final ProjectModel project)
-   {
-      try
-      {
-         AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-            CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
+    protected void getLogs() {
+        ProjectModel project = getSelectedProject();
+        try {
+            CloudFoundryClientService.getInstance().getLogs(vfs.getId(), project.getId(),
+                                                            new AsyncRequestCallback<StringBuilder>(
+                                                                    new StringUnmarshaller(new StringBuilder())) {
 
-         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-            new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+                                                                @Override
+                                                                protected void onSuccess(StringBuilder result) {
+                                                                    IDE.fireEvent(new OutputEvent("<pre>" + result.toString() + "</pre>",
+                                                                                                  Type.OUTPUT));
+                                                                }
 
-         CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), project.getId(), null, null,
-            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, new LoggedInHandler()
-            {
-               @Override
-               public void onLoggedIn()
-               {
-                  getApplicationInfo(project);
-               }
-            }, null)
-            {
-               @Override
-               protected void onSuccess(CloudFoundryApplication result)
-               {
-                  if (display == null)
-                  {
-                     display = GWT.create(Display.class);
-                     bindDisplay();
-                     IDE.getInstance().openView(display.asView());
-                  }
-                  application = result;
-                  displayApplicationProperties(result);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                                                                @Override
+                                                                protected void onFailure(Throwable exception) {
+                                                                    IDE.fireEvent(new ExceptionThrownEvent(exception.getMessage()));
+                                                                }
+                                                            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e.getMessage()));
+            e.printStackTrace();
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.delete.ApplicationDeletedHandler#onApplicationDeleted(org.exoplatform.ide.extension.cloudfoundry.client.delete.ApplicationDeletedEvent)
-    */
-   @Override
-   public void onApplicationDeleted(ApplicationDeletedEvent event)
-   {
-      ProjectModel project = getSelectedProject();
-      if (event.getApplicationName() != null && project != null
-         && event.getApplicationName().equals((String)project.getPropertyValue("cloudfoundry-application")))
-      {
-         if (display != null)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-         IDE.fireEvent(new RefreshBrowserEvent(project));
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
-   protected void displayApplicationProperties(CloudFoundryApplication application)
-   {
-      display.getApplicationName().setValue(application.getName());
-      display.getApplicationInstances().setValue(String.valueOf(application.getInstances()));
-      display.getApplicationMemory().setValue(String.valueOf(application.getResources().getMemory()) + "MB");
-      display.getApplicationModel().setValue(String.valueOf(application.getStaging().getModel()));
-      display.getApplicationStack().setValue(String.valueOf(application.getStaging().getStack()));
-      display.getApplicationStatus().setValue(String.valueOf(application.getState()));
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.project.ManageCloudFoundryProjectHandler#onManageCloudFoundryProject(org
+     * .exoplatform.ide.extension.cloudfoundry.client.project.ManageCloudFoundryProjectEvent) */
+    @Override
+    public void onManageCloudFoundryProject(ManageCloudFoundryProjectEvent event) {
+        //getApplicationInfo(openedProject);
+        getApplicationInfo(getSelectedProject());
+    }
 
-      if (application.getUris() != null && application.getUris().size() > 0)
-      {
-         display.setApplicationURL(application.getUris().get(0));
-      }
-      else
-      {
-         //Set empty field if we specialy unmap all urls and closed url controller window, if whe don't do this, in
-         //info window will be appear old url, that is not good
-         display.setApplicationURL(null);
-      }
-      boolean isStarted = ("STARTED".equals(application.getState()));
-      display.setStartButtonEnabled(!isStarted);
-      display.setStopButtonEnabled(isStarted);
-   }
+    /**
+     * Get application properties.
+     *
+     * @param project
+     */
+    protected void getApplicationInfo(final ProjectModel project) {
+        try {
+            AutoBean<CloudFoundryApplication> cloudFoundryApplication =
+                    CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedHandler#onApplicationInfoChanged(org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent)
-    */
-   @Override
-   public void onApplicationInfoChanged(ApplicationInfoChangedEvent event)
-   {
-      ProjectModel project = getSelectedProject();
-      if (display != null && event.getProjectId() != null && vfs.getId().equals(event.getVfsId())
-         && project != null && project.getId().equals(event.getProjectId()))
-      {
-         getApplicationInfo(project);
-      }
-   }
+            AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+                    new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+
+            CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), project.getId(), null, null,
+                                                                       new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
+                                                                               unmarshaller, new LoggedInHandler() {
+                                                                           @Override
+                                                                           public void onLoggedIn() {
+                                                                               getApplicationInfo(project);
+                                                                           }
+                                                                       }, null) {
+                                                                           @Override
+                                                                           protected void onSuccess(CloudFoundryApplication result) {
+                                                                               if (display == null) {
+                                                                                   display = GWT.create(Display.class);
+                                                                                   bindDisplay();
+                                                                                   IDE.getInstance().openView(display.asView());
+                                                                               }
+                                                                               application = result;
+                                                                               displayApplicationProperties(result);
+                                                                           }
+                                                                       });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.delete.ApplicationDeletedHandler#onApplicationDeleted(org.exoplatform.ide
+     * .extension.cloudfoundry.client.delete.ApplicationDeletedEvent) */
+    @Override
+    public void onApplicationDeleted(ApplicationDeletedEvent event) {
+        ProjectModel project = getSelectedProject();
+        if (event.getApplicationName() != null && project != null
+            && event.getApplicationName().equals((String)project.getPropertyValue("cloudfoundry-application"))) {
+            if (display != null) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+            IDE.fireEvent(new RefreshBrowserEvent(project));
+        }
+    }
+
+    protected void displayApplicationProperties(CloudFoundryApplication application) {
+        display.getApplicationName().setValue(application.getName());
+        display.getApplicationInstances().setValue(String.valueOf(application.getInstances()));
+        display.getApplicationMemory().setValue(String.valueOf(application.getResources().getMemory()) + "MB");
+        display.getApplicationModel().setValue(String.valueOf(application.getStaging().getModel()));
+        display.getApplicationStack().setValue(String.valueOf(application.getStaging().getStack()));
+        display.getApplicationStatus().setValue(String.valueOf(application.getState()));
+
+        if (application.getUris() != null && application.getUris().size() > 0) {
+            appUris = application.getUris();
+            display.setApplicationURL(appUris.get(0));
+
+            if (appUris.size() == 1) {
+                display.setUrisPopupVisible(false);
+            } else {
+                display.setUrisPopupVisible(true);
+            }
+        } else {
+            //Set empty field if we specialy unmap all urls and closed url controller window, if whe don't do this, in
+            //info window will be appear old url, that is not good
+            display.setApplicationURL(null);
+            display.setUrisPopupVisible(false);
+        }
+        boolean isStarted = ("STARTED".equals(application.getState()));
+        display.setStartButtonEnabled(!isStarted);
+        display.setStopButtonEnabled(isStarted);
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedHandler#onApplicationInfoChanged(org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent) */
+    @Override
+    public void onApplicationInfoChanged(ApplicationInfoChangedEvent event) {
+        ProjectModel project = getSelectedProject();
+        if (display != null && event.getProjectId() != null && vfs.getId().equals(event.getVfsId())
+            && project != null && project.getId().equals(event.getProjectId())) {
+            getApplicationInfo(project);
+        }
+    }
 
 }

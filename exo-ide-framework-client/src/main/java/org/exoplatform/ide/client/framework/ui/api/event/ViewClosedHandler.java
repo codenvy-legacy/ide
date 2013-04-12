@@ -22,21 +22,21 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler of ViewClosed event
- * 
+ * <p/>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface ViewClosedHandler extends EventHandler
-{
+public interface ViewClosedHandler extends EventHandler {
 
-   /**
-    * Handle the event after view was closed.
-    * 
-    * @param event instance of ViewClosed Event
-    */
-   void onViewClosed(ViewClosedEvent event);
+    /**
+     * Handle the event after view was closed.
+     *
+     * @param event
+     *         instance of ViewClosed Event
+     */
+    void onViewClosed(ViewClosedEvent event);
 
 }

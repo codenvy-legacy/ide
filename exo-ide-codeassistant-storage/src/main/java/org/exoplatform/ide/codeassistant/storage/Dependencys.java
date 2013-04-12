@@ -25,62 +25,52 @@ import java.util.List;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class Dependencys
-{
-   private List<Dependency> dependencies;
+public class Dependencys {
+    private List<Dependency> dependencies;
 
-   private String zipUrl;
+    private String zipUrl;
 
-   /**
-    * 
-    */
-   public Dependencys()
-   {
-   }
+    /**
+     *
+     */
+    public Dependencys() {
+    }
 
-   /**
-    * @param dependencies
-    * @param zipUrl
-    */
-   public Dependencys(List<Dependency> dependencies, String zipUrl)
-   {
-      super();
-      this.dependencies = dependencies;
-      this.zipUrl = zipUrl;
-   }
+    /**
+     * @param dependencies
+     * @param zipUrl
+     */
+    public Dependencys(List<Dependency> dependencies, String zipUrl) {
+        super();
+        this.dependencies = dependencies;
+        this.zipUrl = zipUrl;
+    }
 
-   /**
-    * @return the dependencies
-    */
-   public List<Dependency> getDependencies()
-   {
-      return dependencies;
-   }
+    /** @return the dependencies */
+    public List<Dependency> getDependencies() {
+        return dependencies;
+    }
 
-   /**
-    * @param dependencies the dependencies to set
-    */
-   public void setDependencies(List<Dependency> dependencies)
-   {
-      this.dependencies = dependencies;
-   }
+    /**
+     * @param dependencies
+     *         the dependencies to set
+     */
+    public void setDependencies(List<Dependency> dependencies) {
+        this.dependencies = dependencies;
+    }
 
-   /**
-    * @return the zipUrl
-    */
-   public String getZipUrl()
-   {
-      return zipUrl;
-   }
+    /** @return the zipUrl */
+    public String getZipUrl() {
+        return zipUrl;
+    }
 
-   /**
-    * @param zipUrl the zipUrl to set
-    */
-   public void setZipUrl(String zipUrl)
-   {
-      this.zipUrl = zipUrl;
-   }
+    /**
+     * @param zipUrl
+     *         the zipUrl to set
+     */
+    public void setZipUrl(String zipUrl) {
+        this.zipUrl = zipUrl;
+    }
 
 }

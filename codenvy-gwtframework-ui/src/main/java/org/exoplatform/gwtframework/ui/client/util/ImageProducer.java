@@ -23,82 +23,69 @@ import com.google.gwt.user.client.ui.Image;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ImageProducer
-{
+public class ImageProducer {
 
-   private String imageURL;
+    private String imageURL;
 
-   private String disabledImageURL;
+    private String disabledImageURL;
 
-   private ImageResource imageResource;
+    private ImageResource imageResource;
 
-   private ImageResource disabledImageResource;
+    private ImageResource disabledImageResource;
 
-   public ImageProducer(ImageResource imageResource)
-   {
-      this.imageResource = imageResource;
-   }
+    public ImageProducer(ImageResource imageResource) {
+        this.imageResource = imageResource;
+    }
 
-   public ImageProducer(String imageURL)
-   {
-      this.imageURL = imageURL;
-   }
+    public ImageProducer(String imageURL) {
+        this.imageURL = imageURL;
+    }
 
-   public ImageProducer(ImageResource imageResource, ImageResource disabledImageResource)
-   {
-      this.imageResource = imageResource;
-      this.disabledImageResource = disabledImageResource;
-   }
+    public ImageProducer(ImageResource imageResource, ImageResource disabledImageResource) {
+        this.imageResource = imageResource;
+        this.disabledImageResource = disabledImageResource;
+    }
 
-   public ImageProducer(String imageURL, String disabledImageURL)
-   {
-      this.imageURL = imageURL;
-      this.disabledImageURL = disabledImageURL;
-   }
+    public ImageProducer(String imageURL, String disabledImageURL) {
+        this.imageURL = imageURL;
+        this.disabledImageURL = disabledImageURL;
+    }
 
-   public Image getImage()
-   {
-      if (imageResource != null)
-      {
-         return new Image(imageResource);
-      }
+    public Image getImage() {
+        if (imageResource != null) {
+            return new Image(imageResource);
+        }
 
-      if (imageURL != null)
-      {
-         return new Image(imageURL);
-      }
+        if (imageURL != null) {
+            return new Image(imageURL);
+        }
 
-      return null;
-   }
+        return null;
+    }
 
-   public Image getDisabledImage()
-   {
-      if (disabledImageResource != null)
-      {
-         return new Image(disabledImageResource);
-      }
+    public Image getDisabledImage() {
+        if (disabledImageResource != null) {
+            return new Image(disabledImageResource);
+        }
 
-      if (disabledImageURL != null)
-      {
-         return new Image(disabledImageURL);
-      }
+        if (disabledImageURL != null) {
+            return new Image(disabledImageURL);
+        }
 
-      if (imageResource != null)
-      {
-         return new Image(imageResource);
-      }
+        if (imageResource != null) {
+            return new Image(imageResource);
+        }
 
-      if (imageURL != null)
-      {
-         return new Image(imageURL);
-      }
+        if (imageURL != null) {
+            return new Image(imageURL);
+        }
 
-      return null;
-   }
+        return null;
+    }
 
 }

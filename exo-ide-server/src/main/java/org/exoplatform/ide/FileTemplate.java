@@ -20,69 +20,58 @@ package org.exoplatform.ide;
 
 /**
  * File template data.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: FileTemplate.java Jul 26, 2011 11:53:35 AM vereshchaka $
  */
-public class FileTemplate extends Template
-{
-   private String mimeType;
+public class FileTemplate extends Template {
+    private String mimeType;
 
-   private String content;
+    private String content;
 
-   private String fileName;
+    private String fileName;
 
-   public FileTemplate()
-   {
-      super("file");
-   }
+    public FileTemplate() {
+        super("file");
+    }
 
-   /**
-    * @return the fileName
-    */
-   public String getFileName()
-   {
-      return fileName;
-   }
+    /** @return the fileName */
+    public String getFileName() {
+        return fileName;
+    }
 
-   /**
-    * @param fileName the fileName to set
-    */
-   public void setFileName(String fileName)
-   {
-      this.fileName = fileName;
-   }
+    /**
+     * @param fileName
+     *         the fileName to set
+     */
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
-   /**
-    * @return the mimeType
-    */
-   public String getMimeType()
-   {
-      return mimeType;
-   }
+    /** @return the mimeType */
+    public String getMimeType() {
+        return mimeType;
+    }
 
-   /**
-    * @param mimeType the mimeType to set
-    */
-   public void setMimeType(String mimeType)
-   {
-      this.mimeType = mimeType;
-   }
+    /**
+     * @param mimeType
+     *         the mimeType to set
+     */
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
 
-   /**
-    * @return the content
-    */
-   public String getContent()
-   {
-      return content;
-   }
+    /** @return the content */
+    public String getContent() {
+        return content;
+    }
 
-   /**
-    * @param content the content to set
-    */
-   public void setContent(String content)
-   {
-      this.content = content;
-   }
+    /**
+     * @param content
+     *         the content to set
+     */
+    public void setContent(String content) {
+        this.content = content;
+    }
 
 }

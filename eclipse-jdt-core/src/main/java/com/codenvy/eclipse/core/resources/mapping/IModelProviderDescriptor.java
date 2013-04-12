@@ -26,74 +26,76 @@ import com.codenvy.eclipse.core.runtime.CoreException;
  * @see com.codenvy.eclipse.core.resources.mapping.ModelProvider
  * @since 3.2
  */
-public interface IModelProviderDescriptor
-{
+public interface IModelProviderDescriptor {
 
-   /**
-    * Return the ids of model providers that this model provider extends.
-    *
-    * @return the ids of model providers that this model provider extends
-    */
-   public String[] getExtendedModels();
+    /**
+     * Return the ids of model providers that this model provider extends.
+     *
+     * @return the ids of model providers that this model provider extends
+     */
+    public String[] getExtendedModels();
 
-   /**
-    * Returns the unique identifier of this model provider.
-    * <p>
-    * The model provider identifier is composed of the model provider's
-    * plug-in id and the simple id of the provider extension. For example, if
-    * plug-in <code>"com.xyz"</code> defines a provider extension with id
-    * <code>"myModelProvider"</code>, the unique model provider identifier will be
-    * <code>"com.xyz.myModelProvider"</code>.
-    * </p>
-    *
-    * @return the unique model provider identifier
-    */
-   public String getId();
+    /**
+     * Returns the unique identifier of this model provider.
+     * <p>
+     * The model provider identifier is composed of the model provider's
+     * plug-in id and the simple id of the provider extension. For example, if
+     * plug-in <code>"com.xyz"</code> defines a provider extension with id
+     * <code>"myModelProvider"</code>, the unique model provider identifier will be
+     * <code>"com.xyz.myModelProvider"</code>.
+     * </p>
+     *
+     * @return the unique model provider identifier
+     */
+    public String getId();
 
-   /**
-    * Returns a displayable label for this model provider.
-    * Returns the empty string if no label for this provider
-    * is specified in the plug-in manifest file.
-    * <p> Note that any translation specified in the plug-in manifest
-    * file is automatically applied.
-    * </p>
-    *
-    * @return a displayable string label for this model provider,
-    *         possibly the empty string
-    */
-   public String getLabel();
+    /**
+     * Returns a displayable label for this model provider.
+     * Returns the empty string if no label for this provider
+     * is specified in the plug-in manifest file.
+     * <p> Note that any translation specified in the plug-in manifest
+     * file is automatically applied.
+     * </p>
+     *
+     * @return a displayable string label for this model provider,
+     *         possibly the empty string
+     */
+    public String getLabel();
 
-   /**
-    * From the provides set of resources, return those that match the enablement
-    * rule specified for the model provider descriptor. The resource mappings
-    * for the returned resources can then be obtained by invoking
-    * {@link ModelProvider#getMappings(com.codenvy.eclipse.core.resources.IResource[], ResourceMappingContext, com.codenvy.eclipse.core.runtime.IProgressMonitor)}
-    *
-    * @param resources the resources
-    * @return the resources that match the descriptor's enablement rule
-    */
-   public IResource[] getMatchingResources(IResource[] resources) throws CoreException;
+    /**
+     * From the provides set of resources, return those that match the enablement
+     * rule specified for the model provider descriptor. The resource mappings
+     * for the returned resources can then be obtained by invoking
+     * {@link ModelProvider#getMappings(com.codenvy.eclipse.core.resources.IResource[], ResourceMappingContext,
+     * com.codenvy.eclipse.core.runtime.IProgressMonitor)}
+     *
+     * @param resources
+     *         the resources
+     * @return the resources that match the descriptor's enablement rule
+     */
+    public IResource[] getMatchingResources(IResource[] resources) throws CoreException;
 
-   /**
-    * Return the set of traversals that overlap with the resources that
-    * this descriptor matches.
-    *
-    * @param traversals the traversals being tested
-    * @return the subset of these traversals that overlap with the resources
-    *         that match this descriptor
-    * @throws com.codenvy.eclipse.core.runtime.CoreException
-    *
-    */
-   public ResourceTraversal[] getMatchingTraversals(ResourceTraversal[] traversals) throws CoreException;
+    /**
+     * Return the set of traversals that overlap with the resources that
+     * this descriptor matches.
+     *
+     * @param traversals
+     *         the traversals being tested
+     * @return the subset of these traversals that overlap with the resources
+     *         that match this descriptor
+     * @throws com.codenvy.eclipse.core.runtime.CoreException
+     *
+     */
+    public ResourceTraversal[] getMatchingTraversals(ResourceTraversal[] traversals) throws CoreException;
 
-   /**
-    * Return the model provider for this descriptor, instantiating it if it is
-    * the first time the method is called.
-    *
-    * @return the model provider for this descriptor
-    * @throws com.codenvy.eclipse.core.runtime.CoreException
-    *          if the model provider could not be instantiated for
-    *          some reason
-    */
-   public ModelProvider getModelProvider() throws CoreException;
+    /**
+     * Return the model provider for this descriptor, instantiating it if it is
+     * the first time the method is called.
+     *
+     * @return the model provider for this descriptor
+     * @throws com.codenvy.eclipse.core.runtime.CoreException
+     *         if the model provider could not be instantiated for
+     *         some reason
+     */
+    public ModelProvider getModelProvider() throws CoreException;
 }

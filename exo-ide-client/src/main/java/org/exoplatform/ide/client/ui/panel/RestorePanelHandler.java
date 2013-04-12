@@ -21,16 +21,14 @@ package org.exoplatform.ide.client.ui.panel;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface RestorePanelHandler extends EventHandler
-{
+public interface RestorePanelHandler extends EventHandler {
 
-   void onRestorePanel(RestorePanelEvent event);
+    void onRestorePanel(RestorePanelEvent event);
 
 }

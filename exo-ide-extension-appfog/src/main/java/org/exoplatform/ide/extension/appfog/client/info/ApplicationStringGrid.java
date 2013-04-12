@@ -29,32 +29,27 @@ import org.exoplatform.gwtframework.ui.client.component.ListGrid;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class ApplicationStringGrid extends ListGrid<String>
-{
-   Column<String, String> valueColumn = new Column<String, String>(new TextCell())
-   {
-      @Override
-      public String getValue(String value)
-      {
-         return value;
-      }
-   };
+public class ApplicationStringGrid extends ListGrid<String> {
+    Column<String, String> valueColumn = new Column<String, String>(new TextCell()) {
+        @Override
+        public String getValue(String value) {
+            return value;
+        }
+    };
 
-   public ApplicationStringGrid()
-   {
-      super();
-   }
+    public ApplicationStringGrid() {
+        super();
+    }
 
-   /**
-    * Add one column of list grid.
-    * This two actions moved to separate method, because
-    * there is need to set the header of column.
-    *
-    * @param header
-    */
-   public void addColumn(String header)
-   {
-      getCellTable().addColumn(valueColumn, header);
-      getCellTable().setColumnWidth(valueColumn, "100%");
-   }
+    /**
+     * Add one column of list grid.
+     * This two actions moved to separate method, because
+     * there is need to set the header of column.
+     *
+     * @param header
+     */
+    public void addColumn(String header) {
+        getCellTable().addColumn(valueColumn, header);
+        getCellTable().setColumnWidth(valueColumn, "100%");
+    }
 }

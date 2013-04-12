@@ -29,34 +29,26 @@ import org.exoplatform.ide.git.shared.RemoteAddRequest;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 19, 2011 12:10:24 PM anya $
- * 
  */
-public class RemoteAddRequestMarshaller implements Marshallable, Constants
-{
+public class RemoteAddRequestMarshaller implements Marshallable, Constants {
 
-   /**
-    * Add remote repository request.
-    */
-   private RemoteAddRequest remoteAddRequest;
+    /** Add remote repository request. */
+    private RemoteAddRequest remoteAddRequest;
 
-   /**
-    * @param remoteAddRequest add remote repository request
-    */
-   public RemoteAddRequestMarshaller(RemoteAddRequest remoteAddRequest)
-   {
-      this.remoteAddRequest = remoteAddRequest;
-   }
+    /**
+     * @param remoteAddRequest add remote repository request
+     */
+    public RemoteAddRequestMarshaller(RemoteAddRequest remoteAddRequest) {
+        this.remoteAddRequest = remoteAddRequest;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
-    */
-   @Override
-   public String marshal()
-   {
-      JSONObject jsonObject = new JSONObject();
-      jsonObject.put(URL, new JSONString(remoteAddRequest.getUrl()));
-      jsonObject.put(NAME, new JSONString(remoteAddRequest.getName()));
-      return jsonObject.toString();
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal() */
+    @Override
+    public String marshal() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(URL, new JSONString(remoteAddRequest.getUrl()));
+        jsonObject.put(NAME, new JSONString(remoteAddRequest.getName()));
+        return jsonObject.toString();
+    }
 
 }

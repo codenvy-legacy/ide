@@ -22,69 +22,50 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user adds comments modifier.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Apr 6, 2012 4:45:02 PM anya $
- * 
  */
-public class AddCommentsModifierEvent extends GwtEvent<AddCommentsModifierHandler>
-{
-   /**
-    * Type used to register the event.
-    */
-   public static final GwtEvent.Type<AddCommentsModifierHandler> TYPE = new GwtEvent.Type<AddCommentsModifierHandler>();
+public class AddCommentsModifierEvent extends GwtEvent<AddCommentsModifierHandler> {
+    /** Type used to register the event. */
+    public static final GwtEvent.Type<AddCommentsModifierHandler> TYPE = new GwtEvent.Type<AddCommentsModifierHandler>();
 
-   /**
-    * MIME type, for which comments modifier can be applied to.
-    */
-   private String mimeType;
+    /** MIME type, for which comments modifier can be applied to. */
+    private String mimeType;
 
-   /**
-    * Comments modifier.
-    */
-   private CommentsModifier commentsModifier;
+    /** Comments modifier. */
+    private CommentsModifier commentsModifier;
 
-   /**
-    * @param mimeType MIME type, for which comments modifier can be applied to
-    * @param commentsModifier comments modifier
-    */
-   public AddCommentsModifierEvent(String mimeType, CommentsModifier commentsModifier)
-   {
-      this.mimeType = mimeType;
-      this.commentsModifier = commentsModifier;
-   }
+    /**
+     * @param mimeType
+     *         MIME type, for which comments modifier can be applied to
+     * @param commentsModifier
+     *         comments modifier
+     */
+    public AddCommentsModifierEvent(String mimeType, CommentsModifier commentsModifier) {
+        this.mimeType = mimeType;
+        this.commentsModifier = commentsModifier;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<AddCommentsModifierHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<AddCommentsModifierHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(AddCommentsModifierHandler handler)
-   {
-      handler.onAddCommentsModifier(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(AddCommentsModifierHandler handler) {
+        handler.onAddCommentsModifier(this);
+    }
 
-   /**
-    * @return {@link String} MIME type
-    */
-   public String getMimeType()
-   {
-      return mimeType;
-   }
+    /** @return {@link String} MIME type */
+    public String getMimeType() {
+        return mimeType;
+    }
 
-   /**
-    * @return {@link CommentsModifier} comments modifier
-    */
-   public CommentsModifier getCommentsModifier()
-   {
-      return commentsModifier;
-   }
+    /** @return {@link CommentsModifier} comments modifier */
+    public CommentsModifier getCommentsModifier() {
+        return commentsModifier;
+    }
 }

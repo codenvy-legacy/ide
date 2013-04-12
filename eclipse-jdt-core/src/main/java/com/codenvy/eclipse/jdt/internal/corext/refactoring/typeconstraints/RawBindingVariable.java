@@ -13,11 +13,9 @@ package com.codenvy.eclipse.jdt.internal.corext.refactoring.typeconstraints;
 import com.codenvy.eclipse.jdt.core.dom.ITypeBinding;
 
 
-public class RawBindingVariable extends ConstraintVariable
-{
+public class RawBindingVariable extends ConstraintVariable {
 
-   public RawBindingVariable(ITypeBinding binding)
-   {
-      super(binding);
-   }
+    public RawBindingVariable(ITypeBinding binding) {
+        super(binding);
+    }
 }

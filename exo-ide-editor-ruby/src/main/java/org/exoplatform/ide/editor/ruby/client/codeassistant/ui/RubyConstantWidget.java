@@ -29,34 +29,29 @@ import org.exoplatform.ide.editor.ruby.client.RubyClientBundle;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: RubyConstantWidget May 10, 2011 12:06:17 PM evgen $
- * 
  */
-public class RubyConstantWidget extends RubyBaseWidget
-{
+public class RubyConstantWidget extends RubyBaseWidget {
 
-   /**
-    * @param token
-    */
-   public RubyConstantWidget(Token token)
-   {
-      super(token);
+    /** @param token */
+    public RubyConstantWidget(Token token) {
+        super(token);
 
-      grid = new Grid(1, 2);
-      grid.setStyleName(RubyClientBundle.INSTANCE.css().item());
-      grid.setWidth("100%");
-      Image i = new Image(RubyClientBundle.INSTANCE.rubyConstant());
-      i.setHeight("16px");
+        grid = new Grid(1, 2);
+        grid.setStyleName(RubyClientBundle.INSTANCE.css().item());
+        grid.setWidth("100%");
+        Image i = new Image(RubyClientBundle.INSTANCE.rubyConstant());
+        i.setHeight("16px");
 
-      grid.setWidget(0, 0, i);
+        grid.setWidget(0, 0, i);
 
-      Label nameLabel = new Label(token.getName(), false);
-      grid.setWidget(0, 1, nameLabel);
+        Label nameLabel = new Label(token.getName(), false);
+        grid.setWidget(0, 1, nameLabel);
 
-      grid.getCellFormatter().setWidth(0, 0, "16px");
-      grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
+        grid.getCellFormatter().setWidth(0, 0, "16px");
+        grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
+        grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
 
-      initWidget(grid);
-   }
+        initWidget(grid);
+    }
 
 }

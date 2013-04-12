@@ -31,80 +31,66 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class StackFrameDumpImpl implements StackFrameDump
-{
-   private List<Field> fields;
-   private List<Variable> localVariables;
+public class StackFrameDumpImpl implements StackFrameDump {
+    private List<Field>    fields;
+    private List<Variable> localVariables;
 
-   public StackFrameDumpImpl(List<Field> fields, List<Variable> localVariables)
-   {
-      this.fields = fields;
-      this.localVariables = localVariables;
-   }
+    public StackFrameDumpImpl(List<Field> fields, List<Variable> localVariables) {
+        this.fields = fields;
+        this.localVariables = localVariables;
+    }
 
-   public StackFrameDumpImpl()
-   {
-   }
+    public StackFrameDumpImpl() {
+    }
 
-   @Override
-   public List<Field> getFields()
-   {
-      if (fields == null)
-      {
-         fields = new ArrayList<Field>();
-      }
-      return fields;
-   }
+    @Override
+    public List<Field> getFields() {
+        if (fields == null) {
+            fields = new ArrayList<Field>();
+        }
+        return fields;
+    }
 
-   @Override
-   public List<Variable> getLocalVariables()
-   {
-      if (localVariables == null)
-      {
-         localVariables = new ArrayList<Variable>();
-      }
-      return localVariables;
-   }
+    @Override
+    public List<Variable> getLocalVariables() {
+        if (localVariables == null) {
+            localVariables = new ArrayList<Variable>();
+        }
+        return localVariables;
+    }
 
-   @Override
-   public void setFields(List<Field> fields)
-   {
-      this.fields = fields;
-   }
+    @Override
+    public void setFields(List<Field> fields) {
+        this.fields = fields;
+    }
 
-   @Override
-   public void setLocalVariables(List<Variable> localVariables)
-   {
-      this.localVariables = localVariables;
-   }
+    @Override
+    public void setLocalVariables(List<Variable> localVariables) {
+        this.localVariables = localVariables;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "StackFrameDumpImpl{\n" +
-         "====== FIELDS =====\n" + toString(fields) +
-         "\n===== LOCAL_VARIABLES======\n" + toString(localVariables) +
-         "\n}";
-   }
+    @Override
+    public String toString() {
+        return "StackFrameDumpImpl{\n" +
+               "====== FIELDS =====\n" + toString(fields) +
+               "\n===== LOCAL_VARIABLES======\n" + toString(localVariables) +
+               "\n}";
+    }
 
-   private <E extends Variable> String toString(Collection<E> collection)
-   {
-      Iterator<E> i;
-      if (collection == null || !(i = collection.iterator()).hasNext())
-      {
-         return "[]";
-      }
-      StringBuilder sb = new StringBuilder();
-      while (true)
-      {
-         E e = i.next();
-         sb.append(e == collection ? "(this Collection)" : e);
-         if (!i.hasNext())
-         {
-            return sb.toString();
-         }
-         sb.append(',');
-         sb.append('\n');
-      }
-   }
+    private <E extends Variable> String toString(Collection<E> collection) {
+        Iterator<E> i;
+        if (collection == null || !(i = collection.iterator()).hasNext()) {
+            return "[]";
+        }
+        StringBuilder sb = new StringBuilder();
+        while (true) {
+            E e = i.next();
+            sb.append(e == collection ? "(this Collection)" : e);
+            if (!i.hasNext()) {
+                return sb.toString();
+            }
+            sb.append(',');
+            sb.append('\n');
+        }
+    }
 }

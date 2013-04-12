@@ -26,29 +26,28 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface ApplicationInfo
-{
-   String getName();
+public interface ApplicationInfo {
+    String getName();
 
-   void setName(String name);
+    void setName(String name);
 
-   String getDescription();
+    String getDescription();
 
-   void setDescription(String description);
+    void setDescription(String description);
 
-   long getCreated();
+    long getCreated();
 
-   void setCreated(long creationDate);
+    void setCreated(long creationDate);
 
-   long getUpdated();
+    long getUpdated();
 
-   void setUpdated(long modificationDate);
+    void setUpdated(long modificationDate);
 
-   List<String> getVersions();
+    List<String> getVersions();
 
-   void setVersions(List<String> versions);
+    void setVersions(List<String> versions);
 
-   List<String> getConfigurationTemplates();
+    List<String> getConfigurationTemplates();
 
-   void setConfigurationTemplates(List<String> configurationTemplates);
+    void setConfigurationTemplates(List<String> configurationTemplates);
 }

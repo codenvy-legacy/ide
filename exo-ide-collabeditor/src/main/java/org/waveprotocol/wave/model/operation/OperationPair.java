@@ -17,37 +17,33 @@
 
 package org.waveprotocol.wave.model.operation;
 
-/**
- * A pair of operations.
- */
+/** A pair of operations. */
 public final class OperationPair<O> {
 
-  private final O clientOp;
-  private final O serverOp;
+    private final O clientOp;
+    private final O serverOp;
 
-  /**
-   * Constructs an OperationPair from a client operation and a server operation.
-   *
-   * @param clientOp The client's operation.
-   * @param serverOp The server's operation.
-   */
-  public OperationPair(O clientOp, O serverOp) {
-    this.clientOp = clientOp;
-    this.serverOp = serverOp;
-  }
+    /**
+     * Constructs an OperationPair from a client operation and a server operation.
+     *
+     * @param clientOp
+     *         The client's operation.
+     * @param serverOp
+     *         The server's operation.
+     */
+    public OperationPair(O clientOp, O serverOp) {
+        this.clientOp = clientOp;
+        this.serverOp = serverOp;
+    }
 
-  /**
-   * @return The client's operation.
-   */
-  public O clientOp() {
-    return clientOp;
-  }
+    /** @return The client's operation. */
+    public O clientOp() {
+        return clientOp;
+    }
 
-  /**
-   * @return The server's operation.
-   */
-  public O serverOp() {
-    return serverOp;
-  }
+    /** @return The server's operation. */
+    public O serverOp() {
+        return serverOp;
+    }
 
 }

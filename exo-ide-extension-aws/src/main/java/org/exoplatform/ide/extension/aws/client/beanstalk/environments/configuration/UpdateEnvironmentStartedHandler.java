@@ -21,17 +21,14 @@ package org.exoplatform.ide.extension.aws.client.beanstalk.environments.configur
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: UpdateEnvironmentStartedHandler.java Oct 1, 2012 4:47:04 PM azatsarynnyy $
- *
  */
-public interface UpdateEnvironmentStartedHandler
-{
-   /**
-    * Perform actions, when update environment is started.
-    * 
-    * @param environmentInfo
-    */
-   void onUpdateEnvironmentStarted(EnvironmentInfo environmentInfo);
+public interface UpdateEnvironmentStartedHandler {
+    /**
+     * Perform actions, when update environment is started.
+     *
+     * @param environmentInfo
+     */
+    void onUpdateEnvironmentStarted(EnvironmentInfo environmentInfo);
 }

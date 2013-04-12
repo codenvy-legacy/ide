@@ -18,33 +18,30 @@
  */
 package org.exoplatform.ide.extension.ssh.client;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
+
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
+ * @param <T>
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
- * @param <T>
  */
-public abstract class JsonpAsyncCallback<T> implements AsyncCallback<T>
-{
+public abstract class JsonpAsyncCallback<T> implements AsyncCallback<T> {
 
-   private Loader loader;
+    private Loader loader;
 
-   public void setLoader(Loader loader)
-   {
-      this.loader = loader;
-   }
+    public void setLoader(Loader loader) {
+        this.loader = loader;
+    }
 
-   public Loader getLoader()
-   {
-      if (loader == null)
-         new EmptyLoader();
-      return loader;
-   }
+    public Loader getLoader() {
+        if (loader == null)
+            new EmptyLoader();
+        return loader;
+    }
 
 }

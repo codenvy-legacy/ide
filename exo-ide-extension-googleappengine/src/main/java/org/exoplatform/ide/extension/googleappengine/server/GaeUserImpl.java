@@ -24,51 +24,43 @@ import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class GaeUserImpl implements GaeUser
-{
-   private String id;
-   private boolean authenticated;
+public class GaeUserImpl implements GaeUser {
+    private String  id;
+    private boolean authenticated;
 
-   public GaeUserImpl(String id, boolean authenticated)
-   {
-      this.id = id;
-      this.authenticated = authenticated;
-   }
+    public GaeUserImpl(String id, boolean authenticated) {
+        this.id = id;
+        this.authenticated = authenticated;
+    }
 
-   @Override
-   public String getId()
-   {
-      return id;
-   }
+    @Override
+    public String getId() {
+        return id;
+    }
 
-   @Override
-   public void setId(String id)
-   {
-      this.id = id;
-   }
+    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
 
-   @Override
-   public String getEmail()
-   {
-      // Not need email address in this case.
-      return null;
-   }
+    @Override
+    public String getEmail() {
+        // Not need email address in this case.
+        return null;
+    }
 
-   @Override
-   public void setEmail(String id)
-   {
-      // Not need email address in this case.
-   }
+    @Override
+    public void setEmail(String id) {
+        // Not need email address in this case.
+    }
 
-   @Override
-   public boolean isAuthenticated()
-   {
-      return authenticated;
-   }
+    @Override
+    public boolean isAuthenticated() {
+        return authenticated;
+    }
 
-   @Override
-   public void setAuthenticated(boolean authenticated)
-   {
-      this.authenticated = authenticated;
-   }
+    @Override
+    public void setAuthenticated(boolean authenticated) {
+        this.authenticated = authenticated;
+    }
 }

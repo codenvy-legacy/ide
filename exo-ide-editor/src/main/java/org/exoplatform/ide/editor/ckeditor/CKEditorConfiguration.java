@@ -22,134 +22,122 @@ import com.google.gwt.core.client.GWT;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $
  */
-public class CKEditorConfiguration
-{
+public class CKEditorConfiguration {
 
-   public enum Language {
-      ENGLISH("en"), FRENCH("fr"), RUSSIAN("ru"), UKRAINIAN("uk"), VIETNAMESE("vi"), DEFAULT("en");
+    public enum Language {
+        ENGLISH("en"), FRENCH("fr"), RUSSIAN("ru"), UKRAINIAN("uk"), VIETNAMESE("vi"), DEFAULT("en");
 
-      private String language;
+        private String language;
 
-      Language(String language)
-      {
-         this.language = language;
-      }
+        Language(String language) {
+            this.language = language;
+        }
 
-      @Override
-      public String toString()
-      {
-         return this.language;
-      }
-   }
+        @Override
+        public String toString() {
+            return this.language;
+        }
+    }
 
-   public final static Language LANGUAGE = Language.DEFAULT;
+    public final static Language LANGUAGE = Language.DEFAULT;
 
-   public enum Toolbar {
-      IDE("IDE"), DEFAULT("IDE");
+    public enum Toolbar {
+        IDE("IDE"), DEFAULT("IDE");
 
-      private String toolbar;
+        private String toolbar;
 
-      Toolbar(String toolbar)
-      {
-         this.toolbar = toolbar;
-      }
+        Toolbar(String toolbar) {
+            this.toolbar = toolbar;
+        }
 
-      @Override
-      public String toString()
-      {
-         return this.toolbar;
-      }
-   }
+        @Override
+        public String toString() {
+            return this.toolbar;
+        }
+    }
 
-   public final static Toolbar TOOLBAR = Toolbar.IDE;
+    public final static Toolbar TOOLBAR = Toolbar.IDE;
 
-   public enum Theme {
-      DEFAULT("default");
+    public enum Theme {
+        DEFAULT("default");
 
-      private String theme;
+        private String theme;
 
-      Theme(String theme)
-      {
-         this.theme = theme;
-      }
+        Theme(String theme) {
+            this.theme = theme;
+        }
 
-      @Override
-      public String toString()
-      {
-         return this.theme;
-      }
-   }
+        @Override
+        public String toString() {
+            return this.theme;
+        }
+    }
 
-   public final static Theme THEME = Theme.DEFAULT;
+    public final static Theme THEME = Theme.DEFAULT;
 
-   public enum Skin {
-      IDE("ide"), DEFAULT("ide");
+    public enum Skin {
+        IDE("ide"), DEFAULT("ide");
 
-      private String skin;
+        private String skin;
 
-      Skin(String skin)
-      {
-         this.skin = skin;
-      }
+        Skin(String skin) {
+            this.skin = skin;
+        }
 
-      @Override
-      public String toString()
-      {
-         return this.skin;
-      }
-   }
+        @Override
+        public String toString() {
+            return this.skin;
+        }
+    }
 
-   public final static Skin SKIN = Skin.IDE; // Skin.V2
+    public final static Skin SKIN = Skin.IDE; // Skin.V2
 
-   public final static boolean READ_ONLY = false;
+    public final static boolean READ_ONLY = false;
 
-   public final static int CONTINUOUS_SCANNING = 100;
-   
-   public final static String CKEDITOR_DIRECTORY = "ckeditor-3.1";
+    public final static int CONTINUOUS_SCANNING = 100;
 
-   public final static String BASE_PATH = GWT.getModuleBaseURL() + CKEDITOR_DIRECTORY + "/";
+    public final static String CKEDITOR_DIRECTORY = "ckeditor-3.1";
 
-   public enum StartupMode {
-      WYSIWYG("wysiwyg"), SOURCE("source");
+    public final static String BASE_PATH = GWT.getModuleBaseURL() + CKEDITOR_DIRECTORY + "/";
 
-      private String startupMode;
+    public enum StartupMode {
+        WYSIWYG("wysiwyg"), SOURCE("source");
 
-      StartupMode(String startupMode)
-      {
-         this.startupMode = startupMode;
-      }
+        private String startupMode;
 
-      @Override
-      public String toString()
-      {
-         return this.startupMode;
-      }
-   }
+        StartupMode(String startupMode) {
+            this.startupMode = startupMode;
+        }
 
-   public final static StartupMode STARTUP_MODE = StartupMode.WYSIWYG;
+        @Override
+        public String toString() {
+            return this.startupMode;
+        }
+    }
 
-   private static boolean fullPage = false;
+    public final static StartupMode STARTUP_MODE = StartupMode.WYSIWYG;
 
-   /**
-    * @param fullPage <b>true</b> - ckeditor will add <i>html, head, body</i> - tags of html-file; <b>false</b> - ckeditor will
-    *           remove <i>html, head, body</i> - tags of html-file
-    **/
-   public static void setFullPage(boolean fullPage)
-   {
-      CKEditorConfiguration.fullPage = fullPage;
-   }
+    private static boolean fullPage = false;
 
-   /**
-    * @return <b>true</b> - ckeditor will add <i>html, head, body</i> - tags of html-file; <b>false</b> - ckeditor will remove
-    *         <i>html, head, body</i> - tags of html-file
-    **/
-   public static boolean isFullPage()
-   {
-      return fullPage;
-   }
+    /**
+     * @param fullPage
+     *         <b>true</b> - ckeditor will add <i>html, head, body</i> - tags of html-file; <b>false</b> - ckeditor will
+     *         remove <i>html, head, body</i> - tags of html-file
+     */
+    public static void setFullPage(boolean fullPage) {
+        CKEditorConfiguration.fullPage = fullPage;
+    }
+
+    /**
+     * @return <b>true</b> - ckeditor will add <i>html, head, body</i> - tags of html-file; <b>false</b> - ckeditor will remove
+     *         <i>html, head, body</i> - tags of html-file
+     */
+    public static boolean isFullPage() {
+        return fullPage;
+    }
 
 }

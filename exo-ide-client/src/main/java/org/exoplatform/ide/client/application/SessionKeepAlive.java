@@ -18,11 +18,8 @@
  */
 package org.exoplatform.ide.client.application;
 
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.*;
+import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.ide.client.IDE;
@@ -33,60 +30,48 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class SessionKeepAlive implements InitializeServicesHandler
-{
+public class SessionKeepAlive implements InitializeServicesHandler {
 
-   private static final int PING_DELAY = 1000 * 60 * 5;
+    private static final int PING_DELAY = 1000 * 60 * 5;
 
-   private String url;
+    private String url;
 
-   private Timer timer = new Timer()
-   {
-      @Override
-      public void run()
-      {
-         ping();
-      }
-   };
+    private Timer timer = new Timer() {
+        @Override
+        public void run() {
+            ping();
+        }
+    };
 
 
-   private RequestCallback callback = new RequestCallback()
-   {
-      @Override
-      public void onResponseReceived(Request request, Response response)
-      {
-      }
+    private RequestCallback callback = new RequestCallback() {
+        @Override
+        public void onResponseReceived(Request request, Response response) {
+        }
 
-      @Override
-      public void onError(Request request, Throwable exception)
-      {
-      }
-   };
+        @Override
+        public void onError(Request request, Throwable exception) {
+        }
+    };
 
-   public SessionKeepAlive()
-   {
-      IDE.eventBus().addHandler(InitializeServicesEvent.TYPE, this);
-   }
+    public SessionKeepAlive() {
+        IDE.eventBus().addHandler(InitializeServicesEvent.TYPE, this);
+    }
 
-   @Override
-   public void onInitializeServices(InitializeServicesEvent event)
-   {
-      url = event.getApplicationConfiguration().getContext() + "/ide/configuration/ping";
-      timer.scheduleRepeating(PING_DELAY);
-   }
+    @Override
+    public void onInitializeServices(InitializeServicesEvent event) {
+        url = event.getApplicationConfiguration().getContext() + "/ide/configuration/ping?random=" + Random.nextDouble();//avoid caching   
+        timer.scheduleRepeating(PING_DELAY);
+    }
 
-   private void ping()
-   {
-      RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url);
-      try
-      {
-         builder.setCallback(callback);
-         builder.send();
-      }
-      catch (RequestException e)
-      {
-         //ignore
-      }
+    private void ping() {
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url);
+        try {
+            builder.setCallback(callback);
+            builder.send();
+        } catch (RequestException e) {
+            //ignore
+        }
 
-   }
+    }
 }

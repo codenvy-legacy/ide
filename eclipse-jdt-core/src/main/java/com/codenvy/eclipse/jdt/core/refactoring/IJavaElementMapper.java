@@ -23,20 +23,20 @@ import com.codenvy.eclipse.ltk.core.refactoring.participants.RefactoringProcesso
  *
  * @since 1.1
  */
-public interface IJavaElementMapper
-{
+public interface IJavaElementMapper {
 
-   /**
-    * Returns the refactored Java element for the given element.
-    * The returned Java element might not yet exist when the method
-    * is called.
-    * </p>
-    * Note that local variables <strong>cannot</strong> be mapped
-    * using this method.
-    * <p>
-    *
-    * @param element the element to be refactored
-    * @return the refactored element for the given element
-    */
-   IJavaElement getRefactoredJavaElement(IJavaElement element);
+    /**
+     * Returns the refactored Java element for the given element.
+     * The returned Java element might not yet exist when the method
+     * is called.
+     * </p>
+     * Note that local variables <strong>cannot</strong> be mapped
+     * using this method.
+     * <p/>
+     *
+     * @param element
+     *         the element to be refactored
+     * @return the refactored element for the given element
+     */
+    IJavaElement getRefactoredJavaElement(IJavaElement element);
 }

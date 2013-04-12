@@ -19,28 +19,28 @@
     02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
 -->
-<nodeTypes xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0"
-   xmlns:dc="http://purl.org/dc/elements/1.1/">
+<nodeTypes xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+        >
 
-   <nodeType name="exo:groovyResourceContainer" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
-      <supertypes>
-         <supertype>nt:resource</supertype>
-      </supertypes>
-      <propertyDefinitions>
-         <propertyDefinition name="exo:autoload" requiredType="Boolean" autoCreated="true" mandatory="true" onParentVersion="COPY"
-            protected="false" multiple="false">
-            <valueConstraints />
-            <defaultValues>
-               <defaultValue>false</defaultValue>
-            </defaultValues>
-         </propertyDefinition>
-      </propertyDefinitions>
-   </nodeType>
+    <nodeType name="exo:groovyResourceContainer" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+        <supertypes>
+            <supertype>nt:resource</supertype>
+        </supertypes>
+        <propertyDefinitions>
+            <propertyDefinition name="exo:autoload" requiredType="Boolean" autoCreated="true" mandatory="true" onParentVersion="COPY"
+                                protected="false" multiple="false">
+                <valueConstraints/>
+                <defaultValues>
+                    <defaultValue>false</defaultValue>
+                </defaultValues>
+            </propertyDefinition>
+        </propertyDefinitions>
+    </nodeType>
 
-   <nodeType name="exo:googleGadget" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
-      <supertypes>
-         <supertype>nt:resource</supertype>
-      </supertypes>
-   </nodeType>
+    <nodeType name="exo:googleGadget" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+        <supertypes>
+            <supertype>nt:resource</supertype>
+        </supertypes>
+    </nodeType>
 
 </nodeTypes>

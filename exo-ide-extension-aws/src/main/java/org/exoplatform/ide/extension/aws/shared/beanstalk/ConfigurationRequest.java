@@ -25,51 +25,50 @@ package org.exoplatform.ide.extension.aws.shared.beanstalk;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface ConfigurationRequest
-{
-   /**
-    * Get name of application.
-    *
-    * @return application name
-    */
-   String getApplicationName();
+public interface ConfigurationRequest {
+    /**
+     * Get name of application.
+     *
+     * @return application name
+     */
+    String getApplicationName();
 
-   /**
-    * Set name of application.
-    *
-    * @param name
-    *    application name
-    * @see #getApplicationName()
-    */
-   void setApplicationName(String name);
+    /**
+     * Set name of application.
+     *
+     * @param name
+     *         application name
+     * @see #getApplicationName()
+     */
+    void setApplicationName(String name);
 
-   /**
-    * Get name of configuration template.
-    *
-    * @return name of configuration template
-    */
-   String getTemplateName();
+    /**
+     * Get name of configuration template.
+     *
+     * @return name of configuration template
+     */
+    String getTemplateName();
 
-   /**
-    * Get name of configuration template.
-    *
-    * @param templateName
-    *    name of configuration template
-    */
-   void setTemplateName(String templateName);
+    /**
+     * Get name of configuration template.
+     *
+     * @param templateName
+     *         name of configuration template
+     */
+    void setTemplateName(String templateName);
 
-   /**
-    * Get name of application environment.
-    *
-    * @return name of application environment
-    */
-   String getEnvironmentName();
+    /**
+     * Get name of application environment.
+     *
+     * @return name of application environment
+     */
+    String getEnvironmentName();
 
-   /**
-    * Set name of application environment.
-    *
-    * @param environmentName
-    *    name of application environment
-    */
-   void setEnvironmentName(String environmentName);
+    /**
+     * Set name of application environment.
+     *
+     * @param environmentName
+     *         name of application environment
+     */
+    void setEnvironmentName(String environmentName);
 }

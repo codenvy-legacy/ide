@@ -23,11 +23,10 @@ package org.exoplatform.ide.codeassistant.asm.test;
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 15, 2010 4:53:36 PM evgen $
- *
  */
 public @interface Foo {
 
-   int foo();
-   
-   String[] bar();
+    int foo();
+
+    String[] bar();
 }

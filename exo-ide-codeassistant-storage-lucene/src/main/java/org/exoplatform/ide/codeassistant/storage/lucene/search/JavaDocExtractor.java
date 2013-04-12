@@ -26,25 +26,20 @@ import org.exoplatform.ide.codeassistant.storage.lucene.DataIndexFields;
 
 import java.io.IOException;
 
-/**
- * Create ShortTypeInfo from lucene document.
- * 
- */
-public class JavaDocExtractor implements ContentExtractor<String>
-{
+/** Create ShortTypeInfo from lucene document. */
+public class JavaDocExtractor implements ContentExtractor<String> {
 
-   /**
-    * @throws IOException
-    * @throws CorruptIndexException
-    */
-   @Override
-   public String getValue(IndexReader reader, int doc) throws IOException
-   {
-      Document document =
-         reader.document(doc,
-            new MapFieldSelector(new String[]{DataIndexFields.JAVA_DOC}));
+    /**
+     * @throws IOException
+     * @throws CorruptIndexException
+     */
+    @Override
+    public String getValue(IndexReader reader, int doc) throws IOException {
+        Document document =
+                reader.document(doc,
+                                new MapFieldSelector(new String[]{DataIndexFields.JAVA_DOC}));
 
-      return document.get(DataIndexFields.JAVA_DOC);
+        return document.get(DataIndexFields.JAVA_DOC);
 
-   }
+    }
 }

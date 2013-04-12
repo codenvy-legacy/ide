@@ -19,76 +19,80 @@
 
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
-   xmlns:rd="urn:import:org.exoplatform.ide.client.restdiscovery.ui">
-   <ui:with type="org.exoplatform.ide.client.IdeLocalizationConstant" field="idelocal"></ui:with>
-   <ui:with type="org.exoplatform.ide.client.messages.IdePreferencesLocalizationConstant" field="preflocal"></ui:with>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
+             xmlns:rd="urn:import:org.exoplatform.ide.client.restdiscovery.ui">
+    <ui:with type="org.exoplatform.ide.client.IdeLocalizationConstant" field="idelocal"></ui:with>
+    <ui:with type="org.exoplatform.ide.client.messages.IdePreferencesLocalizationConstant" field="preflocal"></ui:with>
 
-   <ui:style>
-      .spacing {
-      	margin-top: 15px;
-      }
-      
-      .spacingFields {
-      	margin-bottom: 7px;
-      }
-      
-      .label {
-      	margin-bottom: 5px;
-      	cursor: default;
-      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-      	font-size: 11px;
-      	font-style: normal;
-      	font-weight: normal;
-      }
-   </ui:style>
+    <ui:style>
+        .spacing {
+            margin-top: 15px;
+        }
 
-   <g:LayoutPanel>
-      <g:layer bottom="40px" top="0px">
-         <g:SplitLayoutPanel>
-            <g:west size="200">
-               <c:Border margin="5">
-                  <c:layer>
-                     <g:ScrollPanel width="100%" height="100%">
-                        <rd:RestServiceTree width="100%" height="100%" ui:field="treeGrid" treeId="exoRestServicesDiscoveryTree"></rd:RestServiceTree>
-                     </g:ScrollPanel>
-                  </c:layer>
-               </c:Border>
-            </g:west>
-            <g:center>
-               <c:Border borderSize="5" borderColor="transparent">
-                  <c:layer top="0px" height="120px">
-                     <g:FlowPanel width="100%">
-                        <c:Label text="{preflocal.restServicesDiscoveryPath}" styleName="{style.label}"></c:Label>
-                        <c:TextInput ui:field="pathField" name="ideMethodPathField" height="40px" width="100%"></c:TextInput>
-                        <c:Label text="{preflocal.restServicesDiscoveryRequestMediaType}" styleName="{style.label}"></c:Label>
-                        <c:TextInput ui:field="requestTypeField" name="ideRequestType" height="40px" width="100%"></c:TextInput>
-                        <c:Label text="{preflocal.restServicesDiscoveryResponseMediaType}" styleName="{style.label}"></c:Label>
-                        <c:TextInput ui:field="responseTypeField" name="ideResponseType" height="40px" width="100%"></c:TextInput>
-                     </g:FlowPanel>
-                  </c:layer>
-                  <c:layer bottom="0px" top="126px">
-                     <c:Border ui:field="parametersListGridContainer">
+        .spacingFields {
+            margin-bottom: 7px;
+        }
+
+        .label {
+            margin-bottom: 5px;
+            cursor: default;
+            font-family: Verdana, Bitstream Vera Sans, sans-serif;
+            font-size: 11px;
+            font-style: normal;
+            font-weight: normal;
+        }
+    </ui:style>
+
+    <g:LayoutPanel>
+        <g:layer bottom="40px" top="0px">
+            <g:SplitLayoutPanel>
+                <g:west size="200">
+                    <c:Border margin="5">
                         <c:layer>
-                           <rd:RestServiceParameterListGrid ui:field="parametersListGrid" ID="ideRestServiceDiscoveryParameters"></rd:RestServiceParameterListGrid>
+                            <g:ScrollPanel width="100%" height="100%">
+                                <rd:RestServiceTree width="100%" height="100%" ui:field="treeGrid"
+                                                    treeId="exoRestServicesDiscoveryTree"></rd:RestServiceTree>
+                            </g:ScrollPanel>
                         </c:layer>
-                     </c:Border>
-                  </c:layer>
-               </c:Border>
-            </g:center>
-         </g:SplitLayoutPanel>
-      </g:layer>
-      <g:layer height="40px" bottom="0px">
+                    </c:Border>
+                </g:west>
+                <g:center>
+                    <c:Border borderSize="5" borderColor="transparent">
+                        <c:layer top="0px" height="120px">
+                            <g:FlowPanel width="100%">
+                                <c:Label text="{preflocal.restServicesDiscoveryPath}" styleName="{style.label}"></c:Label>
+                                <c:TextInput ui:field="pathField" name="ideMethodPathField" height="40px" width="100%"></c:TextInput>
+                                <c:Label text="{preflocal.restServicesDiscoveryRequestMediaType}" styleName="{style.label}"></c:Label>
+                                <c:TextInput ui:field="requestTypeField" name="ideRequestType" height="40px" width="100%"></c:TextInput>
+                                <c:Label text="{preflocal.restServicesDiscoveryResponseMediaType}" styleName="{style.label}"></c:Label>
+                                <c:TextInput ui:field="responseTypeField" name="ideResponseType" height="40px" width="100%"></c:TextInput>
+                            </g:FlowPanel>
+                        </c:layer>
+                        <c:layer bottom="0px" top="126px">
+                            <c:Border ui:field="parametersListGridContainer">
+                                <c:layer>
+                                    <rd:RestServiceParameterListGrid ui:field="parametersListGrid"
+                                                                     ID="ideRestServiceDiscoveryParameters"></rd:RestServiceParameterListGrid>
+                                </c:layer>
+                            </c:Border>
+                        </c:layer>
+                    </c:Border>
+                </g:center>
+            </g:SplitLayoutPanel>
+        </g:layer>
+        <g:layer height="40px" bottom="0px">
 
-         <g:HorizontalPanel spacing="5" width="100%" height="100%">
-            <g:cell horizontalAlignment='ALIGN_CENTER' verticalAlignment="ALIGN_MIDDLE">
-               <c:ImageButton text="{idelocal.okButton}" imageName="ok" ui:field="okButton" buttonId="exoRestServicesDiscoveryOkButton">
-               </c:ImageButton>
-            </g:cell>
-         </g:HorizontalPanel>
+            <g:HorizontalPanel spacing="5" width="100%" height="100%">
+                <g:cell horizontalAlignment='ALIGN_CENTER' verticalAlignment="ALIGN_MIDDLE">
+                    <c:ImageButton text="{idelocal.okButton}" imageName="ok" ui:field="okButton"
+                                   buttonId="exoRestServicesDiscoveryOkButton">
+                    </c:ImageButton>
+                </g:cell>
+            </g:HorizontalPanel>
 
-      </g:layer>
-   </g:LayoutPanel>
+        </g:layer>
+    </g:LayoutPanel>
 
 </ui:UiBinder>
  

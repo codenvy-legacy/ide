@@ -1,18 +1,18 @@
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.0//EN"
-   "http://google-web-toolkit.googlecode.com/svn/releases/2.0/distro-source/core/src/gwt-module.dtd">
+        "http://google-web-toolkit.googlecode.com/svn/releases/2.0/distro-source/core/src/gwt-module.dtd">
 <module>
 
-  <inherits name='com.google.gwt.user.User'/>
-  <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
-  <inherits name="org.exoplatform.ide.dtogen.DtoGen"/>
-  <inherits name="org.exoplatform.ide.json.Json"/>
-  <inherits name="com.codenvy.ide.collaboration.dto.Dto"/>
-   <inherits name="com.google.collide.CollabEditor"/>
+    <inherits name='com.google.gwt.user.User'/>
+    <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework'/>
+    <inherits name="org.exoplatform.ide.dtogen.DtoGen"/>
+    <inherits name="org.exoplatform.ide.json.Json"/>
+    <inherits name="com.codenvy.ide.collaboration.dto.Dto"/>
+    <inherits name="com.google.collide.CollabEditor"/>
 
-  <entry-point class='com.codenvy.ide.collaboration.chat.client.ChatExtension'/>
-  <source path="client"/>
-  <replace-with class="com.codenvy.ide.collaboration.chat.client.ProjectChatView">
-      <when-type-is class="com.codenvy.ide.collaboration.chat.client.ProjectChatPresenter.Display"/>
-   </replace-with>
+    <entry-point class='com.codenvy.ide.collaboration.chat.client.ChatExtension'/>
+    <source path="client"/>
+    <replace-with class="com.codenvy.ide.collaboration.chat.client.ProjectChatView">
+        <when-type-is class="com.codenvy.ide.collaboration.chat.client.ProjectChatPresenter.Display"/>
+    </replace-with>
 
 </module>

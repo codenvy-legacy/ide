@@ -23,47 +23,33 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: ShowDocumentationEvent Jan 21, 2011 11:14:29 AM evgen $
- * 
  */
-public class ShowDocumentationEvent extends GwtEvent<ShowDocumentationHandler>
-{
+public class ShowDocumentationEvent extends GwtEvent<ShowDocumentationHandler> {
 
-   public static final GwtEvent.Type<ShowDocumentationHandler> TYPE = new Type<ShowDocumentationHandler>();
+    public static final GwtEvent.Type<ShowDocumentationHandler> TYPE = new Type<ShowDocumentationHandler>();
 
-   private boolean show;
+    private boolean show;
 
-   /**
-    * @param show
-    */
-   public ShowDocumentationEvent(boolean show)
-   {
-      this.show = show;
-   }
+    /** @param show */
+    public ShowDocumentationEvent(boolean show) {
+        this.show = show;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowDocumentationHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowDocumentationHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ShowDocumentationHandler handler)
-   {
-      handler.onShowDocumentation(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ShowDocumentationHandler handler) {
+        handler.onShowDocumentation(this);
+    }
 
-   /**
-    * @return the show
-    */
-   public boolean isShow()
-   {
-      return show;
-   }
+    /** @return the show */
+    public boolean isShow() {
+        return show;
+    }
 
 }

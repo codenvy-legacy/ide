@@ -18,34 +18,31 @@
  */
 package org.exoplatform.ide.git.client;
 
-import com.google.gwt.junit.tools.GWTTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
+
+import com.google.gwt.junit.tools.GWTTestSuite;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 27, 2011 12:28:59 PM anya $
- *
  */
-public class GwtMarshallerTestSuite extends TestCase
-{
-   public static Test suite()
-   {
-      GWTTestSuite suite = new GWTTestSuite("Codenvy Git Marshaller GWT Tests");
-      suite.addTestSuite(AddRequestMarshallerGwtTest.class);
-      suite.addTestSuite(BranchesMarshallerGwtTest.class);
-      suite.addTestSuite(CloneMarshallerGwtTest.class);
-      suite.addTestSuite(CommitMarshallerGwtTest.class);
-      suite.addTestSuite(FetchMarshallerGwtTest.class);
-      suite.addTestSuite(InitMarshallerGwtTest.class);
-      suite.addTestSuite(LogMarshallerGwtTest.class);
-      suite.addTestSuite(PushMarshallerGwtTest.class);
-      suite.addTestSuite(PullMarshallerGwtTest.class);
-      suite.addTestSuite(RemotesMarshallerGwtTest.class);
-      suite.addTestSuite(RemoveMarshallerGwtTest.class);
-      suite.addTestSuite(ResetMarshallerGwtTest.class);
-      suite.addTestSuite(StatusMarshallerGwtTest.class);
-      suite.addTestSuite(DiffMarshallerGwtTest.class);
-      return suite;
-   }
+public class GwtMarshallerTestSuite extends TestCase {
+    public static Test suite() {
+        GWTTestSuite suite = new GWTTestSuite("Codenvy Git Marshaller GWT Tests");
+        suite.addTestSuite(AddRequestMarshallerGwtTest.class);
+        suite.addTestSuite(BranchesMarshallerGwtTest.class);
+        suite.addTestSuite(CloneMarshallerGwtTest.class);
+        suite.addTestSuite(CommitMarshallerGwtTest.class);
+        suite.addTestSuite(FetchMarshallerGwtTest.class);
+        suite.addTestSuite(InitMarshallerGwtTest.class);
+        suite.addTestSuite(LogMarshallerGwtTest.class);
+        suite.addTestSuite(PushMarshallerGwtTest.class);
+        suite.addTestSuite(PullMarshallerGwtTest.class);
+        suite.addTestSuite(RemotesMarshallerGwtTest.class);
+        suite.addTestSuite(RemoveMarshallerGwtTest.class);
+        suite.addTestSuite(ResetMarshallerGwtTest.class);
+        suite.addTestSuite(DiffMarshallerGwtTest.class);
+        return suite;
+    }
 }

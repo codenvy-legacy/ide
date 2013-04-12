@@ -18,68 +18,56 @@
  */
 package org.exoplatform.ide.client.framework.ui.api.event;
 
-import org.exoplatform.ide.client.framework.ui.api.View;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.client.framework.ui.api.View;
 
 /**
  * This event generates after activating of any View.
- * 
+ * <p/>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ViewActivatedEvent extends GwtEvent<ViewActivatedHandler>
-{
+public class ViewActivatedEvent extends GwtEvent<ViewActivatedHandler> {
 
-   /**
-    * Type of this Event.
-    */
-   public static final GwtEvent.Type<ViewActivatedHandler> TYPE = new GwtEvent.Type<ViewActivatedHandler>();
+    /** Type of this Event. */
+    public static final GwtEvent.Type<ViewActivatedHandler> TYPE = new GwtEvent.Type<ViewActivatedHandler>();
 
-   /**
-    * View which was activated.
-    */
-   private View view;
+    /** View which was activated. */
+    private View view;
 
-   /**
-    * Creates a new instance of this Event.
-    * 
-    * @param view View which was activated
-    */
-   public ViewActivatedEvent(View view)
-   {
-      this.view = view;
-   }
+    /**
+     * Creates a new instance of this Event.
+     *
+     * @param view
+     *         View which was activated
+     */
+    public ViewActivatedEvent(View view) {
+        this.view = view;
+    }
 
-   /**
-    * Gets a view which was activated.
-    * 
-    * @return view which was activated
-    */
-   public View getView()
-   {
-      return view;
-   }
+    /**
+     * Gets a view which was activated.
+     *
+     * @return view which was activated
+     */
+    public View getView() {
+        return view;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ViewActivatedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ViewActivatedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ViewActivatedHandler handler)
-   {
-      handler.onViewActivated(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ViewActivatedHandler handler) {
+        handler.onViewActivated(this);
+    }
 
 }

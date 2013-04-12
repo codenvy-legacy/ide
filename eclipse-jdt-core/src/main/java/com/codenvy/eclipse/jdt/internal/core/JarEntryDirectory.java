@@ -17,55 +17,45 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 
-public class JarEntryDirectory extends JarEntryResource
-{
-   private IJarEntryResource[] children;
+public class JarEntryDirectory extends JarEntryResource {
+    private IJarEntryResource[] children;
 
-   public JarEntryDirectory(String simpleName)
-   {
-      super(simpleName);
-   }
+    public JarEntryDirectory(String simpleName) {
+        super(simpleName);
+    }
 
-   public JarEntryResource clone(Object newParent)
-   {
-      JarEntryDirectory dir = new JarEntryDirectory(this.simpleName);
-      dir.setParent(newParent);
-      int length = this.children.length;
-      if (length > 0)
-      {
-         IJarEntryResource[] newChildren = new IJarEntryResource[length];
-         for (int i = 0; i < length; i++)
-         {
-            JarEntryResource child = (JarEntryResource)this.children[i];
-            newChildren[i] = child.clone(dir);
-         }
-         dir.setChildren(newChildren);
-      }
-      return dir;
-   }
+    public JarEntryResource clone(Object newParent) {
+        JarEntryDirectory dir = new JarEntryDirectory(this.simpleName);
+        dir.setParent(newParent);
+        int length = this.children.length;
+        if (length > 0) {
+            IJarEntryResource[] newChildren = new IJarEntryResource[length];
+            for (int i = 0; i < length; i++) {
+                JarEntryResource child = (JarEntryResource)this.children[i];
+                newChildren[i] = child.clone(dir);
+            }
+            dir.setChildren(newChildren);
+        }
+        return dir;
+    }
 
-   public IJarEntryResource[] getChildren()
-   {
-      return this.children;
-   }
+    public IJarEntryResource[] getChildren() {
+        return this.children;
+    }
 
-   public InputStream getContents() throws CoreException
-   {
-      return new ByteArrayInputStream(new byte[0]);
-   }
+    public InputStream getContents() throws CoreException {
+        return new ByteArrayInputStream(new byte[0]);
+    }
 
-   public boolean isFile()
-   {
-      return false;
-   }
+    public boolean isFile() {
+        return false;
+    }
 
-   public void setChildren(IJarEntryResource[] children)
-   {
-      this.children = children;
-   }
+    public void setChildren(IJarEntryResource[] children) {
+        this.children = children;
+    }
 
-   public String toString()
-   {
-      return "JarEntryDirectory[" + getEntryName() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
-   }
+    public String toString() {
+        return "JarEntryDirectory[" + getEntryName() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+    }
 }

@@ -19,68 +19,68 @@
 
 -->
 <module>
-   <inherits name='com.google.gwt.user.User' />
-   <replace-with class="org.exoplatform.ide.git.client.clone.CloneRepositoryView">
-      <when-type-is class="org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter.Display" />
-   </replace-with>
+    <inherits name='com.google.gwt.user.User'/>
+    <replace-with class="org.exoplatform.ide.git.client.clone.CloneRepositoryView">
+        <when-type-is class="org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.git.client.init.InitRepositoryView">
-      <when-type-is class="org.exoplatform.ide.git.client.init.InitRepositoryPresenter.Display" />
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.git.client.init.InitRepositoryView">
+        <when-type-is class="org.exoplatform.ide.git.client.init.InitRepositoryPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.git.client.add.AddToIndexView">
-      <when-type-is class="org.exoplatform.ide.git.client.add.AddToIndexPresenter.Display" />
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.git.client.add.AddToIndexView">
+        <when-type-is class="org.exoplatform.ide.git.client.add.AddToIndexPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.git.client.commit.CommitView">
-      <when-type-is class="org.exoplatform.ide.git.client.commit.CommitPresenter.Display" />
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.git.client.commit.CommitView">
+        <when-type-is class="org.exoplatform.ide.git.client.commit.CommitPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.git.client.push.PushToRemoteView">
-      <when-type-is class="org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display" />
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.git.client.push.PushToRemoteView">
+        <when-type-is class="org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.git.client.branch.BranchView">
-      <when-type-is class="org.exoplatform.ide.git.client.branch.BranchPresenter.Display" />
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.git.client.branch.BranchView">
+        <when-type-is class="org.exoplatform.ide.git.client.branch.BranchPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.git.client.remove.RemoveFilesView">
-      <when-type-is class="org.exoplatform.ide.git.client.remove.RemoveFilesPresenter.Display" />
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.git.client.remove.RemoveFromIndexView">
+        <when-type-is class="org.exoplatform.ide.git.client.remove.RemoveFromIndexPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.git.client.reset.ResetFilesView">
-      <when-type-is class="org.exoplatform.ide.git.client.reset.ResetFilesPresenter.Display" />
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.git.client.reset.ResetFilesView">
+        <when-type-is class="org.exoplatform.ide.git.client.reset.ResetFilesPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.git.client.reset.ResetToCommitView">
-      <when-type-is class="org.exoplatform.ide.git.client.reset.ResetToCommitPresenter.Display" />
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.git.client.reset.ResetToCommitView">
+        <when-type-is class="org.exoplatform.ide.git.client.reset.ResetToCommitPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.git.client.remote.RemoteView">
-      <when-type-is class="org.exoplatform.ide.git.client.remote.RemotePresenter.Display" />
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.git.client.remote.RemoteView">
+        <when-type-is class="org.exoplatform.ide.git.client.remote.RemotePresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.git.client.pull.PullView">
-      <when-type-is class="org.exoplatform.ide.git.client.pull.PullPresenter.Display" />
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.git.client.pull.PullView">
+        <when-type-is class="org.exoplatform.ide.git.client.pull.PullPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.git.client.fetch.FetchView">
-      <when-type-is class="org.exoplatform.ide.git.client.fetch.FetchPresenter.Display" />
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.git.client.fetch.FetchView">
+        <when-type-is class="org.exoplatform.ide.git.client.fetch.FetchPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.git.client.history.HistoryView">
-      <when-type-is class="org.exoplatform.ide.git.client.history.HistoryPresenter.Display" />
-   </replace-with>
-   
-   <replace-with class="org.exoplatform.ide.git.client.merge.MergeView">
-      <when-type-is class="org.exoplatform.ide.git.client.merge.MergePresenter.Display" />
-   </replace-with>
-   
+    <replace-with class="org.exoplatform.ide.git.client.history.HistoryView">
+        <when-type-is class="org.exoplatform.ide.git.client.history.HistoryPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.git.client.merge.MergeView">
+        <when-type-is class="org.exoplatform.ide.git.client.merge.MergePresenter.Display"/>
+    </replace-with>
+
     <replace-with class="org.exoplatform.ide.git.client.init.ShowProjectGitReadOnlyUrlView">
-      <when-type-is class="org.exoplatform.ide.git.client.init.ShowProjectGitReadOnlyUrlPresenter.Display" />
-   </replace-with>
-   
+        <when-type-is class="org.exoplatform.ide.git.client.init.ShowProjectGitReadOnlyUrlPresenter.Display"/>
+    </replace-with>
+
     <replace-with class="org.exoplatform.ide.git.client.github.CollaboratorsViewer">
-      <when-type-is class="org.exoplatform.ide.git.client.github.GitHubCollaboratorsHandler.Display" />
-   </replace-with>
+        <when-type-is class="org.exoplatform.ide.git.client.github.GitHubCollaboratorsHandler.Display"/>
+    </replace-with>
 </module>

@@ -7,7 +7,8 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     Stephan Herrmann <stephan@cs.tu-berlin.de> - inconsistent initialization of classpath container backed by external class folder, see https://bugs.eclipse.org/320618
+ *     Stephan Herrmann <stephan@cs.tu-berlin.de> - inconsistent initialization of classpath container backed by external class folder,
+ *     see https://bugs.eclipse.org/320618
  *******************************************************************************/
 package com.codenvy.eclipse.jdt.internal.core;
 
@@ -21,54 +22,44 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 
-public class ExternalFolderChange
-{
+public class ExternalFolderChange {
 
-   private JavaProject project;
+    private JavaProject project;
 
-   private IClasspathEntry[] oldResolvedClasspath;
+    private IClasspathEntry[] oldResolvedClasspath;
 
-   public ExternalFolderChange(JavaProject project, IClasspathEntry[] oldResolvedClasspath)
-   {
-      this.project = project;
-      this.oldResolvedClasspath = oldResolvedClasspath;
-   }
+    public ExternalFolderChange(JavaProject project, IClasspathEntry[] oldResolvedClasspath) {
+        this.project = project;
+        this.oldResolvedClasspath = oldResolvedClasspath;
+    }
 
-   /*
-    * Update external folders
-    */
-   public void updateExternalFoldersIfNecessary(boolean refreshIfExistAlready,
-      IProgressMonitor monitor) throws JavaModelException
-   {
-      HashSet oldFolders = ExternalFoldersManager.getExternalFolders(this.oldResolvedClasspath);
-      IClasspathEntry[] newResolvedClasspath = this.project.getResolvedClasspath();
-      HashSet newFolders = ExternalFoldersManager.getExternalFolders(newResolvedClasspath);
-      if (newFolders == null)
-      {
-         return;
-      }
-      ExternalFoldersManager foldersManager = JavaModelManager.getExternalManager();
-      Iterator iterator = newFolders.iterator();
-      while (iterator.hasNext())
-      {
-         Object folderPath = iterator.next();
-         if (oldFolders == null || !oldFolders.remove(folderPath) || foldersManager.removePendingFolder(folderPath))
-         {
-            try
-            {
-               foldersManager.createLinkFolder((IPath)folderPath, refreshIfExistAlready, monitor);
+    /*
+     * Update external folders
+     */
+    public void updateExternalFoldersIfNecessary(boolean refreshIfExistAlready,
+                                                 IProgressMonitor monitor) throws JavaModelException {
+        HashSet oldFolders = ExternalFoldersManager.getExternalFolders(this.oldResolvedClasspath);
+        IClasspathEntry[] newResolvedClasspath = this.project.getResolvedClasspath();
+        HashSet newFolders = ExternalFoldersManager.getExternalFolders(newResolvedClasspath);
+        if (newFolders == null) {
+            return;
+        }
+        ExternalFoldersManager foldersManager = JavaModelManager.getExternalManager();
+        Iterator iterator = newFolders.iterator();
+        while (iterator.hasNext()) {
+            Object folderPath = iterator.next();
+            if (oldFolders == null || !oldFolders.remove(folderPath) || foldersManager.removePendingFolder(folderPath)) {
+                try {
+                    foldersManager.createLinkFolder((IPath)folderPath, refreshIfExistAlready, monitor);
+                } catch (CoreException e) {
+                    throw new JavaModelException(e);
+                }
             }
-            catch (CoreException e)
-            {
-               throw new JavaModelException(e);
-            }
-         }
-      }
-      // removal of linked folders is done during save
-   }
+        }
+        // removal of linked folders is done during save
+    }
 
-   public String toString()
-   {
-      return "ExternalFolderChange: " + this.project.getElementName(); //$NON-NLS-1$
-   }
+    public String toString() {
+        return "ExternalFolderChange: " + this.project.getElementName(); //$NON-NLS-1$
+    }
 }

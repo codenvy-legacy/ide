@@ -41,208 +41,164 @@ import org.exoplatform.ide.extension.maven.client.BuilderExtension;
 
 /**
  * View for build project by maven builder.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuildProjectView.java Feb 17, 2012 6:20:16 PM azatsarynnyy $
- *
  */
-public class BuildProjectView extends ViewImpl implements BuildProjectPresenter.Display
-{
-   /**
-    * Identifier of view.
-    */
-   private static final String ID = BuilderExtension.LOCALIZATION_CONSTANT.buildProjectId();
+public class BuildProjectView extends ViewImpl implements BuildProjectPresenter.Display {
+    /** Identifier of view. */
+    private static final String ID = BuilderExtension.LOCALIZATION_CONSTANT.buildProjectId();
 
-   /**
-    * Title of view.
-    */
-   private static final String TITLE = BuilderExtension.LOCALIZATION_CONSTANT.buildProjectTitle();
+    /** Title of view. */
+    private static final String TITLE = BuilderExtension.LOCALIZATION_CONSTANT.buildProjectTitle();
 
-   private static final String CLEAR_OUTPUT = BuilderExtension.LOCALIZATION_CONSTANT.outputClear();
+    private static final String CLEAR_OUTPUT = BuilderExtension.LOCALIZATION_CONSTANT.outputClear();
 
-   private static final int HEIGHT = 450;
+    private static final int HEIGHT = 450;
 
-   private static final int WIDTH = 250;
+    private static final int WIDTH = 250;
 
-   /**
-    * Animation of build progress is enabled.
-    */
-   private boolean animationEnabled = false;
+    /** Animation of build progress is enabled. */
+    private boolean animationEnabled = false;
 
-   private int animationCharIndex = 1;
+    private int animationCharIndex = 1;
 
-   /**
-    * Button for clear output panel.
-    */
-   private IconButton clearOutputButton;
+    /** Button for clear output panel. */
+    private IconButton clearOutputButton;
 
-   @UiField
-   Toolbar toolbar;
+    @UiField
+    Toolbar toolbar;
 
-   /**
-    * Panel for output messages.
-    */
-   @UiField
-   HTMLPanel buildOutputPanel;
+    /** Panel for output messages. */
+    @UiField
+    HTMLPanel buildOutputPanel;
 
-   interface BuildProjectViewUiBinder extends UiBinder<Widget, BuildProjectView>
-   {
-   }
+    interface BuildProjectViewUiBinder extends UiBinder<Widget, BuildProjectView> {
+    }
 
-   /**
-    * UIBinder instance.
-    */
-   private static BuildProjectViewUiBinder uiBinder = GWT.create(BuildProjectViewUiBinder.class);
+    /** UIBinder instance. */
+    private static BuildProjectViewUiBinder uiBinder = GWT.create(BuildProjectViewUiBinder.class);
 
-   public BuildProjectView()
-   {
-      super(ID, ViewType.OPERATION, TITLE, new Image(BuilderClientBundle.INSTANCE.build()), WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
+    public BuildProjectView() {
+        super(ID, ViewType.OPERATION, TITLE, new Image(BuilderClientBundle.INSTANCE.build()), WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
 
-      Image normalIcon = new Image(BuilderClientBundle.INSTANCE.clearOutput());
-      Image disabledIcon = new Image(BuilderClientBundle.INSTANCE.clearOutputDisabled());
+        Image normalIcon = new Image(BuilderClientBundle.INSTANCE.clearOutput());
+        Image disabledIcon = new Image(BuilderClientBundle.INSTANCE.clearOutputDisabled());
 
-      clearOutputButton = new IconButton(normalIcon, disabledIcon);
-      clearOutputButton.setTitle(CLEAR_OUTPUT);
-      clearOutputButton.setEnabled(true);
+        clearOutputButton = new IconButton(normalIcon, disabledIcon);
+        clearOutputButton.setTitle(CLEAR_OUTPUT);
+        clearOutputButton.setEnabled(true);
 
-      ToolbarItem toolbarItem = toolbar.addItem(clearOutputButton, true);
-      toolbarItem.getElement().getStyle().setPaddingTop(2, Unit.PX);
-      toolbarItem.getElement().getStyle().setPaddingRight(2, Unit.PX);
-   }
+        ToolbarItem toolbarItem = toolbar.addItem(clearOutputButton, true);
+        toolbarItem.getElement().getStyle().setPaddingTop(2, Unit.PX);
+        toolbarItem.getElement().getStyle().setPaddingRight(2, Unit.PX);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.maven.client.build.BuildProjectPresenter.Display#showMessageInOutput(java.lang.String)
-    */
-   @Override
-   public final native void showMessageInOutput(String text) /*-{
-                                                             var pre = $doc.getElementById('ide.builder.buildOutput');
-                                                             if (pre == null || pre == undefined) {
-                                                             return;
-                                                             }
-                                                             
-                                                             var curText = pre.textContent;
-                                                             if (curText != null && curText != undefined && curText != "") {
-                                                             pre.innerHTML += "\r\n";      
-                                                             }
-                                                             pre.innerHTML += text;
-                                                             
-                                                             this.@org.exoplatform.ide.extension.maven.client.build.BuildProjectView::scrollToBottom()();
-                                                             }-*/;
+    /** @see org.exoplatform.ide.extension.maven.client.build.BuildProjectPresenter.Display#showMessageInOutput(java.lang.String) */
+    @Override
+    public final native void showMessageInOutput(String text) /*-{
+        var pre = $doc.getElementById('ide.builder.buildOutput');
+        if (pre == null || pre == undefined) {
+            return;
+        }
 
-   /**
-    * @see org.exoplatform.ide.extension.maven.client.build.BuildProjectPresenter.Display#clearOutput()
-    */
-   @Override
-   public final native void clearOutput() /*-{
-                                          var pre = $doc.getElementById('ide.builder.buildOutput');
-                                          if (pre == null || pre == undefined) {
-                                          return;
-                                          }
-                                          pre.textContent = ""; 
-                                          }-*/;
+        var curText = pre.textContent;
+        if (curText != null && curText != undefined && curText != "") {
+            pre.innerHTML += "\r\n";
+        }
+        pre.innerHTML += text;
 
-   /**
-    * Scrolling to bottom of buildOutputPanel.
-    */
-   private void scrollToBottom()
-   {
-      int scrollHeight = DOM.getElementPropertyInt(buildOutputPanel.getElement(), "scrollHeight");
-      DOM.setElementPropertyInt(buildOutputPanel.getElement(), "scrollTop", scrollHeight);
-   }
+        this.@org.exoplatform.ide.extension.maven.client.build.BuildProjectView::scrollToBottom()();
+    }-*/;
 
-   /**
-    * @see org.exoplatform.ide.extension.maven.client.build.BuildProjectPresenter.Display#startAnimation()
-    */
-   @Override
-   public void startAnimation()
-   {
-      animationCharIndex = 1;
-      Element animationElement = DOM.getElementById("ide.builder.buildingAnimation");
-      if (animationElement == null)
-      {
-         return;
-      }
-      animationElement.getStyle().setDisplay(Display.BLOCK);
-      animationTimer.scheduleRepeating(150);
-   }
+    /** @see org.exoplatform.ide.extension.maven.client.build.BuildProjectPresenter.Display#clearOutput() */
+    @Override
+    public final native void clearOutput() /*-{
+        var pre = $doc.getElementById('ide.builder.buildOutput');
+        if (pre == null || pre == undefined) {
+            return;
+        }
+        pre.textContent = "";
+    }-*/;
 
-   /**
-    * @see org.exoplatform.ide.extension.maven.client.build.BuildProjectPresenter.Display#stopAnimation()
-    */
-   @Override
-   public void stopAnimation()
-   {
-      animationTimer.cancel();
+    /** Scrolling to bottom of buildOutputPanel. */
+    private void scrollToBottom() {
+        int scrollHeight = DOM.getElementPropertyInt(buildOutputPanel.getElement(), "scrollHeight");
+        DOM.setElementPropertyInt(buildOutputPanel.getElement(), "scrollTop", scrollHeight);
+    }
 
-      Element animationElement = DOM.getElementById("ide.builder.buildingAnimation");
-      if (animationElement == null)
-      {
-         return;
-      }
+    /** @see org.exoplatform.ide.extension.maven.client.build.BuildProjectPresenter.Display#startAnimation() */
+    @Override
+    public void startAnimation() {
+        animationCharIndex = 1;
+        Element animationElement = DOM.getElementById("ide.builder.buildingAnimation");
+        if (animationElement == null) {
+            return;
+        }
+        animationElement.getStyle().setDisplay(Display.BLOCK);
+        animationTimer.scheduleRepeating(150);
+    }
 
-      animationElement.getStyle().setDisplay(Display.NONE);
-      animationElement.setInnerHTML("");
-   }
+    /** @see org.exoplatform.ide.extension.maven.client.build.BuildProjectPresenter.Display#stopAnimation() */
+    @Override
+    public void stopAnimation() {
+        animationTimer.cancel();
 
-   /**
-    * Animate of build progress.
-    */
-   private Timer animationTimer = new Timer()
-   {
-      @Override
-      public void run()
-      {
-         String c = "";
-         switch (animationCharIndex)
-         {
-            case 1 :
-               c = "/";
-               break;
+        Element animationElement = DOM.getElementById("ide.builder.buildingAnimation");
+        if (animationElement == null) {
+            return;
+        }
 
-            case 2 :
-               c = "-";
-               break;
+        animationElement.getStyle().setDisplay(Display.NONE);
+        animationElement.setInnerHTML("");
+    }
 
-            case 3 :
-               c = "\\";
-               break;
+    /** Animate of build progress. */
+    private Timer animationTimer = new Timer() {
+        @Override
+        public void run() {
+            String c = "";
+            switch (animationCharIndex) {
+                case 1:
+                    c = "/";
+                    break;
 
-            case 4 :
-               c = "|";
-               break;
-         }
+                case 2:
+                    c = "-";
+                    break;
 
-         Element animationElement = DOM.getElementById("ide.builder.buildingAnimation");
-         if (animationElement != null)
-         {
-            animationElement.setInnerHTML(c);
-         }
+                case 3:
+                    c = "\\";
+                    break;
 
-         animationCharIndex++;
-         if (animationCharIndex > 4)
-         {
-            animationCharIndex = 1;
-         }
-      }
-   };
+                case 4:
+                    c = "|";
+                    break;
+            }
 
-   /**
-    * @see org.exoplatform.ide.extension.maven.client.build.BuildProjectPresenter.Display#getClearOutputButton()
-    */
-   @Override
-   public HasClickHandlers getClearOutputButton()
-   {
-      return clearOutputButton;
-   }
+            Element animationElement = DOM.getElementById("ide.builder.buildingAnimation");
+            if (animationElement != null) {
+                animationElement.setInnerHTML(c);
+            }
 
-   /**
-    * @see org.exoplatform.ide.extension.maven.client.build.BuildProjectPresenter.Display#setClearOutputButtonEnabled(boolean)
-    */
-   @Override
-   public void setClearOutputButtonEnabled(boolean isEnabled)
-   {
-      clearOutputButton.setEnabled(isEnabled);
-   }
+            animationCharIndex++;
+            if (animationCharIndex > 4) {
+                animationCharIndex = 1;
+            }
+        }
+    };
+
+    /** @see org.exoplatform.ide.extension.maven.client.build.BuildProjectPresenter.Display#getClearOutputButton() */
+    @Override
+    public HasClickHandlers getClearOutputButton() {
+        return clearOutputButton;
+    }
+
+    /** @see org.exoplatform.ide.extension.maven.client.build.BuildProjectPresenter.Display#setClearOutputButtonEnabled(boolean) */
+    @Override
+    public void setClearOutputButtonEnabled(boolean isEnabled) {
+        clearOutputButton.setEnabled(isEnabled);
+    }
 
 }

@@ -19,45 +19,39 @@
 
 package org.exoplatform.ide.client.framework.project;
 
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
-
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ProjectOpenedEvent extends GwtEvent<ProjectOpenedHandler>
-{
+public class ProjectOpenedEvent extends GwtEvent<ProjectOpenedHandler> {
 
-   public static final GwtEvent.Type<ProjectOpenedHandler> TYPE = new GwtEvent.Type<ProjectOpenedHandler>();
+    public static final GwtEvent.Type<ProjectOpenedHandler> TYPE = new GwtEvent.Type<ProjectOpenedHandler>();
 
-   private ProjectModel project;
+    private ProjectModel project;
 
-   public ProjectOpenedEvent(ProjectModel project)
-   {
-      this.project = project;
-   }
+    public ProjectOpenedEvent(ProjectModel project) {
+        this.project = project;
+    }
 
-   public ProjectModel getProject()
-   {
-      return project;
-   }
+    public ProjectModel getProject() {
+        return project;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ProjectOpenedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ProjectOpenedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(ProjectOpenedHandler handler)
-   {
-      handler.onProjectOpened(this);
-   }
+    @Override
+    protected void dispatch(ProjectOpenedHandler handler) {
+        handler.onProjectOpened(this);
+    }
 
 }

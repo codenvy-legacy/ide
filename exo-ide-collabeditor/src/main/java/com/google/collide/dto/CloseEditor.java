@@ -22,9 +22,8 @@ import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
 @RoutingType(type = RoutingTypes.CLOSEEDITOR)
-public interface CloseEditor extends ClientToServerDto
-{
-   String getFileEditSessionKey();
+public interface CloseEditor extends ClientToServerDto {
+    String getFileEditSessionKey();
 
-   String getClientId();
+    String getClientId();
 }

@@ -35,9 +35,6 @@ import com.codenvy.eclipse.core.runtime.jobs.MultiRule;
 import java.util.ArrayList;
 
 
-
-
-
 /**
  * A <code>GenericFileBufferOperationRunner</code> executes
  * {@link com.codenvy.eclipse.core.filebuffers.manipulation.IFileBufferOperation}.
@@ -49,365 +46,286 @@ import java.util.ArrayList;
  * @see com.codenvy.eclipse.core.filebuffers.manipulation.IFileBufferOperation
  * @since 3.3
  */
-public class GenericFileBufferOperationRunner
-{
+public class GenericFileBufferOperationRunner {
 
-   /**
-    * The validation context
-    */
-   private final Object fValidationContext;
+    /** The validation context */
+    private final Object fValidationContext;
 
-   /**
-    * The file buffer manager
-    */
-   private final IFileBufferManager fFileBufferManager;
+    /** The file buffer manager */
+    private final IFileBufferManager fFileBufferManager;
 
-   /**
-    * The lock for waiting for completion of computation in the UI thread.
-    */
-   private final Object fCompletionLock = new Object();
+    /** The lock for waiting for completion of computation in the UI thread. */
+    private final Object fCompletionLock = new Object();
 
-   /**
-    * The flag indicating completion of computation in the UI thread.
-    */
-   private transient boolean fIsCompleted;
+    /** The flag indicating completion of computation in the UI thread. */
+    private transient boolean fIsCompleted;
 
-   /**
-    * The exception thrown during the computation in the UI thread.
-    */
-   private transient Throwable fThrowable;
+    /** The exception thrown during the computation in the UI thread. */
+    private transient Throwable fThrowable;
 
 
-   /**
-    * Creates a new file buffer operation runner.
-    *
-    * @param fileBufferManager the file buffer manager
-    * @param validationContext the validationContext
-    */
-   public GenericFileBufferOperationRunner(IFileBufferManager fileBufferManager, Object validationContext)
-   {
-      fFileBufferManager = fileBufferManager;
-      fValidationContext = validationContext;
-   }
+    /**
+     * Creates a new file buffer operation runner.
+     *
+     * @param fileBufferManager
+     *         the file buffer manager
+     * @param validationContext
+     *         the validationContext
+     */
+    public GenericFileBufferOperationRunner(IFileBufferManager fileBufferManager, Object validationContext) {
+        fFileBufferManager = fileBufferManager;
+        fValidationContext = validationContext;
+    }
 
-   /**
-    * Executes the given operation for all file buffers specified by the given locations.
-    *
-    * @param locations the file buffer locations
-    * @param operation the operation to be performed
-    * @param monitor   the progress monitor, or <code>null</code> if progress reporting is not desired
-    * @throws CoreException              in case of error
-    * @throws OperationCanceledException in case the execution get canceled
-    */
-   public void execute(IPath[] locations, final IFileBufferOperation operation,
-      IProgressMonitor monitor) throws CoreException, OperationCanceledException
-   {
-      final int size = locations.length;
-      final IProgressMonitor progressMonitor = Progress.getMonitor(monitor);
-      progressMonitor.beginTask(operation.getOperationName(), size * 200);
-      try
-      {
+    /**
+     * Executes the given operation for all file buffers specified by the given locations.
+     *
+     * @param locations
+     *         the file buffer locations
+     * @param operation
+     *         the operation to be performed
+     * @param monitor
+     *         the progress monitor, or <code>null</code> if progress reporting is not desired
+     * @throws CoreException
+     *         in case of error
+     * @throws OperationCanceledException
+     *         in case the execution get canceled
+     */
+    public void execute(IPath[] locations, final IFileBufferOperation operation,
+                        IProgressMonitor monitor) throws CoreException, OperationCanceledException {
+        final int size = locations.length;
+        final IProgressMonitor progressMonitor = Progress.getMonitor(monitor);
+        progressMonitor.beginTask(operation.getOperationName(), size * 200);
+        try {
 
 
-         IProgressMonitor subMonitor = Progress.getSubMonitor(progressMonitor, size * 10);
-         IFileBuffer[] fileBuffers = createFileBuffers(locations, subMonitor);
-         subMonitor.done();
-
-         IFileBuffer[] fileBuffers2Save = findFileBuffersToSave(fileBuffers);
-         subMonitor = Progress.getSubMonitor(progressMonitor, size * 10);
-         fFileBufferManager.validateState(fileBuffers2Save, subMonitor, fValidationContext);
-         subMonitor.done();
-         if (!isCommitable(fileBuffers2Save))
-         {
-            throw new OperationCanceledException();
-         }
-
-         IFileBuffer[] unsynchronizedFileBuffers = findUnsynchronizedFileBuffers(fileBuffers);
-         performOperation(unsynchronizedFileBuffers, operation, progressMonitor);
-
-         final IFileBuffer[] synchronizedFileBuffers = findSynchronizedFileBuffers(fileBuffers);
-         fIsCompleted = false;
-         fThrowable = null;
-         synchronized (fCompletionLock)
-         {
-
-            executeInContext(new Runnable()
-            {
-               public void run()
-               {
-                  synchronized (fCompletionLock)
-                  {
-                     try
-                     {
-                        SafeRunner.run(new ISafeRunnable()
-                        {
-                           public void handleException(Throwable throwable)
-                           {
-                              fThrowable = throwable;
-                           }
-
-                           public void run() throws Exception
-                           {
-                              performOperation(synchronizedFileBuffers, operation, progressMonitor);
-                           }
-                        });
-                     }
-                     finally
-                     {
-                        fIsCompleted = true;
-                        fCompletionLock.notifyAll();
-                     }
-                  }
-               }
-            });
-
-            while (!fIsCompleted)
-            {
-               try
-               {
-                  fCompletionLock.wait(500);
-               }
-               catch (InterruptedException x)
-               {
-               }
-            }
-         }
-
-         if (fThrowable != null)
-         {
-            if (fThrowable instanceof CoreException)
-            {
-               throw (CoreException)fThrowable;
-            }
-            throw new CoreException(
-               new Status(IStatus.ERROR, FileBuffersPlugin.PLUGIN_ID, IFileBufferStatusCodes.CONTENT_CHANGE_FAILED,
-                  fThrowable.getLocalizedMessage(), fThrowable));
-         }
-
-         subMonitor = Progress.getSubMonitor(progressMonitor, size * 80);
-         commit(fileBuffers2Save, subMonitor);
-         subMonitor.done();
-
-      }
-      finally
-      {
-         try
-         {
             IProgressMonitor subMonitor = Progress.getSubMonitor(progressMonitor, size * 10);
-            releaseFileBuffers(locations, subMonitor);
+            IFileBuffer[] fileBuffers = createFileBuffers(locations, subMonitor);
             subMonitor.done();
-         }
-         finally
-         {
-            progressMonitor.done();
-         }
-      }
-   }
 
-   private void performOperation(IFileBuffer fileBuffer, IFileBufferOperation operation,
-      IProgressMonitor progressMonitor) throws CoreException, OperationCanceledException
-   {
+            IFileBuffer[] fileBuffers2Save = findFileBuffersToSave(fileBuffers);
+            subMonitor = Progress.getSubMonitor(progressMonitor, size * 10);
+            fFileBufferManager.validateState(fileBuffers2Save, subMonitor, fValidationContext);
+            subMonitor.done();
+            if (!isCommitable(fileBuffers2Save)) {
+                throw new OperationCanceledException();
+            }
 
-      ISchedulingRule rule = fileBuffer.computeCommitRule();
-      IJobManager manager = Job.getJobManager();
-      try
-      {
-         manager.beginRule(rule, progressMonitor);
+            IFileBuffer[] unsynchronizedFileBuffers = findUnsynchronizedFileBuffers(fileBuffers);
+            performOperation(unsynchronizedFileBuffers, operation, progressMonitor);
 
-         String name = fileBuffer.getLocation().lastSegment();
-         progressMonitor.beginTask(name, 100);
-         try
-         {
+            final IFileBuffer[] synchronizedFileBuffers = findSynchronizedFileBuffers(fileBuffers);
+            fIsCompleted = false;
+            fThrowable = null;
+            synchronized (fCompletionLock) {
+
+                executeInContext(new Runnable() {
+                    public void run() {
+                        synchronized (fCompletionLock) {
+                            try {
+                                SafeRunner.run(new ISafeRunnable() {
+                                    public void handleException(Throwable throwable) {
+                                        fThrowable = throwable;
+                                    }
+
+                                    public void run() throws Exception {
+                                        performOperation(synchronizedFileBuffers, operation, progressMonitor);
+                                    }
+                                });
+                            } finally {
+                                fIsCompleted = true;
+                                fCompletionLock.notifyAll();
+                            }
+                        }
+                    }
+                });
+
+                while (!fIsCompleted) {
+                    try {
+                        fCompletionLock.wait(500);
+                    } catch (InterruptedException x) {
+                    }
+                }
+            }
+
+            if (fThrowable != null) {
+                if (fThrowable instanceof CoreException) {
+                    throw (CoreException)fThrowable;
+                }
+                throw new CoreException(
+                        new Status(IStatus.ERROR, FileBuffersPlugin.PLUGIN_ID, IFileBufferStatusCodes.CONTENT_CHANGE_FAILED,
+                                   fThrowable.getLocalizedMessage(), fThrowable));
+            }
+
+            subMonitor = Progress.getSubMonitor(progressMonitor, size * 80);
+            commit(fileBuffers2Save, subMonitor);
+            subMonitor.done();
+
+        } finally {
+            try {
+                IProgressMonitor subMonitor = Progress.getSubMonitor(progressMonitor, size * 10);
+                releaseFileBuffers(locations, subMonitor);
+                subMonitor.done();
+            } finally {
+                progressMonitor.done();
+            }
+        }
+    }
+
+    private void performOperation(IFileBuffer fileBuffer, IFileBufferOperation operation,
+                                  IProgressMonitor progressMonitor) throws CoreException, OperationCanceledException {
+
+        ISchedulingRule rule = fileBuffer.computeCommitRule();
+        IJobManager manager = Job.getJobManager();
+        try {
+            manager.beginRule(rule, progressMonitor);
+
+            String name = fileBuffer.getLocation().lastSegment();
+            progressMonitor.beginTask(name, 100);
+            try {
+                IProgressMonitor subMonitor = Progress.getSubMonitor(progressMonitor, 100);
+                operation.run(fileBuffer, subMonitor);
+                subMonitor.done();
+            } finally {
+                progressMonitor.done();
+            }
+
+        } finally {
+            manager.endRule(rule);
+        }
+    }
+
+    private void performOperation(IFileBuffer[] fileBuffers, IFileBufferOperation operation,
+                                  IProgressMonitor progressMonitor) throws CoreException, OperationCanceledException {
+        for (int i = 0; i < fileBuffers.length; i++) {
+            if (progressMonitor.isCanceled()) {
+                throw new OperationCanceledException();
+            }
             IProgressMonitor subMonitor = Progress.getSubMonitor(progressMonitor, 100);
-            operation.run(fileBuffer, subMonitor);
+            performOperation(fileBuffers[i], operation, subMonitor);
             subMonitor.done();
-         }
-         finally
-         {
+        }
+    }
+
+    private void executeInContext(Runnable runnable) {
+        ITextFileBufferManager fileBufferManager = FileBuffers.getTextFileBufferManager();
+        fileBufferManager.execute(runnable);
+    }
+
+    private IFileBuffer[] findUnsynchronizedFileBuffers(IFileBuffer[] fileBuffers) {
+        ArrayList list = new ArrayList();
+        for (int i = 0; i < fileBuffers.length; i++) {
+            if (!fileBuffers[i].isSynchronizationContextRequested()) {
+                list.add(fileBuffers[i]);
+            }
+        }
+        return (IFileBuffer[])list.toArray(new IFileBuffer[list.size()]);
+    }
+
+    private IFileBuffer[] findSynchronizedFileBuffers(IFileBuffer[] fileBuffers) {
+        ArrayList list = new ArrayList();
+        for (int i = 0; i < fileBuffers.length; i++) {
+            if (fileBuffers[i].isSynchronizationContextRequested()) {
+                list.add(fileBuffers[i]);
+            }
+        }
+        return (IFileBuffer[])list.toArray(new IFileBuffer[list.size()]);
+    }
+
+    private IFileBuffer[] createFileBuffers(IPath[] locations, IProgressMonitor progressMonitor) throws CoreException {
+        progressMonitor.beginTask(FileBuffersMessages.FileBufferOperationRunner_task_connecting, locations.length);
+        try {
+            IFileBuffer[] fileBuffers = new ITextFileBuffer[locations.length];
+            for (int i = 0; i < locations.length; i++) {
+                IProgressMonitor subMonitor = Progress.getSubMonitor(progressMonitor, 1);
+                fFileBufferManager.connect(locations[i], LocationKind.NORMALIZE, subMonitor);
+                subMonitor.done();
+                fileBuffers[i] = fFileBufferManager.getFileBuffer(locations[i], LocationKind.NORMALIZE);
+            }
+            return fileBuffers;
+
+        } catch (CoreException x) {
+            try {
+                releaseFileBuffers(locations, Progress.getMonitor());
+            } catch (CoreException e) {
+            }
+            throw x;
+        } finally {
             progressMonitor.done();
-         }
+        }
+    }
 
-      }
-      finally
-      {
-         manager.endRule(rule);
-      }
-   }
+    private void releaseFileBuffers(IPath[] locations, IProgressMonitor progressMonitor) throws CoreException {
+        progressMonitor.beginTask(FileBuffersMessages.FileBufferOperationRunner_task_disconnecting, locations.length);
+        try {
+            final ITextFileBufferManager fileBufferManager = FileBuffers.getTextFileBufferManager();
+            for (int i = 0; i < locations.length; i++) {
+                IProgressMonitor subMonitor = Progress.getSubMonitor(progressMonitor, 1);
+                fileBufferManager.disconnect(locations[i], LocationKind.NORMALIZE, subMonitor);
+                subMonitor.done();
+            }
+        } finally {
+            progressMonitor.done();
+        }
+    }
 
-   private void performOperation(IFileBuffer[] fileBuffers, IFileBufferOperation operation,
-      IProgressMonitor progressMonitor) throws CoreException, OperationCanceledException
-   {
-      for (int i = 0; i < fileBuffers.length; i++)
-      {
-         if (progressMonitor.isCanceled())
-         {
-            throw new OperationCanceledException();
-         }
-         IProgressMonitor subMonitor = Progress.getSubMonitor(progressMonitor, 100);
-         performOperation(fileBuffers[i], operation, subMonitor);
-         subMonitor.done();
-      }
-   }
+    private IFileBuffer[] findFileBuffersToSave(IFileBuffer[] fileBuffers) {
+        ArrayList list = new ArrayList();
+        for (int i = 0; i < fileBuffers.length; i++) {
+            IFileBuffer buffer = fileBuffers[i];
+            if (!buffer.isDirty()) {
+                list.add(buffer);
+            }
+        }
+        return (IFileBuffer[])list.toArray(new IFileBuffer[list.size()]);
+    }
 
-   private void executeInContext(Runnable runnable)
-   {
-      ITextFileBufferManager fileBufferManager = FileBuffers.getTextFileBufferManager();
-      fileBufferManager.execute(runnable);
-   }
+    private boolean isCommitable(IFileBuffer[] fileBuffers) {
+        for (int i = 0; i < fileBuffers.length; i++) {
+            if (!fileBuffers[i].isCommitable()) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-   private IFileBuffer[] findUnsynchronizedFileBuffers(IFileBuffer[] fileBuffers)
-   {
-      ArrayList list = new ArrayList();
-      for (int i = 0; i < fileBuffers.length; i++)
-      {
-         if (!fileBuffers[i].isSynchronizationContextRequested())
-         {
-            list.add(fileBuffers[i]);
-         }
-      }
-      return (IFileBuffer[])list.toArray(new IFileBuffer[list.size()]);
-   }
+    protected ISchedulingRule computeCommitRule(IFileBuffer[] fileBuffers) {
+        ArrayList list = new ArrayList();
+        for (int i = 0; i < fileBuffers.length; i++) {
+            ISchedulingRule rule = fileBuffers[i].computeCommitRule();
+            if (rule != null) {
+                list.add(rule);
+            }
+        }
+        ISchedulingRule[] rules = new ISchedulingRule[list.size()];
+        list.toArray(rules);
+        return new MultiRule(rules);
+    }
 
-   private IFileBuffer[] findSynchronizedFileBuffers(IFileBuffer[] fileBuffers)
-   {
-      ArrayList list = new ArrayList();
-      for (int i = 0; i < fileBuffers.length; i++)
-      {
-         if (fileBuffers[i].isSynchronizationContextRequested())
-         {
-            list.add(fileBuffers[i]);
-         }
-      }
-      return (IFileBuffer[])list.toArray(new IFileBuffer[list.size()]);
-   }
+    protected void commit(final IFileBuffer[] fileBuffers, final IProgressMonitor progressMonitor) throws CoreException {
+        IProgressMonitor monitor = Progress.getMonitor(progressMonitor);
+        ISchedulingRule rule = computeCommitRule(fileBuffers);
+        Job.getJobManager().beginRule(rule, progressMonitor);
+        try {
+            doCommit(fileBuffers, progressMonitor);
+        } finally {
+            Job.getJobManager().endRule(rule);
+            monitor.done();
+        }
+    }
 
-   private IFileBuffer[] createFileBuffers(IPath[] locations, IProgressMonitor progressMonitor) throws CoreException
-   {
-      progressMonitor.beginTask(FileBuffersMessages.FileBufferOperationRunner_task_connecting, locations.length);
-      try
-      {
-         IFileBuffer[] fileBuffers = new ITextFileBuffer[locations.length];
-         for (int i = 0; i < locations.length; i++)
-         {
-            IProgressMonitor subMonitor = Progress.getSubMonitor(progressMonitor, 1);
-            fFileBufferManager.connect(locations[i], LocationKind.NORMALIZE, subMonitor);
-            subMonitor.done();
-            fileBuffers[i] = fFileBufferManager.getFileBuffer(locations[i], LocationKind.NORMALIZE);
-         }
-         return fileBuffers;
-
-      }
-      catch (CoreException x)
-      {
-         try
-         {
-            releaseFileBuffers(locations, Progress.getMonitor());
-         }
-         catch (CoreException e)
-         {
-         }
-         throw x;
-      }
-      finally
-      {
-         progressMonitor.done();
-      }
-   }
-
-   private void releaseFileBuffers(IPath[] locations, IProgressMonitor progressMonitor) throws CoreException
-   {
-      progressMonitor.beginTask(FileBuffersMessages.FileBufferOperationRunner_task_disconnecting, locations.length);
-      try
-      {
-         final ITextFileBufferManager fileBufferManager = FileBuffers.getTextFileBufferManager();
-         for (int i = 0; i < locations.length; i++)
-         {
-            IProgressMonitor subMonitor = Progress.getSubMonitor(progressMonitor, 1);
-            fileBufferManager.disconnect(locations[i], LocationKind.NORMALIZE, subMonitor);
-            subMonitor.done();
-         }
-      }
-      finally
-      {
-         progressMonitor.done();
-      }
-   }
-
-   private IFileBuffer[] findFileBuffersToSave(IFileBuffer[] fileBuffers)
-   {
-      ArrayList list = new ArrayList();
-      for (int i = 0; i < fileBuffers.length; i++)
-      {
-         IFileBuffer buffer = fileBuffers[i];
-         if (!buffer.isDirty())
-         {
-            list.add(buffer);
-         }
-      }
-      return (IFileBuffer[])list.toArray(new IFileBuffer[list.size()]);
-   }
-
-   private boolean isCommitable(IFileBuffer[] fileBuffers)
-   {
-      for (int i = 0; i < fileBuffers.length; i++)
-      {
-         if (!fileBuffers[i].isCommitable())
-         {
-            return false;
-         }
-      }
-      return true;
-   }
-
-   protected ISchedulingRule computeCommitRule(IFileBuffer[] fileBuffers)
-   {
-      ArrayList list = new ArrayList();
-      for (int i = 0; i < fileBuffers.length; i++)
-      {
-         ISchedulingRule rule = fileBuffers[i].computeCommitRule();
-         if (rule != null)
-         {
-            list.add(rule);
-         }
-      }
-      ISchedulingRule[] rules = new ISchedulingRule[list.size()];
-      list.toArray(rules);
-      return new MultiRule(rules);
-   }
-
-   protected void commit(final IFileBuffer[] fileBuffers, final IProgressMonitor progressMonitor) throws CoreException
-   {
-      IProgressMonitor monitor = Progress.getMonitor(progressMonitor);
-      ISchedulingRule rule = computeCommitRule(fileBuffers);
-      Job.getJobManager().beginRule(rule, progressMonitor);
-      try
-      {
-         doCommit(fileBuffers, progressMonitor);
-      }
-      finally
-      {
-         Job.getJobManager().endRule(rule);
-         monitor.done();
-      }
-   }
-
-   protected void doCommit(final IFileBuffer[] fileBuffers, IProgressMonitor progressMonitor) throws CoreException
-   {
-      IProgressMonitor monitor = Progress.getMonitor(progressMonitor);
-      monitor.beginTask(FileBuffersMessages.FileBufferOperationRunner_task_committing, fileBuffers.length);
-      try
-      {
-         for (int i = 0; i < fileBuffers.length; i++)
-         {
-            IProgressMonitor subMonitor = Progress.getSubMonitor(monitor, 1);
-            fileBuffers[i].commit(subMonitor, true);
-            subMonitor.done();
-         }
-      }
-      finally
-      {
-         monitor.done();
-      }
-   }
+    protected void doCommit(final IFileBuffer[] fileBuffers, IProgressMonitor progressMonitor) throws CoreException {
+        IProgressMonitor monitor = Progress.getMonitor(progressMonitor);
+        monitor.beginTask(FileBuffersMessages.FileBufferOperationRunner_task_committing, fileBuffers.length);
+        try {
+            for (int i = 0; i < fileBuffers.length; i++) {
+                IProgressMonitor subMonitor = Progress.getSubMonitor(monitor, 1);
+                fileBuffers[i].commit(subMonitor, true);
+                subMonitor.done();
+            }
+        } finally {
+            monitor.done();
+        }
+    }
 
 }

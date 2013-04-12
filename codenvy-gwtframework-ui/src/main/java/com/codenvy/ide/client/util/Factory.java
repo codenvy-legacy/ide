@@ -20,14 +20,14 @@ package com.codenvy.ide.client.util;
 /**
  * A factory.
  *
- * @param <T> type created by this factory
+ * @param <T>
+ *         type created by this factory
  */
-public interface Factory<T>
-{
-   /**
-    * Creates an object.
-    *
-    * @return a new object.
-    */
-   T create();
+public interface Factory<T> {
+    /**
+     * Creates an object.
+     *
+     * @return a new object.
+     */
+    T create();
 }

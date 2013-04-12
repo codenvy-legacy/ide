@@ -24,119 +24,102 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Open new dialog window for asking new file name. Save new file with new name. Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class SaveFileAsEvent extends GwtEvent<SaveFileAsHandler>
-{
-   /**
-    * Enum to configure ask for value dialog window: two buttons (Yes, Cancel) or three buttons (Yes, No, Cancel).
-    */
-   public enum SaveDialogType {
-      YES_CANCEL, EXTENDED
-   }
+public class SaveFileAsEvent extends GwtEvent<SaveFileAsHandler> {
+    /** Enum to configure ask for value dialog window: two buttons (Yes, Cancel) or three buttons (Yes, No, Cancel). */
+    public enum SaveDialogType {
+        YES_CANCEL, EXTENDED
+    }
 
-   public static final GwtEvent.Type<SaveFileAsHandler> TYPE = new GwtEvent.Type<SaveFileAsHandler>();
+    public static final GwtEvent.Type<SaveFileAsHandler> TYPE = new GwtEvent.Type<SaveFileAsHandler>();
 
-   private FileModel file;
+    private FileModel file;
 
-   private boolean saveOnly = false;
+    private boolean saveOnly = false;
 
-   private GwtEvent<?> eventFiredOnNo;
+    private GwtEvent<?> eventFiredOnNo;
 
-   private GwtEvent<?> eventFiredOnCancel;
+    private GwtEvent<?> eventFiredOnCancel;
 
-   private SaveDialogType dialogType;
+    private SaveDialogType dialogType;
 
-   public SaveFileAsEvent()
-   {
-   }
+    public SaveFileAsEvent() {
+    }
 
-   public SaveFileAsEvent(FileModel file)
-   {
-      this.file = file;
-   }
+    public SaveFileAsEvent(FileModel file) {
+        this.file = file;
+    }
 
-   public SaveFileAsEvent(FileModel file, boolean saveOnly)
-   {
-      this.file = file;
-      this.saveOnly = saveOnly;
-   }
+    public SaveFileAsEvent(FileModel file, boolean saveOnly) {
+        this.file = file;
+        this.saveOnly = saveOnly;
+    }
 
-   /**
-    * @param file - file to save
-    * @param type - type of dialog window (two or three buttons)
-    * @param eventFiredOnNo - event, which will be fired if No button will be clicked
-    * @param eventFiredOnCancel - event, which will be fired if Cancel button will be clicked (if null - window will be closed
-    *           without any actions)
-    */
-   public SaveFileAsEvent(FileModel file, SaveDialogType type, GwtEvent<?> eventFiredOnNo,
-      GwtEvent<?> eventFiredOnCancel)
-   {
-      this.file = file;
-      this.eventFiredOnNo = eventFiredOnNo;
-      this.eventFiredOnCancel = eventFiredOnCancel;
-      this.dialogType = type;
-   }
+    /**
+     * @param file
+     *         - file to save
+     * @param type
+     *         - type of dialog window (two or three buttons)
+     * @param eventFiredOnNo
+     *         - event, which will be fired if No button will be clicked
+     * @param eventFiredOnCancel
+     *         - event, which will be fired if Cancel button will be clicked (if null - window will be closed
+     *         without any actions)
+     */
+    public SaveFileAsEvent(FileModel file, SaveDialogType type, GwtEvent<?> eventFiredOnNo,
+                           GwtEvent<?> eventFiredOnCancel) {
+        this.file = file;
+        this.eventFiredOnNo = eventFiredOnNo;
+        this.eventFiredOnCancel = eventFiredOnCancel;
+        this.dialogType = type;
+    }
 
-   /**
-    * @param type
-    * @param eventFiredOnNo
-    * @param eventFiredOnCancel
-    */
-   public SaveFileAsEvent(SaveDialogType type, GwtEvent<?> eventFiredOnNo, GwtEvent<?> eventFiredOnCancel)
-   {
-      this.eventFiredOnNo = eventFiredOnNo;
-      this.eventFiredOnCancel = eventFiredOnCancel;
-      this.dialogType = type;
-   }
+    /**
+     * @param type
+     * @param eventFiredOnNo
+     * @param eventFiredOnCancel
+     */
+    public SaveFileAsEvent(SaveDialogType type, GwtEvent<?> eventFiredOnNo, GwtEvent<?> eventFiredOnCancel) {
+        this.eventFiredOnNo = eventFiredOnNo;
+        this.eventFiredOnCancel = eventFiredOnCancel;
+        this.dialogType = type;
+    }
 
-   public boolean isSaveOnly()
-   {
-      return saveOnly;
-   }
+    public boolean isSaveOnly() {
+        return saveOnly;
+    }
 
-   @Override
-   protected void dispatch(SaveFileAsHandler handler)
-   {
-      handler.onSaveFileAs(this);
-   }
+    @Override
+    protected void dispatch(SaveFileAsHandler handler) {
+        handler.onSaveFileAs(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<SaveFileAsHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<SaveFileAsHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   public FileModel getFile()
-   {
-      return file;
-   }
+    public FileModel getFile() {
+        return file;
+    }
 
-   /**
-    * @return the eventFiredOnCancel
-    */
-   public GwtEvent<?> getEventFiredOnCancel()
-   {
-      return eventFiredOnCancel;
-   }
+    /** @return the eventFiredOnCancel */
+    public GwtEvent<?> getEventFiredOnCancel() {
+        return eventFiredOnCancel;
+    }
 
-   /**
-    * @return the eventFiredOnNo
-    */
-   public GwtEvent<?> getEventFiredOnNo()
-   {
-      return eventFiredOnNo;
-   }
+    /** @return the eventFiredOnNo */
+    public GwtEvent<?> getEventFiredOnNo() {
+        return eventFiredOnNo;
+    }
 
-   /**
-    * @return the dialogType
-    */
-   public SaveDialogType getDialogType()
-   {
-      return dialogType;
-   }
+    /** @return the dialogType */
+    public SaveDialogType getDialogType() {
+        return dialogType;
+    }
 
 }

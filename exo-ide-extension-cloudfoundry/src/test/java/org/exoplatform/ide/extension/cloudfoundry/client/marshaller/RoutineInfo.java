@@ -21,147 +21,109 @@ package org.exoplatform.ide.extension.cloudfoundry.client.marshaller;
 import java.util.List;
 
 
-
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class RoutineInfo extends Member implements IRoutineInfo
-{
-   /**
-    * Array FQN of exceptions throws by method
-    */
-   private List<String> genericExceptionTypes;
+public class RoutineInfo extends Member implements IRoutineInfo {
+    /** Array FQN of exceptions throws by method */
+    private List<String> genericExceptionTypes;
 
-   /**
-    * Full Qualified Class Name of parameter <code>(java.lang.Object)</code>
-    * (not use for now)
-    */
-   private String genericParameterTypes;
+    /**
+     * Full Qualified Class Name of parameter <code>(java.lang.Object)</code>
+     * (not use for now)
+     */
+    private String genericParameterTypes;
 
-   /**
-    * Short Class name of Parameter <code>(Object)</code>
-    */
-   private String parameterTypes;
+    /** Short Class name of Parameter <code>(Object)</code> */
+    private String parameterTypes;
 
-   /**
-    * Method declaration like:
-    * <code>public boolean java.lang.String.equals(java.lang.Object)</code>
-    */
-   private String generic;
+    /**
+     * Method declaration like:
+     * <code>public boolean java.lang.String.equals(java.lang.Object)</code>
+     */
+    private String generic;
 
-   /**
-    * Full Qualified Class Name where method declared Example: method equals()
-    * declared in java.lang.String
-    */
-   private String declaringClass;
-   
+    /**
+     * Full Qualified Class Name where method declared Example: method equals()
+     * declared in java.lang.String
+     */
+    private String declaringClass;
 
-   public RoutineInfo()
-   {
-   }
 
-   public RoutineInfo(Integer modifiers, String name, List<String> genericExceptionTypes, String genericParameterTypes,
-      String parameterTypes, String generic, String declaringClass)
-   {
-      super(modifiers, name);
-      this.genericExceptionTypes = genericExceptionTypes;
-      this.genericParameterTypes = genericParameterTypes;
-      this.parameterTypes = parameterTypes;
-      this.generic = generic;
-      this.declaringClass = declaringClass;
-   }
+    public RoutineInfo() {
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getGenericParameterTypes()
-   {
-      return genericParameterTypes;
-   }
+    public RoutineInfo(Integer modifiers, String name, List<String> genericExceptionTypes, String genericParameterTypes,
+                       String parameterTypes, String generic, String declaringClass) {
+        super(modifiers, name);
+        this.genericExceptionTypes = genericExceptionTypes;
+        this.genericParameterTypes = genericParameterTypes;
+        this.parameterTypes = parameterTypes;
+        this.generic = generic;
+        this.declaringClass = declaringClass;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setGenericParameterTypes(String genericParameterTypes)
-   {
-      this.genericParameterTypes = genericParameterTypes;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getGenericParameterTypes() {
+        return genericParameterTypes;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setGeneric(String generic)
-   {
-      this.generic = generic;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setGenericParameterTypes(String genericParameterTypes) {
+        this.genericParameterTypes = genericParameterTypes;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getGeneric()
-   {
-      return generic;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setGeneric(String generic) {
+        this.generic = generic;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getDeclaringClass()
-   {
-      return declaringClass;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getGeneric() {
+        return generic;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setDeclaringClass(String declaringClass)
-   {
-      this.declaringClass = declaringClass;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getDeclaringClass() {
+        return declaringClass;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public List<String> getGenericExceptionTypes()
-   {
-      return genericExceptionTypes;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setDeclaringClass(String declaringClass) {
+        this.declaringClass = declaringClass;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setGenericExceptionTypes(List<String> genericExceptionTypes)
-   {
-      this.genericExceptionTypes = genericExceptionTypes;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public List<String> getGenericExceptionTypes() {
+        return genericExceptionTypes;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getParameterTypes()
-   {
-      return parameterTypes;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setGenericExceptionTypes(List<String> genericExceptionTypes) {
+        this.genericExceptionTypes = genericExceptionTypes;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setParameterTypes(String parameterTypes)
-   {
-      this.parameterTypes = parameterTypes;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getParameterTypes() {
+        return parameterTypes;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setParameterTypes(String parameterTypes) {
+        this.parameterTypes = parameterTypes;
+    }
 
 }

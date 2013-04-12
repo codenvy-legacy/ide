@@ -19,25 +19,21 @@ import org.eclipse.jdt.client.ltk.refactoring.RefactoringStatus;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 
-public class CodeAnalyzer extends StatementAnalyzer
-{
+public class CodeAnalyzer extends StatementAnalyzer {
 
-   public CodeAnalyzer(IDocument document, Selection selection, boolean traverseSelectedNode) throws CoreException
-   {
-      super(document, selection, traverseSelectedNode);
-   }
+    public CodeAnalyzer(IDocument document, Selection selection, boolean traverseSelectedNode) throws CoreException {
+        super(document, selection, traverseSelectedNode);
+    }
 
-   @Override
-   protected final void checkSelectedNodes()
-   {
-      super.checkSelectedNodes();
-      RefactoringStatus status = getStatus();
-      if (status.hasFatalError())
-         return;
-      ASTNode node = getFirstSelectedNode();
-      if (node instanceof ArrayInitializer)
-      {
-         status.addFatalError(RefactoringCoreMessages.INSTANCE.CodeAnalyzer_array_initializer());
-      }
-   }
+    @Override
+    protected final void checkSelectedNodes() {
+        super.checkSelectedNodes();
+        RefactoringStatus status = getStatus();
+        if (status.hasFatalError())
+            return;
+        ASTNode node = getFirstSelectedNode();
+        if (node instanceof ArrayInitializer) {
+            status.addFatalError(RefactoringCoreMessages.INSTANCE.CodeAnalyzer_array_initializer());
+        }
+    }
 }

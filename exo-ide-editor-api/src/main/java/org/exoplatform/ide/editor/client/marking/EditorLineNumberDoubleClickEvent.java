@@ -23,47 +23,33 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 11:31:53 AM Mar 26, 2012 evgen $
- * 
  */
-public class EditorLineNumberDoubleClickEvent extends GwtEvent<EditorLineNumberDoubleClickHandler>
-{
+public class EditorLineNumberDoubleClickEvent extends GwtEvent<EditorLineNumberDoubleClickHandler> {
 
-   public static final GwtEvent.Type<EditorLineNumberDoubleClickHandler> TYPE = new Type<EditorLineNumberDoubleClickHandler>();
+    public static final GwtEvent.Type<EditorLineNumberDoubleClickHandler> TYPE = new Type<EditorLineNumberDoubleClickHandler>();
 
-   private int lineNumber;
+    private int lineNumber;
 
-   /**
-    * @param lineNumber
-    */
-   public EditorLineNumberDoubleClickEvent(int lineNumber)
-   {
-      this.lineNumber = lineNumber;
-   }
+    /** @param lineNumber */
+    public EditorLineNumberDoubleClickEvent(int lineNumber) {
+        this.lineNumber = lineNumber;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorLineNumberDoubleClickHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorLineNumberDoubleClickHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(EditorLineNumberDoubleClickHandler handler)
-   {
-      handler.onEditorLineNumberDoubleClick(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(EditorLineNumberDoubleClickHandler handler) {
+        handler.onEditorLineNumberDoubleClick(this);
+    }
 
-   /**
-    * @return the lineNuber
-    */
-   public int getLineNumber()
-   {
-      return lineNumber;
-   }
+    /** @return the lineNuber */
+    public int getLineNumber() {
+        return lineNumber;
+    }
 
 }

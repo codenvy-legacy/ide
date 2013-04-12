@@ -18,9 +18,8 @@
  */
 package org.exoplatform.ide.client.theme;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Image;
@@ -36,77 +35,63 @@ import java.util.List;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class SelectThemeView extends ViewImpl implements org.exoplatform.ide.client.theme.SelectThemePresenter.Display
-{
-   
-   public static final String ID = "ideSelectThemeView";
-   
-   private static final String TITLE = "Theme";
-   
-   /**
-    * Initial width of this view
-    */
-   private static final int WIDTH = 725;
+public class SelectThemeView extends ViewImpl implements org.exoplatform.ide.client.theme.SelectThemePresenter.Display {
 
-   /**
-    * Initial height of this view
-    */
-   private static final int HEIGHT = 390;   
+    public static final String ID = "ideSelectThemeView";
 
-   private static SelectThemeViewUiBinder uiBinder = GWT.create(SelectThemeViewUiBinder.class);
+    private static final String TITLE = "Theme";
 
-   interface SelectThemeViewUiBinder extends UiBinder<Widget, SelectThemeView>
-   {
-   }
-   
-   @UiField
-   ThemesListGrid themesListGrid;
-   
-   @UiField
-   ImageButton applyButton;
-   
-   public SelectThemeView()
-   {
-      super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.welcome()), WIDTH, HEIGHT);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
-   }
+    /** Initial width of this view */
+    private static final int WIDTH = 725;
 
-   @Override
-   public ListGridItem<Theme> getThemesListGrid()
-   {
-      return themesListGrid;
-   }
+    /** Initial height of this view */
+    private static final int HEIGHT = 390;
 
-   @Override
-   public Theme getSelectedTheme()
-   {
-      List<Theme> selectedItems = themesListGrid.getSelectedItems();
-      if (selectedItems == null)
-      {
-         return null;
-      }
-      
-      if (selectedItems.isEmpty())
-      {
-         return null;
-      }
-      
-      return selectedItems.get(0);
-   }
+    private static SelectThemeViewUiBinder uiBinder = GWT.create(SelectThemeViewUiBinder.class);
 
-   @Override
-   public HasClickHandlers getApplyButton()
-   {
-      return applyButton;
-   }
+    interface SelectThemeViewUiBinder extends UiBinder<Widget, SelectThemeView> {
+    }
 
-   @Override
-   public void setApplyButtonEnabled(boolean enabled)
-   {
-      applyButton.setEnabled(enabled);
-   }
+    @UiField
+    ThemesListGrid themesListGrid;
+
+    @UiField
+    ImageButton applyButton;
+
+    public SelectThemeView() {
+        super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.welcome()), WIDTH, HEIGHT);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
+    }
+
+    @Override
+    public ListGridItem<Theme> getThemesListGrid() {
+        return themesListGrid;
+    }
+
+    @Override
+    public Theme getSelectedTheme() {
+        List<Theme> selectedItems = themesListGrid.getSelectedItems();
+        if (selectedItems == null) {
+            return null;
+        }
+
+        if (selectedItems.isEmpty()) {
+            return null;
+        }
+
+        return selectedItems.get(0);
+    }
+
+    @Override
+    public HasClickHandlers getApplyButton() {
+        return applyButton;
+    }
+
+    @Override
+    public void setApplyButtonEnabled(boolean enabled) {
+        applyButton.setEnabled(enabled);
+    }
 
 }

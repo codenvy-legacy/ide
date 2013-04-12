@@ -14,59 +14,59 @@
 
 package com.google.collide.client.util.input;
 
+import com.codenvy.ide.client.util.SignalEvent;
 import com.google.common.base.Preconditions;
 
-import com.codenvy.ide.client.util.SignalEvent;
-
 // TODO: Add method that builds textual representation.
+
 /**
  * Bean that holds information describing the matching key-press.
- *
+ * <p/>
  * <p>NOTE: Do not include {@link ModifierKeys#SHIFT} for upper case characters
  * (A,%,?), only for combinations like SHIFT+TAB.
  */
 public class CharCodeWithModifiers {
 
-  private final int modifiers;
+    private final int modifiers;
 
-  private final int charCode;
+    private final int charCode;
 
-  private final int digest;
+    private final int digest;
 
-  public CharCodeWithModifiers(int modifiers, int charCode) {
-    Preconditions.checkArgument(
-        !KeyCodeMap.needsShift(charCode) || (modifiers & ModifierKeys.SHIFT) == 0,
-        "Do not include ModifierKeys.SHIFT for EventShortcuts where the "
-            + "key pressed could be modified by pressing shift.");
-    this.modifiers = modifiers;
-    this.charCode = charCode;
-    this.digest = computeKeyDigest(modifiers, charCode);
-  }
+    public CharCodeWithModifiers(int modifiers, int charCode) {
+        Preconditions.checkArgument(
+                !KeyCodeMap.needsShift(charCode) || (modifiers & ModifierKeys.SHIFT) == 0,
+                "Do not include ModifierKeys.SHIFT for EventShortcuts where the "
+                + "key pressed could be modified by pressing shift.");
+        this.modifiers = modifiers;
+        this.charCode = charCode;
+        this.digest = computeKeyDigest(modifiers, charCode);
+    }
 
-  public int getModifiers() {
-    return modifiers;
-  }
+    public int getModifiers() {
+        return modifiers;
+    }
 
-  public int getCharCode() {
-    return charCode;
-  }
+    public int getCharCode() {
+        return charCode;
+    }
 
-  public int getKeyDigest() {
-    return digest;
-  }
+    public int getKeyDigest() {
+        return digest;
+    }
 
-  public static int computeKeyDigest(int modifiers, int charCode) {
-    return (modifiers << 16) | (0xFFFF & charCode);
-  }
+    public static int computeKeyDigest(int modifiers, int charCode) {
+        return (modifiers << 16) | (0xFFFF & charCode);
+    }
 
-  /**
-   * Returns an integer representing the combination of pressed modifier keys
-   * and the current text key.
-   *
-   * @see ModifierKeys#ACTION for details on the action key abstraction
-   */
-  public static int computeKeyDigest(SignalEvent event) {
-    return computeKeyDigest(ModifierKeys.computeModifiers(event),
-        KeyCodeMap.getKeyFromEvent(event));
-  }
+    /**
+     * Returns an integer representing the combination of pressed modifier keys
+     * and the current text key.
+     *
+     * @see ModifierKeys#ACTION for details on the action key abstraction
+     */
+    public static int computeKeyDigest(SignalEvent event) {
+        return computeKeyDigest(ModifierKeys.computeModifiers(event),
+                                KeyCodeMap.getKeyFromEvent(event));
+    }
 }

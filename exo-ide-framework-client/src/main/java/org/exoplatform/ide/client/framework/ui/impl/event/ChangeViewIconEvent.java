@@ -23,46 +23,40 @@ import com.google.gwt.user.client.ui.Image;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ChangeViewIconEvent extends GwtEvent<ChangeViewIconHandler>
-{
+public class ChangeViewIconEvent extends GwtEvent<ChangeViewIconHandler> {
 
-   public static final GwtEvent.Type<ChangeViewIconHandler> TYPE = new GwtEvent.Type<ChangeViewIconHandler>();
+    public static final GwtEvent.Type<ChangeViewIconHandler> TYPE = new GwtEvent.Type<ChangeViewIconHandler>();
 
-   private String viewId;
+    private String viewId;
 
-   private Image icon;
+    private Image icon;
 
-   public ChangeViewIconEvent(String viewId, Image icon)
-   {
-      this.viewId = viewId;
-      this.icon = icon;
-   }
+    public ChangeViewIconEvent(String viewId, Image icon) {
+        this.viewId = viewId;
+        this.icon = icon;
+    }
 
-   public String getViewId()
-   {
-      return viewId;
-   }
+    public String getViewId() {
+        return viewId;
+    }
 
-   public Image getIcon()
-   {
-      return icon;
-   }
+    public Image getIcon() {
+        return icon;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ChangeViewIconHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ChangeViewIconHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(ChangeViewIconHandler handler)
-   {
-      handler.onChangeViewIcon(this);
-   }
+    @Override
+    protected void dispatch(ChangeViewIconHandler handler) {
+        handler.onChangeViewIcon(this);
+    }
 
 }

@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public interface LogReaderSettingsChangedHandler extends EventHandler
-{
+public interface LogReaderSettingsChangedHandler extends EventHandler {
 
-   void onLogRederSettingsChanged(LogReaderSettingsChangedEvent event);
+    void onLogRederSettingsChanged(LogReaderSettingsChangedEvent event);
 
 }

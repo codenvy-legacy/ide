@@ -18,25 +18,19 @@
  */
 package org.exoplatform.ide.extension.java.server.parser;
 
-import com.thoughtworks.qdox.parser.ParseException;
-
 import com.thoughtworks.qdox.JavaDocBuilder.ErrorHandler;
+import com.thoughtworks.qdox.parser.ParseException;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Dec 1, 2011 11:48:25 AM evgen $
- * 
  */
-public class JavaDocBuilderErrorHandler implements ErrorHandler
-{
+public class JavaDocBuilderErrorHandler implements ErrorHandler {
 
-   /**
-    * @see com.thoughtworks.qdox.JavaDocBuilder.ErrorHandler#handle(com.thoughtworks.qdox.parser.ParseException)
-    */
-   @Override
-   public void handle(ParseException parseException)
-   {
-      // TODO collect parser errors
-   }
+    /** @see com.thoughtworks.qdox.JavaDocBuilder.ErrorHandler#handle(com.thoughtworks.qdox.parser.ParseException) */
+    @Override
+    public void handle(ParseException parseException) {
+        // TODO collect parser errors
+    }
 
 }

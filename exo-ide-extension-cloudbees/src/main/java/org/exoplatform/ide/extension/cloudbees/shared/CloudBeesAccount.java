@@ -22,13 +22,12 @@ package org.exoplatform.ide.extension.cloudbees.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface CloudBeesAccount
-{
-   String getName();
+public interface CloudBeesAccount {
+    String getName();
 
-   void setName(String name);
+    void setName(String name);
 
-   String getCompany();
+    String getCompany();
 
-   void setCompany(String company);
+    void setCompany(String company);
 }

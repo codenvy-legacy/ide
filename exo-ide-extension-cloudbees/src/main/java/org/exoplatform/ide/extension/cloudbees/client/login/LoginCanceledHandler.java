@@ -20,13 +20,12 @@ package org.exoplatform.ide.extension.cloudbees.client.login;
 
 /**
  * Handler to execute, when login to CloudBees was canceled.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: LoginCanceledHandler.java Jun 29, 2011 4:13:14 PM vereshchaka $
  */
-public interface LoginCanceledHandler
-{
+public interface LoginCanceledHandler {
 
-   void onLoginCanceled();
+    void onLoginCanceled();
 
 }

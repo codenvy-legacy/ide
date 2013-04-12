@@ -34,63 +34,48 @@ import java.util.List;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 4, 2011 12:45:37 PM anya $
- * 
  */
-public class RemoteListUnmarshaller implements Unmarshallable<List<Remote>>, Constants
-{
-   /**
-    * Remote repositories.
-    */
-   private List<Remote> remotes;
+public class RemoteListUnmarshaller implements Unmarshallable<List<Remote>>, Constants {
+    /** Remote repositories. */
+    private List<Remote> remotes;
 
-   /**
-    * @param remotes remote repositories
-    */
-   public RemoteListUnmarshaller(List<Remote> remotes)
-   {
-      this.remotes = remotes;
-   }
+    /**
+     * @param remotes remote repositories
+     */
+    public RemoteListUnmarshaller(List<Remote> remotes) {
+        this.remotes = remotes;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      if (response.getText() == null || response.getText().isEmpty())
-      {
-         return;
-      }
-      
-      JSONArray array = JSONParser.parseStrict(response.getText()).isArray();
-      if (array == null || array.size() <= 0)
-         return;
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        if (response.getText() == null || response.getText().isEmpty()) {
+            return;
+        }
 
-      for (int i = 0; i < array.size(); i++)
-      {
-         JSONObject object = array.get(i).isObject();
-         if (object == null)
-            continue;
-         String name = "";
-         String url = "";
-         if (object.containsKey(NAME))
-         {
-            name = (object.get(NAME).isString() != null) ? object.get(NAME).isString().stringValue() : name;
-         }
-         if (object.containsKey(URL))
-         {
-            url = (object.get(URL).isString() != null) ? object.get(URL).isString().stringValue() : url;
-         }
-         remotes.add(new Remote(name, url));
-      }
-   }
+        JSONArray array = JSONParser.parseStrict(response.getText()).isArray();
+        if (array == null || array.size() <= 0)
+            return;
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
-    */
-   @Override
-   public List<Remote> getPayload()
-   {
-      return remotes;
-   }
+        for (int i = 0; i < array.size(); i++) {
+            JSONObject object = array.get(i).isObject();
+            if (object == null)
+                continue;
+            String name = "";
+            String url = "";
+            if (object.containsKey(NAME)) {
+                name = (object.get(NAME).isString() != null) ? object.get(NAME).isString().stringValue() : name;
+            }
+            if (object.containsKey(URL)) {
+                url = (object.get(URL).isString() != null) ? object.get(URL).isString().stringValue() : url;
+            }
+            remotes.add(new Remote(name, url));
+        }
+    }
+
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
+    @Override
+    public List<Remote> getPayload() {
+        return remotes;
+    }
 }

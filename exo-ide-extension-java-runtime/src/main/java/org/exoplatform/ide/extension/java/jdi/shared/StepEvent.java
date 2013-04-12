@@ -22,9 +22,8 @@ package org.exoplatform.ide.extension.java.jdi.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface StepEvent extends DebuggerEvent
-{
-   Location getLocation();
+public interface StepEvent extends DebuggerEvent {
+    Location getLocation();
 
-   void setLocation(Location location);
+    void setLocation(Location location);
 }

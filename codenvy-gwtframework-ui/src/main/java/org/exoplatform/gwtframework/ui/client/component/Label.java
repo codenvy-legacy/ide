@@ -26,56 +26,48 @@ import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class Label extends com.google.gwt.user.client.ui.Label implements HasValue<String>
-{
+public class Label extends com.google.gwt.user.client.ui.Label implements HasValue<String> {
 
-   private boolean isHTML = false;
-   
-   private String value;
-   
-   public boolean isHTML()
-   {
-      return isHTML;
-   }
+    private boolean isHTML = false;
 
-   public void setIsHTML(boolean isHTML)
-   {
-      this.isHTML = isHTML;
-   }
+    private String value;
 
-   public String getValue()
-   {
-      return value;
-   }
+    public boolean isHTML() {
+        return isHTML;
+    }
 
-   public void setValue(String value)
-   {
-      this.value = value;
-      if (isHTML) {
-         getElement().setInnerHTML(value);
-      } else {
-         setText(value);         
-      }
-   }
+    public void setIsHTML(boolean isHTML) {
+        this.isHTML = isHTML;
+    }
 
-   public void setValue(String value, boolean fireEvents)
-   {
-      setValue(value);
-   }
+    public String getValue() {
+        return value;
+    }
 
-   public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler)
-   {
-      return null;
-   }
+    public void setValue(String value) {
+        this.value = value;
+        if (isHTML) {
+            getElement().setInnerHTML(value);
+        } else {
+            setText(value);
+        }
+    }
 
-   public void setID(String id)
-   {
-      getElement().setAttribute("id", id);
-   }
+    public void setValue(String value, boolean fireEvents) {
+        setValue(value);
+    }
+
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
+        return null;
+    }
+
+    public void setID(String id) {
+        getElement().setAttribute("id", id);
+    }
 
 }

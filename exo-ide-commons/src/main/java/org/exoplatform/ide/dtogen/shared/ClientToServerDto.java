@@ -18,6 +18,5 @@ package org.exoplatform.ide.dtogen.shared;
  * Tag interface for DTOs that are meant to be sent from the client to the
  * server.
  */
-public interface ClientToServerDto extends RoutableDto
-{
+public interface ClientToServerDto extends RoutableDto {
 }

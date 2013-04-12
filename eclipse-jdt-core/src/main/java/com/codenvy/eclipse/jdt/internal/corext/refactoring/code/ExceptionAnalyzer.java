@@ -21,58 +21,49 @@ import com.codenvy.eclipse.jdt.internal.corext.refactoring.util.AbstractExceptio
 
 import java.util.List;
 
-/* package */ class ExceptionAnalyzer extends AbstractExceptionAnalyzer
-{
+/* package */ class ExceptionAnalyzer extends AbstractExceptionAnalyzer {
 
-   public static ITypeBinding[] perform(ASTNode[] statements)
-   {
-      ExceptionAnalyzer analyzer = new ExceptionAnalyzer();
-      for (int i = 0; i < statements.length; i++)
-      {
-         statements[i].accept(analyzer);
-      }
-      List<ITypeBinding> exceptions = analyzer.getCurrentExceptions();
-      return exceptions.toArray(new ITypeBinding[exceptions.size()]);
-   }
+    public static ITypeBinding[] perform(ASTNode[] statements) {
+        ExceptionAnalyzer analyzer = new ExceptionAnalyzer();
+        for (int i = 0; i < statements.length; i++) {
+            statements[i].accept(analyzer);
+        }
+        List<ITypeBinding> exceptions = analyzer.getCurrentExceptions();
+        return exceptions.toArray(new ITypeBinding[exceptions.size()]);
+    }
 
-   @Override
-   public boolean visit(ThrowStatement node)
-   {
-      ITypeBinding exception = node.getExpression().resolveTypeBinding();
-      if (exception == null)      // Safety net for null bindings when compiling fails.
-      {
-         return true;
-      }
+    @Override
+    public boolean visit(ThrowStatement node) {
+        ITypeBinding exception = node.getExpression().resolveTypeBinding();
+        if (exception == null)      // Safety net for null bindings when compiling fails.
+        {
+            return true;
+        }
 
-      addException(exception);
-      return true;
-   }
+        addException(exception);
+        return true;
+    }
 
-   @Override
-   public boolean visit(MethodInvocation node)
-   {
-      return handleExceptions((IMethodBinding)node.getName().resolveBinding());
-   }
+    @Override
+    public boolean visit(MethodInvocation node) {
+        return handleExceptions((IMethodBinding)node.getName().resolveBinding());
+    }
 
-   @Override
-   public boolean visit(SuperMethodInvocation node)
-   {
-      return handleExceptions((IMethodBinding)node.getName().resolveBinding());
-   }
+    @Override
+    public boolean visit(SuperMethodInvocation node) {
+        return handleExceptions((IMethodBinding)node.getName().resolveBinding());
+    }
 
-   @Override
-   public boolean visit(ClassInstanceCreation node)
-   {
-      return handleExceptions(node.resolveConstructorBinding());
-   }
+    @Override
+    public boolean visit(ClassInstanceCreation node) {
+        return handleExceptions(node.resolveConstructorBinding());
+    }
 
-   private boolean handleExceptions(IMethodBinding binding)
-   {
-      if (binding == null)
-      {
-         return true;
-      }
-      addExceptions(binding.getExceptionTypes());
-      return true;
-   }
+    private boolean handleExceptions(IMethodBinding binding) {
+        if (binding == null) {
+            return true;
+        }
+        addExceptions(binding.getExceptionTypes());
+        return true;
+    }
 }

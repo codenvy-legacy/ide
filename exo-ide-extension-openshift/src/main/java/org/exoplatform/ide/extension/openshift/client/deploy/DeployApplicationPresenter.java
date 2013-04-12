@@ -43,6 +43,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.paas.DeployResultHandler;
+import org.exoplatform.ide.client.framework.paas.InitializeDeployViewHandler;
 import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectType;
@@ -50,15 +51,13 @@ import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
-import org.exoplatform.ide.extension.openshift.client.OpenShiftAsyncRequestCallback;
-import org.exoplatform.ide.extension.openshift.client.OpenShiftClientService;
-import org.exoplatform.ide.extension.openshift.client.OpenShiftExceptionThrownEvent;
-import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
-import org.exoplatform.ide.extension.openshift.client.OpenShiftLocalizationConstant;
+import org.exoplatform.ide.extension.openshift.client.*;
 import org.exoplatform.ide.extension.openshift.client.key.UpdatePublicKeyCallback;
 import org.exoplatform.ide.extension.openshift.client.key.UpdatePublicKeyCommandHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.openshift.client.login.LoginCanceledEvent;
+import org.exoplatform.ide.extension.openshift.client.login.LoginCanceledHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 import org.exoplatform.ide.extension.openshift.client.marshaller.ApplicationTypesUnmarshaller;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
@@ -80,577 +79,471 @@ import java.util.List;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeployApplicationPresenter.java Dec 5, 2011 1:58:22 PM vereshchaka $
- *
  */
-public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHandler
-{
+public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHandler {
 
-   public interface Display
-   {
-      HasValue<String> getApplicationNameField();
+    public interface Display {
+        HasValue<String> getApplicationNameField();
 
-      HasValue<String> getTypeField();
+        HasValue<String> getTypeField();
 
-      void setTypeValues(String[] types);
+        void setTypeValues(String[] types);
 
-      Composite getView();
-   }
+        Composite getView();
+    }
 
-   private static final OpenShiftLocalizationConstant lb = OpenShiftExtension.LOCALIZATION_CONSTANT;
+    private static final OpenShiftLocalizationConstant lb = OpenShiftExtension.LOCALIZATION_CONSTANT;
 
-   private VirtualFileSystemInfo vfs;
+    private VirtualFileSystemInfo vfs;
 
-   private Display display;
+    private Display display;
 
-   private ProjectModel project;
+    private ProjectModel project;
 
-   private ProjectType projectType;
+    private ProjectType projectType;
 
-   private String projectName;
+    private String projectName;
 
-   private DeployResultHandler deployResultHandler;
+    private DeployResultHandler deployResultHandler;
 
-   public DeployApplicationPresenter()
-   {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-   }
+    private InitializeDeployViewHandler initializeDeployViewHandler;
 
-   public void bindDisplay()
-   {
+    public DeployApplicationPresenter() {
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+    }
 
-   }
+    public void bindDisplay() {
 
-   /**
-    * Forms the message to be shown, when application is created.
-    *
-    * @param appInfo application information
-    * @return {@link String} message
-    */
-   protected String formApplicationCreatedMessage(AppInfo appInfo)
-   {
-      String applicationStr = "<br> ";
-      applicationStr += "<b>Name</b>" + " : " + appInfo.getName() + "<br>";
-      applicationStr += "<b>Git URL</b>" + " : " + appInfo.getGitUrl() + "<br>";
-      applicationStr +=
-         "<b>Public URL</b>" + " : <a href=\"" + appInfo.getPublicUrl() + "\" target=\"_blank\">"
-            + appInfo.getPublicUrl() + "</a><br>";
-      applicationStr += "<b>Type</b>" + " : " + appInfo.getType() + "<br>";
+    }
 
-      return lb.createApplicationSuccess(applicationStr);
-   }
+    /**
+     * Forms the message to be shown, when application is created.
+     * 
+     * @param appInfo application information
+     * @return {@link String} message
+     */
+    protected String formApplicationCreatedMessage(AppInfo appInfo) {
+        String applicationStr = "<br> ";
+        applicationStr += "<b>Name</b>" + " : " + appInfo.getName() + "<br>";
+        applicationStr += "<b>Git URL</b>" + " : " + appInfo.getGitUrl() + "<br>";
+        applicationStr +=
+                          "<b>Public URL</b>" + " : <a href=\"" + appInfo.getPublicUrl() + "\" target=\"_blank\">"
+                              + appInfo.getPublicUrl() + "</a><br>";
+        applicationStr += "<b>Type</b>" + " : " + appInfo.getType() + "<br>";
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      this.vfs = event.getVfsInfo();
-   }
+        return lb.createApplicationSuccess(applicationStr);
+    }
 
-   private void getApplicationTypes()
-   {
-      try
-      {
-         OpenShiftClientService.getInstance().getApplicationTypes(
-            new OpenShiftAsyncRequestCallback<List<String>>(new ApplicationTypesUnmarshaller(new ArrayList<String>()),
-               new LoggedInHandler()
-               {
-                  @Override
-                  public void onLoggedIn(LoggedInEvent event)
-                  {
-                     getApplicationTypes();
-                  }
-               }, null)
-            {
-               @Override
-               protected void onSuccess(List<String> result)
-               {
-                  fillTypeField(projectType, result);
-               }
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     *      .application.event.VfsChangedEvent)
+     */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        this.vfs = event.getVfsInfo();
+    }
+
+    private void getApplicationTypes() {
+        try {
+            OpenShiftClientService.getInstance()
+                  .getApplicationTypes(
+                                       new OpenShiftAsyncRequestCallback<List<String>>(
+                                           new ApplicationTypesUnmarshaller(new ArrayList<String>()),
+                                           new LoggedInHandler() {
+                                               @Override
+                                               public void onLoggedIn(LoggedInEvent event) {
+                                                   getApplicationTypes();
+                                               }
+                                           }, new LoginCanceledHandler() {
+
+                                               @Override
+                                               public void onLoginCanceled(LoginCanceledEvent event) {
+                                                   initializeDeployViewHandler.onInitializeDeployViewError();
+                                               }
+                                           }) {
+                                           @Override
+                                           protected void onSuccess(List<String> result) {
+                                               fillTypeField(projectType, result);
+                                           }
+                                       });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    private void fillTypeField(ProjectType projectType, List<String> availableTypes) {
+        List<String> types = new ArrayList<String>();
+
+        for (String availableType : availableTypes) {
+            if (projectType == ProjectType.JSP && availableType.startsWith("jboss")) {
+                types.add(availableType);
+            } else if (projectType == ProjectType.SPRING && availableType.startsWith("jboss")) {
+                types.add(availableType);
+            } else if (projectType == ProjectType.RUBY_ON_RAILS && availableType.startsWith("ruby")) {
+                types.add(availableType);
+            } else if (projectType == ProjectType.PYTHON && availableType.startsWith("python")) {
+                types.add(availableType);
+            } else if (projectType == ProjectType.PHP && availableType.startsWith("php")) {
+                types.add(availableType);
+            }
+        }
+
+        display.setTypeValues(types.toArray(new String[types.size()]));
+
+        if (types.size() != 0) {
+            display.getTypeField().setValue(types.get(0));
+        }
+    }
+
+    /**
+     * @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#deploy(org.exoplatform.ide.client.framework.template.ProjectTemplate,
+     *      org.exoplatform.ide.client.framework.paas.DeployResultHandler)
+     */
+    @Override
+    public void deploy(ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler) {
+        String applicationName = display.getApplicationNameField().getValue();
+        this.deployResultHandler = deployResultHandler;
+        if (applicationName == null || applicationName.isEmpty()) {
+            Dialogs.getInstance().showError("Application name must not be empty");
+        } else {
+            getUserInfo();
+        }
+    }
+
+    private void getUserInfo() {
+        try {
+            AutoBean<RHUserInfo> rhUserInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.rhUserInfo();
+            AutoBeanUnmarshaller<RHUserInfo> unmarshaller = new AutoBeanUnmarshaller<RHUserInfo>(rhUserInfo);
+            OpenShiftClientService.getInstance().getUserInfo(true, new AsyncRequestCallback<RHUserInfo>(unmarshaller) {
+                @Override
+                protected void onSuccess(RHUserInfo result) {
+                    if ("Doesn't exist".equals(result.getNamespace())) {
+                        // create a domain
+                        StringValueReceivedHandler handler = new StringValueReceivedHandler() {
+                            @Override
+                            public void stringValueReceived(String value) {
+                                if (value != null && !value.isEmpty() && value.matches("[A-Za-z0-9]+") && value.length() < 17) {
+                                    createDomain(value);
+                                } else {
+                                    Dialogs.getInstance()
+                                           .showError(
+                                                      "Namespace name must be contains latin characters only and not longer then 16 characters.");
+                                }
+                            }
+                        };
+
+                        Dialogs.getInstance().askForValue("Create new namespace",
+                                                          "You must enter a name for your new namespace.",
+                                                          "",
+                                                          handler);
+                    } else {
+                        // create an application
+                        createFolder();
+                    }
+                }
+
+                /**
+                 * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+                 */
+                @Override
+                protected void onFailure(Throwable exception) {
+                    IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+                                                                                                                       .getUserInfoFail()));
+                }
             });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+        } catch (RequestException e) {
+            IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT.getUserInfoFail()));
+        }
+    }
 
-   private void fillTypeField(ProjectType projectType, List<String> availableTypes)
-   {
-      List<String> types = new ArrayList<String>();
+    private void createDomain(final String domainName) {
+        try {
+            OpenShiftClientService.getInstance().createDomain(domainName, false, new AsyncRequestCallback<String>() {
 
-      for (String availableType : availableTypes)
-      {
-         if (projectType == ProjectType.JSP && availableType.startsWith("jboss"))
-         {
-            types.add(availableType);
-         }
-         else if (projectType == ProjectType.SPRING && availableType.startsWith("jboss"))
-         {
-            types.add(availableType);
-         }
-         else if (projectType == ProjectType.RUBY_ON_RAILS && availableType.startsWith("ruby"))
-         {
-            types.add(availableType);
-         }
-         else if (projectType == ProjectType.PYTHON && availableType.startsWith("python"))
-         {
-            types.add(availableType);
-         }
-         else if (projectType == ProjectType.PHP && availableType.startsWith("php"))
-         {
-            types.add(availableType);
-         }
-      }
+                @Override
+                protected void onSuccess(String result) {
+                    IDE.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainSuccess(domainName),
+                                                  Type.INFO));
+                    createFolder();
+                }
 
-      display.setTypeValues(types.toArray(new String[types.size()]));
-
-      if (types.size() != 0)
-      {
-         display.getTypeField().setValue(types.get(0));
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#deploy(org.exoplatform.ide.client.framework.template.ProjectTemplate,
-    *      org.exoplatform.ide.client.framework.paas.DeployResultHandler)
-    */
-   @Override
-   public void deploy(ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler)
-   {
-      String applicationName = display.getApplicationNameField().getValue();
-      this.deployResultHandler = deployResultHandler;
-      if (applicationName == null || applicationName.isEmpty())
-      {
-         Dialogs.getInstance().showError("Application name must not be empty");
-      }
-      else
-      {
-         getUserInfo();
-      }
-   }
-
-   private void getUserInfo()
-   {
-      try
-      {
-         AutoBean<RHUserInfo> rhUserInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.rhUserInfo();
-         AutoBeanUnmarshaller<RHUserInfo> unmarshaller = new AutoBeanUnmarshaller<RHUserInfo>(rhUserInfo);
-         OpenShiftClientService.getInstance().getUserInfo(true, new AsyncRequestCallback<RHUserInfo>(unmarshaller)
-         {
-            @Override
-            protected void onSuccess(RHUserInfo result)
-            {
-               if ("Doesn't exist".equals(result.getNamespace()))
-               {
-                  //create a domain
-                  StringValueReceivedHandler handler = new StringValueReceivedHandler()
-                  {
-                     @Override
-                     public void stringValueReceived(String value)
-                     {
-                        if (value != null && !value.isEmpty() && value.matches("[A-Za-z0-9]+") && value.length() < 17)
-                        {
-                           createDomain(value);
-                        }
-                        else
-                        {
-                           Dialogs.getInstance().showError("Namespace name must be contains latin characters only and not longer then 16 characters.");
-                        }
-                     }
-                  };
-
-                  Dialogs.getInstance().askForValue("Create new namespace",
-                     "You must enter a name for your new namespace.",
-                     "",
-                     handler);
-               }
-               else
-               {
-                  //create an application
-                  createFolder();
-               }
-            }
-
-            /**
-             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-             */
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
-                  .getUserInfoFail()));
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT.getUserInfoFail()));
-      }
-   }
-
-   private void createDomain(final String domainName)
-   {
-      try
-      {
-         OpenShiftClientService.getInstance().createDomain(domainName, false, new AsyncRequestCallback<String>()
-         {
-
-            @Override
-            protected void onSuccess(String result)
-            {
-               IDE.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainSuccess(domainName),
-                  Type.INFO));
-               createFolder();
-            }
-
-            /**
-             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-             */
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               String randString = Double.toString(Math.random()).substring(2);
-               String newUniqueDomain = domainName + randString.substring(domainName.length());
-               createDomain(newUniqueDomain);
-               IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
-                  .createDomainFail(domainName)));
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
-            .createDomainFail(domainName)));
-      }
-   }
-
-   private void createFolder()
-   {
-      final Loader loader = new GWTLoader();
-      loader.setMessage(lb.creatingProject());
-      try
-      {
-         loader.show();
-         FolderModel newFolder = new FolderModel();
-         newFolder.setName(projectName);
-
-         VirtualFileSystem.getInstance().createFolder(vfs.getRoot(), new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(newFolder))
-         {
-            @Override
-            protected void onSuccess(FolderModel result)
-            {
-               loader.hide();
-
-               setPropertiesToFolder(result);
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               loader.hide();
-               deployResultHandler.onDeployFinished(false);
-               cleanUpFolder();
-               IDE.fireEvent(new ExceptionThrownEvent(exception));
-            }
-         });
-      }
-      catch (Exception e)
-      {
-         loader.hide();
-         deployResultHandler.onDeployFinished(false);
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   private void setPropertiesToFolder(Item item)
-   {
-      try
-      {
-         final List<Property> properties = new ArrayList<Property>();
-         properties.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-         properties.add(new PropertyImpl("openshift-express-application", display.getApplicationNameField().getValue()));
-         item.getProperties().addAll(properties);
-
-         VirtualFileSystem.getInstance().updateItem(item,
-            null,
-            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
-            {
-               @Override
-               protected void onSuccess(ItemWrapper result)
-               {
-                  project = (ProjectModel)result.getItem();
-                  deployResultHandler.onDeployFinished(true);
-                  createApplication();
-               }
-
-               @Override
-               protected void onFailure(Throwable e)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(e));
-               }
+                /**
+                 * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+                 */
+                @Override
+                protected void onFailure(Throwable exception) {
+                    String randString = Double.toString(Math.random()).substring(2);
+                    String newUniqueDomain = domainName + randString.substring(domainName.length());
+                    createDomain(newUniqueDomain);
+                    IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception,
+                                                                    OpenShiftExtension.LOCALIZATION_CONSTANT
+                                                                                                            .createDomainFail(domainName)));
+                }
             });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+        } catch (RequestException e) {
+            IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
+                                                                                                       .createDomainFail(domainName)));
+        }
+    }
 
-   /**
-    * Perform creation of application on OpenShift by sending request over WebSocket or HTTP.
-    */
-   private void createApplication()
-   {
-      String applicationName = display.getApplicationNameField().getValue();
-      String applicationType = display.getTypeField().getValue();
-      JobManager.get().showJobSeparated();
-      AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
-      AutoBeanUnmarshallerWS<AppInfo> unmarshaller = new AutoBeanUnmarshallerWS<AppInfo>(appInfo);
+    private void createFolder() {
+        final Loader loader = new GWTLoader();
+        loader.setMessage(lb.creatingProject());
+        try {
+            loader.show();
+            FolderModel newFolder = new FolderModel();
+            newFolder.setName(projectName);
 
-      try
-      {
-         OpenShiftClientService.getInstance().createApplicationWS(applicationName, vfs.getId(), project.getId(),
-            applicationType, new RequestCallback<AppInfo>(unmarshaller)
-         {
+            VirtualFileSystem.getInstance()
+                             .createFolder(vfs.getRoot(), new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(newFolder)) {
+                                 @Override
+                                 protected void onSuccess(FolderModel result) {
+                                     loader.hide();
 
+                                     setPropertiesToFolder(result);
+                                 }
+
+                                 @Override
+                                 protected void onFailure(Throwable exception) {
+                                     loader.hide();
+                                     deployResultHandler.onDeployFinished(false);
+                                     cleanUpFolder();
+                                     IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                 }
+                             });
+        } catch (Exception e) {
+            loader.hide();
+            deployResultHandler.onDeployFinished(false);
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    private void setPropertiesToFolder(Item item) {
+        try {
+            final List<Property> properties = new ArrayList<Property>();
+            properties.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+            properties.add(new PropertyImpl("openshift-express-application", display.getApplicationNameField().getValue()));
+            item.getProperties().addAll(properties);
+
+            VirtualFileSystem.getInstance().updateItem(item,
+                                                       null,
+                                                       new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper())) {
+                                                           @Override
+                                                           protected void onSuccess(ItemWrapper result) {
+                                                               project = (ProjectModel)result.getItem();
+                                                               deployResultHandler.onDeployFinished(true);
+                                                               createApplication();
+                                                           }
+
+                                                           @Override
+                                                           protected void onFailure(Throwable e) {
+                                                               IDE.fireEvent(new ExceptionThrownEvent(e));
+                                                           }
+                                                       });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /** Perform creation of application on OpenShift by sending request over WebSocket or HTTP. */
+    private void createApplication() {
+        String applicationName = display.getApplicationNameField().getValue();
+        String applicationType = display.getTypeField().getValue();
+        JobManager.get().showJobSeparated();
+        AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
+        AutoBeanUnmarshallerWS<AppInfo> unmarshaller = new AutoBeanUnmarshallerWS<AppInfo>(appInfo);
+
+        try {
+            OpenShiftClientService.getInstance().createApplicationWS(applicationName, vfs.getId(), project.getId(),
+                                                                     applicationType, new RequestCallback<AppInfo>(unmarshaller) {
+
+                                                                         @Override
+                                                                         protected void onSuccess(AppInfo result) {
+                                                                             onCreatedAppSuccess(result);
+                                                                         }
+
+                                                                         @Override
+                                                                         protected void onFailure(Throwable exception) {
+                                                                             cleanUpFolder();
+                                                                             handleError(exception);
+                                                                         }
+                                                                     });
+        } catch (WebSocketException e) {
+            createApplicationREST(applicationName, applicationType);
+        }
+    }
+
+    /**
+     * Perform creation of application on OpenShift by sending request over HTTP.
+     * 
+     * @param applicationName application's name
+     * @param applicationType type of the application
+     */
+    private void createApplicationREST(String applicationName, String applicationType) {
+        AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
+        AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(appInfo);
+
+        try {
+            OpenShiftClientService.getInstance().createApplication(applicationName, vfs.getId(), project.getId(),
+                                                                   applicationType, new AsyncRequestCallback<AppInfo>(unmarshaller) {
+
+                                                                       @Override
+                                                                       protected void onSuccess(AppInfo result) {
+                                                                           onCreatedAppSuccess(result);
+                                                                       }
+
+                                                                       @Override
+                                                                       protected void onFailure(Throwable exception) {
+                                                                           cleanUpFolder();
+                                                                           handleError(exception);
+                                                                       }
+                                                                   });
+        } catch (RequestException e) {
+            IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, lb.createApplicationFail(applicationName)));
+            deployResultHandler.onDeployFinished(false);
+        }
+    }
+
+    /**
+     * Performs actions after application successfully created on OpenShift.
+     * 
+     * @param app {@link AppInfo}
+     */
+    private void onCreatedAppSuccess(AppInfo app) {
+        IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(app), Type.INFO));
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
-            protected void onSuccess(AppInfo result)
-            {
-               onCreatedAppSuccess(result);
+            public void execute() {
+                updateSSHPublicKey();
             }
+        });
+    }
 
+    private void updateSSHPublicKey() {
+        UpdatePublicKeyCommandHandler.getInstance().updatePublicKey(new UpdatePublicKeyCallback() {
             @Override
-            protected void onFailure(Throwable exception)
-            {
-               cleanUpFolder();
-               handleError(exception);
+            public void onPublicKeyUpdated(boolean success) {
+                if (!success) {
+                    cleanUpFolder();
+                    Dialogs.getInstance().showError("Unable to update ssh public key.");
+                } else {
+                    pullSources();
+                }
             }
-         });
-      }
-      catch (WebSocketException e)
-      {
-         createApplicationREST(applicationName, applicationType);
-      }
-   }
+        });
+    }
 
-   /**
-    * Perform creation of application on OpenShift by sending request over HTTP.
-    *
-    * @param applicationName application's name
-    * @param applicationType type of the application
-    */
-   private void createApplicationREST(String applicationName, String applicationType)
-   {
-      AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
-      AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(appInfo);
-
-      try
-      {
-         OpenShiftClientService.getInstance().createApplication(applicationName, vfs.getId(), project.getId(),
-            applicationType, new AsyncRequestCallback<AppInfo>(unmarshaller)
-         {
-
+    private void pullSources() {
+        new PullApplicationSourcesHandler().pullApplicationSources(vfs, project, new PullCompleteCallback() {
             @Override
-            protected void onSuccess(AppInfo result)
-            {
-               onCreatedAppSuccess(result);
+            public void onPullComplete(boolean success) {
+                if (!success) {
+                    cleanUpFolder();
+                    Dialogs.getInstance().showError(OpenShiftExtension.LOCALIZATION_CONSTANT.pullSourceFailed());
+                } else {
+                    setProjectType();
+                }
             }
+        });
+    }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               cleanUpFolder();
-               handleError(exception);
+    private void setProjectType() {
+        try {
+            project.getProperties().add(new PropertyImpl("vfs:projectType", projectType.value()));
+
+            VirtualFileSystem.getInstance().updateItem(project,
+                                                       null,
+                                                       new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper())) {
+                                                           @Override
+                                                           protected void onSuccess(ItemWrapper result) {
+                                                               project = (ProjectModel)result.getItem();
+                                                               IDE.fireEvent(new ProjectCreatedEvent(project));
+                                                           }
+
+                                                           @Override
+                                                           protected void onFailure(Throwable e) {
+                                                               Dialogs.getInstance().showError("Unable to set project type property.");
+                                                           }
+                                                       });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /**
+     * @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#getDeployView(java.lang.String,
+     *      org.exoplatform.ide.client.framework.project.ProjectType, org.exoplatform.ide.client.framework.paas.InitializeDeployViewHandler)
+     */
+    @Override
+    public Composite getDeployView(String projectName, ProjectType projectType, InitializeDeployViewHandler initializeDeployViewHandler) {
+        this.projectName = projectName;
+        this.projectType = projectType;
+        this.initializeDeployViewHandler = initializeDeployViewHandler;
+        if (display == null) {
+            display = GWT.create(Display.class);
+        }
+        bindDisplay();
+        display.getApplicationNameField().setValue(projectName);
+        getApplicationTypes();
+        return display.getView();
+    }
+
+    /**
+     * Handle error while creating an application.
+     * 
+     * @param exception {@link Throwable}
+     */
+    private void handleError(Throwable exception) {
+        if (exception instanceof ServerException) {
+            ServerException serverException = (ServerException)exception;
+            if (HTTPStatus.OK == serverException.getHTTPStatus()
+                && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED))) {
+                IDE.fireEvent(new LoginEvent());
+                return;
             }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, lb.createApplicationFail(applicationName)));
-         deployResultHandler.onDeployFinished(false);
-      }
-   }
+        }
 
-   /**
-    * Performs actions after application successfully created on OpenShift.
-    *
-    * @param app {@link AppInfo}
-    */
-   private void onCreatedAppSuccess(AppInfo app)
-   {
-      IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(app), Type.INFO));
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            updateSSHPublicKey();
-         }
-      });
-   }
+        String applicationName = display.getApplicationNameField().getValue();
+        IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, lb.createApplicationFail(applicationName)));
+        deployResultHandler.onDeployFinished(false);
+    }
 
-   private void updateSSHPublicKey()
-   {
-      UpdatePublicKeyCommandHandler.getInstance().updatePublicKey(new UpdatePublicKeyCallback()
-      {
-         @Override
-         public void onPublicKeyUpdated(boolean success)
-         {
-            if (!success)
-            {
-               cleanUpFolder();
-               Dialogs.getInstance().showError("Unable to update ssh public key.");
+    /**
+     * @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#deploy(org.exoplatform.ide.vfs.client.model.ProjectModel,
+     *      org.exoplatform.ide.client.framework.paas.DeployResultHandler)
+     */
+    @Override
+    public void deploy(ProjectModel project, DeployResultHandler deployResultHandler) {
+        this.deployResultHandler = deployResultHandler;
+        this.project = project;
+        createApplication();
+    }
+
+    /** @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#validate() */
+    @Override
+    public boolean validate() {
+        return display.getApplicationNameField().getValue() != null
+               && !display.getApplicationNameField().getValue().isEmpty() && display.getTypeField().getValue() != null
+               && !display.getTypeField().getValue().isEmpty();
+    }
+
+    private void cleanUpFolder() {
+        if (project != null) {
+            try {
+                VirtualFileSystem.getInstance().delete(project, new AsyncRequestCallback<String>() {
+                    @Override
+                    protected void onSuccess(String result) {
+                        // nothing to do
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        // nothing to do
+                    }
+                });
+            } catch (RequestException exception) {
+                // ignore this exception
             }
-            else
-            {
-               pullSources();
-            }
-         }
-      });
-   }
-
-   private void pullSources()
-   {
-      new PullApplicationSourcesHandler().pullApplicationSources(vfs, project, new PullCompleteCallback()
-      {
-         @Override
-         public void onPullComplete(boolean success)
-         {
-            if (!success)
-            {
-               cleanUpFolder();
-               Dialogs.getInstance().showError(OpenShiftExtension.LOCALIZATION_CONSTANT.pullSourceFailed());
-            }
-            else
-            {
-               setProjectType();
-            }
-         }
-      });
-   }
-
-   private void setProjectType()
-   {
-      try
-      {
-         project.getProperties().add(new PropertyImpl("vfs:projectType", projectType.value()));
-
-         VirtualFileSystem.getInstance().updateItem(project,
-            null,
-            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
-            {
-               @Override
-               protected void onSuccess(ItemWrapper result)
-               {
-                  project = (ProjectModel)result.getItem();
-                  IDE.fireEvent(new ProjectCreatedEvent(project));
-               }
-
-               @Override
-               protected void onFailure(Throwable e)
-               {
-                  Dialogs.getInstance().showError("Unable to set project type property.");
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#getDeployView(java.lang.String,
-    *      org.exoplatform.ide.client.framework.project.ProjectType)
-    */
-   @Override
-   public Composite getDeployView(String projectName, ProjectType projectType)
-   {
-      this.projectName = projectName;
-      this.projectType = projectType;
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-      }
-      bindDisplay();
-      display.getApplicationNameField().setValue(projectName);
-      getApplicationTypes();
-      return display.getView();
-   }
-
-   /**
-    * Handle error while creating an application.
-    *
-    * @param exception {@link Throwable}
-    */
-   private void handleError(Throwable exception)
-   {
-      if (exception instanceof ServerException)
-      {
-         ServerException serverException = (ServerException)exception;
-         if (HTTPStatus.OK == serverException.getHTTPStatus()
-            && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
-         {
-            IDE.fireEvent(new LoginEvent());
-            return;
-         }
-      }
-
-      String applicationName = display.getApplicationNameField().getValue();
-      IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, lb.createApplicationFail(applicationName)));
-      deployResultHandler.onDeployFinished(false);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#deploy(org.exoplatform.ide.vfs.client.model.ProjectModel,
-    *      org.exoplatform.ide.client.framework.paas.DeployResultHandler)
-    */
-   @Override
-   public void deploy(ProjectModel project, DeployResultHandler deployResultHandler)
-   {
-      this.deployResultHandler = deployResultHandler;
-      this.project = project;
-      createApplication();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#validate()
-    */
-   @Override
-   public boolean validate()
-   {
-      return display.getApplicationNameField().getValue() != null
-         && !display.getApplicationNameField().getValue().isEmpty() && display.getTypeField().getValue() != null
-         && !display.getTypeField().getValue().isEmpty();
-   }
-
-   private void cleanUpFolder()
-   {
-      if (project != null)
-      {
-         try
-         {
-            VirtualFileSystem.getInstance().delete(project, new AsyncRequestCallback<String>()
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  //nothing to do
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  //nothing to do
-               }
-            });
-         }
-         catch (RequestException exception)
-         {
-            //ignore this exception
-         }
-      }
-   }
+        }
+    }
 }

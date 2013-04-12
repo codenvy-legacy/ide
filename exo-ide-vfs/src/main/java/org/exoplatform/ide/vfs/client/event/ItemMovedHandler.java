@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Aug 25, 2011 evgen $
- * 
  */
-public interface ItemMovedHandler extends EventHandler
-{
+public interface ItemMovedHandler extends EventHandler {
 
-   void onItemMoved(ItemMovedEvent event);
+    void onItemMoved(ItemMovedEvent event);
 
 }

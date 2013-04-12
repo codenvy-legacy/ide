@@ -18,17 +18,15 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * Response with one page of search results.
- */
+/** Response with one page of search results. */
 @RoutingType(type = RoutingTypes.SEARCHRESPONSE)
 public interface SearchResponse extends ServerToClientDto {
-  
-  int getResultCount();
 
-  int getPage();
+    int getResultCount();
 
-  int getPageCount();
-  
-  JsonArray<SearchResult> getResults();  
+    int getPage();
+
+    int getPageCount();
+
+    JsonArray<SearchResult> getResults();
 }

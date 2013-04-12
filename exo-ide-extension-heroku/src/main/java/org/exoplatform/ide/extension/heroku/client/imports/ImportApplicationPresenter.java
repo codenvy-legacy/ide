@@ -69,349 +69,262 @@ import java.util.List;
  * <li>Clone Heroku application into created project.</li>
  * <li>Update project's properties, marking it as Heroku application.</li>
  * </ol>
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Mar 19, 2012 10:36:33 AM anya $
- * 
  */
 public class ImportApplicationPresenter implements ImportApplicationHandler, ViewClosedHandler, VfsChangedHandler,
-   LoggedInHandler
-{
+                                                   LoggedInHandler {
 
-   interface Display extends IsView
-   {
-      HasValue<String> getProjectName();
+    interface Display extends IsView {
+        HasValue<String> getProjectName();
 
-      HasValue<String> getApplicationName();
+        HasValue<String> getApplicationName();
 
-      HasValue<Boolean> getDeployPublicKey();
+        HasValue<Boolean> getDeployPublicKey();
 
-      HasClickHandlers getImportButton();
+        HasClickHandlers getImportButton();
 
-      HasClickHandlers getCancelButton();
+        HasClickHandlers getCancelButton();
 
-      void setImportButtonEnabled(boolean enabled);
-   }
+        void setImportButtonEnabled(boolean enabled);
+    }
 
-   private final static String GIT_URL = "gitUrl";
+    private final static String GIT_URL = "gitUrl";
 
-   private Display display;
+    private Display display;
 
-   /**
-    * Current VFS.
-    */
-   private VirtualFileSystemInfo vfs;
+    /** Current VFS. */
+    private VirtualFileSystemInfo vfs;
 
-   /**
-    * GIT repository location.
-    */
-   private String gitLocation;
+    /** GIT repository location. */
+    private String gitLocation;
 
-   /**
-    * Project to be binded with Heroku application.
-    */
-   private FolderModel project;
+    /** Project to be binded with Heroku application. */
+    private FolderModel project;
 
-   /**
-    * Heroku application to import.
-    */
-   private String herokuApplication;
+    /** Heroku application to import. */
+    private String herokuApplication;
 
-   public ImportApplicationPresenter()
-   {
-      IDE.addHandler(ImportApplicationEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-   }
+    public ImportApplicationPresenter() {
+        IDE.addHandler(ImportApplicationEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+    }
 
-   /**
-    * Bind display with presenter.
-    */
-   public void bindDisplay()
-   {
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
+    /** Bind display with presenter. */
+    public void bindDisplay() {
+        display.getCancelButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-
-      display.getProjectName().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            boolean isEmpty = event.getValue() == null || event.getValue().isEmpty();
-            display.setImportButtonEnabled(!isEmpty);
-         }
-      });
-
-      display.getImportButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            createEmptyProject();
-         }
-      });
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.imports.ImportApplicationHandler#onImportApplication(org.exoplatform.ide.extension.heroku.client.imports.ImportApplicationEvent)
-    */
-   @Override
-   public void onImportApplication(ImportApplicationEvent event)
-   {
-      this.herokuApplication = event.getApplication();
-      getApplicationInfo(event.getApplication());
-   }
-
-   /**
-    * Get application's information.
-    * 
-    * @param applicationName application for getting info
-    */
-   private void getApplicationInfo(final String applicationName)
-   {
-      try
-      {
-         HerokuClientService.getInstance().getApplicationInfo(applicationName, vfs.getId(), null, false,
-            new HerokuAsyncRequestCallback(this)
-            {
-               @Override
-               protected void onSuccess(List<Property> properties)
-               {
-                  for (Property property : properties)
-                  {
-                     if (GIT_URL.equals(property.getName()))
-                     {
-                        gitLocation = property.getValue();
-                        break;
-                     }
-                  }
-
-                  if (display == null)
-                  {
-                     display = GWT.create(Display.class);
-                     bindDisplay();
-                     IDE.getInstance().openView(display.asView());
-                  }
-                  display.getApplicationName().setValue(applicationName);
-                  display.getProjectName().setValue(applicationName);
-                  display.getDeployPublicKey().setValue(true);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
-
-   /**
-    * Create empty Ruby project.
-    */
-   private void createEmptyProject()
-   {
-      if (vfs == null)
-      {
-         return;
-      }
-
-      FolderModel parent = (FolderModel)vfs.getRoot();
-      FolderModel model = new FolderModel();
-      model.setName(display.getProjectName().getValue());
-      //      model.setProjectType(ProjectResolver.RAILS);
-      model.setParent(parent);
-
-      final boolean deployPublicKey = display.getDeployPublicKey().getValue();
-      try
-      {
-         VirtualFileSystem.getInstance().createFolder(parent,
-            new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(model))
-            {
-               @Override
-               protected void onSuccess(FolderModel result)
-               {
-                  project = result;
-                  if (deployPublicKey)
-                  {
-                     deployPublicKey();
-                  }
-                  else
-                  {
-                     cloneRepository();
-                  }
-                  IDE.getInstance().closeView(display.asView().getId());
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   /**
-    * Clone of the repository by sending request over WebSocket or HTTP.
-    */
-   private void cloneRepository()
-   {
-      try
-      {
-         GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), project, gitLocation, null,
-            new RequestCallback<RepoInfo>()
-            {
-               @Override
-               protected void onSuccess(RepoInfo result)
-               {
-                  updateProperties();
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-      }
-      catch (WebSocketException e)
-      {
-         cloneRepositoryREST();
-      }
-   }
-
-   /**
-    * Clone repository (over HTTP). Remote repository is Heroku application.
-    */
-   private void cloneRepositoryREST()
-   {
-      try
-      {
-         GitClientService.getInstance().cloneRepository(vfs.getId(), project, gitLocation, null,
-            new AsyncRequestCallback<RepoInfo>()
-            {
-               @Override
-               protected void onSuccess(RepoInfo result)
-               {
-                  updateProperties();
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   /**
-    * Deploy public key to Heroku.
-    */
-   private void deployPublicKey()
-   {
-      try
-      {
-         HerokuClientService.getInstance().addKey(new HerokuAsyncRequestCallback(this)
-         {
             @Override
-            protected void onSuccess(List<Property> properties)
-            {
-               IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.addKeysSuccess(), Type.INFO));
-               cloneRepository();
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
             }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+        });
 
-   /**
-    * Update project properties, setting "heroku-application" property's value.
-    */
-   private void updateProperties()
-   {
-      project.getProperties().add(new PropertyImpl("heroku-application", herokuApplication));
-      project.getProperties().add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-      project.getProperties().add(new PropertyImpl("vfs:projectType", ProjectResolver.RAILS));
+        display.getProjectName().addValueChangeHandler(new ValueChangeHandler<String>() {
 
-      try
-      {
-         VirtualFileSystem.getInstance().updateItem(project, null,
-            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
-            {
-               @Override
-               protected void onSuccess(ItemWrapper result)
-               {
-                  IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT
-                     .importApplicationSuccess(herokuApplication), Type.INFO));
-                  IDE.fireEvent(new OpenProjectEvent((ProjectModel)result.getItem()));
-               }
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                boolean isEmpty = event.getValue() == null || event.getValue().isEmpty();
+                display.setImportButtonEnabled(!isEmpty);
+            }
+        });
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
+        display.getImportButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                createEmptyProject();
+            }
+        });
+    }
+
+    /** @see org.exoplatform.ide.extension.heroku.client.imports.ImportApplicationHandler#onImportApplication(org.exoplatform.ide
+     * .extension.heroku.client.imports.ImportApplicationEvent) */
+    @Override
+    public void onImportApplication(ImportApplicationEvent event) {
+        this.herokuApplication = event.getApplication();
+        getApplicationInfo(event.getApplication());
+    }
+
+    /**
+     * Get application's information.
+     *
+     * @param applicationName
+     *         application for getting info
+     */
+    private void getApplicationInfo(final String applicationName) {
+        try {
+            HerokuClientService.getInstance().getApplicationInfo(applicationName, vfs.getId(), null, false,
+                                                                 new HerokuAsyncRequestCallback(this) {
+                                                                     @Override
+                                                                     protected void onSuccess(List<Property> properties) {
+                                                                         for (Property property : properties) {
+                                                                             if (GIT_URL.equals(property.getName())) {
+                                                                                 gitLocation = property.getValue();
+                                                                                 break;
+                                                                             }
+                                                                         }
+
+                                                                         if (display == null) {
+                                                                             display = GWT.create(Display.class);
+                                                                             bindDisplay();
+                                                                             IDE.getInstance().openView(display.asView());
+                                                                         }
+                                                                         display.getApplicationName().setValue(applicationName);
+                                                                         display.getProjectName().setValue(applicationName);
+                                                                         display.getDeployPublicKey().setValue(true);
+                                                                     }
+                                                                 });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
+
+    /** Create empty Ruby project. */
+    private void createEmptyProject() {
+        if (vfs == null) {
+            return;
+        }
+
+        FolderModel parent = (FolderModel)vfs.getRoot();
+        FolderModel model = new FolderModel();
+        model.setName(display.getProjectName().getValue());
+        //      model.setProjectType(ProjectResolver.RAILS);
+        model.setParent(parent);
+
+        final boolean deployPublicKey = display.getDeployPublicKey().getValue();
+        try {
+            VirtualFileSystem.getInstance().createFolder(parent,
+                                                         new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(model)) {
+                                                             @Override
+                                                             protected void onSuccess(FolderModel result) {
+                                                                 project = result;
+                                                                 if (deployPublicKey) {
+                                                                     deployPublicKey();
+                                                                 } else {
+                                                                     cloneRepository();
+                                                                 }
+                                                                 IDE.getInstance().closeView(display.asView().getId());
+                                                             }
+
+                                                             @Override
+                                                             protected void onFailure(Throwable exception) {
+                                                                 IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                             }
+                                                         });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /** Clone of the repository by sending request over WebSocket or HTTP. */
+    private void cloneRepository() {
+        try {
+            GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), project, gitLocation, null,
+                                                             new RequestCallback<RepoInfo>() {
+                                                                 @Override
+                                                                 protected void onSuccess(RepoInfo result) {
+                                                                     updateProperties();
+                                                                 }
+
+                                                                 @Override
+                                                                 protected void onFailure(Throwable exception) {
+                                                                     IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                                 }
+                                                             });
+        } catch (WebSocketException e) {
+            cloneRepositoryREST();
+        }
+    }
+
+    /** Clone repository (over HTTP). Remote repository is Heroku application. */
+    private void cloneRepositoryREST() {
+        try {
+            GitClientService.getInstance().cloneRepository(vfs.getId(), project, gitLocation, null,
+                                                           new AsyncRequestCallback<RepoInfo>() {
+                                                               @Override
+                                                               protected void onSuccess(RepoInfo result) {
+                                                                   updateProperties();
+                                                               }
+
+                                                               @Override
+                                                               protected void onFailure(Throwable exception) {
+                                                                   IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                               }
+                                                           });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /** Deploy public key to Heroku. */
+    private void deployPublicKey() {
+        try {
+            HerokuClientService.getInstance().addKey(new HerokuAsyncRequestCallback(this) {
+                @Override
+                protected void onSuccess(List<Property> properties) {
+                    IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.addKeysSuccess(), Type.INFO));
+                    cloneRepository();
+                }
             });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-      }
-      catch (Exception e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+    /** Update project properties, setting "heroku-application" property's value. */
+    private void updateProperties() {
+        project.getProperties().add(new PropertyImpl("heroku-application", herokuApplication));
+        project.getProperties().add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+        project.getProperties().add(new PropertyImpl("vfs:projectType", ProjectResolver.RAILS));
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      this.vfs = event.getVfsInfo();
-   }
+        try {
+            VirtualFileSystem.getInstance().updateItem(project, null,
+                                                       new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper())) {
+                                                           @Override
+                                                           protected void onSuccess(ItemWrapper result) {
+                                                               IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT
+                                                                                                            .importApplicationSuccess(
+                                                                                                                    herokuApplication),
+                                                                                             Type.INFO));
+                                                               IDE.fireEvent(new OpenProjectEvent((ProjectModel)result.getItem()));
+                                                           }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent)
-    */
-   @Override
-   public void onLoggedIn(LoggedInEvent event)
-   {
-      IDE.removeHandler(LoggedInEvent.TYPE, this);
-      if (!event.isFailed())
-      {
-         getApplicationInfo(herokuApplication);
-      }
-   }
+                                                           @Override
+                                                           protected void onFailure(Throwable exception) {
+                                                               IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                           }
+                                                       });
+
+        } catch (Exception e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent) */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        this.vfs = event.getVfsInfo();
+    }
+
+    /** @see org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent) */
+    @Override
+    public void onLoggedIn(LoggedInEvent event) {
+        IDE.removeHandler(LoggedInEvent.TYPE, this);
+        if (!event.isFailed()) {
+            getApplicationInfo(herokuApplication);
+        }
+    }
 
 }

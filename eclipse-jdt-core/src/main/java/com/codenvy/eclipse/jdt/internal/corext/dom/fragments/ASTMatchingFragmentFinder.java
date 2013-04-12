@@ -18,52 +18,43 @@ import java.util.HashSet;
 import java.util.Set;
 
 
+class ASTMatchingFragmentFinder extends GenericVisitor {
 
-class ASTMatchingFragmentFinder extends GenericVisitor
-{
+    public static IASTFragment[] findMatchingFragments(ASTNode scope, ASTFragment toMatch) {
+        return new ASTMatchingFragmentFinder(toMatch).findMatches(scope);
+    }
 
-   public static IASTFragment[] findMatchingFragments(ASTNode scope, ASTFragment toMatch)
-   {
-      return new ASTMatchingFragmentFinder(toMatch).findMatches(scope);
-   }
+    private ASTFragment fFragmentToMatch;
 
-   private ASTFragment fFragmentToMatch;
+    private Set<IASTFragment> fMatches = new HashSet<IASTFragment>();
 
-   private Set<IASTFragment> fMatches = new HashSet<IASTFragment>();
+    private ASTMatchingFragmentFinder(ASTFragment toMatch) {
+        super(true);
+        fFragmentToMatch = toMatch;
+    }
 
-   private ASTMatchingFragmentFinder(ASTFragment toMatch)
-   {
-      super(true);
-      fFragmentToMatch = toMatch;
-   }
+    private IASTFragment[] findMatches(ASTNode scope) {
+        fMatches.clear();
+        scope.accept(this);
+        return getMatches();
+    }
 
-   private IASTFragment[] findMatches(ASTNode scope)
-   {
-      fMatches.clear();
-      scope.accept(this);
-      return getMatches();
-   }
+    private IASTFragment[] getMatches() {
+        return fMatches.toArray(new IASTFragment[fMatches.size()]);
+    }
 
-   private IASTFragment[] getMatches()
-   {
-      return fMatches.toArray(new IASTFragment[fMatches.size()]);
-   }
+    @Override
+    public boolean visit(Javadoc node) {
+        return false;
+    }
 
-   @Override
-   public boolean visit(Javadoc node)
-   {
-      return false;
-   }
-
-   @Override
-   protected boolean visitNode(ASTNode node)
-   {
-      IASTFragment[] localMatches = fFragmentToMatch.getMatchingFragmentsWithNode(node);
-      for (int i = 0; i < localMatches.length; i++)
-      {
-         fMatches.add(localMatches[i]);
-      }
-      return true;
-   }
+    @Override
+    protected boolean visitNode(ASTNode node) {
+        IASTFragment[] localMatches = fFragmentToMatch.getMatchingFragmentsWithNode(node);
+        for (int i = 0; i < localMatches.length; i++) {
+            fMatches.add(localMatches[i]);
+        }
+        return true;
+    }
 
 }

@@ -28,16 +28,13 @@ import javax.ws.rs.ext.Provider;
  * @version $Id: $
  */
 @Provider
-public class ApplicationRunnerExceptionMapper implements ExceptionMapper<ApplicationRunnerException>
-{
-   @Override
-   public Response toResponse(ApplicationRunnerException exception)
-   {
-      String logs = exception.getLogs();
-      if (!(logs == null || logs.isEmpty()))
-      {
-         return Response.serverError().entity(logs).type(MediaType.TEXT_PLAIN).build();
-      }
-      return Response.serverError().entity(exception.getMessage()).type(MediaType.TEXT_PLAIN).build();
-   }
+public class ApplicationRunnerExceptionMapper implements ExceptionMapper<ApplicationRunnerException> {
+    @Override
+    public Response toResponse(ApplicationRunnerException exception) {
+        String logs = exception.getLogs();
+        if (!(logs == null || logs.isEmpty())) {
+            return Response.serverError().entity(logs).type(MediaType.TEXT_PLAIN).build();
+        }
+        return Response.serverError().entity(exception.getMessage()).type(MediaType.TEXT_PLAIN).build();
+    }
 }

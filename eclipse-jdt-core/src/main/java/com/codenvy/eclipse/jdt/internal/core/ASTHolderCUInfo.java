@@ -15,15 +15,14 @@ import com.codenvy.eclipse.jdt.core.dom.CompilationUnit;
 import java.util.HashMap;
 
 
-public class ASTHolderCUInfo extends CompilationUnitElementInfo
-{
-   int astLevel;
+public class ASTHolderCUInfo extends CompilationUnitElementInfo {
+    int astLevel;
 
-   boolean resolveBindings;
+    boolean resolveBindings;
 
-   int reconcileFlags;
+    int reconcileFlags;
 
-   HashMap problems = null;
+    HashMap problems = null;
 
-   CompilationUnit ast;
+    CompilationUnit ast;
 }
