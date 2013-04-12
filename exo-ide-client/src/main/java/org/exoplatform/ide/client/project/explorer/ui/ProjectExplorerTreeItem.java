@@ -129,36 +129,7 @@ public abstract class ProjectExplorerTreeItem extends TreeItem {
      * @param item
      * @return
      */
-    public boolean select(Item item)
-    {
-        if (item.getId().equals(((Item)getUserObject()).getId()))
-        {
-            getTree().setSelectedItem(this);
-            getTree().ensureSelectedItemVisible();
-            return true;
-        }
-
-        for (int i = 0; i < getChildCount(); i++)
-        {
-            TreeItem child = getChild(i);
-            if (child instanceof ProjectExplorerTreeItem)
-            {
-                String path = ((Item)child.getUserObject()).getPath();
-                if (path == null || path.isEmpty()) {
-                    continue;
-                }
-                
-                if (item.getPath().startsWith(path))
-                {
-                    ((ProjectExplorerTreeItem)child).refresh(true);
-                    return ((ProjectExplorerTreeItem)child).select(item);
-                }
-            }
-        }
-
-        return false;
-    }
-    
+    public abstract boolean select(Item item);
     
     /**
      * Set additional icons.

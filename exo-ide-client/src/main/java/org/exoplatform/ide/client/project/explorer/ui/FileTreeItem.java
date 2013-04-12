@@ -42,5 +42,17 @@ public class FileTreeItem extends ProjectExplorerTreeItem {
     public void refresh(boolean expand) {
         render();
     }
+    
+    @Override
+    public boolean select(Item item) {
+        if (item.getId().equals(((Item)getUserObject()).getId()))
+        {
+            getTree().setSelectedItem(this);
+            getTree().ensureSelectedItemVisible();
+            return true;
+        }
+
+        return false;
+    }
 
 }

@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.project.explorer.ui;
 
+import com.google.gwt.user.client.ui.TreeItem;
+
 import org.exoplatform.ide.client.framework.navigation.DirectoryFilter;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
@@ -38,16 +40,16 @@ public class FolderTreeItem extends ProjectExplorerTreeItem {
      * Comparator for comparing items in received directory.
      */
     protected Comparator<Item> COMPARATOR = new Comparator<Item>() {
-          public int compare(Item item1, Item item2) {
-              if (item1 instanceof FolderModel && item2 instanceof FileModel) {
-                  return -1;
-              }
-              else if (item1 instanceof FileModel && item2 instanceof FolderModel) {
-                  return 1;
-              }
-              return item1.getName().compareTo(item2.getName());
-          }
-      };
+                                              public int compare(Item item1, Item item2) {
+                                                  if (item1 instanceof FolderModel && item2 instanceof FileModel) {
+                                                      return -1;
+                                                  }
+                                                  else if (item1 instanceof FileModel && item2 instanceof FolderModel) {
+                                                      return 1;
+                                                  }
+                                                  return item1.getName().compareTo(item2.getName());
+                                              }
+                                          };
 
     public FolderTreeItem(FolderModel folder) {
         super(folder);
@@ -67,16 +69,16 @@ public class FolderTreeItem extends ProjectExplorerTreeItem {
         return folderItems;
     }
 
-    
+
     protected ProjectExplorerTreeItem createTreeItem(Item item) {
         if (item instanceof FolderModel) {
             return new FolderTreeItem((FolderModel)item);
         }
-        
+
         return new FileTreeItem((FileModel)item);
     }
-    
-    
+
+
     @Override
     public void refresh(boolean expand) {
         render();
@@ -116,7 +118,43 @@ public class FolderTreeItem extends ProjectExplorerTreeItem {
         if (expand) {
             setState(true);
         }
+    }
 
+    @Override
+    public boolean select(Item item) {
+        if (item.getId().equals(((Item)getUserObject()).getId()))
+        {
+            getTree().setSelectedItem(this);
+            getTree().ensureSelectedItemVisible();
+            return true;
+        }
+
+        String folderPath = ((Item)getUserObject()).getPath();
+        if (!item.getPath().startsWith(folderPath)) {
+            return false;
+        }
+        
+        refresh(true);
+
+        for (int i = 0; i < getChildCount(); i++)
+        {
+            TreeItem child = getChild(i);
+            if (child instanceof ProjectExplorerTreeItem)
+            {
+                String path = ((Item)child.getUserObject()).getPath();
+                if (path == null || path.isEmpty()) {
+                    continue;
+                }
+
+                if (item.getPath().startsWith(path))
+                {
+                    ((ProjectExplorerTreeItem)child).refresh(true);
+                    return ((ProjectExplorerTreeItem)child).select(item);
+                }
+            }
+        }
+
+        return false;
     }
 
 }

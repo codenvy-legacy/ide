@@ -125,8 +125,12 @@ public class ProjectExplorerItemTree extends org.exoplatform.gwtframework.ui.cli
         if (tree.getItemCount() == 0) {
             return false;
         }
-
+        
         boolean selected = ((ProjectExplorerTreeItem)tree.getItem(0)).select(item);
+        if (selected) {
+            tree.ensureSelectedItemVisible();
+        }
+        
         updateHighlighter();
         return selected;
     }
