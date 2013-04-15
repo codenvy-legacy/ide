@@ -83,16 +83,11 @@ public class ResetRequest extends GitRequest {
     private String    commit;
 
     /**
-     * Paths to be reseted.
-     */
-    private String[]  paths;
-
-    /**
      * Type of reset.
      * 
      * @see ResetType
      */
-    private ResetType type;
+    private ResetType type = ResetType.MIXED;
 
     /**
      * @param commit commit to which current head should be reset
@@ -141,21 +136,5 @@ public class ResetRequest extends GitRequest {
      */
     public void setType(ResetType type) {
         this.type = type;
-    }
-
-    /**
-     * @return files to reset in index
-     * @see #paths
-     */
-    public String[] getPaths() {
-        return paths;
-    }
-
-    /**
-     * @param paths files to reset in index
-     * @see #paths
-     */
-    public void setPaths(String[] paths) {
-        this.paths = paths;
     }
 }
