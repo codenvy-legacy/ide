@@ -29,9 +29,9 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.eclipse.jdt.client.event.CreateJavaClassEvent;
 import org.eclipse.jdt.client.event.CreateJavaClassHandler;
-import org.eclipse.jdt.client.packaging.model.next.JavaProject;
-import org.eclipse.jdt.client.packaging.model.next.Package;
-import org.eclipse.jdt.client.packaging.model.next.SourceDirectory;
+import org.eclipse.jdt.client.packaging.model.JavaProject;
+import org.eclipse.jdt.client.packaging.model.Package;
+import org.eclipse.jdt.client.packaging.model.SourceDirectory;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -335,7 +335,7 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
         JavaProject javaProject = (JavaProject)((ItemContext)selectedItem).getProject();
         for (SourceDirectory sourceDirectory : javaProject.getSourceDirectories()) {
             if (sourceDirectory.getSourceDirectoryName().equals(sourceDirectoryName)) {
-                for (org.eclipse.jdt.client.packaging.model.next.Package _package : sourceDirectory.getPackages()) {
+                for (org.eclipse.jdt.client.packaging.model.Package _package : sourceDirectory.getPackages()) {
                     if (_package.getPackageName().isEmpty()) {
                         packages.add(DEFAULT_PACKAGE);
                     } else {

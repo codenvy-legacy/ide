@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.packaging.model.next;
+package org.eclipse.jdt.client.packaging.model;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.xml.client.*;

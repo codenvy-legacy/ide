@@ -16,9 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.packaging.model.next;
+package org.eclipse.jdt.client.packaging.model;
 
-import org.exoplatform.ide.vfs.shared.ItemImpl;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,19 +27,37 @@ import java.util.List;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  */
-public class Dependencies extends ItemImpl {
+public class SourceDirectory extends FolderModel {
 
-    private List<Dependency> classpathList = new ArrayList<Dependency>();
+    private String sourceDirectoryName;
 
-    public Dependencies(String name) {
-        super(null);
-        setId("dependencies-" + name);
-        setPath("");
-        setName(name);
+    private List<Package> packages = new ArrayList<Package>();
+
+    public SourceDirectory(FolderModel folder, String sourceDirectoryName) {
+        super(folder);
+        this.sourceDirectoryName = sourceDirectoryName;
+
+        getChildren().getItems().addAll(folder.getChildren().getItems());
+        setParent(folder.getParent());
+        setProject(folder.getProject());
     }
 
-    public List<Dependency> getClasspathList() {
-        return classpathList;
+    public String getSourceDirectoryName() {
+        return sourceDirectoryName;
+    }
+
+    public List<Package> getPackages() {
+        return packages;
+    }
+
+    public Package getDefaultPackage() {
+        for (Package p : packages) {
+            if (p.getPackageName().isEmpty()) {
+                return p;
+            }
+        }
+
+        return null;
     }
 
 }
