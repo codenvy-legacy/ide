@@ -43,7 +43,7 @@ public class DtoServerImpls {
 
   private  DtoServerImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "d066778066846c22736706d3ccc1241d5083940d";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "644381d81eb2a0c00d85dd595f3b8d3f64bb9b27";
 
   public static class RemoveUserAttributeImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl implements com.codenvy.ide.shared.RemoveUserAttribute, JsonSerializable {
 
@@ -57,8 +57,6 @@ public class DtoServerImpls {
 
     protected java.lang.String attributeName;
     private boolean _hasAttributeName;
-    protected java.lang.String userId;
-    private boolean _hasUserId;
 
     public boolean hasAttributeName() {
       return _hasAttributeName;
@@ -72,21 +70,6 @@ public class DtoServerImpls {
     public RemoveUserAttributeImpl setAttributeName(java.lang.String v) {
       _hasAttributeName = true;
       attributeName = v;
-      return this;
-    }
-
-    public boolean hasUserId() {
-      return _hasUserId;
-    }
-
-    @Override
-    public java.lang.String getUserId() {
-      return userId;
-    }
-
-    public RemoveUserAttributeImpl setUserId(java.lang.String v) {
-      _hasUserId = true;
-      userId = v;
       return this;
     }
 
@@ -107,14 +90,6 @@ public class DtoServerImpls {
           return false;
         }
       }
-      if (this._hasUserId != other._hasUserId) {
-        return false;
-      }
-      if (this._hasUserId) {
-        if (!this.userId.equals(other.userId)) {
-          return false;
-        }
-      }
       return true;
     }
 
@@ -122,7 +97,6 @@ public class DtoServerImpls {
     public int hashCode() {
       int hash = super.hashCode();
       hash = hash * 31 + (_hasAttributeName ? attributeName.hashCode() : 0);
-      hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
       return hash;
     }
 
@@ -132,9 +106,6 @@ public class DtoServerImpls {
 
       JsonElement attributeNameOut = (attributeName == null) ? JsonNull.INSTANCE : new JsonPrimitive(attributeName);
       result.add("attributeName", attributeNameOut);
-
-      JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
-      result.add("userId", userIdOut);
       result.add("_type", new JsonPrimitive(getType()));
       return result;
     }
@@ -163,12 +134,6 @@ public class DtoServerImpls {
         dto.setAttributeName(attributeNameOut);
       }
 
-      if (json.has("userId")) {
-        JsonElement userIdIn = json.get("userId");
-        java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
-        dto.setUserId(userIdOut);
-      }
-
       return dto;
     }
     public static RemoveUserAttributeImpl fromJsonString(String jsonString) {
@@ -194,8 +159,6 @@ public class DtoServerImpls {
     private boolean _hasAttributeValue;
     protected java.lang.String attributeName;
     private boolean _hasAttributeName;
-    protected java.lang.String userId;
-    private boolean _hasUserId;
 
     public boolean hasAttributeValue() {
       return _hasAttributeValue;
@@ -227,21 +190,6 @@ public class DtoServerImpls {
       return this;
     }
 
-    public boolean hasUserId() {
-      return _hasUserId;
-    }
-
-    @Override
-    public java.lang.String getUserId() {
-      return userId;
-    }
-
-    public UpdateUserAttributeImpl setUserId(java.lang.String v) {
-      _hasUserId = true;
-      userId = v;
-      return this;
-    }
-
     @Override
     public boolean equals(Object o) {
       if (!super.equals(o)) {
@@ -267,14 +215,6 @@ public class DtoServerImpls {
           return false;
         }
       }
-      if (this._hasUserId != other._hasUserId) {
-        return false;
-      }
-      if (this._hasUserId) {
-        if (!this.userId.equals(other.userId)) {
-          return false;
-        }
-      }
       return true;
     }
 
@@ -283,7 +223,6 @@ public class DtoServerImpls {
       int hash = super.hashCode();
       hash = hash * 31 + (_hasAttributeValue ? attributeValue.hashCode() : 0);
       hash = hash * 31 + (_hasAttributeName ? attributeName.hashCode() : 0);
-      hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
       return hash;
     }
 
@@ -296,9 +235,6 @@ public class DtoServerImpls {
 
       JsonElement attributeNameOut = (attributeName == null) ? JsonNull.INSTANCE : new JsonPrimitive(attributeName);
       result.add("attributeName", attributeNameOut);
-
-      JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
-      result.add("userId", userIdOut);
       result.add("_type", new JsonPrimitive(getType()));
       return result;
     }
@@ -333,12 +269,6 @@ public class DtoServerImpls {
         dto.setAttributeName(attributeNameOut);
       }
 
-      if (json.has("userId")) {
-        JsonElement userIdIn = json.get("userId");
-        java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
-        dto.setUserId(userIdOut);
-      }
-
       return dto;
     }
     public static UpdateUserAttributeImpl fromJsonString(String jsonString) {
@@ -362,8 +292,6 @@ public class DtoServerImpls {
 
     protected java.util.Map<String, java.lang.String> attributes;
     private boolean _hasAttributes;
-    protected java.lang.String userId;
-    private boolean _hasUserId;
 
     public boolean hasAttributes() {
       return _hasAttributes;
@@ -397,21 +325,6 @@ public class DtoServerImpls {
       }
     }
 
-    public boolean hasUserId() {
-      return _hasUserId;
-    }
-
-    @Override
-    public java.lang.String getUserId() {
-      return userId;
-    }
-
-    public UpdateUserAttributesImpl setUserId(java.lang.String v) {
-      _hasUserId = true;
-      userId = v;
-      return this;
-    }
-
     @Override
     public boolean equals(Object o) {
       if (!super.equals(o)) {
@@ -429,14 +342,6 @@ public class DtoServerImpls {
           return false;
         }
       }
-      if (this._hasUserId != other._hasUserId) {
-        return false;
-      }
-      if (this._hasUserId) {
-        if (!this.userId.equals(other.userId)) {
-          return false;
-        }
-      }
       return true;
     }
 
@@ -444,7 +349,6 @@ public class DtoServerImpls {
     public int hashCode() {
       int hash = super.hashCode();
       hash = hash * 31 + (_hasAttributes ? attributes.hashCode() : 0);
-      hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
       return hash;
     }
 
@@ -460,9 +364,6 @@ public class DtoServerImpls {
         attributesOut.add(entry0.getKey(), attributesOut_);
       }
       result.add("attributes", attributesOut);
-
-      JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
-      result.add("userId", userIdOut);
       result.add("_type", new JsonPrimitive(getType()));
       return result;
     }
@@ -498,12 +399,6 @@ public class DtoServerImpls {
           }
         }
         dto.setAttributes(attributesOut);
-      }
-
-      if (json.has("userId")) {
-        JsonElement userIdIn = json.get("userId");
-        java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
-        dto.setUserId(userIdOut);
       }
 
       return dto;

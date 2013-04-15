@@ -28,7 +28,7 @@ public class DtoClientImpls {
 
   private  DtoClientImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "d066778066846c22736706d3ccc1241d5083940d";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "644381d81eb2a0c00d85dd595f3b8d3f64bb9b27";
 
 
   public static class RemoveUserAttributeImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl implements com.codenvy.ide.shared.RemoveUserAttribute {
@@ -46,20 +46,6 @@ public class DtoClientImpls {
 
     public final native boolean hasAttributeName() /*-{
       return this.hasOwnProperty("attributeName");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getUserId() /*-{
-      return this["userId"];
-    }-*/;
-
-    public final native RemoveUserAttributeImpl setUserId(java.lang.String userId) /*-{
-      this["userId"] = userId;
-      return this;
-    }-*/;
-
-    public final native boolean hasUserId() /*-{
-      return this.hasOwnProperty("userId");
     }-*/;
 
     public static native RemoveUserAttributeImpl make() /*-{
@@ -100,20 +86,6 @@ public class DtoClientImpls {
       return this.hasOwnProperty("attributeName");
     }-*/;
 
-    @Override
-    public final native java.lang.String getUserId() /*-{
-      return this["userId"];
-    }-*/;
-
-    public final native UpdateUserAttributeImpl setUserId(java.lang.String userId) /*-{
-      this["userId"] = userId;
-      return this;
-    }-*/;
-
-    public final native boolean hasUserId() /*-{
-      return this.hasOwnProperty("userId");
-    }-*/;
-
     public static native UpdateUserAttributeImpl make() /*-{
       return {
         _type: 2
@@ -136,20 +108,6 @@ public class DtoClientImpls {
 
     public final native boolean hasAttributes() /*-{
       return this.hasOwnProperty("attributes");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getUserId() /*-{
-      return this["userId"];
-    }-*/;
-
-    public final native UpdateUserAttributesImpl setUserId(java.lang.String userId) /*-{
-      this["userId"] = userId;
-      return this;
-    }-*/;
-
-    public final native boolean hasUserId() /*-{
-      return this.hasOwnProperty("userId");
     }-*/;
 
     public static native UpdateUserAttributesImpl make() /*-{

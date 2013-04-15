@@ -30,13 +30,6 @@ import com.codenvy.ide.dtogen.shared.RoutingType;
 public interface RemoveUserAttribute extends ClientToServerDto {
 
     /**
-     * Returns user's id.
-     *
-     * @return user's id
-     */
-    String getUserId();
-
-    /**
      * Returns user's attribute name.
      *
      * @return user's attribute name

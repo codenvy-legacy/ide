@@ -81,7 +81,9 @@ public class UserService {
             DtoServerImpls.UpdateUserAttributeImpl updateUserAttribute =
                     DtoServerImpls.UpdateUserAttributeImpl.fromJsonString(jsonUpdateAttribute);
 
-            User user = userManager.getUserById(updateUserAttribute.getUserId());
+            String userId = ConversationState.getCurrent().getIdentity().getUserId();
+            User user = userManager.getUserByAlias(userId);
+
             user.getProfile().setAttribute(updateUserAttribute.getAttributeName(), updateUserAttribute.getAttributeValue());
         } catch (OrganizationServiceException e) {
             throw new IllegalStateException("Problem with update user's attribute. Please contact support.", e);
@@ -101,7 +103,9 @@ public class UserService {
             DtoServerImpls.RemoveUserAttributeImpl removeUserAttribute =
                     DtoServerImpls.RemoveUserAttributeImpl.fromJsonString(jsonRemoveAttribute);
 
-            User user = userManager.getUserById(removeUserAttribute.getUserId());
+            String userId = ConversationState.getCurrent().getIdentity().getUserId();
+            User user = userManager.getUserByAlias(userId);
+
             user.getProfile().removeAttribute(removeUserAttribute.getAttributeName());
         } catch (OrganizationServiceException e) {
             throw new IllegalStateException("Problem with remove user's attribute. Please contact support.", e);
@@ -121,7 +125,8 @@ public class UserService {
             DtoServerImpls.UpdateUserAttributesImpl updateUserAttributes =
                     DtoServerImpls.UpdateUserAttributesImpl.fromJsonString(jsonUpdateAttributes);
 
-            User user = userManager.getUserById(updateUserAttributes.getUserId());
+            String userId = ConversationState.getCurrent().getIdentity().getUserId();
+            User user = userManager.getUserByAlias(userId);
             final Profile profile = user.getProfile();
 
             updateUserAttributes.getAttributes().iterate(new JsonStringMap.IterationCallback<String>() {

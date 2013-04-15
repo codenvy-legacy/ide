@@ -31,13 +31,6 @@ import com.codenvy.ide.json.JsonStringMap;
 public interface UpdateUserAttributes extends ClientToServerDto {
 
     /**
-     * Returns user's id.
-     *
-     * @return user's id
-     */
-    String getUserId();
-
-    /**
      * Returns user's attributes with new value what need to update.
      *
      * @return user's attributes
