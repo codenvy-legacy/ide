@@ -476,7 +476,9 @@ public class GitService {
     public void deleteRepository(@Context UriInfo uriInfo) throws VirtualFileSystemException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         Item project = getGitProject(vfs, projectId);
-        vfs.delete(project.getId(), null);
+        String path2gitFolder = project.getPath() + "/.git";
+        Item gitItem = vfs.getItemByPath(path2gitFolder, null, PropertyFilter.NONE_FILTER);
+        vfs.delete(gitItem.getId(), null);
         List<Property> properties = project.getProperties();
         List<Property> propertiesNew = new ArrayList<Property>(properties.size() - 1);
         for (Property property : properties) {

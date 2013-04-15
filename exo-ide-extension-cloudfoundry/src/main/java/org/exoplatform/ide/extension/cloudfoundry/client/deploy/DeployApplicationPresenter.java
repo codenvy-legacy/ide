@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.cloudfoundry.client.deploy;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
@@ -147,8 +148,10 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
         });
     }
 
-    /** @see org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler#onProjectBuilt(org.exoplatform.ide.extension.maven
-     * .client.event.ProjectBuiltEvent) */
+    /**
+     * @see org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler#onProjectBuilt(org.exoplatform.ide.extension.maven
+     *      .client.event.ProjectBuiltEvent)
+     */
     @Override
     public void onProjectBuilt(ProjectBuiltEvent event) {
         IDE.removeHandler(event.getAssociatedType(), this);
@@ -258,7 +261,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
      * Performs action when application successfully created.
      *
      * @param app
-     *         @link CloudFoundryApplication} which is created
+     * @link CloudFoundryApplication} which is created
      */
     private void onAppCreatedSuccess(CloudFoundryApplication app) {
         warUrl = null;
@@ -299,9 +302,17 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
 
     /** Get the list of server and put them to select field. */
     private void getServers() {
+        LoggedInHandler loggedInHandler = new LoggedInHandler() {
+            @Override
+            public void onLoggedIn() {
+                getServers();
+            }
+        };
+
         try {
             CloudFoundryClientService.getInstance().getTargets(
-                    new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>())) {
+                    new CloudFoundryAsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>()), loggedInHandler,
+                                                                       null) {
                         @Override
                         protected void onSuccess(List<String> result) {
                             if (result.isEmpty()) {
@@ -355,8 +366,10 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
-     * .application.event.VfsChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     *      .application.event.VfsChangedEvent)
+     */
     @Override
     public void onVfsChanged(VfsChangedEvent event) {
         this.vfs = event.getVfsInfo();
@@ -452,5 +465,55 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
     public boolean validate() {
         return display.getNameField().getValue() != null && !display.getNameField().getValue().isEmpty()
                && display.getUrlField().getValue() != null && !display.getUrlField().getValue().isEmpty();
+    }
+
+    @Override
+    public void deployFirstTime(final String projectName, final ProjectTemplate projectTemplate,
+                                final DeployResultHandler deployResultHandler) {
+
+        this.deployResultHandler = deployResultHandler;
+        this.projectName = projectName + "-" + rand();
+
+        if (display == null) {
+            display = GWT.create(Display.class);
+        }
+        bindDisplay();
+
+        display.getNameField().setValue(projectName);
+
+        try {
+            TemplateService.getInstance().createProjectFromTemplate(vfs.getId(), vfs.getRoot().getId(), projectName,
+                                                                    projectTemplate.getName(),
+                                                                    new AsyncRequestCallback<ProjectModel>(
+                                                                            new ProjectUnmarshaller(new ProjectModel())) {
+
+                                                                        @Override
+                                                                        protected void onSuccess(ProjectModel result) {
+                                                                            getServers();
+                                                                            project = result;
+                                                                            deployResultHandler.onProjectCreated(project);
+                                                                            Scheduler.get()
+                                                                                     .scheduleDeferred(new Scheduler.ScheduledCommand() {
+
+
+                                                                                         @Override
+                                                                                         public void execute() {
+                                                                                             beforeDeploy();
+                                                                                         }
+                                                                                     });
+                                                                        }
+
+                                                                        @Override
+                                                                        protected void onFailure(Throwable exception) {
+                                                                            IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                                        }
+                                                                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    private int rand() {
+        return (int)(Math.floor(Math.random() * 999 - 100) + 100);
     }
 }

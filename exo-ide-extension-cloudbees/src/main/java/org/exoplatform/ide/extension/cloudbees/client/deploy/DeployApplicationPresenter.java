@@ -350,4 +350,74 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, HasP
         return display.getNameField().getValue() != null && !display.getNameField().getValue().isEmpty()
                && display.getUrlField().getValue() != null && !display.getUrlField().getValue().isEmpty();
     }
+
+    @Override
+    public void deployFirstTime(final String projectName, final ProjectTemplate projectTemplate, final DeployResultHandler deployResultHandler) {
+        this.projectName = projectName;
+        this.deployResultHandler = deployResultHandler;
+        if (display == null) {
+            display = GWT.create(Display.class);
+        }
+        bindDisplay();
+
+        display.getNameField().setValue(projectName);
+        name = projectName + "_" + rand();
+
+        try {
+            TemplateService.getInstance().createProjectFromTemplate(vfs.getId(), vfs.getRoot().getId(), projectName,
+                                                                    projectTemplate.getName(),
+                                                                    new AsyncRequestCallback<ProjectModel>(
+                                                                            new ProjectUnmarshaller(new ProjectModel())) {
+
+                                                                        @Override
+                                                                        protected void onSuccess(ProjectModel result) {
+                                                                            project = result;
+                                                                            deployResultHandler.onProjectCreated(project);
+                                                                            getFirstDeployDomains();
+//                                                                            buildApplication();
+                                                                        }
+
+                                                                        @Override
+                                                                        protected void onFailure(Throwable exception) {
+                                                                            IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                                        }
+                                                                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    private void getFirstDeployDomains() {
+        try {
+            CloudBeesClientService.getInstance().getDomains(
+                    new CloudBeesAsyncRequestCallback<List<String>>(new DomainsUnmarshaller(new ArrayList<String>()),
+                                                                    new LoggedInHandler() {
+                                                                        @Override
+                                                                        public void onLoggedIn() {
+                                                                            getFirstDeployDomains();
+                                                                        }
+                                                                    }, new LoginCanceledHandler() {
+                        @Override
+                        public void onLoginCanceled() {
+                            initializeDeployViewHandler.onInitializeDeployViewError();
+                        }
+                    }) {
+                        @Override
+                        protected void onSuccess(List<String> result) {
+                            display.setDomainValues(result.toArray(new String[result.size()]));
+                            domain = display.getDomainsField().getValue();
+                            display.getNameField().setValue(projectName);
+                            name = projectName;
+                            display.getUrlField().setValue(domain + "/" + name);
+                            buildApplication();
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    private int rand() {
+        return (int)(Math.floor(Math.random() * 999 - 100) + 100);
+    }
 }

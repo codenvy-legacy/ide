@@ -217,7 +217,7 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
         String projectId = getSelectedProject().getId();
 
         try {
-            GitClientService.getInstance().reset(vfs.getId(), projectId, new String[0], revision.getId(), type,
+            GitClientService.getInstance().reset(vfs.getId(), projectId, revision.getId(), type,
                                                  new AsyncRequestCallback<String>() {
 
                                                      @Override
