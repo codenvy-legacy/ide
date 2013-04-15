@@ -33,6 +33,10 @@
         <type>org.exoplatform.ide.IDEServiceApplication</type>
     </component>
 
+    <component>
+        <type>com.codenvy.ide.server.IdeUserApplication</type>
+    </component>
+
     <!-- VirtualFileSystem -->
 
     <component>

@@ -77,6 +77,8 @@ import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.toolbar.ToolbarView;
 import com.codenvy.ide.toolbar.ToolbarViewImpl;
+import com.codenvy.ide.user.UserClientService;
+import com.codenvy.ide.user.UserClientServiceImpl;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.rest.RESTMessageBus;
@@ -107,6 +109,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(ExtensionRegistry.class).in(Singleton.class);
         bind(StandardComponentInitializer.class).in(Singleton.class);
         bind(TemplateService.class).to(TemplateServiceImpl.class).in(Singleton.class);
+        bind(UserClientService.class).to(UserClientServiceImpl.class).in(Singleton.class);
 
         apiBindingConfigure();
 
