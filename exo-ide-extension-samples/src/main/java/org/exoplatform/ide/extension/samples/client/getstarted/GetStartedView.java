@@ -47,7 +47,7 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
 
     private static final String TITLE = "Get started";
 
-    private static final int HEIGHT = 380;
+    private static final int HEIGHT = 300;
 
     private static final int WIDTH = 590;
 
@@ -191,6 +191,9 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
                     case RUBY_ON_RAILS:
                         labelForToggleButton = getNewButtonLabel("Ruby on Rails");
                         break;
+                    case MultiModule:
+                        labelForToggleButton = getNewButtonLabel("Maven Multi-Module");
+                        break;    
                     default:
                         labelForToggleButton = getNewButtonLabel(projectType.value());
                 }

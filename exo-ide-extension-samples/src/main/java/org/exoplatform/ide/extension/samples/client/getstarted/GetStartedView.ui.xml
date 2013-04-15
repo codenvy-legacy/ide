@@ -80,14 +80,14 @@
         }
 
         h1 {
-            font-size: 22pt;
+            font-size: 18pt;
             font-weight: bold;
             text-align: left;
         }
 
         .getStarted {
             padding: 5px 35px 40px 30px;
-            height: 330px;
+            height: 250px;
             position: relative;
             font-family: Verdana;
         }
@@ -153,11 +153,13 @@
         .prevButton {
             display: inline;
             width: 110px;
+            height: 25px;
             margin-right: 15px;
         }
 
         .nextButton {
             width: 110px;
+            height: 25px;
         }
 
         .error {
@@ -188,31 +190,26 @@
         <g:HTMLPanel styleName="{style.chooseTechnology}" ui:field="chooseTechnologyPanel">
             <h1>Choose a technology</h1>
             <p>
-                The technology you choose will help us setup your environment.
+                Codenvy provides an IDE, a builder, and a tester on separate nodes.
                 <br/>
-                Thi might include build system a local web server to run your application.
+                 We configure each node by the type of project selected.
             </p>
             <g:Grid ui:field="projectTypesGrid" styleName="{style.toggleButtons}"/>
-            <p>
-                Running the project locally is currently only available for Python and Java but we'll be adding others soon!
-            </p>
         </g:HTMLPanel>
         <!-- end chooseTechnology -->
         <g:HTMLPanel styleName="{style.choosePaaS}" ui:field="choosePaaSPanel">
             <h1>Choose a PaaS</h1>
             <p>
-                You can select a PaaS to deploy your application to a production environment. The PaaS available
-                depend on the technology you choose.
+                Select a PaaS that your application can deploy into.
                 <br/>
-                Your PaaS might also have an impact of your dev environment as we'll setup a local SDK if
-                available.
+                Where possible, we will configure a Codenvy local runtime that will help you debug your apps before you deploy.
             </p>
             <g:Grid ui:field="paasGrid" styleName="{style.toggleButtons}"/>
         </g:HTMLPanel>
         <!-- end choosePaaS -->
         <div class="{style.stepControls}">
-            <g:Button ui:field="prevButton" styleName="{style.prevButton}" height="25px" width="100px" text="Back"></g:Button>
-            <g:Button ui:field="nextButton" styleName="{style.nextButton}" height="25px" width="100px" text="Back"></g:Button>
+            <g:Button ui:field="prevButton" styleName="{style.prevButton}"  text="Back"></g:Button>
+            <g:Button ui:field="nextButton" styleName="{style.nextButton}"  text="Back"></g:Button>
         </div>
     </g:HTMLPanel>
 </ui:UiBinder>
