@@ -21,7 +21,12 @@ import com.codenvy.ide.api.ui.perspective.EditorPartStack;
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
 import com.codenvy.ide.api.ui.perspective.PartStackView;
 import com.codenvy.ide.util.loging.Log;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -42,7 +47,7 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
      * @param eventBus
      */
     @Inject
-    public EditorPartStackPresenter(@Named("editorPartStack")PartStackView view, EventBus eventBus,
+    public EditorPartStackPresenter(@Named("editorPartStack") PartStackView view, EventBus eventBus,
                                     PartStackEventHandler partStackEventHandler) {
         super(eventBus, partStackEventHandler, view, null);
         partsClosable = true;
@@ -81,7 +86,46 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
         if (!(part instanceof EditorPartPresenter)) {
             Log.warn(getClass(), "EditorPartStack is not intended to be used to open non-Editor Parts.");
         }
-        super.setActivePart(part);
+        if (activePart == part) {
+            return;
+        }
+        activePart = part;
+
+
+        AcceptsOneWidget contentPanel = view.getContentPanel();
+
+        if (part == null) {
+            view.setActiveTabButton(-1);
+        } else {
+            view.setActiveTabButton(parts.indexOf(activePart));
+            activePart.go(contentPanel);
+        }
+        // request part stack to get the focus
+        onRequestFocus();
+        // notify handler, that part changed
+        partStackHandler.onActivePartChanged(activePart);
+
     }
+
+    /**
+     * Close Part
+     *
+     * @param part
+     */
+    protected void close(PartPresenter part) {
+        // may cancel close
+        if (part.onClose()) {
+            int partIndex = parts.indexOf(part);
+            view.removeTabButton(partIndex);
+            parts.remove(part);
+            part.removePropertyListener(propertyListener);
+            if (activePart == part) {
+                //select another part
+                setActivePart(parts.isEmpty() ? null : parts.get(parts.size()-1));
+            }
+        }
+    }
+
+
 
 }

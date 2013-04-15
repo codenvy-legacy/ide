@@ -27,6 +27,7 @@ import com.codenvy.ide.wizard.newproject.NewProjectWizardResource;
 import com.codenvy.ide.wizard.newresource.NewResourceWizardResources;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.CssResource.NotStrict;
+import com.google.gwt.resources.client.ImageResource;
 
 
 /**
@@ -52,4 +53,7 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
     @Source({"Core.css", "com/codenvy/ide/common/constants.css","com/codenvy/ide/api/ui/style.css"})
     @NotStrict
     CoreCss coreCss();
+
+    @Source("tree/project_explorer.png")
+    ImageResource projectExplorer();
 }

@@ -45,7 +45,7 @@ public abstract class AbstractPartPresenter implements PartPresenter {
     /** @see com.codenvy.ide.api.ui.perspective.PartPresenter#onClose() */
     @Override
     public boolean onClose() {
-        return false;
+        return true;
     }
 
     /** @see com.codenvy.ide.api.ui.perspective.PartPresenter#onOpen() */

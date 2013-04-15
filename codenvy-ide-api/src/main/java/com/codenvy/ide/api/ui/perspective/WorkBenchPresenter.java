@@ -105,11 +105,11 @@ public class WorkBenchPresenter implements Presenter {
         partStacks.put(PartStackType.TOOLING.toString(), toolingPartStack);
 
         openPart(welcomePart, PartStackType.EDITING);
-        openPart(projectExplorerPart, PartStackType.NAVIGATION);
         openPart(outlinePart, PartStackType.TOOLING);
+        openPart(projectExplorerPart, PartStackType.NAVIGATION);
         openPart(consolePart, PartStackType.INFORMATION);
         openPart(searchPart, PartStackType.INFORMATION);
-
+        setActivePart(projectExplorerPart);
     }
 
     /**

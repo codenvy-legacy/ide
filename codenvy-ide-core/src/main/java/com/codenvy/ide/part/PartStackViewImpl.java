@@ -51,14 +51,14 @@ import static com.codenvy.ide.api.ui.perspective.PartStackView.TabPosition.RIGHT
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class PartStackViewImpl extends Composite implements PartStackView, RequiresResize {
+public class PartStackViewImpl extends Composite implements PartStackView {
     private final PartStackUIResources resources;
     // DOM Handler
     private final FocusRequestDOMHandler focusRequstHandler = new FocusRequestDOMHandler();
     // list of tabs
     private final JsonArray<TabButton>   tabs               = JsonCollections.createArray();
-    private InsertPanel tabsPanel;
-    private SimplePanel contentPanel;
+    private InsertPanel         tabsPanel;
+    private SimplePanel         contentPanel;
     private ActionDelegate      delegate;
     private TabButton           activeTab;
     private boolean             focused;
@@ -181,17 +181,13 @@ public class PartStackViewImpl extends Composite implements PartStackView, Requi
         tabButton.setTitle(toolTip);
     }
 
-    @Override
-    public void onResize() {
-        Log.debug(getClass(), "on resize");
-    }
-
     /** Special button for tab title. */
     private class TabButton extends Composite implements PartStackView.TabItem {
 
         private Image       image;
         private FlowPanel   tabItem;
         private InlineLabel tabItemTittle;
+        private Image icon;
 
         /**
          * Create button.
@@ -202,6 +198,7 @@ public class PartStackViewImpl extends Composite implements PartStackView, Requi
          * @param closable
          */
         public TabButton(Image icon, String title, String toolTip, boolean closable) {
+            this.icon = icon;
             tabItem = new FlowPanel();
             tabItem.setTitle(toolTip);
             initWidget(tabItem);
@@ -246,19 +243,38 @@ public class PartStackViewImpl extends Composite implements PartStackView, Requi
 
             int offsetWidth = getElement().getOffsetWidth();
             if (tabPosition == RIGHT) {
-//                getElement().getStyle().setHeight(16, Style.Unit.PX);
-                getElement().getStyle().setWidth(offsetWidth, Style.Unit.PX);
+                int padding;
+                if (icon != null) {
+                    getElement().getStyle().setWidth(offsetWidth + 16, Style.Unit.PX);
+                    padding = 0;
+                } else {
+                    padding = 16;
+                    getElement().getStyle().setWidth(offsetWidth, Style.Unit.PX);
+                }
+
                 getElement().getStyle().setTop(top, Style.Unit.PX);
-                top += offsetWidth - 14;
+
+                top += offsetWidth - padding;
                 tabItem.addStyleName(resources.partStackCss().idePartStackTabRight());
             } else if (tabPosition == LEFT) {
-//                getElement().getStyle().setHeight(16, Style.Unit.PX);
+                int topPadding;
+                if (icon != null) {
+                    getElement().getStyle().setWidth(offsetWidth + 15, Style.Unit.PX);
+                    topPadding = 6;
+                } else {
+                    topPadding = 16;
+                }
                 if (first) {
-                    top += offsetWidth - 15;
+                    if (icon != null) {
+                        top += offsetWidth + 2;
+                    } else {
+                        top += offsetWidth - 15;
+                    }
                     first = false;
                 } else {
-                    top += offsetWidth - 16;
+                    top += offsetWidth - topPadding;
                 }
+
                 tabItem.addStyleName(resources.partStackCss().idePartStackTabLeft());
 //                tabItem.getElement().getStyle().setWidth(offsetWidth, Style.Unit.PX);
                 tabItem.getElement().getStyle().setTop(top, Style.Unit.PX);

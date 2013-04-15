@@ -35,7 +35,7 @@ public class WorkBenchViewImpl extends Composite implements WorkBenchView<WorkBe
     }
 
     @UiField(provided = true)
-    SplitLayoutPanel splitPanel = new SplitLayoutPanel(8);
+    SplitLayoutPanel splitPanel = new SplitLayoutPanel(6);
 
     @UiField
     SimplePanel editorPanel;

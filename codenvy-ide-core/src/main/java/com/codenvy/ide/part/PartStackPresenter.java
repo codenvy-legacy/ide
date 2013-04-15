@@ -54,16 +54,11 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
 
     private static final double                   DEFAULT_SIZE = 200;
     /** list of parts */
-    protected final        JsonArray<PartPresenter> parts        = JsonCollections.createArray();
+    protected final      JsonArray<PartPresenter> parts        = JsonCollections.createArray();
     /** view implementation */
     protected final PartStackView view;
-    private final EventBus      eventBus;
-    protected boolean partsClosable = false;
-    /** current active part */
-    private PartPresenter           activePart;
-    private PartStackEventHandler   partStackHandler;
-    private WorkBenchPartController workBenchPartController;
-    private JsonArray<Double> partsSize = JsonCollections.createArray();
+    private final   EventBus      eventBus;
+    protected boolean          partsClosable    = false;
     protected PropertyListener propertyListener = new PropertyListener() {
 
         @Override
@@ -75,6 +70,11 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             }
         }
     };
+    /** current active part */
+    protected PartPresenter           activePart;
+    protected PartStackEventHandler   partStackHandler;
+    private   WorkBenchPartController workBenchPartController;
+    private JsonArray<Double> partsSize = JsonCollections.createArray();
 
     /** Creates PartStack with given instance of display and resources (CSS and Images) */
     @Inject
@@ -128,6 +128,8 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         }
         parts.add(part);
         partsSize.add(DEFAULT_SIZE);
+        if (workBenchPartController != null)
+            workBenchPartController.setSize(DEFAULT_SIZE);
         part.addPropertyListener(propertyListener);
         // include close button
         ImageResource titleImage = part.getTitleImage();
@@ -162,7 +164,15 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
     @Override
     public void setActivePart(PartPresenter part) {
         if (activePart == part) {
+            partsSize.set(parts.indexOf(part), workBenchPartController.getSize());
+            workBenchPartController.setHidden(true);
+            activePart = null;
+            view.setActiveTabButton(-1);
             return;
+        }
+
+        if (activePart != null) {
+            partsSize.set(parts.indexOf(activePart), workBenchPartController.getSize());
         }
         activePart = part;
         AcceptsOneWidget contentPanel = view.getContentPanel();
@@ -172,13 +182,16 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         } else {
             view.setActiveTabButton(parts.indexOf(activePart));
             activePart.go(contentPanel);
-            if (workBenchPartController != null)
-                workBenchPartController.setSize(DEFAULT_SIZE);
         }
         // request part stack to get the focus
         onRequestFocus();
         // notify handler, that part changed
         partStackHandler.onActivePartChanged(activePart);
+
+        if (activePart != null) {
+            workBenchPartController.setHidden(false);
+            workBenchPartController.setSize(partsSize.get(parts.indexOf(activePart)));
+        }
     }
 
     /**
@@ -196,7 +209,8 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             part.removePropertyListener(propertyListener);
             if (activePart == part) {
                 //select another part
-                setActivePart(parts.isEmpty() ? null : parts.get(0));
+//                setActivePart(parts.isEmpty() ? null : parts.get(0));
+                setActivePart(null);
             }
         }
     }
@@ -212,18 +226,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             @Override
             public void onClick(ClickEvent event) {
                 // make active
-                if(part == activePart)
-                {
-
-                  partsSize.set(parts.indexOf(part), workBenchPartController.getSize());
-                  workBenchPartController.setHidden(true);
-                  setActivePart(null);
-                }else
-                {
-                  workBenchPartController.setHidden(false);
-                  setActivePart(part);
-                  workBenchPartController.setSize(partsSize.get(parts.indexOf(part)));
-                }
+                setActivePart(part);
             }
         });
 

@@ -16,6 +16,7 @@
  */
 package com.codenvy.ide.part.projectexplorer;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
@@ -44,6 +45,7 @@ public class ProjectExplorerPartPresenter extends AbstractPartPresenter implemen
     protected ProjectExplorerView view;
 
     protected EventBus eventBus;
+    private Resources resources;
 
     /**
      * Instantiates the ProjectExplorer Presenter
@@ -52,9 +54,10 @@ public class ProjectExplorerPartPresenter extends AbstractPartPresenter implemen
      * @param eventBus
      */
     @Inject
-    public ProjectExplorerPartPresenter(ProjectExplorerView view, EventBus eventBus) {
+    public ProjectExplorerPartPresenter(ProjectExplorerView view, EventBus eventBus, Resources resources) {
         this.view = view;
         this.eventBus = eventBus;
+        this.resources = resources;
         view.setTitle("Project");
         bind();
     }
@@ -126,7 +129,7 @@ public class ProjectExplorerPartPresenter extends AbstractPartPresenter implemen
     /** {@inheritDoc} */
     @Override
     public ImageResource getTitleImage() {
-        return null;
+        return resources.projectExplorer();
     }
 
     /** {@inheritDoc} */
