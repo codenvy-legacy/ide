@@ -257,19 +257,6 @@
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-editor-chromattic</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-editor-gtmpl</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-
-
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-ruby</artifactId>
             <version>${project.version}</version>
          </dependency>

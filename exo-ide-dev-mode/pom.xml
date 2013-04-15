@@ -62,22 +62,6 @@
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor-groovy</artifactId>
-      </dependency>
-      
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor-gtmpl</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor-chromattic</artifactId>
-      </dependency>
-
-
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-jsp</artifactId>
       </dependency>
 
