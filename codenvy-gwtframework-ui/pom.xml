@@ -21,11 +21,6 @@
     <artifactId>codenvy-gwtframework-ui</artifactId>
     <packaging>jar</packaging>
     <name>eXo GWT Framework :: UI</name>
-    <properties>
-        <!-- Repositories URLs -->
-        <exo.snapshots.repo.url>http://repository.exoplatform.org/content/repositories/exo-private-snapshots</exo.snapshots.repo.url>
-    </properties>
-
     <dependencies>
 
         <dependency>

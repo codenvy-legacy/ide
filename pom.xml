@@ -85,6 +85,12 @@
          <version>${com.codenvy.organization.version}</version>
       </dependency>
       <dependency>
+         <groupId>com.codenvy.organization</groupId>
+         <artifactId>codenvy-organization-packaging-api-war</artifactId>
+         <type>war</type>
+         <version>${com.codenvy.organization.version}</version>
+      </dependency>
+      <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>codenvy-ide-collaboration</artifactId>
          <version>${project.version}</version>

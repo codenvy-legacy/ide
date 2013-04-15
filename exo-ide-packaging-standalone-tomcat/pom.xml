@@ -72,7 +72,6 @@
             <groupId>com.codenvy.organization</groupId>
             <artifactId>codenvy-organization-packaging-api-war</artifactId>
             <type>war</type>
-            <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -761,7 +760,7 @@
                                       tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-gadget-server-${project.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/gadget-server.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-0.1-SNAPSHOT.war"
+                                <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true"/>
                                 <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"
                                        dest="${project.build.directory}/tomcat-ide"/>
