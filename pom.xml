@@ -752,9 +752,6 @@
       <module>exo-ide-editor-css</module>
       <module>exo-ide-editor-html</module>
       <module>exo-ide-editor-gadget</module>
-      <!--module>exo-ide-editor-groovy</module-->
-      <!--module>exo-ide-editor-gtmpl</module-->
-      <!--module>exo-ide-editor-chromattic</module-->
       <module>exo-ide-editor-java</module>
       <module>exo-ide-editor-jsp</module>
       <module>exo-ide-editor-ruby</module>
@@ -765,13 +762,10 @@
 
       <module>exo-ide-jdt-core</module>
 
-      <!--module>exo-ide-extension-gadget-gatein</module-->
       <module>exo-ide-extension-gadget</module>
-      <!--module>exo-ide-extension-groovy</module-->
       <module>exo-ide-extension-java</module>
       <module>exo-ide-extension-java-runtime</module>
       <module>exo-ide-extension-python-runtime</module>
-      <!--module>exo-ide-extension-chromattic</module-->
       <module>exo-ide-extension-git</module>
       <module>exo-ide-extension-ssh</module>
       <module>exo-ide-extension-heroku</module>
