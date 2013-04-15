@@ -141,7 +141,7 @@ public class PackageExplorerItemTree extends org.exoplatform.gwtframework.ui.cli
             if (tree.getItemCount() == 1) {
                 PackageExplorerTreeItem packageExplorerTreeItem = (JavaProjectTreeItem)tree.getItem(0);
 
-                packageExplorerTreeItem.refresh(false);
+                packageExplorerTreeItem.refresh(true);
                 updateHighlighter();
             }
         } catch (Exception e)

@@ -111,16 +111,14 @@ public class ProjectPaaSControl extends SimpleControl implements IDEControl,
 
         List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());
 
-        return project.getPropertyValue("cloudbees-application") != null
-               || project.getPropertyValue("heroku-application") != null
-               || project.getPropertyValue("openshift-express-application") != null
-               || project.getPropertyValue("cloudfoundry-application") != null
-               || project.getPropertyValue("appfog-application") != null
-         /* TODO || ProjectType.GAE_JAVA.value().equals(project.getProjectType())
-        || ProjectType.GAE_PYTHON.value().equals(project.getProjectType())*/
-         || ProjectResolver.APP_ENGINE_JAVA.equals(project.getProjectType())
-         || ProjectResolver.APP_ENGINE_PYTHON.equals(project.getProjectType())
-         || (targets != null && targets.contains("GAE"));
+        return (project.getProperty("cloudbees-application") != null  &&  !project.getPropertyValues("cloudbees-application").isEmpty())
+               || (project.getProperty("heroku-application") != null &&  !project.getPropertyValues("heroku-application").isEmpty())
+               || (project.getProperty("openshift-express-application") != null  &&  !project.getPropertyValues("openshift-express-application").isEmpty())
+               || (project.getProperty("cloudfoundry-application") != null &&  !project.getPropertyValues("cloudfoundry-application").isEmpty())
+               || (project.getProperty("appfog-application") != null &&  !project.getPropertyValues("appfog-application").isEmpty())
+               || ProjectResolver.APP_ENGINE_JAVA.equals(project.getProjectType())
+               || ProjectResolver.APP_ENGINE_PYTHON.equals(project.getProjectType())
+               || (targets != null && targets.contains("GAE"));
     }
 
     /** @see org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler#onFolderRefreshed(org.exoplatform.ide.client
