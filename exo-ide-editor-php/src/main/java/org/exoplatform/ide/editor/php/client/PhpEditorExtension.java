@@ -33,12 +33,7 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.client.api.Editor;
-import org.exoplatform.ide.editor.codemirror.CodeMirror;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
-import org.exoplatform.ide.editor.php.client.codeassistant.PhpCodeAssistant;
-import org.exoplatform.ide.editor.php.client.codemirror.PhpAutocompleteHelper;
 import org.exoplatform.ide.editor.php.client.codemirror.PhpOutlineItemCreator;
-import org.exoplatform.ide.editor.php.client.codemirror.PhpParser;
 
 /**
  * Provides a text editing area along with UI for executing text commands on the.<br>
@@ -74,19 +69,7 @@ public class PhpEditorExtension extends Extension implements InitializeServicesH
                 new EditorCreator() {
                     @Override
                     public Editor createEditor() {
-                        return new CodeMirror(MimeType.APPLICATION_PHP, new CodeMirrorConfiguration()
-                                .setGenericParsers(
-                                        "['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizephp.js', " +
-                                        "'parsephp.js', 'parsephphtmlmixed.js']")
-                                .setGenericStyles(
-                                        "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH +
-                                        "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '" +
-                                        CodeMirrorConfiguration.PATH + "css/phpcolors.css']")
-                                .setParser(new PhpParser())
-                                .setCanBeOutlined(true)
-                                .setAutocompleteHelper(new PhpAutocompleteHelper())
-                                .setCodeAssistant(new PhpCodeAssistant())
-                                .setCanHaveSeveralMimeTypes(true));
+                        return new PhpEditor(MimeType.APPLICATION_PHP);
                     }
                 });
 
@@ -95,19 +78,7 @@ public class PhpEditorExtension extends Extension implements InitializeServicesH
                 new EditorCreator() {
                     @Override
                     public Editor createEditor() {
-                        return new CodeMirror(MimeType.APPLICATION_X_PHP, new CodeMirrorConfiguration()
-                                .setGenericParsers(
-                                        "['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizephp.js', " +
-                                        "'parsephp.js', 'parsephphtmlmixed.js']")
-                                .setGenericStyles(
-                                        "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH +
-                                        "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '" +
-                                        CodeMirrorConfiguration.PATH + "css/phpcolors.css']")
-                                .setParser(new PhpParser())
-                                .setCanBeOutlined(true)
-                                .setAutocompleteHelper(new PhpAutocompleteHelper())
-                                .setCodeAssistant(new PhpCodeAssistant())
-                                .setCanHaveSeveralMimeTypes(true));
+                        return new PhpEditor(MimeType.APPLICATION_X_PHP);
                     }
                 });
 
@@ -116,51 +87,9 @@ public class PhpEditorExtension extends Extension implements InitializeServicesH
                 new EditorCreator() {
                     @Override
                     public Editor createEditor() {
-                        return new CodeMirror(MimeType.APPLICATION_X_HTTPD_PHP, new CodeMirrorConfiguration()
-                                .setGenericParsers(
-                                        "['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizephp.js', " +
-                                        "'parsephp.js', 'parsephphtmlmixed.js']")
-                                .setGenericStyles(
-                                        "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH +
-                                        "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '" +
-                                        CodeMirrorConfiguration.PATH + "css/phpcolors.css']")
-                                .setParser(new PhpParser())
-                                .setCanBeOutlined(true)
-                                .setAutocompleteHelper(new PhpAutocompleteHelper())
-                                .setCodeAssistant(new PhpCodeAssistant())
-                                .setCanHaveSeveralMimeTypes(true));
+                        return new PhpEditor(MimeType.APPLICATION_X_HTTPD_PHP);
                     }
                 });
-
-
-//      CodeMirrorConfiguration phpCodeMirrorConfiguration =
-//         new CodeMirrorConfiguration()
-//            .setGenericParsers(
-//               "['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizephp.js', 'parsephp.js',
-// 'parsephphtmlmixed.js']")
-//            .setGenericStyles(
-//               "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH
-//                  + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '"
-//                  + CodeMirrorConfiguration.PATH + "css/phpcolors.css']").setParser(new PhpParser())
-//            .setCanBeOutlined(true).setAutocompleteHelper(new PhpAutocompleteHelper())
-//            .setCodeAssistant(new PhpCodeAssistant()).setCanHaveSeveralMimeTypes(true);
-//
-//      IDE.getInstance().addEditor(new CodeMirror(MimeType.APPLICATION_PHP, "CodeMirror PHP editor", "php", phpCodeMirrorConfiguration));
-//      IDE.getInstance().addEditor(new CodeMirror(MimeType.APPLICATION_X_PHP, "CodeMirror PHP editor", "php", phpCodeMirrorConfiguration));
-//      IDE.getInstance().addEditor(new CodeMirror(MimeType.APPLICATION_X_HTTPD_PHP, "CodeMirror PHP editor", "php",
-// phpCodeMirrorConfiguration));
-
-//      IDE.getInstance().addEditor(
-//         new CodeMirrorProducer(MimeType.APPLICATION_PHP, "CodeMirror PHP editor", "php", Images.INSTANCE.php(), true,
-//            phpCodeMirrorConfiguration));
-//
-//      IDE.getInstance().addEditor(
-//         new CodeMirrorProducer(MimeType.APPLICATION_X_PHP, "CodeMirror PHP editor", "php", Images.INSTANCE.php(),
-//            true, phpCodeMirrorConfiguration));
-//
-//      IDE.getInstance().addEditor(
-//         new CodeMirrorProducer(MimeType.APPLICATION_X_HTTPD_PHP, "CodeMirror PHP editor", "php",
-//            Images.INSTANCE.php(), true, phpCodeMirrorConfiguration));
 
         PhpOutlineItemCreator phpOutlineItemCreator = new PhpOutlineItemCreator();
         IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_PHP, phpOutlineItemCreator);

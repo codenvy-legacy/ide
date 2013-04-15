@@ -20,6 +20,7 @@ package org.exoplatform.ide.editor.javascript.client;
 
 import com.google.collide.client.CollabEditor;
 
+import org.exoplatform.ide.editor.client.api.EditorCapability;
 import org.exoplatform.ide.editor.javascript.client.codemirror.JavaScriptAutocompleter;
 import org.exoplatform.ide.editor.javascript.client.contentassist.JavaScriptContentAssistProcessor;
 import org.exoplatform.ide.editor.shared.text.IDocument;
@@ -42,5 +43,14 @@ public class JavaScriptEditor extends CollabEditor {
         editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(new JavaScriptAutocompleter());
         editorBundle.getAutocompleter().addContentAssitProcessor(IDocument.DEFAULT_CONTENT_TYPE,
                                                                  new JavaScriptContentAssistProcessor());
+    }
+
+    /** @see com.google.collide.client.CollabEditor#isCapable(org.exoplatform.ide.editor.client.api.EditorCapability) */
+    @Override
+    public boolean isCapable(EditorCapability capability) {
+        if (capability == EditorCapability.OUTLINE) {
+            return false;
+        }
+        return super.isCapable(capability);
     }
 }

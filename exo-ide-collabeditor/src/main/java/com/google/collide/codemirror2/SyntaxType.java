@@ -163,6 +163,8 @@ public enum SyntaxType {
         tmp.put(MimeType.APPLICATION_X_JAVASCRIPT, SyntaxType.JS);
         tmp.put(MimeType.TEXT_JAVASCRIPT, SyntaxType.JS);
         tmp.put(MimeType.APPLICATION_PHP, SyntaxType.PHP);
+        tmp.put(MimeType.APPLICATION_X_PHP, SyntaxType.PHP);
+        tmp.put(MimeType.APPLICATION_X_HTTPD_PHP, SyntaxType.PHP);
         tmp.put(MimeType.TEXT_X_PYTHON, SyntaxType.PY);
         tmp.put(MimeType.TEXT_XML, SyntaxType.XML);
         tmp.put(MimeType.TEXT_YAML, SyntaxType.YAML);
