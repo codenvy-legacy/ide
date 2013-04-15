@@ -29,7 +29,7 @@ import com.google.gwt.user.client.Timer;
 import org.eclipse.jdt.client.create.CreateJavaClassPresenter;
 import org.eclipse.jdt.client.event.PackageCreatedEvent;
 import org.eclipse.jdt.client.event.PackageCreatedHandler;
-import org.eclipse.jdt.client.packaging.model.next.JavaProject;
+import org.eclipse.jdt.client.packaging.model.JavaProject;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;

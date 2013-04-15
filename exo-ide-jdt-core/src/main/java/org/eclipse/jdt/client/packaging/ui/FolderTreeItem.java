@@ -20,8 +20,8 @@ package org.eclipse.jdt.client.packaging.ui;
 
 import com.google.gwt.resources.client.ImageResource;
 
-import org.eclipse.jdt.client.packaging.model.next.JavaProject;
-import org.eclipse.jdt.client.packaging.model.next.SourceDirectory;
+import org.eclipse.jdt.client.packaging.model.JavaProject;
+import org.eclipse.jdt.client.packaging.model.SourceDirectory;
 import org.exoplatform.ide.client.framework.navigation.DirectoryFilter;
 import org.exoplatform.ide.client.framework.util.ImageUtil;
 import org.exoplatform.ide.vfs.client.model.FileModel;
