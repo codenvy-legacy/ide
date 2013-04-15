@@ -143,7 +143,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
         this.vfs = event.getVfsInfo();
     }
 
-    private void getApplicationTypes() {
+    private void getApplicationTypes(final boolean getStartedWizard) {
         try {
             OpenShiftClientService.getInstance()
                   .getApplicationTypes(
@@ -152,7 +152,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                                            new LoggedInHandler() {
                                                @Override
                                                public void onLoggedIn(LoggedInEvent event) {
-                                                   getApplicationTypes();
+                                                   getApplicationTypes(getStartedWizard);
                                                }
                                            }, new LoginCanceledHandler() {
 
@@ -164,6 +164,10 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                                            @Override
                                            protected void onSuccess(List<String> result) {
                                                fillTypeField(projectType, result);
+
+                                               if (getStartedWizard) {
+                                                   getUserInfo();
+                                               }
                                            }
                                        });
         } catch (RequestException e) {
@@ -484,7 +488,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
         }
         bindDisplay();
         display.getApplicationNameField().setValue(projectName);
-        getApplicationTypes();
+        getApplicationTypes(false);
         return display.getView();
     }
 
@@ -545,5 +549,20 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                 // ignore this exception
             }
         }
+    }
+
+    @Override
+    public void deployFirstTime(String projectName, ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler) {
+        this.deployResultHandler = deployResultHandler;
+        this.projectName = projectName;
+        this.projectType = ProjectType.fromValue(projectTemplate.getType());
+
+        if (display == null) {
+            display = GWT.create(Display.class);
+        }
+        bindDisplay();
+        display.getApplicationNameField().setValue(projectName);
+        deployResultHandler.onDeployFinished(true);
+        getApplicationTypes(true);
     }
 }

@@ -269,14 +269,12 @@ public abstract class GitClientService {
      * 
      * @param vfsId virtual file system id
      * @param projectid project's id (root of GIT repository)
-     * @param paths paths to reset
      * @param commit commit to which current head should be reset
      * @param resetType type of the reset
      * @param callback callback
      */
     public abstract void reset(String vfsId,
                                String projectid,
-                               String[] paths,
                                String commit,
                                ResetRequest.ResetType resetType,
                                AsyncRequestCallback<String> callback) throws RequestException;

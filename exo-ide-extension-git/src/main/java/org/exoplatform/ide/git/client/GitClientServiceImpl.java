@@ -527,14 +527,13 @@ public class GitClientServiceImpl extends GitClientService {
      *      org.exoplatform.ide.git.shared.ResetRequest.ResetType, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
      */
     @Override
-    public void reset(String vfsId, String projectid, String[] paths, String commit, ResetType resetType,
+    public void reset(String vfsId, String projectid, String commit, ResetType resetType,
                       AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + RESET;
 
         ResetRequest resetRequest = new ResetRequest();
         resetRequest.setCommit(commit);
         resetRequest.setType(resetType);
-        resetRequest.setPaths(paths);
 
         ResetRequestMarshaller marshaller = new ResetRequestMarshaller(resetRequest);
 

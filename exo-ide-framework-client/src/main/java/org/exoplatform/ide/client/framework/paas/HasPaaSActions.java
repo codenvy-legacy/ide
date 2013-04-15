@@ -36,4 +36,6 @@ public interface HasPaaSActions {
     Composite getDeployView(String projectName, ProjectType projectType, InitializeDeployViewHandler initializeDeployViewHandler);
 
     boolean validate();
+
+    void deployFirstTime(String projectName, ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler);
 }

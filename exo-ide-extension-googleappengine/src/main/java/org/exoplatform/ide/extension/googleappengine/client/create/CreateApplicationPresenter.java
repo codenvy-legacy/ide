@@ -245,7 +245,7 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
                                 new OAuthLoginView();
                             } else {
                                 if (ProjectResolver.APP_ENGINE_JAVA.equals(currentProject.getProjectType()))
-                                  checkIfAppengineWebXmlExist();
+                                    checkIfAppengineWebXmlExist();
                                 else
                                 {
                                     bindDisplay();

@@ -1,0 +1,215 @@
+<!--
+
+    Copyright (C) 2012 eXo Platform SAS.
+
+    This is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation; either version 2.1 of
+    the License, or (at your option) any later version.
+
+    This software is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this software; if not, write to the Free
+    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+    02110-1301 USA, or see the FSF site: http://www.fsf.org.
+
+-->
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+
+    <ui:with field='resource' type='org.exoplatform.ide.extension.samples.client.SamplesClientBundle'/>
+    <ui:with field="locale" type="org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant"></ui:with>
+
+    <ui:style>
+        @external gwt-ToggleButton-up, gwt-ToggleButton-up-hovering, gwt-ToggleButton-up-disabled, gwt-ToggleButton-down, gwt-ToggleButton-down-hovering, gwt-ToggleButton-down-disabled, gwt-ToggleButton-down, gwt-ToggleButton-down-hovering, gwt-ToggleButton-down-disabled;
+
+        .gwt-ToggleButton-up {
+            border: 1px solid #BCBCBC;
+            cursor: pointer;
+            cursor: hand;
+        }
+
+        .gwt-ToggleButton-up-hovering {
+            border: 1px solid;
+            border-color: #B6CCE8;
+            cursor: pointer;
+            cursor: hand;
+        }
+
+        .gwt-ToggleButton-up-disabled {
+            border: 1px solid #ccc;
+            cursor: default;
+            opacity: .5;
+            zoom: 1;
+            opacity: 0.4;
+        }
+
+        .gwt-ToggleButton-down,
+        .gwt-ToggleButton-down-hovering,
+        .gwt-ToggleButton-down-disabled {
+            padding: 4px 4px 2px 6px;
+        }
+
+        .gwt-ToggleButton-down {
+            background-position: 0 -513px;
+            border: 1px solid #bcbcbc;
+            cursor: pointer;
+            cursor: hand;
+        }
+
+        .gwt-ToggleButton-down-hovering {
+            background-position: 0 -513px;
+            border: 1px solid;
+            border-color: #B6CCE8;
+            cursor: pointer;
+            cursor: hand;
+        }
+
+        .gwt-ToggleButton-down-disabled {
+            background-position: 0 -513px;
+            border: 1px solid #ccc;
+            cursor: default;
+            opacity: .5;
+            zoom: 1;
+            opacity: 0.4;
+        }
+
+        h1 {
+            font-size: 18pt;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .getStarted {
+            padding: 5px 35px 40px 30px;
+            height: 250px;
+            position: relative;
+            font-family: Verdana;
+        }
+
+        .getStarted a, .paginator {
+            color: black;
+        }
+
+        p {
+            line-height: 1.9;
+            font-size: 10pt;
+        }
+
+            /*--------------------------*/
+        .chooseName {
+
+        }
+
+        .chooseTechnology {
+
+        }
+
+        .choosePaaS {
+
+        }
+
+            /*--------------------------*/
+        .projectNameInput {
+            width: 100%;
+            padding: 3px;
+        }
+
+        .toggleButtons {
+            height: 80px;
+        }
+
+            /*---------------------------*/
+        .skipButton {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+        }
+
+        .skipButton:hover {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .paginator {
+            position: absolute;
+            bottom: 23px;
+            right: 20px;
+        }
+
+        .stepControls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            left: 20px;
+            text-align: center;
+        }
+
+        .prevButton {
+            display: inline;
+            width: 110px;
+            height: 25px;
+            margin-right: 15px;
+        }
+
+        .nextButton {
+            width: 110px;
+            height: 25px;
+        }
+
+        .error {
+            color: red;
+        }
+    </ui:style>
+
+    <g:HTMLPanel styleName="{style.getStarted}">
+        <div class="{style.skipButton}">
+            <g:Anchor ui:field="skipAnchor" text="Skip >"></g:Anchor>
+        </div>
+        <div class="{style.paginator}">
+            <g:Label ui:field="currentStepNumber" text="1/3"></g:Label>
+        </div>
+        <g:HTMLPanel styleName="{style.chooseName}" ui:field="chooseNamePanel">
+            <h1>Welcome to Codenvy!</h1>
+            <p>
+                We let you code, build and test in the cloud.
+                <br/>
+                We'll help you get started with your first project.
+                <br/>
+                Start by choosing a project name:
+            </p>
+            <f:TextInput ui:field="projectName" styleName="{style.projectNameInput}" text="myproject"></f:TextInput>
+            <f:Label text="Project name must contain alphabetical chars only." styleName="{style.error}" ui:field="errorLabel"></f:Label>
+        </g:HTMLPanel>
+        <!-- end chooseName -->
+        <g:HTMLPanel styleName="{style.chooseTechnology}" ui:field="chooseTechnologyPanel">
+            <h1>Choose a technology</h1>
+            <p>
+                Codenvy provides an IDE, a builder, and a tester on separate nodes.
+                <br/>
+                 We configure each node by the type of project selected.
+            </p>
+            <g:Grid ui:field="projectTypesGrid" styleName="{style.toggleButtons}"/>
+        </g:HTMLPanel>
+        <!-- end chooseTechnology -->
+        <g:HTMLPanel styleName="{style.choosePaaS}" ui:field="choosePaaSPanel">
+            <h1>Choose a PaaS</h1>
+            <p>
+                Select a PaaS that your application can deploy into.
+                <br/>
+                Where possible, we will configure a Codenvy local runtime that will help you debug your apps before you deploy.
+            </p>
+            <g:Grid ui:field="paasGrid" styleName="{style.toggleButtons}"/>
+        </g:HTMLPanel>
+        <!-- end choosePaaS -->
+        <div class="{style.stepControls}">
+            <g:Button ui:field="prevButton" styleName="{style.prevButton}"  text="Back"></g:Button>
+            <g:Button ui:field="nextButton" styleName="{style.nextButton}"  text="Back"></g:Button>
+        </div>
+    </g:HTMLPanel>
+</ui:UiBinder>
