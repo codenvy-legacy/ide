@@ -240,7 +240,7 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
                 paaSToggleButton.setSize("36px", "36px");
                 paaSToggleButton.getElement().getStyle().setPropertyPx("borderRadius", 5);
                 paaSToggleButton.getElement().getStyle().setPropertyPx("outline", 0);
-                paaSToggleButton.getElement().setId("CREATE-PROJECT-" + paaS);
+                paaSToggleButton.getElement().setId("CREATE-PROJECT-" + paaS.getId());
                 paaSToggleButton.setPaaS(paaS);
                 paaSToggleButtonList.add(paaSToggleButton);
 
