@@ -38,8 +38,7 @@ public interface PartStack extends Presenter {
     public void setFocus(boolean focused);
 
     /**
-     * Add part to the PartStack. Newly added part will be activated. If the Part
-     * has already been added to this PartStack, then it will be activated only.
+     * Add part to the PartStack. To immediately show part, you mast call <code>setActivePart()</code>.
      *
      * @param part
      */
@@ -74,5 +73,17 @@ public interface PartStack extends Presenter {
      * @param part
      */
     public void setActivePart(PartPresenter part);
+
+    /**
+     * Hide given part (remove from the screen). If part not active part that method has no effect.
+     * @param part
+     */
+    public void hidePart(PartPresenter part);
+
+    /**
+     * Remove given part from PartStack.
+     * @param part
+     */
+    public void removePart(PartPresenter part);
 
 }

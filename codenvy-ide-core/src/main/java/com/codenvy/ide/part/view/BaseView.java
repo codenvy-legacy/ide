@@ -20,15 +20,16 @@ package com.codenvy.ide.part.view;
 
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.part.PartStackUIResources;
+import com.github.gwtbootstrap.client.ui.Button;
+import com.github.gwtbootstrap.client.ui.DropdownButton;
+import com.github.gwtbootstrap.client.ui.NavLink;
+import com.github.gwtbootstrap.client.ui.constants.ButtonType;
+import com.github.gwtbootstrap.client.ui.constants.IconType;
+import com.github.gwtbootstrap.client.ui.resources.ButtonSize;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.MenuBar;
-import com.google.gwt.user.client.ui.MenuItem;
-import com.google.gwt.user.client.ui.PushButton;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
@@ -38,6 +39,7 @@ public abstract class BaseView<T> extends Composite implements View<T> {
 
     protected DockLayoutPanel toolBar;
     protected DockLayoutPanel container;
+    private final Button hideButton;
 
     public BaseView(PartStackUIResources resources) {
         container = new DockLayoutPanel(Style.Unit.PX);
@@ -47,10 +49,21 @@ public abstract class BaseView<T> extends Composite implements View<T> {
         toolBar.addStyleName(resources.partStackCss().ideBasePartToolbar());
         container.addNorth(toolBar, 20);
 
-        Image minimize = new Image(resources.minimize());
-        Image settings = new Image(resources.settings());
-        toolBar.addEast(minimize, 24);
-        toolBar.addEast(settings, 24);
+        hideButton = new Button();
+        hideButton.setIcon(IconType.MINUS);
+        hideButton.setSize(ButtonSize.MINI);
+        hideButton.setType(ButtonType.SUCCESS);
+        hideButton.addStyleName(resources.partStackCss().ideButtonMicro());
+        DropdownButton settings = new DropdownButton();
+        settings.add(new NavLink("1"));
+        settings.add(new NavLink("2"));
+        settings.add(new NavLink("3"));
+        settings.add(new NavLink("4"));
+        settings.setIcon(IconType.TH_LARGE);
+        settings.addStyleName(resources.partStackCss().ideButtonMicro());
+        settings.setSize(ButtonSize.MINI);
+        toolBar.addEast(hideButton, 20);
+        toolBar.addEast(settings, 32);
     }
 
     public void setTitle(String title) {

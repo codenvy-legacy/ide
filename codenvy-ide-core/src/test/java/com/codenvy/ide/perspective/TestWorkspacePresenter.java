@@ -83,7 +83,7 @@ public class TestWorkspacePresenter {
     @Test
     public void shouldAddToStack() {
         PartPresenter part = mock(PartPresenter.class);
-        presenter.showPart(part, TYPE);
+        presenter.openPart(part, TYPE);
         // verify part added to proper stack
         verify(activePerspective).openPart(eq(part), eq(TYPE));
     }

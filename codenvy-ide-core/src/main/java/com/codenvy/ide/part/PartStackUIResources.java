@@ -71,15 +71,14 @@ public interface PartStackUIResources extends ClientBundle {
 
         @ClassName("ide-PartStack-Tool-Tab-selected")
         String idePartStackToolTabSelected();
+
+        @ClassName("ide-button-micro")
+        String ideButtonMicro();
     }
 
     @Source({"PartStack.css", "com/codenvy/ide/api/ui/style.css"})
     PartStackCss partStackCss();
 
     ImageResource close();
-
-    ImageResource minimize();
-
-    ImageResource settings();
 
 }

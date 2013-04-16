@@ -194,6 +194,20 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         }
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void hidePart(PartPresenter part) {
+        if (activePart == part) {
+            setActivePart(null);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void removePart(PartPresenter part) {
+        close(part);
+    }
+
     /**
      * Close Part
      *

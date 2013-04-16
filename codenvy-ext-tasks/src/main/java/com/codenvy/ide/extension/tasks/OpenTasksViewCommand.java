@@ -70,7 +70,7 @@ public class OpenTasksViewCommand implements ExtendedCommand {
 
     @Override
     public void execute() {
-        agent.showPart(tasksPartPresenter, PartStackType.TOOLING);
+        agent.openPart(tasksPartPresenter, PartStackType.TOOLING);
     }
 
     @Override

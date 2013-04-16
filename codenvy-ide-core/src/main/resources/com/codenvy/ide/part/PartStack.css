@@ -170,3 +170,9 @@
     padding-right: 5px;
     /*border-left: 1px solid  rgb(150, 150, 150);*/
 }
+
+.ide-button-micro{
+    padding: 1px 5px;
+    font-size: 9px;
+    line-height: 16px;
+}

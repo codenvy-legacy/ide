@@ -43,6 +43,17 @@ public interface WorkspaceAgent {
      * @param part
      * @param type
      */
-    public void showPart(PartPresenter part, PartStackType type);
+    public void openPart(PartPresenter part, PartStackType type);
 
+    /**
+     * Hides given Part
+     * @param part
+     */
+    public void hidePart(PartPresenter part);
+
+    /**
+     * Remove given Part
+     * @param part
+     */
+    public void removePart(PartPresenter part);
 }

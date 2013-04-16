@@ -1,17 +1,37 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui">
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"  xmlns:b="urn:import:com.github.gwtbootstrap.client.ui">
     <ui:style>
-        .alignBtn {
-            float: right;
+        @external .span1,.span2,.span3,.span4,.span6,.span8,.span12;
+        .show-grid {
+        }
+
+        .show-grid .span1,
+        .show-grid .span2,
+        .show-grid .span3,
+        .show-grid .span4,
+        .show-grid .span6,
+        .show-grid .span8,
+        .show-grid .span12 {
+            text-align: center;
+        }
+
+        .show-grid .show-grid {
+            margin-top: 0;
+            margin-bottom: 0;
+            padding-top: 2px;
         }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="300px" height="300px">
-        <g:south size="26">
-            <g:FlowPanel>
-                <g:Button styleName="{style.alignBtn}" text="Open" ui:field="btnOpen"/>
-                <g:Button styleName="{style.alignBtn}" text="Cancel" ui:field="btnCancel"/>
-            </g:FlowPanel>
+        <g:south size="27">
+           <b:Row addStyleNames="{style.show-grid}">
+               <b:Column size="6" width="130px">
+                <b:Button type="PRIMARY"  size="SMALL" ui:field="btnOpen">Open</b:Button>
+               </b:Column>
+               <b:Column size="6" width="130px">
+                <b:Button type="INVERSE" ui:field="btnCancel" size="SMALL">Cancel</b:Button>
+               </b:Column>
+           </b:Row>
         </g:south>
         <g:center>
             <g:ScrollPanel ui:field="listPanel"/>

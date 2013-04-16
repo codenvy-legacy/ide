@@ -26,7 +26,6 @@ import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 
@@ -36,44 +35,14 @@ import com.google.inject.Singleton;
  * Tooling at the right side;
  * Information at the bottom of the page;
  * Editors int center.
+ *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @Singleton
 public class WorkBenchPresenter implements Presenter {
 
-    /** Defines Part's position on the Screen */
-    public enum PartStackType {
-        /**
-         * Contains navigation parts. Designed to navigate
-         * by project, types, classes and any other entities.
-         * Usually placed on the LEFT side of the IDE.
-         */
-        NAVIGATION,
-        /**
-         * Contains informative parts. Designed to display
-         * the state of the application, project or processes.
-         * Usually placed on the BOTTOM side of the IDE.
-         */
-        INFORMATION,
-        /**
-         * Contains editing parts. Designed to provide an
-         * ability to edit any resources or settings.
-         * Usually placed in the CENTRAL part of the IDE.
-         */
-        EDITING,
-        /**
-         * Contains tooling parts. Designed to provide handy
-         * features and utilities, access to other services
-         * or any other features that are out of other PartType
-         * scopes.
-         * Usually placed on the RIGHT side of the IDE.
-         */
-        TOOLING
-    }
-
-    private WorkBenchViewImpl view;
-
     protected final JsonStringMap<PartStack> partStacks = JsonCollections.createStringMap();
+    private WorkBenchViewImpl view;
 
     /**
      * Instantiates the Perspective
@@ -84,24 +53,28 @@ public class WorkBenchPresenter implements Presenter {
      */
     @Inject
     public WorkBenchPresenter(WorkBenchViewImpl view, EditorPartStack editorPartStackPresenter,
-                              PartStackPresenterFactory stackPresenterFactory, PartStackViewFactory partViewFactory, OutlinePart outlinePart, ConsolePart consolePart,
+                              PartStackPresenterFactory stackPresenterFactory, PartStackViewFactory partViewFactory,
+                              OutlinePart outlinePart, ConsolePart consolePart,
                               ProjectExplorerPart projectExplorerPart, WelcomePart welcomePart, SearchPart searchPart) {
         this.view = view;
 
         partStacks.put(PartStackType.EDITING.toString(), editorPartStackPresenter);
 
         //TODO move to implementation
-        PartStackView navigationView = partViewFactory.create(PartStackView.TabPosition.LEFT,view.leftPanel);
+        PartStackView navigationView = partViewFactory.create(PartStackView.TabPosition.LEFT, view.leftPanel);
 
-        PartStack navigationPartStack = stackPresenterFactory.create(navigationView, new WorkBenchPartControllerImpl(view.splitPanel, view.navPanel));
+        PartStack navigationPartStack =
+                stackPresenterFactory.create(navigationView, new WorkBenchPartControllerImpl(view.splitPanel, view.navPanel));
         partStacks.put(PartStackType.NAVIGATION.toString(), navigationPartStack);
 
         PartStackView informationView = partViewFactory.create(PartStackView.TabPosition.BELOW, view.bottomPanel);
-        PartStack informationStack = stackPresenterFactory.create(informationView, new WorkBenchPartControllerImpl(view.splitPanel, view.infoPanel));
+        PartStack informationStack =
+                stackPresenterFactory.create(informationView, new WorkBenchPartControllerImpl(view.splitPanel, view.infoPanel));
         partStacks.put(PartStackType.INFORMATION.toString(), informationStack);
 
         PartStackView toolingView = partViewFactory.create(PartStackView.TabPosition.RIGHT, view.rightPanel);
-        PartStack toolingPartStack = stackPresenterFactory.create(toolingView, new WorkBenchPartControllerImpl(view.splitPanel, view.toolPanel));
+        PartStack toolingPartStack =
+                stackPresenterFactory.create(toolingView, new WorkBenchPartControllerImpl(view.splitPanel, view.toolPanel));
         partStacks.put(PartStackType.TOOLING.toString(), toolingPartStack);
 
         openPart(welcomePart, PartStackType.EDITING);
@@ -110,6 +83,20 @@ public class WorkBenchPresenter implements Presenter {
         openPart(consolePart, PartStackType.INFORMATION);
         openPart(searchPart, PartStackType.INFORMATION);
         setActivePart(projectExplorerPart);
+    }
+
+    public void removePart(PartPresenter part) {
+        PartStack destPartStack = findPartStackByPart(part);
+        if(destPartStack != null){
+            destPartStack.removePart(part);
+        }
+    }
+
+    public void hidePart(PartPresenter part) {
+        PartStack destPartStack = findPartStackByPart(part);
+        if(destPartStack != null){
+            destPartStack.hidePart(part);
+        }
     }
 
     /**
@@ -165,13 +152,43 @@ public class WorkBenchPresenter implements Presenter {
     }
 
     /**
-     * Retrieves the instance of the {@link PartStackPresenter} for given {@link PartStackType}
+     * Retrieves the instance of the {@link PartStack} for given {@link PartStackType}
      *
      * @param type
      * @return
      */
     protected PartStack getPartStack(PartStackType type) {
         return partStacks.get(type.toString());
+    }
+
+    /** Defines Part's position on the Screen */
+    public enum PartStackType {
+        /**
+         * Contains navigation parts. Designed to navigate
+         * by project, types, classes and any other entities.
+         * Usually placed on the LEFT side of the IDE.
+         */
+        NAVIGATION,
+        /**
+         * Contains informative parts. Designed to display
+         * the state of the application, project or processes.
+         * Usually placed on the BOTTOM side of the IDE.
+         */
+        INFORMATION,
+        /**
+         * Contains editing parts. Designed to provide an
+         * ability to edit any resources or settings.
+         * Usually placed in the CENTRAL part of the IDE.
+         */
+        EDITING,
+        /**
+         * Contains tooling parts. Designed to provide handy
+         * features and utilities, access to other services
+         * or any other features that are out of other PartType
+         * scopes.
+         * Usually placed on the RIGHT side of the IDE.
+         */
+        TOOLING
     }
 
 }

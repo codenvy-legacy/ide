@@ -157,7 +157,7 @@ public class EditorAgentImpl implements EditorAgent {
             } catch (EditorInitException e) {
                 Log.error(getClass(), e);
             }
-            workspace.showPart(editor, PartStackType.EDITING);
+            workspace.openPart(editor, PartStackType.EDITING);
             openedEditors.put(file.getId(), editor);
         }
     }

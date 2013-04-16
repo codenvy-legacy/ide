@@ -13,6 +13,7 @@
     <inherits name="com.codenvy.ide.Commons"/>
     <inherits name="com.google.gwt.json.JSON"/>
     <inherits name="com.google.gwt.inject.Inject"/>
+    <inherits name="com.github.gwtbootstrap.Bootstrap" />
 
     <source path=""/>
 </module>

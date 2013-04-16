@@ -58,7 +58,7 @@ public class BootstrapController {
                 // Display IDE
                 workspacePeresenter.go(mainPanel);
                 // TODO FOR DEMO
-                workspacePeresenter.showPart(extensionsPage, PartStackType.EDITING);
+                workspacePeresenter.openPart(extensionsPage, PartStackType.EDITING);
             }
 
             @Override

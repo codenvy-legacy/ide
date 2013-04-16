@@ -36,8 +36,8 @@ import com.google.inject.Singleton;
 
 /**
  * Root Presenter that implements Workspace logic. Descendant Presenters are injected via
- * constructor and exposed to coresponding UI containers.
- * It contains Menu, Toolbar and Perspective Presenter to exopse their views into corresponding places
+ * constructor and exposed to corresponding UI containers.
+ * It contains Menu, Toolbar and WorkBench Presenter to expose their views into corresponding places
  * and to maintain their interactions.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
@@ -48,9 +48,7 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
 
     private final MainMenuPresenter menu;
 
-    private WorkBenchPresenter activePerspective;
-
-    private JsonStringMap<PerspectiveDescriptor> perspectives = JsonCollections.createStringMap();
+    private WorkBenchPresenter workBenchPresenter;
 
     private final ToolbarPresenter toolbarPresenter;
 
@@ -70,9 +68,7 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
         this.view.setDelegate(this);
         this.menu = menu;
 
-        // register default perspective
-//        registerPerspective(GENERAL_PERSPECTIVE, null, genericPerspectiveProvider);
-        this.activePerspective = genericPerspectiveProvider.get();
+        this.workBenchPresenter = genericPerspectiveProvider.get();
     }
 
     /** {@inheritDoc} */
@@ -81,81 +77,32 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
         // Expose Project Explorer into Tools Panel
         menu.go(view.getMenuPanel());
         toolbarPresenter.go(view.getToolbarPanel());
-        activePerspective.go(view.getPerspectivePanel());
+        workBenchPresenter.go(view.getPerspectivePanel());
         container.setWidget(view);
-    }
-
-    /**
-     * Provides active Perspective instance
-     *
-     * @return
-     */
-    public WorkBenchPresenter getActivePerspective() {
-        return activePerspective;
     }
 
     /** {@inheritDoc} */
     @Override
     public void setActivePart(PartPresenter part) {
-        activePerspective.setActivePart(part);
+        workBenchPresenter.setActivePart(part);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void showPart(PartPresenter part, PartStackType type) {
-        activePerspective.openPart(part, type);
+    public void openPart(PartPresenter part, PartStackType type) {
+        workBenchPresenter.openPart(part, type);
     }
 
-    /**
-     * Returns registered perspectives.
-     *
-     * @return
-     */
-    public JsonArray<PerspectiveDescriptor> getPerspectives() {
-        final JsonArray<PerspectiveDescriptor> perspectives = JsonCollections.createArray();
-
-        this.perspectives.iterate(new IterationCallback<PerspectiveDescriptor>() {
-            @Override
-            public void onIteration(String key, PerspectiveDescriptor value) {
-                perspectives.add(value);
-            }
-        });
-
-        return perspectives;
+    /** {@inheritDoc} */
+    @Override
+    public void hidePart(PartPresenter part) {
+        workBenchPresenter.hidePart(part);
     }
 
-    /** Wrapper containing the information about Perspective and it's Provider. */
-    class PerspectiveDescriptor {
-        protected String title;
-
-        protected ImageResource icon;
-
-        protected Provider<? extends WorkBenchPresenter> pespectiveProvider;
-
-        public PerspectiveDescriptor(String title, ImageResource icon,
-                                     Provider<? extends WorkBenchPresenter> pespectiveProvider) {
-            super();
-            this.title = title;
-            this.icon = icon;
-            this.pespectiveProvider = pespectiveProvider;
-        }
-
-        /**
-         * Returns title.
-         *
-         * @return
-         */
-        public String getTitle() {
-            return title;
-        }
-
-        /**
-         * Returns icon.
-         *
-         * @return
-         */
-        public ImageResource getIcon() {
-            return icon;
-        }
+    /** {@inheritDoc} */
+    @Override
+    public void removePart(PartPresenter part) {
+        workBenchPresenter.removePart(part);
     }
+
 }
