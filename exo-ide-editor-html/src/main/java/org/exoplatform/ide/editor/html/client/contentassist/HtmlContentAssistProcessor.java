@@ -40,8 +40,6 @@ import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor;
 import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
-import org.exoplatform.ide.editor.css.client.contentassist.CssContentAssistProcessor;
-import org.exoplatform.ide.editor.javascript.client.contentassist.JavaScriptContentAssistProcessor;
 import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
@@ -78,21 +76,21 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor {
     static final AnchorType MODE_ANCHOR_TYPE = AnchorType.create(HtmlAutocompleter.class, "mode");
 
     /** A {@link ContentAssistProcessor} for CSS. */
-    private CssContentAssistProcessor cssProcessor;
+    private ContentAssistProcessor cssProcessor;
 
     /** A {@link ContentAssistProcessor} for JavaScript. */
-    private JavaScriptContentAssistProcessor jsProcessor;
+    private ContentAssistProcessor jsProcessor;
 
     /**
      * Constructs new {@link HtmlContentAssistProcessor} instance.
      *
      * @param cssProcessor
-     *         {@link CssContentAssistProcessor}
+     *         {@link ContentAssistProcessor}
      * @param jsProcessor
-     *         {@link JavaScriptContentAssistProcessor}
+     *         {@link ContentAssistProcessor}
      */
-    public HtmlContentAssistProcessor(CssContentAssistProcessor cssProcessor,
-                                      JavaScriptContentAssistProcessor jsProcessor) {
+    public HtmlContentAssistProcessor(ContentAssistProcessor cssProcessor,
+                                      ContentAssistProcessor jsProcessor) {
         this.cssProcessor = cssProcessor;
         this.jsProcessor = jsProcessor;
     }

@@ -33,11 +33,10 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.client.api.Editor;
-import org.exoplatform.ide.editor.php.client.codemirror.PhpOutlineItemCreator;
 
 /**
  * Provides a text editing area along with UI for executing text commands on the.<br>
- *
+ * 
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Revision$
  */
@@ -54,52 +53,47 @@ public class PhpEditorExtension extends Extension implements InitializeServicesH
     @Override
     public void initialize() {
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
-
-        IDE.getInstance().addControl(
-                new NewItemControl("File/New/New PHP File", "PHP File", "Create PHP File", PhpClientBundle.INSTANCE.php(),
-                                   PhpClientBundle.INSTANCE.phpDisabled(), MimeType.APPLICATION_PHP).setGroupName(GroupNames.NEW_SCRIPT));
-
+        IDE.getInstance()
+           .addControl(new NewItemControl("File/New/New PHP File", "PHP File", "Create PHP File", PhpClientBundle.INSTANCE.php(),
+                                          PhpClientBundle.INSTANCE.phpDisabled(), MimeType.APPLICATION_PHP).setGroupName(GroupNames.NEW_SCRIPT));
         PhpClientBundle.INSTANCE.css().ensureInjected();
     }
 
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
+     */
+    @Override
     public void onInitializeServices(InitializeServicesEvent event) {
+        IDE.getInstance().getFileTypeRegistry().addFileType(new FileType(MimeType.APPLICATION_PHP, "php", Images.INSTANCE.php()),
+                                                            new EditorCreator() {
+                                                                @Override
+                                                                public Editor createEditor() {
+                                                                    return new PhpEditor(MimeType.APPLICATION_PHP);
+                                                                }
+                                                            });
+        IDE.getInstance().getFileTypeRegistry().addFileType(new FileType(MimeType.APPLICATION_X_PHP, "php", Images.INSTANCE.php()),
+                                                            new EditorCreator() {
+                                                                @Override
+                                                                public Editor createEditor() {
+                                                                    return new PhpEditor(MimeType.APPLICATION_X_PHP);
+                                                                }
+                                                            });
+        IDE.getInstance().getFileTypeRegistry().addFileType(new FileType(MimeType.APPLICATION_X_HTTPD_PHP, "php", Images.INSTANCE.php()),
+                                                            new EditorCreator() {
+                                                                @Override
+                                                                public Editor createEditor() {
+                                                                    return new PhpEditor(MimeType.APPLICATION_X_HTTPD_PHP);
+                                                                }
+                                                            });
 
-        IDE.getInstance().getFileTypeRegistry().addFileType(
-                new FileType(MimeType.APPLICATION_PHP, "php", Images.INSTANCE.php()),
-                new EditorCreator() {
-                    @Override
-                    public Editor createEditor() {
-                        return new PhpEditor(MimeType.APPLICATION_PHP);
-                    }
-                });
+        // PhpOutlineItemCreator phpOutlineItemCreator = new PhpOutlineItemCreator();
+        // IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_PHP, phpOutlineItemCreator);
+        // IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_X_PHP, phpOutlineItemCreator);
+        // IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_X_HTTPD_PHP, phpOutlineItemCreator);
 
-        IDE.getInstance().getFileTypeRegistry().addFileType(
-                new FileType(MimeType.APPLICATION_X_PHP, "php", Images.INSTANCE.php()),
-                new EditorCreator() {
-                    @Override
-                    public Editor createEditor() {
-                        return new PhpEditor(MimeType.APPLICATION_X_PHP);
-                    }
-                });
-
-        IDE.getInstance().getFileTypeRegistry().addFileType(
-                new FileType(MimeType.APPLICATION_X_HTTPD_PHP, "php", Images.INSTANCE.php()),
-                new EditorCreator() {
-                    @Override
-                    public Editor createEditor() {
-                        return new PhpEditor(MimeType.APPLICATION_X_HTTPD_PHP);
-                    }
-                });
-
-        PhpOutlineItemCreator phpOutlineItemCreator = new PhpOutlineItemCreator();
-        IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_PHP, phpOutlineItemCreator);
-        IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_X_PHP, phpOutlineItemCreator);
-        IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_X_HTTPD_PHP, phpOutlineItemCreator);
-
-      /* PhpCommentsModifier commentsModifier = new PhpCommentsModifier();
-      IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_PHP, commentsModifier));
-      IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_X_PHP, commentsModifier));
-      IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_X_HTTPD_PHP, commentsModifier));*/
+        // PhpCommentsModifier commentsModifier = new PhpCommentsModifier();
+        // IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_PHP, commentsModifier));
+        // IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_X_PHP, commentsModifier));
+        // IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_X_HTTPD_PHP, commentsModifier));
     }
-
 }

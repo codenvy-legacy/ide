@@ -65,4 +65,7 @@ public class CodeMirror2 {
 
     /** Mode constant: CSS. */
     public static final String CSS = "css";
+
+    /** Mode constant: PHP. */
+    public static final String PHP = "php";
 }

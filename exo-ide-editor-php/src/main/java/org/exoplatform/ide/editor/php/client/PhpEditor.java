@@ -21,12 +21,14 @@ package org.exoplatform.ide.editor.php.client;
 import com.google.collide.client.CollabEditor;
 
 import org.exoplatform.ide.editor.client.api.EditorCapability;
+import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor;
 import org.exoplatform.ide.editor.css.client.contentassist.CssAutocompleter;
 import org.exoplatform.ide.editor.css.client.contentassist.CssContentAssistProcessor;
 import org.exoplatform.ide.editor.html.client.contentassist.HtmlAutocompleter;
 import org.exoplatform.ide.editor.html.client.contentassist.HtmlContentAssistProcessor;
 import org.exoplatform.ide.editor.javascript.client.codemirror.JavaScriptAutocompleter;
 import org.exoplatform.ide.editor.javascript.client.contentassist.JavaScriptContentAssistProcessor;
+import org.exoplatform.ide.editor.php.client.contentassist.PhpContentAssistProcessor;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 
 /**
@@ -34,26 +36,24 @@ import org.exoplatform.ide.editor.shared.text.IDocument;
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: PhpEditor.java Apr 12, 2013 5:02:00 PM azatsarynnyy $
- *
  */
 public class PhpEditor extends CollabEditor {
 
     /**
      * Constructs new editor for the given MIME-type.
-     *
+     * 
      * @param mimeType
      */
     public PhpEditor(String mimeType) {
         super(mimeType);
         CssAutocompleter cssAutocompleter = CssAutocompleter.create();
         HtmlAutocompleter htmlAutocompleter = HtmlAutocompleter.create(cssAutocompleter, new JavaScriptAutocompleter());
-
         editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(htmlAutocompleter);
 
-        editorBundle.getAutocompleter().addContentAssitProcessor(
-                IDocument.DEFAULT_CONTENT_TYPE,
-                new HtmlContentAssistProcessor(new CssContentAssistProcessor(cssAutocompleter),
-                                               new JavaScriptContentAssistProcessor()));
+        ContentAssistProcessor htmlContentAssistProcessor = new HtmlContentAssistProcessor(new CssContentAssistProcessor(cssAutocompleter),
+                                                                                           new JavaScriptContentAssistProcessor());
+        ContentAssistProcessor phpContentAssistProcessor = new PhpContentAssistProcessor(htmlContentAssistProcessor);
+        editorBundle.getAutocompleter().addContentAssitProcessor(IDocument.DEFAULT_CONTENT_TYPE, phpContentAssistProcessor);
     }
 
     /** @see com.google.collide.client.CollabEditor#isCapable(org.exoplatform.ide.editor.client.api.EditorCapability) */
