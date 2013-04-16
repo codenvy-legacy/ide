@@ -18,8 +18,8 @@
  */
 package org.eclipse.jdt.client.create;
 
-import org.eclipse.jdt.client.packaging.model.next.JavaProject;
-import org.eclipse.jdt.client.packaging.model.next.SourceDirectory;
+import org.eclipse.jdt.client.packaging.model.JavaProject;
+import org.eclipse.jdt.client.packaging.model.SourceDirectory;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
