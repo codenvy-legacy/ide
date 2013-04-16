@@ -25,7 +25,6 @@ import com.google.gwt.user.client.ui.Widget;
 import org.exoplatform.ide.editor.api.codeassitant.Modifier;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
-import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
 import org.exoplatform.ide.editor.client.api.contentassist.Point;
@@ -57,7 +56,7 @@ public class PhpProposal implements CompletionProposal {
     /** Text offset. */
     private final int offset;
 
-    private final TokenType tokenType;
+    private final Token token;
 
     private List<Modifier> modifieres = new ArrayList<Modifier>();
 
@@ -75,7 +74,7 @@ public class PhpProposal implements CompletionProposal {
         this.proposal = proposal;
         this.prefix = prefix;
         this.offset = offset;
-        this.tokenType = token.getType();
+        this.token = token;
 
         if (token.hasProperty(TokenProperties.MODIFIERS)) {
             modifieres.addAll((Collection<Modifier>)token.getProperty(TokenProperties.MODIFIERS).isObjectProperty().objectValue());
@@ -120,7 +119,7 @@ public class PhpProposal implements CompletionProposal {
     /** @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getImage() */
     @Override
     public Image getImage() {
-        switch (tokenType) {
+        switch (token.getType()) {
             case FUNCTION:
             case METHOD:
                 return new Image(PhpClientBundle.INSTANCE.publicMethod());

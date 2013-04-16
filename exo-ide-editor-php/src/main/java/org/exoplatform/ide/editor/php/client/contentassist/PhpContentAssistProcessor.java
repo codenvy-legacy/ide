@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.editor.php.client.contentassist;
 
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.client.CollabEditor;
 import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.selection.SelectionModel;
@@ -35,8 +36,8 @@ import com.google.gwt.resources.client.ResourceCallback;
 import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.resources.client.TextResource;
 
-import com.codenvy.ide.client.util.logging.Log;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor;
@@ -44,6 +45,9 @@ import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
 import org.exoplatform.ide.editor.codeassistant.JSONTokenParser;
 import org.exoplatform.ide.json.shared.JsonArray;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -54,15 +58,40 @@ import java.util.List;
  */
 public class PhpContentAssistProcessor implements ContentAssistProcessor {
 
+    /** Bean that holds {@link #findToken} results. */
+    private static class FindTokenResult {
+        /** Token that "covers" the cursor; left token if cursor touches 2 tokens, */
+        com.google.collide.codemirror2.Token inToken = null;
+
+        /** Number of characters between "inToken" start and the cursor position. */
+        int cut = 0;
+    }
+
     public interface PhpBundle extends ClientBundle {
         @Source("org/exoplatform/ide/editor/php/client/tokens/php_tokens.js")
         ExternalTextResource phpKeyWords();
     }
 
+    private Comparator<Token> tokenComparator = new Comparator<Token>() {
+         @Override
+         public int compare(Token o1, Token o2) {
+
+             if (o1.getType() != TokenType.KEYWORD && o2.getType() == TokenType.KEYWORD) {
+                 return -1;
+             } else if (o1.getType() == TokenType.KEYWORD
+                        && o2.getType() != TokenType.KEYWORD) {
+                 return 1;
+             } else {
+                 return o1.getName().compareTo(o2.getName());
+             }
+         }
+     };
+
     /** A {@link ContentAssistProcessor} for HTML. */
     private final ContentAssistProcessor htmlContentAssistProcessor;
 
-    private static List<Token>           keyWords;
+    /** List of PHP language keywords. */
+    private static List<Token> keyWords;
 
     /**
      * Constructs new {@link PhpContentAssistProcessor} instance.
@@ -103,14 +132,57 @@ public class PhpContentAssistProcessor implements ContentAssistProcessor {
                 return htmlContentAssistProcessor.computeCompletionProposals(editor, offset);
             }
         } else if (CodeMirror2.PHP.equals(mode)) {
-            CompletionProposal[] proposals = new CompletionProposal[keyWords.size()];
+            FindTokenResult findTokenResult = getTriggeringString(tokens, column);
+            String prefix = findTokenResult.inToken.getValue();
+            prefix = prefix.substring(0, prefix.length() - findTokenResult.cut);
+
+            List<Token> filteredTokens = getFilteredTokensByPrefix(prefix);
+            CompletionProposal[] proposals = new CompletionProposal[filteredTokens.size()];
             int i = 0;
-            for (Token token : keyWords) {
-                proposals[i++] = new PhpProposal(token.getName(), "", offset, token);
+            for (Token token : filteredTokens) {
+                proposals[i++] = new PhpProposal(token.getName(), prefix, offset, token);
             }
             return proposals;
         }
         return null;
+    }
+
+    private List<Token> getFilteredTokensByPrefix(String prefix) {
+        List<Token> filteredTokens = new ArrayList<Token>();
+        for (Token token : keyWords) {
+            if (token.getName().startsWith(prefix)) {
+                filteredTokens.add(token);
+            }
+        }
+        return filteredTokens;
+    }
+
+    /** Finds token at cursor position. */
+    private static FindTokenResult getTriggeringString(JsonArray<com.google.collide.codemirror2.Token> tokens, int column) {
+        FindTokenResult result = new FindTokenResult();
+
+        // Number of tokens in line.
+        final int size = tokens.size();
+
+        // Sum of lengths of processed tokens.
+        int colCount = 0;
+
+        // Index of next token.
+        int index = 0;
+
+        while (index < size) {
+            com.google.collide.codemirror2.Token token = tokens.get(index);
+            colCount += token.getValue().length();
+            index++;
+            if (result.inToken == null) {
+                if (colCount >= column) {
+                    result.inToken = token;
+                    result.cut = colCount - column;
+                    return result;
+                }
+            }
+        }
+        return result;
     }
 
     private void init() {
@@ -122,6 +194,7 @@ public class PhpContentAssistProcessor implements ContentAssistProcessor {
                     JSONValue parseLenient = JSONParser.parseLenient(resource.getText());
                     JSONTokenParser parser = new JSONTokenParser();
                     keyWords = parser.getTokens(parseLenient.isArray());
+                    Collections.sort(keyWords, tokenComparator);
                 }
 
                 @Override
