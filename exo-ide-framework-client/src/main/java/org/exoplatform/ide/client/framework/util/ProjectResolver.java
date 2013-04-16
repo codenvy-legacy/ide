@@ -118,6 +118,7 @@ public class ProjectResolver {
             projectLargeImages.put(ProjectType.RUBY_ON_RAILS, IconImageBundle.INSTANCE.rubyProject48());
             projectLargeImages.put(ProjectType.PYTHON, IconImageBundle.INSTANCE.pythonProject48());
             projectLargeImages.put(ProjectType.PHP, IconImageBundle.INSTANCE.phpProject48());
+            projectLargeImages.put(ProjectType.NODE_JS, IconImageBundle.INSTANCE.nodejsProject48());
             projectLargeImages.put(ProjectType.MultiModule, IconImageBundle.INSTANCE.multiModule48());
         }
 

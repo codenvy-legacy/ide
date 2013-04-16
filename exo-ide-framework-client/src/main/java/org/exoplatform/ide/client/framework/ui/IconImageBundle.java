@@ -61,6 +61,9 @@ public interface IconImageBundle extends ClientBundle {
 
     @Source("org/exoplatform/ide/client/bundled-images/projects/python48x48.png")
     ImageResource pythonProject48();
+    
+    @Source("org/exoplatform/ide/client/bundled-images/projects/nodejs48x48.png")
+    ImageResource nodejsProject48();
 
     @Source("org/exoplatform/ide/client/bundled-images/projects/django.png")
     ImageResource djangoProject();

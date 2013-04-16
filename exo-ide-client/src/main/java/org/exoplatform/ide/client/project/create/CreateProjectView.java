@@ -54,7 +54,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
 
     private static final int HEIGHT = 460;
 
-    private static final int WIDTH = 705;
+    private static final int WIDTH = 805;
 
     private final String NAME_FIELD_ID = "eXoCreateNewProjectViewNameField";
 
@@ -271,7 +271,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
     public void setProjectTypes(List<ProjectType> projectTypeList) {
         projectTypesGrid.setSize("100%", "100%");
 
-        int columnCount = 8;
+        int columnCount = 9;
         int rowCount = (int)Math.ceil((double)projectTypeList.size() / columnCount);
         projectTypesGrid.resize(rowCount, columnCount);
 
@@ -305,6 +305,8 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
                     type = "Java Spring";
                 } else if (projectType == ProjectType.RUBY_ON_RAILS) {
                     type = "Ruby on Rails";
+                } else if (projectType == ProjectType.NODE_JS) {
+                    type = "Node.js";
                 }
 
                 dock.add(projectTypeButton, DockPanel.NORTH);

@@ -189,6 +189,8 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                 types.add(availableType);
             } else if (projectType == ProjectType.PHP && availableType.startsWith("php")) {
                 types.add(availableType);
+            } else if (projectType == ProjectType.NODE_JS && availableType.startsWith("nodejs")){
+                types.add(availableType);
             }
         }
 

@@ -145,7 +145,7 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
 
     @Override
     public void setProjectTypes(Set<ProjectType> projectTypes) {
-        int columnCount = 8;
+        int columnCount = 9;
         int rowCount = (int)Math.ceil((double)projectTypes.size() / columnCount);
 
         projectTypesGrid.clear();
@@ -340,6 +340,7 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
             case PYTHON: return SamplesClientBundle.INSTANCE.pythonTechnology();
             case RUBY_ON_RAILS: return SamplesClientBundle.INSTANCE.rorTechnology();
             case SPRING: return SamplesClientBundle.INSTANCE.springTechnology();
+            case NODE_JS: return SamplesClientBundle.INSTANCE.springTechnology();
             default: return null;
         }
     }
