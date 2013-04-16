@@ -28,7 +28,9 @@ import java.io.File;
  */
 public class RmTest extends BaseTest {
     public void testRm() throws Exception {
-        getDefaultConnection().rm(new RmRequest(new String[]{"README.txt"}));
+        RmRequest req = new RmRequest(new String[]{"README.txt"});
+        req.setCached(false);
+        getDefaultConnection().rm(req);
         assertFalse(new File(getDefaultRepository().getWorkTree(), "README.txt").exists());
         checkNoFilesInCache(getDefaultRepository(), "README.txt");
     }

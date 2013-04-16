@@ -65,6 +65,13 @@ public class RemoveFromIndexPresenter extends GitPresenter implements RemoveFile
          * @return {@link HasValue}
          */
         HasValue<String> getMessage();
+
+        /**
+         * Get only from index checkbox value
+         * 
+         * @return {@link HasValue}
+         */
+        HasValue<Boolean> getFromIndexValue();
     }
 
     /** Presenter's display. */
@@ -139,6 +146,7 @@ public class RemoveFromIndexPresenter extends GitPresenter implements RemoveFile
         try {
 
             GitClientService.getInstance().remove(vfs.getId(), getSelectedProject().getId(), getFilePatterns(),
+                                                  display.getFromIndexValue().getValue().booleanValue(),
                                                   new AsyncRequestCallback<String>() {
                                                       @Override
                                                       protected void onSuccess(String result) {
