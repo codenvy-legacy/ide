@@ -22,19 +22,29 @@ import com.google.collide.client.CollabEditor;
 import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.codemirror2.CodeMirror2;
-import com.google.collide.codemirror2.Token;
 import com.google.collide.codemirror2.TokenUtil;
 import com.google.collide.shared.Pair;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.Position;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ExternalTextResource;
+import com.google.gwt.resources.client.ResourceCallback;
+import com.google.gwt.resources.client.ResourceException;
+import com.google.gwt.resources.client.TextResource;
 
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.gwtframework.commons.util.Log;
+import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor;
 import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
+import org.exoplatform.ide.editor.codeassistant.JSONTokenParser;
 import org.exoplatform.ide.json.shared.JsonArray;
+
+import java.util.List;
 
 /**
  * A {@link ContentAssistProcessor} proposes completions and
@@ -46,8 +56,14 @@ import org.exoplatform.ide.json.shared.JsonArray;
  */
 public class PhpContentAssistProcessor implements ContentAssistProcessor {
 
+    public interface PhpBundle extends ClientBundle {
+        @Source("org/exoplatform/ide/editor/php/client/tokens/php_tokens.js")
+        ExternalTextResource phpKeyWords();
+    }
+    
     /** A {@link ContentAssistProcessor} for HTML. */
     private final ContentAssistProcessor htmlContentAssistProcessor;
+    private static List<Token> keyWords;
 
     /**
      * Constructs new {@link PhpContentAssistProcessor} instance.
@@ -72,7 +88,7 @@ public class PhpContentAssistProcessor implements ContentAssistProcessor {
         final Line line = cursor.getLine();
         final int column = cursor.getColumn();
 
-        JsonArray<Token> tokens = parser.parseLineSync(line);
+        JsonArray<com.google.collide.codemirror2.Token> tokens = parser.parseLineSync(line);
         if (tokens == null) {
             // This line has never been parsed yet. No variants.
             return null;
@@ -94,11 +110,37 @@ public class PhpContentAssistProcessor implements ContentAssistProcessor {
             }
         }
 
-        if (CodeMirror2.PHP.equals(mode)) {
-            // TODO keywords autocompletion support
+        if (keyWords == null) {
+            if (CodeMirror2.PHP.equals(mode)) {
+                PhpBundle bundle = GWT.create(PhpBundle.class);
+                try {
+                    bundle.phpKeyWords().getText(new ResourceCallback<TextResource>() {
+    
+                        @Override
+                        public void onSuccess(TextResource resource) {
+                            JSONValue parseLenient = JSONParser.parseLenient(resource.getText());
+                            JSONTokenParser parser = new JSONTokenParser();
+                            keyWords = parser.getTokens(parseLenient.isArray());
+//                            doAutocomplete(editor.getLineText(currentLine), editor.getCursorColumn(), tokenList, currentToken);
+                        }
+    
+                        @Override
+                        public void onError(ResourceException e) {
+                            Log.info(e.getMessage());
+                        }
+                    });
+                } catch (ResourceException e) {
+                    Log.info(e.getMessage());
+                }
+            }
         }
 
-        return null;
+        CompletionProposal[] proposals = new CompletionProposal[keyWords.size()];
+        int i = 0;
+        for (Token token : keyWords) {
+            proposals[++i] = new PhpProposal(token.getName(), "", offset);
+        }
+        return proposals;
     }
 
     /**
