@@ -508,11 +508,12 @@ public class GitClientServiceImpl extends GitClientService {
      *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
      */
     @Override
-    public void remove(String vfsId, String projectid, String[] files, AsyncRequestCallback<String> callback)
-                                                                                                             throws RequestException {
+    public void remove(String vfsId, String projectid, String[] files, Boolean cached, AsyncRequestCallback<String> callback)
+                                                                                                                             throws RequestException {
         String url = restServiceContext + REMOVE;
 
         RmRequest rmRequest = new RmRequest(files);
+        rmRequest.setCached(cached);
         RemoveRequestMarshaller marshaller = new RemoveRequestMarshaller(rmRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
