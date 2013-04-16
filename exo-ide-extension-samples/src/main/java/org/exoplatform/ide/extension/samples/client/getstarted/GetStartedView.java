@@ -45,6 +45,8 @@ import java.util.Set;
 public class GetStartedView extends ViewImpl implements GetStartedPresenter.Display {
     private static final String ID = "codenvyGetStartedView";
 
+    private static final String PROJECT_NAME_ID = "codenvyGetStartedWizardProjectName";
+
     private static final String TITLE = "Get started";
 
     private static final int HEIGHT = 300;
@@ -96,6 +98,7 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
     public GetStartedView() {
         super(ID, ViewType.MODAL, TITLE, null, WIDTH, HEIGHT, false);
         add(uiBinder.createAndBindUi(this));
+        projectName.getElement().setId(PROJECT_NAME_ID);
         chooseNamePanel.setVisible(false);
         chooseTechnologyPanel.setVisible(false);
         choosePaaSPanel.setVisible(false);
@@ -240,7 +243,7 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
                 paaSToggleButton.setSize("36px", "36px");
                 paaSToggleButton.getElement().getStyle().setPropertyPx("borderRadius", 5);
                 paaSToggleButton.getElement().getStyle().setPropertyPx("outline", 0);
-                paaSToggleButton.getElement().setId("CREATE-PROJECT-" + paaS);
+                paaSToggleButton.getElement().setId("CREATE-PROJECT-" + paaS.getId());
                 paaSToggleButton.setPaaS(paaS);
                 paaSToggleButtonList.add(paaSToggleButton);
 
