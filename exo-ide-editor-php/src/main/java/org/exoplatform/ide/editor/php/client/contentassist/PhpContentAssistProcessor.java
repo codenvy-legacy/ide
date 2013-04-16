@@ -35,7 +35,7 @@ import com.google.gwt.resources.client.ResourceCallback;
 import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.resources.client.TextResource;
 
-import org.exoplatform.gwtframework.commons.util.Log;
+import com.codenvy.ide.client.util.logging.Log;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
@@ -47,12 +47,10 @@ import org.exoplatform.ide.json.shared.JsonArray;
 import java.util.List;
 
 /**
- * A {@link ContentAssistProcessor} proposes completions and
- * computes context information for PHP content.
+ * A {@link ContentAssistProcessor} proposes completions and computes context information for PHP content.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: PhpContentAssistProcessor.java Apr 15, 2013 3:47:18 PM azatsarynnyy $
- *
  */
 public class PhpContentAssistProcessor implements ContentAssistProcessor {
 
@@ -60,26 +58,28 @@ public class PhpContentAssistProcessor implements ContentAssistProcessor {
         @Source("org/exoplatform/ide/editor/php/client/tokens/php_tokens.js")
         ExternalTextResource phpKeyWords();
     }
-    
+
     /** A {@link ContentAssistProcessor} for HTML. */
     private final ContentAssistProcessor htmlContentAssistProcessor;
-    private static List<Token> keyWords;
+
+    private static List<Token>           keyWords;
 
     /**
      * Constructs new {@link PhpContentAssistProcessor} instance.
-     *
-     * @param htmlContentAssistProcessor
-     *         {@link ContentAssistProcessor}
+     * 
+     * @param htmlContentAssistProcessor {@link ContentAssistProcessor}
      */
     public PhpContentAssistProcessor(ContentAssistProcessor htmlContentAssistProcessor) {
         this.htmlContentAssistProcessor = htmlContentAssistProcessor;
+        init();
     }
 
     /**
-     * @see org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor#computeCompletionProposals(org.exoplatform.ide.editor.client.api.Editor, int)
+     * @see org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor#computeCompletionProposals(org.exoplatform.ide.editor.client.api.Editor,
+     *      int)
      */
     @Override
-    public CompletionProposal[] computeCompletionProposals(Editor editor, int offset) {
+    public CompletionProposal[] computeCompletionProposals(Editor editor, final int offset) {
         CollabEditor collabEditor = (CollabEditor)editor;
         SelectionModel selection = collabEditor.getEditor().getSelection();
         DocumentParser parser = collabEditor.getEditorBundle().getParser();
@@ -94,57 +94,49 @@ public class PhpContentAssistProcessor implements ContentAssistProcessor {
             return null;
         }
 
-        // We do not ruin parse results for "clean" lines.
-//        if (parser.isLineDirty(cursor.getLineNumber())) {
-//            // But "processing" of "dirty" line is harmless.
-//            XmlCodeAnalyzer.processLine(TaggableLineUtil.getPreviousLine(line), line, tokens);
-//        }
-        String initialMode = parser.getInitialMode(line);
+        final String initialMode = parser.getInitialMode(line);
         JsonArray<Pair<Integer, String>> modes = TokenUtil.buildModes(initialMode, tokens);
-//        putModeAnchors(line, modes);
-        String mode = TokenUtil.findModeForColumn(initialMode, modes, column);
+        final String mode = TokenUtil.findModeForColumn(initialMode, modes, column);
 
-        if (htmlContentAssistProcessor != null) {
-            if (CodeMirror2.CSS.equals(mode) || CodeMirror2.JAVASCRIPT.equals(mode) || CodeMirror2.HTML.equals(mode)) {
+        if (CodeMirror2.CSS.equals(mode) || CodeMirror2.JAVASCRIPT.equals(mode) || CodeMirror2.HTML.equals(mode)) {
+            if (htmlContentAssistProcessor != null) {
                 return htmlContentAssistProcessor.computeCompletionProposals(editor, offset);
             }
-        }
-
-        if (keyWords == null) {
-            if (CodeMirror2.PHP.equals(mode)) {
-                PhpBundle bundle = GWT.create(PhpBundle.class);
-                try {
-                    bundle.phpKeyWords().getText(new ResourceCallback<TextResource>() {
-    
-                        @Override
-                        public void onSuccess(TextResource resource) {
-                            JSONValue parseLenient = JSONParser.parseLenient(resource.getText());
-                            JSONTokenParser parser = new JSONTokenParser();
-                            keyWords = parser.getTokens(parseLenient.isArray());
-//                            doAutocomplete(editor.getLineText(currentLine), editor.getCursorColumn(), tokenList, currentToken);
-                        }
-    
-                        @Override
-                        public void onError(ResourceException e) {
-                            Log.info(e.getMessage());
-                        }
-                    });
-                } catch (ResourceException e) {
-                    Log.info(e.getMessage());
-                }
+        } else if (CodeMirror2.PHP.equals(mode)) {
+            CompletionProposal[] proposals = new CompletionProposal[keyWords.size()];
+            int i = 0;
+            for (Token token : keyWords) {
+                proposals[i++] = new PhpProposal(token.getName(), "", offset, token);
             }
+            return proposals;
         }
+        return null;
+    }
 
-        CompletionProposal[] proposals = new CompletionProposal[keyWords.size()];
-        int i = 0;
-        for (Token token : keyWords) {
-            proposals[++i] = new PhpProposal(token.getName(), "", offset);
+    private void init() {
+        PhpBundle bundle = GWT.create(PhpBundle.class);
+        try {
+            bundle.phpKeyWords().getText(new ResourceCallback<TextResource>() {
+                @Override
+                public void onSuccess(TextResource resource) {
+                    JSONValue parseLenient = JSONParser.parseLenient(resource.getText());
+                    JSONTokenParser parser = new JSONTokenParser();
+                    keyWords = parser.getTokens(parseLenient.isArray());
+                }
+
+                @Override
+                public void onError(ResourceException e) {
+                    Log.error(getClass(), e.getMessage());
+                }
+            });
+        } catch (ResourceException e) {
+            Log.error(getClass(), e.getMessage());
         }
-        return proposals;
     }
 
     /**
-     * @see org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor#computeContextInformation(org.exoplatform.ide.editor.client.api.Editor, int)
+     * @see org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor#computeContextInformation(org.exoplatform.ide.editor.client.api.Editor,
+     *      int)
      */
     @Override
     public ContextInformation[] computeContextInformation(Editor viewer, int offset) {

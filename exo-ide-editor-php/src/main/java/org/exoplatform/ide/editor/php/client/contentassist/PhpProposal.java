@@ -22,15 +22,26 @@ import com.codenvy.ide.client.util.logging.Log;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.exoplatform.ide.editor.api.codeassitant.Modifier;
+import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
+import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
 import org.exoplatform.ide.editor.client.api.contentassist.Point;
+import org.exoplatform.ide.editor.php.client.PhpClientBundle;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.editor.shared.text.edits.MalformedTreeException;
 import org.exoplatform.ide.editor.shared.text.edits.ReplaceEdit;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 /**
+ * Completion proposal for PHP.
+ * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: PhpCompletionProposal.java Apr 16, 2013 12:56:54 PM azatsarynnyy $
  *
@@ -46,6 +57,10 @@ public class PhpProposal implements CompletionProposal {
     /** Text offset. */
     private final int offset;
 
+    private final TokenType tokenType;
+
+    private List<Modifier> modifieres = new ArrayList<Modifier>();
+
     /**
      * Constructs new {@link PhpProposal} instance with the given proposal, prefix and offset.
      * 
@@ -53,11 +68,18 @@ public class PhpProposal implements CompletionProposal {
      *         proposal text label
      * @param prefix
      * @param offset
+     * @param token
      */
-    public PhpProposal(String proposal, String prefix, int offset) {
+    @SuppressWarnings("unchecked")
+    public PhpProposal(String proposal, String prefix, int offset, Token token) {
         this.proposal = proposal;
         this.prefix = prefix;
         this.offset = offset;
+        this.tokenType = token.getType();
+
+        if (token.hasProperty(TokenProperties.MODIFIERS)) {
+            modifieres.addAll((Collection<Modifier>)token.getProperty(TokenProperties.MODIFIERS).isObjectProperty().objectValue());
+        }
     }
 
     /**
@@ -83,34 +105,51 @@ public class PhpProposal implements CompletionProposal {
         return null;
     }
 
-    /**
-     * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getAdditionalProposalInfo()
-     */
+    /** @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getAdditionalProposalInfo() */
     @Override
     public Widget getAdditionalProposalInfo() {
         return null;
     }
 
-    /**
-     * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getDisplayString()
-     */
+    /** @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getDisplayString() */
     @Override
     public String getDisplayString() {
         return proposal;
     }
 
-    /**
-     * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getImage()
-     */
+    /** @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getImage() */
     @Override
     public Image getImage() {
-        // TODO Auto-generated method stub
-        return null;
+        switch (tokenType) {
+            case FUNCTION:
+            case METHOD:
+                return new Image(PhpClientBundle.INSTANCE.publicMethod());
+            case PROPERTY:
+                if (modifieres.contains(Modifier.PRIVATE)) {
+                    return new Image(PhpClientBundle.INSTANCE.privateField());
+                } else if (modifieres.contains(Modifier.PROTECTED)) {
+                    return new Image(PhpClientBundle.INSTANCE.protectedField());
+                } else {
+                    return new Image(PhpClientBundle.INSTANCE.publicField());
+                }
+            case CONSTANT:
+            case CLASS_CONSTANT:
+                return new Image(PhpClientBundle.INSTANCE.constantItem());
+            case PARAMETER:
+            case VARIABLE:
+            case LOCAL_VARIABLE:
+                return new Image(PhpClientBundle.INSTANCE.variable());
+            case INTERFACE:
+                return new Image(PhpClientBundle.INSTANCE.interfaceItem());
+            case CLASS:
+                return new Image(PhpClientBundle.INSTANCE.classItem());
+            case KEYWORD:
+            default:
+                return new Image(PhpClientBundle.INSTANCE.blankImage());
+        }
     }
 
-    /**
-     * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getContextInformation()
-     */
+    /** @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getContextInformation() */
     @Override
     public ContextInformation getContextInformation() {
         return null;
