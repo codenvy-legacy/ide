@@ -34,6 +34,7 @@ import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -86,6 +87,7 @@ import org.exoplatform.ide.client.operation.cutcopy.CopyItemsEvent;
 import org.exoplatform.ide.client.operation.cutcopy.CutItemsEvent;
 import org.exoplatform.ide.client.operation.cutcopy.PasteItemsEvent;
 import org.exoplatform.ide.client.operation.deleteitem.DeleteItemEvent;
+import org.exoplatform.ide.extension.samples.client.getstarted.GetStartedEvent;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedHandler;
@@ -210,7 +212,7 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
     @Override
     public void onIDELoadComplete(IDELoadCompleteEvent event) {
         if (openedProject == null) {
-            refreshProjectsList();
+            refreshProjectsList(event);
         }
     }
 
@@ -241,7 +243,7 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
         
         if (openedProject == null) {
             display.setProject(null);
-            refreshProjectsList();
+            refreshProjectsList(event);
             return;
         }
 
@@ -292,7 +294,7 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
 
         display.asView().setTitle(DEFAULT_TITLE);
         display.setLinkWithEditorButtonEnabled(false);
-        refreshProjectsList();
+        refreshProjectsList(event);
         
         IDE.fireEvent(new ItemsSelectedEvent(new ArrayList<Item>(), display.asView()));
     }
@@ -587,7 +589,7 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
     public void onItemDeleted(ItemDeletedEvent event) {
         if (event.getItem() instanceof ProjectModel) {
             if (openedProject == null && display != null) {
-                refreshProjectsList();
+                refreshProjectsList(event);
             }
         }
     }
@@ -611,11 +613,10 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
         }
     }
     
-    
     /**
      * 
      */
-    private void refreshProjectsList() {
+    private void refreshProjectsList(final GwtEvent event) {
         try {
             VirtualFileSystem.getInstance().getChildren(VirtualFileSystem.getInstance().getInfo().getRoot(),
                 ItemType.PROJECT, new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>())) {
@@ -628,13 +629,17 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
                         }
                     }
 
+                    if (event instanceof IDELoadCompleteEvent && projects.size() == 0) {
+                        IDE.fireEvent(new GetStartedEvent());
+                    }
+
                     Collections.sort(projects, PROJECT_COMPARATOR);
                     display.getProjectsListGrid().setValue(projects);
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    IDE.fireEvent(new ExceptionThrownEvent(exception, "Error loadin Searching of projects failed."));
+                    IDE.fireEvent(new ExceptionThrownEvent(exception, "Error loading Searching of projects failed."));
                 }
             });
         } catch (RequestException e) {

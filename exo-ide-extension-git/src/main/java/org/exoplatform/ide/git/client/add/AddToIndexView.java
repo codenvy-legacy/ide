@@ -39,7 +39,7 @@ import org.exoplatform.ide.git.client.GitExtension;
  * @version $Id: Mar 30, 2011 9:25:02 AM anya $
  */
 public class AddToIndexView extends ViewImpl implements AddToIndexPresenter.Display {
-    public static final int     HEIGHT           = 180;
+    public static final int     HEIGHT           = 120;
 
     public static final int     WIDTH            = 420;
 
@@ -72,7 +72,7 @@ public class AddToIndexView extends ViewImpl implements AddToIndexPresenter.Disp
     private static AddToIndexViewUiBinder uiBinder = GWT.create(AddToIndexViewUiBinder.class);
 
     public AddToIndexView() {
-        super(ID, ViewType.MODAL, GitExtension.MESSAGES.addToIndexTitle(), null, WIDTH, HEIGHT);
+        super(ID, ViewType.MODAL, GitExtension.MESSAGES.addToIndexTitle(), null, WIDTH, HEIGHT, false);
         setCloseOnEscape(true);
         add(uiBinder.createAndBindUi(this));
         messageField.getElement().setId(MESSAGE_FIELD_ID);

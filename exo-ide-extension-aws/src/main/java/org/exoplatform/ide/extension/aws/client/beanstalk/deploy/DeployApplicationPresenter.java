@@ -124,7 +124,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
         }
         bindDisplay();
         display.getNameField().setValue(projectName);
-        getSolutionStacks();
+        getSolutionStacks(false);
         return display.getView();
     }
 
@@ -344,11 +344,11 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
     }
 
     /** Get the list of solution stack and put them to the appropriate field. */
-    private void getSolutionStacks() {
+    private void getSolutionStacks(final boolean getStartedWizard) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
             public void onLoggedIn() {
-                getSolutionStacks();
+                getSolutionStacks(getStartedWizard);
             }
         };
 
@@ -372,6 +372,9 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                                 }
                             }
                             display.setSolutionStackValues(values.toArray(new String[values.size()]));
+                            if (getStartedWizard) {
+                                beforeDeploy();
+                            }
                         }
 
                         @Override
@@ -408,4 +411,48 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
         }
     }
 
+
+    @Override
+    public void deployFirstTime(String projectName, ProjectTemplate projectTemplate, final DeployResultHandler deployResultHandler) {
+        this.projectName = projectName;
+        this.deployResultHandler = deployResultHandler;
+
+        if (display == null) {
+            display = GWT.create(Display.class);
+        }
+        bindDisplay();
+        display.getNameField().setValue(projectName + "-" + rand());
+        display.getEnvNameField().setValue(projectName + "-env-" + rand());
+
+        final Loader loader = new GWTLoader();
+        loader.setMessage(LOCALIZATION_CONSTANT.creatingProject());
+        loader.show();
+        try {
+            TemplateService.getInstance().createProjectFromTemplate(vfsInfo.getId(), vfsInfo.getRoot().getId(),
+                                                                    projectName, projectTemplate.getName(),
+                                                                    new AsyncRequestCallback<ProjectModel>(
+                                                                            new ProjectUnmarshaller(new ProjectModel())) {
+                                                                        @Override
+                                                                        protected void onSuccess(ProjectModel result) {
+                                                                            loader.hide();
+                                                                            project = result;
+                                                                            deployResultHandler.onProjectCreated(project);
+                                                                            getSolutionStacks(true);
+                                                                        }
+
+                                                                        @Override
+                                                                        protected void onFailure(Throwable exception) {
+                                                                            loader.hide();
+                                                                            IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                                        }
+                                                                    });
+        } catch (RequestException e) {
+            loader.hide();
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    private int rand() {
+        return (int)(Math.floor(Math.random() * 999 - 100) + 100);
+    }
 }

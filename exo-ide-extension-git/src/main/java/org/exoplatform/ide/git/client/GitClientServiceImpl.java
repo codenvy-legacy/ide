@@ -508,11 +508,12 @@ public class GitClientServiceImpl extends GitClientService {
      *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
      */
     @Override
-    public void remove(String vfsId, String projectid, String[] files, AsyncRequestCallback<String> callback)
-                                                                                                             throws RequestException {
+    public void remove(String vfsId, String projectid, String[] files, Boolean cached, AsyncRequestCallback<String> callback)
+                                                                                                                             throws RequestException {
         String url = restServiceContext + REMOVE;
 
         RmRequest rmRequest = new RmRequest(files);
+        rmRequest.setCached(cached);
         RemoveRequestMarshaller marshaller = new RemoveRequestMarshaller(rmRequest);
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
@@ -527,14 +528,13 @@ public class GitClientServiceImpl extends GitClientService {
      *      org.exoplatform.ide.git.shared.ResetRequest.ResetType, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
      */
     @Override
-    public void reset(String vfsId, String projectid, String[] paths, String commit, ResetType resetType,
+    public void reset(String vfsId, String projectid, String commit, ResetType resetType,
                       AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + RESET;
 
         ResetRequest resetRequest = new ResetRequest();
         resetRequest.setCommit(commit);
         resetRequest.setType(resetType);
-        resetRequest.setPaths(paths);
 
         ResetRequestMarshaller marshaller = new ResetRequestMarshaller(resetRequest);
 

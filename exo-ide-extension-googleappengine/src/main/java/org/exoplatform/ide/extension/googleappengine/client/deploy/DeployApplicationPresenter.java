@@ -364,4 +364,22 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
     public boolean validate() {
         return true;
     }
+
+    @Override
+    public void deployFirstTime(String projectName, ProjectTemplate projectTemplate, final DeployResultHandler deployResultHandler) {
+        this.projectTemplate = projectTemplate;
+        this.deployResultHandler = deployResultHandler;
+        this.projectName = projectName;
+
+        if (display == null) {
+            display = GWT.create(Display.class);
+            bindDisplay();
+        }
+
+        display.getUseExisting().setValue(false);
+        display.enableApplicationIdField(false);
+        display.getApplicationIdField().setValue("");
+
+        isUserLogged(true);
+    }
 }

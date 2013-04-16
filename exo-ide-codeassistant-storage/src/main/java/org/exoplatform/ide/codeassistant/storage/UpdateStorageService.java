@@ -28,7 +28,17 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -37,63 +47,63 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class UpdateStorageService {
 
-    public static final String INFO_STORAGE = "update.info.storage";
+    public static final String                  INFO_STORAGE                    = "update.info.storage";
 
     /**
      * Name of configuration parameter that provides build timeout is seconds. After this time build may be terminated.
-     *
+     * 
      * @see #DEFAULT_UPDATE_TIMEOUT
      */
-    public static final String UPDATE_TIMEOUT = "update.timeout";
+    public static final String                  UPDATE_TIMEOUT                  = "update.timeout";
 
     /**
-     * Name of configuration parameter that sets the number of update workers. In other words it set the number of build
-     * process that can be run at the same time. If this parameter is not set then the number of available processors
-     * used, e.g. <code>Runtime.getRuntime().availableProcessors();</code>
+     * Name of configuration parameter that sets the number of update workers. In other words it set the number of build process that can be
+     * run at the same time. If this parameter is not set then the number of available processors used, e.g.
+     * <code>Runtime.getRuntime().availableProcessors();</code>
      */
-    public static final String UPDATE_WORKERS_NUMBER = "update.workers.number";
+    public static final String                  UPDATE_WORKERS_NUMBER           = "update.workers.number";
 
     /**
-     * Name of parameter that set the max size of build queue. The number of build task in queue may not be greater than
-     * provided by this parameter.
-     *
+     * Name of parameter that set the max size of build queue. The number of build task in queue may not be greater than provided by this
+     * parameter.
+     * 
      * @see #DEFAULT_UPDATE_QUEUE_SIZE
      */
-    public static final String UPDATE_QUEUE_SIZE = "update.queue.size";
+    public static final String                  UPDATE_QUEUE_SIZE               = "update.queue.size";
 
     /**
-     * Name of configuration parameter that points to the directory where all jars stored.
-     * Is such parameter is not specified then 'java.io.tmpdir' used.
+     * Name of configuration parameter that points to the directory where all jars stored. Is such parameter is not specified then
+     * 'java.io.tmpdir' used.
      */
-    public static final String UPDATE_FOLDER = "update.folder";
+    public static final String                  UPDATE_FOLDER                   = "update.folder";
 
     /** Default build timeout in seconds (120). After this time build may be terminated. */
-    public static final int DEFAULT_UPDATE_TIMEOUT = 180;
+    public static final int                     DEFAULT_UPDATE_TIMEOUT          = 180;
 
     /** Default max size of build queue (200). */
-    public static final int DEFAULT_UPDATE_QUEUE_SIZE = 200;
+    public static final int                     DEFAULT_UPDATE_QUEUE_SIZE       = 200;
 
     /** Default build timeout in minutes (10). After this time update task may be terminated. */
-    public static final int DEFAULT_CLEAN_RESULT_DELAY_TIME = 10;
+    public static final int                     DEFAULT_CLEAN_RESULT_DELAY_TIME = 10;
 
-    private final ExecutorService pool;
+    private final ExecutorService               pool;
 
-    private final File tempFolder;
+    private final File                          tempFolder;
 
-    private final int timeoutMillis;
+    private final int                           timeoutMillis;
 
-    private final InfoStorage infoStorage;
+    private final InfoStorage                   infoStorage;
 
-    private Thread writerThread;
+    private Thread                              writerThread;
 
-    private BlockingQueue<WriterTask> writerQueue;
+    private BlockingQueue<WriterTask>           writerQueue;
 
-    private final ScheduledExecutorService cleaner;
+    private final ScheduledExecutorService      cleaner;
 
-    private ConcurrentMap<String, CacheElement> concurrentMap = new ConcurrentHashMap<String, CacheElement>();
+    private ConcurrentMap<String, CacheElement> concurrentMap                   = new ConcurrentHashMap<String, CacheElement>();
 
     /** task ID generator. */
-    private static final AtomicLong idGenerator = new AtomicLong(1);
+    private static final AtomicLong             idGenerator                     = new AtomicLong(1);
 
     private static String nextTaskID() {
         return Long.toString(idGenerator.getAndIncrement());
@@ -117,7 +127,7 @@ public class UpdateStorageService {
              getOption(options, UPDATE_TIMEOUT, Integer.class, DEFAULT_UPDATE_TIMEOUT),//
              getOption(options, UPDATE_WORKERS_NUMBER, Integer.class, Runtime.getRuntime().availableProcessors()),//
              getOption(options, UPDATE_QUEUE_SIZE, Integer.class, DEFAULT_UPDATE_QUEUE_SIZE)//
-            );
+        );
     }
 
     /**
@@ -130,8 +140,8 @@ public class UpdateStorageService {
         this.timeoutMillis = timeout * 1000; // to milliseconds
         //
         this.pool =
-                new ThreadPoolExecutor(workerNumber, workerNumber, 0L, TimeUnit.MILLISECONDS,
-                                       new LinkedBlockingQueue<Runnable>(updateQueueSize), new ThreadPoolExecutor.AbortPolicy());
+                    new ThreadPoolExecutor(workerNumber, workerNumber, 0L, TimeUnit.MILLISECONDS,
+                                           new LinkedBlockingQueue<Runnable>(updateQueueSize), new ThreadPoolExecutor.AbortPolicy());
 
         this.cleaner = Executors.newSingleThreadScheduledExecutor();
         cleaner.scheduleAtFixedRate(new CleanTask(), DEFAULT_CLEAN_RESULT_DELAY_TIME, DEFAULT_CLEAN_RESULT_DELAY_TIME,
@@ -140,6 +150,7 @@ public class UpdateStorageService {
         writerQueue = new LinkedBlockingQueue<WriterTask>();
         StorageWriter storageWriter = new StorageWriter(writerQueue, infoStorage);
         writerThread = new Thread(storageWriter, "StorageWriter");
+        writerThread.setDaemon(true);
         writerThread.start();
     }
 
@@ -157,7 +168,7 @@ public class UpdateStorageService {
             if (!pool.awaitTermination(30, TimeUnit.SECONDS)) {
                 pool.shutdownNow();
             }
-            //Task with null artifact will shutdown writer thread
+            // Task with null artifact will shutdown writer thread
             writerQueue.add(new WriterTask(null, null, null, null));
         } catch (InterruptedException e) {
             pool.shutdownNow();
@@ -184,7 +195,7 @@ public class UpdateStorageService {
 
         UpdateStorageTask task = new UpdateStorageTask(nextTaskID, future);
         CacheElement newElement =
-                new CacheElement(nextTaskID, task, System.currentTimeMillis() + DEFAULT_CLEAN_RESULT_DELAY_TIME);
+                                  new CacheElement(nextTaskID, task, System.currentTimeMillis() + DEFAULT_CLEAN_RESULT_DELAY_TIME);
         concurrentMap.put(nextTaskID, newElement);
         return task;
     }
@@ -200,7 +211,7 @@ public class UpdateStorageService {
 
     /** Timeout Thread. Kill the main task if necessary. */
     public static class TimeOutThread extends Thread {
-        final long timeout;
+        final long   timeout;
 
         final Thread controlledObj;
 
@@ -253,7 +264,7 @@ public class UpdateStorageService {
         return depFolder;
     }
 
-   /* ====================================================== */
+    /* ====================================================== */
 
     private class CleanTask implements Runnable {
         public void run() {
@@ -270,11 +281,11 @@ public class UpdateStorageService {
     }
 
     private static final class CacheElement {
-        private final long expirationTime;
+        private final long      expirationTime;
 
-        private final int hash;
+        private final int       hash;
 
-        final String id;
+        final String            id;
 
         final UpdateStorageTask task;
 
