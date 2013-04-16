@@ -28,6 +28,10 @@ public class RmRequest extends GitRequest {
     /** List of files to remove. */
     private String[] files;
 
+    /** Only from index */
+    private Boolean  cached;
+
+
     /**
      * @param files files to remove
      */
@@ -51,5 +55,17 @@ public class RmRequest extends GitRequest {
      */
     public void setFiles(String[] files) {
         this.files = files;
+    }
+
+    /** @return is RmRequest represents remove from index only */
+    public Boolean getCached() {
+        return cached;
+    }
+
+    /**
+     * @param Boolean cached represents remove from index only
+     */
+    public void setCached(Boolean cached) {
+        this.cached = cached;
     }
 }
