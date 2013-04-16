@@ -914,7 +914,7 @@ public class JGitConnection implements GitConnection {
         String[] files = request.getFiles();
         RmCommand rmCommand = new Git(repository).rm();
 
-        rmCommand.setCached(false);
+        rmCommand.setCached(request.getCached());
 
         if (files != null) {
             for (int i = 0; i < files.length; i++) {

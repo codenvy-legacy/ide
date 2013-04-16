@@ -254,11 +254,13 @@ public abstract class GitClientService {
      * @param vfsId virtual file system id
      * @param projectid project's id (root of GIT repository)
      * @param files files to remove
+     * @param cached is for removal only from index
      * @param callback callback
      */
     public abstract void remove(String vfsId,
                                 String projectid,
                                 String[] files,
+                                Boolean cached,
                                 AsyncRequestCallback<String> callback) throws RequestException;
 
     /**

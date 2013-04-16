@@ -29,7 +29,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.TreeItem;
 
-import org.eclipse.jdt.client.packaging.model.next.JavaProject;
+import org.eclipse.jdt.client.packaging.model.JavaProject;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
