@@ -191,6 +191,9 @@ public interface SamplesClientBundle extends ClientBundle {
 
     @Source("org/exoplatform/ide/extension/samples/client/images/wizard/technology/php36x36.png")
     ImageResource phpTechnology();
+    
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/technology/nodejs36x36.png")
+    ImageResource nodejsTechnology();
 
     @Source("org/exoplatform/ide/extension/samples/client/images/wizard/technology/python36x36.png")
     ImageResource pythonTechnology();

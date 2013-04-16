@@ -49,7 +49,7 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
 
     private static final int HEIGHT = 300;
 
-    private static final int WIDTH = 590;
+    private static final int WIDTH = 630;
 
     private static GetStartedUiBinder uiBinder = GWT.create(GetStartedUiBinder.class);
 
@@ -190,6 +190,9 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
                         break;
                     case RUBY_ON_RAILS:
                         labelForToggleButton = getNewButtonLabel("Ruby on Rails");
+                        break;
+                    case NODE_JS:
+                        labelForToggleButton = getNewButtonLabel("Node.js");
                         break;
                     case MultiModule:
                         labelForToggleButton = getNewButtonLabel("Maven Multi-Module");
@@ -340,7 +343,7 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
             case PYTHON: return SamplesClientBundle.INSTANCE.pythonTechnology();
             case RUBY_ON_RAILS: return SamplesClientBundle.INSTANCE.rorTechnology();
             case SPRING: return SamplesClientBundle.INSTANCE.springTechnology();
-            case NODE_JS: return SamplesClientBundle.INSTANCE.springTechnology();
+            case NODE_JS: return SamplesClientBundle.INSTANCE.nodejsTechnology();
             default: return null;
         }
     }
