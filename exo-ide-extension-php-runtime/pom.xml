@@ -8,7 +8,7 @@
         <version>2.2.0-SNAPSHOT</version>
     </parent>
     <artifactId>exo-ide-extension-php-runtime</artifactId>
-    <name>Codenvy IDE :: Extension :: Php :: Runtime</name>
+    <name>Codenvy IDE :: Extension :: PHP :: Runtime</name>
 
     <dependencies>
         <dependency>

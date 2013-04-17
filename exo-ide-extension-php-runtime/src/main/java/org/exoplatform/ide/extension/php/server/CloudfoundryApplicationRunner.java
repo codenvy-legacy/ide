@@ -52,7 +52,7 @@ import static org.exoplatform.ide.commons.NameGenerator.generate;
 import static org.exoplatform.ide.commons.ZipUtils.unzip;
 
 /**
- * ApplicationRunner for deploy PHP applications at Cloud Foundry PaaS.
+ * ApplicationRunner for deploy PHP applications at Cloud Foundry.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: CloudfoundryApplicationRunner.java Apr 17, 2013 4:40:15 PM azatsarynnyy $

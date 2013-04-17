@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.php.client;
 
 /**
+ * Interface to represent the messages contained in resource bundle: DebugLocalizationConstant.properties'.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: PhpExtensionLocalizationConstant.java Apr 17, 2013 4:07:00 PM azatsarynnyy $

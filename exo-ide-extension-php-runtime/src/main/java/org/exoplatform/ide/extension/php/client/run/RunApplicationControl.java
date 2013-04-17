@@ -22,11 +22,20 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.*;
-import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.extension.php.client.PhpExtensionClientBundle;
 import org.exoplatform.ide.extension.php.client.PhpRuntimeExtension;
-import org.exoplatform.ide.extension.php.client.run.event.*;
+import org.exoplatform.ide.extension.php.client.run.event.ApplicationStartedEvent;
+import org.exoplatform.ide.extension.php.client.run.event.ApplicationStartedHandler;
+import org.exoplatform.ide.extension.php.client.run.event.ApplicationStoppedEvent;
+import org.exoplatform.ide.extension.php.client.run.event.ApplicationStoppedHandler;
+import org.exoplatform.ide.extension.php.client.run.event.RunApplicationEvent;
 
 /**
  * Control for running PHP application.
