@@ -107,6 +107,7 @@ public class ProjectResolver {
             projectImages.put(ProjectType.RUBY, IconImageBundle.INSTANCE.rubyProject());
             projectImages.put(ProjectType.RUBY_ON_RAILS, IconImageBundle.INSTANCE.rubyProject());
             projectImages.put(ProjectType.PYTHON, IconImageBundle.INSTANCE.pythonProject());
+            projectImages.put(ProjectType.NODE_JS, IconImageBundle.INSTANCE.nodejsProject());
             projectImages.put(ProjectType.DJANGO, IconImageBundle.INSTANCE.djangoProject());
             projectImages.put(ProjectType.AWS, IconImageBundle.INSTANCE.awsProject());
 
