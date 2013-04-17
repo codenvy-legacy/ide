@@ -104,6 +104,19 @@
 
     <!-- End Python Support -->
 
+    <!-- PHP Support -->
+
+    <component>
+        <key>org.exoplatform.ide.extension.php.server.ApplicationRunner</key>
+        <type>org.exoplatform.ide.extension.php.server.CloudfoundryApplicationRunner</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.extension.php.server.AppRunnerApplication</type>
+    </component>
+
+    <!-- End PHP Support -->
+
 
     <!--
     ***************************************************************************************
@@ -134,7 +147,6 @@
     ********************************** PaaS's *********************************************
     ***************************************************************************************
     -->
-
 
     <component>
 
