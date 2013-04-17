@@ -105,10 +105,10 @@ import java.util.Map;
  * @version $Id: RefactoringRenamePresenter.java Jan 17, 2013 4:07:09 PM azatsarynnyy $
  */
 public class RefactoringRenamePresenter implements RefactoringRenameHandler, ViewClosedHandler, VfsChangedHandler,
-                                                   ProjectOpenedHandler, ProjectClosedHandler, ActiveProjectChangedHandler,
-                                                   EditorActiveFileChangedHandler,
-                                                   UpdateOutlineHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
-                                                   EditorFileContentChangedHandler {
+                   ProjectOpenedHandler, ProjectClosedHandler, ActiveProjectChangedHandler,
+                   EditorActiveFileChangedHandler,
+                   UpdateOutlineHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
+                   EditorFileContentChangedHandler {
 
     public interface Display extends IsView {
         /**
