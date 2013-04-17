@@ -37,7 +37,6 @@ import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.resources.client.TextResource;
 
 import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor;
@@ -53,6 +52,8 @@ import java.util.List;
 /**
  * A {@link ContentAssistProcessor} proposes completions and computes context information for PHP content.
  * 
+ * TODO: For now, it supports autocompletion for keywords and special variables/arrays.
+ * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: PhpContentAssistProcessor.java Apr 15, 2013 3:47:18 PM azatsarynnyy $
  */
@@ -60,11 +61,11 @@ public class PhpContentAssistProcessor implements ContentAssistProcessor {
 
     /** Bean that holds {@link #findToken} results. */
     private static class FindTokenResult {
-        /** Token that "covers" the cursor; left token if cursor touches 2 tokens, */
-        com.google.collide.codemirror2.Token inToken = null;
+        /** Token that "covers" the cursor. */
+        com.google.collide.codemirror2.Token inToken;
 
         /** Number of characters between "inToken" start and the cursor position. */
-        int cut = 0;
+        int cut;
     }
 
     public interface PhpBundle extends ClientBundle {
@@ -76,10 +77,11 @@ public class PhpContentAssistProcessor implements ContentAssistProcessor {
          @Override
          public int compare(Token o1, Token o2) {
 
-             if (o1.getType() != TokenType.KEYWORD && o2.getType() == TokenType.KEYWORD) {
+             if (o1.getType() != org.exoplatform.ide.editor.api.codeassitant.TokenType.KEYWORD
+                 && o2.getType() == org.exoplatform.ide.editor.api.codeassitant.TokenType.KEYWORD) {
                  return -1;
-             } else if (o1.getType() == TokenType.KEYWORD
-                        && o2.getType() != TokenType.KEYWORD) {
+             } else if (o1.getType() == org.exoplatform.ide.editor.api.codeassitant.TokenType.KEYWORD
+                        && o2.getType() != org.exoplatform.ide.editor.api.codeassitant.TokenType.KEYWORD) {
                  return 1;
              } else {
                  return o1.getName().compareTo(o2.getName());
@@ -134,9 +136,16 @@ public class PhpContentAssistProcessor implements ContentAssistProcessor {
         } else if (CodeMirror2.PHP.equals(mode)) {
             FindTokenResult findTokenResult = getTriggeringString(tokens, column);
             String prefix = findTokenResult.inToken.getValue();
-            prefix = prefix.substring(0, prefix.length() - findTokenResult.cut);
 
-            List<Token> filteredTokens = getFilteredTokensByPrefix(prefix);
+            switch (findTokenResult.inToken.getType()) {
+                case WHITESPACE:
+                case NULL:
+                    prefix = "";
+                default:
+                    prefix = prefix.substring(0, prefix.length() - findTokenResult.cut);
+            }
+
+            List<Token> filteredTokens = getTokensFilteredByPrefix(prefix);
             CompletionProposal[] proposals = new CompletionProposal[filteredTokens.size()];
             int i = 0;
             for (Token token : filteredTokens) {
@@ -147,14 +156,26 @@ public class PhpContentAssistProcessor implements ContentAssistProcessor {
         return null;
     }
 
-    private List<Token> getFilteredTokensByPrefix(String prefix) {
-        List<Token> filteredTokens = new ArrayList<Token>();
-        for (Token token : keyWords) {
-            if (token.getName().startsWith(prefix)) {
-                filteredTokens.add(token);
-            }
+    private void init() {
+        PhpBundle bundle = GWT.create(PhpBundle.class);
+        try {
+            bundle.phpKeyWords().getText(new ResourceCallback<TextResource>() {
+                @Override
+                public void onSuccess(TextResource resource) {
+                    JSONValue parseLenient = JSONParser.parseLenient(resource.getText());
+                    JSONTokenParser parser = new JSONTokenParser();
+                    keyWords = parser.getTokens(parseLenient.isArray());
+                    Collections.sort(keyWords, tokenComparator);
+                }
+                
+                @Override
+                public void onError(ResourceException e) {
+                    Log.error(getClass(), e.getMessage());
+                }
+            });
+        } catch (ResourceException e) {
+            Log.error(getClass(), e.getMessage());
         }
-        return filteredTokens;
     }
 
     /** Finds token at cursor position. */
@@ -185,26 +206,14 @@ public class PhpContentAssistProcessor implements ContentAssistProcessor {
         return result;
     }
 
-    private void init() {
-        PhpBundle bundle = GWT.create(PhpBundle.class);
-        try {
-            bundle.phpKeyWords().getText(new ResourceCallback<TextResource>() {
-                @Override
-                public void onSuccess(TextResource resource) {
-                    JSONValue parseLenient = JSONParser.parseLenient(resource.getText());
-                    JSONTokenParser parser = new JSONTokenParser();
-                    keyWords = parser.getTokens(parseLenient.isArray());
-                    Collections.sort(keyWords, tokenComparator);
-                }
-
-                @Override
-                public void onError(ResourceException e) {
-                    Log.error(getClass(), e.getMessage());
-                }
-            });
-        } catch (ResourceException e) {
-            Log.error(getClass(), e.getMessage());
+    private List<Token> getTokensFilteredByPrefix(String prefix) {
+        List<Token> filteredTokens = new ArrayList<Token>();
+        for (Token token : keyWords) {
+            if (token.getName().toLowerCase().startsWith(prefix.toLowerCase())) {
+                filteredTokens.add(token);
+            }
         }
+        return filteredTokens;
     }
 
     /**

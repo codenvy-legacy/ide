@@ -26,8 +26,9 @@ import org.exoplatform.ide.editor.css.client.contentassist.CssAutocompleter;
 import org.exoplatform.ide.editor.css.client.contentassist.CssContentAssistProcessor;
 import org.exoplatform.ide.editor.html.client.contentassist.HtmlAutocompleter;
 import org.exoplatform.ide.editor.html.client.contentassist.HtmlContentAssistProcessor;
-import org.exoplatform.ide.editor.javascript.client.codemirror.JavaScriptAutocompleter;
+import org.exoplatform.ide.editor.javascript.client.contentassist.JavaScriptAutocompleter;
 import org.exoplatform.ide.editor.javascript.client.contentassist.JavaScriptContentAssistProcessor;
+import org.exoplatform.ide.editor.php.client.contentassist.PhpAutocompleter;
 import org.exoplatform.ide.editor.php.client.contentassist.PhpContentAssistProcessor;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 
@@ -48,7 +49,7 @@ public class PhpEditor extends CollabEditor {
         super(mimeType);
         CssAutocompleter cssAutocompleter = CssAutocompleter.create();
         HtmlAutocompleter htmlAutocompleter = HtmlAutocompleter.create(cssAutocompleter, new JavaScriptAutocompleter());
-        editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(htmlAutocompleter);
+        editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(new PhpAutocompleter(htmlAutocompleter));
 
         ContentAssistProcessor htmlContentAssistProcessor = new HtmlContentAssistProcessor(new CssContentAssistProcessor(cssAutocompleter),
                                                                                            new JavaScriptContentAssistProcessor());

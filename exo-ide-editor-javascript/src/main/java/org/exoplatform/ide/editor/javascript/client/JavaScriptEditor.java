@@ -21,7 +21,7 @@ package org.exoplatform.ide.editor.javascript.client;
 import com.google.collide.client.CollabEditor;
 
 import org.exoplatform.ide.editor.client.api.EditorCapability;
-import org.exoplatform.ide.editor.javascript.client.codemirror.JavaScriptAutocompleter;
+import org.exoplatform.ide.editor.javascript.client.contentassist.JavaScriptAutocompleter;
 import org.exoplatform.ide.editor.javascript.client.contentassist.JavaScriptContentAssistProcessor;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 

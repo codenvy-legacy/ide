@@ -25,7 +25,7 @@ import org.exoplatform.ide.editor.css.client.contentassist.CssAutocompleter;
 import org.exoplatform.ide.editor.css.client.contentassist.CssContentAssistProcessor;
 import org.exoplatform.ide.editor.html.client.contentassist.HtmlAutocompleter;
 import org.exoplatform.ide.editor.html.client.contentassist.HtmlContentAssistProcessor;
-import org.exoplatform.ide.editor.javascript.client.codemirror.JavaScriptAutocompleter;
+import org.exoplatform.ide.editor.javascript.client.contentassist.JavaScriptAutocompleter;
 import org.exoplatform.ide.editor.javascript.client.contentassist.JavaScriptContentAssistProcessor;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 
