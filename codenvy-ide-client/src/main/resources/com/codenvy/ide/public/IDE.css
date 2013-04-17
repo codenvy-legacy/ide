@@ -2,6 +2,9 @@
 body {
     background: #DDD;
 }
+a{
+    text-decoration: none;
+}
 
 /* Style for splitter */
 .gwt-SplitLayoutPanel-HDragger {

@@ -49,10 +49,10 @@ public class OpenProjectViewImpl extends DialogBox implements OpenProjectView {
     private static OpenProjectViewImplUiBinder uiBinder = GWT.create(OpenProjectViewImplUiBinder.class);
 
     @UiField
-    Button btnCancel;
+    com.codenvy.ide.ui.Button btnCancel;
 
     @UiField
-    Button btnOpen;
+    com.codenvy.ide.ui.Button btnOpen;
 
     @UiField
     ScrollPanel listPanel;
