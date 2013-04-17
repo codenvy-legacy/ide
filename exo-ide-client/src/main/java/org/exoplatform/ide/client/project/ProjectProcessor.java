@@ -60,8 +60,8 @@ import java.util.List;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  */
-public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler, AllFilesClosedHandler,
-                                         RefreshBrowserHandler, ItemsSelectedHandler, FolderChangedHandler, FileSavedHandler {
+public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler, AllFilesClosedHandler, 
+        RefreshBrowserHandler, ItemsSelectedHandler, FolderChangedHandler, FileSavedHandler {
 
     private IDEProject openedProject;
 
@@ -127,6 +127,7 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
         if (openedProject == null) {
             return;
         }
+        
         foldersToBeRefreshed.clear();
         for (Folder f : event.getFolders()) {
             foldersToBeRefreshed.add((FolderModel)f);

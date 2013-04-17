@@ -25,7 +25,7 @@ import org.exoplatform.ide.git.shared.LogRequest;
 
 /**
  * Marshaller for log request in JSON format.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 14, 2011 5:42:15 PM anya $
  */
@@ -34,8 +34,7 @@ public class LogRequestMarshaller implements Marshallable, Constants {
     private LogRequest logRequest;
 
     /**
-     * @param logRequest
-     *         log request
+     * @param logRequest log request
      */
     public LogRequestMarshaller(LogRequest logRequest) {
         this.logRequest = logRequest;

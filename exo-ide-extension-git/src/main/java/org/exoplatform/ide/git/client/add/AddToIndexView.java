@@ -34,37 +34,37 @@ import org.exoplatform.ide.git.client.GitExtension;
 
 /**
  * View for adding changes togit index.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 30, 2011 9:25:02 AM anya $
  */
 public class AddToIndexView extends ViewImpl implements AddToIndexPresenter.Display {
-    public static final int HEIGHT = 180;
+    public static final int     HEIGHT           = 120;
 
-    public static final int WIDTH = 420;
+    public static final int     WIDTH            = 420;
 
-    public static final String ID = "ideAddToIndexView";
+    public static final String  ID               = "ideAddToIndexView";
 
-    private static final String ADD_BUTTON_ID = "ideAddToIndexViewAddButton";
+    private static final String ADD_BUTTON_ID    = "ideAddToIndexViewAddButton";
 
     private static final String CANCEL_BUTTON_ID = "ideAddToIndexViewCancelButton";
 
-    private static final String UPDATE_FIELD_ID = "ideAddToIndexViewUpdaterField";
+    private static final String UPDATE_FIELD_ID  = "ideAddToIndexViewUpdaterField";
 
     private static final String MESSAGE_FIELD_ID = "ideAddToIndexViewMessageField";
 
     /* Elements titles */
     @UiField
-    ImageButton addButton;
+    ImageButton                 addButton;
 
     @UiField
-    ImageButton cancelButton;
+    ImageButton                 cancelButton;
 
     @UiField
-    CheckBox updateField;
+    CheckBox                    updateField;
 
     @UiField
-    Label messageField;
+    Label                       messageField;
 
     interface AddToIndexViewUiBinder extends UiBinder<Widget, AddToIndexView> {
     }
@@ -72,7 +72,7 @@ public class AddToIndexView extends ViewImpl implements AddToIndexPresenter.Disp
     private static AddToIndexViewUiBinder uiBinder = GWT.create(AddToIndexViewUiBinder.class);
 
     public AddToIndexView() {
-        super(ID, ViewType.MODAL, GitExtension.MESSAGES.addToIndexTitle(), null, WIDTH, HEIGHT);
+        super(ID, ViewType.MODAL, GitExtension.MESSAGES.addToIndexTitle(), null, WIDTH, HEIGHT, false);
         setCloseOnEscape(true);
         add(uiBinder.createAndBindUi(this));
         messageField.getElement().setId(MESSAGE_FIELD_ID);

@@ -82,4 +82,8 @@
     <replace-with class="org.exoplatform.ide.extension.samples.client.inviting.manage.ManageInvitesView">
         <when-type-is class="org.exoplatform.ide.extension.samples.client.inviting.manage.ManageInvitePresenter.Display"/>
     </replace-with>
+
+    <replace-with class="org.exoplatform.ide.extension.samples.client.getstarted.GetStartedView">
+        <when-type-is class="org.exoplatform.ide.extension.samples.client.getstarted.GetStartedPresenter.Display" />
+    </replace-with>
 </module>

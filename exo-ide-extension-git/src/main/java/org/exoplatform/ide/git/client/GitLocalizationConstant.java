@@ -81,6 +81,9 @@ public interface GitLocalizationConstant extends Messages {
     @Key("messages.nothing_changed")
     String nothingChanged();
 
+    @Key("messages.index_empty")
+    String indexIsEmpty();
+
     @Key("messages.not_git_repository")
     String notGitRepository();
 
@@ -396,9 +399,24 @@ public interface GitLocalizationConstant extends Messages {
     @Key("view.reset.hard.type.description")
     String resetHardTypeDescription();
 
+    @Key("view.reset.keep.type.title")
+    String resetKeepTypeTitle();
+
+    @Key("view.reset.keep.type.description")
+    String resetKeepTypeDescription();
+
+    @Key("view.reset.merge.type.title")
+    String resetMergeTypeTitle();
+
+    @Key("view.reset.merge.type.description")
+    String resetMergeTypeDescription();
+
     // Remove
     @Key("view.remove_from_index.all")
     String removeFromIndexAll();
+
+    @Key("view.remove_from_index.only")
+    String removeFromIndexOnly();
 
     @Key("view.remove_from_index.folder")
     String removeFromIndexFolder(String folder);

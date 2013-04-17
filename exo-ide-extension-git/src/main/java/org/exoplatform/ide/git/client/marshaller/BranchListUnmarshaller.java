@@ -31,7 +31,7 @@ import java.util.List;
 
 /**
  * Unmarshaller for list of branches.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 5, 2011 2:14:51 PM anya $
  */
@@ -40,8 +40,7 @@ public class BranchListUnmarshaller implements Unmarshallable<List<Branch>>, Con
     private List<Branch> branches;
 
     /**
-     * @param branches
-     *         branches
+     * @param branches branches
      */
     public BranchListUnmarshaller(List<Branch> branches) {
         this.branches = branches;
@@ -74,8 +73,8 @@ public class BranchListUnmarshaller implements Unmarshallable<List<Branch>>, Con
             }
             if (object.containsKey(DISPLAY_NAME)) {
                 displayName =
-                        (object.get(DISPLAY_NAME).isString() != null) ? object.get(DISPLAY_NAME).isString().stringValue()
-                                                                      : displayName;
+                              (object.get(DISPLAY_NAME).isString() != null) ? object.get(DISPLAY_NAME).isString().stringValue()
+                                  : displayName;
             }
 
             branches.add(new Branch(name, active, displayName));

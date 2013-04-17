@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,57 +16,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.client.event;
+package org.exoplatform.ide.extension.samples.client.getstarted;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-import org.exoplatform.ide.vfs.shared.Item;
-
 /**
- * Created by The eXo Platform SAS .
- *
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
+ * @version $Id: $
  */
-
-public class ItemMovedEvent extends GwtEvent<ItemMovedHandler> {
-
-    public static final GwtEvent.Type<ItemMovedHandler> TYPE = new Type<ItemMovedHandler>();
-
-    private Item item;
-
-    private String sourceId;
-
-    /**
-     * @param item
-     * @param sourceId
-     */
-    public ItemMovedEvent(Item item, String sourceId) {
-        super();
-        this.item = item;
-        this.sourceId = sourceId;
-    }
+public class GetStartedEvent extends GwtEvent<GetStartedHandler> {
+    public static final GwtEvent.Type<GetStartedHandler> TYPE =
+            new GwtEvent.Type<GetStartedHandler>();
 
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
     @Override
-    public com.google.gwt.event.shared.GwtEvent.Type<ItemMovedHandler> getAssociatedType() {
+    public com.google.gwt.event.shared.GwtEvent.Type<GetStartedHandler> getAssociatedType() {
         return TYPE;
     }
 
     /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
     @Override
-    protected void dispatch(ItemMovedHandler handler) {
-        handler.onItemMoved(this);
+    protected void dispatch(GetStartedHandler handler) {
+        handler.onGetStarted(this);
     }
-
-    /** @return the item */
-    public Item getItem() {
-        return item;
-    }
-
-    /** @return the sourceId */
-    public String getSourceId() {
-        return sourceId;
-    }
-
 }

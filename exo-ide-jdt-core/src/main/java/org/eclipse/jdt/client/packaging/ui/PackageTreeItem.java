@@ -21,7 +21,7 @@ package org.eclipse.jdt.client.packaging.ui;
 import com.google.gwt.resources.client.ImageResource;
 
 import org.eclipse.jdt.client.JdtClientBundle;
-import org.eclipse.jdt.client.packaging.model.next.Package;
+import org.eclipse.jdt.client.packaging.model.Package;
 import org.exoplatform.ide.client.framework.navigation.DirectoryFilter;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.Item;

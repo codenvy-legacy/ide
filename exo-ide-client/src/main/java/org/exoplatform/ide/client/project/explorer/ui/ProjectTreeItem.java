@@ -16,39 +16,37 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.packaging.model.next;
+package org.exoplatform.ide.client.project.explorer.ui;
 
-import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
+import com.google.gwt.resources.client.ImageResource;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.exoplatform.ide.client.framework.project.api.IDEProject;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.vfs.shared.Item;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
+ * 
  */
-public class Package extends FolderModel {
+public class ProjectTreeItem extends FolderTreeItem {
 
-    private String packageName;
-
-    private List<FileModel> files = new ArrayList<FileModel>();
-
-    public Package(FolderModel folder, String packageName) {
-        super(folder);
-        this.packageName = packageName;
-
-        getChildren().getItems().addAll(folder.getChildren().getItems());
-        setParent(folder.getParent());
-        setProject(folder.getProject());
+    public ProjectTreeItem(IDEProject project) {
+        super(project);
+    }
+    
+    @Override
+    protected ImageResource getItemIcon() {
+        IDEProject project = (IDEProject)getUserObject();
+        return ProjectResolver.getImageForProject(project.getProjectType());
     }
 
-    public String getPackageName() {
-        return packageName;
+    protected ProjectExplorerTreeItem createTreeItem(Item item) {
+        if (item instanceof IDEProject) {
+            return new ProjectTreeItem((IDEProject)item);
+        }
+        
+        return super.createTreeItem(item);
     }
-
-    public List<FileModel> getFiles() {
-        return files;
-    }
-
+    
 }

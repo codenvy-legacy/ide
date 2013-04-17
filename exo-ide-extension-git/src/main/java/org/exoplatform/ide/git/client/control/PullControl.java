@@ -24,7 +24,7 @@ import org.exoplatform.ide.git.client.pull.PullEvent;
 
 /**
  * Control for pulling data from remote repository.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 20, 2011 12:03:32 PM anya $
  */

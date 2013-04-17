@@ -40,6 +40,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.paas.DeployResultHandler;
 import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
+import org.exoplatform.ide.client.framework.paas.InitializeDeployViewHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
@@ -288,11 +289,11 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
     }
 
     /**
-     * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#getDeployView(java.lang.String,
-     *      org.exoplatform.ide.client.framework.project.ProjectType)
+     * @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#getDeployView(java.lang.String,
+     *      org.exoplatform.ide.client.framework.project.ProjectType, org.exoplatform.ide.client.framework.paas.InitializeDeployViewHandler)
      */
     @Override
-    public Composite getDeployView(String projectName, ProjectType projectType) {
+    public Composite getDeployView(String projectName, ProjectType projectType, InitializeDeployViewHandler initializeDeployViewHandler) {
         this.projectName = projectName;
         if (display == null) {
             display = GWT.create(Display.class);
@@ -362,5 +363,23 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
     @Override
     public boolean validate() {
         return true;
+    }
+
+    @Override
+    public void deployFirstTime(String projectName, ProjectTemplate projectTemplate, final DeployResultHandler deployResultHandler) {
+        this.projectTemplate = projectTemplate;
+        this.deployResultHandler = deployResultHandler;
+        this.projectName = projectName;
+
+        if (display == null) {
+            display = GWT.create(Display.class);
+            bindDisplay();
+        }
+
+        display.getUseExisting().setValue(false);
+        display.enableApplicationIdField(false);
+        display.getApplicationIdField().setValue("");
+
+        isUserLogged(true);
     }
 }

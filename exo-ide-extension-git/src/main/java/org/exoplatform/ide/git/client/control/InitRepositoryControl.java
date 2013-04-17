@@ -19,18 +19,18 @@
 package org.exoplatform.ide.git.client.control;
 
 import org.exoplatform.ide.client.framework.control.GroupNames;
-import org.exoplatform.ide.client.framework.project.api.TreeRefreshedEvent;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.init.InitRepositoryEvent;
 
 /**
  * Control for initializing the repository.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 23, 2011 5:36:00 PM anya $
  */
 public class InitRepositoryControl extends GitControl {
+
     public InitRepositoryControl() {
         super(GitExtension.MESSAGES.initControlId());
         setTitle(GitExtension.MESSAGES.initControlTitle());
@@ -42,42 +42,4 @@ public class InitRepositoryControl extends GitControl {
         setGroupName(GroupNames.ACTIONS);
     }
 
-//   protected void updateControlState()
-//   {
-//      if (workspace == null)
-//      {
-//         setVisible(false);
-//         return;
-//      }
-//
-//      if (selectedProject == null || !isProjectExplorerVisible)
-//      {
-//         setVisible(false);
-//         return;
-//      }
-//
-//      if (selectedItem == null
-//         || (isWorkspaceSelected(selectedItem.getId()) || !isProjectSelected((ItemContext)selectedItem)))
-//      {
-//         setVisible(false);
-//         return;
-//      }
-//
-//      setVisible(true);
-//
-//      List<Item> itemList = selectedProject.getChildren().getItems();
-//      for (Item child : itemList)
-//      {
-//         if (".git".equals(child.getName()))
-//         {
-//            setEnabled(false);
-//            return;
-//         }
-//      }
-//
-//      if (enableState == EnableState.BEFORE_INIT)
-//         setEnabled(true);
-//      else
-//         setEnabled(false);
-//   }
 }

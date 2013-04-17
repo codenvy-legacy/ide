@@ -22,14 +22,14 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ShowInHistoryEvent} event.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 29, 2011 3:13:56 PM anya $
  */
 public interface ShowInHistoryHandler extends EventHandler {
     /**
      * Perform actions, when user tries to view the history of commits.
-     *
+     * 
      * @param event
      */
     void onShowInHistory(ShowInHistoryEvent event);

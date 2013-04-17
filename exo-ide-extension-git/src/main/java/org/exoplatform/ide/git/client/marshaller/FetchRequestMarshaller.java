@@ -28,7 +28,7 @@ import org.exoplatform.ide.git.shared.FetchRequest;
 
 /**
  * Marshaller for creation fetch request in JSON format.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 20, 2011 3:05:47 PM anya $
  */
@@ -37,8 +37,7 @@ public class FetchRequestMarshaller implements Marshallable, Constants {
     private FetchRequest fetchRequest;
 
     /**
-     * @param fetchRequest
-     *         fetch request
+     * @param fetchRequest fetch request
      */
     public FetchRequestMarshaller(FetchRequest fetchRequest) {
         this.fetchRequest = fetchRequest;

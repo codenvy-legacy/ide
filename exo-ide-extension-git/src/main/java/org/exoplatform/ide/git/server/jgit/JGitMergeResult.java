@@ -33,8 +33,7 @@ public class JGitMergeResult implements MergeResult {
     private final org.eclipse.jgit.api.MergeResult jgitMergeResult;
 
     /**
-     * @param jgitMergeResult
-     *         back-end instance of ArrayIndexOutOfBoundsException
+     * @param jgitMergeResult back-end instance of ArrayIndexOutOfBoundsException
      */
     public JGitMergeResult(org.eclipse.jgit.api.MergeResult jgitMergeResult) {
         this.jgitMergeResult = jgitMergeResult;

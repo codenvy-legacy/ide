@@ -25,7 +25,6 @@ import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
@@ -37,30 +36,21 @@ import java.util.Map;
  * @version $Id: Dec 12, 2011 5:45:42 PM anya $
  */
 public interface ProjectExplorerDisplay extends IsView {
+    
     /**
-     * Change tree visibility.
+     * Get Project Tree
      *
-     * @param visible
-     *         <code>true</code> if visible
+     * @return {@link TreeGridItem}
      */
-    void setProjectExplorerTreeVisible(boolean visible);
+    TreeGridItem<Item> getProjectTree();
 
-    /** @return {@link TreeGridItem} */
-    TreeGridItem<Item> getBrowserTree();
-
+    /**
+     * Set project.
+     * 
+     * @param project
+     */
     void setProject(ProjectModel project);
-
-    void navigateToItem(Item item);
-
-    /**
-     * Get selected items in the tree.
-     *
-     * @return {@link List} selected items
-     */
-    List<Item> getSelectedItems();
-
-    List<Item> getVisibleItems();
-
+    
     /**
      * Select item.
      *
@@ -69,34 +59,53 @@ public interface ProjectExplorerDisplay extends IsView {
      * @return <b>true</b> is item was found and selected, <b>false</b> otherwise
      */
     boolean selectItem(Item item);
+    
+    /**
+     * Get selected item in Project tree.
+     *
+     * @return {@link List} selected items
+     */
+    Item getSelectedItem();
 
     /**
-     * Deselect item in browser tree by path.
-     *
-     * @param path
-     *         item's path
+     * Get list of visible items in Project tree.
+     * 
+     * @return
      */
-    void deselectItem(String path);
-
+    List<Item> getVisibleItems();
+    
     /**
-     * Update the state of the item in the tree.
-     *
-     * @param file
+     * Refresh project tree.
      */
-    void updateItemState(FileModel file);
-
-    /**
-     * Set lock tokens to the items in the tree.
-     *
-     * @param locktokens
+    void refreshTree();
+    
+    /** 
+     * Add info icons to main item icon.
      */
-    void setLockTokens(Map<String, String> locktokens);
-
-    /** Add info icons to main item icon. */
     void addItemsIcons(Map<Item, Map<TreeIconPosition, ImageResource>> itemsIcons);
 
-    /** Remove additional icons from items. */
+    /**
+     * Remove additional icons from items.
+     */
     void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons);
+    
+    
+    
+//    /**
+//     * Deselect item in browser tree by path.
+//     *
+//     * @param path
+//     *         item's path
+//     */
+//    void deselectItem(String path);
+//
+//    /**
+//     * Update the state of the item in the tree.
+//     *
+//     * @param file
+//     */
+//    void updateItemState(FileModel file);
+
 
     /**
      * Linking with Editor
@@ -126,22 +135,6 @@ public interface ProjectExplorerDisplay extends IsView {
     void setLinkWithEditorButtonSelected(boolean selected);
 
     /**
-     * Change projects list grid visibility.
-     *
-     * @param visible
-     *         <code>true</code> if visible
-     */
-    void setProjectsListGridVisible(boolean visible);
-
-    /**
-     * Change ProjectNotOpenedPanel visibility.
-     *
-     * @param visible
-     *         <code>true</code> if visible
-     */
-    void setProjectNotOpenedPanelVisible(boolean visible);
-
-    /**
      * Get projects list grid.
      *
      * @return projects list grid
@@ -154,7 +147,5 @@ public interface ProjectExplorerDisplay extends IsView {
      * @return {@link List} of selected projects
      */
     List<ProjectModel> getSelectedProjects();
-
-    void refreshTree();
-
+    
 }

@@ -36,6 +36,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.paas.DeployResultHandler;
 import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
+import org.exoplatform.ide.client.framework.paas.InitializeDeployViewHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
@@ -47,14 +48,10 @@ import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
-import org.exoplatform.ide.vfs.client.VirtualFileSystem;
-import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -235,7 +232,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
     }
 
     @Override
-    public Composite getDeployView(String projectName, ProjectType projectType) {
+    public Composite getDeployView(String projectName, ProjectType projectType, InitializeDeployViewHandler initializeDeployViewHandler) {
         if (display == null) {
             display = GWT.create(Display.class);
             bindDisplay();
@@ -295,28 +292,11 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
     }
 
     private void checkIsGitRepository(final ProjectModel project) {
-        try {
-            VirtualFileSystem.getInstance().getChildren(project,
-                                                        new AsyncRequestCallback<List<Item>>(
-                                                                new ChildrenUnmarshaller(new ArrayList<Item>())) {
 
-                                                            @Override
-                                                            protected void onSuccess(List<Item> result) {
-                                                                for (Item item : result) {
-                                                                    if (".git".equals(item.getName())) {
-                                                                        createApplication();
-                                                                        return;
-                                                                    }
-                                                                }
-                                                                initRepository(project);
-                                                            }
-
-                                                            @Override
-                                                            protected void onFailure(Throwable exception) {
-                                                                initRepository(project);
-                                                            }
-                                                        });
-        } catch (RequestException ignored) {
+        if (project.hasProperty("isGitRepository") && project.getPropertyValue("isGitRepository").equals("true")) {
+            createApplication();
+        } else {
+            initRepository(project);
         }
     }
 
@@ -330,5 +310,27 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
         String errorMessage =
                 (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES.initFailed();
         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+    }
+
+    @Override
+    public void deployFirstTime(String projectName, ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler) {
+        this.deployResultHandler = deployResultHandler;
+        this.projectName = projectName;
+
+        if (display == null) {
+            display = GWT.create(Display.class);
+            bindDisplay();
+        }
+        this.projectName = projectName;
+        String name = projectName + "-" + rand();
+
+        display.getApplicationNameField().setValue(name);
+        display.getRemoteNameField().setValue(name);
+
+        createProject(projectTemplate);
+    }
+
+    private int rand() {
+        return (int)(Math.floor(Math.random() * 999 - 100) + 100);
     }
 }

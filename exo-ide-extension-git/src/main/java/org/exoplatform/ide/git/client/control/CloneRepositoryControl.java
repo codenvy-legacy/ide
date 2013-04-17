@@ -25,11 +25,12 @@ import org.exoplatform.ide.git.client.clone.CloneRepositoryEvent;
 
 /**
  * Control for cloning remote repository to local one.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 22, 2011 3:49:23 PM anya $
  */
 public class CloneRepositoryControl extends GitControl {
+
     public CloneRepositoryControl() {
         super(GitExtension.MESSAGES.cloneControlId());
         setTitle(GitExtension.MESSAGES.cloneControlTitle());
@@ -43,7 +44,8 @@ public class CloneRepositoryControl extends GitControl {
 
     @Override
     protected void updateControlState() {
-        setVisible(true);
-        setEnabled(true);
+        setEnabled(vfsInfo != null);
+        setVisible(vfsInfo != null);
     }
+
 }

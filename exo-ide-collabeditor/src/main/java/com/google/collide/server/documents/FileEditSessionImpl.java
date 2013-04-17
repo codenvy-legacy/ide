@@ -33,6 +33,13 @@ import com.google.protobuf.ByteString;
 
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.server.observation.ChangeEvent;
+import org.exoplatform.ide.vfs.server.observation.ChangeEventFilter;
+import org.exoplatform.ide.vfs.server.observation.EventListener;
+import org.exoplatform.ide.vfs.server.observation.EventListenerList;
+import org.exoplatform.ide.vfs.server.observation.PathFilter;
+import org.exoplatform.ide.vfs.server.observation.TypeFilter;
+import org.exoplatform.ide.vfs.server.observation.VfsIDFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -53,125 +60,45 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * This class is thread-safe.
  */
 final class FileEditSessionImpl implements FileEditSession {
-    private static final Log LOG = ExoLogger.getLogger(FileEditSessionImpl.class);
-
-    /** Bundles together a snapshot of the text of this file with any conflict chunks. */
-    private static class VersionedTextAndConflictChunksImpl implements VersionedTextAndConflictChunks {
-        private final VersionedText               text;
-        private final List<AnchoredConflictChunk> conflictChunks;
-
-        VersionedTextAndConflictChunksImpl(VersionedText text, List<AnchoredConflictChunk> conflictChunks) {
-            this.text = text;
-            this.conflictChunks = conflictChunks;
-        }
-
-        @Override
-        public VersionedText getVersionedText() {
-            return text;
-        }
-
-        @Override
-        public List<AnchoredConflictChunk> getConflictChunks() {
-            return conflictChunks;
-        }
-    }
-
-    private static class AnchoredConflictChunk extends ConflictChunk {
-
-        private static final AnchorType CONFLICT_CHUNK_START_LINE = AnchorType.create(FileEditSessionImpl.class, "conflictChunkStart");
-        private static final AnchorType CONFLICT_CHUNK_END_LINE   = AnchorType.create(FileEditSessionImpl.class, "conflictChunkEnd");
-
-        public final Anchor startLineAnchor;
-        public final Anchor endLineAnchor;
-
-        public AnchoredConflictChunk(ConflictChunk chunk, VersionedDocument doc) {
-            super(chunk, chunk.isResolved());
-
-            // Add anchors at the conflict regions' boundaries, so their position/size
-            // gets adjusted automatically as the user enters text in and around them.
-            startLineAnchor = doc.addAnchor(
-                    CONFLICT_CHUNK_START_LINE, chunk.getStartLine(), AnchorManager.IGNORE_COLUMN);
-            startLineAnchor.setRemovalStrategy(Anchor.RemovalStrategy.SHIFT);
-            startLineAnchor.getShiftListenerRegistrar().add(new ShiftListener() {
-                @Override
-                public void onAnchorShifted(Anchor anchor) {
-                    setStartLine(anchor.getLineNumber());
-                }
-            });
-            endLineAnchor =
-                    doc.addAnchor(CONFLICT_CHUNK_END_LINE, chunk.getEndLine(), AnchorManager.IGNORE_COLUMN);
-            endLineAnchor.setInsertionPlacementStrategy(InsertionPlacementStrategy.LATER);
-            endLineAnchor.setRemovalStrategy(Anchor.RemovalStrategy.SHIFT);
-            endLineAnchor.getShiftListenerRegistrar().add(new ShiftListener() {
-                @Override
-                public void onAnchorShifted(Anchor anchor) {
-                    setEndLine(anchor.getLineNumber());
-                }
-            });
-        }
-    }
-
-    /** Given a merge result from the originally conflicted state, construct conflict chunks for it. */
-    private static List<ConflictChunk> constructConflictChunks(MergeResult mergeResult) {
-        List<ConflictChunk> conflicts = Lists.newArrayList();
-        for (MergeChunk mergeChunk : mergeResult.getMergeChunks()) {
-            if (mergeChunk.hasConflict()) {
-                conflicts.add(new ConflictChunk(mergeChunk));
-            }
-        }
-        return conflicts;
-    }
-
-    /** Document that contains the file contents. */
-    private VersionedDocument contents;
-
+    private static final Log                         LOG            = ExoLogger.getLogger(FileEditSessionImpl.class);
     /** The list of conflict chunks for this file. */
-    private final List<AnchoredConflictChunk> conflictChunks = Lists.newArrayList();
-
-  /*
-   * The size and sha1 fields don't actually need to stay in lock-step with the doc contents since
-   * there's no public API for retrieving a snapshot of both values. Thus, we don't need blocking
-   * synchronization. We do however need to ensure that updates made by one thread are seen by other
-   * threads, so they must be declared volatile.
-   */
-
-    /** Size of the file, in bytes. Lazily computed by {@link #getSize()}. */
-    private Integer size = null;
-
-    /** SHA-1 hash of the file contents. Lazily computed by {@link #getSha1()}. */
-    private ByteString sha1 = null;
-
-    /** CC revision of the document that we last saved */
-    private int lastSavedCcRevision;
-
-    /** CC revision of the document after the last mutation was applied */
-    private int lastMutationCcRevision;
-
-    /** True if the file-edit session has been closed */
-    private boolean closed = false;
-
-    /** When this file edit session was closed. Makes sense only if closed = true. */
-    private long closedTimeMs;
-
-    /** Time that this FileEditSession was created (millis since epoch) */
-    //private final long createdAt = System.currentTimeMillis();
-
-    private OnCloseListener onCloseListener;
-
+    private final        List<AnchoredConflictChunk> conflictChunks = Lists.newArrayList();
     /** The ID of the resource this edit session is opened for. */
-    private final String resourceId;
-
-    private final String path;
-
+    private       String    resourceId;
+    private       String    path;
     private final MediaType mediaType;
-
     private final Set<String> editSessionParticipants         = new CopyOnWriteArraySet<String>();
+    /*
+     * The size and sha1 fields don't actually need to stay in lock-step with the doc contents since
+     * there's no public API for retrieving a snapshot of both values. Thus, we don't need blocking
+     * synchronization. We do however need to ensure that updates made by one thread are seen by other
+     * threads, so they must be declared volatile.
+     */
     private final Set<String> editSessionParticipantsReadOnly = Collections.unmodifiableSet(editSessionParticipants);
     private final String            editSessionKey;
     private final VirtualFileSystem vfs;
+    /** Document that contains the file contents. */
+    private       VersionedDocument contents;
+    /** Size of the file, in bytes. Lazily computed by {@link #getSize()}. */
+    private Integer    size = null;
+    /** SHA-1 hash of the file contents. Lazily computed by {@link #getSha1()}. */
+    private ByteString sha1 = null;
+    /** CC revision of the document that we last saved */
+    private int lastSavedCcRevision;
+    /** CC revision of the document after the last mutation was applied */
+    private int lastMutationCcRevision;
+    /** True if the file-edit session has been closed */
+    private boolean closed = false;
+    /** When this file edit session was closed. Makes sense only if closed = true. */
+    private long              closedTimeMs;
+    /** Time that this FileEditSession was created (millis since epoch) */
+    //private final long createdAt = System.currentTimeMillis();
+
+    private OnCloseListener   onCloseListener;
 
     FileEditSessionImpl(String editSessionKey,
                         VirtualFileSystem vfs,
+                        EventListenerList listenerList,
                         String resourceId,
                         String path,
                         String mediaType,
@@ -201,8 +128,27 @@ final class FileEditSessionImpl implements FileEditSession {
         final long createdAt = System.currentTimeMillis();
         this.lastSavedCcRevision = contents.getCcRevision();
         this.lastMutationCcRevision = 0;
-
         LOG.debug("FileEditSession {} was created at {}", this, createdAt);
+    }
+
+    /** Given a merge result from the originally conflicted state, construct conflict chunks for it. */
+    private static List<ConflictChunk> constructConflictChunks(MergeResult mergeResult) {
+        List<ConflictChunk> conflicts = Lists.newArrayList();
+        for (MergeChunk mergeChunk : mergeResult.getMergeChunks()) {
+            if (mergeChunk.hasConflict()) {
+                conflicts.add(new ConflictChunk(mergeChunk));
+            }
+        }
+        return conflicts;
+    }
+
+    private static boolean hasUnresolvedConflictChunks(List<? extends ConflictChunk> conflictChunks) {
+        for (ConflictChunk conflict : conflictChunks) {
+            if (!conflict.isResolved()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void checkNotClosed() {
@@ -321,7 +267,6 @@ final class FileEditSessionImpl implements FileEditSession {
         return lastSavedCcRevision < lastMutationCcRevision;
     }
 
-
     @Override
     public void save() throws IOException {
         checkNotClosed();
@@ -390,7 +335,7 @@ final class FileEditSessionImpl implements FileEditSession {
 
     /*
      * Immediately save the file.
-     * 
+     *
      * TODO: how to store chunk resolution?
      */
         save();
@@ -400,15 +345,6 @@ final class FileEditSessionImpl implements FileEditSession {
     @Override
     public boolean hasUnresolvedConflictChunks() {
         return hasUnresolvedConflictChunks(getConflictChunks());
-    }
-
-    private static boolean hasUnresolvedConflictChunks(List<? extends ConflictChunk> conflictChunks) {
-        for (ConflictChunk conflict : conflictChunks) {
-            if (!conflict.isResolved()) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
@@ -439,5 +375,70 @@ final class FileEditSessionImpl implements FileEditSession {
     @Override
     public boolean removeCollaborator(String clientId) {
         return editSessionParticipants.remove(clientId);
+    }
+
+    @Override
+    public void setResourceId(String newResourceId) {
+        resourceId = newResourceId;
+    }
+
+    @Override
+    public void setPath(String newPath) {
+        path = newPath;
+    }
+
+    /** Bundles together a snapshot of the text of this file with any conflict chunks. */
+    private static class VersionedTextAndConflictChunksImpl implements VersionedTextAndConflictChunks {
+        private final VersionedText               text;
+        private final List<AnchoredConflictChunk> conflictChunks;
+
+        VersionedTextAndConflictChunksImpl(VersionedText text, List<AnchoredConflictChunk> conflictChunks) {
+            this.text = text;
+            this.conflictChunks = conflictChunks;
+        }
+
+        @Override
+        public VersionedText getVersionedText() {
+            return text;
+        }
+
+        @Override
+        public List<AnchoredConflictChunk> getConflictChunks() {
+            return conflictChunks;
+        }
+    }
+
+    private static class AnchoredConflictChunk extends ConflictChunk {
+
+        private static final AnchorType CONFLICT_CHUNK_START_LINE = AnchorType.create(FileEditSessionImpl.class, "conflictChunkStart");
+        private static final AnchorType CONFLICT_CHUNK_END_LINE   = AnchorType.create(FileEditSessionImpl.class, "conflictChunkEnd");
+        public final Anchor startLineAnchor;
+        public final Anchor endLineAnchor;
+
+        public AnchoredConflictChunk(ConflictChunk chunk, VersionedDocument doc) {
+            super(chunk, chunk.isResolved());
+
+            // Add anchors at the conflict regions' boundaries, so their position/size
+            // gets adjusted automatically as the user enters text in and around them.
+            startLineAnchor = doc.addAnchor(
+                    CONFLICT_CHUNK_START_LINE, chunk.getStartLine(), AnchorManager.IGNORE_COLUMN);
+            startLineAnchor.setRemovalStrategy(Anchor.RemovalStrategy.SHIFT);
+            startLineAnchor.getShiftListenerRegistrar().add(new ShiftListener() {
+                @Override
+                public void onAnchorShifted(Anchor anchor) {
+                    setStartLine(anchor.getLineNumber());
+                }
+            });
+            endLineAnchor =
+                    doc.addAnchor(CONFLICT_CHUNK_END_LINE, chunk.getEndLine(), AnchorManager.IGNORE_COLUMN);
+            endLineAnchor.setInsertionPlacementStrategy(InsertionPlacementStrategy.LATER);
+            endLineAnchor.setRemovalStrategy(Anchor.RemovalStrategy.SHIFT);
+            endLineAnchor.getShiftListenerRegistrar().add(new ShiftListener() {
+                @Override
+                public void onAnchorShifted(Anchor anchor) {
+                    setEndLine(anchor.getLineNumber());
+                }
+            });
+        }
     }
 }

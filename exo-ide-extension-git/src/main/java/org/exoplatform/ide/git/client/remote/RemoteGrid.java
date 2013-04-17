@@ -30,7 +30,7 @@ import java.util.List;
 
 /**
  * Grid to display remote repositories info.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 18, 2011 12:09:09 PM anya $
  */
@@ -39,10 +39,10 @@ public class RemoteGrid extends ListGrid<Remote> {
     private static final String ID = "ideRemoteGrid";
 
     /** Name column. */
-    Column<Remote, String> nameColumn;
+    Column<Remote, String>      nameColumn;
 
     /** Location column. */
-    Column<Remote, String> urlColumn;
+    Column<Remote, String>      urlColumn;
 
     public RemoteGrid() {
         super();
@@ -90,7 +90,7 @@ public class RemoteGrid extends ListGrid<Remote> {
 
     /**
      * Returns selected remote repository in grid.
-     *
+     * 
      * @return {@link Remote} selected remote repository
      */
     public Remote getSelectedRemote() {

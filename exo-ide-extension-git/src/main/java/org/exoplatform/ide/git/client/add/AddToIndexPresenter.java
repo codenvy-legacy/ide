@@ -41,7 +41,7 @@ import org.exoplatform.ide.vfs.shared.Folder;
 
 /**
  * Presenter for add changes to index view. The view must implement {@link AddToIndexPresenter.Display}. Add view to View.gwt.xml.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 29, 2011 4:35:16 PM anya $
  */
@@ -49,28 +49,28 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
     public interface Display extends IsView {
         /**
          * Get add button click handler.
-         *
+         * 
          * @return {@link HasClickHandlers}
          */
         HasClickHandlers getAddButton();
 
         /**
          * Get cancel button click handler.
-         *
+         * 
          * @return {@link HasClickHandlers}
          */
         HasClickHandlers getCancelButton();
 
         /**
          * Get update field value.
-         *
+         * 
          * @return {@link HasValue}
          */
         HasValue<Boolean> getUpdateValue();
 
         /**
          * Get message label value.
-         *
+         * 
          * @return {@link HasValue}
          */
         HasValue<String> getMessage();
@@ -84,8 +84,7 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
     }
 
     /**
-     * @param d
-     *         display
+     * @param d display
      */
     public void bindDisplay(Display d) {
         this.display = d;
@@ -121,7 +120,7 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
 
     /**
      * Form the message to display for adding to index, telling the user what is gonna to be added.
-     *
+     * 
      * @return {@link String} message to display
      */
     private String formMessage(String workdir) {
@@ -192,7 +191,7 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
 
     /**
      * Returns pattern of the files to be added.
-     *
+     * 
      * @return pattern of the files to be added
      */
     private String[] getFilePatterns() {
@@ -205,7 +204,7 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
 
     private void handleError(Throwable t) {
         String errorMessage =
-                (t.getMessage() != null && t.getMessage().length() > 0) ? t.getMessage() : GitExtension.MESSAGES.addFailed();
+                              (t.getMessage() != null && t.getMessage().length() > 0) ? t.getMessage() : GitExtension.MESSAGES.addFailed();
         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
     }
 

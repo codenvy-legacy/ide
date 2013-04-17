@@ -51,17 +51,17 @@ import java.util.*;
 
 /**
  * Handler to process actions with displaying the status of the Git work tree.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 28, 2011 3:58:20 PM anya $
  */
 public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeStatusHandler, FolderRefreshedHandler,
-                                                                  ProjectOpenedHandler, ProjectClosedHandler, FolderOpenedHandler {
+                                                      ProjectOpenedHandler, ProjectClosedHandler, FolderOpenedHandler {
     /**
-     * Store the status of the working tree (changed, untracked files).
-     * Status will be checked once, only when expands project item in Project Explorer.
+     * Store the status of the working tree (changed, untracked files). Status will be checked once, only when expands project item in
+     * Project Explorer.
      */
-    private Status workingTreeStatus;
+    private Status       workingTreeStatus;
 
     private ProjectModel openedProject;
 
@@ -73,8 +73,10 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
     }
 
-    /** @see org.exoplatform.ide.git.client.status.ShowWorkTreeStatusHandler#onShowWorkTreeStatus(org.exoplatform.ide.git.client.status
-     * .ShowWorkTreeStatusEvent) */
+    /**
+     * @see org.exoplatform.ide.git.client.status.ShowWorkTreeStatusHandler#onShowWorkTreeStatus(org.exoplatform.ide.git.client.status
+     *      .ShowWorkTreeStatusEvent)
+     */
     @Override
     public void onShowWorkTreeStatus(ShowWorkTreeStatusEvent event) {
         if (makeSelectionCheck()) {
@@ -84,9 +86,8 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
 
     /**
      * Get the status for Git work tree and display it on success.
-     *
-     * @param item
-     *         item in work tree
+     * 
+     * @param item item in work tree
      */
     @SuppressWarnings("unchecked")
     private void getStatusText(ProjectModel project, Item item) {
@@ -105,9 +106,10 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
                                                           @Override
                                                           protected void onFailure(Throwable exception) {
                                                               String errorMessage =
-                                                                      (exception.getMessage() != null) ? exception.getMessage()
-                                                                                                       : GitExtension.MESSAGES
-                                                                                                                     .statusFailed();
+                                                                                    (exception.getMessage() != null)
+                                                                                        ? exception.getMessage()
+                                                                                        : GitExtension.MESSAGES
+                                                                                                               .statusFailed();
                                                               IDE.fireEvent(new OutputEvent(errorMessage, OutputMessage.Type.GIT));
                                                           }
                                                       });
@@ -117,8 +119,10 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler#onFolderRefreshed(org.exoplatform.ide.client
-     * .framework.navigation.event.FolderRefreshedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler#onFolderRefreshed(org.exoplatform.ide.client
+     *      .framework.navigation.event.FolderRefreshedEvent)
+     */
     @Override
     public void onFolderRefreshed(FolderRefreshedEvent event) {
         FolderModel folder = (FolderModel)event.getFolder();
@@ -131,41 +135,41 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
 
     /**
      * Get the files in different state of Git cycle and mark them in browser tree.
-     *
-     * @param folder
-     *         folder to be updated
+     * 
+     * @param folder folder to be updated
      */
     private void getStatus(final FolderModel folder, boolean forced, final List<Item> additionalItems) {
+        if (openedProject.getProperty(GitExtension.GIT_REPOSITORY_PROP) == null)
+            return;
         if (!folder.getId().equals(openedProject.getId()) && !forced) {
             addItemsTreeIcons(folder, additionalItems);
             return;
         }
 
         try {
-            GitClientService.getInstance().status(vfs.getId(), openedProject.getId(),
-                                                  new AsyncRequestCallback<Status>(
-                                                          new AutoBeanUnmarshaller<Status>(GitExtension.AUTO_BEAN_FACTORY.status())) {
-                                                      @Override
-                                                      protected void onSuccess(Status result) {
-                                                          workingTreeStatus = result;
-                                                          addItemsTreeIcons(folder, additionalItems);
-                                                      }
+            GitClientService.getInstance()
+                            .status(vfs.getId(),
+                                    openedProject.getId(),
+                                    new AsyncRequestCallback<Status>(new AutoBeanUnmarshaller<Status>(GitExtension.AUTO_BEAN_FACTORY.status())) {
+                                        @Override
+                                        protected void onSuccess(Status result) {
+                                            workingTreeStatus = result;
+                                            addItemsTreeIcons(folder, additionalItems);
+                                        }
 
-                                                      @Override
-                                                      protected void onFailure(Throwable exception) {
-                                                      }
-                                                  });
+                                        @Override
+                                        protected void onFailure(Throwable exception) {
+                                        }
+                                    });
         } catch (RequestException ignored) {
         }
     }
 
     /**
      * Update icons for all items in the specified folder.
-     *
-     * @param project
-     *         project
-     * @param folder
-     *         folder to be updated
+     * 
+     * @param project project
+     * @param folder folder to be updated
      */
     private void addItemsTreeIcons(FolderModel folder, List<Item> additionalItems) {
         if (workingTreeStatus == null) {
@@ -173,7 +177,7 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
         }
 
         Map<Item, Map<TreeIconPosition, ImageResource>> treeNodesToUpdate =
-                new HashMap<Item, Map<TreeIconPosition, ImageResource>>();
+                                                                            new HashMap<Item, Map<TreeIconPosition, ImageResource>>();
 
         List<Item> itemsToCheck = new ArrayList<Item>();
 
@@ -214,11 +218,9 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
 
     /**
      * Check whether files from Git status contain the match with pointed pattern.
-     *
-     * @param files
-     *         file paths in status
-     * @param pattern
-     *         pattern to compare
+     * 
+     * @param files file paths in status
+     * @param pattern pattern to compare
      * @return pattern matchers one of the files in the list or not
      */
     private boolean contains(Set<String> files, String pattern) {

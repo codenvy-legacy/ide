@@ -22,6 +22,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -33,33 +34,37 @@ import org.exoplatform.ide.git.client.GitExtension;
 
 /**
  * View for removing changes in git index.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 30, 2011 9:25:02 AM anya $
  */
 public class RemoveFromIndexView extends ViewImpl implements RemoveFromIndexPresenter.Display {
-    public static final int HEIGHT = 180;
+    public static final int     HEIGHT           = 120;
 
-    public static final int WIDTH = 420;
+    public static final int     WIDTH            = 420;
 
-    public static final String ID = "ideRemoveFromIndexView";
+    public static final String  ID               = "ideRemoveFromIndexView";
 
     private static final String REMOVE_BUTTON_ID = "ideRemoveFromIndexViewRemoveButton";
 
     private static final String CANCEL_BUTTON_ID = "ideRemoveFromIndexViewCancelButton";
 
-
     private static final String MESSAGE_FIELD_ID = "ideRemoveFromIndexViewMessageField";
+
+    private static final String FROM_INDEX_ID    = "ideRemoveFromIndexOnlyBox";
 
     /* Elements titles */
     @UiField
-    ImageButton removeButton;
+    ImageButton                 removeButton;
 
     @UiField
-    ImageButton cancelButton;
+    ImageButton                 cancelButton;
 
     @UiField
-    Label messageField;
+    Label                       messageField;
+
+    @UiField
+    CheckBox                    fromIndexBox;
 
     interface RemoveFromIndexViewUiBinder extends UiBinder<Widget, RemoveFromIndexView> {
     }
@@ -67,12 +72,13 @@ public class RemoveFromIndexView extends ViewImpl implements RemoveFromIndexPres
     private static RemoveFromIndexViewUiBinder uiBinder = GWT.create(RemoveFromIndexViewUiBinder.class);
 
     public RemoveFromIndexView() {
-        super(ID, ViewType.MODAL, GitExtension.MESSAGES.removeFromIndexTitle(), null, WIDTH, HEIGHT);
+        super(ID, ViewType.MODAL, GitExtension.MESSAGES.removeFromIndexTitle(), null, WIDTH, HEIGHT, false);
         setCloseOnEscape(true);
         add(uiBinder.createAndBindUi(this));
         messageField.getElement().setId(MESSAGE_FIELD_ID);
         removeButton.setButtonId(REMOVE_BUTTON_ID);
         cancelButton.setButtonId(CANCEL_BUTTON_ID);
+        fromIndexBox.getElement().setId(FROM_INDEX_ID);
     }
 
     /** @see org.exoplatform.ide.git.client.remove.RemoveFromIndexPresenter.Display#getRemoveButton() */
@@ -91,5 +97,11 @@ public class RemoveFromIndexView extends ViewImpl implements RemoveFromIndexPres
     @Override
     public HasValue<String> getMessage() {
         return messageField;
+    }
+
+    /** @see org.exoplatform.ide.git.client.remove.RemoveFromIndexPresenter.Display#getFromIndexValue() */
+    @Override
+    public HasValue<Boolean> getFromIndexValue() {
+        return fromIndexBox;
     }
 }

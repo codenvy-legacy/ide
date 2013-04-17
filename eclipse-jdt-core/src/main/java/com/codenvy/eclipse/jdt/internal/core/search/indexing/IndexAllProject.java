@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.eclipse.jdt.internal.core.search.indexing;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.eclipse.core.resources.IFile;
 import com.codenvy.eclipse.core.resources.IProject;
 import com.codenvy.eclipse.core.resources.IResource;
@@ -29,8 +30,6 @@ import com.codenvy.eclipse.jdt.internal.core.index.Index;
 import com.codenvy.eclipse.jdt.internal.core.search.processing.JobManager;
 import com.codenvy.eclipse.jdt.internal.core.util.Util;
 
-import org.exoplatform.services.security.ConversationState;
-
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashSet;
@@ -41,7 +40,7 @@ public class IndexAllProject extends IndexRequest {
 
     private CountDownLatch latch;
 
-    ConversationState state = ConversationState.getCurrent();
+    EnvironmentContext context = EnvironmentContext.getCurrent();
 
     public IndexAllProject(IProject project, IndexManager manager, CountDownLatch latch) {
         this(project, manager);
@@ -66,7 +65,7 @@ public class IndexAllProject extends IndexRequest {
      * since the index was produced.
      */
     public boolean execute(IProgressMonitor progressMonitor) {
-        ConversationState.setCurrent(state);
+        EnvironmentContext.setCurrent(context);
         if (this.isCancelled || progressMonitor != null && progressMonitor.isCanceled()) {
             if (latch != null) {
                 latch.countDown();

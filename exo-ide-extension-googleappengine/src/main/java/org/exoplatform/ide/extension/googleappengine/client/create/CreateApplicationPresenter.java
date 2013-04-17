@@ -38,6 +38,7 @@ import org.exoplatform.ide.client.framework.project.api.FolderTreeUnmarshaller;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
@@ -138,12 +139,11 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
 
     private void checkIfAppengineWebXmlExist() {
         final Loader loader = new GWTLoader();
-
         try {
             loader.setMessage("Searching for appengine-web.xml...");
             loader.show();
             FolderModel target = currentProject;
-            FolderTreeUnmarshaller unmarshaller = new FolderTreeUnmarshaller(target, currentProject);
+            FolderTreeUnmarshaller unmarshaller = new FolderTreeUnmarshaller(target);
             VirtualFileSystem.getInstance().getTree(target.getId(), new AsyncRequestCallback<Folder>(unmarshaller) {
                 @Override
                 protected void onSuccess(Folder result) {
@@ -244,7 +244,13 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
                                 // IDE.fireEvent(new LoginEvent());
                                 new OAuthLoginView();
                             } else {
-                                checkIfAppengineWebXmlExist();
+                                if (ProjectResolver.APP_ENGINE_JAVA.equals(currentProject.getProjectType()))
+                                    checkIfAppengineWebXmlExist();
+                                else
+                                {
+                                    bindDisplay();
+                                    IDE.getInstance().openView(display.asView());
+                                }
                             }
                         }
 

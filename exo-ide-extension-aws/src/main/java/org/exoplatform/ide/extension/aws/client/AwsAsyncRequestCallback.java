@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.aws.client.login.LoginCanceledHandler;
 import org.exoplatform.ide.extension.aws.client.login.LoginEvent;
 
 /**
@@ -32,14 +33,19 @@ import org.exoplatform.ide.extension.aws.client.login.LoginEvent;
  */
 public abstract class AwsAsyncRequestCallback<T> extends AsyncRequestCallback<T> {
     private LoggedInHandler loggedInHandler;
+    private final LoginCanceledHandler loginCanceledHandler;
 
-    public AwsAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn) {
+    public AwsAsyncRequestCallback(Unmarshallable<T> unmarshaller,
+                                   LoggedInHandler loggedInHandler,
+                                   LoginCanceledHandler loginCanceledHandler) {
         super(unmarshaller);
-        this.loggedInHandler = loggedIn;
+        this.loggedInHandler = loggedInHandler;
+        this.loginCanceledHandler = loginCanceledHandler;
     }
 
-    public AwsAsyncRequestCallback(LoggedInHandler loggedIn) {
-        this.loggedInHandler = loggedIn;
+    public AwsAsyncRequestCallback(LoggedInHandler loggedInHandler, LoginCanceledHandler loginCanceledHandler) {
+        this.loggedInHandler = loggedInHandler;
+        this.loginCanceledHandler = loginCanceledHandler;
     }
 
 
@@ -47,12 +53,12 @@ public abstract class AwsAsyncRequestCallback<T> extends AsyncRequestCallback<T>
     @Override
     protected void onFailure(Throwable exception) {
         if (exception instanceof UnauthorizedException) {
-            IDE.fireEvent(new LoginEvent(loggedInHandler));
+            IDE.fireEvent(new LoginEvent(loggedInHandler, loginCanceledHandler));
             return;
         } else if (exception instanceof ServerException) {
             ServerException serverException = (ServerException)exception;
             if (serverException.getMessage() != null && serverException.getMessage().contains("Authentication required")) {
-                IDE.fireEvent(new LoginEvent(loggedInHandler));
+                IDE.fireEvent(new LoginEvent(loggedInHandler, loginCanceledHandler));
                 return;
             }
         }

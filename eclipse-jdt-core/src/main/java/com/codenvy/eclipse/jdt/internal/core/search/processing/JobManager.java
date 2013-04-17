@@ -319,12 +319,6 @@ public abstract class JobManager implements Runnable {
         notifyAll(); // wake up the background thread if it is waiting
     }
 
-//   class HU implements Runnable{
-//      ConversationState state = ConversationState.getCurrent();
-//      public void run() {
-//         JobManager.this.run();
-//      }
-//   }
 
     /** Flush current state */
     public synchronized void reset() {

@@ -26,7 +26,7 @@ import org.exoplatform.ide.git.shared.MergeRequest;
 
 /**
  * The marshaller for merge operation request.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 20, 2011 11:56:09 AM anya $
  */
@@ -35,8 +35,7 @@ public class MergeRequestMarshaller implements Marshallable, Constants {
     private MergeRequest mergeRequest;
 
     /**
-     * @param mergeRequest
-     *         request for merge
+     * @param mergeRequest request for merge
      */
     public MergeRequestMarshaller(MergeRequest mergeRequest) {
         this.mergeRequest = mergeRequest;

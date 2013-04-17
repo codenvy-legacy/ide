@@ -33,40 +33,40 @@ import org.exoplatform.ide.git.client.GitExtension;
 
 /**
  * UI for cloning repository.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 22, 2011 4:54:24 PM anya $
  */
 public class CloneRepositoryView extends ViewImpl implements
-                                                  org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter.Display {
-    public static final String ID = "ideCloneRepositoryView";
+                                                 org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter.Display {
+    public static final String  ID                    = "ideCloneRepositoryView";
 
-    private static final String CLONE_BUTTON_ID = "ideCloneRepositoryViewCloneButton";
+    private static final String CLONE_BUTTON_ID       = "ideCloneRepositoryViewCloneButton";
 
-    private static final String CANCEL_BUTTON_ID = "ideCloneRepositoryViewCancelButton";
+    private static final String CANCEL_BUTTON_ID      = "ideCloneRepositoryViewCancelButton";
 
     private static final String PROJECT_NAME_FIELD_ID = "ideCloneRepositoryViewProjectNameField";
 
-    private static final String REMOTE_URI_FIELD_ID = "ideCloneRepositoryViewRemoteUriField";
+    private static final String REMOTE_URI_FIELD_ID   = "ideCloneRepositoryViewRemoteUriField";
 
-    private static final String REMOTE_NAME_FIELD_ID = "ideCloneRepositoryViewRemoteNameField";
+    private static final String REMOTE_NAME_FIELD_ID  = "ideCloneRepositoryViewRemoteNameField";
 
     private static final String PROJECT_TYPE_FIELD_ID = "ideCloneRepositoryProjectTypeId";
 
     @UiField
-    ImageButton cloneButton;
+    ImageButton                 cloneButton;
 
     @UiField
-    ImageButton cancelButton;
+    ImageButton                 cancelButton;
 
     @UiField
-    TextInput projectNameField;
+    TextInput                   projectNameField;
 
     @UiField
-    TextInput remoteUriField;
+    TextInput                   remoteUriField;
 
     @UiField
-    TextInput remoteNameField;
+    TextInput                   remoteNameField;
 
     interface CloneRepositoryViewUiBinder extends UiBinder<Widget, CloneRepositoryView> {
     }

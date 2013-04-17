@@ -28,12 +28,16 @@ import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.shared.Item;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Delete repository command handler, performs deleting Git repository.
@@ -82,44 +86,21 @@ public class DeleteRepositoryCommandHandler extends GitPresenter implements Dele
     public void doDeleteRepository() {
 
         try {
-            VirtualFileSystem.getInstance().getItemByPath(getSelectedProject().getPath() + "/.git",
-                                                          new AsyncRequestCallback<ItemWrapper>(
-                                                                                                new ItemUnmarshaller(new ItemWrapper())) {
-                                                              @Override
-                                                              protected void onSuccess(ItemWrapper result) {
-                                                                  deleteItem(result.getItem());
-                                                              }
+            GitClientService.getInstance().deleteRepository(vfs.getId(), getSelectedProject().getId(),
+                                                            new AsyncRequestCallback<Void>() {
+                                                                @Override
+                                                                protected void onSuccess(Void result) {
+                                                                    IDE.fireEvent(new OutputEvent(
+                                                                                                  GitExtension.MESSAGES.deleteGitRepositorySuccess(),
+                                                                                                  Type.INFO));
+                                                                    IDE.fireEvent(new RefreshBrowserEvent(getSelectedProject()));
+                                                                }
 
-                                                              @Override
-                                                              protected void onFailure(Throwable exception) {
-                                                                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-                                                              }
-                                                          });
-        } catch (RequestException e) {
-            IDE.fireEvent(new ExceptionThrownEvent(e));
-        }
-
-    }
-
-    /**
-     * Delete item.
-     * 
-     * @param item item to delete
-     */
-    private void deleteItem(Item item) {
-        try {
-            VirtualFileSystem.getInstance().delete(item, new AsyncRequestCallback<String>() {
-                @Override
-                protected void onSuccess(String result) {
-                    IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.deleteGitRepositorySuccess(), Type.INFO));
-                    IDE.fireEvent(new RefreshBrowserEvent(getSelectedProject()));
-                }
-
-                @Override
-                protected void onFailure(Throwable exception) {
-                    IDE.fireEvent(new ExceptionThrownEvent(exception));
-                }
-            });
+                                                                @Override
+                                                                protected void onFailure(Throwable exception) {
+                                                                    IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                                }
+                                                            });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }

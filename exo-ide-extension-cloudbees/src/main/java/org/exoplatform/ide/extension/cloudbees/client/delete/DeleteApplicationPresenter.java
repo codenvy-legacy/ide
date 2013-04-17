@@ -45,7 +45,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @version $Id: DeleteApplicationPresenter.java Jul 1, 2011 12:59:52 PM vereshchaka $
  */
 public class DeleteApplicationPresenter extends GitPresenter implements DeleteApplicationHandler {
-    /** @param eventBus */
+
     public DeleteApplicationPresenter() {
         IDE.addHandler(DeleteApplicationEvent.TYPE, this);
     }
@@ -133,7 +133,6 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
                 projectId = project.getId();
             }
         }
-
 
         try {
             CloudBeesClientService.getInstance().deleteApplication(appId, vfs.getId(), projectId,

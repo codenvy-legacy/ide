@@ -216,7 +216,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler {
             AutoBean<SystemInfo> systemInfo = AppfogExtension.AUTO_BEAN_FACTORY.systemInfo();
             AutoBeanUnmarshaller<SystemInfo> unmarshaller = new AutoBeanUnmarshaller<SystemInfo>(systemInfo);
             AppfogClientService.getInstance().getSystemInfo(AppfogExtension.DEFAULT_SERVER,
-                                                            new AppfogAsyncRequestCallback<SystemInfo>(unmarshaller, loggedIn, null) {
+                                                            new AppfogAsyncRequestCallback<SystemInfo>(unmarshaller, loggedIn, loginCanceled) {
                                                                 @Override
                                                                 protected void onSuccess(SystemInfo result) {
                                                                     display.getEmailField().setValue(result.getUser());

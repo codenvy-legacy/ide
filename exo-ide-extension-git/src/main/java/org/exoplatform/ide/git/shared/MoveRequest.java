@@ -20,7 +20,7 @@ package org.exoplatform.ide.git.shared;
 
 /**
  * Request to move or rename a file or directory.
- *
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: MoveRequest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
@@ -32,10 +32,8 @@ public class MoveRequest extends GitRequest {
     private String target;
 
     /**
-     * @param source
-     *         move source
-     * @param target
-     *         move target
+     * @param source move source
+     * @param target move target
      */
     public MoveRequest(String source, String target) {
         this.source = source;
@@ -43,8 +41,7 @@ public class MoveRequest extends GitRequest {
     }
 
     /**
-     * "Empty" move request. Corresponding setters used to setup required
-     * parameters.
+     * "Empty" move request. Corresponding setters used to setup required parameters.
      */
     public MoveRequest() {
     }
@@ -55,8 +52,7 @@ public class MoveRequest extends GitRequest {
     }
 
     /**
-     * @param source
-     *         move source
+     * @param source move source
      */
     public void setSource(String source) {
         this.source = source;
@@ -68,8 +64,7 @@ public class MoveRequest extends GitRequest {
     }
 
     /**
-     * @param target
-     *         move target
+     * @param target move target
      */
     public void setTarget(String target) {
         this.target = target;

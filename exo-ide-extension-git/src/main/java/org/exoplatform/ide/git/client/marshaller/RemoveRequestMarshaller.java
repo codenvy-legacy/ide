@@ -19,6 +19,7 @@
 package org.exoplatform.ide.git.client.marshaller;
 
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 
@@ -27,7 +28,7 @@ import org.exoplatform.ide.git.shared.RmRequest;
 
 /**
  * Marshaller for remove files request in JSON format.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 12, 2011 2:55:02 PM anya $
  */
@@ -36,8 +37,7 @@ public class RemoveRequestMarshaller implements Marshallable, Constants {
     private RmRequest rmRequest;
 
     /**
-     * @param rmRequest
-     *         remove request
+     * @param rmRequest remove request
      */
     public RemoveRequestMarshaller(RmRequest rmRequest) {
         this.rmRequest = rmRequest;
@@ -47,6 +47,7 @@ public class RemoveRequestMarshaller implements Marshallable, Constants {
     @Override
     public String marshal() {
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put(CACHED, JSONBoolean.getInstance(rmRequest.getCached()));
         if (rmRequest.getFiles() != null && rmRequest.getFiles().length > 0) {
             JSONArray array = new JSONArray();
             for (int i = 0; i < rmRequest.getFiles().length; i++) {
@@ -56,5 +57,4 @@ public class RemoveRequestMarshaller implements Marshallable, Constants {
         }
         return jsonObject.toString();
     }
-
 }

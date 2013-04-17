@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,21 +16,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.packaging.model.next;
+package org.exoplatform.ide.extension.samples.client.getstarted;
 
-import org.exoplatform.ide.vfs.shared.ItemImpl;
+import com.google.gwt.user.client.ui.ToggleButton;
+
+import org.exoplatform.ide.client.framework.paas.PaaS;
 
 /**
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
- * @version $
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
+ * @version $Id: $
  */
-public class Dependency extends ItemImpl {
+public class PaaSToggleButton extends ToggleButton {
 
-    public Dependency(String name) {
-        super(null);
-        setId("dependency-" + name);
-        setPath("");
-        setName(name);
+    private PaaS paaS;
+
+    public PaaS getPaaS() {
+        return paaS;
     }
 
+    public void setPaaS(PaaS paaS) {
+        this.paaS = paaS;
+    }
 }

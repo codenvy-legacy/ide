@@ -22,16 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ShowRemotesEvent} event.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 18, 2011 10:24:53 AM anya $
  */
 public interface ShowRemotesHandler extends EventHandler {
     /**
      * Perform actions on show remote repositories.
-     *
-     * @param event
-     *         event
+     * 
+     * @param event event
      */
     void onShowRemotes(ShowRemotesEvent event);
 }

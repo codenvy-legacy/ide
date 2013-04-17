@@ -41,30 +41,28 @@ import java.lang.reflect.Type;
 @Produces(MediaType.TEXT_PLAIN)
 public final class CommitMessageWriter implements MessageBodyWriter<Revision> {
     /**
-     * @see MessageBodyWriter#isWriteable(Class, java.lang.reflect.Type, java.lang.annotation.Annotation[],
-     *      javax.ws.rs.core.MediaType)
+     * @see MessageBodyWriter#isWriteable(Class, java.lang.reflect.Type, java.lang.annotation.Annotation[], javax.ws.rs.core.MediaType)
      */
     @Override
-    public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+    public boolean isWriteable(Class< ? > type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         return type == Revision.class;
     }
 
     /**
-     * @see MessageBodyWriter#getSize(Object, Class, java.lang.reflect.Type, java.lang.annotation.Annotation[],
-     *      javax.ws.rs.core.MediaType)
+     * @see MessageBodyWriter#getSize(Object, Class, java.lang.reflect.Type, java.lang.annotation.Annotation[], javax.ws.rs.core.MediaType)
      */
     @Override
-    public long getSize(Revision revision, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+    public long getSize(Revision revision, Class< ? > type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         return -1;
     }
 
     /**
-     * @see MessageBodyWriter#writeTo(Object, Class, java.lang.reflect.Type, java.lang.annotation.Annotation[],
-     *      javax.ws.rs.core.MediaType, javax.ws.rs.core.MultivaluedMap, java.io.OutputStream)
+     * @see MessageBodyWriter#writeTo(Object, Class, java.lang.reflect.Type, java.lang.annotation.Annotation[], javax.ws.rs.core.MediaType,
+     *      javax.ws.rs.core.MultivaluedMap, java.io.OutputStream)
      */
     @Override
     public void writeTo(Revision revision,
-                        Class<?> type,
+                        Class< ? > type,
                         Type genericType,
                         Annotation[] annotations,
                         MediaType mediaType,

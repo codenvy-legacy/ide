@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,16 +16,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.client.event;
+package org.exoplatform.ide.extension.samples.client.getstarted;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.user.client.ui.ToggleButton;
+
+import org.exoplatform.ide.client.framework.project.ProjectType;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: Aug 25, 2011 evgen $
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
+ * @version $Id: $
  */
-public interface ItemMovedHandler extends EventHandler {
+public class ProjectTypeToggleButton extends ToggleButton {
 
-    void onItemMoved(ItemMovedEvent event);
+    private ProjectType projectType;
 
+    public ProjectType getProjectType() {
+        return projectType;
+    }
+
+    public void setProjectType(ProjectType projectType) {
+        this.projectType = projectType;
+    }
 }

@@ -18,13 +18,22 @@
  */
 package org.exoplatform.ide.client.application;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
-import org.exoplatform.ide.client.framework.editor.event.*;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ShowHideHiddenFilesEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ShowHideHiddenFilesHandler;
@@ -32,15 +41,28 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.client.framework.settings.*;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.settings.SaveApplicationSettingsEvent;
+import org.exoplatform.ide.client.framework.settings.SaveApplicationSettingsHandler;
 import org.exoplatform.ide.client.model.Settings;
 import org.exoplatform.ide.client.model.SettingsService;
-import org.exoplatform.ide.vfs.client.event.*;
+import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
+import org.exoplatform.ide.vfs.client.event.ItemDeletedHandler;
+import org.exoplatform.ide.vfs.client.event.ItemLockedEvent;
+import org.exoplatform.ide.vfs.client.event.ItemLockedHandler;
+import org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent;
+import org.exoplatform.ide.vfs.client.event.ItemUnlockedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.File;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -52,7 +74,7 @@ import java.util.*;
 public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler, EditorFileClosedHandler,
                                                          EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler,
                                                          VfsChangedHandler, EditorReplaceFileHandler,
-                                                         ItemLockedHandler, ItemUnlockedHandler, ItemDeletedHandler, ItemMovedHandler,
+                                                         ItemLockedHandler, ItemUnlockedHandler, ItemDeletedHandler,
                                                          ProjectOpenedHandler,
                                                          ProjectClosedHandler, SaveApplicationSettingsHandler, ShowHideHiddenFilesHandler {
 
@@ -73,7 +95,6 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
         IDE.addHandler(ItemLockedEvent.TYPE, this);
         IDE.addHandler(ItemUnlockedEvent.TYPE, this);
         IDE.addHandler(ItemDeletedEvent.TYPE, this);
-        IDE.addHandler(ItemMovedEvent.TYPE, this);
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
         IDE.addHandler(SaveApplicationSettingsEvent.TYPE, this);
@@ -147,52 +168,18 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
     /** @see org.exoplatform.ide.client.editor.event.EditorReplaceFileHandler#onEditorReplaceFile(org.exoplatform.ide.client.editor.event
      * .EditorReplaceFileEvent) */
     public void onEditorReplaceFile(EditorReplaceFileEvent event) {
-        storeOpenedFiles();
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                storeOpenedFiles();
+            }
+        });
     }
 
     /** Store Lock Tokens */
     private void storeLockTokens() {
         applicationSettings.setValue(Settings.LOCK_TOKENS, lockTokens, Store.COOKIES);
         SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
-    }
-
-    /** @see org.exoplatform.ide.vfs.client.event.ItemMovedHandler#onItemMoved(org.exoplatform.ide.vfs.client.event.ItemMovedEvent) */
-    @Override
-    public void onItemMoved(ItemMovedEvent event) {
-        // TODO
-        // if (lockTokens.containsKey(event.getSourceHref()))
-        // {
-        // String lock = lockTokens.get(event.getSourceHref());
-        // lockTokens.remove(event.getSourceHref());
-        // lockTokens.put(event.getItem().getHref(), lock);
-        // storeLockTokens();
-        // }
-        // else if (event.getItem() instanceof Folder)
-        // {
-        // String sourceHref = event.getSourceHref();
-        // List<String> keys = new ArrayList<String>();
-        // for (String k : lockTokens.keySet())
-        // {
-        // keys.add(k);
-        // }
-        //
-        // for (String key : keys)
-        // {
-        // if (key.startsWith(sourceHref))
-        // {
-        // String lock = lockTokens.get(key);
-        // String name = key.substring(sourceHref.length());
-        // String path = event.getItem().getHref();
-        // if (!path.endsWith("/"))
-        // {
-        // path += "/";
-        // }
-        // lockTokens.remove(key);
-        // lockTokens.put(path + name, lock);
-        // storeLockTokens();
-        // }
-        // }
-        // }
     }
 
     /** @see org.exoplatform.ide.vfs.client.event.ItemDeletedHandler#onItemDeleted(org.exoplatform.ide.vfs.client.event.ItemDeletedEvent) */

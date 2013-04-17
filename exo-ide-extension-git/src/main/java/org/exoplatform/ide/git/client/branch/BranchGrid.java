@@ -35,19 +35,19 @@ import java.util.List;
 
 /**
  * Grid for disaplying branches.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 8, 2011 11:31:09 AM anya $
  */
 public class BranchGrid extends ListGrid<Branch> {
     /** Grid's ID. */
-    private static final String ID = "ideBranchGrid";
+    private static final String ID   = "ideBranchGrid";
 
     /** Name column's name. */
-    private final String NAME = GitExtension.MESSAGES.branchGridNameColumn();
+    private final String        NAME = GitExtension.MESSAGES.branchGridNameColumn();
 
     /** Name column. */
-    Column<Branch, SafeHtml> nameColumn;
+    Column<Branch, SafeHtml>    nameColumn;
 
     public BranchGrid() {
         super();
@@ -97,7 +97,7 @@ public class BranchGrid extends ListGrid<Branch> {
 
     /**
      * Returns selected branch in branches grid.
-     *
+     * 
      * @return {@link Branch} selected branch
      */
     public Branch getSelectedBranch() {

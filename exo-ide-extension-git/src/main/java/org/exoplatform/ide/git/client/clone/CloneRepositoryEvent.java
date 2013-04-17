@@ -22,7 +22,7 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event is fired, on user action to clone remote repository. Implement {@link CloneRepositoryHandler} handler to process event.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 22, 2011 4:07:34 PM anya $
  */

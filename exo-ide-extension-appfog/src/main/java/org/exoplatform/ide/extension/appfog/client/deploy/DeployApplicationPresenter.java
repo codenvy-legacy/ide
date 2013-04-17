@@ -41,6 +41,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.paas.DeployResultHandler;
 import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
+import org.exoplatform.ide.client.framework.paas.InitializeDeployViewHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
@@ -48,6 +49,7 @@ import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.extension.appfog.client.*;
 import org.exoplatform.ide.extension.appfog.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.appfog.client.login.LoginCanceledHandler;
 import org.exoplatform.ide.extension.appfog.client.marshaller.InfrasUnmarshaller;
 import org.exoplatform.ide.extension.appfog.shared.AppfogApplication;
 import org.exoplatform.ide.extension.appfog.shared.InfraDetail;
@@ -109,6 +111,8 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
     private ProjectModel project;
 
     private DeployResultHandler deployResultHandler;
+
+    private InitializeDeployViewHandler initializeDeployViewHandler;
 
     public DeployApplicationPresenter() {
         IDE.addHandler(VfsChangedEvent.TYPE, this);
@@ -284,11 +288,17 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
         return appUris;
     }
 
-    private void getInfras(final String server) {
+    private void getInfras(final String server, final boolean startedWizard) {
         LoggedInHandler getInfrasHandler = new LoggedInHandler() {
             @Override
             public void onLoggedIn() {
-                getInfras(server);
+                getInfras(server, startedWizard);
+            }
+        };
+        LoginCanceledHandler loginCanceledHandler = new LoginCanceledHandler() {
+            @Override
+            public void onLoginCanceled() {
+                initializeDeployViewHandler.onInitializeDeployViewError();
             }
         };
 
@@ -298,7 +308,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
                     null,
                     null,
                     new AppfogAsyncRequestCallback<List<InfraDetail>>(new InfrasUnmarshaller(new ArrayList<InfraDetail>()),
-                                                                      getInfrasHandler, null, server) {
+                                                                      getInfrasHandler, loginCanceledHandler, server) {
                         @Override
                         protected void onSuccess(List<InfraDetail> result) {
                             if (result.isEmpty()) {
@@ -318,6 +328,9 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
 
                                 updateUrlField();
                                 url = display.getUrlField().getValue();
+                                if (startedWizard) {
+                                    beforeDeploy();
+                                }
                             }
                         }
                     });
@@ -360,7 +373,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
             || currentInfra == null) {
             Dialogs.getInstance().showError("Infrastructure field must be valid and not empty.");
         } else {
-            createProject(projectTemplate);
+            createProject(display.getNameField().getValue(), projectTemplate, false);
         }
     }
 
@@ -394,21 +407,26 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
         }
     }
 
+    /**
+     * @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#getDeployView(java.lang.String,
+     *      org.exoplatform.ide.client.framework.project.ProjectType, org.exoplatform.ide.client.framework.paas.InitializeDeployViewHandler)
+     */
     @Override
-    public Composite getDeployView(String projectName, ProjectType projectType) {
+    public Composite getDeployView(String projectName, ProjectType projectType, InitializeDeployViewHandler initializeDeployViewHandler) {
         this.projectName = projectName;
+        this.initializeDeployViewHandler = initializeDeployViewHandler;
         if (display == null) {
             display = GWT.create(Display.class);
         }
         display.setServerValue(AppfogExtension.DEFAULT_SERVER);
         display.getNameField().setValue(projectName);
-        getInfras(AppfogExtension.DEFAULT_SERVER);
+        getInfras(AppfogExtension.DEFAULT_SERVER, false);
         server = display.getServerField().getValue();
         bindDisplay();
         return display.getView();
     }
 
-    private void createProject(ProjectTemplate projectTemplate) {
+    private void createProject(String name, ProjectTemplate projectTemplate, final boolean startedWizard) {
         final Loader loader = new GWTLoader();
         loader.setMessage(lb.creatingProject());
         loader.show();
@@ -416,7 +434,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
             TemplateService.getInstance().createProjectFromTemplate(
                     vfs.getId(),
                     vfs.getRoot().getId(),
-                    display.getNameField().getValue(),
+                    name,
                     projectTemplate.getName(),
                     new AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(new ProjectModel())) {
 
@@ -425,7 +443,11 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
                             loader.hide();
                             project = result;
                             deployResultHandler.onProjectCreated(project);
-                            beforeDeploy();
+                            if (startedWizard) {
+                                getInfras(server, startedWizard);
+                            } else {
+                                beforeDeploy();
+                            }
                         }
 
                         @Override
@@ -452,5 +474,28 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
         return display.getNameField().getValue() != null && !display.getNameField().getValue().isEmpty()
                && display.getUrlField().getValue() != null && !display.getUrlField().getValue().isEmpty();
         //         && display.getInfraField().getValue() != null && !display.getInfraField().getValue().isEmpty();
+    }
+
+    @Override
+    public void deployFirstTime(final String projectName, final ProjectTemplate projectTemplate, final DeployResultHandler deployResultHandler) {
+        this.deployResultHandler = deployResultHandler;
+        this.projectName = projectName;
+
+        if (display == null) {
+            display = GWT.create(Display.class);
+        }
+
+        server = AppfogExtension.DEFAULT_SERVER;
+        name = projectName + "-" + rand();
+        display.setServerValue(server);
+        display.getNameField().setValue(name);
+
+        bindDisplay();
+
+        createProject(name, projectTemplate, true);
+    }
+
+    private int rand() {
+        return (int)(Math.floor(Math.random() * 999 - 100) + 100);
     }
 }

@@ -37,52 +37,52 @@ import java.util.LinkedHashMap;
 
 /**
  * View for fetching changes from remote repository. Point view in Views.gwt.xml
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 20, 2011 4:23:02 PM anya $
  */
 public class FetchView extends ViewImpl implements FetchPresenter.Display {
-    public static final int HEIGHT = 222;
+    public static final int     HEIGHT                       = 222;
 
-    public static final int WIDTH = 510;
+    public static final int     WIDTH                        = 510;
 
-    public static final String ID = "ideFetchView";
+    public static final String  ID                           = "ideFetchView";
 
-    private static final String FETCH_BUTTON_ID = "ideFetchViewFetchButton";
+    private static final String FETCH_BUTTON_ID              = "ideFetchViewFetchButton";
 
-    private static final String CANCEL_BUTTON_ID = "ideFetchViewCancelButton";
+    private static final String CANCEL_BUTTON_ID             = "ideFetchViewCancelButton";
 
-    private static final String REMOTE_FIELD_ID = "ideFetchViewRemoteField";
+    private static final String REMOTE_FIELD_ID              = "ideFetchViewRemoteField";
 
-    private static final String REMOTE_BRANCHES_FIELD_ID = "ideFetchViewRemoteBranchesField";
+    private static final String REMOTE_BRANCHES_FIELD_ID     = "ideFetchViewRemoteBranchesField";
 
-    private static final String LOCAL_BRANCHES_FIELD_ID = "ideFetchViewLocalBranchesField";
+    private static final String LOCAL_BRANCHES_FIELD_ID      = "ideFetchViewLocalBranchesField";
 
     private static final String REMOVE_DELETED_REFS_FIELD_ID = "ideFetchViewRemoveDeletedRefsField";
 
     /** Fetch button. */
     @UiField
-    ImageButton fetchButton;
+    ImageButton                 fetchButton;
 
     /** Cancel button. */
     @UiField
-    ImageButton cancelButton;
+    ImageButton                 cancelButton;
 
     /** Remote repository field. */
     @UiField
-    SelectItem remoteField;
+    SelectItem                  remoteField;
 
     /** Local branches field. */
     @UiField
-    ComboBoxField localBranchesField;
+    ComboBoxField               localBranchesField;
 
     /** Remote branches field. */
     @UiField
-    ComboBoxField remoteBranchesField;
+    ComboBoxField               remoteBranchesField;
 
     /** Remove deleted refs field. */
     @UiField
-    CheckBox removeDeletedRefsField;
+    CheckBox                    removeDeletedRefsField;
 
     interface FetchViewUiBinder extends UiBinder<Widget, FetchView> {
     }

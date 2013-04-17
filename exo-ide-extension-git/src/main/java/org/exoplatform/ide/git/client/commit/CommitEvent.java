@@ -21,9 +21,8 @@ package org.exoplatform.ide.git.client.commit;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event is fired, when user tries to perform commit to local Git repository. Implement {@link CommitHandler} handler to process
- * event.
- *
+ * Event is fired, when user tries to perform commit to local Git repository. Implement {@link CommitHandler} handler to process event.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 31, 2011 9:42:02 AM anya $
  */

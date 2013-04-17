@@ -117,4 +117,8 @@ public interface FileEditSession extends ImmutableFileEditSession {
     boolean addCollaborator(String clientId);
 
     boolean removeCollaborator(String clientId);
+
+    void setResourceId(String newResourceId);
+
+    void setPath(String newPath);
 }

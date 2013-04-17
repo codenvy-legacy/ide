@@ -20,9 +20,9 @@ package org.eclipse.jdt.client.packaging.ui;
 
 import com.google.gwt.resources.client.ImageResource;
 
-import org.eclipse.jdt.client.packaging.model.next.Dependencies;
-import org.eclipse.jdt.client.packaging.model.next.JavaProject;
-import org.eclipse.jdt.client.packaging.model.next.SourceDirectory;
+import org.eclipse.jdt.client.packaging.model.Dependencies;
+import org.eclipse.jdt.client.packaging.model.JavaProject;
+import org.eclipse.jdt.client.packaging.model.SourceDirectory;
 import org.exoplatform.ide.client.framework.navigation.DirectoryFilter;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.vfs.client.model.FileModel;
@@ -110,7 +110,8 @@ public class JavaProjectTreeItem extends PackageExplorerTreeItem {
         /*
          * Dependencies
          */
-        for (Dependencies classpathFolder : javaProject.getClasspathFolders())
+        List<Dependencies> dependencies = getDependencies();
+        for (Dependencies classpathFolder : dependencies)
         {
             PackageExplorerTreeItem child = getChildByItemId(classpathFolder.getId());
             if (child == null) {
@@ -179,6 +180,19 @@ public class JavaProjectTreeItem extends PackageExplorerTreeItem {
 
         return false;
     }
+    
+    private List<Dependencies> getDependencies() {
+        List<Dependencies> dependencies = new ArrayList<Dependencies>();
+        
+        JavaProject project = (JavaProject)getUserObject();
+        for (Dependencies dep : project.getClasspathFolders()) {
+            if (dep.getClasspathList() != null && !dep.getClasspathList().isEmpty()) {
+                dependencies.add(dep);
+            }
+        }
+        
+        return dependencies;
+    }
 
     @Override
     public List<Item> getItems() {
@@ -188,7 +202,7 @@ public class JavaProjectTreeItem extends PackageExplorerTreeItem {
 
         items.addAll(project.getModules());
         items.addAll(project.getSourceDirectories());
-        items.addAll(project.getClasspathFolders());
+        items.addAll(getDependencies());
 
         for (Item item : project.getChildren().getItems()) {
             if (DirectoryFilter.get().matchWithPattern(item.getName())) {
@@ -208,5 +222,5 @@ public class JavaProjectTreeItem extends PackageExplorerTreeItem {
 
         return items;
     }
-
+    
 }

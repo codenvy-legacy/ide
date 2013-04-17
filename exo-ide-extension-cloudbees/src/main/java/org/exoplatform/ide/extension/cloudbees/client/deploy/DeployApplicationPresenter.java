@@ -41,6 +41,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.paas.DeployResultHandler;
 import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
+import org.exoplatform.ide.client.framework.paas.InitializeDeployViewHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
@@ -48,6 +49,7 @@ import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.extension.cloudbees.client.*;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudbees.client.login.LoginCanceledHandler;
 import org.exoplatform.ide.extension.cloudbees.client.marshaller.DomainsUnmarshaller;
 import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
@@ -101,6 +103,8 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, HasP
 
     private DeployResultHandler deployResultHandler;
 
+    private InitializeDeployViewHandler initializeDeployViewHandler;
+
     public DeployApplicationPresenter() {
         IDE.addHandler(VfsChangedEvent.TYPE, this);
     }
@@ -152,7 +156,12 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, HasP
                                                                         public void onLoggedIn() {
                                                                             getDomains();
                                                                         }
-                                                                    }, null) {
+                                                                    }, new LoginCanceledHandler() {
+                                                                        @Override
+                                                                        public void onLoginCanceled() {
+                                                                            initializeDeployViewHandler.onInitializeDeployViewError();
+                                                                        }
+                                                                    }) {
                         @Override
                         protected void onSuccess(List<String> result) {
                             display.setDomainValues(result.toArray(new String[result.size()]));
@@ -287,8 +296,9 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, HasP
     }
 
     @Override
-    public Composite getDeployView(String projectName, ProjectType projectType) {
+    public Composite getDeployView(String projectName, ProjectType projectType, InitializeDeployViewHandler initializeDeployViewHandler) {
         this.projectName = projectName;
+        this.initializeDeployViewHandler = initializeDeployViewHandler;
         if (display == null) {
             display = GWT.create(Display.class);
         }
@@ -339,5 +349,75 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, HasP
     public boolean validate() {
         return display.getNameField().getValue() != null && !display.getNameField().getValue().isEmpty()
                && display.getUrlField().getValue() != null && !display.getUrlField().getValue().isEmpty();
+    }
+
+    @Override
+    public void deployFirstTime(final String projectName, final ProjectTemplate projectTemplate, final DeployResultHandler deployResultHandler) {
+        this.projectName = projectName;
+        this.deployResultHandler = deployResultHandler;
+        if (display == null) {
+            display = GWT.create(Display.class);
+        }
+        bindDisplay();
+
+        display.getNameField().setValue(projectName);
+        name = projectName + "_" + rand();
+
+        try {
+            TemplateService.getInstance().createProjectFromTemplate(vfs.getId(), vfs.getRoot().getId(), projectName,
+                                                                    projectTemplate.getName(),
+                                                                    new AsyncRequestCallback<ProjectModel>(
+                                                                            new ProjectUnmarshaller(new ProjectModel())) {
+
+                                                                        @Override
+                                                                        protected void onSuccess(ProjectModel result) {
+                                                                            project = result;
+                                                                            deployResultHandler.onProjectCreated(project);
+                                                                            getFirstDeployDomains();
+//                                                                            buildApplication();
+                                                                        }
+
+                                                                        @Override
+                                                                        protected void onFailure(Throwable exception) {
+                                                                            IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                                        }
+                                                                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    private void getFirstDeployDomains() {
+        try {
+            CloudBeesClientService.getInstance().getDomains(
+                    new CloudBeesAsyncRequestCallback<List<String>>(new DomainsUnmarshaller(new ArrayList<String>()),
+                                                                    new LoggedInHandler() {
+                                                                        @Override
+                                                                        public void onLoggedIn() {
+                                                                            getFirstDeployDomains();
+                                                                        }
+                                                                    }, new LoginCanceledHandler() {
+                        @Override
+                        public void onLoginCanceled() {
+                            initializeDeployViewHandler.onInitializeDeployViewError();
+                        }
+                    }) {
+                        @Override
+                        protected void onSuccess(List<String> result) {
+                            display.setDomainValues(result.toArray(new String[result.size()]));
+                            domain = display.getDomainsField().getValue();
+                            display.getNameField().setValue(projectName);
+                            name = projectName;
+                            display.getUrlField().setValue(domain + "/" + name);
+                            buildApplication();
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    private int rand() {
+        return (int)(Math.floor(Math.random() * 999 - 100) + 100);
     }
 }

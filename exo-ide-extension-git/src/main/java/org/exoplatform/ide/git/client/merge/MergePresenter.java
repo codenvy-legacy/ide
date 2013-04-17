@@ -51,7 +51,7 @@ import java.util.List;
 
 /**
  * Presenter to perform merge reference with current HEAD commit.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 20, 2011 12:38:39 PM anya $
  */
@@ -109,7 +109,6 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
     @Override
     public void onMerge(MergeEvent event) {
         if (makeSelectionCheck()) {
-//         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
             String projectId = getSelectedProject().getId();
             if (display == null) {
                 display = GWT.create(Display.class);
@@ -119,43 +118,45 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
             }
 
             try {
-                GitClientService.getInstance().branchList(vfs.getId(), projectId, false,
-                                                          new AsyncRequestCallback<List<Branch>>(
-                                                                  new BranchListUnmarshaller(new ArrayList<Branch>())) {
+                GitClientService.getInstance()
+                                .branchList(vfs.getId(), projectId, false,
+                                            new AsyncRequestCallback<List<Branch>>(
+                                                                                   new BranchListUnmarshaller(new ArrayList<Branch>())) {
 
-                                                              @Override
-                                                              protected void onSuccess(List<Branch> result) {
-                                                                  if (result == null || result.size() == 0)
-                                                                      return;
-                                                                  setReferences(result, true);
-                                                              }
+                                                @Override
+                                                protected void onSuccess(List<Branch> result) {
+                                                    if (result == null || result.size() == 0)
+                                                        return;
+                                                    setReferences(result, true);
+                                                }
 
-                                                              @Override
-                                                              protected void onFailure(Throwable exception) {
-                                                                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-                                                              }
-                                                          });
+                                                @Override
+                                                protected void onFailure(Throwable exception) {
+                                                    IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                }
+                                            });
             } catch (RequestException e) {
                 IDE.fireEvent(new ExceptionThrownEvent(e));
             }
 
             try {
-                GitClientService.getInstance().branchList(vfs.getId(), projectId, true,
-                                                          new AsyncRequestCallback<List<Branch>>(
-                                                                  new BranchListUnmarshaller(new ArrayList<Branch>())) {
+                GitClientService.getInstance()
+                                .branchList(vfs.getId(), projectId, true,
+                                            new AsyncRequestCallback<List<Branch>>(
+                                                                                   new BranchListUnmarshaller(new ArrayList<Branch>())) {
 
-                                                              @Override
-                                                              protected void onSuccess(List<Branch> result) {
-                                                                  if (result == null || result.size() == 0)
-                                                                      return;
-                                                                  setReferences(result, false);
-                                                              }
+                                                @Override
+                                                protected void onSuccess(List<Branch> result) {
+                                                    if (result == null || result.size() == 0)
+                                                        return;
+                                                    setReferences(result, false);
+                                                }
 
-                                                              @Override
-                                                              protected void onFailure(Throwable exception) {
-                                                                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-                                                              }
-                                                          });
+                                                @Override
+                                                protected void onFailure(Throwable exception) {
+                                                    IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                }
+                                            });
             } catch (RequestException e) {
                 IDE.fireEvent(new ExceptionThrownEvent(e));
             }
@@ -164,28 +165,28 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
 
     /**
      * Set references values.
-     *
-     * @param branches
-     *         list of branches
-     * @param isLocal
-     *         if <code>true</code> then list of local branches is provided
+     * 
+     * @param branches list of branches
+     * @param isLocal if <code>true</code> then list of local branches is provided
      */
     public void setReferences(List<Branch> branches, boolean isLocal) {
         for (Branch branch : branches) {
             if (!branch.isActive()) {
                 if (isLocal) {
                     display.getRefTree().setValue(
-                            new Reference(branch.getName(), branch.getDisplayName(), RefType.LOCAL_BRANCH));
+                                                  new Reference(branch.getName(), branch.getDisplayName(), RefType.LOCAL_BRANCH));
                 } else {
                     display.getRefTree().setValue(
-                            new Reference(branch.getName(), branch.getDisplayName(), RefType.REMOTE_BRANCH));
+                                                  new Reference(branch.getName(), branch.getDisplayName(), RefType.REMOTE_BRANCH));
                 }
             }
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     *      .event.ViewClosedEvent)
+     */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
@@ -200,7 +201,6 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
             return;
         }
 
-//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
         String projectId = getSelectedProject().getId();
 
         try {
@@ -226,11 +226,14 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
 
     /**
      * Form the result message of the merge operation.
-     *
+     * 
      * @param mergeResult
      * @return {@link String} merge result message
      */
     private String formMergeMessage(MergeResult mergeResult) {
+        if (mergeResult.getMergeStatus().equals(MergeResult.MergeStatus.ALREADY_UP_TO_DATE)) {
+            return mergeResult.getMergeStatus().toString();
+        }
         String conflicts = "";
         if (mergeResult.getConflicts() != null && mergeResult.getConflicts().length > 0) {
             for (String conflict : mergeResult.getConflicts()) {
@@ -248,7 +251,7 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
         message += (conflicts.length() > 0) ? GitExtension.MESSAGES.mergedConflicts(conflicts) : "";
         message += (commits.length() > 0) ? GitExtension.MESSAGES.mergedCommits(commits) : "";
         message +=
-                (mergeResult.getNewHead() != null) ? GitExtension.MESSAGES.mergedNewHead(mergeResult.getNewHead()) : "";
+                   (mergeResult.getNewHead() != null) ? GitExtension.MESSAGES.mergedNewHead(mergeResult.getNewHead()) : "";
         return message;
     }
 }

@@ -238,9 +238,9 @@ public class AppfogProjectPresenter extends GitPresenter implements
 
                 //need to fill uris list from second uri, cause first uri is filled in project info window
                 for (int i = 1; i < appUris.size(); i++) {
-                    uris.append("<div><a href=\">");
+                    uris.append("<div><a href=\"http://");
                     uris.append(appUris.get(i));
-                    uris.append("\" >http://");
+                    uris.append("\" target=\"_blank\">http://");
                     uris.append(appUris.get(i));
                     uris.append("</a></div>\n");
                 }

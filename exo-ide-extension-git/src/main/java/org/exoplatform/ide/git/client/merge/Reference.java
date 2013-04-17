@@ -20,31 +20,30 @@ package org.exoplatform.ide.git.client.merge;
 
 /**
  * Git reference bean.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 20, 2011 2:41:39 PM anya $
  */
 public class Reference {
     enum RefType {
-        LOCAL_BRANCH, REMOTE_BRANCH, TAG;
+        LOCAL_BRANCH,
+        REMOTE_BRANCH,
+        TAG;
     }
 
     /** Short name of the reference to display. */
-    private String displayName;
+    private String  displayName;
 
     /** Full name of the reference. */
-    private String fullName;
+    private String  fullName;
 
     /** Type of the reference. */
     private RefType refType;
 
     /**
-     * @param fullName
-     *         full name of the reference
-     * @param displayName
-     *         short name of the reference to display
-     * @param refType
-     *         type the reference
+     * @param fullName full name of the reference
+     * @param displayName short name of the reference to display
+     * @param refType type the reference
      */
     public Reference(String fullName, String displayName, RefType refType) {
         this.displayName = displayName;

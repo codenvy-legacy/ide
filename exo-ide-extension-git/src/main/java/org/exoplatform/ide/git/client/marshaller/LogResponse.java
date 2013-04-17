@@ -22,7 +22,7 @@ import org.exoplatform.ide.git.shared.Log;
 
 /**
  * The response with the log of commits.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 14, 2011 4:32:17 PM anya $
  */
@@ -36,8 +36,7 @@ public class LogResponse extends Log {
     }
 
     /**
-     * @param textLog
-     *         the textLog text format of the log response
+     * @param textLog the textLog text format of the log response
      */
     public void setTextLog(String textLog) {
         this.textLog = textLog;

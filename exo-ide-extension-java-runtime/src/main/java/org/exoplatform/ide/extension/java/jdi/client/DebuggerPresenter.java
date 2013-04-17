@@ -621,9 +621,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
      * .events.RunAppEvent) */
     @Override
     public void onRunApp(RunAppEvent event) {
-        if (!IDE.eventBus().isEventHandled(ProjectBuiltEvent.TYPE)) {
-            IDE.addHandler(ProjectBuiltEvent.TYPE, this);
-        }
+        IDE.addHandler(ProjectBuiltEvent.TYPE, this);
         startDebugger = false;
         IDE.fireEvent(new BuildProjectEvent());
     }
@@ -632,9 +630,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
      * .client.events.DebugAppEvent) */
     @Override
     public void onDebugApp(DebugAppEvent event) {
-        if (!IDE.eventBus().isEventHandled(ProjectBuiltEvent.TYPE)) {
-            IDE.addHandler(ProjectBuiltEvent.TYPE, this);
-        }
+        IDE.addHandler(ProjectBuiltEvent.TYPE, this);
         startDebugger = true;
         IDE.fireEvent(new BuildProjectEvent());
     }
@@ -643,9 +639,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
      * .client.events.UpdateAppEvent) */
     @Override
     public void onUpdateApp(UpdateAppEvent event) {
-        if (!IDE.eventBus().isEventHandled(ProjectBuiltEvent.TYPE)) {
-            IDE.addHandler(ProjectBuiltEvent.TYPE, this);
-        }
+        IDE.addHandler(ProjectBuiltEvent.TYPE, this);
         updateApp = true;
         if (startDebugger) {
             doRemoveAllBreakPoints();
@@ -657,6 +651,9 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
      * .client.event.ProjectBuiltEvent) */
     @Override
     public void onProjectBuilt(ProjectBuiltEvent event) {
+        if (IDE.eventBus().isEventHandled(ProjectBuiltEvent.TYPE)) {
+            IDE.eventBus().removeHandler(ProjectBuiltEvent.TYPE, this);
+        }
         BuildStatus buildStatus = event.getBuildStatus();
         if (buildStatus.getStatus().equals(BuildStatus.Status.SUCCESSFUL)) {
             IDE.eventBus().fireEvent(
@@ -671,9 +668,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
     }
 
     private void startApplication(String url) {
-        if (IDE.eventBus().isEventHandled(ProjectBuiltEvent.TYPE)) {
-            IDE.eventBus().removeHandler(ProjectBuiltEvent.TYPE, this);
-        }
         if (startDebugger) {
             debugApplication(url);
         } else {
@@ -702,396 +696,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                                                                                     // websocket we get stopURL like:
                                                                                     //ide/java/runner/stop?name=app-zcuz5b5wawcn5u23
                                                                                     //but it must be like:
-                                                                                    //http://127.0.0
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    //
-                                                                                    // .1:8080/IDE/rest/private/ide/java/runner/stop?name=app-8gkiomg9q4qrhkxz
+                                                                                    //http://127.0.0.1:8080/IDE/rest/private/ide/java/runner/stop?name=app-8gkiomg9q4qrhkxz
                                                                                     if (!result.getStopURL().matches(
                                                                                             "http[s]?://.+/IDE/rest/private/.*/stop\\?name=.+")) {
                                                                                         String fixedStopURL =
@@ -1254,28 +859,24 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                                                                                    @Override
                                                                                    protected void onSuccess(Object result) {
                                                                                        String message =
-                                                                                               DebuggerExtension.LOCALIZATION_CONSTANT
-                                                                                                                .applicationUpdated(
-                                                                                                                        runningApp
-                                                                                                                                .getName(),
-                                                                                                                        getAppUrlsAsString(
-
-
-                                                                                                                                runningApp));
-                                                                                       IDE.fireEvent(new OutputEvent(message,
+                                                                                                        DebuggerExtension.LOCALIZATION_CONSTANT
+                                                                                                                                               .applicationUpdated(runningApp.getName(),
+                                                                                                                                                                   getAppUrlsAsString(
+                                                                                                                                                                   runningApp));
+                                                                                       IDE.fireEvent(new OutputEvent(
+                                                                                                                     message,
                                                                                                                      OutputMessage.Type.INFO));
                                                                                    }
 
                                                                                    @Override
                                                                                    protected void onFailure(Throwable exception) {
                                                                                        String message =
-                                                                                               (exception.getMessage() != null) ? exception
-                                                                                                       .getMessage()
-                                                                                                                                : DebuggerExtension
-                                                                                                       .LOCALIZATION_CONSTANT
-                                                                                                       .updateApplicationFailed(
-                                                                                                               runningApp.getName());
-                                                                                       IDE.fireEvent(new OutputEvent(message,
+                                                                                                        (exception.getMessage() != null)
+                                                                                                            ? exception.getMessage()
+                                                                                                            : DebuggerExtension.LOCALIZATION_CONSTANT.updateApplicationFailed(
+                                                                                                                                                     runningApp.getName());
+                                                                                       IDE.fireEvent(new OutputEvent(
+                                                                                                                     message,
                                                                                                                      OutputMessage.Type.ERROR));
                                                                                    }
                                                                                });

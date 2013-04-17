@@ -27,7 +27,7 @@ import com.google.gwt.resources.client.ImageResource;
  * @version $Id: Mar 22, 2011 2:39:07 PM anya $
  */
 public interface GitClientBundle extends ClientBundle {
-    GitClientBundle INSTANCE = GWT.<GitClientBundle>create(GitClientBundle.class);
+    GitClientBundle INSTANCE = GWT.<GitClientBundle> create(GitClientBundle.class);
 
     @Source("org/exoplatform/ide/git/images/push/arrow.png")
     ImageResource arrow();
@@ -184,6 +184,12 @@ public interface GitClientBundle extends ClientBundle {
 
     @Source("org/exoplatform/ide/git/images/controls/status_Disabled.png")
     ImageResource statusDisabled();
+
+    @Source("org/exoplatform/ide/git/images/controls/checkout.png")
+    ImageResource checkout();
+
+    @Source("org/exoplatform/ide/git/images/controls/checkout_Disabled.png")
+    ImageResource checkoutDisabled();
 
     @Source("org/exoplatform/ide/git/images/statuses/added.png")
     ImageResource itemAdded();

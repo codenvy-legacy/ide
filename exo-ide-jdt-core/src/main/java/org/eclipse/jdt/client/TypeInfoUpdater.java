@@ -24,8 +24,6 @@ import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedHandler;
-import org.exoplatform.ide.vfs.client.event.ItemMovedEvent;
-import org.exoplatform.ide.vfs.client.event.ItemMovedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
@@ -33,7 +31,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 4:19:16 PM 34360 evgen $
  */
-public class TypeInfoUpdater implements FileSavedHandler, ItemDeletedHandler, ItemMovedHandler {
+public class TypeInfoUpdater implements FileSavedHandler, ItemDeletedHandler {
 
     /** Default Maven 'sourceDirectory' value */
     private static final String DEFAULT_SOURCE_FOLDER = "src/main/java";
@@ -87,13 +85,6 @@ public class TypeInfoUpdater implements FileSavedHandler, ItemDeletedHandler, It
         if (event.getItem().getMimeType().equals(MimeType.APPLICATION_JAVA)) {
             deleteTypeFormStorage((FileModel)event.getItem(), false);
         }
-    }
-
-    /** @see org.exoplatform.ide.vfs.client.event.ItemMovedHandler#onItemMoved(org.exoplatform.ide.vfs.client.event.ItemMovedEvent) */
-    @Override
-    public void onItemMoved(ItemMovedEvent event) {
-        // TODO Auto-generated method stub
-
     }
 
 }

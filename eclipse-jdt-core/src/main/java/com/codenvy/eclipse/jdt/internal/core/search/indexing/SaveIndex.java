@@ -10,13 +10,12 @@
  *******************************************************************************/
 package com.codenvy.eclipse.jdt.internal.core.search.indexing;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.eclipse.core.runtime.IPath;
 import com.codenvy.eclipse.core.runtime.IProgressMonitor;
 import com.codenvy.eclipse.jdt.internal.core.index.Index;
 import com.codenvy.eclipse.jdt.internal.core.search.processing.JobManager;
 import com.codenvy.eclipse.jdt.internal.core.util.Util;
-
-import org.exoplatform.services.security.ConversationState;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
@@ -37,7 +36,7 @@ public class SaveIndex extends IndexRequest {
     }
 
     public boolean execute(IProgressMonitor progressMonitor) {
-        ConversationState.setCurrent(state);
+        EnvironmentContext.setCurrent(context);
         if (this.isCancelled || progressMonitor != null && progressMonitor.isCanceled()) {
             if (latch != null) {
                 latch.countDown();

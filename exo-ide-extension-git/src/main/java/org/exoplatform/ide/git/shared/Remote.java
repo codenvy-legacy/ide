@@ -20,7 +20,7 @@ package org.exoplatform.ide.git.shared;
 
 /**
  * Info about remote configuration.
- *
+ * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: Remote.java 67651 2011-03-25 16:15:36Z andrew00x $
  */
@@ -32,10 +32,8 @@ public class Remote {
     private String url;
 
     /**
-     * @param name
-     *         remote name
-     * @param url
-     *         repository url
+     * @param name remote name
+     * @param url repository url
      */
     public Remote(String name, String url) {
         this.name = name;

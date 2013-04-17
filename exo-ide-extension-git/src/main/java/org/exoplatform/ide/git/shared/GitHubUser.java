@@ -20,7 +20,7 @@ package org.exoplatform.ide.git.shared;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: GitHubUser.java Aug 6, 2012
  */
@@ -30,8 +30,7 @@ public interface GitHubUser {
     public abstract String getType();
 
     /**
-     * @param type
-     *         the type to set
+     * @param type the type to set
      */
     public abstract void setType(String type);
 
@@ -39,8 +38,7 @@ public interface GitHubUser {
     public abstract String getEmail();
 
     /**
-     * @param email
-     *         the email to set
+     * @param email the email to set
      */
     public abstract void setEmail(String email);
 
@@ -48,8 +46,7 @@ public interface GitHubUser {
     public abstract String getCompany();
 
     /**
-     * @param company
-     *         the company to set
+     * @param company the company to set
      */
     public abstract void setCompany(String company);
 
@@ -57,8 +54,7 @@ public interface GitHubUser {
     public abstract int getFollowers();
 
     /**
-     * @param followers
-     *         the followers to set
+     * @param followers the followers to set
      */
     public abstract void setFollowers(int followers);
 
@@ -66,8 +62,7 @@ public interface GitHubUser {
     public abstract String getAvatarUrl();
 
     /**
-     * @param avatarUrl
-     *         the avatar_url to set
+     * @param avatarUrl the avatar_url to set
      */
     public abstract void setAvatarUrl(String avatarUrl);
 
@@ -75,8 +70,7 @@ public interface GitHubUser {
     public abstract String getHtmlUrl();
 
     /**
-     * @param htmlUrl
-     *         the html_url to set
+     * @param htmlUrl the html_url to set
      */
     public abstract void setHtmlUrl(String htmlUrl);
 
@@ -84,8 +78,7 @@ public interface GitHubUser {
     public abstract String getBio();
 
     /**
-     * @param bio
-     *         the bio to set
+     * @param bio the bio to set
      */
     public abstract void setBio(String bio);
 
@@ -93,8 +86,7 @@ public interface GitHubUser {
     public abstract int getPublicRepos();
 
     /**
-     * @param publicRepos
-     *         the public_repos to set
+     * @param publicRepos the public_repos to set
      */
     public abstract void setPublicRepos(int publicRepos);
 
@@ -102,8 +94,7 @@ public interface GitHubUser {
     public abstract int getPublicGists();
 
     /**
-     * @param public_gists
-     *         the public_gists to set
+     * @param public_gists the public_gists to set
      */
     public abstract void setPublicGists(int publicGists);
 
@@ -111,8 +102,7 @@ public interface GitHubUser {
     public abstract int getFollowing();
 
     /**
-     * @param following
-     *         the following to set
+     * @param following the following to set
      */
     public abstract void setFollowing(int following);
 
@@ -120,8 +110,7 @@ public interface GitHubUser {
     public abstract String getLocation();
 
     /**
-     * @param location
-     *         the location to set
+     * @param location the location to set
      */
     public abstract void setLocation(String location);
 
@@ -129,8 +118,7 @@ public interface GitHubUser {
     public abstract String getName();
 
     /**
-     * @param name
-     *         the name to set
+     * @param name the name to set
      */
     public abstract void setName(String name);
 
@@ -138,8 +126,7 @@ public interface GitHubUser {
     public abstract String getUrl();
 
     /**
-     * @param url
-     *         the url to set
+     * @param url the url to set
      */
     public abstract void setUrl(String url);
 
@@ -147,8 +134,7 @@ public interface GitHubUser {
     public abstract String getGravatarId();
 
     /**
-     * @param gravatarId
-     *         the gravatar_id to set
+     * @param gravatarId the gravatar_id to set
      */
     public abstract void setGravatarId(String gravatarId);
 
@@ -156,8 +142,7 @@ public interface GitHubUser {
     public abstract String getId();
 
     /**
-     * @param id
-     *         the id to set
+     * @param id the id to set
      */
     public abstract void setId(String id);
 
@@ -165,8 +150,7 @@ public interface GitHubUser {
     public abstract String getLogin();
 
     /**
-     * @param login
-     *         the login to set
+     * @param login the login to set
      */
     public abstract void setLogin(String login);
 

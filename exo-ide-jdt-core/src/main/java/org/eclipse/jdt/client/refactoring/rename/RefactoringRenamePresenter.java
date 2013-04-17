@@ -25,7 +25,12 @@ import com.google.collide.dto.FileOperationNotification.Operation;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
@@ -38,8 +43,11 @@ import org.eclipse.jdt.client.UpdateOutlineHandler;
 import org.eclipse.jdt.client.core.JavaConventions;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.dom.ASTNode;
+import org.eclipse.jdt.client.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.core.dom.NodeFinder;
+import org.eclipse.jdt.client.core.dom.SimpleName;
+import org.eclipse.jdt.client.core.dom.SimpleType;
 import org.eclipse.jdt.client.event.ReparseOpenedFilesEvent;
 import org.eclipse.jdt.client.refactoring.RefactoringClientService;
 import org.eclipse.jdt.client.runtime.IStatus;
@@ -50,11 +58,23 @@ import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
-import org.exoplatform.ide.client.framework.editor.event.*;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.*;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -85,10 +105,10 @@ import java.util.Map;
  * @version $Id: RefactoringRenamePresenter.java Jan 17, 2013 4:07:09 PM azatsarynnyy $
  */
 public class RefactoringRenamePresenter implements RefactoringRenameHandler, ViewClosedHandler, VfsChangedHandler,
-                                                   ProjectOpenedHandler, ProjectClosedHandler, ActiveProjectChangedHandler,
-                                                   EditorActiveFileChangedHandler,
-                                                   UpdateOutlineHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
-                                                   EditorFileContentChangedHandler {
+                   ProjectOpenedHandler, ProjectClosedHandler, ActiveProjectChangedHandler,
+                   EditorActiveFileChangedHandler,
+                   UpdateOutlineHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
+                   EditorFileContentChangedHandler {
 
     public interface Display extends IsView {
         /**
@@ -299,6 +319,12 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
             }
         }
 
+        // temporary block renaming top-level class/interface/enum which is opened
+        if (isNodeDeclarationOpenedInSeparateFile(elementToRename)) {
+            Dialogs.getInstance().showError("Rename refactoring for this node temporary unavailable.");
+            return;
+        }
+
         originElementName = getElementName(elementToRename);
 
         openView();
@@ -372,77 +398,39 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
     private ASTNode getElementToRename() {
         try {
             IDocument document = activeEditor.getDocument();
-            int offset =
-                    document.getLineOffset(activeEditor.getCursorRow() - 1) + activeEditor.getSelectionRange().getStartSymbol();
+            final int offset = document.getLineOffset(activeEditor.getCursorRow() - 1) + activeEditor.getSelectionRange().getStartSymbol();
             NodeFinder nf = new NodeFinder(currentCompilationUnit, offset, 0);
             ASTNode coveringNode = nf.getCoveringNode();
-
             if (coveringNode == null) {
                 return null;
             }
-
             if (coveringNode.getNodeType() == ASTNode.SIMPLE_NAME) {
-                //IDE.fireEvent(new OutputEvent(coveringNode.getLocationInParent().toString()));
                 return coveringNode;
-//            ASTNode parentNode = coveringNode.getParent();
-//            StructuralPropertyDescriptor descriptor = coveringNode.getLocationInParent();
-//
-//            if (parentNode instanceof SingleVariableDeclaration)
-//            {
-//               if (descriptor == SingleVariableDeclaration.NAME_PROPERTY)
-//               {
-//                  return coveringNode;
-//               }
-//            }
-//            else if (parentNode instanceof VariableDeclarationFragment)
-//            {
-//               if (descriptor == VariableDeclarationFragment.NAME_PROPERTY)
-//               {
-//                  return coveringNode;
-//               }
-//            }
-//            else if (parentNode instanceof MethodDeclaration)
-//            {
-//               MethodDeclaration p = (MethodDeclaration)parentNode;
-//               // could be the name of the constructor
-//               if (!p.isConstructor() && descriptor == MethodDeclaration.NAME_PROPERTY)
-//               {
-//                  return coveringNode;
-//               }
-//            }
-//            else if (parentNode instanceof MethodInvocation)
-//            {
-//               if (descriptor == MethodInvocation.NAME_PROPERTY)
-//               {
-//                  return coveringNode;
-//               }
-//            }
-//            else if (parentNode instanceof TypeDeclaration)
-//            {
-//               if (descriptor == TypeDeclaration.NAME_PROPERTY)
-//               {
-//                  return coveringNode;
-//               }
-//            }
-//            else if (parentNode instanceof SimpleType)
-//            {
-//               if (descriptor == SimpleType.NAME_PROPERTY)
-//               {
-//                  return coveringNode;
-//               }
-//            }
-//            else if (parentNode instanceof ClassInstanceCreation)
-//            {
-//               if (descriptor == ClassInstanceCreation.NAME_PROPERTY)
-//               {
-//                  return coveringNode;
-//               }
-//            }
             }
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /** Temporary block renaming top-level class/interface/enum which is opened */
+    private boolean isNodeDeclarationOpenedInSeparateFile(ASTNode astNode) {
+        if (astNode == null) {
+            return false;
+        }
+        if (astNode.getNodeType() == ASTNode.SIMPLE_NAME) {
+            ASTNode parentNode = astNode.getParent();
+            if (parentNode instanceof AbstractTypeDeclaration || parentNode instanceof SimpleType) {
+                String nodeName = ((SimpleName)astNode).getIdentifier();
+                for (FileModel file : openedFiles.values()) {
+                    String fileName = file.getName().substring(0, file.getName().length() - 5); // excluding file extension ".java"
+                    if (nodeName.equals(fileName)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /** Opens view for rename Java element. */

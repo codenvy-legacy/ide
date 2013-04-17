@@ -31,25 +31,26 @@ import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 
 /**
  * Grid for displaying git files.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 12, 2011 5:05:49 PM anya $
  */
 public class IndexFilesGrid extends ListGrid<IndexFile> {
     /** Grid's ID. */
-    private static final String ID = "ideIndexFilesGrid";
+    private static final String ID    = "ideIndexFilesGrid";
 
-    private final String FILES = "Files for commit";
+    private final String        FILES = "Files for commit";
 
     /** Files column. */
-    Column<IndexFile, String> filesColumn;
+    Column<IndexFile, String>   filesColumn;
 
     /** Column with checkboxes. */
-    Column<IndexFile, Boolean> checkColumn;
+    Column<IndexFile, Boolean>  checkColumn;
 
     public IndexFilesGrid() {
         super();
         setID(ID);
+        this.setHeight("auto");
         initColumns();
     }
 

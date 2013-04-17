@@ -43,6 +43,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.paas.DeployResultHandler;
+import org.exoplatform.ide.client.framework.paas.InitializeDeployViewHandler;
 import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectType;
@@ -55,6 +56,8 @@ import org.exoplatform.ide.extension.openshift.client.key.UpdatePublicKeyCallbac
 import org.exoplatform.ide.extension.openshift.client.key.UpdatePublicKeyCommandHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.openshift.client.login.LoginCanceledEvent;
+import org.exoplatform.ide.extension.openshift.client.login.LoginCanceledHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 import org.exoplatform.ide.extension.openshift.client.marshaller.ApplicationTypesUnmarshaller;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
@@ -103,6 +106,8 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
 
     private DeployResultHandler deployResultHandler;
 
+    private InitializeDeployViewHandler initializeDeployViewHandler;
+
     public DeployApplicationPresenter() {
         IDE.addHandler(VfsChangedEvent.TYPE, this);
     }
@@ -113,9 +118,8 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
 
     /**
      * Forms the message to be shown, when application is created.
-     *
-     * @param appInfo
-     *         application information
+     * 
+     * @param appInfo application information
      * @return {@link String} message
      */
     protected String formApplicationCreatedMessage(AppInfo appInfo) {
@@ -123,35 +127,49 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
         applicationStr += "<b>Name</b>" + " : " + appInfo.getName() + "<br>";
         applicationStr += "<b>Git URL</b>" + " : " + appInfo.getGitUrl() + "<br>";
         applicationStr +=
-                "<b>Public URL</b>" + " : <a href=\"" + appInfo.getPublicUrl() + "\" target=\"_blank\">"
-                + appInfo.getPublicUrl() + "</a><br>";
+                          "<b>Public URL</b>" + " : <a href=\"" + appInfo.getPublicUrl() + "\" target=\"_blank\">"
+                              + appInfo.getPublicUrl() + "</a><br>";
         applicationStr += "<b>Type</b>" + " : " + appInfo.getType() + "<br>";
 
         return lb.createApplicationSuccess(applicationStr);
     }
 
-    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
-     * .application.event.VfsChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     *      .application.event.VfsChangedEvent)
+     */
     @Override
     public void onVfsChanged(VfsChangedEvent event) {
         this.vfs = event.getVfsInfo();
     }
 
-    private void getApplicationTypes() {
+    private void getApplicationTypes(final boolean getStartedWizard) {
         try {
-            OpenShiftClientService.getInstance().getApplicationTypes(
-                    new OpenShiftAsyncRequestCallback<List<String>>(new ApplicationTypesUnmarshaller(new ArrayList<String>()),
-                                                                    new LoggedInHandler() {
-                                                                        @Override
-                                                                        public void onLoggedIn(LoggedInEvent event) {
-                                                                            getApplicationTypes();
-                                                                        }
-                                                                    }, null) {
-                        @Override
-                        protected void onSuccess(List<String> result) {
-                            fillTypeField(projectType, result);
-                        }
-                    });
+            OpenShiftClientService.getInstance()
+                  .getApplicationTypes(
+                                       new OpenShiftAsyncRequestCallback<List<String>>(
+                                           new ApplicationTypesUnmarshaller(new ArrayList<String>()),
+                                           new LoggedInHandler() {
+                                               @Override
+                                               public void onLoggedIn(LoggedInEvent event) {
+                                                   getApplicationTypes(getStartedWizard);
+                                               }
+                                           }, new LoginCanceledHandler() {
+
+                                               @Override
+                                               public void onLoginCanceled(LoginCanceledEvent event) {
+                                                   initializeDeployViewHandler.onInitializeDeployViewError();
+                                               }
+                                           }) {
+                                           @Override
+                                           protected void onSuccess(List<String> result) {
+                                               fillTypeField(projectType, result);
+
+                                               if (getStartedWizard) {
+                                                   getUserInfo();
+                                               }
+                                           }
+                                       });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
@@ -204,15 +222,16 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                 @Override
                 protected void onSuccess(RHUserInfo result) {
                     if ("Doesn't exist".equals(result.getNamespace())) {
-                        //create a domain
+                        // create a domain
                         StringValueReceivedHandler handler = new StringValueReceivedHandler() {
                             @Override
                             public void stringValueReceived(String value) {
                                 if (value != null && !value.isEmpty() && value.matches("[A-Za-z0-9]+") && value.length() < 17) {
                                     createDomain(value);
                                 } else {
-                                    Dialogs.getInstance().showError(
-                                            "Namespace name must be contains latin characters only and not longer then 16 characters.");
+                                    Dialogs.getInstance()
+                                           .showError(
+                                                      "Namespace name must be contains latin characters only and not longer then 16 characters.");
                                 }
                             }
                         };
@@ -222,7 +241,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                                                           "",
                                                           handler);
                     } else {
-                        //create an application
+                        // create an application
                         createFolder();
                     }
                 }
@@ -233,7 +252,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                 @Override
                 protected void onFailure(Throwable exception) {
                     IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
-                                                                                                 .getUserInfoFail()));
+                                                                                                                       .getUserInfoFail()));
                 }
             });
         } catch (RequestException e) {
@@ -260,13 +279,14 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                     String randString = Double.toString(Math.random()).substring(2);
                     String newUniqueDomain = domainName + randString.substring(domainName.length());
                     createDomain(newUniqueDomain);
-                    IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
-                                                                                                 .createDomainFail(domainName)));
+                    IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception,
+                                                                    OpenShiftExtension.LOCALIZATION_CONSTANT
+                                                                                                            .createDomainFail(domainName)));
                 }
             });
         } catch (RequestException e) {
             IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
-                                                                                 .createDomainFail(domainName)));
+                                                                                                       .createDomainFail(domainName)));
         }
     }
 
@@ -341,17 +361,17 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
             OpenShiftClientService.getInstance().createApplicationWS(applicationName, vfs.getId(), project.getId(),
                                                                      applicationType, new RequestCallback<AppInfo>(unmarshaller) {
 
-                @Override
-                protected void onSuccess(AppInfo result) {
-                    onCreatedAppSuccess(result);
-                }
+                                                                         @Override
+                                                                         protected void onSuccess(AppInfo result) {
+                                                                             onCreatedAppSuccess(result);
+                                                                         }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    cleanUpFolder();
-                    handleError(exception);
-                }
-            });
+                                                                         @Override
+                                                                         protected void onFailure(Throwable exception) {
+                                                                             cleanUpFolder();
+                                                                             handleError(exception);
+                                                                         }
+                                                                     });
         } catch (WebSocketException e) {
             createApplicationREST(applicationName, applicationType);
         }
@@ -359,11 +379,9 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
 
     /**
      * Perform creation of application on OpenShift by sending request over HTTP.
-     *
-     * @param applicationName
-     *         application's name
-     * @param applicationType
-     *         type of the application
+     * 
+     * @param applicationName application's name
+     * @param applicationType type of the application
      */
     private void createApplicationREST(String applicationName, String applicationType) {
         AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
@@ -373,17 +391,17 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
             OpenShiftClientService.getInstance().createApplication(applicationName, vfs.getId(), project.getId(),
                                                                    applicationType, new AsyncRequestCallback<AppInfo>(unmarshaller) {
 
-                @Override
-                protected void onSuccess(AppInfo result) {
-                    onCreatedAppSuccess(result);
-                }
+                                                                       @Override
+                                                                       protected void onSuccess(AppInfo result) {
+                                                                           onCreatedAppSuccess(result);
+                                                                       }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    cleanUpFolder();
-                    handleError(exception);
-                }
-            });
+                                                                       @Override
+                                                                       protected void onFailure(Throwable exception) {
+                                                                           cleanUpFolder();
+                                                                           handleError(exception);
+                                                                       }
+                                                                   });
         } catch (RequestException e) {
             IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, lb.createApplicationFail(applicationName)));
             deployResultHandler.onDeployFinished(false);
@@ -392,9 +410,8 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
 
     /**
      * Performs actions after application successfully created on OpenShift.
-     *
-     * @param app
-     *         {@link AppInfo}
+     * 
+     * @param app {@link AppInfo}
      */
     private void onCreatedAppSuccess(AppInfo app) {
         IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(app), Type.INFO));
@@ -459,26 +476,26 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
 
     /**
      * @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#getDeployView(java.lang.String,
-     *      org.exoplatform.ide.client.framework.project.ProjectType)
+     *      org.exoplatform.ide.client.framework.project.ProjectType, org.exoplatform.ide.client.framework.paas.InitializeDeployViewHandler)
      */
     @Override
-    public Composite getDeployView(String projectName, ProjectType projectType) {
+    public Composite getDeployView(String projectName, ProjectType projectType, InitializeDeployViewHandler initializeDeployViewHandler) {
         this.projectName = projectName;
         this.projectType = projectType;
+        this.initializeDeployViewHandler = initializeDeployViewHandler;
         if (display == null) {
             display = GWT.create(Display.class);
         }
         bindDisplay();
         display.getApplicationNameField().setValue(projectName);
-        getApplicationTypes();
+        getApplicationTypes(false);
         return display.getView();
     }
 
     /**
      * Handle error while creating an application.
-     *
-     * @param exception
-     *         {@link Throwable}
+     * 
+     * @param exception {@link Throwable}
      */
     private void handleError(Throwable exception) {
         if (exception instanceof ServerException) {
@@ -520,17 +537,32 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                 VirtualFileSystem.getInstance().delete(project, new AsyncRequestCallback<String>() {
                     @Override
                     protected void onSuccess(String result) {
-                        //nothing to do
+                        // nothing to do
                     }
 
                     @Override
                     protected void onFailure(Throwable exception) {
-                        //nothing to do
+                        // nothing to do
                     }
                 });
             } catch (RequestException exception) {
-                //ignore this exception
+                // ignore this exception
             }
         }
+    }
+
+    @Override
+    public void deployFirstTime(String projectName, ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler) {
+        this.deployResultHandler = deployResultHandler;
+        this.projectName = projectName;
+        this.projectType = ProjectType.fromValue(projectTemplate.getType());
+
+        if (display == null) {
+            display = GWT.create(Display.class);
+        }
+        bindDisplay();
+        display.getApplicationNameField().setValue(projectName);
+        deployResultHandler.onDeployFinished(true);
+        getApplicationTypes(true);
     }
 }

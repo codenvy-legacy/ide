@@ -22,14 +22,14 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link MergeEvent} event.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 20, 2011 12:25:39 PM anya $
  */
 public interface MergeHandler extends EventHandler {
     /**
      * Perform actions, when user tries to do merge operation.
-     *
+     * 
      * @param event
      */
     void onMerge(MergeEvent event);
