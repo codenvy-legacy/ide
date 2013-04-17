@@ -34,6 +34,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -48,10 +49,10 @@ public class OpenProjectViewImpl extends DialogBox implements OpenProjectView {
     private static OpenProjectViewImplUiBinder uiBinder = GWT.create(OpenProjectViewImplUiBinder.class);
 
     @UiField
-    com.github.gwtbootstrap.client.ui.Button btnCancel;
+    Button btnCancel;
 
     @UiField
-    com.github.gwtbootstrap.client.ui.Button btnOpen;
+    Button btnOpen;
 
     @UiField
     ScrollPanel listPanel;

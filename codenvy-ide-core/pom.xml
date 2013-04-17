@@ -42,10 +42,6 @@
             <artifactId>gwt-elemental</artifactId>
             <version>collide</version>
         </dependency>
-        <dependency>
-            <groupId>com.github.gwtbootstrap</groupId>
-            <artifactId>gwt-bootstrap</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.codenvy.ide</groupId>
