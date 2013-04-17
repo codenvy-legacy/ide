@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.php.shared;
 
 /**
+ * Interface represents application instance.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ApplicationInstance.java Apr 17, 2013 4:33:05 PM azatsarynnyy $

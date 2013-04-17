@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ide.extension.php.server;
 
+import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
+import static org.exoplatform.ide.commons.FileUtils.createTempDirectory;
+import static org.exoplatform.ide.commons.FileUtils.deleteRecursive;
+import static org.exoplatform.ide.commons.NameGenerator.generate;
+import static org.exoplatform.ide.commons.ZipUtils.unzip;
+
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry;
@@ -36,8 +42,6 @@ import org.exoplatform.services.log.Log;
 import org.picocontainer.Startable;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,11 +49,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
-import static org.exoplatform.ide.commons.FileUtils.*;
-import static org.exoplatform.ide.commons.NameGenerator.generate;
-import static org.exoplatform.ide.commons.ZipUtils.unzip;
 
 /**
  * ApplicationRunner for deploy PHP applications at Cloud Foundry.
@@ -71,7 +70,6 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
     private final Map<String, Application> applications;
     private final ScheduledExecutorService applicationTerminator;
-    private final java.io.File             appEngineSdk;
 
     public CloudfoundryApplicationRunner(CloudfoundryPool cfServers, InitParams initParams) {
         this(cfServers, parseApplicationLifeTime(readValueParam(initParams, "cloudfoundry-application-lifetime")));
@@ -98,26 +96,6 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
         this.applications = new ConcurrentHashMap<String, Application>();
         this.applicationTerminator = Executors.newSingleThreadScheduledExecutor();
         this.applicationTerminator.scheduleAtFixedRate(new TerminateApplicationTask(), 1, 1, TimeUnit.MINUTES);
-
-        URL cs = getClass().getProtectionDomain().getCodeSource().getLocation();
-        java.io.File f = new java.io.File(URI.create(cs.toString()));
-        java.io.File sdk = null;
-        while (!(f == null || (sdk = new java.io.File(f, "appengine-python-sdk")).exists())) {
-            f = f.getParentFile();
-        }
-        appEngineSdk = sdk;
-        if (!appEngineSdk.exists()) {
-            LOG.error("***** Google appengine Python SDK not found *****");
-        }
-    }
-
-    private enum APPLICATION_TYPE {
-        PYTHON,
-        PYTHON_APP_ENGINE
-    }
-
-    private APPLICATION_TYPE determineApplicationType(java.io.File appDir) {
-        return new java.io.File(appDir, "app.yaml").exists() ? APPLICATION_TYPE.PYTHON_APP_ENGINE : APPLICATION_TYPE.PYTHON;
     }
 
     @Override
@@ -129,49 +107,24 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             if (project.getItemType() != ItemType.PROJECT) {
                 throw new ApplicationRunnerException("Item '" + project.getPath() + "' is not a project. ");
             }
-            path = createTempDirectory(null, "app-python-");
+            path = createTempDirectory(null, "app-php-");
             unzip(vfs.exportZip(projectId).getStream(), path);
             java.io.File projectFile = new java.io.File(path, ".project");
             if (projectFile.exists()) {
                 projectFile.delete(); // Do not send .project file to CF.
             }
 
-            APPLICATION_TYPE type = determineApplicationType(path);
-            if (APPLICATION_TYPE.PYTHON_APP_ENGINE == type) {
-                if (appEngineSdk == null) {
-                    throw new RuntimeException("Unable run appengine project. Google appengine Python SDK not found. ");
-                }
-
-                final java.io.File appengineApplication = createTempDirectory(null, "gae-app-");
-
-                // copy sdk
-                java.io.File sdk = new java.io.File(appengineApplication, "appengine-python-sdk");
-                if (!sdk.mkdir()) {
-                    throw new IOException("Unable create directory " + sdk.getAbsolutePath());
-                }
-                copy(appEngineSdk, sdk, null);
-
-                // copy application
-                java.io.File application = new java.io.File(appengineApplication, "application");
-                if (!application.mkdir()) {
-                    throw new IOException("Unable create directory " + application.getAbsolutePath());
-                }
-                copy(path, application, null);
-                deleteRecursive(path);
-                path = appengineApplication;
-            }
-
             final Cloudfoundry cloudfoundry = cfServers.next();
             final String name = generate("app-", 16);
             try {
-                return doRunApplication(cloudfoundry, name, path, type);
+                return doRunApplication(cloudfoundry, name, path);
             } catch (ApplicationRunnerException e) {
                 Throwable cause = e.getCause();
                 if (cause instanceof CloudfoundryException) {
                     if (200 == ((CloudfoundryException)cause).getExitCode()) {
                         // Login and try again.
                         login(cloudfoundry);
-                        return doRunApplication(cloudfoundry, name, path, type);
+                        return doRunApplication(cloudfoundry, name, path);
                     }
                 }
                 throw e;
@@ -187,11 +140,10 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
     private ApplicationInstance doRunApplication(Cloudfoundry cloudfoundry,
                                                  String name,
-                                                 java.io.File appDir,
-                                                 APPLICATION_TYPE type) throws ApplicationRunnerException {
+                                                 java.io.File appDir) throws ApplicationRunnerException {
         try {
             final String target = cloudfoundry.getTarget();
-            final CloudFoundryApplication cfApp = createApplication(cloudfoundry, target, name, appDir, type);
+            final CloudFoundryApplication cfApp = createApplication(cloudfoundry, target, name, appDir);
             final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
 
             applications.put(name, new Application(name, target, expired));
@@ -318,16 +270,9 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
     private CloudFoundryApplication createApplication(Cloudfoundry cloudfoundry,
                                                       String target,
                                                       String name,
-                                                      java.io.File path,
-                                                      APPLICATION_TYPE type)
+                                                      java.io.File path)
             throws CloudfoundryException, IOException, ParsingResponseException, VirtualFileSystemException, CredentialStoreException {
-        if (APPLICATION_TYPE.PYTHON_APP_ENGINE == type) {
-            final String command = "PATH=/home/vcap/bin:$PATH appengine-python-sdk/dev_appserver.py --host=0.0.0.0 --port=$VCAP_APP_PORT " +
-                                   "--skip_sdk_update_check=yes application";
-            return cloudfoundry.createApplication(target, name, "standalone", null, 1, 128, false, "python2", command,
-                                                  null, null, null, path.toURI().toURL());
-        }
-        return cloudfoundry.createApplication(target, name, null, null, 1, 128, false, "python2", null, null, null,
+        return cloudfoundry.createApplication(target, name, null, null, 1, 128, false, "php", null, null, null,
                                               null, path.toURI().toURL());
     }
 
@@ -362,7 +307,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
     private static class Application {
         final String name;
         final String server;
-        final long   expirationTime;
+        final long expirationTime;
 
         Application(String name, String server, long expirationTime) {
             this.name = name;
