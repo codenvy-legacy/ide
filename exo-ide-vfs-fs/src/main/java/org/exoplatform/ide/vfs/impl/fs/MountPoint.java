@@ -22,21 +22,55 @@ import com.codenvy.ide.commons.cache.Cache;
 import com.codenvy.ide.commons.cache.LoadingValueSLRUCache;
 import com.codenvy.ide.commons.cache.SynchronizedCache;
 
-import org.everrest.core.impl.provider.json.*;
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonGenerator;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.JsonWriter;
+import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.exoplatform.ide.commons.FileUtils;
 import org.exoplatform.ide.commons.NameGenerator;
 import org.exoplatform.ide.vfs.server.ContentStream;
-import org.exoplatform.ide.vfs.server.exceptions.*;
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
+import org.exoplatform.ide.vfs.server.exceptions.LockException;
+import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 import org.exoplatform.ide.vfs.server.util.DeleteOnCloseFileInputStream;
 import org.exoplatform.ide.vfs.server.util.NotClosableInputStream;
 import org.exoplatform.ide.vfs.server.util.ZipContent;
-import org.exoplatform.ide.vfs.shared.*;
+import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.Closeable;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -92,8 +126,7 @@ public class MountPoint {
     };
 
     /** Hide .vfs and .git directories. */
-    private static final java.io.FilenameFilter SERVICE_GIT_DIR_FILTER =
-            new OrFileNameFilter(SERVICE_DIR_FILTER, FileUtils.GIT_FILTER);
+    private static final java.io.FilenameFilter SERVICE_GIT_DIR_FILTER = new OrFileNameFilter(SERVICE_DIR_FILTER, FileUtils.GIT_FILTER);
 
     private static class OrFileNameFilter implements java.io.FilenameFilter {
         private final java.io.FilenameFilter[] filters;
@@ -196,6 +229,8 @@ public class MountPoint {
         }
     }
 
+    private static final Identity ANONYMOUS = new Identity(VirtualFileSystemInfo.ANONYMOUS_PRINCIPAL);
+
     private final java.io.File     ioRoot;
     private final SearcherProvider searcherProvider;
 
@@ -260,10 +295,9 @@ public class MountPoint {
         if (!virtualFile.exists()) {
             throw new ItemNotFoundException(String.format("Object '%s' does not exists. ", path));
         }
-        final FileLockFactory.FileLock lock =
-                fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
+        final FileLockFactory.FileLock lock = fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
         try {
-            if (!hasPermission(virtualFile, getCurrentUserId(), BasicPermissions.READ)) {
+            if (!hasPermission(virtualFile, BasicPermissions.READ, true)) {
                 throw new PermissionDeniedException(
                         String.format("Unable get item '%s'. Operation not permitted. ", virtualFile.getPath()));
             }
@@ -295,31 +329,24 @@ public class MountPoint {
             return null;
         }
         final Path parentPath = virtualFile.getInternalPath().getParent();
-
         return new VirtualFile(new java.io.File(ioRoot, parentPath.toIoPath()), parentPath, this);
     }
 
 
-    List<VirtualFile> getChildren(VirtualFile virtualFile) throws VirtualFileSystemException {
-        if (!virtualFile.isFolder()) {
-            throw new InvalidArgumentException(
-                    String.format("Unable get children. Item '%s' is not a folder. ", virtualFile.getPath()));
+    List<VirtualFile> getChildren(VirtualFile parent) throws VirtualFileSystemException {
+        if (!parent.isFolder()) {
+            throw new InvalidArgumentException(String.format("Unable get children. Item '%s' is not a folder. ", parent.getPath()));
         }
 
-        final FileLockFactory.FileLock parentLock =
-                fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
+        final FileLockFactory.FileLock parentLock = fileLockFactory.getLock(parent.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
         try {
-            final String userId = getCurrentUserId();
-            final List<VirtualFile> children = doGetChildren(virtualFile, SERVICE_GIT_DIR_FILTER);
-            for (VirtualFile child : children) {
+            final List<VirtualFile> children = doGetChildren(parent, SERVICE_GIT_DIR_FILTER);
+            for (Iterator<VirtualFile> iterator = children.iterator(); iterator.hasNext(); ) {
+                VirtualFile child = iterator.next();
                 // Check permission directly for current file only.
-                // Not use method 'hasPermission' here to avoid useless
-                // traversing up to root folder for each file.
-                if (!aclCache[child.getInternalPath().hashCode() & MASK]
-                        .get(child.getInternalPath()).hasPermission(userId, BasicPermissions.READ)) {
-                    throw new PermissionDeniedException(
-                            String.format("Unable get children of '%s'. Operation not permitted for '%s'. ",
-                                          virtualFile.getPath(), child.getPath()));
+                // We know the parent is accessible for current user otherwise we should not be here.
+                if (!hasPermission(child, BasicPermissions.READ, false)) {
+                    iterator.remove(); // Do not show item in list if current user has not permission to see it
                 }
             }
 
@@ -348,18 +375,16 @@ public class MountPoint {
     }
 
 
-    VirtualFile createFile(VirtualFile parent, String name, String mediaType, InputStream content)
-            throws VirtualFileSystemException {
+    VirtualFile createFile(VirtualFile parent, String name, String mediaType, InputStream content) throws VirtualFileSystemException {
         checkName(name);
 
         if (!parent.isFolder()) {
             throw new InvalidArgumentException("Unable create new file. Item specified as parent is not a folder. ");
         }
 
-        final FileLockFactory.FileLock parentLock =
-                fileLockFactory.getLock(parent.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
+        final FileLockFactory.FileLock parentLock = fileLockFactory.getLock(parent.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         try {
-            if (!hasPermission(parent, getCurrentUserId(), BasicPermissions.WRITE)) {
+            if (!hasPermission(parent, BasicPermissions.WRITE, true)) {
                 throw new PermissionDeniedException(
                         String.format("Unable create new file in '%s'. Operation not permitted. ", parent.getPath()));
             }
@@ -404,10 +429,9 @@ public class MountPoint {
             throw new InvalidArgumentException("Unable create folder. Item specified as parent is not a folder. ");
         }
 
-        final FileLockFactory.FileLock parentLock =
-                fileLockFactory.getLock(parent.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
+        final FileLockFactory.FileLock parentLock = fileLockFactory.getLock(parent.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         try {
-            if (!hasPermission(parent, getCurrentUserId(), BasicPermissions.WRITE)) {
+            if (!hasPermission(parent, BasicPermissions.WRITE, true)) {
                 throw new PermissionDeniedException(
                         String.format("Unable create new folder in '%s'. Operation not permitted. ", parent.getPath()));
             }
@@ -425,8 +449,7 @@ public class MountPoint {
 
             if (createdPath == null) {
                 // Folder or folder hierarchy already exists.
-                throw new ItemAlreadyExistException(
-                        String.format("Item '%s' already exists. ", parent.getInternalPath().newPath(name)));
+                throw new ItemAlreadyExistException(String.format("Item '%s' already exists. ", parent.getInternalPath().newPath(name)));
             }
 
             // Return first created folder, e.g. assume we need create: folder1/folder2/folder3 in specified folder.
@@ -438,10 +461,8 @@ public class MountPoint {
     }
 
 
-    VirtualFile createProject(VirtualFile parent, String name, List<Property> properties)
-            throws VirtualFileSystemException {
-        final FileLockFactory.FileLock parentLock =
-                fileLockFactory.getLock(parent.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
+    VirtualFile createProject(VirtualFile parent, String name, List<Property> properties) throws VirtualFileSystemException {
+        final FileLockFactory.FileLock parentLock = fileLockFactory.getLock(parent.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
         try {
             final VirtualFile project = createFolder(parent, name);
             updateProperties(project, properties, null);
@@ -458,10 +479,9 @@ public class MountPoint {
         if (!parent.isFolder()) {
             throw new InvalidArgumentException("Unable copy item. Item specified as parent is not a folder. ");
         }
-        final FileLockFactory.FileLock parentLock =
-                fileLockFactory.getLock(parent.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
+        final FileLockFactory.FileLock parentLock = fileLockFactory.getLock(parent.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
         try {
-            if (!hasPermission(parent, getCurrentUserId(), BasicPermissions.WRITE)) {
+            if (!hasPermission(parent, BasicPermissions.WRITE, true)) {
                 throw new PermissionDeniedException(String.format("Unable copy item '%s' to %s. Operation not permitted. ",
                                                                   source.getPath(), parent.getPath()));
             }
@@ -522,8 +542,7 @@ public class MountPoint {
     }
 
 
-    VirtualFile rename(VirtualFile virtualFile, String newName, String newMediaType, String lockToken)
-            throws VirtualFileSystemException {
+    VirtualFile rename(VirtualFile virtualFile, String newName, String newMediaType, String lockToken) throws VirtualFileSystemException {
         if (virtualFile.isRoot()) {
             throw new InvalidArgumentException("Unable rename root folder. ");
         }
@@ -531,13 +550,12 @@ public class MountPoint {
         final FileLockFactory.FileLock parentLock =
                 fileLockFactory.getLock(parent.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         try {
-            if (!hasPermission(virtualFile, getCurrentUserId(), BasicPermissions.WRITE)) {
+            if (!hasPermission(virtualFile, BasicPermissions.WRITE, true)) {
                 throw new PermissionDeniedException(
                         String.format("Unable rename item '%s'. Operation not permitted. ", virtualFile.getPath()));
             }
             if (virtualFile.isFile() && !validateLockTokenIfLocked(virtualFile, lockToken)) {
-                throw new LockException(
-                        String.format("Unable rename file '%s'. File is locked. ", virtualFile.getPath()));
+                throw new LockException(String.format("Unable rename file '%s'. File is locked. ", virtualFile.getPath()));
             }
             final String name = virtualFile.getName();
             final VirtualFile renamed;
@@ -579,9 +597,8 @@ public class MountPoint {
             throw new InvalidArgumentException("Unable move. Item specified as parent is not a folder. ");
         }
         if (source.isFolder() && parent.getInternalPath().isChild(source.getInternalPath())) {
-            throw new InvalidArgumentException(
-                    String.format("Unable move item '%s' to '%s'. Item may not have itself as parent. ",
-                                  source.getPath(), parent.getPath()));
+            throw new InvalidArgumentException(String.format("Unable move item '%s' to '%s'. Item may not have itself as parent. ",
+                                                             source.getPath(), parent.getPath()));
         }
 
         FileLockFactory.FileLock sourceLock = null;
@@ -590,17 +607,14 @@ public class MountPoint {
             sourceLock = fileLockFactory.getLock(source.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
             parentLock = fileLockFactory.getLock(parent.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
 
-            final String userId = getCurrentUserId();
-            if (!(hasPermission(source, userId, BasicPermissions.WRITE)
-                  && hasPermission(parent, userId, BasicPermissions.WRITE))) {
+            if (!(hasPermission(source, BasicPermissions.WRITE, true) && hasPermission(parent, BasicPermissions.WRITE, true))) {
                 throw new PermissionDeniedException(
                         String.format("Unable move item '%s' to %s. Operation not permitted. ", source.getPath(), parent.getPath()));
             }
             // Even we check lock before delete original file check it here also to have better behaviour.
             // Prevent even copy original file if we already know it is locked.
             if (source.isFile() && !validateLockTokenIfLocked(source, lockToken)) {
-                throw new LockException(
-                        String.format("Unable move file '%s'. File is locked. ", source.getPath()));
+                throw new LockException(String.format("Unable move file '%s'. File is locked. ", source.getPath()));
             }
             final Path newPath = parent.getInternalPath().newPath(source.getName());
             VirtualFile destination = new VirtualFile(new java.io.File(ioRoot, newPath.toIoPath()), newPath, this);
@@ -625,12 +639,10 @@ public class MountPoint {
 
     ContentStream getContent(VirtualFile virtualFile) throws VirtualFileSystemException {
         if (!virtualFile.isFile()) {
-            throw new InvalidArgumentException(
-                    String.format("Unable get content. Item '%s' is not a file. ", virtualFile.getPath()));
+            throw new InvalidArgumentException(String.format("Unable get content. Item '%s' is not a file. ", virtualFile.getPath()));
         }
 
-        final FileLockFactory.FileLock lock =
-                fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
+        final FileLockFactory.FileLock lock = fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
         try {
             final java.io.File ioFile = virtualFile.getIoFile();
             FileInputStream fIn = null;
@@ -669,23 +681,19 @@ public class MountPoint {
     }
 
 
-    void updateContent(VirtualFile virtualFile, String mediaType, InputStream content, String lockToken)
-            throws VirtualFileSystemException {
+    void updateContent(VirtualFile virtualFile, String mediaType, InputStream content, String lockToken) throws VirtualFileSystemException {
         if (!virtualFile.isFile()) {
-            throw new InvalidArgumentException(
-                    String.format("Unable get content. Item '%s' is not file. ", virtualFile.getPath()));
+            throw new InvalidArgumentException(String.format("Unable get content. Item '%s' is not file. ", virtualFile.getPath()));
         }
 
-        final FileLockFactory.FileLock lock =
-                fileLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
+        final FileLockFactory.FileLock lock = fileLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         try {
-            if (!hasPermission(virtualFile, getCurrentUserId(), BasicPermissions.WRITE)) {
+            if (!hasPermission(virtualFile, BasicPermissions.WRITE, true)) {
                 throw new PermissionDeniedException(
                         String.format("Unable update content of file '%s'. Operation not permitted. ", virtualFile.getPath()));
             }
             if (!validateLockTokenIfLocked(virtualFile, lockToken)) {
-                throw new LockException(
-                        String.format("Unable update content of file '%s'. File is locked. ", virtualFile.getPath()));
+                throw new LockException(String.format("Unable update content of file '%s'. File is locked. ", virtualFile.getPath()));
             }
 
             doUpdateContent(virtualFile, mediaType, content);
@@ -703,8 +711,7 @@ public class MountPoint {
     }
 
 
-    private void doUpdateContent(VirtualFile virtualFile, String mediaType, InputStream content)
-            throws VirtualFileSystemException {
+    private void doUpdateContent(VirtualFile virtualFile, String mediaType, InputStream content) throws VirtualFileSystemException {
         FileOutputStream fOut = null;
         try {
             fOut = new FileOutputStream(virtualFile.getIoFile());
@@ -728,16 +735,14 @@ public class MountPoint {
         if (virtualFile.isRoot()) {
             throw new InvalidArgumentException("Unable delete root folder. ");
         }
-        final FileLockFactory.FileLock lock =
-                fileLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
+        final FileLockFactory.FileLock lock = fileLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         try {
-            if (!hasPermission(virtualFile, getCurrentUserId(), BasicPermissions.WRITE)) {
+            if (!hasPermission(virtualFile, BasicPermissions.WRITE, true)) {
                 throw new PermissionDeniedException(
                         String.format("Unable delete item '%s'. Operation not permitted. ", virtualFile.getPath()));
             }
             if (virtualFile.isFile() && !validateLockTokenIfLocked(virtualFile, lockToken)) {
-                throw new LockException(
-                        String.format("Unable delete item '%s'. Item is locked. ", virtualFile.getPath()));
+                throw new LockException(String.format("Unable delete item '%s'. Item is locked. ", virtualFile.getPath()));
             }
 
             doDelete(virtualFile, lockToken);
@@ -748,17 +753,14 @@ public class MountPoint {
 
 
     private void doDelete(VirtualFile virtualFile, String lockToken) throws VirtualFileSystemException {
-        final String userId = getCurrentUserId();
         if (virtualFile.isFolder()) {
             final LinkedList<VirtualFile> q = new LinkedList<VirtualFile>();
             q.add(virtualFile);
             while (!q.isEmpty()) {
                 for (VirtualFile child : doGetChildren(q.pop(), SERVICE_GIT_DIR_FILTER)) {
                     // Check permission directly for current file only.
-                    // Not use method 'hasPermission' here to avoid useless
-                    // traversing up to root folder for each file.
-                    if (!aclCache[child.getInternalPath().hashCode() & MASK]
-                            .get(child.getInternalPath()).hasPermission(userId, BasicPermissions.WRITE)) {
+                    // We already know parent may be deleted by current user otherwise we should not be here.
+                    if (!hasPermission(child, BasicPermissions.WRITE, false)) {
                         throw new PermissionDeniedException(
                                 String.format("Unable delete item '%s'. Operation not permitted. ", child.getPath()));
                     }
@@ -841,15 +843,12 @@ public class MountPoint {
 
     ContentStream zip(VirtualFile virtualFile) throws IOException, VirtualFileSystemException {
         if (!virtualFile.isFolder()) {
-            throw new InvalidArgumentException(
-                    String.format("Unable export to zip. Item '%s' is not a folder. ", virtualFile.getPath()));
+            throw new InvalidArgumentException(String.format("Unable export to zip. Item '%s' is not a folder. ", virtualFile.getPath()));
         }
-        final FileLockFactory.FileLock lock =
-                fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
+        final FileLockFactory.FileLock lock = fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
         try {
             final java.io.File zipFile = java.io.File.createTempFile("export", ".zip");
             final FileOutputStream out = new FileOutputStream(zipFile);
-            final String userId = getCurrentUserId();
             try {
                 final ZipOutputStream zipOut = new ZipOutputStream(out);
                 if (virtualFile.isProject()) {
@@ -865,39 +864,38 @@ public class MountPoint {
                 while (!q.isEmpty()) {
                     for (VirtualFile current : doGetChildren(q.pop(), SERVICE_GIT_DIR_FILTER)) {
                         // Check permission directly for current file only.
-                        // Not use method 'hasPermission' here to avoid useless
-                        // traversing up to root folder for each file.
-                        if (!aclCache[current.getInternalPath().hashCode() & MASK]
-                                .get(current.getInternalPath()).hasPermission(userId, BasicPermissions.READ)) {
+                        // We already know parent accessible for current user otherwise we should not be here.
+                        // Ignore item if don't have permission to read it.
+                        if (hasPermission(current, BasicPermissions.READ, false)) {
+                            final String zipEntryName = current.getInternalPath().subPath(rootZipPathLength).toString();
+                            if (current.isFile()) {
+                                zipOut.putNextEntry(new ZipEntry(zipEntryName));
+                                InputStream in = null;
+                                try {
+                                    in = new FileInputStream(current.getIoFile());
+                                    int r;
+                                    while ((r = in.read(buff)) != -1) {
+                                        zipOut.write(buff, 0, r);
+                                    }
+                                } finally {
+                                    closeQuietly(in);
+                                }
+                                zipOut.closeEntry();
+                            } else if (current.isFolder()) {
+                                zipOut.putNextEntry(new ZipEntry(zipEntryName + '/'));
+                                if (current.isProject()) {
+                                    zipOut.putNextEntry(new ZipEntry(zipEntryName + "/.project"));
+                                    JsonWriter jw = new JsonWriter(zipOut);
+                                    JsonGenerator.createJsonArray(current.getProperties(PropertyFilter.ALL_FILTER)).writeTo(jw);
+                                    jw.flush();
+                                }
+                                q.add(current);
+                                zipOut.closeEntry();
+                            }
+                        }/* else {
                             throw new PermissionDeniedException(String.format(
                                     "Unable export to zip. Cannot read '%s'. Operation not permitted. ", current.getPath()));
-                        }
-
-                        final String zipEntryName = current.getInternalPath().subPath(rootZipPathLength).toString();
-                        if (current.isFile()) {
-                            zipOut.putNextEntry(new ZipEntry(zipEntryName));
-                            InputStream in = null;
-                            try {
-                                in = new FileInputStream(current.getIoFile());
-                                int r;
-                                while ((r = in.read(buff)) != -1) {
-                                    zipOut.write(buff, 0, r);
-                                }
-                            } finally {
-                                closeQuietly(in);
-                            }
-                            zipOut.closeEntry();
-                        } else if (current.isFolder()) {
-                            zipOut.putNextEntry(new ZipEntry(zipEntryName + '/'));
-                            if (current.isProject()) {
-                                zipOut.putNextEntry(new ZipEntry(zipEntryName + "/.project"));
-                                JsonWriter jw = new JsonWriter(zipOut);
-                                JsonGenerator.createJsonArray(current.getProperties(PropertyFilter.ALL_FILTER)).writeTo(jw);
-                                jw.flush();
-                            }
-                            q.add(current);
-                            zipOut.closeEntry();
-                        }
+                        }*/
                     }
                 }
                 closeQuietly(zipOut);
@@ -924,14 +922,13 @@ public class MountPoint {
 
     void unzip(VirtualFile parent, InputStream zipped, boolean overwrite) throws IOException, VirtualFileSystemException {
         if (!parent.isFolder()) {
-            throw new InvalidArgumentException(
-                    String.format("Unable import zip content. Item '%s' is not a folder. ", parent.getPath()));
+            throw new InvalidArgumentException(String.format("Unable import zip content. Item '%s' is not a folder. ", parent.getPath()));
         }
         final ZipContent zipContent = ZipContent.newInstance(zipped);
         final FileLockFactory.FileLock lock =
                 fileLockFactory.getLock(parent.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         try {
-            if (!hasPermission(parent, getCurrentUserId(), BasicPermissions.WRITE)) {
+            if (!hasPermission(parent, BasicPermissions.WRITE, true)) {
                 throw new PermissionDeniedException(
                         String.format("Unable import from zip to '%s'. Operation not permitted. ", parent.getPath()));
             }
@@ -964,8 +961,7 @@ public class MountPoint {
                     } else if (".project".equals(name)) {
                         final JsonParser parser = new JsonParser();
                         parser.parse(noCloseZip);
-                        final Property[] array =
-                                (Property[])ObjectBuilder.createArray(Property[].class, parser.getJsonObject());
+                        final Property[] array = (Property[])ObjectBuilder.createArray(Property[].class, parser.getJsonObject());
                         if (array.length > 0) {
                             List<Property> list = new ArrayList<Property>(array.length);
                             Collections.addAll(list, array);
@@ -987,8 +983,7 @@ public class MountPoint {
                             updateProperties(
                                     current,
                                     Collections.<Property>singletonList(new PropertyImpl("vfs:mimeType", Project.PROJECT_MIME_TYPE)),
-                                    null
-                                            );
+                                    null);
                         }
                     } else {
                         final VirtualFile file = new VirtualFile(
@@ -996,10 +991,9 @@ public class MountPoint {
                         String mediaType = null;
                         if (file.exists()) {
                             if (isLocked(file)) {
-                                throw new LockException(
-                                        String.format("File '%s' already exists and locked. ", file.getPath()));
+                                throw new LockException(String.format("File '%s' already exists and locked. ", file.getPath()));
                             }
-                            if (!hasPermission(file, getCurrentUserId(), BasicPermissions.WRITE)) {
+                            if (!hasPermission(file, BasicPermissions.WRITE, true)) {
                                 throw new PermissionDeniedException(
                                         String.format("Unable update file '%s'. Operation not permitted. ", file.getPath()));
                             }
@@ -1010,13 +1004,11 @@ public class MountPoint {
                             if (!file.getIoFile().createNewFile()) // atomic
                             {
                                 if (!overwrite) {
-                                    throw new ItemAlreadyExistException(
-                                            String.format("File '%s' already exists. ", file.getPath()));
+                                    throw new ItemAlreadyExistException(String.format("File '%s' already exists. ", file.getPath()));
                                 }
                             }
                         } catch (IOException e) {
-                            String msg = String.format(
-                                    "Unable create new file '%s'. ", current.getInternalPath().newPath(name));
+                            String msg = String.format("Unable create new file '%s'. ", current.getInternalPath().newPath(name));
                             LOG.error(msg + e.getMessage(), e); // More details in log but do not show internal error to caller.
                             throw new VirtualFileSystemException(msg);
                         }
@@ -1039,16 +1031,13 @@ public class MountPoint {
 
     String lock(VirtualFile virtualFile) throws VirtualFileSystemException {
         if (!virtualFile.isFile()) {
-            throw new InvalidArgumentException(
-                    String.format("Unable lock '%s'. Locking allowed for files only. ", virtualFile.getPath()));
+            throw new InvalidArgumentException(String.format("Unable lock '%s'. Locking allowed for files only. ", virtualFile.getPath()));
         }
 
-        final FileLockFactory.FileLock lock =
-                fileLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
+        final FileLockFactory.FileLock lock = fileLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         try {
-            if (!hasPermission(virtualFile, getCurrentUserId(), BasicPermissions.WRITE)) {
-                throw new PermissionDeniedException(
-                        String.format("Unable lock '%s'. Operation not permitted. ", virtualFile.getPath()));
+            if (!hasPermission(virtualFile, BasicPermissions.WRITE, true)) {
+                throw new PermissionDeniedException(String.format("Unable lock '%s'. Operation not permitted. ", virtualFile.getPath()));
             }
 
             return doLock(virtualFile);
@@ -1083,8 +1072,7 @@ public class MountPoint {
             return lockToken;
         }
 
-        throw new LockException(
-                String.format("Unable lock file '%s'. File already locked. ", virtualFile.getPath()));
+        throw new LockException(String.format("Unable lock file '%s'. File already locked. ", virtualFile.getPath()));
     }
 
 
@@ -1096,8 +1084,7 @@ public class MountPoint {
             // Locks available for files only.
             throw new LockException(String.format("Item '%s' is not locked. ", virtualFile.getPath()));
         }
-        final FileLockFactory.FileLock lock =
-                fileLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
+        final FileLockFactory.FileLock lock = fileLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         try {
             doUnlock(virtualFile, lockToken);
         } finally {
@@ -1114,8 +1101,7 @@ public class MountPoint {
                 throw new LockException(String.format("File '%s' is not locked. ", virtualFile.getPath()));
             }
             if (!thisLockToken.equals(lockToken)) {
-                throw new LockException(
-                        String.format("Unable unlock file '%s'. Lock token does not match. ", virtualFile.getPath()));
+                throw new LockException(String.format("Unable unlock file '%s'. Lock token does not match. ", virtualFile.getPath()));
             }
             final java.io.File lockIoFile = getLockFile(virtualFile.getInternalPath());
             if (!lockIoFile.delete()) {
@@ -1135,8 +1121,7 @@ public class MountPoint {
         if (!virtualFile.isFile()) {
             return false;
         }
-        final FileLockFactory.FileLock lock =
-                fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
+        final FileLockFactory.FileLock lock = fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
         try {
             return getLockToken(virtualFile) != null;
         } finally {
@@ -1145,8 +1130,7 @@ public class MountPoint {
     }
 
 
-    private boolean validateLockTokenIfLocked(VirtualFile virtualFile, String checkLockToken)
-            throws VirtualFileSystemException {
+    private boolean validateLockTokenIfLocked(VirtualFile virtualFile, String checkLockToken) throws VirtualFileSystemException {
         final String lockToken = getLockToken(virtualFile);
         return lockToken == null || lockToken.equals(checkLockToken);
     }
@@ -1173,11 +1157,9 @@ public class MountPoint {
 
     List<AccessControlEntry> getACL(VirtualFile virtualFile) throws VirtualFileSystemException {
         // Do not check permission here. We already check 'read' permission when get VirtualFile.
-        final FileLockFactory.FileLock lock =
-                fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
+        final FileLockFactory.FileLock lock = fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
         try {
-            return aclCache[virtualFile.getInternalPath().hashCode() & MASK]
-                    .get(virtualFile.getInternalPath()).getEntries();
+            return aclCache[virtualFile.getInternalPath().hashCode() & MASK].get(virtualFile.getInternalPath()).getEntries();
         } finally {
             lock.release();
         }
@@ -1186,20 +1168,18 @@ public class MountPoint {
 
     void updateACL(VirtualFile virtualFile, List<AccessControlEntry> acl, boolean override, String lockToken)
             throws VirtualFileSystemException {
-        final FileLockFactory.FileLock lock =
-                fileLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
+        final FileLockFactory.FileLock lock = fileLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         try {
             final int index = virtualFile.getInternalPath().hashCode() & MASK;
             final AccessControlList actualACL = aclCache[index].get(virtualFile.getInternalPath());
 
-            if (!actualACL.hasPermission(getCurrentUserId(), BasicPermissions.WRITE)) {
+            if (!hasPermission(virtualFile, BasicPermissions.UPDATE_ACL, true)) {
                 throw new PermissionDeniedException(
                         String.format("Unable update ACL for '%s'. Operation not permitted. ", virtualFile.getPath()));
             }
 
             if (virtualFile.isFile() && !validateLockTokenIfLocked(virtualFile, lockToken)) {
-                throw new LockException(
-                        String.format("Unable update ACL of item '%s'. Item is locked. ", virtualFile.getPath()));
+                throw new LockException(String.format("Unable update ACL of item '%s'. Item is locked. ", virtualFile.getPath()));
             }
 
             // 1. make copy of ACL
@@ -1243,15 +1223,34 @@ public class MountPoint {
 
 
     // under lock
-    private boolean hasPermission(VirtualFile virtualFile, String userId, BasicPermissions p)
-            throws VirtualFileSystemException {
+    private boolean hasPermission(VirtualFile virtualFile, BasicPermissions p, boolean checkParent) throws VirtualFileSystemException {
+        final ConversationState cs = ConversationState.getCurrent();
+        final Identity user = cs != null ? cs.getIdentity() : ANONYMOUS;
         Path path = virtualFile.getInternalPath();
         while (path != null) {
             final AccessControlList accessControlList = aclCache[path.hashCode() & MASK].get(path);
             if (!accessControlList.isEmpty()) {
-                return accessControlList.hasPermission(userId, p);
+                Set<BasicPermissions> userPermissions = accessControlList.getPermissions(user.getUserId());
+                if (userPermissions != null) {
+                    return userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL);
+                }
+                Collection<String> roles = user.getRoles();
+                if (!roles.isEmpty()) {
+                    for (String role : roles) {
+                        userPermissions = accessControlList.getPermissions("role:" + role);
+                        if (userPermissions != null) {
+                            return userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL);
+                        }
+                    }
+                }
+                userPermissions = accessControlList.getPermissions(VirtualFileSystemInfo.ANY_PRINCIPAL);
+                return userPermissions != null && (userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL));
             }
-            path = path.getParent();
+            if (checkParent) {
+                path = path.getParent();
+            } else {
+                break;
+            }
         }
         return true;
     }
@@ -1288,25 +1287,21 @@ public class MountPoint {
     }
 
 
-    void updateProperties(VirtualFile virtualFile, List<Property> properties, String lockToken)
-            throws VirtualFileSystemException {
+    void updateProperties(VirtualFile virtualFile, List<Property> properties, String lockToken) throws VirtualFileSystemException {
         final int index = virtualFile.getInternalPath().hashCode() & MASK;
-        final FileLockFactory.FileLock lock =
-                fileLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
+        final FileLockFactory.FileLock lock = fileLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         try {
-            if (!hasPermission(virtualFile, getCurrentUserId(), BasicPermissions.WRITE)) {
+            if (!hasPermission(virtualFile, BasicPermissions.WRITE, true)) {
                 throw new PermissionDeniedException(
                         String.format("Unable update properties for '%s'. Operation not permitted. ", virtualFile.getPath()));
             }
 
             if (virtualFile.isFile() && !validateLockTokenIfLocked(virtualFile, lockToken)) {
-                throw new LockException(
-                        String.format("Unable update properties of item '%s'. Item is locked. ", virtualFile.getPath()));
+                throw new LockException(String.format("Unable update properties of item '%s'. Item is locked. ", virtualFile.getPath()));
             }
 
             // 1. make copy of properties
-            final Map<String, String[]> metadata =
-                    copyMetadataMap(metadataCache[index].get(virtualFile.getInternalPath()));
+            final Map<String, String[]> metadata = copyMetadataMap(metadataCache[index].get(virtualFile.getInternalPath()));
             // 2. update
             for (Property property : properties) {
                 final String name = property.getName();
@@ -1334,8 +1329,7 @@ public class MountPoint {
 
     private Map<String, String[]> getFileMetadata(VirtualFile virtualFile) throws VirtualFileSystemException {
         final int index = virtualFile.getInternalPath().hashCode() & MASK;
-        final FileLockFactory.FileLock lock =
-                fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
+        final FileLockFactory.FileLock lock = fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
         try {
             return copyMetadataMap(metadataCache[index].get(virtualFile.getInternalPath()));
         } finally {
@@ -1347,8 +1341,7 @@ public class MountPoint {
     String getPropertyValue(VirtualFile virtualFile, String name) throws VirtualFileSystemException {
         // Do not check permission here. We already check 'read' permission when get VirtualFile.
         final int index = virtualFile.getInternalPath().hashCode() & MASK;
-        final FileLockFactory.FileLock lock =
-                fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
+        final FileLockFactory.FileLock lock = fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
         try {
             final String[] value = metadataCache[index].get(virtualFile.getInternalPath()).get(name);
             return value == null || value.length == 0 ? null : value[0];
@@ -1361,8 +1354,7 @@ public class MountPoint {
     String[] getPropertyValues(VirtualFile virtualFile, String name) throws VirtualFileSystemException {
         // Do not check permission here. We already check 'read' permission when get VirtualFile.
         final int index = virtualFile.getInternalPath().hashCode() & MASK;
-        final FileLockFactory.FileLock lock =
-                fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
+        final FileLockFactory.FileLock lock = fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
         try {
             final String[] value = metadataCache[index].get(virtualFile.getInternalPath()).get(name);
             final String[] copyValue = new String[value.length];
@@ -1381,12 +1373,10 @@ public class MountPoint {
 
     private void setProperty(VirtualFile virtualFile, String name, String... value) throws VirtualFileSystemException {
         final int index = virtualFile.getInternalPath().hashCode() & MASK;
-        final FileLockFactory.FileLock lock =
-                fileLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
+        final FileLockFactory.FileLock lock = fileLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         try {
             // 1. make copy of properties
-            final Map<String, String[]> metadata =
-                    copyMetadataMap(metadataCache[index].get(virtualFile.getInternalPath()));
+            final Map<String, String[]> metadata = copyMetadataMap(metadataCache[index].get(virtualFile.getInternalPath()));
             // 2. update
             if (value != null) {
                 String[] copyValue = new String[value.length];
@@ -1405,8 +1395,7 @@ public class MountPoint {
     }
 
 
-    private void saveFileMetadata(VirtualFile virtualFile, Map<String, String[]> properties)
-            throws VirtualFileSystemException {
+    private void saveFileMetadata(VirtualFile virtualFile, Map<String, String[]> properties) throws VirtualFileSystemException {
         DataOutputStream dos = null;
 
         try {
@@ -1446,10 +1435,7 @@ public class MountPoint {
 
     String getCurrentUserId() {
         final ConversationState cs = ConversationState.getCurrent();
-        if (cs != null) {
-            return cs.getIdentity().getUserId();
-        }
-        return VirtualFileSystemInfo.ANONYMOUS_PRINCIPAL;
+        return cs != null ? cs.getIdentity().getUserId() : ANONYMOUS.getUserId();
     }
 
 
