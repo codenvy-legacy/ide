@@ -152,10 +152,10 @@ public class PartStackViewImpl extends Composite implements PartStackView {
 
         // if focused already, then remove DOM handler
         if (focused) {
-//            parent.addStyleName(resources.partStackCss().idePartStackFocused());
+            contentPanel.addStyleName(resources.partStackCss().idePartStackFocused());
             removeFocusRequestHandler();
         } else {
-//            parent.removeStyleName(resources.partStackCss().idePartStackFocused());
+            contentPanel.removeStyleName(resources.partStackCss().idePartStackFocused());
             addFocusRequestHandler();
         }
     }

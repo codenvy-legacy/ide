@@ -4,9 +4,9 @@
 @def inactiveTabBackground #d6d6d6;
 @def activeTabBackground #ffffff;
 @def tabsPanelBackground #f6f6f6;
-@def highlightFocus #ffffff;
+@def highlightFocus #92c1f0;
 
-@def hoverBackgroundColor #eee;
+@def hoverBackgroundColor #D4E8FF;
 @def lightTextColor #999;
 @def lightestTextColor #BCBCBC;
 @def lightGreyBackground #F1F1F1;
@@ -14,8 +14,12 @@
     /* Indicates a completed action. Preferred text color is lightTextColor. */
 @def completedBackgroundColor #f9edbe;
     /* Background color for an item selected with the keyboard */
-@def keyboardSelectionBackgroundColor #E0E0E0;
+@def keyboardSelectionBackgroundColor #C3DEFF;
 @def anchorColor #1155CC;
+
+/* Tree */
+@def hoverBackground #D4E8FF;
+@def selectionBackground #C3DEFF;
 
     /* Sizes */
 @def dividerThickness 1px;

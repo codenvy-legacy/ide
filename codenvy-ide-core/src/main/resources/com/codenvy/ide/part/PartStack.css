@@ -69,14 +69,20 @@
 
 }
 
-.ide-PartStack-focused .ide-PartStack-Editor-Content {
+.ide-PartStack-focused .ide-Base-Part-Toolbar {
     /*border: 2px solid highlightFocus;*/
+    background: -moz-linear-gradient(top, rgba(195,222,255,1) 0%, rgba(212,232,255,1) 5%, rgba(212,232,255,1) 95%, rgba(195,222,255,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(195,222,255,1)), color-stop(5%,rgba(212,232,255,1)), color-stop(95%,rgba(212,232,255,1)), color-stop(100%,rgba(195,222,255,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(195,222,255,1) 0%,rgba(212,232,255,1) 5%,rgba(212,232,255,1) 95%,rgba(195,222,255,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(195,222,255,1) 0%,rgba(212,232,255,1) 5%,rgba(212,232,255,1) 95%,rgba(195,222,255,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(195,222,255,1) 0%,rgba(212,232,255,1) 5%,rgba(212,232,255,1) 95%,rgba(195,222,255,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom, rgba(195,222,255,1) 0%,rgba(212,232,255,1) 5%,rgba(212,232,255,1) 95%,rgba(195,222,255,1) 100%); /* W3C */
 }
 
-.ide-PartStack-focused .ide-PartStack-Tab-selected {
-    background: highlightFocus;
-    border-bottom: 2px solid highlightFocus;
-}
+/*.ide-PartStack-focused .ide-PartStack-Tab-selected {*/
+    /*background: highlightFocus;*/
+    /*border-bottom: 2px solid highlightFocus;*/
+/*}*/
 
 .ide-PartStack-Tab-Left{
     -webkit-transform: rotate(270deg);
@@ -127,10 +133,10 @@
     /*border-top: 2px solid activeTabBackground;*/
     background-color: activeTabBackground !important;
 }
-.ide-PartStack-focused .ide-PartStack-Tab-selected-Below {
-    background: highlightFocus;
-    border-top: 2px solid highlightFocus;
-}
+/*.ide-PartStack-focused .ide-PartStack-Tab-selected-Below {*/
+    /*background: highlightFocus;*/
+    /*border-top: 2px solid highlightFocus;*/
+/*}*/
 
 .ide-PartStack-Content{
     background-color: activeTabBackground;
@@ -157,15 +163,8 @@
 
 .ide-Base-Part-Toolbar{
     background: -webkit-linear-gradient(top, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(212, 212, 212) 100%);
-    background: -o-linear-gradient(top, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(212, 212, 212) 100%);
-    background: -ms-linear-gradient(top, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(212, 212, 212) 100%);
     background: -moz-linear-gradient(top, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(212, 212, 212) 100%);
     background: linear-gradient(to bottom, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(212, 212, 212) 100%);
-    /*background: -webkit-linear-gradient(bottom, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(224, 224, 224) 39%, rgb(212, 212, 212) 100%);*/
-    /*background: -o-linear-gradient(bottom, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(224, 224, 224) 39%, rgb(212, 212, 212) 100%);*/
-    /*background: -ms-linear-gradient(bottom, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(224, 224, 224) 39%, rgb(212, 212, 212) 100%);*/
-    /*background: -moz-linear-gradient(bottom, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(224, 224, 224) 39%, rgb(212, 212, 212) 100%);*/
-    /*background: linear-gradient(to top, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(224, 224, 224) 39%, rgb(212, 212, 212) 100%);*/
     padding-left: 3px;
     padding-right: 5px;
     /*border-left: 1px solid  rgb(150, 150, 150);*/
