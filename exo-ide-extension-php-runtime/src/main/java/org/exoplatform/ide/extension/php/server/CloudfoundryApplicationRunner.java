@@ -272,7 +272,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                                                       String name,
                                                       java.io.File path)
             throws CloudfoundryException, IOException, ParsingResponseException, VirtualFileSystemException, CredentialStoreException {
-        return cloudfoundry.createApplication(target, name, null, null, 1, 128, false, "php", null, null, null,
+        return cloudfoundry.createApplication(target, name, "php", null, 1, 128, false, "php", null, null, null,
                                               null, path.toURI().toURL());
     }
 
