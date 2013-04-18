@@ -19,10 +19,20 @@
 package org.exoplatform.ide.client.authentication;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.http.client.*;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
@@ -202,7 +212,12 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 
         display.getLoginField().setValue(login);
         display.getPasswordField().setValue(password);
-
+        
+        if (!GWT.isScript() && login == null && password == null) {
+            display.getLoginField().setValue("ide");
+            display.getPasswordField().setValue("codenvy123");            
+        }
+        
         checkForLoginButtonEnabled();
 
         IDE.getInstance().openView(display.asView());
