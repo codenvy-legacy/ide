@@ -22,7 +22,7 @@ import com.codenvy.ide.client.DtoClientImpls;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.json.js.Jso;
 import com.codenvy.ide.rest.Unmarshallable;
-import com.codenvy.ide.shared.User;
+import com.codenvy.ide.api.user.User;
 import com.google.gwt.http.client.Response;
 
 /**

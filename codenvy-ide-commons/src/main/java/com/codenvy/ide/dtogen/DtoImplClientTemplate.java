@@ -30,12 +30,10 @@ import java.util.List;
 /** Generates the source code for a generated Client DTO impl. */
 public class DtoImplClientTemplate extends DtoImpl {
 
-    private static final String ROUTABLE_DTO_IMPL = RoutableDto.class.getPackage().getName().replace("dtogen.shared",
-                                                                                                     "dtogen.client") +
+    private static final String ROUTABLE_DTO_IMPL = RoutableDto.class.getPackage().getName().replace("dtogen.shared", "dtogen.client") +
                                                     ".RoutableDtoClientImpl";
 
-
-    private static final String JSO_TYPE = "com.codenvy.ide.json.client.Jso";
+    private static final String JSO_TYPE = "com.codenvy.ide.json.js.Jso";
 
     private static boolean isEnum(Class<?> type) {
         return type != null && (type.equals(Enum.class) || isEnum(type.getSuperclass()));

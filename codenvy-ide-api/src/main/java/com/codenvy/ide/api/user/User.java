@@ -16,9 +16,8 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.shared;
+package com.codenvy.ide.api.user;
 
-import com.codenvy.ide.dtogen.shared.RoutingType;
 import com.codenvy.ide.dtogen.shared.ServerToClientDto;
 import com.codenvy.ide.json.JsonStringMap;
 
@@ -27,9 +26,9 @@ import com.codenvy.ide.json.JsonStringMap;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-@RoutingType(type = RoutingTypes.IDE_USER)
+// TODO IDEX-94
+//@RoutingType(type = RoutingTypes.IDE_USER)
 public interface User extends ServerToClientDto {
-
     /**
      * Returns user's id.
      *

@@ -22,78 +22,18 @@
 package com.codenvy.ide.client;
 
 
+import com.codenvy.ide.api.user.UpdateUserAttributes;
+import com.codenvy.ide.api.user.User;
 
 @SuppressWarnings({"unchecked", "cast"})
 public class DtoClientImpls {
 
   private  DtoClientImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "644381d81eb2a0c00d85dd595f3b8d3f64bb9b27";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "648f8d86f27105b66b0eb5f90b185c9f029001e1";
 
 
-  public static class RemoveUserAttributeImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl implements com.codenvy.ide.shared.RemoveUserAttribute {
-    protected RemoveUserAttributeImpl() {}
-
-    @Override
-    public final native java.lang.String getAttributeName() /*-{
-      return this["attributeName"];
-    }-*/;
-
-    public final native RemoveUserAttributeImpl setAttributeName(java.lang.String attributeName) /*-{
-      this["attributeName"] = attributeName;
-      return this;
-    }-*/;
-
-    public final native boolean hasAttributeName() /*-{
-      return this.hasOwnProperty("attributeName");
-    }-*/;
-
-    public static native RemoveUserAttributeImpl make() /*-{
-      return {
-        _type: 4
-      };
-    }-*/;  }
-
-
-  public static class UpdateUserAttributeImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl implements com.codenvy.ide.shared.UpdateUserAttribute {
-    protected UpdateUserAttributeImpl() {}
-
-    @Override
-    public final native java.lang.String getAttributeValue() /*-{
-      return this["attributeValue"];
-    }-*/;
-
-    public final native UpdateUserAttributeImpl setAttributeValue(java.lang.String attributeValue) /*-{
-      this["attributeValue"] = attributeValue;
-      return this;
-    }-*/;
-
-    public final native boolean hasAttributeValue() /*-{
-      return this.hasOwnProperty("attributeValue");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getAttributeName() /*-{
-      return this["attributeName"];
-    }-*/;
-
-    public final native UpdateUserAttributeImpl setAttributeName(java.lang.String attributeName) /*-{
-      this["attributeName"] = attributeName;
-      return this;
-    }-*/;
-
-    public final native boolean hasAttributeName() /*-{
-      return this.hasOwnProperty("attributeName");
-    }-*/;
-
-    public static native UpdateUserAttributeImpl make() /*-{
-      return {
-        _type: 2
-      };
-    }-*/;  }
-
-
-  public static class UpdateUserAttributesImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl implements com.codenvy.ide.shared.UpdateUserAttributes {
+  public static class UpdateUserAttributesImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl implements UpdateUserAttributes {
     protected UpdateUserAttributesImpl() {}
 
     @Override
@@ -112,12 +52,12 @@ public class DtoClientImpls {
 
     public static native UpdateUserAttributesImpl make() /*-{
       return {
-        _type: 3
+        _type: 2
       };
     }-*/;  }
 
 
-  public static class UserImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl implements com.codenvy.ide.shared.User {
+  public static class UserImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl implements User {
     protected UserImpl() {}
 
     @Override

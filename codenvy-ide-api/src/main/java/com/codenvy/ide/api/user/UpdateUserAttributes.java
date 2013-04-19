@@ -16,30 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.shared;
+package com.codenvy.ide.api.user;
 
 import com.codenvy.ide.dtogen.shared.ClientToServerDto;
-import com.codenvy.ide.dtogen.shared.RoutingType;
+import com.codenvy.ide.json.JsonStringMap;
 
 /**
- * Represent information about attribute what need to update.
+ * Represent information about attributes what need to update.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-@RoutingType(type = RoutingTypes.UPDATE_USER_ATTRIBUTE)
-public interface UpdateUserAttribute extends ClientToServerDto {
-
+// TODO IDEX-94
+//@RoutingType(type = RoutingTypes.UPDATE_USER_ATTRIBUTES)
+public interface UpdateUserAttributes extends ClientToServerDto {
     /**
-     * Returns user's attribute name.
+     * Returns user's attributes with new value what need to update.
      *
-     * @return user's attribute name
+     * @return user's attributes
      */
-    String getAttributeName();
-
-    /**
-     * Returns user's attribute value.
-     *
-     * @return user's attribute value
-     */
-    String getAttributeValue();
+    JsonStringMap<String> getAttributes();
 }

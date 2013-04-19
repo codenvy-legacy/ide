@@ -40,7 +40,6 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("ide/user")
 public class UserService {
-
     @Inject
     UserManager userManager;
 
@@ -69,56 +68,12 @@ public class UserService {
     }
 
     /**
-     * Updates user's attribute from information what contains into jsonUpdateAttribute. If the attribute isn't exist then this attribute
-     * will add.
-     *
-     * @param jsonUpdateAttribute
-     */
-    @Path("update/attribute")
-    @POST
-    public void updateUserAttribute(String jsonUpdateAttribute) {
-        try {
-            DtoServerImpls.UpdateUserAttributeImpl updateUserAttribute =
-                    DtoServerImpls.UpdateUserAttributeImpl.fromJsonString(jsonUpdateAttribute);
-
-            String userId = ConversationState.getCurrent().getIdentity().getUserId();
-            User user = userManager.getUserByAlias(userId);
-
-            user.getProfile().setAttribute(updateUserAttribute.getAttributeName(), updateUserAttribute.getAttributeValue());
-        } catch (OrganizationServiceException e) {
-            throw new IllegalStateException("Problem with update user's attribute. Please contact support.", e);
-        }
-    }
-
-    /**
-     * Removes user's attribute. Which attribute needs to remove describe into jsonRemoveAttribute. If the attribute isn't exist then no
-     * attribute will be removed.
-     *
-     * @param jsonRemoveAttribute
-     */
-    @Path("remove/attribute")
-    @POST
-    public void removeUserAttribute(String jsonRemoveAttribute) {
-        try {
-            DtoServerImpls.RemoveUserAttributeImpl removeUserAttribute =
-                    DtoServerImpls.RemoveUserAttributeImpl.fromJsonString(jsonRemoveAttribute);
-
-            String userId = ConversationState.getCurrent().getIdentity().getUserId();
-            User user = userManager.getUserByAlias(userId);
-
-            user.getProfile().removeAttribute(removeUserAttribute.getAttributeName());
-        } catch (OrganizationServiceException e) {
-            throw new IllegalStateException("Problem with remove user's attribute. Please contact support.", e);
-        }
-    }
-
-    /**
      * Updates user's attributes from information what contains into updateUserAttributes. If some attributes aren't exist then these
      * attributes will be added. This method can add/update many attribute per one operation.
      *
      * @param jsonUpdateAttributes
      */
-    @Path("update/attributes")
+    @Path("update")
     @POST
     public void updateUserAttributes(String jsonUpdateAttributes) {
         try {
@@ -132,9 +87,15 @@ public class UserService {
             updateUserAttributes.getAttributes().iterate(new JsonStringMap.IterationCallback<String>() {
                 @Override
                 public void onIteration(String key, String value) {
-                    profile.setAttribute(key, value);
+                    if (value == null) {
+                        profile.removeAttribute(key);
+                    } else {
+                        profile.setAttribute(key, value);
+                    }
                 }
             });
+
+            userManager.updateUser(user);
         } catch (OrganizationServiceException e) {
             throw new IllegalStateException("Problem with update user's attribute. Please contact support.", e);
         }

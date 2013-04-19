@@ -29,9 +29,5 @@ public class RoutingTypes {
 
     public static final int IDE_USER = 1;
 
-    public static final int UPDATE_USER_ATTRIBUTE = 2;
-
-    public static final int UPDATE_USER_ATTRIBUTES = 3;
-
-    public static final int REMOVE_USER_ATTRIBUTE = 4;
+    public static final int UPDATE_USER_ATTRIBUTES = 2;
 }

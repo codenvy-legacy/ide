@@ -21,18 +21,18 @@
 // GENERATED SOURCE. DO NOT EDIT.
 package com.codenvy.ide.server;
 
+import com.codenvy.ide.api.user.UpdateUserAttributes;
+import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.dtogen.server.JsonSerializable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
-import java.util.List;
 import java.util.Map;
 
 
@@ -43,247 +43,12 @@ public class DtoServerImpls {
 
   private  DtoServerImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "644381d81eb2a0c00d85dd595f3b8d3f64bb9b27";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "648f8d86f27105b66b0eb5f90b185c9f029001e1";
 
-  public static class RemoveUserAttributeImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl implements com.codenvy.ide.shared.RemoveUserAttribute, JsonSerializable {
-
-    private RemoveUserAttributeImpl() {
-      super(4);
-    }
-
-    protected RemoveUserAttributeImpl(int type) {
-      super(type);
-    }
-
-    protected java.lang.String attributeName;
-    private boolean _hasAttributeName;
-
-    public boolean hasAttributeName() {
-      return _hasAttributeName;
-    }
-
-    @Override
-    public java.lang.String getAttributeName() {
-      return attributeName;
-    }
-
-    public RemoveUserAttributeImpl setAttributeName(java.lang.String v) {
-      _hasAttributeName = true;
-      attributeName = v;
-      return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (!super.equals(o)) {
-        return false;
-      }
-      if (!(o instanceof RemoveUserAttributeImpl)) {
-        return false;
-      }
-      RemoveUserAttributeImpl other = (RemoveUserAttributeImpl) o;
-      if (this._hasAttributeName != other._hasAttributeName) {
-        return false;
-      }
-      if (this._hasAttributeName) {
-        if (!this.attributeName.equals(other.attributeName)) {
-          return false;
-        }
-      }
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      int hash = super.hashCode();
-      hash = hash * 31 + (_hasAttributeName ? attributeName.hashCode() : 0);
-      return hash;
-    }
-
-    @Override
-    public JsonElement toJsonElement() {
-      JsonObject result = new JsonObject();
-
-      JsonElement attributeNameOut = (attributeName == null) ? JsonNull.INSTANCE : new JsonPrimitive(attributeName);
-      result.add("attributeName", attributeNameOut);
-      result.add("_type", new JsonPrimitive(getType()));
-      return result;
-    }
-
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
-
-    @Override
-    public String toString() {
-      return toJson();
-    }
-
-    public static RemoveUserAttributeImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
-      }
-
-      RemoveUserAttributeImpl dto = new RemoveUserAttributeImpl();
-      JsonObject json = jsonElem.getAsJsonObject();
-
-      if (json.has("attributeName")) {
-        JsonElement attributeNameIn = json.get("attributeName");
-        java.lang.String attributeNameOut = gson.fromJson(attributeNameIn, java.lang.String.class);
-        dto.setAttributeName(attributeNameOut);
-      }
-
-      return dto;
-    }
-    public static RemoveUserAttributeImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
-      }
-
-      return fromJsonElement(new JsonParser().parse(jsonString));
-    }
-  }
-
-  public static class UpdateUserAttributeImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl implements com.codenvy.ide.shared.UpdateUserAttribute, JsonSerializable {
-
-    private UpdateUserAttributeImpl() {
-      super(2);
-    }
-
-    protected UpdateUserAttributeImpl(int type) {
-      super(type);
-    }
-
-    protected java.lang.String attributeValue;
-    private boolean _hasAttributeValue;
-    protected java.lang.String attributeName;
-    private boolean _hasAttributeName;
-
-    public boolean hasAttributeValue() {
-      return _hasAttributeValue;
-    }
-
-    @Override
-    public java.lang.String getAttributeValue() {
-      return attributeValue;
-    }
-
-    public UpdateUserAttributeImpl setAttributeValue(java.lang.String v) {
-      _hasAttributeValue = true;
-      attributeValue = v;
-      return this;
-    }
-
-    public boolean hasAttributeName() {
-      return _hasAttributeName;
-    }
-
-    @Override
-    public java.lang.String getAttributeName() {
-      return attributeName;
-    }
-
-    public UpdateUserAttributeImpl setAttributeName(java.lang.String v) {
-      _hasAttributeName = true;
-      attributeName = v;
-      return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (!super.equals(o)) {
-        return false;
-      }
-      if (!(o instanceof UpdateUserAttributeImpl)) {
-        return false;
-      }
-      UpdateUserAttributeImpl other = (UpdateUserAttributeImpl) o;
-      if (this._hasAttributeValue != other._hasAttributeValue) {
-        return false;
-      }
-      if (this._hasAttributeValue) {
-        if (!this.attributeValue.equals(other.attributeValue)) {
-          return false;
-        }
-      }
-      if (this._hasAttributeName != other._hasAttributeName) {
-        return false;
-      }
-      if (this._hasAttributeName) {
-        if (!this.attributeName.equals(other.attributeName)) {
-          return false;
-        }
-      }
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      int hash = super.hashCode();
-      hash = hash * 31 + (_hasAttributeValue ? attributeValue.hashCode() : 0);
-      hash = hash * 31 + (_hasAttributeName ? attributeName.hashCode() : 0);
-      return hash;
-    }
-
-    @Override
-    public JsonElement toJsonElement() {
-      JsonObject result = new JsonObject();
-
-      JsonElement attributeValueOut = (attributeValue == null) ? JsonNull.INSTANCE : new JsonPrimitive(attributeValue);
-      result.add("attributeValue", attributeValueOut);
-
-      JsonElement attributeNameOut = (attributeName == null) ? JsonNull.INSTANCE : new JsonPrimitive(attributeName);
-      result.add("attributeName", attributeNameOut);
-      result.add("_type", new JsonPrimitive(getType()));
-      return result;
-    }
-
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
-
-    @Override
-    public String toString() {
-      return toJson();
-    }
-
-    public static UpdateUserAttributeImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
-      }
-
-      UpdateUserAttributeImpl dto = new UpdateUserAttributeImpl();
-      JsonObject json = jsonElem.getAsJsonObject();
-
-      if (json.has("attributeValue")) {
-        JsonElement attributeValueIn = json.get("attributeValue");
-        java.lang.String attributeValueOut = gson.fromJson(attributeValueIn, java.lang.String.class);
-        dto.setAttributeValue(attributeValueOut);
-      }
-
-      if (json.has("attributeName")) {
-        JsonElement attributeNameIn = json.get("attributeName");
-        java.lang.String attributeNameOut = gson.fromJson(attributeNameIn, java.lang.String.class);
-        dto.setAttributeName(attributeNameOut);
-      }
-
-      return dto;
-    }
-    public static UpdateUserAttributeImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
-      }
-
-      return fromJsonElement(new JsonParser().parse(jsonString));
-    }
-  }
-
-  public static class UpdateUserAttributesImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl implements com.codenvy.ide.shared.UpdateUserAttributes, JsonSerializable {
+  public static class UpdateUserAttributesImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl implements UpdateUserAttributes, JsonSerializable {
 
     private UpdateUserAttributesImpl() {
-      super(3);
+      super(2);
     }
 
     protected UpdateUserAttributesImpl(int type) {
@@ -412,7 +177,7 @@ public class DtoServerImpls {
     }
   }
 
-  public static class UserImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl implements com.codenvy.ide.shared.User, JsonSerializable {
+  public static class UserImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl implements User, JsonSerializable {
 
     private UserImpl() {
       super(1);

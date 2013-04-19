@@ -18,14 +18,13 @@
  */
 package com.codenvy.ide.user;
 
+import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.client.DtoClientImpls;
 import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.shared.RemoveUserAttribute;
-import com.codenvy.ide.shared.UpdateUserAttribute;
-import com.codenvy.ide.shared.UpdateUserAttributes;
-import com.codenvy.ide.shared.User;
+import com.codenvy.ide.api.user.UpdateUserAttributes;
+import com.codenvy.ide.api.user.User;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
@@ -33,7 +32,7 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 /**
- * The implementation of {@link UserClientService}.
+ * The implementation of {@link com.codenvy.ide.api.user.UserClientService}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
@@ -43,11 +42,7 @@ public class UserClientServiceImpl implements UserClientService {
 
     private static final String GET_USER = BASE_URL + "/get";
 
-    private static final String UPDATE_USER_ATTRIBUTE = BASE_URL + "/update/attribute";
-
-    private static final String UPDATE_USER_ATTRIBUTES = BASE_URL + "/update/attributes";
-
-    private static final String REMOVE_USER_ATTRIBUTE = BASE_URL + "/remove/attribute";
+    private static final String UPDATE_USER_ATTRIBUTES = BASE_URL + "/update";
 
     private String restContext;
 
@@ -75,28 +70,12 @@ public class UserClientServiceImpl implements UserClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void updateUserAttribute(UpdateUserAttribute updateUserAttribute, AsyncRequestCallback<Void> callback) throws RequestException {
-        final String requestUrl = restContext + UPDATE_USER_ATTRIBUTE;
-        String updateAttributeData = ((DtoClientImpls.UpdateUserAttributeImpl)updateUserAttribute).serialize();
-
-        AsyncRequest.build(RequestBuilder.POST, requestUrl).loader(loader).data(updateAttributeData).send(callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void removeUserAttribute(RemoveUserAttribute removeUserAttribute, AsyncRequestCallback<Void> callback) throws RequestException {
-        final String requestUrl = restContext + REMOVE_USER_ATTRIBUTE;
-        String removeAttributeData = ((DtoClientImpls.RemoveUserAttributeImpl)removeUserAttribute).serialize();
-
-        AsyncRequest.build(RequestBuilder.POST, requestUrl).loader(loader).data(removeAttributeData).send(callback);
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void updateUserAttributes(UpdateUserAttributes updateUserAttributes, AsyncRequestCallback<Void> callback)
             throws RequestException {
         final String requestUrl = restContext + UPDATE_USER_ATTRIBUTES;
-        String updateAttributesData = ((DtoClientImpls.UpdateUserAttributesImpl)updateUserAttributes).serialize();
+
+        DtoClientImpls.UpdateUserAttributesImpl userAttributes = (DtoClientImpls.UpdateUserAttributesImpl)updateUserAttributes;
+        String updateAttributesData = userAttributes.serialize();
 
         AsyncRequest.build(RequestBuilder.POST, requestUrl).loader(loader).data(updateAttributesData).send(callback);
     }

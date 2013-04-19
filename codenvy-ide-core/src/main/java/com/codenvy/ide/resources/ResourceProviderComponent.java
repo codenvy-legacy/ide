@@ -30,6 +30,7 @@ import com.codenvy.ide.resources.model.*;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
@@ -78,24 +79,25 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
 
     private final FileType defaulFile;
 
-   /**
-    * Resources API for client application.
-    * It deals with VFS to retrieve the content of  the files 
-    * @throws ResourceException 
-    */
-   @Inject
-   public ResourceProviderComponent(ModelProvider genericModelProvider, Loader loader, EventBus eventBus,
-                                    @Named("defaultFileType") FileType defaulFile){
-      super();
-      this.genericModelProvider = genericModelProvider;
-      this.eventBus = eventBus;
-      this.defaulFile = defaulFile;
-      this.workspaceURL = "rest/ide/vfs/v2";
-      this.modelProviders = JsonCollections.<ModelProvider> createStringMap();
-      this.natures = JsonCollections.<ProjectNature> createStringMap();
-      this.fileTypes = JsonCollections.createIntegerMap();
-      this.loader = loader;
-   }
+    /**
+     * Resources API for client application.
+     * It deals with VFS to retrieve the content of  the files
+     *
+     * @throws ResourceException
+     */
+    @Inject
+    public ResourceProviderComponent(ModelProvider genericModelProvider, Loader loader, EventBus eventBus,
+                                     @Named("defaultFileType") FileType defaulFile) {
+        super();
+        this.genericModelProvider = genericModelProvider;
+        this.eventBus = eventBus;
+        this.defaulFile = defaulFile;
+        this.workspaceURL = "rest/ide/vfs/v2";
+        this.modelProviders = JsonCollections.<ModelProvider>createStringMap();
+        this.natures = JsonCollections.<ProjectNature>createStringMap();
+        this.fileTypes = JsonCollections.createIntegerMap();
+        this.loader = loader;
+    }
 
     @Override
     public void start(final Callback<Component, ComponentException> callback) {
@@ -112,8 +114,9 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                     @Override
                     protected void onFailure(Throwable exception) {
                         // notify Component failed
-                        callback.onFailure(new ComponentException("Failed to start Resource Manager. Cause:"
-                                                                  + exception.getMessage(), ResourceProviderComponent.this));
+                        callback.onFailure(new ComponentException("Failed to start Resource Manager. Cause:" + exception.getMessage(),
+                                                                  ResourceProviderComponent.this));
+                        Log.error(ResourceProviderComponent.class, exception);
                     }
                 };
 
@@ -317,7 +320,6 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         }
         // Call ProjectNature.configure()
         nature.configure(project, new AsyncCallback<Project>() {
-
             @Override
             public void onSuccess(Project result) {
                 // finally add property and flush settings
@@ -347,7 +349,6 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
      * Validate, if nature can be applied on project
      *
      * @param project
-     * @param callback
      * @param nature
      */
     protected void validate(Project project, ProjectNature nature) throws IllegalStateException {

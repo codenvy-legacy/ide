@@ -16,13 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.user;
+package com.codenvy.ide.api.user;
 
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.shared.RemoveUserAttribute;
-import com.codenvy.ide.shared.UpdateUserAttribute;
-import com.codenvy.ide.shared.UpdateUserAttributes;
-import com.codenvy.ide.shared.User;
 import com.google.gwt.http.client.RequestException;
 
 /**
@@ -31,35 +27,14 @@ import com.google.gwt.http.client.RequestException;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public interface UserClientService {
-
     /**
      * Returns current user with additional information. Which additional information includes into User described into {@link
-     * com.codenvy.ide.shared.User} interface.
+     * com.codenvy.ide.api.user.User} interface.
      *
      * @param callback
      * @throws RequestException
      */
     void getUser(AsyncRequestCallback<User> callback) throws RequestException;
-
-    /**
-     * Updates user's attribute from information what contains into updateUserAttribute. If the attribute isn't exist then this attribute
-     * will add.
-     *
-     * @param updateUserAttribute
-     * @param callback
-     * @throws RequestException
-     */
-    void updateUserAttribute(UpdateUserAttribute updateUserAttribute, AsyncRequestCallback<Void> callback) throws RequestException;
-
-    /**
-     * Removes user's attribute. Which attribute needs to remove describe into removeUserAttribute. If the attribute isn't exist then no
-     * attribute will be removed.
-     *
-     * @param removeUserAttribute
-     * @param callback
-     * @throws RequestException
-     */
-    void removeUserAttribute(RemoveUserAttribute removeUserAttribute, AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
      * Updates user's attributes from information what contains into updateUserAttributes. If some attributes aren't exist then these
