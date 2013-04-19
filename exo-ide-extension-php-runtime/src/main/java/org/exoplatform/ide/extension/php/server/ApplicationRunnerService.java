@@ -19,8 +19,13 @@
 package org.exoplatform.ide.extension.php.server;
 
 import org.exoplatform.ide.extension.php.shared.ApplicationInstance;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -40,6 +45,8 @@ import javax.ws.rs.core.UriInfo;
  */
 @Path("ide/php/runner")
 public class ApplicationRunnerService {
+    private static final Log LOG = ExoLogger.getLogger(ApplicationRunnerService.class);
+
     @Inject
     private ApplicationRunner runner;
 
@@ -53,10 +60,14 @@ public class ApplicationRunnerService {
                                               @QueryParam("projectid") String projectId,
                                               @Context UriInfo uriInfo)
             throws ApplicationRunnerException, VirtualFileSystemException {
-        ApplicationInstance app = runner.runApplication(
-                vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId);
+        VirtualFileSystem vfs = vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null;
+        ApplicationInstance app = runner.runApplication(vfs, projectId);
         app.setStopURL(uriInfo.getBaseUriBuilder().path(getClass(), "stopApplication")
                               .queryParam("name", app.getName()).build().toString());
+
+        Project project = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+        LOG.info("EVENT#application-created# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
+                 + "# PAAS#LOCAL#");
         return app;
     }
 
