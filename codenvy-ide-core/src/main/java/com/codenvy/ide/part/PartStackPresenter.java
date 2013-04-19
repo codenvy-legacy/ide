@@ -175,7 +175,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             return;
         }
 
-        if (activePart != null) {
+        if (activePart != null && workBenchPartController !=null) {
             partsSize.set(parts.indexOf(activePart), workBenchPartController.getSize());
         }
         activePart = part;
@@ -193,7 +193,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         // notify handler, that part changed
         partStackHandler.onActivePartChanged(activePart);
 
-        if (activePart != null) {
+        if (activePart != null && workBenchPartController !=null) {
             workBenchPartController.setHidden(false);
             workBenchPartController.setSize(partsSize.get(parts.indexOf(activePart)));
         }

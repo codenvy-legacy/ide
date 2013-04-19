@@ -82,23 +82,24 @@ public class TestPartStackPresenter {
     }
 
     @Test
-    public void shoudNotifyPartChanged() {
+    public void shouldNotifyPartChanged() {
         PartPresenter part = mock(PartPresenter.class);
         when(part.getTitleImage()).thenReturn(null);
 
         stack.addPart(part);
+        stack.setActivePart(part);
 
         verify(handler).onActivePartChanged(eq(part));
     }
 
     @Test
-    public void shoudDelegateSetFocusToDisplay() {
+    public void shouldDelegateSetFocusToDisplay() {
         stack.setFocus(true);
         verify(partStackView).setFocus(eq(true));
     }
 
     @Test
-    public void shoudAddPart() {
+    public void shouldAddPart() {
         PartPresenter part = mock(PartPresenter.class);
         stack.addPart(part);
 
@@ -106,40 +107,42 @@ public class TestPartStackPresenter {
     }
 
     @Test
-    public void shoudNotAddPartTwice() {
+    public void shouldNotAddPartTwice() {
         PartPresenter part = mock(PartPresenter.class);
         stack.addPart(part);
-        assertEquals("shoud contain 1 part", 1, stack.getNumberOfParts());
+        assertEquals("should contain 1 part", 1, stack.getNumberOfParts());
 
         stack.addPart(part);
-        assertEquals("shoud contain 1 part", 1, stack.getNumberOfParts());
+        assertEquals("should contain 1 part", 1, stack.getNumberOfParts());
     }
 
     @Test
-    public void shoudActivatePartOnAdd() {
+    public void shouldActivatePartOnAdd() {
         PartPresenter part = mock(PartPresenter.class);
         PartPresenter part2 = mock(PartPresenter.class);
 
         stack.addPart(part);
-        assertEquals("shoud activate part", part, stack.getActivePart());
+        stack.setActivePart(part);
+        assertEquals("should activate part", part, stack.getActivePart());
 
         stack.addPart(part2);
-        assertEquals("shoud activate part2", part2, stack.getActivePart());
+        stack.setActivePart(part2);
+        assertEquals("should activate part2", part2, stack.getActivePart());
     }
 
     @Test
-    public void shoudSetActivatePart() {
+    public void shouldSetActivatePart() {
         PartPresenter part = mock(PartPresenter.class);
         PartPresenter part2 = mock(PartPresenter.class);
 
         stack.addPart(part);
         stack.addPart(part2);
         stack.setActivePart(part);
-        assertEquals("shoud activate part", part, stack.getActivePart());
+        assertEquals("should activate part", part, stack.getActivePart());
     }
 
     @Test
-    public void shoudNotifyActivatePart() {
+    public void shouldNotifyActivatePart() {
         PartPresenter part = mock(PartPresenter.class);
         PartPresenter part2 = mock(PartPresenter.class);
 
@@ -148,11 +151,13 @@ public class TestPartStackPresenter {
 
         reset(handler);
         stack.addPart(part);
+        stack.setActivePart(part);
         verify(handler).onActivePartChanged(eq(part));
 
         reset(handler);
         // check another activated
         stack.addPart(part2);
+        stack.setActivePart(part2);
         verify(handler).onActivePartChanged(eq(part2));
 
         reset(handler);
