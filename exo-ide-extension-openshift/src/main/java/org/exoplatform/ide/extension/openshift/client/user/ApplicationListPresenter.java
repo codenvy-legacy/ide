@@ -276,6 +276,7 @@ public class ApplicationListPresenter extends GitPresenter implements ShowApplic
                         bindDisplay();
                         IDE.getInstance().openView(display.asView());
                     }
+                    display.clearCartridgesInfo();
                     display.getLoginField().setValue(result.getRhlogin());
                     display.getDomainField().setValue(result.getNamespace() != null ? result.getNamespace() : "Doesn't exist");
                     if (result.getApps() != null) {
