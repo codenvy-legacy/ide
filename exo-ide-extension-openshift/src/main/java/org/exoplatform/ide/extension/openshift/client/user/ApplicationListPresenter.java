@@ -144,7 +144,6 @@ public class ApplicationListPresenter extends GitPresenter implements ShowApplic
     public ApplicationListPresenter() {
         IDE.addHandler(ShowApplicationListEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
-        IDE.addHandler(LoggedInEvent.TYPE, this);
     }
 
     /** Bind presenter with display. */
