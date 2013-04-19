@@ -27,6 +27,7 @@ import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * OpenShift client service.
@@ -204,4 +205,101 @@ public abstract class OpenShiftClientService {
      * @throws RequestException
      */
     public abstract void restartApplication(String appName, AsyncRequestCallback<Void> callback) throws RequestException;
+
+    /**
+     * Get available embedded cartridges
+     *
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
+    public abstract void getCartridges(AsyncRequestCallback<List<String>> callback) throws RequestException;
+
+    /**
+     * Add cartridge to application
+     *
+     * @param appName
+     *         application name
+     * @param cartridgeName
+     *         cartridge name
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
+    public abstract void addCartridge(String appName, String cartridgeName, AsyncRequestCallback<Void> callback) throws RequestException;
+
+    /**
+     * Delete cartridge from application
+     *
+     * @param appName
+     *         application name
+     * @param cartridgeName
+     *         cartridge name
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
+    public abstract void deleteCartridge(String appName, String cartridgeName, AsyncRequestCallback<Void> callback) throws RequestException;
+
+    /**
+     * Start cartridge
+     *
+     * @param appName
+     *         application name
+     * @param cartridgeName
+     *         cartridgeName
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
+    public abstract void startCartridge(String appName, String cartridgeName, AsyncRequestCallback<Void> callback) throws RequestException;
+
+    /**
+     * Stop cartridge
+     *
+     * @param appName
+     *         application name
+     * @param cartridgeName
+     *         cartridgeName
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
+    public abstract void stopCartridge(String appName, String cartridgeName, AsyncRequestCallback<Void> callback) throws RequestException;
+
+    /**
+     * Restart cartridge
+     *
+     * @param appName
+     *         application name
+     * @param cartridgeName
+     *         cartridgeName
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
+    public abstract void restartCartridge(String appName, String cartridgeName, AsyncRequestCallback<Void> callback)
+            throws RequestException;
+
+    /**
+     * Reload cartridge
+     *
+     * @param appName
+     *         application name
+     * @param cartridgeName
+     *         cartridgeName
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
+    public abstract void reloadCartridge(String appName, String cartridgeName, AsyncRequestCallback<Void> callback) throws RequestException;
+
+    /**
+     * Destroy all applications and namespace if need
+     *
+     * @param callback
+     * @throws RequestException
+     */
+    public abstract void destroyAllApplications(boolean alsoNamespace, String vfsId, String projectId, AsyncRequestCallback<Void> callback)
+            throws RequestException;
 }

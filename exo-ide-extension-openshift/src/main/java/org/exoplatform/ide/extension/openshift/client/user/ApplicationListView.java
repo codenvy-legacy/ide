@@ -35,8 +35,10 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.client.info.ApplicationInfoListGrid;
 import org.exoplatform.ide.extension.openshift.client.info.Property;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
+import org.exoplatform.ide.extension.openshift.shared.OpenShiftEmbeddableCartridge;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * view for showing user's information.
@@ -44,10 +46,10 @@ import java.util.ArrayList;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 14, 2011 4:25:33 PM anya $
  */
-public class UserInfoView extends ViewImpl implements UserInfoPresenter.Display {
+public class ApplicationListView extends ViewImpl implements ApplicationListPresenter.Display {
     public static final String ID = "ideUserInfoView";
 
-    private static final int HEIGHT = 320;
+    private static final int HEIGHT = 420;
 
     private static final int WIDTH = 700;
 
@@ -55,9 +57,11 @@ public class UserInfoView extends ViewImpl implements UserInfoPresenter.Display 
 
     private static final String DOMAIN_FIELD_ID = "ideUserInfoViewDomainField";
 
+    private static final String ADD_CARTRIDGE_BUTTON_ID = "ideAddCartridgeButton";
+
     private static UserInfoViewUiBinder uiBinder = GWT.create(UserInfoViewUiBinder.class);
 
-    interface UserInfoViewUiBinder extends UiBinder<Widget, UserInfoView> {
+    interface UserInfoViewUiBinder extends UiBinder<Widget, ApplicationListView> {
     }
 
     /** User's login field. */
@@ -80,55 +84,129 @@ public class UserInfoView extends ViewImpl implements UserInfoPresenter.Display 
     @UiField
     ImageButton okButton;
 
-    public UserInfoView() {
-        super(ID, ViewType.MODAL, OpenShiftExtension.LOCALIZATION_CONSTANT.userInfoViewTitle(), null, WIDTH, HEIGHT);
+    /** Switch account button */
+    @UiField
+    ImageButton switchAccount;
+
+    /** Change namespace button */
+    @UiField
+    ImageButton changeNamespace;
+
+    /** Cartridge list grid */
+    @UiField
+    CartridgeGrid cartridgeGrid;
+
+    /** Add new cartridge button */
+    @UiField
+    ImageButton addCartridgeButton;
+
+    public ApplicationListView() {
+        super(ID, ViewType.MODAL, OpenShiftExtension.LOCALIZATION_CONSTANT.userInfoViewTitle(), null, WIDTH, HEIGHT, false);
         add(uiBinder.createAndBindUi(this));
         domainField.setName(DOMAIN_FIELD_ID);
         domainField.setHeight("22px");
         loginField.setName(LOGIN_FIELD_ID);
         loginField.setHeight("22px");
+        addCartridgeButton.setId(ADD_CARTRIDGE_BUTTON_ID);
     }
 
-    /** @see org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter.Display#getOkButton() */
+    /** @see ApplicationListPresenter.Display#getOkButton() */
     @Override
     public HasClickHandlers getOkButton() {
         return okButton;
     }
 
-    /** @see org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter.Display#getLoginField() */
+    /** @see ApplicationListPresenter.Display#getLoginField() */
     @Override
     public HasValue<String> getLoginField() {
         return loginField;
     }
 
-    /** @see org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter.Display#getDomainField() */
+    /** @see ApplicationListPresenter.Display#getDomainField() */
     @Override
     public HasValue<String> getDomainField() {
         return domainField;
     }
 
-    /** @see org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter.Display#getApplicationInfoGrid() */
+    /** @see ApplicationListPresenter.Display#getApplicationInfoGrid() */
     @Override
     public ListGridItem<Property> getApplicationInfoGrid() {
         return applicationInfoGrid;
     }
 
-    /** @see org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter.Display#getApplicationGrid() */
+    /** @see ApplicationListPresenter.Display#getApplicationGrid() */
     @Override
     public ListGridItem<AppInfo> getApplicationGrid() {
         return applicationGrid;
     }
 
-    /** @see org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter.Display#addDeleteButtonSelectionHandler(com.google.gwt
-     * .event.logical.shared.SelectionHandler) */
+    /**
+     * @see ApplicationListPresenter.Display#addDeleteButtonSelectionHandler(com.google.gwt
+     *      .event.logical.shared.SelectionHandler)
+     */
     @Override
     public void addDeleteButtonSelectionHandler(SelectionHandler<AppInfo> handler) {
         applicationGrid.addDeleteButtonSelectionHandler(handler);
     }
 
-    /** @see org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter.Display#clearApplicationInfo() */
+    /** @see ApplicationListPresenter.Display#clearApplicationInfo() */
     @Override
     public void clearApplicationInfo() {
         applicationInfoGrid.setValue(new ArrayList<Property>());
+    }
+
+    @Override
+    public ListGridItem<OpenShiftEmbeddableCartridge> getCartridgesGrid() {
+        return cartridgeGrid;
+    }
+
+    @Override
+    public void addDeleteCartridgeButtonSelectionHandler(SelectionHandler<OpenShiftEmbeddableCartridge> handler) {
+        cartridgeGrid.addDeleteButtonSelectionHandler(handler);
+    }
+
+    @Override
+    public void addStartCartridgeButtonSelectionHandler(SelectionHandler<OpenShiftEmbeddableCartridge> handler) {
+        cartridgeGrid.addStartButtonSelectionHandler(handler);
+    }
+
+    @Override
+    public void addStopCartridgeButtonSelectionHandler(SelectionHandler<OpenShiftEmbeddableCartridge> handler) {
+        cartridgeGrid.addStopButtonSelectionHandler(handler);
+    }
+
+    @Override
+    public void addRestartCartridgeButtonSelectionHandler(SelectionHandler<OpenShiftEmbeddableCartridge> handler) {
+        cartridgeGrid.addRestartButtonSelectionHandler(handler);
+    }
+
+    @Override
+    public void addReloadCartridgeButtonSelectionHandler(SelectionHandler<OpenShiftEmbeddableCartridge> handler) {
+        cartridgeGrid.addReloadButtonSelectionHandler(handler);
+    }
+
+    @Override
+    public HasClickHandlers getAddCartridgeButton() {
+        return addCartridgeButton;
+    }
+
+    @Override
+    public HasClickHandlers getSwitchAccountButton() {
+        return switchAccount;
+    }
+
+    @Override
+    public HasClickHandlers getChangeNamespaceButton() {
+        return changeNamespace;
+    }
+
+    @Override
+    public void setAddCartridgeButtonEnable(boolean isEnable) {
+        addCartridgeButton.setEnabled(isEnable);
+    }
+
+    @Override
+    public void clearCartridgesInfo() {
+        cartridgeGrid.setValue(Collections.<OpenShiftEmbeddableCartridge>emptyList());
     }
 }

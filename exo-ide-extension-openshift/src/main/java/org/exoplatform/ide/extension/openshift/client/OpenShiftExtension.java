@@ -28,6 +28,7 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.project.ProjectType;
+import org.exoplatform.ide.extension.openshift.client.cartridge.AddCartridgePresenter;
 import org.exoplatform.ide.extension.openshift.client.controls.*;
 import org.exoplatform.ide.extension.openshift.client.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.openshift.client.delete.DeleteApplicationCommandHandler;
@@ -39,7 +40,7 @@ import org.exoplatform.ide.extension.openshift.client.login.LoginPresenter;
 import org.exoplatform.ide.extension.openshift.client.preview.PreviewApplicationPresenter;
 import org.exoplatform.ide.extension.openshift.client.project.OpenShiftProjectPresenter;
 import org.exoplatform.ide.extension.openshift.client.start.StartApplicationPresenter;
-import org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter;
+import org.exoplatform.ide.extension.openshift.client.user.ApplicationListPresenter;
 
 import java.util.Arrays;
 
@@ -113,7 +114,8 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
         new DeleteApplicationCommandHandler();
         new ApplicationInfoPresenter();
         new PreviewApplicationPresenter();
-        new UserInfoPresenter();
+        new ApplicationListPresenter();
+        new AddCartridgePresenter();
         new UpdatePublicKeyCommandHandler();
 
         new OpenShiftProjectPresenter();

@@ -18,27 +18,19 @@
  */
 package org.exoplatform.ide.extension.openshift.client.user;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Event occurs, when user tries to view OpenShift user's information. Implement {@link ShowUserInfoHandler} to handle event.
+ * Handler for {@link ShowApplicationListEvent} event.
  *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Jun 14, 2011 10:57:08 AM anya $
+ * @version $Id: Jun 14, 2011 10:57:18 AM anya $
  */
-public class ShowUserInfoEvent extends GwtEvent<ShowUserInfoHandler> {
-    /** Type used to register event. */
-    public static final GwtEvent.Type<ShowUserInfoHandler> TYPE = new GwtEvent.Type<ShowUserInfoHandler>();
-
-    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
-    @Override
-    public com.google.gwt.event.shared.GwtEvent.Type<ShowUserInfoHandler> getAssociatedType() {
-        return TYPE;
-    }
-
-    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
-    @Override
-    protected void dispatch(ShowUserInfoHandler handler) {
-        handler.onShowUserInfo(this);
-    }
+public interface ShowApplicationListHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to view OpenShift user's info.
+     *
+     * @param event
+     */
+    void onShowUserInfo(ShowApplicationListEvent event);
 }

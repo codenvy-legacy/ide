@@ -16,47 +16,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.openshift.client.domain;
+package org.exoplatform.ide.extension.openshift.client.user;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to create new domain. Implement {@link CreateDomainHandler} to handle event.
+ * Event occurs, when user tries to view OpenShift user's information. Implement {@link ShowApplicationListHandler} to handle event.
  *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Jun 6, 2011 2:52:28 PM anya $
+ * @version $Id: Jun 14, 2011 10:57:08 AM anya $
  */
-public class CreateDomainEvent extends GwtEvent<CreateDomainHandler> {
-    /** Type used to register this event. */
-    public static final GwtEvent.Type<CreateDomainHandler> TYPE = new GwtEvent.Type<CreateDomainHandler>();
-
-    /** Indicates that windows is showed from application info list, that after update namespace will be fired ShowApplicationListEvent */
-    private boolean fromUserInfo;
-
-    public CreateDomainEvent() {
-    }
-
-    public CreateDomainEvent(boolean fromUserInfo) {
-        this.fromUserInfo = fromUserInfo;
-    }
+public class ShowApplicationListEvent extends GwtEvent<ShowApplicationListHandler> {
+    /** Type used to register event. */
+    public static final GwtEvent.Type<ShowApplicationListHandler> TYPE = new GwtEvent.Type<ShowApplicationListHandler>();
 
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
     @Override
-    public com.google.gwt.event.shared.GwtEvent.Type<CreateDomainHandler> getAssociatedType() {
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowApplicationListHandler> getAssociatedType() {
         return TYPE;
     }
 
     /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
     @Override
-    protected void dispatch(CreateDomainHandler handler) {
-        handler.onCreateDomain(this);
-    }
-
-    public boolean isFromUserInfo() {
-        return fromUserInfo;
-    }
-
-    public void setFromUserInfo(boolean fromUserInfo) {
-        this.fromUserInfo = fromUserInfo;
+    protected void dispatch(ShowApplicationListHandler handler) {
+        handler.onShowUserInfo(this);
     }
 }

@@ -21,17 +21,20 @@ package org.exoplatform.ide.extension.openshift.client.user;
 import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.client.ui.HTML;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -47,6 +50,12 @@ public class ApplicationGrid extends ListGrid<AppInfo> {
     public ApplicationGrid() {
         setID(ID);
         initColumns();
+
+        HTML emptyTable = new HTML(OpenShiftExtension.LOCALIZATION_CONSTANT.createAppForView());
+        emptyTable.getElement().getStyle().setMarginBottom(2, Style.Unit.PX);
+        getCellTable().setEmptyTableWidget(emptyTable);
+
+        setValue(Collections.<AppInfo>emptyList());
     }
 
     /** Initialize columns. */

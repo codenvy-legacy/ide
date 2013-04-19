@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,21 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.openshift.client.user;
+package org.exoplatform.ide.extension.openshift.client.cartridge;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link ShowUserInfoEvent} event.
- *
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Jun 14, 2011 10:57:18 AM anya $
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
+ * @version $Id: $
  */
-public interface ShowUserInfoHandler extends EventHandler {
-    /**
-     * Perform actions, when user tries to view OpenShift user's info.
-     *
-     * @param event
-     */
-    void onShowUserInfo(ShowUserInfoEvent event);
+public interface AddCartridgeHandler extends EventHandler {
+    void onAddCartridge(AddCartridgeEvent event);
 }
