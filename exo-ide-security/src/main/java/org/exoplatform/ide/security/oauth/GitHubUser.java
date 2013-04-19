@@ -67,6 +67,8 @@ public class GitHubUser implements User {
     public void setEmail(String email) {
         this.email = email;
     }
+    
+    
 
     @Override
     public String toString() {
@@ -77,4 +79,6 @@ public class GitHubUser implements User {
                ", email='" + email + '\'' +
                '}';
     }
+
+  
 }

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.security.oauth;
 
+import org.exoplatform.ide.security.shared.Token;
 import org.exoplatform.ide.security.shared.User;
 
 /**
@@ -60,6 +61,8 @@ public class GoogleUser implements User {
         this.name = name;
     }
 
+  
+    
     @Override
     public String toString() {
         return "GoogleUser{" +
@@ -68,4 +71,5 @@ public class GoogleUser implements User {
                ", name='" + name + '\'' +
                '}';
     }
+
 }

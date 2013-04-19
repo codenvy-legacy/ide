@@ -31,8 +31,8 @@ public class OAuthAuthenticatorTokenProvider implements OAuthTokenProvider {
     @Override
     public String getToken(String oauthProviderName, String userId) throws IOException {
         OAuthAuthenticator oAuthAuthenticator = oAuthAuthenticatorProvider.getAuthenticator(oauthProviderName);
-        if (oAuthAuthenticator != null) {
-            return oAuthAuthenticator.getToken(userId);
+        if (oAuthAuthenticator != null && oAuthAuthenticator.getToken(userId) != null) {
+            return oAuthAuthenticator.getToken(userId).getToken();
         }
         return null;
     }

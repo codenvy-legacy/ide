@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,52 +16,64 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.googleappengine.server;
+package org.exoplatform.ide.security.oauth;
 
-import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
 import org.exoplatform.ide.security.shared.Token;
 
 /**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * @author <a href="mailto:vparfonov@codenvy.com">Vitaly Parfonov</a>
+ * @version $Id: GoogleToken.java Apr 18, 2013 vetal $
  */
-public class GaeUserImpl implements GaeUser {
-    private String  id;
-    private Token token;
+public class TokenImpl implements Token {
 
-    public GaeUserImpl(String id, Token token) {
-        this.id = id;
+    private String scope;
+    private String token;
+
+    /**
+     * @param token
+     */
+    public TokenImpl(String token) {
+        this(token, null);
+    }
+
+    
+    /**
+     * @param scope
+     * @param token
+     */
+    public TokenImpl(String token, String scope) {
         this.token = token;
+        this.scope = scope;
+    }
+
+    /**
+     * @see org.exoplatform.ide.security.shared.Token#getScope()
+     */
+    @Override
+    public String getScope() {
+        return scope;
+    }
+
+    /**
+     * @see org.exoplatform.ide.security.shared.Token#setScope(java.lang.String)
+     */
+    @Override
+    public void setScope(String scope) {
+        this.scope = scope;
     }
 
     @Override
-    public String getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    @Override
-    public String getEmail() {
-        // Not need email address in this case.
-        return null;
-    }
-
-    @Override
-    public void setEmail(String id) {
-        // Not need email address in this case.
-    }
-
-    @Override
-    public Token getToken() {
+    public String getToken() {
         return token;
     }
-    
+
     @Override
-    public void setToken(Token token) {
+    public void setToken(String token) {
         this.token = token;
+        
     }
+    
+    
+
+
 }

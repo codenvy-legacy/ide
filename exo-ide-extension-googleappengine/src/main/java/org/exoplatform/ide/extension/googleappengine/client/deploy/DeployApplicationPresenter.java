@@ -45,6 +45,7 @@ import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.extension.googleappengine.client.GaeTools;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
@@ -240,7 +241,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
 
                         @Override
                         protected void onSuccess(GaeUser result) {
-                            if (!result.isAuthenticated()) {
+                            if (!GaeTools.isAuthenticatedInAppEngine(result.getToken())) {
                                 new OAuthLoginView();
                                 return;
                             }

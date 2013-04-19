@@ -26,6 +26,7 @@ import com.google.api.client.http.json.JsonHttpParser;
 
 import org.exoplatform.ide.commons.JsonHelper;
 import org.exoplatform.ide.commons.JsonParseException;
+import org.exoplatform.ide.security.shared.Token;
 import org.exoplatform.ide.security.shared.User;
 
 import java.io.IOException;
@@ -234,14 +235,14 @@ public abstract class OAuthAuthenticator {
      * @throws IOException
      * @see OAuthTokenProvider#getToken(String, String)
      */
-    public String getToken(String userId) throws IOException {
+    public Token getToken(String userId) throws IOException {
         Credential credential = flow.loadCredential(userId);
         if (credential != null) {
             Long expirationTime = credential.getExpiresInSeconds();
             if (expirationTime != null && expirationTime < 0) {
                 credential.refreshToken();
             }
-            return credential.getAccessToken();
+            return new TokenImpl(credential.getAccessToken());
         }
         return null;
     }

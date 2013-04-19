@@ -27,6 +27,7 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson.JacksonFactory;
 
+import org.exoplatform.ide.security.shared.Token;
 import org.exoplatform.ide.security.shared.User;
 
 import javax.mail.internet.AddressException;
@@ -83,9 +84,9 @@ public class GitHubOAuthAuthenticator extends OAuthAuthenticator {
     }
 
     @Override
-    public String getToken(String userId) throws IOException {
-        final String token = super.getToken(userId);
-        if (!(token == null || token.isEmpty())) {
+    public Token getToken(String userId) throws IOException {
+        final Token token = super.getToken(userId);
+        if (!(token == null || token.getToken() == null || token.getToken().isEmpty())) {
             // Need to check if token which stored is valid for requests, then if valid - we returns it to caller
             String tokenVerifyUrl = "https://api.github.com/?access_token=" + token;
             HttpURLConnection http = null;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,18 +16,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.googleappengine.shared;
+package org.exoplatform.ide.extension.googleappengine.client;
 
 import org.exoplatform.ide.security.shared.Token;
-import org.exoplatform.ide.security.shared.User;
 
 /**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * @author <a href="mailto:vparfonov@codenvy.com">Vitaly Parfonov</a>
+ * @version $Id: GaeTools.java Apr 18, 2013 vetal $
  */
-public interface GaeUser extends User {
-    
-    public Token getToken();
-    
-    public void setToken(Token token);
+public class GaeTools {
+
+    public static final String APPENGINE_ADMIN_SCOPE = "https://www.googleapis.com/auth/appengine.admin";
+
+    public static boolean isAuthenticatedInAppEngine(Token token) {
+        if (token == null || token.getToken() == null || token.getToken().isEmpty())
+            return false;
+        if (token.getScope() == null || token.getScope().isEmpty())
+            return false;
+        return token.getScope().contains(APPENGINE_ADMIN_SCOPE);
+    }
+
+
 }

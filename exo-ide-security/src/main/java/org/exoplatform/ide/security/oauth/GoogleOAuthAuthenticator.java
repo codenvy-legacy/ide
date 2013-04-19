@@ -24,9 +24,14 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson.JacksonFactory;
 
+import org.everrest.core.impl.provider.json.JsonValue;
+import org.exoplatform.ide.commons.JsonHelper;
+import org.exoplatform.ide.commons.JsonParseException;
+import org.exoplatform.ide.security.shared.Token;
 import org.exoplatform.ide.security.shared.User;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Collections;
@@ -34,7 +39,7 @@ import java.util.HashSet;
 
 /**
  * OAuth authentication for google account.
- *
+ * 
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladyslav Zhukovskii</a>
  * @version $Id: $
  */
@@ -42,9 +47,10 @@ public class GoogleOAuthAuthenticator extends OAuthAuthenticator {
 
     public GoogleOAuthAuthenticator(CredentialStore credentialStore, GoogleClientSecrets clientSecrets) {
         super(new GoogleAuthorizationCodeFlow.Builder(new NetHttpTransport(), new JacksonFactory(), clientSecrets,
-                                                      Collections.<String>emptyList()).setCredentialStore(credentialStore)
-                                                                                      .setApprovalPrompt("auto").setAccessType
-                        ("online").build(), new HashSet<String>(clientSecrets.getDetails().getRedirectUris()));
+                                                      Collections.<String> emptyList()).setCredentialStore(credentialStore)
+                                                                                       .setApprovalPrompt("auto").setAccessType
+                                                                                       ("online").build(),
+              new HashSet<String>(clientSecrets.getDetails().getRedirectUris()));
     }
 
     @Override
@@ -58,27 +64,46 @@ public class GoogleOAuthAuthenticator extends OAuthAuthenticator {
     }
 
     @Override
-    public String getToken(String userId) throws IOException {
-        final String token = super.getToken(userId);
-        if (!(token == null || token.isEmpty())) {
+    public Token getToken(String userId) throws IOException {
+        final Token token = super.getToken(userId);
+        if (!(token == null || token.getToken() == null || token.getToken().isEmpty())) {
             // Need to check if token which stored is valid for requests, then if valid - we returns it to caller
-            URL tokenInfoUrl = new URL("https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=" + token);
-            HttpURLConnection http = null;
-
+            URL tokenInfoUrl = new URL("https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=" + token.getToken());
             try {
-                http = (HttpURLConnection)tokenInfoUrl.openConnection();
-                if (http.getResponseCode() != 200) {
-                    return null;
-                }
-            } finally {
-                if (http != null) {
-                    http.disconnect();
-                }
+                JsonValue jsonValue = doRequest(tokenInfoUrl);
+                JsonValue scope = jsonValue.getElement("scope");
+                if (scope != null)
+                    token.setScope(scope.getStringValue());
+            } catch (JsonParseException e) {
+                e.printStackTrace();
             }
-
             return token;
         }
 
         return null;
+    }
+
+
+    private JsonValue doRequest(URL tokenInfoUrl) throws IOException, JsonParseException {
+        HttpURLConnection http = null;
+        try {
+            http = (HttpURLConnection)tokenInfoUrl.openConnection();
+            if (http.getResponseCode() != 200) {
+                throw null;
+            }
+
+            InputStream input = http.getInputStream();
+            JsonValue result;
+            try {
+                result = JsonHelper.parseJson(input);
+            } finally {
+                input.close();
+            }
+            return result;
+        } finally {
+            if (http != null) {
+                http.disconnect();
+            }
+        }
     }
 }

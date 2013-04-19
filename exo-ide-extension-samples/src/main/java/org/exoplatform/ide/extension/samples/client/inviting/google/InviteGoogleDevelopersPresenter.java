@@ -216,7 +216,6 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
                                      + "/ide/oauth/authenticate?oauth_provider=google&mode=federated_login"//
                                      + "&scope=https://www.googleapis.com/auth/userinfo.profile"//
                                      + "&scope=https://www.googleapis.com/auth/userinfo.email"//
-                                     + "&scope=https://www.googleapis.com/auth/appengine.admin" //
                                      + "&scope=https://www.google.com/m8/feeds"//
                                      + "&userId=" + IDE.userId//
                                      + "&redirect_after_login="//

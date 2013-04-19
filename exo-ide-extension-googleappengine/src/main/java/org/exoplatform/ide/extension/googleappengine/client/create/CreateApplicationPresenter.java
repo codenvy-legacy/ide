@@ -39,6 +39,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.extension.googleappengine.client.GaeTools;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
@@ -240,7 +241,7 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
 
                         @Override
                         protected void onSuccess(GaeUser result) {
-                            if (!result.isAuthenticated()) {
+                            if (!GaeTools.isAuthenticatedInAppEngine(result.getToken())) {
                                 // IDE.fireEvent(new LoginEvent());
                                 new OAuthLoginView();
                             } else {
