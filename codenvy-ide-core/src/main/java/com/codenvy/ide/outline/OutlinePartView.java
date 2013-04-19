@@ -16,20 +16,24 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.search;
+package com.codenvy.ide.outline;
 
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.part.view.BaseActionDelegate;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public interface SearchPartView extends View<SearchPartView.ActionDelegate> {
+public interface OutlinePartView extends View<OutlinePartView.ActionDelegate> {
+    AcceptsOneWidget getContainer();
+
+    void showNoOutline();
+
     void setTitle(String title);
 
     public interface ActionDelegate extends BaseActionDelegate {
 
     }
-
 }

@@ -40,8 +40,6 @@ import com.google.inject.Singleton;
 public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.ActionDelegate> implements ProjectExplorerView {
     protected Tree<Resource> tree;
 
-    protected ActionDelegate delegate;
-
     /**
      * Create view.
      *

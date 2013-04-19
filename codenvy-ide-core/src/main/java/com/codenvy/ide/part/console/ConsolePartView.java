@@ -19,6 +19,7 @@
 package com.codenvy.ide.part.console;
 
 import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.part.view.BaseActionDelegate;
 
 /**
  * View of {@link ConsolePartPresenter}.
@@ -26,7 +27,7 @@ import com.codenvy.ide.api.mvp.View;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public interface ConsolePartView extends View<ConsolePartView.ActionDelegate> {
-    public interface ActionDelegate {
+    public interface ActionDelegate extends BaseActionDelegate {
     }
 
     /**

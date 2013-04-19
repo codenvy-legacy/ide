@@ -16,20 +16,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.search;
+package com.codenvy.ide.part.view;
 
-import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.part.view.BaseActionDelegate;
+import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
+import com.codenvy.ide.api.ui.perspective.PartStack;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public interface SearchPartView extends View<SearchPartView.ActionDelegate> {
-    void setTitle(String title);
+public abstract class BasePresenter extends AbstractPartPresenter implements BaseActionDelegate {
 
-    public interface ActionDelegate extends BaseActionDelegate {
+    protected PartStack partStack;
 
+    protected BasePresenter() {
     }
 
+    @Override
+    public void minimize() {
+        if(partStack != null)
+          partStack.hidePart(this);
+    }
+
+    public void setPartStack(PartStack partStack) {
+        this.partStack = partStack;
+    }
 }

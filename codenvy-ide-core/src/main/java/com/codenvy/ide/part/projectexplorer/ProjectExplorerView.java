@@ -19,6 +19,7 @@
 package com.codenvy.ide.part.projectexplorer;
 
 import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.part.view.BaseActionDelegate;
 import com.codenvy.ide.resources.model.Resource;
 
 /**
@@ -38,7 +39,7 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
     void setTitle(String title);
 
     /** Needs for delegate some function into ProjectTree view. */
-    public interface ActionDelegate {
+    public interface ActionDelegate extends BaseActionDelegate {
         /**
          * Performs any actions in response to some node action.
          *

@@ -26,6 +26,8 @@ import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEvent.FileOperation;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
+import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
+import com.codenvy.ide.part.view.BasePresenter;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Resource;
 import com.google.gwt.resources.client.ImageResource;
@@ -41,11 +43,11 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @Singleton
-public class ProjectExplorerPartPresenter extends AbstractPartPresenter implements ProjectExplorerView.ActionDelegate, ProjectExplorerPart {
+public class ProjectExplorerPartPresenter extends BasePresenter implements ProjectExplorerView.ActionDelegate, ProjectExplorerPart {
     protected ProjectExplorerView view;
 
-    protected EventBus eventBus;
-    private Resources resources;
+    protected EventBus  eventBus;
+    private   Resources resources;
 
     /**
      * Instantiates the ProjectExplorer Presenter
@@ -58,7 +60,7 @@ public class ProjectExplorerPartPresenter extends AbstractPartPresenter implemen
         this.view = view;
         this.eventBus = eventBus;
         this.resources = resources;
-        view.setTitle("Project");
+        view.setTitle("Project Explorer");
         bind();
     }
 

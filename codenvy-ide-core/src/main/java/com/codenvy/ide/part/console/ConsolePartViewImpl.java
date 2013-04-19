@@ -45,18 +45,10 @@ public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate
     interface ConsolePartViewImplUiBinder extends UiBinder<Widget, ConsolePartViewImpl> {
     }
 
-    private ActionDelegate delegate;
-
     @Inject
     public ConsolePartViewImpl(PartStackUIResources resources) {
         super(resources);
         container.add(uiBinder.createAndBindUi(this));
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setDelegate(ActionDelegate delegate) {
-        this.delegate = delegate;
     }
 
     /** {@inheritDoc} */

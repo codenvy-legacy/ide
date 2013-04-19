@@ -21,8 +21,11 @@ package com.codenvy.ide.outline;
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
+import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.parts.OutlinePart;
 import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
+import com.codenvy.ide.part.view.BaseActionDelegate;
+import com.codenvy.ide.part.view.BasePresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -38,15 +41,7 @@ import com.google.web.bindery.event.shared.EventBus;
  * @version $Id:
  */
 @Singleton
-public class OutlinePartPresenter extends AbstractPartPresenter implements ActivePartChangedHandler, OutlinePart {
-
-    public interface OutlinePartView extends IsWidget {
-        AcceptsOneWidget getContainer();
-
-        void showNoOutline();
-
-        void setTitle(String title);
-    }
+public class OutlinePartPresenter extends BasePresenter implements ActivePartChangedHandler, OutlinePart, OutlinePartView.ActionDelegate {
 
     private final OutlinePartView view;
 
@@ -60,6 +55,7 @@ public class OutlinePartPresenter extends AbstractPartPresenter implements Activ
         this.view = view;
         eventBus.addHandler(ActivePartChangedEvent.TYPE, this);
         view.setTitle("Outline");
+        view.setDelegate(this);
     }
 
     /** {@inheritDoc} */

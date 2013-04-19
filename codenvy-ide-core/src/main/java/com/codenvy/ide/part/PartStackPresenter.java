@@ -27,6 +27,7 @@ import com.codenvy.ide.api.ui.perspective.PropertyListener;
 import com.codenvy.ide.api.ui.perspective.WorkBenchPartController;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.part.view.BasePresenter;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
@@ -126,6 +127,9 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             // and return
             return;
         }
+        if(part instanceof BasePresenter) {
+            ((BasePresenter)part).setPartStack(this);
+        }
         parts.add(part);
         partsSize.add(DEFAULT_SIZE);
         if (workBenchPartController != null)
@@ -179,6 +183,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
 
         if (part == null) {
             view.setActiveTabButton(-1);
+            workBenchPartController.setHidden(true);
         } else {
             view.setActiveTabButton(parts.indexOf(activePart));
             activePart.go(contentPanel);

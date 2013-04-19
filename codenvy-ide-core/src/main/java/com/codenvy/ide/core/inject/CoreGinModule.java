@@ -56,6 +56,7 @@ import com.codenvy.ide.menu.MainMenuPresenter;
 import com.codenvy.ide.menu.MainMenuView;
 import com.codenvy.ide.menu.MainMenuViewImpl;
 import com.codenvy.ide.outline.OutlinePartPresenter;
+import com.codenvy.ide.outline.OutlinePartView;
 import com.codenvy.ide.outline.OutlinePartViewImpl;
 import com.codenvy.ide.paas.PaaSAgentImpl;
 import com.codenvy.ide.part.*;
@@ -161,7 +162,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(EditorProvider.class).annotatedWith(Names.named("defaulEditor")).to(DefaultEditorProvider.class);
         bind(DocumentProvider.class).to(ResourceDocumentProvider.class).in(Singleton.class);
         bind(UserActivityManager.class).in(Singleton.class);
-        bind(OutlinePartPresenter.OutlinePartView.class).to(OutlinePartViewImpl.class).in(Singleton.class);
+        bind(OutlinePartView.class).to(OutlinePartViewImpl.class).in(Singleton.class);
     }
 
     /** Configures binding for Resource API (Resource Manager) */

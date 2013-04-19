@@ -21,18 +21,22 @@ package com.codenvy.ide.part.view;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.part.PartStackUIResources;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public abstract class BaseView<T> extends Composite implements View<T> {
+public abstract class BaseView<T extends BaseActionDelegate> extends Composite implements View<T> {
 
     protected DockLayoutPanel toolBar;
     protected DockLayoutPanel container;
+    protected T               delegate;
 
     public BaseView(PartStackUIResources resources) {
         container = new DockLayoutPanel(Style.Unit.PX);
@@ -41,6 +45,19 @@ public abstract class BaseView<T> extends Composite implements View<T> {
         toolBar = new DockLayoutPanel(Style.Unit.PX);
         toolBar.addStyleName(resources.partStackCss().ideBasePartToolbar());
         container.addNorth(toolBar, 20);
+        ToolButton toolButton = new ToolButton(new Image(resources.minimize()));
+        toolButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                minimize();
+            }
+        });
+        toolBar.addEast(toolButton, 20);
+    }
+
+    protected void minimize() {
+        if (delegate != null)
+            delegate.minimize();
     }
 
     public void setTitle(String title) {
@@ -52,5 +69,9 @@ public abstract class BaseView<T> extends Composite implements View<T> {
         toolBar.addWest(l, 60);
     }
 
-
+    /** {@inheritDoc} */
+    @Override
+    public void setDelegate(T delegate) {
+        this.delegate = delegate;
+    }
 }

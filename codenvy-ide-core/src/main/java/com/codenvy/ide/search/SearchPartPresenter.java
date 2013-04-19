@@ -20,6 +20,8 @@ package com.codenvy.ide.search;
 
 import com.codenvy.ide.api.parts.SearchPart;
 import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
+import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
+import com.codenvy.ide.part.view.BasePresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -30,7 +32,7 @@ import com.google.inject.Singleton;
  * @version $Id:
  */
 @Singleton
-public class SearchPartPresenter extends AbstractPartPresenter implements SearchPart {
+public class SearchPartPresenter extends BasePresenter implements SearchPart, SearchPartView.ActionDelegate {
 
     private static final String TITLE = "Search";
     private SearchPartView view;
@@ -40,6 +42,7 @@ public class SearchPartPresenter extends AbstractPartPresenter implements Search
     public SearchPartPresenter(SearchPartView view) {
         this.view = view;
         view.setTitle(TITLE);
+        view.setDelegate(this);
     }
 
     @Override

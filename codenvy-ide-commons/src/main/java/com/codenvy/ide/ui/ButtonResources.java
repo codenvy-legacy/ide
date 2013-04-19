@@ -26,56 +26,8 @@ import com.google.gwt.resources.client.CssResource;
  * @version $Id:
  */
 public interface ButtonResources extends ClientBundle {
-    public interface Css extends CssResource{
 
-        @ClassName("btn-link")
-        String btnLink();
-
-        @ClassName("btn-info")
-        String btnInfo();
-
-        @ClassName("btn-inverse")
-        String btnInverse();
-
-        @ClassName("btn-small")
-        String btnSmall();
-
-        @ClassName("btn-warning")
-        String btnWarning();
-
-        @ClassName("btn-success")
-        String btnSuccess();
-
-        @ClassName("btn-mini")
-        String btnMini();
-
-        @ClassName("btn-primary")
-        String btnPrimary();
-
-        String btn();
-
-        @ClassName("btn-danger")
-        String btnDanger();
-
-        @ClassName("hide-text")
-        String hideText();
-
-        String active();
-
-        @ClassName("btn-large")
-        String btnLarge();
-
-        String clearfix();
-
-        @ClassName("btn-block")
-        String btnBlock();
-
-        String disabled();
-
-        @ClassName("input-block-level")
-        String inputBlockLevel();
-    }
-
+    @CssResource.NotStrict
     @Source("Button.css")
-    Css buttonCss();
+    CssResource buttonCss();
 }

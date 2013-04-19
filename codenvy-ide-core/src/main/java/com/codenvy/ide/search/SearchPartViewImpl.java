@@ -40,11 +40,6 @@ public class SearchPartViewImpl extends BaseView<SearchPartView.ActionDelegate> 
 
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void setDelegate(ActionDelegate delegate) {
-    }
-
     interface SearchPartViewImplUiBinder
             extends UiBinder<HTMLPanel, SearchPartViewImpl> {
     }

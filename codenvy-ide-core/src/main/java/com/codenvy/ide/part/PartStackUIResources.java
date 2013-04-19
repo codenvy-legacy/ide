@@ -81,4 +81,7 @@ public interface PartStackUIResources extends ClientBundle {
 
     ImageResource close();
 
+    @Source("thin_min_view.png")
+    ImageResource minimize();
+
 }

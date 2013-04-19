@@ -18,7 +18,6 @@
  */
 package com.codenvy.ide.outline;
 
-import com.codenvy.ide.outline.OutlinePartPresenter.OutlinePartView;
 import com.codenvy.ide.part.PartStackUIResources;
 import com.codenvy.ide.part.view.BaseView;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -31,7 +30,7 @@ import com.google.inject.Inject;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class OutlinePartViewImpl extends BaseView<OutlinePartView> implements OutlinePartView {
+public class OutlinePartViewImpl extends BaseView<OutlinePartView.ActionDelegate> implements OutlinePartView {
 
     private SimplePanel container;
 
@@ -64,10 +63,5 @@ public class OutlinePartViewImpl extends BaseView<OutlinePartView> implements Ou
     @Override
     public AcceptsOneWidget getContainer() {
         return container;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setDelegate(OutlinePartView delegate) {
     }
 }

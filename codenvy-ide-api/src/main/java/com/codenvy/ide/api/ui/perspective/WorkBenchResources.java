@@ -38,6 +38,6 @@ public interface WorkBenchResources  extends ClientBundle{
         String ideWorkBenchToolPanelRight();
     }
 
-    @Source({"WorkBench.css", "../style.css"})
+    @Source({"WorkBench.css", "com/codenvy/ide/api/ui/style.css"})
     WorkBenchCss workBenchCss();
 }
