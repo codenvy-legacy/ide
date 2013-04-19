@@ -23,7 +23,6 @@
     <inherits name='com.codenvy.ide.extension.cloudfoundry.CloudFoundry'/>
     <inherits name='com.codenvy.ide.extension.maven.Maven'/>
     <inherits name='com.codenvy.ide.extension.tasks.Tasks'/>
-    <inherits name="com.github.gwtbootstrap.Bootstrap" />
 
     <stylesheet src="IDE.css"/>
 

@@ -21,8 +21,8 @@ package com.codenvy.ide.extension.maven.client.build;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
-import com.codenvy.ide.api.ui.perspective.GenericPerspectivePresenter;
-import com.codenvy.ide.api.ui.perspective.PerspectivePresenter;
+import com.codenvy.ide.api.ui.perspective.PartStackType;
+import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.extension.maven.client.*;
@@ -112,7 +112,7 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
 
     private BuilderResources resources;
 
-    private GenericPerspectivePresenter perspectivePresenter;
+    private WorkspaceAgent workspaceAgent;
 
     /** Handler for processing Maven build status which is received over WebSocket connection. */
     private final SubscriptionHandler<BuildStatus> buildStatusHandler;
@@ -128,14 +128,15 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
      * @param constant
      * @param autoBeanFactory
      * @param resources
-     * @param perspectivePresenter
+     * @param workspaceAgent
      */
     @Inject
     protected BuildProjectPresenter(final BuildProjectView view, final EventBus eventBus, ResourceProvider resourceProvider,
                                     final ConsolePart console, BuilderClientService service, BuilderLocalizationConstant constant,
                                     BuilderAutoBeanFactory autoBeanFactory, BuilderResources resources,
-                                    GenericPerspectivePresenter perspectivePresenter) {
+                                    WorkspaceAgent workspaceAgent) {
         this.view = view;
+        this.workspaceAgent = workspaceAgent;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
@@ -144,7 +145,6 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
         this.constant = constant;
         this.autoBeanFactory = autoBeanFactory;
         this.resources = resources;
-        this.perspectivePresenter = perspectivePresenter;
 
         buildStatusHandler = new SubscriptionHandler<BuildStatus>(
                 new AutoBeanUnmarshallerWS<BuildStatus>(this.autoBeanFactory.create(BuildStatus.class))) {
@@ -627,7 +627,7 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
     private void showBuildMessage(String message) {
 
         if (isViewClosed) {
-            perspectivePresenter.openPart(this, PerspectivePresenter.PartStackType.INFORMATION);
+            workspaceAgent.openPart(this, PartStackType.INFORMATION);
             isViewClosed = false;
         }
 

@@ -79,7 +79,7 @@ public class BootstrapController {
                             // Display IDE
                             workspacePeresenter.go(mainPanel);
                             // TODO FOR DEMO
-                            workspacePeresenter.showPart(extensionsPage, PartStackType.EDITING);
+                            workspacePeresenter.openPart(extensionsPage, PartStackType.EDITING);
                         }
 
                         @Override
@@ -89,4 +89,13 @@ public class BootstrapController {
                     });
                 }
 
+                @Override
+                protected void onFailure(Throwable exception) {
+                    Log.error(BootstrapController.class, exception);
+                }
+            });
+        } catch (RequestException e) {
+            Log.error(BootstrapController.class, e);
+        }
+    }
 }

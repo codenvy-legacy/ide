@@ -21,7 +21,7 @@ import com.codenvy.ide.api.extension.SDK;
 
 
 /**
- * Handles IDE Perspective, allows to open/close/switch beetween perspectives,
+ * Handles IDE Perspective, allows to open/close/switch Parts,
  * manages opened Parts.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
