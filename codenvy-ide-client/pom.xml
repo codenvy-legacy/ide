@@ -103,6 +103,11 @@
          <scope>compile</scope>
       </dependency>
 
+       <dependency>
+           <groupId>com.github.gwtbootstrap</groupId>
+           <artifactId>gwt-bootstrap</artifactId>
+           <version>2.2.1.0</version>
+       </dependency>
    </dependencies>
 
    <build>

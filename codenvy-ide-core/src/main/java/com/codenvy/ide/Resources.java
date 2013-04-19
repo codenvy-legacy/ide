@@ -20,6 +20,7 @@ import com.codenvy.ide.texteditor.EditableContentArea;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.renderer.LineNumberRenderer;
 import com.codenvy.ide.tree.FileTreeNodeRenderer;
+import com.codenvy.ide.ui.DialogBoxResources;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectWizardResource;
@@ -43,7 +44,7 @@ import com.google.gwt.resources.client.ImageResource;
  */
 public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resources, TextEditorViewImpl.Resources,
                                    LineNumberRenderer.Resources, EditableContentArea.Resources, PartStackUIResources, SimpleList.Resources,
-                                   NewProjectWizardResource, NewGenericProjectWizardResource, NewResourceWizardResources, MenuResources {
+                                   NewProjectWizardResource, NewGenericProjectWizardResource, NewResourceWizardResources, MenuResources,DialogBoxResources {
 
     /** Interface for css resources. */
     public interface CoreCss extends CssResource {
@@ -53,6 +54,8 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
     @Source({"Core.css", "com/codenvy/ide/common/constants.css","com/codenvy/ide/api/ui/style.css"})
     @NotStrict
     CoreCss coreCss();
+
+
 
     @Source("tree/project_explorer.png")
     ImageResource projectExplorer();
