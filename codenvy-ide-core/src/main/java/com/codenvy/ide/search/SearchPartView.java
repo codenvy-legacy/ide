@@ -19,7 +19,7 @@
 package com.codenvy.ide.search;
 
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.part.view.BaseActionDelegate;
+import com.codenvy.ide.part.base.BaseActionDelegate;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>

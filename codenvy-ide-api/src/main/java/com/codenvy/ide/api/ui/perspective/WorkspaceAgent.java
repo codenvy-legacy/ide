@@ -18,7 +18,6 @@ package com.codenvy.ide.api.ui.perspective;
 
 
 import com.codenvy.ide.api.extension.SDK;
-import com.codenvy.ide.api.ui.perspective.WorkBenchPresenter.PartStackType;
 
 
 /**

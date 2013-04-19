@@ -19,14 +19,12 @@ package com.codenvy.ide.part.projectexplorer;
 import elemental.html.DragEvent;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.part.view.BaseView;
+import com.codenvy.ide.part.base.BaseView;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.tree.FileTreeNodeRenderer;
 import com.codenvy.ide.tree.ResourceTreeNodeDataAdapter;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 

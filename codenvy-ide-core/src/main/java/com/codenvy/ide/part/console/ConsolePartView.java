@@ -19,7 +19,7 @@
 package com.codenvy.ide.part.console;
 
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.part.view.BaseActionDelegate;
+import com.codenvy.ide.part.base.BaseActionDelegate;
 
 /**
  * View of {@link ConsolePartPresenter}.

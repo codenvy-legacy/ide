@@ -19,7 +19,7 @@
 package com.codenvy.ide.outline;
 
 import com.codenvy.ide.part.PartStackUIResources;
-import com.codenvy.ide.part.view.BaseView;
+import com.codenvy.ide.part.base.BaseView;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;

@@ -18,16 +18,10 @@ package com.codenvy.ide.perspective;
 
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
-import com.codenvy.ide.api.ui.perspective.WorkBenchPresenter;
-import com.codenvy.ide.api.ui.perspective.WorkBenchPresenter.PartStackType;
+import com.codenvy.ide.api.ui.perspective.PartStackType;
 import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.json.JsonStringMap.IterationCallback;
 import com.codenvy.ide.menu.MainMenuPresenter;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;

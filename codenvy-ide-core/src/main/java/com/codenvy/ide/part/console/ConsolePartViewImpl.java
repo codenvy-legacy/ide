@@ -19,11 +19,10 @@
 package com.codenvy.ide.part.console;
 
 import com.codenvy.ide.part.PartStackUIResources;
-import com.codenvy.ide.part.view.BaseView;
+import com.codenvy.ide.part.base.BaseView;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;

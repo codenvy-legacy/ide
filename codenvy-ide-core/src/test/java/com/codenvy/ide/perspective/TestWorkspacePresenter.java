@@ -17,8 +17,7 @@
 package com.codenvy.ide.perspective;
 
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
-import com.codenvy.ide.api.ui.perspective.WorkBenchPresenter;
-import com.codenvy.ide.api.ui.perspective.WorkBenchPresenter.PartStackType;
+import com.codenvy.ide.api.ui.perspective.PartStackType;
 import com.codenvy.ide.part.PartStackPresenter;
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.inject.Provider;

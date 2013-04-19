@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.part.view;
+package com.codenvy.ide.part.base;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
@@ -41,9 +41,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Button which can be added to the TabPanel and can be displayed at the upper right corner of the TabPanel.
+ * Button which can be added to the tool bar.
  * <p/>
- * Created by The eXo Platform SAS .
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
@@ -86,8 +85,6 @@ public class ToolButton extends Composite implements HasClickHandlers {
     @UiField
     DivElement iconPanel;
 
-    private Image image;
-
     boolean enabled = true;
 
     private List<ClickHandler> clickHandlers = new ArrayList<ClickHandler>();
@@ -97,8 +94,6 @@ public class ToolButton extends Composite implements HasClickHandlers {
     }
 
     public ToolButton(String id, Image image) {
-        this.image = image;
-
         initWidget(uiBinder.createAndBindUi(this));
         iconPanel.appendChild(image.getElement());
 
@@ -109,47 +104,27 @@ public class ToolButton extends Composite implements HasClickHandlers {
 
     @UiHandler("controlPanel")
     void onMouseOver(MouseOverEvent e) {
-//        if (!enabled) {
-//            return;
-//        }
-
         buttonPanel.addClassName(style.buttonOver());
     }
 
     @UiHandler("controlPanel")
     void onMouseOut(MouseOutEvent e) {
-//        if (!enabled) {
-//            return;
-//        }
-
         buttonPanel.removeClassName(style.buttonOver());
         buttonPanel.removeClassName(style.buttonDown());
     }
 
     @UiHandler("controlPanel")
     void onMouseDown(MouseDownEvent e) {
-//        if (!enabled) {
-//            return;
-//        }
-
         buttonPanel.addClassName(style.buttonDown());
     }
 
     @UiHandler("controlPanel")
     void onMouseUp(MouseUpEvent e) {
-//        if (!enabled) {
-//            return;
-//        }
-
         buttonPanel.removeClassName(style.buttonDown());
     }
 
     @UiHandler("controlPanel")
     void onClick(ClickEvent e) {
-//        if (!enabled) {
-//            return;
-//        }
-
         for (ClickHandler clickHandler : clickHandlers) {
             clickHandler.onClick(e);
         }
@@ -164,26 +139,6 @@ public class ToolButton extends Composite implements HasClickHandlers {
     public boolean isEnabled() {
         return enabled;
     }
-
-//    public void setEnabled(boolean enabled) {
-//        if (this.enabled == enabled) {
-//            return;
-//        }
-//
-//        this.enabled = enabled;
-//
-//        while (iconPanel.hasChildNodes()) {
-//            iconPanel.getFirstChild().removeFromParent();
-//        }
-//
-//        if (enabled) {
-//            iconPanel.appendChild(image.getElement());
-//        } else {
-//            buttonPanel.removeClassName(style.buttonOver());
-//            buttonPanel.removeClassName(style.buttonDown());
-//            iconPanel.appendChild(disabledImage.getElement());
-//        }
-//    }
 
     private class ClickHandlerRegistration implements HandlerRegistration {
 

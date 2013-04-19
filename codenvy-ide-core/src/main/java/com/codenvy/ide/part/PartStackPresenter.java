@@ -27,7 +27,7 @@ import com.codenvy.ide.api.ui.perspective.PropertyListener;
 import com.codenvy.ide.api.ui.perspective.WorkBenchPartController;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.part.view.BasePresenter;
+import com.codenvy.ide.part.base.BasePresenter;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;

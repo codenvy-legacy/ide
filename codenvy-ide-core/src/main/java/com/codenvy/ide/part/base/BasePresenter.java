@@ -16,12 +16,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.part.view;
+package com.codenvy.ide.part.base;
 
 import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
 import com.codenvy.ide.api.ui.perspective.PartStack;
 
 /**
+ * Base presenter for parts that support minimizing by part toolbar button.
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
@@ -32,12 +33,17 @@ public abstract class BasePresenter extends AbstractPartPresenter implements Bas
     protected BasePresenter() {
     }
 
+    /** {@inheritDoc} */
     @Override
     public void minimize() {
-        if(partStack != null)
-          partStack.hidePart(this);
+        if (partStack != null)
+            partStack.hidePart(this);
     }
 
+    /**
+     * Set PartStack where this part added.
+     * @param partStack
+     */
     public void setPartStack(PartStack partStack) {
         this.partStack = partStack;
     }

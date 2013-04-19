@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package com.codenvy.ide.api.ui.perspective;
+package com.codenvy.ide.perspective;
 
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.api.parts.ConsolePart;
@@ -22,6 +22,13 @@ import com.codenvy.ide.api.parts.OutlinePart;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.api.parts.SearchPart;
 import com.codenvy.ide.api.parts.WelcomePart;
+import com.codenvy.ide.api.ui.perspective.EditorPartStack;
+import com.codenvy.ide.api.ui.perspective.PartPresenter;
+import com.codenvy.ide.api.ui.perspective.PartStack;
+import com.codenvy.ide.api.ui.perspective.PartStackPresenterFactory;
+import com.codenvy.ide.api.ui.perspective.PartStackType;
+import com.codenvy.ide.api.ui.perspective.PartStackView;
+import com.codenvy.ide.api.ui.perspective.PartStackViewFactory;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -159,36 +166,6 @@ public class WorkBenchPresenter implements Presenter {
      */
     protected PartStack getPartStack(PartStackType type) {
         return partStacks.get(type.toString());
-    }
-
-    /** Defines Part's position on the Screen */
-    public enum PartStackType {
-        /**
-         * Contains navigation parts. Designed to navigate
-         * by project, types, classes and any other entities.
-         * Usually placed on the LEFT side of the IDE.
-         */
-        NAVIGATION,
-        /**
-         * Contains informative parts. Designed to display
-         * the state of the application, project or processes.
-         * Usually placed on the BOTTOM side of the IDE.
-         */
-        INFORMATION,
-        /**
-         * Contains editing parts. Designed to provide an
-         * ability to edit any resources or settings.
-         * Usually placed in the CENTRAL part of the IDE.
-         */
-        EDITING,
-        /**
-         * Contains tooling parts. Designed to provide handy
-         * features and utilities, access to other services
-         * or any other features that are out of other PartType
-         * scopes.
-         * Usually placed on the RIGHT side of the IDE.
-         */
-        TOOLING
     }
 
 }

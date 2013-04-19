@@ -16,7 +16,7 @@
  */
 package com.codenvy.ide.client;
 
-import com.codenvy.ide.api.ui.perspective.WorkBenchPresenter.PartStackType;
+import com.codenvy.ide.api.ui.perspective.PartStackType;
 import com.codenvy.ide.client.extensionsPart.ExtensionsPage;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
