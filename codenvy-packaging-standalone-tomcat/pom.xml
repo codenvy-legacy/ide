@@ -8,9 +8,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-      <groupId>com.codenvy.ide</groupId>
-      <artifactId>codenvy-ide-parent</artifactId>
-      <version>3.0.0-SNAPSHOT</version>
+        <groupId>com.codenvy.ide</groupId>
+        <artifactId>codenvy-ide-parent</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-packaging-standalone-tomcat</artifactId>
     <packaging>pom</packaging>
@@ -100,6 +100,12 @@
             <artifactId>codenvy-ide-site-war</artifactId>
             <version>${project.version}</version>
             <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-core</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -607,27 +613,27 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
-                 <execution>
-                   <id>copy-clear-tomcat</id>
-                    <phase>process-resources</phase>
-                    <goals>
-                        <goal>copy</goal>
-                    </goals>
-                    <configuration>
-                        <artifactItems>
-                            <artifactItem>
-                                <groupId>org.apache.tomcat</groupId>
-                                <artifactId>tomcat</artifactId>
-                                <type>zip</type>
-                                <version>7.0.37</version>
-                                <overWrite>false</overWrite>
-                                <outputDirectory>${project.build.directory}/packager-conf/zip</outputDirectory>
-                                <destFileName>tomcat.zip</destFileName>
-                            </artifactItem>
-                        </artifactItems>
-                    </configuration>
-                  </execution>
-                   <execution>
+                    <execution>
+                        <id>copy-clear-tomcat</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.apache.tomcat</groupId>
+                                    <artifactId>tomcat</artifactId>
+                                    <type>zip</type>
+                                    <version>7.0.37</version>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/packager-conf/zip</outputDirectory>
+                                    <destFileName>tomcat.zip</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>copy-dependencies-war</id>
                         <phase>process-resources</phase>
                         <goals>
@@ -739,7 +745,7 @@
                         <phase>prepare-package</phase>
                         <configuration>
                             <tasks>
-                               <unzip src="${project.build.directory}/packager-conf/zip/tomcat.zip"
+                                <unzip src="${project.build.directory}/packager-conf/zip/tomcat.zip"
                                        dest="${project.build.directory}">
                                     <patternset>
                                         <exclude name="**/ROOT/**"/>
@@ -748,7 +754,7 @@
                                         <exclude name="**/manager/**"/>
                                         <exclude name="**/host-manager/**"/>
                                     </patternset>
-                                </unzip> 
+                                </unzip>
                                 <move file="${project.build.directory}/apache-tomcat-7.0.37"
                                       tofile="${project.build.directory}/tomcat-ide"/>
                                 <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
@@ -776,7 +782,6 @@
                                 <war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false">
                                     <fileset dir="${project.build.directory}/packager-conf/war/IDE"/>
                                 </war>
-
 
                                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-rest-war-2.1.0-SNAPSHOT.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/rest.war" overwrite="true"/>
@@ -861,65 +866,4 @@
             </plugin>
         </plugins>
     </build>
-    <profiles>
-        <profile>
-            <id>mysql</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>mysql</groupId>
-                    <artifactId>mysql-connector-java</artifactId>
-                    <version>5.1.13</version>
-                    <scope>runtime</scope>
-                </dependency>
-            </dependencies>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>copy-dependencies-mysql</id>
-                                <phase>generate-resources</phase>
-                                <goals>
-                                    <goal>copy-dependencies</goal>
-                                </goals>
-                                <configuration>
-                                    <includeTypes>jar</includeTypes>
-                                    <outputDirectory>${project.build.directory}/tomcat-ide/lib</outputDirectory>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>copy-mysql-config</id>
-                                <phase>compile</phase>
-                                <configuration>
-                                    <tasks>
-                                        <unwar src="${project.build.directory}/packager-conf/war/exo-ide-packaging-application-war-2.1.0-SNAPSHOT.war"
-                                               dest="${project.build.directory}/packager-conf/unwar"/>
-                                        <copy file="${basedir}/src/main/resources/ide-war-mysql/WEB-INF/classes/conf/exo-jcr-config-mysql.xml"
-                                              tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/exo-jcr-config.xml"
-                                              overwrite="true"/>
-                                        <copy file="${basedir}/src/main/resources/ide-war-mysql/WEB-INF/classes/conf/cf-configuration-mysql.xml"
-                                              tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/cf-configuration.xml"
-                                              overwrite="true"/>
-                                    </tasks>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

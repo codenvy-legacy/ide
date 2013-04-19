@@ -20,19 +20,42 @@ package com.codenvy.ide.extension.maven.client.build;
 
 import com.codenvy.ide.api.mvp.View;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * The view of {@link BuildProjectPresenter}.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 public interface BuildProjectView extends View<BuildProjectView.ActionDelegate> {
+    /** Needs for delegate some function into BuildProject view. */
     public interface ActionDelegate {
+        /**
+         * Performs any actions appropriate in response to the user
+         * having pressed the ClearOutput button.
+         */
         public void onClearOutputClicked();
     }
 
+    /**
+     * Shows message.
+     *
+     * @param text
+     */
     public void showMessageInOutput(String text);
 
+    /** Starts animation. */
     public void startAnimation();
 
+    /** Stops animation. */
     public void stopAnimation();
 
+    /** Clears output. */
     public void clearOutput();
 
+    /**
+     * Sets whether ClearOutput button is enabled.
+     *
+     * @param isEnabled
+     *         <code>true</code> to enable the button, <code>false</code> to disable it
+     */
     public void setClearOutputButtonEnabled(boolean isEnabled);
 }

@@ -27,6 +27,9 @@ import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.MimeType;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 
 /**
  * Implementation of {@link BuilderClientService} service.
@@ -34,7 +37,8 @@ import com.google.gwt.http.client.RequestException;
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuilderClientServiceImpl.java Feb 21, 2012 12:44:05 PM azatsarynnyy $
  */
-public class BuilderClientServiceImpl extends BuilderClientService {
+@Singleton
+public class BuilderClientServiceImpl implements BuilderClientService {
 
     /** Base url. */
     private static final String BASE_URL = "/ide/maven";
@@ -64,23 +68,20 @@ public class BuilderClientServiceImpl extends BuilderClientService {
     private Loader loader;
 
     /**
+     * Create service.
+     *
      * @param restContext
      *         REST-service context
      * @param loader
      *         loader to show on server request
      */
-    public BuilderClientServiceImpl(String restContext, Loader loader) {
+    @Inject
+    protected BuilderClientServiceImpl(@Named("restContext") String restContext, Loader loader) {
         this.loader = loader;
         this.restServiceContext = restContext;
     }
 
-    /**
-     * Start new build.
-     *
-     * @throws RequestException
-     * @see com.codenvy.ide.extension.maven.client.BuilderClientService#build(java.lang.String, java.lang.String,
-     *      com.codenvy.gwtframework.commons.rest.AsyncRequestCallback)
-     */
+    /** {@inheritDoc} */
     @Override
     public void build(String projectId, String vfsId, String projectName, String projectType, AsyncRequestCallback<StringBuilder> callback)
             throws RequestException {
@@ -92,6 +93,7 @@ public class BuilderClientServiceImpl extends BuilderClientService {
                     .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void buildAndPublish(String projectId, String vfsId, String projectName, String projectType,
                                 AsyncRequestCallback<StringBuilder> callback)
@@ -104,13 +106,7 @@ public class BuilderClientServiceImpl extends BuilderClientService {
                     .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 
-    /**
-     * Cancel previously launched build.
-     *
-     * @throws RequestException
-     * @see com.codenvy.ide.extension.maven.client.BuilderClientService#cancel(java.lang.String,
-     * com.codenvy.gwtframework.commons.rest.AsyncRequestCallback)
-     */
+    /** {@inheritDoc} */
     @Override
     public void cancel(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
         final String requestUrl = restServiceContext + CANCEL + "/" + buildid;
@@ -119,13 +115,7 @@ public class BuilderClientServiceImpl extends BuilderClientService {
                     .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 
-    /**
-     * Check current status of previously launched build.
-     *
-     * @throws RequestException
-     * @see com.codenvy.ide.extension.maven.client.BuilderClientService#status(java.lang.String,
-     * com.codenvy.gwtframework.commons.rest.AsyncRequestCallback)
-     */
+    /** {@inheritDoc} */
     @Override
     public void status(String buildid, AsyncRequestCallback<BuildStatus> callback) throws RequestException {
         final String requestUrl = restServiceContext + STATUS + "/" + buildid;
@@ -134,13 +124,7 @@ public class BuilderClientServiceImpl extends BuilderClientService {
                     .send(callback);
     }
 
-    /**
-     * Get build log.
-     *
-     * @throws RequestException
-     * @see com.codenvy.ide.extension.maven.client.BuilderClientService#log(java.lang.String,
-     * com.codenvy.gwtframework.commons.rest.AsyncRequestCallback)
-     */
+    /** {@inheritDoc} */
     @Override
     public void log(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
         final String requestUrl = restServiceContext + LOG + "/" + buildid;
@@ -149,12 +133,7 @@ public class BuilderClientServiceImpl extends BuilderClientService {
                     .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 
-    /**
-     * Get result of previously launched build.
-     *
-     * @see com.codenvy.ide.extension.maven.client.BuilderClientService#result(java.lang.String,
-     * com.codenvy.gwtframework.commons.rest.AsyncRequestCallback)
-     */
+    /** {@inheritDoc} */
     @Override
     public void result(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
         final String requestUrl = restServiceContext + RESULT + "/" + buildid;
@@ -163,13 +142,7 @@ public class BuilderClientServiceImpl extends BuilderClientService {
                     .send(callback);
     }
 
-    /**
-     * Check is URL for download artifact is valid.
-     *
-     * @see com.codenvy.ide.extension.maven.client.BuilderClientService#checkArtifactUrl(java.lang.String,
-     *      com.codenvy.gwtframework.commons.rest.AsyncRequestCallback)
-     */
-
+    /** {@inheritDoc} */
     @Override
     public void checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException {
         final String requestUrl = restServiceContext + "/ide/maven/check_download_url?url=" + url;

@@ -16,24 +16,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.extension.maven.client.inject;
+package com.codenvy.ide.server;
 
-import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.codenvy.ide.extension.maven.client.BuilderClientService;
-import com.codenvy.ide.extension.maven.client.BuilderClientServiceImpl;
-import com.codenvy.ide.extension.maven.client.build.BuildProjectView;
-import com.codenvy.ide.extension.maven.client.build.BuildProjectViewImpl;
-import com.google.gwt.inject.client.AbstractGinModule;
-import com.google.inject.Singleton;
+import javax.ws.rs.core.Application;
+import java.util.HashSet;
+import java.util.Set;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
-@ExtensionGinModule
-public class MavenGinModule extends AbstractGinModule {
+public class IdeUserApplication extends Application {
     /** {@inheritDoc} */
     @Override
-    protected void configure() {
-        bind(BuilderClientService.class).to(BuilderClientServiceImpl.class).in(Singleton.class);
-
-        bind(BuildProjectView.class).to(BuildProjectViewImpl.class).in(Singleton.class);
+    public Set<Class<?>> getClasses() {
+        Set<Class<?>> classes = new HashSet<Class<?>>();
+        classes.add(UserService.class);
+        return classes;
     }
 }

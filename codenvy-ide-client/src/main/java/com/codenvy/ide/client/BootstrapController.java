@@ -18,11 +18,18 @@ package com.codenvy.ide.client;
 
 import com.codenvy.ide.api.ui.perspective.PartStackType;
 import com.codenvy.ide.client.extensionsPart.ExtensionsPage;
+import com.codenvy.ide.client.marshaller.UserUnmarshaller;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
+import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.perspective.WorkspacePresenter;
+import com.codenvy.ide.preferences.PreferencesManagerImpl;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.api.user.User;
+import com.codenvy.ide.api.user.UserClientService;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Callback;
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
@@ -33,40 +40,53 @@ import com.google.inject.Inject;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public class BootstrapController {
-
     /**
+     * Create controller.
+     *
      * @param componentRegistry
      * @param workspacePeresenter
      * @param styleInjector
      * @param extensionInitializer
+     * @param extensionsPage
+     * @param preferencesManager
+     * @param userService
      */
     @Inject
-    public BootstrapController(ComponentRegistry componentRegistry, final WorkspacePresenter workspacePeresenter,
+    public BootstrapController(final ComponentRegistry componentRegistry, final WorkspacePresenter workspacePeresenter,
                                StyleInjector styleInjector, final ExtensionInitializer extensionInitializer,
-                               final ExtensionsPage extensionsPage) {
+                               final ExtensionsPage extensionsPage, final PreferencesManagerImpl preferencesManager,
+                               UserClientService userService) {
         styleInjector.inject();
 
-        // initialize components
-        componentRegistry.start(new Callback<Void, ComponentException>() {
-            @Override
-            public void onSuccess(Void result) {
-                // instantiate extensions
-                extensionInitializer.startExtensions();
-                // Start UI
-                SimplePanel mainPanel = new SimplePanel();
-                RootLayoutPanel.get().add(mainPanel);
-                // Display IDE
-                workspacePeresenter.go(mainPanel);
-                // TODO FOR DEMO
-                workspacePeresenter.openPart(extensionsPage, PartStackType.EDITING);
-            }
+        try {
+            DtoClientImpls.UserImpl user = DtoClientImpls.UserImpl.make();
+            UserUnmarshaller unmarshaller = new UserUnmarshaller(user);
+            userService.getUser(new AsyncRequestCallback<User>(unmarshaller) {
+                @Override
+                protected void onSuccess(User user) {
+                    JsonStringMap<String> attributes = user.getProfileAttributes();
+                    preferencesManager.load(attributes);
 
-            @Override
-            public void onFailure(ComponentException caught) {
-                GWT.log("FAILED to start service:" + caught.getComponent());
-            }
-        });
+                    // initialize components
+                    componentRegistry.start(new Callback<Void, ComponentException>() {
+                        @Override
+                        public void onSuccess(Void result) {
+                            // instantiate extensions
+                            extensionInitializer.startExtensions();
+                            // Start UI
+                            SimplePanel mainPanel = new SimplePanel();
+                            RootLayoutPanel.get().add(mainPanel);
+                            // Display IDE
+                            workspacePeresenter.go(mainPanel);
+                            // TODO FOR DEMO
+                            workspacePeresenter.showPart(extensionsPage, PartStackType.EDITING);
+                        }
 
-    }
+                        @Override
+                        public void onFailure(ComponentException caught) {
+                            Log.error(BootstrapController.class, "FAILED to start service:" + caught.getComponent(), caught);
+                        }
+                    });
+                }
 
 }

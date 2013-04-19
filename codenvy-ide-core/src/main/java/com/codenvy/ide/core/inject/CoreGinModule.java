@@ -25,6 +25,7 @@ import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.parts.OutlinePart;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.api.parts.WelcomePart;
+import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.api.resources.ResourceProvider;
@@ -71,6 +72,7 @@ import com.codenvy.ide.perspective.WorkspacePresenter;
 import com.codenvy.ide.perspective.WorkspaceView;
 import com.codenvy.ide.perspective.WorkspaceViewImpl;
 import com.codenvy.ide.preferences.PreferencesAgentImpl;
+import com.codenvy.ide.preferences.PreferencesManagerImpl;
 import com.codenvy.ide.resources.ResourceProviderComponent;
 import com.codenvy.ide.resources.model.GenericModelProvider;
 import com.codenvy.ide.api.parts.SearchPart;
@@ -86,6 +88,8 @@ import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.toolbar.ToolbarView;
 import com.codenvy.ide.toolbar.ToolbarViewImpl;
+import com.codenvy.ide.api.user.UserClientService;
+import com.codenvy.ide.user.UserClientServiceImpl;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.rest.RESTMessageBus;
@@ -119,6 +123,9 @@ public class CoreGinModule extends AbstractGinModule {
         bind(TemplateService.class).to(TemplateServiceImpl.class).in(Singleton.class);
         install(new GinFactoryModuleBuilder().implement(PartStackView.class, PartStackViewImpl.class).build(PartStackViewFactory.class));
         install(new GinFactoryModuleBuilder().implement(PartStack.class, PartStackPresenter.class).build(PartStackPresenterFactory.class));
+        bind(UserClientService.class).to(UserClientServiceImpl.class).in(Singleton.class);
+        bind(PreferencesManager.class).to(PreferencesManagerImpl.class).in(Singleton.class);
+        
         apiBindingConfigure();
 
         resourcesAPIconfigure();

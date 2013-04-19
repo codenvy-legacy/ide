@@ -20,9 +20,12 @@ package com.codenvy.ide.extension.maven.client.build;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
+import com.codenvy.ide.api.ui.perspective.GenericPerspectivePresenter;
+import com.codenvy.ide.api.ui.perspective.PerspectivePresenter;
+import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
-import com.codenvy.ide.extension.maven.client.BuilderClientService;
-import com.codenvy.ide.extension.maven.client.BuilderExtension;
+import com.codenvy.ide.extension.maven.client.*;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectHandler;
 import com.codenvy.ide.extension.maven.client.event.ProjectBuiltEvent;
@@ -43,10 +46,12 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -59,15 +64,7 @@ import com.google.web.bindery.event.shared.EventBus;
  * @version $Id: BuildProjectPresenter.java Feb 17, 2012 5:39:10 PM azatsarynnyy $
  */
 @Singleton
-public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectView.ActionDelegate
-// TODO IDEX-57 
-// Need to research: do these classes need?
-// , ItemsSelectedHandler, ViewClosedHandler, VfsChangedHandler, ItemDeletedHandler
-{
-    private static final String BUILD_SUCCESS = BuilderExtension.LOCALIZATION_CONSTANT.buildSuccess();
-
-    private static final String BUILD_FAILED = BuilderExtension.LOCALIZATION_CONSTANT.buildFailed();
-
+public class BuildProjectPresenter extends AbstractPartPresenter implements BuildProjectHandler, BuildProjectView.ActionDelegate {
     private final static String LAST_SUCCESS_BUILD = "lastSuccessBuild";
 
     private final static String ARTIFACT_DOWNLOAD_URL = "artifactDownloadUrl";
@@ -107,49 +104,94 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
 
     private ConsolePart console;
 
-    @Inject
-    protected BuildProjectPresenter(BuildProjectView view, EventBus eventBus, ResourceProvider resourceProvider,
-                                    ConsolePart console) {
-        // TODO IDEX-57
-        // do these classes need?
+    private BuilderClientService service;
 
-        //      IDE.getInstance().addControl(new BuildProjectControl());
-        //      IDE.getInstance().addControl(new BuildAndPublishProjectControl());
-        //
-        //      IDE.addHandler(ViewClosedEvent.TYPE, this);
-        //      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-        //      IDE.addHandler(VfsChangedEvent.TYPE, this);
-        //      IDE.addHandler(ItemDeletedEvent.TYPE, this);
+    private BuilderLocalizationConstant constant;
+
+    private BuilderAutoBeanFactory autoBeanFactory;
+
+    private BuilderResources resources;
+
+    private GenericPerspectivePresenter perspectivePresenter;
+
+    /** Handler for processing Maven build status which is received over WebSocket connection. */
+    private final SubscriptionHandler<BuildStatus> buildStatusHandler;
+
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param eventBus
+     * @param resourceProvider
+     * @param console
+     * @param service
+     * @param constant
+     * @param autoBeanFactory
+     * @param resources
+     * @param perspectivePresenter
+     */
+    @Inject
+    protected BuildProjectPresenter(final BuildProjectView view, final EventBus eventBus, ResourceProvider resourceProvider,
+                                    final ConsolePart console, BuilderClientService service, BuilderLocalizationConstant constant,
+                                    BuilderAutoBeanFactory autoBeanFactory, BuilderResources resources,
+                                    GenericPerspectivePresenter perspectivePresenter) {
         this.view = view;
+        this.view.setDelegate(this);
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
         this.console = console;
+        this.service = service;
+        this.constant = constant;
+        this.autoBeanFactory = autoBeanFactory;
+        this.resources = resources;
+        this.perspectivePresenter = perspectivePresenter;
 
+        buildStatusHandler = new SubscriptionHandler<BuildStatus>(
+                new AutoBeanUnmarshallerWS<BuildStatus>(this.autoBeanFactory.create(BuildStatus.class))) {
+            @Override
+            protected void onSuccess(BuildStatus buildStatus) {
+                updateBuildStatus(buildStatus);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                // TODO need to fix it after port websocket support
+                // Problem with using Websocket
+                //         try
+                //         {
+                //            IDE.messageBus().unsubscribe(buildStatusChannel, this);
+                //         }
+                //         catch (WebSocketException e)
+                //         {
+                //            // nothing to do
+                //         }
+
+                setBuildInProgress(false);
+                view.stopAnimation();
+                eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                console.print(exception.getMessage());
+            }
+        };
+
+        // TODO need to remove following code
         this.eventBus.addHandler(BuildProjectEvent.TYPE, this);
     }
 
-    /** @see com.codenvy.ide.extension.maven.client.event.BuildProjectHandler#onBuildProject(com.codenvy.ide.extension.maven.client.event
-     * .BuildProjectEvent) */
+    /** {@inheritDoc} */
     @Override
     public void onBuildProject(BuildProjectEvent event) {
         if (isBuildInProgress) {
-            String message = BuilderExtension.LOCALIZATION_CONSTANT.buildInProgress(project.getPath().substring(1));
-            // TODO IDEX-57
-            // We don't have analog Dialogs class in IDE3
-            //         Dialogs.getInstance().showError(message);
+            String message = constant.buildInProgress(project.getPath().substring(1));
             Window.alert(message);
             return;
         }
 
         project = event.getProject();
         if (project == null && makeSelectionCheck()) {
-            // TODO IDEX-57
-            // Check: is it good solution? may be need to get selected item from Selection service
-            //         project = ((ItemContext)selectedItems.get(0)).getProject();
             project = resourceProvider.getActiveProject();
         }
 
-        statusHandler = new BuildRequestStatusHandler(project.getPath().substring(1), eventBus);
+        statusHandler = new BuildRequestStatusHandler(project.getPath().substring(1), eventBus, constant);
 
         publishAfterBuild = event.isPublish();
 
@@ -162,45 +204,36 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
         statusHandler.requestInProgress(projectId);
 
         try {
-            BuilderClientService.getInstance().build(projectId, resourceProvider.getVfsId(), project.getName(),
-                                                     (String)project.getPropertyValue(ProjectDescription.PROPERTY_PRIMARY_NATURE),
-                                                     new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder())) {
-                                                         @Override
-                                                         protected void onSuccess(StringBuilder result) {
-                                                             buildID = result.substring(result.lastIndexOf("/") + 1);
-                                                             setBuildInProgress(true);
-                                                             showBuildMessage(
-                                                                     "Building project <b>" + project.getPath().substring(1) + "</b>");
-                                                             view.startAnimation();
-                                                             previousStatus = null;
-                                                             startCheckingStatus(buildID);
-                                                         }
+            StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+            service.build(projectId, resourceProvider.getVfsId(), project.getName(),
+                          (String)project.getPropertyValue(ProjectDescription.PROPERTY_PRIMARY_NATURE),
+                          new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+                              @Override
+                              protected void onSuccess(StringBuilder result) {
+                                  buildID = result.substring(result.lastIndexOf("/") + 1);
+                                  setBuildInProgress(true);
+                                  showBuildMessage("Building project <b>" + project.getPath().substring(1) + "</b>");
+                                  view.startAnimation();
+                                  previousStatus = null;
+                                  startCheckingStatus(buildID);
+                              }
 
-                                                         @Override
-                                                         protected void onFailure(Throwable exception) {
-                                                             statusHandler.requestError(projectId, exception);
-                                                             setBuildInProgress(false);
-                                                             view.stopAnimation();
-                                                             if (exception instanceof ServerException && exception.getMessage() != null) {
-                                                                 // TODO IDEX-57
-                                                                 // Research: is it good solution?
-                                                                 //                     IDE.fireEvent(new OutputEvent(exception
-                                                                 // .getMessage(), Type.ERROR));
-                                                                 console.print(exception.getMessage());
-                                                             } else {
-                                                                 // TODO IDEX-57
-                                                                 // Research: is it good solution?
-                                                                 //                     IDE.fireEvent(new ExceptionThrownEvent(exception));
-                                                                 console.print(exception.getMessage());
-                                                             }
-                                                         }
-                                                     });
+                              @Override
+                              protected void onFailure(Throwable exception) {
+                                  statusHandler.requestError(projectId, exception);
+                                  setBuildInProgress(false);
+                                  view.stopAnimation();
+                                  if (exception instanceof ServerException && exception.getMessage() != null) {
+                                      console.print(exception.getMessage());
+                                  } else {
+                                      eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                                      console.print(exception.getMessage());
+                                  }
+                              }
+                          });
         } catch (RequestException e) {
             setBuildInProgress(false);
             view.stopAnimation();
-            // TODO IDEX-57
-            // Research: is it good solution?
-            //         IDE.fireEvent(new OutputEvent(e.getMessage(), Type.ERROR));
             console.print(e.getMessage());
         }
     }
@@ -213,7 +246,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
      *         id of the build job to check status
      */
     private void startCheckingStatus(String buildId) {
-        // TODO IDEX-57
+        // TODO need to fix it after port websocket support
         // Problem with using Websocket
         //      try
         //      {
@@ -232,53 +265,49 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
         statusHandler.requestInProgress(projectId);
 
         try {
-            BuilderClientService.getInstance().buildAndPublish(projectId, resourceProvider.getVfsId(), project.getName(),
-                                                               (String)project.getPropertyValue(ProjectDescription.PROPERTY_PRIMARY_NATURE),
-                                                               new AsyncRequestCallback<StringBuilder>(
-                                                                       new StringUnmarshaller(new StringBuilder())) {
-                                                                   @Override
-                                                                   protected void onSuccess(StringBuilder result) {
-                                                                       buildID = result.substring(result.lastIndexOf("/") + 1);
-                                                                       setBuildInProgress(true);
-                                                                       showBuildMessage(
-                                                                               "Building project <b>" + project.getPath().substring(1) +
-                                                                               "</b>");
-                                                                       //                  display.startAnimation();
-                                                                       previousStatus = null;
-                                                                       refreshBuildStatusTimer.schedule(delay);
-                                                                   }
+            StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+            service.buildAndPublish(projectId, resourceProvider.getVfsId(), project.getName(),
+                                    (String)project.getPropertyValue(ProjectDescription.PROPERTY_PRIMARY_NATURE),
+                                    new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+                                        @Override
+                                        protected void onSuccess(StringBuilder result) {
+                                            buildID = result.substring(result.lastIndexOf("/") + 1);
+                                            setBuildInProgress(true);
+                                            showBuildMessage(
+                                                    "Building project <b>" + project.getPath().substring(1) +
+                                                    "</b>");
+                                            view.startAnimation();
+                                            previousStatus = null;
+                                            refreshBuildStatusTimer.schedule(delay);
+                                        }
 
-                                                                   @Override
-                                                                   protected void onFailure(Throwable exception) {
-                                                                       statusHandler.requestError(projectId, exception);
-                                                                       setBuildInProgress(false);
-                                                                       view.stopAnimation();
-                                                                       if (exception instanceof ServerException &&
-                                                                           exception.getMessage() != null) {
-                                                                           // TODO IDEX-57
-                                                                           // Research: is it good solution?
-                                                                           //                     IDE.fireEvent(new OutputEvent(exception
-                                                                           // .getMessage(), Type.INFO));
-                                                                           console.print(exception.getMessage());
-                                                                       } else {
-                                                                           // TODO IDEX-57
-                                                                           // Research: is it good solution?
-                                                                           //                     IDE.fireEvent(new ExceptionThrownEvent
-                                                                           // (exception));
-                                                                           console.print(exception.getMessage());
-                                                                       }
-                                                                   }
-                                                               });
+                                        @Override
+                                        protected void onFailure(Throwable exception) {
+                                            statusHandler.requestError(projectId, exception);
+                                            setBuildInProgress(false);
+                                            view.stopAnimation();
+                                            if (exception instanceof ServerException &&
+                                                exception.getMessage() != null) {
+                                                console.print(exception.getMessage());
+                                            } else {
+                                                eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                                                console.print(exception.getMessage());
+                                            }
+                                        }
+                                    });
         } catch (RequestException e) {
             setBuildInProgress(false);
             view.stopAnimation();
-            // TODO IDEX-57
-            // Research: is it good solution?
-            //         IDE.fireEvent(new OutputEvent(e.getMessage(), Type.INFO));
             console.print(e.getMessage());
         }
     }
 
+    /**
+     * Builds application if it needs.
+     *
+     * @param force
+     *         <code>true</code> to force build, <code>false</code> to not force build
+     */
     private void buildApplicationIfNeed(boolean force) {
         //if isPublish true start build & publish process any way
         if (publishAfterBuild) {
@@ -315,6 +344,13 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
         });
     }
 
+    /**
+     * Checks if the project is changed after last build.
+     *
+     * @param item
+     *         current project
+     * @return <code>true</code> if the project is changed, and <code>true</code> otherwise.
+     */
     private boolean isProjectChangedAfterLastBuild(Project item) {
         long buildTime = 0;
         long lastUpdateTime = 0;
@@ -330,12 +366,18 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
         return buildTime > lastUpdateTime;
     }
 
+    /**
+     * Checks download url.
+     *
+     * @param url
+     *         download url
+     */
     private void checkDownloadUrl(final String url) {
         try {
-            BuilderClientService.getInstance().checkArtifactUrl(url, new AsyncRequestCallback<Object>() {
+            service.checkArtifactUrl(url, new AsyncRequestCallback<Object>() {
                 @Override
                 protected void onSuccess(Object result) {
-                    BuildStatus buildStatus = BuilderExtension.AUTO_BEAN_FACTORY.buildStatus().as();
+                    BuildStatus buildStatus = autoBeanFactory.buildStatus().as();
                     buildStatus.setStatus(BuildStatus.Status.SUCCESSFUL);
                     buildStatus.setDownloadUrl(url);
                     eventBus.fireEvent(new ProjectBuiltEvent(buildStatus));
@@ -352,6 +394,11 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
         }
     }
 
+    /**
+     * Sets build in progress.
+     *
+     * @param buildInProgress
+     */
     private void setBuildInProgress(boolean buildInProgress) {
         isBuildInProgress = buildInProgress;
         view.setClearOutputButtonEnabled(!buildInProgress);
@@ -362,9 +409,9 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
         @Override
         public void run() {
             try {
-                AutoBean<BuildStatus> buildStatus = BuilderExtension.AUTO_BEAN_FACTORY.create(BuildStatus.class);
+                AutoBean<BuildStatus> buildStatus = autoBeanFactory.create(BuildStatus.class);
                 AutoBeanUnmarshaller<BuildStatus> unmarshaller = new AutoBeanUnmarshaller<BuildStatus>(buildStatus);
-                BuilderClientService.getInstance().status(buildID, new AsyncRequestCallback<BuildStatus>(unmarshaller) {
+                service.status(buildID, new AsyncRequestCallback<BuildStatus>(unmarshaller) {
                     @Override
                     protected void onSuccess(BuildStatus response) {
                         updateBuildStatus(response);
@@ -379,18 +426,14 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
                     protected void onFailure(Throwable exception) {
                         setBuildInProgress(false);
                         view.stopAnimation();
-                        // TODO IDEX-57
-                        // Research: is it good solution?
-                        //                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+                        eventBus.fireEvent(new ExceptionThrownEvent(exception));
                         console.print(exception.getMessage());
                     }
                 });
             } catch (RequestException e) {
                 setBuildInProgress(false);
                 view.stopAnimation();
-                // TODO IDEX-57
-                // Research: is it good solution?
-                //            IDE.fireEvent(new ExceptionThrownEvent(e));
+                eventBus.fireEvent(new ExceptionThrownEvent(e));
                 console.print(e.getMessage());
             }
         }
@@ -424,7 +467,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
      *         status of build job
      */
     private void afterBuildFinished(BuildStatus buildStatus) {
-        // TODO IDEX-57
+        // TODO need to fix it after port websocket support
         // Problem with using Websocket
         //      try
         //      {
@@ -443,10 +486,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
                                                                   .append("</b>.\r\nResult: ").append(buildStatus.getStatus());
 
         if (buildStatus.getStatus() == Status.SUCCESSFUL) {
-            // TODO IDEX-57
-            // Research: is it good solution?
-            //         IDE.fireEvent(new OutputEvent(BUILD_SUCCESS, Type.INFO));
-            console.print(BUILD_SUCCESS);
+            console.print(constant.buildSuccess());
 
             statusHandler.requestFinished(projectId);
             if (projectId != null) {
@@ -457,10 +497,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
                 getPublishArtifactResult();
             }
         } else if (buildStatus.getStatus() == Status.FAILED) {
-            // TODO IDEX-57
-            // Research: is it good solution?
-            //         IDE.fireEvent(new OutputEvent(BUILD_FAILED, Type.ERROR));
-            console.print(BUILD_FAILED);
+            console.print(constant.buildFailed());
 
             String errorMessage = buildStatus.getError();
             String exceptionMessage = "Building of project failed";
@@ -474,59 +511,46 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
         }
         showBuildMessage(message.toString());
         view.stopAnimation();
-        // TODO IDEX-57
-        // Research: is it good solution?
-        //      IDE.fireEvent(new ProjectBuiltEvent(buildStatus));
         eventBus.fireEvent(new ProjectBuiltEvent(buildStatus));
     }
 
     /** Getting information about publish artifact process for its only suggest dependency */
     private void getPublishArtifactResult() {
         try {
-            StringBuilder builder = new StringBuilder();
-            BuilderClientService.getInstance().result(buildID,
-                                                      new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(builder)) {
-                                                          @Override
-                                                          protected void onSuccess(StringBuilder result) {
-                                                              JSONObject json = JSONParser.parseStrict((result.toString())).isObject();
-                                                              if (json.containsKey("artifactDownloadUrl")) {
-                                                                  String artifactUrl =
-                                                                          json.get("artifactDownloadUrl").isString().stringValue();
-                                                                  // TODO IDEX-57
-                                                                  // Research: is it good solution?
-                                                                  //                     IDE.fireEvent(new OutputEvent("You can download
-                                                                  // your artifact :<a href=" + artifactUrl
-                                                                  //                        + " target=\"_blank\">" + artifactUrl +
-                                                                  // "</a>", Type.INFO));
-                                                                  console.print("You can download your artifact :<a href=" + artifactUrl +
-                                                                                " target=\"_blank\">"
-                                                                                + artifactUrl + "</a>");
-                                                              }
-                                                              if (json.containsKey("suggestDependency")) {
-                                                                  String dep = json.get("suggestDependency").isString().stringValue();
-                                                                  //format XML
-                                                                  String res = formatDepXml(dep);
-                                                                  // TODO IDEX-57
-                                                                  // Research: is it good solution?
-                                                                  //                     IDE.fireEvent(new OutputEvent("Dependency for
-                                                                  // your pom:<br><span style=\"color:black;\">" + res
-                                                                  //                        + "</span>", Type.INFO));
-                                                                  console.print(
-                                                                          "Dependency for your pom:<br><span style=\"color:black;\">" +
-                                                                          res + "</span>");
-                                                              }
-                                                          }
+            StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+            service.result(buildID, new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+                @Override
+                protected void onSuccess(StringBuilder result) {
+                    JSONObject json = JSONParser.parseStrict((result.toString())).isObject();
+                    if (json.containsKey("artifactDownloadUrl")) {
+                        String artifactUrl = json.get("artifactDownloadUrl").isString().stringValue();
+                        console.print(
+                                "You can download your artifact :<a href=" + artifactUrl + " target=\"_blank\">" + artifactUrl + "</a>");
+                    }
+                    if (json.containsKey("suggestDependency")) {
+                        String dep = json.get("suggestDependency").isString().stringValue();
+                        //format XML
+                        String res = formatDepXml(dep);
+                        console.print("Dependency for your pom:<br><span style=\"color:black;\">" + res + "</span>");
+                    }
+                }
 
-                                                          @Override
-                                                          protected void onFailure(Throwable exception) {
-                                                              // nothing to do
-                                                          }
-                                                      });
+                @Override
+                protected void onFailure(Throwable exception) {
+                    // nothing to do
+                }
+            });
         } catch (RequestException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Writes build info.
+     *
+     * @param buildStatus
+     *         build status
+     */
     private void writeBuildInfo(BuildStatus buildStatus) {
         project.getProperties().add(new Property(LAST_SUCCESS_BUILD, buildStatus.getTime()));
         project.getProperties().add(new Property(ARTIFACT_DOWNLOAD_URL, buildStatus.getDownloadUrl()));
@@ -534,7 +558,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
         project.flushProjectProperties(new AsyncCallback<Project>() {
             @Override
             public void onSuccess(Project result) {
-                //Nothing todo
+                //Nothing to do
             }
 
             @Override
@@ -544,6 +568,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
         });
     }
 
+    /** Checks if project is uder watching. */
     private void checkIfProjectIsUnderWatching() {
         project.refreshProperties(new AsyncCallback<Project>() {
             @Override
@@ -564,8 +589,11 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
         });
     }
 
+    /**
+     *
+     */
     private void startWatchingProjectChanges() {
-        // TODO IDEX-57
+        // TODO IDEX-62
         // We don't have vfs module. Need to create or use some analog method
         //      try
         //      {
@@ -597,57 +625,29 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
      *         message for output
      */
     private void showBuildMessage(String message) {
-        // TODO IDEX-57
-        // Review and change to new architecture
-        //      if (display != null)
-        //      {
-        //         if (isViewClosed)
-        //         {
-        //            IDE.getInstance().openView(display.asView());
-        //            isViewClosed = false;
-        //         }
-        //         else
-        //         {
-        //            display.asView().activate();
-        //         }
-        //      }
-        //      else
-        //      {
-        //         display = GWT.create(Display.class);
-        //         IDE.getInstance().openView(display.asView());
-        //         bindDisplay();
-        //         isViewClosed = false;
-        //      }
-        //
 
-        // TODO IDEX-57
-        // View does nothing
+        if (isViewClosed) {
+            perspectivePresenter.openPart(this, PerspectivePresenter.PartStackType.INFORMATION);
+            isViewClosed = false;
+        }
+
+        view.setClearOutputButtonEnabled(true);
         view.showMessageInOutput(message);
-        // This was added because need to see some message
-        console.print(message);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onClearOutputClicked() {
         view.clearOutput();
+        view.setClearOutputButtonEnabled(false);
     }
 
+    /**
+     * Checks if some project is opened/selected.
+     *
+     * @return <code>true</code> if some project is opened, and <code>true</code> otherwise.
+     */
     private boolean makeSelectionCheck() {
-        // TODO IDEX-57
-        // Check: does this snippent need?
-        //      if (selectedItems == null || selectedItems.size() <= 0)
-        //      {
-        //         Dialogs.getInstance().showInfo(BuilderExtension.LOCALIZATION_CONSTANT.selectedItemsFail());
-        //         return false;
-        //      }
-
-        //      if (!(selectedItems.get(0) instanceof ItemContext) || ((ItemContext)selectedItems.get(0)).getProject() == null)
-        //      {
-        //         Dialogs.getInstance().showInfo("Project is not selected.");
-        //         return false;
-        //      }
-
         if (resourceProvider.getActiveProject() == null) {
             Window.alert("Project is not selected.");
             return false;
@@ -657,8 +657,10 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
     }
 
     /**
+     * Formats dependency xml.
+     *
      * @param dep
-     * @return
+     * @return formated xml
      */
     private String formatDepXml(String dep) {
 
@@ -672,35 +674,30 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
         return formatStr.replaceFirst("&gt;&lt;", "&gt;<br>&lt;");
     }
 
-    /** Handler for processing Maven build status which is received over WebSocket connection. */
-    private SubscriptionHandler<BuildStatus> buildStatusHandler = new SubscriptionHandler<BuildStatus>(
-            new AutoBeanUnmarshallerWS<BuildStatus>(BuilderExtension.AUTO_BEAN_FACTORY.create(BuildStatus.class))) {
-        @Override
-        protected void onSuccess(BuildStatus buildStatus) {
-            updateBuildStatus(buildStatus);
-        }
+    /** {@inheritDoc} */
+    @Override
+    public String getTitle() {
+        return "Output";
+    }
 
-        @Override
-        protected void onFailure(Throwable exception) {
-            // TODO IDEX-57
-            // Problem with using Websocket
-            //         try
-            //         {
-            //            IDE.messageBus().unsubscribe(buildStatusChannel, this);
-            //         }
-            //         catch (WebSocketException e)
-            //         {
-            //            // nothing to do
-            //         }
+    /** {@inheritDoc} */
+    @Override
+    public ImageResource getTitleImage() {
+        return resources.build();
+    }
 
-            setBuildInProgress(false);
-            view.stopAnimation();
-            // TODO IDEX-57
-            // Research: is it good solution?
-            //         IDE.fireEvent(new ExceptionThrownEvent(exception));
-            console.print(exception.getMessage());
-        }
-    };
+    /** {@inheritDoc} */
+    @Override
+    public String getTitleToolTip() {
+        return "Displays maven output";
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void go(AcceptsOneWidget container) {
+        view.setClearOutputButtonEnabled(false);
+        container.setWidget(view);
+    }
 
     /** Deserializer for responses body. */
     private class StringUnmarshaller implements Unmarshallable<StringBuilder> {
