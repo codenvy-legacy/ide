@@ -430,9 +430,7 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
     private void onRepositoryCloned(final RepoInfo gitRepositoryInfo, final FolderModel folder) {
         IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(gitRepositoryInfo.getRemoteUri()),
                                       OutputMessage.Type.GIT));
-        List<Property> properties = new ArrayList<Property>();
-        properties.add(new PropertyImpl(GitExtension.GIT_REPOSITORY_PROP, "true"));
-        IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId(), null, properties));
+        IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId(), null));
 
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override

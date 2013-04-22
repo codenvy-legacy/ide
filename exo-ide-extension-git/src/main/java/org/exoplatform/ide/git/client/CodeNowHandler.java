@@ -266,7 +266,6 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
 
         List<Property> properties = new ArrayList<Property>();
         properties.add(new PropertyImpl("codenow", repoInfo.getRemoteUri()));
-        properties.add(new PropertyImpl(GitExtension.GIT_REPOSITORY_PROP, "true"));
 
         IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId(), prjType, properties));
     }

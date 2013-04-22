@@ -64,8 +64,10 @@ import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
@@ -190,6 +192,7 @@ public class GitService {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.clone(request);
+            setGitRepositoryProp();
             return new RepoInfo(request.getRemoteUri());
         } finally {
             long end = System.currentTimeMillis();
@@ -197,6 +200,18 @@ public class GitService {
             LOG.info("Repository clone from '" + request.getRemoteUri() + "' to '" + request.getWorkingDir()
                      + "' finished. Process took " + seconds + " seconds (" + seconds / 60 + " minutes)");
             gitConnection.close();
+        }
+    }
+
+    private void setGitRepositoryProp() throws VirtualFileSystemException {
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+        Item project = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+        String value = project.getPropertyValue("isGitRepository");
+        if (value == null || !value.equals("true")) {
+            Property isGitRepositoryProperty = new PropertyImpl("isGitRepository", "true");
+            List<Property> propertiesList = new ArrayList<Property>(1);
+            propertiesList.add(isGitRepositoryProperty);
+            vfs.updateItem(projectId, propertiesList, null);
         }
     }
 
@@ -248,6 +263,7 @@ public class GitService {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.init(request);
+            setGitRepositoryProp();
         } finally {
             gitConnection.close();
         }
