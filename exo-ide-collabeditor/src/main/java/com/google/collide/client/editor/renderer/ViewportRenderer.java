@@ -14,8 +14,6 @@
 
 package com.google.collide.client.editor.renderer;
 
-import elemental.dom.NodeList;
-
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 
