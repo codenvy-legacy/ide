@@ -103,7 +103,11 @@ public class VirtualFileSystemAdapter {
         return virtualFileSystem.getContent(id);
     }
 
-    public ContentStream getContent(String path, String versionId) throws VirtualFileSystemException {
+    public ContentStream getContentByPath(String path) throws VirtualFileSystemException {
+        return getContentByPath(path, null);
+    }
+
+    public ContentStream getContentByPath(String path, String versionId) throws VirtualFileSystemException {
         return virtualFileSystem.getContent(path, versionId);
     }
 
@@ -113,6 +117,10 @@ public class VirtualFileSystemAdapter {
 
     public Item getItem(String id) throws VirtualFileSystemException {
         return virtualFileSystem.getItem(id, PropertyFilter.ALL_FILTER);
+    }
+
+    public Item getItemByPath(String path) throws VirtualFileSystemException {
+        return getItemByPath(path, null);
     }
 
     public Item getItemByPath(String path, String versionId) throws VirtualFileSystemException {
@@ -190,6 +198,16 @@ public class VirtualFileSystemAdapter {
 
     public void updateContent(String id, String mediaType, InputStream newcontent, String lockToken) throws VirtualFileSystemException {
         virtualFileSystem.updateContent(id, mediaType == null ? null : MediaType.valueOf(mediaType), newcontent, lockToken);
+    }
+
+    public void updateContentByPath(String path, String mediaType, InputStream newcontent) throws VirtualFileSystemException {
+        updateContentByPath(path, mediaType, newcontent, null);
+    }
+
+    public void updateContentByPath(String path, String mediaType, InputStream newcontent, String lockToken)
+            throws VirtualFileSystemException {
+        final Item item = getItemByPath(path);
+        updateContent(item.getId(), mediaType, newcontent, lockToken);
     }
 
     public Item updateItem(String id, List<Property> properties) throws VirtualFileSystemException {
