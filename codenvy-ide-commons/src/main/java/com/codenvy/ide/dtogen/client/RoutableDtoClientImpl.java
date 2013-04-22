@@ -33,7 +33,7 @@ public abstract class RoutableDtoClientImpl extends Jso implements RoutableDto {
 
     /** @return the type of the JsonMessage so the client knows how to route it. */
     public final native int getType() /*-{
-        return this[@org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl::TYPE_FIELD] ||
-            @org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl::NON_ROUTABLE_TYPE;
+        return this[@com.codenvy.ide.dtogen.client.RoutableDtoClientImpl::TYPE_FIELD] ||
+            @com.codenvy.ide.dtogen.client.RoutableDtoClientImpl::NON_ROUTABLE_TYPE;
     }-*/;
 }

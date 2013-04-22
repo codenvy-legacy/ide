@@ -20,7 +20,9 @@ package com.codenvy.ide.menu;
 
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 import com.codenvy.ide.api.ui.menu.Selectable;
+import com.codenvy.ide.util.ImageResourceUtils;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
@@ -90,24 +92,26 @@ public class Item extends MenuItem implements Selectable {
     private static String getItem(MenuPath path, String hotKey, ImageResource iconResource, ExtendedCommand command,
                                   ConteinerType type, MenuResources resources) {
         int depth = path.getSize() - 1;
-        Image icon = null;
 
+            String image = null;
         if (iconResource != null) {
-            icon = new Image(iconResource);
-            icon.addStyleName(resources.menuCSS().itemIcon());
+            image = AbstractImagePrototype.create(iconResource).getHTML();
+//            icon = new Image(iconResource);
+//            icon.addStyleName(resources.menuCSS().itemIcon());
         }
 
         String title = path.getPathElementAt(depth);
         String itemContent;
         if (type.equals(ConteinerType.MAIN_MENU)) {
+
             itemContent =
-                    (depth != 0 && icon != null ? icon.toString() : "<div class=\"" + resources.menuCSS().itemIcon() + "\"></div>")
+                    (depth != 0 && image != null ? image : "<div class=\"" + resources.menuCSS().itemIcon() + "\"></div>")
                     + "<span class=\"" + resources.menuCSS().itemTitle() + "\">" + title + "</span>"
                     + (depth != 0 && hotKey != null ? "<span class=\"" + resources.menuCSS().hotKey() + "\">" + hotKey
                                                       + "</span>" : "");
         } else {
             itemContent =
-                    (icon != null ? icon.toString() : "<div class=\"" + resources.menuCSS().itemIcon() + "\"></div>")
+                    (image != null ? image : "<div class=\"" + resources.menuCSS().itemIcon() + "\"></div>")
                     + (depth != 1 ? "<span class=\"" + resources.menuCSS().itemTitle() + "\">" + title + "</span>" : "")
                     + (depth != 1 && hotKey != null ? "<span class=\"" + resources.menuCSS().hotKey() + "\">" + hotKey
                                                       + "</span>" : "");
