@@ -65,21 +65,22 @@ public class OAuthLoginPresenter implements OAuthLoginHandler, ViewClosedHandler
 
             @Override
             public void onClick(ClickEvent event) {
-                String authUrl = Utils.getAuthorizationContext()//
-                                 + "/ide/oauth/authenticate?oauth_provider=github"//
-                                 + "&scope=user" + "&userId=" + IDE.userId +
-                                 "&scope=repo&redirect_after_login="//
+                String authUrl = Utils.getAuthorizationContext()
+                                 + "/ide/oauth/authenticate?oauth_provider=github"
+                                 + "&scope=user&userId=" + IDE.userId
+                                 + "&scope=repo&redirect_after_login="
                                  + Utils.getAuthorizationPageURL();
-                JsPopUpOAuthWindow authWindow =
-                        new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500);
+                JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500);
                 authWindow.loginWithOAuth();
                 IDE.getInstance().closeView(display.asView().getId());
             }
         });
     }
 
-    /** @see org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginHandler#onOAuthLogin(org.exoplatform.ide.extension.samples
-     * .client.oauth.OAuthLoginEvent) */
+    /**
+     * @see org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginHandler#onOAuthLogin(org.exoplatform.ide.extension.samples
+     *      .client.oauth.OAuthLoginEvent)
+     */
     @Override
     public void onOAuthLogin(OAuthLoginEvent event) {
         if (display == null) {
@@ -89,8 +90,10 @@ public class OAuthLoginPresenter implements OAuthLoginHandler, ViewClosedHandler
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     *      .event.ViewClosedEvent)
+     */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {

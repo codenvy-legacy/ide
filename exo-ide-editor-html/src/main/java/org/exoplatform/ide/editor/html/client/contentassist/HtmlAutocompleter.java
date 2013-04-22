@@ -14,14 +14,27 @@
 
 package org.exoplatform.ide.editor.html.client.contentassist;
 
-import com.google.collide.client.code.autocomplete.*;
+import com.codenvy.ide.client.util.Preconditions;
+import com.google.collide.client.code.autocomplete.AutocompleteProposal;
+import com.google.collide.client.code.autocomplete.AutocompleteProposals;
 import com.google.collide.client.code.autocomplete.AutocompleteProposals.ProposalWithContext;
+import com.google.collide.client.code.autocomplete.AutocompleteResult;
+import com.google.collide.client.code.autocomplete.DefaultAutocompleteResult;
+import com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter;
+import com.google.collide.client.code.autocomplete.SignalEventEssence;
 import com.google.collide.client.code.autocomplete.integration.TaggableLineUtil;
 import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.documentparser.ParseResult;
 import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.client.util.collections.StringMultiset;
-import com.google.collide.codemirror2.*;
+import com.google.collide.codemirror2.CodeMirror2;
+import com.google.collide.codemirror2.HtmlState;
+import com.google.collide.codemirror2.SyntaxType;
+import com.google.collide.codemirror2.Token;
+import com.google.collide.codemirror2.TokenType;
+import com.google.collide.codemirror2.TokenUtil;
+import com.google.collide.codemirror2.XmlContext;
+import com.google.collide.codemirror2.XmlState;
 import com.google.collide.shared.Pair;
 import com.google.collide.shared.TaggableLine;
 import com.google.collide.shared.document.Line;
@@ -33,7 +46,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 
 import org.exoplatform.ide.editor.css.client.contentassist.CssAutocompleter;
 import org.exoplatform.ide.editor.html.client.contentassist.HtmlAutocompleteProposals.HtmlProposalWithContext;
-import org.exoplatform.ide.editor.javascript.client.codemirror.JavaScriptAutocompleter;
+import org.exoplatform.ide.editor.javascript.client.contentassist.JavaScriptAutocompleter;
 import org.exoplatform.ide.json.shared.JsonArray;
 
 //import javax.annotation.Nonnull;
@@ -53,7 +66,6 @@ public class HtmlAutocompleter extends LanguageSpecificAutocompleter {
 
     private static final HtmlTagsAndAttributes htmlAttributes = HtmlTagsAndAttributes.getInstance();
 
-    //  @VisibleForTesting
     static final AnchorType MODE_ANCHOR_TYPE =
             AnchorType.create(HtmlAutocompleter.class, "mode");
 
@@ -190,8 +202,7 @@ public class HtmlAutocompleter extends LanguageSpecificAutocompleter {
     }
 
     @Override
-    protected void attach(
-            DocumentParser parser/*, AutocompleteController controller, PathUtil filePath*/) {
+    public void attach(DocumentParser parser/*, AutocompleteController controller, PathUtil filePath*/) {
         super.attach(parser/*, controller, filePath*/);
         if (cssAutocompleter != null) {
             cssAutocompleter.attach(parser/*, controller, filePath*/);
@@ -431,7 +442,6 @@ public class HtmlAutocompleter extends LanguageSpecificAutocompleter {
         putModeAnchors(line, modes);
     }
 
-    //  @VisibleForTesting
     String getModeForColumn(Line line, int column) {
         DocumentParser parser = getParser();
         String mode = parser.getInitialMode(line);
@@ -449,10 +459,9 @@ public class HtmlAutocompleter extends LanguageSpecificAutocompleter {
         return mode;
     }
 
-    //  @VisibleForTesting
     void putModeAnchors(/*@Nonnull */TaggableLine currentLine,
       /*@Nonnull */JsonArray<Pair<Integer, String>> modes) {
-//    Preconditions.checkState(currentLine instanceof Line);
+        Preconditions.checkState(currentLine instanceof Line, "");
         if (!(currentLine instanceof Line)) {
             throw new IllegalStateException();
         }
@@ -460,7 +469,7 @@ public class HtmlAutocompleter extends LanguageSpecificAutocompleter {
         // TaggableLine interface (for decoupling).
         Line line = (Line)currentLine;
         AnchorManager anchorManager = line.getDocument().getAnchorManager();
-//    Preconditions.checkNotNull(anchorManager);
+        Preconditions.checkNotNull(anchorManager, "");
         if (anchorManager == null) {
             throw new NullPointerException();
         }

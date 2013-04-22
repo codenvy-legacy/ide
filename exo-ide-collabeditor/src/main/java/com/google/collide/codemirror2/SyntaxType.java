@@ -31,7 +31,8 @@ public enum SyntaxType {
     JAVA("clike", "text/x-java", State.class, new BasicTokenFactory(), false),
     JS("javascript", "text/javascript", JsState.class, new BasicTokenFactory(), true),
     NONE("unknown", "text/plain", State.class, new BasicTokenFactory(), true),
-    PHP("php", "text/x-php", State.class, new BasicTokenFactory(), false),
+//    PHP("php", "text/x-php", State.class, new BasicTokenFactory(), false),
+    PHP("php", "application/x-httpd-php", State.class, new BasicTokenFactory(), false),
     PY("python", "text/x-python", PyState.class, new PyTokenFactory(), false),
     SVG("xml", "application/xml", State.class, new BasicTokenFactory(), true),
     XML("xml", "application/xml", State.class, new BasicTokenFactory(), true),
@@ -163,6 +164,8 @@ public enum SyntaxType {
         tmp.put(MimeType.APPLICATION_X_JAVASCRIPT, SyntaxType.JS);
         tmp.put(MimeType.TEXT_JAVASCRIPT, SyntaxType.JS);
         tmp.put(MimeType.APPLICATION_PHP, SyntaxType.PHP);
+        tmp.put(MimeType.APPLICATION_X_PHP, SyntaxType.PHP);
+        tmp.put(MimeType.APPLICATION_X_HTTPD_PHP, SyntaxType.PHP);
         tmp.put(MimeType.TEXT_X_PYTHON, SyntaxType.PY);
         tmp.put(MimeType.TEXT_XML, SyntaxType.XML);
         tmp.put(MimeType.TEXT_YAML, SyntaxType.YAML);

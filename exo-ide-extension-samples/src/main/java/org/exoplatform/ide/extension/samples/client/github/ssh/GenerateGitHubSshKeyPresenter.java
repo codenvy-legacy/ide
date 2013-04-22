@@ -26,6 +26,8 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.api.event.OAuthLoginFinishedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.OAuthLoginFinishedHandler;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
@@ -41,10 +43,10 @@ import org.exoplatform.ide.git.client.github.GitHubClientService;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, GenerateGitHubKeyHandler {
+public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, GenerateGitHubKeyHandler, OAuthLoginFinishedHandler {
     private UserInfo userInfo;
 
-    EmptyLoader loader;
+    EmptyLoader      loader;
 
     public GenerateGitHubSshKeyPresenter() {
         IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
@@ -77,7 +79,7 @@ public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, G
                 @Override
                 protected void onFailure(Throwable exception) {
                     loader.hide();
-                    IDE.fireEvent(new OAuthLoginEvent());
+                    oAuthLoginStart();
                 }
             };
 
@@ -91,33 +93,43 @@ public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, G
 
     private void getToken(String user) {
         try {
-            GitHubClientService.getInstance().getUserToken(user,
-                                                           new AsyncRequestCallback<StringBuilder>(
-                                                                   new StringUnmarshaller(new StringBuilder())) {
+            GitHubClientService.getInstance()
+                               .getUserToken(user,
+                                             new AsyncRequestCallback<StringBuilder>(
+                                                                                     new StringUnmarshaller(new StringBuilder())) {
 
-                                                               @Override
-                                                               protected void onSuccess(StringBuilder result) {
-                                                                   if (result == null || result.toString().isEmpty()) {
-                                                                       loader.hide();
-                                                                       processUnauthorized();
-                                                                   } else {
-                                                                       generateGitHubKey();
-                                                                   }
-                                                               }
+                                                 @Override
+                                                 protected void onSuccess(StringBuilder result) {
+                                                     if (result == null || result.toString().isEmpty()) {
+                                                         loader.hide();
+                                                         oAuthLoginStart();
+                                                     } else {
+                                                         generateGitHubKey();
+                                                     }
+                                                 }
 
-                                                               @Override
-                                                               protected void onFailure(Throwable exception) {
-                                                                   loader.hide();
-                                                                   processUnauthorized();
-                                                               }
-                                                           });
+                                                 @Override
+                                                 protected void onFailure(Throwable exception) {
+                                                     loader.hide();
+                                                     oAuthLoginStart();
+                                                 }
+                                             });
         } catch (RequestException e) {
             loader.hide();
             IDE.fireEvent(new OAuthLoginEvent());
         }
     }
 
-    private void processUnauthorized() {
+    public void oAuthLoginStart() {
+        IDE.addHandler(OAuthLoginFinishedEvent.TYPE, this);
         IDE.fireEvent(new OAuthLoginEvent());
+    }
+
+    @Override
+    public void onOAuthLoginFinished(OAuthLoginFinishedEvent event) {
+        if (event.getStatus() == 2) {
+            generateGitHubKey();
+        }
+        IDE.removeHandler(OAuthLoginFinishedEvent.TYPE, this);
     }
 }

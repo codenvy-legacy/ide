@@ -47,16 +47,21 @@ public class UserAgentRuntimeProperties {
 
     private final boolean isChrome;
 
+    private final boolean isCrOS;
+
     public UserAgentRuntimeProperties(String userAgent) {
         this.userAgent = userAgent;
         this.version = calculateVersion(userAgent);
         this.isMac = calculateIsMac(userAgent);
         this.isWin = calculateIsWin(userAgent);
         this.isLinux = calculateIsLinux(userAgent);
+        this.isCrOS = calculateIsCrOS(userAgent);
         this.isIe7 = calculateIe7(userAgent);
         this.isIe8 = calculateIe8(userAgent);
         this.isChrome = calculateIsChrome(userAgent);
     }
+
+ 
 
     public String getUserAgent() {
         return userAgent;
@@ -72,6 +77,10 @@ public class UserAgentRuntimeProperties {
 
     public boolean isLinux() {
         return isLinux;
+    }
+    
+    public boolean isCrOS() {
+        return isCrOS;
     }
 
     public boolean isIe7() {
@@ -132,6 +141,10 @@ public class UserAgentRuntimeProperties {
 
     private static boolean calculateIsLinux(String userAgent) {
         return userAgent.indexOf("Linux") != -1;
+    }
+    
+    private boolean calculateIsCrOS(String userAgent) {
+        return userAgent.indexOf("CrOS") != -1;
     }
 
     private static boolean calculateIsChrome(String userAgent) {
