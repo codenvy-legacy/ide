@@ -70,11 +70,10 @@ class DocumentMutatorImpl implements DocumentMutator {
             }
 
             if (wasNewlineCharDeleted) {
-        /*
-         * Must join the next line with the current line. Setting
-         * deleteCountForLine = 0 will have a nice effect of naturally joining
-         * the line.
-         */
+                /*
+                 * Must join the next line with the current line. Setting deleteCountForLine = 0 will have a nice effect of naturally
+                 * joining the line.
+                 */
                 iterateToNextLine();
                 column = 0;
                 deleteCountForCurLine = 0;
