@@ -30,9 +30,11 @@ import com.google.gwt.user.client.ui.HasValue;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.project.api.TreeRefreshedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
@@ -214,6 +216,9 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
         type = (type == null && display.getKeepMode().getValue()) ? ResetType.KEEP : type;
         type = (type == null && display.getMergeMode().getValue()) ? ResetType.MERGE : type;
 
+        // Needed for onSuccess callback to detect which type of event to throw
+        final ResetType resetType = type;
+
         String projectId = getSelectedProject().getId();
 
         try {
@@ -222,16 +227,20 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
 
                                                      @Override
                                                      protected void onSuccess(String result) {
-                                                         IDE.fireEvent(
-                                                            new OutputEvent(GitExtension.MESSAGES.resetSuccessfully(), Type.GIT));
+                                                         IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.resetSuccessfully(), Type.GIT));
+                                                         if (ResetType.HARD.equals(resetType)) {
+                                                             IDE.fireEvent(new RefreshBrowserEvent());
+                                                         }
+                                                         else {
+                                                             IDE.fireEvent(new TreeRefreshedEvent(getSelectedProject()));
+                                                         }
                                                          IDE.getInstance().closeView(display.asView().getId());
                                                      }
 
                                                      @Override
                                                      protected void onFailure(Throwable exception) {
-                                                         String errorMessage =
-                                                                               (exception.getMessage() != null) ? exception.getMessage()
-                                                                                   : GitExtension.MESSAGES.resetFail();
+                                                         String errorMessage = (exception.getMessage() != null) ? exception.getMessage()
+                                                             : GitExtension.MESSAGES.resetFail();
                                                          IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
                                                      }
                                                  });

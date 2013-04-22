@@ -39,9 +39,9 @@ import org.exoplatform.ide.git.client.GitExtension;
  * @version $Id: Mar 30, 2011 9:25:02 AM anya $
  */
 public class AddToIndexView extends ViewImpl implements AddToIndexPresenter.Display {
-    public static final int     HEIGHT           = 120;
+    public static final int     HEIGHT           = 95;
 
-    public static final int     WIDTH            = 420;
+    public static final int     WIDTH            = 335;
 
     public static final String  ID               = "ideAddToIndexView";
 

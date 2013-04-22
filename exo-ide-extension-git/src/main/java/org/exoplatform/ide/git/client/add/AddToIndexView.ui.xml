@@ -39,13 +39,20 @@
 		.textCenter {
 			text-align: center;
 		}
+		
+		.cropped {
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+		​
 	</ui:style>
 
 	<f:Border margin="10" borderColor="transparent" styleName="{style.textCenter}">
-		<f:layer height="40px" bottom="50">
+		<f:layer height="40px" bottom="25">
 			<g:FlowPanel styleName="{style.center}">
 				<f:Label ui:field="messageField" isHTML="true"
-					addStyleNames="{style.textCenter}"></f:Label>
+					addStyleNames="{style.textCenter} {style.cropped}"></f:Label>
 			</g:FlowPanel>
 		</f:layer>
 		<f:layer height="22px" bottom="25">
