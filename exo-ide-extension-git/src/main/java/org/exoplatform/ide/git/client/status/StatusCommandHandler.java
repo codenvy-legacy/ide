@@ -27,8 +27,6 @@ import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconEvent;
-import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
@@ -47,7 +45,11 @@ import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Handler to process actions with displaying the status of the Git work tree.
@@ -55,8 +57,8 @@ import java.util.*;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 28, 2011 3:58:20 PM anya $
  */
-public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeStatusHandler, FolderRefreshedHandler,
-                                                      ProjectOpenedHandler, ProjectClosedHandler, FolderOpenedHandler {
+public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeStatusHandler, ProjectOpenedHandler, ProjectClosedHandler,
+                                                      FolderOpenedHandler {
     /**
      * Store the status of the working tree (changed, untracked files). Status will be checked once, only when expands project item in
      * Project Explorer.
@@ -67,30 +69,16 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
 
     public StatusCommandHandler() {
         IDE.addHandler(ShowWorkTreeStatusEvent.TYPE, this);
-        IDE.addHandler(FolderRefreshedEvent.TYPE, this);
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(FolderOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
     }
 
     /**
-     * @see org.exoplatform.ide.git.client.status.ShowWorkTreeStatusHandler#onShowWorkTreeStatus(org.exoplatform.ide.git.client.status
-     *      .ShowWorkTreeStatusEvent)
-     */
-    @Override
-    public void onShowWorkTreeStatus(ShowWorkTreeStatusEvent event) {
-        if (makeSelectionCheck()) {
-            getStatusText(getSelectedProject(), selectedItem);
-        }
-    }
-
-    /**
      * Get the status for Git work tree and display it on success.
-     * 
-     * @param item item in work tree
      */
     @SuppressWarnings("unchecked")
-    private void getStatusText(ProjectModel project, Item item) {
+    private void getStatusText(ProjectModel project) {
         if (project == null) {
             return;
         }
@@ -108,8 +96,7 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
                                                               String errorMessage =
                                                                                     (exception.getMessage() != null)
                                                                                         ? exception.getMessage()
-                                                                                        : GitExtension.MESSAGES
-                                                                                                               .statusFailed();
+                                                                                        : GitExtension.MESSAGES.statusFailed();
                                                               IDE.fireEvent(new OutputEvent(errorMessage, OutputMessage.Type.GIT));
                                                           }
                                                       });
@@ -122,16 +109,10 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
     /**
      * @see org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler#onFolderRefreshed(org.exoplatform.ide.client
      *      .framework.navigation.event.FolderRefreshedEvent)
+     * @Override public void onFolderRefreshed(FolderRefreshedEvent event) { FolderModel folder = (FolderModel)event.getFolder(); if
+     *           (folder.getChildren().getItems().isEmpty() || folder.getId() == null || folder.getId().isEmpty()) { return; }
+     *           getStatus(folder, true, new ArrayList<Item>()); }
      */
-    @Override
-    public void onFolderRefreshed(FolderRefreshedEvent event) {
-        FolderModel folder = (FolderModel)event.getFolder();
-        if (folder.getChildren().getItems().isEmpty() || folder.getId() == null || folder.getId().isEmpty()) {
-            return;
-        }
-
-        getStatus(folder, true, new ArrayList<Item>());
-    }
 
     /**
      * Get the files in different state of Git cycle and mark them in browser tree.
@@ -150,7 +131,9 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
             GitClientService.getInstance()
                             .status(vfs.getId(),
                                     openedProject.getId(),
-                                    new AsyncRequestCallback<Status>(new AutoBeanUnmarshaller<Status>(GitExtension.AUTO_BEAN_FACTORY.status())) {
+                                    new AsyncRequestCallback<Status>(
+                                                                     new AutoBeanUnmarshaller<Status>(
+                                                                                                      GitExtension.AUTO_BEAN_FACTORY.status())) {
                                         @Override
                                         protected void onSuccess(Status result) {
                                             workingTreeStatus = result;
@@ -246,6 +229,13 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
     @Override
     public void onProjectClosed(ProjectClosedEvent event) {
         openedProject = null;
+    }
+
+    @Override
+    public void onShowWorkTreeStatus(ShowWorkTreeStatusEvent event) {
+        if (makeSelectionCheck()) {
+            getStatusText(getSelectedProject());
+        }
     }
 
 }
