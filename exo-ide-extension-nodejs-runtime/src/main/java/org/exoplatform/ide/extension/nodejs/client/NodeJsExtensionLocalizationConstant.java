@@ -22,7 +22,7 @@ package org.exoplatform.ide.extension.nodejs.client;
  * Interface to represent the messages contained in resource bundle: DebugLocalizationConstant.properties'.
  * 
  * @author <a href="mailto:vsvydenko@codenvy.com">Valeriy Svydenko</a>
- * @version $Id: PhpExtensionLocalizationConstant.java Apr 18, 2013 4:38:27 PM vsvydenko $
+ * @version $Id: NodeJsExtensionLocalizationConstant.java Apr 18, 2013 4:38:27 PM vsvydenko $
  *
  */
 public interface NodeJsExtensionLocalizationConstant extends com.google.gwt.i18n.client.Messages {

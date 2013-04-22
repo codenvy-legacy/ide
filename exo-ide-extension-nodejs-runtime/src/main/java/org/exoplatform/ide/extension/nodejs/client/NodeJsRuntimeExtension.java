@@ -28,7 +28,7 @@ import org.exoplatform.ide.extension.nodejs.client.logs.LogsHandler;
 import org.exoplatform.ide.extension.nodejs.client.run.RunApplicationManager;
 
 /**
- * PHP runtime extension.
+ * Node.js runtime extension.
  * 
  * @author <a href="mailto:vsvydenko@codenvy.com">Valeriy Svydenko</a>
  * @version $Id: NodeJsRuntimeExtension.java Apr 18, 2013 4:19:43 PM vsvydenko $
