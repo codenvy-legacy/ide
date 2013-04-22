@@ -62,18 +62,5 @@ public class PythonEditorExtension extends Extension implements InitializeServic
                         return new PythonEditor(MimeType.TEXT_X_PYTHON);
                     }
                 });
-
-//      CodeMirrorConfiguration pythonCodeMirrorConfiguration =
-//         new CodeMirrorConfiguration().setGenericParsers("['parsepython.js']").setGenericStyles(
-//            "['" + CodeMirrorConfiguration.PATH + "css/pythoncolors.css']").setTabMode(TabMode.INDENT);
-//
-//      IDE.getInstance().addEditor(new CodeMirror(MimeType.TEXT_X_PYTHON, "CodeMirror Python editor", "py",
-//         pythonCodeMirrorConfiguration));
-
-//      IDE.getInstance().addEditor(
-//         new CodeMirrorProducer(MimeType.TEXT_X_PYTHON, "CodeMirror Python editor", "py",
-//            Images.INSTANCE.pythonImage(), true, pythonCodeMirrorConfiguration));
-
     }
-
 }
