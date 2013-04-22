@@ -175,6 +175,19 @@
 
     <!-- End Python Support -->
 
+    <!-- Node.js Support -->
+
+    <component>
+        <key>org.exoplatform.ide.extension.nodejs.server.ApplicationRunner</key>
+        <type>org.exoplatform.ide.extension.nodejs.server.CloudfoundryApplicationRunner</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.extension.nodejs.server.AppRunnerApplication</type>
+    </component>
+
+    <!-- End Node.js Support -->
+
     <!-- Google Gadgets support-->
 
     <!--component>
