@@ -20,6 +20,10 @@
 
 package com.codenvy.ide.ui.menu;
 
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
 
 import java.util.ArrayList;
@@ -33,10 +37,9 @@ import java.util.Map;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-public class PopupMenuItem extends MenuItem {
+public class PopupMenuItem implements MenuItem {
 
-    /** Icon as HTML Image */
-    private String icon;
+    private ImageResource image;
 
     /** Title of this item */
     private String title;
@@ -53,8 +56,8 @@ public class PopupMenuItem extends MenuItem {
     /** Enabled state. True as default. */
     private boolean enabled = true;
 
-    /** List of children. */
-    private List<MenuItem> menuItems = new ArrayList<MenuItem>();
+    /** Map of children. */
+    private JsonStringMap<MenuItem> children = JsonCollections.createStringMap();
 
     /** Command which will be executed when this item will be selected. */
     private Command command;
@@ -76,77 +79,77 @@ public class PopupMenuItem extends MenuItem {
     /**
      * Create PopupMenuItem
      *
-     * @param icon
-     *         - icon as HTML image for new item. Image must be prepared like "<img ... />" tag
+     * @param image
+     *         - image as ImageResource
      * @param title
      *         - title
      */
-    public PopupMenuItem(String icon, String title) {
-        this.icon = icon;
+    public PopupMenuItem(ImageResource image, String title) {
+        this.image = image;
         this.title = title;
     }
 
     /**
-     * @param icon
-     *         - icon as HTML image for new item. Image must be prepared like "<img ... />" tag
+     * @param image
+     *         - image as ImageResource
      * @param title
      *         - title
      * @param command
      *         - command which will be executed when item will be selected
      */
-    public PopupMenuItem(String icon, String title, Command command) {
-        this.icon = icon;
-        this.title = title;
+    public PopupMenuItem(ImageResource image, String title, Command command) {
+        this(image, title);
         this.command = command;
     }
 
-    /** @see org.exoplatform.gwtframework.ui.client.extension.menu.nn.api.MenuItem#addItem(String) */
+    /** {@inheritDoc} */
     public MenuItem addItem(String title) {
         return addItem(null, title, null);
     }
 
-    /** @see org.exoplatform.gwtframework.ui.client.extension.menu.nn.api.MenuItem#addItem(String, String) */
-    public MenuItem addItem(String imageHTML, String title) {
-        return addItem(imageHTML, title, null);
+    /** {@inheritDoc} */
+    public MenuItem addItem(ImageResource image, String title) {
+        return addItem(image, title, null);
     }
 
-    /**
-     * @see org.exoplatform.gwtframework.ui.client.extension.menu.nn.api.MenuItem#addItem(String,
-     *      com.google.gwt.user.client.Command)
-     */
+    /** {@inheritDoc} */
     public MenuItem addItem(String title, Command command) {
         return addItem(null, title, command);
     }
 
-    /**
-     * @see org.exoplatform.gwtframework.ui.client.extension.menu.nn.api.MenuItem#addItem(String, String,
-     *      com.google.gwt.user.client.Command)
-     */
-    public MenuItem addItem(String imageHTML, String title, Command command) {
-        PopupMenuItem item = new PopupMenuItem(imageHTML, title, command);
-        menuItems.add(item);
+
+    /** {@inheritDoc} */
+    public MenuItem addItem(ImageResource image, String title, Command command) {
+        PopupMenuItem item = new PopupMenuItem(image, title, command);
+        children.put(title, item);
         return item;
     }
 
-    /** @see org.exoplatform.gwtframework.ui.client.extension.menu.nn.api.MenuItem#setTitle(String) */
+    @Override
+    public void addItem(MenuItem item) {
+        children.put(item.getTitle(), item);
+    }
+
+    /** {@inheritDoc} */
     public void setTitle(String title) {
         this.title = title;
     }
 
-    /** @see org.exoplatform.gwtframework.ui.client.extension.menu.nn.api.MenuItem#getTitle() */
+
+    /** {@inheritDoc} */
     public String getTitle() {
         return title;
     }
 
-    public void setIcon(String icon) {
-        this.icon = icon;
+    public void setImage(ImageResource image) {
+        this.image = image;
     }
 
-    public String getIcon() {
-        return icon;
+    public ImageResource getImage() {
+        return image;
     }
 
-    /** @see org.exoplatform.gwtframework.ui.client.extension.menu.nn.api.MenuItem#setVisible(boolean) */
+    /** {@inheritDoc} */
     public void setVisible(boolean visible) {
         this.visible = visible;
         if (updateItemEnablingCallback != null) {
@@ -154,44 +157,49 @@ public class PopupMenuItem extends MenuItem {
         }
     }
 
-    /** @see org.exoplatform.gwtframework.ui.client.extension.menu.nn.api.MenuItem#isVisible() */
+    /** {@inheritDoc} */
     public boolean isVisible() {
         return visible;
     }
 
-    /** @see org.exoplatform.gwtframework.ui.client.extension.menu.nn.api.MenuItem#setSelected(boolean) */
+    /** {@inheritDoc} */
     public void setSelected(boolean selected) {
         this.selected = selected;
     }
 
-    /** @see org.exoplatform.gwtframework.ui.client.extension.menu.nn.api.MenuItem#isSelected() */
+    /** {@inheritDoc} */
     public boolean isSelected() {
         return selected;
     }
 
-    /** @see org.exoplatform.gwtframework.ui.client.extension.menu.nn.api.MenuItem#setEnabled(boolean) */
+    /** {@inheritDoc} */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
-    /** @see org.exoplatform.gwtframework.ui.client.extension.menu.nn.api.MenuItem#isEnabled() */
+    /** {@inheritDoc} */
     public boolean isEnabled() {
         return enabled;
     }
 
-    /** @see org.exoplatform.gwtframework.ui.client.extension.menu.nn.api.MenuItem#getHotKey() */
+    /** {@inheritDoc} */
     public String getHotKey() {
         return hotKey;
     }
 
-    /** @see org.exoplatform.gwtframework.ui.client.extension.menu.nn.api.MenuItem#setHotKey(String) */
+    /** {@inheritDoc} */
     public void setHotKey(String hotKey) {
         this.hotKey = hotKey;
     }
 
-    /** @see org.exoplatform.gwtframework.ui.client.extension.menu.nn.api.MenuItem#getItems() */
-    public List<MenuItem> getItems() {
-        return menuItems;
+    /** {@inheritDoc} */
+    public JsonArray<MenuItem> getItems() {
+        return children.getValues();
+    }
+
+    @Override
+    public MenuItem getChildren(String title) {
+        return children.get(title);
     }
 
     /** Use for dump */
@@ -203,12 +211,12 @@ public class PopupMenuItem extends MenuItem {
         return value;
     }
 
-    /** @see org.exoplatform.gwtframework.ui.client.extension.menu.nn.api.MenuItem#setCommand(com.google.gwt.user.client.Command) */
+    /** {@inheritDoc} */
     public void setCommand(Command command) {
         this.command = command;
     }
 
-    /** @see org.exoplatform.gwtframework.ui.client.extension.menu.nn.api.MenuItem#getCommand() */
+    /** {@inheritDoc} */
     public Command getCommand() {
         return command;
     }

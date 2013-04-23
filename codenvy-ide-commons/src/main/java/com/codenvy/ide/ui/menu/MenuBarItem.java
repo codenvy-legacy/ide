@@ -20,11 +20,12 @@
 
 package com.codenvy.ide.ui.menu;
 
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Element;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -34,63 +35,49 @@ import java.util.List;
  *          <p/>
  *          Menu bar is implementation of Menu interface and represents a visual component.
  */
-public class MenuBarItem extends MenuItem implements ItemSelectedHandler, UpdateItemEnablingCallback {
-
-    /** List of children */
-    private List<MenuItem> children = new ArrayList<MenuItem>();
-
-    /** Command which will be called just after menu ber item will be selected. */
-    private Command command;
-
-    /** Visual element which is table cell. */
-    private Element element;
-
-    /** Enabled or disabled state */
-    private boolean enabled = true;
-
-    private boolean hasVisibleItems;
-
-    /** Hot Key associated with this item. */
-    private String hotKey;
+public class MenuBarItem implements MenuItem, ItemSelectedHandler, UpdateItemEnablingCallback {
 
     /**
      * Working variable:
      * is need to store hovered or normal state.
      */
     boolean hovered = false;
-
-    /** Icon as String which is represents already builded "<img ... />" tag. */
-    private String icon;
-
-    /**
-     *
-     */
-    private ItemSelectedHandler itemSelectedHandler;
-
-    /**
-     * Working variable:
-     * is needs to store opened Popup menu.
-     */
-    private PopupMenu popupMenu;
-
     /**
      * Working variable:
      * is need to store pressed state.
      */
     boolean pressed = false;
-
+    /** Map of children */
+    private JsonStringMap<MenuItem> children = JsonCollections.createStringMap();
+    /** Command which will be called just after menu ber item will be selected. */
+    private Command command;
+    /** Visual element which is table cell. */
+    private Element element;
+    /** Enabled or disabled state */
+    private boolean enabled = true;
+    private boolean             hasVisibleItems;
+    /** Hot Key associated with this item. */
+    private String              hotKey;
+    private ImageResource       image;
+    /**
+     *
+     */
+    private ItemSelectedHandler itemSelectedHandler;
+    /**
+     * Working variable:
+     * is needs to store opened Popup menu.
+     */
+    private PopupMenu           popupMenu;
     /** Selected state. */
-    private boolean selected;
-
+    private boolean             selected;
     /** Title of Menu Bar Item */
-    private String title;
-
+    private String              title;
     /** Visibility state. */
-    private boolean visible;
+    private boolean             visible;
 
     /**
-     * @param icon
-     *         - icon as HTML image for new item. Image must be prepared like "<img ... />" tag
+     * @param image
+     *         - image as ImageResource
      * @param title
      *         - title
      * @param element
@@ -98,8 +85,8 @@ public class MenuBarItem extends MenuItem implements ItemSelectedHandler, Update
      * @param callback
      *         - callBack for notifying Menu when menu item is selected and is need to close all pupups
      */
-    public MenuBarItem(String icon, String title, Element element, ItemSelectedHandler callback) {
-        this.icon = icon;
+    public MenuBarItem(ImageResource image, String title, Element element, ItemSelectedHandler callback) {
+        this.image = image;
         this.title = title;
         this.element = element;
         this.itemSelectedHandler = callback;
@@ -116,15 +103,21 @@ public class MenuBarItem extends MenuItem implements ItemSelectedHandler, Update
     }
 
     /** {@inheritDoc} */
-    public MenuItem addItem(String icon, String title) {
-        return addItem(icon, title, null);
+    @Override
+    public MenuItem addItem(ImageResource image, String title) {
+        return null;
     }
 
     /** {@inheritDoc} */
-    public MenuItem addItem(String icon, String title, Command command) {
-        PopupMenuItem item = new PopupMenuItem(icon, title, command);
+    @Override
+    public void addItem(MenuItem item) {
+    }
+
+    /** {@inheritDoc} */
+    public MenuItem addItem(ImageResource image, String title, Command command) {
+        PopupMenuItem item = new PopupMenuItem(image, title, command);
         item.setUpdateItemEnablingCallback(this);
-        children.add(item);
+        children.put(title, item);
 
         hasVisibleItems = hasVisibleItems(children);
         updateEnabledState();
@@ -143,18 +136,38 @@ public class MenuBarItem extends MenuItem implements ItemSelectedHandler, Update
     }
 
     /** {@inheritDoc} */
+    public void setCommand(Command command) {
+        this.command = command;
+    }
+
+    /** {@inheritDoc} */
     public String getHotKey() {
         return hotKey;
     }
 
     /** {@inheritDoc} */
-    public String getIcon() {
-        return icon;
+    public void setHotKey(String hotKey) {
+        this.hotKey = hotKey;
     }
 
     /** {@inheritDoc} */
-    public List<MenuItem> getItems() {
-        return children;
+    public ImageResource getImage() {
+        return image;
+    }
+
+    /** {@inheritDoc} */
+    public void setImage(ImageResource image) {
+        this.image = image;
+    }
+
+    /** {@inheritDoc} */
+    public JsonArray<MenuItem> getItems() {
+        return children.getValues();
+    }
+
+    @Override
+    public MenuItem getChildren(String title) {
+        return children.get(title);
     }
 
     /** {@inheritDoc} */
@@ -162,8 +175,15 @@ public class MenuBarItem extends MenuItem implements ItemSelectedHandler, Update
         return title;
     }
 
-    private boolean hasVisibleItems(List<MenuItem> items) {
-        for (MenuItem item : children) {
+    /** {@inheritDoc} */
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    private boolean hasVisibleItems(JsonStringMap<MenuItem> items) {
+        JsonArray<String> keys = items.getKeys();
+        for (String key : keys.asIterable()) {
+            MenuItem item = items.get(key);
             if (item.getTitle() == null) {
                 continue;
             }
@@ -171,7 +191,9 @@ public class MenuBarItem extends MenuItem implements ItemSelectedHandler, Update
             if (item.isVisible()) {
                 return true;
             }
+
         }
+
 
         return false;
     }
@@ -182,13 +204,29 @@ public class MenuBarItem extends MenuItem implements ItemSelectedHandler, Update
     }
 
     /** {@inheritDoc} */
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        updateEnabledState();
+    }
+
+    /** {@inheritDoc} */
     public boolean isSelected() {
         return selected;
     }
 
     /** {@inheritDoc} */
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    /** {@inheritDoc} */
     public boolean isVisible() {
         return visible;
+    }
+
+    /** {@inheritDoc} */
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 
     /** {@inheritDoc} */
@@ -249,50 +287,14 @@ public class MenuBarItem extends MenuItem implements ItemSelectedHandler, Update
     public void openPopupMenu(MenuLockLayer menuLockLayer) {
         int x = element.getAbsoluteLeft();
         int y = 0;
-        popupMenu = new PopupMenu(children, menuLockLayer, this, "topmenu/" + title);
+        popupMenu = new PopupMenu(children.getValues(), menuLockLayer, this, "topmenu/" + title);
         menuLockLayer.add(popupMenu, x, y);
-    }
-
-    /** {@inheritDoc} */
-    public void setCommand(Command command) {
-        this.command = command;
-    }
-
-    /** {@inheritDoc} */
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-        updateEnabledState();
-    }
-
-    /** {@inheritDoc} */
-    public void setHotKey(String hotKey) {
-        this.hotKey = hotKey;
-    }
-
-    /** {@inheritDoc} */
-    public void setIcon(String icon) {
-        this.icon = icon;
     }
 
     /** Reset visual state of Menu Bar Item to default. */
     public void setNormalState() {
         pressed = false;
         element.setClassName(MenuBar.resources.menuCss().menuBarItem());
-    }
-
-    /** {@inheritDoc} */
-    public void setSelected(boolean selected) {
-        this.selected = selected;
-    }
-
-    /** {@inheritDoc} */
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    /** {@inheritDoc} */
-    public void setVisible(boolean visible) {
-        this.visible = visible;
     }
 
     private void updateEnabledState() {

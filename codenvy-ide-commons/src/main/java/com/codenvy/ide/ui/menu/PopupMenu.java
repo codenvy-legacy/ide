@@ -20,6 +20,7 @@
 
 package com.codenvy.ide.ui.menu;
 
+import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -156,7 +157,7 @@ public class PopupMenu extends Composite {
      */
     private String itemIdPrefix;
 
-    public PopupMenu(List<MenuItem> menuItems, MenuLockLayer lockLayer, ItemSelectedHandler itemSelectedCallback) {
+    public PopupMenu(JsonArray<MenuItem> menuItems, MenuLockLayer lockLayer, ItemSelectedHandler itemSelectedCallback) {
         this(menuItems, lockLayer, itemSelectedCallback, null);
     }
 
@@ -170,7 +171,7 @@ public class PopupMenu extends Composite {
      * @param itemSelectedCallback
      *         - callback, uses for notifying parent menu when menu item is selected.
      */
-    public PopupMenu(List<MenuItem> menuItems, MenuLockLayer lockLayer, ItemSelectedHandler itemSelectedCallback,
+    public PopupMenu(JsonArray<MenuItem> menuItems, MenuLockLayer lockLayer, ItemSelectedHandler itemSelectedCallback,
                      String itemIdPrefix) {
         this.menuItems = new ArrayList<MenuItem>();
         this.itemIdPrefix = itemIdPrefix;
@@ -178,7 +179,7 @@ public class PopupMenu extends Composite {
       /*
        * show only visible items and delimiters
        */
-        for (MenuItem item : menuItems) {
+        for (MenuItem item : menuItems.asIterable()) {
             if (item.getTitle() == null) {
                 this.menuItems.add(item);
                 continue;
@@ -282,7 +283,7 @@ public class PopupMenu extends Composite {
                 table.setHTML(i, 0, "<nobr><hr noshade=\"noshade\" style=\"color:#BBBBBB;\" size=\"1\"></nobr>");
                 table.getCellFormatter().setStyleName(i, 0, POPUP_RESOURCES.popup().popupMenuDelimiter());
             } else {
-                table.setHTML(i, 0, menuItem.getIcon());
+                table.setWidget(i, 0, new Image(menuItem.getImage() == null? POPUP_RESOURCES.blank() : menuItem.getImage()));
                 table.getCellFormatter().setStyleName(i, 0,
                                                       menuItem.isEnabled() ? POPUP_RESOURCES.popup().popupMenuIconField()
                                                                            : POPUP_RESOURCES.popup().popupMenuIconFieldDisabled());
@@ -515,10 +516,10 @@ public class PopupMenu extends Composite {
         openedSubPopup = new PopupMenu(menuItem.getItems(), lockLayer, itemSelectedCallback, idPrefix);
 
         final int HORIZONTAL_OFFSET = 3;
-        final int VERTIVAL_OFFSET = 1;
+        final int VERTICAL_OFFSET = 1;
 
 //      final int left = getAbsoluteLeft() + getOffsetWidth() - HORIZONTAL_OFFSET;
-//      final int top = tableRowElement.getAbsoluteTop() - lockLayer.getTopOffset() - VERTIVAL_OFFSET;
+//      final int top = tableRowElement.getAbsoluteTop() - lockLayer.getTopOffset() - VERTICAL_OFFSET;
 
         openedSubPopup.getElement().getStyle().setVisibility(Visibility.HIDDEN);
 //      lockLayer.add(openedSubPopup, left, top);
@@ -528,7 +529,7 @@ public class PopupMenu extends Composite {
             @Override
             public void execute() {
                 int left = getAbsoluteLeft() + getOffsetWidth() - HORIZONTAL_OFFSET;
-                int top = tableRowElement.getAbsoluteTop() - lockLayer.getTopOffset() - VERTIVAL_OFFSET;
+                int top = tableRowElement.getAbsoluteTop() - lockLayer.getTopOffset() - VERTICAL_OFFSET;
 
                 if (left + openedSubPopup.getOffsetWidth() > Window.getClientWidth()) {
                     if (left > openedSubPopup.getOffsetWidth()) {
@@ -541,7 +542,7 @@ public class PopupMenu extends Composite {
 
                 if (top + openedSubPopup.getOffsetHeight() > Window.getClientHeight()) {
                     if (top > openedSubPopup.getOffsetHeight()) {
-                        top = tableRowElement.getAbsoluteTop() - openedSubPopup.getOffsetHeight() + VERTIVAL_OFFSET;
+                        top = tableRowElement.getAbsoluteTop() - openedSubPopup.getOffsetHeight() + VERTICAL_OFFSET;
                     } else {
                         int diff = top + openedSubPopup.getOffsetHeight() - Window.getClientHeight();
                         top -= diff;

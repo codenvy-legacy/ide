@@ -18,10 +18,10 @@ package com.codenvy.ide.json;
  * String Map interface for use in DTOs.
  * <p/>
  * On the client it is safe to cast this to a
- * {@link com.codenvy.ide.json.js.collide.json.client.Jso}.
+ * {@link com.codenvy.ide.json.js.Jso}.
  * <p/>
  * On the server this is an instance of a wrapper object
- * {@link com.google.collide.json.server.JsonStringMapAdapter}.
+ * {@link com.codenvy.ide.json.java.JsonStringMapAdapter}.
  */
 public interface JsonStringMap<T> {
     /**
@@ -51,4 +51,11 @@ public interface JsonStringMap<T> {
     boolean containsKey(String key);
 
     int size();
+
+    /**
+     * Returns an array containing all the values in this map.
+     *
+     * @return a snapshot of the values contained in the map
+     */
+    JsonArray<T> getValues();
 }

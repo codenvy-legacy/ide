@@ -20,6 +20,9 @@
 
 package com.codenvy.ide.ui.menu;
 
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonStringMap;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
 
 import java.util.List;
@@ -33,7 +36,7 @@ import java.util.List;
  *          Menu item interface which represents buttons on Menu Bar and item in the Popup Menu.
  */
 
-public abstract class MenuItem {
+public interface MenuItem {
 
     /**
      * Create new MenuItem with specified parameters and add it to the list of children.
@@ -42,7 +45,7 @@ public abstract class MenuItem {
      *         - title of menu item
      * @return new instance of menu item, which is already added to children list
      */
-    public abstract MenuItem addItem(String title);
+    public MenuItem addItem(String title);
 
     /**
      * Create new MenuItem with specified parameters and add it to the list of children.
@@ -53,87 +56,102 @@ public abstract class MenuItem {
      *         - associated command
      * @return new instance of MenuItem
      */
-    public abstract MenuItem addItem(String title, Command command);
+    public MenuItem addItem(String title, Command command);
 
     /**
      * Create new MenuItem with specified parameters and add it to the list of children.
      *
-     * @param icon
-     *         - icon as HTML image. Image must be prepared like "<img src='....'" />
+     * @param image
+     *         - image as ImageResource
      * @param title
      *         - title of menu item
      * @return new instance of MenuItem
      */
-    public abstract MenuItem addItem(String icon, String title);
+    public MenuItem addItem(ImageResource image, String title);
 
     /**
      * Create new MenuItem with specified parameters and add it to the list of children.
      *
-     * @param icon
-     *         - icon as HTML image. Image must be prepared like "<img src='....'" />
+     * @param image
+     *         - image as ImageResource
      * @param title
      *         - title of menu item
      * @param command
-     *         - asociated command
+     *         - associated command
      * @return new instance of MenuItem
      */
-    public abstract MenuItem addItem(String icon, String title, Command command);
+    public MenuItem addItem(ImageResource image, String title, Command command);
+
+    /**
+     * Add new MenuItem
+     * @param item
+     *         - item the new menu item
+     */
+    public void addItem(MenuItem item);
 
     /**
      * Get command
      *
      * @return command
      */
-    public abstract Command getCommand();
+    public Command getCommand();
 
     /**
      * Get Hot Key value
      *
      * @return hot key as String
      */
-    public abstract String getHotKey();
+    public String getHotKey();
 
     /**
-     * Get icon.
+     * Get image.
      *
-     * @return - icon
+     * @return - image
      */
-    public abstract String getIcon();
+    public ImageResource getImage();
 
     /**
-     * Get list of children.
+     * Get map of children.
      *
      * @return list of children
      */
-    public abstract List<MenuItem> getItems();
+    public JsonArray<MenuItem> getItems();
+
+    /**
+     * Get children of this menu item, by title.
+     * If this item not contains children with this title, return null.
+     * @param title the children title.
+     * @return  the children menu item.
+     */
+    public MenuItem getChildren(String title);
 
     /**
      * Get menu title
      *
      * @return title of menu item
      */
-    public abstract String getTitle();
+    public String getTitle();
 
     /**
      * Get is enabled
      *
      * @return enabled state
      */
-    public abstract boolean isEnabled();
+    public boolean isEnabled();
 
     /**
      * Get is selected
      *
      * @return true or false - selected state
      */
-    public abstract boolean isSelected();
+    public boolean isSelected();
 
     /**
      * Get is visible
      *
      * @return - true, false
      */
-    public abstract boolean isVisible();
+    public boolean isVisible();
 
     /**
      * Set command which will be executed when item will be selected.
@@ -141,7 +159,7 @@ public abstract class MenuItem {
      * @param command
      *         - command to execute
      */
-    public abstract void setCommand(Command command);
+    public void setCommand(Command command);
 
     /**
      * Set is enabled
@@ -149,7 +167,7 @@ public abstract class MenuItem {
      * @param enabled
      *         - true or false
      */
-    public abstract void setEnabled(boolean enabled);
+    public void setEnabled(boolean enabled);
 
     /**
      * Set Hot Key
@@ -157,15 +175,7 @@ public abstract class MenuItem {
      * @param hotKey
      *         - Hot Key value
      */
-    public abstract void setHotKey(String hotKey);
-
-    /**
-     * Set icon as HTML image. HTML must be like below
-     * "<img src='....'" /> or "<img src='....' / style='width:16px; height:16px;'>"
-     *
-     * @param icon
-     */
-    public abstract void setIcon(String icon);
+    public void setHotKey(String hotKey);
 
     /**
      * Set is selected
@@ -173,7 +183,7 @@ public abstract class MenuItem {
      * @param selected
      *         - selected state (true / false)
      */
-    public abstract void setSelected(boolean selected);
+    public void setSelected(boolean selected);
 
     /**
      * Set title
@@ -181,7 +191,7 @@ public abstract class MenuItem {
      * @param title
      *         - new title of menu item
      */
-    public abstract void setTitle(String title);
+    public void setTitle(String title);
 
     /**
      * set is visible
@@ -189,6 +199,6 @@ public abstract class MenuItem {
      * @param visible
      *         - true, false
      */
-    public abstract void setVisible(boolean visible);
+    public void setVisible(boolean visible);
 
 }
