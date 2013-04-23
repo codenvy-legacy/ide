@@ -447,32 +447,10 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
     /** Performs actions when initialization of Git-repository successfully completed. */
     private void onInitSuccess() {
         showBuildMessage(GitExtension.MESSAGES.initSuccess());
-        setGitRepositoryProperty();
+        IDE.fireEvent(new RefreshBrowserEvent(project));                           
         createJob();
     }
     
-    private void setGitRepositoryProperty() {
-        project.getProperties().add(new PropertyImpl(GitExtension.GIT_REPOSITORY_PROP, "true"));
-        ItemWrapper item = new ItemWrapper(project);
-        ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
-        try {
-            VirtualFileSystem.getInstance().updateItem(project, null,
-                   new AsyncRequestCallback<ItemWrapper>(unmarshaller) {
-                       @Override
-                       protected void onSuccess(ItemWrapper result) {
-                           IDE.fireEvent(new RefreshBrowserEvent(project));                           
-                       }
-
-                       @Override
-                       protected void onFailure(Throwable exception) {
-                           handleError(exception);
-    
-                       }
-                   });
-        } catch (RequestException e) {
-            handleError(e);
-        }
-    }    
 
     private void handleError(Throwable e) {
         String errorMessage =

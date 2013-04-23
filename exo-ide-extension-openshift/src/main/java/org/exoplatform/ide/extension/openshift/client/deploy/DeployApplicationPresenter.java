@@ -223,7 +223,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
             OpenShiftClientService.getInstance().getUserInfo(true, new AsyncRequestCallback<RHUserInfo>(unmarshaller) {
                 @Override
                 protected void onSuccess(RHUserInfo result) {
-                    if ("Doesn't exist".equals(result.getNamespace())) {
+                    if (result.getNamespace() == null) {
                         // create a domain
                         StringValueReceivedHandler handler = new StringValueReceivedHandler() {
                             @Override
