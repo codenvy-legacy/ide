@@ -15,7 +15,7 @@
         <g:north size="25">
             <g:SimplePanel width="100%" ui:field="menuPanel"/>
         </g:north>
-        <g:north size="24">
+        <g:north size="25">
             <g:SimplePanel width="100%" ui:field="toolbarPanel"/>
         </g:north>
         <g:south size="22">

@@ -569,7 +569,7 @@ public class PopupMenu extends Composite {
 
     interface PopupResources extends ClientBundle{
 
-        @Source("popup-menu.css")
+        @Source({"popup-menu.css", "com/codenvy/ide/api/ui/style.css"})
         Css popup();
 
         @Source("check.gif")
