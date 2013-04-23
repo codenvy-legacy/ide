@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.security.oauth;
 
+import org.exoplatform.ide.security.shared.Token;
+
 import java.io.IOException;
 
 /** Retrieves oAuth token with help of OAuthAuthenticatorProvider. */
@@ -29,10 +31,10 @@ public class OAuthAuthenticatorTokenProvider implements OAuthTokenProvider {
     }
 
     @Override
-    public String getToken(String oauthProviderName, String userId) throws IOException {
+    public Token getToken(String oauthProviderName, String userId) throws IOException {
         OAuthAuthenticator oAuthAuthenticator = oAuthAuthenticatorProvider.getAuthenticator(oauthProviderName);
         if (oAuthAuthenticator != null && oAuthAuthenticator.getToken(userId) != null) {
-            return oAuthAuthenticator.getToken(userId).getToken();
+            return oAuthAuthenticator.getToken(userId);
         }
         return null;
     }

@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.security.oauth;
 
+import org.exoplatform.ide.security.shared.Token;
+
 import java.io.IOException;
 
 /** Retrieves user token from OAuth providers. */
@@ -33,5 +35,5 @@ public interface OAuthTokenProvider {
      * @throws java.io.IOException
      *         if i/o error occurs when try to refresh expired oauth token
      */
-    String getToken(String oauthProviderName, String userId) throws IOException;
+    Token getToken(String oauthProviderName, String userId) throws IOException;
 }
