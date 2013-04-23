@@ -18,40 +18,101 @@
  */
 package org.exoplatform.ide.extension.samples.client.github.ssh;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.OAuthLoginFinishedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.OAuthLoginFinishedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
 import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginEvent;
+import org.exoplatform.ide.extension.ssh.client.JsonpAsyncCallback;
+import org.exoplatform.ide.extension.ssh.client.SshKeyService;
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.GenerateGitHubKeyEvent;
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.GenerateGitHubKeyHandler;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.GitHubKeyGeneratedEvent;
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.RefreshKeysEvent;
+import org.exoplatform.ide.extension.ssh.client.marshaller.SshKeysUnmarshaller;
+import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 import org.exoplatform.ide.git.client.github.GitHubClientService;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, GenerateGitHubKeyHandler, OAuthLoginFinishedHandler {
+public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, ViewClosedHandler,
+                                          GenerateGitHubKeyHandler, OAuthLoginFinishedHandler {
     private UserInfo userInfo;
 
     EmptyLoader      loader;
 
+
+    interface Display extends IsView {
+        HasClickHandlers getOkButton();
+
+        HasClickHandlers getCancelButton();
+
+        HasValue<String> getLabel();
+    }
+
+    private Display display;
+
     public GenerateGitHubSshKeyPresenter() {
         IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
         IDE.addHandler(GenerateGitHubKeyEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
         loader = new EmptyLoader();
+    }
+
+    /** Open view. */
+    private void openView() {
+        if (display == null) {
+            Display d = GWT.create(Display.class);
+            display = d;
+            bindDisplay();
+            IDE.getInstance().openView(d.asView());
+            return;
+        }
+    }
+
+    public void bindDisplay() {
+        display.getCancelButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
+
+        display.getOkButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+                loader.show();
+                getToken(userInfo.getName());
+            }
+        });
     }
 
     @Override
@@ -61,10 +122,38 @@ public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, G
 
     @Override
     public void onGenerateGitHubSshKey(GenerateGitHubKeyEvent event) {
-        if (userInfo != null) {
-            loader.show();
-            getToken(userInfo.getName());
-        }
+        SshKeyService.get().getAllKeys(new JsonpAsyncCallback<JavaScriptObject>() {
+            @Override
+            public void onSuccess(JavaScriptObject result) {
+                try {
+                    boolean githubKeyExists = false;
+                    List<KeyItem> keys = SshKeysUnmarshaller.unmarshal(result);
+                    for (KeyItem key : keys) {
+                        if (key.getHost().contains("github.com")) {
+                            githubKeyExists = true;
+                        }
+                    }
+                    if (!githubKeyExists) {
+                        getLoader().hide();
+                        openView();
+                    }
+                    else {
+                        getLoader().hide();
+                        IDE.fireEvent(new GitHubKeyGeneratedEvent());
+                    }
+                } catch (UnmarshallerException e) {
+                    getLoader().hide();
+                    Dialogs.getInstance().showError("Getting ssh keys failed.");
+                }
+
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                getLoader().hide();
+                Dialogs.getInstance().showError("Getting ssh keys failed.");
+            }
+        });
     }
 
     private void generateGitHubKey() {
@@ -74,12 +163,12 @@ public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, G
                 protected void onSuccess(Void result) {
                     loader.hide();
                     IDE.fireEvent(new RefreshKeysEvent());
+                    IDE.fireEvent(new GitHubKeyGeneratedEvent());
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
                     loader.hide();
-                    oAuthLoginStart();
                 }
             };
 
@@ -116,7 +205,6 @@ public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, G
                                              });
         } catch (RequestException e) {
             loader.hide();
-            IDE.fireEvent(new OAuthLoginEvent());
         }
     }
 
@@ -131,5 +219,16 @@ public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, G
             generateGitHubKey();
         }
         IDE.removeHandler(OAuthLoginFinishedEvent.TYPE, this);
+    }
+
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     *      .event.ViewClosedEvent)
+     */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
     }
 }

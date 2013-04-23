@@ -157,6 +157,7 @@ public interface SamplesLocalizationConstant extends Messages {
 
     @Key("project.type")
     String projectType();
+
     /*
      * Login
      */
@@ -249,4 +250,10 @@ public interface SamplesLocalizationConstant extends Messages {
 
     @Key("login.oauth.label")
     String loginOAuthLabel();
+
+    @Key("github.sshkey.title")
+    String githubSshKeyTitle();
+
+    @Key("github.sshkey.label")
+    String githubSshKeyLabel();
 }
