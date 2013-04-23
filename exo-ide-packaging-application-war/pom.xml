@@ -154,12 +154,17 @@
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-cloudbees</artifactId>
+        </dependency>
+
+       <dependency>
+            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-nodejs-runtime</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-cloudbees</artifactId>
+            <artifactId>exo-ide-extension-php-runtime</artifactId>
         </dependency>
 
         <dependency>

@@ -192,9 +192,15 @@
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-nodejs-runtime</artifactId>
+            <artifactId>exo-ide-extension-php-runtime</artifactId>
             <version>${project.version}</version>
          </dependency>
+
+          <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-nodejs-runtime</artifactId>
+            <version>${project.version}</version>
+         </dependency>  
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -777,7 +783,6 @@
       <module>exo-ide-extension-java</module>
       <module>exo-ide-extension-java-runtime</module>
       <module>exo-ide-extension-python-runtime</module>
-      <module>exo-ide-extension-nodejs-runtime</module>
       <!--module>exo-ide-extension-chromattic</module-->
       <module>exo-ide-extension-git</module>
       <module>exo-ide-extension-ssh</module>

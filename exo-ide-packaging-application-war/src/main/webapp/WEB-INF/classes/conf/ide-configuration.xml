@@ -134,7 +134,6 @@
     ***************************************************************************************
     -->
 
-
     <component>
 
         <type>org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryPool</type>
