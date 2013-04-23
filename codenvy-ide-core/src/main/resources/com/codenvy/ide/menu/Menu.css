@@ -6,13 +6,6 @@
     gwt-image: 'toolbarBackground';
     border-bottom: 1px solid tabBorder;
 }
-.menuHorizontal .checkedItem {
-    background: keyboardSelectionBackgroundColor;
-}
-
-.menuHorizontal .uncheckedItem {
-    background-color: transparent;
-}
 
 .menuVertical .itemContainer {
     position: relative;
