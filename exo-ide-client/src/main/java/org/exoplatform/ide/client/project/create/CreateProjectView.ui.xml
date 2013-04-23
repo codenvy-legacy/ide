@@ -212,14 +212,14 @@
                     <g:FlowPanel addStyleNames="{style.line}">
                         <g:Label text="{templateLocale.chooseTechnology}"
                                  addStyleNames="{style.buttonsGroupTitle} {style.floatLeft}"></g:Label>
-                        <g:Image title="{templateLocale.chooseTechnologyTooltip}" resource="{resource.question}"
+                        <g:Image ui:field="chooseTechnologyTooltip" resource="{resource.question}"
                                  addStyleNames="{style.questionImage}"></g:Image>
                         <g:Grid ui:field="projectTypesGrid" addStyleNames="{style.clearLeft}"/>
                     </g:FlowPanel>
                     <g:FlowPanel addStyleNames="{style.line}">
                         <g:Label text="{templateLocale.choosePaaS}"
                                  addStyleNames="{style.buttonsGroupTitle} {style.floatLeft}"></g:Label>
-                        <g:Image title="{templateLocale.choosePaaSTooltip}" resource="{resource.question}"
+                        <g:Image ui:field="choosePaaSTooltip" resource="{resource.question}"
                                  addStyleNames="{style.questionImage}"></g:Image>
                         <g:Grid ui:field="targetGrid" addStyleNames="{style.clearLeft}"/>
                     </g:FlowPanel>
