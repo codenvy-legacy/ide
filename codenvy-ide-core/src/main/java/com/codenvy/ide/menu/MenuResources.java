@@ -34,6 +34,8 @@ public interface MenuResources extends ClientBundle {
 
         String uncheckedItem();
 
+        String menuHorizontal();
+
         String menuVertical();
 
         String itemIcon();
@@ -51,6 +53,9 @@ public interface MenuResources extends ClientBundle {
     ToolbarCSS menuCSS();
 
     @Source("toolbar-background.png")
-    @ImageResource.ImageOptions(repeatStyle= ImageResource.RepeatStyle.Horizontal)
+    @ImageResource.ImageOptions(repeatStyle = ImageResource.RepeatStyle.Horizontal)
     ImageResource toolbarBackground();
+
+    @Source("com/codenvy/ide/menu/check.png")
+    DataResource checkIcon();
 }

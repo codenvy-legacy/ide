@@ -1,10 +1,18 @@
 @CHARSET "UTF-8";
 
 @url check checkIcon;
-@sprite .toolbarHorizontal{
+@sprite .toolbarHorizontal {
     /*background: url("toolbar-background.png") repeat-x scroll 0 0 #FFFFFF !important;*/
     gwt-image: 'toolbarBackground';
     border-bottom: 1px solid tabBorder;
+}
+
+.menuHorizontal .checkedItem {
+    background: keyboardSelectionBackgroundColor;
+}
+
+.menuHorizontal .uncheckedItem {
+    background-color: transparent;
 }
 
 .menuVertical .itemContainer {

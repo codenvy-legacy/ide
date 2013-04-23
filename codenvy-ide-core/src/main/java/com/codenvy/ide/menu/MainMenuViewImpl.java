@@ -100,14 +100,13 @@ public class MainMenuViewImpl extends Composite implements MainMenuView {
             return item;
         }
         MenuItem item = parentMenuBar.getItems().get(menuPath.getPathElementAt(0));
-        if(item == null){
+        if (item == null) {
             item = parentMenuBar.addItem(menuPath.getPathElementAt(0));
         }
         // Recursively get destination menu bar
-        MenuItem dstMenuBar = getOrCreateParentMenuBar(menuPath, menuPath.getSize() -1, item);
+        MenuItem dstMenuBar = getOrCreateParentMenuBar(menuPath, menuPath.getSize() - 1, item);
         // create new item
         MenuItem newItem = dstMenuBar.addItem(command.getIcon(), menuPath.getPathElementAt(menuPath.getSize() - 1), command);
-//        Item newItem = new Item(menuPath, null, command.getToolTip(), command, ConteinerType.MAIN_MENU, resources);
         dstMenuBar.addItem(newItem);
 
         newItem.setVisible(visible);
@@ -128,14 +127,14 @@ public class MainMenuViewImpl extends Composite implements MainMenuView {
      */
     private MenuItem getOrCreateParentMenuBar(MenuPath menuPath, int depth, MenuItem item) {
         int i = 1;
-         while (i< depth){
-             MenuItem children = item.getChildren(menuPath.getPathElementAt(i));
-             if(children == null){
+        while (i < depth) {
+            MenuItem children = item.getChildren(menuPath.getPathElementAt(i));
+            if (children == null) {
                 children = item.addItem(menuPath.getPathElementAt(i));
-             }
-             i++;
-             item = children;
-         }
+            }
+            i++;
+            item = children;
+        }
         return item;
     }
 
@@ -144,35 +143,7 @@ public class MainMenuViewImpl extends Composite implements MainMenuView {
     public void addMenuItem(String path, ExtendedCommand command, boolean visible, boolean enabled, boolean selected) {
         MenuItem newItem = addMainMenuItem(path, command, visible, enabled);
         newItem.setSelected(selected);
-
-//            // try to get parent
-//            MenuItem menuItem = menuItems.get(menuPath.getParentPath(depth));
-//            if (menuItem != null) {
-//                MenuItem subMenu = menuItem.getSubMenu();
-//                if (subMenu == null) {
-//                    subMenu = createSubMenuBar();
-//                    menuItem.setSubMenu(subMenu);
-//                }
-//                return subMenu;
-//            } else {
-//                MenuBar dstMenuBar = getOrCreateParentMenuBar(menuPath, depth - 1);
-//                MenuPath path = new MenuPath(menuPath.getParentPath(depth));
-//                Item newItem = new Item(path, null, null, createSubMenuBar(), ConteinerType.MAIN_MENU, resources);
-//                dstMenuBar.addItem(newItem);
-//                menuItems.put(menuPath.getParentPath(depth), newItem);
-//                return newItem.getSubMenu();
-//            }
-
     }
-
-//    /** @return new instance of {@link MenuBar} */
-//    private MenuItem createSubMenuBar() {
-//        MenuItem menuBar = new MenuItem(true);
-//        menuBar.setAnimationEnabled(true);
-//        menuBar.setAutoOpen(true);
-//        menuBar.addStyleName(resources.menuCSS().menuVertical());
-//        return menuBar;
-//    }
 
     /** {@inheritDoc} */
     @Override
