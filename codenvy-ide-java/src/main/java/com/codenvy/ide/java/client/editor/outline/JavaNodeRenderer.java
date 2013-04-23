@@ -22,7 +22,7 @@ import elemental.html.DivElement;
 import elemental.html.Element;
 import elemental.html.SpanElement;
 
-import com.codenvy.ide.api.outline.CodeBlock;
+import com.codenvy.ide.api.editor.outline.CodeBlock;
 import com.codenvy.ide.java.client.JavaClientBundle;
 import com.codenvy.ide.java.client.JavaCss;
 import com.codenvy.ide.java.client.core.dom.Modifier;

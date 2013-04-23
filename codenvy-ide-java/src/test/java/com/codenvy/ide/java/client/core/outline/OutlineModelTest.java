@@ -18,8 +18,8 @@
  */
 package com.codenvy.ide.java.client.core.outline;
 
-import com.codenvy.ide.api.outline.CodeBlock;
-import com.codenvy.ide.api.outline.OutlineModel;
+import com.codenvy.ide.api.editor.outline.CodeBlock;
+import com.codenvy.ide.api.editor.outline.OutlineModel;
 import com.codenvy.ide.java.client.BaseTest;
 import com.codenvy.ide.java.client.core.dom.AST;
 import com.codenvy.ide.java.client.core.dom.ASTParser;

@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.api.editor;
 
-import com.codenvy.ide.api.outline.OutlinePresenter;
+import com.codenvy.ide.api.editor.outline.OutlinePresenter;
 
 
 /**

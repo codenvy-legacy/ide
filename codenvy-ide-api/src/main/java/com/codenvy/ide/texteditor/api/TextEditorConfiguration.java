@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.texteditor.api;
 
-import com.codenvy.ide.api.outline.OutlineModel;
+import com.codenvy.ide.api.editor.outline.OutlineModel;
 import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
