@@ -29,6 +29,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorAddBlockCommentEvent;
 import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.client.api.EditorCapability;
+import org.exoplatform.ide.editor.client.api.SelectionRange;
 import org.exoplatform.ide.editor.client.api.event.EditorCursorActivityEvent;
 import org.exoplatform.ide.editor.client.api.event.EditorCursorActivityHandler;
 
@@ -67,7 +68,7 @@ public class AddBlockCommentControl extends SimpleControl implements IDEControl,
      */
     public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
         boolean isEnabled = event.getFile() != null && event.getEditor() != null
-                                && event.getEditor().isCapable(EditorCapability.COMMENT_SOURCE);
+                            && event.getEditor().isCapable(EditorCapability.COMMENT_SOURCE);
         setVisible(isEnabled);
         updateEnableState(event.getEditor());
     }
@@ -81,7 +82,9 @@ public class AddBlockCommentControl extends SimpleControl implements IDEControl,
     }
 
     private void updateEnableState(Editor editor) {
-        boolean hasSelection = editor.getSelectionRange().getStartSymbol() != editor.getSelectionRange().getEndSymbol();
+        SelectionRange selectionRange = editor.getSelectionRange();
+        boolean hasSelection = (selectionRange.getStartSymbol() != selectionRange.getEndSymbol())
+                                   || (selectionRange.getStartLine() != selectionRange.getEndLine());
         setEnabled(hasSelection);
     }
 
