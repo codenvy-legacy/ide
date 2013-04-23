@@ -49,11 +49,14 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientService;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExceptionThrownEvent;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
+import org.exoplatform.ide.extension.openshift.client.cartridge.AddCartridgeEvent;
+import org.exoplatform.ide.extension.openshift.client.domain.CreateDomainEvent;
 import org.exoplatform.ide.extension.openshift.client.info.Property;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
+import org.exoplatform.ide.extension.openshift.shared.OpenShiftEmbeddableCartridge;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
 
@@ -65,7 +68,7 @@ import java.util.List;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 14, 2011 2:38:17 PM anya $
  */
-public class UserInfoPresenter extends GitPresenter implements ShowUserInfoHandler, ViewClosedHandler, LoggedInHandler {
+public class ApplicationListPresenter extends GitPresenter implements ShowApplicationListHandler, ViewClosedHandler, LoggedInHandler {
     interface Display extends IsView {
         /**
          * Get Ok button click handler.
@@ -111,15 +114,35 @@ public class UserInfoPresenter extends GitPresenter implements ShowUserInfoHandl
 
         /** Clear application's properties in grid. */
         void clearApplicationInfo();
+
+        ListGridItem<OpenShiftEmbeddableCartridge> getCartridgesGrid();
+
+        void addDeleteCartridgeButtonSelectionHandler(SelectionHandler<OpenShiftEmbeddableCartridge> handler);
+        void addStartCartridgeButtonSelectionHandler(SelectionHandler<OpenShiftEmbeddableCartridge> handler);
+        void addStopCartridgeButtonSelectionHandler(SelectionHandler<OpenShiftEmbeddableCartridge> handler);
+        void addRestartCartridgeButtonSelectionHandler(SelectionHandler<OpenShiftEmbeddableCartridge> handler);
+        void addReloadCartridgeButtonSelectionHandler(SelectionHandler<OpenShiftEmbeddableCartridge> handler);
+
+        HasClickHandlers getAddCartridgeButton();
+
+        HasClickHandlers getSwitchAccountButton();
+
+        HasClickHandlers getChangeNamespaceButton();
+
+        void setAddCartridgeButtonEnable(boolean isEnable);
+
+        void clearCartridgesInfo();
     }
 
     private Display display;
 
+    private AppInfo currentViewedApp;
+
     /**
      *
      */
-    public UserInfoPresenter() {
-        IDE.addHandler(ShowUserInfoEvent.TYPE, this);
+    public ApplicationListPresenter() {
+        IDE.addHandler(ShowApplicationListEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
     }
 
@@ -138,9 +161,11 @@ public class UserInfoPresenter extends GitPresenter implements ShowUserInfoHandl
             @Override
             public void onSelection(SelectionEvent<AppInfo> event) {
                 if (event.getSelectedItem() != null) {
+                    currentViewedApp = event.getSelectedItem();
                     displayAppInfo(event.getSelectedItem());
                 } else {
                     display.clearApplicationInfo();
+                    display.clearCartridgesInfo();
                 }
             }
         });
@@ -162,6 +187,63 @@ public class UserInfoPresenter extends GitPresenter implements ShowUserInfoHandl
                 askDeleteApplication(event.getSelectedItem().getName());
             }
         });
+
+        display.addDeleteCartridgeButtonSelectionHandler(new SelectionHandler<OpenShiftEmbeddableCartridge>() {
+            @Override
+            public void onSelection(SelectionEvent<OpenShiftEmbeddableCartridge> event) {
+                askDeleteCartridge(event.getSelectedItem().getName());
+            }
+        });
+
+        display.addStartCartridgeButtonSelectionHandler(new SelectionHandler<OpenShiftEmbeddableCartridge>() {
+            @Override
+            public void onSelection(SelectionEvent<OpenShiftEmbeddableCartridge> event) {
+                sendStartCartridgeEvent(event.getSelectedItem().getName());
+            }
+        });
+
+        display.addStopCartridgeButtonSelectionHandler(new SelectionHandler<OpenShiftEmbeddableCartridge>() {
+            @Override
+            public void onSelection(SelectionEvent<OpenShiftEmbeddableCartridge> event) {
+                sendStopCartridgeEvent(event.getSelectedItem().getName());
+            }
+        });
+
+        display.addRestartCartridgeButtonSelectionHandler(new SelectionHandler<OpenShiftEmbeddableCartridge>() {
+            @Override
+            public void onSelection(SelectionEvent<OpenShiftEmbeddableCartridge> event) {
+                sendRestartCartridgeEvent(event.getSelectedItem().getName());
+            }
+        });
+
+        display.addReloadCartridgeButtonSelectionHandler(new SelectionHandler<OpenShiftEmbeddableCartridge>() {
+            @Override
+            public void onSelection(SelectionEvent<OpenShiftEmbeddableCartridge> event) {
+                sendReloadCartridgeEvent(event.getSelectedItem().getName());
+            }
+        });
+
+        display.getAddCartridgeButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.fireEvent(new AddCartridgeEvent(currentViewedApp));
+            }
+        });
+
+        display.getSwitchAccountButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.fireEvent(new LoginEvent());
+                addLoggedInHandler();
+            }
+        });
+
+        display.getChangeNamespaceButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.fireEvent(new CreateDomainEvent(true));
+            }
+        });
     }
 
     /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
@@ -173,10 +255,10 @@ public class UserInfoPresenter extends GitPresenter implements ShowUserInfoHandl
         }
     }
 
-    /** @see org.exoplatform.ide.extension.openshift.client.user.ShowUserInfoHandler#onShowUserInfo(org.exoplatform.ide.extension
-     * .openshift.client.user.ShowUserInfoEvent) */
+    /** @see ShowApplicationListHandler#onShowUserInfo(org.exoplatform.ide.extension
+     * .openshift.client.user.ShowApplicationListEvent) */
     @Override
-    public void onShowUserInfo(ShowUserInfoEvent event) {
+    public void onShowUserInfo(ShowApplicationListEvent event) {
         getUserInfo();
     }
 
@@ -194,9 +276,18 @@ public class UserInfoPresenter extends GitPresenter implements ShowUserInfoHandl
                         bindDisplay();
                         IDE.getInstance().openView(display.asView());
                     }
+                    display.clearCartridgesInfo();
                     display.getLoginField().setValue(result.getRhlogin());
-                    display.getDomainField().setValue(result.getNamespace());
-                    display.getApplicationGrid().setValue(result.getApps());
+                    display.getDomainField().setValue(result.getNamespace() != null ? result.getNamespace() : "Doesn't exist");
+                    if (result.getApps() != null) {
+                        display.getApplicationGrid().setValue(result.getApps());
+
+                        if (result.getApps().size() > 0) {
+                            display.setAddCartridgeButtonEnable(true);
+                        } else {
+                            display.setAddCartridgeButtonEnable(false);
+                        }
+                    }
                 }
 
                 /**
@@ -240,6 +331,7 @@ public class UserInfoPresenter extends GitPresenter implements ShowUserInfoHandl
                 DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM).format(new Date((long)appInfo.getCreationTime()));
         properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationCreationTime(), time));
         display.getApplicationInfoGrid().setValue(properties);
+        display.getCartridgesGrid().setValue(appInfo.getEmbeddedCartridges());
     }
 
     /** Register {@link LoggedInHandler} handler. */
@@ -271,6 +363,20 @@ public class UserInfoPresenter extends GitPresenter implements ShowUserInfoHandl
             public void booleanValueReceived(Boolean value) {
                 if (value != null && value) {
                     doDeleteApplication(name);
+                }
+            }
+        });
+    }
+
+    private void askDeleteCartridge(final String cartridgeName) {
+        Dialogs.getInstance().ask(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteCartridgeTitle(),
+                                  OpenShiftExtension.LOCALIZATION_CONSTANT.deleteCartridge(cartridgeName), new BooleanValueReceivedHandler() {
+
+
+            @Override
+            public void booleanValueReceived(Boolean value) {
+                if (value != null && value) {
+                    doDeleteCartridge(cartridgeName);
                 }
             }
         });
@@ -311,6 +417,112 @@ public class UserInfoPresenter extends GitPresenter implements ShowUserInfoHandl
         } catch (RequestException e) {
             IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
                                                                                  .deleteApplicationFail(name)));
+        }
+    }
+
+    private void doDeleteCartridge(String cartridgeName) {
+        try {
+            OpenShiftClientService.getInstance().deleteCartridge(currentViewedApp.getName(), cartridgeName, new AsyncRequestCallback<Void>() {
+
+
+                @Override
+                protected void onSuccess(Void result) {
+                    IDE.fireEvent(new ShowApplicationListEvent());
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    Dialogs.getInstance().showError(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteCartridgeError());
+                }
+            });
+        } catch (RequestException e) {
+            Dialogs.getInstance().showError(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteCartridgeError());
+        }
+    }
+
+    private void sendStartCartridgeEvent(String cartridgeName) {
+        try {
+            OpenShiftClientService.getInstance().startCartridge(currentViewedApp.getName(), cartridgeName, new AsyncRequestCallback<Void>() {
+
+
+                @Override
+                protected void onSuccess(Void result) {
+                    IDE.fireEvent(new ShowApplicationListEvent());
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    Dialogs.getInstance().showError(OpenShiftExtension.LOCALIZATION_CONSTANT.sendEventFailed("start"));
+                }
+            });
+        } catch (RequestException e) {
+            Dialogs.getInstance().showError(OpenShiftExtension.LOCALIZATION_CONSTANT.sendEventFailed("start"));
+        }
+    }
+
+    private void sendStopCartridgeEvent(String cartridgeName) {
+        try {
+            OpenShiftClientService.getInstance().stopCartridge(currentViewedApp.getName(), cartridgeName, new AsyncRequestCallback<Void>() {
+
+
+                @Override
+                protected void onSuccess(Void result) {
+                    IDE.fireEvent(new ShowApplicationListEvent());
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    Dialogs.getInstance().showError(OpenShiftExtension.LOCALIZATION_CONSTANT.sendEventFailed("stop"));
+                }
+            });
+        } catch (RequestException e) {
+            Dialogs.getInstance().showError(OpenShiftExtension.LOCALIZATION_CONSTANT.sendEventFailed("stop"));
+        }
+    }
+
+    private void sendRestartCartridgeEvent(String cartridgeName) {
+        try {
+            OpenShiftClientService.getInstance().restartCartridge(currentViewedApp.getName(), cartridgeName,
+                                                                  new AsyncRequestCallback<Void>() {
+
+
+                                                                      @Override
+                                                                      protected void onSuccess(Void result) {
+                                                                          IDE.fireEvent(new ShowApplicationListEvent());
+                                                                      }
+
+                                                                      @Override
+                                                                      protected void onFailure(Throwable exception) {
+                                                                          Dialogs.getInstance().showError(
+                                                                                  OpenShiftExtension.LOCALIZATION_CONSTANT
+                                                                                                    .sendEventFailed("restart"));
+                                                                      }
+                                                                  });
+        } catch (RequestException e) {
+            Dialogs.getInstance().showError(OpenShiftExtension.LOCALIZATION_CONSTANT.sendEventFailed("restart"));
+        }
+    }
+
+    private void sendReloadCartridgeEvent(String cartridgeName) {
+        try {
+            OpenShiftClientService.getInstance().reloadCartridge(currentViewedApp.getName(), cartridgeName,
+                                                                 new AsyncRequestCallback<Void>() {
+
+
+                                                                     @Override
+                                                                     protected void onSuccess(Void result) {
+                                                                         IDE.fireEvent(new ShowApplicationListEvent());
+                                                                     }
+
+                                                                     @Override
+                                                                     protected void onFailure(Throwable exception) {
+                                                                         Dialogs.getInstance().showError(
+                                                                                 OpenShiftExtension.LOCALIZATION_CONSTANT
+                                                                                                   .sendEventFailed("reload"));
+                                                                     }
+                                                                 });
+        } catch (RequestException e) {
+            Dialogs.getInstance().showError(OpenShiftExtension.LOCALIZATION_CONSTANT.sendEventFailed("reload"));
         }
     }
 }

@@ -80,6 +80,30 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService {
     /** Health check of the application method's path. */
     private static final String APPLICATION_HEALTH = "/ide/openshift/express/apps/health";
 
+    /** Cartridges list method's path. */
+    private static final String CARTRIDGES = "/ide/openshift/express/sys/embeddable_cartridges";
+
+    /** Add cartridge method's path. */
+    private static final String ADD_CARTRIDGE = "/ide/openshift/express/apps/embeddable_cartridges/add";
+
+    /** Delete cartridge method's path. */
+    private static final String DELETE_CARTRIDGE = "/ide/openshift/express/apps/embedded_cartridges/remove";
+
+    /** Start cartridge method's path. */
+    private static final String START_CARTRIDGE = "/ide/openshift/express/apps/embedded_cartridges/start";
+
+    /** Stop cartridge method's path. */
+    private static final String STOP_CARTRIDGE = "/ide/openshift/express/apps/embedded_cartridges/stop";
+
+    /** Restart cartridge method's path. */
+    private static final String RESTART_CARTRIDGE = "/ide/openshift/express/apps/embedded_cartridges/restart";
+
+    /** Reload cartridge method's path. */
+    private static final String RELOAD_CARTRIDGE = "/ide/openshift/express/apps/embedded_cartridges/reload";
+
+    /** Destroy all applications and namespace method's path. */
+    private static final String DESTROY_APPS_AND_NAMESPACE = "/ide/openshift/express/apps/destroy/all";
+
     /** REST service context. */
     private String restServiceContext;
 
@@ -225,5 +249,66 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService {
         String url = restServiceContext + APPLICATION_RESTART;
 
         AsyncRequest.build(RequestBuilder.POST, url + "?name=" + appName).loader(loader).send(callback);
+    }
+
+    @Override
+    public void getCartridges(AsyncRequestCallback<List<String>> callback) throws RequestException {
+        String url = restServiceContext + CARTRIDGES;
+
+        AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
+    }
+
+    @Override
+    public void addCartridge(String appName, String cartridgeName, AsyncRequestCallback<Void> callback) throws RequestException {
+        String url = restServiceContext + ADD_CARTRIDGE;
+
+        AsyncRequest.build(RequestBuilder.POST, url + "?name=" + appName + "&cartridge=" + cartridgeName).loader(loader).send(callback);
+    }
+
+    @Override
+    public void deleteCartridge(String appName, String cartridgeName, AsyncRequestCallback<Void> callback) throws RequestException {
+        String url = restServiceContext + DELETE_CARTRIDGE;
+
+        AsyncRequest.build(RequestBuilder.POST, url + "?name=" + appName + "&cartridge=" + cartridgeName).loader(loader).send(callback);
+    }
+
+    @Override
+    public void startCartridge(String appName, String cartridgeName, AsyncRequestCallback<Void> callback) throws RequestException {
+        String url = restServiceContext + START_CARTRIDGE;
+
+        AsyncRequest.build(RequestBuilder.POST, url + "?name=" + appName + "&cartridge=" + cartridgeName).loader(loader).send(callback);
+    }
+
+    @Override
+    public void stopCartridge(String appName, String cartridgeName, AsyncRequestCallback<Void> callback) throws RequestException {
+        String url = restServiceContext + STOP_CARTRIDGE;
+
+        AsyncRequest.build(RequestBuilder.POST, url + "?name=" + appName + "&cartridge=" + cartridgeName).loader(loader).send(callback);
+    }
+
+    @Override
+    public void restartCartridge(String appName, String cartridgeName, AsyncRequestCallback<Void> callback) throws RequestException {
+        String url = restServiceContext + RESTART_CARTRIDGE;
+
+        AsyncRequest.build(RequestBuilder.POST, url + "?name=" + appName + "&cartridge=" + cartridgeName).loader(loader).send(callback);
+    }
+
+    @Override
+    public void reloadCartridge(String appName, String cartridgeName, AsyncRequestCallback<Void> callback) throws RequestException {
+        String url = restServiceContext + RELOAD_CARTRIDGE;
+
+        AsyncRequest.build(RequestBuilder.POST, url + "?name=" + appName + "&cartridge=" + cartridgeName).loader(loader).send(callback);
+    }
+
+    @Override
+    public void destroyAllApplications(boolean alsoNamespace, String vfsId, String projectId, AsyncRequestCallback<Void> callback)
+            throws RequestException {
+        String url = restServiceContext + DESTROY_APPS_AND_NAMESPACE;
+
+        String params = "?namespace=" + alsoNamespace + "&";
+        params += "vfsid=" + vfsId;
+        params += (projectId != null) ? "&projectid=" + projectId : "";
+
+        AsyncRequest.build(RequestBuilder.POST, url + params).loader(loader).send(callback);
     }
 }
