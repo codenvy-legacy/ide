@@ -158,11 +158,11 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService {
     }
 
     @Override
-    public void createApplication(String name, String vfsId, String projectId, String type,
+    public void createApplication(String name, String vfsId, String projectId, String type, boolean scale,
                                   AsyncRequestCallback<AppInfo> callback) throws RequestException {
         String url = restServiceContext + CREATE_APPLICATION;
 
-        String params = "?name=" + name + "&type=" + type + "&vfsid=" + vfsId + "&projectid=" + projectId;
+        String params = "?name=" + name + "&type=" + type + "&vfsid=" + vfsId + "&projectid=" + projectId + "&scale=" + scale;
         AsyncRequest.build(RequestBuilder.POST, url + params, true).requestStatusHandler(new CreateRequestHandler(name))
                     .send(callback);
     }
@@ -173,9 +173,9 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService {
      *      java.lang.String, java.lang.String, org.exoplatform.ide.client.framework.websocket.rest.RequestCallback)
      */
     @Override
-    public void createApplicationWS(String name, String vfsId, String projectId, String type,
+    public void createApplicationWS(String name, String vfsId, String projectId, String type, boolean scale,
                                     RequestCallback<AppInfo> callback) throws WebSocketException {
-        String params = "?name=" + name + "&type=" + type + "&vfsid=" + vfsId + "&projectid=" + projectId;
+        String params = "?name=" + name + "&type=" + type + "&vfsid=" + vfsId + "&projectid=" + projectId + "&scale=" + scale;
         callback.setStatusHandler(new CreateRequestHandler(name));
         RequestMessage message =
                 RequestMessageBuilder.build(RequestBuilder.POST, CREATE_APPLICATION + params).getRequestMessage();
