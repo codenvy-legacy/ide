@@ -16,25 +16,31 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.api.wizard.newproject;
+package com.codenvy.ide.wizard.newproject;
 
-/**
- * General interface for all classes which contains Create project handler.
- *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
- */
-public interface HasCreateProjectHandler {
-    /**
-     * Returns create project handler.
-     *
-     * @return handler
-     */
-    public CreateProjectHandler getCreateProjectHandler();
+import com.google.gwt.resources.client.ImageResource;
 
-    /**
-     * Sets create project handler.
-     *
-     * @param handler
-     */
-    public void setCreateProjectHandler(CreateProjectHandler handler);
+/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+public class ProjectTypeData {
+    String        typeName;
+    String        title;
+    ImageResource icon;
+
+    public ProjectTypeData(String typeName, String title, ImageResource icon) {
+        this.typeName = typeName;
+        this.title = title;
+        this.icon = icon;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public ImageResource getIcon() {
+        return icon;
+    }
 }
