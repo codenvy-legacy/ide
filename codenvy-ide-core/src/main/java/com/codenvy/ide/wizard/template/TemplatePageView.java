@@ -16,26 +16,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.api.paas;
+package com.codenvy.ide.wizard.template;
 
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.api.template.Template;
 
-/**
- * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Jul 26, 2012 5:56:12 PM anya $
- */
-public interface DeployResultHandler {
-    /**
-     * Fired, when deploy finished
-     *
-     * @param success
-     */
-    void onDeployFinished(boolean success);
+/** @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a> */
+public interface TemplatePageView extends View<TemplatePageView.ActionDelegate> {
 
-    /**
-     * Fired when project created
-     *
-     * @param project
-     */
-    void onProjectCreated(Project project);
+    public interface ActionDelegate {
+
+        void selectedTemplate(Template template);
+    }
 }

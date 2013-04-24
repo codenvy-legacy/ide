@@ -27,6 +27,7 @@ import com.codenvy.ide.wizard.WizardPresenter;
 import com.codenvy.ide.wizard.newproject.NewProjectPagePresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 
@@ -43,6 +44,8 @@ public class ShowNewProjectWizardCommand implements ExtendedCommand {
 
     private final PaaSAgentImpl paasAgent;
 
+    private final Provider<NewProjectPagePresenter> firstPage;
+
     /**
      * Create command
      *
@@ -50,16 +53,17 @@ public class ShowNewProjectWizardCommand implements ExtendedCommand {
      * @param resources
      */
     @Inject
-    public ShowNewProjectWizardCommand(WizardAgentImpl wizardAgent, Resources resources, PaaSAgentImpl paasAgent) {
+    public ShowNewProjectWizardCommand(WizardAgentImpl wizardAgent, Resources resources, PaaSAgentImpl paasAgent,
+                                       Provider<NewProjectPagePresenter> firstPage) {
         this.wizardAgent = wizardAgent;
         this.resources = resources;
         this.paasAgent = paasAgent;
+        this.firstPage = firstPage;
     }
 
     /** {@inheritDoc} */
     public void execute() {
-        NewProjectPagePresenter firstPage = new NewProjectPagePresenter(wizardAgent, resources, paasAgent);
-        WizardPresenter wizardDialog = new WizardPresenter(firstPage, "Create project");
+        WizardPresenter wizardDialog = new WizardPresenter(firstPage.get(), "Create project");
         wizardDialog.showWizard();
     }
 
@@ -73,7 +77,7 @@ public class ShowNewProjectWizardCommand implements ExtendedCommand {
     /** {@inheritDoc} */
     @Override
     public String getToolTip() {
-        return "Create new porject";
+        return "Create new project";
     }
 
     /** {@inheritDoc} */

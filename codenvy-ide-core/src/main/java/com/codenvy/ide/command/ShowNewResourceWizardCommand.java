@@ -22,11 +22,11 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.expressions.Expression;
 import com.codenvy.ide.api.expressions.ProjectOpenedExpression;
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
-import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.codenvy.ide.wizard.WizardPresenter;
 import com.codenvy.ide.wizard.newresource.NewResourcePagePresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 
@@ -37,31 +37,28 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ShowNewResourceWizardCommand implements ExtendedCommand {
-    private final Resources resources;
-
-    private final WizardAgentImpl wizardAgent;
-
-    private final ProjectOpenedExpression expression;
+    private final Resources                          resources;
+    private final ProjectOpenedExpression            expression;
+    private final Provider<NewResourcePagePresenter> firstPage;
 
     /**
      * Create command.
      *
      * @param resources
-     * @param wizardAgent
      * @param expression
+     * @param firstPage
      */
     @Inject
-    public ShowNewResourceWizardCommand(Resources resources, WizardAgentImpl wizardAgent,
-                                        ProjectOpenedExpression expression) {
+    public ShowNewResourceWizardCommand(Resources resources, ProjectOpenedExpression expression,
+                                        Provider<NewResourcePagePresenter> firstPage) {
         this.resources = resources;
-        this.wizardAgent = wizardAgent;
         this.expression = expression;
+        this.firstPage = firstPage;
     }
 
     /** {@inheritDoc} */
     public void execute() {
-        NewResourcePagePresenter page = new NewResourcePagePresenter(resources, wizardAgent);
-        WizardPresenter wizardDialog = new WizardPresenter(page, "Create resource");
+        WizardPresenter wizardDialog = new WizardPresenter(firstPage.get(), "Create resource");
         wizardDialog.showWizard();
     }
 
@@ -72,7 +69,6 @@ public class ShowNewResourceWizardCommand implements ExtendedCommand {
 
     /** {@inheritDoc} */
     public Expression inContext() {
-        // TODO Auto-generated method stub
         return null;
     }
 

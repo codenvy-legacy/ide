@@ -16,25 +16,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.api.paas;
+package com.codenvy.ide.wizard.template;
 
-import com.codenvy.ide.resources.model.Project;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
- * PaaS Actions
+ * Contains of resource for new resource wizard page view.
  *
- * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Jul 24, 2012 12:44:17 PM anya $
+ * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface HasPaaSActions {
-    /**
-     * Deploys Project
-     *
-     * @param project
-     * @param deployResultHandler
-     */
-    void deploy(Project project, DeployResultHandler deployResultHandler);
-
-    /** @return  */
-    boolean validate();
+public interface TemplateWizardResources extends ClientBundle {
+    @Source("com/codenvy/ide/wizard/images/NewResourceIcon.png")
+    ImageResource templateIcon();
 }

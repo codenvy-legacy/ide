@@ -41,7 +41,7 @@ public class ProjectModelUnmarshaller implements Unmarshallable<ProjectModelProv
         this.modelProviderAdapter = modelProviderAdapter;
     }
 
-    /** @see com.codenvy.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         try {
@@ -58,6 +58,7 @@ public class ProjectModelUnmarshaller implements Unmarshallable<ProjectModelProv
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public ProjectModelProviderAdapter getPayload() {
         return this.modelProviderAdapter;
