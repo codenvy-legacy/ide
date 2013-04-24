@@ -19,8 +19,11 @@
 package com.codenvy.ide.java.client.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
+import com.codenvy.ide.java.client.JavaProjectClientService;
+import com.codenvy.ide.java.client.JavaProjectClientServiceImpl;
 import com.codenvy.ide.java.client.wizard.*;
 import com.google.gwt.inject.client.AbstractGinModule;
+import com.google.inject.Singleton;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -35,6 +38,6 @@ public class JavaGinModule extends AbstractGinModule {
         bind(NewJavaProjectPageView.class).to(NewJavaProjectPageViewImpl.class);
         bind(NewPackagePageView.class).to(NewPackagePageViewImpl.class);
         bind(NewJavaClassPageView.class).to(NewJavaClassPageViewImpl.class);
+        bind(JavaProjectClientService.class).to(JavaProjectClientServiceImpl.class).in(Singleton.class);
     }
-
 }
