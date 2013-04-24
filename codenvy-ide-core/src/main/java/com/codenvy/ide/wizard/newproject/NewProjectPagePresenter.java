@@ -46,7 +46,6 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
     private ProjectTypeAgentImpl            projectTypeAgent;
     private PaaSAgentImpl                   paasAgent;
     private Provider<TemplatePagePresenter> templatePageProvider;
-    private TemplatePagePresenter           templatePage;
     private boolean                         hasProjectNameIncorrectSymbol;
     private boolean                         hasSameProject;
     private boolean                         hasProjectList;
@@ -97,13 +96,9 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
     /** {@inheritDoc} */
     @Override
     public WizardPagePresenter flipToNext() {
-        if (templatePage == null) {
-            templatePage = templatePageProvider.get();
-            templatePage.setPrevious(this);
-            templatePage.setUpdateDelegate(delegate);
-        }
-
-
+        WizardPagePresenter templatePage = templatePageProvider.get();
+        templatePage.setPrevious(this);
+        templatePage.setUpdateDelegate(delegate);
 
         return templatePage;
     }

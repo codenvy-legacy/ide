@@ -16,12 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.api.template;
+package com.codenvy.ide.java.client.template;
 
-import com.codenvy.ide.resources.model.Project;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.codenvy.ide.api.mvp.View;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
-public interface CreateProjectProvider {
-    void create(AsyncCallback<Project> callback);
+public interface CreateJavaProjectPageView extends View<CreateJavaProjectPageView.ActionDelegate> {
+    /** Action delegate for new Java project wizard */
+    public interface ActionDelegate {
+        /** Checks whether source folder is complete or not and updates navigation buttons. */
+        void checkSourceFolederInput();
+    }
+
+    /**
+     * Get Source folder name
+     *
+     * @return the source folder name
+     */
+    String getSourceFolder();
 }

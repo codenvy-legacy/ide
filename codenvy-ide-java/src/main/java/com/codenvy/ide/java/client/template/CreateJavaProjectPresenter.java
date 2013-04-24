@@ -39,18 +39,21 @@ import com.google.web.bindery.event.shared.EventBus;
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 public class CreateJavaProjectPresenter implements CreateProjectProvider {
     // TODO
-    private String projectName  = "g";
-    private String sourceFolder = "src";
+    private String projectName = "g";
+    private String                   sourceFolder;
     private JavaProjectClientService service;
     private ResourceProvider         resourceProvider;
     private EventBus                 eventBus;
 
     @Inject
-
     protected CreateJavaProjectPresenter(JavaProjectClientService service, ResourceProvider resourceProvider, EventBus eventBus) {
         this.service = service;
         this.resourceProvider = resourceProvider;
         this.eventBus = eventBus;
+    }
+
+    public void setSourceFolder(String sourceFolder) {
+        this.sourceFolder = sourceFolder;
     }
 
     /**
@@ -94,11 +97,5 @@ public class CreateJavaProjectPresenter implements CreateProjectProvider {
         } catch (RequestException e) {
             callback.onFailure(e);
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setProjectName(String name) {
-        projectName = name;
     }
 }

@@ -31,6 +31,7 @@ import com.codenvy.ide.java.client.internal.codeassist.impl.AssistOptions;
 import com.codenvy.ide.java.client.internal.compiler.impl.CompilerOptions;
 import com.codenvy.ide.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.java.client.projectmodel.JavaProjectModelProvider;
+import com.codenvy.ide.java.client.template.CreateJavaProjectPagePresenter;
 import com.codenvy.ide.java.client.template.CreateJavaProjectPresenter;
 import com.codenvy.ide.java.client.templates.*;
 import com.codenvy.ide.java.client.wizard.NewJavaClassPagePresenter;
@@ -72,7 +73,8 @@ public class JavaExtension {
     public JavaExtension(ResourceProvider resourceProvider, EditorRegistry editorRegistry, JavaEditorProvider javaEditorProvider,
                          EventBus eventBus, WizardAgent wizardAgent, Provider<NewPackagePagePresenter> packageProvider,
                          Provider<NewJavaClassPagePresenter> classProvider, ProjectTypeAgent projectTypeAgent,
-                         TemplateAgent templateAgent, CreateJavaProjectPresenter createJavaProjectPresenter) {
+                         TemplateAgent templateAgent, CreateJavaProjectPresenter createJavaProjectPresenter,
+                         Provider<CreateJavaProjectPagePresenter> createJavaProjectWizardPage) {
 
         this();
         FileType javaFile = new FileType(JavaClientBundle.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
@@ -90,7 +92,7 @@ public class JavaExtension {
 
         templateAgent
                 .registerTemplate("title", JavaClientBundle.INSTANCE.javaProject(), JsonCollections.createArray(JavaProject.PRIMARY_NATURE),
-                                  createJavaProjectPresenter, null);
+                                  createJavaProjectPresenter, createJavaProjectWizardPage);
     }
 
     /** For test use only. */
