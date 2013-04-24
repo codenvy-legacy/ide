@@ -19,9 +19,9 @@
 package com.codenvy.ide.extension.cloudfoundry.client.wizard;
 
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
-import com.codenvy.ide.api.paas.AbstractPaasWizardPagePresenter;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.*;
@@ -53,8 +53,8 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class CloudFoundryPagePresenter extends AbstractPaasWizardPagePresenter implements
-                                                                               CloudFoundryPageView.ActionDelegate, ProjectBuiltHandler {
+public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
+        implements CloudFoundryPageView.ActionDelegate, ProjectBuiltHandler {
     private CloudFoundryPageView view;
 
     private EventBus eventBus;
@@ -446,24 +446,26 @@ public class CloudFoundryPagePresenter extends AbstractPaasWizardPagePresenter i
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
-        projectName = getCreateProjectHandler().getProjectName();
-        getServers();
-        container.setWidget(view);
+        // TODO
+//        projectName = getCreateProjectHandler().getProjectName();
+//        getServers();
+//        container.setWidget(view);
     }
 
     /** {@inheritDoc} */
     @Override
     public void doFinish() {
-        getCreateProjectHandler().create(new AsyncCallback<Project>() {
-            @Override
-            public void onSuccess(Project result) {
-                deploy(result);
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                // do nothing
-            }
-        });
+        // TODO
+//        getCreateProjectHandler().create(new AsyncCallback<Project>() {
+//            @Override
+//            public void onSuccess(Project result) {
+//                deploy(result);
+//            }
+//
+//            @Override
+//            public void onFailure(Throwable caught) {
+//                // do nothing
+//            }
+//        });
     }
 }

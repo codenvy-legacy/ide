@@ -18,15 +18,20 @@
  */
 package com.codenvy.ide.wizard.newproject;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.paas.PaaS;
+import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
-import com.codenvy.ide.api.wizard.newproject.AbstractNewProjectWizardPage;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.paas.PaaSAgentImpl;
-import com.codenvy.ide.wizard.WizardAgentImpl;
-import com.google.gwt.resources.client.ImageResource;
+import com.codenvy.ide.resources.model.ResourceNameValidator;
+import com.codenvy.ide.util.loging.Log;
+import com.codenvy.ide.wizard.template.TemplatePagePresenter;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 
 /**
@@ -35,54 +40,72 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public class NewProjectPagePresenter extends AbstractWizardPagePresenter implements NewProjectPageView.ActionDelegate {
-    private AbstractNewProjectWizardPage next;
-
-    private NewProjectPageView view;
-
-    private JsonArray<NewProjectWizardData> wizards;
-
-    private PaaS selectedPaaS;
-
-    private JsonArray<PaaS> paases;
+    private NewProjectPageView              view;
+    private JsonArray<PaaS>                 paases;
+    private JsonArray<ProjectTypeData>      projectTypes;
+    private ProjectTypeAgentImpl            projectTypeAgent;
+    private PaaSAgentImpl                   paasAgent;
+    private Provider<TemplatePagePresenter> templatePageProvider;
+    private TemplatePagePresenter           templatePage;
+    private boolean                         hasProjectNameIncorrectSymbol;
+    private boolean                         hasSameProject;
+    private boolean                         hasProjectList;
+    private JsonArray<String>               projectList;
 
     /**
      * Create presenter
      *
-     * @param wizardAgent
+     * @param projectTypeAgent
      * @param resources
+     * @param view
      * @param paasAgent
      */
-    public NewProjectPagePresenter(WizardAgentImpl wizardAgent, NewProjectWizardResource resources,
-                                   PaaSAgentImpl paasAgent) {
-        this(wizardAgent, resources.newProjectIcon(), new NewProjectPageViewImpl(wizardAgent.getNewProjectWizards(),
-                                                                                 paasAgent.getPaaSes()), paasAgent);
-    }
+    @Inject
+    protected NewProjectPagePresenter(ProjectTypeAgentImpl projectTypeAgent, Resources resources, NewProjectPageView view,
+                                      PaaSAgentImpl paasAgent, Provider<TemplatePagePresenter> templatePageProvider,
+                                      ResourceProvider resourceProvider) {
 
-    /**
-     * Create presenter
-     * <p/>
-     * For tests
-     *
-     * @param wizardAgent
-     * @param image
-     * @param view
-     */
-    protected NewProjectPagePresenter(WizardAgentImpl wizardAgent, ImageResource image, NewProjectPageView view,
-                                      PaaSAgentImpl paasAgent) {
-        super("Select a wizard", image);
+        super("Select a wizard", resources.newResourceIcon());
+
+        resourceProvider.listProjects(new AsyncCallback<JsonArray<String>>() {
+            @Override
+            public void onSuccess(JsonArray<String> result) {
+                projectList = result;
+                hasProjectList = true;
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                Log.error(NewProjectPagePresenter.class, caught);
+            }
+        });
+
         this.view = view;
-        view.setDelegate(this);
-        this.wizards = wizardAgent.getNewProjectWizards();
+        this.view.setDelegate(this);
+
+        this.paasAgent = paasAgent;
         this.paases = paasAgent.getPaaSes();
+        this.paasAgent.setSelectedPaaS(null);
+
+        this.projectTypeAgent = projectTypeAgent;
+        this.projectTypes = projectTypeAgent.getProjectTypes();
+        this.projectTypeAgent.setSelectedProjectType(null);
+
+        this.templatePageProvider = templatePageProvider;
     }
 
     /** {@inheritDoc} */
     @Override
     public WizardPagePresenter flipToNext() {
-        next.setPrevious(this);
-        next.setUpdateDelegate(delegate);
-        next.setPaaSWizardPage(selectedPaaS.getWizardPage());
-        return next;
+        if (templatePage == null) {
+            templatePage = templatePageProvider.get();
+            templatePage.setPrevious(this);
+            templatePage.setUpdateDelegate(delegate);
+        }
+
+
+
+        return templatePage;
     }
 
     /** {@inheritDoc} */
@@ -94,21 +117,30 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
     /** {@inheritDoc} */
     @Override
     public boolean hasNext() {
-        return next != null;
+        return true;
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean isCompleted() {
-        return next != null && selectedPaaS != null;
+        return paasAgent.getSelectedPaaS() != null && projectTypeAgent.getSelectedProjectType() != null &&
+               !view.getProjectName().isEmpty() && !hasProjectNameIncorrectSymbol && hasProjectList && !hasSameProject;
     }
 
     /** {@inheritDoc} */
     @Override
     public String getNotice() {
-        if (next == null) {
+        if (view.getProjectName().isEmpty()) {
+            return "Please, enter a project name.";
+        } else if (!hasProjectList) {
+            return "Please wait, checking project list";
+        } else if (hasSameProject) {
+            return "Project with this name already exists.";
+        } else if (hasProjectNameIncorrectSymbol) {
+            return "Incorrect project name.";
+        } else if (projectTypeAgent.getSelectedProjectType() == null) {
             return "Please, choose technology";
-        } else if (selectedPaaS == null) {
+        } else if (paasAgent.getSelectedPaaS() == null) {
             return "Please, choose PaaS";
         }
 
@@ -124,15 +156,34 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
     /** {@inheritDoc} */
     @Override
     public void onProjectTypeSelected(int id) {
-        next = wizards.get(id).getWizardPage();
-        selectedPaaS = null;
+        ProjectTypeData projectType = projectTypes.get(id);
+        projectTypeAgent.setSelectedProjectType(projectType);
+        paasAgent.setSelectedPaaS(null);
+
         delegate.updateControls();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onPaaSSelected(int id) {
-        selectedPaaS = paases.get(id);
+        PaaS paas = paases.get(id);
+        paasAgent.setSelectedPaaS(paas);
+
+        delegate.updateControls();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void checkProjectName() {
+        String projectName = view.getProjectName();
+        hasProjectNameIncorrectSymbol = !ResourceNameValidator.isProjectNameValid(projectName);
+
+        hasSameProject = false;
+        for (int i = 0; i < projectList.size() && !hasSameProject; i++) {
+            String name = projectList.get(i);
+            hasSameProject = projectName.equals(name);
+        }
+
         delegate.updateControls();
     }
 }

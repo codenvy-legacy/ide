@@ -45,5 +45,9 @@ public interface NewProjectPageView extends View<NewProjectPageView.ActionDelega
          *         button's id
          */
         void onPaaSSelected(int id);
+
+        void checkProjectName();
     }
+
+    String getProjectName();
 }

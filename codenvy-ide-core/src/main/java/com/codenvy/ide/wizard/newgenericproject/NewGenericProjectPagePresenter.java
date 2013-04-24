@@ -18,13 +18,10 @@
  */
 package com.codenvy.ide.wizard.newgenericproject;
 
-import com.codenvy.ide.api.paas.AbstractPaasWizardPagePresenter;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
-import com.codenvy.ide.api.wizard.newproject.AbstractNewProjectWizardPage;
-import com.codenvy.ide.api.wizard.newproject.CreateProjectHandler;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.util.StringUtils;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectPageView.ActionDelegate;
@@ -38,7 +35,7 @@ import com.google.inject.Inject;
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewGenericProjectPagePresenter extends AbstractNewProjectWizardPage implements ActionDelegate {
+public class NewGenericProjectPagePresenter extends AbstractWizardPagePresenter implements ActionDelegate {
     private NewGenericProjectPageView view;
 
     private ResourceProvider resourceProvider;
@@ -83,14 +80,16 @@ public class NewGenericProjectPagePresenter extends AbstractNewProjectWizardPage
     /** {@inheritDoc} */
     @Override
     public WizardPagePresenter flipToNext() {
-        AbstractPaasWizardPagePresenter paasWizardPage = getPaaSWizardPage();
-        CreateProjectHandler createProjectHandler = getCreateProjectHandler();
-        createProjectHandler.setProjectName(view.getProjectName());
-        paasWizardPage.setCreateProjectHandler(createProjectHandler);
-        paasWizardPage.setPrevious(this);
-        paasWizardPage.setUpdateDelegate(delegate);
-
-        return paasWizardPage;
+// TODO
+//        AbstractPaasWizardPagePresenter paasWizardPage = getPaaSWizardPage();
+//        CreateProjectHandler createProjectHandler = getCreateProjectHandler();
+//        createProjectHandler.setProjectName(view.getProjectName());
+//        paasWizardPage.setCreateProjectHandler(createProjectHandler);
+//        paasWizardPage.setPrevious(this);
+//        paasWizardPage.setUpdateDelegate(delegate);
+//
+//        return paasWizardPage;
+        return null;
     }
 
     /** {@inheritDoc} */
@@ -102,7 +101,9 @@ public class NewGenericProjectPagePresenter extends AbstractNewProjectWizardPage
     /** {@inheritDoc} */
     @Override
     public boolean hasNext() {
-        return getPaaSWizardPage() != null;
+        // TODO
+//        return getPaaSWizardPage() != null;
+        return false;
     }
 
     /** {@inheritDoc} */
@@ -155,18 +156,19 @@ public class NewGenericProjectPagePresenter extends AbstractNewProjectWizardPage
     /** {@inheritDoc} */
     @Override
     public void doFinish() {
-        CreateProjectHandler createProjectHandler = getCreateProjectHandler();
-        createProjectHandler.setProjectName(view.getProjectName());
-        createProjectHandler.create(new AsyncCallback<Project>() {
-            @Override
-            public void onSuccess(Project result) {
-                // do nothing
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                // do nothing
-            }
-        });
+        // TODO
+//        CreateProjectHandler createProjectHandler = getCreateProjectHandler();
+//        createProjectHandler.setProjectName(view.getProjectName());
+//        createProjectHandler.create(new AsyncCallback<Project>() {
+//            @Override
+//            public void onSuccess(Project result) {
+//                // do nothing
+//            }
+//
+//            @Override
+//            public void onFailure(Throwable caught) {
+//                // do nothing
+//            }
+//        });
     }
 }

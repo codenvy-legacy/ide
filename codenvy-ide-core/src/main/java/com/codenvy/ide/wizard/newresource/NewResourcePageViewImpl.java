@@ -27,6 +27,7 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.list.SimpleList.View;
 import com.codenvy.ide.util.dom.Elements;
+import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -35,6 +36,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 
 
 /**
@@ -44,7 +46,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public class NewResourcePageViewImpl extends Composite implements NewResourcePageView {
-    private static NewFileViewUiBinder uiBinder = GWT.create(NewFileViewUiBinder.class);
+    private static NewResourceViewUiBinder uiBinder = GWT.create(NewResourceViewUiBinder.class);
 
     @UiField
     ScrollPanel resources;
@@ -53,59 +55,57 @@ public class NewResourcePageViewImpl extends Composite implements NewResourcePag
 
     private SimpleList<NewResourceWizardData> list;
 
-    private SimpleList.ListItemRenderer<NewResourceWizardData> listItemRenderer =
-            new SimpleList.ListItemRenderer<NewResourceWizardData>() {
-                @Override
-                public void render(Element itemElement, NewResourceWizardData itemData) {
-                    TableCellElement label = Elements.createTDElement();
+    private SimpleList.ListItemRenderer<NewResourceWizardData> listItemRenderer = new SimpleList.ListItemRenderer<NewResourceWizardData>() {
+        @Override
+        public void render(Element itemElement, NewResourceWizardData itemData) {
+            TableCellElement label = Elements.createTDElement();
 
-                    SafeHtmlBuilder sb = new SafeHtmlBuilder();
-                    // Add icon
-                    sb.appendHtmlConstant("<table><tr><td>");
-                    ImageResource icon = itemData.getIcon();
-                    if (icon != null) {
-                        sb.appendHtmlConstant("<img src=\"" + icon.getSafeUri().asString() + "\">");
-                    }
-                    sb.appendHtmlConstant("</td>");
+            SafeHtmlBuilder sb = new SafeHtmlBuilder();
+            // Add icon
+            sb.appendHtmlConstant("<table><tr><td>");
+            ImageResource icon = itemData.getIcon();
+            if (icon != null) {
+                sb.appendHtmlConstant("<img src=\"" + icon.getSafeUri().asString() + "\">");
+            }
+            sb.appendHtmlConstant("</td>");
 
-                    // Add title
-                    sb.appendHtmlConstant("<td>");
-                    sb.appendEscaped(itemData.getTitle());
-                    sb.appendHtmlConstant("</td></tr></table>");
+            // Add title
+            sb.appendHtmlConstant("<td>");
+            sb.appendEscaped(itemData.getTitle());
+            sb.appendHtmlConstant("</td></tr></table>");
 
-                    label.setInnerHTML(sb.toSafeHtml().asString());
+            label.setInnerHTML(sb.toSafeHtml().asString());
 
-                    itemElement.appendChild(label);
-                }
+            itemElement.appendChild(label);
+        }
 
-                @Override
-                public Element createElement() {
-                    return Elements.createTRElement();
-                }
-            };
+        @Override
+        public Element createElement() {
+            return Elements.createTRElement();
+        }
+    };
 
-    private SimpleList.ListEventDelegate<NewResourceWizardData> listDelegate =
-            new SimpleList.ListEventDelegate<NewResourceWizardData>() {
-                public void onListItemClicked(Element itemElement, NewResourceWizardData itemData) {
-                    list.getSelectionModel().setSelectedItem(itemData);
-                    delegate.selectedFileType(itemData);
-                }
+    private SimpleList.ListEventDelegate<NewResourceWizardData> listDelegate = new SimpleList.ListEventDelegate<NewResourceWizardData>() {
+        public void onListItemClicked(Element itemElement, NewResourceWizardData itemData) {
+            list.getSelectionModel().setSelectedItem(itemData);
+            delegate.selectedFileType(itemData);
+        }
 
-                public void onListItemDoubleClicked(Element listItemBase, NewResourceWizardData itemData) {
-                }
-            };
+        public void onListItemDoubleClicked(Element listItemBase, NewResourceWizardData itemData) {
+        }
+    };
 
-
-    interface NewFileViewUiBinder extends UiBinder<Widget, NewResourcePageViewImpl> {
+    interface NewResourceViewUiBinder extends UiBinder<Widget, NewResourcePageViewImpl> {
     }
 
     /**
-     * Create view with given list of new resource wizards.
+     * Create view.
      *
-     * @param wizards
-     *         available wizards
+     * @param resources
+     * @param wizardAgent
      */
-    public NewResourcePageViewImpl(Resources resources, JsonArray<NewResourceWizardData> wizards) {
+    @Inject
+    protected NewResourcePageViewImpl(Resources resources, WizardAgentImpl wizardAgent) {
         initWidget(uiBinder.createAndBindUi(this));
 
         TableElement tableElement = Elements.createTableElement();
@@ -115,6 +115,7 @@ public class NewResourcePageViewImpl extends Composite implements NewResourcePag
         this.resources.setStyleName(resources.coreCss().simpleListContainer());
         this.resources.add(list);
 
+        JsonArray<NewResourceWizardData> wizards = wizardAgent.getNewResourceWizards();
         list.render(wizards);
     }
 

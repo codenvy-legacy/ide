@@ -19,12 +19,11 @@
 package com.codenvy.ide.java.client.wizard;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.wizard.newproject.AbstractCreateProjectPresenter;
 import com.codenvy.ide.java.client.projectmodel.CompilationUnit;
 import com.codenvy.ide.java.client.projectmodel.JavaProject;
-import com.codenvy.ide.java.client.projectmodel.JavaProjectDesctiprion;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.resources.model.*;
+import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.resources.model.Folder;
+import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.MimeType;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -37,7 +36,8 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class CreateJavaProjectPresenter extends AbstractCreateProjectPresenter {
+//public class CreateJavaProjectPresenter extends AbstractCreateProjectPresenter {
+public class CreateJavaProjectPresenter {
     public static final String SOURCE_FOLDER = "SOURCE_FOLDER";
 
     private ResourceProvider resourceProvider;
@@ -53,31 +53,29 @@ public class CreateJavaProjectPresenter extends AbstractCreateProjectPresenter {
     }
 
     /** {@inheritDoc} */
-    @Override
+//    @Override
     public void create(final AsyncCallback<Project> callback) {
-        String projectName = getProjectName();
-        final String sourceFolder = getParam(SOURCE_FOLDER);
-
-        resourceProvider.createProject(projectName, JsonCollections.<Property>createArray(new Property(
-                ProjectDescription.PROPERTY_PRIMARY_NATURE, JavaProject.PRIMARY_NATURE),//
-                                                                                          new Property(
-                                                                                                  JavaProjectDesctiprion
-                                                                                                          .PROPERTY_SOURCE_FOLDERS,
-                                                                                                  JsonCollections
-                                                                                                          .createArray(sourceFolder))),
-                                       new AsyncCallback<Project>() {
-                                           @Override
-                                           public void onFailure(Throwable caught) {
-                                               Log.error(NewJavaProjectPagePresenter.class, caught);
-                                           }
-
-                                           @Override
-                                           public void onSuccess(Project result) {
-                                               createSourceFolder(result, sourceFolder);
-                                               createReadMeFile(result);
-                                               callback.onSuccess(result);
-                                           }
-                                       });
+        // TOOD
+//        String projectName = getProjectName();
+//        final String sourceFolder = getParam(SOURCE_FOLDER);
+//
+//        resourceProvider.createProject(projectName, JsonCollections
+//                .<Property>createArray(new Property(ProjectDescription.PROPERTY_PRIMARY_NATURE, JavaProject.PRIMARY_NATURE),//
+//                                       new Property(JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS,
+//                                                    JsonCollections.createArray(sourceFolder))),
+//                                       new AsyncCallback<Project>() {
+//                                           @Override
+//                                           public void onFailure(Throwable caught) {
+//                                               Log.error(NewJavaProjectPagePresenter.class, caught);
+//                                           }
+//
+//                                           @Override
+//                                           public void onSuccess(Project result) {
+//                                               createSourceFolder(result, sourceFolder);
+//                                               createReadMeFile(result);
+//                                               callback.onSuccess(result);
+//                                           }
+//                                       });
     }
 
     private void createReadMeFile(Project project) {
@@ -111,7 +109,8 @@ public class CreateJavaProjectPresenter extends AbstractCreateProjectPresenter {
                 .createCompilationUnit(
                         result,
                         "HelloWorld.java",
-                        "\npublic class HelloWorld{\n   public static void main(String args[]){\n      System.out.println(\"Hello World!\");\n   }\n}",
+                        "\npublic class HelloWorld{\n   public static void main(String args[]){\n      System.out.println(\"Hello " +
+                        "World!\");\n   }\n}",
                         new AsyncCallback<CompilationUnit>() {
                             @Override
                             public void onFailure(Throwable caught) {

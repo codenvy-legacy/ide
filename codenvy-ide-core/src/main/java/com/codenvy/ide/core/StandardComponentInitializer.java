@@ -31,9 +31,7 @@ import com.codenvy.ide.toolbar.ToggleItemExpression;
 import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.codenvy.ide.wizard.newfile.NewTextFilePagePresenter;
 import com.codenvy.ide.wizard.newfolder.NewFolderPagePresenter;
-import com.codenvy.ide.wizard.newgenericproject.CreateGenericProjectPresenter;
 import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectPagePresenter;
-import com.codenvy.ide.wizard.warproject.CreateWarProjectPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -58,14 +56,7 @@ public class StandardComponentInitializer {
                                         Provider<NewTextFilePagePresenter> newTextFileProvider,
                                         Resources resources, KeyBindingAgent keyBinding, ShowPreferenceCommand showPreferencesCommand,
                                         OpenProjectCommand openProjectCommand, ToolbarAgent toolbar, ExpressionManager expressionManager,
-                                        EventBus eventBus, PaaSAgent paasAgent,
-                                        CreateGenericProjectPresenter createGenericProject, CreateWarProjectPresenter createWarProject) {
-
-        wizard.registerNewProjectWizard("Generic Project", "Create generic project", "", resources.genericProjectIcon(),
-                                        genericProjectProvider, createGenericProject, JsonCollections.<String>createArray());
-        wizard.registerNewProjectWizard("Java Web Application (WAR)", "Create web application", "War",
-                                        resources.genericProjectIcon(), genericProjectProvider, createWarProject,
-                                        JsonCollections.<String>createArray("java", "War"));
+                                        EventBus eventBus, PaaSAgent paasAgent) {
 
         // TODO change icon
         wizard.registerNewResourceWizard("General", "Folder", resources.folder(), newFolderProvider);
@@ -102,6 +93,6 @@ public class StandardComponentInitializer {
         toolbar.addDropDownItem("Test/New", resources.file(), "Test item");
         toolbar.addToggleItem("Test/New/Checked item", command);
 
-        paasAgent.registerPaaS("None", "None", null, false, JsonCollections.<String>createArray("", "java", "War"), null, null);
+        paasAgent.registerPaaS("None", "None", null, JsonCollections.<String>createArray("", "java", "War"), null, null);
     }
 }

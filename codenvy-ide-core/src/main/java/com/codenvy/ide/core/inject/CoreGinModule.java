@@ -21,28 +21,21 @@ import com.codenvy.ide.api.editor.*;
 import com.codenvy.ide.api.expressions.ExpressionManager;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.paas.PaaSAgent;
-import com.codenvy.ide.api.parts.ConsolePart;
-import com.codenvy.ide.api.parts.OutlinePart;
-import com.codenvy.ide.api.parts.ProjectExplorerPart;
-import com.codenvy.ide.api.parts.WelcomePart;
+import com.codenvy.ide.api.parts.*;
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
+import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.menu.MainMenuAgent;
 import com.codenvy.ide.api.ui.menu.ToolbarAgent;
-import com.codenvy.ide.api.ui.perspective.EditorPartStack;
-import com.codenvy.ide.api.ui.perspective.PartStack;
-import com.codenvy.ide.api.ui.perspective.PartStackPresenterFactory;
-import com.codenvy.ide.api.ui.perspective.PartStackView;
-import com.codenvy.ide.api.ui.perspective.PartStackViewFactory;
-import com.codenvy.ide.api.ui.perspective.WorkBenchPartController;
-import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
+import com.codenvy.ide.api.ui.perspective.*;
 import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
 import com.codenvy.ide.api.ui.wizard.WizardAgent;
 import com.codenvy.ide.api.ui.wizard.newfile.NewGenericFilePageView;
+import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.core.StandardComponentInitializer;
 import com.codenvy.ide.core.editor.DefaultEditorProvider;
 import com.codenvy.ide.core.editor.EditorAgentImpl;
@@ -73,9 +66,9 @@ import com.codenvy.ide.perspective.WorkspaceView;
 import com.codenvy.ide.perspective.WorkspaceViewImpl;
 import com.codenvy.ide.preferences.PreferencesAgentImpl;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
+import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.codenvy.ide.resources.ResourceProviderComponent;
 import com.codenvy.ide.resources.model.GenericModelProvider;
-import com.codenvy.ide.api.parts.SearchPart;
 import com.codenvy.ide.search.SearchPartPresenter;
 import com.codenvy.ide.search.SearchPartView;
 import com.codenvy.ide.search.SearchPartViewImpl;
@@ -88,7 +81,6 @@ import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.toolbar.ToolbarView;
 import com.codenvy.ide.toolbar.ToolbarViewImpl;
-import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.user.UserClientServiceImpl;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.codenvy.ide.websocket.MessageBus;
@@ -98,6 +90,14 @@ import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.codenvy.ide.wizard.newfile.NewGenericFilePageViewImpl;
 import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectPageView;
 import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectPageViewImpl;
+import com.codenvy.ide.wizard.newproject.NewProjectPageView;
+import com.codenvy.ide.wizard.newproject.NewProjectPageViewImpl;
+import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
+import com.codenvy.ide.wizard.newresource.NewResourcePageView;
+import com.codenvy.ide.wizard.newresource.NewResourcePageViewImpl;
+import com.codenvy.ide.wizard.template.TemplateAgentImpl;
+import com.codenvy.ide.wizard.template.TemplatePageView;
+import com.codenvy.ide.wizard.template.TemplatePageViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.inject.Provides;
@@ -125,7 +125,7 @@ public class CoreGinModule extends AbstractGinModule {
         install(new GinFactoryModuleBuilder().implement(PartStack.class, PartStackPresenter.class).build(PartStackPresenterFactory.class));
         bind(UserClientService.class).to(UserClientServiceImpl.class).in(Singleton.class);
         bind(PreferencesManager.class).to(PreferencesManagerImpl.class).in(Singleton.class);
-        
+
         apiBindingConfigure();
 
         resourcesAPIconfigure();
@@ -147,6 +147,8 @@ public class CoreGinModule extends AbstractGinModule {
         bind(PreferencesAgent.class).to(PreferencesAgentImpl.class).in(Singleton.class);
         bind(WizardAgent.class).to(WizardAgentImpl.class).in(Singleton.class);
         bind(PaaSAgent.class).to(PaaSAgentImpl.class).in(Singleton.class);
+        bind(TemplateAgent.class).to(TemplateAgentImpl.class).in(Singleton.class);
+        bind(ProjectTypeAgent.class).to(ProjectTypeAgentImpl.class).in(Singleton.class);
         // UI Model
 //        bind(PartStack.class).to(PartStackPresenter.class);
         bind(EditorPartStack.class).to(EditorPartStackPresenter.class).in(Singleton.class);
@@ -196,6 +198,9 @@ public class CoreGinModule extends AbstractGinModule {
         bind(SearchPartView.class).to(SearchPartViewImpl.class).in(Singleton.class);
 
         bind(NewGenericProjectPageView.class).to(NewGenericProjectPageViewImpl.class);
+        bind(TemplatePageView.class).to(TemplatePageViewImpl.class);
+        bind(NewResourcePageView.class).to(NewResourcePageViewImpl.class);
+        bind(NewProjectPageView.class).to(NewProjectPageViewImpl.class);
     }
 
     @Provides

@@ -18,8 +18,10 @@
  */
 package com.codenvy.ide.api.paas;
 
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.inject.Provider;
 
 
 /**
@@ -37,13 +39,10 @@ public class PaaS {
     /** PaaS image. */
     private ImageResource image;
 
-    /** PaaS provides application's template or not. */
-    private boolean providesTemplate;
-
     /** List of project types, required by the PaaS (can be deployed). */
     private JsonArray<String> requiredProjectTypes;
 
-    private AbstractPaasWizardPagePresenter wizardPage;
+    private Provider<? extends WizardPagePresenter> wizardPage;
 
     /**
      * Create PaaS.
@@ -51,23 +50,21 @@ public class PaaS {
      * @param id
      * @param title
      * @param image
-     * @param providesTemplate
      * @param requiredProjectTypes
      * @param wizardPage
      */
-    public PaaS(String id, String title, ImageResource image, boolean providesTemplate,
-                JsonArray<String> requiredProjectTypes, AbstractPaasWizardPagePresenter wizardPage) {
+    public PaaS(String id, String title, ImageResource image, JsonArray<String> requiredProjectTypes,
+                Provider<? extends WizardPagePresenter> wizardPage) {
         this.id = id;
         this.title = title;
         this.image = image;
-        this.providesTemplate = providesTemplate;
         this.requiredProjectTypes = requiredProjectTypes;
         this.wizardPage = wizardPage;
     }
 
     /** @return the wizardPage */
-    public AbstractPaasWizardPagePresenter getWizardPage() {
-        return wizardPage;
+    public WizardPagePresenter getWizardPage() {
+        return wizardPage != null ? wizardPage.get() : null;
     }
 
     /** @return {@link String} PaaS id */
@@ -83,11 +80,6 @@ public class PaaS {
     /** @return the image */
     public ImageResource getImage() {
         return image;
-    }
-
-    /** @return the providesTemplate */
-    public boolean isProvidesTemplate() {
-        return providesTemplate;
     }
 
     /** @return the requiredProjectTypes */

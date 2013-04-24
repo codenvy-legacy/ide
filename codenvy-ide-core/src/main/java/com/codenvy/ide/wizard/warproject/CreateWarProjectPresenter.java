@@ -20,14 +20,8 @@ package com.codenvy.ide.wizard.warproject;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.wizard.newproject.AbstractCreateProjectPresenter;
-import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.resources.marshal.ProjectUnmarshaller;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.template.TemplateService;
-import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -40,7 +34,8 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class CreateWarProjectPresenter extends AbstractCreateProjectPresenter {
+//public class CreateWarProjectPresenter extends AbstractCreateProjectPresenter {
+public class CreateWarProjectPresenter {
     private ResourceProvider resourceProvider;
 
     private EventBus eventBus;
@@ -65,37 +60,38 @@ public class CreateWarProjectPresenter extends AbstractCreateProjectPresenter {
     }
 
     /** {@inheritDoc} */
-    @Override
+//    @Override
     public void create(final AsyncCallback<Project> callback) {
-        String projectName = getProjectName();
-
-        try {
-            ProjectUnmarshaller unmarshaller = new ProjectUnmarshaller(new Project(eventBus));
-            service.createProjectFromTemplate(resourceProvider.getVfsId(), resourceProvider.getRootId(), projectName, "jsp",
-                                              new AsyncRequestCallback<Project>(unmarshaller) {
-                                                  @Override
-                                                  protected void onSuccess(Project result) {
-                                                      resourceProvider.getProject(result.getName(), new AsyncCallback<Project>() {
-                                                          @Override
-                                                          public void onSuccess(Project result) {
-                                                              callback.onSuccess(result);
-                                                          }
-
-                                                          @Override
-                                                          public void onFailure(Throwable caught) {
-                                                              Log.error(CreateWarProjectPresenter.class, caught);
-                                                          }
-                                                      });
-                                                  }
-
-                                                  @Override
-                                                  protected void onFailure(Throwable exception) {
-                                                      Log.error(CreateWarProjectPresenter.class, exception);
-                                                  }
-                                              });
-        } catch (RequestException e) {
-            eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
-        }
+        // TODO
+//        String projectName = getProjectName();
+//
+//        try {
+//            ProjectUnmarshaller unmarshaller = new ProjectUnmarshaller(new Project(eventBus));
+//            service.createProjectFromTemplate(resourceProvider.getVfsId(), resourceProvider.getRootId(), projectName, "jsp",
+//                                              new AsyncRequestCallback<Project>(unmarshaller) {
+//                                                  @Override
+//                                                  protected void onSuccess(Project result) {
+//                                                      resourceProvider.getProject(result.getName(), new AsyncCallback<Project>() {
+//                                                          @Override
+//                                                          public void onSuccess(Project result) {
+//                                                              callback.onSuccess(result);
+//                                                          }
+//
+//                                                          @Override
+//                                                          public void onFailure(Throwable caught) {
+//                                                              Log.error(CreateWarProjectPresenter.class, caught);
+//                                                          }
+//                                                      });
+//                                                  }
+//
+//                                                  @Override
+//                                                  protected void onFailure(Throwable exception) {
+//                                                      Log.error(CreateWarProjectPresenter.class, exception);
+//                                                  }
+//                                              });
+//        } catch (RequestException e) {
+//            eventBus.fireEvent(new ExceptionThrownEvent(e));
+//            console.print(e.getMessage());
+//        }
     }
 }
