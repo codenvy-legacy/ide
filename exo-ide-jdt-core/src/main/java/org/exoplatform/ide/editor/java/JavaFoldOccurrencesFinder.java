@@ -148,23 +148,23 @@ public class JavaFoldOccurrencesFinder implements FoldOccurrencesFinder {
         public IRegion[] computeProjectionRegions(IDocument document) throws BadLocationException {
             int nameStart = offset;
 
-            /* The member's name range may not be correct. However,
-             * reconciling would trigger another element delta which would
-				 * lead to reentrant situations. Therefore, we optimistically
-				 * assume that the name range is correct, but double check the
-				 * received lines below. */
+            /*
+             * The member's name range may not be correct. However, reconciling would trigger another element delta which would lead to
+             * reentrant situations. Therefore, we optimistically assume that the name range is correct, but double check the received lines
+             * below.
+             */
             ISourceRange nameRange = new SourceRange(fMember.getStartPosition(), fMember.getLength());
 
             nameStart = nameRange.getOffset();
-
 
             int firstLine = document.getLineOfOffset(offset);
             int captionLine = document.getLineOfOffset(nameStart);
             int lastLine = document.getLineOfOffset(offset + length);
 
-			/* see comment above - adjust the caption line to be inside the
-          * entire folded region, and rely on later element deltas to correct
-			 * the name range. */
+            /*
+             * See comment above - adjust the caption line to be inside the entire folded region, and rely on later element deltas to
+             * correct the name range.
+             */
             if (captionLine < firstLine) {
                 captionLine = firstLine;
             }

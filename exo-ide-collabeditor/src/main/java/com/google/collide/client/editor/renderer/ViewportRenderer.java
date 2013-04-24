@@ -210,10 +210,9 @@ public class ViewportRenderer {
             Line line = dirtyLines.get(i);
             Element lineElement = getLineElement(line);
             if (lineElement == null) {
-        /*
-         * The line may have been in the viewport when marked as dirty, but it
-         * is not anymore
-         */
+                /*
+                 * The line may have been in the viewport when marked as dirty, but it is not anymore.
+                 */
                 continue;
             }
 
