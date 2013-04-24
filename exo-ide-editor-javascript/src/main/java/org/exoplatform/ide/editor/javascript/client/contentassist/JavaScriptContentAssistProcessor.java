@@ -151,7 +151,6 @@ public class JavaScriptContentAssistProcessor implements ContentAssistProcessor 
     /** @see org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor#getErrorMessage() */
     @Override
     public String getErrorMessage() {
-        // TODO Auto-generated method stub
         return null;
     }
 

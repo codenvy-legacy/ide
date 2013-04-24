@@ -174,6 +174,85 @@ public interface SamplesClientBundle extends ClientBundle {
     @Source("org/exoplatform/ide/extension/samples/client/images/import-samples_Disabled.png")
     ImageResource importSamplesDisabledControl();
 
+    /**
+     * Technology images
+     */
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/technology/jar36x36.png")
+    ImageResource jarTechnology();
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/technology/js36x36.png")
+    ImageResource jsTechnology();
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/technology/jsp36x36.png")
+    ImageResource jspTechnology();
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/technology/multi-module36x36.png")
+    ImageResource multiModuleTechnology();
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/technology/php36x36.png")
+    ImageResource phpTechnology();
+    
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/technology/nodejs36x36.png")
+    ImageResource nodejsTechnology();
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/technology/python36x36.png")
+    ImageResource pythonTechnology();
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/technology/ror36x36.png")
+    ImageResource rorTechnology();
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/technology/spring36x36.png")
+    ImageResource springTechnology();
+
+    /**
+     * PaaSes image
+     */
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/paas/appfog_36.png")
+    ImageResource appfogPaaS();
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/paas/appfog_36_Disabled.png")
+    ImageResource appfogPaaSDisabled();
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/paas/cloudbees_36.png")
+    ImageResource cloudBeesPaaS();
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/paas/cloudbees_36_Disabled.png")
+    ImageResource cloudBeesPaaSDisabled();
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/paas/cloudfoundry_36.png")
+    ImageResource cloudfoundryPaaS();
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/paas/cloudfoundry_36_Disabled.png")
+    ImageResource cloudfoundryPaaSDisabled();
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/paas/Elastic_Beanstalk_36.png")
+    ImageResource beansTalkPaaS();
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/paas/Elastic_Beanstalk_36_Disabled.png")
+    ImageResource beansTalkPaaSDisabled();
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/paas/gae_36.png")
+    ImageResource gaePaaS();
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/paas/gae_36_Disabled.png")
+    ImageResource gaePaaSDisabled();
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/paas/heroku_36.png")
+    ImageResource herokuPaaS();
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/paas/heroku_36_Disabled.png")
+    ImageResource herokuPaaSDisabled();
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/paas/none-target.png")
+    ImageResource nonePaaS();
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/paas/openshift_36.png")
+    ImageResource openShiftPaaS();
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/paas/openshift_36_Disabled.png")
+    ImageResource openShiftPaaSDisabled();
+
     public interface Style extends CssResource {
         String inviteHeader();
 

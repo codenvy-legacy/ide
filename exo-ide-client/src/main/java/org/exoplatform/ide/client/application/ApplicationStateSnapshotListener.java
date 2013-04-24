@@ -53,8 +53,6 @@ import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedHandler;
 import org.exoplatform.ide.vfs.client.event.ItemLockedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemLockedHandler;
-import org.exoplatform.ide.vfs.client.event.ItemMovedEvent;
-import org.exoplatform.ide.vfs.client.event.ItemMovedHandler;
 import org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemUnlockedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
@@ -76,7 +74,7 @@ import java.util.Map;
 public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler, EditorFileClosedHandler,
                                                          EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler,
                                                          VfsChangedHandler, EditorReplaceFileHandler,
-                                                         ItemLockedHandler, ItemUnlockedHandler, ItemDeletedHandler, ItemMovedHandler,
+                                                         ItemLockedHandler, ItemUnlockedHandler, ItemDeletedHandler,
                                                          ProjectOpenedHandler,
                                                          ProjectClosedHandler, SaveApplicationSettingsHandler, ShowHideHiddenFilesHandler {
 
@@ -97,7 +95,6 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
         IDE.addHandler(ItemLockedEvent.TYPE, this);
         IDE.addHandler(ItemUnlockedEvent.TYPE, this);
         IDE.addHandler(ItemDeletedEvent.TYPE, this);
-        IDE.addHandler(ItemMovedEvent.TYPE, this);
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
         IDE.addHandler(SaveApplicationSettingsEvent.TYPE, this);
@@ -183,45 +180,6 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
     private void storeLockTokens() {
         applicationSettings.setValue(Settings.LOCK_TOKENS, lockTokens, Store.COOKIES);
         SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
-    }
-
-    /** @see org.exoplatform.ide.vfs.client.event.ItemMovedHandler#onItemMoved(org.exoplatform.ide.vfs.client.event.ItemMovedEvent) */
-    @Override
-    public void onItemMoved(ItemMovedEvent event) {
-        // TODO
-        // if (lockTokens.containsKey(event.getSourceHref()))
-        // {
-        // String lock = lockTokens.get(event.getSourceHref());
-        // lockTokens.remove(event.getSourceHref());
-        // lockTokens.put(event.getItem().getHref(), lock);
-        // storeLockTokens();
-        // }
-        // else if (event.getItem() instanceof Folder)
-        // {
-        // String sourceHref = event.getSourceHref();
-        // List<String> keys = new ArrayList<String>();
-        // for (String k : lockTokens.keySet())
-        // {
-        // keys.add(k);
-        // }
-        //
-        // for (String key : keys)
-        // {
-        // if (key.startsWith(sourceHref))
-        // {
-        // String lock = lockTokens.get(key);
-        // String name = key.substring(sourceHref.length());
-        // String path = event.getItem().getHref();
-        // if (!path.endsWith("/"))
-        // {
-        // path += "/";
-        // }
-        // lockTokens.remove(key);
-        // lockTokens.put(path + name, lock);
-        // storeLockTokens();
-        // }
-        // }
-        // }
     }
 
     /** @see org.exoplatform.ide.vfs.client.event.ItemDeletedHandler#onItemDeleted(org.exoplatform.ide.vfs.client.event.ItemDeletedEvent) */

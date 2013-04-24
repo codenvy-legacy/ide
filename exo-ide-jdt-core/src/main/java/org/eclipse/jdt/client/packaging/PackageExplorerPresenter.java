@@ -33,9 +33,9 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.Timer;
 
-import org.eclipse.jdt.client.packaging.model.next.Dependencies;
-import org.eclipse.jdt.client.packaging.model.next.Dependency;
-import org.eclipse.jdt.client.packaging.model.next.JavaProject;
+import org.eclipse.jdt.client.packaging.model.Dependencies;
+import org.eclipse.jdt.client.packaging.model.Dependency;
+import org.eclipse.jdt.client.packaging.model.JavaProject;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -91,11 +91,11 @@ import java.util.Map;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  */
-public class PackageExplorerPresenter implements ShowPackageExplorerHandler, ViewOpenedHandler, ViewClosedHandler,
-                                     ProjectOpenedHandler, ProjectClosedHandler, SelectItemHandler,
-                                     EditorActiveFileChangedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
-                                     ApplicationSettingsReceivedHandler, ItemsSelectedHandler, TreeRefreshedHandler,
-                                     AddItemTreeIconHandler, RemoveItemTreeIconHandler, ShowHideHiddenFilesHandler {
+public class PackageExplorerPresenter implements ShowPackageExplorerHandler, 
+        ViewOpenedHandler, ViewClosedHandler, ProjectOpenedHandler, ProjectClosedHandler, 
+        SelectItemHandler, EditorActiveFileChangedHandler, EditorFileOpenedHandler, 
+        EditorFileClosedHandler, ApplicationSettingsReceivedHandler, ItemsSelectedHandler, 
+        TreeRefreshedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler, ShowHideHiddenFilesHandler {
 
     private static final String    PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG = "package-explorer-linked-with-editor";
 

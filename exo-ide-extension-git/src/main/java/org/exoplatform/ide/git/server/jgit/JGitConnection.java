@@ -65,7 +65,6 @@ import org.eclipse.jgit.transport.URIish;
 import org.exoplatform.ide.git.server.DiffPage;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitException;
-import org.exoplatform.ide.git.server.GitHelper;
 import org.exoplatform.ide.git.server.LogPage;
 import org.exoplatform.ide.git.server.StatusImpl;
 import org.exoplatform.ide.git.shared.AddRequest;
@@ -915,7 +914,7 @@ public class JGitConnection implements GitConnection {
         String[] files = request.getFiles();
         RmCommand rmCommand = new Git(repository).rm();
 
-        rmCommand.setCached(false);
+        rmCommand.setCached(request.getCached());
 
         if (files != null) {
             for (int i = 0; i < files.length; i++) {

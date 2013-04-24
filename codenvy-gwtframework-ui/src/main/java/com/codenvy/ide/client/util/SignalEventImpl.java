@@ -275,9 +275,7 @@ public class SignalEventImpl implements SignalEvent {
         SignalKeyLogic.Result keySignalResult;
         if (isKeyEvent(event)) {
             keySignalResult = computeKeySignalTypeResult;
-
-            String keyIdentifier = getKeyIdentifier(event);
-
+            String keyIdentifier = UserAgent.isCrOS() ? "" : getKeyIdentifier(event);  
             logic.computeKeySignalType(keySignalResult, event.getType(), getNativeKeyCode(event), getWhich(event),
                                        keyIdentifier, event.getMetaKey(), event.getCtrlKey(), event.getAltKey(), event.getShiftKey());
 

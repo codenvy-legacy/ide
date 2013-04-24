@@ -30,7 +30,6 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.client.api.Editor;
-import org.exoplatform.ide.editor.css.client.outline.CssOutlineItemCreator;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -53,27 +52,15 @@ public class CssEditorExtension extends Extension {
                 new NewItemControl("File/New/New CSS", MESSAGES.controlNewCssTitle(), MESSAGES.controlNewCssPrompt(),
                                    CSS_ICON, MimeType.TEXT_CSS).setGroupName(GroupNames.NEW_FILE));
 
-//      IDE.getInstance().addEditor(new CodeMirror(MimeType.TEXT_CSS, MESSAGES.cssEditor(), "css", 
-//         new CodeMirrorConfiguration()
-//            .setGenericParsers("['parsecss.js']")
-//            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/csscolors.css']")
-//            .setParser(new CssParser())
-//            .setCodeAssistant(new CssCodeAssistant())));
-//
         IDE.getInstance().getFileTypeRegistry()
            .addFileType(new FileType(MimeType.TEXT_CSS, "css", RESOURCES.cssImage()), new EditorCreator() {
                @Override
                public Editor createEditor() {
-//               return new CodeMirror(MimeType.TEXT_CSS, new CodeMirrorConfiguration()
-//               .setGenericParsers("['parsecss.js']")
-//               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/csscolors.css']")
-//               .setParser(new CssParser())
-//               .setCodeAssistant(new CssCodeAssistant()));
                    return new CssEditor(MimeType.TEXT_CSS);
                }
            });
 
-        IDE.getInstance().addOutlineItemCreator(MimeType.TEXT_CSS, new CssOutlineItemCreator());
+//        IDE.getInstance().addOutlineItemCreator(MimeType.TEXT_CSS, new CssOutlineItemCreator());
         IDE.fireEvent(new AddCommentsModifierEvent(MimeType.TEXT_CSS, new CssCommentsModifier()));
     }
 

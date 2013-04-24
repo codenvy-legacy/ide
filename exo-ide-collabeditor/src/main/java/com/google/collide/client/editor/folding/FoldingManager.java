@@ -64,7 +64,7 @@ public class FoldingManager implements Document.TextListener {
     /** A listener that is called when a text block was collapsed or expanded. */
     public interface FoldingListener {
         /**
-         * @param lineNumber the line number of the first item in {@code linesToCollapse}
+         * @param lineNumber the number of the first line in {@code linesToCollapse}
          * @param linesToCollapse a contiguous list of lines that should be collapsed
          */
         void onCollapse(int lineNumber, JsonArray<Line> linesToCollapse);
@@ -226,9 +226,9 @@ public class FoldingManager implements Document.TextListener {
         AbstractFoldRange foldRange = new AbstractFoldRange(offset, length) {
             @Override
             public IRegion[] computeProjectionRegions(IDocument document) throws BadLocationException {
-                int firstLineNumber = document.getLineOfOffset(offset);
-                int firstLineLength = document.getLineLength(firstLineNumber);
-                return new Region[]{new Region(offset + firstLineLength, length - firstLineLength)};
+                int captionLineNumber = document.getLineOfOffset(offset);
+                int captionLineLength = document.getLineLength(captionLineNumber);
+                return new Region[]{new Region(offset + captionLineLength, length - captionLineLength)};
             }
 
             @Override
@@ -327,24 +327,28 @@ public class FoldingManager implements Document.TextListener {
                 final int startOffset = regions[i].getOffset();
                 final int length = regions[i].getLength();
                 final int firstLineNumber = getMasterDocument().getLineOfOffset(startOffset);
-                final int lineCount = getMasterDocument().getNumberOfLines(startOffset, length);
+                int lineCount = getMasterDocument().getNumberOfLines(startOffset, length);
+                if (!getMasterDocument().get(startOffset, length).endsWith("\n")) {
+                    lineCount++;
+                }
                 Line beginLine = document.getLineFinder().findLine(firstLineNumber).line();
 
-                JsonArray<Line> linesArray = JsonCollections.createArray();
+                JsonArray<Line> modifiedLines = JsonCollections.createArray();
                 Line nextLine = beginLine;
-                linesArray.add(nextLine);
+                modifiedLines.add(nextLine);
                 for (int j = 0; j < lineCount - 2; j++) {
                     nextLine = nextLine.getNextLine();
-                    linesArray.add(nextLine);
+                    modifiedLines.add(nextLine);
                 }
 
                 if (foldMarker.isCollapsed()) {
                     slaveDocument.removeMasterDocumentRange(startOffset, length);
-                    processAnchorsInCollapsedRange(firstLineNumber, linesArray);
-                    dispatchCollapse(firstLineNumber/* + linesToCollapse.size() */, linesArray);
+                    processAnchorsInCollapsedRange(firstLineNumber, modifiedLines);
+                    dispatchCollapse(firstLineNumber, modifiedLines);
                 } else {
                     slaveDocument.addMasterDocumentRange(startOffset, length);
-                    // collapse nested folds
+
+                    // collapse nested folds when parent fold is expanded
                     FoldMarker[] collapsedFolds = computeCollapsedNestedFolds(startOffset, length);
                     if (collapsedFolds != null) {
                         for (int m = 0; m < collapsedFolds.length; m++) {
@@ -358,7 +362,7 @@ public class FoldingManager implements Document.TextListener {
                             }
                         }
                     }
-                    dispatchExpand(firstLineNumber, linesArray);
+                    dispatchExpand(firstLineNumber, modifiedLines);
                 }
             }
         } catch (BadLocationException e) {
@@ -428,7 +432,12 @@ public class FoldingManager implements Document.TextListener {
         }
 
         Line firstLine = linesToCollapse.peek().getNextLine();
-        final int firstLineNumber = lineNumber + linesToCollapse.size();
+        int firstLineNumber = lineNumber + linesToCollapse.size();
+        // shift anchors to up from the fold when document's last line is collapsed
+        if (firstLine == null) {
+            firstLine = linesToCollapse.get(0).getPreviousLine();
+            firstLineNumber = lineNumber-1;
+        }
         final int numberOfLinesDeleted = 0; // pass '0' because there is no need to change the anchor's line number
         final int lastLineFirstUntouchedColumn = linesToCollapse.peek().getText().length();
 

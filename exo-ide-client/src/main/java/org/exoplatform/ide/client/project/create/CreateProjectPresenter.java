@@ -73,7 +73,11 @@ import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.*;
+import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -256,11 +260,13 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
                     if (selectedProjectType == null) {
                         Dialogs.getInstance().showInfo(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noTechnologyTitle(),
                                                        org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noTechnologyMessage());
+                    } else if (!isNameValid(display.getNameField().getValue())) {
+                        return;
                     } else {
                         if (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING) {
                             getJRebelUserProfileInfo();
                         }
-                        validateProjectName(display.getNameField().getValue());
+                        validateProjectNameForExistenceAndGoNext(display.getNameField().getValue());
                     }
                 } else {
                     if (display.getUseJRebelPlugin().getValue()
@@ -534,9 +540,8 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
         if (isChooseTemplateStep) {
             isChooseTemplateStep = false;
             goToDeployStep();
-        } else
-        // create project step
-        {
+        } else {
+            // create project step
             goToTemplatesStep();
             if (!availableProjectTemplates.contains(selectedTemplate)) {
                 selectedTemplate = null;
@@ -644,33 +649,33 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
             IDELoader.getInstance().setMessage(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.creatingProject());
             IDELoader.getInstance().show();
             TemplateService.getInstance().createProjectFromTemplate(vfsInfo.getId(), parentId, projectName,
-                                                                    projectTemplate.getName(),
-                                                                    new AsyncRequestCallback<ProjectModel>(
-                                                                            new ProjectUnmarshaller(new ProjectModel())) {
-                                                                        @Override
-                                                                        protected void onSuccess(final ProjectModel result) {
-                                                                            if ((selectedProjectType == ProjectType.JSP ||
-                                                                                 selectedProjectType == ProjectType.SPRING)) {
-                                                                                writeUseJRebelProperty(result);
-                                                                            }
+                projectTemplate.getName(),
+                new AsyncRequestCallback<ProjectModel>(
+                        new ProjectUnmarshaller(new ProjectModel())) {
+                    @Override
+                    protected void onSuccess(final ProjectModel result) {
+                        if ((selectedProjectType == ProjectType.JSP ||
+                             selectedProjectType == ProjectType.SPRING)) {
+                            writeUseJRebelProperty(result);
+                        }
 
-                                                                            IDELoader.getInstance().hide();
-                                                                            IDE.getInstance().closeView(display.asView().getId());
+                        IDELoader.getInstance().hide();
+                        IDE.getInstance().closeView(display.asView().getId());
 
-                                                                            if (createModule) {
-                                                                                MavenModuleCreationCallback.getInstance().moduleCreated(
-                                                                                        getParentProject(), result);
-                                                                            } else {
-                                                                                IDE.fireEvent(new ProjectCreatedEvent(result));
-                                                                            }
-                                                                        }
+                        if (createModule) {
+                            MavenModuleCreationCallback.getInstance().moduleCreated(
+                                    getParentProject(), result);
+                        } else {
+                            IDE.fireEvent(new ProjectCreatedEvent(result));
+                        }
+                    }
 
-                                                                        @Override
-                                                                        protected void onFailure(Throwable exception) {
-                                                                            IDELoader.getInstance().hide();
-                                                                            IDE.fireEvent(new ExceptionThrownEvent(exception));
-                                                                        }
-                                                                    });
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        IDELoader.getInstance().hide();
+                        IDE.fireEvent(new ExceptionThrownEvent(exception));
+                    }
+                });
         } catch (RequestException e) {
             IDELoader.getInstance().hide();
             IDE.fireEvent(new ExceptionThrownEvent(e));
@@ -807,13 +812,24 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
         return project;
     }
 
+    private boolean isNameValid(String name) {
+        boolean isInvalid = name.contains("*") || name.contains("\\") || name.contains("/");
+        if (isInvalid) {
+            display.getErrorLabel().setValue(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.createProjectFromTemplateProjectNameInvalid());
+        }
+        else {
+            display.getErrorLabel().setValue("");
+        }
+        return !isInvalid;
+    }
+
     /**
      * Validates project name for existence.
      *
      * @param projectName
      *         project's name
      */
-    private void validateProjectName(final String projectName) {
+    private void validateProjectNameForExistenceAndGoNext(final String projectName) {
         try {
             Folder parent = VirtualFileSystem.getInstance().getInfo().getRoot();
             if (createModule) {
@@ -821,68 +837,30 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
             }
 
             VirtualFileSystem.getInstance().getChildren(parent, ItemType.PROJECT,
-                                                        new AsyncRequestCallback<List<Item>>(
-                                                                new ChildrenUnmarshaller(new ArrayList<Item>())) {
-                                                            @Override
-                                                            protected void onSuccess(List<Item> result) {
-                                                                for (Item item : result) {
-                                                                    if (projectName.equals(item.getName())) {
-                                                                        display.getErrorLabel().setValue(
-                                                                                org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                                                                              .createProjectFromTemplateProjectExists(
-                                                                                                                      projectName));
-                                                                        return;
-                                                                    }
-                                                                }
-                                                                display.getErrorLabel().setValue("");
-                                                                goNext();
-                                                            }
-
-                                                            @Override
-                                                            protected void onFailure(Throwable exception) {
-                                                                IDE.fireEvent(new ExceptionThrownEvent(exception,
-                                                                                                       "Searching of projects failed."));
-                                                            }
-                                                        });
+                new AsyncRequestCallback<List<Item>>(
+                        new ChildrenUnmarshaller(new ArrayList<Item>())) {
+                    @Override
+                    protected void onSuccess(List<Item> result) {
+                        for (Item item : result) {
+                            if (projectName.equals(item.getName())) {
+                                display.getErrorLabel().setValue(
+                                    org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.createProjectFromTemplateProjectExists(projectName));
+                                return;
+                            }
+                        }
+                        display.getErrorLabel().setValue("");
+                        goNext();
+                    }
+    
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        IDE.fireEvent(new ExceptionThrownEvent(exception,
+                                                               "Searching of projects failed."));
+                    }
+                });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e, "Searching of projects failed."));
         }
-
     }
 
     /** Set the visibility state of a panel with JRebel setting. */

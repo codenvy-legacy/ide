@@ -30,6 +30,10 @@ public interface OpenShiftLocalizationConstant extends Messages {
     @Key("cancelButton")
     String cancelButton();
 
+    @DefaultMessage("Change")
+    @Key("changeButton")
+    String changeButton();
+
     @DefaultMessage("Create")
     @Key("createButton")
     String createButton();
@@ -309,6 +313,9 @@ public interface OpenShiftLocalizationConstant extends Messages {
     @Key("unmarshal.application.types.failed")
     String applicationTypesUnmarshallerFail();
 
+    @Key("errorGettingCartridgesList")
+    String errorGettingCartridgesList();
+
     /* Application properties */
     @DefaultMessage("Name")
     @Key("application.name")
@@ -384,4 +391,45 @@ public interface OpenShiftLocalizationConstant extends Messages {
 
     @Key("application.status.label")
     String statusLabel();
+
+    @Key("addCartridgeButton")
+    String addCartridgeButton();
+
+    @Key("addCartridgeTitle")
+    String addCartridgeTitle();
+
+    @Key("errorAddingCartridge")
+    String errorAddingCartridge();
+
+    @DefaultMessage("Delete OpenShift cartridge")
+    @Key("deleteCartridgeTitle")
+    String deleteCartridgeTitle();
+
+    @DefaultMessage("Do you want to delete cartridge <b>{0}</b> on OpenShift?")
+    @Key("deleteCartridge")
+    String deleteCartridge(String applicationName);
+
+    @Key("deleteCartridgeError")
+    String deleteCartridgeError();
+
+    @Key("sendEventFailed")
+    String sendEventFailed(String event);
+
+    @Key("changeNamespaceTitle")
+    String changeNamespaceTitle();
+
+    @Key("changeNamespacePrompt")
+    String changeNamespacePrompt();
+
+    @Key("removingApplicationsFailed")
+    String removingApplicationsFailed();
+
+    @Key("createAppForPropertiesView")
+    String createAppForPropertiesView();
+
+    @Key("createAppForCartridgesView")
+    String createAppForCartridgesView();
+
+    @Key("createAppForView")
+    String createAppForView();
 }

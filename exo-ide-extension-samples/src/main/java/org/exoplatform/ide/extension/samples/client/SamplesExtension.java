@@ -29,6 +29,8 @@ import org.exoplatform.ide.extension.samples.client.control.DocumentationControl
 import org.exoplatform.ide.extension.samples.client.control.FeedbackControl;
 import org.exoplatform.ide.extension.samples.client.control.SupportControl;
 import org.exoplatform.ide.extension.samples.client.control.WelcomeControl;
+import org.exoplatform.ide.extension.samples.client.getstarted.GetStartedControl;
+import org.exoplatform.ide.extension.samples.client.getstarted.GetStartedPresenter;
 import org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter;
 import org.exoplatform.ide.extension.samples.client.github.deploy.ImportSampleStep;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
@@ -83,6 +85,7 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
         IDE.getInstance().addControl(new DocumentationControl());
         IDE.getInstance().addControl(new SupportControl());
         IDE.getInstance().addControl(new FeedbackControl());
+        IDE.getInstance().addControl(new GetStartedControl());
 
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
@@ -91,6 +94,8 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
 
         new ManageInvitePresenter();
         new GenerateGitHubSshKeyPresenter();
+
+        new GetStartedPresenter();
 
         // Import from GitHub
         ImportSampleStep<ProjectData> firstStep = new ShowSamplesPresenter();

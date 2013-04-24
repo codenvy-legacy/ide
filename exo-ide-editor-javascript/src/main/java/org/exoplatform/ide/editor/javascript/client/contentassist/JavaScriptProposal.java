@@ -37,8 +37,8 @@ import org.exoplatform.ide.editor.shared.text.edits.MalformedTreeException;
  */
 public class JavaScriptProposal implements CompletionProposal {
 
-    private       JsProposal prop;
-    private final int        offset;
+    private JsProposal prop;
+    private final int offset;
 
     /** @param prop */
     public JavaScriptProposal(JsProposal prop, int offset) {
@@ -75,7 +75,6 @@ public class JavaScriptProposal implements CompletionProposal {
     /** @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getAdditionalProposalInfo() */
     @Override
     public Widget getAdditionalProposalInfo() {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -94,7 +93,6 @@ public class JavaScriptProposal implements CompletionProposal {
     /** @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getContextInformation() */
     @Override
     public ContextInformation getContextInformation() {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -104,8 +102,6 @@ public class JavaScriptProposal implements CompletionProposal {
      */
     @Override
     public void apply(IDocument document, char trigger, int offset) {
-        // TODO Auto-generated method stub
-
     }
 
     /**
@@ -115,14 +111,12 @@ public class JavaScriptProposal implements CompletionProposal {
      */
     @Override
     public boolean isValidFor(IDocument document, int offset) {
-        // TODO Auto-generated method stub
         return false;
     }
 
     /** @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getTriggerCharacters() */
     @Override
     public char[] getTriggerCharacters() {
-        // TODO Auto-generated method stub
         return null;
     }
 

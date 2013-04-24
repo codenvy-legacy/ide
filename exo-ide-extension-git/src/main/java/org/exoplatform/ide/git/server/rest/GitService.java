@@ -63,8 +63,11 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
@@ -189,6 +192,7 @@ public class GitService {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.clone(request);
+            setGitRepositoryProp();
             return new RepoInfo(request.getRemoteUri());
         } finally {
             long end = System.currentTimeMillis();
@@ -196,6 +200,18 @@ public class GitService {
             LOG.info("Repository clone from '" + request.getRemoteUri() + "' to '" + request.getWorkingDir()
                      + "' finished. Process took " + seconds + " seconds (" + seconds / 60 + " minutes)");
             gitConnection.close();
+        }
+    }
+
+    private void setGitRepositoryProp() throws VirtualFileSystemException {
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+        Item project = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+        String value = project.getPropertyValue("isGitRepository");
+        if (value == null || !value.equals("true")) {
+            Property isGitRepositoryProperty = new PropertyImpl("isGitRepository", "true");
+            List<Property> propertiesList = new ArrayList<Property>(1);
+            propertiesList.add(isGitRepositoryProperty);
+            vfs.updateItem(projectId, propertiesList, null);
         }
     }
 
@@ -247,6 +263,7 @@ public class GitService {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.init(request);
+            setGitRepositoryProp();
         } finally {
             gitConnection.close();
         }
@@ -395,8 +412,12 @@ public class GitService {
     @Path("status")
     @POST
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public Status status(@PathParam("short") boolean shortFormat) throws GitException, LocalPathResolveException,
+    public Status status(@PathParam("short") boolean shortFormat) throws GitException,
+                                                                 LocalPathResolveException,
                                                                  VirtualFileSystemException {
+        if (!isGitRepository()) {
+            throw new GitException("Not a git repository.");
+        }
         GitConnection gitConnection = getGitConnection();
         try {
             return gitConnection.status(shortFormat);
@@ -409,8 +430,7 @@ public class GitService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Tag tagCreate(TagCreateRequest request) throws GitException, LocalPathResolveException,
-                                                  VirtualFileSystemException {
+    public Tag tagCreate(TagCreateRequest request) throws GitException, LocalPathResolveException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             return gitConnection.tagCreate(request);
@@ -422,8 +442,7 @@ public class GitService {
     @Path("tag-delete")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void tagDelete(TagDeleteRequest request) throws GitException, LocalPathResolveException,
-                                                   VirtualFileSystemException {
+    public void tagDelete(TagDeleteRequest request) throws GitException, LocalPathResolveException, VirtualFileSystemException {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.tagDelete(request);
@@ -470,7 +489,7 @@ public class GitService {
     @Path("delete-repository")
     public void deleteRepository(@Context UriInfo uriInfo) throws VirtualFileSystemException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        Item project = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+        Item project = getGitProject(vfs, projectId);
         String path2gitFolder = project.getPath() + "/.git";
         Item gitItem = vfs.getItemByPath(path2gitFolder, null, PropertyFilter.NONE_FILTER);
         vfs.delete(gitItem.getId(), null);
@@ -483,19 +502,37 @@ public class GitService {
             }
             propertiesNew.add(property);
         }
-        vfs.updateItem(projectId, propertiesNew, null);
+        vfs.updateItem(project.getId(), propertiesNew, null);
     }
 
-    protected String resolveLocalPath(String projId) throws VirtualFileSystemException {
+    private Item getGitProject(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException
+    {
+        Item project = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+        Item parent = vfs.getItem(project.getParentId(), PropertyFilter.ALL_FILTER);
+        if (parent.getItemType().equals(ItemType.PROJECT)) // MultiModule project
+            return parent;
+        else
+            return project;
+    }
+
+
+    protected boolean isGitRepository() throws VirtualFileSystemException {
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+        Item project = getGitProject(vfs, projectId);
+        String value = project.getPropertyValue("isGitRepository");
+        return value != null && value.equals("true");
+    }
+
+    protected String resolveLocalPath(String projId) throws LocalPathResolveException, VirtualFileSystemException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         if (vfs == null) {
             throw new VirtualFileSystemException("Can't resolve path on the Local File System : Virtual file system not initialized");
         }
-        return localPathResolver.resolve(vfs, projId);
+        Item gitProject = getGitProject(vfs, projectId);
+        return localPathResolver.resolve(vfs, gitProject.getId());
     }
 
-    protected GitConnection getGitConnection() throws GitException, LocalPathResolveException,
-                                              VirtualFileSystemException {
+    protected GitConnection getGitConnection() throws GitException, LocalPathResolveException, VirtualFileSystemException {
         GitUser gituser = null;
         ConversationState user = ConversationState.getCurrent();
         if (user != null) {
@@ -503,5 +540,4 @@ public class GitService {
         }
         return GitConnectionFactory.getInstance().getConnection(resolveLocalPath(projectId), gituser);
     }
-
 }

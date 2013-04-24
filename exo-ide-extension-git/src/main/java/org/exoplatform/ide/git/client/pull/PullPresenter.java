@@ -175,8 +175,6 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler {
     @Override
     public void onPull(PullEvent event) {
         if (makeSelectionCheck()) {
-            // String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-            // getRemotes(projectId);
             getRemotes(getSelectedProject().getId());
         }
     }
@@ -188,7 +186,6 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler {
         IDE.getInstance().openView(d.asView());
         bindDisplay(d);
 
-        // String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
         String projectId = getSelectedProject().getId();
 
         LinkedHashMap<String, String> remoteValues = new LinkedHashMap<String, String>();
@@ -230,7 +227,6 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler {
     private void doPull() {
         String remoteName = display.getRemoteDisplayValue();
         final String remoteUrl = display.getRemoteName().getValue();
-        // ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
         ProjectModel project = getSelectedProject();
         IDE.getInstance().closeView(display.asView().getId());
 

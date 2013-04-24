@@ -105,10 +105,10 @@ import java.util.Map;
  * @version $Id: RefactoringRenamePresenter.java Jan 17, 2013 4:07:09 PM azatsarynnyy $
  */
 public class RefactoringRenamePresenter implements RefactoringRenameHandler, ViewClosedHandler, VfsChangedHandler,
-                                                   ProjectOpenedHandler, ProjectClosedHandler, ActiveProjectChangedHandler,
-                                                   EditorActiveFileChangedHandler,
-                                                   UpdateOutlineHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
-                                                   EditorFileContentChangedHandler {
+                   ProjectOpenedHandler, ProjectClosedHandler, ActiveProjectChangedHandler,
+                   EditorActiveFileChangedHandler,
+                   UpdateOutlineHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
+                   EditorFileContentChangedHandler {
 
     public interface Display extends IsView {
         /**
@@ -415,6 +415,9 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
 
     /** Temporary block renaming top-level class/interface/enum which is opened */
     private boolean isNodeDeclarationOpenedInSeparateFile(ASTNode astNode) {
+        if (astNode == null) {
+            return false;
+        }
         if (astNode.getNodeType() == ASTNode.SIMPLE_NAME) {
             ASTNode parentNode = astNode.getParent();
             if (parentNode instanceof AbstractTypeDeclaration || parentNode instanceof SimpleType) {
