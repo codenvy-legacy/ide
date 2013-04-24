@@ -215,16 +215,16 @@
                     </g:DockLayoutPanel>
                     <g:FlowPanel addStyleNames="{style.line}">
                         <g:Label text="{templateLocale.chooseTechnology}"
-                                 addStyleNames="{style.buttonsGroupTitle} {style.floatLeft} {style.cursorPointer}"></g:Label>
+                                 addStyleNames="{style.buttonsGroupTitle} {style.floatLeft}"></g:Label>
                         <g:Image ui:field="chooseTechnologyTooltip" resource="{resource.question}"
-                                 addStyleNames="{style.questionImage}"></g:Image>
+                                 addStyleNames="{style.questionImage} {style.cursorPointer}"></g:Image>
                         <g:Grid ui:field="projectTypesGrid" addStyleNames="{style.clearLeft}"/>
                     </g:FlowPanel>
                     <g:FlowPanel addStyleNames="{style.line}">
                         <g:Label text="{templateLocale.choosePaaS}"
-                                 addStyleNames="{style.buttonsGroupTitle} {style.floatLeft} {style.cursorPointer}"></g:Label>
+                                 addStyleNames="{style.buttonsGroupTitle} {style.floatLeft}"></g:Label>
                         <g:Image ui:field="choosePaaSTooltip" resource="{resource.question}"
-                                 addStyleNames="{style.questionImage}"></g:Image>
+                                 addStyleNames="{style.questionImage} {style.cursorPointer}"></g:Image>
                         <g:Grid ui:field="targetGrid" addStyleNames="{style.clearLeft}"/>
                     </g:FlowPanel>
                 </g:FlowPanel>
