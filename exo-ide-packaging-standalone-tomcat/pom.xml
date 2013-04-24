@@ -72,7 +72,7 @@
             <groupId>com.codenvy.organization</groupId>
             <artifactId>codenvy-organization-packaging-api-war</artifactId>
             <type>war</type>
-            <version>0.1-SNAPSHOT</version>
+            <version>${com.codenvy.organization.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
