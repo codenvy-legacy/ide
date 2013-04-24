@@ -23,16 +23,15 @@ import elemental.html.DragEvent;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
-import com.codenvy.ide.api.editor.outline.CodeBlock;
-import com.codenvy.ide.api.editor.outline.OutlineModel;
-import com.codenvy.ide.api.editor.outline.OutlineModel.OutlineModelListener;
-import com.codenvy.ide.api.editor.outline.OutlinePresenter;
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
 import com.codenvy.ide.api.ui.perspective.PropertyListener;
 import com.codenvy.ide.text.TextUtilities;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
+import com.codenvy.ide.texteditor.api.outline.CodeBlock;
+import com.codenvy.ide.texteditor.api.outline.OutlineModel;
+import com.codenvy.ide.texteditor.api.outline.OutlinePresenter;
 import com.codenvy.ide.texteditor.selection.SelectionModel.CursorListener;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.Tree.Listener;
@@ -89,7 +88,7 @@ public class OutlineImpl implements OutlinePresenter {
                 }
             }
         });
-        model.setListener(new OutlineModelListener() {
+        model.setListener(new OutlineModel.OutlineModelListener() {
 
             @Override
             public void rootUpdated() {
