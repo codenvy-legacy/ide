@@ -29,6 +29,7 @@
     <inherits name='com.google.gwt.user.User'/>
     <inherits name='org.exoplatform.ide.vfs.IDEVFS'/>
     <inherits name="org.exoplatform.gwtframework.ui.UITextEditor"/>
+    <inherits name="com.codenvy.ide.Collaboration"/>
 
     <!-- replace-with class="org.exoplatform.gwtframework.ui.client.component.BorderImpl">
        <when-type-is class="org.exoplatform.gwtframework.ui.client.component.Border" />

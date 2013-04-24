@@ -20,6 +20,7 @@
 -->
 <module>
     <inherits name='com.google.gwt.user.User'/>
+    <inherits name="com.google.collide.CollabEditor"/>
     <replace-with class="com.google.collide.client.collaboration.participants.ParticipantsView">
         <when-type-is class="com.google.collide.client.collaboration.participants.ParticipantsPresenter.Display"/>
     </replace-with>
