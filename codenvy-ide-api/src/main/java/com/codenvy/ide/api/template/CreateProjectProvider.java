@@ -24,4 +24,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 public interface CreateProjectProvider {
     void create(AsyncCallback<Project> callback);
+
+    void setProjectName(String projectName);
 }

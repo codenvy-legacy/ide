@@ -96,9 +96,10 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
     /** {@inheritDoc} */
     @Override
     public WizardPagePresenter flipToNext() {
-        WizardPagePresenter templatePage = templatePageProvider.get();
+        TemplatePagePresenter templatePage = templatePageProvider.get();
         templatePage.setPrevious(this);
         templatePage.setUpdateDelegate(delegate);
+        templatePage.setProjectName(view.getProjectName());
 
         return templatePage;
     }

@@ -19,6 +19,7 @@
 package com.codenvy.ide.wizard.template;
 
 import com.codenvy.ide.api.paas.PaaSAgent;
+import com.codenvy.ide.api.template.CreateProjectProvider;
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
@@ -38,6 +39,7 @@ public class TemplatePagePresenter extends AbstractWizardPagePresenter implement
     private WizardPagePresenter paasWizardPage;
     private PaaSAgent           paaSAgent;
     private Template            selectedTemplate;
+    private String              projectName;
 
     @Inject
     protected TemplatePagePresenter(TemplateWizardResources resources, TemplatePageView view, PaaSAgent paaSAgent) {
@@ -46,6 +48,10 @@ public class TemplatePagePresenter extends AbstractWizardPagePresenter implement
         this.view = view;
         this.view.setDelegate(this);
         this.paaSAgent = paaSAgent;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 
     /** {@inheritDoc} */
@@ -60,6 +66,9 @@ public class TemplatePagePresenter extends AbstractWizardPagePresenter implement
 
     /** {@inheritDoc} */
     public WizardPagePresenter flipToNext() {
+        CreateProjectProvider createProjectProvider = selectedTemplate.getCreateProjectProvider();
+        createProjectProvider.setProjectName(projectName);
+
         if (next == null) {
             next = paasWizardPage;
         }
@@ -101,7 +110,9 @@ public class TemplatePagePresenter extends AbstractWizardPagePresenter implement
     /** {@inheritDoc} */
     @Override
     public void doFinish() {
-        selectedTemplate.getCreateProjectProvider().create(new AsyncCallback<Project>() {
+        CreateProjectProvider createProjectProvider = selectedTemplate.getCreateProjectProvider();
+        createProjectProvider.setProjectName(projectName);
+        createProjectProvider.create(new AsyncCallback<Project>() {
             @Override
             public void onSuccess(Project result) {
                 //do nothing

@@ -34,12 +34,13 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+@Singleton
 public class CreateJavaProjectPresenter implements CreateProjectProvider {
-    // TODO
-    private String projectName = "g";
+    private String                   projectName;
     private String                   sourceFolder;
     private JavaProjectClientService service;
     private ResourceProvider         resourceProvider;
@@ -56,11 +57,13 @@ public class CreateJavaProjectPresenter implements CreateProjectProvider {
         this.sourceFolder = sourceFolder;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param callback
-     */
+    /** {@inheritDoc} */
+    @Override
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    /** {@inheritDoc} */
     @Override
     public void create(final AsyncCallback<Project> callback) {
 
