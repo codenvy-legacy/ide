@@ -18,9 +18,9 @@
  */
 package com.codenvy.ide.java.client.editor.outline;
 
-import com.codenvy.ide.api.editor.outline.CodeBlock;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.texteditor.api.outline.CodeBlock;
 
 
 /**

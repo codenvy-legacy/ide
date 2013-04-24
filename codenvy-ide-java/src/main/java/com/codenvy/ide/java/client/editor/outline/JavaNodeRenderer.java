@@ -22,10 +22,10 @@ import elemental.html.DivElement;
 import elemental.html.Element;
 import elemental.html.SpanElement;
 
-import com.codenvy.ide.api.editor.outline.CodeBlock;
 import com.codenvy.ide.java.client.JavaClientBundle;
 import com.codenvy.ide.java.client.JavaCss;
 import com.codenvy.ide.java.client.core.dom.Modifier;
+import com.codenvy.ide.texteditor.api.outline.CodeBlock;
 import com.codenvy.ide.ui.tree.NodeRenderer;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
 import com.codenvy.ide.util.dom.Elements;

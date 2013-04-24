@@ -19,7 +19,6 @@
 package com.codenvy.ide.java.client.editor;
 
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
-import com.codenvy.ide.api.editor.outline.OutlineModel;
 import com.codenvy.ide.java.client.JavaClientBundle;
 import com.codenvy.ide.java.client.JavaPartitions;
 import com.codenvy.ide.java.client.editor.outline.JavaNodeRenderer;
@@ -38,6 +37,7 @@ import com.codenvy.ide.texteditor.api.AutoEditStrategy;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
+import com.codenvy.ide.texteditor.api.outline.OutlineModel;
 import com.codenvy.ide.texteditor.api.parser.BasicTokenFactory;
 import com.codenvy.ide.texteditor.api.parser.CmParser;
 import com.codenvy.ide.texteditor.api.parser.Parser;

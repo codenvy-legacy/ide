@@ -18,8 +18,6 @@
  */
 package com.codenvy.ide.java.client.core.outline;
 
-import com.codenvy.ide.api.editor.outline.CodeBlock;
-import com.codenvy.ide.api.editor.outline.OutlineModel;
 import com.codenvy.ide.java.client.BaseTest;
 import com.codenvy.ide.java.client.core.dom.AST;
 import com.codenvy.ide.java.client.core.dom.ASTParser;
@@ -31,6 +29,8 @@ import com.codenvy.ide.java.client.editor.outline.OutlineModelUpdater;
 import com.codenvy.ide.java.client.internal.compiler.env.INameEnvironment;
 import com.codenvy.ide.java.emul.FileSystem;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.texteditor.api.outline.CodeBlock;
+import com.codenvy.ide.texteditor.api.outline.OutlineModel;
 
 import org.junit.Before;
 import org.junit.Test;
