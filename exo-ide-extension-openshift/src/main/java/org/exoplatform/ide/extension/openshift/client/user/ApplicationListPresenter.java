@@ -118,9 +118,13 @@ public class ApplicationListPresenter extends GitPresenter implements ShowApplic
         ListGridItem<OpenShiftEmbeddableCartridge> getCartridgesGrid();
 
         void addDeleteCartridgeButtonSelectionHandler(SelectionHandler<OpenShiftEmbeddableCartridge> handler);
+
         void addStartCartridgeButtonSelectionHandler(SelectionHandler<OpenShiftEmbeddableCartridge> handler);
+
         void addStopCartridgeButtonSelectionHandler(SelectionHandler<OpenShiftEmbeddableCartridge> handler);
+
         void addRestartCartridgeButtonSelectionHandler(SelectionHandler<OpenShiftEmbeddableCartridge> handler);
+
         void addReloadCartridgeButtonSelectionHandler(SelectionHandler<OpenShiftEmbeddableCartridge> handler);
 
         HasClickHandlers getAddCartridgeButton();
@@ -246,8 +250,10 @@ public class ApplicationListPresenter extends GitPresenter implements ShowApplic
         });
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     *      .event.ViewClosedEvent)
+     */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
@@ -255,8 +261,10 @@ public class ApplicationListPresenter extends GitPresenter implements ShowApplic
         }
     }
 
-    /** @see ShowApplicationListHandler#onShowUserInfo(org.exoplatform.ide.extension
-     * .openshift.client.user.ShowApplicationListEvent) */
+    /**
+     * @see ShowApplicationListHandler#onShowUserInfo(org.exoplatform.ide.extension
+     *      .openshift.client.user.ShowApplicationListEvent)
+     */
     @Override
     public void onShowUserInfo(ShowApplicationListEvent event) {
         getUserInfo();
@@ -339,8 +347,10 @@ public class ApplicationListPresenter extends GitPresenter implements ShowApplic
         IDE.addHandler(LoggedInEvent.TYPE, this);
     }
 
-    /** @see org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.openshift
-     * .client.login.LoggedInEvent) */
+    /**
+     * @see org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.openshift
+     *      .client.login.LoggedInEvent)
+     */
     @Override
     public void onLoggedIn(LoggedInEvent event) {
         IDE.removeHandler(LoggedInEvent.TYPE, this);
@@ -370,16 +380,17 @@ public class ApplicationListPresenter extends GitPresenter implements ShowApplic
 
     private void askDeleteCartridge(final String cartridgeName) {
         Dialogs.getInstance().ask(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteCartridgeTitle(),
-                                  OpenShiftExtension.LOCALIZATION_CONSTANT.deleteCartridge(cartridgeName), new BooleanValueReceivedHandler() {
+                                  OpenShiftExtension.LOCALIZATION_CONSTANT.deleteCartridge(cartridgeName),
+                                  new BooleanValueReceivedHandler() {
 
 
-            @Override
-            public void booleanValueReceived(Boolean value) {
-                if (value != null && value) {
-                    doDeleteCartridge(cartridgeName);
-                }
-            }
-        });
+                                      @Override
+                                      public void booleanValueReceived(Boolean value) {
+                                          if (value != null && value) {
+                                              doDeleteCartridge(cartridgeName);
+                                          }
+                                      }
+                                  });
     }
 
     /**
@@ -403,7 +414,8 @@ public class ApplicationListPresenter extends GitPresenter implements ShowApplic
                                                                         }
 
                                                                         /**
-                                                                         * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+                                                                         * @see org.exoplatform.gwtframework.commons.rest
+                                                                         * .AsyncRequestCallback#onFailure(java.lang.Throwable)
                                                                          */
                                                                         @Override
                                                                         protected void onFailure(Throwable exception) {
@@ -420,47 +432,52 @@ public class ApplicationListPresenter extends GitPresenter implements ShowApplic
         }
     }
 
-    private void doDeleteCartridge(String cartridgeName) {
+    private void doDeleteCartridge(final String cartridgeName) {
         try {
-            OpenShiftClientService.getInstance().deleteCartridge(currentViewedApp.getName(), cartridgeName, new AsyncRequestCallback<Void>() {
+            OpenShiftClientService.getInstance()
+                                  .deleteCartridge(currentViewedApp.getName(), cartridgeName, new AsyncRequestCallback<Void>() {
 
 
-                @Override
-                protected void onSuccess(Void result) {
-                    IDE.fireEvent(new ShowApplicationListEvent());
-                }
+                                      @Override
+                                      protected void onSuccess(Void result) {
+                                          IDE.fireEvent(new ShowApplicationListEvent());
+                                          IDE.fireEvent(new OutputEvent("Cartridge " + cartridgeName + " successfully deleted."));
+                                      }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    Dialogs.getInstance().showError(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteCartridgeError());
-                }
-            });
+                                      @Override
+                                      protected void onFailure(Throwable exception) {
+                                          Dialogs.getInstance().showError(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteCartridgeError());
+                                      }
+                                  });
         } catch (RequestException e) {
             Dialogs.getInstance().showError(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteCartridgeError());
         }
     }
 
-    private void sendStartCartridgeEvent(String cartridgeName) {
+    private void sendStartCartridgeEvent(final String cartridgeName) {
         try {
-            OpenShiftClientService.getInstance().startCartridge(currentViewedApp.getName(), cartridgeName, new AsyncRequestCallback<Void>() {
+            OpenShiftClientService.getInstance()
+                                  .startCartridge(currentViewedApp.getName(), cartridgeName, new AsyncRequestCallback<Void>() {
 
 
-                @Override
-                protected void onSuccess(Void result) {
-                    IDE.fireEvent(new ShowApplicationListEvent());
-                }
+                                      @Override
+                                      protected void onSuccess(Void result) {
+                                          IDE.fireEvent(new ShowApplicationListEvent());
+                                          IDE.fireEvent(new OutputEvent("Cartridge " + cartridgeName + " successfully started."));
+                                      }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    Dialogs.getInstance().showError(OpenShiftExtension.LOCALIZATION_CONSTANT.sendEventFailed("start"));
-                }
-            });
+                                      @Override
+                                      protected void onFailure(Throwable exception) {
+                                          Dialogs.getInstance()
+                                                 .showError(OpenShiftExtension.LOCALIZATION_CONSTANT.sendEventFailed("start"));
+                                      }
+                                  });
         } catch (RequestException e) {
             Dialogs.getInstance().showError(OpenShiftExtension.LOCALIZATION_CONSTANT.sendEventFailed("start"));
         }
     }
 
-    private void sendStopCartridgeEvent(String cartridgeName) {
+    private void sendStopCartridgeEvent(final String cartridgeName) {
         try {
             OpenShiftClientService.getInstance().stopCartridge(currentViewedApp.getName(), cartridgeName, new AsyncRequestCallback<Void>() {
 
@@ -468,6 +485,7 @@ public class ApplicationListPresenter extends GitPresenter implements ShowApplic
                 @Override
                 protected void onSuccess(Void result) {
                     IDE.fireEvent(new ShowApplicationListEvent());
+                    IDE.fireEvent(new OutputEvent("Cartridge " + cartridgeName + " successfully stopped."));
                 }
 
                 @Override
@@ -480,7 +498,7 @@ public class ApplicationListPresenter extends GitPresenter implements ShowApplic
         }
     }
 
-    private void sendRestartCartridgeEvent(String cartridgeName) {
+    private void sendRestartCartridgeEvent(final String cartridgeName) {
         try {
             OpenShiftClientService.getInstance().restartCartridge(currentViewedApp.getName(), cartridgeName,
                                                                   new AsyncRequestCallback<Void>() {
@@ -489,6 +507,8 @@ public class ApplicationListPresenter extends GitPresenter implements ShowApplic
                                                                       @Override
                                                                       protected void onSuccess(Void result) {
                                                                           IDE.fireEvent(new ShowApplicationListEvent());
+                                                                          IDE.fireEvent(new OutputEvent("Cartridge " + cartridgeName +
+                                                                                                        " successfully restarted."));
                                                                       }
 
                                                                       @Override
@@ -503,7 +523,7 @@ public class ApplicationListPresenter extends GitPresenter implements ShowApplic
         }
     }
 
-    private void sendReloadCartridgeEvent(String cartridgeName) {
+    private void sendReloadCartridgeEvent(final String cartridgeName) {
         try {
             OpenShiftClientService.getInstance().reloadCartridge(currentViewedApp.getName(), cartridgeName,
                                                                  new AsyncRequestCallback<Void>() {
@@ -512,6 +532,8 @@ public class ApplicationListPresenter extends GitPresenter implements ShowApplic
                                                                      @Override
                                                                      protected void onSuccess(Void result) {
                                                                          IDE.fireEvent(new ShowApplicationListEvent());
+                                                                         IDE.fireEvent(new OutputEvent("Cartridge " + cartridgeName +
+                                                                                                       " successfully reloaded."));
                                                                      }
 
                                                                      @Override
