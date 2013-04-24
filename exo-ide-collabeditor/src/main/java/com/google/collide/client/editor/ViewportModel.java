@@ -335,25 +335,56 @@ public class ViewportModel
     }
 
     /**
-     * Adjusts the viewport bounds after a line is added or removed, returning
-     * whether there an adjustment was made.
+     * Adjusts the viewport bounds after a line is added or removed, returning whether there an adjustment was made.
      */
     private boolean adjustViewportBoundsForLineAdditionOrRemoval(Document document, int lineNumber) {
         int bottomLineNumber = bottomAnchor.getLineNumber();
         int topLineNumber = topAnchor.getLineNumber();
-//    int lastVisibleLineNumber = topLineNumber + buffer.getFlooredHeightInLines();
+        // int lastVisibleLineNumber = topLineNumber + buffer.getFlooredHeightInLines();
         int lastVisibleLineNumber = buffer.getLastVisibleLineNumberFromTop(topLineNumber);
 
-    /*
-     * The "lastVisibleLineNumber != bottomLineNumber" catches the case where
-     * the viewport's last line is deleted, causing the bottom anchor to shift
-     * up a line before this method is called. So, the lineNumber will not be in
-     * the range of the top and bottom anchors.
-     */
+        /*
+         * The "lastVisibleLineNumber != bottomLineNumber" catches the case where the viewport's last line is deleted, causing the bottom
+         * anchor to shift up a line before this method is called. So, the lineNumber will not be in the range of the top and bottom
+         * anchors.
+         */
         if (MathUtils.isInRangeInclusive(lineNumber, topLineNumber, bottomLineNumber)
             || lastVisibleLineNumber != bottomLineNumber) {
 
             // Update the viewport to cope with the line addition or removal
+            int shiftAmount = lastVisibleLineNumber - bottomLineNumber;
+            if (shiftAmount != 0) {
+                shiftBottomAnchor(shiftAmount);
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Adjusts the viewport bounds after a line is collapsed or expanded, returning whether there an adjustment was made.
+     */
+    private boolean adjustViewportBoundsForLineExpansionOrCollapse(Document document, int lineNumber, boolean expansion) {
+        int bottomLineNumber = bottomAnchor.getLineNumber();
+        int topLineNumber = topAnchor.getLineNumber();
+        int lastVisibleLineNumber = buffer.getLastVisibleLineNumberFromTop(topLineNumber);
+
+        /*
+         * The "lastVisibleLineNumber != bottomLineNumber" catches the case where the viewport's last line is collapsed, causing the bottom
+         * anchor to shift up a line before this method is called. So, the lineNumber will not be in the range of the top and bottom
+         * anchors.
+         */
+        if (MathUtils.isInRangeInclusive(lineNumber, topLineNumber, bottomLineNumber)
+            || lastVisibleLineNumber != bottomLineNumber) {
+
+            // do not shift bottom anchor when viewport's last line is collapsed
+            if (!expansion && lastVisibleLineNumber != bottomLineNumber) {
+                return true;
+            }
+
+            // Update the viewport to cope with the line expansion or collapse
             int shiftAmount = lastVisibleLineNumber - bottomLineNumber;
             if (shiftAmount != 0) {
                 shiftBottomAnchor(shiftAmount);
@@ -526,7 +557,7 @@ public class ViewportModel
 
     @Override
     public void onCollapse(final int lineNumber, final JsonArray<Line> linesToCollapse) {
-        if (adjustViewportBoundsForLineAdditionOrRemoval(document, lineNumber)) {
+        if (adjustViewportBoundsForLineExpansionOrCollapse(document, lineNumber, false)) {
             listenerManager.dispatch(new Dispatcher<ViewportModel.Listener>() {
                 @Override
                 public void dispatch(Listener listener) {
@@ -538,7 +569,7 @@ public class ViewportModel
 
     @Override
     public void onExpand(final int lineNumber, final JsonArray<Line> linesToExpand) {
-        if (adjustViewportBoundsForLineAdditionOrRemoval(document, lineNumber)) {
+        if (adjustViewportBoundsForLineExpansionOrCollapse(document, lineNumber, true)) {
             listenerManager.dispatch(new Dispatcher<ViewportModel.Listener>() {
                 @Override
                 public void dispatch(Listener listener) {

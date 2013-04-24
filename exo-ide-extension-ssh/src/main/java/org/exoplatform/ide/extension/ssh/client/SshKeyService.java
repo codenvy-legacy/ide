@@ -41,11 +41,9 @@ public class SshKeyService {
 
     private static SshKeyService instance;
 
-    private final String restContext;
+    private final String         restContext;
 
-    private final Loader loader;
-
-    // private final int httpsPort;
+    private final Loader         loader;
 
     /**
      *
@@ -53,7 +51,6 @@ public class SshKeyService {
     public SshKeyService(String restContext, int httpsPort, Loader loader) {
         this.restContext = restContext;
         this.loader = loader;
-        // this.httpsPort = httpsPort;
         instance = this;
     }
 
@@ -63,15 +60,10 @@ public class SshKeyService {
 
     /**
      * Receive all ssh key, stored on server
-     *
+     * 
      * @param callback
      */
     public void getAllKeys(JsonpAsyncCallback<JavaScriptObject> callback) {
-        // UrlBuilder builder = new UrlBuilder();
-        // String url =
-        // builder.setProtocol("https").setHost(Location.getHost()).setPort(httpsPort)
-        // .setPath(GWT.getModuleName()+ "/" + sslContext + "/ide/ssh-keys/all").buildString();
-
         JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
         loader.setMessage("Getting SSH keys....");
         loader.show();
@@ -81,9 +73,8 @@ public class SshKeyService {
 
     /**
      * Generate new ssh key pare
-     *
-     * @param host
-     *         for ssh key
+     * 
+     * @param host for ssh key
      * @param callback
      * @throws RequestException
      */
@@ -102,9 +93,8 @@ public class SshKeyService {
 
     /**
      * Get public ssh key
-     *
-     * @param keyItem
-     *         to get public key
+     * 
+     * @param keyItem to get public key
      * @param callback
      */
     public void getPublicKey(KeyItem keyItem, JsonpAsyncCallback<JavaScriptObject> callback) {
@@ -117,9 +107,8 @@ public class SshKeyService {
 
     /**
      * Delete ssh key
-     *
-     * @param keyItem
-     *         to delete
+     * 
+     * @param keyItem to delete
      * @param callback
      */
     public void deleteKey(KeyItem keyItem, JsonpAsyncCallback<Void> callback) {

@@ -242,7 +242,7 @@ public class GitHub {
 
         String jsonRequest = JsonHelper.toJson(params);
 
-        doJsonRequest(url, "POST", 200, jsonRequest);
+        doJsonRequest(url, "POST", 201, jsonRequest);
     }
 
     /**
