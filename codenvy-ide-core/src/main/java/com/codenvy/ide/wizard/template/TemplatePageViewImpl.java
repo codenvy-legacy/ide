@@ -35,6 +35,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -46,6 +47,9 @@ public class TemplatePageViewImpl extends Composite implements TemplatePageView 
 
     @UiField
     ScrollPanel templates;
+
+    @UiField
+    Label label;
 
     private ActionDelegate delegate;
 
@@ -102,6 +106,7 @@ public class TemplatePageViewImpl extends Composite implements TemplatePageView 
         tableElement.setAttribute("style", "width: 100%");
         list = SimpleList.create((View)tableElement, resources.defaultSimpleListCss(), listItemRenderer, listDelegate);
 
+        this.label.addStyleName(resources.coreCss().mainText());
         this.templates.setStyleName(resources.coreCss().simpleListContainer());
         this.templates.add(list);
 

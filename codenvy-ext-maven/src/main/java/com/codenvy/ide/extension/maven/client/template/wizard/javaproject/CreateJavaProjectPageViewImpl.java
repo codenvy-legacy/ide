@@ -18,12 +18,14 @@
  */
 package com.codenvy.ide.extension.maven.client.template.wizard.javaproject;
 
+import com.codenvy.ide.Resources;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -42,9 +44,14 @@ public class CreateJavaProjectPageViewImpl extends Composite implements CreateJa
     @UiField
     TextBox sourceFolder;
 
+    @UiField
+    Label label;
+
     @Inject
-    protected CreateJavaProjectPageViewImpl() {
+    protected CreateJavaProjectPageViewImpl(Resources resources) {
         initWidget(ourUiBinder.createAndBindUi(this));
+
+        label.addStyleName(resources.coreCss().mainText());
     }
 
     @Override
