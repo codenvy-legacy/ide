@@ -40,7 +40,12 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
-import org.exoplatform.ide.extension.cloudfoundry.client.*;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryRESTfulRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.FrameworksUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
@@ -59,6 +64,8 @@ import org.exoplatform.ide.vfs.shared.ItemType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER.CLOUD_FOUNDRY;
 
 /**
  * Presenter for creating application on CloudFoundry.
@@ -163,10 +170,9 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
     /** Store application data in format, that convenient to send to server. */
     private AppData appData;
 
-    /**
-     *
-     */
     private boolean isMavenProject;
+
+    private PAAS_PROVIDER paasProvider = null;
 
     public CreateApplicationPresenter() {
         IDE.addHandler(CreateApplicationEvent.TYPE, this);
@@ -268,6 +274,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
      * .extension.cloudfoundry.client.create.CreateApplicationEvent) */
     @Override
     public void onCreateApplication(CreateApplicationEvent event) {
+        this.paasProvider = event.getPaasProvider();
 //      if (selectedItems == null || selectedItems.size() == 0)
 //      {
 //         String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.selectFolderToCreate();
@@ -347,13 +354,22 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
             }
         };
 
-//      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+        // ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
         ProjectModel project = getSelectedProject();
 
         try {
-            CloudFoundryClientService.getInstance().validateAction("create", app.server, app.name, app.type, app.url,
-                                                                   vfs.getId(), project.getId(), app.instances, app.memory, app.nostart,
-                                                                   new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null,
+            CloudFoundryClientService.getInstance().validateAction("create",
+                                                                   app.server,
+                                                                   app.name,
+                                                                   app.type,
+                                                                   app.url,
+                                                                   vfs.getId(),
+                                                                   project.getId(),
+                                                                   app.instances,
+                                                                   app.memory,
+                                                                   app.nostart,
+                                                                   new CloudFoundryAsyncRequestCallback<String>(null, validateHandler,
+                                                                                                                null,
                                                                                                                 app.server) {
                                                                        @Override
                                                                        protected void onSuccess(String result) {
@@ -441,6 +457,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                     vfs.getId(),
                     project.getId(),
                     warUrl,
+                    paasProvider.value(),
                     new CloudFoundryRESTfulRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
                                                                                     appData.server) {
                         @Override
@@ -488,6 +505,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                     vfs.getId(),
                     project.getId(),
                     warUrl,
+                    paasProvider.value(),
                     new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
                                                                                   appData.server) {
                         @Override
@@ -655,28 +673,29 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
     /** Check is selected item project and can be built. */
     private void checkIsProject(final ProjectModel project) {
         try {
-            VirtualFileSystem.getInstance().getChildren(project,
-                                                        new AsyncRequestCallback<List<Item>>(
-                                                                new ChildrenUnmarshaller(new ArrayList<Item>())) {
+            VirtualFileSystem.getInstance()
+                             .getChildren(project,
+                                          new AsyncRequestCallback<List<Item>>(
+                                                                               new ChildrenUnmarshaller(new ArrayList<Item>())) {
 
-                                                            @Override
-                                                            protected void onSuccess(List<Item> result) {
-                                                                isMavenProject = false;
-                                                                project.getChildren().setItems(result);
-                                                                for (Item i : result) {
-                                                                    if (i.getItemType() == ItemType.FILE && "pom.xml".equals(i.getName())) {
-                                                                        isMavenProject = true;
-                                                                    }
-                                                                }
-                                                                openView(Collections.<Framework>emptyList());
-                                                            }
+                                              @Override
+                                              protected void onSuccess(List<Item> result) {
+                                                  isMavenProject = false;
+                                                  project.getChildren().setItems(result);
+                                                  for (Item i : result) {
+                                                      if (i.getItemType() == ItemType.FILE && "pom.xml".equals(i.getName())) {
+                                                          isMavenProject = true;
+                                                      }
+                                                  }
+                                                  openView(Collections.<Framework> emptyList());
+                                              }
 
-                                                            @Override
-                                                            protected void onFailure(Throwable exception) {
-                                                                IDE.fireEvent(new ExceptionThrownEvent(exception,
-                                                                                                       "Service is not deployed.<br>Parent folder not found."));
-                                                            }
-                                                        });
+                                              @Override
+                                              protected void onFailure(Throwable exception) {
+                                                  IDE.fireEvent(new ExceptionThrownEvent(exception,
+                                                                                         "Service is not deployed.<br>Parent folder not found."));
+                                              }
+                                          });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
@@ -689,17 +708,16 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                     new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>())) {
                         @Override
                         protected void onSuccess(List<String> result) {
-                            if (result.isEmpty()) {
-                                display.setServerValues(new String[]{CloudFoundryExtension.DEFAULT_SERVER});
-                                display.getServerField().setValue(CloudFoundryExtension.DEFAULT_SERVER);
-                            } else {
+                            if (!result.isEmpty()) {
                                 String[] servers = result.toArray(new String[result.size()]);
                                 display.setServerValues(servers);
                                 display.getServerField().setValue(servers[0]);
                                 getFrameworks(servers[0]);
+                            } else if (paasProvider == CLOUD_FOUNDRY) {
+                                display.setServerValues(new String[]{CloudFoundryExtension.DEFAULT_CF_SERVER});
+                                display.getServerField().setValue(CloudFoundryExtension.DEFAULT_CF_SERVER);
                             }
 
-//                  display.getNameField().setValue(((ItemContext)selectedItems.get(0)).getProject().getName());
                             display.getNameField().setValue(getSelectedProject().getName());
                             updateUrlField();
                         }

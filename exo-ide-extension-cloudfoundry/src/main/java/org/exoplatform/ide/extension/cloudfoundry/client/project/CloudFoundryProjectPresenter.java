@@ -42,6 +42,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.ApplicationDeletedEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.ApplicationDeletedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationEvent;
@@ -129,9 +130,9 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements
 
     private List<String> appUris;
 
-    public CloudFoundryProjectPresenter() {
-        IDE.getInstance().addControl(new CloudFoundryControl());
+    private PAAS_PROVIDER paasProvider = null;
 
+    public CloudFoundryProjectPresenter() {
         IDE.addHandler(ManageCloudFoundryProjectEvent.TYPE, this);
         IDE.addHandler(ApplicationDeletedEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -293,7 +294,7 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements
      * .exoplatform.ide.extension.cloudfoundry.client.project.ManageCloudFoundryProjectEvent) */
     @Override
     public void onManageCloudFoundryProject(ManageCloudFoundryProjectEvent event) {
-        //getApplicationInfo(openedProject);
+        paasProvider = event.getPaasProvider();
         getApplicationInfo(getSelectedProject());
     }
 

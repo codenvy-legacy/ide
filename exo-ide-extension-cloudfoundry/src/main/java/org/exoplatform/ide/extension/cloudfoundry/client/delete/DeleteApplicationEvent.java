@@ -20,6 +20,8 @@ package org.exoplatform.ide.extension.cloudfoundry.client.delete;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
+
 /**
  * Event, occurs after pressing Delete Application command.
  *
@@ -34,6 +36,8 @@ public class DeleteApplicationEvent extends GwtEvent<DeleteApplicationHandler> {
 
     private String server;
 
+    private PAAS_PROVIDER paasProvider;
+
     /**
      *
      */
@@ -42,10 +46,16 @@ public class DeleteApplicationEvent extends GwtEvent<DeleteApplicationHandler> {
         this.server = null;
     }
 
-    /** @param applicationName */
-    public DeleteApplicationEvent(String applicationName, String server) {
+    /**
+     * 
+     * @param applicationName
+     * @param server
+     * @param paasProvider
+     */
+    public DeleteApplicationEvent(String applicationName, String server, PAAS_PROVIDER paasProvider) {
         this.applicationName = applicationName;
         this.server = server;
+        this.paasProvider = paasProvider;
     }
 
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
@@ -68,5 +78,10 @@ public class DeleteApplicationEvent extends GwtEvent<DeleteApplicationHandler> {
     /** @return the server */
     public String getServer() {
         return server;
+    }
+
+    /** @return paas provider */
+    public PAAS_PROVIDER getPaasProvider() {
+        return paasProvider;
     }
 }

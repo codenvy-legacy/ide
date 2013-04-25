@@ -77,11 +77,13 @@ public abstract class CloudFoundryClientService {
      *         id of the project with the source code or compiled and packed java web application
      * @param war
      *         URL to pre-builded war file. May be present for java (spring, grails, java-web) applications ONLY
+     * @param paasProvider
+     *         CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param callback
      *         callback, that client has to implement to receive response
      */
     public abstract void create(String server, String name, String type, String url, int instances, int memory,
-                                boolean nostart, String vfsId, String projectId, String war,
+                                boolean nostart, String vfsId, String projectId, String war, String paasProvider,
                                 CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback) throws RequestException;
 
     /**
@@ -108,11 +110,13 @@ public abstract class CloudFoundryClientService {
      *         id of the project with the source code or compiled and packed java web application
      * @param war
      *         URL to pre-builded war file. May be present for java (spring, grails, java-web) applications ONLY
+     * @param paasProvider
+     *         CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param callback
      *         callback, that client has to implement to receive response
      */
     public abstract void createWS(String server, String name, String type, String url, int instances, int memory,
-                                  boolean nostart, String vfsId, String projectId, String war,
+                                  boolean nostart, String vfsId, String projectId, String war, String paasProvider,
                                   CloudFoundryRESTfulRequestCallback<CloudFoundryApplication> callback) throws WebSocketException;
 
     /**
@@ -170,11 +174,13 @@ public abstract class CloudFoundryClientService {
      *         location of Cloud Foundry instance, where application is located
      * @param deleteServices
      *         if <code>true</code> - delete application's services
+     * @param paasProvider
+     *         CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param callback
      *         - callback, that client has to implement
      */
     public abstract void deleteApplication(String vfsId, String projectId, String appId, String server,
-                                           boolean deleteServices, CloudFoundryAsyncRequestCallback<String> callback)
+                                           boolean deleteServices, String paasProvider, CloudFoundryAsyncRequestCallback<String> callback)
             throws RequestException;
 
     /**

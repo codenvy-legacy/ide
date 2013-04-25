@@ -140,17 +140,24 @@ public class CloudfoundryService {
 
         String warURLStr = params.get("war");
         URL warURL = warURLStr == null || warURLStr.isEmpty() ? null : new URL(warURLStr);
+        String paasProvider = params.get("paasprovider");
         CloudFoundryApplication app =
                 cloudfoundry.createApplication(params.get("server"), params.get("name"), params.get("type"),
                                                params.get("url"), instances, mem, noStart, params.get("runtime"), params.get("command"),
                                                debugMode, vfs,
-                                               params.get("projectid"), warURL);
+                                               params.get("projectid"), warURL, paasProvider);
 
         String projectId = params.get("projectid");
         if (projectId != null) {
             Project proj = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+            String paasName;
+            if (paasProvider.equalsIgnoreCase("tier3webfabric")) {
+                paasName = "Tier3 Web Fabric";
+            } else {
+                paasName = "CloudFoundry";
+            }
             LOG.info("EVENT#application-created# PROJECT#" + proj.getName() + "# TYPE#" + proj.getProjectType()
-                     + "# PAAS#CloudFoundry#");
+                     + "# PAAS#" + paasName + "#");
         }
         return app;
     }
@@ -356,11 +363,12 @@ public class CloudfoundryService {
             @QueryParam("name") String app, //
             @QueryParam("vfsid") String vfsId, //
             @QueryParam("projectid") String projectId, //
-            @QueryParam("delete-services") boolean deleteServices //
+            @QueryParam("delete-services") boolean deleteServices, //
+            @QueryParam("paasprovider") String paasProvider //
                                  )
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         cloudfoundry.deleteApplication(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null)
-                                                                  : null, projectId, deleteServices);
+                                                                  : null, projectId, deleteServices, paasProvider);
     }
 
     @Path("apps/stats")

@@ -1,6 +1,6 @@
 <!--
 
-    Copyright (C) 2012 eXo Platform SAS.
+    Copyright (C) 2013 eXo Platform SAS.
 
     This is free software; you can redistribute it and/or modify it
     under the terms of the GNU Lesser General Public License as
@@ -66,8 +66,8 @@
         <f:layer>
             <g:FlowPanel ui:field="cloudFoundryPanel" stylePrimaryName="{style.innerBox}">
                 <g:FlowPanel styleName="{style.title}">
-                    <g:Image resource="{resource.cloudFoundryLogo}" styleName="{style.image}"></g:Image>
-                    <g:Label text="Deploy project to CloudFoundry" styleName="{style.label}"></g:Label>
+                    <g:Image resource="{resource.tier3WebFabricLogo}" styleName="{style.image}"></g:Image>
+                    <g:Label text="Deploy project to Tier3 Web Fabric" styleName="{style.label}"></g:Label>
                 </g:FlowPanel>
                 <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
                     <g:west size="115">

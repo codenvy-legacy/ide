@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.cloudfoundry.client.deploy;
+package org.exoplatform.ide.extension.cloudfoundry.client.deployTier3WebFabric;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
@@ -54,7 +54,6 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizatio
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryRESTfulRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
@@ -71,8 +70,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: DeployApplicationPresenter.java Dec 2, 2011 10:17:23 AM vereshchaka $
+ * 
+ * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @version $Id: DeployApplicationPresenter.java Apr 24, 2013 3:14:13 PM azatsarynnyy $
+ *
  */
 public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSActions, VfsChangedHandler {
     interface Display {
@@ -202,7 +203,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
                                              vfs.getId(),
                                              project.getId(),
                                              warUrl,
-                                             PAAS_PROVIDER.CLOUD_FOUNDRY.value(),
+                                             PAAS_PROVIDER.WEB_FABRIC.value(),
                                              new CloudFoundryRESTfulRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler,
                                                                                                              null,
                                                                                                              server) {
@@ -240,7 +241,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
             // Application will be started after creation (IDE-1618)
             boolean noStart = false;
             CloudFoundryClientService.getInstance().create(server, name, null, url, 0, 0, noStart, vfs.getId(),
-                                                           project.getId(), warUrl, PAAS_PROVIDER.CLOUD_FOUNDRY.value(),
+                                                           project.getId(), warUrl, PAAS_PROVIDER.WEB_FABRIC.value(),
                                                            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
                                                                                                                          loggedInHandler,
                                                                                                                          null, server) {
@@ -308,45 +309,42 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
 
     /** Get the list of server and put them to select field. */
     private void getServers() {
-        LoggedInHandler loggedInHandler = new LoggedInHandler() {
-            @Override
-            public void onLoggedIn() {
-                getServers();
-            }
-        };
-
-        try {
-            CloudFoundryClientService.getInstance().getTargets(
-                    new CloudFoundryAsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>()), loggedInHandler,
-                                                                       null) {
-                        @Override
-                        protected void onSuccess(List<String> result) {
-                            if (!result.isEmpty()) {
-                                String[] servers = result.toArray(new String[result.size()]);
-                                display.setServerValues(servers);
-                                display.getServerField().setValue(servers[0]);
-                            } else {
-                                display.setServerValues(new String[]{CloudFoundryExtension.DEFAULT_CF_SERVER});
-                                display.getServerField().setValue(CloudFoundryExtension.DEFAULT_CF_SERVER);
-                            }
+//        LoggedInHandler loggedInHandler = new LoggedInHandler() {
+//            @Override
+//            public void onLoggedIn() {
+//                getServers();
+//            }
+//        };
+//
+//        try {
+//            CloudFoundryClientService.getInstance().getTargets(
+//                    new CloudFoundryAsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>()), loggedInHandler,
+//                                                                       null) {
+//                        @Override
+//                        protected void onSuccess(List<String> result) {
+//                            if (!result.isEmpty()) {
+//                                String[] servers = result.toArray(new String[result.size()]);
+//                                display.setServerValues(servers);
+//                                display.getServerField().setValue(servers[0]);
+//                            }
                             display.getNameField().setValue(projectName);
                             // don't forget to init values, that are stored, when
                             // values in form fields are changed
                             name = projectName;
-                            server = display.getServerField().getValue();
-                            String urlSufix = server.substring(server.indexOf("."));
-                            display.getUrlField().setValue(name + urlSufix);
-                            url = display.getUrlField().getValue();
-                        }
-
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            IDE.fireEvent(new ExceptionThrownEvent(exception));
-                        }
-                    });
-        } catch (RequestException e) {
-            IDE.fireEvent(new ExceptionThrownEvent(e));
-        }
+//                            server = display.getServerField().getValue();
+//                            String urlSufix = server.substring(server.indexOf("."));
+//                            display.getUrlField().setValue(name + urlSufix);
+//                            url = display.getUrlField().getValue();
+//                        }
+//
+//                        @Override
+//                        protected void onFailure(Throwable exception) {
+//                            IDE.fireEvent(new ExceptionThrownEvent(exception));
+//                        }
+//                    });
+//        } catch (RequestException e) {
+//            IDE.fireEvent(new ExceptionThrownEvent(e));
+//        }
     }
 
     public void performValidation() {
@@ -426,6 +424,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
         }
         bindDisplay();
         getServers();
+
         return display.getView();
     }
 

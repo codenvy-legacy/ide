@@ -347,10 +347,11 @@ public class Cloudfoundry {
                                                      DebugMode debugMode,
                                                      VirtualFileSystem vfs,
                                                      String projectId,
-                                                     URL war)
+                                                     URL war,
+                                                     String paasProvider)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         return createApplication(server, app, framework, url, instances, memory, noStart, runtime, command, debugMode,
-                                 vfs, projectId, war, null);
+                                 vfs, projectId, war, paasProvider, null);
     }
 
     /**
@@ -370,6 +371,7 @@ public class Cloudfoundry {
                                                      VirtualFileSystem vfs,
                                                      String projectId,
                                                      URL war,
+                                                     String paasProvider,
                                                      Map<String, String> options)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         if (app == null || app.isEmpty()) {
@@ -383,7 +385,7 @@ public class Cloudfoundry {
         }
         CloudfoundryCredential cloudfoundryCredential = getCredential(server);
         return createApplication(cloudfoundryCredential, app, framework, url, instances, memory, noStart, runtime, command, debugMode,
-                                 vfs, projectId, war, options);
+                                 vfs, projectId, war, paasProvider, options);
     }
 
     private static final Pattern suggestUrlPattern = Pattern.compile("(http(s)?://)?([^\\.]+)(.*)");
@@ -401,6 +403,7 @@ public class Cloudfoundry {
                                                       VirtualFileSystem vfs,
                                                       String projectId,
                                                       URL url,
+                                                      String paasProvider,
                                                       Map<String, String> options)
             throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException {
         final long start = System.currentTimeMillis();
@@ -487,7 +490,7 @@ public class Cloudfoundry {
             uploadApplication(cloudfoundryCredential, app, vfs, projectId, path);
 
             if (vfs != null && projectId != null) {
-                writeApplicationName(vfs, projectId, app);
+                writeApplicationName(vfs, projectId, app, paasProvider);
                 writeServerName(vfs, projectId, cloudfoundryCredential.target);
             }
 
@@ -1238,19 +1241,21 @@ public class Cloudfoundry {
      * @throws IOException
      *         id any i/o errors occurs
      */
-    public void deleteApplication(String server, String app, VirtualFileSystem vfs, String projectId, boolean deleteServices)
+    public void deleteApplication(String server, String app, VirtualFileSystem vfs, String projectId, boolean deleteServices,
+                                  String paasProvider)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         deleteApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
-                          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, deleteServices, vfs, projectId);
+                          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, deleteServices, vfs, projectId,
+                              paasProvider);
     }
 
     private void deleteApplication(CloudfoundryCredential cloudfoundryCredential, String app, boolean deleteServices, VirtualFileSystem vfs,
-                                   String projectId)
+                                   String projectId, String paasProvider)
             throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException {
         CloudFoundryApplication appInfo = applicationInfo(cloudfoundryCredential, app);
         deleteJson(cloudfoundryCredential.target + "/apps/" + app, cloudfoundryCredential.token, 200);
         if (vfs != null && projectId != null) {
-            writeApplicationName(vfs, projectId, null);
+            writeApplicationName(vfs, projectId, null, paasProvider);
             writeServerName(vfs, projectId, null);
         }
         if (deleteServices) {
@@ -1908,8 +1913,9 @@ public class Cloudfoundry {
         return new CloudfoundryCredential(server, token);
     }
 
-    private void writeApplicationName(VirtualFileSystem vfs, String projectId, String name) throws VirtualFileSystemException {
-        Property p = new PropertyImpl("cloudfoundry-application", name);
+    private void writeApplicationName(VirtualFileSystem vfs, String projectId, String name, String paasProvider) throws VirtualFileSystemException {
+        final String propertyName = paasProvider == null || paasProvider.isEmpty() ? "cloudfoundry" : paasProvider;
+        Property p = new PropertyImpl(propertyName + "-application", name);
         List<Property> properties = new ArrayList<Property>(1);
         properties.add(p);
         vfs.updateItem(projectId, properties, null);

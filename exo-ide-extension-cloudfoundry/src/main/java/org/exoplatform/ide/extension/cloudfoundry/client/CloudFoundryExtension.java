@@ -34,11 +34,13 @@ import org.exoplatform.ide.extension.cloudfoundry.client.control.ApplicationsCon
 import org.exoplatform.ide.extension.cloudfoundry.client.control.CloudFoundryControlGroup;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.CreateApplicationControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.SwitchAccountControl;
+import org.exoplatform.ide.extension.cloudfoundry.client.control.Tier3WebFabricControlGroup;
 import org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginPresenter;
+import org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServicePresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.services.ManageServicesPresenter;
@@ -52,12 +54,34 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * CloudFoundry extention for IDE.
+ * CloudFoundry extension for IDE.
  *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudFoundryExtension.java Jul 7, 2011 5:00:41 PM vereshchaka $
  */
 public class CloudFoundryExtension extends Extension implements InitializeServicesHandler {
+
+    /** Defined CloudFoundry PaaS providers. */
+    public static enum PAAS_PROVIDER {
+        CLOUD_FOUNDRY("cloudfoundry"),
+        WEB_FABRIC("tier3webfabric");
+
+        /** Project's type name. */
+        private String label;
+
+        /**
+         * @param label
+         *         provider's label
+         */
+        private PAAS_PROVIDER(String label) {
+            this.label = label;
+        }
+
+        /** @return {@link String} provider's label */
+        public String value() {
+            return label;
+        }
+    }
 
     /** The generator of an {@link AutoBean}. */
     public static final CloudFoundryAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(CloudFoundryAutoBeanFactory.class);
@@ -66,9 +90,11 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
             .create(CloudFoundryLocalizationConstant.class);
 
     /** Default CloudFoundry server. */
-    public static final String DEFAULT_SERVER = "http://api.cloudfoundry.com";
+    public static final String DEFAULT_CF_SERVER = "http://api.cloudfoundry.com";
 
-    private static final String ID = "CloudFoundry";
+    private static final String CF_ID = "CloudFoundry";
+
+    private static final String WF_ID = "Tier3WF";
 
     /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
      * .client.framework.application.event.InitializeServicesEvent) */
@@ -80,24 +106,42 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
     /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
     @Override
     public void initialize() {
-        IDE.getInstance().registerPaaS(
-                new PaaS("CloudFoundry", "Cloud Foundry", new Image(CloudFoundryClientBundle.INSTANCE.cloudFoundry48()),
-                         new Image(CloudFoundryClientBundle.INSTANCE.cloudFoundry48Disabled()), Arrays.asList(ProjectType.JSP,
-                                                                                                              ProjectType.RUBY_ON_RAILS,
-                                                                                                              ProjectType.SPRING,
-                                                                                                              ProjectType.WAR),
-                         new DeployApplicationPresenter()));
+        IDE.getInstance().registerPaaS(new PaaS(CF_ID, "Cloud Foundry",
+                                                new Image(CloudFoundryClientBundle.INSTANCE.cloudFoundry48()),
+                                                new Image(CloudFoundryClientBundle.INSTANCE.cloudFoundry48Disabled()),
+                                                Arrays.asList(ProjectType.JSP,
+                                                              ProjectType.RUBY_ON_RAILS,
+                                                              ProjectType.SPRING,
+                                                              ProjectType.WAR),
+                                                new DeployApplicationPresenter()));
+
+        IDE.getInstance().registerPaaS(new PaaS(WF_ID, "Tier3 Web Fabric",
+                                                new Image(CloudFoundryClientBundle.INSTANCE.tier3WebFabric48()),
+                                                new Image(CloudFoundryClientBundle.INSTANCE.tier3WebFabric48Disabled()),
+                                                Arrays.asList(ProjectType.JSP,
+                                                              ProjectType.RUBY_ON_RAILS,
+                                                              ProjectType.SPRING,
+                                                              ProjectType.WAR),
+                                                new org.exoplatform.ide.extension.cloudfoundry.client.deployTier3WebFabric.DeployApplicationPresenter()));
 
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
-        IDE.getInstance().addControl(new CloudFoundryControlGroup());
-        IDE.getInstance().addControl(new CreateApplicationControl());
+        IDE.getInstance().addControl(new CloudFoundryControl(PAAS_PROVIDER.CLOUD_FOUNDRY));
+        IDE.getInstance().addControl(new CloudFoundryControl(PAAS_PROVIDER.WEB_FABRIC));
 
-        IDE.getInstance().addControl(new ApplicationsControl());
-        IDE.getInstance().addControl(new SwitchAccountControl());
+        IDE.getInstance().addControl(new CloudFoundryControlGroup());
+        IDE.getInstance().addControl(new Tier3WebFabricControlGroup());
+
+        IDE.getInstance().addControl(new CreateApplicationControl(PAAS_PROVIDER.CLOUD_FOUNDRY));
+        IDE.getInstance().addControl(new CreateApplicationControl(PAAS_PROVIDER.WEB_FABRIC));
+        IDE.getInstance().addControl(new ApplicationsControl(PAAS_PROVIDER.CLOUD_FOUNDRY));
+        IDE.getInstance().addControl(new ApplicationsControl(PAAS_PROVIDER.WEB_FABRIC));
+        IDE.getInstance().addControl(new SwitchAccountControl(PAAS_PROVIDER.CLOUD_FOUNDRY));
+        IDE.getInstance().addControl(new SwitchAccountControl(PAAS_PROVIDER.WEB_FABRIC));
 
         new CreateApplicationPresenter();
-        new LoginPresenter();
+        new LoginPresenter(PAAS_PROVIDER.CLOUD_FOUNDRY);
+        new LoginPresenter(PAAS_PROVIDER.WEB_FABRIC);
         new StartApplicationPresenter();
         new ApplicationInfoPresenter();
         new UpdateApplicationPresenter();
@@ -112,6 +156,11 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
 
     public static boolean canBeDeployedToCF(ProjectModel project) {
         List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());
-        return (targets != null && targets.contains(ID));
+        return (targets != null && targets.contains(CF_ID));
+    }
+
+    public static boolean canBeDeployedToWF(ProjectModel project) {
+        List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());
+        return (targets != null && targets.contains(WF_ID));
     }
 }

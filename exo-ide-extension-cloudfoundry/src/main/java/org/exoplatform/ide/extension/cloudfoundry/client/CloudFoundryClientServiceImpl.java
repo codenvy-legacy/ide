@@ -119,11 +119,11 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService {
      * @throws RequestException
      * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#create(java.lang.String, java.lang.String,
      *      java.lang.String, int, java.lang.String, java.lang.String, java.lang.String,
-     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+     *      java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
      */
     @Override
     public void create(String server, String name, String type, String url, int instances, int memory, boolean nostart,
-                       String vfsId, String projectId, String war, CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback)
+                       String vfsId, String projectId, String war, String paasProvider, CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback)
             throws RequestException {
         final String requestUrl = restServiceContext + CREATE;
 
@@ -141,6 +141,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService {
         createApplicationRequest.setVfsid(vfsId);
         createApplicationRequest.setProjectid(projectId);
         createApplicationRequest.setWar(war);
+        createApplicationRequest.setPaasprovider(paasProvider);
 
         String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(createApplicationRequest)).getPayload();
 
@@ -153,11 +154,11 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService {
      * @throws WebSocketException
      * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#createWS(java.lang.String, java.lang.String,
      *      java.lang.String, java.lang.String, int, int, boolean, java.lang.String, java.lang.String, java.lang.String,
-     *      org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryRESTfulRequestCallback)
+     *      java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryRESTfulRequestCallback)
      */
     @Override
     public void createWS(String server, String name, String type, String url, int instances, int memory,
-                         boolean nostart, String vfsId, String projectId, String war,
+                         boolean nostart, String vfsId, String projectId, String war, String paasProvider,
                          CloudFoundryRESTfulRequestCallback<CloudFoundryApplication> callback) throws WebSocketException {
         server = checkServerUrl(server);
 
@@ -173,6 +174,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService {
         createApplicationRequest.setVfsid(vfsId);
         createApplicationRequest.setProjectid(projectId);
         createApplicationRequest.setWar(war);
+        createApplicationRequest.setPaasprovider(paasProvider);
 
         String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(createApplicationRequest)).getPayload();
         callback.setStatusHandler(new CreateApplicationRequestStatusHandler(name));
@@ -253,11 +255,11 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService {
     /**
      * @throws RequestException
      * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#deleteApplication(java.lang.String,
-     *      java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+     *      java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
      */
     @Override
     public void deleteApplication(String vfsId, String projectId, String appId, String server, boolean deleteServices,
-                                  CloudFoundryAsyncRequestCallback<String> callback) throws RequestException {
+                                  String paasProvider, CloudFoundryAsyncRequestCallback<String> callback) throws RequestException {
         final String url = restServiceContext + DELETE;
 
         server = checkServerUrl(server);
@@ -266,7 +268,8 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService {
         params += (vfsId != null) ? "vfsid=" + vfsId + "&" : "";
         params += (projectId != null) ? "projectid=" + projectId + "&" : "";
         params += (server != null) ? "server=" + server + "&" : "";
-        params += "delete-services=" + String.valueOf(deleteServices);
+        params += "delete-services=" + String.valueOf(deleteServices) + "&";
+        params += (paasProvider != null) ? "paasprovider=" + paasProvider : "";
 
         AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader)
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
