@@ -190,7 +190,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             // try to remove application.
             try {
                 LOG.warn("Application {} failed to start, cause: {}", name, e.getMessage());
-                cloudfoundry.deleteApplication(cloudfoundry.getTarget(), name, null, null, true);
+                cloudfoundry.deleteApplication(cloudfoundry.getTarget(), name, null, null, true, null);
             } catch (Exception e1) {
                 LOG.warn("Unable delete failed application {}, cause: {}", name, e.getMessage());
             }
@@ -225,7 +225,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             // try to remove application.
             try {
                 LOG.warn("Application {} failed to start, cause: {}", name, e.getMessage());
-                cloudfoundry.deleteApplication(cloudfoundry.getTarget(), name, null, null, true);
+                cloudfoundry.deleteApplication(cloudfoundry.getTarget(), name, null, null, true, null);
             } catch (Exception e1) {
                 LOG.warn("Unable delete failed application {}, cause: {}", name, e.getMessage());
             }
@@ -312,7 +312,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
         try {
             String target = cloudfoundry.getTarget();
             cloudfoundry.stopApplication(target, name, null, null);
-            cloudfoundry.deleteApplication(target, name, null, null, true);
+            cloudfoundry.deleteApplication(target, name, null, null, true, null);
             applications.remove(name);
             publishWebSocketMessage(null, "runner:application-stopped:" + name);
             LOG.debug("Stop application {}.", name);
@@ -348,10 +348,10 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             throws CloudfoundryException, IOException, ParsingResponseException, VirtualFileSystemException, CredentialStoreException {
         if (APPLICATION_TYPE.JAVA_WEB_APP_ENGINE == type) {
             return cloudfoundry.createApplication(target, name, "java_gae", null, 1, 256, false, "java", null, debug, null,
-                                                  null, path.toURI().toURL(), params);
+                                                  null, path.toURI().toURL(), null, params);
         }
         return cloudfoundry.createApplication(target, name, "spring", null, 1, 256, false, "java", null, debug, null,
-                                              null, path.toURI().toURL(), params);
+                                              null, path.toURI().toURL(), null, params);
     }
 
     @Override

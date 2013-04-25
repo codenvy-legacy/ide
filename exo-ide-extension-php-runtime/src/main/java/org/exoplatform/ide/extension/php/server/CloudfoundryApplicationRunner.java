@@ -156,7 +156,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             // try to remove application.
             try {
                 LOG.warn("Application {} failed to start, cause: {}", name, e.getMessage());
-                cloudfoundry.deleteApplication(cloudfoundry.getTarget(), name, null, null, true);
+                cloudfoundry.deleteApplication(cloudfoundry.getTarget(), name, null, null, true, null);
             } catch (Exception e1) {
                 LOG.warn("Unable delete failed application {}, cause: {}", name, e.getMessage());
             }
@@ -242,7 +242,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
         try {
             String target = cloudfoundry.getTarget();
             cloudfoundry.stopApplication(target, name, null, null);
-            cloudfoundry.deleteApplication(target, name, null, null, true);
+            cloudfoundry.deleteApplication(target, name, null, null, true, null);
             applications.remove(name);
             LOG.debug("Stop application {}.", name);
         } catch (Exception e) {
@@ -273,7 +273,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                                                       java.io.File path)
             throws CloudfoundryException, IOException, ParsingResponseException, VirtualFileSystemException, CredentialStoreException {
         return cloudfoundry.createApplication(target, name, "php", null, 1, 128, false, "php", null, null, null,
-                                              null, path.toURI().toURL());
+                                              null, path.toURI().toURL(), null);
     }
 
     private void login(Cloudfoundry cloudfoundry) throws ApplicationRunnerException {

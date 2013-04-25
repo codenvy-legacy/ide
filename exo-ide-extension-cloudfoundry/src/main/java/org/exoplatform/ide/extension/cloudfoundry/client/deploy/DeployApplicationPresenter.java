@@ -70,6 +70,8 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER.CLOUD_FOUNDRY;
+
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeployApplicationPresenter.java Dec 2, 2011 10:17:23 AM vereshchaka $
@@ -205,7 +207,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
                                              PAAS_PROVIDER.CLOUD_FOUNDRY.value(),
                                              new CloudFoundryRESTfulRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler,
                                                                                                              null,
-                                                                                                             server) {
+                                                                                                             server, CLOUD_FOUNDRY) {
                                                  @Override
                                                  protected void onSuccess(CloudFoundryApplication result) {
                                                      onAppCreatedSuccess(result);
@@ -243,7 +245,8 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
                                                            project.getId(), warUrl, PAAS_PROVIDER.CLOUD_FOUNDRY.value(),
                                                            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
                                                                                                                          loggedInHandler,
-                                                                                                                         null, server) {
+                                                                                                                         null, server,
+                                                                                                                         CLOUD_FOUNDRY) {
                                                                @Override
                                                                protected void onSuccess(CloudFoundryApplication result) {
                                                                    onAppCreatedSuccess(result);
@@ -318,7 +321,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
         try {
             CloudFoundryClientService.getInstance().getTargets(
                     new CloudFoundryAsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>()), loggedInHandler,
-                                                                       null) {
+                                                                       null, CLOUD_FOUNDRY) {
                         @Override
                         protected void onSuccess(List<String> result) {
                             if (!result.isEmpty()) {
@@ -359,9 +362,9 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
 
         try {
             CloudFoundryClientService.getInstance().validateAction("create", server, name, null, url, vfs.getId(), null,
-                                                                   0, 0, true,
+                                                                   CLOUD_FOUNDRY.value(), 0, 0, true,
                                                                    new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null,
-                                                                                                                server) {
+                                                                                                                server, CLOUD_FOUNDRY) {
                                                                        @Override
                                                                        protected void onSuccess(String result) {
                                                                            beforeDeploy();

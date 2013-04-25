@@ -100,11 +100,12 @@ public class CloudfoundryService {
             @QueryParam("server") String server, //
             @QueryParam("name") String app, //
             @QueryParam("vfsid") String vfsId, //
-            @QueryParam("projectid") String projectId //
+            @QueryParam("projectid") String projectId, //
+            @QueryParam("paasprovider") String paasProvider //
                                                   )
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         return cloudfoundry.applicationInfo(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null)
-                                                                       : null, projectId);
+                                                                       : null, projectId, paasProvider);
     }
 
     @Path("apps/create")
@@ -170,7 +171,8 @@ public class CloudfoundryService {
             @QueryParam("name") String app, //
             @QueryParam("debug") String debug,
             @QueryParam("vfsid") String vfsId, //
-            @QueryParam("projectid") String projectId //
+            @QueryParam("projectid") String projectId, //
+            @QueryParam("paasprovider") String paasProvider //
                                                    )
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         DebugMode debugMode = null;
@@ -178,7 +180,8 @@ public class CloudfoundryService {
             debugMode = debug.isEmpty() ? new DebugMode() : new DebugMode(debug);
         }
         return cloudfoundry.startApplication(server, app, debugMode, vfsId != null ? vfsRegistry.getProvider(vfsId)
-                                                                                                .newInstance(null, null) : null, projectId);
+                                                                                                .newInstance(null, null) : null, projectId,
+                                                                                                paasProvider);
     }
 
     @Path("apps/stop")
@@ -187,11 +190,12 @@ public class CloudfoundryService {
             @QueryParam("server") String server, //
             @QueryParam("name") String app, //
             @QueryParam("vfsid") String vfsId, //
-            @QueryParam("projectid") String projectId //
+            @QueryParam("projectid") String projectId, //
+            @QueryParam("paasprovider") String paasProvider //
                                )
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         cloudfoundry.stopApplication(server, app,
-                                     vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId);
+                                     vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId, paasProvider);
     }
 
     @Path("apps/restart")
@@ -202,7 +206,8 @@ public class CloudfoundryService {
             @QueryParam("name") String app, //
             @QueryParam("debug") String debug,
             @QueryParam("vfsid") String vfsId, //
-            @QueryParam("projectid") String projectId //
+            @QueryParam("projectid") String projectId, //
+            @QueryParam("paasprovider") String paasProvider //
                                                      )
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         DebugMode debugMode = null;
@@ -211,7 +216,7 @@ public class CloudfoundryService {
         }
         return cloudfoundry.restartApplication(server, app,
                                                debugMode, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
-                                               projectId);
+                                               projectId, paasProvider);
     }
 
     @Path("apps/update")
@@ -221,11 +226,12 @@ public class CloudfoundryService {
             @QueryParam("name") String app, //
             @QueryParam("vfsid") String vfsId, //
             @QueryParam("projectid") String projectId, //
+            @QueryParam("paasprovider") String paasProvider, //
             @QueryParam("war") URL war //
                                  )
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         cloudfoundry.updateApplication(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null)
-                                                                  : null, projectId, war);
+                                                                  : null, projectId, paasProvider, war);
     }
 
     @Path("apps/files")
@@ -237,10 +243,12 @@ public class CloudfoundryService {
             @QueryParam("path") String path, //
             @QueryParam("instance") String instance, //
             @QueryParam("vfsid") String vfsId, //
-            @QueryParam("projectid") String projectId //
+            @QueryParam("projectid") String projectId, //
+            @QueryParam("paasprovider") String paasProvider //
                           ) throws CloudfoundryException, CredentialStoreException, VirtualFileSystemException, IOException {
         return cloudfoundry.getFiles(server, app, path, instance,
-                                     vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId);
+                                     vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
+                                         paasProvider);
     }
 
     @Path("apps/logs")
@@ -251,10 +259,11 @@ public class CloudfoundryService {
             @QueryParam("name") String app, //
             @QueryParam("instance") String instance, //
             @QueryParam("vfsid") String vfsId, //
-            @QueryParam("projectid") String projectId //
+            @QueryParam("projectid") String projectId, //
+            @QueryParam("paasprovider") String paasProvider //
                          ) throws CloudfoundryException, CredentialStoreException, VirtualFileSystemException, IOException {
         return cloudfoundry.getLogs(server, app, instance,
-                                    vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId);
+                                    vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId, paasProvider);
     }
 
     @Path("apps/map")
@@ -264,11 +273,12 @@ public class CloudfoundryService {
             @QueryParam("name") String app, //
             @QueryParam("vfsid") String vfsId, //
             @QueryParam("projectid") String projectId, //
+            @QueryParam("paasprovider") String paasProvider, //
             @QueryParam("url") String url //
                       )
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         cloudfoundry.mapUrl(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
-                            projectId, url);
+                            projectId, paasProvider, url);
     }
 
     @Path("apps/unmap")
@@ -278,11 +288,12 @@ public class CloudfoundryService {
             @QueryParam("name") String app, //
             @QueryParam("vfsid") String vfsId, //
             @QueryParam("projectid") String projectId, //
+            @QueryParam("paasprovider") String paasProvider, //
             @QueryParam("url") String url //
                         )
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         cloudfoundry.unmapUrl(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
-                              projectId, url);
+                              projectId, paasProvider, url);
     }
 
     @Path("apps/mem")
@@ -292,11 +303,12 @@ public class CloudfoundryService {
             @QueryParam("name") String app, //
             @QueryParam("vfsid") String vfsId, //
             @QueryParam("projectid") String projectId, //
+            @QueryParam("paasprovider") String paasProvider, //
             @QueryParam("mem") int mem //
                    )
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         cloudfoundry.mem(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-                         mem);
+                         paasProvider, mem);
     }
 
     @Path("apps/instances")
@@ -306,11 +318,12 @@ public class CloudfoundryService {
             @QueryParam("name") String app, //
             @QueryParam("vfsid") String vfsId, //
             @QueryParam("projectid") String projectId, //
+            @QueryParam("paasprovider") String paasProvider, //
             @QueryParam("expr") String expression //
                          )
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         cloudfoundry.instances(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
-                               projectId, expression);
+                               projectId, paasProvider, expression);
     }
 
     @Path("apps/instances/info")
@@ -320,11 +333,13 @@ public class CloudfoundryService {
             @QueryParam("server") String server, //
             @QueryParam("name") String app, //
             @QueryParam("vfsid") String vfsId, //
-            @QueryParam("projectid") String projectId
+            @QueryParam("projectid") String projectId, //
+            @QueryParam("paasprovider") String paasProvider //
                                           )
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         return cloudfoundry.applicationInstances(server, app,
-                                                 vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId);
+                                                 vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
+                                                     paasProvider);
     }
 
     @Path("apps/env/add")
@@ -334,12 +349,13 @@ public class CloudfoundryService {
             @QueryParam("name") String app, //
             @QueryParam("vfsid") String vfsId, //
             @QueryParam("projectid") String projectId, //
+            @QueryParam("paasprovider") String paasProvider, //
             @QueryParam("key") String key, //
             @QueryParam("val") String value //
                               )
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         cloudfoundry.environmentAdd(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
-                                    projectId, key, value);
+                                    projectId, paasProvider, key, value);
     }
 
     @Path("apps/env/delete")
@@ -349,11 +365,12 @@ public class CloudfoundryService {
             @QueryParam("name") String app, //
             @QueryParam("vfsid") String vfsId, //
             @QueryParam("projectid") String projectId, //
+            @QueryParam("paasprovider") String paasProvider, //
             @QueryParam("key") String key //
                                  )
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         cloudfoundry.environmentDelete(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null)
-                                                                  : null, projectId, key);
+                                                                  : null, projectId, paasProvider, key);
     }
 
     @Path("apps/delete")
@@ -378,11 +395,12 @@ public class CloudfoundryService {
             @QueryParam("server") String server, //
             @QueryParam("name") String app, //
             @QueryParam("vfsid") String vfsId, //
-            @QueryParam("projectid") String projectId //
+            @QueryParam("projectid") String projectId, //
+            @QueryParam("paasprovider") String paasProvider //
                                                                           )
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         return cloudfoundry.applicationStats(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId)
-                                                                                     .newInstance(null, null) : null, projectId);
+                                                                                     .newInstance(null, null) : null, projectId, paasProvider);
     }
 
     @Path("apps")
@@ -410,12 +428,13 @@ public class CloudfoundryService {
             @QueryParam("name") String name, //
             @QueryParam("app") String app, //
             @QueryParam("vfsid") String vfsId, //
-            @QueryParam("projectid") String projectId //
+            @QueryParam("projectid") String projectId, //
+            @QueryParam("paasprovider") String paasProvider //
                                            )
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         return cloudfoundry.createService(server, service, name, app, vfsId != null ? vfsRegistry.getProvider(vfsId)
                                                                                                  .newInstance(null, null) : null,
-                                          projectId);
+                                          projectId, paasProvider);
     }
 
     @Path("services/delete/{name}")
@@ -434,11 +453,12 @@ public class CloudfoundryService {
             @PathParam("name") String name, //
             @QueryParam("app") String app, //
             @QueryParam("vfsid") String vfsId, //
-            @QueryParam("projectid") String projectId //
+            @QueryParam("projectid") String projectId, //
+            @QueryParam("paasprovider") String paasProvider //
                            )
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         cloudfoundry.bindService(server, name, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null)
-                                                                  : null, projectId);
+                                                                  : null, projectId, paasProvider);
     }
 
     @Path("services/unbind/{name}")
@@ -448,11 +468,12 @@ public class CloudfoundryService {
             @PathParam("name") String name, //
             @QueryParam("app") String app, //
             @QueryParam("vfsid") String vfsId, //
-            @QueryParam("projectid") String projectId //
+            @QueryParam("projectid") String projectId, //
+            @QueryParam("paasprovider") String paasProvider //
                              )
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         cloudfoundry.unbindService(server, name, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null)
-                                                                    : null, projectId);
+                                                                    : null, projectId, paasProvider);
     }
 
     @Path("apps/validate-action")
@@ -467,13 +488,14 @@ public class CloudfoundryService {
             @QueryParam("mem") int memory, //
             @QueryParam("nostart") boolean nostart, //
             @QueryParam("vfsid") String vfsId, //
-            @QueryParam("projectid") String projectId //
+            @QueryParam("projectid") String projectId, //
+            @QueryParam("paasprovider") String paasProvider //
                               )
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         cloudfoundry.validateAction(server, action, app, framework, url, instances, memory, nostart, vfsId != null
                                                                                                      ? vfsRegistry.getProvider(vfsId)
                                                                                                                   .newInstance(null, null)
-                                                                                                     : null, projectId);
+                                                                                                     : null, projectId, paasProvider);
     }
 
     @Path("target")

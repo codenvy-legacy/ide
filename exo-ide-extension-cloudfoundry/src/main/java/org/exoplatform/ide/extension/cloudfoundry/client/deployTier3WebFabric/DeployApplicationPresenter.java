@@ -69,6 +69,8 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER.WEB_FABRIC;
+
 /**
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
@@ -206,7 +208,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
                                              PAAS_PROVIDER.WEB_FABRIC.value(),
                                              new CloudFoundryRESTfulRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler,
                                                                                                              null,
-                                                                                                             server) {
+                                                                                                             server, WEB_FABRIC) {
                                                  @Override
                                                  protected void onSuccess(CloudFoundryApplication result) {
                                                      onAppCreatedSuccess(result);
@@ -244,7 +246,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
                                                            project.getId(), warUrl, PAAS_PROVIDER.WEB_FABRIC.value(),
                                                            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
                                                                                                                          loggedInHandler,
-                                                                                                                         null, server) {
+                                                                                                                         null, server, WEB_FABRIC) {
                                                                @Override
                                                                protected void onSuccess(CloudFoundryApplication result) {
                                                                    onAppCreatedSuccess(result);
@@ -357,9 +359,9 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
 
         try {
             CloudFoundryClientService.getInstance().validateAction("create", server, name, null, url, vfs.getId(), null,
-                                                                   0, 0, true,
+                                                                   WEB_FABRIC.value(), 0, 0, true,
                                                                    new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null,
-                                                                                                                server) {
+                                                                                                                server, WEB_FABRIC) {
                                                                        @Override
                                                                        protected void onSuccess(String result) {
                                                                            beforeDeploy();

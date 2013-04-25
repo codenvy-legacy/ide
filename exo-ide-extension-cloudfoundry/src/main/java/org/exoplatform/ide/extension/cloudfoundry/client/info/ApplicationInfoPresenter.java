@@ -35,6 +35,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.git.client.GitPresenter;
@@ -75,6 +76,8 @@ public class ApplicationInfoPresenter extends GitPresenter implements Applicatio
 
     private Display display;
 
+    private PAAS_PROVIDER paasProvider;
+
     /**
      * @param eventBus
      *         events handler
@@ -99,6 +102,7 @@ public class ApplicationInfoPresenter extends GitPresenter implements Applicatio
      * .extension.cloudbees.client.info.ApplicationInfoEvent) */
     @Override
     public void onShowApplicationInfo(ApplicationInfoEvent event) {
+        paasProvider = event.getPaasProvider();
         if (makeSelectionCheck()) {
             //showApplicationInfo(((ItemContext)selectedItems.get(0)).getProject().getId());
             showApplicationInfo(getSelectedProject().getId());
@@ -113,14 +117,14 @@ public class ApplicationInfoPresenter extends GitPresenter implements Applicatio
             AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                     new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-            CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
+            CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null, paasProvider.value(),
                                                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
                                                                                unmarshaller, new LoggedInHandler() {
                                                                            @Override
                                                                            public void onLoggedIn() {
                                                                                showApplicationInfo(projectId);
                                                                            }
-                                                                       }, null) {
+                                                                       }, null, paasProvider) {
                                                                            @Override
                                                                            protected void onSuccess(CloudFoundryApplication result) {
                                                                                if (display == null) {

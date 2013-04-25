@@ -122,7 +122,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
 
             @Override
             public void onSelection(SelectionEvent<CloudFoundryApplication> event) {
-                IDE.fireEvent(new StopApplicationEvent(event.getSelectedItem().getName()));
+                IDE.fireEvent(new StopApplicationEvent(event.getSelectedItem().getName(), paasProvider));
             }
         });
 
@@ -130,7 +130,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
 
             @Override
             public void onSelection(SelectionEvent<CloudFoundryApplication> event) {
-                IDE.fireEvent(new StartApplicationEvent(event.getSelectedItem().getName()));
+                IDE.fireEvent(new StartApplicationEvent(event.getSelectedItem().getName(), paasProvider));
             }
         });
 
@@ -138,7 +138,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
 
             @Override
             public void onSelection(SelectionEvent<CloudFoundryApplication> event) {
-                IDE.fireEvent(new RestartApplicationEvent(event.getSelectedItem().getName()));
+                IDE.fireEvent(new RestartApplicationEvent(event.getSelectedItem().getName(), paasProvider));
             }
         });
 
@@ -220,7 +220,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
                         public void onLoggedIn() {
                             getApplicationList();
                         }
-                    }, null, currentServer) {
+                    }, null, currentServer, paasProvider) {
 
                         @Override
                         protected void onSuccess(List<CloudFoundryApplication> result) {

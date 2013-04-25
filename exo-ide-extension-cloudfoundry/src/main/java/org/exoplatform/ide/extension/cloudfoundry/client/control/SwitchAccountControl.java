@@ -43,13 +43,13 @@ public class SwitchAccountControl extends AbstractCloudFoundryControl {
 
     private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.switchAccountControlPrompt();
 
-    public SwitchAccountControl(PAAS_PROVIDER target) {
-        super(target == WEB_FABRIC ? CF_ID : WF_ID);
+    public SwitchAccountControl(PAAS_PROVIDER paasProvider) {
+        super(paasProvider == WEB_FABRIC ? CF_ID : WF_ID);
         setTitle(TITLE);
         setPrompt(PROMPT);
         setImages(CloudFoundryClientBundle.INSTANCE.switchAccount(),
                   CloudFoundryClientBundle.INSTANCE.switchAccountDisabled());
-        setEvent(new LoginEvent(null, null));
+        setEvent(new LoginEvent(paasProvider));
     }
 
     @Override

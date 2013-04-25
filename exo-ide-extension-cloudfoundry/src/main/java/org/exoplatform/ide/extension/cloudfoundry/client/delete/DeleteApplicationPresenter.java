@@ -150,9 +150,10 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
                                                          projectId,
                                                          null,
                                                          null,
+                                                         paasProvider.value(),
                                                          new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
                                                                                                                        appInfoLoggedInHandler,
-                                                                                                                       null) {
+                                                                                                                       null, paasProvider) {
                                                              @Override
                                                              protected void onSuccess(CloudFoundryApplication result) {
                                                                  appName = result.getName();
@@ -199,7 +200,7 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
                                                         isDeleteServices , paasProvider.value(),
                                                         new CloudFoundryAsyncRequestCallback<String>(null,
                                                                                                      deleteAppLoggedInHandler,
-                                                                                                     null) {
+                                                                                                     null, paasProvider) {
                                                             @Override
                                                             protected void onSuccess(String result) {
                                                                 closeView();

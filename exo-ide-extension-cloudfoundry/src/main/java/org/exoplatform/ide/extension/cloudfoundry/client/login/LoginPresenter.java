@@ -135,15 +135,14 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler {
     /** The last server, that user logged in. */
     private String server;
 
-    private final PAAS_PROVIDER target;
+    private PAAS_PROVIDER paasProvider;
 
     /**
      * Creates new instance {@link LoginPresenter} with the specified deploy <code>target</code>.
      * 
      * @param target deploy target
      */
-    public LoginPresenter(PAAS_PROVIDER target) {
-        this.target = target;
+    public LoginPresenter() {
         IDE.addHandler(LoginEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
     }
@@ -212,6 +211,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler {
      */
     @Override
     public void onLogin(LoginEvent event) {
+        paasProvider = event.getPaasProvider();
         loggedIn = event.getLoggedIn();
         loginCanceled = event.getLoginCanceled();
         if (event.getLoginUrl() != null) {
@@ -267,10 +267,10 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler {
                         @Override
                         protected void onSuccess(List<String> result) {
                             if (result.isEmpty()) {
-                                if (target == CLOUD_FOUNDRY) {
+                                if (paasProvider == CLOUD_FOUNDRY) {
                                     display.setTargetValues(new String[]{CloudFoundryExtension.DEFAULT_CF_SERVER});
                                 }
-                                if ((server == null || server.isEmpty()) && target == CLOUD_FOUNDRY) {
+                                if ((server == null || server.isEmpty()) && paasProvider == CLOUD_FOUNDRY) {
                                     display.getTargetSelectField().setValue(CloudFoundryExtension.DEFAULT_CF_SERVER);
                                 } else
                                     display.getTargetSelectField().setValue(server);

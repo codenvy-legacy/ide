@@ -365,12 +365,13 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                                                                    app.url,
                                                                    vfs.getId(),
                                                                    project.getId(),
+                                                                   paasProvider.value(),
                                                                    app.instances,
                                                                    app.memory,
                                                                    app.nostart,
                                                                    new CloudFoundryAsyncRequestCallback<String>(null, validateHandler,
                                                                                                                 null,
-                                                                                                                app.server) {
+                                                                                                                app.server, paasProvider) {
                                                                        @Override
                                                                        protected void onSuccess(String result) {
                                                                            if (isMavenProject)
@@ -396,7 +397,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
         try {
             CloudFoundryClientService.getInstance().getFrameworks(
                     new CloudFoundryAsyncRequestCallback<List<Framework>>(
-                            new FrameworksUnmarshaller(new ArrayList<Framework>()), getFrameworksLoggedInHandler, null) {
+                            new FrameworksUnmarshaller(new ArrayList<Framework>()), getFrameworksLoggedInHandler, null, paasProvider) {
                         @Override
                         protected void onSuccess(List<Framework> result) {
                             if (!result.isEmpty()) {
@@ -459,7 +460,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                     warUrl,
                     paasProvider.value(),
                     new CloudFoundryRESTfulRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
-                                                                                    appData.server) {
+                                                                                    appData.server, paasProvider) {
                         @Override
                         protected void onSuccess(CloudFoundryApplication result) {
                             onAppCreatedSuccess(result);
@@ -507,7 +508,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                     warUrl,
                     paasProvider.value(),
                     new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
-                                                                                  appData.server) {
+                                                                                  appData.server, paasProvider) {
                         @Override
                         protected void onSuccess(CloudFoundryApplication result) {
                             onAppCreatedSuccess(result);

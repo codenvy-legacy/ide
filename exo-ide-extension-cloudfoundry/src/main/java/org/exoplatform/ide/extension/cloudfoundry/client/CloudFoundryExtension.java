@@ -140,8 +140,7 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
         IDE.getInstance().addControl(new SwitchAccountControl(PAAS_PROVIDER.WEB_FABRIC));
 
         new CreateApplicationPresenter();
-        new LoginPresenter(PAAS_PROVIDER.CLOUD_FOUNDRY);
-        new LoginPresenter(PAAS_PROVIDER.WEB_FABRIC);
+        new LoginPresenter();
         new StartApplicationPresenter();
         new ApplicationInfoPresenter();
         new UpdateApplicationPresenter();

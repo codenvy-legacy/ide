@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationEvent;
 
 /**
@@ -39,13 +40,13 @@ public class DeleteApplicationControl extends AbstractCloudFoundryControl {
     /**
      *
      */
-    public DeleteApplicationControl() {
+    public DeleteApplicationControl(PAAS_PROVIDER paasProvider) {
         super(ID);
         setTitle(TITLE);
         setPrompt(PROMPT);
         setImages(CloudFoundryClientBundle.INSTANCE.deleteApplication(),
                   CloudFoundryClientBundle.INSTANCE.deleteApplicationDisabled());
-        setEvent(new DeleteApplicationEvent());
+        setEvent(new DeleteApplicationEvent(paasProvider));
     }
 
 }

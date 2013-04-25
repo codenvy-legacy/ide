@@ -144,14 +144,14 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements
         display.getDeleteButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.eventBus().fireEvent(new DeleteApplicationEvent());
+                IDE.eventBus().fireEvent(new DeleteApplicationEvent(paasProvider));
             }
         });
 
         display.getUpdateButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.eventBus().fireEvent(new UpdateApplicationEvent());
+                IDE.eventBus().fireEvent(new UpdateApplicationEvent(paasProvider));
             }
         });
 
@@ -163,10 +163,9 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements
         });
 
         display.getServicesButton().addClickHandler(new ClickHandler() {
-
             @Override
             public void onClick(ClickEvent event) {
-                IDE.fireEvent(new ManageServicesEvent(application));
+                IDE.fireEvent(new ManageServicesEvent(application, paasProvider));
             }
         });
 
@@ -180,49 +179,49 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements
         display.getInfoButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.eventBus().fireEvent(new ApplicationInfoEvent());
+                IDE.eventBus().fireEvent(new ApplicationInfoEvent(paasProvider));
             }
         });
 
         display.getStartButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.eventBus().fireEvent(new StartApplicationEvent());
+                IDE.eventBus().fireEvent(new StartApplicationEvent(paasProvider));
             }
         });
 
         display.getStopButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.eventBus().fireEvent(new StopApplicationEvent());
+                IDE.eventBus().fireEvent(new StopApplicationEvent(paasProvider));
             }
         });
 
         display.getRestartButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.eventBus().fireEvent(new RestartApplicationEvent());
+                IDE.eventBus().fireEvent(new RestartApplicationEvent(paasProvider));
             }
         });
 
         display.getEditInstancesButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.eventBus().fireEvent(new UpdateInstancesEvent());
+                IDE.eventBus().fireEvent(new UpdateInstancesEvent(paasProvider));
             }
         });
 
         display.getEditMemoryButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.eventBus().fireEvent(new UpdateMemoryEvent());
+                IDE.eventBus().fireEvent(new UpdateMemoryEvent(paasProvider));
             }
         });
 
         display.getEditURLButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.eventBus().fireEvent(new UnmapUrlEvent());
+                IDE.eventBus().fireEvent(new UnmapUrlEvent(paasProvider));
             }
         });
 
@@ -260,7 +259,7 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements
     protected void getLogs() {
         ProjectModel project = getSelectedProject();
         try {
-            CloudFoundryClientService.getInstance().getLogs(vfs.getId(), project.getId(),
+            CloudFoundryClientService.getInstance().getLogs(vfs.getId(), project.getId(), paasProvider.value(),
                                                             new AsyncRequestCallback<StringBuilder>(
                                                                     new StringUnmarshaller(new StringBuilder())) {
 
@@ -311,14 +310,14 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements
             AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                     new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-            CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), project.getId(), null, null,
+            CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), project.getId(), null, null, paasProvider.value(),
                                                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
                                                                                unmarshaller, new LoggedInHandler() {
                                                                            @Override
                                                                            public void onLoggedIn() {
                                                                                getApplicationInfo(project);
                                                                            }
-                                                                       }, null) {
+                                                                       }, null, paasProvider) {
                                                                            @Override
                                                                            protected void onSuccess(CloudFoundryApplication result) {
                                                                                if (display == null) {

@@ -41,9 +41,11 @@ public class DeleteApplicationEvent extends GwtEvent<DeleteApplicationHandler> {
     /**
      *
      */
-    public DeleteApplicationEvent() {
+    public DeleteApplicationEvent(PAAS_PROVIDER paasProvider) {
+        super();
         this.applicationName = null;
         this.server = null;
+        this.paasProvider = paasProvider;
     }
 
     /**
@@ -53,6 +55,7 @@ public class DeleteApplicationEvent extends GwtEvent<DeleteApplicationHandler> {
      * @param paasProvider
      */
     public DeleteApplicationEvent(String applicationName, String server, PAAS_PROVIDER paasProvider) {
+        super();
         this.applicationName = applicationName;
         this.server = server;
         this.paasProvider = paasProvider;

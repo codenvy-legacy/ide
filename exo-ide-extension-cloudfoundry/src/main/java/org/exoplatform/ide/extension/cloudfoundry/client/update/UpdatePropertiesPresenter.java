@@ -31,6 +31,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
@@ -50,6 +51,8 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
 
     private String instances;
 
+    private PAAS_PROVIDER paasProvider;
+
     public UpdatePropertiesPresenter() {
         IDE.addHandler(UpdateMemoryEvent.TYPE, this);
         IDE.addHandler(UpdateInstancesEvent.TYPE, this);
@@ -62,6 +65,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
      * .cloudfoundry.client.update.UpdateMemoryEvent) */
     @Override
     public void onUpdateMemory(UpdateMemoryEvent event) {
+        paasProvider = event.getPaasProvider();
         if (makeSelectionCheck()) {
             getOldMemoryValue();
         }
@@ -90,8 +94,9 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
                     projectId,
                     null,
                     null,
+                    paasProvider.value(),
                     new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
-                                                                                  getOldMemoryValueLoggedInHandler, null) {
+                                                                                  getOldMemoryValueLoggedInHandler, null, paasProvider) {
                         @Override
                         protected void onSuccess(CloudFoundryApplication result) {
                             askForNewMemoryValue(result.getResources().getMemory());
@@ -138,10 +143,10 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
         final String projectId = getSelectedProject().getId();
 
         try {
-            CloudFoundryClientService.getInstance().updateMemory(vfs.getId(), projectId, null, null, memory,
+            CloudFoundryClientService.getInstance().updateMemory(vfs.getId(), projectId, null, null, paasProvider.value(), memory,
                                                                  new CloudFoundryAsyncRequestCallback<String>(null,
                                                                                                               updateMemoryLoggedInHandler,
-                                                                                                              null) {
+                                                                                                              null, paasProvider) {
                                                                      @Override
                                                                      protected void onSuccess(String result) {
                                                                          String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT
@@ -161,6 +166,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
      * .extension.cloudfoundry.client.update.UpdateInstancesEvent) */
     @Override
     public void onUpdateInstances(UpdateInstancesEvent event) {
+        paasProvider = event.getPaasProvider();
         getOldInstancesValue();
     }
 
@@ -188,8 +194,9 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
                     projectId,
                     null,
                     null,
+                    paasProvider.value(),
                     new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
-                                                                                  getOldInstancesValueLoggedInHandler, null) {
+                                                                                  getOldInstancesValueLoggedInHandler, null, paasProvider) {
                         @Override
                         protected void onSuccess(CloudFoundryApplication result) {
                             askForInstancesNumber(result.getInstances());
@@ -249,66 +256,10 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
         String encodedExp = URL.encodePathSegment(instancesExpression);
 
         try {
-            CloudFoundryClientService.getInstance().updateInstances(vfs.getId(), projectId, null, null, encodedExp,
+            CloudFoundryClientService.getInstance().updateInstances(vfs.getId(), projectId, null, null, paasProvider.value(), encodedExp,
                                                                     new CloudFoundryAsyncRequestCallback<String>(null,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                                                                                                                  updateInstancesLoggedInHandler,
-                                                                                                                 null) {
+                                                                                                                 null, paasProvider) {
                                                                         @Override
                                                                         protected void onSuccess(String result) {
                                                                             try {
@@ -324,10 +275,11 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
                                                                                                          .getApplicationInfo(vfs.getId(),
                                                                                                                              projectId,
                                                                                                                              null, null,
+                                                                                                                             paasProvider.value(),
                                                                                                                              new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
                                                                                                                                      unmarshaller,
                                                                                                                                      null,
-                                                                                                                                     null) {
+                                                                                                                                     null, paasProvider) {
                                                                                                                                  @Override
                                                                                                                                  protected void onSuccess(
                                                                                                                                          CloudFoundryApplication result) {
