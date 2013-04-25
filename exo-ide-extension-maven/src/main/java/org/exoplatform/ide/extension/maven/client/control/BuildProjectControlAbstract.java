@@ -21,7 +21,11 @@ package org.exoplatform.ide.extension.maven.client.control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.*;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 
 /**
@@ -30,8 +34,8 @@ import org.exoplatform.ide.client.framework.util.ProjectResolver;
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuildProjectControl.java Feb 17, 2012 3:51:08 PM azatsarynnyy $
  */
-public abstract class BuildProjectControlAbstract extends SimpleControl implements IDEControl, ProjectClosedHandler,
-                                                                                   ProjectOpenedHandler, ActiveProjectChangedHandler {
+public abstract class BuildProjectControlAbstract extends SimpleControl implements IDEControl,
+        ProjectClosedHandler, ProjectOpenedHandler {
 
     public BuildProjectControlAbstract(String id) {
         super(id);
@@ -45,7 +49,6 @@ public abstract class BuildProjectControlAbstract extends SimpleControl implemen
 
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
     }
 
     /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
@@ -76,12 +79,4 @@ public abstract class BuildProjectControlAbstract extends SimpleControl implemen
                || ProjectType.MultiModule.value().equals(projectType);
     }
 
-    @Override
-    public void onActiveProjectChanged(ActiveProjectChangedEvent currentProjectEvent) {
-        String projectType = currentProjectEvent.getProject().getProjectType();
-        if (chekProjectType(projectType))
-            setEnabled(true);
-        else
-            setEnabled(false);
-    }
 }

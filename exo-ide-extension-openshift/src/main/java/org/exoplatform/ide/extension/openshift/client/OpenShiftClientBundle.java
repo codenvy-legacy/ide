@@ -82,10 +82,10 @@ public interface OpenShiftClientBundle extends ClientBundle {
     @Source("org/exoplatform/ide/extension/openshift/images/controls/preview_Disabled.png")
     ImageResource previewControlDisabled();
 
-    @Source("org/exoplatform/ide/extension/openshift/images/controls/userInfo.png")
+    @Source("org/exoplatform/ide/extension/openshift/images/controls/apps-list.png")
     ImageResource userInfoControl();
 
-    @Source("org/exoplatform/ide/extension/openshift/images/controls/userInfo_Disabled.png")
+    @Source("org/exoplatform/ide/extension/openshift/images/controls/apps-list_Disabled.png")
     ImageResource userInfoControlDisabled();
 
     @Source("org/exoplatform/ide/extension/openshift/images/controls/createDomain.png")
@@ -129,4 +129,25 @@ public interface OpenShiftClientBundle extends ClientBundle {
 
     @Source("org/exoplatform/ide/extension/openshift/images/buttons/stop_Disabled.png")
     ImageResource stopButtonDisabled();
+
+    @Source("org/exoplatform/ide/extension/openshift/images/cartridges/delete.png")
+    ImageResource deleteCartridge();
+
+    @Source("org/exoplatform/ide/extension/openshift/images/cartridges/start.png")
+    ImageResource startCartridge();
+
+    @Source("org/exoplatform/ide/extension/openshift/images/cartridges/stop.png")
+    ImageResource stopCartridge();
+
+    @Source("org/exoplatform/ide/extension/openshift/images/cartridges/restart.png")
+    ImageResource restartCartridge();
+
+    @Source("org/exoplatform/ide/extension/openshift/images/cartridges/reload.png")
+    ImageResource reloadCartridge();
+
+    @Source("org/exoplatform/ide/extension/openshift/images/cartridges/credential.png")
+    ImageResource credentialCartridge();
+
+    @Source("org/exoplatform/ide/extension/openshift/images/cartridges/add_cartridge.png")
+    ImageResource addCartridge();
 }

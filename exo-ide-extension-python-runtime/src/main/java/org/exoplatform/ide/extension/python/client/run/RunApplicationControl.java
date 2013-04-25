@@ -22,11 +22,19 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.*;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.python.client.PythonExtensionClientBundle;
 import org.exoplatform.ide.extension.python.client.PythonRuntimeExtension;
-import org.exoplatform.ide.extension.python.client.run.event.*;
+import org.exoplatform.ide.extension.python.client.run.event.ApplicationStartedEvent;
+import org.exoplatform.ide.extension.python.client.run.event.ApplicationStartedHandler;
+import org.exoplatform.ide.extension.python.client.run.event.ApplicationStoppedEvent;
+import org.exoplatform.ide.extension.python.client.run.event.ApplicationStoppedHandler;
+import org.exoplatform.ide.extension.python.client.run.event.RunApplicationEvent;
 
 /**
  * Control for running Python application.
@@ -34,9 +42,9 @@ import org.exoplatform.ide.extension.python.client.run.event.*;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 20, 2012 2:58:43 PM anya $
  */
-public class RunApplicationControl extends SimpleControl implements IDEControl, ProjectClosedHandler,
-                                                                    ProjectOpenedHandler, ApplicationStartedHandler,
-                                                                    ApplicationStoppedHandler, ActiveProjectChangedHandler {
+public class RunApplicationControl extends SimpleControl implements IDEControl,
+        ProjectClosedHandler, ProjectOpenedHandler, ApplicationStartedHandler, ApplicationStoppedHandler {
+    
     public static final String ID = "Run/Run Python Application";
 
     private static final String TITLE = PythonRuntimeExtension.PYTHON_LOCALIZATION.runApplicationControlTitle();
@@ -59,7 +67,6 @@ public class RunApplicationControl extends SimpleControl implements IDEControl, 
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ApplicationStartedEvent.TYPE, this);
         IDE.addHandler(ApplicationStoppedEvent.TYPE, this);
-        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
     }
 
     /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
@@ -86,12 +93,6 @@ public class RunApplicationControl extends SimpleControl implements IDEControl, 
         setShowInContextMenu(isPythonProject);
     }
 
-    @Override
-    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
-        String projectType = event.getProject().getProjectType();
-        updateStatus(projectType);
-    }
-
     /** @see org.exoplatform.ide.extension.python.client.run.event.ApplicationStoppedHandler#onApplicationStopped(org.exoplatform.ide
      * .extension.python.client.run.event.ApplicationStoppedEvent) */
     @Override
@@ -105,4 +106,5 @@ public class RunApplicationControl extends SimpleControl implements IDEControl, 
     public void onApplicationStarted(ApplicationStartedEvent event) {
         setEnabled(false);
     }
+    
 }

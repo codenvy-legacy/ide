@@ -36,8 +36,8 @@
         <when-type-is class="org.exoplatform.ide.extension.openshift.client.info.ApplicationInfoPresenter.Display"/>
     </replace-with>
 
-    <replace-with class="org.exoplatform.ide.extension.openshift.client.user.UserInfoView">
-        <when-type-is class="org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter.Display"/>
+    <replace-with class="org.exoplatform.ide.extension.openshift.client.user.ApplicationListView">
+        <when-type-is class="org.exoplatform.ide.extension.openshift.client.user.ApplicationListPresenter.Display"/>
     </replace-with>
 
     <replace-with class="org.exoplatform.ide.extension.openshift.client.deploy.DeployApplicationView">
@@ -46,5 +46,9 @@
 
     <replace-with class="org.exoplatform.ide.extension.openshift.client.project.OpenShiftProjectView">
         <when-type-is class="org.exoplatform.ide.extension.openshift.client.project.OpenShiftProjectPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.extension.openshift.client.cartridge.AddCartridgeView">
+        <when-type-is class="org.exoplatform.ide.extension.openshift.client.cartridge.AddCartridgePresenter.Display"/>
     </replace-with>
 </module>

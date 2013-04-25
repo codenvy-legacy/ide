@@ -61,10 +61,8 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 8, 2011 9:39:29 AM anya $
  */
-public class OpenShiftProjectPresenter extends GitPresenter
-        implements ViewClosedHandler, ManageOpenShiftProjectHandler, LoggedInHandler, ApplicationDeletedHandler,
-                   ApplicationInfoChangedHandler
-   /*ProjectOpenedHandler, ProjectClosedHandler, ActiveProjectChangedHandler,*/ {
+public class OpenShiftProjectPresenter extends GitPresenter implements ManageOpenShiftProjectHandler, 
+        ViewClosedHandler, LoggedInHandler, ApplicationDeletedHandler, ApplicationInfoChangedHandler {
 
     interface Display extends IsView {
 
@@ -93,14 +91,9 @@ public class OpenShiftProjectPresenter extends GitPresenter
 
     private Display display;
 
-//   private ProjectModel openedProject;
-
     public OpenShiftProjectPresenter() {
         IDE.getInstance().addControl(new OpenShiftControl());
 
-//      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-//      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-//      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
         IDE.addHandler(ManageOpenShiftProjectEvent.TYPE, this);
         IDE.addHandler(ApplicationDeletedEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -180,32 +173,6 @@ public class OpenShiftProjectPresenter extends GitPresenter
         }
     }
 
-//   /**
-//    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
-// .project.ProjectClosedEvent)
-//    */
-//   @Override
-//   public void onProjectClosed(ProjectClosedEvent event)
-//   {
-//      openedProject = null;
-//   }
-//
-//   /**
-//    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
-// .project.ProjectOpenedEvent)
-//    */
-//   @Override
-//   public void onProjectOpened(ProjectOpenedEvent event)
-//   {
-//      openedProject = event.getProject();
-//   }
-//
-//   @Override
-//   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-//   {
-//      openedProject = event.getProject();
-//   }
-
     /** Get application's information. */
     public void getApplicationInfo() {
         try {
@@ -235,7 +202,7 @@ public class OpenShiftProjectPresenter extends GitPresenter
                                                                                         (ServerException)exception;
                                                                                 if (HTTPStatus.OK == serverException.getHTTPStatus()
                                                                                     && "Authentication-required".equals(serverException
-                                                                                                                                .getHeader(
+                                                                                                                           .getHeader(
 
 
 

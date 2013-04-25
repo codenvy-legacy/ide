@@ -163,6 +163,22 @@ public class ExpressService {
     }
 
     @POST
+    @Path("apps/destroy/all")
+    public void destroyAllApplicationIncludeNamespace(@QueryParam("namespace") boolean includeNamespace,
+                                                      @QueryParam("projectid") String projectId,
+                                                      @QueryParam("vfsid") String vfsId)
+            throws ExpressException, CredentialStoreException, VirtualFileSystemException {
+        express.destroyAllApplicationsIncludeNamespace(includeNamespace);
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+        if (projectId != null) {
+            Property p = new PropertyImpl("openshift-express-application", Collections.<String>emptyList());
+            List<Property> properties = new ArrayList<Property>(1);
+            properties.add(p);
+            vfs.updateItem(projectId, properties, null);
+        }
+    }
+
+    @POST
     @Path("apps/stop")
     public void stopApplication(@QueryParam("name") String appName) throws ExpressException, CredentialStoreException {
         express.stopApplication(appName);

@@ -915,7 +915,7 @@ public class Buffer extends UiComponent<Buffer.View>
     }
 
     /**
-     * Returns last visible (not collapsed) in viewport line number.
+     * Returns number of the line that is last visible (not collapsed) in viewport.
      *
      * @param topLineNumber
      *         top line number

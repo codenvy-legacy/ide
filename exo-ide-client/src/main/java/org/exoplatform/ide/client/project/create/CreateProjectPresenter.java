@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.project.create;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -31,10 +32,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.ToggleButton;
+import com.google.gwt.user.client.ui.*;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
@@ -73,7 +71,11 @@ import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.*;
+import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -166,6 +168,10 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
         void setJRebelFormVisible(boolean visible);
 
         void setJRebelStoredFormVisible(boolean visible);
+
+        HasClickHandlers getChooseTechnologyTooltip();
+
+        HasClickHandlers getChoosePaaSTooltip();
     }
 
     private Display display;
@@ -256,11 +262,13 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
                     if (selectedProjectType == null) {
                         Dialogs.getInstance().showInfo(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noTechnologyTitle(),
                                                        org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noTechnologyMessage());
+                    } else if (!isNameValid(display.getNameField().getValue())) {
+                        return;
                     } else {
                         if (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING) {
                             getJRebelUserProfileInfo();
                         }
-                        validateProjectName(display.getNameField().getValue());
+                        validateProjectNameForExistenceAndGoNext(display.getNameField().getValue());
                     }
                 } else {
                     if (display.getUseJRebelPlugin().getValue()
@@ -339,10 +347,40 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
                 checkJRebelFieldFill();
             }
         });
+
+        display.getChooseTechnologyTooltip().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                showPopup(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.chooseTechnologyTooltip(), event.getClientX() + 10,
+                          event.getClientY() + 10);
+            }
+        });
+
+        display.getChoosePaaSTooltip().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                showPopup(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.choosePaaSTooltip(), event.getClientX() + 10,
+                          event.getClientY() + 10);
+            }
+        });
     }
 
-    /** @see org.exoplatform.ide.client.framework.event.CreateProjectHandler#onCreateProject(org.exoplatform.ide.client.framework.event
-     * .CreateProjectEvent) */
+    private void showPopup(String message, int left, int top) {
+        HTML htmlText = new HTML(message);
+
+        PopupPanel popup = new PopupPanel();
+        popup.setAutoHideEnabled(true);
+        popup.setWidth("auto");
+        popup.getElement().getStyle().setPadding(5.0, Style.Unit.PX);
+        popup.setPopupPosition(left, top);
+        popup.setWidget(htmlText);
+        popup.show();
+    }
+
+    /**
+     * @see org.exoplatform.ide.client.framework.event.CreateProjectHandler#onCreateProject(org.exoplatform.ide.client.framework.event
+     *      .CreateProjectEvent)
+     */
     @Override
     public void onCreateProject(CreateProjectEvent event) {
         openCreateProjectView(false);
@@ -382,8 +420,10 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
         updateNavigationButtonsState();
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     *      .event.ViewClosedEvent)
+     */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
@@ -409,8 +449,10 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
-     * .application.event.VfsChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     *      .application.event.VfsChangedEvent)
+     */
     @Override
     public void onVfsChanged(VfsChangedEvent event) {
         this.vfsInfo = event.getVfsInfo();
@@ -534,9 +576,8 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
         if (isChooseTemplateStep) {
             isChooseTemplateStep = false;
             goToDeployStep();
-        } else
-        // create project step
-        {
+        } else {
+            // create project step
             goToTemplatesStep();
             if (!availableProjectTemplates.contains(selectedTemplate)) {
                 selectedTemplate = null;
@@ -708,7 +749,8 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
             if (projectTemplate != null || currentPaaS.isProvidesTemplate()) {
                 currentPaaS.getPaaSActions().deploy(projectTemplate, this);
             } else {
-                Dialogs.getInstance().showError(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noProjectTemplateForTarget(currentPaaS.getTitle()));
+                Dialogs.getInstance()
+                       .showError(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noProjectTemplateForTarget(currentPaaS.getTitle()));
             }
         }
     }
@@ -721,8 +763,10 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.paas.DeployResultHandler#onProjectCreated(org.exoplatform.ide.vfs.client.model
-     * .ProjectModel) */
+    /**
+     * @see org.exoplatform.ide.client.framework.paas.DeployResultHandler#onProjectCreated(org.exoplatform.ide.vfs.client.model
+     *      .ProjectModel)
+     */
     @Override
     public void onProjectCreated(ProjectModel project) {
         if ((selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING)
@@ -736,9 +780,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
         }
     }
 
-    /**
-     * @see org.exoplatform.ide.client.framework.paas.InitializeDeployViewHandler#onInitializeDeployViewError()
-     */
+    /** @see org.exoplatform.ide.client.framework.paas.InitializeDeployViewHandler#onInitializeDeployViewError() */
     @Override
     public void onInitializeDeployViewError() {
         // when user press cancel in login to PaaS view
@@ -807,13 +849,24 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
         return project;
     }
 
+    private boolean isNameValid(String name) {
+        boolean isInvalid = name.contains("*") || name.contains("\\") || name.contains("/");
+        if (isInvalid) {
+            display.getErrorLabel()
+                   .setValue(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.createProjectFromTemplateProjectNameInvalid());
+        } else {
+            display.getErrorLabel().setValue("");
+        }
+        return !isInvalid;
+    }
+
     /**
      * Validates project name for existence.
      *
      * @param projectName
      *         project's name
      */
-    private void validateProjectName(final String projectName) {
+    private void validateProjectNameForExistenceAndGoNext(final String projectName) {
         try {
             Folder parent = VirtualFileSystem.getInstance().getInfo().getRoot();
             if (createModule) {
@@ -829,41 +882,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
                                                                     if (projectName.equals(item.getName())) {
                                                                         display.getErrorLabel().setValue(
                                                                                 org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                                                                                                               .createProjectFromTemplateProjectExists(
                                                                                                                       projectName));
                                                                         return;
@@ -882,7 +900,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e, "Searching of projects failed."));
         }
-
     }
 
     /** Set the visibility state of a panel with JRebel setting. */

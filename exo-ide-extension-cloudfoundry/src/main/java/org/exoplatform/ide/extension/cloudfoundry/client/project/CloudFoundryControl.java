@@ -23,7 +23,10 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler;
-import org.exoplatform.ide.client.framework.project.*;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -34,9 +37,9 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Dec 2, 2011 5:39:01 PM anya $
  */
-public class CloudFoundryControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-                                                                  ProjectClosedHandler, FolderRefreshedHandler,
-                                                                  ActiveProjectChangedHandler {
+public class CloudFoundryControl extends SimpleControl implements IDEControl,
+            ProjectOpenedHandler, ProjectClosedHandler, FolderRefreshedHandler {
+    
     private static final String ID = "Project/PaaS/CloudFoundry";
 
     private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.cloudFoundryControlTitle();
@@ -47,8 +50,7 @@ public class CloudFoundryControl extends SimpleControl implements IDEControl, Pr
         super(ID);
         setTitle(TITLE);
         setPrompt(PROMPT);
-        setImages(CloudFoundryClientBundle.INSTANCE.cloudFoundry(),
-                  CloudFoundryClientBundle.INSTANCE.cloudFoundryDisabled());
+        setImages(CloudFoundryClientBundle.INSTANCE.cloudFoundry(), CloudFoundryClientBundle.INSTANCE.cloudFoundryDisabled());
         setEvent(new ManageCloudFoundryProjectEvent());
     }
 
@@ -75,11 +77,6 @@ public class CloudFoundryControl extends SimpleControl implements IDEControl, Pr
         update(event.getProject());
     }
 
-    @Override
-    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
-        update(event.getProject());
-    }
-
     /** @see org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler#onFolderRefreshed(org.exoplatform.ide.client
      * .framework.navigation.event.FolderRefreshedEvent) */
     @Override
@@ -94,4 +91,5 @@ public class CloudFoundryControl extends SimpleControl implements IDEControl, Pr
         setVisible(isCloudFoundry);
         setEnabled(isCloudFoundry);
     }
+    
 }

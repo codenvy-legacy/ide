@@ -1002,7 +1002,7 @@ public class WorkspaceResource implements IWorkspace {
      * @see com.codenvy.eclipse.core.resources.IFile#setContents(java.io.InputStream, int,
      * com.codenvy.eclipse.core.runtime.IProgressMonitor)
      */
-    void setFileContents(IFile file, InputStream newContent) throws CoreException {
+    public void setFileContents(IFile file, InputStream newContent) throws CoreException {
         try {
 
             vfs.updateContent(getVfsIdByFullPath(file.getFullPath()), /* TODO use special resolver*/
@@ -1031,7 +1031,7 @@ public class WorkspaceResource implements IWorkspace {
      * @see com.codenvy.eclipse.core.resources.IResource#move(com.codenvy.eclipse.core.runtime.IPath, int,
      *      com.codenvy.eclipse.core.runtime.IProgressMonitor)
      */
-    void moveResource(IResource resource, IPath destination) throws CoreException {
+    public void moveResource(IResource resource, IPath destination) throws CoreException {
         if (resource.getType() == IResource.ROOT || destination.isRoot()) {
             throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1,
                                                "The workspace root may not be the source or destination location of a move operation",

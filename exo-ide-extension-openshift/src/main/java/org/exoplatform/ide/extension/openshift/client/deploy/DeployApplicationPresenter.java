@@ -90,6 +90,8 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
         void setTypeValues(String[] types);
 
         Composite getView();
+
+        HasValue<String> getScalingValue();
     }
 
     private static final OpenShiftLocalizationConstant lb = OpenShiftExtension.LOCALIZATION_CONSTANT;
@@ -189,6 +191,8 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                 types.add(availableType);
             } else if (projectType == ProjectType.PHP && availableType.startsWith("php")) {
                 types.add(availableType);
+            } else if (projectType == ProjectType.NODE_JS && availableType.startsWith("nodejs")){
+                types.add(availableType);
             }
         }
 
@@ -221,7 +225,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
             OpenShiftClientService.getInstance().getUserInfo(true, new AsyncRequestCallback<RHUserInfo>(unmarshaller) {
                 @Override
                 protected void onSuccess(RHUserInfo result) {
-                    if ("Doesn't exist".equals(result.getNamespace())) {
+                    if (result.getNamespace() == null) {
                         // create a domain
                         StringValueReceivedHandler handler = new StringValueReceivedHandler() {
                             @Override
@@ -356,10 +360,11 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
         JobManager.get().showJobSeparated();
         AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
         AutoBeanUnmarshallerWS<AppInfo> unmarshaller = new AutoBeanUnmarshallerWS<AppInfo>(appInfo);
+        boolean scale = !"No scaling".equals(display.getScalingValue().getValue());
 
         try {
             OpenShiftClientService.getInstance().createApplicationWS(applicationName, vfs.getId(), project.getId(),
-                                                                     applicationType, new RequestCallback<AppInfo>(unmarshaller) {
+                                                                     applicationType, scale, new RequestCallback<AppInfo>(unmarshaller) {
 
                                                                          @Override
                                                                          protected void onSuccess(AppInfo result) {
@@ -373,7 +378,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                                                                          }
                                                                      });
         } catch (WebSocketException e) {
-            createApplicationREST(applicationName, applicationType);
+            createApplicationREST(applicationName, applicationType, scale);
         }
     }
 
@@ -383,13 +388,13 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
      * @param applicationName application's name
      * @param applicationType type of the application
      */
-    private void createApplicationREST(String applicationName, String applicationType) {
+    private void createApplicationREST(String applicationName, String applicationType, boolean scale) {
         AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
         AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(appInfo);
 
         try {
             OpenShiftClientService.getInstance().createApplication(applicationName, vfs.getId(), project.getId(),
-                                                                   applicationType, new AsyncRequestCallback<AppInfo>(unmarshaller) {
+                                                                   applicationType, scale, new AsyncRequestCallback<AppInfo>(unmarshaller) {
 
                                                                        @Override
                                                                        protected void onSuccess(AppInfo result) {

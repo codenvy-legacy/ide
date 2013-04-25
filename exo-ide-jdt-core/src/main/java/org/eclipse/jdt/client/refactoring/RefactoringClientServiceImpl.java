@@ -30,6 +30,8 @@ import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 
+import java.util.List;
+
 /**
  * Implementation of {@link RefactoringClientService} service.
  *
@@ -74,7 +76,7 @@ public class RefactoringClientServiceImpl extends RefactoringClientService {
      */
     @Override
     public void renameWS(String vfsId, String projectId, String fqn, int offset, String newName,
-                         RequestCallback<Object> callback) throws WebSocketException {
+                         RequestCallback<List<Action>> callback) throws WebSocketException {
         final String requesrUrl = RENAME;
         callback.setLoader(loader);
 
@@ -92,7 +94,7 @@ public class RefactoringClientServiceImpl extends RefactoringClientService {
      */
     @Override
     public void rename(String vfsId, String projectId, String fqn, int offset, String newName,
-                       AsyncRequestCallback<Object> callback) throws RequestException {
+                       AsyncRequestCallback<List<Action>> callback) throws RequestException {
         final String requesrUrl = restServiceContext + RENAME;
 
         String params =

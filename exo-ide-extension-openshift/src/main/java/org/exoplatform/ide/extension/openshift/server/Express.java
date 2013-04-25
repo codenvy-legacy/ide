@@ -243,7 +243,7 @@ public class Express {
                                                        scale ? ApplicationScale.SCALE : ApplicationScale.NO_SCALE,
                                                        new GearProfile(instanceType));
         } catch (OpenShiftException e) {
-            throw new ExpressException(500, e.getMessage(), "text/plain");
+            throw new ExpressException(500, String.format("Reason given: '%s'", e.getMessage()), "text/plain");
         }
 
         String gitUrl = application.getGitUrl();
@@ -322,22 +322,27 @@ public class Express {
 
     private AppInfo addEmbeddableCartridge(IOpenShiftConnection connection, String appName, List<String> embeddableCartridges)
             throws ExpressException, CredentialStoreException {
-        IApplication application = connection.getUser().getDefaultDomain().getApplicationByName(appName);
-        if (application != null) {
-            List<IEmbeddableCartridge> myEmbeddableCartridges = new ArrayList<IEmbeddableCartridge>(embeddableCartridges.size());
-            for (String embeddableCartridge : embeddableCartridges) {
-                myEmbeddableCartridges.add(new EmbeddableCartridge(embeddableCartridge));
+        try {
+            IApplication application = connection.getUser().getDefaultDomain().getApplicationByName(appName);
+            if (application != null) {
+                List<IEmbeddableCartridge> myEmbeddableCartridges = new ArrayList<IEmbeddableCartridge>(embeddableCartridges.size());
+                for (String embeddableCartridge : embeddableCartridges) {
+                    myEmbeddableCartridges.add(new EmbeddableCartridge(embeddableCartridge));
+                }
+                application.addEmbeddableCartridges(myEmbeddableCartridges);
+                AppInfoImpl myApplication = new AppInfoImpl(
+                        application.getName(),
+                        application.getCartridge().getName(),
+                        application.getGitUrl(),
+                        application.getApplicationUrl(),
+                        application.getCreationTime().getTime()
+                );
+                myApplication.getEmbeddedCartridges().addAll(getApplicationEmbeddableCartridges(application));
+                return myApplication;
             }
-            application.addEmbeddableCartridges(myEmbeddableCartridges);
-            AppInfoImpl myApplication = new AppInfoImpl(
-                    application.getName(),
-                    application.getCartridge().getName(),
-                    application.getGitUrl(),
-                    application.getApplicationUrl(),
-                    application.getCreationTime().getTime()
-            );
-            myApplication.getEmbeddedCartridges().addAll(getApplicationEmbeddableCartridges(application));
-            return myApplication;
+        } catch (OpenShiftException e) {
+            String reason = e.getMessage().replaceAll("(?s)(.*Reason given: \"Invalid cartridge.\\s)(.*)(\")", "$2");
+            throw new ExpressException(500, reason, "text/plain");
         }
         throw new ExpressException(404, String.format("Application '%s' not found", appName), "text/plain");
     }
@@ -433,6 +438,24 @@ public class Express {
     private void destroyApplication(IOpenShiftConnection connection, String app) throws ExpressException {
         try {
             connection.getUser().getDefaultDomain().getApplicationByName(app).destroy();
+        } catch (OpenShiftException e) {
+            throw new ExpressException(500, e.getMessage(), "text/plain");
+        }
+    }
+
+    public void destroyAllApplicationsIncludeNamespace(boolean includeNamespace) throws ExpressException, CredentialStoreException {
+        destroyAllApplicationsIncludeNamespace(getOpenShiftConnection(), includeNamespace);
+    }
+
+    private void destroyAllApplicationsIncludeNamespace(IOpenShiftConnection connection, boolean includeNamespace) throws ExpressException {
+        try {
+            if (includeNamespace) {
+                connection.getUser().getDefaultDomain().destroy(true);
+            } else {
+                for (IApplication application : connection.getUser().getDefaultDomain().getApplications()) {
+                    application.destroy();
+                }
+            }
         } catch (OpenShiftException e) {
             throw new ExpressException(500, e.getMessage(), "text/plain");
         }
@@ -542,7 +565,7 @@ public class Express {
             }
 
             RHUserInfo userInfo =
-                    new RHUserInfoImpl("rhcloud.com", null, user.getRhlogin(), (domain != null) ? domain.getId() : "Doesn't exist");
+                    new RHUserInfoImpl("rhcloud.com", null, user.getRhlogin(), (domain != null) ? domain.getId() : null);
             if (appsInfo && domain != null) {
                 List<AppInfo> appInfoList = new ArrayList<AppInfo>();
                 for (IApplication application : domain.getApplications()) {

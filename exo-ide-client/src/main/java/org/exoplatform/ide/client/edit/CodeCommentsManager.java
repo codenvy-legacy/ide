@@ -61,9 +61,12 @@ public class CodeCommentsManager implements AddCommentsModifierHandler, EditorAd
     public void onEditorRemoveBlockComment(EditorRemoveBlockCommentEvent event) {
         if (commentModifiers.containsKey(activeFile.getMimeType())) {
             CommentsModifier commentsModifier = commentModifiers.get(activeFile.getMimeType());
-            TextEdit textEdit = commentsModifier.removeBlockComment(editor.getSelectionRange(), editor.getDocument());
+            TextEdit textEdit;
             try {
-                textEdit.apply(editor.getDocument());
+                do {
+                    textEdit = commentsModifier.removeBlockComment(editor.getSelectionRange(), editor.getDocument());
+                    textEdit.apply(editor.getDocument());
+                } while (textEdit.getRegion().getLength() != 0); //try to find other block comments in selection range
             } catch (MalformedTreeException e) {
                 Log.info(e.getMessage());
             } catch (BadLocationException e) {

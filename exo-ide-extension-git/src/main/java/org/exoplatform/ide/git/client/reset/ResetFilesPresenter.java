@@ -28,10 +28,10 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.project.api.TreeRefreshedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
@@ -192,7 +192,7 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
                                                          IDE.getInstance().closeView(display.asView().getId());
                                                          IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.resetFilesSuccessfully(),
                                                                                        Type.GIT));
-                                                         IDE.fireEvent(new RefreshBrowserEvent());
+                                                         IDE.fireEvent(new TreeRefreshedEvent(getSelectedProject()));
                                                      }
 
                                                      @Override
