@@ -67,6 +67,7 @@ import javax.ws.rs.core.MediaType;
 
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -159,7 +160,11 @@ public class RefactoringService {
                 IStatus status = renameSupport.preCheck();
                 if (status.isOK()) {
                     renameSupport.perform();
-                    return ((ObservableWorkspace)workspace).getActions();
+                    if (workspace instanceof ObservableWorkspace) {
+                        return ((ObservableWorkspace)workspace).getActions();
+                    } else {
+                        return new ArrayList<Action>();
+                    }
                 } else {
                     throw new CoreException(status);
                 }
