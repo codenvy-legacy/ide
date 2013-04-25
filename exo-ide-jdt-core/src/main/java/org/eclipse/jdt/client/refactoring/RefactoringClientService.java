@@ -24,6 +24,8 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 
+import java.util.List;
+
 /**
  * Client service for refactoring features.
  *
@@ -54,7 +56,7 @@ public abstract class RefactoringClientService {
      * @throws WebSocketException
      */
     public abstract void renameWS(String vfsId, String projectId, String fqn, int offset, String newName,
-                                  RequestCallback<Object> callback) throws WebSocketException;
+                                  RequestCallback<List<Action>> callback) throws WebSocketException;
 
     /**
      * Rename a Java element using refactoring. Send request over HTTP.
@@ -68,6 +70,6 @@ public abstract class RefactoringClientService {
      * @throws RequestException
      */
     public abstract void rename(String vfsId, String projectId, String fqn, int offset, String newName,
-                                AsyncRequestCallback<Object> callback) throws RequestException;
+                                AsyncRequestCallback<List<Action>> callback) throws RequestException;
 
 }

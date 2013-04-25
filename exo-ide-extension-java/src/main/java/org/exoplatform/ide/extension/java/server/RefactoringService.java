@@ -25,15 +25,30 @@ import com.codenvy.eclipse.core.resources.ResourcesPlugin;
 import com.codenvy.eclipse.core.runtime.CoreException;
 import com.codenvy.eclipse.core.runtime.IStatus;
 import com.codenvy.eclipse.core.runtime.Status;
-import com.codenvy.eclipse.jdt.core.*;
+import com.codenvy.eclipse.jdt.core.ICompilationUnit;
+import com.codenvy.eclipse.jdt.core.IField;
+import com.codenvy.eclipse.jdt.core.IInitializer;
+import com.codenvy.eclipse.jdt.core.IJavaElement;
+import com.codenvy.eclipse.jdt.core.IJavaProject;
+import com.codenvy.eclipse.jdt.core.ILocalVariable;
+import com.codenvy.eclipse.jdt.core.IMethod;
+import com.codenvy.eclipse.jdt.core.IType;
+import com.codenvy.eclipse.jdt.core.ITypeParameter;
+import com.codenvy.eclipse.jdt.core.JavaCore;
+import com.codenvy.eclipse.jdt.core.JavaModelException;
 import com.codenvy.eclipse.jdt.internal.core.JavaModelManager;
 import com.codenvy.eclipse.jdt.ui.refactoring.RenameSupport;
 import com.codenvy.eclipse.resources.ProjectResource;
 import com.codenvy.eclipse.resources.WorkspaceResource;
 
+import org.exoplatform.ide.extension.java.shared.Action;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
-import org.exoplatform.ide.vfs.server.exceptions.*;
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
+import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.observation.EventListenerList;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
@@ -41,16 +56,18 @@ import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.security.ConversationState;
 
 import javax.inject.Inject;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -70,31 +87,49 @@ public class RefactoringService {
     private static final Log LOG = ExoLogger.getLogger(RefactoringService.class);
 
     private WorkspaceResource getWorkspace(String vfsid) {
-        Object tenantName = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID); 
+        Object tenantName = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID);
+        
         if (tenantName == null) {
+            
+            System.out.println("tenant name > NULL");            
+            
             if (ResourcesPlugin.getDefaultWorkspace() == null) {
 
+                System.out.println("Default workspace is NULL");
+                
                 try {
                     VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null, eventListenerList);
-                    ResourcesPlugin.setDefaultWorkspace(new WorkspaceResource(vfs));
+                    
+                    //ResourcesPlugin.setDefaultWorkspace(new WorkspaceResource(vfs));
+                    ResourcesPlugin.setDefaultWorkspace(new ObservableWorkspace(vfs));
+                    
                 } catch (VirtualFileSystemException e) {
                     LOG.error("Can't initialize Workspace.", e);
                 }
+            } else {
+                System.out.println("Default workspace present");
             }
         } else {
+            
+            System.out.println("tenant name is not NULL");
+            
             try {
                 VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null, eventListenerList);
-                ResourcesPlugin.addWorkspace(new WorkspaceResource(vfs));
+                
+                //ResourcesPlugin.addWorkspace(new WorkspaceResource(vfs));
+                ResourcesPlugin.addWorkspace(new ObservableWorkspace(vfs));
+                
             } catch (VirtualFileSystemException e) {
                 LOG.error("Can't initialize Workspace.", e);
             }
         }
         return (WorkspaceResource)ResourcesPlugin.getWorkspace();
     }
-
+    
     @Path("rename")
     @POST
-    public void rename(@QueryParam("vfsid") String vfsid, @QueryParam("projectid") String projectid,
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<Action> rename(@QueryParam("vfsid") String vfsid, @QueryParam("projectid") String projectid,
                        @QueryParam("fqn") String fqn, @QueryParam("offset") int offset,
                        @QueryParam("newName") String newname) throws CoreException {
         WorkspaceResource workspace = getWorkspace(vfsid);
@@ -124,6 +159,7 @@ public class RefactoringService {
                 IStatus status = renameSupport.preCheck();
                 if (status.isOK()) {
                     renameSupport.perform();
+                    return ((ObservableWorkspace)workspace).getActions();
                 } else {
                     throw new CoreException(status);
                 }

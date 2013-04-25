@@ -41,7 +41,12 @@ import org.exoplatform.ide.client.framework.job.JobManager;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.project.*;
+import org.exoplatform.ide.client.framework.project.Language;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -53,7 +58,11 @@ import org.exoplatform.ide.extension.aws.client.beanstalk.SolutionStackListUnmar
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentRequestStatusHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentStatusChecker;
 import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.aws.shared.beanstalk.*;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
@@ -67,9 +76,8 @@ import java.util.List;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 17, 2012 11:54:00 AM anya $
  */
-public class CreateApplicationPresenter implements ProjectOpenedHandler, ProjectClosedHandler, VfsChangedHandler,
-                                                   CreateApplicationHandler, ViewClosedHandler, ProjectBuiltHandler,
-                                                   ActiveProjectChangedHandler {
+public class CreateApplicationPresenter implements ProjectOpenedHandler, ProjectClosedHandler,
+        VfsChangedHandler, CreateApplicationHandler, ViewClosedHandler, ProjectBuiltHandler {
 
     interface Display extends IsView {
         // Create Application step
@@ -133,7 +141,6 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
         IDE.addHandler(VfsChangedEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
         IDE.addHandler(CreateApplicationEvent.TYPE, this);
-        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
     }
 
     public void bindDisplay() {
@@ -234,12 +241,6 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
      * .project.ProjectOpenedEvent) */
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
-        this.openedProject = event.getProject();
-    }
-
-
-    @Override
-    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
         this.openedProject = event.getProject();
     }
 

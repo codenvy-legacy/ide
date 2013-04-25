@@ -37,11 +37,9 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 19, 2012 10:37:05 AM anya $
  */
-public class ManageApplicationControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-                                                                       ProjectClosedHandler
-        , FolderRefreshedHandler
-//   , ActiveProjectChangedHandler
-{
+public class ManageApplicationControl extends SimpleControl implements IDEControl, 
+            ProjectOpenedHandler, ProjectClosedHandler , FolderRefreshedHandler {
+
     private static final String ID = AWSExtension.LOCALIZATION_CONSTANT.manageApplicationControlId();
 
     private static final String TITLE = AWSExtension.LOCALIZATION_CONSTANT.manageApplicationControlTitle();
@@ -62,8 +60,6 @@ public class ManageApplicationControl extends SimpleControl implements IDEContro
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
         IDE.addHandler(FolderRefreshedEvent.TYPE, this);
-//      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
-
         setVisible(true);
     }
 
@@ -81,12 +77,6 @@ public class ManageApplicationControl extends SimpleControl implements IDEContro
         setEnabled(event.getProject() != null && AWSExtension.isAWSApplication(event.getProject()));
     }
 
-//   @Override
-//   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-//   {
-//      setEnabled(event.getProject() != null && AWSExtension.isAWSApplication(event.getProject()));
-//   }
-
     @Override
     public void onFolderRefreshed(FolderRefreshedEvent event) {
         ProjectModel project = null;
@@ -101,11 +91,6 @@ public class ManageApplicationControl extends SimpleControl implements IDEContro
         } else {
             setEnabled(AWSExtension.isAWSApplication(project));
         }
-
-//      if (event.getFolder() != null && event.getFolder() instanceof ProjectModel)
-//      {
-//         setEnabled(AWSExtension.isAWSApplication((ProjectModel)event.getFolder()));
-//      }
     }
 
 }

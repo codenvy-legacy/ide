@@ -27,7 +27,11 @@ import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEven
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.project.*;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectProperties;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -40,9 +44,8 @@ import java.util.List;
  * @version $Id: Dec 8, 2011 2:12:50 PM anya $
  */
 public class ProjectPaaSControl extends SimpleControl implements IDEControl,
-                                                                 ProjectOpenedHandler, ProjectClosedHandler, FolderRefreshedHandler,
-                                                                 ItemsSelectedHandler
-//   , ActiveProjectChangedHandler
+         ProjectOpenedHandler, ProjectClosedHandler, FolderRefreshedHandler,
+         ItemsSelectedHandler
 {
 
     public static final String ID = "Project/PaaS";
@@ -68,8 +71,6 @@ public class ProjectPaaSControl extends SimpleControl implements IDEControl,
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
         IDE.addHandler(FolderRefreshedEvent.TYPE, this);
-
-        //IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
         IDE.addHandler(ItemsSelectedEvent.TYPE, this);
     }
 
@@ -89,13 +90,6 @@ public class ProjectPaaSControl extends SimpleControl implements IDEControl,
         setEnabled(enabled);
         setVisible(enabled);
     }
-
-//   @Override
-//   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-//   {
-//      boolean enabled = isDeployed(event.getProject());
-//      setEnabled(enabled);
-//   }
 
     /**
      * Check project is deployed to one of the PaaS.

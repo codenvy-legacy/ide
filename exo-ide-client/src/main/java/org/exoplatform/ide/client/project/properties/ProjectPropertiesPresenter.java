@@ -20,7 +20,11 @@
 package org.exoplatform.ide.client.project.properties;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 
@@ -30,7 +34,10 @@ import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.*;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -52,7 +59,7 @@ import java.util.List;
  */
 
 public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler, ProjectOpenedHandler,
-                                                   ProjectClosedHandler, ViewClosedHandler, ActiveProjectChangedHandler {
+                                                   ProjectClosedHandler, ViewClosedHandler {
 
     public interface Display extends IsView {
 
@@ -91,7 +98,6 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
-        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
     }
 
     @Override
@@ -108,27 +114,27 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
             String projectId = currentProject.getId();
 
             VirtualFileSystem.getInstance().getItemById(projectId,
-                                                        new AsyncRequestCallback<ItemWrapper>(
-                                                                new ItemUnmarshaller(new ItemWrapper(new FileModel()))) {
-                                                            @Override
-                                                            protected void onSuccess(ItemWrapper result) {
-                                                                if (!(result.getItem() instanceof ProjectModel)) {
-                                                                    Dialogs.getInstance().showError(
-                                                                            "Item " + result.getItem().getPath() + " is not a project.");
-                                                                    return;
-                                                                }
-
-                                                                currentProject.getProperties().clear();
-                                                                currentProject.getProperties().addAll(result.getItem().getProperties());
-
-                                                                createDisplay();
-                                                            }
-
-                                                            @Override
-                                                            protected void onFailure(Throwable exception) {
-                                                                IDE.fireEvent(new ExceptionThrownEvent(exception));
-                                                            }
-                                                        });
+                    new AsyncRequestCallback<ItemWrapper>(
+                            new ItemUnmarshaller(new ItemWrapper(new FileModel()))) {
+                        @Override
+                        protected void onSuccess(ItemWrapper result) {
+                            if (!(result.getItem() instanceof ProjectModel)) {
+                                Dialogs.getInstance().showError(
+                                        "Item " + result.getItem().getPath() + " is not a project.");
+                                return;
+                            }
+    
+                            currentProject.getProperties().clear();
+                            currentProject.getProperties().addAll(result.getItem().getProperties());
+    
+                            createDisplay();
+                        }
+    
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            IDE.fireEvent(new ExceptionThrownEvent(exception));
+                        }
+                    });
 
         } catch (Exception e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
@@ -253,11 +259,6 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
 
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
-        currentProject = event.getProject();
-    }
-
-    @Override
-    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
         currentProject = event.getProject();
     }
 

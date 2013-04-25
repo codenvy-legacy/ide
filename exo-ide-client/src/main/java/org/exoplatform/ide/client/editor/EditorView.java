@@ -129,6 +129,7 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler {
             editor.setText(file.getContent());
             add(editor);
         }
+        
         editorEventHandlers.put(editor, new EditorEventHandler(editor));
         openedEditors.add(editor);
     }

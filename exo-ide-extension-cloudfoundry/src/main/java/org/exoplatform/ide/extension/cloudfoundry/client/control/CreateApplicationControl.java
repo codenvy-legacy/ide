@@ -19,7 +19,10 @@
 package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.*;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationEvent;
@@ -30,8 +33,8 @@ import org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicatio
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CreateApplicationControl.java Jul 7, 2011 5:32:27 PM vereshchaka $
  */
-public class CreateApplicationControl extends AbstractCloudFoundryControl implements ProjectOpenedHandler,
-                                                                                     ProjectClosedHandler, ActiveProjectChangedHandler {
+public class CreateApplicationControl extends AbstractCloudFoundryControl implements 
+        ProjectOpenedHandler, ProjectClosedHandler {
 
     private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.createAppControlId();
 
@@ -52,7 +55,6 @@ public class CreateApplicationControl extends AbstractCloudFoundryControl implem
     public void initialize() {
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
-        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
         setVisible(true);
     }
 
@@ -70,8 +72,4 @@ public class CreateApplicationControl extends AbstractCloudFoundryControl implem
         setEnabled(event.getProject() != null && CloudFoundryExtension.canBeDeployedToCF(event.getProject()));
     }
 
-    @Override
-    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
-        setEnabled(event.getProject() != null && CloudFoundryExtension.canBeDeployedToCF(event.getProject()));
-    }
 }
