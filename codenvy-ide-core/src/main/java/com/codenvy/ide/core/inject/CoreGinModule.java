@@ -88,8 +88,6 @@ import com.codenvy.ide.websocket.rest.RESTMessageBus;
 import com.codenvy.ide.welcome.WelcomePartPresenter;
 import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.codenvy.ide.wizard.newfile.NewGenericFilePageViewImpl;
-import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectPageView;
-import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectPageViewImpl;
 import com.codenvy.ide.wizard.newproject.NewProjectPageView;
 import com.codenvy.ide.wizard.newproject.NewProjectPageViewImpl;
 import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
@@ -197,7 +195,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(ConsolePartView.class).to(ConsolePartViewImpl.class).in(Singleton.class);
         bind(SearchPartView.class).to(SearchPartViewImpl.class).in(Singleton.class);
 
-        bind(NewGenericProjectPageView.class).to(NewGenericProjectPageViewImpl.class);
         bind(TemplatePageView.class).to(TemplatePageViewImpl.class);
         bind(NewResourcePageView.class).to(NewResourcePageViewImpl.class);
         bind(NewProjectPageView.class).to(NewProjectPageViewImpl.class);

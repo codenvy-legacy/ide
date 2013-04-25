@@ -19,7 +19,10 @@
 package com.codenvy.ide.java.client.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.codenvy.ide.java.client.wizard.*;
+import com.codenvy.ide.java.client.wizard.NewJavaClassPageView;
+import com.codenvy.ide.java.client.wizard.NewJavaClassPageViewImpl;
+import com.codenvy.ide.java.client.wizard.NewPackagePageView;
+import com.codenvy.ide.java.client.wizard.NewPackagePageViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 
 /**
@@ -32,7 +35,6 @@ public class JavaGinModule extends AbstractGinModule {
     /** @see com.google.gwt.inject.client.AbstractGinModule#configure() */
     @Override
     protected void configure() {
-        bind(NewJavaProjectPageView.class).to(NewJavaProjectPageViewImpl.class);
         bind(NewPackagePageView.class).to(NewPackagePageViewImpl.class);
         bind(NewJavaClassPageView.class).to(NewJavaClassPageViewImpl.class);
     }
