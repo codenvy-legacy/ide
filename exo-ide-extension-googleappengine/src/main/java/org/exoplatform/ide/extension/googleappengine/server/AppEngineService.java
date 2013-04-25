@@ -26,6 +26,7 @@ import org.apache.commons.lang.StringUtils;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
 import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
 import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
+import org.exoplatform.ide.security.shared.Token;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
@@ -70,14 +71,13 @@ public class AppEngineService {
     @Produces(MediaType.APPLICATION_JSON)
     public GaeUser getUser(@Context SecurityContext security) throws Exception {
         final String userId = getUserId(/*security*/);
-        boolean authenticated;
+        Token token = null;
         try {
-            authenticated = oauthTokenProvider.getToken("google", userId) != null;
+            token = oauthTokenProvider.getToken("google", userId);
         } catch (IOException e) {
             // Error when try to refresh access token. User may try re-authenticate.
-            authenticated = false;
         }
-        return new GaeUserImpl(userId, authenticated);
+        return new GaeUserImpl(userId, token);
     }
 
     @GET

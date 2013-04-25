@@ -25,6 +25,7 @@ import org.exoplatform.ide.git.server.github.GitHubException;
 import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.GitHubRepository;
 import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
+import org.exoplatform.ide.security.shared.Token;
 
 import java.io.IOException;
 import java.util.List;
@@ -98,7 +99,7 @@ public class GitHubService {
     @Path("token/{userid}")
     @Produces(MediaType.TEXT_PLAIN)
     public String getToken(@PathParam("userid") String userId) throws IOException, GitHubException, ParsingResponseException {
-        return oauthTokenProvider.getToken("github", userId);
+        return github.getToken(userId);
     }
 
     @POST
