@@ -44,10 +44,14 @@ public class DeployApplicationView extends Composite implements DeployApplicatio
     @UiField
     SelectItem typeField;
 
+    @UiField
+    SelectItem scalingField;
+
     public DeployApplicationView() {
         super();
         initWidget(uiBinder.createAndBindUi(this));
-        setHeight("150px");
+        setHeight("170px");
+        scalingField.setValueMap(new String[]{"No scaling", "Scale with web traffic"}, "No scaling");
     }
 
     /** @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#getApplicationNameField() */
@@ -74,4 +78,8 @@ public class DeployApplicationView extends Composite implements DeployApplicatio
         typeField.setValueMap(types);
     }
 
+    @Override
+    public HasValue<String> getScalingValue() {
+        return scalingField;
+    }
 }
