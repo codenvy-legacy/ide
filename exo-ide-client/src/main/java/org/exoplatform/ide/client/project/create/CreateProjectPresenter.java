@@ -608,8 +608,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
         for (ProjectTemplate template : availableProjectTemplates) {
             if (selectedTarget instanceof NoneTarget
                 && template.getTargets() != null
-                && template.getTargets().contains("OpenShift")
-                && template.getTargets().size() == 1) {
+                && template.getTargets().contains("OpenShift")) {
                 templatesToTempHide.add(template);
             }
         }
