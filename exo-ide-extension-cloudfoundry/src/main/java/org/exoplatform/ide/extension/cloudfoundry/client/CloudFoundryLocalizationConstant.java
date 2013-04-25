@@ -239,7 +239,7 @@ public interface CloudFoundryLocalizationConstant extends Messages {
     String tier3WebFabricAppsControlPrompt();
 
     /*
-     * LoginView - CloudFoundry.
+     * LoginView
      */
     @Key("login.title")
     String loginViewTitle();
@@ -258,15 +258,6 @@ public interface CloudFoundryLocalizationConstant extends Messages {
 
     @Key("login.error.invalidUserOrPassword")
     String loginViewErrorInvalidUserOrPassword();
-
-    /*
-     * LoginView - Tier3 Web Fabric.
-     */
-    @Key("login.tier3WebFabric.title")
-    String tier3WebFabricLoginViewTitle();
-
-    @Key("login.tier3WebFabric.error.unknowTarget")
-    String tier3WebFabricLoginViewErrorUnknownTarget();
 
     /*
      * CreateApplicationView.
@@ -338,23 +329,8 @@ public interface CloudFoundryLocalizationConstant extends Messages {
     String createApplicationFinished(String project);
 
     /*
-     * CreateApplicationPresenter - Tier3 Web Fabric
+     * StartApplicationPresenter
      */
-    @Key("create.tier3WebFabric.appStarted.noUrls")
-    String tier3WebFabricApplicationStartedWithNoUrls();
-
-    @Key("create.tier3WebFabric.application.started")
-    String createTier3WebFabricApplicationStarted(String project);
-
-    @Key("create.tier3WebFabric.application.finished")
-    String createTier3WebFabricApplicationFinished(String project);
-
-    /*
-     * StartApplicationPresenter - CloudFoundry
-     */
-    @Key("startApp.appStarted")
-    String applicationStarted(String name);
-
     @Key("startApp.appStarted.uris")
     String applicationStartedOnUrls(String name, String uris);
 
@@ -377,12 +353,6 @@ public interface CloudFoundryLocalizationConstant extends Messages {
     String applicationWasNotStarted(String name);
 
     /*
-     * StartApplicationPresenter - Tier3 Web Fabric
-     */
-    @Key("startApp.tier3WebFabric.appStarted")
-    String tier3WebFabricApplicationStarted(String name);
-
-    /*
      * UpdateApplicationPresenter
      */
     @Key("update.applicationUpdated")
@@ -403,9 +373,6 @@ public interface CloudFoundryLocalizationConstant extends Messages {
     @Key("loginSuccess")
     String loginSuccess();
 
-    @Key("loginFailed")
-    String loginFailed();
-
     @Key("systemInfo.umarshaller.error")
     String systemInfoUnmarshallerError();
 
@@ -420,9 +387,6 @@ public interface CloudFoundryLocalizationConstant extends Messages {
      */
     @Key("tier3WebFabric.loginSuccess")
     String tier3WebFabricLoginSuccess();
-
-    @Key("tier3WebFabric.loginFailed")
-    String tier3WebFabricLoginFailed();
 
     /*
      * DeployApplicationPresenter
@@ -491,7 +455,7 @@ public interface CloudFoundryLocalizationConstant extends Messages {
     String unmapUrlViewTitle();
 
     /*
-     * DeleteApplication - CloudFoundry
+     * DeleteApplication
      */
     @Key("deleteApplication.title")
     String deleteApplicationTitle();
@@ -504,15 +468,6 @@ public interface CloudFoundryLocalizationConstant extends Messages {
 
     @Key("delete.application.services")
     String deleteApplicationAskDeleteServices();
-
-    /*
-     * DeleteApplication - Tier3 Web Fabric
-     */
-    @Key("tier3WebFabric.deleteApplication.title")
-    String deleteTier3WebFabricApplicationTitle();
-
-    @Key("tier3WebFabric.askForDeleteApplication")
-    String deleteTier3WebFabricApplicationQuestion(String applicationTitle);
 
     /*
      * MapUnmapUrlPresenter
@@ -602,7 +557,7 @@ public interface CloudFoundryLocalizationConstant extends Messages {
     String appsServerLabel();
 
     /*
-     * Manage deployed project view - CloudFoundry
+     * Manage deployed project view
      */
     @Key("manage.project.view.title")
     String manageProjectViewTitle();
@@ -655,13 +610,7 @@ public interface CloudFoundryLocalizationConstant extends Messages {
     @Key("manage.project.services")
     String manageProjectServices();
 
-    /*
-     * Manage deployed project view - Tier3 Web Fabric
-     */
-    @Key("manage.tier3WebFabric.project.view.title")
-    String manageTier3WebFabricProjectViewTitle();
-
-    /* Services - CloudFoundry */
+    /* Services */
     @Key("service.name")
     String serviceName();
 
@@ -709,11 +658,4 @@ public interface CloudFoundryLocalizationConstant extends Messages {
 
     @Key("optional")
     String optional();
-
-    /* Services - Tier3 Web Fabric */
-    @Key("manage.tier3WebFabric.services.view.title")
-    String bindTier3WebFabricServiceViewTitle();
-
-    @Key("retrieve.tier3WebFabric.services.failed")
-    String retrieveTier3WebFabricServicesFailed();
 }

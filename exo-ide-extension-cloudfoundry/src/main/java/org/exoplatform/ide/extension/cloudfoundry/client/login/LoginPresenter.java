@@ -311,7 +311,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler {
                       @Override
                       protected void onSuccess(String result) {
                           server = enteredServer;
-                          IDE.fireEvent(new OutputEvent(lb.loginSuccess(), Type.INFO));
+                          IDE.fireEvent(new OutputEvent(paasProvider == CLOUD_FOUNDRY ? lb.loginSuccess() : lb.tier3WebFabricLoginSuccess(), Type.INFO));
                           if (loggedIn != null) {
                               loggedIn.onLoggedIn();
                           }
