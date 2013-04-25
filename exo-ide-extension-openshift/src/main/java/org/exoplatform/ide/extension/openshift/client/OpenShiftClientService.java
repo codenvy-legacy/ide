@@ -91,7 +91,7 @@ public abstract class OpenShiftClientService {
      * @param callback
      *         callback
      */
-    public abstract void createApplication(String name, String vfsId, String projectId, String type,
+    public abstract void createApplication(String name, String vfsId, String projectId, String type, boolean scale,
                                            AsyncRequestCallback<AppInfo> callback) throws RequestException;
 
     /**
@@ -110,7 +110,7 @@ public abstract class OpenShiftClientService {
      * @param callback
      *         callback
      */
-    public abstract void createApplicationWS(String name, String vfsId, String projectId, String type,
+    public abstract void createApplicationWS(String name, String vfsId, String projectId, String type, boolean scale,
                                              RequestCallback<AppInfo> callback) throws WebSocketException;
 
     /**

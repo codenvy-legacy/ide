@@ -420,7 +420,7 @@ public final class ResourcesPlugin {
         return defaultWorkspace;
     }
 
-    public static void setDefaultWorkspace(WorkspaceResource defaultWorkspace) {
+    public static void setDefaultWorkspace(IWorkspace defaultWorkspace) {
         ResourcesPlugin.defaultWorkspace = defaultWorkspace;
     }
 

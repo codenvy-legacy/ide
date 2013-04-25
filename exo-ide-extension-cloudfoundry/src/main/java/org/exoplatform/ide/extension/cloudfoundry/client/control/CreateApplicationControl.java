@@ -19,8 +19,6 @@
 package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -42,7 +40,7 @@ import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExte
  * @version $Id: CreateApplicationControl.java Jul 7, 2011 5:32:27 PM vereshchaka $
  */
 public class CreateApplicationControl extends AbstractCloudFoundryControl implements ProjectOpenedHandler,
-                                                                         ProjectClosedHandler, ActiveProjectChangedHandler {
+                                                                         ProjectClosedHandler {
 
     private static final String CF_ID  = CloudFoundryExtension.LOCALIZATION_CONSTANT.createAppControlId();
 
@@ -68,7 +66,6 @@ public class CreateApplicationControl extends AbstractCloudFoundryControl implem
     public void initialize() {
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
-        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
         setVisible(true);
     }
 
@@ -91,9 +88,4 @@ public class CreateApplicationControl extends AbstractCloudFoundryControl implem
                    && ((paasProvider == CLOUD_FOUNDRY && canBeDeployedToCF(event.getProject())) || (paasProvider == WEB_FABRIC && canBeDeployedToWF(event.getProject()))));
     }
 
-    @Override
-    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
-        setEnabled(event.getProject() != null
-                   && ((paasProvider == CLOUD_FOUNDRY && canBeDeployedToCF(event.getProject())) || (paasProvider == WEB_FABRIC && canBeDeployedToWF(event.getProject()))));
-    }
 }

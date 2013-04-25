@@ -23,7 +23,10 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler;
-import org.exoplatform.ide.client.framework.project.*;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.extension.appfog.client.AppfogClientBundle;
 import org.exoplatform.ide.extension.appfog.client.AppfogExtension;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -35,7 +38,8 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @version $Id: $
  */
 public class AppfogControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-                                                            ProjectClosedHandler, FolderRefreshedHandler, ActiveProjectChangedHandler {
+        ProjectClosedHandler, FolderRefreshedHandler {
+    
     private static final String ID = "Project/PaaS/Appfog";
 
     private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.appfogControlTitle();
@@ -56,7 +60,6 @@ public class AppfogControl extends SimpleControl implements IDEControl, ProjectO
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(FolderRefreshedEvent.TYPE, this);
-        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
     }
 
     /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
@@ -71,11 +74,6 @@ public class AppfogControl extends SimpleControl implements IDEControl, ProjectO
      * .project.ProjectOpenedEvent) */
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
-        update(event.getProject());
-    }
-
-    @Override
-    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
         update(event.getProject());
     }
 

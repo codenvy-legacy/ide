@@ -19,7 +19,10 @@
 package org.exoplatform.ide.extension.heroku.client.control;
 
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.*;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.create.CreateApplicationEvent;
@@ -30,8 +33,9 @@ import org.exoplatform.ide.extension.heroku.client.create.CreateApplicationEvent
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 26, 2011 2:27:45 PM anya $
  */
-public class CreateApplicationControl extends AbstractHerokuControl implements ProjectOpenedHandler,
-                                                                               ProjectClosedHandler, ActiveProjectChangedHandler {
+public class CreateApplicationControl extends AbstractHerokuControl implements 
+            ProjectOpenedHandler, ProjectClosedHandler {
+    
     public CreateApplicationControl() {
         super(HerokuExtension.LOCALIZATION_CONSTANT.createApplicationControlId());
         setTitle(HerokuExtension.LOCALIZATION_CONSTANT.createApplicationControlTitle());
@@ -46,7 +50,6 @@ public class CreateApplicationControl extends AbstractHerokuControl implements P
     public void initialize() {
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
-        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
         setVisible(true);
     }
 
@@ -64,8 +67,4 @@ public class CreateApplicationControl extends AbstractHerokuControl implements P
         setEnabled(event.getProject() != null && HerokuExtension.canBeDeployedToHeroku(event.getProject()));
     }
 
-    @Override
-    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
-        setEnabled(event.getProject() != null && HerokuExtension.canBeDeployedToHeroku(event.getProject()));
-    }
 }

@@ -170,11 +170,7 @@ public class Participants {
             if (EnvironmentContext.getCurrent() == null) {
                 return null;
             }
-            String currentTenant = (String)EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID);
-            if (currentTenant == null) {
-                currentTenant = "StandAlone";
-            }
-            return currentTenant;
+            return (String)EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID);
         }
     }
 

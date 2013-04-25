@@ -195,7 +195,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler {
         loginCanceled = event.getLoginCanceled();
         if (event.getLoginUrl() != null) {
             server = event.getLoginUrl();
-            if (server != null && !server.startsWith("http")) {
+            if (!server.startsWith("http")) {
                 server = "https://" + server;
             }
         }

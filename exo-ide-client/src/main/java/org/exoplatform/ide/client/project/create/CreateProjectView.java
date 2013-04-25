@@ -140,6 +140,12 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
     @UiField
     DockLayoutPanel jRebelProfileFields;
 
+    @UiField
+    Image chooseTechnologyTooltip;
+
+    @UiField
+    Image choosePaaSTooltip;
+
     private List<ToggleButton> projectTypeButtonsList = new LinkedList<ToggleButton>();
 
     private List<ToggleButton> targetButtonsList = new LinkedList<ToggleButton>();
@@ -546,5 +552,15 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
     @Override
     public void setJRebelStoredFormVisible(boolean visible) {
         showJRebelStoredForm = visible;
+    }
+
+    @Override
+    public HasClickHandlers getChooseTechnologyTooltip() {
+        return chooseTechnologyTooltip;
+    }
+
+    @Override
+    public HasClickHandlers getChoosePaaSTooltip() {
+        return choosePaaSTooltip;
     }
 }

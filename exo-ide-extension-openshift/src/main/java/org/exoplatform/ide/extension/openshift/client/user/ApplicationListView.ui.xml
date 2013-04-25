@@ -140,7 +140,8 @@
         </div>
         <div class="{style.closeBtn}">
             <f:ImageButton ui:field="addCartridgeButton" width="125px" height="22" text="{locale.addCartridgeButton}"
-                           imageResource="{resource.addCartridge}" styleName="{style.left} {style.marginRight10}"></f:ImageButton>
+                           imageResource="{resource.addCartridge}" disabledImageResource="{resource.addCartridgeDisable}"
+                           styleName="{style.left} {style.marginRight10}"></f:ImageButton>
             <f:ImageButton ui:field="okButton" buttonId="ideUserInfoViewOkButton" width="90px" height="22"
                            text="{locale.okButton}" imageResource="{resource.okButton}"
                            disabledImageResource="{resource.okButtonDisabled}" styleName="{style.left}"></f:ImageButton>

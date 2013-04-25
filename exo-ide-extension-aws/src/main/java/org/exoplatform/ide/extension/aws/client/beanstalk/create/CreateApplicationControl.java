@@ -32,9 +32,8 @@ import org.exoplatform.ide.extension.aws.client.AWSExtension;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 17, 2012 11:26:26 AM anya $
  */
-public class CreateApplicationControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-                                                                       ProjectClosedHandler
-//   , ActiveProjectChangedHandler
+public class CreateApplicationControl extends SimpleControl implements IDEControl,
+            ProjectOpenedHandler, ProjectClosedHandler
 {
     private static final String ID = AWSExtension.LOCALIZATION_CONSTANT.createApplicationControlId();
 
@@ -55,8 +54,6 @@ public class CreateApplicationControl extends SimpleControl implements IDEContro
     public void initialize() {
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
-//      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
-
         setVisible(true);
     }
 
@@ -73,11 +70,5 @@ public class CreateApplicationControl extends SimpleControl implements IDEContro
     public void onProjectClosed(ProjectClosedEvent event) {
         setEnabled(false);
     }
-
-//   @Override
-//   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-//   {
-//      setEnabled(event.getProject() != null && AWSExtension.canBeDeployedToBeanstalk(event.getProject()));
-//   }
 
 }

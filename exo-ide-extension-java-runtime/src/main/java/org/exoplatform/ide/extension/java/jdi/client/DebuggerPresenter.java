@@ -42,7 +42,10 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.project.*;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -51,10 +54,40 @@ import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.client.framework.websocket.rest.SubscriptionHandler;
-import org.exoplatform.ide.extension.java.jdi.client.events.*;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.ChangeValueEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebugAppEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebugAppHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerActivityEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.EvaluateExpressionEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.RunAppEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.RunAppHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.StopAppEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.StopAppHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.UpdateAppEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.UpdateAppHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.UpdateVariableValueInTreeEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.UpdateVariableValueInTreeHandler;
 import org.exoplatform.ide.extension.java.jdi.client.ui.DebuggerView;
 import org.exoplatform.ide.extension.java.jdi.client.ui.RunDebuggerView;
-import org.exoplatform.ide.extension.java.jdi.shared.*;
+import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
+import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
+import org.exoplatform.ide.extension.java.jdi.shared.BreakPointEvent;
+import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEvent;
+import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventList;
+import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
+import org.exoplatform.ide.extension.java.jdi.shared.Location;
+import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
+import org.exoplatform.ide.extension.java.jdi.shared.StepEvent;
+import org.exoplatform.ide.extension.java.jdi.shared.Variable;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
@@ -66,7 +99,11 @@ import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Property;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by The eXo Platform SAS.
@@ -74,11 +111,10 @@ import java.util.*;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisconnectedHandler, ViewClosedHandler,
-                                          BreakPointsUpdatedHandler, RunAppHandler, DebugAppHandler, ProjectBuiltHandler, StopAppHandler,
-                                          UpdateAppHandler,
-                                          AppStoppedHandler, ProjectClosedHandler, ProjectOpenedHandler, EditorActiveFileChangedHandler,
-                                          UpdateVariableValueInTreeHandler, ActiveProjectChangedHandler {
+public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisconnectedHandler,
+        ViewClosedHandler, BreakPointsUpdatedHandler, RunAppHandler, DebugAppHandler, 
+        ProjectBuiltHandler, StopAppHandler, UpdateAppHandler, AppStoppedHandler, ProjectClosedHandler, 
+        ProjectOpenedHandler, EditorActiveFileChangedHandler, UpdateVariableValueInTreeHandler {
 
     private Display display;
 
@@ -169,7 +205,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
     public DebuggerPresenter(BreakpointsManager breakpointsManager) {
         this.breakpointsManager = breakpointsManager;
-        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
     }
 
     void bindDisplay(Display d) {
@@ -998,11 +1033,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
         doStopApp();
-        project = event.getProject();
-    }
-
-    @Override
-    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
         project = event.getProject();
     }
 

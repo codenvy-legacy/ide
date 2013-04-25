@@ -22,8 +22,6 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -44,9 +42,10 @@ import org.exoplatform.ide.extension.nodejs.client.run.event.RunApplicationEvent
  * @version $Id: RunApplicationControl.java Apr 18, 2013 4:36:23 PM vsvydenko $
  *
  */
-public class RunApplicationControl extends SimpleControl implements IDEControl, ProjectClosedHandler,
-                                                                    ProjectOpenedHandler, ApplicationStartedHandler,
-                                                                    ApplicationStoppedHandler, ActiveProjectChangedHandler {
+public class RunApplicationControl extends SimpleControl implements IDEControl,
+        ProjectClosedHandler, ProjectOpenedHandler, ApplicationStartedHandler,
+        ApplicationStoppedHandler {
+    
     public static final String ID = "Run/Run Node.js Application";
 
     private static final String TITLE = NodeJsRuntimeExtension.NODEJS_LOCALIZATION.runApplicationControlTitle();
@@ -69,7 +68,6 @@ public class RunApplicationControl extends SimpleControl implements IDEControl, 
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ApplicationStartedEvent.TYPE, this);
         IDE.addHandler(ApplicationStoppedEvent.TYPE, this);
-        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
     }
 
     /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
@@ -94,12 +92,6 @@ public class RunApplicationControl extends SimpleControl implements IDEControl, 
         setVisible(isNodeProject);
         setEnabled(isNodeProject);
         setShowInContextMenu(isNodeProject);
-    }
-
-    @Override
-    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
-        String projectType = event.getProject().getProjectType();
-        updateStatus(projectType);
     }
 
     /** @see org.exoplatform.ide.extension.nodejs.client.run.event.ApplicationStoppedHandler#onApplicationStopped(org.exoplatform.ide.extension.nodejs.client.run.event.ApplicationStoppedEvent) */
