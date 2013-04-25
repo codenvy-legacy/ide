@@ -18,15 +18,16 @@
  */
 package org.exoplatform.ide.googlecontacts;
 
+import com.codenvy.commons.security.oauth.GoogleOAuthAuthenticator;
+import com.codenvy.commons.security.oauth.OAuthTokenProvider;
+import com.codenvy.commons.security.shared.Token;
 import com.codenvy.organization.invite.InviteService;
 import com.codenvy.organization.model.Invitation;
 import com.google.gdata.data.contacts.ContactEntry;
 import com.google.gdata.data.extensions.Email;
 import com.google.gdata.util.ServiceException;
 
-import org.exoplatform.ide.security.oauth.GoogleOAuthAuthenticator;
-import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
-import org.exoplatform.ide.security.shared.Token;
+
 import org.exoplatform.services.security.ConversationState;
 
 import javax.inject.Inject;
@@ -53,7 +54,7 @@ public class GoogleContactsRestService {
 
     @Inject
     private OAuthTokenProvider oauthTokenProvider;
-    
+
     @Inject
     private GoogleOAuthAuthenticator googleOAuthAuthenticator;
 

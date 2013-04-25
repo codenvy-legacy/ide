@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.googlecontacts;
 
+import com.codenvy.commons.security.oauth.OAuthTokenProvider;
+import com.codenvy.commons.security.shared.Token;
 import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.gdata.client.Query;
@@ -31,8 +33,6 @@ import com.google.gdata.data.contacts.ContactFeed;
 import com.google.gdata.util.ServiceException;
 
 import org.apache.commons.codec.binary.Base64;
-import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
-import org.exoplatform.ide.security.shared.Token;
 import org.exoplatform.services.security.ConversationState;
 
 import java.io.ByteArrayOutputStream;

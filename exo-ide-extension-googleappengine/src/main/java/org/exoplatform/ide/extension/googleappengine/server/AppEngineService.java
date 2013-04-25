@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.googleappengine.server;
 
+import com.codenvy.commons.security.oauth.OAuthTokenProvider;
+import com.codenvy.commons.security.shared.Token;
 import com.google.appengine.tools.admin.CronEntry;
 import com.google.apphosting.utils.config.BackendsXml;
 
@@ -25,7 +27,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
 import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
-import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
@@ -34,6 +35,8 @@ import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.security.ConversationState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -52,6 +55,9 @@ import java.util.regex.Pattern;
  */
 @Path("ide/appengine")
 public class AppEngineService {
+
+    private static final Logger  LOG         = LoggerFactory.getLogger(AppEngineService.class);
+
     private static final Pattern PATTERN_XML = Pattern.compile(".*<application>.*</application>.*");
 
     private static final Pattern PATTERN_YAML = Pattern.compile("application:.*");
@@ -70,14 +76,14 @@ public class AppEngineService {
     @Produces(MediaType.APPLICATION_JSON)
     public GaeUser getUser(@Context SecurityContext security) throws Exception {
         final String userId = getUserId(/*security*/);
-        boolean authenticated;
+        Token token = null;// TODO check null behavior in GaeUserImpl
         try {
-            authenticated = oauthTokenProvider.getToken("google", userId) != null;
+            token = oauthTokenProvider.getToken("google", userId);
         } catch (IOException e) {
-            // Error when try to refresh access token. User may try re-authenticate.
-            authenticated = false;
+            // .
+           LOG.warn("Error when try to refresh access token. User {} may try re-authenticate", userId);
         }
-        return new GaeUserImpl(userId, authenticated);
+        return new GaeUserImpl(userId, token);
     }
 
     @GET

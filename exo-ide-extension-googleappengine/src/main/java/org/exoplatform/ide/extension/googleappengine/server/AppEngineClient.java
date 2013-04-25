@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.googleappengine.server;
 
+import com.codenvy.commons.security.oauth.OAuthTokenProvider;
+import com.codenvy.commons.security.shared.Token;
 import com.google.appengine.tools.admin.*;
 import com.google.appengine.tools.admin.AppAdminFactory.ApplicationProcessingOptions;
 import com.google.appengine.tools.admin.AppAdminFactory.ConnectOptions;
@@ -27,7 +29,6 @@ import com.google.apphosting.utils.config.BackendsXml.State;
 import org.exoplatform.ide.extension.googleappengine.server.python.PythonApplication;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfoImpl;
-import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
@@ -296,9 +297,9 @@ public class AppEngineClient {
                                                String userId) throws IOException, VirtualFileSystemException {
         ConnectOptions options = new ConnectOptions();
         if (userId != null) {
-            String token = oauthTokenProvider.getToken("google", userId);
-            if (token != null) {
-                options.setOauthToken(token);
+            Token token = oauthTokenProvider.getToken("google", userId);
+            if (token != null &&  !token.getToken().isEmpty()) {
+                options.setOauthToken(token.getToken());
             }
         }
         return new IdeAppAdmin(options, application, new PrintWriter(DUMMY_WRITER), new ApplicationProcessingOptions(),

@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.security.login;
 
-import org.exoplatform.ide.security.oauth.OAuthAuthenticationService;
 import org.exoplatform.ide.security.openid.OpenIDAuthenticationService;
 
 import javax.ws.rs.core.Application;
@@ -37,7 +36,7 @@ public class FederatedLoginApplication extends Application {
     public FederatedLoginApplication() {
         classes = new HashSet<Class<?>>(2);
         classes.add(OpenIDAuthenticationService.class);
-        classes.add(OAuthAuthenticationService.class);
+        //classes.add(OAuthAuthenticationService.class);
     }
 
     @Override

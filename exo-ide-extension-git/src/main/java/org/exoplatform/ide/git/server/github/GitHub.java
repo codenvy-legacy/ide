@@ -18,35 +18,28 @@
  */
 package org.exoplatform.ide.git.server.github;
 
+import com.codenvy.commons.json.JsonHelper;
+import com.codenvy.commons.json.JsonNameConventions;
+import com.codenvy.commons.json.JsonParseException;
+import com.codenvy.commons.security.oauth.OAuthTokenProvider;
+import com.codenvy.commons.security.shared.Token;
+
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.commons.ContainerUtils;
-import org.exoplatform.ide.commons.JsonHelper;
-import org.exoplatform.ide.commons.JsonNameConventions;
-import org.exoplatform.ide.commons.JsonParseException;
 import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.ssh.server.SshKey;
 import org.exoplatform.ide.extension.ssh.server.SshKeyStore;
 import org.exoplatform.ide.extension.ssh.server.SshKeyStoreException;
 import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.GitHubRepository;
-import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
 import org.exoplatform.services.security.ConversationState;
 
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -74,7 +67,7 @@ public class GitHub {
 
     /**
      * Get the list of public repositories by user's name.
-     * 
+     *
      * @param user name of user
      * @return an array of repositories
      * @throws IOException if any i/o errors occurs
@@ -94,7 +87,7 @@ public class GitHub {
 
     /**
      * Get the list of all (private + public) repositories by user's name.
-     * 
+     *
      * @param user name of user
      * @return an array of repositories
      * @throws IOException if any i/o errors occurs
@@ -366,12 +359,12 @@ public class GitHub {
     }
 
     private String getToken() throws GitHubException, IOException {
-        String oauthToken = oauthTokenProvider.getToken("github", getUserId());
-        if (oauthToken == null || oauthToken.isEmpty())
+        Token oauthToken = oauthTokenProvider.getToken("github", getUserId());
+        if (oauthToken == null || oauthToken.getToken().isEmpty())
         {
             throw new GitHubException(401, "Authentication required.\n", "text/plain");
         }
-        return oauthToken;
+        return oauthToken.getToken();
     }
 
     private String getUserId() {
@@ -379,7 +372,7 @@ public class GitHub {
     }
 
     private String getGithubUserId() throws IOException, JsonParseException, GitHubException {
-        final String oauthToken = oauthTokenProvider.getToken("github", getUserId());
+        final String oauthToken = oauthTokenProvider.getToken("github", getUserId()).getToken();
         final String url = "https://api.github.com/user?access_token=" + oauthToken;
         final String method = "GET";
         final String response = doJsonRequest(url, method, 200);

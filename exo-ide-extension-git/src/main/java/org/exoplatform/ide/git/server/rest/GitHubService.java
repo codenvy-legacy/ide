@@ -18,30 +18,25 @@
  */
 package org.exoplatform.ide.git.server.rest;
 
+import com.codenvy.commons.security.oauth.OAuthTokenProvider;
+
 import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.ssh.server.SshKeyStoreException;
 import org.exoplatform.ide.git.server.github.GitHub;
 import org.exoplatform.ide.git.server.github.GitHubException;
 import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.GitHubRepository;
-import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
 
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-
 /**
  * REST service to get the list of repositories from GitHub (where sample projects are located).
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: GithubSamplesService.java Aug 29, 2011 9:59:02 AM vereshchaka $
  */
@@ -51,7 +46,7 @@ public class GitHubService {
     OAuthTokenProvider oauthTokenProvider;
 
     @Inject
-    GitHub             github;
+    GitHub github;
 
     public GitHubService() {
     }
@@ -64,9 +59,9 @@ public class GitHubService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public GitHubRepository[] listRepositoriesByUser(
-                                                     @QueryParam("username") String userName) throws IOException,
-                                                                                             GitHubException,
-                                                                                             ParsingResponseException {
+            @QueryParam("username") String userName) throws IOException,
+                                                            GitHubException,
+                                                            ParsingResponseException {
         return github.listUserPublicRepositories(userName);
     }
 
@@ -80,8 +75,7 @@ public class GitHubService {
     @Path("list/available")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Map<String, List<GitHubRepository>> availableRepositories() throws IOException, GitHubException, ParsingResponseException
-    {
+    public Map<String, List<GitHubRepository>> availableRepositories() throws IOException, GitHubException, ParsingResponseException {
         return github.availableRepositoriesList();
     }
 
@@ -90,7 +84,7 @@ public class GitHubService {
     @Produces(MediaType.APPLICATION_JSON)
     public Collaborators collaborators(@PathParam("user") String user,
                                        @PathParam("repository") String repository) throws IOException,
-                                                                                  GitHubException, ParsingResponseException {
+                                                                                          GitHubException, ParsingResponseException {
         return github.getCollaborators(user, repository);
     }
 
@@ -98,7 +92,7 @@ public class GitHubService {
     @Path("token/{userid}")
     @Produces(MediaType.TEXT_PLAIN)
     public String getToken(@PathParam("userid") String userId) throws IOException, GitHubException, ParsingResponseException {
-        return oauthTokenProvider.getToken("github", userId);
+        return oauthTokenProvider.getToken("github", userId).getToken();
     }
 
     @POST
