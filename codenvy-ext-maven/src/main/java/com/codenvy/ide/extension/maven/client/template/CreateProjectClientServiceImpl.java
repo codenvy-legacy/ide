@@ -29,6 +29,7 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.URL;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -36,9 +37,9 @@ import com.google.inject.name.Named;
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 @Singleton
 public class CreateProjectClientServiceImpl implements CreateProjectClientService {
-    private static final String BASE_URL            = "/ide/maven2";
-    private static final String CREATE_WAR_PROJECT  = BASE_URL + "/create/project/war";
-    private static final String CREATE_JAVA_PROJECT = BASE_URL + "/create/project/java";
+    private static final String BASE_URL            = "/ide/maven/create";
+    private static final String CREATE_WAR_PROJECT  = BASE_URL + "/project/war";
+    private static final String CREATE_JAVA_PROJECT = BASE_URL + "/project/java";
 
     private String           restContext;
     private Loader           loader;
@@ -72,9 +73,9 @@ public class CreateProjectClientServiceImpl implements CreateProjectClientServic
     public void createJavaProject(String projectName, String sourceFolder, JsonArray<Property> properties,
                                   AsyncRequestCallback<ProjectModelProviderAdapter> callback) throws RequestException {
         String requestUrl = restContext + CREATE_JAVA_PROJECT;
-
         String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&source=" + sourceFolder;
         String url = requestUrl + param;
+        url = URL.encode(url);
 
         loader.setMessage("Creating new project...");
 

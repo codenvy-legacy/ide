@@ -56,6 +56,12 @@ public class CreateJavaProjectPresenter implements CreateProjectProvider {
 
     /** {@inheritDoc} */
     @Override
+    public String getProjectName() {
+        return projectName;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void setProjectName(String projectName) {
         this.projectName = projectName;
     }

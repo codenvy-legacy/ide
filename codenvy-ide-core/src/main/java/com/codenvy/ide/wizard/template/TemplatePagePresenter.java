@@ -38,14 +38,18 @@ public class TemplatePagePresenter extends AbstractWizardPagePresenter implement
     private PaaSAgent           paaSAgent;
     private Template            selectedTemplate;
     private String              projectName;
+    private TemplateAgentImpl   templateAgent;
 
     @Inject
-    protected TemplatePagePresenter(TemplateWizardResources resources, TemplatePageView view, PaaSAgent paaSAgent) {
+
+    protected TemplatePagePresenter(TemplateWizardResources resources, TemplatePageView view, PaaSAgent paaSAgent,
+                                    TemplateAgentImpl templateAgent) {
         super("Choose project template", resources.templateIcon());
 
         this.view = view;
         this.view.setDelegate(this);
         this.paaSAgent = paaSAgent;
+        this.templateAgent = templateAgent;
     }
 
     public void setProjectName(String projectName) {
@@ -102,6 +106,7 @@ public class TemplatePagePresenter extends AbstractWizardPagePresenter implement
     public void selectedTemplate(Template template) {
         selectedTemplate = template;
         next = selectedTemplate.getWizardPage();
+        templateAgent.setSelectedTemplate(selectedTemplate);
         delegate.updateControls();
     }
 

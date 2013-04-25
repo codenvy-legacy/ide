@@ -31,13 +31,15 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
-@Path("ide/maven2")
+@Path("ide/maven/create")
 public class CreateProjectService {
     @Inject
     VirtualFileSystemRegistry registry;
@@ -45,8 +47,7 @@ public class CreateProjectService {
     @Inject
     EventListenerList eventListenerList;
 
-
-    @Path("create/project/java")
+    @Path("project/java")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Project createJavaProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
@@ -76,23 +77,46 @@ public class CreateProjectService {
         return project;
     }
 
-    @Path("create/project/war")
+    @Path("project/war")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Project createWarProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name, List<Property> properties)
-            throws VirtualFileSystemException {
+    public Project createWarProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name, List<Property> properties,
+                                    @Context UriInfo uriInfo) throws VirtualFileSystemException {
 
         VirtualFileSystem vfs = registry.getProvider(vfsId).newInstance(null, eventListenerList);
         Project project =
                 vfs.createProject(vfs.getInfo().getRoot().getId(), name, "deprecated.project.type", properties);
         String projectId = project.getId();
 
+        String projectContent = "[{\"name\":\"vfs:mimeType\",\"value\":[\"text/vnd.ideproject+directory\"]}," +
+                                "{\"name\":\"vfs:projectType\",\"value\":[\"Servlet/JSP\"]},{\"name\":\"exoide:projectDescription\"," +
+                                "\"value\":[\"Java Web project.\"]}, {\"name\":\"exoide:target\",\"value\":[\"CloudBees\", " +
+                                "\"CloudFoundry\", \"AWS\", \"AppFog\"]}]";
+        InputStream projectIS = new ByteArrayInputStream(projectContent.getBytes());
+        vfs.createFile(projectId, ".project", MediaType.TEXT_PLAIN_TYPE, projectIS);
+
+
+        String host = uriInfo.getAbsolutePath().getHost();
+        String groupId = null;
+        if (host.contains(".")) {
+            String[] split = host.split("\\.");
+            StringBuffer result = new StringBuffer();
+            int j = split.length - 1;
+            while (j > 0) {
+                result.append(split[j--]).append(".");
+            }
+            result.append(split[0]);
+            groupId = result.toString();
+        } else {
+            groupId = host;
+        }
+
         String pomContent = "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3" +
                             ".org/2001/XMLSchema-instance\"\n" +
                             "  xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd\">\n" +
                             "  <modelVersion>4.0.0</modelVersion>\n" +
-                            "  <groupId>groupId</groupId>\n" +
-                            "  <artifactId>artifactId</artifactId>\n" +
+                            "  <groupId>" + groupId + "</groupId>\n" +
+                            "  <artifactId>" + name + "</artifactId>\n" +
                             "  <packaging>war</packaging>\n" +
                             "  <version>1.0-SNAPSHOT</version>\n" +
                             "  <name>java-web-sample</name>\n" +
@@ -104,11 +128,12 @@ public class CreateProjectService {
         vfs.createFile(projectId, "pom.xml", MediaType.TEXT_XML_TYPE, pomIS);
 
         Folder src = vfs.createFolder(projectId, "src");
+        Folder main = vfs.createFolder(src.getId(), "main");
+        String mainId = main.getId();
 
-        String srcId = src.getId();
-        vfs.createFolder(srcId, "java");
-        vfs.createFolder(srcId, "resources");
-        Folder webapp = vfs.createFolder(srcId, "webapp");
+        vfs.createFolder(mainId, "java");
+        vfs.createFolder(mainId, "resources");
+        Folder webapp = vfs.createFolder(mainId, "webapp");
 
         String webappId = webapp.getId();
         String indexContent = "<html>\n" +
@@ -166,8 +191,7 @@ public class CreateProjectService {
         InputStream sayHelloIS = new ByteArrayInputStream(sayHelloContent.getBytes());
         vfs.createFile(webappId, "sayhello.jsp", MediaType.TEXT_PLAIN_TYPE, sayHelloIS);
 
-        Folder webInf = vfs.createFolder(webappId, "WEB_INF");
-        String webInfId = webInf.getId();
+        Folder webInf = vfs.createFolder(webappId, "WEB-INF");
         String webContent = "<!DOCTYPE web-app PUBLIC\n" +
                             " \"-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN\"\n" +
                             " \"http://java.sun.com/dtd/web-app_2_3.dtd\" >\n" +
@@ -176,7 +200,7 @@ public class CreateProjectService {
                             "  <display-name>Web Application Created With eXo IDE</display-name>\n" +
                             "</web-app>";
         InputStream webIS = new ByteArrayInputStream(webContent.getBytes());
-        vfs.createFile(webInfId, "web.xml", MediaType.TEXT_XML_TYPE, webIS);
+        vfs.createFile(webInf.getId(), "web.xml", MediaType.TEXT_XML_TYPE, webIS);
 
         return project;
     }

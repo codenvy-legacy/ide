@@ -47,6 +47,12 @@ public class CreateWarProjectPresenter implements CreateProjectProvider {
 
     /** {@inheritDoc} */
     @Override
+    public String getProjectName() {
+        return projectName;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void setProjectName(String projectName) {
         this.projectName = projectName;
     }
@@ -54,13 +60,7 @@ public class CreateWarProjectPresenter implements CreateProjectProvider {
     /** {@inheritDoc} */
     @Override
     public void create(final AsyncCallback<Project> callback) {
-        JsonArray<Property> properties = JsonCollections
-                .<Property>createArray(new Property("vfs:mimeType", "text/vnd.ideproject+directory"),
-                                       new Property("vfs:projectType", "Servlet/JSP"),
-                                       new Property("exoide:projectDescription", "Java Web project."),
-                                       new Property("exoide:target",
-                                                    JsonCollections.createArray("CloudBees", "CloudFoundry", "AWS", "AppFog")));
-
+        JsonArray<Property> properties = JsonCollections.<Property>createArray();
         ProjectModelProviderAdapter adapter = new ProjectModelProviderAdapter(resourceProvider);
         ProjectModelUnmarshaller unmarshaller = new ProjectModelUnmarshaller(adapter);
 

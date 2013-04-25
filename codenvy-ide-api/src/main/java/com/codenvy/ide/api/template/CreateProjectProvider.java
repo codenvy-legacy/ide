@@ -25,5 +25,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public interface CreateProjectProvider {
     void create(AsyncCallback<Project> callback);
 
+    String getProjectName();
+
     void setProjectName(String projectName);
 }
