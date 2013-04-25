@@ -243,7 +243,7 @@ public class Express {
                                                        scale ? ApplicationScale.SCALE : ApplicationScale.NO_SCALE,
                                                        new GearProfile(instanceType));
         } catch (OpenShiftException e) {
-            throw new ExpressException(500, e.getMessage(), "text/plain");
+            throw new ExpressException(500, String.format("Reason given: '%s'", e.getMessage()), "text/plain");
         }
 
         String gitUrl = application.getGitUrl();
