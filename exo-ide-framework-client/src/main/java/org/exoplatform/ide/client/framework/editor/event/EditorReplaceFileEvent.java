@@ -24,7 +24,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
@@ -36,9 +36,17 @@ public class EditorReplaceFileEvent extends GwtEvent<EditorReplaceFileHandler> {
 
     private FileModel newFile;
 
+    boolean updateContent = true;
+
     public EditorReplaceFileEvent(FileModel file, FileModel newFile) {
         this.file = file;
         this.newFile = newFile;
+    }
+
+    public EditorReplaceFileEvent(FileModel file, FileModel newFile, boolean updateContent) {
+        this.file = file;
+        this.newFile = newFile;
+        this.updateContent = updateContent;
     }
 
     public FileModel getFile() {
@@ -47,6 +55,10 @@ public class EditorReplaceFileEvent extends GwtEvent<EditorReplaceFileHandler> {
 
     public FileModel getNewFile() {
         return newFile;
+    }
+
+    public boolean isUpdateContent() {
+        return updateContent;
     }
 
     @Override

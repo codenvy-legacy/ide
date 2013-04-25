@@ -23,7 +23,10 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler;
-import org.exoplatform.ide.client.framework.project.*;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientBundle;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -34,8 +37,9 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 2, 2011 6:00:15 PM anya $
  */
-public class CloudBeesControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler,
-                                                               FolderRefreshedHandler, ActiveProjectChangedHandler {
+public class CloudBeesControl extends SimpleControl implements IDEControl, 
+        ProjectOpenedHandler, ProjectClosedHandler, FolderRefreshedHandler {
+    
     private static final String ID = "Project/PaaS/CloudBees";
 
     public CloudBeesControl() {
@@ -52,7 +56,6 @@ public class CloudBeesControl extends SimpleControl implements IDEControl, Proje
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(FolderRefreshedEvent.TYPE, this);
-        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
     }
 
     /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
@@ -74,13 +77,6 @@ public class CloudBeesControl extends SimpleControl implements IDEControl, Proje
         }
     }
 
-    @Override
-    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
-        boolean isCloudBees = isCloudBees(event.getProject());
-        setVisible(isCloudBees);
-        setEnabled(isCloudBees);
-    }
-
     /** @see org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler#onFolderRefreshed(org.exoplatform.ide.client
      * .framework.navigation.event.FolderRefreshedEvent) */
     @Override
@@ -95,4 +91,5 @@ public class CloudBeesControl extends SimpleControl implements IDEControl, Proje
     private boolean isCloudBees(ProjectModel project) {
         return project.getPropertyValue("cloudbees-application") != null;
     }
+    
 }

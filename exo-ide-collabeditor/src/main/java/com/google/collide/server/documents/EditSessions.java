@@ -412,11 +412,13 @@ public class EditSessions implements Startable {
         @Override
         public void handleEvent(ChangeEvent event) throws VirtualFileSystemException {
             FileEditSession fileEditSession = editSessionsByResourceId.remove(itemId);
-            fileEditSession.setPath(event.getItemPath());
-            fileEditSession.setResourceId(event.getItemId());
-            editSessionsByResourceId.putIfAbsent(event.getItemId(), fileEditSession);
             listenerList.removeEventListener(eventFilter, this);
-            addVfsListener(vfsId,event.getItemPath(), event.getItemId());
+            if(fileEditSession != null){
+                fileEditSession.setPath(event.getItemPath());
+                fileEditSession.setResourceId(event.getItemId());
+                editSessionsByResourceId.putIfAbsent(event.getItemId(), fileEditSession);
+                addVfsListener(vfsId,event.getItemPath(), event.getItemId());                
+            }
         }
     }
 }

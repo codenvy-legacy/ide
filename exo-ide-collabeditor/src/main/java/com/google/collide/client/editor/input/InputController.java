@@ -259,6 +259,10 @@ public class InputController {
             @Override
             public void handleEvent(Event event) {
                 SignalEvent signalEvent = SignalEventUtils.create(event);
+                if (signalEvent == null) {
+                    return;
+                }
+                
                 Log.info(getClass(), signalEvent.getKeyCode());
                 if (signalEvent != null) {
                     if (selection.hasSelection() && signalEvent.getCommandKey() &&
