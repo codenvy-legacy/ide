@@ -298,7 +298,9 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
         LoginCanceledHandler loginCanceledHandler = new LoginCanceledHandler() {
             @Override
             public void onLoginCanceled() {
-                initializeDeployViewHandler.onInitializeDeployViewError();
+                if (initializeDeployViewHandler != null) {
+                    initializeDeployViewHandler.onInitializeDeployViewError();
+                }
             }
         };
 

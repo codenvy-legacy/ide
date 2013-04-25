@@ -258,6 +258,7 @@ public class InputController {
         EventListener signalEventListener = new EventListener() {
             @Override
             public void handleEvent(Event event) {
+                try{
                 SignalEvent signalEvent = SignalEventUtils.create(event);
                 if (signalEvent == null) {
                     return;
@@ -282,6 +283,9 @@ public class InputController {
                         event.preventDefault();
                         event.stopPropagation();
                     }
+                }
+                }catch (Exception e) {
+                    Log.error(getClass(), e);
                 }
             }
         };

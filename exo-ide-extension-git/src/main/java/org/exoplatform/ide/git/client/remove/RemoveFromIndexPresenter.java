@@ -30,6 +30,7 @@ import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.project.api.TreeRefreshedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
@@ -151,7 +152,12 @@ public class RemoveFromIndexPresenter extends GitPresenter implements RemoveFile
                                                       @Override
                                                       protected void onSuccess(String result) {
                                                           IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.removeFilesSuccessfull()));
-                                                          IDE.fireEvent(new RefreshBrowserEvent());
+                                                          if (display.getFromIndexValue().getValue().booleanValue()) {
+                                                              IDE.fireEvent(new TreeRefreshedEvent(getSelectedProject()));
+                                                          }
+                                                          else {
+                                                              IDE.fireEvent(new RefreshBrowserEvent());
+                                                          }
                                                       }
 
                                                       @Override

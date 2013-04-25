@@ -42,19 +42,19 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExten
  */
 public class OAuthLoginView extends ViewImpl {
 
-    private static final String ID = "ideGaeOAuthLoginView";
+    private static final String           ID               = "ideGaeOAuthLoginView";
 
-    private static final int WIDTH = 450;
+    private static final int              WIDTH            = 450;
 
-    private static final int HEIGHT = 180;
+    private static final int              HEIGHT           = 180;
 
-    private static final String LABEL_ID = "ideOAuthLoginViewLabel";
+    private static final String           LABEL_ID         = "ideOAuthLoginViewLabel";
 
-    private static final String AUTH_BUTTON_ID = "ideOAuthLoginViewAuthButton";
+    private static final String           AUTH_BUTTON_ID   = "ideOAuthLoginViewAuthButton";
 
-    private static final String CANCEL_BUTTON_ID = "ideOAuthLoginViewCancelButton";
+    private static final String           CANCEL_BUTTON_ID = "ideOAuthLoginViewCancelButton";
 
-    private static OAuthLoginViewUiBinder uiBinder = GWT.create(OAuthLoginViewUiBinder.class);
+    private static OAuthLoginViewUiBinder uiBinder         = GWT.create(OAuthLoginViewUiBinder.class);
 
     interface OAuthLoginViewUiBinder extends UiBinder<Widget, OAuthLoginView> {
     }
@@ -66,11 +66,11 @@ public class OAuthLoginView extends ViewImpl {
     ImageButton cancelButton;
 
     @UiField
-    Label label;
+    Label       label;
 
     public OAuthLoginView() {
-        super(ID, ViewType.MODAL, GoogleAppEngineExtension.GAE_LOCALIZATION.loginOAuthTitle(), new Image(
-                GAEClientBundle.INSTANCE.login()), WIDTH, HEIGHT, false);
+        super(ID, ViewType.MODAL, GoogleAppEngineExtension.GAE_LOCALIZATION.loginOAuthTitle(), new Image(GAEClientBundle.INSTANCE.login()),
+              WIDTH, HEIGHT, false);
         Widget widget = uiBinder.createAndBindUi(this);
         label.setID(LABEL_ID);
         oauthButton.setId(AUTH_BUTTON_ID);
@@ -87,14 +87,12 @@ public class OAuthLoginView extends ViewImpl {
 
             @Override
             public void onClick(ClickEvent event) {
-                String authUrl = Utils.getAuthorizationContext()//
-                                 + "/ide/oauth/authenticate?oauth_provider=google"//
-                                 + "&scope=https://www.googleapis.com/auth/appengine.admin"//
-                                 + "&userId=" + IDE.userId //
-                                 + "&redirect_after_login="//
+                String authUrl = Utils.getAuthorizationContext()
+                                 + "/ide/oauth/authenticate?oauth_provider=google"
+                                 + "&scope=https://www.googleapis.com/auth/appengine.admin"
+                                 + "&userId=" + IDE.userId + "&redirect_after_login="
                                  + Utils.getAuthorizationPageURL();
-                JsPopUpOAuthWindow authWindow =
-                        new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 450, 500);
+                JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 450, 500);
                 authWindow.loginWithOAuth();
                 IDE.getInstance().closeView(ID);
             }

@@ -33,15 +33,19 @@
         .left-float {
             float: left;
         }
+
+        .marginBottom5 {
+            margin-bottom: 5px;
+        }
     </ui:style>
     <f:Border margin="7" borderColor="transparent">
         <f:layer>
             <g:FlowPanel>
-                <g:Label text="{locale.createDomainViewNameField}"></g:Label>
+                <g:Label text="{locale.createDomainViewNameField}" styleName="{style.marginBottom5}"></g:Label>
                 <f:TextInput ui:field="nameField" width="100%" height="22px"></f:TextInput>
                 <g:FlowPanel height="20px" width="100%"></g:FlowPanel>
                 <g:FlowPanel width="190px" styleName="{style.center}">
-                    <f:ImageButton ui:field="createButton" width="90" height="22" text="{locale.createButton}"
+                    <f:ImageButton ui:field="createButton" width="90" height="22" text="{locale.changeButton}"
                                    imageResource="{resource.okButton}" addStyleNames="{style.left-float}"
                                    disabledImageResource="{resource.okButtonDisabled}">
                     </f:ImageButton>
