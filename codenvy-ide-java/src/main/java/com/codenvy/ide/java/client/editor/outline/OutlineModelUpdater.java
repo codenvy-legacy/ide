@@ -18,14 +18,29 @@
  */
 package com.codenvy.ide.java.client.editor.outline;
 
-import com.codenvy.ide.api.outline.CodeBlock;
-import com.codenvy.ide.api.outline.OutlineModel;
-import com.codenvy.ide.java.client.core.dom.*;
+import com.codenvy.ide.java.client.core.dom.ASTNode;
+import com.codenvy.ide.java.client.core.dom.ASTVisitor;
+import com.codenvy.ide.java.client.core.dom.AbstractTypeDeclaration;
+import com.codenvy.ide.java.client.core.dom.AnnotationTypeDeclaration;
+import com.codenvy.ide.java.client.core.dom.AnonymousClassDeclaration;
+import com.codenvy.ide.java.client.core.dom.ClassInstanceCreation;
+import com.codenvy.ide.java.client.core.dom.CompilationUnit;
+import com.codenvy.ide.java.client.core.dom.EnumDeclaration;
+import com.codenvy.ide.java.client.core.dom.FieldDeclaration;
+import com.codenvy.ide.java.client.core.dom.ImportDeclaration;
+import com.codenvy.ide.java.client.core.dom.MethodDeclaration;
+import com.codenvy.ide.java.client.core.dom.PackageDeclaration;
+import com.codenvy.ide.java.client.core.dom.SingleVariableDeclaration;
+import com.codenvy.ide.java.client.core.dom.Type;
+import com.codenvy.ide.java.client.core.dom.TypeDeclaration;
+import com.codenvy.ide.java.client.core.dom.VariableDeclarationFragment;
 import com.codenvy.ide.java.client.editor.AstProvider;
 import com.codenvy.ide.java.client.editor.AstProvider.AstListener;
 import com.codenvy.ide.java.client.internal.corext.dom.ASTNodes;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.texteditor.api.outline.CodeBlock;
+import com.codenvy.ide.texteditor.api.outline.OutlineModel;
 
 import java.util.Iterator;
 

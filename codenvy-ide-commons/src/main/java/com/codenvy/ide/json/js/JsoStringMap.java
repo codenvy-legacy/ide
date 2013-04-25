@@ -23,7 +23,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  * <p/>
  * On the client, if you have a reference to JsonStringMap, or JsoStringMap
  * (the JavaScriptObject backed impl), feel free to cross cast this to the more
- * robust {@link com.codenvy.ide.json.js.collide.json.client.Jso}.
+ * robust {@link Jso}.
  */
 public final class JsoStringMap<T> extends JavaScriptObject implements JsonStringMap<T> {
 
@@ -136,5 +136,17 @@ public final class JsoStringMap<T> extends JavaScriptObject implements JsonStrin
             }
         }
         return size;
+    }-*/;
+
+
+    /** {@inheritDoc} */
+    public final native JsoArray<T> getValues() /*-{
+        var data = [];
+        for (var i in this) {
+            if (Object.prototype.hasOwnProperty.call(this, key)) {
+                data.push(this[i]);
+            }
+        }
+        return data;
     }-*/;
 }

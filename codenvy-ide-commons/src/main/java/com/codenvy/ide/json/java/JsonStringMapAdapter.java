@@ -32,21 +32,25 @@ public class JsonStringMapAdapter<T> implements JsonStringMap<T> {
         this.delegate = delegate;
     }
 
+    /** {@inheritDoc} */
     @Override
     public T get(String key) {
         return delegate.get(key);
     }
 
+    /** {@inheritDoc} */
     @Override
     public JsonArray<String> getKeys() {
         return new JsonArrayListAdapter<String>(new ArrayList<String>(delegate.keySet()));
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isEmpty() {
         return delegate.isEmpty();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void iterate(IterationCallback<T> callback) {
         for (String key : delegate.keySet()) {
@@ -54,11 +58,13 @@ public class JsonStringMapAdapter<T> implements JsonStringMap<T> {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void put(String key, T value) {
         delegate.put(key, value);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void putAll(JsonStringMap<T> otherMap) {
         JsonArray<String> keys = otherMap.getKeys();
@@ -68,21 +74,31 @@ public class JsonStringMapAdapter<T> implements JsonStringMap<T> {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public T remove(String key) {
         return delegate.remove(key);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean containsKey(String key) {
         return delegate.containsKey(key);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int size() {
         return delegate.size();
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public JsonArray<T> getValues() {
+        return new JsonArrayListAdapter<T>(new ArrayList<T>(delegate.values()));
+    }
+
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return delegate.toString();

@@ -41,6 +41,6 @@ public interface MenuResources extends ClientBundle{
         String menuBarItemOver();
     }
 
-    @Source("menu.css")
+    @Source({"menu.css", "com/codenvy/ide/api/ui/style.css"})
     Css menuCss();
 }

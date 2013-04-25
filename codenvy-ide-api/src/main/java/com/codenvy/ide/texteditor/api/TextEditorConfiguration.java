@@ -18,10 +18,10 @@
  */
 package com.codenvy.ide.texteditor.api;
 
-import com.codenvy.ide.api.outline.OutlineModel;
 import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
+import com.codenvy.ide.texteditor.api.outline.OutlineModel;
 import com.codenvy.ide.texteditor.api.parser.Parser;
 import com.codenvy.ide.texteditor.api.quickassist.QuickAssistProcessor;
 import com.codenvy.ide.texteditor.api.reconciler.Reconciler;

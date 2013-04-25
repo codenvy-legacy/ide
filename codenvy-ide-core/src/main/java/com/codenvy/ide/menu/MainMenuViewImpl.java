@@ -20,13 +20,12 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.menu.Item.ConteinerType;
+import com.codenvy.ide.ui.menu.MenuBar;
+import com.codenvy.ide.ui.menu.MenuItem;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.MenuBar;
-import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -38,24 +37,18 @@ import com.google.inject.Inject;
  */
 public class MainMenuViewImpl extends Composite implements MainMenuView {
     private static MainMenuUiBinder uiBinder = GWT.create(MainMenuUiBinder.class);
-
+    /** Map storing Path and corresponding menu item */
+    private final JsonStringMap<MenuItem> menuItems;
+    private final Resources               resources;
     /** Parent menu bar */
     @UiField
     MenuBar parentMenuBar;
-
-    /** Map storing Path and corresponding menu item */
-    private final JsonStringMap<Item> menuItems;
-
-    private final Resources resources;
-
-    interface MainMenuUiBinder extends UiBinder<Widget, MainMenuViewImpl> {
-    }
 
     /** Create new {@link MainMenuViewImpl} */
     @Inject
     public MainMenuViewImpl(Resources resources) {
         initWidget(uiBinder.createAndBindUi(this));
-        parentMenuBar.addStyleName(resources.menuCSS().menuHorizontal());
+//        parentMenuBar.addStyleName(resources.menuCSS().menuHorizontal());
         this.menuItems = JsonCollections.createStringMap();
         this.resources = resources;
     }
@@ -99,12 +92,21 @@ public class MainMenuViewImpl extends Composite implements MainMenuView {
      * @param enabled
      * @return
      */
-    private Item addMainMenuItem(String path, ExtendedCommand command, boolean visible, boolean enabled) {
+    private MenuItem addMainMenuItem(String path, ExtendedCommand command, boolean visible, boolean enabled) {
         MenuPath menuPath = new MenuPath(path);
+        if (menuPath.getSize() == 1) {
+            MenuItem item = parentMenuBar.addItem(menuPath.getPathElementAt(0));
+            menuItems.put(path, item);
+            return item;
+        }
+        MenuItem item = parentMenuBar.getItems().get(menuPath.getPathElementAt(0));
+        if (item == null) {
+            item = parentMenuBar.addItem(menuPath.getPathElementAt(0));
+        }
         // Recursively get destination menu bar
-        MenuBar dstMenuBar = getOrCreateParentMenuBar(menuPath, menuPath.getSize() - 1);
+        MenuItem dstMenuBar = getOrCreateParentMenuBar(menuPath, menuPath.getSize() - 1, item);
         // create new item
-        Item newItem = new Item(menuPath, null, command.getToolTip(), command, ConteinerType.MAIN_MENU, resources);
+        MenuItem newItem = dstMenuBar.addItem(command.getIcon(), menuPath.getPathElementAt(menuPath.getSize() - 1), command);
         dstMenuBar.addItem(newItem);
 
         newItem.setVisible(visible);
@@ -120,45 +122,26 @@ public class MainMenuViewImpl extends Composite implements MainMenuView {
      *
      * @param menuPath
      * @param depth
+     * @param item
      * @return
      */
-    private MenuBar getOrCreateParentMenuBar(MenuPath menuPath, int depth) {
-        if (depth == 0) {
-            return parentMenuBar;
-        } else {
-            // try to get parent
-            MenuItem menuItem = menuItems.get(menuPath.getParentPath(depth));
-            if (menuItem != null) {
-                MenuBar subMenu = menuItem.getSubMenu();
-                if (subMenu == null) {
-                    subMenu = createSubMenuBar();
-                    menuItem.setSubMenu(subMenu);
-                }
-                return subMenu;
-            } else {
-                MenuBar dstMenuBar = getOrCreateParentMenuBar(menuPath, depth - 1);
-                MenuPath path = new MenuPath(menuPath.getParentPath(depth));
-                Item newItem = new Item(path, null, null, createSubMenuBar(), ConteinerType.MAIN_MENU, resources);
-                dstMenuBar.addItem(newItem);
-                menuItems.put(menuPath.getParentPath(depth), newItem);
-                return newItem.getSubMenu();
+    private MenuItem getOrCreateParentMenuBar(MenuPath menuPath, int depth, MenuItem item) {
+        int i = 1;
+        while (i < depth) {
+            MenuItem children = item.getChildren(menuPath.getPathElementAt(i));
+            if (children == null) {
+                children = item.addItem(menuPath.getPathElementAt(i));
             }
+            i++;
+            item = children;
         }
-    }
-
-    /** @return new instance of {@link MenuBar} */
-    private MenuBar createSubMenuBar() {
-        MenuBar menuBar = new MenuBar(true);
-        menuBar.setAnimationEnabled(true);
-        menuBar.setAutoOpen(true);
-        menuBar.addStyleName(resources.menuCSS().menuVertical());
-        return menuBar;
+        return item;
     }
 
     /** {@inheritDoc} */
     @Override
     public void addMenuItem(String path, ExtendedCommand command, boolean visible, boolean enabled, boolean selected) {
-        Item newItem = addMainMenuItem(path, command, visible, enabled);
+        MenuItem newItem = addMainMenuItem(path, command, visible, enabled);
         newItem.setSelected(selected);
     }
 
@@ -167,5 +150,8 @@ public class MainMenuViewImpl extends Composite implements MainMenuView {
     public void setDelegate(ActionDelegate delegate) {
         // ok
         // there are no events for now
+    }
+
+    interface MainMenuUiBinder extends UiBinder<Widget, MainMenuViewImpl> {
     }
 }

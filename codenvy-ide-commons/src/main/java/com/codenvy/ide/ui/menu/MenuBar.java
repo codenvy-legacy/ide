@@ -20,7 +20,10 @@
 
 package com.codenvy.ide.ui.menu;
 
+import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -162,20 +165,20 @@ public class MenuBar extends Composite implements ItemSelectedHandler, CloseMenu
     /**
      * Create and add new item in menu.
      *
-     * @param icon
+     * @param image
      *         item's icon which must be represented as HTML image. Image must be prepared like "<img ... />" tag
      * @param title
      *         title of new item
      * @return new instance of MenuBarItem which extends MenuItem
      */
-    public MenuItem addItem(String icon, String title) {
-        return addItem(icon, title, null);
+    public MenuItem addItem(ImageResource image, String title) {
+        return addItem(image, title, null);
     }
 
     /**
      * Create and add new item in menu.
      *
-     * @param icon
+     * @param image
      *         item's icon which must be represented as HTML image. Image must be prepared like "<img ... />" tag
      * @param title
      *         title of new item
@@ -183,10 +186,10 @@ public class MenuBar extends Composite implements ItemSelectedHandler, CloseMenu
      *         command, which will be executed when menu item will be selected
      * @return new instance of MenuBarItem which extends MenuItem
      */
-    public MenuItem addItem(String icon, String title, Command command) {
+    public MenuItem addItem(ImageResource image, String title, Command command) {
         table.setText(0, menuBarItems.size(), title);
         Element element = table.getCellFormatter().getElement(0, menuBarItems.size());
-        MenuBarItem item = new MenuBarItem(icon, title, element, this);
+        MenuBarItem item = new MenuBarItem(image, title, element, this);
 
         item.onMouseOut();
         menuBarItems.put(element, item);
@@ -198,13 +201,11 @@ public class MenuBar extends Composite implements ItemSelectedHandler, CloseMenu
      *
      * @return list of items
      */
-    public List<MenuItem> getItems() {
-        List<MenuItem> items = new ArrayList<MenuItem>();
+    public JsonStringMap<MenuItem> getItems() {
+         JsonStringMap<MenuItem> items = JsonCollections.createStringMap();
 
-        Iterator<MenuBarItem> itemIter = menuBarItems.values().iterator();
-        while (itemIter.hasNext()) {
-            MenuBarItem item = itemIter.next();
-            items.add(item);
+        for (MenuBarItem item : menuBarItems.values()) {
+            items.put(item.getTitle(), item);
         }
 
         return items;
@@ -266,7 +267,7 @@ public class MenuBar extends Composite implements ItemSelectedHandler, CloseMenu
             str += prefix + "[ " + menuItem.getTitle() + " ]\r\n";
         }
 
-        for (MenuItem childIten : menuItem.getItems()) {
+        for (MenuItem childIten : menuItem.getItems().asIterable()) {
             str += toString(childIten, depth + 1);
         }
 
