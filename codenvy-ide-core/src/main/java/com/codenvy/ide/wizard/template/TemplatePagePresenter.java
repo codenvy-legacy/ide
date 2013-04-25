@@ -28,11 +28,9 @@ import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 
 /** @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a> */
-@Singleton
 public class TemplatePagePresenter extends AbstractWizardPagePresenter implements TemplatePageView.ActionDelegate {
     private TemplatePageView    view;
     private WizardPagePresenter next;

@@ -109,8 +109,14 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-java</artifactId>
+            <artifactId>codenvy-ext-maven</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.exoplatform.kernel</groupId>
+                    <artifactId>exo.kernel.container</artifactId>
+                </exclusion>
+            </exclusions>
             <type>jar</type>
         </dependency>
         <dependency>

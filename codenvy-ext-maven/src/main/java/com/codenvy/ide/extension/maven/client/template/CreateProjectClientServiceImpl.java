@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.java.client;
+package com.codenvy.ide.extension.maven.client.template;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.json.JsonArray;
@@ -29,15 +29,15 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
-import javax.inject.Inject;
-
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 @Singleton
-public class JavaProjectClientServiceImpl implements JavaProjectClientService {
-    private static final String BASE_URL            = "/ide";
+public class CreateProjectClientServiceImpl implements CreateProjectClientService {
+    private static final String BASE_URL            = "/ide/maven2";
+    private static final String CREATE_WAR_PROJECT  = BASE_URL + "/create/project/war";
     private static final String CREATE_JAVA_PROJECT = BASE_URL + "/create/project/java";
 
     private String           restContext;
@@ -45,10 +45,26 @@ public class JavaProjectClientServiceImpl implements JavaProjectClientService {
     private ResourceProvider resourceProvider;
 
     @Inject
-    protected JavaProjectClientServiceImpl(@Named("restContext") String restContext, Loader loader, ResourceProvider resourceProvider) {
+    protected CreateProjectClientServiceImpl(@Named("restContext") String restContext, Loader loader, ResourceProvider resourceProvider) {
         this.restContext = restContext;
         this.loader = loader;
         this.resourceProvider = resourceProvider;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void createWarProject(String projectName, JsonArray<Property> properties,
+                                 AsyncRequestCallback<ProjectModelProviderAdapter> callback) throws RequestException {
+        String requestUrl = restContext + CREATE_WAR_PROJECT;
+
+        String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName;
+        String url = requestUrl + param;
+
+        loader.setMessage("Creating new project...");
+
+        AsyncRequest.build(RequestBuilder.POST, url)
+                    .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(properties).toString())
+                    .header(HTTPHeader.CONTENT_TYPE, "application/json").loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */

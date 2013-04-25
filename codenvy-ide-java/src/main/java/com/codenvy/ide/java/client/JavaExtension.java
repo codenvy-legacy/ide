@@ -22,7 +22,6 @@ import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.wizard.WizardAgent;
 import com.codenvy.ide.java.client.codeassistant.ContentAssistHistory;
 import com.codenvy.ide.java.client.core.JavaCore;
@@ -31,12 +30,9 @@ import com.codenvy.ide.java.client.internal.codeassist.impl.AssistOptions;
 import com.codenvy.ide.java.client.internal.compiler.impl.CompilerOptions;
 import com.codenvy.ide.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.java.client.projectmodel.JavaProjectModelProvider;
-import com.codenvy.ide.java.client.template.CreateJavaProjectPagePresenter;
-import com.codenvy.ide.java.client.template.CreateJavaProjectPresenter;
 import com.codenvy.ide.java.client.templates.*;
 import com.codenvy.ide.java.client.wizard.NewJavaClassPagePresenter;
 import com.codenvy.ide.java.client.wizard.NewPackagePagePresenter;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.codenvy.ide.rest.MimeType;
 import com.google.gwt.core.client.GWT;
@@ -72,9 +68,7 @@ public class JavaExtension {
     @Inject
     public JavaExtension(ResourceProvider resourceProvider, EditorRegistry editorRegistry, JavaEditorProvider javaEditorProvider,
                          EventBus eventBus, WizardAgent wizardAgent, Provider<NewPackagePagePresenter> packageProvider,
-                         Provider<NewJavaClassPagePresenter> classProvider, ProjectTypeAgent projectTypeAgent,
-                         TemplateAgent templateAgent, CreateJavaProjectPresenter createJavaProjectPresenter,
-                         Provider<CreateJavaProjectPagePresenter> createJavaProjectWizardPage) {
+                         Provider<NewJavaClassPagePresenter> classProvider, ProjectTypeAgent projectTypeAgent) {
 
         this();
         FileType javaFile = new FileType(JavaClientBundle.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
@@ -89,10 +83,6 @@ public class JavaExtension {
 
         wizardAgent.registerNewResourceWizard(JAVA_PERSPECTIVE, "Package", JavaClientBundle.INSTANCE.packageItem(), packageProvider);
         wizardAgent.registerNewResourceWizard(JAVA_PERSPECTIVE, "Java Class", JavaClientBundle.INSTANCE.newClassWizz(), classProvider);
-
-        templateAgent
-                .registerTemplate("title", JavaClientBundle.INSTANCE.javaProject(), JsonCollections.createArray(JavaProject.PRIMARY_NATURE),
-                                  createJavaProjectPresenter, createJavaProjectWizardPage);
     }
 
     /** For test use only. */

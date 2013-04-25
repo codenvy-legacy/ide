@@ -16,19 +16,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.java.server;
+package com.codenvy.ide.extension.maven.server;
 
 import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
-public class CreateJavaProjectApplication extends Application {
+public class CreateProjectApplication extends Application {
     /** {@inheritDoc} */
     @Override
     public Set<Class<?>> getClasses() {
         Set<Class<?>> classes = new HashSet<Class<?>>();
-        classes.add(JavaProjectService.class);
+        classes.add(CreateProjectService.class);
         return classes;
     }
 }

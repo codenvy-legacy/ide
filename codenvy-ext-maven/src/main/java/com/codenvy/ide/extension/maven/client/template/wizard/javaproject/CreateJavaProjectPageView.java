@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.java.client.template;
+package com.codenvy.ide.extension.maven.client.template.wizard.javaproject;
 
 import com.codenvy.ide.api.mvp.View;
 

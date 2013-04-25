@@ -16,11 +16,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.java.client.template;
+package com.codenvy.ide.extension.maven.client.template.wizard.javaproject;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.CreateProjectProvider;
-import com.codenvy.ide.java.client.JavaProjectClientService;
+import com.codenvy.ide.extension.maven.client.template.CreateProjectClientService;
 import com.codenvy.ide.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.java.client.projectmodel.JavaProjectDesctiprion;
 import com.codenvy.ide.json.JsonArray;
@@ -35,22 +35,19 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.event.shared.EventBus;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 @Singleton
 public class CreateJavaProjectPresenter implements CreateProjectProvider {
-    private String                   projectName;
-    private String                   sourceFolder;
-    private JavaProjectClientService service;
-    private ResourceProvider         resourceProvider;
-    private EventBus                 eventBus;
+    private String                     projectName;
+    private String                     sourceFolder;
+    private CreateProjectClientService service;
+    private ResourceProvider           resourceProvider;
 
     @Inject
-    protected CreateJavaProjectPresenter(JavaProjectClientService service, ResourceProvider resourceProvider, EventBus eventBus) {
+    protected CreateJavaProjectPresenter(CreateProjectClientService service, ResourceProvider resourceProvider) {
         this.service = service;
         this.resourceProvider = resourceProvider;
-        this.eventBus = eventBus;
     }
 
     public void setSourceFolder(String sourceFolder) {

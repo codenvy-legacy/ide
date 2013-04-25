@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.java.client;
+package com.codenvy.ide.extension.maven.client.template;
 
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.marshal.ProjectModelProviderAdapter;
@@ -25,7 +25,10 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
-public interface JavaProjectClientService {
+public interface CreateProjectClientService {
+    void createWarProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<ProjectModelProviderAdapter> callback)
+            throws RequestException;
+
     void createJavaProject(String projectName, String sourceFolder, JsonArray<Property> properties,
                            AsyncRequestCallback<ProjectModelProviderAdapter> callback) throws RequestException;
 }
