@@ -331,7 +331,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
     public void setTargets(List<PaaS> targetList) {
         targetGrid.setSize("100%", "100%");
 
-        int columnCount = 8;
+        int columnCount = 9;
         int rowCount = (int)Math.ceil((double)targetList.size() / columnCount);
         targetGrid.resize(rowCount, columnCount);
 

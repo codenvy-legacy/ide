@@ -30,6 +30,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
@@ -54,6 +55,8 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
     /** Location of war file (Java only). */
     private String warUrl;
 
+    private PAAS_PROVIDER paasProvider;
+
     public UpdateApplicationPresenter() {
         IDE.addHandler(UpdateApplicationEvent.TYPE, this);
     }
@@ -70,6 +73,7 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
      * .extension.cloudfoundry.client.update.UpdateApplicationEvent) */
     @Override
     public void onUpdateApplication(UpdateApplicationEvent event) {
+        paasProvider = event.getPaasProvider();
         if (makeSelectionCheck()) {
             validateData();
         }
@@ -80,9 +84,9 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
         final String projectId = getSelectedProject().getId();
 
         try {
-            CloudFoundryClientService.getInstance().updateApplication(vfs.getId(), projectId, null, null, warUrl,
+            CloudFoundryClientService.getInstance().updateApplication(vfs.getId(), projectId, null, null, paasProvider, warUrl,
                                                                       new CloudFoundryAsyncRequestCallback<String>(null, loggedInHandler,
-                                                                                                                   null) {
+                                                                                                                   null, paasProvider) {
                                                                           @Override
                                                                           protected void onSuccess(String result) {
                                                                               try {
@@ -100,54 +104,13 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
                                                                                                            .getApplicationInfo(vfs.getId(),
                                                                                                                                projectId,
                                                                                                                                null, null,
+                                                                                                                               paasProvider,
                                                                                                                                new
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                                                                                                                                        CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
                                                                                                                                        unmarshaller,
                                                                                                                                        null,
-                                                                                                                                       null) {
+                                                                                                                                       null,
+                                                                                                                                       paasProvider) {
 
                                                                                                                                    @Override
 
@@ -195,9 +158,9 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
 
         try {
             CloudFoundryClientService.getInstance().validateAction("update", null, null, null, null, vfs.getId(),
-                                                                   projectId, 0, 0, false,
+                                                                   projectId, paasProvider, 0, 0, false,
                                                                    new CloudFoundryAsyncRequestCallback<String>(null, validateHandler,
-                                                                                                                null) {
+                                                                                                                null, paasProvider) {
                                                                        @Override
                                                                        protected void onSuccess(String result) {
                                                                            isBuildApplication();

@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateApplicationEvent;
 
 /**
@@ -39,12 +40,12 @@ public class UpdateApplicationControl extends AbstractCloudFoundryControl {
     /**
      *
      */
-    public UpdateApplicationControl() {
+    public UpdateApplicationControl(PAAS_PROVIDER paasProvider) {
         super(ID);
         setTitle(TITLE);
         setPrompt(PROMPT);
         setImages(CloudFoundryClientBundle.INSTANCE.updateApp(), CloudFoundryClientBundle.INSTANCE.updateAppDisabled());
-        setEvent(new UpdateApplicationEvent());
+        setEvent(new UpdateApplicationEvent(paasProvider));
     }
 
 }

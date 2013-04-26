@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.rename.RenameApplicationEvent;
 
 /**
@@ -36,13 +37,13 @@ public class RenameApplicationControl extends AbstractCloudFoundryControl {
 
     private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.renameAppControlPrompt();
 
-    public RenameApplicationControl() {
+    public RenameApplicationControl(PAAS_PROVIDER paasProvider) {
         super(ID);
         setTitle(TITLE);
         setPrompt(PROMPT);
         setImages(CloudFoundryClientBundle.INSTANCE.renameApplication(),
                   CloudFoundryClientBundle.INSTANCE.renameApplicationDisabled());
-        setEvent(new RenameApplicationEvent());
+        setEvent(new RenameApplicationEvent(paasProvider));
     }
 
 }

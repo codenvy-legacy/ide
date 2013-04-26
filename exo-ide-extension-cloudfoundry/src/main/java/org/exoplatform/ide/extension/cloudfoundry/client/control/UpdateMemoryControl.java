@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateMemoryEvent;
 
 /**
@@ -39,12 +40,12 @@ public class UpdateMemoryControl extends AbstractCloudFoundryControl {
     /**
      *
      */
-    public UpdateMemoryControl() {
+    public UpdateMemoryControl(PAAS_PROVIDER paasProvider) {
         super(ID);
         setTitle(TITLE);
         setPrompt(PROMPT);
         setImages(CloudFoundryClientBundle.INSTANCE.appMemory(), CloudFoundryClientBundle.INSTANCE.appMemoryDisabled());
-        setEvent(new UpdateMemoryEvent());
+        setEvent(new UpdateMemoryEvent(paasProvider));
     }
 
 }

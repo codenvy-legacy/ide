@@ -20,6 +20,8 @@ package org.exoplatform.ide.extension.cloudfoundry.client.services;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
+
 /**
  * Event occurs, when user tries to create service.
  *
@@ -33,12 +35,16 @@ public class CreateServiceEvent extends GwtEvent<CreateServiceHandler> {
     /** Handler for successful provisioned service creation. */
     private ProvisionedServiceCreatedHandler provisionedServiceCreatedHandler;
 
+    private final PAAS_PROVIDER paasProvider;
+
     /**
      * @param provisionedServiceCreatedHandler
      *         handler for successful provisioned service creation
+     * @param paasProvider 
      */
-    public CreateServiceEvent(ProvisionedServiceCreatedHandler provisionedServiceCreatedHandler) {
+    public CreateServiceEvent(ProvisionedServiceCreatedHandler provisionedServiceCreatedHandler, PAAS_PROVIDER paasProvider) {
         this.provisionedServiceCreatedHandler = provisionedServiceCreatedHandler;
+        this.paasProvider = paasProvider;
     }
 
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
@@ -56,5 +62,9 @@ public class CreateServiceEvent extends GwtEvent<CreateServiceHandler> {
     /** @return the provisionedServiceCreatedHandler */
     public ProvisionedServiceCreatedHandler getProvisionedServiceCreatedHandler() {
         return provisionedServiceCreatedHandler;
+    }
+
+    public PAAS_PROVIDER getPaasProvider() {
+        return paasProvider;
     }
 }

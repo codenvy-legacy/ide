@@ -20,6 +20,8 @@ package org.exoplatform.ide.extension.cloudfoundry.client.url;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
+
 /**
  * Event, occurs after pressing Unmap Url command.
  *
@@ -29,6 +31,16 @@ import com.google.gwt.event.shared.GwtEvent;
 public class UnmapUrlEvent extends GwtEvent<UnmapUrlHandler> {
     /** Type used to register this event. */
     public static final GwtEvent.Type<UnmapUrlHandler> TYPE = new GwtEvent.Type<UnmapUrlHandler>();
+
+    private final PAAS_PROVIDER paasProvider;
+
+    /**
+     * @param paasProvider
+     */
+    public UnmapUrlEvent(PAAS_PROVIDER paasProvider) {
+        super();
+        this.paasProvider = paasProvider;
+    }
 
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
     @Override
@@ -40,6 +52,10 @@ public class UnmapUrlEvent extends GwtEvent<UnmapUrlHandler> {
     @Override
     protected void dispatch(UnmapUrlHandler handler) {
         handler.onUnmapUrl(this);
+    }
+
+    public PAAS_PROVIDER getPaasProvider() {
+        return paasProvider;
     }
 
 }

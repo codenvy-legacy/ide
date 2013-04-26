@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable;
 import org.exoplatform.ide.client.framework.websocket.rest.exceptions.ServerException;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginCanceledHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginEvent;
@@ -47,17 +48,20 @@ public abstract class CloudFoundryRESTfulRequestCallback<T> extends RequestCallb
 
     private final static String CLOUDFOUNDRY_EXIT_CODE = "Cloudfoundry-Exit-Code";
 
+    private PAAS_PROVIDER paasProvider;
+
     public CloudFoundryRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
-                                              LoginCanceledHandler loginCanceled) {
-        this(unmarshaller, loggedIn, loginCanceled, null);
+                                              LoginCanceledHandler loginCanceled, PAAS_PROVIDER paasProvider) {
+        this(unmarshaller, loggedIn, loginCanceled, null, paasProvider);
     }
 
     public CloudFoundryRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
-                                              LoginCanceledHandler loginCanceled, String loginUrl) {
+                                              LoginCanceledHandler loginCanceled, String loginUrl, PAAS_PROVIDER paasProvider) {
         super(unmarshaller);
         this.loggedIn = loggedIn;
         this.loginCanceled = loginCanceled;
         this.loginUrl = loginUrl;
+        this.paasProvider = paasProvider;
     }
 
     /** @see org.exoplatform.ide.client.framework.websocket.rest.RequestCallback#onFailure(java.lang.Throwable) */
@@ -67,12 +71,12 @@ public abstract class CloudFoundryRESTfulRequestCallback<T> extends RequestCallb
             ServerException serverException = (ServerException)exception;
             if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
                 && serverException.getMessage().contains("Authentication required.")) {
-                IDE.fireEvent(new LoginEvent(loggedIn, loginCanceled, loginUrl));
+                IDE.fireEvent(new LoginEvent(loggedIn, loginCanceled, loginUrl, paasProvider));
                 return;
             } else if (HTTPStatus.FORBIDDEN == serverException.getHTTPStatus()
                        && serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE) != null
                        && "200".equals(serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE))) {
-                IDE.fireEvent(new LoginEvent(loggedIn, loginCanceled, loginUrl));
+                IDE.fireEvent(new LoginEvent(loggedIn, loginCanceled, loginUrl, paasProvider));
                 return;
             } else if (HTTPStatus.NOT_FOUND == serverException.getHTTPStatus()
                        && serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE) != null

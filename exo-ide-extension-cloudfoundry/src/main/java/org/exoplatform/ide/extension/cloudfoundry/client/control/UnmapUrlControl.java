@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlEvent;
 
 /**
@@ -39,12 +40,12 @@ public class UnmapUrlControl extends AbstractCloudFoundryControl {
     /**
      *
      */
-    public UnmapUrlControl() {
+    public UnmapUrlControl(PAAS_PROVIDER paasProvider) {
         super(ID);
         setTitle(TITLE);
         setPrompt(PROMPT);
         setImages(CloudFoundryClientBundle.INSTANCE.mapUrl(), CloudFoundryClientBundle.INSTANCE.mapUrlDisabled());
-        setEvent(new UnmapUrlEvent());
+        setEvent(new UnmapUrlEvent(paasProvider));
         setDelimiterBefore(true);
     }
 

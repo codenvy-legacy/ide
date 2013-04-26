@@ -20,6 +20,8 @@ package org.exoplatform.ide.extension.cloudfoundry.client.info;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
+
 /**
  * Event, which set to control to show application info.
  *
@@ -31,6 +33,16 @@ public class ApplicationInfoEvent extends GwtEvent<ApplicationInfoHandler> {
     /** Type used to register this event. */
     public static final GwtEvent.Type<ApplicationInfoHandler> TYPE = new GwtEvent.Type<ApplicationInfoHandler>();
 
+    private final PAAS_PROVIDER paasProvider;
+
+    /**
+     * @param paasProvider
+     */
+    public ApplicationInfoEvent(PAAS_PROVIDER paasProvider) {
+        super();
+        this.paasProvider = paasProvider;
+    }
+
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
     @Override
     public com.google.gwt.event.shared.GwtEvent.Type<ApplicationInfoHandler> getAssociatedType() {
@@ -41,6 +53,10 @@ public class ApplicationInfoEvent extends GwtEvent<ApplicationInfoHandler> {
     @Override
     protected void dispatch(ApplicationInfoHandler handler) {
         handler.onShowApplicationInfo(this);
+    }
+
+    public PAAS_PROVIDER getPaasProvider() {
+        return paasProvider;
     }
 
 }

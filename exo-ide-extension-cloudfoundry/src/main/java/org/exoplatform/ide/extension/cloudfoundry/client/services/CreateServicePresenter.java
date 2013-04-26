@@ -37,6 +37,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryServices;
 import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
@@ -68,6 +69,8 @@ public class CreateServicePresenter implements CreateServiceHandler, ViewClosedH
 
     /** Handler for successful service creation. */
     private ProvisionedServiceCreatedHandler serviceCreatedHandler;
+
+    private PAAS_PROVIDER paasProvider;
 
     private LoggedInHandler createServiceLoggedInHandler = new LoggedInHandler() {
 
@@ -134,6 +137,7 @@ public class CreateServicePresenter implements CreateServiceHandler, ViewClosedH
     @Override
     public void onCreateService(CreateServiceEvent event) {
         this.serviceCreatedHandler = event.getProvisionedServiceCreatedHandler();
+        this.paasProvider = event.getPaasProvider();
         if (display == null) {
             display = GWT.create(Display.class);
             IDE.getInstance().openView(display.asView());
@@ -160,13 +164,10 @@ public class CreateServicePresenter implements CreateServiceHandler, ViewClosedH
             AutoBeanUnmarshaller<ProvisionedService> unmarshaller =
                     new AutoBeanUnmarshaller<ProvisionedService>(provisionedService);
 
-            CloudFoundryClientService.getInstance().createService(null, type, name, null, null, null,
+            CloudFoundryClientService.getInstance().createService(null, type, name, null, null, null, paasProvider,
                                                                   new CloudFoundryAsyncRequestCallback<ProvisionedService>(unmarshaller,
-
-
                                                                                                                            createServiceLoggedInHandler,
-                                                                                                                           null) {
-
+                                                                                                                           null, paasProvider) {
                                                                       @Override
                                                                       protected void onSuccess(ProvisionedService result) {
                                                                           IDE.getInstance().closeView(display.asView().getId());

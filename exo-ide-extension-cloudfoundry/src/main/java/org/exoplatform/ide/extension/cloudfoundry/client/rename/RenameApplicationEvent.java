@@ -20,6 +20,8 @@ package org.exoplatform.ide.extension.cloudfoundry.client.rename;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
+
 /**
  * Event, occurs after pressing Rename Application command.
  *
@@ -29,6 +31,16 @@ import com.google.gwt.event.shared.GwtEvent;
 public class RenameApplicationEvent extends GwtEvent<RenameApplicationHandler> {
     /** Type used to register this event. */
     public static final GwtEvent.Type<RenameApplicationHandler> TYPE = new GwtEvent.Type<RenameApplicationHandler>();
+
+    private final PAAS_PROVIDER paasProvider;
+
+    /**
+     * @param paasProvider
+     */
+    public RenameApplicationEvent(PAAS_PROVIDER paasProvider) {
+        super();
+        this.paasProvider = paasProvider;
+    }
 
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
     @Override
@@ -40,6 +52,10 @@ public class RenameApplicationEvent extends GwtEvent<RenameApplicationHandler> {
     @Override
     protected void dispatch(RenameApplicationHandler handler) {
         handler.onRenameApplication(this);
+    }
+
+    public PAAS_PROVIDER getPaasProvider() {
+        return paasProvider;
     }
 
 }
