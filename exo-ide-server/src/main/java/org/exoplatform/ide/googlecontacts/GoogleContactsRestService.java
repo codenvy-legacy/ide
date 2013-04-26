@@ -56,9 +56,6 @@ public class GoogleContactsRestService {
     private OAuthTokenProvider oauthTokenProvider;
 
     @Inject
-    private GoogleOAuthAuthenticator googleOAuthAuthenticator;
-
-    @Inject
     private InviteService inviteService;
 
     /**
@@ -109,7 +106,8 @@ public class GoogleContactsRestService {
     @GET
     @Path("/is-authenticate")
     @Produces(MediaType.APPLICATION_JSON)
-    public Token isAuthenticate() throws Exception {
-        return googleOAuthAuthenticator.getToken(ConversationState.getCurrent().getIdentity().getUserId());
+    public String isAuthenticate() throws Exception {
+        Token token = oauthTokenProvider.getToken("google",ConversationState.getCurrent().getIdentity().getUserId());
+        return token != null ? token.getScope() : null;
     }
 }

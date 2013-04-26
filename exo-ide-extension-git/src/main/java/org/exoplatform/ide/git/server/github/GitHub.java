@@ -18,20 +18,21 @@
  */
 package org.exoplatform.ide.git.server.github;
 
+import com.codenvy.commons.json.JsonHelper;
+import com.codenvy.commons.json.JsonNameConventions;
+import com.codenvy.commons.json.JsonParseException;
+import com.codenvy.commons.security.oauth.OAuthTokenProvider;
+import com.codenvy.commons.security.shared.Token;
+
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.commons.ContainerUtils;
-import org.exoplatform.ide.commons.JsonHelper;
-import org.exoplatform.ide.commons.JsonNameConventions;
-import org.exoplatform.ide.commons.JsonParseException;
 import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.ssh.server.SshKey;
 import org.exoplatform.ide.extension.ssh.server.SshKeyStore;
 import org.exoplatform.ide.extension.ssh.server.SshKeyStoreException;
 import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.GitHubRepository;
-import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
-import org.exoplatform.ide.security.shared.Token;
 import org.exoplatform.services.security.ConversationState;
 
 import java.io.BufferedWriter;
