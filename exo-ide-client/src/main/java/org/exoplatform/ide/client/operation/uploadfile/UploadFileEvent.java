@@ -32,6 +32,16 @@ public class UploadFileEvent extends GwtEvent<UploadFileHandler> {
 
     public static final GwtEvent.Type<UploadFileHandler> TYPE = new GwtEvent.Type<UploadFileHandler>();
 
+    boolean openAfterUpload;
+
+    public UploadFileEvent() {
+        openAfterUpload = false;
+    }
+
+    public UploadFileEvent(boolean openAfterUpload) {
+        this.openAfterUpload = openAfterUpload;
+    }
+
     @Override
     public com.google.gwt.event.shared.GwtEvent.Type<UploadFileHandler> getAssociatedType() {
         return TYPE;
@@ -42,4 +52,7 @@ public class UploadFileEvent extends GwtEvent<UploadFileHandler> {
         handler.onUploadFile(this);
     }
 
+    public boolean isOpenAfterUpload() {
+        return openAfterUpload;
+    }
 }

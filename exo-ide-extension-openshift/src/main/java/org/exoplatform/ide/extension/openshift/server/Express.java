@@ -243,7 +243,7 @@ public class Express {
                                                        scale ? ApplicationScale.SCALE : ApplicationScale.NO_SCALE,
                                                        new GearProfile(instanceType));
         } catch (OpenShiftException e) {
-            throw new ExpressException(500, String.format("Reason given: '%s'", e.getMessage()), "text/plain");
+            throw new ExpressException(500, e.getMessage(), "text/plain");
         }
 
         String gitUrl = application.getGitUrl();
@@ -341,8 +341,7 @@ public class Express {
                 return myApplication;
             }
         } catch (OpenShiftException e) {
-            String reason = e.getMessage().replaceAll("(?s)(.*Reason given: \"Invalid cartridge.\\s)(.*)(\")", "$2");
-            throw new ExpressException(500, reason, "text/plain");
+            throw new ExpressException(500, e.getMessage(), "text/plain");
         }
         throw new ExpressException(404, String.format("Application '%s' not found", appName), "text/plain");
     }
@@ -424,7 +423,7 @@ public class Express {
                 }
             }
         } catch (Exception e) {
-            LOG.error("Failed to get link for load embedded cartridges list, use API method instead. " +
+            LOG.warn("Failed to get link for load embedded cartridges list, use API method instead. " +
                       "Some info about cartridge may be not available. ", e);
         }
         return myEmbeddedCartridges.values();

@@ -150,4 +150,7 @@ public interface OpenShiftClientBundle extends ClientBundle {
 
     @Source("org/exoplatform/ide/extension/openshift/images/cartridges/add_cartridge.png")
     ImageResource addCartridge();
+
+    @Source("org/exoplatform/ide/extension/openshift/images/cartridges/add_cartridge_disable.png")
+    ImageResource addCartridgeDisable();
 }
