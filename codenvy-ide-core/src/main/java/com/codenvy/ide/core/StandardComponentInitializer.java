@@ -31,7 +31,6 @@ import com.codenvy.ide.toolbar.ToggleItemExpression;
 import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.codenvy.ide.wizard.newfile.NewTextFilePagePresenter;
 import com.codenvy.ide.wizard.newfolder.NewFolderPagePresenter;
-import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectPagePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -51,7 +50,6 @@ public class StandardComponentInitializer {
     public StandardComponentInitializer(MainMenuPresenter menu, SaveCommand saveCommand, SaveAllCommand saveAllCommand,
                                         ShowNewResourceWizardCommand newFileCommand, ShowNewFolderWizardCommand newFolderCommand,
                                         ShowNewProjectWizardCommand newProjectCommand, WizardAgentImpl wizard,
-                                        Provider<NewGenericProjectPagePresenter> genericProjectProvider,
                                         Provider<NewFolderPagePresenter> newFolderProvider,
                                         Provider<NewTextFilePagePresenter> newTextFileProvider,
                                         Resources resources, KeyBindingAgent keyBinding, ShowPreferenceCommand showPreferencesCommand,

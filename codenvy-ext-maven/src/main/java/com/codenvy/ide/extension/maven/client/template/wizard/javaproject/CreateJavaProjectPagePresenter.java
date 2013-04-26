@@ -25,6 +25,7 @@ import com.codenvy.ide.java.client.JavaClientBundle;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
 import com.codenvy.ide.util.loging.Log;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -53,6 +54,27 @@ public class CreateJavaProjectPagePresenter extends AbstractWizardPagePresenter 
     protected CreateJavaProjectPagePresenter(JavaClientBundle resources, CreateJavaProjectPageView view, PaaSAgent paasAgent,
                                              CreateJavaProjectPresenter createJavaProjectPresenter) {
         super("Java Project", resources.javaProject());
+
+        this.view = view;
+        this.view.setDelegate(this);
+        this.paasAgent = paasAgent;
+        this.createJavaProjectPresenter = createJavaProjectPresenter;
+    }
+
+
+    /**
+     * Create presenter.
+     * <p/>
+     * For tests.
+     *
+     * @param icon
+     * @param view
+     * @param paasAgent
+     * @param createJavaProjectPresenter
+     */
+    protected CreateJavaProjectPagePresenter(ImageResource icon, CreateJavaProjectPageView view, PaaSAgent paasAgent,
+                                             CreateJavaProjectPresenter createJavaProjectPresenter) {
+        super("Java Project", icon);
 
         this.view = view;
         this.view.setDelegate(this);

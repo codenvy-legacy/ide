@@ -20,9 +20,10 @@ package com.codenvy.ide.extension.maven.client.template.wizard.javaproject;
 
 
 import com.codenvy.ide.api.paas.PaaSAgent;
-import com.codenvy.ide.java.client.JavaClientBundle;
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
 import com.codenvy.ide.resources.model.Project;
 import com.google.gwt.junit.GWTMockUtilities;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.junit.After;
@@ -32,10 +33,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static com.google.inject.matcher.Matchers.any;
 import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Testing {@link CreateJavaProjectPagePresenter} functionality.
@@ -47,8 +46,6 @@ public class TestCreateJavaProjectPagePresenter {
     @Mock
     private CreateJavaProjectPageView      view;
     @Mock
-    private JavaClientBundle               resources;
-    @Mock
     private PaaSAgent                      paasAgent;
     @Mock
     private CreateJavaProjectPresenter     createJavaProjectPresenter;
@@ -59,7 +56,12 @@ public class TestCreateJavaProjectPagePresenter {
         // don't throw an exception if GWT.create() invoked
         GWTMockUtilities.disarm();
 
-        presenter = new CreateJavaProjectPagePresenter(resources, view, paasAgent, createJavaProjectPresenter);
+        ImageResource icon = mock(ImageResource.class);
+        WizardPagePresenter.WizardUpdateDelegate updateDelegate = mock(WizardPagePresenter.WizardUpdateDelegate.class);
+
+        presenter = new CreateJavaProjectPagePresenter(icon, view, paasAgent, createJavaProjectPresenter);
+        presenter.setUpdateDelegate(updateDelegate);
+
         when(view.getSourceFolder()).thenReturn("src");
     }
 
@@ -86,6 +88,6 @@ public class TestCreateJavaProjectPagePresenter {
     public void testDoFinish() throws Exception {
         presenter.checkSourceFolederInput();
         presenter.doFinish();
-        verify(createJavaProjectPresenter).create((AsyncCallback<Project>)any());
+        verify(createJavaProjectPresenter).create((AsyncCallback<Project>)anyObject());
     }
 }
