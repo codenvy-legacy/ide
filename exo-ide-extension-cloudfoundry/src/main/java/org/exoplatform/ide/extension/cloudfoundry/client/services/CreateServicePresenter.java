@@ -106,7 +106,7 @@ public class CreateServicePresenter implements CreateServiceHandler, ViewClosedH
     /** Get the list of CloudFoundry services (provisioned and system). */
     private void getServices() {
         try {
-            CloudFoundryClientService.getInstance().services(null,
+            CloudFoundryClientService.getInstance().services(null, paasProvider,
                                                              new AsyncRequestCallback<CloudfoundryServices>(
                                                                      new CloudFoundryServicesUnmarshaller()) {
 
@@ -164,8 +164,7 @@ public class CreateServicePresenter implements CreateServiceHandler, ViewClosedH
             AutoBeanUnmarshaller<ProvisionedService> unmarshaller =
                     new AutoBeanUnmarshaller<ProvisionedService>(provisionedService);
 
-            CloudFoundryClientService.getInstance().createService(null, type, name, null, null, null, paasProvider,
-                                                                  new CloudFoundryAsyncRequestCallback<ProvisionedService>(unmarshaller,
+            CloudFoundryClientService.getInstance().createService(null, type, name, null, null, null, new CloudFoundryAsyncRequestCallback<ProvisionedService>(unmarshaller,
                                                                                                                            createServiceLoggedInHandler,
                                                                                                                            null, paasProvider) {
                                                                       @Override

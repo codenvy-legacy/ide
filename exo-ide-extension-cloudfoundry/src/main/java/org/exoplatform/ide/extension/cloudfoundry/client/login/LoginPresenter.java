@@ -235,7 +235,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler {
         try {
             AutoBean<SystemInfo> systemInfo = CloudFoundryExtension.AUTO_BEAN_FACTORY.systemInfo();
             AutoBeanUnmarshaller<SystemInfo> unmarshaller = new AutoBeanUnmarshaller<SystemInfo>(systemInfo);
-            CloudFoundryClientService.getInstance().getSystemInfo(server,
+            CloudFoundryClientService.getInstance().getSystemInfo(server, paasProvider,
                   new AsyncRequestCallback<SystemInfo>(unmarshaller) {
                       @Override
                       protected void onSuccess(SystemInfo result) {
@@ -262,7 +262,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler {
 
     private void getTargets() {
         try {
-            CloudFoundryClientService.getInstance().getTargets(
+            CloudFoundryClientService.getInstance().getTargets(paasProvider,
                     new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>())) {
                         @Override
                         protected void onSuccess(List<String> result) {
@@ -302,7 +302,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler {
         final String password = display.getPasswordField().getValue();
 
         try {
-            CloudFoundryClientService.getInstance().login(enteredServer, email, password,
+            CloudFoundryClientService.getInstance().login(enteredServer, email, password, paasProvider,
                   new AsyncRequestCallback<String>() {
 
                       /**

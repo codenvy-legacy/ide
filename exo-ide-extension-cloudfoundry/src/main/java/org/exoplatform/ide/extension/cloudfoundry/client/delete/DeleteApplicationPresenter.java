@@ -44,6 +44,9 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
+import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER.CLOUD_FOUNDRY;
+import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER.WEB_FABRIC;
+
 /**
  * Presenter for delete application operation.
  * 
@@ -83,13 +86,13 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
         void setAskDeleteServices(String text);
     }
 
-    private Display display;
+    private Display       display;
 
     /** The name of application. */
-    private String  appName;
+    private String        appName;
 
     /** Name of the server. */
-    private String  serverName;
+    private String        serverName;
 
     private PAAS_PROVIDER paasProvider;
 
@@ -144,14 +147,16 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
 
         try {
             AutoBean<CloudFoundryApplication> cloudFoundryApplication = CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
-            AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller = new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+            AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+                                                                         new AutoBeanUnmarshaller<CloudFoundryApplication>(
+                                                                                                                           cloudFoundryApplication);
             CloudFoundryClientService.getInstance()
                                      .getApplicationInfo(vfs.getId(),
                                                          projectId,
                                                          null,
                                                          null,
-                                                         paasProvider,
-                                                         new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
+                                                         new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
+                                                                                                                       unmarshaller,
                                                                                                                        appInfoLoggedInHandler,
                                                                                                                        null, paasProvider) {
                                                              @Override
@@ -188,8 +193,11 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
 
         if (selectedItem != null) {
             ProjectModel project = getSelectedProject();
-            if (project != null && project.getPropertyValue("cloudfoundry-application") != null
-                && appName.equals((String)project.getPropertyValue("cloudfoundry-application"))) {
+            final boolean isCloudFoundryApp = paasProvider == CLOUD_FOUNDRY && project.getPropertyValue("cloudfoundry-application") != null
+                                              && appName.equals((String)project.getPropertyValue("cloudfoundry-application"));
+            final boolean isWebFabricApp = paasProvider == WEB_FABRIC && project.getPropertyValue("tier3webfabric-application") != null
+                                           && appName.equals((String)project.getPropertyValue("tier3webfabric-application"));
+            if (project != null && (isCloudFoundryApp || isWebFabricApp)) {
                 projectId = project.getId();
             }
         }
@@ -197,14 +205,14 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
         try {
             CloudFoundryClientService.getInstance()
                                      .deleteApplication(vfs.getId(), projectId, appName, serverName,
-                                                        isDeleteServices , paasProvider,
-                                                        new CloudFoundryAsyncRequestCallback<String>(null,
+                                                        isDeleteServices, new CloudFoundryAsyncRequestCallback<String>(null,
                                                                                                      deleteAppLoggedInHandler,
                                                                                                      null, paasProvider) {
                                                             @Override
                                                             protected void onSuccess(String result) {
                                                                 closeView();
-                                                                IDE.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationDeletedMsg(appName),
+                                                                IDE.fireEvent(new OutputEvent(
+                                                                                              CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationDeletedMsg(appName),
                                                                                               Type.INFO));
                                                                 IDE.fireEvent(new ApplicationDeletedEvent(appName));
                                                             }

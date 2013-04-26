@@ -52,9 +52,10 @@ public abstract class CloudFoundryClientService {
     /**
      * Get the list of available frameworks for CloudFoundry.
      * 
+     * @param paasProvider CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param callback - callback, that client has to implement to receive response
      */
-    public abstract void getFrameworks(AsyncRequestCallback<List<Framework>> callback, String server)
+    public abstract void getFrameworks(String server, PAAS_PROVIDER paasProvider, AsyncRequestCallback<List<Framework>> callback)
                                                                                                      throws RequestException;
 
     /**
@@ -105,18 +106,24 @@ public abstract class CloudFoundryClientService {
      * @param server location of Cloud Foundry instance where to log in
      * @param email user's email (login)
      * @param password user's password
+     * @param paasProvider CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param callback callback, that client has to implement to receive response
      */
-    public abstract void login(String server, String email, String password, AsyncRequestCallback<String> callback)
-                                                                                                                   throws RequestException;
+    public abstract void login(String server,
+                               String email,
+                               String password,
+                               PAAS_PROVIDER paasProvider,
+                               AsyncRequestCallback<String> callback)
+                                                                     throws RequestException;
 
     /**
      * Log out CloudFoundry account.
      * 
      * @param server location of Cloud Foundry instance from which to log out
+     * @param paasProvider CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param callback callback, that client has to implement to receive response
      */
-    public abstract void logout(String server, AsyncRequestCallback<String> callback) throws RequestException;
+    public abstract void logout(String server, PAAS_PROVIDER paasProvider, AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Get the application's information.
@@ -125,10 +132,9 @@ public abstract class CloudFoundryClientService {
      * @param projectId id of the project with the source code or compiled and packed java web application
      * @param appId application's id
      * @param server location of Cloud Foundry instance, where application is located
-     * @param paasProvider CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param callback callback, that client has to implement
      */
-    public abstract void getApplicationInfo(String vfsId, String projectId, String appId, String server, PAAS_PROVIDER paasProvider,
+    public abstract void getApplicationInfo(String vfsId, String projectId, String appId, String server,
                                             CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback) throws RequestException;
 
     /**
@@ -139,7 +145,6 @@ public abstract class CloudFoundryClientService {
      * @param appId application's id
      * @param server location of Cloud Foundry instance, where application is located
      * @param deleteServices if <code>true</code> - delete application's services
-     * @param paasProvider CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param callback - callback, that client has to implement
      */
     public abstract void deleteApplication(String vfsId,
@@ -147,7 +152,6 @@ public abstract class CloudFoundryClientService {
                                            String appId,
                                            String server,
                                            boolean deleteServices,
-                                           PAAS_PROVIDER paasProvider,
                                            CloudFoundryAsyncRequestCallback<String> callback)
                                                                                              throws RequestException;
 
@@ -158,10 +162,9 @@ public abstract class CloudFoundryClientService {
      * @param projectId id of the project with the source code or compiled and packed java web application
      * @param name - application name
      * @param server location of Cloud Foundry instance, where application is located
-     * @param paasProvider CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param callback callback, that client has to implement to receive response from server.
      */
-    public abstract void startApplication(String vfsId, String projectId, String name, String server, PAAS_PROVIDER paasProvider,
+    public abstract void startApplication(String vfsId, String projectId, String name, String server,
                                           CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback) throws RequestException;
 
     /**
@@ -171,10 +174,9 @@ public abstract class CloudFoundryClientService {
      * @param projectId id of the project with the source code or compiled and packed java web application
      * @param name - application name
      * @param server location of Cloud Foundry instance, where application is located
-     * @param paasProvider CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param callback callback, that client has to implement to receive response from server.
      */
-    public abstract void stopApplication(String vfsId, String projectId, String name, String server, PAAS_PROVIDER paasProvider,
+    public abstract void stopApplication(String vfsId, String projectId, String name, String server,
                                          CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
 
     /**
@@ -184,10 +186,9 @@ public abstract class CloudFoundryClientService {
      * @param projectId id of the project with the source code or compiled and packed java web application
      * @param name application's name
      * @param server location of Cloud Foundry instance, where application is located
-     * @param paasProvider CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param callback callback, that client has to implement to receive response from server.
      */
-    public abstract void restartApplication(String vfsId, String projectId, String name, String server, PAAS_PROVIDER paasProvider,
+    public abstract void restartApplication(String vfsId, String projectId, String name, String server,
                                             CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback) throws RequestException;
 
     /**
@@ -197,7 +198,6 @@ public abstract class CloudFoundryClientService {
      * @param projectId id of the project with the source code or compiled and packed java web application
      * @param name application's name
      * @param server location of Cloud Foundry instance, where application is located
-     * @param paasProvider CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param war location of war file (Java applications only)
      * @param callback callback, that client has to implement to handle response from server
      */
@@ -205,7 +205,6 @@ public abstract class CloudFoundryClientService {
                                            String projectId,
                                            String name,
                                            String server,
-                                           PAAS_PROVIDER paasProvider,
                                            String war,
                                            CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
 
@@ -219,11 +218,10 @@ public abstract class CloudFoundryClientService {
      * @param projectId id of the project with the source code or compiled and packed java web application
      * @param name application's name
      * @param server location of Cloud Foundry instance, where application is located
-     * @param paasProvider CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param url URL to map
      * @param callback callback, that client has to implement to handle response from server.
      */
-    public abstract void mapUrl(String vfsId, String projectId, String name, String server, PAAS_PROVIDER paasProvider, String url,
+    public abstract void mapUrl(String vfsId, String projectId, String name, String server, String url,
                                 CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
 
     /**
@@ -233,11 +231,10 @@ public abstract class CloudFoundryClientService {
      * @param projectId id of the project with the source code or compiled and packed java web application
      * @param name application's name
      * @param server location of Cloud Foundry instance, where application is located
-     * @param paasProvider CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param url URL to unmap
      * @param callback callback, that client has to implement to handle response from server
      */
-    public abstract void unmapUrl(String vfsId, String projectId, String name, String server, PAAS_PROVIDER paasProvider, String url,
+    public abstract void unmapUrl(String vfsId, String projectId, String name, String server, String url,
                                   CloudFoundryAsyncRequestCallback<Object> callback) throws RequestException;
 
     /**
@@ -247,11 +244,10 @@ public abstract class CloudFoundryClientService {
      * @param projectId id of the project with the source code or compiled and packed java web application
      * @param name application's name
      * @param server location of Cloud Foundry instance, where to update memoryw
-     * @param paasProvider CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param mem mememory size
      * @param callback callback, that client has to implement to handle response from server
      */
-    public abstract void updateMemory(String vfsId, String projectId, String name, String server, PAAS_PROVIDER paasProvider, int mem,
+    public abstract void updateMemory(String vfsId, String projectId, String name, String server, int mem,
                                       CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
 
     /**
@@ -261,7 +257,6 @@ public abstract class CloudFoundryClientService {
      * @param projectId id of the project with the source code or compiled and packed java web application
      * @param name application's name
      * @param server location of Cloud Foundry instance, where to update instances
-     * @param paasProvider CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param expression expression for instances updating
      * @param callback callback, that client has to implement to handle response from server
      */
@@ -269,7 +264,6 @@ public abstract class CloudFoundryClientService {
                                          String projectId,
                                          String name,
                                          String server,
-                                         PAAS_PROVIDER paasProvider,
                                          String expression,
                                          CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
 
@@ -283,7 +277,6 @@ public abstract class CloudFoundryClientService {
      * @param url application's URL
      * @param vfsId current virtual file system id
      * @param projectId id of the project with the source code or compiled and packed java web application
-     * @param paasProvider CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param instances number of instances
      * @param memory memory size
      * @param nostart
@@ -296,7 +289,6 @@ public abstract class CloudFoundryClientService {
                                         String url,
                                         String vfsId,
                                         String projectId,
-                                        PAAS_PROVIDER paasProvider,
                                         int instances,
                                         int memory,
                                         boolean nostart,
@@ -306,9 +298,10 @@ public abstract class CloudFoundryClientService {
      * Get list of deployed applications.
      * 
      * @param server location of Cloud Foundry instance, where applications are located
+     * @param paasProvider CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param callback callback, that client has to implement to handle response from server.
      */
-    public abstract void getApplicationList(String server,
+    public abstract void getApplicationList(String server, PAAS_PROVIDER paasProvider,
                                             CloudFoundryAsyncRequestCallback<List<CloudFoundryApplication>> callback)
                                                                                                                      throws RequestException;
 
@@ -316,42 +309,45 @@ public abstract class CloudFoundryClientService {
      * Get Cloud Foundry system information.
      * 
      * @param server location of Cloud Foundry instance
+     * @param paasProvider CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param callback callback, that client has to implement to handle response from server
      */
-    public abstract void getSystemInfo(String server, AsyncRequestCallback<SystemInfo> callback) throws RequestException;
+    public abstract void getSystemInfo(String server, PAAS_PROVIDER paasProvider, AsyncRequestCallback<SystemInfo> callback) throws RequestException;
 
     /**
      * Get the list of available targets for user.
      * 
+     * @param paasProvider CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param callback callback, that client has to implement to handle response from server
      */
-    public abstract void getTargets(AsyncRequestCallback<List<String>> callback) throws RequestException;
+    public abstract void getTargets(PAAS_PROVIDER paasProvider, AsyncRequestCallback<List<String>> callback) throws RequestException;
 
     /**
+     * @param paasProvider CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param callback callback, that client has to implement to handle response from server
      */
-    public abstract void getTarget(AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+    public abstract void getTarget(PAAS_PROVIDER paasProvider, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 
     /**
      * Getting logs for CloudFoundry Application
      * 
      * @param vfsId
      * @param projectId
-     * @param paasProvider CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param callback
      * @throws RequestException
      */
-    public abstract void getLogs(String vfsId, String projectId, PAAS_PROVIDER paasProvider, AsyncRequestCallback<StringBuilder> callback)
-                                                                                                                                          throws RequestException;
+    public abstract void getLogs(String vfsId, String projectId, AsyncRequestCallback<StringBuilder> callback)
+                                                                                                              throws RequestException;
 
     /**
      * Get the list of services available and provisioned.
      * 
      * @param server server's name (may be <code>null</code>)
+     * @param paasProvider CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param callback
      * @throws RequestException
      */
-    public abstract void services(String server, AsyncRequestCallback<CloudfoundryServices> callback)
+    public abstract void services(String server, PAAS_PROVIDER paasProvider, AsyncRequestCallback<CloudfoundryServices> callback)
                                                                                                      throws RequestException;
 
     /**
@@ -363,7 +359,6 @@ public abstract class CloudFoundryClientService {
      * @param application application's name
      * @param vfsId virtual file system id
      * @param projectId project's id
-     * @param paasProvider CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param callback callback
      * @throws RequestException
      */
@@ -373,7 +368,6 @@ public abstract class CloudFoundryClientService {
                                        String application,
                                        String vfsId,
                                        String projectId,
-                                       PAAS_PROVIDER paasProvider,
                                        CloudFoundryAsyncRequestCallback<ProvisionedService> callback)
                                                                                                      throws RequestException;
 
@@ -382,10 +376,11 @@ public abstract class CloudFoundryClientService {
      * 
      * @param server server's name
      * @param name service's name
+     * @param paasProvider CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param callback callback
      * @throws RequestException
      */
-    public abstract void deleteService(String server, String name, CloudFoundryAsyncRequestCallback<Object> callback)
+    public abstract void deleteService(String server, String name, PAAS_PROVIDER paasProvider, CloudFoundryAsyncRequestCallback<Object> callback)
                                                                                                                      throws RequestException;
 
     /**
@@ -396,7 +391,6 @@ public abstract class CloudFoundryClientService {
      * @param application application's name
      * @param vfsId virtual file system id
      * @param projectId project's id
-     * @param paasProvider CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param callback callback
      * @throws RequestException
      */
@@ -405,7 +399,6 @@ public abstract class CloudFoundryClientService {
                                      String application,
                                      String vfsId,
                                      String projetcId,
-                                     PAAS_PROVIDER paasProvider,
                                      CloudFoundryAsyncRequestCallback<Object> callback) throws RequestException;
 
     /**
@@ -416,7 +409,6 @@ public abstract class CloudFoundryClientService {
      * @param application application's name
      * @param vfsId virtual file system id
      * @param projectId project's id
-     * @param paasProvider CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param callback callback
      * @throws RequestException
      */
@@ -425,6 +417,5 @@ public abstract class CloudFoundryClientService {
                                        String application,
                                        String vfsId,
                                        String projetcId,
-                                       PAAS_PROVIDER paasProvider,
                                        CloudFoundryAsyncRequestCallback<Object> callback) throws RequestException;
 }

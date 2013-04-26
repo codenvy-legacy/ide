@@ -94,7 +94,6 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
                     projectId,
                     null,
                     null,
-                    paasProvider,
                     new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
                                                                                   getOldMemoryValueLoggedInHandler, null, paasProvider) {
                         @Override
@@ -143,7 +142,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
         final String projectId = getSelectedProject().getId();
 
         try {
-            CloudFoundryClientService.getInstance().updateMemory(vfs.getId(), projectId, null, null, paasProvider, memory,
+            CloudFoundryClientService.getInstance().updateMemory(vfs.getId(), projectId, null, null, memory,
                                                                  new CloudFoundryAsyncRequestCallback<String>(null,
                                                                                                               updateMemoryLoggedInHandler,
                                                                                                               null, paasProvider) {
@@ -194,7 +193,6 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
                     projectId,
                     null,
                     null,
-                    paasProvider,
                     new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
                                                                                   getOldInstancesValueLoggedInHandler, null, paasProvider) {
                         @Override
@@ -256,7 +254,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
         String encodedExp = URL.encodePathSegment(instancesExpression);
 
         try {
-            CloudFoundryClientService.getInstance().updateInstances(vfs.getId(), projectId, null, null, paasProvider, encodedExp,
+            CloudFoundryClientService.getInstance().updateInstances(vfs.getId(), projectId, null, null, encodedExp,
                                                                     new CloudFoundryAsyncRequestCallback<String>(null,
                                                                                                                  updateInstancesLoggedInHandler,
                                                                                                                  null, paasProvider) {
@@ -275,7 +273,6 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
                                                                                                          .getApplicationInfo(vfs.getId(),
                                                                                                                              projectId,
                                                                                                                              null, null,
-                                                                                                                             paasProvider,
                                                                                                                              new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
                                                                                                                                      unmarshaller,
                                                                                                                                      null,

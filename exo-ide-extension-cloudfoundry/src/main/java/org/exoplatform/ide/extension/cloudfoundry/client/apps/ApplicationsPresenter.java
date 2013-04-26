@@ -176,7 +176,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
     private void checkLogginedToServer() {
         try {
             CloudFoundryClientService.getInstance().getTargets(
-                    new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>())) {
+                    paasProvider, new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>())) {
                         @Override
                         protected void onSuccess(List<String> result) {
                             if (!result.isEmpty()) {
@@ -216,7 +216,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
         try {
             CloudFoundryClientService.getInstance().getApplicationList(
                     currentServer,
-                    new CloudFoundryAsyncRequestCallback<List<CloudFoundryApplication>>(new ApplicationListUnmarshaller(
+                    paasProvider, new CloudFoundryAsyncRequestCallback<List<CloudFoundryApplication>>(new ApplicationListUnmarshaller(
                             new ArrayList<CloudFoundryApplication>()), new LoggedInHandler()//
                     {
                         @Override
@@ -244,7 +244,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
     private void getServers() {
         try {
             CloudFoundryClientService.getInstance().getTargets(
-                    new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>())) {
+                    paasProvider, new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>())) {
                         @Override
                         protected void onSuccess(List<String> result) {
                             servers = result;

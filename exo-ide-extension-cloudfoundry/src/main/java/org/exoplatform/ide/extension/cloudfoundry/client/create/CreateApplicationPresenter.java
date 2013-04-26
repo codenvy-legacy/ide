@@ -365,7 +365,6 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                                                                    app.url,
                                                                    vfs.getId(),
                                                                    project.getId(),
-                                                                   paasProvider,
                                                                    app.instances,
                                                                    app.memory,
                                                                    app.nostart,
@@ -395,7 +394,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
         };
 
         try {
-            CloudFoundryClientService.getInstance().getFrameworks(
+            CloudFoundryClientService.getInstance().getFrameworks(server, paasProvider,
                     new CloudFoundryAsyncRequestCallback<List<Framework>>(
                             new FrameworksUnmarshaller(new ArrayList<Framework>()), getFrameworksLoggedInHandler, null, paasProvider) {
                         @Override
@@ -413,7 +412,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                             }
 
                         }
-                    }, server);
+                    });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
@@ -705,7 +704,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
     /** Get the list of server and put them to select field. */
     private void getServers() {
         try {
-            CloudFoundryClientService.getInstance().getTargets(
+            CloudFoundryClientService.getInstance().getTargets(paasProvider,
                     new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>())) {
                         @Override
                         protected void onSuccess(List<String> result) {

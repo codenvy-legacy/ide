@@ -342,7 +342,6 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
                                                                    url,
                                                                    vfs.getId(),
                                                                    null,
-                                                                   WEB_FABRIC,
                                                                    0,
                                                                    0,
                                                                    true,

@@ -150,8 +150,7 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
             AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                     new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-            CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null, paasProvider,
-                                                                       new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
+            CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null, new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
                                                                                unmarshaller, appInfoLoggedInHandler, null, paasProvider) {
                                                                            @Override
                                                                            protected void onSuccess(CloudFoundryApplication result) {

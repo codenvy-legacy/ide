@@ -50,6 +50,7 @@ import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerW
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryRESTfulRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
@@ -320,7 +321,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
 
         try {
             CloudFoundryClientService.getInstance()
-                                     .getTargets(
+                                     .getTargets(PAAS_PROVIDER.CLOUD_FOUNDRY,
                                                  new CloudFoundryAsyncRequestCallback<List<String>>(
                                                                                                     new TargetsUnmarshaller(
                                                                                                                             new ArrayList<String>()),
@@ -372,7 +373,6 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
                                                                    url,
                                                                    vfs.getId(),
                                                                    null,
-                                                                   CLOUD_FOUNDRY,
                                                                    0,
                                                                    0,
                                                                    true,
