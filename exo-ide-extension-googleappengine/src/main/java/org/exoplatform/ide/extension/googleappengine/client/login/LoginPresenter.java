@@ -30,10 +30,11 @@ import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.OAuthLoginFinishedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.OAuthLoginFinishedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.Utils;
-import org.exoplatform.ide.extension.googleappengine.client.GaeTools;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
@@ -45,7 +46,7 @@ import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 18, 2012 12:19:01 PM anya $
  */
-public class LoginPresenter implements LoginHandler, ViewClosedHandler {
+public class LoginPresenter implements LoginHandler, ViewClosedHandler, OAuthLoginFinishedHandler {
     interface Display extends IsView {
         /**
          * Get Go button click handler.
@@ -86,15 +87,22 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler {
      */
     @Override
     public void onLogin(LoginEvent event) {
-        String authUrl = Utils.getAuthorizationContext()//
-                         + "/ide/oauth/authenticate?oauth_provider=google"//
-                         + "&scope=https://www.googleapis.com/auth/appengine.admin"//
-                         + "&userId=" + IDE.userId
-                         + "&redirect_after_login="//
+        IDE.addHandler(OAuthLoginFinishedEvent.TYPE, this);
+        String authUrl = Utils.getAuthorizationContext()
+                         + "/ide/oauth/authenticate?oauth_provider=google"
+                         + "&scope=https://www.googleapis.com/auth/appengine.admin"
+                         + "&userId=" + IDE.userId + "&redirect_after_login="
                          + Utils.getAuthorizationPageURL();
         JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 450, 500);
         authWindow.loginWithOAuth();
-        IDE.fireEvent(new SetLoggedUserStateEvent(true));
+    }
+
+    @Override
+    public void onOAuthLoginFinished(OAuthLoginFinishedEvent event) {
+        if (event.getStatus() == 2) {
+            IDE.fireEvent(new SetLoggedUserStateEvent(true));
+        }
+        IDE.removeHandler(OAuthLoginFinishedEvent.TYPE, this);
     }
 
     private void doLogin() {
@@ -118,17 +126,15 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler {
         try {
             GoogleAppEngineClientService.getInstance().getLoggedUser(
                                                                      new GoogleAppEngineAsyncRequestCallback<GaeUser>(unmarshaller) {
-
                                                                          @Override
                                                                          protected void onSuccess(GaeUser result) {
-                                                                             if (!GaeTools.isAuthenticatedInAppEngine(result.getToken())) {
+                                                                             IDE.fireEvent(new SetLoggedUserStateEvent(
+                                                                                                                       result.isAuthenticated()));
+                                                                             if (!result.isAuthenticated()) {
                                                                                  IDE.fireEvent(new SetLoggedUserStateEvent(true));
                                                                                  if (display != null) {
                                                                                      IDE.getInstance().closeView(display.asView().getId());
                                                                                  }
-                                                                             }
-                                                                             else {
-                                                                                 IDE.fireEvent(new SetLoggedUserStateEvent(false));
                                                                              }
                                                                          }
 
