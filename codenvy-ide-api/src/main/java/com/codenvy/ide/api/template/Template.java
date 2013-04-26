@@ -23,18 +23,27 @@ import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Provider;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * Aggregate information about registered Template for creating project.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 public class Template {
-    private ImageResource icon;
-
-    private String title;
-
-    private CreateProjectProvider createProjectProvider;
-
+    private ImageResource                           icon;
+    private String                                  title;
+    private CreateProjectProvider                   createProjectProvider;
     private Provider<? extends WizardPagePresenter> wizardPage;
+    private JsonArray<String>                       projectTypes;
 
-    private JsonArray<String> projectTypes;
-
+    /**
+     * Create template.
+     *
+     * @param icon
+     * @param title
+     * @param createProjectProvider
+     * @param wizardPage
+     * @param projectTypes
+     */
     public Template(ImageResource icon, String title, CreateProjectProvider createProjectProvider,
                     Provider<? extends WizardPagePresenter> wizardPage, JsonArray<String> projectTypes) {
         this.icon = icon;
@@ -44,22 +53,27 @@ public class Template {
         this.projectTypes = projectTypes;
     }
 
+    /** @return template's icon */
     public ImageResource getIcon() {
         return icon;
     }
 
+    /** @return template's title */
     public String getTitle() {
         return title;
     }
 
+    /** @return create project provider */
     public CreateProjectProvider getCreateProjectProvider() {
         return createProjectProvider;
     }
 
+    /** @return the wizard page */
     public WizardPagePresenter getWizardPage() {
         return wizardPage != null ? wizardPage.get() : null;
     }
 
+    /** @return available project types */
     public JsonArray<String> getProjectTypes() {
         return projectTypes;
     }

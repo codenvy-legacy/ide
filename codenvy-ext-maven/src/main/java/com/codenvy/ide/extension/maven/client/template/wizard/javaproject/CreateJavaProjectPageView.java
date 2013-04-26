@@ -20,7 +20,11 @@ package com.codenvy.ide.extension.maven.client.template.wizard.javaproject;
 
 import com.codenvy.ide.api.mvp.View;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * The view of {@link CreateJavaProjectPagePresenter}.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 public interface CreateJavaProjectPageView extends View<CreateJavaProjectPageView.ActionDelegate> {
     /** Action delegate for new Java project wizard */
     public interface ActionDelegate {

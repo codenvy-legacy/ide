@@ -24,11 +24,32 @@ import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * Client service for creating projects.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 public interface CreateProjectClientService {
+    /**
+     * Creates web project.
+     *
+     * @param projectName
+     * @param properties
+     * @param callback
+     * @throws RequestException
+     */
     void createWarProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<ProjectModelProviderAdapter> callback)
             throws RequestException;
 
+    /**
+     * Creates java project.
+     *
+     * @param projectName
+     * @param sourceFolder
+     * @param properties
+     * @param callback
+     * @throws RequestException
+     */
     void createJavaProject(String projectName, String sourceFolder, JsonArray<Property> properties,
                            AsyncRequestCallback<ProjectModelProviderAdapter> callback) throws RequestException;
 }

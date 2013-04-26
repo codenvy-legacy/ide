@@ -29,8 +29,7 @@ public interface NewProjectPageView extends View<NewProjectPageView.ActionDelega
     /** Needs for delegate some function into NewProjectPage view. */
     public interface ActionDelegate {
         /**
-         * Performs any actions appropriate in response to the user
-         * having selected project type
+         * Performs any actions appropriate in response to the user having selected project type.
          *
          * @param id
          *         button's id
@@ -38,16 +37,21 @@ public interface NewProjectPageView extends View<NewProjectPageView.ActionDelega
         void onProjectTypeSelected(int id);
 
         /**
-         * Performs any actions appropriate in response to the user
-         * having selected paas
+         * Performs any actions appropriate in response to the user having selected paas.
          *
          * @param id
          *         button's id
          */
         void onPaaSSelected(int id);
 
+        /** Checks whether project's name is complete or not and updates navigation buttons. */
         void checkProjectName();
     }
 
+    /**
+     * Returns project's name.
+     *
+     * @return project's name
+     */
     String getProjectName();
 }

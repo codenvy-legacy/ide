@@ -20,26 +20,40 @@ package com.codenvy.ide.wizard.newproject;
 
 import com.google.gwt.resources.client.ImageResource;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * Aggregate information about registered project type.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 public class ProjectTypeData {
-    String        typeName;
-    String        title;
-    ImageResource icon;
+    private String        typeName;
+    private String        title;
+    private ImageResource icon;
 
+    /**
+     * Create project type.
+     *
+     * @param typeName
+     * @param title
+     * @param icon
+     */
     public ProjectTypeData(String typeName, String title, ImageResource icon) {
         this.typeName = typeName;
         this.title = title;
         this.icon = icon;
     }
 
+    /** @return the project type's name */
     public String getTypeName() {
         return typeName;
     }
 
+    /** @return the title */
     public String getTitle() {
         return title;
     }
 
+    /** @return the icon */
     public ImageResource getIcon() {
         return icon;
     }

@@ -35,8 +35,7 @@ import com.google.inject.Inject;
 
 
 /**
- * NewProjectPageViewImpl is the view of new project page wizard.
- * Provides selecting type of technology for creating new project.
+ * NewProjectPageViewImpl is the view of new project page wizard. Provides selecting type of technology for creating new project.
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
@@ -65,6 +64,12 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
     interface NewProjectViewImplUiBinder extends UiBinder<Widget, NewProjectPageViewImpl> {
     }
 
+    /**
+     * Create view.
+     *
+     * @param projectTypeAgent
+     * @param paaSAgent
+     */
     @Inject
     protected NewProjectPageViewImpl(ProjectTypeAgentImpl projectTypeAgent, PaaSAgentImpl paaSAgent) {
         JsonArray<ProjectTypeData> projectTypes = projectTypeAgent.getProjectTypes();

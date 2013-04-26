@@ -25,12 +25,17 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * The implementation of {@link ProjectTypeAgent}.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 @Singleton
 public class ProjectTypeAgentImpl implements ProjectTypeAgent {
     private final JsonArray<ProjectTypeData> projectTypes;
     private       ProjectTypeData            selectedProjectType;
 
+    /** Create agent. */
     @Inject
     protected ProjectTypeAgentImpl() {
         this.projectTypes = JsonCollections.createArray();
@@ -49,10 +54,20 @@ public class ProjectTypeAgentImpl implements ProjectTypeAgent {
         return selectedProjectType != null ? selectedProjectType.getTypeName() : null;
     }
 
+    /**
+     * Sets selected project type.
+     *
+     * @param projectType
+     */
     public void setSelectedProjectType(ProjectTypeData projectType) {
         selectedProjectType = projectType;
     }
 
+    /**
+     * Returns all available project types.
+     *
+     * @return project types
+     */
     public JsonArray<ProjectTypeData> getProjectTypes() {
         return projectTypes;
     }

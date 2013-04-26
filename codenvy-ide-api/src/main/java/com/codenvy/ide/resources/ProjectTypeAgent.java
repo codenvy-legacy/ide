@@ -20,9 +20,25 @@ package com.codenvy.ide.resources;
 
 import com.google.gwt.resources.client.ImageResource;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * Provides a way to register a new project type.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 public interface ProjectTypeAgent {
+    /**
+     * Registers new project type.
+     *
+     * @param typeName
+     * @param title
+     * @param icon
+     */
     void registerProjectType(String typeName, String title, ImageResource icon);
 
+    /**
+     * Returns selected project type name.
+     *
+     * @return project type name.
+     */
     String getSelectedProjectType();
 }

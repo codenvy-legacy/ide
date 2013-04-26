@@ -23,10 +23,28 @@ import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Provider;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * Provides a way to register a new template for creating project.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 public interface TemplateAgent {
+    /**
+     * Registers new template for creating project.
+     *
+     * @param title
+     * @param icon
+     * @param projectTypes
+     * @param createProjectProvider
+     * @param wizardPage
+     */
     void registerTemplate(String title, ImageResource icon, JsonArray<String> projectTypes, CreateProjectProvider createProjectProvider,
                           Provider<? extends WizardPagePresenter> wizardPage);
 
+    /**
+     * Returns selected template for creating project.
+     *
+     * @return template
+     */
     Template getSelectedTemplate();
 }

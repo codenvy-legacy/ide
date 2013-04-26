@@ -29,7 +29,11 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * Provides input information which need for creating java project.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 public class CreateJavaProjectPagePresenter extends AbstractWizardPagePresenter implements CreateJavaProjectPageView.ActionDelegate {
     private CreateJavaProjectPageView  view;
     private boolean                    hasResourceFolderIncorrectSymbol;
@@ -37,6 +41,14 @@ public class CreateJavaProjectPagePresenter extends AbstractWizardPagePresenter 
     private WizardPagePresenter        paasWizardPage;
     private CreateJavaProjectPresenter createJavaProjectPresenter;
 
+    /**
+     * Create presenter.
+     *
+     * @param resources
+     * @param view
+     * @param paasAgent
+     * @param createJavaProjectPresenter
+     */
     @Inject
     protected CreateJavaProjectPagePresenter(JavaClientBundle resources, CreateJavaProjectPageView view, PaaSAgent paasAgent,
                                              CreateJavaProjectPresenter createJavaProjectPresenter) {

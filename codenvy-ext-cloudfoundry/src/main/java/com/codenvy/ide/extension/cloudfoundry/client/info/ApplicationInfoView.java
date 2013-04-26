@@ -23,7 +23,7 @@ import com.codenvy.ide.api.mvp.View;
 import java.util.List;
 
 /**
- * The implementation of {@link ApplicationInfoPresenter}.
+ * The view of {@link ApplicationInfoPresenter}.
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */

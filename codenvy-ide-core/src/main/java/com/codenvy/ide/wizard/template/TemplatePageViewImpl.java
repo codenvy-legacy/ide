@@ -41,7 +41,11 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 
-/** @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a> */
+/**
+ * The implementation of {@link TemplatePageView}.
+ *
+ * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ */
 public class TemplatePageViewImpl extends Composite implements TemplatePageView {
     private static TemplateViewUiBinder uiBinder = GWT.create(TemplateViewUiBinder.class);
 
@@ -88,7 +92,7 @@ public class TemplatePageViewImpl extends Composite implements TemplatePageView 
     private SimpleList.ListEventDelegate<Template> listDelegate = new SimpleList.ListEventDelegate<Template>() {
         public void onListItemClicked(Element itemElement, Template itemData) {
             list.getSelectionModel().setSelectedItem(itemData);
-            delegate.selectedTemplate(itemData);
+            delegate.onTemplateSelected(itemData);
         }
 
         public void onListItemDoubleClicked(Element listItemBase, Template itemData) {
@@ -98,6 +102,13 @@ public class TemplatePageViewImpl extends Composite implements TemplatePageView 
     interface TemplateViewUiBinder extends UiBinder<Widget, TemplatePageViewImpl> {
     }
 
+    /**
+     * Create view.
+     *
+     * @param resources
+     * @param templateAgent
+     * @param projectTypeAgent
+     */
     @Inject
     protected TemplatePageViewImpl(Resources resources, TemplateAgentImpl templateAgent, ProjectTypeAgent projectTypeAgent) {
         initWidget(uiBinder.createAndBindUi(this));

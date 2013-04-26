@@ -29,16 +29,17 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * The implementation of {@link TemplateAgent}.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 @Singleton
 public class TemplateAgentImpl implements TemplateAgent {
     private final JsonArray<Template> templates;
+    private       Template            selectedTemplate;
 
-    private Template selectedTemplate;
-
-    /**
-     *
-     */
+    /** Create agent. */
     @Inject
     protected TemplateAgentImpl() {
         this.templates = JsonCollections.createArray();
@@ -58,10 +59,21 @@ public class TemplateAgentImpl implements TemplateAgent {
         return selectedTemplate;
     }
 
+    /**
+     * Sets selected template for creating project.
+     *
+     * @param template
+     */
     public void setSelectedTemplate(Template template) {
         selectedTemplate = template;
     }
 
+    /**
+     * Returns all available templates for creating project.
+     *
+     * @param projectType
+     * @return
+     */
     public JsonArray<Template> getTemplatesForProjectType(String projectType) {
         JsonArray<Template> templates = JsonCollections.createArray();
 

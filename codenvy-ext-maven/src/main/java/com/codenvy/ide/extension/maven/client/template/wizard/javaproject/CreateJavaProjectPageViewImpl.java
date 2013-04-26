@@ -30,9 +30,12 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * The implementation of {@link CreateJavaProjectPageView}.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 public class CreateJavaProjectPageViewImpl extends Composite implements CreateJavaProjectPageView {
-
     interface CreateJavaProjectPageViewImplUiBinder
             extends UiBinder<Widget, CreateJavaProjectPageViewImpl> {
     }
@@ -43,10 +46,14 @@ public class CreateJavaProjectPageViewImpl extends Composite implements CreateJa
 
     @UiField
     TextBox sourceFolder;
-
     @UiField
-    Label label;
+    Label   label;
 
+    /**
+     * Create view.
+     *
+     * @param resources
+     */
     @Inject
     protected CreateJavaProjectPageViewImpl(Resources resources) {
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -54,11 +61,13 @@ public class CreateJavaProjectPageViewImpl extends Composite implements CreateJa
         label.addStyleName(resources.coreCss().mainText());
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getSourceFolder() {
         return sourceFolder.getText();

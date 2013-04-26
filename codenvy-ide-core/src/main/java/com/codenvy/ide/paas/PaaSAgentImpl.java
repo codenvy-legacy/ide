@@ -38,8 +38,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class PaaSAgentImpl implements PaaSAgent {
     private final JsonArray<PaaS> registeredPaaS;
-
-    private PaaS selectedPaaS;
+    private       PaaS            selectedPaaS;
 
     /** Create agent. */
     @Inject
@@ -63,6 +62,11 @@ public class PaaSAgentImpl implements PaaSAgent {
         return selectedPaaS;
     }
 
+    /**
+     * Sets selected PaaS.
+     *
+     * @param paas
+     */
     public void setSelectedPaaS(PaaS paas) {
         selectedPaaS = paas;
     }

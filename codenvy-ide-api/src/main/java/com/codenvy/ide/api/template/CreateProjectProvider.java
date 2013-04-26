@@ -21,11 +21,30 @@ package com.codenvy.ide.api.template;
 import com.codenvy.ide.resources.model.Project;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * The general interface of creating project from template. This interface needs when someone wants to create own create project template.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 public interface CreateProjectProvider {
+    /**
+     * Creates project from template.
+     *
+     * @param callback
+     */
     void create(AsyncCallback<Project> callback);
 
+    /**
+     * Returns project's name.
+     *
+     * @return project's name
+     */
     String getProjectName();
 
+    /**
+     * Sets project's name.
+     *
+     * @param projectName
+     */
     void setProjectName(String projectName);
 }

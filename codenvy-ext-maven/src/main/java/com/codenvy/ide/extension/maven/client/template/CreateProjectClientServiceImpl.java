@@ -34,7 +34,11 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * The implementation of {@link CreateProjectClientService}.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 @Singleton
 public class CreateProjectClientServiceImpl implements CreateProjectClientService {
     private static final String BASE_URL            = "/ide/maven/create";
@@ -45,6 +49,13 @@ public class CreateProjectClientServiceImpl implements CreateProjectClientServic
     private Loader           loader;
     private ResourceProvider resourceProvider;
 
+    /**
+     * Create service.
+     *
+     * @param restContext
+     * @param loader
+     * @param resourceProvider
+     */
     @Inject
     protected CreateProjectClientServiceImpl(@Named("restContext") String restContext, Loader loader, ResourceProvider resourceProvider) {
         this.restContext = restContext;

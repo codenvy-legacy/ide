@@ -20,11 +20,13 @@ package com.codenvy.ide.extension.maven.client.template;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.CreateProjectProvider;
+import com.codenvy.ide.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.marshal.ProjectModelProviderAdapter;
 import com.codenvy.ide.resources.marshal.ProjectModelUnmarshaller;
 import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.resources.model.ProjectDescription;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
@@ -32,15 +34,25 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * The implementation of {@link CreateProjectProvider}. Provides create web application.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 @Singleton
 public class CreateWarProjectPresenter implements CreateProjectProvider {
     private String                     projectName;
     private CreateProjectClientService service;
     private ResourceProvider           resourceProvider;
 
+    /**
+     * Create presenter.
+     *
+     * @param service
+     * @param resourceProvider
+     */
     @Inject
-    public CreateWarProjectPresenter(CreateProjectClientService service, ResourceProvider resourceProvider) {
+    protected CreateWarProjectPresenter(CreateProjectClientService service, ResourceProvider resourceProvider) {
         this.service = service;
         this.resourceProvider = resourceProvider;
     }
@@ -60,7 +72,8 @@ public class CreateWarProjectPresenter implements CreateProjectProvider {
     /** {@inheritDoc} */
     @Override
     public void create(final AsyncCallback<Project> callback) {
-        JsonArray<Property> properties = JsonCollections.<Property>createArray();
+        JsonArray<Property> properties = JsonCollections.<Property>createArray(new Property(ProjectDescription.PROPERTY_PRIMARY_NATURE,
+                                                                                            JavaProject.PRIMARY_NATURE));
         ProjectModelProviderAdapter adapter = new ProjectModelProviderAdapter(resourceProvider);
         ProjectModelUnmarshaller unmarshaller = new ProjectModelUnmarshaller(adapter);
 

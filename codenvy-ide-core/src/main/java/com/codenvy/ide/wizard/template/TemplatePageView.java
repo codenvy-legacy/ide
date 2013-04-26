@@ -21,11 +21,19 @@ package com.codenvy.ide.wizard.template;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.template.Template;
 
-/** @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a> */
+/**
+ * The view of {@link TemplatePagePresenter}.
+ *
+ * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ */
 public interface TemplatePageView extends View<TemplatePageView.ActionDelegate> {
-
+    /** Needs for delegate some function into TemplatePage view. */
     public interface ActionDelegate {
-
-        void selectedTemplate(Template template);
+        /**
+         * Performs any actions appropriate in response to the user having selected template for creating project.
+         *
+         * @param template
+         */
+        void onTemplateSelected(Template template);
     }
 }

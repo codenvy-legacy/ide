@@ -36,7 +36,11 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * The implementation of {@link CreateProjectProvider}. Provides create java application.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 @Singleton
 public class CreateJavaProjectPresenter implements CreateProjectProvider {
     private String                     projectName;
@@ -44,6 +48,12 @@ public class CreateJavaProjectPresenter implements CreateProjectProvider {
     private CreateProjectClientService service;
     private ResourceProvider           resourceProvider;
 
+    /**
+     * Create presenter.
+     *
+     * @param service
+     * @param resourceProvider
+     */
     @Inject
     protected CreateJavaProjectPresenter(CreateProjectClientService service, ResourceProvider resourceProvider) {
         this.service = service;
@@ -69,7 +79,6 @@ public class CreateJavaProjectPresenter implements CreateProjectProvider {
     /** {@inheritDoc} */
     @Override
     public void create(final AsyncCallback<Project> callback) {
-
         JsonArray<Property> properties =
                 JsonCollections.<Property>createArray(new Property(ProjectDescription.PROPERTY_PRIMARY_NATURE, JavaProject.PRIMARY_NATURE),
                                                       new Property(JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS,

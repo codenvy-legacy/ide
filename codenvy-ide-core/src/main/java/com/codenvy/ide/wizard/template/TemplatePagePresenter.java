@@ -30,7 +30,11 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 
-/** @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a> */
+/**
+ * Provides selecting kind of templates which user wish to use for create new project.
+ *
+ * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ */
 public class TemplatePagePresenter extends AbstractWizardPagePresenter implements TemplatePageView.ActionDelegate {
     private TemplatePageView    view;
     private WizardPagePresenter next;
@@ -40,8 +44,15 @@ public class TemplatePagePresenter extends AbstractWizardPagePresenter implement
     private String              projectName;
     private TemplateAgentImpl   templateAgent;
 
+    /**
+     * Create presenter.
+     *
+     * @param resources
+     * @param view
+     * @param paaSAgent
+     * @param templateAgent
+     */
     @Inject
-
     protected TemplatePagePresenter(TemplateWizardResources resources, TemplatePageView view, PaaSAgent paaSAgent,
                                     TemplateAgentImpl templateAgent) {
         super("Choose project template", resources.templateIcon());
@@ -52,6 +63,11 @@ public class TemplatePagePresenter extends AbstractWizardPagePresenter implement
         this.templateAgent = templateAgent;
     }
 
+    /**
+     * Sets project's name.
+     *
+     * @param projectName
+     */
     public void setProjectName(String projectName) {
         this.projectName = projectName;
     }
@@ -103,7 +119,7 @@ public class TemplatePagePresenter extends AbstractWizardPagePresenter implement
 
     /** {@inheritDoc} */
     @Override
-    public void selectedTemplate(Template template) {
+    public void onTemplateSelected(Template template) {
         selectedTemplate = template;
         next = selectedTemplate.getWizardPage();
         templateAgent.setSelectedTemplate(selectedTemplate);

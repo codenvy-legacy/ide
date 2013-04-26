@@ -45,5 +45,10 @@ public interface PaaSAgent {
     void registerPaaS(String id, String title, ImageResource image, JsonArray<String> requiredTypes,
                       Provider<? extends WizardPagePresenter> wizardPage, PreferencesPagePresenter preferencePage);
 
+    /**
+     * Returns selected PaaS.
+     *
+     * @return paas
+     */
     PaaS getSelectedPaaS();
 }

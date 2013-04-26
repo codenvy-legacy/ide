@@ -38,14 +38,17 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * Server service for creating projects.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 @Path("ide/maven/create")
 public class CreateProjectService {
     @Inject
     VirtualFileSystemRegistry registry;
-
     @Inject
-    EventListenerList eventListenerList;
+    EventListenerList         eventListenerList;
 
     @Path("project/java")
     @POST
