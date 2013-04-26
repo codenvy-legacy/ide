@@ -145,7 +145,7 @@
             </dependency>
             <dependency>
                 <groupId>com.codenvy.ide</groupId>
-                <artifactId>codenvy-ide-java</artifactId>
+                <artifactId>codenvy-ext-java</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -454,7 +454,7 @@
         <module>codenvy-ext-demo</module>
         <module>codenvy-ext-css</module>
         <module>codenvy-ext-tasks</module>
-        <module>codenvy-ide-java</module>
+        <module>codenvy-ext-java</module>
         <module>codenvy-ext-cloudfoundry</module>
         <module>codenvy-ext-maven</module>
         <module>codenvy-ide-client</module>

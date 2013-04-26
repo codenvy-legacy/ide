@@ -9,7 +9,7 @@
         <artifactId>codenvy-ide-parent</artifactId>
         <version>3.0.0-SNAPSHOT</version>
     </parent>
-    <artifactId>codenvy-ide-java</artifactId>
+    <artifactId>codenvy-ext-java</artifactId>
     <packaging>jar</packaging>
     <name>Codenvy Extension :: Java</name>
 
