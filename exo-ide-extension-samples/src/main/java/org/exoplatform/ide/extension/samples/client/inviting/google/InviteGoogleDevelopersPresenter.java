@@ -139,7 +139,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
             GoogleContactsService.getInstance().isAuthenticate(new AsyncRequestCallback<StringBuilder>(unmarshaller) {
                 @Override
                 protected void onSuccess(StringBuilder s) {
-                    if (s != null && !s.toString().isEmpty()) {
+                    if (s != null && !s.toString().isEmpty() && s.indexOf("https://www.google.com/m8/feeds") > 0) {
                         loadGoogleContacts();
                     } else {
                         oAuthLoginStart();
@@ -169,9 +169,6 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
                 if (aBoolean != null && aBoolean) {
                     String authUrl = Utils.getAuthorizationContext()
                                      + "/ide/oauth/authenticate?oauth_provider=google&mode=federated_login"
-                                     + "&scope=https://www.googleapis.com/auth/userinfo.profile"
-                                     + "&scope=https://www.googleapis.com/auth/userinfo.email"
-                                     + "&scope=https://www.googleapis.com/auth/appengine.admin"
                                      + "&scope=https://www.google.com/m8/feeds"
                                      + "&userId=" + IDE.userId
                                      + "&redirect_after_login="
