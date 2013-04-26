@@ -40,6 +40,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryServices;
@@ -78,6 +79,8 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
 
     /** Application, for which need to bind service. */
     private CloudFoundryApplication application;
+
+    private PAAS_PROVIDER paasProvider;
 
     /** Selected provisioned service. */
     private ProvisionedService selectedService;
@@ -183,6 +186,7 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
     @Override
     public void onManageServices(ManageServicesEvent event) {
         this.application = event.getApplication();
+        this.paasProvider = event.getPaasProvider();
         if (display == null) {
             display = GWT.create(Display.class);
             IDE.getInstance().openView(display.asView());
@@ -229,7 +233,7 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
 
     /** Perform adding new provisioned service. */
     private void doAdd() {
-        IDE.fireEvent(new CreateServiceEvent(this));
+        IDE.fireEvent(new CreateServiceEvent(this, paasProvider));
     }
 
     /**
@@ -243,7 +247,7 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
             CloudFoundryClientService.getInstance().deleteService(null, service.getName(),
                                                                   new CloudFoundryAsyncRequestCallback<Object>(null,
                                                                                                                deleteServiceLoggedInHandler,
-                                                                                                               null) {
+                                                                                                               null, paasProvider) {
                                                                       @Override
                                                                       protected void onSuccess(Object result) {
                                                                           getServices();
@@ -266,26 +270,9 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
     private void bindService(final ProvisionedService service) {
         try {
             CloudFoundryClientService.getInstance().bindService(null, service.getName(), application.getName(), null,
-                                                                null, new CloudFoundryAsyncRequestCallback<Object>(null,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                                null, paasProvider, new CloudFoundryAsyncRequestCallback<Object>(null,
                                                                                                                    bindServiceLoggedInHandler,
-                                                                                                                   null) {
+                                                                                                                   null, paasProvider) {
 
                 @Override
                 protected void onSuccess(Object result) {
@@ -313,10 +300,10 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
      */
     private void unbindService(String service) {
         try {
-            CloudFoundryClientService.getInstance().unbindService(null, service, application.getName(), null, null,
+            CloudFoundryClientService.getInstance().unbindService(null, service, application.getName(), null, null, paasProvider,
                                                                   new CloudFoundryAsyncRequestCallback<Object>(null,
                                                                                                                unBindServiceLoggedInHandler,
-                                                                                                               null) {
+                                                                                                               null, paasProvider) {
 
                                                                       @Override
                                                                       protected void onSuccess(Object result) {
@@ -365,8 +352,9 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
                     null,
                     application.getName(),
                     null,
+                    paasProvider,
                     new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
-                                                                                  getApplicationInfoLoggedInHandler, null) {
+                                                                                  getApplicationInfoLoggedInHandler, null, paasProvider) {
 
                         @Override
                         protected void onSuccess(CloudFoundryApplication result) {

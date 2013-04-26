@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoEvent;
 
 /**
@@ -36,12 +37,12 @@ public class ApplicationInfoControl extends AbstractCloudFoundryControl {
 
     private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationInfoControlPrompt();
 
-    public ApplicationInfoControl() {
+    public ApplicationInfoControl(PAAS_PROVIDER paasProvider) {
         super(ID);
         setTitle(TITLE);
         setPrompt(PROMPT);
         setImages(CloudFoundryClientBundle.INSTANCE.applicationInfo(), CloudFoundryClientBundle.INSTANCE.applicationInfoDisabled());
-        setEvent(new ApplicationInfoEvent());
+        setEvent(new ApplicationInfoEvent(paasProvider));
     }
 
 }

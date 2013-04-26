@@ -20,6 +20,8 @@ package org.exoplatform.ide.extension.cloudfoundry.client.create;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
+
 /**
  * Event, occurs after pressing Create Application button.
  *
@@ -29,6 +31,16 @@ import com.google.gwt.event.shared.GwtEvent;
 public class CreateApplicationEvent extends GwtEvent<CreateApplicationHandler> {
     /** Type used to register this event. */
     public static final GwtEvent.Type<CreateApplicationHandler> TYPE = new GwtEvent.Type<CreateApplicationHandler>();
+
+    private PAAS_PROVIDER paasProvider;
+
+    /**
+     * @param paasProvider
+     */
+    public CreateApplicationEvent(PAAS_PROVIDER paasProvider) {
+        super();
+        this.paasProvider = paasProvider;
+    }
 
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
     @Override
@@ -40,6 +52,10 @@ public class CreateApplicationEvent extends GwtEvent<CreateApplicationHandler> {
     @Override
     protected void dispatch(CreateApplicationHandler handler) {
         handler.onCreateApplication(this);
+    }
+
+    public PAAS_PROVIDER getPaasProvider() {
+        return paasProvider;
     }
 
 }

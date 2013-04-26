@@ -134,7 +134,8 @@ public class CloudfoundryTest {
                     null,
                     // vfs. Do not provide VFS instance since we provide all required info and not need to read something from VFS
                     null,             // project
-                    javaWebApp.toURI().toURL()
+                    javaWebApp.toURI().toURL(),
+                    null
                                                                         );
 
             assertEquals(name, app.getName());
@@ -147,7 +148,7 @@ public class CloudfoundryTest {
 
             checkApplicationURL(new URL("http://" + app.getUris().get(0)), 200);
         } finally {
-            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false);
+            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false, null);
         }
     }
 
@@ -171,17 +172,18 @@ public class CloudfoundryTest {
                     null,
                     // vfs. Do not provide VFS instance since we provide all required info and not need to read something from VFS
                     null,             // project
-                    javaWebApp.toURI().toURL()
+                    javaWebApp.toURI().toURL(),
+                    null
                                                                         );
 
             assertNotNull(app.getDebug());
 
-            Instance[] instances = cloudfoundry.applicationInstances(LoginInfo.target, name, null, null);
+            Instance[] instances = cloudfoundry.applicationInstances(LoginInfo.target, name, null, null, null);
             assertEquals(1, instances.length);
             assertFalse(instances[0].getDebugPort() == 0);
             assertNotNull(instances[0].getDebugHost());
         } finally {
-            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false);
+            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false, null);
         }
     }
 
@@ -192,11 +194,11 @@ public class CloudfoundryTest {
         try {
             // use all available memory for this application
             cloudfoundry.createApplication(LoginInfo.target, name, null, null, 1, limits.getMemory(), false, null, null,
-                                           null, null, null, javaWebApp.toURI().toURL());
+                                           null, null, null, javaWebApp.toURI().toURL(), null);
 
             try {
                 cloudfoundry.createApplication(LoginInfo.target, generate("test-", 16), null, null, 1, mem, false, null,
-                                               null, null, null, null, javaWebApp.toURI().toURL());
+                                               null, null, null, null, javaWebApp.toURI().toURL(), null);
                 fail("IllegalStateException expected.");
             } catch (IllegalStateException e) {
                 // OK. All available memory used for first application
@@ -205,7 +207,7 @@ public class CloudfoundryTest {
                 assertTrue(e.getMessage().matches(expected + ".*"));
             }
         } finally {
-            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false);
+            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false, null);
         }
     }
 
@@ -219,13 +221,13 @@ public class CloudfoundryTest {
             for (int i = 0; i < maxApp; i++) {
                 String name = generate("test-", 16);
                 cloudfoundry.createApplication(LoginInfo.target, name, null, null, 1, mem, false, null, null, null, null, null,
-                                               javaWebApp.toURI().toURL());
+                                               javaWebApp.toURI().toURL(), null);
                 apps.add(name);
             }
 
             try {
                 cloudfoundry.createApplication(LoginInfo.target, generate("test-", 16), null, null, 1, mem, false, null,
-                                               null, null, null, null, javaWebApp.toURI().toURL());
+                                               null, null, null, null, javaWebApp.toURI().toURL(), null);
                 fail("IllegalStateException expected.");
             } catch (IllegalStateException e) {
                 // OK. Max number of application reached.
@@ -235,7 +237,7 @@ public class CloudfoundryTest {
             }
         } finally {
             for (String name : apps) {
-                cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false);
+                cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false, null);
             }
         }
     }
@@ -245,11 +247,11 @@ public class CloudfoundryTest {
         final String name = generate("test-", 16);
         try {
             cloudfoundry.createApplication(LoginInfo.target, name, null, null, 1, 128, false, null, null, null, null, null,
-                                           javaWebApp.toURI().toURL());
+                                           javaWebApp.toURI().toURL(), null);
 
             try {
                 cloudfoundry.createApplication(LoginInfo.target, name, null, null, 1, 128, false, null,
-                                               null, null, null, null, javaWebApp.toURI().toURL());
+                                               null, null, null, null, javaWebApp.toURI().toURL(), null);
                 fail("IllegalArgumentException expected.");
             } catch (IllegalArgumentException e) {
                 // OK. Application with the same name already exists.
@@ -257,7 +259,7 @@ public class CloudfoundryTest {
                 assertTrue(e.getMessage().matches(expected + ".*"));
             }
         } finally {
-            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false);
+            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false, null);
         }
     }
 
@@ -266,9 +268,9 @@ public class CloudfoundryTest {
         final String name = generate("test-", 16);
         try {
             cloudfoundry.createApplication(LoginInfo.target, name, null, null, 1, 128, false, null, null, null, null, null,
-                                           javaWebApp.toURI().toURL());
+                                           javaWebApp.toURI().toURL(), null);
 
-            CloudFoundryApplication app = cloudfoundry.applicationInfo(LoginInfo.target, name, null, null);
+            CloudFoundryApplication app = cloudfoundry.applicationInfo(LoginInfo.target, name, null, null, null);
 
             assertEquals(name, app.getName());
             assertEquals(1, app.getUris().size());
@@ -278,7 +280,7 @@ public class CloudfoundryTest {
             assertEquals("STARTED", app.getState());
             assertNull(app.getDebug());
         } finally {
-            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false);
+            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false, null);
         }
     }
 
@@ -289,13 +291,13 @@ public class CloudfoundryTest {
             // create application but not start it
             CloudFoundryApplication app = cloudfoundry.createApplication(LoginInfo.target, name, null, null, 1, 128,
                                                                          true /* disable start */, null, null, null, null, null,
-                                                                         javaWebApp.toURI().toURL());
+                                                                         javaWebApp.toURI().toURL(), null);
             assertEquals(1, app.getInstances());
             assertEquals(0, app.getRunningInstances());
             assertEquals("STOPPED", app.getState());
             checkApplicationURL(new URL("http://" + app.getUris().get(0)), 404); // not started yet
 
-            app = cloudfoundry.startApplication(LoginInfo.target, name, null, null, null);
+            app = cloudfoundry.startApplication(LoginInfo.target, name, null, null, null, null);
 
             assertEquals(1, app.getInstances());
             assertEquals(1, app.getRunningInstances());
@@ -303,7 +305,7 @@ public class CloudfoundryTest {
             assertNull(app.getDebug());
             checkApplicationURL(new URL("http://" + app.getUris().get(0)), 200);
         } finally {
-            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false);
+            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false, null);
         }
     }
 
@@ -314,15 +316,15 @@ public class CloudfoundryTest {
         try {
             // create application but not start it
             cloudfoundry.createApplication(LoginInfo.target, name1, null, null, 1, 128, true /* disable start */, null,
-                                           null, null, null, null, javaWebApp.toURI().toURL());
+                                           null, null, null, null, javaWebApp.toURI().toURL(), null);
 
             // create and start application that use all available memory
             cloudfoundry.createApplication(LoginInfo.target, name2, null, null, 1, limits.getMemory(), false, null, null,
-                                           null, null, null, javaWebApp.toURI().toURL());
+                                           null, null, null, javaWebApp.toURI().toURL(), null);
 
             try {
                 // start should be failed because there is no memory for start application any more
-                cloudfoundry.startApplication(LoginInfo.target, name1, null, null, null);
+                cloudfoundry.startApplication(LoginInfo.target, name1, null, null, null, null);
                 fail("CloudfoundryException expected. ");
             } catch (CloudfoundryException e) {
                 assertEquals(600, e.getExitCode());
@@ -333,8 +335,8 @@ public class CloudfoundryTest {
             }
 
         } finally {
-            cloudfoundry.deleteApplication(LoginInfo.target, name1, null, null, false);
-            cloudfoundry.deleteApplication(LoginInfo.target, name2, null, null, false);
+            cloudfoundry.deleteApplication(LoginInfo.target, name1, null, null, false, null);
+            cloudfoundry.deleteApplication(LoginInfo.target, name2, null, null, false, null);
         }
     }
 
@@ -343,16 +345,16 @@ public class CloudfoundryTest {
         final String name = generate("test-", 16);
         try {
             cloudfoundry.createApplication(LoginInfo.target, name, null, null, 1, 128, false, null,
-                                           null, null, null, null, javaWebApp.toURI().toURL());
+                                           null, null, null, null, javaWebApp.toURI().toURL(), null);
 
-            cloudfoundry.stopApplication(LoginInfo.target, name, null, null);
-            CloudFoundryApplication app = cloudfoundry.applicationInfo(LoginInfo.target, name, null, null);
+            cloudfoundry.stopApplication(LoginInfo.target, name, null, null, null);
+            CloudFoundryApplication app = cloudfoundry.applicationInfo(LoginInfo.target, name, null, null, null);
             assertEquals(1, app.getInstances());
             assertEquals(0, app.getRunningInstances());
             assertEquals("STOPPED", app.getState());
             checkApplicationURL(new URL("http://" + app.getUris().get(0)), 404); // stopped
         } finally {
-            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false);
+            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false, null);
         }
     }
 
@@ -362,17 +364,17 @@ public class CloudfoundryTest {
         try {
             // create application but not start it
             cloudfoundry.createApplication(LoginInfo.target, name, null, null, 1, 128, true /* disable start */, null,
-                                           null, null, null, null, javaWebApp.toURI().toURL());
+                                           null, null, null, null, javaWebApp.toURI().toURL(), null);
 
             // even to started application may be re-started
-            cloudfoundry.restartApplication(LoginInfo.target, name, null, null, null);
-            CloudFoundryApplication app = cloudfoundry.applicationInfo(LoginInfo.target, name, null, null);
+            cloudfoundry.restartApplication(LoginInfo.target, name, null, null, null, null);
+            CloudFoundryApplication app = cloudfoundry.applicationInfo(LoginInfo.target, name, null, null, null);
             assertEquals(1, app.getInstances());
             assertEquals(1, app.getRunningInstances());
             assertEquals("STARTED", app.getState());
             checkApplicationURL(new URL("http://" + app.getUris().get(0)), 200);
         } finally {
-            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false);
+            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false, null);
         }
     }
 
@@ -382,17 +384,17 @@ public class CloudfoundryTest {
         try {
             // create application and start
             cloudfoundry.createApplication(LoginInfo.target, name, null, null, 1, 128, false, null, null, null, null, null,
-                                           javaWebApp.toURI().toURL());
+                                           javaWebApp.toURI().toURL(), null);
 
             // restart
-            cloudfoundry.restartApplication(LoginInfo.target, name, null, null, null);
-            CloudFoundryApplication app = cloudfoundry.applicationInfo(LoginInfo.target, name, null, null);
+            cloudfoundry.restartApplication(LoginInfo.target, name, null, null, null, null);
+            CloudFoundryApplication app = cloudfoundry.applicationInfo(LoginInfo.target, name, null, null, null);
             assertEquals(1, app.getInstances());
             assertEquals(1, app.getRunningInstances());
             assertEquals("STARTED", app.getState());
             checkApplicationURL(new URL("http://" + app.getUris().get(0)), 200);
         } finally {
-            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false);
+            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false, null);
         }
     }
 
@@ -413,16 +415,16 @@ public class CloudfoundryTest {
         try {
             // create application and start
             CloudFoundryApplication app = cloudfoundry.createApplication(LoginInfo.target, name, null, null, 1, 128, false,
-                                                                         null, null, null, null, null, javaWebApp.toURI().toURL());
+                                                                         null, null, null, null, null, javaWebApp.toURI().toURL(), null);
 
             // update
-            cloudfoundry.updateApplication(LoginInfo.target, name, null, null, new_war.toURI().toURL());
+            cloudfoundry.updateApplication(LoginInfo.target, name, null, null, null, new_war.toURI().toURL());
             assertEquals(1, app.getInstances());
             assertEquals(1, app.getRunningInstances());
             assertEquals("STARTED", app.getState());
             checkApplicationOutput(new URL("http://" + app.getUris().get(0)), new_content);
         } finally {
-            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false);
+            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false, null);
         }
     }
 
@@ -431,9 +433,9 @@ public class CloudfoundryTest {
         final String name = generate("test-", 16);
         try {
             cloudfoundry.createApplication(LoginInfo.target, name, null, null, 1, 128, false, null, null, null, null, null,
-                                           javaWebApp.toURI().toURL());
+                                           javaWebApp.toURI().toURL(), null);
 
-            String raw = cloudfoundry.getFiles(LoginInfo.target, name, null, "0" /* for instance with index 0 */, null, null);
+            String raw = cloudfoundry.getFiles(LoginInfo.target, name, null, "0" /* for instance with index 0 */, null, null, null);
             List<String> list = new ArrayList<String>();
             for (String line : raw.split("\n")) {
                 list.add(line.split("\\s+")[0]);
@@ -442,7 +444,7 @@ public class CloudfoundryTest {
             assertTrue(list.contains("tomcat/"));
             assertTrue(list.contains("logs/"));
         } finally {
-            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false);
+            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false, null);
         }
     }
 
@@ -451,15 +453,15 @@ public class CloudfoundryTest {
         final String name = generate("test-", 16);
         try {
             cloudfoundry.createApplication(LoginInfo.target, name, null, null, 1, 128, false, null, null, null, null, null,
-                                           javaWebApp.toURI().toURL());
+                                           javaWebApp.toURI().toURL(), null);
 
-            String logs = cloudfoundry.getLogs(LoginInfo.target, name, "0" /* for instance with index 0 */, null, null);
+            String logs = cloudfoundry.getLogs(LoginInfo.target, name, "0" /* for instance with index 0 */, null, null, null);
             assertNotNull(logs);
             assertFalse(logs.isEmpty());
 
             System.out.println(logs);
         } finally {
-            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false);
+            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false, null);
         }
     }
 
@@ -470,10 +472,10 @@ public class CloudfoundryTest {
             final String original = LoginInfo.target.replace("http://api", name);
             final String mapped = LoginInfo.target.replace("http://api", name + "_mapped");
             cloudfoundry.createApplication(LoginInfo.target, name, null, original, 1, 128, false, null, null, null, null,
-                                           null, javaWebApp.toURI().toURL());
+                                           null, javaWebApp.toURI().toURL(), null);
 
-            cloudfoundry.mapUrl(LoginInfo.target, name, null, null, mapped);
-            CloudFoundryApplication app = cloudfoundry.applicationInfo(LoginInfo.target, name, null, null);
+            cloudfoundry.mapUrl(LoginInfo.target, name, null, null, null, mapped);
+            CloudFoundryApplication app = cloudfoundry.applicationInfo(LoginInfo.target, name, null, null, null);
 
             assertEquals(2, app.getUris().size());
             assertTrue(app.getUris().contains(original));
@@ -482,7 +484,7 @@ public class CloudfoundryTest {
             checkApplicationURL(new URL("http://" + original), 200);
             checkApplicationURL(new URL("http://" + mapped), 200);
         } finally {
-            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false);
+            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false, null);
         }
     }
 
@@ -494,12 +496,12 @@ public class CloudfoundryTest {
             final String original = LoginInfo.target.replace("http://api", name);
             final String mapped = LoginInfo.target.replace("http://api", name + "_mapped");
             cloudfoundry.createApplication(LoginInfo.target, name, null, original, 1, 128, false, null, null, null, null,
-                                           null, javaWebApp.toURI().toURL());
-            cloudfoundry.mapUrl(LoginInfo.target, name, null, null, mapped);
+                                           null, javaWebApp.toURI().toURL(), null);
+            cloudfoundry.mapUrl(LoginInfo.target, name, null, null, null, mapped);
             // ---
 
-            cloudfoundry.unmapUrl(LoginInfo.target, name, null, null, original); // remove original URL
-            CloudFoundryApplication app = cloudfoundry.applicationInfo(LoginInfo.target, name, null, null);
+            cloudfoundry.unmapUrl(LoginInfo.target, name, null, null, null, original); // remove original URL
+            CloudFoundryApplication app = cloudfoundry.applicationInfo(LoginInfo.target, name, null, null, null);
 
             assertEquals(1, app.getUris().size());
             assertTrue(app.getUris().contains(mapped));
@@ -507,7 +509,7 @@ public class CloudfoundryTest {
             checkApplicationURL(new URL("http://" + original), 404);
             checkApplicationURL(new URL("http://" + mapped), 200);
         } finally {
-            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false);
+            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false, null);
         }
     }
 
@@ -517,15 +519,15 @@ public class CloudfoundryTest {
         final int mem = 128;
         try {
             cloudfoundry.createApplication(LoginInfo.target, name, null, null, 1, mem, false, null, null, null, null, null,
-                                           javaWebApp.toURI().toURL());
+                                           javaWebApp.toURI().toURL(), null);
 
             final int usedMem_Before = cloudfoundry.systemInfo(LoginInfo.target).getUsage().getMemory();
-            cloudfoundry.mem(LoginInfo.target, name, null, null, mem * 2); // double memory size
+            cloudfoundry.mem(LoginInfo.target, name, null, null, null, mem * 2); // double memory size
 
             final int usedMem_After = cloudfoundry.systemInfo(LoginInfo.target).getUsage().getMemory();
             assertEquals(usedMem_Before + mem, usedMem_After);
         } finally {
-            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false);
+            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false, null);
         }
     }
 
@@ -535,14 +537,14 @@ public class CloudfoundryTest {
         final int instances = 1;
         try {
             cloudfoundry.createApplication(LoginInfo.target, name, null, null, instances, 128, false, null, null, null, null,
-                                           null, javaWebApp.toURI().toURL());
+                                           null, javaWebApp.toURI().toURL(), null);
 
-            cloudfoundry.instances(LoginInfo.target, name, null, null, "+1"); // one more instance
-            CloudFoundryApplication app = cloudfoundry.applicationInfo(LoginInfo.target, name, null, null);
+            cloudfoundry.instances(LoginInfo.target, name, null, null, null, "+1"); // one more instance
+            CloudFoundryApplication app = cloudfoundry.applicationInfo(LoginInfo.target, name, null, null, null);
 
             assertEquals(2, app.getInstances());
         } finally {
-            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false);
+            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false, null);
         }
     }
 
@@ -552,14 +554,14 @@ public class CloudfoundryTest {
         final int instances = 2;
         try {
             cloudfoundry.createApplication(LoginInfo.target, name, null, null, instances, 128, false, null, null, null, null,
-                                           null, javaWebApp.toURI().toURL());
+                                           null, javaWebApp.toURI().toURL(), null);
 
-            cloudfoundry.instances(LoginInfo.target, name, null, null, "-1"); // stop one instance
-            CloudFoundryApplication app = cloudfoundry.applicationInfo(LoginInfo.target, name, null, null);
+            cloudfoundry.instances(LoginInfo.target, name, null, null, null, "-1"); // stop one instance
+            CloudFoundryApplication app = cloudfoundry.applicationInfo(LoginInfo.target, name, null, null, null);
 
             assertEquals(1, app.getInstances());
         } finally {
-            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false);
+            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false, null);
         }
     }
 
@@ -569,14 +571,14 @@ public class CloudfoundryTest {
         final int instances = 1;
         try {
             cloudfoundry.createApplication(LoginInfo.target, name, null, null, instances, 128, false, null, null, null, null,
-                                           null, javaWebApp.toURI().toURL());
+                                           null, javaWebApp.toURI().toURL(), null);
 
-            cloudfoundry.instances(LoginInfo.target, name, null, null, "2");
-            CloudFoundryApplication app = cloudfoundry.applicationInfo(LoginInfo.target, name, null, null);
+            cloudfoundry.instances(LoginInfo.target, name, null, null, null, "2");
+            CloudFoundryApplication app = cloudfoundry.applicationInfo(LoginInfo.target, name, null, null, null);
 
             assertEquals(2, app.getInstances());
         } finally {
-            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false);
+            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false, null);
         }
     }
 
@@ -584,9 +586,9 @@ public class CloudfoundryTest {
     public void testDeleteApplication() throws Exception {
         final String name = generate("test-", 16);
         cloudfoundry.createApplication(LoginInfo.target, name, null, null, 1, 128, false, null, null, null, null, null,
-                                       javaWebApp.toURI().toURL());
+                                       javaWebApp.toURI().toURL(), null);
 
-        cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false);
+        cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false, null);
         assertTrue(cloudfoundry.listApplications(LoginInfo.target).length == 0);
 
         checkApplicationURL(new URL(LoginInfo.target.replace("api", name)), 404);
@@ -598,10 +600,10 @@ public class CloudfoundryTest {
         final int mem = 128;
         try {
             cloudfoundry.createApplication(LoginInfo.target, name, null, null, 1, mem, false, null, null, null, null, null,
-                                           javaWebApp.toURI().toURL());
+                                           javaWebApp.toURI().toURL(), null);
 
             Map<String, CloudfoundryApplicationStatistics> stats =
-                    cloudfoundry.applicationStats(LoginInfo.target, name, null, null);
+                    cloudfoundry.applicationStats(LoginInfo.target, name, null, null, null);
             assertEquals(1, stats.size()); // application has one instance
             CloudfoundryApplicationStatistics stat = stats.get("0");
             assertNotNull(stat);
@@ -619,7 +621,7 @@ public class CloudfoundryTest {
             assertFalse(stat.getMem() == 0);
             assertEquals(mem, stat.getMemLimit());
         } finally {
-            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false);
+            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false, null);
         }
     }
 
@@ -629,9 +631,9 @@ public class CloudfoundryTest {
         final String name2 = generate("test-", 16);
         try {
             cloudfoundry.createApplication(LoginInfo.target, name1, null, null, 1, 128, false, null, null, null, null, null,
-                                           javaWebApp.toURI().toURL());
+                                           javaWebApp.toURI().toURL(), null);
             cloudfoundry.createApplication(LoginInfo.target, name2, null, null, 1, 128, false, null, null, null, null, null,
-                                           javaWebApp.toURI().toURL());
+                                           javaWebApp.toURI().toURL(), null);
 
             CloudFoundryApplication[] apps = cloudfoundry.listApplications(LoginInfo.target);
             assertEquals(2, apps.length);
@@ -643,8 +645,8 @@ public class CloudfoundryTest {
             assertTrue(names.contains(name1));
             assertTrue(names.contains(name2));
         } finally {
-            cloudfoundry.deleteApplication(LoginInfo.target, name1, null, null, false);
-            cloudfoundry.deleteApplication(LoginInfo.target, name2, null, null, false);
+            cloudfoundry.deleteApplication(LoginInfo.target, name1, null, null, false, null);
+            cloudfoundry.deleteApplication(LoginInfo.target, name2, null, null, false, null);
         }
     }
 
@@ -655,16 +657,16 @@ public class CloudfoundryTest {
         final String value = "test_value";
         try {
             cloudfoundry.createApplication(LoginInfo.target, name, null, null, 1, 128, false, null, null, null, null, null,
-                                           javaWebApp.toURI().toURL());
-            cloudfoundry.environmentAdd(LoginInfo.target, name, null, null, key, value);
+                                           javaWebApp.toURI().toURL(), null);
+            cloudfoundry.environmentAdd(LoginInfo.target, name, null, null, null, key, value);
 
-            CloudFoundryApplication app = cloudfoundry.applicationInfo(LoginInfo.target, name, null, null);
+            CloudFoundryApplication app = cloudfoundry.applicationInfo(LoginInfo.target, name, null, null, null);
             List<String> env = app.getEnv();
             assertNotNull(env);
             assertFalse(env.isEmpty());
             assertEquals(env.get(0), key + '=' + value);
         } finally {
-            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false);
+            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false, null);
         }
     }
 
@@ -674,16 +676,16 @@ public class CloudfoundryTest {
         try {
             // create application and add environment variable
             cloudfoundry.createApplication(LoginInfo.target, name, null, null, 1, 128, false, null, null, null, null, null,
-                                           javaWebApp.toURI().toURL());
-            cloudfoundry.environmentAdd(LoginInfo.target, name, null, null, "test_key", "test_value");
+                                           javaWebApp.toURI().toURL(), null);
+            cloudfoundry.environmentAdd(LoginInfo.target, name, null, null, null, "test_key", "test_value");
             // ---
 
-            cloudfoundry.environmentDelete(LoginInfo.target, name, null, null, "test_key");
-            CloudFoundryApplication app = cloudfoundry.applicationInfo(LoginInfo.target, name, null, null);
+            cloudfoundry.environmentDelete(LoginInfo.target, name, null, null, null, "test_key");
+            CloudFoundryApplication app = cloudfoundry.applicationInfo(LoginInfo.target, name, null, null, null);
             List<String> env = app.getEnv();
             assertTrue(env == null || env.isEmpty()); // null or empty list is OK
         } finally {
-            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false);
+            cloudfoundry.deleteApplication(LoginInfo.target, name, null, null, false, null);
         }
     }
 

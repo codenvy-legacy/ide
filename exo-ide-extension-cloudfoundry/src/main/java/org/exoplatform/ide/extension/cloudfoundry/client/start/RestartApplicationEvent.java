@@ -20,9 +20,11 @@ package org.exoplatform.ide.extension.cloudfoundry.client.start;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
+
 /**
  * Event, occurs after pressing Restart Application command.
- *
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: RestartApplicationEvent.java Jul 12, 2011 3:51:16 PM vereshchaka $
  */
@@ -30,18 +32,23 @@ public class RestartApplicationEvent extends GwtEvent<RestartApplicationHandler>
     /** Type used to register this event. */
     public static final GwtEvent.Type<RestartApplicationHandler> TYPE = new GwtEvent.Type<RestartApplicationHandler>();
 
-    private String applicationName;
+    private String                                               applicationName;
+
+    private PAAS_PROVIDER                                        paasProvider;
 
     /**
      *
      */
-    public RestartApplicationEvent() {
+    public RestartApplicationEvent(PAAS_PROVIDER paasProvider) {
+        super();
+        this.paasProvider = paasProvider;
     }
 
     /** @param applicationName */
-    public RestartApplicationEvent(String applicationName) {
+    public RestartApplicationEvent(String applicationName, PAAS_PROVIDER paasProvider) {
         super();
         this.applicationName = applicationName;
+        this.paasProvider = paasProvider;
     }
 
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
@@ -59,6 +66,10 @@ public class RestartApplicationEvent extends GwtEvent<RestartApplicationHandler>
     /** @return the applicationName */
     public String getApplicationName() {
         return applicationName;
+    }
+
+    public PAAS_PROVIDER getPaasProvider() {
+        return paasProvider;
     }
 
 }

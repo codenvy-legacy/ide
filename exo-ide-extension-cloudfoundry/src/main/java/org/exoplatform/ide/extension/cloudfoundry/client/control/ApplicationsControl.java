@@ -22,22 +22,26 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.apps.ShowApplicationsEvent;
+
+import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER.WEB_FABRIC;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 18, 2011 evgen $
+ * @version $Id: Aug 18, 2011 evgen $
  */
 public class ApplicationsControl extends AbstractCloudFoundryControl {
 
-    /**
-     *
-     */
-    public ApplicationsControl() {
-        super(CloudFoundryExtension.LOCALIZATION_CONSTANT.appsControlId());
+    private static final String CF_ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.appsControlId();
+
+    private static final String WF_ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.tier3WebFabricAppsControlId();
+
+    public ApplicationsControl(PAAS_PROVIDER paasProvider) {
+        super(paasProvider == WEB_FABRIC ? WF_ID : CF_ID);
         setTitle(CloudFoundryExtension.LOCALIZATION_CONSTANT.appsControlTitle());
         setPrompt(CloudFoundryExtension.LOCALIZATION_CONSTANT.appsControlPrompt());
-        setEvent(new ShowApplicationsEvent());
+        setEvent(new ShowApplicationsEvent(paasProvider));
         setImages(CloudFoundryClientBundle.INSTANCE.appsList(), CloudFoundryClientBundle.INSTANCE.appsListDisabled());
     }
 

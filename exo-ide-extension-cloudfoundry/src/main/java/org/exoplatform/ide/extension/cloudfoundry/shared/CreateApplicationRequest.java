@@ -114,4 +114,13 @@ public interface CreateApplicationRequest {
      */
     public abstract void setWar(String war);
 
+    /** @return CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc. */
+    public abstract String getPaasprovider();
+
+    /**
+     * @param paasProvider
+     *         CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
+     */
+    public abstract void setPaasprovider(String paasProvider);
+
 }

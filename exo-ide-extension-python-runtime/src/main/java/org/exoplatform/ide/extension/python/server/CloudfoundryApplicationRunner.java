@@ -203,7 +203,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             // try to remove application.
             try {
                 LOG.warn("Application {} failed to start, cause: {}", name, e.getMessage());
-                cloudfoundry.deleteApplication(cloudfoundry.getTarget(), name, null, null, true);
+                cloudfoundry.deleteApplication(cloudfoundry.getTarget(), name, null, null, true, null);
             } catch (Exception e1) {
                 LOG.warn("Unable delete failed application {}, cause: {}", name, e.getMessage());
             }
@@ -219,7 +219,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
      */
     private String safeGetLogs(Cloudfoundry cloudfoundry, String name) {
         try {
-            return cloudfoundry.getLogs(cloudfoundry.getTarget(), name, "0", null, null);
+            return cloudfoundry.getLogs(cloudfoundry.getTarget(), name, "0", null, null, null);
         } catch (Exception e) {
             // Not able show log if any errors occurs.
             return null;
@@ -254,7 +254,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
     private String doGetLogs(Cloudfoundry cloudfoundry, String name) throws ApplicationRunnerException {
         try {
-            return cloudfoundry.getLogs(cloudfoundry.getTarget(), name, "0", null, null);
+            return cloudfoundry.getLogs(cloudfoundry.getTarget(), name, "0", null, null, null);
         } catch (Exception e) {
             throw new ApplicationRunnerException(e.getMessage(), e);
         }
@@ -289,8 +289,8 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
     private void doStopApplication(Cloudfoundry cloudfoundry, String name) throws ApplicationRunnerException {
         try {
             String target = cloudfoundry.getTarget();
-            cloudfoundry.stopApplication(target, name, null, null);
-            cloudfoundry.deleteApplication(target, name, null, null, true);
+            cloudfoundry.stopApplication(target, name, null, null, null);
+            cloudfoundry.deleteApplication(target, name, null, null, true, null);
             applications.remove(name);
             LOG.debug("Stop application {}.", name);
         } catch (Exception e) {
@@ -325,10 +325,10 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             final String command = "PATH=/home/vcap/bin:$PATH appengine-python-sdk/dev_appserver.py --host=0.0.0.0 --port=$VCAP_APP_PORT " +
                                    "--skip_sdk_update_check=yes application";
             return cloudfoundry.createApplication(target, name, "standalone", null, 1, 128, false, "python2", command,
-                                                  null, null, null, path.toURI().toURL());
+                                                  null, null, null, path.toURI().toURL(), null);
         }
         return cloudfoundry.createApplication(target, name, null, null, 1, 128, false, "python2", null, null, null,
-                                              null, path.toURI().toURL());
+                                              null, path.toURI().toURL(), null);
     }
 
     private void login(Cloudfoundry cloudfoundry) throws ApplicationRunnerException {

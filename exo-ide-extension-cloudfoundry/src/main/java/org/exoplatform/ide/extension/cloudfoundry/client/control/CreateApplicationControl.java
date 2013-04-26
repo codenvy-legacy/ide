@@ -25,29 +25,40 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationEvent;
 
+import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.canBeDeployedToCF;
+import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.canBeDeployedToWF;
+import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER.CLOUD_FOUNDRY;
+import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER.WEB_FABRIC;
+
 /**
- * Control for creating application on CloudFoundry.
- *
+ * Control for creating application on CloudFoundry/Tier 3 Web Fabric.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CreateApplicationControl.java Jul 7, 2011 5:32:27 PM vereshchaka $
  */
-public class CreateApplicationControl extends AbstractCloudFoundryControl implements 
-        ProjectOpenedHandler, ProjectClosedHandler {
+public class CreateApplicationControl extends AbstractCloudFoundryControl implements ProjectOpenedHandler,
+                                                                         ProjectClosedHandler {
 
-    private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.createAppControlId();
+    private static final String CF_ID  = CloudFoundryExtension.LOCALIZATION_CONSTANT.createAppControlId();
 
-    private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.createAppControlTitle();
+    private static final String WF_ID  = CloudFoundryExtension.LOCALIZATION_CONSTANT.createTier3WebFabricAppControlId();
+
+    private static final String TITLE  = CloudFoundryExtension.LOCALIZATION_CONSTANT.createAppControlTitle();
 
     private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.createAppControlPrompt();
 
-    public CreateApplicationControl() {
-        super(ID);
+    private final PAAS_PROVIDER paasProvider;
+
+    public CreateApplicationControl(PAAS_PROVIDER paasProvider) {
+        super(paasProvider == WEB_FABRIC ? WF_ID : CF_ID);
+        this.paasProvider = paasProvider;
         setTitle(TITLE);
         setPrompt(PROMPT);
         setImages(CloudFoundryClientBundle.INSTANCE.createApp(), CloudFoundryClientBundle.INSTANCE.createAppDisabled());
-        setEvent(new CreateApplicationEvent());
+        setEvent(new CreateApplicationEvent(paasProvider));
     }
 
     /** @see org.exoplatform.ide.extension.cloudfoundry.client.control.AbstractCloudFoundryControl#initialize() */
@@ -58,18 +69,23 @@ public class CreateApplicationControl extends AbstractCloudFoundryControl implem
         setVisible(true);
     }
 
-    /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
-     * .project.ProjectClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+     *      .project.ProjectClosedEvent)
+     */
     @Override
     public void onProjectClosed(ProjectClosedEvent event) {
         setEnabled(false);
     }
 
-    /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
-     * .project.ProjectOpenedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
+     *      .project.ProjectOpenedEvent)
+     */
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
-        setEnabled(event.getProject() != null && CloudFoundryExtension.canBeDeployedToCF(event.getProject()));
+        setEnabled(event.getProject() != null
+                   && ((paasProvider == CLOUD_FOUNDRY && canBeDeployedToCF(event.getProject())) || (paasProvider == WEB_FABRIC && canBeDeployedToWF(event.getProject()))));
     }
 
 }
