@@ -23,8 +23,6 @@ import com.codenvy.ide.api.template.CreateProjectProvider;
 import com.codenvy.ide.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.resources.marshal.ProjectModelProviderAdapter;
-import com.codenvy.ide.resources.marshal.ProjectModelUnmarshaller;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.ProjectDescription;
 import com.codenvy.ide.resources.model.Property;
@@ -74,32 +72,28 @@ public class CreateWarProjectPresenter implements CreateProjectProvider {
     public void create(final AsyncCallback<Project> callback) {
         JsonArray<Property> properties = JsonCollections.<Property>createArray(new Property(ProjectDescription.PROPERTY_PRIMARY_NATURE,
                                                                                             JavaProject.PRIMARY_NATURE));
-        ProjectModelProviderAdapter adapter = new ProjectModelProviderAdapter(resourceProvider);
-        ProjectModelUnmarshaller unmarshaller = new ProjectModelUnmarshaller(adapter);
-
         try {
-            service.createWarProject(projectName, properties,
-                                     new AsyncRequestCallback<ProjectModelProviderAdapter>(unmarshaller) {
-                                         @Override
-                                         protected void onSuccess(ProjectModelProviderAdapter result) {
-                                             resourceProvider.getProject(result.getProject().getName(), new AsyncCallback<Project>() {
-                                                 @Override
-                                                 public void onSuccess(Project result) {
-                                                     callback.onSuccess(result);
-                                                 }
+            service.createWarProject(projectName, properties, new AsyncRequestCallback<Void>() {
+                @Override
+                protected void onSuccess(Void result) {
+                    resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
+                        @Override
+                        public void onSuccess(Project result) {
+                            callback.onSuccess(result);
+                        }
 
-                                                 @Override
-                                                 public void onFailure(Throwable caught) {
-                                                     callback.onFailure(caught);
-                                                 }
-                                             });
-                                         }
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            callback.onFailure(caught);
+                        }
+                    });
+                }
 
-                                         @Override
-                                         protected void onFailure(Throwable exception) {
-                                             callback.onFailure(exception);
-                                         }
-                                     });
+                @Override
+                protected void onFailure(Throwable exception) {
+                    callback.onFailure(exception);
+                }
+            });
         } catch (RequestException e) {
             callback.onFailure(e);
         }

@@ -22,7 +22,6 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.resources.marshal.JSONSerializer;
-import com.codenvy.ide.resources.marshal.ProjectModelProviderAdapter;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -65,8 +64,8 @@ public class CreateProjectClientServiceImpl implements CreateProjectClientServic
 
     /** {@inheritDoc} */
     @Override
-    public void createWarProject(String projectName, JsonArray<Property> properties,
-                                 AsyncRequestCallback<ProjectModelProviderAdapter> callback) throws RequestException {
+    public void createWarProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback)
+            throws RequestException {
         String requestUrl = restContext + CREATE_WAR_PROJECT;
 
         String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName;
@@ -82,7 +81,7 @@ public class CreateProjectClientServiceImpl implements CreateProjectClientServic
     /** {@inheritDoc} */
     @Override
     public void createJavaProject(String projectName, String sourceFolder, JsonArray<Property> properties,
-                                  AsyncRequestCallback<ProjectModelProviderAdapter> callback) throws RequestException {
+                                  AsyncRequestCallback<Void> callback) throws RequestException {
         String requestUrl = restContext + CREATE_JAVA_PROJECT;
         String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&source=" + sourceFolder;
         String url = requestUrl + param;

@@ -53,10 +53,8 @@ public class CreateProjectService {
     @Path("project/java")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Project createJavaProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
-                                     @QueryParam("source") String source, List<Property> properties)
-            throws VirtualFileSystemException {
-
+    public void createJavaProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
+                                  @QueryParam("source") String source, List<Property> properties) throws VirtualFileSystemException {
         VirtualFileSystem vfs = registry.getProvider(vfsId).newInstance(null, eventListenerList);
         Project project =
                 vfs.createProject(vfs.getInfo().getRoot().getId(), name, "deprecated.project.type", properties);
@@ -76,16 +74,13 @@ public class CreateProjectService {
                                  "}";
         InputStream javaFileIS = new ByteArrayInputStream(javaFileContent.getBytes());
         vfs.createFile(sourceFolder.getId(), "HelloWorld.java", MediaType.TEXT_PLAIN_TYPE, javaFileIS);
-
-        return project;
     }
 
     @Path("project/war")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Project createWarProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name, List<Property> properties,
-                                    @Context UriInfo uriInfo) throws VirtualFileSystemException {
-
+    public void createWarProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name, List<Property> properties,
+                                 @Context UriInfo uriInfo) throws VirtualFileSystemException {
         VirtualFileSystem vfs = registry.getProvider(vfsId).newInstance(null, eventListenerList);
         Project project =
                 vfs.createProject(vfs.getInfo().getRoot().getId(), name, "deprecated.project.type", properties);
@@ -204,7 +199,5 @@ public class CreateProjectService {
                             "</web-app>";
         InputStream webIS = new ByteArrayInputStream(webContent.getBytes());
         vfs.createFile(webInf.getId(), "web.xml", MediaType.TEXT_XML_TYPE, webIS);
-
-        return project;
     }
 }

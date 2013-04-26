@@ -19,7 +19,6 @@
 package com.codenvy.ide.extension.maven.client.template;
 
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.resources.marshal.ProjectModelProviderAdapter;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
@@ -38,7 +37,7 @@ public interface CreateProjectClientService {
      * @param callback
      * @throws RequestException
      */
-    void createWarProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<ProjectModelProviderAdapter> callback)
+    void createWarProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback)
             throws RequestException;
 
     /**
@@ -51,5 +50,5 @@ public interface CreateProjectClientService {
      * @throws RequestException
      */
     void createJavaProject(String projectName, String sourceFolder, JsonArray<Property> properties,
-                           AsyncRequestCallback<ProjectModelProviderAdapter> callback) throws RequestException;
+                           AsyncRequestCallback<Void> callback) throws RequestException;
 }
