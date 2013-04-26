@@ -18,19 +18,21 @@
  */
 package org.exoplatform.ide.git.server.github;
 
+import com.codenvy.commons.json.JsonHelper;
+import com.codenvy.commons.json.JsonNameConventions;
+import com.codenvy.commons.json.JsonParseException;
+import com.codenvy.commons.security.oauth.OAuthTokenProvider;
+import com.codenvy.commons.security.shared.Token;
+
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.commons.ContainerUtils;
-import org.exoplatform.ide.commons.JsonHelper;
-import org.exoplatform.ide.commons.JsonNameConventions;
-import org.exoplatform.ide.commons.JsonParseException;
 import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.ssh.server.SshKey;
 import org.exoplatform.ide.extension.ssh.server.SshKeyStore;
 import org.exoplatform.ide.extension.ssh.server.SshKeyStoreException;
 import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.GitHubRepository;
-import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
 import org.exoplatform.services.security.ConversationState;
 
 import java.io.BufferedWriter;
@@ -102,7 +104,7 @@ public class GitHub {
      * @throws org.exoplatform.ide.commons.ParsingResponseException if any error occurs when parse response body
      */
     public GitHubRepository[] listAllUserRepositories(String user) throws IOException, GitHubException, ParsingResponseException {
-        final String oauthToken = getToken();
+        final String oauthToken = getToken(getUserId());
         final String url = "https://api.github.com/users/" + user + "/repos?access_token=" + oauthToken;
         final String method = "GET";
         final String response = doJsonRequest(url, method, 200);
@@ -121,7 +123,7 @@ public class GitHub {
     public GitHubRepository[] listAllOrganizationRepositories(String organization) throws IOException,
                                                                                   GitHubException,
                                                                                   ParsingResponseException {
-        final String oauthToken = getToken();
+        final String oauthToken = getToken(getUserId());
         final String url = "https://api.github.com/orgs/" + organization + "/repos?access_token=" + oauthToken;
         final String method = "GET";
         final String response = doJsonRequest(url, method, 200);
@@ -137,7 +139,7 @@ public class GitHub {
      * @throws org.exoplatform.ide.commons.ParsingResponseException if any error occurs when parse response body
      */
     public GitHubRepository[] listCurrentUserRepositories() throws IOException, GitHubException, ParsingResponseException {
-        final String oauthToken = getToken();
+        final String oauthToken = getToken(getUserId());
         final String url = "https://api.github.com/user/repos?access_token=" + oauthToken;
         final String method = "GET";
         final String response = doJsonRequest(url, method, 200);
@@ -175,7 +177,7 @@ public class GitHub {
      * @throws org.exoplatform.ide.commons.ParsingResponseException if any error occurs when parse response body
      */
     public List<String> listOrganizations() throws IOException, GitHubException, ParsingResponseException {
-        final String oauthToken = getToken();
+        final String oauthToken = getToken(getUserId());
         final List<String> result = new ArrayList<String>();
         final String url = "https://api.github.com/user/orgs?access_token=" + oauthToken;
         final String method = "GET";
@@ -227,7 +229,7 @@ public class GitHub {
 
 
     public void generateGitHubSshKey() throws IOException, SshKeyStoreException, GitHubException, ParsingResponseException {
-        final String oauthToken = getToken();
+        final String oauthToken = getToken(getUserId());
         final String url = "https://api.github.com/user/keys?access_token=" + oauthToken;
 
         sshKeyStore.removeKeys("github.com");
@@ -242,8 +244,19 @@ public class GitHub {
 
         String jsonRequest = JsonHelper.toJson(params);
 
-        doJsonRequest(url, "POST", 201, jsonRequest);
+        doJsonRequest(url, "POST", 200, jsonRequest);
     }
+    
+    public String getToken(String user) throws GitHubException, IOException {
+        Token token = oauthTokenProvider.getToken("github", user);
+        String oauthToken =  token != null ? token.getToken() : null;
+        if (oauthToken == null || oauthToken.isEmpty())
+        {
+            throw new GitHubException(401, "Authentication required.\n", "text/plain");
+        }
+        return oauthToken;
+    }
+    
 
     /**
      * Do json request (without authorization!)
@@ -365,21 +378,13 @@ public class GitHub {
         return body;
     }
 
-    private String getToken() throws GitHubException, IOException {
-        String oauthToken = oauthTokenProvider.getToken("github", getUserId());
-        if (oauthToken == null || oauthToken.isEmpty())
-        {
-            throw new GitHubException(401, "Authentication required.\n", "text/plain");
-        }
-        return oauthToken;
-    }
 
     private String getUserId() {
         return ConversationState.getCurrent().getIdentity().getUserId();
     }
 
     private String getGithubUserId() throws IOException, JsonParseException, GitHubException {
-        final String oauthToken = oauthTokenProvider.getToken("github", getUserId());
+        final String oauthToken = getToken(getUserId());
         final String url = "https://api.github.com/user?access_token=" + oauthToken;
         final String method = "GET";
         final String response = doJsonRequest(url, method, 200);

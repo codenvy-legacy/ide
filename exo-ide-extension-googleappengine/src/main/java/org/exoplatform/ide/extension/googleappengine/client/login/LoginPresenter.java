@@ -35,6 +35,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.OAuthLoginFinishedHandl
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.Utils;
+import org.exoplatform.ide.extension.googleappengine.client.GaeTools;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
@@ -128,10 +129,9 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, OAuthLog
                                                                      new GoogleAppEngineAsyncRequestCallback<GaeUser>(unmarshaller) {
                                                                          @Override
                                                                          protected void onSuccess(GaeUser result) {
-                                                                             IDE.fireEvent(new SetLoggedUserStateEvent(
-                                                                                                                       result.isAuthenticated()));
-                                                                             if (!result.isAuthenticated()) {
-                                                                                 IDE.fireEvent(new SetLoggedUserStateEvent(true));
+                                                                             boolean isLogged = GaeTools.isAuthenticatedInAppEngine(result.getToken());
+                                                                            IDE.fireEvent(new SetLoggedUserStateEvent(isLogged));
+                                                                             if (!isLogged) {
                                                                                  if (display != null) {
                                                                                      IDE.getInstance().closeView(display.asView().getId());
                                                                                  }

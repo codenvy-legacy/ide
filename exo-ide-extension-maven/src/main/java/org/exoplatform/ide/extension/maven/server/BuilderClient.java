@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.maven.server;
 
+import com.codenvy.commons.json.JsonHelper;
+
 import org.everrest.websockets.WSConnectionContext;
 import org.everrest.websockets.message.ChannelBroadcastMessage;
 import org.exoplatform.container.xml.InitParams;
@@ -38,7 +40,7 @@ import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import static org.exoplatform.ide.commons.JsonHelper.toJson;
+
 
 /**
  * Client to remote build server.
@@ -501,7 +503,7 @@ public class BuilderClient {
             if (data instanceof String) {
                 message.setBody((String)data);
             } else if (data != null) {
-                message.setBody(toJson(data));
+                message.setBody(JsonHelper.toJson(data));
             }
         } else {
             message.setType(ChannelBroadcastMessage.Type.ERROR);

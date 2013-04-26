@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.security.paas;
 
+import com.codenvy.commons.json.JsonHelper;
+import com.codenvy.commons.json.JsonParseException;
 import com.codenvy.ide.commons.Pair;
 import com.codenvy.ide.commons.cache.Cache;
 import com.codenvy.ide.commons.cache.SLRUCache;
@@ -25,9 +27,6 @@ import com.codenvy.organization.client.UserManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
 import com.codenvy.organization.exception.UserExistenceException;
 import com.codenvy.organization.model.User;
-
-import org.exoplatform.ide.commons.JsonHelper;
-import org.exoplatform.ide.commons.JsonParseException;
 
 import java.util.Map;
 import java.util.concurrent.locks.Lock;

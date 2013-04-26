@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.googleappengine.server;
 
+import com.codenvy.commons.security.shared.Token;
+
 import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
 
 /**
@@ -25,12 +27,12 @@ import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
  * @version $Id: $
  */
 public class GaeUserImpl implements GaeUser {
-    private String  id;
-    private boolean authenticated;
+    private String id;
+    private Token  token;
 
-    public GaeUserImpl(String id, boolean authenticated) {
+    public GaeUserImpl(String id, Token token) {
         this.id = id;
-        this.authenticated = authenticated;
+        this.token = token;
     }
 
     @Override
@@ -55,12 +57,12 @@ public class GaeUserImpl implements GaeUser {
     }
 
     @Override
-    public boolean isAuthenticated() {
-        return authenticated;
+    public Token getToken() {
+        return token;
     }
 
     @Override
-    public void setAuthenticated(boolean authenticated) {
-        this.authenticated = authenticated;
+    public void setToken(Token token) {
+        this.token = token;
     }
 }

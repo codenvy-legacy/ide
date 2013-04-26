@@ -51,7 +51,7 @@ import java.util.regex.Pattern;
 
 import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
 import static org.exoplatform.ide.commons.FileUtils.*;
-import static org.exoplatform.ide.commons.JsonHelper.toJson;
+import static com.codenvy.commons.json.JsonHelper.toJson;
 import static org.exoplatform.ide.commons.NameGenerator.generate;
 import static org.exoplatform.ide.commons.ZipUtils.*;
 

@@ -18,13 +18,16 @@
  */
 package org.exoplatform.ide.googlecontacts;
 
+import com.codenvy.commons.security.oauth.GoogleOAuthAuthenticator;
+import com.codenvy.commons.security.oauth.OAuthTokenProvider;
+import com.codenvy.commons.security.shared.Token;
 import com.codenvy.organization.invite.InviteService;
 import com.codenvy.organization.model.Invitation;
 import com.google.gdata.data.contacts.ContactEntry;
 import com.google.gdata.data.extensions.Email;
 import com.google.gdata.util.ServiceException;
 
-import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
+
 import org.exoplatform.services.security.ConversationState;
 
 import javax.inject.Inject;
@@ -104,6 +107,7 @@ public class GoogleContactsRestService {
     @Path("/is-authenticate")
     @Produces(MediaType.APPLICATION_JSON)
     public String isAuthenticate() throws Exception {
-        return oauthTokenProvider.getToken("google", ConversationState.getCurrent().getIdentity().getUserId());
+        Token token = oauthTokenProvider.getToken("google",ConversationState.getCurrent().getIdentity().getUserId());
+        return token != null ? token.getScope() : null;
     }
 }
