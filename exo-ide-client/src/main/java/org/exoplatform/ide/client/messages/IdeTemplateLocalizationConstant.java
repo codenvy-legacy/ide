@@ -98,6 +98,9 @@ public interface IdeTemplateLocalizationConstant extends Messages {
     @Key("createProjectFromTemplate.selectTemplate")
     String createProjectFromTemplateSelectTemplate();
 
+    @Key("createProjectFromTemplate.project.nameInvalid")
+    String createProjectFromTemplateProjectNameInvalid();
+
     @Key("createProjectFromTemplate.project.exists")
     String createProjectFromTemplateProjectExists(String projectName);
 

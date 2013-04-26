@@ -40,8 +40,6 @@ import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor;
 import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
-import org.exoplatform.ide.editor.css.client.contentassist.CssContentAssistProcessor;
-import org.exoplatform.ide.editor.javascript.client.contentassist.JavaScriptContentAssistProcessor;
 import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
@@ -61,11 +59,11 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor {
         /** Index of last end-of-TAG token before cursor; -1 => not in this line. */
         int endTagIndex = -1;
 
-        /** Token that "covers" the cursor; left token if cursor touches 2 tokens, */
-        Token inToken = null;
+        /** Token that "covers" the cursor; left token if cursor touches 2 tokens. */
+        Token inToken;
 
         /** Number of characters between "inToken" start and the cursor position. */
-        int cut = 0;
+        int cut;
 
         /** Indicates that cursor is located inside tag. */
         boolean inTag;
@@ -78,21 +76,21 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor {
     static final AnchorType MODE_ANCHOR_TYPE = AnchorType.create(HtmlAutocompleter.class, "mode");
 
     /** A {@link ContentAssistProcessor} for CSS. */
-    private CssContentAssistProcessor cssProcessor;
+    private ContentAssistProcessor cssProcessor;
 
     /** A {@link ContentAssistProcessor} for JavaScript. */
-    private JavaScriptContentAssistProcessor jsProcessor;
+    private ContentAssistProcessor jsProcessor;
 
     /**
      * Constructs new {@link HtmlContentAssistProcessor} instance.
      *
      * @param cssProcessor
-     *         {@link CssContentAssistProcessor}
+     *         {@link ContentAssistProcessor}
      * @param jsProcessor
-     *         {@link JavaScriptContentAssistProcessor}
+     *         {@link ContentAssistProcessor}
      */
-    public HtmlContentAssistProcessor(CssContentAssistProcessor cssProcessor,
-                                      JavaScriptContentAssistProcessor jsProcessor) {
+    public HtmlContentAssistProcessor(ContentAssistProcessor cssProcessor,
+                                      ContentAssistProcessor jsProcessor) {
         this.cssProcessor = cssProcessor;
         this.jsProcessor = jsProcessor;
     }
@@ -147,15 +145,7 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor {
             if (inTag) {
                 JsonArray<AutocompleteProposal> proposals =
                         htmlAttributes.searchAttributes(tag.getTagName(), tag.getAttributes(), "");
-
-                CompletionProposal[] proposalArray = new CompletionProposal[proposals.size()];
-
-                for (int i = 0; i < proposals.size(); i++) {
-                    AutocompleteProposal proposal = proposals.get(i);
-                    proposalArray[i] =
-                            new HtmlProposal(proposal.getName(), CompletionType.ATTRIBUTE, "", offset, htmlAttributes);
-                }
-                return proposalArray;
+                return getCompletionProposalArray(proposals, CompletionType.ATTRIBUTE, "", offset);
             }
             return null;
         }
@@ -187,17 +177,8 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor {
         value = value.substring(0, value.length() - findTagResult.cut);
         if (TokenType.TAG == type) {
             value = value.substring(1).trim();
-
             JsonArray<AutocompleteProposal> searchTags = htmlAttributes.searchTags(value.toLowerCase());
-
-            CompletionProposal[] proposalArray = new CompletionProposal[searchTags.size()];
-
-            for (int i = 0; i < searchTags.size(); i++) {
-                AutocompleteProposal proposal = searchTags.get(i);
-                proposalArray[i] =
-                        new HtmlProposal(proposal.getName(), CompletionType.ELEMENT, value, offset, htmlAttributes);
-            }
-            return proposalArray;
+            return getCompletionProposalArray(searchTags, CompletionType.ELEMENT, value, offset);
         }
         if (TokenType.WHITESPACE == type || TokenType.ATTRIBUTE == type) {
             value = (TokenType.ATTRIBUTE == type) ? value : "";
@@ -209,18 +190,22 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor {
             //         {
             //            return AutocompleteProposals.PARSING;
             //         }
-
-            CompletionProposal[] proposalArray = new CompletionProposal[proposals.size()];
-
-            for (int i = 0; i < proposals.size(); i++) {
-                AutocompleteProposal proposal = proposals.get(i);
-                proposalArray[i] =
-                        new HtmlProposal(proposal.getName(), CompletionType.ATTRIBUTE, value, offset, htmlAttributes);
-            }
-            return proposalArray;
+            return getCompletionProposalArray(proposals, CompletionType.ATTRIBUTE, value, offset);
         }
 
         return null;
+    }
+
+    private CompletionProposal[] getCompletionProposalArray(JsonArray<AutocompleteProposal> proposals,
+                                                            CompletionType completionType,
+                                                            String prefix,
+                                                            int offset) {
+        CompletionProposal[] proposalArray = new CompletionProposal[proposals.size()];
+        for (int i = 0; i < proposals.size(); i++) {
+            AutocompleteProposal proposal = proposals.get(i);
+            proposalArray[i] = new HtmlProposal(proposal.getName(), completionType, prefix, offset, htmlAttributes);
+        }
+        return proposalArray;
     }
 
     void putModeAnchors(TaggableLine currentLine, JsonArray<Pair<Integer, String>> modes) {
@@ -275,10 +260,7 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor {
         return result;
     }
 
-    /**
-     * Finds token at cursor position and computes first and last token indexes
-     * of surrounding tag.
-     */
+    /** Finds token at cursor position and computes first and last token indexes of surrounding tag. */
     private static FindTagResult findTag(JsonArray<Token> tokens, boolean startsInTag, int column) {
         FindTagResult result = new FindTagResult();
         result.inTag = startsInTag;

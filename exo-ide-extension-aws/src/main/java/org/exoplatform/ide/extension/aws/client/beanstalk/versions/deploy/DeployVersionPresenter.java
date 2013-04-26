@@ -37,7 +37,10 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.project.*;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -68,8 +71,9 @@ import java.util.Map;
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: DeployVersionPresenter.java Sep 27, 2012 6:05:22 PM azatsarynnyy $
  */
-public class DeployVersionPresenter implements ProjectOpenedHandler, ProjectClosedHandler, VfsChangedHandler,
-                                               DeployVersionHandler, ViewClosedHandler, ActiveProjectChangedHandler {
+public class DeployVersionPresenter implements ProjectOpenedHandler, ProjectClosedHandler,
+            VfsChangedHandler, DeployVersionHandler, ViewClosedHandler {
+    
     interface Display extends IsView {
         /**
          * Get the 'Deploy to a new environment' mode radio field.
@@ -171,7 +175,6 @@ public class DeployVersionPresenter implements ProjectOpenedHandler, ProjectClos
         IDE.addHandler(VfsChangedEvent.TYPE, this);
         IDE.addHandler(DeployVersionEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
-        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
     }
 
     /** Bind display (view) with presenter. */
@@ -295,13 +298,13 @@ public class DeployVersionPresenter implements ProjectOpenedHandler, ProjectClos
                     vfsInfo.getId(),
                     openedProject.getId(),
                     new AwsAsyncRequestCallback<List<EnvironmentInfo>>(new EnvironmentsInfoListUnmarshaller(),
-                                                                       new LoggedInHandler() {
+                           new LoggedInHandler() {
 
-                                                                           @Override
-                                                                           public void onLoggedIn() {
-                                                                               getEnvironments();
-                                                                           }
-                                                                       }, null) {
+                               @Override
+                               public void onLoggedIn() {
+                                   getEnvironments();
+                               }
+                           }, null) {
 
                         @Override
                         protected void onSuccess(List<EnvironmentInfo> result) {
@@ -341,11 +344,6 @@ public class DeployVersionPresenter implements ProjectOpenedHandler, ProjectClos
     /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent) */
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
-        this.openedProject = event.getProject();
-    }
-
-    @Override
-    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
         this.openedProject = event.getProject();
     }
 

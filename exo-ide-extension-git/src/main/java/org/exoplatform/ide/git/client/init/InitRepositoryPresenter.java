@@ -147,9 +147,8 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
                                                   new RequestCallback<String>() {
                                                       @Override
                                                       protected void onSuccess(String result) {
-                                                          // IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
-                                                          // IDE.fireEvent(new RefreshBrowserEvent(project));
-                                                          setGitRepositoryProperty();
+                                                           IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
+                                                           IDE.fireEvent(new RefreshBrowserEvent(project));
                                                       }
 
                                                       @Override
@@ -169,9 +168,8 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
                                                 new AsyncRequestCallback<String>() {
                                                     @Override
                                                     protected void onSuccess(String result) {
-                                                        // IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
-                                                        // IDE.fireEvent(new RefreshBrowserEvent(getSelectedProject()));
-                                                        setGitRepositoryProperty();
+                                                         IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
+                                                         IDE.fireEvent(new RefreshBrowserEvent(getSelectedProject()));
                                                     }
 
                                                     @Override
@@ -179,30 +177,6 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
                                                         handleError(exception);
                                                     }
                                                 });
-        } catch (RequestException e) {
-            handleError(e);
-        }
-    }
-
-    private void setGitRepositoryProperty() {
-        project.getProperties().add(new PropertyImpl(GitExtension.GIT_REPOSITORY_PROP, "true"));
-        ItemWrapper item = new ItemWrapper(project);
-        ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
-        try {
-            VirtualFileSystem.getInstance().updateItem(project, null,
-                                                       new AsyncRequestCallback<ItemWrapper>(unmarshaller) {
-                                                           @Override
-                                                           protected void onSuccess(ItemWrapper result) {
-                                                               IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
-                                                               IDE.fireEvent(new RefreshBrowserEvent(project));
-                                                           }
-
-                                                           @Override
-                                                           protected void onFailure(Throwable exception) {
-                                                               handleError(exception);
-
-                                                           }
-                                                       });
         } catch (RequestException e) {
             handleError(e);
         }

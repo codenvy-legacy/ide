@@ -24,13 +24,28 @@ import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 import org.exoplatform.ide.extension.ssh.shared.PublicKey;
 
 import javax.annotation.security.RolesAllowed;
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
-import java.util.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * REST interface to SshKeyProvider.
- *
+ * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
@@ -66,13 +81,11 @@ public class KeyService {
     @RolesAllowed({"developer"})
     public Response addPrivateKey(@Context SecurityContext security, @QueryParam("host") String host,
                                   Iterator<FileItem> iterator) {
-      /*      XXX : Temporary turn-off don't work on demo site      
-            if (!security.isSecure())
-            {
-               throw new WebApplicationException(Response.status(400)
-                  .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());
-            }
-      */
+        /*
+         * XXX : Temporary turn-off don't work on demo site if (!security.isSecure()) { throw new
+         * WebApplicationException(Response.status(400)
+         * .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build()); }
+         */
         byte[] key = null;
         while (iterator.hasNext() && key == null) {
             FileItem fileItem = iterator.next();
@@ -97,7 +110,7 @@ public class KeyService {
 
     /**
      * Get public key.
-     *
+     * 
      * @see {@link SshKeyStore#genKeyPair(String, String, String)}
      * @see {@link SshKeyStore#getPublicKey(String)}
      */
@@ -106,13 +119,11 @@ public class KeyService {
     @Produces({MediaType.APPLICATION_JSON})
     public Response getPublicKey(@Context SecurityContext security, @QueryParam("host") String host) {
 
-      /*      XXX : Temporary turn-off don't work on demo site      
-            if (!security.isSecure())
-            {
-               throw new WebApplicationException(Response.status(400)
-                  .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());
-            }
-      */
+        /*
+         * XXX : Temporary turn-off don't work on demo site if (!security.isSecure()) { throw new
+         * WebApplicationException(Response.status(400)
+         * .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build()); }
+         */
         SshKey publicKey;
         try {
             publicKey = keyStore.getPublicKey(host);
@@ -161,11 +172,11 @@ public class KeyService {
                     String getPublicKeyUrl = null;
                     if (publicKeyExists) {
                         getPublicKeyUrl =
-                                uriInfo.getBaseUriBuilder().path(getClass()).queryParam("host", host).build().toString();
+                                          uriInfo.getBaseUriBuilder().path(getClass()).queryParam("host", host).build().toString();
                     }
                     String removeKeysUrl =
-                            uriInfo.getBaseUriBuilder().path(getClass(), "removeKeys").queryParam("host", host).build()
-                                   .toString();
+                                           uriInfo.getBaseUriBuilder().path(getClass(), "removeKeys").queryParam("host", host).build()
+                                                  .toString();
 
                     result.add(new KeyItem(host, getPublicKeyUrl, removeKeysUrl));
                 }
@@ -173,10 +184,7 @@ public class KeyService {
             }
             return Response.ok(Collections.emptyList(), MediaType.APPLICATION_JSON).build();
         } catch (SshKeyStoreException e) {
-            throw new WebApplicationException(Response.serverError() //
-                                                      .entity(e.getMessage()) //
-                                                      .type(MediaType.TEXT_PLAIN) //
-                                                      .build());
+            throw new WebApplicationException(Response.serverError().entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build());
         }
     }
 }

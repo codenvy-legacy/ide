@@ -56,10 +56,8 @@ import java.util.List;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 2, 2011 2:21:04 PM anya $
  */
-public class HerokuProjectPresenter extends GitPresenter
-        implements ManageHerokuProjectHandler, ViewClosedHandler, LoggedInHandler, ApplicationRenamedHandler, ApplicationDeletedHandler
-//   ProjectOpenedHandler, ProjectClosedHandler, , ActiveProjectChangedHandler
-{
+public class HerokuProjectPresenter extends GitPresenter implements ManageHerokuProjectHandler, 
+        ViewClosedHandler, LoggedInHandler, ApplicationRenamedHandler, ApplicationDeletedHandler {
 
     interface Display extends IsView {
         HasClickHandlers getCloseButton();
@@ -86,17 +84,8 @@ public class HerokuProjectPresenter extends GitPresenter
     /** Presenter's display. */
     private Display display;
 
-//   /**
-//    * Opened project in project explorer.
-//    */
-//   private ProjectModel openedProject;
-
     public HerokuProjectPresenter() {
         IDE.getInstance().addControl(new HerokuControl());
-
-//      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-//      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-//      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
         IDE.addHandler(ManageHerokuProjectEvent.TYPE, this);
         IDE.addHandler(ApplicationRenamedEvent.TYPE, this);
         IDE.addHandler(ApplicationDeletedEvent.TYPE, this);
@@ -178,44 +167,18 @@ public class HerokuProjectPresenter extends GitPresenter
         getApplicationInfo();
     }
 
-//   /**
-//    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
-// .project.ProjectClosedEvent)
-//    */
-//   @Override
-//   public void onProjectClosed(ProjectClosedEvent event)
-//   {
-//      openedProject = null;
-//   }
-//
-//   /**
-//    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
-// .project.ProjectOpenedEvent)
-//    */
-//   @Override
-//   public void onProjectOpened(ProjectOpenedEvent event)
-//   {
-//      openedProject = event.getProject();
-//   }
-//   
-//   @Override
-//   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-//   {
-//      openedProject = event.getProject();
-//   }
-
     /** Get application's information. */
     protected void getApplicationInfo() {
         try {
             ProjectModel project = getSelectedProject();
             HerokuClientService.getInstance().getApplicationInfo(null, vfs.getId(), project.getId(), false,
-                                                                 new HerokuAsyncRequestCallback(this) {
+                     new HerokuAsyncRequestCallback(this) {
 
-                                                                     @Override
-                                                                     protected void onSuccess(List<Property> properties) {
-                                                                         displayProperties(properties);
-                                                                     }
-                                                                 });
+                         @Override
+                         protected void onSuccess(List<Property> properties) {
+                             displayProperties(properties);
+                         }
+                     });
         } catch (RequestException e) {
         }
     }
@@ -276,4 +239,5 @@ public class HerokuProjectPresenter extends GitPresenter
             IDE.fireEvent(new RefreshBrowserEvent(project));
         }
     }
+    
 }

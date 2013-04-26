@@ -21,7 +21,13 @@ package org.eclipse.jdt.client.create;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyPressHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
@@ -62,13 +68,9 @@ import java.util.List;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClosedHandler, ItemsSelectedHandler,
-   /*ProjectOpenedHandler, ProjectClosedHandler,*/ EditorActiveFileChangedHandler, TreeRefreshedHandler
-   /*, ActiveProjectChangedHandler*/ {
+public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClosedHandler, 
+        ItemsSelectedHandler, EditorActiveFileChangedHandler, TreeRefreshedHandler {
 
-    /**
-     *
-     */
     private static final String TYPE_CONTENT = "\n{\n}";
 
     public static final String DEFAULT_SOURCE_FOLDER = "src/main/java";
@@ -120,20 +122,9 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
 
     private Display display;
 
-//   private ProjectModel project;
-
     private Item selectedItem;
 
-//   private FolderModel parentFolder;
-
-
-//   FolderModel classParentFolder;
-
     private final VirtualFileSystem vfs;
-
-//   private HandlerRegistration fileOpenedHandler;
-
-//   private Project currentProjectItem;
 
     /** @param eventBus */
     public CreateJavaClassPresenter(VirtualFileSystem vfs) {
@@ -142,10 +133,7 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
 
         IDE.addHandler(CreateJavaClassEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
-//      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-//      IDE.addHandler(ProjectClosedEvent.TYPE, this);
         IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-//      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
     }
 
     /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
@@ -157,29 +145,6 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
         } else {
             selectedItem = null;
         }
-
-//      if (!event.getSelectedItems().isEmpty())
-//      {
-//         selectedItem = event.getSelectedItems().get(0);
-//
-//         Item item = event.getSelectedItems().get(0);
-//         if (item instanceof FolderModel)
-//         {
-//            parentFolder = (FolderModel)item;
-//         }
-//         else if (item instanceof ProjectModel)
-//         {
-//            parentFolder = new FolderModel((Folder)item);
-//         }
-//         else
-//         {
-//            parentFolder = ((FileModel)item).getParent();
-//         }
-//      }
-//      else
-//      {
-//         parentFolder = null;
-//      }
     }
 
 
@@ -273,13 +238,6 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
 
         showCurrentPackage();
         display.focusInClassNameField();
-      
-      
-
-      /*
-
-
-      */
     }
    
    /*
@@ -627,14 +585,6 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
         return "package " + packageName + ";\n\n";
     }
 
-
-//   @Override
-//   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-//   {
-//      project = event.getProject();
-//   }
-
-
     /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
      * .event.ViewClosedEvent) */
     @Override
@@ -643,27 +593,6 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
             display = null;
         }
     }
-
-//   /**
-//    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
-// .project.ProjectClosedEvent)
-//    */
-//   @Override
-//   public void onProjectClosed(ProjectClosedEvent event)
-//   {
-//      project = null;
-//      currentProjectItem = null;
-//   }
-
-//   /**
-//    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
-// .project.ProjectOpenedEvent)
-//    */
-//   @Override
-//   public void onProjectOpened(ProjectOpenedEvent event)
-//   {
-//      project = event.getProject();
-//   }
 
     /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
      * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */

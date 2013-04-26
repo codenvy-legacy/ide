@@ -19,11 +19,15 @@
 package org.exoplatform.ide.extension.openshift.client.info;
 
 import com.google.gwt.cell.client.SafeHtmlCell;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.client.ui.HTML;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
+
+import java.util.List;
 
 /**
  * Grid for displaying application information.
@@ -42,6 +46,10 @@ public class ApplicationInfoListGrid extends ListGrid<Property> {
         super();
 
         setID(ID);
+
+        HTML emptyTable = new HTML(OpenShiftExtension.LOCALIZATION_CONSTANT.createAppForPropertiesView());
+        emptyTable.getElement().getStyle().setMarginBottom(2, Style.Unit.PX);
+        getCellTable().setEmptyTableWidget(emptyTable);
 
         Column<Property, SafeHtml> nameColumn = new Column<Property, SafeHtml>(new SafeHtmlCell()) {
 
@@ -78,5 +86,16 @@ public class ApplicationInfoListGrid extends ListGrid<Property> {
         getCellTable().setColumnWidth(nameColumn, "35%");
         getCellTable().addColumn(valueColumn, VALUE);
         getCellTable().setColumnWidth(valueColumn, "65%");
+    }
+
+    @Override
+    public void setValue(List<Property> value) {
+        super.setValue(value);
+
+        if (value.size() == 0) {
+            setHeight(45);
+        } else {
+            setHeight(140);
+        }
     }
 }

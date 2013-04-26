@@ -18,16 +18,17 @@
  */
 package org.exoplatform.ide.extension.googleappengine.server;
 
+import com.codenvy.commons.security.shared.Token;
+
 import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
-import org.exoplatform.ide.security.shared.Token;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public class GaeUserImpl implements GaeUser {
-    private String  id;
-    private Token token;
+    private String id;
+    private Token  token;
 
     public GaeUserImpl(String id, Token token) {
         this.id = id;
@@ -59,7 +60,7 @@ public class GaeUserImpl implements GaeUser {
     public Token getToken() {
         return token;
     }
-    
+
     @Override
     public void setToken(Token token) {
         this.token = token;
