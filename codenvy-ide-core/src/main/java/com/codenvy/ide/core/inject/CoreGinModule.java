@@ -73,8 +73,6 @@ import com.codenvy.ide.search.SearchPartPresenter;
 import com.codenvy.ide.search.SearchPartView;
 import com.codenvy.ide.search.SearchPartViewImpl;
 import com.codenvy.ide.selection.SelectionAgentImpl;
-import com.codenvy.ide.template.TemplateService;
-import com.codenvy.ide.template.TemplateServiceImpl;
 import com.codenvy.ide.text.DocumentFactory;
 import com.codenvy.ide.text.DocumentFactoryImpl;
 import com.codenvy.ide.texteditor.TextEditorPresenter;
@@ -118,7 +116,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(Resources.class).in(Singleton.class);
         bind(ExtensionRegistry.class).in(Singleton.class);
         bind(StandardComponentInitializer.class).in(Singleton.class);
-        bind(TemplateService.class).to(TemplateServiceImpl.class).in(Singleton.class);
         install(new GinFactoryModuleBuilder().implement(PartStackView.class, PartStackViewImpl.class).build(PartStackViewFactory.class));
         install(new GinFactoryModuleBuilder().implement(PartStack.class, PartStackPresenter.class).build(PartStackPresenterFactory.class));
         bind(UserClientService.class).to(UserClientServiceImpl.class).in(Singleton.class);
@@ -225,12 +222,5 @@ public class CoreGinModule extends AbstractGinModule {
     @Singleton
     protected MessageBus provideMessageBus() {
         return new RESTMessageBus("wss://localhost/websocket");
-    }
-
-    @Provides
-    @Named("registryContext")
-    @Singleton
-    protected String provideDefaultRegistryContext() {
-        return "/IDE/rest/private/registry/repository/exo:applications/IDE";
     }
 }
