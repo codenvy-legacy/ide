@@ -322,11 +322,17 @@ public interface CloudFoundryLocalizationConstant extends Messages {
     @Key("create.application.failed")
     String applicationCreationFailed();
 
-    @Key("create.application.started")
-    String createApplicationStarted(String project);
+    @Key("create.application.started.cloudFoundry")
+    String createApplicationStartedCloudFoundry(String project);
 
-    @Key("create.application.finished")
-    String createApplicationFinished(String project);
+    @Key("create.application.started.webFabric")
+    String createApplicationStartedWebFabric(String project);
+
+    @Key("create.application.finished.cloudFoundry")
+    String createApplicationFinishedCloudFoundry(String project);
+
+    @Key("create.application.finished.webFabric")
+    String createApplicationFinishedWebFabric(String project);
 
     /*
      * StartApplicationPresenter

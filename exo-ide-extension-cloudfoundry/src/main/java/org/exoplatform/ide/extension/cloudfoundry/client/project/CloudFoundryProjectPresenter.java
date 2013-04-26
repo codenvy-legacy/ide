@@ -259,7 +259,7 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements
     protected void getLogs() {
         ProjectModel project = getSelectedProject();
         try {
-            CloudFoundryClientService.getInstance().getLogs(vfs.getId(), project.getId(), paasProvider.value(),
+            CloudFoundryClientService.getInstance().getLogs(vfs.getId(), project.getId(), paasProvider,
                                                             new AsyncRequestCallback<StringBuilder>(
                                                                     new StringUnmarshaller(new StringBuilder())) {
 
@@ -310,7 +310,7 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements
             AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                     new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-            CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), project.getId(), null, null, paasProvider.value(),
+            CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), project.getId(), null, null, paasProvider,
                                                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
                                                                                unmarshaller, new LoggedInHandler() {
                                                                            @Override

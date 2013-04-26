@@ -164,7 +164,7 @@ public class CreateServicePresenter implements CreateServiceHandler, ViewClosedH
             AutoBeanUnmarshaller<ProvisionedService> unmarshaller =
                     new AutoBeanUnmarshaller<ProvisionedService>(provisionedService);
 
-            CloudFoundryClientService.getInstance().createService(null, type, name, null, null, null, paasProvider.value(),
+            CloudFoundryClientService.getInstance().createService(null, type, name, null, null, null, paasProvider,
                                                                   new CloudFoundryAsyncRequestCallback<ProvisionedService>(unmarshaller,
                                                                                                                            createServiceLoggedInHandler,
                                                                                                                            null, paasProvider) {

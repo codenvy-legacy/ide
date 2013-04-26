@@ -150,7 +150,7 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
                                                          projectId,
                                                          null,
                                                          null,
-                                                         paasProvider.value(),
+                                                         paasProvider,
                                                          new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
                                                                                                                        appInfoLoggedInHandler,
                                                                                                                        null, paasProvider) {
@@ -197,7 +197,7 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
         try {
             CloudFoundryClientService.getInstance()
                                      .deleteApplication(vfs.getId(), projectId, appName, serverName,
-                                                        isDeleteServices , paasProvider.value(),
+                                                        isDeleteServices , paasProvider,
                                                         new CloudFoundryAsyncRequestCallback<String>(null,
                                                                                                      deleteAppLoggedInHandler,
                                                                                                      null, paasProvider) {

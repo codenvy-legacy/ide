@@ -54,7 +54,7 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER.CLOUD_FOUNDRY;
+import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER.WEB_FABRIC;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -156,7 +156,11 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
     @Override
     public void onShowApplications(ShowApplicationsEvent event) {
         this.paasProvider = event.getPaasProvider();
-        checkLogginedToServer();
+        if (paasProvider == WEB_FABRIC) {
+            openView();
+        } else {
+            checkLogginedToServer();
+        }
     }
 
     /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
@@ -177,11 +181,10 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
                         protected void onSuccess(List<String> result) {
                             if (!result.isEmpty()) {
                                 servers = result;
-                            } else if (paasProvider == CLOUD_FOUNDRY) {
+                            } else {
                                 servers = new ArrayList<String>();
                                 servers.add(CloudFoundryExtension.DEFAULT_CF_SERVER);
                             }
-                            // open view
                             openView();
                         }
 

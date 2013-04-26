@@ -117,7 +117,7 @@ public class ApplicationInfoPresenter extends GitPresenter implements Applicatio
             AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                     new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-            CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null, paasProvider.value(),
+            CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null, paasProvider,
                                                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
                                                                                unmarshaller, new LoggedInHandler() {
                                                                            @Override

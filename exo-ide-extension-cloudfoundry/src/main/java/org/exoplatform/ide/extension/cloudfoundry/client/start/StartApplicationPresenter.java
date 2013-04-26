@@ -137,7 +137,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
                                                          project.getId(),
                                                          null,
                                                          null,
-                                                         paasProvider.value(),
+                                                         paasProvider,
                                                          new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
                                                                                                                        unmarshaller,
                                                                                                                        checkIsStartedLoggedInHandler,
@@ -177,7 +177,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
                                                          project.getId(),
                                                          null,
                                                          null,
-                                                         paasProvider.value(),
+                                                         paasProvider,
                                                          new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
                                                                                                                        unmarshaller,
                                                                                                                        checkIsStoppedLoggedInHandler,
@@ -213,7 +213,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
                                                        project.getId(),
                                                        (name != null) ? name : project.getName(),
                                                        null,
-                                                       paasProvider.value(),
+                                                       paasProvider,
                                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
                                                                                                                      startLoggedInHandler,
                                                                                                                      null, paasProvider) {
@@ -281,7 +281,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
         final String projectId = getSelectedProject() != null ? getSelectedProject().getId() : null;
 
         try {
-            CloudFoundryClientService.getInstance().stopApplication(vfs.getId(), projectId, name, null, paasProvider.value(),
+            CloudFoundryClientService.getInstance().stopApplication(vfs.getId(), projectId, name, null, paasProvider,
                                                                     new CloudFoundryAsyncRequestCallback<String>(null, stopLoggedInHandler,
                                                                                                                  null, paasProvider) {
                                                                         @Override
@@ -299,7 +299,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
                                                                                                                              projectId,
                                                                                                                              name,
                                                                                                                              null,
-                                                                                                                             paasProvider.value(),
+                                                                                                                             paasProvider,
                                                                                                                              new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
                                                                                                                                                                                            unmarshaller,
                                                                                                                                                                                            null,
@@ -361,7 +361,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
                                                          projectId,
                                                          name,
                                                          null,
-                                                         paasProvider.value(),
+                                                         paasProvider,
                                                          new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
                                                                                                                        unmarshaller,
                                                                                                                        restartLoggedInHandler,

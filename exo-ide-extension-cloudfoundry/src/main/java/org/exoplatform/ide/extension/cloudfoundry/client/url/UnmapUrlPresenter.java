@@ -149,7 +149,7 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
         String projectId = getSelectedProject().getId();
 
         try {
-            CloudFoundryClientService.getInstance().mapUrl(vfs.getId(), projectId, null, null, paasProvider.value(), url,
+            CloudFoundryClientService.getInstance().mapUrl(vfs.getId(), projectId, null, null, paasProvider, url,
                                                            new CloudFoundryAsyncRequestCallback<String>(null, mapUrlLoggedInHandler, null,
                                                                paasProvider) {
                                                                @Override
@@ -199,7 +199,7 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
         String projectId = getSelectedProject().getId();
 
         try {
-            CloudFoundryClientService.getInstance().unmapUrl(vfs.getId(), projectId, null, null, paasProvider.value(), url,
+            CloudFoundryClientService.getInstance().unmapUrl(vfs.getId(), projectId, null, null, paasProvider, url,
                                                              new CloudFoundryAsyncRequestCallback<Object>(null,
                                                                                                           unregisterUrlLoggedInHandler,
                                                                                                           null, paasProvider) {
@@ -250,7 +250,7 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
             AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                     new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-            CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null, paasProvider.value(),
+            CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null, paasProvider,
                                                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
                                                                                unmarshaller, null, null, paasProvider) {
                                                                            @Override

@@ -270,7 +270,7 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
     private void bindService(final ProvisionedService service) {
         try {
             CloudFoundryClientService.getInstance().bindService(null, service.getName(), application.getName(), null,
-                                                                null, paasProvider.value(), new CloudFoundryAsyncRequestCallback<Object>(null,
+                                                                null, paasProvider, new CloudFoundryAsyncRequestCallback<Object>(null,
                                                                                                                    bindServiceLoggedInHandler,
                                                                                                                    null, paasProvider) {
 
@@ -300,7 +300,7 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
      */
     private void unbindService(String service) {
         try {
-            CloudFoundryClientService.getInstance().unbindService(null, service, application.getName(), null, null, paasProvider.value(),
+            CloudFoundryClientService.getInstance().unbindService(null, service, application.getName(), null, null, paasProvider,
                                                                   new CloudFoundryAsyncRequestCallback<Object>(null,
                                                                                                                unBindServiceLoggedInHandler,
                                                                                                                null, paasProvider) {
@@ -352,7 +352,7 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
                     null,
                     application.getName(),
                     null,
-                    paasProvider.value(),
+                    paasProvider,
                     new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
                                                                                   getApplicationInfoLoggedInHandler, null, paasProvider) {
 

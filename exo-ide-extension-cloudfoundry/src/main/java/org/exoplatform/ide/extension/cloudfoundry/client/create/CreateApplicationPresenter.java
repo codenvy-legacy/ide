@@ -365,7 +365,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                                                                    app.url,
                                                                    vfs.getId(),
                                                                    project.getId(),
-                                                                   paasProvider.value(),
+                                                                   paasProvider,
                                                                    app.instances,
                                                                    app.memory,
                                                                    app.nostart,
@@ -458,7 +458,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                     vfs.getId(),
                     project.getId(),
                     warUrl,
-                    paasProvider.value(),
+                    paasProvider,
                     new CloudFoundryRESTfulRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
                                                                                     appData.server, paasProvider) {
                         @Override
@@ -506,7 +506,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                     vfs.getId(),
                     project.getId(),
                     warUrl,
-                    paasProvider.value(),
+                    paasProvider,
                     new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
                                                                                   appData.server, paasProvider) {
                         @Override
