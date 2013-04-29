@@ -139,7 +139,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
             GoogleContactsService.getInstance().isAuthenticate(new AsyncRequestCallback<StringBuilder>(unmarshaller) {
                 @Override
                 protected void onSuccess(StringBuilder s) {
-                    if (s != null && !s.toString().isEmpty() && s.indexOf("https://www.google.com/m8/feeds") < 0) {
+                    if (s != null && !s.toString().isEmpty() && !(s.indexOf("https://www.google.com/m8/feeds") < 0)) {
                         loadGoogleContacts();
                     } else {
                         oAuthLoginStart();
