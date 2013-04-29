@@ -37,4 +37,9 @@
     <component>
         <type>org.exoplatform.ide.vfs.impl.fs.EnvironmentContextLocalFSMountStrategy</type>
     </component>
+    
+    <component>
+      <key>org.exoplatform.ide.vfs.impl.fs.SearcherProvider</key>
+      <type>org.exoplatform.ide.vfs.impl.fs.CleanableSearcherProvider</type>
+    </component>
 </configuration>
