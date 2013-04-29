@@ -21,7 +21,7 @@ package com.codenvy.ide.extension.maven.client.template.wizard.javaproject;
 import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
-import com.codenvy.ide.java.client.JavaClientBundle;
+import com.codenvy.ide.ext.java.client.JavaClientBundle;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
 import com.codenvy.ide.util.loging.Log;
