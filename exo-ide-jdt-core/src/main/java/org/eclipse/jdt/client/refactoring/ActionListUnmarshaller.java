@@ -27,7 +27,6 @@ import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.framework.websocket.rest.ResponseMessage;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
