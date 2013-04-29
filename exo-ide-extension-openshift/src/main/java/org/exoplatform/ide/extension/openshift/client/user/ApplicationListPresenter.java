@@ -446,7 +446,7 @@ public class ApplicationListPresenter extends GitPresenter implements ShowApplic
 
                                       @Override
                                       protected void onFailure(Throwable exception) {
-                                          Dialogs.getInstance().showError(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteCartridgeError());
+                                          Dialogs.getInstance().showError(exception.getMessage());
                                       }
                                   });
         } catch (RequestException e) {
@@ -463,7 +463,17 @@ public class ApplicationListPresenter extends GitPresenter implements ShowApplic
                                       @Override
                                       protected void onSuccess(Void result) {
                                           IDE.fireEvent(new ShowApplicationListEvent());
-                                          IDE.fireEvent(new OutputEvent("Cartridge " + cartridgeName + " successfully started."));
+
+                                          String haproxyStatusUrl = null;
+                                          if (cartridgeName.indexOf("haproxy") > 0) {
+                                              haproxyStatusUrl =
+                                                      "\nStatus url: <a href=\"" + currentViewedApp.getPublicUrl() + "haproxy-status/\">" +
+                                                      currentViewedApp.getPublicUrl() + "haproxy-status/</a>";
+                                          }
+
+                                          IDE.fireEvent(new OutputEvent(
+                                                  "Cartridge " + cartridgeName + " successfully started." + haproxyStatusUrl));
+
                                       }
 
                                       @Override

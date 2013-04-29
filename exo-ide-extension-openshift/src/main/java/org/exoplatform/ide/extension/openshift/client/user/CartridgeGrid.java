@@ -37,6 +37,7 @@ import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
+import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.OpenShiftEmbeddableCartridge;
 
 import java.util.Collections;
@@ -62,6 +63,8 @@ public class CartridgeGrid extends ListGrid<OpenShiftEmbeddableCartridge> {
     private Column<OpenShiftEmbeddableCartridge, String> restartCartridgeColumn;
 
     private Column<OpenShiftEmbeddableCartridge, String> reloadCartridgeColumn;
+
+    private AppInfo appInfo;
 
     public CartridgeGrid() {
         setID(ID);
@@ -234,6 +237,10 @@ public class CartridgeGrid extends ListGrid<OpenShiftEmbeddableCartridge> {
         updateGrid();
     }
 
+    public void setApplicationInfo(AppInfo appInfo) {
+        this.appInfo = appInfo;
+    }
+
     /** Cell for clicking to delete application. */
     private class ImageButtonCell extends ButtonCell {
 
@@ -306,6 +313,12 @@ public class CartridgeGrid extends ListGrid<OpenShiftEmbeddableCartridge> {
                     if (value.getProperties().get("database_name") != null) {
                         info.append("<li><span style=\"font-weight: bold;\">Database url:</span>&nbsp;");
                         info.append(value.getProperties().get("database_name"));
+                        info.append("</li>");
+                    }
+
+                    if (value.getName().indexOf("haproxy") > 0) {
+                        info.append("<li><span style=\"font-weight: bold;\">Status url:</span>&nbsp;");
+                        info.append("<a href=\"" + appInfo.getPublicUrl() + "haproxy-status/\">" + appInfo.getPublicUrl() + "haproxy-status/</a>");
                         info.append("</li>");
                     }
                 } else {
