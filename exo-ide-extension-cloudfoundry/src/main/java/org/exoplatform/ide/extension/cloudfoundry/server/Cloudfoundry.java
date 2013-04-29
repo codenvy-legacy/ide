@@ -544,6 +544,8 @@ public class Cloudfoundry {
      * @param projectId
      *         IDE project identifier. May be <code>null</code> if command executed out of project directory in
      *         this case <code>app</code> parameter must be not <code>null</code>
+     * @param paasProvider
+     *         CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @return since start application may take a while time return info with current state of application. If
      *         {@link CloudFoundryApplication#getState()} gives something other then 'STARTED' caller should wait and
      *         check status of application later to be sure it started
@@ -563,14 +565,14 @@ public class Cloudfoundry {
                                                     String app,
                                                     DebugMode debugMode,
                                                     VirtualFileSystem vfs,
-                                                    String projectId)
+                                                    String projectId,
+                                                    String paasProvider)
                                                                      throws CloudfoundryException,
                                                                      ParsingResponseException,
                                                                      CredentialStoreException,
                                                                      VirtualFileSystemException,
                                                                      IOException {
-        return startApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server,
-                                              detectCloudFoundryProviderName(vfs, projectId)),
+        return startApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server, paasProvider),
                                 app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app,
                                 debugMode != null ? debugMode.getMode() : null, true);
     }
@@ -649,6 +651,8 @@ public class Cloudfoundry {
      * @param projectId
      *         IDE project identifier. May be <code>null</code> if command executed out of project directory in
      *         this case <code>app</code> parameter must be not <code>null</code>
+     * @param paasProvider
+     *         CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @throws CloudfoundryException
      *         if cloudfoundry server return unexpected or error status for request
      * @throws ParsingResponseException
@@ -661,9 +665,8 @@ public class Cloudfoundry {
      * @throws IOException
      *         if any i/o errors occurs
      */
-    public void stopApplication(String server, String app, VirtualFileSystem vfs, String projectId)
+    public void stopApplication(String server, String app, VirtualFileSystem vfs, String projectId, String paasProvider)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
-        final String paasProvider = detectCloudFoundryProviderName(vfs, projectId);
         stopApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server, paasProvider),
                         app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, true);
     }
@@ -697,6 +700,8 @@ public class Cloudfoundry {
      * @param projectId
      *         IDE project identifier. May be <code>null</code> if command executed out of project directory in
      *         this case <code>app</code> parameter must be not <code>null</code>
+     * @param paasProvider
+     *         CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @return since restart application may take a while time return info with current state of application. If
      *         {@link CloudFoundryApplication#getState()} gives something other then 'STARTED' caller should wait and
      *         check status of application later to be sure it started
@@ -716,10 +721,10 @@ public class Cloudfoundry {
                                                       String app,
                                                       DebugMode debugMode,
                                                       VirtualFileSystem vfs,
-                                                      String projectId)
+                                                      String projectId,
+                                                      String paasProvider)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
-        return restartApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server,
-            detectCloudFoundryProviderName(vfs, projectId)),
+        return restartApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server, paasProvider),
                                   app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app,
                                   debugMode == null ? null : debugMode.getMode());
     }
@@ -1260,6 +1265,8 @@ public class Cloudfoundry {
      * @param projectId
      *         IDE project identifier. May be <code>null</code> if command executed out of project directory in
      *         this case <code>app</code> parameter must be not <code>null</code>
+     * @param paasProvider
+     *         CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param deleteServices
      *         if <code>true</code> then delete all services bounded to application
      * @throws CloudfoundryException
@@ -1274,9 +1281,8 @@ public class Cloudfoundry {
      * @throws IOException
      *         id any i/o errors occurs
      */
-    public void deleteApplication(String server, String app, VirtualFileSystem vfs, String projectId, boolean deleteServices)
+    public void deleteApplication(String server, String app, VirtualFileSystem vfs, String projectId, String paasProvider, boolean deleteServices)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
-        final String paasProvider = detectCloudFoundryProviderName(vfs, projectId);
         deleteApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server, paasProvider),
                           app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, deleteServices, vfs, projectId);
     }
@@ -1830,7 +1836,8 @@ public class Cloudfoundry {
                                int memory,
                                boolean noStart,
                                VirtualFileSystem vfs,
-                               String projectId)
+                               String projectId,
+                               String paasProvider)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         if ("create".equals(action)) {
             if (app == null || app.isEmpty()) {
@@ -1845,7 +1852,7 @@ public class Cloudfoundry {
             if (server == null || server.isEmpty()) {
                 throw new IllegalArgumentException("Location of Cloud Foundry server required. ");
             }
-            CloudfoundryCredential cloudfoundryCredential = getCredential(server, detectCloudFoundryProviderName(vfs, projectId));
+            CloudfoundryCredential cloudfoundryCredential = getCredential(server, paasProvider);
 
             SystemInfo systemInfo = systemInfo(cloudfoundryCredential);
             SystemResources limits = systemInfo.getLimits();
@@ -1994,6 +2001,9 @@ public class Cloudfoundry {
         if (vfs != null && projectId != null) {
             Item item = vfs.getItem(projectId, PropertyFilter.valueOf("cloudfoundry-provider"));
             providerName = item.getPropertyValue("cloudfoundry-provider");
+        }
+        if (providerName == null || providerName.isEmpty()) {
+            providerName = "cloudfoundry";
         }
         return providerName;
     }

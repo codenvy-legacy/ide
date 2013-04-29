@@ -36,18 +36,18 @@ public class StopApplicationEvent extends GwtEvent<StopApplicationHandler> {
 
     private PAAS_PROVIDER paasProvider;
 
-    /**
-     *
-     */
+    private String server;
+
     public StopApplicationEvent(PAAS_PROVIDER paasProvider) {
         super();
         this.paasProvider = paasProvider;
     }
 
     /** @param applicationName */
-    public StopApplicationEvent(String applicationName, PAAS_PROVIDER paasProvider) {
+    public StopApplicationEvent(String applicationName, String server, PAAS_PROVIDER paasProvider) {
         super();
         this.applicationName = applicationName;
+        this.server = server;
         this.paasProvider = paasProvider;
     }
 
@@ -70,6 +70,10 @@ public class StopApplicationEvent extends GwtEvent<StopApplicationHandler> {
 
     public PAAS_PROVIDER getPaasProvider() {
         return paasProvider;
+    }
+
+    public String getServer() {
+        return server;
     }
 
 }

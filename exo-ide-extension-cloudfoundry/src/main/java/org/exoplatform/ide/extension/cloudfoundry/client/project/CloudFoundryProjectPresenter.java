@@ -324,7 +324,7 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements
                                                                                                                        unmarshaller,
                                                                                                                        new LoggedInHandler() {
                                                                                                                            @Override
-                                                                                                                           public void onLoggedIn() {
+                                                                                                                           public void onLoggedIn(String server) {
                                                                                                                                getApplicationInfo(project);
                                                                                                                            }
                                                                                                                        }, null,

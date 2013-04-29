@@ -179,7 +179,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
     private void createApplication() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
-            public void onLoggedIn() {
+            public void onLoggedIn(String server) {
                 createApplication();
             }
         };
@@ -314,7 +314,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
     private void getServers() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
-            public void onLoggedIn() {
+            public void onLoggedIn(String server) {
                 getServers();
             }
         };
@@ -360,7 +360,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
     public void performValidation() {
         LoggedInHandler validateHandler = new LoggedInHandler() {
             @Override
-            public void onLoggedIn() {
+            public void onLoggedIn(String server) {
                 performValidation();
             }
         };
@@ -373,6 +373,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
                                                                    url,
                                                                    vfs.getId(),
                                                                    null,
+                                                                   CLOUD_FOUNDRY,
                                                                    0,
                                                                    0,
                                                                    true,

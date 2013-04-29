@@ -42,16 +42,17 @@ import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryServices;
 import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemService;
+import org.exoplatform.ide.git.client.GitPresenter;
 
 import java.util.LinkedHashMap;
 
 /**
  * Presenter for creating new service.
- *
+ * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 16, 2012 12:31:33 PM anya $
  */
-public class CreateServicePresenter implements CreateServiceHandler, ViewClosedHandler {
+public class CreateServicePresenter extends GitPresenter implements CreateServiceHandler, ViewClosedHandler {
     interface Display extends IsView {
         HasValue<String> getSystemServicesField();
 
@@ -65,20 +66,20 @@ public class CreateServicePresenter implements CreateServiceHandler, ViewClosedH
     }
 
     /** Display. */
-    private Display display;
+    private Display                          display;
 
     /** Handler for successful service creation. */
     private ProvisionedServiceCreatedHandler serviceCreatedHandler;
 
-    private PAAS_PROVIDER paasProvider;
+    private PAAS_PROVIDER                    paasProvider;
 
-    private LoggedInHandler createServiceLoggedInHandler = new LoggedInHandler() {
+    private LoggedInHandler                  createServiceLoggedInHandler = new LoggedInHandler() {
 
-        @Override
-        public void onLoggedIn() {
-            doCreate();
-        }
-    };
+                                                                              @Override
+                                                                              public void onLoggedIn(String server) {
+                                                                                  doCreate();
+                                                                              }
+                                                                          };
 
     public CreateServicePresenter() {
         IDE.addHandler(CreateServiceEvent.TYPE, this);
@@ -106,34 +107,38 @@ public class CreateServicePresenter implements CreateServiceHandler, ViewClosedH
     /** Get the list of CloudFoundry services (provisioned and system). */
     private void getServices() {
         try {
-            CloudFoundryClientService.getInstance().services(null, paasProvider,
-                                                             new AsyncRequestCallback<CloudfoundryServices>(
-                                                                     new CloudFoundryServicesUnmarshaller()) {
+            CloudFoundryClientService.getInstance()
+                                     .services(null, paasProvider,
+                                               new AsyncRequestCallback<CloudfoundryServices>(
+                                                                                              new CloudFoundryServicesUnmarshaller()) {
 
-                                                                 @Override
-                                                                 protected void onSuccess(CloudfoundryServices result) {
-                                                                     LinkedHashMap<String, String> values =
-                                                                             new LinkedHashMap<String, String>();
-                                                                     for (SystemService service : result.getSystem()) {
-                                                                         values.put(service.getVendor(), service.getDescription());
-                                                                     }
-                                                                     display.setServices(values);
-                                                                 }
+                                                   @Override
+                                                   protected void onSuccess(CloudfoundryServices result) {
+                                                       LinkedHashMap<String, String> values =
+                                                                                              new LinkedHashMap<String, String>();
+                                                       for (SystemService service : result.getSystem()) {
+                                                           values.put(service.getVendor(), service.getDescription());
+                                                       }
+                                                       display.setServices(values);
+                                                   }
 
-                                                                 @Override
-                                                                 protected void onFailure(Throwable exception) {
-                                                                     Dialogs.getInstance().showError(
-                                                                             CloudFoundryExtension.LOCALIZATION_CONSTANT
-                                                                                                  .retrieveServicesFailed());
-                                                                 }
-                                                             });
+                                                   @Override
+                                                   protected void onFailure(Throwable exception) {
+                                                       Dialogs.getInstance()
+                                                              .showError(
+                                                                         CloudFoundryExtension.LOCALIZATION_CONSTANT
+                                                                                                                    .retrieveServicesFailed());
+                                                   }
+                                               });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
     }
 
-    /** @see org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServiceHandler#onCreateService(org.exoplatform.ide
-     * .extension.cloudfoundry.client.services.CreateServiceEvent) */
+    /**
+     * @see org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServiceHandler#onCreateService(org.exoplatform.ide
+     *      .extension.cloudfoundry.client.services.CreateServiceEvent)
+     */
     @Override
     public void onCreateService(CreateServiceEvent event) {
         this.serviceCreatedHandler = event.getProvisionedServiceCreatedHandler();
@@ -146,8 +151,10 @@ public class CreateServicePresenter implements CreateServiceHandler, ViewClosedH
         getServices();
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     *      .event.ViewClosedEvent)
+     */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
@@ -162,17 +169,19 @@ public class CreateServicePresenter implements CreateServiceHandler, ViewClosedH
         try {
             AutoBean<ProvisionedService> provisionedService = CloudFoundryExtension.AUTO_BEAN_FACTORY.provisionedService();
             AutoBeanUnmarshaller<ProvisionedService> unmarshaller =
-                    new AutoBeanUnmarshaller<ProvisionedService>(provisionedService);
+                                                                    new AutoBeanUnmarshaller<ProvisionedService>(provisionedService);
 
-            CloudFoundryClientService.getInstance().createService(null, type, name, null, null, null, new CloudFoundryAsyncRequestCallback<ProvisionedService>(unmarshaller,
-                                                                                                                           createServiceLoggedInHandler,
-                                                                                                                           null, paasProvider) {
-                                                                      @Override
-                                                                      protected void onSuccess(ProvisionedService result) {
-                                                                          IDE.getInstance().closeView(display.asView().getId());
-                                                                          serviceCreatedHandler.onProvisionedServiceCreated(result);
-                                                                      }
-                                                                  });
+            CloudFoundryClientService.getInstance()
+                                     .createService(null, type, name, null, vfs.getId(), getSelectedProject().getId(),
+                                                    new CloudFoundryAsyncRequestCallback<ProvisionedService>(unmarshaller,
+                                                                                                             createServiceLoggedInHandler,
+                                                                                                             null, paasProvider) {
+                                                        @Override
+                                                        protected void onSuccess(ProvisionedService result) {
+                                                            IDE.getInstance().closeView(display.asView().getId());
+                                                            serviceCreatedHandler.onProvisionedServiceCreated(result);
+                                                        }
+                                                    });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }

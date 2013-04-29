@@ -36,6 +36,8 @@ public class StartApplicationEvent extends GwtEvent<StartApplicationHandler> {
 
     private PAAS_PROVIDER                                      paasProvider;
 
+    private String                                             server;
+
     /**
      *
      */
@@ -46,11 +48,13 @@ public class StartApplicationEvent extends GwtEvent<StartApplicationHandler> {
 
     /**
      * @param applicationName
+     * @param server
      * @param paasProvider
      */
-    public StartApplicationEvent(String applicationName, PAAS_PROVIDER paasProvider) {
+    public StartApplicationEvent(String applicationName, String server, PAAS_PROVIDER paasProvider) {
         super();
         this.applicationName = applicationName;
+        this.server = server;
         this.paasProvider = paasProvider;
     }
 
@@ -73,6 +77,10 @@ public class StartApplicationEvent extends GwtEvent<StartApplicationHandler> {
 
     public PAAS_PROVIDER getPaasProvider() {
         return paasProvider;
+    }
+
+    public String getServer() {
+        return server;
     }
 
 }

@@ -194,6 +194,15 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler {
                 }
             }
         });
+
+        display.getTargetSelectField().addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                if (event.getValue() != null) {
+                    server = event.getValue();
+                }
+            }
+        });
     }
 
     /**
@@ -313,7 +322,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler {
                           server = enteredServer;
                           IDE.fireEvent(new OutputEvent(paasProvider == CLOUD_FOUNDRY ? lb.loginSuccess() : lb.tier3WebFabricLoginSuccess(), Type.INFO));
                           if (loggedIn != null) {
-                              loggedIn.onLoggedIn();
+                              loggedIn.onLoggedIn(server);
                           }
                           IDE.getInstance().closeView(display.asView().getId());
                       }

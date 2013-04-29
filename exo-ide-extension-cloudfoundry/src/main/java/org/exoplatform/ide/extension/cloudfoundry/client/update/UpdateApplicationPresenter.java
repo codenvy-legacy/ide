@@ -64,7 +64,7 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
     LoggedInHandler loggedInHandler = new LoggedInHandler() {
 
         @Override
-        public void onLoggedIn() {
+        public void onLoggedIn(String server) {
             updateApplication();
         }
     };
@@ -146,7 +146,7 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
 
     private LoggedInHandler validateHandler = new LoggedInHandler() {
         @Override
-        public void onLoggedIn() {
+        public void onLoggedIn(String server) {
             validateData();
         }
     };
@@ -157,7 +157,7 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
 
         try {
             CloudFoundryClientService.getInstance().validateAction("update", null, null, null, null, vfs.getId(),
-                                                                   projectId, 0, 0, false,
+                                                                   projectId, paasProvider, 0, 0, false,
                                                                    new CloudFoundryAsyncRequestCallback<String>(null, validateHandler,
                                                                                                                 null, paasProvider) {
                                                                        @Override

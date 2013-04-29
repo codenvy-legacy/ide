@@ -173,11 +173,14 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
         IDE.fireEvent(new BuildProjectEvent(project));
     }
 
-    /** Create application on CloudFoundry by sending request over WebSocket or HTTP. */
+    /** Create application on Tier3 Web Fabric by sending request over WebSocket or HTTP. */
     private void createApplication() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
-            public void onLoggedIn() {
+            public void onLoggedIn(String server) {
+                if (server != null) {
+                    DeployApplicationPresenter.this.server = server;
+                }
                 createApplication();
             }
         };
@@ -227,7 +230,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
     }
 
     /**
-     * Create application on CloudFoundry by sending request over HTTP.
+     * Create application on Tier3 Web Fabric by sending request over HTTP.
      * 
      * @param loggedInHandler handler that should be called after success login
      */
@@ -329,7 +332,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
     public void performValidation() {
         LoggedInHandler validateHandler = new LoggedInHandler() {
             @Override
-            public void onLoggedIn() {
+            public void onLoggedIn(String server) {
                 performValidation();
             }
         };
@@ -342,6 +345,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
                                                                    url,
                                                                    vfs.getId(),
                                                                    null,
+                                                                   WEB_FABRIC,
                                                                    0,
                                                                    0,
                                                                    true,
