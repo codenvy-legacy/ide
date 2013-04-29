@@ -20,8 +20,8 @@ import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.SelectionChangedEvent;
 import com.codenvy.ide.api.event.SelectionChangedHandler;
 import com.codenvy.ide.api.selection.Selection;
-import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
-import com.codenvy.ide.api.ui.perspective.PartPresenter;
+import com.codenvy.ide.api.ui.workspace.AbstractPartPresenter;
+import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -37,7 +37,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
 /**
  * Test covers {@link SelectionAgentImpl} functionality.

@@ -16,10 +16,9 @@
  */
 package com.codenvy.ide.part;
 
-import com.codenvy.ide.api.ui.perspective.PartStackView;
+import com.codenvy.ide.api.ui.workspace.PartStackView;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -36,14 +35,13 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.InsertPanel;
-import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-import static com.codenvy.ide.api.ui.perspective.PartStackView.TabPosition.BELOW;
-import static com.codenvy.ide.api.ui.perspective.PartStackView.TabPosition.LEFT;
-import static com.codenvy.ide.api.ui.perspective.PartStackView.TabPosition.RIGHT;
+import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.BELOW;
+import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.LEFT;
+import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.RIGHT;
 
 
 /**
@@ -187,7 +185,7 @@ public class PartStackViewImpl extends Composite implements PartStackView {
         private Image       image;
         private FlowPanel   tabItem;
         private InlineLabel tabItemTittle;
-        private Image icon;
+        private Image       icon;
 
         /**
          * Create button.

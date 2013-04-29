@@ -137,7 +137,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter {
         container.setWidget(getWidget());
     }
 
-    /** @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitleToolTip() */
+    /** @see com.codenvy.ide.api.ui.workspace.PartPresenter#getTitleToolTip() */
     @Override
     public String getTitleToolTip() {
         // TODO Auto-generated method stub

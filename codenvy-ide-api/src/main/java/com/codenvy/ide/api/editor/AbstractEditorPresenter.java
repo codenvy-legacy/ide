@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.api.editor;
 
-import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
+import com.codenvy.ide.api.ui.workspace.AbstractPartPresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.google.gwt.user.client.Window;
@@ -78,7 +78,7 @@ public abstract class AbstractEditorPresenter extends AbstractPartPresenter impl
         return input;
     }
 
-    /** @see com.codenvy.ide.api.ui.perspective.PartPresenter#onClose() */
+    /** @see com.codenvy.ide.api.ui.workspace.PartPresenter#onClose() */
     @Override
     public boolean onClose() {
         if (isDirty()) {

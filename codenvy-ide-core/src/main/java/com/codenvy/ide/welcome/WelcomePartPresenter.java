@@ -17,7 +17,7 @@
 package com.codenvy.ide.welcome;
 
 import com.codenvy.ide.api.parts.WelcomePart;
-import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
+import com.codenvy.ide.api.ui.workspace.AbstractPartPresenter;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.resources.client.ImageResource;
@@ -58,19 +58,19 @@ public class WelcomePartPresenter extends AbstractPartPresenter implements Welco
         container.setWidget(h);
     }
 
-    /** @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitle() */
+    /** @see com.codenvy.ide.api.ui.workspace.PartPresenter#getTitle() */
     @Override
     public String getTitle() {
         return "Welcome";
     }
 
-    /** @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitleImage() */
+    /** @see com.codenvy.ide.api.ui.workspace.PartPresenter#getTitleImage() */
     @Override
     public ImageResource getTitleImage() {
         return null;
     }
 
-    /** @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitleToolTip() */
+    /** @see com.codenvy.ide.api.ui.workspace.PartPresenter#getTitleToolTip() */
     @Override
     public String getTitleToolTip() {
         return "This is Welcome page, it shows general information about Project Development.";

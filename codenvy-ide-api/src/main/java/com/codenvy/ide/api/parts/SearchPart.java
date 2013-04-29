@@ -19,7 +19,7 @@
 package com.codenvy.ide.api.parts;
 
 import com.codenvy.ide.api.extension.SDK;
-import com.codenvy.ide.api.ui.perspective.PartPresenter;
+import com.codenvy.ide.api.ui.workspace.PartPresenter;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>

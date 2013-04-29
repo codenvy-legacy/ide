@@ -19,15 +19,15 @@ package com.codenvy.ide.part;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.event.EditorDirtyStateChangedEvent;
 import com.codenvy.ide.api.mvp.Presenter;
-import com.codenvy.ide.api.ui.perspective.PartPresenter;
-import com.codenvy.ide.api.ui.perspective.PartStack;
-import com.codenvy.ide.api.ui.perspective.PartStackView;
-import com.codenvy.ide.api.ui.perspective.PartStackView.TabItem;
-import com.codenvy.ide.api.ui.perspective.PropertyListener;
-import com.codenvy.ide.api.ui.perspective.WorkBenchPartController;
+import com.codenvy.ide.api.ui.workspace.PartPresenter;
+import com.codenvy.ide.api.ui.workspace.PartStack;
+import com.codenvy.ide.api.ui.workspace.PartStackView;
+import com.codenvy.ide.api.ui.workspace.PartStackView.TabItem;
+import com.codenvy.ide.api.ui.workspace.PropertyListener;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.part.base.BasePresenter;
+import com.codenvy.ide.workspace.WorkBenchPartController;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
@@ -127,7 +127,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             // and return
             return;
         }
-        if(part instanceof BasePresenter) {
+        if (part instanceof BasePresenter) {
             ((BasePresenter)part).setPartStack(this);
         }
         parts.add(part);
@@ -175,7 +175,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             return;
         }
 
-        if (activePart != null && workBenchPartController !=null) {
+        if (activePart != null && workBenchPartController != null) {
             partsSize.set(parts.indexOf(activePart), workBenchPartController.getSize());
         }
         activePart = part;
@@ -193,7 +193,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         // notify handler, that part changed
         partStackHandler.onActivePartChanged(activePart);
 
-        if (activePart != null && workBenchPartController !=null) {
+        if (activePart != null && workBenchPartController != null) {
             workBenchPartController.setHidden(false);
             workBenchPartController.setSize(partsSize.get(parts.indexOf(activePart)));
         }

@@ -17,31 +17,25 @@
 package com.codenvy.ide.extension.tasks;
 
 import com.codenvy.ide.api.extension.Extension;
-
-import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
-
 import com.codenvy.ide.api.ui.menu.MainMenuAgent;
-
+import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.extension.tasks.part.TasksPartPresenter;
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 
 /**
  * Extension used to demonstrate the IDE 2.0 SDK fetures
- * 
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ *
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @Singleton
 @Extension(title = "Tasks extension", version = "3.0.0")
-public class TasksExtension
-{
+public class TasksExtension {
 
-   @Inject
-   public TasksExtension(MainMenuAgent menu, final WorkspaceAgent agent, final TasksPartPresenter tasksPartPresenter,
-      final OpenTasksViewCommand openTasksViewCommand)
-   {
-      menu.addMenuItem("Tasks/Show Tasks View", openTasksViewCommand);
-   }
+    @Inject
+    public TasksExtension(MainMenuAgent menu, final WorkspaceAgent agent, final TasksPartPresenter tasksPartPresenter,
+                          final OpenTasksViewCommand openTasksViewCommand) {
+        menu.addMenuItem("Tasks/Show Tasks View", openTasksViewCommand);
+    }
 }

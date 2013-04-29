@@ -48,7 +48,7 @@ public class MenuBarItem implements MenuItem, ItemSelectedHandler, UpdateItemEna
      */
     boolean pressed = false;
     /** Map of children */
-    private JsonStringMap<MenuItem> children = JsonCollections.createStringMap();
+    private JsonStringMap<Item> children = JsonCollections.createStringMap();
     /** Command which will be called just after menu ber item will be selected. */
     private Command command;
     /** Visual element which is table cell. */
@@ -98,19 +98,19 @@ public class MenuBarItem implements MenuItem, ItemSelectedHandler, UpdateItemEna
     }
 
     /** {@inheritDoc} */
-    public MenuItem addItem(String title, Command command) {
+    public Item addItem(String title, Command command) {
         return addItem(null, title, command);
     }
 
     /** {@inheritDoc} */
     @Override
-    public MenuItem addItem(ImageResource image, String title) {
+    public Item addItem(ImageResource image, String title) {
         return null;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void addItem(MenuItem item) {
+    public void addItem(Item item) {
     }
 
     /** {@inheritDoc} */
@@ -161,13 +161,13 @@ public class MenuBarItem implements MenuItem, ItemSelectedHandler, UpdateItemEna
     }
 
     /** {@inheritDoc} */
-    public JsonArray<MenuItem> getItems() {
+    public JsonArray<Item> getItems() {
         return children.getValues();
     }
 
     @Override
     public MenuItem getChildren(String title) {
-        return children.get(title);
+        return (MenuItem)children.get(title);
     }
 
     /** {@inheritDoc} */
@@ -180,10 +180,10 @@ public class MenuBarItem implements MenuItem, ItemSelectedHandler, UpdateItemEna
         this.title = title;
     }
 
-    private boolean hasVisibleItems(JsonStringMap<MenuItem> items) {
+    private boolean hasVisibleItems(JsonStringMap<Item> items) {
         JsonArray<String> keys = items.getKeys();
         for (String key : keys.asIterable()) {
-            MenuItem item = items.get(key);
+            Item item = items.get(key);
             if (item.getTitle() == null) {
                 continue;
             }
@@ -230,9 +230,9 @@ public class MenuBarItem implements MenuItem, ItemSelectedHandler, UpdateItemEna
     }
 
     /** {@inheritDoc} */
-    public void onMenuItemSelected(MenuItem menuItem) {
+    public void onMenuItemSelected(Item Item) {
         setNormalState();
-        itemSelectedHandler.onMenuItemSelected(menuItem);
+        itemSelectedHandler.onMenuItemSelected(Item);
     }
 
     /** Mouse Down handler */

@@ -33,9 +33,9 @@ public interface ItemSelectedHandler {
     /**
      * Do some actions when menu item will be selected.
      *
-     * @param menuItem
+     * @param Item
      *         selected MenuItem
      */
-    void onMenuItemSelected(MenuItem menuItem);
+    void onMenuItemSelected(Item Item);
 
 }

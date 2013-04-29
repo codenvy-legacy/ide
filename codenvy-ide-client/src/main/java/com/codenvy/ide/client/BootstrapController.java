@@ -16,18 +16,18 @@
  */
 package com.codenvy.ide.client;
 
-import com.codenvy.ide.api.ui.perspective.PartStackType;
+import com.codenvy.ide.api.ui.workspace.PartStackType;
+import com.codenvy.ide.api.user.User;
+import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.client.extensionsPart.ExtensionsPage;
 import com.codenvy.ide.client.marshaller.UserUnmarshaller;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
 import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.perspective.WorkspacePresenter;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.api.user.User;
-import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.util.loging.Log;
+import com.codenvy.ide.workspace.WorkspacePresenter;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.RootLayoutPanel;

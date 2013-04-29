@@ -19,7 +19,7 @@
 package com.codenvy.ide.api.expressions;
 
 import com.codenvy.ide.api.editor.EditorPartPresenter;
-import com.codenvy.ide.api.ui.perspective.PartPresenter;
+import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 

@@ -32,15 +32,10 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
- * Created by The eXo Platform SAS .
- * <p/>
  * MenuBar is visual component, represents top menu.
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -51,7 +46,7 @@ public class MenuBar extends Composite implements ItemSelectedHandler, CloseMenu
 
     static final MenuResources resources = GWT.create(MenuResources.class);
 
-    static{
+    static {
         resources.menuCss().ensureInjected();
     }
 
@@ -158,7 +153,7 @@ public class MenuBar extends Composite implements ItemSelectedHandler, CloseMenu
      *         command, which will be executed when menu item will be selected
      * @return new instance of MenuBarItem which extends MenuItem
      */
-    public MenuItem addItem(String title, Command command) {
+    public Item addItem(String title, Command command) {
         return addItem(null, title, command);
     }
 
@@ -201,8 +196,8 @@ public class MenuBar extends Composite implements ItemSelectedHandler, CloseMenu
      *
      * @return list of items
      */
-    public JsonStringMap<MenuItem> getItems() {
-         JsonStringMap<MenuItem> items = JsonCollections.createStringMap();
+    public JsonStringMap<Item> getItems() {
+        JsonStringMap<Item> items = JsonCollections.createStringMap();
 
         for (MenuBarItem item : menuBarItems.values()) {
             items.put(item.getTitle(), item);
@@ -211,29 +206,24 @@ public class MenuBar extends Composite implements ItemSelectedHandler, CloseMenu
         return items;
     }
 
-    /**
-     * Handle closing of all popup windows.
-     *
-     */
+    /** Handle closing of all popup windows. */
     public void onCloseMenu() {
         selectedMenuBarItem.setNormalState();
         selectedMenuBarItem = null;
         lockLayer = null;
     }
 
-    /**
-     * Handle selection of Menu Item.
-     */
-    public void onMenuItemSelected(MenuItem menuItem) {
-        if (menuItem instanceof MenuBarItem) {
-            MenuBarItem item = (MenuBarItem)menuItem;
-            if (selectedMenuBarItem != null && selectedMenuBarItem != menuItem) {
+    /** Handle selection of Menu Item. */
+    public void onMenuItemSelected(Item Item) {
+        if (Item instanceof MenuBarItem) {
+            MenuBarItem item = (MenuBarItem)Item;
+            if (selectedMenuBarItem != null && selectedMenuBarItem != Item) {
                 selectedMenuBarItem.setNormalState();
                 selectedMenuBarItem.closePopupMenu();
             }
 
             selectedMenuBarItem = item;
-        } else if (menuItem instanceof PopupMenuItem) {
+        } else if (Item instanceof PopupMenuItem) {
             lockLayer.close();
             lockLayer = null;
         }
@@ -254,20 +244,20 @@ public class MenuBar extends Composite implements ItemSelectedHandler, CloseMenu
         item.openPopupMenu(lockLayer);
     }
 
-    private String toString(MenuItem menuItem, int depth) {
+    private String toString(Item Item, int depth) {
         String prefix = "";
         for (int i = 0; i < depth; i++) {
             prefix += "        ";
         }
 
         String str = "";
-        if (menuItem.getTitle() == null) {
+        if (Item.getTitle() == null) {
             str += prefix + "-------------------------------\r\n";
         } else {
-            str += prefix + "[ " + menuItem.getTitle() + " ]\r\n";
+            str += prefix + "[ " + Item.getTitle() + " ]\r\n";
         }
 
-        for (MenuItem childIten : menuItem.getItems().asIterable()) {
+        for (Item childIten : Item.getItems().asIterable()) {
             str += toString(childIten, depth + 1);
         }
 
@@ -278,8 +268,8 @@ public class MenuBar extends Composite implements ItemSelectedHandler, CloseMenu
     public String toString() {
         String str = "";
 
-        for (MenuItem menuItem : menuBarItems.values()) {
-            str += toString(menuItem, 0);
+        for (Item Item : menuBarItems.values()) {
+            str += toString(Item, 0);
         }
 
         return str;

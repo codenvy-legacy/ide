@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.part;
 
-import com.codenvy.ide.api.ui.perspective.PartStackView;
+import com.codenvy.ide.api.ui.workspace.PartStackView;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.google.gwt.core.client.GWT;

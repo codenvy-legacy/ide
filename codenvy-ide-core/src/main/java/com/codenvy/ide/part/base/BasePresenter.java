@@ -18,11 +18,12 @@
  */
 package com.codenvy.ide.part.base;
 
-import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
-import com.codenvy.ide.api.ui.perspective.PartStack;
+import com.codenvy.ide.api.ui.workspace.AbstractPartPresenter;
+import com.codenvy.ide.api.ui.workspace.PartStack;
 
 /**
  * Base presenter for parts that support minimizing by part toolbar button.
+ *
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
@@ -42,6 +43,7 @@ public abstract class BasePresenter extends AbstractPartPresenter implements Bas
 
     /**
      * Set PartStack where this part added.
+     *
      * @param partStack
      */
     public void setPartStack(PartStack partStack) {

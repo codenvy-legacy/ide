@@ -16,7 +16,7 @@
  */
 package com.codenvy.ide.client.extensionsPart;
 
-import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
+import com.codenvy.ide.api.ui.workspace.AbstractPartPresenter;
 import com.codenvy.ide.client.ExtensionInitializer;
 import com.codenvy.ide.client.PageResources;
 import com.codenvy.ide.extension.DependencyDescription;

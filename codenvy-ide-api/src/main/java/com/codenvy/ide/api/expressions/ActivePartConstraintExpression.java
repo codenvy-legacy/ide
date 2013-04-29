@@ -16,7 +16,7 @@
  */
 package com.codenvy.ide.api.expressions;
 
-import com.codenvy.ide.api.ui.perspective.PartPresenter;
+import com.codenvy.ide.api.ui.workspace.PartPresenter;
 
 /**
  * Handles the event when Active Part changed

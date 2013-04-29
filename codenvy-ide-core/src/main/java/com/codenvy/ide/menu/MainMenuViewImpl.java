@@ -20,6 +20,7 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.ui.menu.Item;
 import com.codenvy.ide.ui.menu.MenuBar;
 import com.codenvy.ide.ui.menu.MenuItem;
 import com.google.gwt.core.client.GWT;
@@ -38,8 +39,8 @@ import com.google.inject.Inject;
 public class MainMenuViewImpl extends Composite implements MainMenuView {
     private static MainMenuUiBinder uiBinder = GWT.create(MainMenuUiBinder.class);
     /** Map storing Path and corresponding menu item */
-    private final JsonStringMap<MenuItem> menuItems;
-    private final Resources               resources;
+    private final JsonStringMap<Item> menuItems;
+    private final Resources           resources;
     /** Parent menu bar */
     @UiField
     MenuBar parentMenuBar;
@@ -48,7 +49,6 @@ public class MainMenuViewImpl extends Composite implements MainMenuView {
     @Inject
     public MainMenuViewImpl(Resources resources) {
         initWidget(uiBinder.createAndBindUi(this));
-//        parentMenuBar.addStyleName(resources.menuCSS().menuHorizontal());
         this.menuItems = JsonCollections.createStringMap();
         this.resources = resources;
     }
@@ -92,21 +92,21 @@ public class MainMenuViewImpl extends Composite implements MainMenuView {
      * @param enabled
      * @return
      */
-    private MenuItem addMainMenuItem(String path, ExtendedCommand command, boolean visible, boolean enabled) {
+    private Item addMainMenuItem(String path, ExtendedCommand command, boolean visible, boolean enabled) {
         MenuPath menuPath = new MenuPath(path);
         if (menuPath.getSize() == 1) {
-            MenuItem item = parentMenuBar.addItem(menuPath.getPathElementAt(0));
+            Item item = parentMenuBar.addItem(menuPath.getPathElementAt(0));
             menuItems.put(path, item);
             return item;
         }
-        MenuItem item = parentMenuBar.getItems().get(menuPath.getPathElementAt(0));
+        MenuItem item = (MenuItem)parentMenuBar.getItems().get(menuPath.getPathElementAt(0));
         if (item == null) {
             item = parentMenuBar.addItem(menuPath.getPathElementAt(0));
         }
         // Recursively get destination menu bar
         MenuItem dstMenuBar = getOrCreateParentMenuBar(menuPath, menuPath.getSize() - 1, item);
         // create new item
-        MenuItem newItem = dstMenuBar.addItem(command.getIcon(), menuPath.getPathElementAt(menuPath.getSize() - 1), command);
+        Item newItem = dstMenuBar.addItem(command.getIcon(), menuPath.getPathElementAt(menuPath.getSize() - 1), command);
         dstMenuBar.addItem(newItem);
 
         newItem.setVisible(visible);
@@ -141,7 +141,7 @@ public class MainMenuViewImpl extends Composite implements MainMenuView {
     /** {@inheritDoc} */
     @Override
     public void addMenuItem(String path, ExtendedCommand command, boolean visible, boolean enabled, boolean selected) {
-        MenuItem newItem = addMainMenuItem(path, command, visible, enabled);
+        com.codenvy.ide.ui.menu.Item newItem = addMainMenuItem(path, command, visible, enabled);
         newItem.setSelected(selected);
     }
 

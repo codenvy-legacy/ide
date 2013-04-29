@@ -17,9 +17,22 @@
 package com.codenvy.ide.core.expressions;
 
 import com.codenvy.ide.api.editor.EditorPartPresenter;
-import com.codenvy.ide.api.event.*;
-import com.codenvy.ide.api.expressions.*;
-import com.codenvy.ide.api.ui.perspective.PartPresenter;
+import com.codenvy.ide.api.event.ActivePartChangedEvent;
+import com.codenvy.ide.api.event.ActivePartChangedHandler;
+import com.codenvy.ide.api.event.ChangeToggleItemStateEvent;
+import com.codenvy.ide.api.event.ChangeToggleItemStateHandler;
+import com.codenvy.ide.api.event.EditorDirtyStateChangedEvent;
+import com.codenvy.ide.api.event.EditorDirtyStateChangedHandler;
+import com.codenvy.ide.api.event.ExpressionsChangedEvent;
+import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.event.ProjectActionHandler;
+import com.codenvy.ide.api.expressions.ActivePartConstraintExpression;
+import com.codenvy.ide.api.expressions.EditorDirtyConstraintExpression;
+import com.codenvy.ide.api.expressions.Expression;
+import com.codenvy.ide.api.expressions.ExpressionManager;
+import com.codenvy.ide.api.expressions.ProjectConstraintExpression;
+import com.codenvy.ide.api.expressions.ToggleStateExpression;
+import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonIntegerMap;
 import com.codenvy.ide.json.JsonIntegerMap.IterationCallback;
