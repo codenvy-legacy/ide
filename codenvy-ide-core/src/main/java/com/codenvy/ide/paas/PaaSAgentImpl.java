@@ -18,14 +18,15 @@
  */
 package com.codenvy.ide.paas;
 
-import com.codenvy.ide.api.paas.AbstractPaasWizardPagePresenter;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 
@@ -37,22 +38,37 @@ import com.google.inject.Singleton;
 @Singleton
 public class PaaSAgentImpl implements PaaSAgent {
     private final JsonArray<PaaS> registeredPaaS;
+    private       PaaS            selectedPaaS;
 
     /** Create agent. */
     @Inject
-    public PaaSAgentImpl() {
+    protected PaaSAgentImpl() {
         this.registeredPaaS = JsonCollections.createArray();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void registerPaaS(String id, String title, ImageResource image, boolean providesTemplate,
-                             JsonArray<String> requiredTypes, AbstractPaasWizardPagePresenter wizardPage,
-                             PreferencesPagePresenter preferencePage) {
-        PaaS paas = new PaaS(id, title, image, providesTemplate, requiredTypes, wizardPage);
+    public void registerPaaS(String id, String title, ImageResource image, JsonArray<String> requiredTypes,
+                             Provider<? extends WizardPagePresenter> wizardPage, PreferencesPagePresenter preferencePage) {
+        PaaS paas = new PaaS(id, title, image, requiredTypes, wizardPage);
         registeredPaaS.add(paas);
 
         // TODO preference page
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public PaaS getSelectedPaaS() {
+        return selectedPaaS;
+    }
+
+    /**
+     * Sets selected PaaS.
+     *
+     * @param paas
+     */
+    public void setSelectedPaaS(PaaS paas) {
+        selectedPaaS = paas;
     }
 
     /**

@@ -3,7 +3,7 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <g:DockLayoutPanel unit="PX" width="100%" height="100%">
         <g:north size="20.0">
-            <g:Label text="Chose a file type:"/>
+            <g:Label text="Choose a file type:"/>
         </g:north>
         <g:center>
             <g:ScrollPanel ui:field="resources"/>

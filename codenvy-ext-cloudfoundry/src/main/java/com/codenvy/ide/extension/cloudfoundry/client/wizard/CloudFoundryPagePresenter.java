@@ -19,9 +19,11 @@
 package com.codenvy.ide.extension.cloudfoundry.client.wizard;
 
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
-import com.codenvy.ide.api.paas.AbstractPaasWizardPagePresenter;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.template.CreateProjectProvider;
+import com.codenvy.ide.api.template.TemplateAgent;
+import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.*;
@@ -38,6 +40,7 @@ import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -53,38 +56,26 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class CloudFoundryPagePresenter extends AbstractPaasWizardPagePresenter implements
-                                                                               CloudFoundryPageView.ActionDelegate, ProjectBuiltHandler {
-    private CloudFoundryPageView view;
-
-    private EventBus eventBus;
-
-    private String server;
-
-    private String name;
-
-    private String url;
-
+public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
+        implements CloudFoundryPageView.ActionDelegate, ProjectBuiltHandler {
+    private CloudFoundryPageView             view;
+    private EventBus                         eventBus;
+    private String                           server;
+    private String                           name;
+    private String                           url;
     /** Public url to war file of application. */
-    private String warUrl;
-
-    private String projectName;
-
-    private Project project;
-
-    private ResourceProvider resourcesProvider;
-
-    private ConsolePart console;
-
+    private String                           warUrl;
+    private String                           projectName;
+    private Project                          project;
+    private ResourceProvider                 resourcesProvider;
+    private ConsolePart                      console;
     private CloudFoundryLocalizationConstant constant;
-
-    private CloudFoundryAutoBeanFactory autoBeanFactory;
-
-    private HandlerRegistration projectBuildHandler;
-
-    private LoginPresenter loginPresenter;
-
-    private CloudFoundryClientService service;
+    private CloudFoundryAutoBeanFactory      autoBeanFactory;
+    private HandlerRegistration              projectBuildHandler;
+    private LoginPresenter                   loginPresenter;
+    private CloudFoundryClientService        service;
+    private TemplateAgent                    templateAgent;
+    private CreateProjectProvider            createProjectProvider;
 
     /**
      * Create presenter.
@@ -103,7 +94,7 @@ public class CloudFoundryPagePresenter extends AbstractPaasWizardPagePresenter i
     protected CloudFoundryPagePresenter(CloudFoundryPageView view, EventBus eventBus, ResourceProvider resourcesProvider,
                                         CloudFoundryResources resources, ConsolePart console, CloudFoundryLocalizationConstant constant,
                                         CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter,
-                                        CloudFoundryClientService service) {
+                                        CloudFoundryClientService service, TemplateAgent templateAgent) {
         super("Deploy project to Cloud Foundry", resources.cloudFoundry48());
 
         this.view = view;
@@ -115,6 +106,7 @@ public class CloudFoundryPagePresenter extends AbstractPaasWizardPagePresenter i
         this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
+        this.templateAgent = templateAgent;
     }
 
     /** {@inheritDoc} */
@@ -196,7 +188,6 @@ public class CloudFoundryPagePresenter extends AbstractPaasWizardPagePresenter i
         //               @Override
         //               protected void onFailure(Throwable exception)
         //               {
-        //                  // TODO
         //                  //                  deployResultHandler.onDeployFinished(false);
         //                  console.print(constant.applicationCreationFailed());
         //                  super.onFailure(exception);
@@ -446,7 +437,8 @@ public class CloudFoundryPagePresenter extends AbstractPaasWizardPagePresenter i
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
-        projectName = getCreateProjectHandler().getProjectName();
+        createProjectProvider = templateAgent.getSelectedTemplate().getCreateProjectProvider();
+        projectName = createProjectProvider.getProjectName();
         getServers();
         container.setWidget(view);
     }
@@ -454,7 +446,7 @@ public class CloudFoundryPagePresenter extends AbstractPaasWizardPagePresenter i
     /** {@inheritDoc} */
     @Override
     public void doFinish() {
-        getCreateProjectHandler().create(new AsyncCallback<Project>() {
+        createProjectProvider.create(new AsyncCallback<Project>() {
             @Override
             public void onSuccess(Project result) {
                 deploy(result);
@@ -462,7 +454,7 @@ public class CloudFoundryPagePresenter extends AbstractPaasWizardPagePresenter i
 
             @Override
             public void onFailure(Throwable caught) {
-                // do nothing
+                Log.error(CloudFoundryPagePresenter.class, caught);
             }
         });
     }

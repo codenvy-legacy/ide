@@ -21,9 +21,7 @@ package com.codenvy.ide.wizard.newresource;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
-import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.codenvy.ide.wizard.newresource.NewResourcePageView.ActionDelegate;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -37,53 +35,19 @@ import com.google.inject.Singleton;
 @Singleton
 public class NewResourcePagePresenter extends AbstractWizardPagePresenter implements ActionDelegate {
     private NewResourcePageView view;
-
     private WizardPagePresenter next;
 
     /**
      * Create presenter.
      *
      * @param resources
-     * @param wizardAgent
-     * @param project
-     */
-    @Inject
-    public NewResourcePagePresenter(Resources resources, WizardAgentImpl wizardAgent) {
-        this("Create a new resource", resources.newResourceIcon(), wizardAgent, new NewResourcePageViewImpl(resources,
-                                                                                                            wizardAgent
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                                                                                    .getNewResourceWizards()));
-    }
-
-    /**
-     * Create presenter.
-     * <p/>
-     * For tests
-     *
-     * @param caption
-     * @param image
-     * @param wizardAgent
-     * @param project
      * @param view
      */
-    protected NewResourcePagePresenter(String caption, ImageResource image, WizardAgentImpl wizardAgent,
-                                       NewResourcePageView view) {
-        super(caption, image);
+    @Inject
+    protected NewResourcePagePresenter(Resources resources, NewResourcePageView view) {
+        super("Create a new resource", resources.newResourceIcon());
         this.view = view;
-        view.setDelegate(this);
+        this.view.setDelegate(this);
     }
 
     /** {@inheritDoc} */

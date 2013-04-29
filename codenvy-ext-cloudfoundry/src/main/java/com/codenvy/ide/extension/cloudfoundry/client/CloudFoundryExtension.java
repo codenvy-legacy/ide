@@ -29,6 +29,7 @@ import com.codenvy.ide.extension.cloudfoundry.client.wizard.CloudFoundryPagePres
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -61,12 +62,13 @@ public class CloudFoundryExtension {
                                  ShowCreateApplicationCommand createApplicationCommand, ShowLoginCommand loginCommand,
                                  ShowApplicationsCommand showApplicationsCommand,
                                  ShowCloudFoundryProjectCommand showCloudFoundryProjectCommand,
-                                 CloudFoundryPagePresenter wizardPage) {
+                                 Provider<CloudFoundryPagePresenter> wizardPage) {
+
         resources.cloudFoundryCss().ensureInjected();
 
         // TODO change hard code types
         JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "Rails", "Spring", "War");
-        paasAgent.registerPaaS(ID, ID, resources.cloudFoundry48(), false, requiredProjectTypes, wizardPage, null);
+        paasAgent.registerPaaS(ID, ID, resources.cloudFoundry48(), requiredProjectTypes, wizardPage, null);
 
         menu.addMenuItem("PaaS/CloudFoudry/Create Application...", createApplicationCommand);
         menu.addMenuItem("PaaS/CloudFoudry/Applications...", showApplicationsCommand);

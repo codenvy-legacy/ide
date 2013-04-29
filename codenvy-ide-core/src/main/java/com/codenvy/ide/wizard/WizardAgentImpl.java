@@ -20,11 +20,8 @@ package com.codenvy.ide.wizard;
 
 import com.codenvy.ide.api.ui.wizard.WizardAgent;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
-import com.codenvy.ide.api.wizard.newproject.AbstractNewProjectWizardPage;
-import com.codenvy.ide.api.wizard.newproject.CreateProjectHandler;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.wizard.newproject.NewProjectWizardData;
 import com.codenvy.ide.wizard.newresource.NewResourceWizardData;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
@@ -39,35 +36,12 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class WizardAgentImpl implements WizardAgent {
-    private final JsonArray<NewProjectWizardData> newProjectWizardDatas;
-
     private final JsonArray<NewResourceWizardData> newResourceWizardDatas;
 
     /** Create WizardAgent */
     @Inject
-    public WizardAgentImpl() {
-        newProjectWizardDatas = JsonCollections.createArray();
+    protected WizardAgentImpl() {
         newResourceWizardDatas = JsonCollections.createArray();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void registerNewProjectWizard(String title, String description, String primaryNature, ImageResource icon,
-                                         Provider<? extends AbstractNewProjectWizardPage> wizardPage,
-                                         CreateProjectHandler createProjectHandler,
-                                         JsonArray<String> natures) {
-        NewProjectWizardData newProjectWizardData =
-                new NewProjectWizardData(title, description, primaryNature, icon, wizardPage, createProjectHandler, natures);
-        newProjectWizardDatas.add(newProjectWizardData);
-    }
-
-    /**
-     * Returns all registered wizards for creating new project.
-     *
-     * @return
-     */
-    public JsonArray<NewProjectWizardData> getNewProjectWizards() {
-        return newProjectWizardDatas;
     }
 
     /** {@inheritDoc} */

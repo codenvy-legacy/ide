@@ -20,8 +20,10 @@ package com.codenvy.ide.api.paas;
 
 import com.codenvy.ide.api.extension.SDK;
 import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.inject.Provider;
 
 /**
  * Provides a way to register a new PaaS Extension.
@@ -36,12 +38,17 @@ public interface PaaSAgent {
      * @param id
      * @param title
      * @param image
-     * @param providesTemplate
      * @param requiredTypes
      * @param wizardPage
      * @param preferencePage
      */
-    public void registerPaaS(String id, String title, ImageResource image, boolean providesTemplate,
-                             JsonArray<String> requiredTypes, AbstractPaasWizardPagePresenter wizardPage,
-                             PreferencesPagePresenter preferencePage);
+    void registerPaaS(String id, String title, ImageResource image, JsonArray<String> requiredTypes,
+                      Provider<? extends WizardPagePresenter> wizardPage, PreferencesPagePresenter preferencePage);
+
+    /**
+     * Returns selected PaaS.
+     *
+     * @return paas
+     */
+    PaaS getSelectedPaaS();
 }

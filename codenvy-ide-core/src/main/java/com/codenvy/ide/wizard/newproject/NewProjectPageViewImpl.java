@@ -21,23 +21,29 @@ package com.codenvy.ide.wizard.newproject;
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.paas.PaaSAgentImpl;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import com.google.inject.Inject;
 
 
 /**
- * NewProjectPageViewImpl is the view of new project page wizard.
- * Provides selecting type of technology for creating new project.
+ * NewProjectPageViewImpl is the view of new project page wizard. Provides selecting type of technology for creating new project.
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public class NewProjectPageViewImpl extends Composite implements NewProjectPageView {
     private static NewProjectViewImplUiBinder uiBinder = GWT.create(NewProjectViewImplUiBinder.class);
+
+    @UiField
+    TextBox projectName;
 
     @UiField(provided = true)
     Grid technologies;
@@ -59,13 +65,17 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
     }
 
     /**
-     * Create view with given instance of resources and list of wizard's data
+     * Create view.
      *
-     * @param wizardDatas
-     *         aggregate information about available wizards
+     * @param projectTypeAgent
+     * @param paaSAgent
      */
-    public NewProjectPageViewImpl(JsonArray<NewProjectWizardData> wizardDatas, JsonArray<PaaS> paases) {
-        createTechnologiesTable(wizardDatas);
+    @Inject
+    protected NewProjectPageViewImpl(ProjectTypeAgentImpl projectTypeAgent, PaaSAgentImpl paaSAgent) {
+        JsonArray<ProjectTypeData> projectTypes = projectTypeAgent.getProjectTypes();
+        createTechnologiesTable(projectTypes);
+
+        JsonArray<PaaS> paases = paaSAgent.getPaaSes();
         createPaasTable(paases);
         availablePaaS = paases;
 
@@ -75,19 +85,19 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
     /**
      * Create table with available technologies.
      *
-     * @param wizardDatas
+     * @param projectTypes
      *         available technologies
      */
-    private void createTechnologiesTable(JsonArray<NewProjectWizardData> wizardDatas) {
+    private void createTechnologiesTable(JsonArray<ProjectTypeData> projectTypes) {
         //create table where contains kind of technology
-        technologies = new Grid(2, wizardDatas.size());
+        technologies = new Grid(2, projectTypes.size());
         HTMLTable.CellFormatter formatter = technologies.getCellFormatter();
 
         //create button for each available wizard
-        for (int i = 0; i < wizardDatas.size(); i++) {
-            final NewProjectWizardData wizardData = wizardDatas.get(i);
+        for (int i = 0; i < projectTypes.size(); i++) {
+            final ProjectTypeData projectTypeData = projectTypes.get(i);
 
-            Image icon = wizardData.getIcon();
+            Image icon = new Image(projectTypeData.getIcon());
             final ToggleButton btn;
             if (icon != null) {
                 btn = new ToggleButton(icon);
@@ -107,8 +117,7 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
                         }
                         selectedProjectType = btn;
 
-                        // TODO need improvement if it is possible
-                        JsonArray<String> natures = wizardData.getNatures();
+                        String nature = projectTypeData.getTypeName();
                         for (int i = 0; i < availablePaaS.size(); i++) {
                             PaaS paas = availablePaaS.get(i);
                             JsonArray<String> paases = paas.getRequiredProjectTypes();
@@ -118,11 +127,8 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
 
                             // TODO constant
                             if (!paas.getId().equals("None")) {
-                                for (int j = 0; j < natures.size(); j++) {
-                                    String nature = natures.get(j);
-                                    if (paases.contains(nature)) {
-                                        button.setEnabled(true);
-                                    }
+                                if (paases.contains(nature)) {
+                                    button.setEnabled(true);
                                 }
                             } else {
                                 button.setEnabled(true);
@@ -140,7 +146,7 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
             technologies.setWidget(0, i, btn);
             formatter.setHorizontalAlignment(0, i, HasHorizontalAlignment.ALIGN_CENTER);
 
-            Label title = new Label(wizardData.getTitle());
+            Label title = new Label(projectTypeData.getTitle());
             technologies.setWidget(1, i, title);
             formatter.setHorizontalAlignment(1, i, HasHorizontalAlignment.ALIGN_CENTER);
         }
@@ -195,5 +201,16 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
     /** {@inheritDoc} */
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getProjectName() {
+        return projectName.getText();
+    }
+
+    @UiHandler("projectName")
+    public void handleKeyUp(KeyUpEvent event) {
+        delegate.checkProjectName();
     }
 }

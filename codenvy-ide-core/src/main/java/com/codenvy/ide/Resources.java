@@ -23,7 +23,6 @@ import com.codenvy.ide.tree.FileTreeNodeRenderer;
 import com.codenvy.ide.ui.DialogBoxResources;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.tree.Tree;
-import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectWizardResource;
 import com.codenvy.ide.wizard.newproject.NewProjectWizardResource;
 import com.codenvy.ide.wizard.newresource.NewResourceWizardResources;
 import com.google.gwt.resources.client.CssResource;
@@ -44,17 +43,18 @@ import com.google.gwt.resources.client.ImageResource;
  */
 public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resources, TextEditorViewImpl.Resources,
                                    LineNumberRenderer.Resources, EditableContentArea.Resources, PartStackUIResources, SimpleList.Resources,
-                                   NewProjectWizardResource, NewGenericProjectWizardResource, NewResourceWizardResources, MenuResources,DialogBoxResources {
+                                   NewProjectWizardResource, NewResourceWizardResources, MenuResources, DialogBoxResources {
 
     /** Interface for css resources. */
     public interface CoreCss extends CssResource {
         String simpleListContainer();
+
+        String mainText();
     }
 
-    @Source({"Core.css", "com/codenvy/ide/common/constants.css","com/codenvy/ide/api/ui/style.css"})
+    @Source({"Core.css", "com/codenvy/ide/common/constants.css", "com/codenvy/ide/api/ui/style.css"})
     @NotStrict
     CoreCss coreCss();
-
 
 
     @Source("tree/project_explorer.png")

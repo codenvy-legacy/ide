@@ -22,7 +22,6 @@ import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.menu.MainMenuAgent;
 import com.codenvy.ide.api.ui.wizard.WizardAgent;
 import com.codenvy.ide.java.client.codeassistant.ContentAssistHistory;
 import com.codenvy.ide.java.client.core.JavaCore;
@@ -31,27 +30,10 @@ import com.codenvy.ide.java.client.internal.codeassist.impl.AssistOptions;
 import com.codenvy.ide.java.client.internal.compiler.impl.CompilerOptions;
 import com.codenvy.ide.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.java.client.projectmodel.JavaProjectModelProvider;
-import com.codenvy.ide.java.client.templates.CodeTemplateContextType;
-import com.codenvy.ide.java.client.templates.ContextTypeRegistry;
-import com.codenvy.ide.java.client.templates.ElementTypeResolver;
-import com.codenvy.ide.java.client.templates.ExceptionVariableNameResolver;
-import com.codenvy.ide.java.client.templates.FieldResolver;
-import com.codenvy.ide.java.client.templates.ImportsResolver;
-import com.codenvy.ide.java.client.templates.JavaContextType;
-import com.codenvy.ide.java.client.templates.JavaDocContextType;
-import com.codenvy.ide.java.client.templates.LinkResolver;
-import com.codenvy.ide.java.client.templates.LocalVarResolver;
-import com.codenvy.ide.java.client.templates.NameResolver;
-import com.codenvy.ide.java.client.templates.StaticImportResolver;
-import com.codenvy.ide.java.client.templates.TemplateStore;
-import com.codenvy.ide.java.client.templates.TypeResolver;
-import com.codenvy.ide.java.client.templates.TypeVariableResolver;
-import com.codenvy.ide.java.client.templates.VarResolver;
-import com.codenvy.ide.java.client.wizard.CreateJavaProjectPresenter;
+import com.codenvy.ide.java.client.templates.*;
 import com.codenvy.ide.java.client.wizard.NewJavaClassPagePresenter;
-import com.codenvy.ide.java.client.wizard.NewJavaProjectPagePresenter;
 import com.codenvy.ide.java.client.wizard.NewPackagePagePresenter;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.codenvy.ide.rest.MimeType;
 import com.google.gwt.core.client.GWT;
 import com.google.inject.Inject;
@@ -68,6 +50,8 @@ import java.util.HashMap;
 public class JavaExtension {
     private static final String JAVA_PERSPECTIVE = "Java";
 
+    public static final String JAVA_WEB_APPLICATION_PROJECT_TYPE = "War";
+
     private static JavaExtension instance;
 
     private HashMap<String, String> options;
@@ -82,26 +66,23 @@ public class JavaExtension {
      *
      */
     @Inject
-    public JavaExtension(ResourceProvider resourceProvider, EditorRegistry editorRegistry,
-                         JavaEditorProvider javaEditorProvider, EventBus eventBus,
-                         WizardAgent wizardAgent, Provider<NewJavaProjectPagePresenter> wizardProvider, MainMenuAgent mainMenu,
-                         Provider<NewPackagePagePresenter> packageProvider, Provider<NewJavaClassPagePresenter> classProvider,
-                         CreateJavaProjectPresenter createJavaProjectPresenter) {
+    public JavaExtension(ResourceProvider resourceProvider, EditorRegistry editorRegistry, JavaEditorProvider javaEditorProvider,
+                         EventBus eventBus, WizardAgent wizardAgent, Provider<NewPackagePagePresenter> packageProvider,
+                         Provider<NewJavaClassPagePresenter> classProvider, ProjectTypeAgent projectTypeAgent) {
+
         this();
         FileType javaFile = new FileType(JavaClientBundle.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
         editorRegistry.register(javaFile, javaEditorProvider);
         resourceProvider.registerFileType(javaFile);
         resourceProvider.registerModelProvider(JavaProject.PRIMARY_NATURE, new JavaProjectModelProvider(eventBus));
         JavaClientBundle.INSTANCE.css().ensureInjected();
-        wizardAgent.registerNewProjectWizard("Java Project", "Create new Java Project", JavaProject.PRIMARY_NATURE,
-                                             JavaClientBundle.INSTANCE.newJavaProject(), wizardProvider, createJavaProjectPresenter,
-                                             JsonCollections.<String>createArray());
 
-        wizardAgent.registerNewResourceWizard(JAVA_PERSPECTIVE, "Package", JavaClientBundle.INSTANCE.packageItem(),
-                                              packageProvider);
-        wizardAgent.registerNewResourceWizard(JAVA_PERSPECTIVE, "Java Class", JavaClientBundle.INSTANCE.newClassWizz(),
-                                              classProvider);
+        projectTypeAgent.registerProjectType(JavaProject.PRIMARY_NATURE, "Java application", JavaClientBundle.INSTANCE.newJavaProject());
+        projectTypeAgent
+                .registerProjectType(JAVA_WEB_APPLICATION_PROJECT_TYPE, "Java web application", JavaClientBundle.INSTANCE.newJavaProject());
 
+        wizardAgent.registerNewResourceWizard(JAVA_PERSPECTIVE, "Package", JavaClientBundle.INSTANCE.packageItem(), packageProvider);
+        wizardAgent.registerNewResourceWizard(JAVA_PERSPECTIVE, "Java Class", JavaClientBundle.INSTANCE.newClassWizz(), classProvider);
     }
 
     /** For test use only. */

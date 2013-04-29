@@ -19,8 +19,17 @@
 package com.codenvy.ide.extension.maven.client;
 
 import com.codenvy.ide.api.extension.Extension;
+import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.extension.maven.client.build.BuildProjectPresenter;
+import com.codenvy.ide.extension.maven.client.template.CreateWarProjectPresenter;
+import com.codenvy.ide.extension.maven.client.template.wizard.javaproject.CreateJavaProjectPagePresenter;
+import com.codenvy.ide.extension.maven.client.template.wizard.javaproject.CreateJavaProjectPresenter;
+import com.codenvy.ide.java.client.JavaClientBundle;
+import com.codenvy.ide.java.client.JavaExtension;
+import com.codenvy.ide.java.client.projectmodel.JavaProject;
+import com.codenvy.ide.json.JsonCollections;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -41,6 +50,13 @@ public class BuilderExtension {
      * @param buildProjectPresenter
      */
     @Inject
-    public BuilderExtension(BuildProjectPresenter buildProjectPresenter) {
+    public BuilderExtension(BuildProjectPresenter buildProjectPresenter, TemplateAgent templateAgent,
+                            CreateWarProjectPresenter createProjectPresenter, CreateJavaProjectPresenter createJavaProjectPresenter,
+                            Provider<CreateJavaProjectPagePresenter> createJavaProjectWizardPage) {
+        templateAgent.registerTemplate("War project", null, JsonCollections.createArray(JavaExtension.JAVA_WEB_APPLICATION_PROJECT_TYPE),
+                                       createProjectPresenter, null);
+        templateAgent.registerTemplate("Java project", JavaClientBundle.INSTANCE.javaProject(),
+                                       JsonCollections.createArray(JavaProject.PRIMARY_NATURE),
+                                       createJavaProjectPresenter, createJavaProjectWizardPage);
     }
 }
