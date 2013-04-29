@@ -18,8 +18,13 @@
  */
 package com.codenvy.ide.core.editor;
 
-import com.codenvy.ide.api.editor.*;
+import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.editor.EditorInitException;
+import com.codenvy.ide.api.editor.EditorInput;
+import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorPartPresenter.EditorPartCloseHandler;
+import com.codenvy.ide.api.editor.EditorProvider;
+import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
 import com.codenvy.ide.api.resources.FileEvent;
@@ -27,8 +32,8 @@ import com.codenvy.ide.api.resources.FileEvent.FileOperation;
 import com.codenvy.ide.api.resources.FileEventHandler;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.perspective.PartStackType;
-import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
+import com.codenvy.ide.api.ui.workspace.PartStackType;
+import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;

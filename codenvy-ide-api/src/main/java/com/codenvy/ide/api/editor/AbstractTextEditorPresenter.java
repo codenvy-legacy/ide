@@ -50,13 +50,13 @@ public abstract class AbstractTextEditorPresenter extends AbstractEditorPresente
         return documentProvider;
     }
 
-    /** @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitleImage() */
+    /** @see com.codenvy.ide.api.ui.workspace.PartPresenter#getTitleImage() */
     @Override
     public ImageResource getTitleImage() {
         return input.getImageResource();
     }
 
-    /** @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitle() */
+    /** @see com.codenvy.ide.api.ui.workspace.PartPresenter#getTitle() */
     @Override
     public String getTitle() {
         if (isDirty()) {

@@ -16,14 +16,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.api.ui.perspective;
+package com.codenvy.ide.workspace;
 
-import com.google.gwt.user.client.ui.InsertPanel;
+import com.codenvy.ide.api.ui.workspace.PartStack;
+import com.codenvy.ide.api.ui.workspace.PartStackView;
 
 /**
+ * Gin factory for PartStack
+ *
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public interface PartStackViewFactory {
-    PartStackView create(PartStackView.TabPosition tabPosition, InsertPanel tabsPanel);
+public interface PartStackPresenterFactory {
+    PartStack create(PartStackView view, WorkBenchPartController workBenchPartController);
 }

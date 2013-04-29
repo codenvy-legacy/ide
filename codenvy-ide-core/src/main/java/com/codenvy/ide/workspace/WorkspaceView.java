@@ -16,24 +16,40 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.api.ui.perspective;
+package com.codenvy.ide.workspace;
+
+import com.codenvy.ide.api.mvp.View;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
+
 
 /**
- * Interface for listening for property changes on an {@link PartPresenter}
+ * Workspace view interface.
  *
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface PropertyListener {
+public interface WorkspaceView extends View<WorkspaceView.ActionDelegate> {
+    /**
+     * Returns central panel.
+     *
+     * @return
+     */
+    AcceptsOneWidget getPerspectivePanel();
 
     /**
-     * Indicates that a property has changed.
+     * Returns menu panel.
      *
-     * @param source
-     *         the object whose property has changed
-     * @param propId
-     *         the id of the property which has changed; property ids
-     *         are generally defined as constants on the source class
+     * @return
      */
-    public void propertyChanged(PartPresenter source, int propId);
+    AcceptsOneWidget getMenuPanel();
+
+    /**
+     * Returns toolbar panel.
+     *
+     * @return
+     */
+    AcceptsOneWidget getToolbarPanel();
+
+    /** Needs for delegate some function into Workspace view. */
+    public interface ActionDelegate {
+    }
 }

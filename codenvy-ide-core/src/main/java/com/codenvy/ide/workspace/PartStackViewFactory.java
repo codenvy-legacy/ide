@@ -16,28 +16,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.api.ui.perspective;
+package com.codenvy.ide.workspace;
 
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
+import com.codenvy.ide.api.ui.workspace.PartStackView;
+import com.google.gwt.user.client.ui.InsertPanel;
 
 /**
+ * Gin factory for PartStackView.
+ *
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public interface WorkBenchResources  extends ClientBundle{
-    public interface WorkBenchCss extends CssResource{
-
-        @ClassName("ide-work-bench-tool-panel-bottom")
-        String ideWorkBenchToolPanelBottom();
-
-        @ClassName("ide-work-bench-tool-panel-left")
-        String ideWorkBenchToolPanelLeft();
-
-        @ClassName("ide-work-bench-tool-panel-right")
-        String ideWorkBenchToolPanelRight();
-    }
-
-    @Source({"WorkBench.css", "com/codenvy/ide/api/ui/style.css"})
-    WorkBenchCss workBenchCss();
+public interface PartStackViewFactory {
+    PartStackView create(PartStackView.TabPosition tabPosition, InsertPanel tabsPanel);
 }

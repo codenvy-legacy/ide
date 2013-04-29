@@ -1,4 +1,4 @@
-package com.codenvy.ide.api.ui.perspective;
+package com.codenvy.ide.api.ui.workspace;
 
 import com.codenvy.ide.api.mvp.View;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -15,9 +15,10 @@ public interface PartStackView extends View<PartStackView.ActionDelegate> {
     public interface TabItem extends HasCloseHandlers<PartStackView.TabItem>, HasClickHandlers {
     }
 
-    public enum TabPosition{
+    public enum TabPosition {
         BELOW, LEFT, RIGHT
     }
+
     /** Add Tab */
     public PartStackView.TabItem addTabButton(Image icon, String title, String toolTip, boolean closable);
 

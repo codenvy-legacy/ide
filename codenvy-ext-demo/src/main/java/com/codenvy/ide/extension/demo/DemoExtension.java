@@ -22,7 +22,7 @@ import com.codenvy.ide.api.expressions.ProjectOpenedExpression;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 import com.codenvy.ide.api.ui.menu.MainMenuAgent;
-import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
+import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;

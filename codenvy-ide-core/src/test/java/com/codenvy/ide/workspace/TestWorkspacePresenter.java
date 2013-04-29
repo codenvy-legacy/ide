@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package com.codenvy.ide.perspective;
+package com.codenvy.ide.workspace;
 
-import com.codenvy.ide.api.ui.perspective.PartPresenter;
-import com.codenvy.ide.api.ui.perspective.PartStackType;
+import com.codenvy.ide.api.ui.workspace.PartPresenter;
+import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.part.PartStackPresenter;
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.inject.Provider;

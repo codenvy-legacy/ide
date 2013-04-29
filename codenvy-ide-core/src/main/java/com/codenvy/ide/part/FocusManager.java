@@ -17,8 +17,8 @@
 package com.codenvy.ide.part;
 
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
-import com.codenvy.ide.api.ui.perspective.PartPresenter;
-import com.codenvy.ide.api.ui.perspective.PartStack;
+import com.codenvy.ide.api.ui.workspace.PartPresenter;
+import com.codenvy.ide.api.ui.workspace.PartStack;
 import com.codenvy.ide.part.PartStackPresenter.PartStackEventHandler;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

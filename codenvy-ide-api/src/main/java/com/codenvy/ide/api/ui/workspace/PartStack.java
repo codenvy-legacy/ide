@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package com.codenvy.ide.api.ui.perspective;
+package com.codenvy.ide.api.ui.workspace;
 
 import com.codenvy.ide.api.mvp.Presenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -76,12 +76,14 @@ public interface PartStack extends Presenter {
 
     /**
      * Hide given part (remove from the screen). If part not active part that method has no effect.
+     *
      * @param part
      */
     public void hidePart(PartPresenter part);
 
     /**
      * Remove given part from PartStack.
+     *
      * @param part
      */
     public void removePart(PartPresenter part);

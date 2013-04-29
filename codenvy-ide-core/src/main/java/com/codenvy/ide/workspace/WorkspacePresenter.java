@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package com.codenvy.ide.perspective;
+package com.codenvy.ide.workspace;
 
 import com.codenvy.ide.api.mvp.Presenter;
-import com.codenvy.ide.api.ui.perspective.PartPresenter;
-import com.codenvy.ide.api.ui.perspective.PartStackType;
-import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
+import com.codenvy.ide.api.ui.workspace.PartPresenter;
+import com.codenvy.ide.api.ui.workspace.PartStackType;
+import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.menu.MainMenuPresenter;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;

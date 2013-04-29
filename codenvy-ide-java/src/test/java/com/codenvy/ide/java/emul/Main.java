@@ -2622,7 +2622,7 @@ public class Main implements ProblemSeverities, SuffixConstants {
 //			CompilerOptions.OPTION_DocCommentSupport,
 //			CompilerOptions.ENABLED);
 //		// override defaults: references that are embedded in javadoc are ignored
-//		// from the perspective of parameters and thrown exceptions usage
+//		// from the workspace of parameters and thrown exceptions usage
 //		this.options.put(
 //			CompilerOptions.OPTION_ReportUnusedParameterIncludeDocCommentReference,
 //			CompilerOptions.DISABLED);

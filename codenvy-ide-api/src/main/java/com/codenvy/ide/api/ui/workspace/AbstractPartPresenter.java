@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.api.ui.perspective;
+package com.codenvy.ide.api.ui.workspace;
 
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.util.ListenerManager;
@@ -42,24 +42,24 @@ public abstract class AbstractPartPresenter implements PartPresenter {
         manager = ListenerManager.create();
     }
 
-    /** @see com.codenvy.ide.api.ui.perspective.PartPresenter#onClose() */
+    /** @see com.codenvy.ide.api.ui.workspace.PartPresenter#onClose() */
     @Override
     public boolean onClose() {
         return true;
     }
 
-    /** @see com.codenvy.ide.api.ui.perspective.PartPresenter#onOpen() */
+    /** @see com.codenvy.ide.api.ui.workspace.PartPresenter#onOpen() */
     @Override
     public void onOpen() {
     }
 
-    /** @see com.codenvy.ide.api.ui.perspective.PartPresenter#addPropertyListener(com.codenvy.ide.api.ui.perspective.PropertyListener) */
+    /** @see com.codenvy.ide.api.ui.workspace.PartPresenter#addPropertyListener(com.codenvy.ide.api.ui.workspace.PropertyListener) */
     @Override
     public void addPropertyListener(PropertyListener listener) {
         manager.add(listener);
     }
 
-    /** @see com.codenvy.ide.api.ui.perspective.PartPresenter#removePropertyListener(com.codenvy.ide.api.ui.perspective.PropertyListener) */
+    /** @see com.codenvy.ide.api.ui.workspace.PartPresenter#removePropertyListener(com.codenvy.ide.api.ui.workspace.PropertyListener) */
     @Override
     public void removePropertyListener(PropertyListener listener) {
         manager.remove(listener);

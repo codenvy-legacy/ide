@@ -22,6 +22,9 @@ package com.codenvy.ide.api.ui;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
+/*
+  This class intended for Style API
+ */
 public class Style {
 
 }

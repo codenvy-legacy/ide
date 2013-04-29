@@ -17,14 +17,10 @@
 package com.codenvy.ide.part;
 
 import com.codenvy.ide.api.editor.EditorPartPresenter;
-import com.codenvy.ide.api.ui.perspective.EditorPartStack;
-import com.codenvy.ide.api.ui.perspective.PartPresenter;
-import com.codenvy.ide.api.ui.perspective.PartStackView;
+import com.codenvy.ide.api.ui.workspace.EditorPartStack;
+import com.codenvy.ide.api.ui.workspace.PartPresenter;
+import com.codenvy.ide.api.ui.workspace.PartStackView;
 import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Image;
@@ -121,11 +117,10 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
             part.removePropertyListener(propertyListener);
             if (activePart == part) {
                 //select another part
-                setActivePart(parts.isEmpty() ? null : parts.get(parts.size()-1));
+                setActivePart(parts.isEmpty() ? null : parts.get(parts.size() - 1));
             }
         }
     }
-
 
 
 }

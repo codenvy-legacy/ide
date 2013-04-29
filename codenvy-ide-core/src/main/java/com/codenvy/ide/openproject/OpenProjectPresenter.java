@@ -66,7 +66,7 @@ public class OpenProjectPresenter implements OpenProjectView.ActionDelegate {
         updateComponents();
     }
 
-    /** Updates change perspective view components. */
+    /** Updates change workspace view components. */
     private void updateComponents() {
         view.setOpenButtonEnabled(selectedProject != null);
     }

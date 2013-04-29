@@ -16,17 +16,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.api.ui.perspective;
+package com.codenvy.ide.workspace;
 
 /**
+ * This interface give ability part stack manipulate visibility an size in container.
+ *
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
 public interface WorkBenchPartController {
 
+    /**
+     * Get part stack size.
+     *
+     * @return the size
+     */
     double getSize();
 
+    /**
+     * Set part stack size.
+     *
+     * @param size
+     */
     void setSize(double size);
 
+    /**
+     * Show/hide part stack.
+     *
+     * @param hidden
+     */
     void setHidden(boolean hidden);
 }

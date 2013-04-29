@@ -16,13 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.perspective;
+package com.codenvy.ide.workspace;
 
-import com.codenvy.ide.api.ui.perspective.WorkBenchPartController;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
 
 /**
+ * Implementation of WorkBenchPartController, used with SplitLayoutPanel as container
+ *
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
@@ -39,17 +40,20 @@ public class WorkBenchPartControllerImpl implements WorkBenchPartController {
         setHidden(true);
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getSize() {
         return splitLayoutPanel.getWidgetSize(widget);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setSize(double size) {
         splitLayoutPanel.setWidgetSize(widget, size);
         splitLayoutPanel.animate(DURATION);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setHidden(boolean hidden) {
         splitLayoutPanel.setWidgetHidden(widget, hidden);
