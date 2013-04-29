@@ -17,7 +17,7 @@
     <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
     <!-- Other module inherits                                      -->
     <inherits name='com.codenvy.ide.Api'/>
-    <inherits name='com.codenvy.ide.java.Java'/>
+    <inherits name='com.codenvy.ide.ext.java.Java'/>
     <inherits name='com.codenvy.ide.extension.demo.Demo'/>
     <inherits name='com.codenvy.ide.extension.css.Css'/>
     <inherits name='com.codenvy.ide.extension.cloudfoundry.CloudFoundry'/>

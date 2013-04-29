@@ -19,19 +19,19 @@ public class ExtensionManager
    /** Constructor that accepts all the Extension found in IDE package */
    @Inject
    public ExtensionManager(
+      Provider<com.codenvy.ide.ext.java.client.JavaExtension> javaextension,
       Provider<com.codenvy.ide.extension.demo.DemoExtension> demoextension,
       Provider<com.codenvy.ide.extension.maven.client.BuilderExtension> builderextension,
       Provider<com.codenvy.ide.extension.tasks.TasksExtension> tasksextension,
       Provider<com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension> cloudfoundryextension,
-      Provider<com.codenvy.ide.java.client.JavaExtension> javaextension,
       Provider<com.codenvy.ide.extension.css.CssExtension> cssextension
    )
    {
+      this.extensions.put("com.codenvy.ide.ext.java.client.JavaExtension",javaextension);
       this.extensions.put("com.codenvy.ide.extension.demo.DemoExtension",demoextension);
       this.extensions.put("com.codenvy.ide.extension.maven.client.BuilderExtension",builderextension);
       this.extensions.put("com.codenvy.ide.extension.tasks.TasksExtension",tasksextension);
       this.extensions.put("com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension",cloudfoundryextension);
-      this.extensions.put("com.codenvy.ide.java.client.JavaExtension",javaextension);
       this.extensions.put("com.codenvy.ide.extension.css.CssExtension",cssextension);
    }
 

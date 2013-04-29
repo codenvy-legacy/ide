@@ -73,7 +73,7 @@
         <!-- Extensions -->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-java</artifactId>
+            <artifactId>codenvy-ext-java</artifactId>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
