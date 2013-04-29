@@ -20,12 +20,8 @@
 
 package com.codenvy.ide.ui.menu;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonStringMap;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
-
-import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -36,7 +32,7 @@ import java.util.List;
  *          Menu item interface which represents buttons on Menu Bar and item in the Popup Menu.
  */
 
-public interface MenuItem {
+public interface MenuItem extends Item {
 
     /**
      * Create new MenuItem with specified parameters and add it to the list of children.
@@ -56,7 +52,7 @@ public interface MenuItem {
      *         - associated command
      * @return new instance of MenuItem
      */
-    public MenuItem addItem(String title, Command command);
+    public Item addItem(String title, Command command);
 
     /**
      * Create new MenuItem with specified parameters and add it to the list of children.
@@ -67,7 +63,7 @@ public interface MenuItem {
      *         - title of menu item
      * @return new instance of MenuItem
      */
-    public MenuItem addItem(ImageResource image, String title);
+    public Item addItem(ImageResource image, String title);
 
     /**
      * Create new MenuItem with specified parameters and add it to the list of children.
@@ -84,74 +80,21 @@ public interface MenuItem {
 
     /**
      * Add new MenuItem
+     *
      * @param item
      *         - item the new menu item
      */
-    public void addItem(MenuItem item);
-
-    /**
-     * Get command
-     *
-     * @return command
-     */
-    public Command getCommand();
-
-    /**
-     * Get Hot Key value
-     *
-     * @return hot key as String
-     */
-    public String getHotKey();
-
-    /**
-     * Get image.
-     *
-     * @return - image
-     */
-    public ImageResource getImage();
-
-    /**
-     * Get map of children.
-     *
-     * @return list of children
-     */
-    public JsonArray<MenuItem> getItems();
+    public void addItem(Item item);
 
     /**
      * Get children of this menu item, by title.
      * If this item not contains children with this title, return null.
-     * @param title the children title.
-     * @return  the children menu item.
+     *
+     * @param title
+     *         the children title.
+     * @return the children menu item.
      */
     public MenuItem getChildren(String title);
-
-    /**
-     * Get menu title
-     *
-     * @return title of menu item
-     */
-    public String getTitle();
-
-    /**
-     * Get is enabled
-     *
-     * @return enabled state
-     */
-    public boolean isEnabled();
-
-    /**
-     * Get is selected
-     *
-     * @return true or false - selected state
-     */
-    public boolean isSelected();
-
-    /**
-     * Get is visible
-     *
-     * @return - true, false
-     */
-    public boolean isVisible();
 
     /**
      * Set command which will be executed when item will be selected.
@@ -162,14 +105,6 @@ public interface MenuItem {
     public void setCommand(Command command);
 
     /**
-     * Set is enabled
-     *
-     * @param enabled
-     *         - true or false
-     */
-    public void setEnabled(boolean enabled);
-
-    /**
      * Set Hot Key
      *
      * @param hotKey
@@ -178,27 +113,11 @@ public interface MenuItem {
     public void setHotKey(String hotKey);
 
     /**
-     * Set is selected
-     *
-     * @param selected
-     *         - selected state (true / false)
-     */
-    public void setSelected(boolean selected);
-
-    /**
      * Set title
      *
      * @param title
      *         - new title of menu item
      */
     public void setTitle(String title);
-
-    /**
-     * set is visible
-     *
-     * @param visible
-     *         - true, false
-     */
-    public void setVisible(boolean visible);
 
 }

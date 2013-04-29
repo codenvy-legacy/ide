@@ -44,7 +44,6 @@ import com.google.gwt.user.client.ui.SimplePanel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -59,7 +58,7 @@ public class PopupMenu extends Composite {
 
     private static final PopupResources POPUP_RESOURCES = GWT.create(PopupResources.class);
 
-    static{
+    static {
         POPUP_RESOURCES.popup().ensureInjected();
     }
 
@@ -113,12 +112,9 @@ public class PopupMenu extends Composite {
         }
 
         int itemIndex = Integer.parseInt(index);
-        PopupMenuItem menuItem = (PopupMenuItem)menuItems.get(itemIndex);
-        if (!menuItem.isEnabled()) {
-            return false;
-        }
+        Item menuItem = items.get(itemIndex);
+        return menuItem.isEnabled();
 
-        return true;
     }
 
     /** Working variable is needs to indicate when PopupMenu has at list one MenuItem with selected state. */
@@ -133,8 +129,8 @@ public class PopupMenu extends Composite {
      */
     private MenuLockLayer lockLayer;
 
-    /** List of Menu Items. */
-    private List<MenuItem> menuItems;
+    /** List of Menu items. */
+    private List<Item> items;
 
     /** Contains opened sub Popup Menu. */
     private PopupMenu openedSubPopup;
@@ -157,7 +153,7 @@ public class PopupMenu extends Composite {
      */
     private String itemIdPrefix;
 
-    public PopupMenu(JsonArray<MenuItem> menuItems, MenuLockLayer lockLayer, ItemSelectedHandler itemSelectedCallback) {
+    public PopupMenu(JsonArray<Item> menuItems, MenuLockLayer lockLayer, ItemSelectedHandler itemSelectedCallback) {
         this(menuItems, lockLayer, itemSelectedCallback, null);
     }
 
@@ -171,22 +167,22 @@ public class PopupMenu extends Composite {
      * @param itemSelectedCallback
      *         - callback, uses for notifying parent menu when menu item is selected.
      */
-    public PopupMenu(JsonArray<MenuItem> menuItems, MenuLockLayer lockLayer, ItemSelectedHandler itemSelectedCallback,
+    public PopupMenu(JsonArray<Item> menuItems, MenuLockLayer lockLayer, ItemSelectedHandler itemSelectedCallback,
                      String itemIdPrefix) {
-        this.menuItems = new ArrayList<MenuItem>();
+        this.items = new ArrayList<Item>();
         this.itemIdPrefix = itemIdPrefix;
 
       /*
        * show only visible items and delimiters
        */
-        for (MenuItem item : menuItems.asIterable()) {
+        for (Item item : menuItems.asIterable()) {
             if (item.getTitle() == null) {
-                this.menuItems.add(item);
+                this.items.add(item);
                 continue;
             }
 
             if (item.isVisible()) {
-                this.menuItems.add(item);
+                this.items.add(item);
             }
         }
 
@@ -219,15 +215,15 @@ public class PopupMenu extends Composite {
       /*
        * remove delimiters from start
        */
-        while (menuItems.size() > 0 && menuItems.get(0).getTitle() == null) {
-            menuItems.remove(0);
+        while (items.size() > 0 && items.get(0).getTitle() == null) {
+            items.remove(0);
         }
 
       /*
        * remove delimiters from end
        */
-        while (menuItems.size() > 0 && menuItems.get(menuItems.size() - 1).getTitle() == null) {
-            menuItems.remove(menuItems.size() - 1);
+        while (items.size() > 0 && items.get(items.size() - 1).getTitle() == null) {
+            items.remove(items.size() - 1);
         }
 
       /*
@@ -235,10 +231,10 @@ public class PopupMenu extends Composite {
        */
         boolean found = false;
         int index = 0;
-        while (index < menuItems.size()) {
-            if (menuItems.get(index).getTitle() == null) {
+        while (index < items.size()) {
+            if (items.get(index).getTitle() == null) {
                 if (found) {
-                    menuItems.remove(index);
+                    items.remove(index);
                     continue;
                 }
 
@@ -275,15 +271,15 @@ public class PopupMenu extends Composite {
         table.setCellSpacing(0);
         DOM.setElementAttribute(table.getElement(), "border", "0");
 
-        for (int i = 0; i < menuItems.size(); i++) {
-            PopupMenuItem menuItem = (PopupMenuItem)menuItems.get(i);
+        for (int i = 0; i < items.size(); i++) {
+            Item menuItem = items.get(i);
 
             if (menuItem.getTitle() == null) {
                 table.getFlexCellFormatter().setColSpan(i, 0, hasCheckedItems ? 5 : 4);
                 table.setHTML(i, 0, "<nobr><hr noshade=\"noshade\" style=\"color:#BBBBBB;\" size=\"1\"></nobr>");
                 table.getCellFormatter().setStyleName(i, 0, POPUP_RESOURCES.popup().popupMenuDelimiter());
             } else {
-                table.setWidget(i, 0, new Image(menuItem.getImage() == null? POPUP_RESOURCES.blank() : menuItem.getImage()));
+                table.setWidget(i, 0, new Image(menuItem.getImage() == null ? POPUP_RESOURCES.blank() : menuItem.getImage()));
                 table.getCellFormatter().setStyleName(i, 0,
                                                       menuItem.isEnabled() ? POPUP_RESOURCES.popup().popupMenuIconField()
                                                                            : POPUP_RESOURCES.popup().popupMenuIconFieldDisabled());
@@ -293,7 +289,6 @@ public class PopupMenu extends Composite {
                 if (hasCheckedItems) {
                     String checkImage;
                     if (menuItem.isSelected()) {
-                        //checkImage = ExoStyle.getEXoStyleURL() + "popupMenu/check.gif";
                         checkImage = AbstractImagePrototype.create(POPUP_RESOURCES.check()).getHTML();
                     } else {
                         checkImage = AbstractImagePrototype.create(POPUP_RESOURCES.blank()).getHTML();
@@ -325,7 +320,8 @@ public class PopupMenu extends Composite {
 
                 table.setHTML(i, work, hotKey);
                 table.getCellFormatter().setStyleName(i, work,
-                                                      menuItem.isEnabled() ? POPUP_RESOURCES.popup().popupMenuHotKeyField() : POPUP_RESOURCES.popup().popupMenuHotKeyFieldDisabled());
+                                                      menuItem.isEnabled() ? POPUP_RESOURCES.popup().popupMenuHotKeyField()
+                                                                           : POPUP_RESOURCES.popup().popupMenuHotKeyFieldDisabled());
 
                 work++;
 
@@ -351,10 +347,10 @@ public class PopupMenu extends Composite {
                 DOM.setElementAttribute(table.getRowFormatter().getElement(i), "item-enabled", "" + menuItem.isEnabled());
             }
 
-            Element row = table.getRowFormatter().getElement(i);
-            for (Map.Entry<String, String> attrEntry : menuItem.getAttributes().entrySet()) {
-                row.setAttribute(attrEntry.getKey(), attrEntry.getValue());
-            }
+//            Element row = table.getRowFormatter().getElement(i);
+//            for (Map.Entry<String, String> attrEntry : menuItem.getAttributes().entrySet()) {
+//                row.setAttribute(attrEntry.getKey(), attrEntry.getValue());
+//            }
         }
 
         popupMenuPanel.add(table);
@@ -362,8 +358,8 @@ public class PopupMenu extends Composite {
 
     /** @return true when at list one item from list of menu items has selected state. */
     private boolean hasCheckedItems() {
-        for (int i = 0; i < menuItems.size(); i++) {
-            PopupMenuItem menuItem = (PopupMenuItem)menuItems.get(i);
+        for (int i = 0; i < items.size(); i++) {
+            Item menuItem = items.get(i);
             if (menuItem.isSelected()) {
                 return true;
             }
@@ -455,7 +451,7 @@ public class PopupMenu extends Composite {
         setStyleHovered(tr);
 
         int itemIndex = Integer.parseInt(DOM.getElementAttribute(tr, "item-index"));
-        PopupMenuItem menuItem = (PopupMenuItem)menuItems.get(itemIndex);
+        Item menuItem = items.get(itemIndex);
         openSubPopupTimer.cancel();
         if (menuItem.getItems().size() != 0) {
             openSubPopupTimer.schedule(300);
@@ -476,7 +472,7 @@ public class PopupMenu extends Composite {
         }
 
         int itemIndex = Integer.parseInt(DOM.getElementAttribute(tr, "item-index"));
-        PopupMenuItem menuItem = (PopupMenuItem)menuItems.get(itemIndex);
+        Item menuItem = items.get(itemIndex);
         if (menuItem.getItems().size() == 0) {
             if (itemSelectedCallback != null) {
                 itemSelectedCallback.onMenuItemSelected(menuItem);
@@ -503,7 +499,7 @@ public class PopupMenu extends Composite {
         }
 
         int itemIndex = Integer.parseInt(DOM.getElementAttribute(tableRowElement, "item-index"));
-        PopupMenuItem menuItem = (PopupMenuItem)menuItems.get(itemIndex);
+        PopupMenuItem menuItem = (PopupMenuItem)items.get(itemIndex);
 
         if (openedSubPopup != null) {
             openedSubPopup.closePopup();
@@ -518,11 +514,7 @@ public class PopupMenu extends Composite {
         final int HORIZONTAL_OFFSET = 3;
         final int VERTICAL_OFFSET = 1;
 
-//      final int left = getAbsoluteLeft() + getOffsetWidth() - HORIZONTAL_OFFSET;
-//      final int top = tableRowElement.getAbsoluteTop() - lockLayer.getTopOffset() - VERTICAL_OFFSET;
-
         openedSubPopup.getElement().getStyle().setVisibility(Visibility.HIDDEN);
-//      lockLayer.add(openedSubPopup, left, top);
         lockLayer.add(openedSubPopup, 0, 0);
 
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
@@ -567,7 +559,7 @@ public class PopupMenu extends Composite {
         }
     };
 
-    interface PopupResources extends ClientBundle{
+    interface PopupResources extends ClientBundle {
 
         @Source({"popup-menu.css", "com/codenvy/ide/api/ui/style.css"})
         Css popup();
@@ -582,7 +574,7 @@ public class PopupMenu extends Composite {
         ImageResource subMenu();
     }
 
-    interface Css extends CssResource{
+    interface Css extends CssResource {
 
         String popupMenuSubMenuFieldDisabled();
 

@@ -1,5 +1,5 @@
-/**
- * Copyright (C) 2010 eXo Platform SAS.
+/*
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -15,27 +15,18 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- *
  */
+package com.codenvy.ide.ui.toolbar;
 
-package com.codenvy.ide.ui.menu;
+import com.codenvy.ide.ui.menu.Item;
+import com.google.gwt.user.client.ui.IsWidget;
 
 
 /**
- * Created by The eXo Platform SAS .
+ * Interface for all toolbar components
  *
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
+ * @version $Id:
  */
-
-public interface ItemSelectedHandler {
-
-    /**
-     * Do some actions when menu item will be selected.
-     *
-     * @param Item
-     *         selected MenuItem
-     */
-    void onMenuItemSelected(Item Item);
-
+public interface ToolbarItem extends Item, IsWidget {
 }

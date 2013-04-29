@@ -26,9 +26,7 @@ import com.codenvy.ide.json.JsonStringMap;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -57,7 +55,7 @@ public class PopupMenuItem implements MenuItem {
     private boolean enabled = true;
 
     /** Map of children. */
-    private JsonStringMap<MenuItem> children = JsonCollections.createStringMap();
+    private JsonStringMap<Item> children = JsonCollections.createStringMap();
 
     /** Command which will be executed when this item will be selected. */
     private Command command;
@@ -108,12 +106,12 @@ public class PopupMenuItem implements MenuItem {
     }
 
     /** {@inheritDoc} */
-    public MenuItem addItem(ImageResource image, String title) {
+    public Item addItem(ImageResource image, String title) {
         return addItem(image, title, null);
     }
 
     /** {@inheritDoc} */
-    public MenuItem addItem(String title, Command command) {
+    public Item addItem(String title, Command command) {
         return addItem(null, title, command);
     }
 
@@ -126,7 +124,7 @@ public class PopupMenuItem implements MenuItem {
     }
 
     @Override
-    public void addItem(MenuItem item) {
+    public void addItem(Item item) {
         children.put(item.getTitle(), item);
     }
 
@@ -193,13 +191,13 @@ public class PopupMenuItem implements MenuItem {
     }
 
     /** {@inheritDoc} */
-    public JsonArray<MenuItem> getItems() {
+    public JsonArray<Item> getItems() {
         return children.getValues();
     }
 
     @Override
     public MenuItem getChildren(String title) {
-        return children.get(title);
+        return (MenuItem)children.get(title);
     }
 
     /** Use for dump */

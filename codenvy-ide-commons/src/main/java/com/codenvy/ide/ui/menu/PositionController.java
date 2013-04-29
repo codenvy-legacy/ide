@@ -231,7 +231,11 @@ public class PositionController {
                     }
                 case MIDDLE:
                     double anchorx = anchorRect.getLeft() + anchorRect.getWidth() / 2;
-                    return anchorx - elementRect.getWidth() / 2 - offsetX;
+                    double left = anchorx - elementRect.getWidth() / 2 - offsetX;
+                    if (left < 0) {
+                        left = -1;
+                    }
+                    return left;
                 case RIGHT:
                     if (getPosition() == Position.OVERLAP) {
                         return anchorRect.getRight() - elementRect.getWidth() - offsetX;

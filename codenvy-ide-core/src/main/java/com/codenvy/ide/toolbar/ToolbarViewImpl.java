@@ -23,18 +23,13 @@ import com.codenvy.ide.api.ui.menu.ToggleCommand;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.menu.Item;
-import com.codenvy.ide.menu.Item.ConteinerType;
 import com.codenvy.ide.menu.MenuPath;
-import com.codenvy.ide.menu.MenuResources;
-import com.google.gwt.core.client.GWT;
+import com.codenvy.ide.ui.toolbar.ButtonItem;
+import com.codenvy.ide.ui.toolbar.PopupItem;
+import com.codenvy.ide.ui.toolbar.Toolbar;
+import com.codenvy.ide.ui.toolbar.ToolbarItem;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.MenuBar;
-import com.google.gwt.user.client.ui.MenuItemSeparator;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -46,36 +41,22 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ToolbarViewImpl extends Composite implements ToolbarView {
-    private static ToolbarViewImplUiBinder uiBinder = GWT.create(ToolbarViewImplUiBinder.class);
 
-    @UiField
-    MenuBar menu;
 
-    private final JsonStringMap<Item> menuItems;
-
-    private final JsonStringMap<JsonArray<Item>> groupItems;
-
-    private final JsonStringMap<MenuItemSeparator> groupsSeparator;
-
-    private final MenuResources resources;
-
+    private final JsonStringMap<ToolbarItem>            menuItems;
+    private final JsonStringMap<JsonArray<ToolbarItem>> groupItems;
+    private final JsonStringMap<ToolbarItem>            groupsSeparator;
+    Toolbar menu;
     private int countGroupsItems = 0;
 
-    interface ToolbarViewImplUiBinder extends UiBinder<Widget, ToolbarViewImpl> {
-    }
-
-    /**
-     * Create view with given instance of resources.
-     *
-     * @param resources
-     */
+    /** Create view with given instance of resources. */
     @Inject
-    public ToolbarViewImpl(MenuResources resources) {
-        initWidget(uiBinder.createAndBindUi(this));
+    public ToolbarViewImpl() {
+        menu = new Toolbar();
+        initWidget(menu);
 
-        this.addStyleName(resources.menuCSS().toolbarHorizontal());
+//        this.addStyleName(resources.menuCSS().toolbarHorizontal());
 
-        this.resources = resources;
         this.menuItems = JsonCollections.createStringMap();
         this.groupItems = JsonCollections.createStringMap();
         this.groupsSeparator = JsonCollections.createStringMap();
@@ -99,7 +80,7 @@ public class ToolbarViewImpl extends Composite implements ToolbarView {
         if (groupItems.containsKey(path)) {
             groupsSeparator.get(path).setVisible(visible);
 
-            JsonArray<Item> items = groupItems.get(path);
+            JsonArray<ToolbarItem> items = groupItems.get(path);
             for (int i = 0; i < items.size(); i++) {
                 items.get(i).setVisible(visible);
             }
@@ -115,7 +96,7 @@ public class ToolbarViewImpl extends Composite implements ToolbarView {
         }
 
         if (groupItems.containsKey(path)) {
-            JsonArray<Item> items = groupItems.get(path);
+            JsonArray<ToolbarItem> items = groupItems.get(path);
             for (int i = 0; i < items.size(); i++) {
                 items.get(i).setEnabled(enabled);
             }
@@ -141,7 +122,7 @@ public class ToolbarViewImpl extends Composite implements ToolbarView {
     @Override
     public void addToggleItem(String path, ToggleCommand command, boolean visible, boolean enabled, boolean selected)
             throws IllegalStateException {
-        Item menuItem = addToolbarItem(path, command.getIcon(), command.getToolTip(), command, visible, enabled);
+        ToolbarItem menuItem = addToolbarItem(path, command.getIcon(), command.getToolTip(), command, visible, enabled);
         menuItem.setSelected(selected);
     }
 
@@ -164,33 +145,35 @@ public class ToolbarViewImpl extends Composite implements ToolbarView {
      * @return new item
      * @throws IllegalStateException
      */
-    private Item addToolbarItem(String path, ImageResource icon, String tooltip, ExtendedCommand command,
-                                boolean visible, boolean enabled) throws IllegalStateException {
+    private ToolbarItem addToolbarItem(String path, ImageResource icon, String tooltip, ExtendedCommand command,
+                                       boolean visible, boolean enabled) throws IllegalStateException {
         MenuPath menuPath = new MenuPath(path);
         int depth = menuPath.getSize() - 1;
 
-        Item menuItem;
+        ToolbarItem menuItem;
         if (depth == 0) {
             // if path has only one name
             throw new IllegalStateException("Group or item with entered name is not exist");
         } else if (depth == 1) {
             // in order to create item into the group
             String groupName = menuPath.getParentPath(depth);
-            MenuItemSeparator groupSeparator = groupsSeparator.get(groupName);
+            ToolbarItem groupSeparator = groupsSeparator.get(groupName);
             if (groupSeparator == null) {
                 // if group isn't exist then creates it
-                MenuItemSeparator newSeparator = menu.addSeparator();
+                ToolbarItem newSeparator = menu.addDelimiter();
                 newSeparator.setVisible(visible);
-                JsonArray<Item> items = JsonCollections.createArray();
+                JsonArray<ToolbarItem> items = JsonCollections.createArray();
 
                 groupsSeparator.put(groupName, newSeparator);
                 groupItems.put(groupName, items);
 
                 // it is the first item into the group
                 if (command != null) {
-                    menuItem = new Item(menuPath, null, tooltip, command, ConteinerType.TOOLBAR, resources);
+                    menuItem = new ButtonItem(icon, command,
+                                              tooltip); // new Item(menuPath, null, tooltip, command, ConteinerType.TOOLBAR, resources);
                 } else {
-                    menuItem = new Item(menuPath, icon, tooltip, createSubMenuBar(), ConteinerType.TOOLBAR, resources);
+                    menuItem =
+                            new PopupItem(icon); //new Item(menuPath, icon, tooltip, createSubMenuBar(), ConteinerType.TOOLBAR, resources);
                 }
 
                 menu.addItem(menuItem);
@@ -199,13 +182,15 @@ public class ToolbarViewImpl extends Composite implements ToolbarView {
                 // when the group has items needs to insert item after last
                 // because could be situation when other group was created after the current group
                 String parentName = menuPath.getParentPath(depth);
-                JsonArray<Item> items = groupItems.get(parentName);
+                JsonArray<ToolbarItem> items = groupItems.get(parentName);
 
-                Item previousItem = items.get(items.size() - 1);
+                ToolbarItem previousItem = items.get(items.size() - 1);
                 if (command != null) {
-                    menuItem = new Item(menuPath, null, tooltip, command, ConteinerType.TOOLBAR, resources);
+                    menuItem = new ButtonItem(icon, command,
+                                              tooltip); //new Item(menuPath, null, tooltip, command, ConteinerType.TOOLBAR, resources);
                 } else {
-                    menuItem = new Item(menuPath, icon, tooltip, createSubMenuBar(), ConteinerType.TOOLBAR, resources);
+                    menuItem =
+                            new PopupItem(icon); //new Item(menuPath, icon, tooltip, createSubMenuBar(), ConteinerType.TOOLBAR, resources);
                 }
 
                 // insert after last item into current group
@@ -222,18 +207,17 @@ public class ToolbarViewImpl extends Composite implements ToolbarView {
             countGroupsItems++;
         } else {
             // in order to create item into the dropdown item/popup menu
-            Item parentItem = menuItems.get(menuPath.getParentPath(depth));
+            ToolbarItem parentItem = menuItems.get(menuPath.getParentPath(depth));
             if (parentItem == null) {
                 throw new IllegalStateException("Parent item is not exist");
             }
 
-            if (command != null) {
-                menuItem = new Item(menuPath, null, tooltip, command, ConteinerType.TOOLBAR, resources);
-            } else {
-                menuItem = new Item(menuPath, icon, tooltip, createSubMenuBar(), ConteinerType.TOOLBAR, resources);
+            menuItem = new PopupItem.PopupRowItem(menuPath.getPathElementAt(depth), icon, command, null, tooltip);
+            if (parentItem instanceof PopupItem) {
+                PopupItem item = (PopupItem)parentItem;
+                item.addItem((PopupItem.PopupRowItem)menuItem);
+//            parentItem.getSubMenu().addItem(menuItem);
             }
-
-            parentItem.getSubMenu().addItem(menuItem);
         }
 
         menuItem.setVisible(visible);
@@ -242,21 +226,6 @@ public class ToolbarViewImpl extends Composite implements ToolbarView {
         menuItems.put(path, menuItem);
 
         return menuItem;
-    }
-
-    /**
-     * Create SubMenu bar.
-     *
-     * @return new instance of {@link MenuBar}
-     */
-    private MenuBar createSubMenuBar() {
-        MenuBar menuBar = new MenuBar(true);
-
-        menuBar.setAnimationEnabled(true);
-        menuBar.setAutoOpen(true);
-        menuBar.addStyleName(resources.menuCSS().menuVertical());
-
-        return menuBar;
     }
 
     /** {@inheritDoc} */
