@@ -145,7 +145,10 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
                 String target = display.getServerField().getValue();
                 String sufix = target.substring(target.indexOf("."));
                 String oldUrl = display.getUrlField().getValue();
-                String prefix = "<name>";
+                String prefix = "";
+                if (display.getNameField().getValue() != null) {
+                    prefix = display.getNameField().getValue();
+                }
                 if (!oldUrl.isEmpty() && oldUrl.contains(".")) {
                     prefix = oldUrl.substring(0, oldUrl.indexOf("."));
                 }
