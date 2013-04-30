@@ -40,18 +40,6 @@
     <!-- VirtualFileSystem -->
 
     <component>
-        <type>org.exoplatform.ide.vfs.server.VirtualFileSystemApplication</type>
-    </component>
-
-    <component>
-        <type>org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry</type>
-    </component>
-
-    <component>
-        <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
-    </component>
-
-    <component>
         <type>org.exoplatform.ide.vfs.impl.fs.LocalFileSystemInitializer</type>
         <init-params>
             <values-param>
@@ -60,16 +48,6 @@
             </values-param>
         </init-params>
     </component>
-
-    <component>
-        <type>org.exoplatform.ide.vfs.impl.fs.EnvironmentContextLocalFSMountStrategy</type>
-    </component>
-
-    <component>
-        <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
-    </component>
-
-    <!-- End VirtualFileSystem -->
 
     <!-- Java -->
     <component>

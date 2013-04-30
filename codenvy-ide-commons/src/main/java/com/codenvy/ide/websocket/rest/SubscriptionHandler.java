@@ -60,15 +60,13 @@ public abstract class SubscriptionHandler<T> implements MessageHandler {
     /**
      * Perform actions when {@link ResponseMessage} was received.
      *
-     * @param response
+     * @param message
      *         received {@link ResponseMessage}
-     * @see com.codenvy.ide.client.framework.websocket.events.MessageHandler#onMessage(com.codenvy.ide.client.framework.websocket.Message)
      */
-    @Override
     public void onMessage(Message message) {
-        if (!(message instanceof ResponseMessage)) {
+
+        if (!(message instanceof ResponseMessage))
             throw new IllegalArgumentException("Invalid input message.");
-        }
 
         ResponseMessage response = (ResponseMessage)message;
 
@@ -84,6 +82,11 @@ public abstract class SubscriptionHandler<T> implements MessageHandler {
         } else {
             onFailure(new ServerException(response));
         }
+    }
+
+
+    @Override
+    public void onMessage(String message) {
     }
 
     /**

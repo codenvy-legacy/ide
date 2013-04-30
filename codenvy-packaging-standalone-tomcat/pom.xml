@@ -25,19 +25,19 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-rest-war</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-packaging-shell-war</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-websocket</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>httpclient</artifactId>
@@ -52,37 +52,37 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-maven</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-codeassistant-storage</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-gadget-server</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>com.codenvy.organization</groupId>
             <artifactId>codenvy-organization-packaging-api-war</artifactId>
             <type>war</type>
-            <version>0.1-SNAPSHOT</version>
+            <version>${com.codenvy.organization.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-codeassistant-asm</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-shell</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.google.gwt</groupId>
@@ -122,7 +122,7 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-git-server</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
@@ -163,7 +163,7 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs-fs</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -198,7 +198,7 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-gadget</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -222,7 +222,7 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-java</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -238,7 +238,7 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-aws</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>httpclient</artifactId>
@@ -250,7 +250,7 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-java-runtime</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -274,7 +274,7 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-python-runtime</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -298,7 +298,7 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-jenkins</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -315,7 +315,7 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-googleappengine</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -335,7 +335,7 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-git</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -351,7 +351,7 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-ssh</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -367,7 +367,7 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-heroku</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -387,7 +387,7 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-openshift</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -415,7 +415,7 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-cloudbees</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -431,7 +431,7 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-cloudfoundry</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -451,7 +451,7 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-appfog</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -471,13 +471,13 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-logreader</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-maven</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -493,7 +493,7 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-samples</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.ide</groupId>
@@ -513,7 +513,7 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -532,7 +532,7 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>codenvy-ide-collaboration</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -552,13 +552,13 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs-fs</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-ruby</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -574,7 +574,7 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-codeassistant-storage-lucene</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
+            <version>${org.exoplatform.ide.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.ide</groupId>
@@ -795,21 +795,21 @@
                                     <fileset dir="${project.build.directory}/packager-conf/war/IDE"/>
                                 </war>
 
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-rest-war-2.1.0-SNAPSHOT.war"
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-rest-war-${org.exoplatform.ide.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/rest.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-2.1.0-SNAPSHOT.war"
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${org.exoplatform.ide.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/codenvy-ide-site-war-${project.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-shell-war-2.1.0-SNAPSHOT.war"
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-shell-war-${org.exoplatform.ide.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/shell.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-2.1.0-SNAPSHOT.war"
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${org.exoplatform.ide.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-2.1.0-SNAPSHOT.war"
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${org.exoplatform.ide.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-gadget-server-2.1.0-SNAPSHOT.war"
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-gadget-server-${org.exoplatform.ide.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/gadget-server.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-0.1-SNAPSHOT.war"
+                                <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true"/>
                                 <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"
                                        dest="${project.build.directory}/tomcat-ide"/>

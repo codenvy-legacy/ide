@@ -26,8 +26,6 @@ import com.codenvy.ide.websocket.events.MessageReceivedEvent;
 import com.codenvy.ide.websocket.events.ReplyHandler;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestBuilder;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
@@ -44,6 +42,9 @@ public class RESTMessageBus extends MessageBus {
 
     private static final String MESSAGE_TYPE_HEADER_NAME = "x-everrest-websocket-message-type";
 
+    public static final RequestMessage HEARTBEAT_MESSAGE = RequestMessageBuilder.build(RequestBuilder.POST, null).header(
+            "x-everrest-websocket-message-type", "ping").getRequestMessage();
+
     /**
      * Creates new {@link RESTMessageBus} instance.
      *
@@ -54,7 +55,7 @@ public class RESTMessageBus extends MessageBus {
         super(url);
     }
 
-    /** @see com.codenvy.ide.websocket.MessageBus#onMessageReceived(com.codenvy.ide.websocket.events.MessageReceivedEvent) */
+    /** {@inheritDoc} */
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         Message message = parseMessage(event.getMessage());
@@ -62,59 +63,56 @@ public class RESTMessageBus extends MessageBus {
         // TODO temporary ignore the confirmation message
         if (message instanceof ResponseMessage) {
             ResponseMessage response = (ResponseMessage)message;
-            for (Pair header : response.getHeaders()) {
-                if (HTTPHeader.LOCATION.equals(header.getName()) && header.getValue().contains("async/")) {
+            for (Pair header : response.getHeaders())
+                if (HTTPHeader.LOCATION.equals(header.getName()) && header.getValue().contains("async/"))
                     return;
-                }
-            }
         }
 
         super.onMessageReceived(event);
     }
 
-    /** @see com.codenvy.ide.websocket.MessageBus#parseMessage(java.lang.String) */
+    /** {@inheritDoc} */
     @Override
     protected Message parseMessage(String message) {
         return AutoBeanCodex.decode(AUTO_BEAN_FACTORY, ResponseMessage.class, message).as();
     }
 
-    /** @see com.codenvy.ide.websocket.MessageBus#getChannel(com.codenvy.ide.websocket.Message) */
+    /** {@inheritDoc} */
+    @Override
+    protected Message getHeartbeatMessage() {
+        return HEARTBEAT_MESSAGE;
+    }
+
+    /** {@inheritDoc} */
     @Override
     protected String getChannel(Message message) {
-        if (!(message instanceof ResponseMessage)) {
+        if (!(message instanceof ResponseMessage))
             return null;
-        }
 
         ResponseMessage restMessage = (ResponseMessage)message;
-        for (Pair header : restMessage.getHeaders()) {
-            if ("x-everrest-websocket-channel".equals(header.getName())) {
+        for (Pair header : restMessage.getHeaders())
+            if ("x-everrest-websocket-channel".equals(header.getName()))
                 return header.getValue();
-            }
-        }
 
         return null;
     }
 
-    /**
-     * @throws WebSocketException
-     * @see com.codenvy.ide.websocket.MessageBus#send(com.codenvy.ide.websocket.Message, com.codenvy.ide.websocket.events.ReplyHandler)
-     */
+    /** {@inheritDoc} */
     @Override
     public void send(Message message, ReplyHandler callback) throws WebSocketException {
         checkWebSocketConnectionState();
 
         AutoBean<?> autoBean = AutoBeanUtils.getAutoBean(message);
-        if (autoBean == null) {
+        if (autoBean == null)
             throw new NullPointerException("Failed to marshall message");
-        }
 
         RequestCallback<?> requestCallback = null;
-        if (callback != null) {
+        if (callback != null && callback instanceof RequestCallback) {
             requestCallback = (RequestCallback<?>)callback;
         }
 
         String textMessage = AutoBeanCodex.encode(autoBean).getPayload();
-        send(message.getUuid(), textMessage, callback);
+        internalSend(message.getUuid(), textMessage, callback);
 
         if (requestCallback != null) {
             requestCallback.getLoader().show();
@@ -124,10 +122,22 @@ public class RESTMessageBus extends MessageBus {
         }
     }
 
-    /**
-     * @throws WebSocketException
-     * @see com.codenvy.ide.websocket.MessageBus#sendSubscribeMessage(java.lang.String)
-     */
+    /** {@inheritDoc} */
+    @Override
+    public void send(String address, String message) throws WebSocketException {
+        send(address, message, null);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void send(String address, String message, ReplyHandler replyHandler) throws WebSocketException {
+        RequestMessage requestMessage =
+                RequestMessageBuilder.build(RequestBuilder.POST, address).header("content-type", "application/json").data(message)
+                                     .getRequestMessage();
+        send(requestMessage, replyHandler);
+    }
+
+    /** {@inheritDoc} */
     @Override
     protected void sendSubscribeMessage(String channel) throws WebSocketException {
         RequestMessage message =
@@ -136,10 +146,7 @@ public class RESTMessageBus extends MessageBus {
         send(message, null);
     }
 
-    /**
-     * @throws WebSocketException
-     * @see com.codenvy.ide.websocket.MessageBus#sendUnsubscribeMessage(java.lang.String)
-     */
+    /** {@inheritDoc} */
     @Override
     protected void sendUnsubscribeMessage(String channel) throws WebSocketException {
         RequestMessage message =

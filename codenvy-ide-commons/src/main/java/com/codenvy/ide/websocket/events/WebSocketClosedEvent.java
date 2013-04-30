@@ -38,6 +38,9 @@ public class WebSocketClosedEvent {
     /** Indicates whether or not the connection was cleanly closed. */
     private boolean wasClean;
 
+    public WebSocketClosedEvent() {
+    }
+
     public WebSocketClosedEvent(int code, String reason, boolean wasClean) {
         this.code = code;
         this.reason = reason;

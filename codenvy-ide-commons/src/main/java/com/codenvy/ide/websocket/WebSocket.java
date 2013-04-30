@@ -65,7 +65,7 @@ public class WebSocket extends JavaScriptObject {
 
     /**
      * Closes the WebSocket connection. If the connection state
-     * is already {@link com.codenvy.ide.websocket.MessageBus.ReadyState#CLOSED}, this method does nothing.
+     * is already {@link MessageBus.ReadyState#CLOSED}, this method does nothing.
      */
     public final native void close()
    /*-{

@@ -24,7 +24,7 @@
         <!-- eXo Modules -->
         <org.exoplatform.kernel.version>2.3.9-GA</org.exoplatform.kernel.version>
         <org.exoplatform.core.version>2.4.9-GA</org.exoplatform.core.version>
-        <org.exoplatform.vfs.version>2.1.0-SNAPSHOT</org.exoplatform.vfs.version>
+        <org.exoplatform.ide.version>2.2.0-SNAPSHOT</org.exoplatform.ide.version>
         <!-- CodeAssistant DataBase -->
         <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
         <!-- Everrest -->
@@ -56,7 +56,7 @@
         <appengine.version>1.6.5</appengine.version>
         <ch.qos.logback.version>0.9.29</ch.qos.logback.version>
         <crash.version>1.0.0-beta21</crash.version>
-        <com.codenvy.organization.version>0.1-SNAPSHOT</com.codenvy.organization.version>
+        <com.codenvy.organization.version>0.3-SNAPSHOT</com.codenvy.organization.version>
         <maven.build.timestamp.format>dd.MM.yy HH:mm</maven.build.timestamp.format>
         <buildNumber>${maven.build.timestamp}</buildNumber>
     </properties>
@@ -131,12 +131,12 @@
             <dependency>
                 <groupId>org.exoplatform.ide</groupId>
                 <artifactId>exo-ide-vfs</artifactId>
-                <version>${org.exoplatform.vfs.version}</version>
+                <version>${org.exoplatform.ide.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.exoplatform.ide</groupId>
                 <artifactId>exo-ide-vfs-fs</artifactId>
-                <version>${org.exoplatform.vfs.version}</version>
+                <version>${org.exoplatform.ide.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.codenvy.ide</groupId>
