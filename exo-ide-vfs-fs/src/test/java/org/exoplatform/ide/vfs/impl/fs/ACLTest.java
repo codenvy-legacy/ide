@@ -28,7 +28,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.util.*;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 
@@ -56,7 +61,7 @@ public class ACLTest extends LocalFileSystemTest {
 
         permissions = new HashMap<String, Set<BasicPermissions>>(3);
         permissions.put("admin", EnumSet.of(BasicPermissions.ALL));
-        permissions.put("andrew", EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
+        permissions.put("andrew", EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE, BasicPermissions.UPDATE_ACL));
         permissions.put("john", EnumSet.of(BasicPermissions.READ));
 
         writePermissions(filePath, permissions);
@@ -155,7 +160,7 @@ public class ACLTest extends LocalFileSystemTest {
     @SuppressWarnings("unchecked")
     public void testUpdateACLHavePermissions() throws Exception {
         // Remove permissions for current user, see LocalFileSystemTest.setUp()
-        permissions.put("admin", EnumSet.of(BasicPermissions.READ));
+        permissions.put("admin", EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
         writePermissions(filePath, permissions);
 
         String requestPath = SERVICE_URI + "acl/" + fileId;
@@ -163,7 +168,7 @@ public class ACLTest extends LocalFileSystemTest {
         String acl = "[{\"principal\":\"admin\",\"permissions\":[\"read\", \"write\"]}]";
         Map<String, List<String>> h = new HashMap<String, List<String>>(1);
         h.put("Content-Type", Arrays.asList("application/json"));
-        // File is protected and default principal 'admin' has not write permission.
+        // File is protected and default principal 'admin' has not update_acl permission.
         // Replace default principal by principal who has write permission.
         ConversationState user = new ConversationState(new Identity("andrew"));
         user.setAttribute("currentTenant", ConversationState.getCurrent().getAttribute("currentTenant"));
@@ -271,64 +276,6 @@ public class ACLTest extends LocalFileSystemTest {
             }
         }
         return map;
-    }
-
-    // -------------------------------------------
-
-    public void testHasPermission1() {
-        AccessControlList accessControlList = new AccessControlList(permissions);
-        assertTrue(accessControlList.hasPermission("admin", BasicPermissions.ALL));
-        assertTrue(accessControlList.hasPermission("admin", BasicPermissions.READ));
-        assertTrue(accessControlList.hasPermission("admin", BasicPermissions.WRITE));
-
-        assertTrue(accessControlList.hasPermission("admin", BasicPermissions.WRITE, BasicPermissions.READ,
-                                                   BasicPermissions.ALL));
-        assertTrue(accessControlList.hasPermission("admin", BasicPermissions.WRITE, BasicPermissions.READ));
-    }
-
-    public void testHasPermission2() {
-        AccessControlList accessControlList = new AccessControlList(permissions);
-        assertFalse(accessControlList.hasPermission("andrew", BasicPermissions.ALL));
-        assertTrue(accessControlList.hasPermission("andrew", BasicPermissions.READ));
-        assertTrue(accessControlList.hasPermission("andrew", BasicPermissions.WRITE));
-
-        assertFalse(accessControlList.hasPermission("andrew", BasicPermissions.WRITE, BasicPermissions.READ,
-                                                    BasicPermissions.ALL));
-        assertTrue(accessControlList.hasPermission("andrew", BasicPermissions.WRITE, BasicPermissions.READ));
-    }
-
-    public void testHasPermission3() {
-        AccessControlList accessControlList = new AccessControlList(permissions);
-        assertFalse(accessControlList.hasPermission("john", BasicPermissions.ALL));
-        assertFalse(accessControlList.hasPermission("john", BasicPermissions.WRITE));
-        assertTrue(accessControlList.hasPermission("john", BasicPermissions.READ));
-
-        assertFalse(accessControlList.hasPermission("john", BasicPermissions.WRITE, BasicPermissions.READ,
-                                                    BasicPermissions.ALL));
-        assertFalse(accessControlList.hasPermission("john", BasicPermissions.WRITE, BasicPermissions.READ));
-    }
-
-    public void testHasPermission4() {
-        AccessControlList accessControlList = new AccessControlList(permissions);
-        assertFalse(accessControlList.hasPermission("anonymous", BasicPermissions.ALL));
-        assertFalse(accessControlList.hasPermission("anonymous", BasicPermissions.WRITE));
-        assertFalse(accessControlList.hasPermission("anonymous", BasicPermissions.READ));
-
-        assertFalse(accessControlList.hasPermission("anonymous", BasicPermissions.WRITE, BasicPermissions.READ,
-                                                    BasicPermissions.ALL));
-        assertFalse(accessControlList.hasPermission("anonymous", BasicPermissions.WRITE, BasicPermissions.READ));
-    }
-
-    public void testEmptyAccessControlList() {
-        AccessControlList emptyAccessControlList = new AccessControlList();
-        assertTrue(emptyAccessControlList.hasPermission("admin", BasicPermissions.WRITE, BasicPermissions.READ,
-                                                        BasicPermissions.ALL));
-        assertTrue(emptyAccessControlList.hasPermission("andrew", BasicPermissions.WRITE, BasicPermissions.READ,
-                                                        BasicPermissions.ALL));
-        assertTrue(emptyAccessControlList.hasPermission("john", BasicPermissions.WRITE, BasicPermissions.READ,
-                                                        BasicPermissions.ALL));
-        assertTrue(emptyAccessControlList.hasPermission("anonymous", BasicPermissions.WRITE, BasicPermissions.READ,
-                                                        BasicPermissions.ALL));
     }
 
     public void testReadWrite() throws Exception {

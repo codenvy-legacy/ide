@@ -67,7 +67,7 @@ public class UpdateACLTest extends MemoryFileSystemTest {
 
     public void testUpdateAclOverride() throws Exception {
         AccessControlEntry ace = new AccessControlEntryImpl();
-        ace.setPrincipal("anonymous");
+        ace.setPrincipal("any");
         ace.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
         memoryContext.getItem(objectId).updateACL(Arrays.asList(ace), false);
 
@@ -89,7 +89,7 @@ public class UpdateACLTest extends MemoryFileSystemTest {
 
     public void testUpdateAclMerge() throws Exception {
         AccessControlEntry ace = new AccessControlEntryImpl();
-        ace.setPrincipal("anonymous");
+        ace.setPrincipal("any");
         ace.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
         memoryContext.getItem(objectId).updateACL(Arrays.asList(ace), false);
 
@@ -105,7 +105,7 @@ public class UpdateACLTest extends MemoryFileSystemTest {
         Map<String, Set<String>> m = toMap(acl);
         assertEquals(m.get("admin"), new HashSet<String>(Arrays.asList("all")));
         assertEquals(m.get("john"), new HashSet<String>(Arrays.asList("read")));
-        assertEquals(m.get("anonymous"), new HashSet<String>(Arrays.asList("all")));
+        assertEquals(m.get("any"), new HashSet<String>(Arrays.asList("all")));
     }
 
     public void testUpdateAclLocked() throws Exception {
