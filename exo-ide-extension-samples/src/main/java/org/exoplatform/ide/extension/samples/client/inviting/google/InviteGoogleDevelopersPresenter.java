@@ -139,7 +139,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
             GoogleContactsService.getInstance().isAuthenticate(new AsyncRequestCallback<StringBuilder>(unmarshaller) {
                 @Override
                 protected void onSuccess(StringBuilder s) {
-                    if (s != null && !s.toString().isEmpty() && s.indexOf("https://www.google.com/m8/feeds") > 0) {
+                    if (s != null && !s.toString().isEmpty() && !(s.indexOf("https://www.google.com/m8/feeds") < 0)) {
                         loadGoogleContacts();
                     } else {
                         oAuthLoginStart();
@@ -158,8 +158,8 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
 
     public void oAuthLoginStart() {
         IDE.addHandler(OAuthLoginFinishedEvent.TYPE, this);
-        String message = "If you want to invite someone from your Google contact list, <br> "
-                         + "press Yes button and you will be redirected to Google authorization page.";
+        String message = "Would you like to find contacts in your Google contact list? <br> "
+                         + "You will be redirected to Google authorization page.";
 
         Dialog askDialog = new Dialog("You have to be logged in Google account!", message, Dialog.Type.ASK);
 

@@ -171,7 +171,7 @@ public class ProjectPrepare {
             //Detecting spring project type
             File webXML = findWebXML(pomObject, modulePath);
             if (webXML.exists() && detectSpringApp(webXML)) {
-                return ProjectType.WAR;
+                return ProjectType.SPRING;
             }
 
             //Detecting GAE project type
@@ -280,6 +280,8 @@ public class ProjectPrepare {
                     } else {
                         if (f.getName().endsWith(".rb")) {
                             return ProjectType.RUBY_ON_RAILS;
+                        } else if (f.getName().equals("package.json") || f.getName().equals("app.js") || f.getName().equals("server.js")) {
+                            return ProjectType.NODE_JS;
                         } else if (f.getName().endsWith(".js")) {
                             return ProjectType.JAVASCRIPT;
                         } else if (f.getName().endsWith(".py")) {

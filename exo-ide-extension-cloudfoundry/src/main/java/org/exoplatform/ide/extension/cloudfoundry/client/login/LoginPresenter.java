@@ -362,6 +362,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler {
             display = null;
             loggedIn = null;
             loginCanceled = null;
+            server = "";
         }
     }
 }
