@@ -191,6 +191,9 @@ public interface SamplesClientBundle extends ClientBundle {
 
     @Source("org/exoplatform/ide/extension/samples/client/images/wizard/technology/php36x36.png")
     ImageResource phpTechnology();
+    
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/technology/nodejs36x36.png")
+    ImageResource nodejsTechnology();
 
     @Source("org/exoplatform/ide/extension/samples/client/images/wizard/technology/python36x36.png")
     ImageResource pythonTechnology();
@@ -228,6 +231,12 @@ public interface SamplesClientBundle extends ClientBundle {
 
     @Source("org/exoplatform/ide/extension/samples/client/images/wizard/paas/Elastic_Beanstalk_36_Disabled.png")
     ImageResource beansTalkPaaSDisabled();
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/paas/tier3WebFabric_36.png")
+    ImageResource tier3WebFabricPaaS();
+
+    @Source("org/exoplatform/ide/extension/samples/client/images/wizard/paas/tier3WebFabric_36_Disabled.png")
+    ImageResource tier3WebFabricPaaSDisabled();
 
     @Source("org/exoplatform/ide/extension/samples/client/images/wizard/paas/gae_36.png")
     ImageResource gaePaaS();

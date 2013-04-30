@@ -35,7 +35,6 @@ import org.exoplatform.ide.client.navigation.handler.SaveAllFilesCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.SaveFileAsCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.SaveFileCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesCommandHandler;
-import org.exoplatform.ide.client.navigator.NavigatorPresenter;
 import org.exoplatform.ide.client.operation.createfile.CreateFilePresenter;
 import org.exoplatform.ide.client.operation.createfile.NewItemMenuGroup;
 import org.exoplatform.ide.client.operation.createfile.NewItemPopupToolbarControl;
@@ -45,7 +44,7 @@ import org.exoplatform.ide.client.operation.deleteitem.DeleteItemsPresenter;
 import org.exoplatform.ide.client.operation.gotofolder.GoToFolderCommandHandler;
 import org.exoplatform.ide.client.operation.openbypath.OpenFileByPathPresenter;
 import org.exoplatform.ide.client.operation.openbyurl.OpenFileByURLPresenter;
-import org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFilePresenter;
+import org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFileCommand;
 import org.exoplatform.ide.client.operation.rename.RenameFilePresenter;
 import org.exoplatform.ide.client.operation.rename.RenameFolderPresenter;
 import org.exoplatform.ide.client.operation.rename.RenameItemControl;
@@ -79,7 +78,11 @@ public class NavigationModule implements InitializeServicesHandler {
 
         new UploadFilePresenter();
         new UploadZipPresenter();
-        new OpenLocalFilePresenter();
+
+        //need to place this control here to save positioning, cause open local file presenter is now deleted, opening local file now
+        //work by uploader
+        IDE.getInstance().addControl(new OpenLocalFileCommand());
+
         new OpenFileByPathPresenter();
         new OpenFileByURLPresenter();
         new DownloadHandler();
@@ -102,7 +105,6 @@ public class NavigationModule implements InitializeServicesHandler {
         new FileClosedHandler();
         IDE.getInstance().addControl(new ShowViewMenuGroup());
         IDE.getInstance().addControl(new NavigationMenuGroup());
-        new NavigatorPresenter();
         new ProgressPresenter();
         new ShellLinkUpdater();
     }

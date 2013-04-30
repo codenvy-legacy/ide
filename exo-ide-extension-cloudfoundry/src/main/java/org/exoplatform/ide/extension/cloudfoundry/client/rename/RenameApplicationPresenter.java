@@ -36,6 +36,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.git.client.GitPresenter;
@@ -86,6 +87,8 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
     /** The name of application. */
     private String applicationName;
 
+    private PAAS_PROVIDER paasProvider;
+
     /** The new name of application. */
     public RenameApplicationPresenter() {
         IDE.addHandler(RenameApplicationEvent.TYPE, this);
@@ -131,7 +134,7 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
 
     private LoggedInHandler appInfoLoggedInHandler = new LoggedInHandler() {
         @Override
-        public void onLoggedIn() {
+        public void onLoggedIn(String server) {
             getApplicationInfo();
         }
     };
@@ -147,9 +150,8 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
             AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                     new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-            CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
-                                                                       new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
-                                                                               unmarshaller, appInfoLoggedInHandler, null) {
+            CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null, new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
+                                                                               unmarshaller, appInfoLoggedInHandler, null, paasProvider) {
                                                                            @Override
                                                                            protected void onSuccess(CloudFoundryApplication result) {
                                                                                applicationName = result.getName();
@@ -174,7 +176,7 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
 
     private LoggedInHandler renameAppLoggedInHandler = new LoggedInHandler() {
         @Override
-        public void onLoggedIn() {
+        public void onLoggedIn(String server) {
             renameApplication();
         }
     };
@@ -187,18 +189,8 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
         try {
             CloudFoundryClientService.getInstance().renameApplication(vfs.getId(), projectId, applicationName, null,
                                                                       newName, new CloudFoundryAsyncRequestCallback<String>(null,
-
-
-
-
-
-
-
-
-
-
                                                                                                                             renameAppLoggedInHandler,
-                                                                                                                            null) {
+                                                                                                                            null, paasProvider) {
                 @Override
                 protected void onSuccess(String result) {
                     closeView();
@@ -214,6 +206,7 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
     /** @see org.exoplatform.ide.extension.cloudfoundry.client.rename.RenameApplicationHandler#onRenameApplication(org.exoplatform.ide.extension.cloudfoundry.client.rename.RenameApplicationEvent) */
     @Override
     public void onRenameApplication(RenameApplicationEvent event) {
+        paasProvider = event.getPaasProvider();
         if (makeSelectionCheck()) {
             getApplicationInfo();
         }

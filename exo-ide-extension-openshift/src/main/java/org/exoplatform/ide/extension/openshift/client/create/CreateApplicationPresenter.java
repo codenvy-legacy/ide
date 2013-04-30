@@ -212,7 +212,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
         String errorMessage = OpenShiftExtension.LOCALIZATION_CONSTANT.createApplicationFail(applicationName);
 
         try {
-            OpenShiftClientService.getInstance().createApplicationWS(applicationName, vfs.getId(), projectId, type,
+            OpenShiftClientService.getInstance().createApplicationWS(applicationName, vfs.getId(), projectId, type, false,
                                                                      new OpenShiftRESTfulRequestCallback<AppInfo>(unmarshaller,
                                                                                                                   new LoggedInHandler() {
                                                                                                                       @Override
@@ -284,7 +284,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
         String errorMessage = OpenShiftExtension.LOCALIZATION_CONSTANT.createApplicationFail(applicationName);
 
         try {
-            OpenShiftClientService.getInstance().createApplication(applicationName, vfs.getId(), projectId, type,
+            OpenShiftClientService.getInstance().createApplication(applicationName, vfs.getId(), projectId, type, false,
                                                                    new OpenShiftAsyncRequestCallback<AppInfo>(unmarshaller,
                                                                                                               new LoggedInHandler() {
                                                                                                                   @Override

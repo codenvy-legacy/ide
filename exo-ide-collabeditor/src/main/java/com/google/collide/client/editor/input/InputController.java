@@ -258,7 +258,13 @@ public class InputController {
         EventListener signalEventListener = new EventListener() {
             @Override
             public void handleEvent(Event event) {
+                try{
                 SignalEvent signalEvent = SignalEventUtils.create(event);
+                if (signalEvent == null) {
+                    return;
+                }
+                
+                Log.info(getClass(), signalEvent.getKeyCode());
                 if (signalEvent != null) {
                     if (selection.hasSelection() && signalEvent.getCommandKey() &&
                         (signalEvent.getKeyCode() == 99 || signalEvent.getKeyCode() == 120)) {
@@ -277,6 +283,9 @@ public class InputController {
                         event.preventDefault();
                         event.stopPropagation();
                     }
+                }
+                }catch (Exception e) {
+                    Log.error(getClass(), e);
                 }
             }
         };

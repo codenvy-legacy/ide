@@ -20,6 +20,7 @@
 package org.exoplatform.ide.client.dialogs;
 
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -53,6 +54,7 @@ public class IDEDialogsView extends ViewImpl {
         mainLayout.setSpacing(10);
         mainLayout.add(content);
 
+        mainLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
         buttonsLayout = createButtonsLayout();
         mainLayout.add(buttonsLayout);
 

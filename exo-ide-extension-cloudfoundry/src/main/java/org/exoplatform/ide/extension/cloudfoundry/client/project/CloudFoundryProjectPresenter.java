@@ -42,6 +42,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.ApplicationDeletedEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.ApplicationDeletedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationEvent;
@@ -64,13 +65,13 @@ import java.util.List;
 
 /**
  * Presenter for managing project, deployed on CloudFoundry.
- *
+ * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 2, 2011 5:54:50 PM anya $
  */
 public class CloudFoundryProjectPresenter extends GitPresenter implements
-                                                               ManageCloudFoundryProjectHandler, ViewClosedHandler,
-                                                               ApplicationDeletedHandler, ApplicationInfoChangedHandler
+                                                              ManageCloudFoundryProjectHandler, ViewClosedHandler,
+                                                              ApplicationDeletedHandler, ApplicationInfoChangedHandler
 {
     interface Display extends IsView {
         HasClickHandlers getCloseButton();
@@ -123,15 +124,15 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements
     }
 
     /** Presenter's display. */
-    private Display display;
+    private Display                 display;
 
     private CloudFoundryApplication application;
 
-    private List<String> appUris;
+    private List<String>            appUris;
+
+    private PAAS_PROVIDER           paasProvider = null;
 
     public CloudFoundryProjectPresenter() {
-        IDE.getInstance().addControl(new CloudFoundryControl());
-
         IDE.addHandler(ManageCloudFoundryProjectEvent.TYPE, this);
         IDE.addHandler(ApplicationDeletedEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -143,14 +144,14 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements
         display.getDeleteButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.eventBus().fireEvent(new DeleteApplicationEvent());
+                IDE.eventBus().fireEvent(new DeleteApplicationEvent(paasProvider));
             }
         });
 
         display.getUpdateButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.eventBus().fireEvent(new UpdateApplicationEvent());
+                IDE.eventBus().fireEvent(new UpdateApplicationEvent(paasProvider));
             }
         });
 
@@ -162,10 +163,9 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements
         });
 
         display.getServicesButton().addClickHandler(new ClickHandler() {
-
             @Override
             public void onClick(ClickEvent event) {
-                IDE.fireEvent(new ManageServicesEvent(application));
+                IDE.fireEvent(new ManageServicesEvent(application, paasProvider));
             }
         });
 
@@ -179,49 +179,49 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements
         display.getInfoButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.eventBus().fireEvent(new ApplicationInfoEvent());
+                IDE.eventBus().fireEvent(new ApplicationInfoEvent(paasProvider));
             }
         });
 
         display.getStartButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.eventBus().fireEvent(new StartApplicationEvent());
+                IDE.eventBus().fireEvent(new StartApplicationEvent(paasProvider));
             }
         });
 
         display.getStopButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.eventBus().fireEvent(new StopApplicationEvent());
+                IDE.eventBus().fireEvent(new StopApplicationEvent(paasProvider));
             }
         });
 
         display.getRestartButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.eventBus().fireEvent(new RestartApplicationEvent());
+                IDE.eventBus().fireEvent(new RestartApplicationEvent(paasProvider));
             }
         });
 
         display.getEditInstancesButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.eventBus().fireEvent(new UpdateInstancesEvent());
+                IDE.eventBus().fireEvent(new UpdateInstancesEvent(paasProvider));
             }
         });
 
         display.getEditMemoryButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.eventBus().fireEvent(new UpdateMemoryEvent());
+                IDE.eventBus().fireEvent(new UpdateMemoryEvent(paasProvider));
             }
         });
 
         display.getEditURLButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.eventBus().fireEvent(new UnmapUrlEvent());
+                IDE.eventBus().fireEvent(new UnmapUrlEvent(paasProvider));
             }
         });
 
@@ -235,7 +235,7 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements
 
                 StringBuilder uris = new StringBuilder();
 
-                //need to fill uris list from second uri, cause first uri is filled in project info window
+                // need to fill uris list from second uri, cause first uri is filled in project info window
                 for (int i = 1; i < appUris.size(); i++)
                 {
                     uris.append("<div><a href=\"");
@@ -259,29 +259,31 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements
     protected void getLogs() {
         ProjectModel project = getSelectedProject();
         try {
-            CloudFoundryClientService.getInstance().getLogs(vfs.getId(), project.getId(),
-                                                            new AsyncRequestCallback<StringBuilder>(
-                                                                    new StringUnmarshaller(new StringBuilder())) {
+            CloudFoundryClientService.getInstance()
+                                     .getLogs(vfs.getId(), project.getId(), new AsyncRequestCallback<StringBuilder>(
+                                                                                      new StringUnmarshaller(new StringBuilder())) {
 
-                                                                @Override
-                                                                protected void onSuccess(StringBuilder result) {
-                                                                    IDE.fireEvent(new OutputEvent("<pre>" + result.toString() + "</pre>",
-                                                                                                  Type.OUTPUT));
-                                                                }
+                                                  @Override
+                                                  protected void onSuccess(StringBuilder result) {
+                                                      IDE.fireEvent(new OutputEvent("<pre>" + result.toString() + "</pre>",
+                                                                                    Type.OUTPUT));
+                                                  }
 
-                                                                @Override
-                                                                protected void onFailure(Throwable exception) {
-                                                                    IDE.fireEvent(new ExceptionThrownEvent(exception.getMessage()));
-                                                                }
-                                                            });
+                                                  @Override
+                                                  protected void onFailure(Throwable exception) {
+                                                      IDE.fireEvent(new ExceptionThrownEvent(exception.getMessage()));
+                                                  }
+                                              });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e.getMessage()));
             e.printStackTrace();
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     *      .event.ViewClosedEvent)
+     */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
@@ -289,58 +291,72 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements
         }
     }
 
-    /** @see org.exoplatform.ide.extension.cloudfoundry.client.project.ManageCloudFoundryProjectHandler#onManageCloudFoundryProject(org
-     * .exoplatform.ide.extension.cloudfoundry.client.project.ManageCloudFoundryProjectEvent) */
+    /**
+     * @see org.exoplatform.ide.extension.cloudfoundry.client.project.ManageCloudFoundryProjectHandler#onManageCloudFoundryProject(org
+     *      .exoplatform.ide.extension.cloudfoundry.client.project.ManageCloudFoundryProjectEvent)
+     */
     @Override
     public void onManageCloudFoundryProject(ManageCloudFoundryProjectEvent event) {
-        //getApplicationInfo(openedProject);
+        paasProvider = event.getPaasProvider();
         getApplicationInfo(getSelectedProject());
     }
 
     /**
      * Get application properties.
-     *
+     * 
      * @param project
      */
     protected void getApplicationInfo(final ProjectModel project) {
         try {
             AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-                    CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
+                                                                        CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
 
             AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-                    new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+                                                                         new AutoBeanUnmarshaller<CloudFoundryApplication>(
+                                                                                                                           cloudFoundryApplication);
 
-            CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), project.getId(), null, null,
-                                                                       new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
-                                                                               unmarshaller, new LoggedInHandler() {
-                                                                           @Override
-                                                                           public void onLoggedIn() {
-                                                                               getApplicationInfo(project);
-                                                                           }
-                                                                       }, null) {
-                                                                           @Override
-                                                                           protected void onSuccess(CloudFoundryApplication result) {
-                                                                               if (display == null) {
-                                                                                   display = GWT.create(Display.class);
-                                                                                   bindDisplay();
-                                                                                   IDE.getInstance().openView(display.asView());
-                                                                               }
-                                                                               application = result;
-                                                                               displayApplicationProperties(result);
-                                                                           }
-                                                                       });
+            CloudFoundryClientService.getInstance()
+                                     .getApplicationInfo(vfs.getId(),
+                                                         project.getId(),
+                                                         null,
+                                                         null,
+                                                         new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
+                                                                                                                       unmarshaller,
+                                                                                                                       new LoggedInHandler() {
+                                                                                                                           @Override
+                                                                                                                           public void onLoggedIn(String server) {
+                                                                                                                               getApplicationInfo(project);
+                                                                                                                           }
+                                                                                                                       }, null,
+                                                                                                                       paasProvider) {
+                                                             @Override
+                                                             protected void onSuccess(CloudFoundryApplication result) {
+                                                                 if (display == null) {
+                                                                     display = GWT.create(Display.class);
+                                                                     bindDisplay();
+                                                                     IDE.getInstance().openView(display.asView());
+                                                                 }
+                                                                 application = result;
+                                                                 displayApplicationProperties(result);
+                                                             }
+                                                         });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
     }
 
-    /** @see org.exoplatform.ide.extension.cloudfoundry.client.delete.ApplicationDeletedHandler#onApplicationDeleted(org.exoplatform.ide
-     * .extension.cloudfoundry.client.delete.ApplicationDeletedEvent) */
+    /**
+     * @see org.exoplatform.ide.extension.cloudfoundry.client.delete.ApplicationDeletedHandler#onApplicationDeleted(org.exoplatform.ide
+     *      .extension.cloudfoundry.client.delete.ApplicationDeletedEvent)
+     */
     @Override
     public void onApplicationDeleted(ApplicationDeletedEvent event) {
         ProjectModel project = getSelectedProject();
-        if (event.getApplicationName() != null && project != null
-            && event.getApplicationName().equals((String)project.getPropertyValue("cloudfoundry-application"))) {
+        final String applicationName = event.getApplicationName();
+        final String cloudFoundryAppName = (String)project.getPropertyValue("cloudfoundry-application");
+        final String webFabricAppName = (String)project.getPropertyValue("tier3webfabric-application");
+        if (applicationName != null && project != null
+            && (applicationName.equals(cloudFoundryAppName) || applicationName.equals(webFabricAppName))) {
             if (display != null) {
                 IDE.getInstance().closeView(display.asView().getId());
             }
@@ -366,8 +382,8 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements
                 display.setUrisPopupVisible(true);
             }
         } else {
-            //Set empty field if we specialy unmap all urls and closed url controller window, if whe don't do this, in
-            //info window will be appear old url, that is not good
+            // Set empty field if we specialy unmap all urls and closed url controller window, if whe don't do this, in
+            // info window will be appear old url, that is not good
             display.setApplicationURL(null);
             display.setUrisPopupVisible(false);
         }

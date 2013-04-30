@@ -28,7 +28,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.eclipse.jdt.client.JdtClientBundle;
-import org.eclipse.jdt.client.packaging.model.next.JavaProject;
+import org.eclipse.jdt.client.packaging.model.JavaProject;
 import org.eclipse.jdt.client.packaging.ui.PackageExplorerItemTree;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.IconButton;

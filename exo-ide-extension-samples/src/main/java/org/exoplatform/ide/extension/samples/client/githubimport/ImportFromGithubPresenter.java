@@ -32,7 +32,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.UnauthorizedException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -54,7 +53,9 @@ import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
 import org.exoplatform.ide.extension.samples.client.marshal.AllRepositoriesUnmarshaller;
-import org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginEvent;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.GenerateGitHubKeyEvent;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.GitHubKeyGeneratedEvent;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.GitHubKeyGeneratedHandler;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryCompleteEvent;
@@ -83,7 +84,7 @@ import java.util.Map;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ImportFromGithubPresenter.java Dec 7, 2011 3:37:11 PM vereshchaka $
  */
-public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewClosedHandler,
+public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewClosedHandler, GitHubKeyGeneratedHandler,
                                       UserInfoReceivedHandler, VfsChangedHandler {
     public interface Display extends IsView {
         /**
@@ -214,15 +215,23 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
 
                                                        @Override
                                                        protected void onFailure(Throwable exception) {
-                                                           if (exception instanceof UnauthorizedException) {
-                                                               processUnauthorized();
-                                                           } else {
-                                                               IDE.fireEvent(new ExceptionThrownEvent(exception));
-                                                           }
+                                                           IDE.fireEvent(new ExceptionThrownEvent(exception));
+
                                                        }
                                                    });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /** Open view. */
+    private void openView() {
+        if (display == null) {
+            Display d = GWT.create(Display.class);
+            IDE.getInstance().openView(d.asView());
+            display = d;
+            bindDisplay();
+            return;
         }
     }
 
@@ -275,17 +284,6 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
         }
     }
 
-    /** Open view. */
-    private void openView() {
-        if (display == null) {
-            Display d = GWT.create(Display.class);
-            IDE.getInstance().openView(d.asView());
-            display = d;
-            bindDisplay();
-            return;
-        }
-    }
-
     /**
      * @see org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler#onUserInfoReceived(org.exoplatform.ide.client
      *      .framework.userinfo.event.UserInfoReceivedEvent)
@@ -304,16 +302,12 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
 
                                                  @Override
                                                  protected void onSuccess(StringBuilder result) {
-                                                     if (result.toString() == null || result.toString().isEmpty()) {
-                                                         processUnauthorized();
-                                                     } else {
-                                                         getUserRepos();
-                                                     }
+                                                     generateGitHubKey();
                                                  }
 
                                                  @Override
                                                  protected void onFailure(Throwable exception) {
-                                                     processUnauthorized();
+                                                     generateGitHubKey();
                                                  }
                                              });
         } catch (RequestException e) {
@@ -321,8 +315,15 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
         }
     }
 
-    private void processUnauthorized() {
-        IDE.fireEvent(new OAuthLoginEvent());
+    public void generateGitHubKey() {
+        IDE.addHandler(GitHubKeyGeneratedEvent.TYPE, this);
+        IDE.fireEvent(new GenerateGitHubKeyEvent());
+    }
+
+    @Override
+    public void onGithubKeyGenerated(GitHubKeyGeneratedEvent event) {
+        IDE.removeHandler(GitHubKeyGeneratedEvent.TYPE, this);
+        getUserRepos();
     }
 
     private void deleteFolder(FolderModel path) {
@@ -430,9 +431,7 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
     private void onRepositoryCloned(final RepoInfo gitRepositoryInfo, final FolderModel folder) {
         IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(gitRepositoryInfo.getRemoteUri()),
                                       OutputMessage.Type.GIT));
-        List<Property> properties = new ArrayList<Property>();
-        properties.add(new PropertyImpl(GitExtension.GIT_REPOSITORY_PROP, "true"));
-        IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId(), null, properties));
+        IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId(), null));
 
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override

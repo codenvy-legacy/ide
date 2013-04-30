@@ -47,30 +47,31 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
-import static org.exoplatform.ide.commons.FileUtils.*;
+import static org.exoplatform.ide.commons.FileUtils.copy;
+import static org.exoplatform.ide.commons.FileUtils.createTempDirectory;
+import static org.exoplatform.ide.commons.FileUtils.deleteRecursive;
 import static org.exoplatform.ide.commons.NameGenerator.generate;
 import static org.exoplatform.ide.commons.ZipUtils.unzip;
 
 /**
  * ApplicationRunner for deploy Python applications at Cloud Foundry PaaS.
- *
+ * 
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public class CloudfoundryApplicationRunner implements ApplicationRunner, Startable {
     /** Default application lifetime (in minutes). After this time application may be stopped automatically. */
-    private static final int DEFAULT_APPLICATION_LIFETIME = 10;
+    private static final int               DEFAULT_APPLICATION_LIFETIME = 10;
 
-    private static final Log LOG = ExoLogger.getLogger(CloudfoundryApplicationRunner.class);
+    private static final Log               LOG                          = ExoLogger.getLogger(CloudfoundryApplicationRunner.class);
 
-    private final int  applicationLifetime;
-    private final long applicationLifetimeMillis;
+    private final int                      applicationLifetime;
+    private final long                     applicationLifetimeMillis;
 
-    private final CloudfoundryPool cfServers;
+    private final CloudfoundryPool         cfServers;
 
     private final Map<String, Application> applications;
     private final ScheduledExecutorService applicationTerminator;
-    private final java.io.File             appEngineSdk;
 
     public CloudfoundryApplicationRunner(CloudfoundryPool cfServers, InitParams initParams) {
         this(cfServers, parseApplicationLifeTime(readValueParam(initParams, "cloudfoundry-application-lifetime")));
@@ -100,13 +101,8 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
         URL cs = getClass().getProtectionDomain().getCodeSource().getLocation();
         java.io.File f = new java.io.File(URI.create(cs.toString()));
-        java.io.File sdk = null;
-        while (!(f == null || (sdk = new java.io.File(f, "appengine-python-sdk")).exists())) {
+        while (!(f == null)) {
             f = f.getParentFile();
-        }
-        appEngineSdk = sdk;
-        if (!appEngineSdk.exists()) {
-            LOG.error("***** Google appengine Python SDK not found *****");
         }
     }
 
@@ -121,7 +117,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
     @Override
     public ApplicationInstance runApplication(VirtualFileSystem vfs, String projectId) throws ApplicationRunnerException,
-                                                                                              VirtualFileSystemException {
+                                                                                      VirtualFileSystemException {
         java.io.File path = null;
         try {
             Item project = vfs.getItem(projectId, PropertyFilter.NONE_FILTER);
@@ -137,18 +133,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
             APPLICATION_TYPE type = determineApplicationType(path);
             if (APPLICATION_TYPE.PYTHON_APP_ENGINE == type) {
-                if (appEngineSdk == null) {
-                    throw new RuntimeException("Unable run appengine project. Google appengine Python SDK not found. ");
-                }
-
                 final java.io.File appengineApplication = createTempDirectory(null, "gae-app-");
-
-                // copy sdk
-                java.io.File sdk = new java.io.File(appengineApplication, "appengine-python-sdk");
-                if (!sdk.mkdir()) {
-                    throw new IOException("Unable create directory " + sdk.getAbsolutePath());
-                }
-                copy(appEngineSdk, sdk, null);
 
                 // copy application
                 java.io.File application = new java.io.File(appengineApplication, "application");
@@ -203,7 +188,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             // try to remove application.
             try {
                 LOG.warn("Application {} failed to start, cause: {}", name, e.getMessage());
-                cloudfoundry.deleteApplication(cloudfoundry.getTarget(), name, null, null, true);
+                cloudfoundry.deleteApplication(cloudfoundry.getTarget(), name, null, null, "cloudfoundry", true);
             } catch (Exception e1) {
                 LOG.warn("Unable delete failed application {}, cause: {}", name, e.getMessage());
             }
@@ -213,9 +198,8 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
     }
 
     /**
-     * Get applications logs and hide any errors. This method is used for getting logs of failed application to help
-     * user
-     * understand what is going wrong.
+     * Get applications logs and hide any errors. This method is used for getting logs of failed application to help user understand what is
+     * going wrong.
      */
     private String safeGetLogs(Cloudfoundry cloudfoundry, String name) {
         try {
@@ -289,8 +273,8 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
     private void doStopApplication(Cloudfoundry cloudfoundry, String name) throws ApplicationRunnerException {
         try {
             String target = cloudfoundry.getTarget();
-            cloudfoundry.stopApplication(target, name, null, null);
-            cloudfoundry.deleteApplication(target, name, null, null, true);
+            cloudfoundry.stopApplication(target, name, null, null, "cloudfoundry");
+            cloudfoundry.deleteApplication(target, name, null, null, "cloudfoundry", true);
             applications.remove(name);
             LOG.debug("Stop application {}.", name);
         } catch (Exception e) {
@@ -320,15 +304,19 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                                                       String name,
                                                       java.io.File path,
                                                       APPLICATION_TYPE type)
-            throws CloudfoundryException, IOException, ParsingResponseException, VirtualFileSystemException, CredentialStoreException {
+                                                                            throws CloudfoundryException,
+                                                                            IOException,
+                                                                            ParsingResponseException,
+                                                                            VirtualFileSystemException,
+                                                                            CredentialStoreException {
         if (APPLICATION_TYPE.PYTHON_APP_ENGINE == type) {
-            final String command = "PATH=/home/vcap/bin:$PATH appengine-python-sdk/dev_appserver.py --host=0.0.0.0 --port=$VCAP_APP_PORT " +
+            final String command = "PATH=/home/vcap/bin:$PATH python_gae/dev_appserver.py --host=0.0.0.0 --port=$VCAP_APP_PORT " +
                                    "--skip_sdk_update_check=yes application";
-            return cloudfoundry.createApplication(target, name, "standalone", null, 1, 128, false, "python2", command,
-                                                  null, null, null, path.toURI().toURL());
+            return cloudfoundry.createApplication(target, name, "python_gae", null, 1, 128, false, "python2", command,
+                                                  null, null, null, path.toURI().toURL(), null);
         }
         return cloudfoundry.createApplication(target, name, null, null, 1, 128, false, "python2", null, null, null,
-                                              null, path.toURI().toURL());
+                                              null, path.toURI().toURL(), null);
     }
 
     private void login(Cloudfoundry cloudfoundry) throws ApplicationRunnerException {

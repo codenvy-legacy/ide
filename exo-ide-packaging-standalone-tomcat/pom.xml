@@ -9,7 +9,7 @@
     <parent>
         <groupId>org.exoplatform.ide</groupId>
         <artifactId>exo-ide-parent</artifactId>
-        <version>2.1.1-SNAPSHOT</version>
+        <version>2.2.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>exo-ide-packaging-standalone-tomcat</artifactId>
@@ -71,6 +71,7 @@
             <groupId>com.codenvy.organization</groupId>
             <artifactId>codenvy-organization-packaging-api-war</artifactId>
             <type>war</type>
+            <version>${com.codenvy.organization.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -275,6 +276,52 @@
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
                     <artifactId>codenvy-gwtframework-commons</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+          
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-nodejs-runtime</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-ui</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-commons</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>gwt-user</artifactId>
+                    <groupId>com.google.gwt</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>slf4j-log4j12</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-php-runtime</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-ui</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-commons</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>gwt-user</artifactId>
+                    <groupId>com.google.gwt</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>slf4j-log4j12</artifactId>
+                    <groupId>org.slf4j</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -562,12 +609,6 @@
             <type>zip</type>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-python-sdk</artifactId>
-            <type>zip</type>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -602,12 +643,6 @@
                                 <artifactItem>
                                     <groupId>com.google.appengine</groupId>
                                     <artifactId>appengine-java-sdk</artifactId>
-                                    <version>${appengine.version}</version>
-                                    <type>zip</type>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>com.google.appengine</groupId>
-                                    <artifactId>appengine-python-sdk</artifactId>
                                     <version>${appengine.version}</version>
                                     <type>zip</type>
                                 </artifactItem>
@@ -720,16 +755,26 @@
                                 </war>
 
 
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-rest-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/rest.war" overwrite="true" />
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true" />
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-site-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true" />
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-shell-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/shell.war" overwrite="true" />
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" overwrite="true" />
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true" />
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-gadget-server-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/gadget-server.war" overwrite="true" />
-                                <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true" />
-                                <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip" dest="${project.build.directory}/tomcat-ide" />
-                                <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip" dest="${project.build.directory}/tomcat-ide">
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-rest-war-${project.version}.war"
+                                      tofile="${project.build.directory}/tomcat-ide/webapps/rest.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${project.version}.war"
+                                      tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-site-war-${project.version}.war"
+                                      tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-shell-war-${project.version}.war"
+                                      tofile="${project.build.directory}/tomcat-ide/webapps/shell.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${project.version}.war"
+                                      tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${project.version}.war"
+                                      tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-gadget-server-${project.version}.war"
+                                      tofile="${project.build.directory}/tomcat-ide/webapps/gadget-server.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war"
+                                      tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true"/>
+                                <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"
+                                       dest="${project.build.directory}/tomcat-ide"/>
+                                <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip"
+                                       dest="${project.build.directory}/tomcat-ide">
                                     <patternset>
                                         <exclude name="**/bin/**" />
                                         <exclude name="**/demos/**" />
@@ -747,19 +792,8 @@
                                         <exclude name="**/RELEASE_NOTES.ORM" />
                                     </patternset>
                                 </unzip>
-                                <move file="${project.build.directory}/tomcat-ide/appengine-java-sdk-${appengine.version}" tofile="${project.build.directory}/tomcat-ide/appengine-java-sdk" />
-                                <unzip src="${project.build.directory}/packager-conf/appengine/appengine-python-sdk.zip" dest="${project.build.directory}/tomcat-ide">
-                                    <patternset>
-                                        <exclude name="**/demos/**" />
-                                        <exclude name="**/new_project_template/**" />
-                                        <exclude name="**/BUGS" />
-                                        <exclude name="**/LICENSE" />
-                                        <exclude name="**/README" />
-                                        <exclude name="**/RELEASE_NOTES" />
-                                    </patternset>
-                                </unzip>
-                                <move file="${project.build.directory}/tomcat-ide/google_appengine" tofile="${project.build.directory}/tomcat-ide/appengine-python-sdk" />
-
+                                <move file="${project.build.directory}/tomcat-ide/appengine-java-sdk-${appengine.version}"
+                                      tofile="${project.build.directory}/tomcat-ide/appengine-java-sdk"/>
                             </tasks>
                         </configuration>
                         <goals>

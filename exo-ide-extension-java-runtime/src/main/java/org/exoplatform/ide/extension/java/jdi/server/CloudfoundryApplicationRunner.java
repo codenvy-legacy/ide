@@ -51,7 +51,7 @@ import java.util.regex.Pattern;
 
 import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
 import static org.exoplatform.ide.commons.FileUtils.*;
-import static org.exoplatform.ide.commons.JsonHelper.toJson;
+import static com.codenvy.commons.json.JsonHelper.toJson;
 import static org.exoplatform.ide.commons.NameGenerator.generate;
 import static org.exoplatform.ide.commons.ZipUtils.*;
 
@@ -190,7 +190,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             // try to remove application.
             try {
                 LOG.warn("Application {} failed to start, cause: {}", name, e.getMessage());
-                cloudfoundry.deleteApplication(cloudfoundry.getTarget(), name, null, null, true);
+                cloudfoundry.deleteApplication(cloudfoundry.getTarget(), name, null, null, "cloudfoundry", true);
             } catch (Exception e1) {
                 LOG.warn("Unable delete failed application {}, cause: {}", name, e.getMessage());
             }
@@ -225,7 +225,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             // try to remove application.
             try {
                 LOG.warn("Application {} failed to start, cause: {}", name, e.getMessage());
-                cloudfoundry.deleteApplication(cloudfoundry.getTarget(), name, null, null, true);
+                cloudfoundry.deleteApplication(cloudfoundry.getTarget(), name, null, null, "cloudfoundry", true);
             } catch (Exception e1) {
                 LOG.warn("Unable delete failed application {}, cause: {}", name, e.getMessage());
             }
@@ -311,8 +311,8 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
     private void doStopApplication(Cloudfoundry cloudfoundry, String name) throws ApplicationRunnerException {
         try {
             String target = cloudfoundry.getTarget();
-            cloudfoundry.stopApplication(target, name, null, null);
-            cloudfoundry.deleteApplication(target, name, null, null, true);
+            cloudfoundry.stopApplication(target, name, null, null, "cloudfoundry");
+            cloudfoundry.deleteApplication(target, name, null, null, "cloudfoundry", true);
             applications.remove(name);
             publishWebSocketMessage(null, "runner:application-stopped:" + name);
             LOG.debug("Stop application {}.", name);
@@ -348,10 +348,10 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             throws CloudfoundryException, IOException, ParsingResponseException, VirtualFileSystemException, CredentialStoreException {
         if (APPLICATION_TYPE.JAVA_WEB_APP_ENGINE == type) {
             return cloudfoundry.createApplication(target, name, "java_gae", null, 1, 256, false, "java", null, debug, null,
-                                                  null, path.toURI().toURL(), params);
+                                                  null, path.toURI().toURL(), null, params);
         }
         return cloudfoundry.createApplication(target, name, "spring", null, 1, 256, false, "java", null, debug, null,
-                                              null, path.toURI().toURL(), params);
+                                              null, path.toURI().toURL(), null, params);
     }
 
     @Override

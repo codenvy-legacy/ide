@@ -26,11 +26,15 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -43,12 +47,15 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
+import org.exoplatform.ide.extension.openshift.client.user.ShowApplicationListEvent;
+import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
+import org.exoplatform.ide.git.client.GitPresenter;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 7, 2011 3:49:41 PM anya $
  */
-public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHandler, LoggedInHandler {
+public class CreateDomainPresenter extends GitPresenter implements ViewClosedHandler, CreateDomainHandler, LoggedInHandler {
     interface Display extends IsView {
         /**
          * Get create button's click handler.
@@ -84,6 +91,8 @@ public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHan
 
     private Display display;
 
+    private boolean fromUserInfo;
+
     /**
      *
      */
@@ -97,7 +106,7 @@ public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHan
 
             @Override
             public void onClick(ClickEvent event) {
-                createDomain();
+                getUserInfo();
             }
         });
 
@@ -119,8 +128,10 @@ public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHan
         });
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     *      .event.ViewClosedEvent)
+     */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
@@ -128,8 +139,10 @@ public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHan
         }
     }
 
-    /** @see org.exoplatform.ide.extension.openshift.client.domain.CreateDomainHandler#onCreateDomain(org.exoplatform.ide.extension
-     * .openshift.client.domain.CreateDomainEvent) */
+    /**
+     * @see org.exoplatform.ide.extension.openshift.client.domain.CreateDomainHandler#onCreateDomain(org.exoplatform.ide.extension
+     *      .openshift.client.domain.CreateDomainEvent)
+     */
     @Override
     public void onCreateDomain(CreateDomainEvent event) {
         if (display == null) {
@@ -138,6 +151,90 @@ public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHan
             IDE.getInstance().openView(display.asView());
             display.enableCreateButton(false);
             display.focusInDomainNameField();
+            fromUserInfo = event.isFromUserInfo();
+        }
+    }
+
+    protected void getUserInfo() {
+        try {
+            AutoBean<RHUserInfo> rhUserInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.rhUserInfo();
+            AutoBeanUnmarshaller<RHUserInfo> unmarshaller = new AutoBeanUnmarshaller<RHUserInfo>(rhUserInfo);
+            OpenShiftClientService.getInstance().getUserInfo(true, new AsyncRequestCallback<RHUserInfo>(unmarshaller) {
+
+                @Override
+                protected void onSuccess(RHUserInfo result) {
+                    //if user have namespace
+                    if (result.getNamespace() != null && !result.getNamespace().isEmpty()) {
+                        if (result.getApps() != null && result.getApps().size() > 0) {
+                            askUserForDeleteHisApplications();
+                        } else {
+                            deleteAllApplicationsAndNamespace();
+                        }
+                    } else {
+                        createDomain();
+                    }
+                }
+
+                /**
+                 * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+                 */
+                @Override
+                protected void onFailure(Throwable exception) {
+                    if (exception instanceof ServerException) {
+                        ServerException serverException = (ServerException)exception;
+                        if (HTTPStatus.OK == serverException.getHTTPStatus()
+                            && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED))) {
+                            addLoggedInHandler();
+                            IDE.fireEvent(new LoginEvent());
+                            return;
+                        }
+                    }
+                    IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+                                                                                                 .getUserInfoFail()));
+                }
+            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT.getUserInfoFail()));
+        }
+    }
+
+    private void askUserForDeleteHisApplications() {
+        Dialogs.getInstance().ask(OpenShiftExtension.LOCALIZATION_CONSTANT.changeNamespaceTitle(),
+                                  OpenShiftExtension.LOCALIZATION_CONSTANT.changeNamespacePrompt(), new BooleanValueReceivedHandler() {
+
+
+            @Override
+            public void booleanValueReceived(Boolean value) {
+                if (value != null && value) {
+                    GWT.log("dialog ok clicked");
+                    deleteAllApplicationsAndNamespace();
+                }
+            }
+        });
+    }
+
+    private void deleteAllApplicationsAndNamespace() {
+        final String projectId = getSelectedProject() != null ? getSelectedProject().getId() : null;
+
+        try {
+            OpenShiftClientService.getInstance().destroyAllApplications(true, vfs.getId(), projectId,
+                                                                        new AsyncRequestCallback<Void>() {
+
+
+                                                                            @Override
+                                                                            protected void onSuccess(Void result) {
+                                                                                createDomain();
+                                                                            }
+
+                                                                            @Override
+                                                                            protected void onFailure(Throwable exception) {
+                                                                                Dialogs.getInstance().showError(
+                                                                                        OpenShiftExtension.LOCALIZATION_CONSTANT
+                                                                                                          .removingApplicationsFailed());
+                                                                            }
+                                                                        });
+        } catch (RequestException e) {
+            Dialogs.getInstance().showError(OpenShiftExtension.LOCALIZATION_CONSTANT.removingApplicationsFailed());
         }
     }
 
@@ -157,6 +254,9 @@ public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHan
                     IDE.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainSuccess(domainName),
                                                   Type.INFO));
                     IDE.getInstance().closeView(display.asView().getId());
+                    if (fromUserInfo) {
+                        IDE.fireEvent(new ShowApplicationListEvent());
+                    }
                 }
 
                 /**
@@ -173,13 +273,13 @@ public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHan
                             return;
                         }
                     }
-                    IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
-                                                                                                 .createDomainFail(domainName)));
+                    Dialogs.getInstance().showError(OpenShiftExtension.LOCALIZATION_CONSTANT
+                                                                      .createDomainFail(domainName));
                 }
             });
         } catch (RequestException e) {
-            IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
-                                                                                 .createDomainFail(domainName)));
+            Dialogs.getInstance().showError(OpenShiftExtension.LOCALIZATION_CONSTANT
+                                                              .createDomainFail(domainName));
         }
     }
 
@@ -188,8 +288,10 @@ public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHan
         IDE.addHandler(LoggedInEvent.TYPE, this);
     }
 
-    /** @see org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.openshift
-     * .client.login.LoggedInEvent) */
+    /**
+     * @see org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.openshift
+     *      .client.login.LoggedInEvent)
+     */
     @Override
     public void onLoggedIn(LoggedInEvent event) {
         IDE.removeHandler(LoggedInEvent.TYPE, this);

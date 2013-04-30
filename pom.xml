@@ -8,7 +8,7 @@
     </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-parent</artifactId>
-   <version>2.1.1-SNAPSHOT</version>
+   <version>2.2.0-SNAPSHOT</version>
    <packaging>pom</packaging>
    <name>Codenvy IDE :: Parent</name>
    <scm>
@@ -45,8 +45,8 @@
       <appengine.version>1.7.7</appengine.version>
       <ch.qos.logback.version>1.0.0</ch.qos.logback.version>
       <crash.version>1.0.0-beta21</crash.version>
-      <com.codenvy.commons.version>0.3</com.codenvy.commons.version>
-      <com.codenvy.organization.version>0.1</com.codenvy.organization.version>
+      <com.codenvy.commons.version>0.4-SNAPSHOT</com.codenvy.commons.version>
+      <com.codenvy.organization.version>0.3-SNAPSHOT</com.codenvy.organization.version>
 
       <tomcat.version>7.0.32</tomcat.version>
       <javax.annotation.version>1.0</javax.annotation.version>
@@ -189,6 +189,18 @@
             <artifactId>exo-ide-extension-python-runtime</artifactId>
             <version>${project.version}</version>
          </dependency>
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-php-runtime</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+          <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-nodejs-runtime</artifactId>
+            <version>${project.version}</version>
+         </dependency>  
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -747,6 +759,9 @@
       <module>exo-ide-extension-java</module>
       <module>exo-ide-extension-java-runtime</module>
       <module>exo-ide-extension-python-runtime</module>
+      <module>exo-ide-extension-php-runtime</module>
+      <module>exo-ide-extension-nodejs-runtime</module>
+      <!--module>exo-ide-extension-chromattic</module-->
       <module>exo-ide-extension-git</module>
       <module>exo-ide-extension-ssh</module>
       <module>exo-ide-extension-heroku</module>

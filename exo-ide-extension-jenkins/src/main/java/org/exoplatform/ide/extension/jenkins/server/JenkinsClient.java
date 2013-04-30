@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.jenkins.server;
 
+import com.codenvy.commons.json.JsonHelper;
+
 import org.everrest.websockets.WSConnectionContext;
 import org.everrest.websockets.message.ChannelBroadcastMessage;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
@@ -52,8 +54,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import static org.exoplatform.ide.commons.JsonHelper.toJson;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
@@ -659,7 +659,7 @@ public abstract class JenkinsClient {
             if (data instanceof String) {
                 message.setBody((String)data);
             } else if (data != null) {
-                message.setBody(toJson(data));
+                message.setBody(JsonHelper.toJson(data));
             }
         } else {
             message.setType(ChannelBroadcastMessage.Type.ERROR);

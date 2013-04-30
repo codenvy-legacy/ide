@@ -18,17 +18,14 @@
  */
 package org.exoplatform.ide.git.server.rest;
 
+import com.codenvy.commons.security.oauth.OAuthTokenProvider;
+
 import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.ssh.server.SshKeyStoreException;
 import org.exoplatform.ide.git.server.github.GitHub;
 import org.exoplatform.ide.git.server.github.GitHubException;
 import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.GitHubRepository;
-import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -38,6 +35,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * REST service to get the list of repositories from GitHub (where sample projects are located).
@@ -98,7 +99,7 @@ public class GitHubService {
     @Path("token/{userid}")
     @Produces(MediaType.TEXT_PLAIN)
     public String getToken(@PathParam("userid") String userId) throws IOException, GitHubException, ParsingResponseException {
-        return oauthTokenProvider.getToken("github", userId);
+        return github.getToken(userId);
     }
 
     @POST

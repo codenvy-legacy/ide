@@ -42,8 +42,18 @@ public interface Framework {
      */
     void setName(String name);
 
+    /**
+     * Get list of runtimes.
+     * 
+     * @return runtime list
+     */
     List<Runtime> getRuntimes();
 
+    /**
+     * Set runtimes.
+     * 
+     * @param runtimes runtime list to set
+     */
     void setRuntimes(List<Runtime> runtimes);
 
     /**

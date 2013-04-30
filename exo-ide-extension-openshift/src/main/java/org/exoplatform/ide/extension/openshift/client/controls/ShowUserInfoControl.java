@@ -22,7 +22,7 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
-import org.exoplatform.ide.extension.openshift.client.user.ShowUserInfoEvent;
+import org.exoplatform.ide.extension.openshift.client.user.ShowApplicationListEvent;
 
 /**
  * Control is used for showing OpenShift user's information.
@@ -38,7 +38,7 @@ public class ShowUserInfoControl extends AbstractOpenShiftControl {
         setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.showUserInfoControlPrompt());
         setImages(OpenShiftClientBundle.INSTANCE.userInfoControl(),
                   OpenShiftClientBundle.INSTANCE.userInfoControlDisabled());
-        setEvent(new ShowUserInfoEvent());
+        setEvent(new ShowApplicationListEvent());
     }
 
     /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */

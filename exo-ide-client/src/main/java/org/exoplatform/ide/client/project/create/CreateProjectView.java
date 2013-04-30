@@ -54,7 +54,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
 
     private static final int HEIGHT = 460;
 
-    private static final int WIDTH = 705;
+    private static final int WIDTH = 805;
 
     private final String NAME_FIELD_ID = "eXoCreateNewProjectViewNameField";
 
@@ -139,6 +139,12 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
 
     @UiField
     DockLayoutPanel jRebelProfileFields;
+
+    @UiField
+    Image chooseTechnologyTooltip;
+
+    @UiField
+    Image choosePaaSTooltip;
 
     private List<ToggleButton> projectTypeButtonsList = new LinkedList<ToggleButton>();
 
@@ -271,7 +277,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
     public void setProjectTypes(List<ProjectType> projectTypeList) {
         projectTypesGrid.setSize("100%", "100%");
 
-        int columnCount = 8;
+        int columnCount = 9;
         int rowCount = (int)Math.ceil((double)projectTypeList.size() / columnCount);
         projectTypesGrid.resize(rowCount, columnCount);
 
@@ -305,6 +311,8 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
                     type = "Java Spring";
                 } else if (projectType == ProjectType.RUBY_ON_RAILS) {
                     type = "Ruby on Rails";
+                } else if (projectType == ProjectType.NODE_JS) {
+                    type = "Node.js";
                 }
 
                 dock.add(projectTypeButton, DockPanel.NORTH);
@@ -323,7 +331,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
     public void setTargets(List<PaaS> targetList) {
         targetGrid.setSize("100%", "100%");
 
-        int columnCount = 8;
+        int columnCount = 9;
         int rowCount = (int)Math.ceil((double)targetList.size() / columnCount);
         targetGrid.resize(rowCount, columnCount);
 
@@ -544,5 +552,15 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
     @Override
     public void setJRebelStoredFormVisible(boolean visible) {
         showJRebelStoredForm = visible;
+    }
+
+    @Override
+    public HasClickHandlers getChooseTechnologyTooltip() {
+        return chooseTechnologyTooltip;
+    }
+
+    @Override
+    public HasClickHandlers getChoosePaaSTooltip() {
+        return choosePaaSTooltip;
     }
 }

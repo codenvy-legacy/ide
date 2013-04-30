@@ -399,7 +399,9 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, HasP
                                                                     }, new LoginCanceledHandler() {
                         @Override
                         public void onLoginCanceled() {
-                            initializeDeployViewHandler.onInitializeDeployViewError();
+                            if (initializeDeployViewHandler != null) {
+                                initializeDeployViewHandler.onInitializeDeployViewError();
+                            }
                         }
                     }) {
                         @Override

@@ -21,8 +21,8 @@ package org.eclipse.jdt.client.packaging.ui;
 import com.google.gwt.resources.client.ImageResource;
 
 import org.eclipse.jdt.client.JdtClientBundle;
-import org.eclipse.jdt.client.packaging.model.next.Dependency;
-import org.eclipse.jdt.client.packaging.model.next.Dependencies;
+import org.eclipse.jdt.client.packaging.model.Dependencies;
+import org.eclipse.jdt.client.packaging.model.Dependency;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;

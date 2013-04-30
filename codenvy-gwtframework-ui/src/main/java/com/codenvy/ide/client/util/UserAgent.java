@@ -84,6 +84,7 @@ public abstract class UserAgent {
     public static boolean isChrome() {
         return UserAgentRuntimeProperties.get().isChrome();
     }
+    
 
     public static boolean isIE7() {
         return UserAgentRuntimeProperties.get().isIe7();
@@ -106,6 +107,11 @@ public abstract class UserAgent {
     /** @return true if we are on Linux */
     public static boolean isLinux() {
         return UserAgentRuntimeProperties.get().isLinux();
+    }
+
+    /** @return true if we are on Linux */
+    public static boolean isCrOS() {
+        return UserAgentRuntimeProperties.get().isCrOS();
     }
 
     /**

@@ -415,6 +415,9 @@ public interface GitLocalizationConstant extends Messages {
     @Key("view.remove_from_index.all")
     String removeFromIndexAll();
 
+    @Key("view.remove_from_index.only")
+    String removeFromIndexOnly();
+
     @Key("view.remove_from_index.folder")
     String removeFromIndexFolder(String folder);
 

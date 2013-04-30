@@ -20,6 +20,8 @@ package org.exoplatform.ide.extension.cloudfoundry.client.login;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
+
 /**
  * Event occurs, when user tries to log in CloudFoundry.
  * Implement {@link LoginHandler} to handle event.
@@ -37,20 +39,25 @@ public class LoginEvent extends GwtEvent<LoginHandler> {
 
     private String loginUrl;
 
+    private PAAS_PROVIDER paasProvider;
+
     /**
+     * 
      * @param loggedIn
      * @param loginCanceled
      * @param loginUrl
+     * @param paasProvider
      */
-    public LoginEvent(LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled, String loginUrl) {
+    public LoginEvent(LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled, String loginUrl, PAAS_PROVIDER paasProvider) {
         super();
         this.loggedIn = loggedIn;
         this.loginCanceled = loginCanceled;
         this.loginUrl = loginUrl;
+        this.paasProvider = paasProvider;
     }
 
-    public LoginEvent(LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled) {
-        this(loggedIn, loginCanceled, null);
+    public LoginEvent(PAAS_PROVIDER paasProvider) {
+        this(null, null, null, paasProvider);
     }
 
     public LoggedInHandler getLoggedIn() {
@@ -77,6 +84,10 @@ public class LoginEvent extends GwtEvent<LoginHandler> {
     /** @return the loginUrl */
     public String getLoginUrl() {
         return loginUrl;
+    }
+
+    public PAAS_PROVIDER getPaasProvider() {
+        return paasProvider;
     }
 
 }

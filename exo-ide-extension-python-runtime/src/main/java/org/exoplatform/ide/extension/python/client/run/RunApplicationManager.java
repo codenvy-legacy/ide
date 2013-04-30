@@ -33,11 +33,20 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.project.*;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.python.client.PythonRuntimeExtension;
 import org.exoplatform.ide.extension.python.client.PythonRuntimeService;
-import org.exoplatform.ide.extension.python.client.run.event.*;
+import org.exoplatform.ide.extension.python.client.run.event.ApplicationStartedEvent;
+import org.exoplatform.ide.extension.python.client.run.event.ApplicationStoppedEvent;
+import org.exoplatform.ide.extension.python.client.run.event.RunApplicationEvent;
+import org.exoplatform.ide.extension.python.client.run.event.RunApplicationHandler;
+import org.exoplatform.ide.extension.python.client.run.event.StopApplicationEvent;
+import org.exoplatform.ide.extension.python.client.run.event.StopApplicationHandler;
 import org.exoplatform.ide.extension.python.shared.ApplicationInstance;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
@@ -48,8 +57,9 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 21, 2012 10:51:39 AM anya $
  */
-public class RunApplicationManager implements RunApplicationHandler, StopApplicationHandler, VfsChangedHandler,
-                                              ProjectOpenedHandler, ProjectClosedHandler, ActiveProjectChangedHandler {
+public class RunApplicationManager implements RunApplicationHandler, StopApplicationHandler, 
+            VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler {
+    
     private ProjectModel currentProject;
 
     private VirtualFileSystemInfo currentVfs;
@@ -66,7 +76,6 @@ public class RunApplicationManager implements RunApplicationHandler, StopApplica
         IDE.addHandler(VfsChangedEvent.TYPE, this);
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
-        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
     }
 
     /** @see org.exoplatform.ide.extension.python.client.run.event.StopApplicationHandler#onStopApplication(org.exoplatform.ide.extension
@@ -104,11 +113,6 @@ public class RunApplicationManager implements RunApplicationHandler, StopApplica
         this.currentProject = event.getProject();
     }
 
-    @Override
-    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
-        this.currentProject = event.getProject();
-    }
-
     /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
      * .application.event.VfsChangedEvent) */
     @Override
@@ -127,32 +131,32 @@ public class RunApplicationManager implements RunApplicationHandler, StopApplica
                                                                                                                     .getName()),
                                           Type.INFO));
             PythonRuntimeService.getInstance().start(currentVfs.getId(), currentProject,
-                                                     new AsyncRequestCallback<ApplicationInstance>(unmarshaller) {
-                                                         @Override
-                                                         protected void onSuccess(ApplicationInstance result) {
-                                                             runApplication = result;
-                                                             IDE.fireEvent(new ApplicationStartedEvent(runApplication));
-                                                             String url =
-                                                                     (result.getHost().startsWith("http://")) ? result.getHost()
-                                                                                                              : "http://" +
-                                                                                                                result.getHost();
-                                                             String link = "<a href=\"" + url + "\" target=\"_blank\">" + url + "</a>";
-                                                             IDE.fireEvent(new OutputEvent(
-                                                                     PythonRuntimeExtension.PYTHON_LOCALIZATION.applicationStartedUrl(
-                                                                             result.getName(), link), Type.INFO));
-                                                         }
+                         new AsyncRequestCallback<ApplicationInstance>(unmarshaller) {
+                             @Override
+                             protected void onSuccess(ApplicationInstance result) {
+                                 runApplication = result;
+                                 IDE.fireEvent(new ApplicationStartedEvent(runApplication));
+                                 String url =
+                                         (result.getHost().startsWith("http://")) ? result.getHost()
+                                                                                  : "http://" +
+                                                                                    result.getHost();
+                                 String link = "<a href=\"" + url + "\" target=\"_blank\">" + url + "</a>";
+                                 IDE.fireEvent(new OutputEvent(
+                                         PythonRuntimeExtension.PYTHON_LOCALIZATION.applicationStartedUrl(
+                                                 result.getName(), link), Type.INFO));
+                             }
 
-                                                         @Override
-                                                         protected void onFailure(Throwable exception) {
-                                                             String message =
-                                                                     (exception.getMessage() != null && !exception.getMessage().isEmpty()) ?
-                                                                     " : "
-                                                                     + exception.getMessage() : "";
-                                                             IDE.fireEvent(new OutputEvent(
-                                                                     PythonRuntimeExtension.PYTHON_LOCALIZATION.startApplicationFailed()
-                                                                     + message, OutputMessage.Type.ERROR));
-                                                         }
-                                                     });
+                             @Override
+                             protected void onFailure(Throwable exception) {
+                                 String message =
+                                         (exception.getMessage() != null && !exception.getMessage().isEmpty()) ?
+                                         " : "
+                                         + exception.getMessage() : "";
+                                 IDE.fireEvent(new OutputEvent(
+                                         PythonRuntimeExtension.PYTHON_LOCALIZATION.startApplicationFailed()
+                                         + message, OutputMessage.Type.ERROR));
+                             }
+                         });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
@@ -195,4 +199,5 @@ public class RunApplicationManager implements RunApplicationHandler, StopApplica
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
     }
+    
 }

@@ -45,11 +45,13 @@ import java.util.Set;
 public class GetStartedView extends ViewImpl implements GetStartedPresenter.Display {
     private static final String ID = "codenvyGetStartedView";
 
+    private static final String PROJECT_NAME_ID = "codenvyGetStartedWizardProjectName";
+
     private static final String TITLE = "Get started";
 
     private static final int HEIGHT = 300;
 
-    private static final int WIDTH = 590;
+    private static final int WIDTH = 630;
 
     private static GetStartedUiBinder uiBinder = GWT.create(GetStartedUiBinder.class);
 
@@ -96,6 +98,7 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
     public GetStartedView() {
         super(ID, ViewType.MODAL, TITLE, null, WIDTH, HEIGHT, false);
         add(uiBinder.createAndBindUi(this));
+        projectName.getElement().setId(PROJECT_NAME_ID);
         chooseNamePanel.setVisible(false);
         chooseTechnologyPanel.setVisible(false);
         choosePaaSPanel.setVisible(false);
@@ -145,7 +148,7 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
 
     @Override
     public void setProjectTypes(Set<ProjectType> projectTypes) {
-        int columnCount = 8;
+        int columnCount = 9;
         int rowCount = (int)Math.ceil((double)projectTypes.size() / columnCount);
 
         projectTypesGrid.clear();
@@ -191,6 +194,9 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
                     case RUBY_ON_RAILS:
                         labelForToggleButton = getNewButtonLabel("Ruby on Rails");
                         break;
+                    case NODE_JS:
+                        labelForToggleButton = getNewButtonLabel("Node.js");
+                        break;
                     case MultiModule:
                         labelForToggleButton = getNewButtonLabel("Maven Multi-Module");
                         break;    
@@ -208,7 +214,7 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
 
     @Override
     public void setPaaSTypes(List<PaaS> paaSTypes) {
-        int columnCount = 8;
+        int columnCount = 9;
         int rowCount = (int)Math.ceil((double)paaSTypes.size() / columnCount);
 
         paasGrid.clear();
@@ -240,7 +246,7 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
                 paaSToggleButton.setSize("36px", "36px");
                 paaSToggleButton.getElement().getStyle().setPropertyPx("borderRadius", 5);
                 paaSToggleButton.getElement().getStyle().setPropertyPx("outline", 0);
-                paaSToggleButton.getElement().setId("CREATE-PROJECT-" + paaS);
+                paaSToggleButton.getElement().setId("CREATE-PROJECT-" + paaS.getId());
                 paaSToggleButton.setPaaS(paaS);
                 paaSToggleButtonList.add(paaSToggleButton);
 
@@ -340,6 +346,7 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
             case PYTHON: return SamplesClientBundle.INSTANCE.pythonTechnology();
             case RUBY_ON_RAILS: return SamplesClientBundle.INSTANCE.rorTechnology();
             case SPRING: return SamplesClientBundle.INSTANCE.springTechnology();
+            case NODE_JS: return SamplesClientBundle.INSTANCE.nodejsTechnology();
             default: return null;
         }
     }
@@ -359,6 +366,8 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
             return !disable ? SamplesClientBundle.INSTANCE.gaePaaS() : SamplesClientBundle.INSTANCE.gaePaaSDisabled();
         } else if (paaS.getId().equals("AWS")) {
             return !disable ? SamplesClientBundle.INSTANCE.beansTalkPaaS() : SamplesClientBundle.INSTANCE.beansTalkPaaSDisabled();
+        } else if (paaS.getId().equals("Tier3WF")) {
+            return !disable ? SamplesClientBundle.INSTANCE.tier3WebFabricPaaS() : SamplesClientBundle.INSTANCE.tier3WebFabricPaaSDisabled();
         } else {
             return !disable ? SamplesClientBundle.INSTANCE.nonePaaS() : SamplesClientBundle.INSTANCE.nonePaaS();
         }

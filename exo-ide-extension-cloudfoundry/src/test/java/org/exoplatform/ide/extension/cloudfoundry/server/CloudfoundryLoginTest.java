@@ -59,7 +59,7 @@ public class CloudfoundryLoginTest {
 
     @Test
     public void testLogin() throws Exception {
-        cloudfoundry.login(LoginInfo.target, LoginInfo.email, LoginInfo.password);
+        cloudfoundry.login(LoginInfo.target, LoginInfo.email, LoginInfo.password, "cloudfoundry");
         Credential credential = new Credential();
         assertTrue(credentialStore.load(userId, "cloudfoundry", credential));
         assertNotNull(credential.getAttribute(LoginInfo.target));
@@ -68,7 +68,7 @@ public class CloudfoundryLoginTest {
     @Test
     public void testLoginFail() throws Exception {
         try {
-            cloudfoundry.login(LoginInfo.target, LoginInfo.email, LoginInfo.password + "_wrong");
+            cloudfoundry.login(LoginInfo.target, LoginInfo.email, LoginInfo.password + "_wrong", "cloudfoundry");
             fail("CloudfoundryException expected");
         } catch (CloudfoundryException e) {
             assertEquals(200, e.getExitCode());
@@ -83,12 +83,12 @@ public class CloudfoundryLoginTest {
 
     @Test
     public void testLogout() throws Exception {
-        cloudfoundry.login(LoginInfo.target, LoginInfo.email, LoginInfo.password);
+        cloudfoundry.login(LoginInfo.target, LoginInfo.email, LoginInfo.password, "cloudfoundry");
         Credential credential = new Credential();
         assertTrue(credentialStore.load(userId, "cloudfoundry", credential));
         assertNotNull(credential.getAttribute(LoginInfo.target));
 
-        cloudfoundry.logout(LoginInfo.target);
+        cloudfoundry.logout(LoginInfo.target, "cloudfoundry");
         credential = new Credential();
         credentialStore.load(userId, "cloudfoundry", credential);
         assertNull(credential.getAttribute(LoginInfo.target));

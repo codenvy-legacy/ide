@@ -19,10 +19,20 @@
 package org.exoplatform.ide.client.authentication;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.http.client.*;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
@@ -54,7 +64,7 @@ import org.exoplatform.ide.client.framework.util.Utils;
  * @version $Id: exo-jboss-codetemplates.xml 34360 2009-07-22 23:58:59Z aheritier $
  */
 public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler, InitializeServicesHandler,
-                                       UserInfoReceivedHandler {
+                           UserInfoReceivedHandler {
 
     /** LoginDialog's display. */
     public interface Display extends IsView {
@@ -79,10 +89,10 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
     private Display display;
 
     /** Login. */
-    private String login;
+    private String  login;
 
     /** Password. */
-    private String password;
+    private String  password;
 
     /** Creates a new instance of LoginDialog. */
     public LoginPresenter() {
@@ -91,22 +101,24 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
         IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
 
-      /*
-       * // Uncomment this to show Image at the top of IDE to see how the Login Window looks. Image showLoginImage = new
-       * Image(IDEImageBundle.INSTANCE.browser()); showLoginImage.getElement().getStyle().setZIndex(Integer.MAX_VALUE);
-       * RootPanel.get().add(showLoginImage, 300, 0); showLoginImage.addClickHandler(new ClickHandler() {
-       * @Override public void onClick(ClickEvent event) { showLoginDialog(null); } });
-       */
+        /*
+         * // Uncomment this to show Image at the top of IDE to see how the Login Window looks. Image showLoginImage = new
+         * Image(IDEImageBundle.INSTANCE.browser()); showLoginImage.getElement().getStyle().setZIndex(Integer.MAX_VALUE);
+         * RootPanel.get().add(showLoginImage, 300, 0); showLoginImage.addClickHandler(new ClickHandler() {
+         * @Override public void onClick(ClickEvent event) { showLoginDialog(null); } });
+         */
 
     }
 
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        //nothing to do
+        // nothing to do
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     *      .event.ViewClosedEvent)
+     */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
@@ -116,7 +128,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 
     /**
      * Creates and shows new Login View.
-     *
+     * 
      * @param asyncRequest
      */
     public void showLoginDialog(final AsyncRequest asyncRequest) {
@@ -131,17 +143,14 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 
             @Override
             public void onClick(ClickEvent event) {
-                String authUrl = Utils.getAuthorizationContext()//
-                                 + "/ide/oauth/authenticate?oauth_provider=google&mode=federated_login"//
-                                 + "&scope=https://www.googleapis.com/auth/userinfo.profile"//
-                                 + "&scope=https://www.googleapis.com/auth/userinfo.email"//
-                                 + "&scope=https://www.googleapis.com/auth/appengine.admin"
-                                 + "&scope=https://www.google.com/m8/feeds"//
-                                 + "&redirect_after_login="//
+                String authUrl = Utils.getAuthorizationContext()
+                                 + "/ide/oauth/authenticate?oauth_provider=google&mode=federated_login"
+                                 + "&scope=https://www.googleapis.com/auth/userinfo.profile"
+                                 + "&scope=https://www.googleapis.com/auth/userinfo.email"
+                                 + "&redirect_after_login="
                                  + Utils.getAuthorizationPageURL();
 
-                JsPopUpOAuthWindow authWindow =
-                        new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500);
+                JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500);
                 authWindow.loginWithOAuth();
                 IDE.getInstance().closeView(display.asView().getId());
 
@@ -152,12 +161,11 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 
             @Override
             public void onClick(ClickEvent event) {
-                String authUrl = Utils.getAuthorizationContext()//
-                                 + "/ide/oauth/authenticate?oauth_provider=github&mode=federated_login"//
-                                 + "&scope=user&scope=repo&redirect_after_login="//
+                String authUrl = Utils.getAuthorizationContext()
+                                 + "/ide/oauth/authenticate?oauth_provider=github&mode=federated_login"
+                                 + "&scope=user&scope=repo&redirect_after_login="
                                  + Utils.getAuthorizationPageURL();
-                JsPopUpOAuthWindow authWindow =
-                        new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500);
+                JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500);
                 authWindow.loginWithOAuth();
                 IDE.getInstance().closeView(display.asView().getId());
 
@@ -203,6 +211,11 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
         display.getLoginField().setValue(login);
         display.getPasswordField().setValue(password);
 
+        if (!GWT.isScript() && login == null && password == null) {
+            display.getLoginField().setValue("ide");
+            display.getPasswordField().setValue("codenvy123");
+        }
+
         checkForLoginButtonEnabled();
 
         IDE.getInstance().openView(display.asView());
@@ -210,11 +223,11 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 
     /** Handle changing of the text in text fields. */
     ValueChangeHandler<String> valueChangeHandler = new ValueChangeHandler<String>() {
-        @Override
-        public void onValueChange(ValueChangeEvent<String> event) {
-            checkForLoginButtonEnabled();
-        }
-    };
+                                                      @Override
+                                                      public void onValueChange(ValueChangeEvent<String> event) {
+                                                          checkForLoginButtonEnabled();
+                                                      }
+                                                  };
 
     /** Checks for text in the text fields and enables or disables Login button. */
     private void checkForLoginButtonEnabled() {
@@ -242,8 +255,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
         String authorizationPageURL = Utils.getAuthorizationPageURL();
         try {
             if (authorizationPageURL == null) {
-                throw new Exception(
-                        org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.confMissingVariable("authorizationPageURL"));
+                throw new Exception(org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.confMissingVariable("authorizationPageURL"));
             }
             RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, authorizationPageURL);
             requestBuilder.setCallback(new RequestCallback() {
@@ -276,8 +288,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
         try {
             String securityCheckURL = Utils.getSecurityCheckURL();
             if (securityCheckURL == null) {
-                throw new Exception(
-                        org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.confMissingVariable("securityCheckURL"));
+                throw new Exception(org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.confMissingVariable("securityCheckURL"));
             }
             RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST, securityCheckURL);
             requestBuilder.setHeader("Content-type", "application/x-www-form-urlencoded");

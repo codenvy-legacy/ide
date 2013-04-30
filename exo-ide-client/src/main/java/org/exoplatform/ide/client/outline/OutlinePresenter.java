@@ -153,11 +153,6 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
         IDE.getInstance().addControl(new ShowOutlineControl(), Docking.TOOLBAR);
 
         ignoredMimeTypes.add(MimeType.APPLICATION_JAVA);
-        ignoredMimeTypes.add(MimeType.TEXT_HTML);
-        ignoredMimeTypes.add(MimeType.TEXT_CSS);
-        ignoredMimeTypes.add(MimeType.TEXT_JAVASCRIPT);
-        ignoredMimeTypes.add(MimeType.APPLICATION_JAVASCRIPT);
-        ignoredMimeTypes.add(MimeType.APPLICATION_X_JAVASCRIPT);
     }
 
     @Override

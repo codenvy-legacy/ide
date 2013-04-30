@@ -613,7 +613,6 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
         }
     }
     
-    
     /**
      * 
      */

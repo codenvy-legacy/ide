@@ -26,10 +26,10 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.project.api.TreeRefreshedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
@@ -153,7 +153,7 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
                                                      @Override
                                                      protected void onSuccess(String result) {
                                                          IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.addSuccess()));
-                                                         IDE.fireEvent(new RefreshBrowserEvent());
+                                                         IDE.fireEvent(new TreeRefreshedEvent(getSelectedProject()));
                                                      }
 
                                                      @Override
@@ -175,7 +175,7 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
                                                    @Override
                                                    protected void onSuccess(String result) {
                                                        IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.addSuccess()));
-                                                       IDE.fireEvent(new RefreshBrowserEvent());
+                                                       IDE.fireEvent(new TreeRefreshedEvent(getSelectedProject()));
                                                    }
 
                                                    @Override

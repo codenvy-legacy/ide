@@ -79,6 +79,10 @@ public class GitIgnoreConfigChecker implements Startable {
             // Do not run git command as a process because git is not installed on the server.
             // Runtime.getRuntime().exec("git config --global core.excludesfile " + GIT_IGNORE_GLOBAL_FILE_NAME);
             // Update .gitconfig file manually.
+            File file = new File(System.getProperty("user.home") + GIT_GLOBAL_CONFIG_FILE_NAME);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
             final String gitGlobalConfigFilePath = System.getProperty("user.home") + GIT_GLOBAL_CONFIG_FILE_NAME;
 
             final String fileContent = readFileContent(gitGlobalConfigFilePath);

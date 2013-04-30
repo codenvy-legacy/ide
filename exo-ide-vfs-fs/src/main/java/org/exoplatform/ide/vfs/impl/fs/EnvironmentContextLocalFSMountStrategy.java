@@ -72,7 +72,7 @@ public class EnvironmentContextLocalFSMountStrategy implements LocalFSMountStrat
     }
 
     // need package visibility for test
-    static java.io.File calculateDirPath(java.io.File parent, String workspaceId) {
+    public static java.io.File calculateDirPath(java.io.File parent, String workspaceId) {
         final int hash = workspaceId.hashCode();
         final String relPath = segments[hash & 0xff] +
                                java.io.File.separatorChar + segments[(hash >> 8) & 0xff] +

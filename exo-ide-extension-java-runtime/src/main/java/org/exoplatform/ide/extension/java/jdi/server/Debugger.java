@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server;
 
+
 import com.sun.jdi.*;
 import com.sun.jdi.connect.AttachingConnector;
 import com.sun.jdi.connect.Connector;
@@ -40,7 +41,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static org.exoplatform.ide.commons.JsonHelper.toJson;
+import static com.codenvy.commons.json.JsonHelper.toJson;
+
 
 /**
  * Connects to JVM over Java Debug Wire Protocol handle its events. All methods of this class may throws

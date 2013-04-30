@@ -27,9 +27,19 @@ import java.io.File;
  * @version $Id: RmTest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
 public class RmTest extends BaseTest {
-    public void testRm() throws Exception {
-        getDefaultConnection().rm(new RmRequest(new String[]{"README.txt"}));
+    public void testRmNotCached() throws Exception {
+        RmRequest req = new RmRequest(new String[]{"README.txt"});
+        req.setCached(false);
+        getDefaultConnection().rm(req);
         assertFalse(new File(getDefaultRepository().getWorkTree(), "README.txt").exists());
+        checkNoFilesInCache(getDefaultRepository(), "README.txt");
+    }
+
+    public void testRmCached() throws Exception {
+        RmRequest req = new RmRequest(new String[]{"README.txt"});
+        req.setCached(true);
+        getDefaultConnection().rm(req);
+        assertTrue(new File(getDefaultRepository().getWorkTree(), "README.txt").exists());
         checkNoFilesInCache(getDefaultRepository(), "README.txt");
     }
 }

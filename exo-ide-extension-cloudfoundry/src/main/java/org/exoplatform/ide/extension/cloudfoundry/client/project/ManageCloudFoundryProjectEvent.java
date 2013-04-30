@@ -20,8 +20,10 @@ package org.exoplatform.ide.extension.cloudfoundry.client.project;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
+
 /**
- * Event occurs, when user tries to manage project, deployed to CloudFoundry.
+ * Event occurs, when user tries to manage project, deployed to CloudFoundry or Tier3 Web Fabric.
  *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Dec 7, 2011 2:27:55 PM anya $
@@ -30,6 +32,15 @@ public class ManageCloudFoundryProjectEvent extends GwtEvent<ManageCloudFoundryP
 
     /** Type used to register event. */
     public static final GwtEvent.Type<ManageCloudFoundryProjectHandler> TYPE = new GwtEvent.Type<ManageCloudFoundryProjectHandler>();
+
+    private final PAAS_PROVIDER paasProvider;
+
+    /**
+     * @param paasProvider
+     */
+    public ManageCloudFoundryProjectEvent(PAAS_PROVIDER paasProvider) {
+        this.paasProvider = paasProvider;
+    }
 
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
     @Override
@@ -41,6 +52,10 @@ public class ManageCloudFoundryProjectEvent extends GwtEvent<ManageCloudFoundryP
     @Override
     protected void dispatch(ManageCloudFoundryProjectHandler handler) {
         handler.onManageCloudFoundryProject(this);
+    }
+
+    public PAAS_PROVIDER getPaasProvider() {
+        return paasProvider;
     }
 
 }

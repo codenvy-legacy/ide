@@ -32,9 +32,8 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 17, 2012 11:49:18 AM anya $
  */
-public abstract class GoogleAppEnginePresenter implements VfsChangedHandler, ItemsSelectedHandler
-//, ProjectOpenedHandler, ProjectClosedHandler, ActiveProjectChangedHandler
-{
+public abstract class GoogleAppEnginePresenter implements VfsChangedHandler, ItemsSelectedHandler {
+    
     /** Current virtual file system. */
     protected VirtualFileSystemInfo currentVfs;
 
@@ -49,9 +48,6 @@ public abstract class GoogleAppEnginePresenter implements VfsChangedHandler, Ite
         IDE.addHandler(VfsChangedEvent.TYPE, this);
         IDE.addHandler(VfsChangedEvent.TYPE, this);
         IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-//      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-//      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-//      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
     }
 
     /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
@@ -87,6 +83,5 @@ public abstract class GoogleAppEnginePresenter implements VfsChangedHandler, Ite
     protected boolean isAppEngineProject() {
         return GoogleAppEngineExtension.isAppEngineProject(currentProject);
     }
-
 
 }

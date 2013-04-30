@@ -149,8 +149,7 @@ public class CloudFoundryProjectView extends ViewImpl implements CloudFoundryPro
     Anchor showUrisAnchor;
 
     public CloudFoundryProjectView() {
-        super(ID, ViewType.MODAL, CloudFoundryExtension.LOCALIZATION_CONSTANT.manageProjectViewTitle(), new Image(
-                CloudFoundryClientBundle.INSTANCE.cloudFoundry()), WIDTH, HEIGHT);
+        super(ID, ViewType.MODAL, CloudFoundryExtension.LOCALIZATION_CONSTANT.manageProjectViewTitle(), null, WIDTH, HEIGHT);
         add(uiBinder.createAndBindUi(this));
 
         deleteButton.getElement().setId(DELETE_BUTTON_ID);

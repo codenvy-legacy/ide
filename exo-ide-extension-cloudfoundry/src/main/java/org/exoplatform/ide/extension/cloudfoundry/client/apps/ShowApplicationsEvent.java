@@ -20,6 +20,8 @@ package org.exoplatform.ide.extension.cloudfoundry.client.apps;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  Aug 18, 2011 evgen $
@@ -27,6 +29,16 @@ import com.google.gwt.event.shared.GwtEvent;
 public class ShowApplicationsEvent extends GwtEvent<ShowApplicationsHandler> {
 
     public static GwtEvent.Type<ShowApplicationsHandler> TYPE = new Type<ShowApplicationsHandler>();
+
+    private final PAAS_PROVIDER paasProvider;
+
+    /**
+     * @param paasProvider
+     */
+    public ShowApplicationsEvent(PAAS_PROVIDER paasProvider) {
+        super();
+        this.paasProvider = paasProvider;
+    }
 
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
     @Override
@@ -38,6 +50,10 @@ public class ShowApplicationsEvent extends GwtEvent<ShowApplicationsHandler> {
     @Override
     protected void dispatch(ShowApplicationsHandler handler) {
         handler.onShowApplications(this);
+    }
+
+    public PAAS_PROVIDER getPaasProvider() {
+        return paasProvider;
     }
 
 }

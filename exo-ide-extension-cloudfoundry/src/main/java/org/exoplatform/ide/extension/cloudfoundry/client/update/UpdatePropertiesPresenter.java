@@ -31,6 +31,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
@@ -50,6 +51,8 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
 
     private String instances;
 
+    private PAAS_PROVIDER paasProvider;
+
     public UpdatePropertiesPresenter() {
         IDE.addHandler(UpdateMemoryEvent.TYPE, this);
         IDE.addHandler(UpdateInstancesEvent.TYPE, this);
@@ -62,6 +65,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
      * .cloudfoundry.client.update.UpdateMemoryEvent) */
     @Override
     public void onUpdateMemory(UpdateMemoryEvent event) {
+        paasProvider = event.getPaasProvider();
         if (makeSelectionCheck()) {
             getOldMemoryValue();
         }
@@ -70,7 +74,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
     /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
     private LoggedInHandler getOldMemoryValueLoggedInHandler = new LoggedInHandler() {
         @Override
-        public void onLoggedIn() {
+        public void onLoggedIn(String server) {
             getOldMemoryValue();
         }
     };
@@ -91,7 +95,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
                     null,
                     null,
                     new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
-                                                                                  getOldMemoryValueLoggedInHandler, null) {
+                                                                                  getOldMemoryValueLoggedInHandler, null, paasProvider) {
                         @Override
                         protected void onSuccess(CloudFoundryApplication result) {
                             askForNewMemoryValue(result.getResources().getMemory());
@@ -128,7 +132,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
     /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
     private LoggedInHandler updateMemoryLoggedInHandler = new LoggedInHandler() {
         @Override
-        public void onLoggedIn() {
+        public void onLoggedIn(String server) {
             updateMemory(memory);
         }
     };
@@ -141,7 +145,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
             CloudFoundryClientService.getInstance().updateMemory(vfs.getId(), projectId, null, null, memory,
                                                                  new CloudFoundryAsyncRequestCallback<String>(null,
                                                                                                               updateMemoryLoggedInHandler,
-                                                                                                              null) {
+                                                                                                              null, paasProvider) {
                                                                      @Override
                                                                      protected void onSuccess(String result) {
                                                                          String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT
@@ -161,13 +165,14 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
      * .extension.cloudfoundry.client.update.UpdateInstancesEvent) */
     @Override
     public void onUpdateInstances(UpdateInstancesEvent event) {
+        paasProvider = event.getPaasProvider();
         getOldInstancesValue();
     }
 
     /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
     private LoggedInHandler getOldInstancesValueLoggedInHandler = new LoggedInHandler() {
         @Override
-        public void onLoggedIn() {
+        public void onLoggedIn(String server) {
             getOldInstancesValue();
         }
     };
@@ -189,7 +194,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
                     null,
                     null,
                     new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
-                                                                                  getOldInstancesValueLoggedInHandler, null) {
+                                                                                  getOldInstancesValueLoggedInHandler, null, paasProvider) {
                         @Override
                         protected void onSuccess(CloudFoundryApplication result) {
                             askForInstancesNumber(result.getInstances());
@@ -228,7 +233,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
 
     private LoggedInHandler updateInstancesLoggedInHandler = new LoggedInHandler() {
         @Override
-        public void onLoggedIn() {
+        public void onLoggedIn(String server) {
             updateInstances(instances);
         }
     };
@@ -251,64 +256,8 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
         try {
             CloudFoundryClientService.getInstance().updateInstances(vfs.getId(), projectId, null, null, encodedExp,
                                                                     new CloudFoundryAsyncRequestCallback<String>(null,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                                                                                                                  updateInstancesLoggedInHandler,
-                                                                                                                 null) {
+                                                                                                                 null, paasProvider) {
                                                                         @Override
                                                                         protected void onSuccess(String result) {
                                                                             try {
@@ -327,7 +276,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
                                                                                                                              new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
                                                                                                                                      unmarshaller,
                                                                                                                                      null,
-                                                                                                                                     null) {
+                                                                                                                                     null, paasProvider) {
                                                                                                                                  @Override
                                                                                                                                  protected void onSuccess(
                                                                                                                                          CloudFoundryApplication result) {

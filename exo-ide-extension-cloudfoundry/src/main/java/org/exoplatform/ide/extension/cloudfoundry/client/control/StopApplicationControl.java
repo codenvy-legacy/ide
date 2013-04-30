@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StopApplicationEvent;
 
 /**
@@ -39,12 +40,12 @@ public class StopApplicationControl extends AbstractCloudFoundryControl {
     /**
      *
      */
-    public StopApplicationControl() {
+    public StopApplicationControl(PAAS_PROVIDER paasProvider) {
         super(ID);
         setTitle(TITLE);
         setPrompt(PROMPT);
         setImages(CloudFoundryClientBundle.INSTANCE.stopApp(), CloudFoundryClientBundle.INSTANCE.stopAppDisabled());
-        setEvent(new StopApplicationEvent());
+        setEvent(new StopApplicationEvent(paasProvider));
     }
 
 }

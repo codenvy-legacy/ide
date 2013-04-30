@@ -26,5 +26,5 @@ package org.exoplatform.ide.extension.cloudfoundry.client.login;
  * @version $Id: LoggedInHandler.java Jul 12, 2011 10:27:16 AM vereshchaka $
  */
 public interface LoggedInHandler {
-    void onLoggedIn();
+    void onLoggedIn(String server);
 }
