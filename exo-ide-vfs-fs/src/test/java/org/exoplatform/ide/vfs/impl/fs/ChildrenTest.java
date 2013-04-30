@@ -131,16 +131,31 @@ public class ChildrenTest extends LocalFileSystemTest {
 
     public void testGetChildrenNoPermissions2() throws Exception {
         // Have permission for read folder but have not permission to read one of its child.
-        String protectedItemPath = folderPath + '/' + childrenNames.iterator().next();
+        String protectedItemName = childrenNames.iterator().next();
+        String protectedItemPath = folderPath + '/' + protectedItemName;
         Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(1);
         permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
         writePermissions(protectedItemPath, permissions);
+        childrenNames.remove(protectedItemName); // this should not appears in result
 
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         String requestPath = SERVICE_URI + "children/" + folderId;
         ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
-        assertEquals(403, response.getStatus());
+        assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
         log.info(new String(writer.getBody()));
+        @SuppressWarnings("unchecked")
+        ItemList<Item> children = (ItemList<Item>)response.getEntity();
+        List<String> list = new ArrayList<String>(3);
+        for (Item i : children.getItems()) {
+            validateLinks(i);
+            list.add(i.getName());
+        }
+
+        assertEquals(3, list.size());
+        childrenNames.removeAll(list);
+        if (!childrenNames.isEmpty()) {
+            fail("Expected items " + childrenNames + " missed in response. ");
+        }
     }
 
     public void testGetChildrenPagingSkipCount() throws Exception {

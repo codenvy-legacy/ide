@@ -35,7 +35,6 @@ import org.exoplatform.ide.client.navigation.handler.SaveAllFilesCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.SaveFileAsCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.SaveFileCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesCommandHandler;
-import org.exoplatform.ide.client.navigator.NavigatorPresenter;
 import org.exoplatform.ide.client.operation.createfile.CreateFilePresenter;
 import org.exoplatform.ide.client.operation.createfile.NewItemMenuGroup;
 import org.exoplatform.ide.client.operation.createfile.NewItemPopupToolbarControl;
@@ -106,7 +105,6 @@ public class NavigationModule implements InitializeServicesHandler {
         new FileClosedHandler();
         IDE.getInstance().addControl(new ShowViewMenuGroup());
         IDE.getInstance().addControl(new NavigationMenuGroup());
-        new NavigatorPresenter();
         new ProgressPresenter();
         new ShellLinkUpdater();
     }
