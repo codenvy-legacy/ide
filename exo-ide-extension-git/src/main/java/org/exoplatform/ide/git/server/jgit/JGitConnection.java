@@ -23,6 +23,7 @@ import org.eclipse.jgit.api.CheckoutCommand;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.CreateBranchCommand;
+import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
 import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand;
@@ -32,16 +33,11 @@ import org.eclipse.jgit.api.PushCommand;
 import org.eclipse.jgit.api.ResetCommand;
 import org.eclipse.jgit.api.RmCommand;
 import org.eclipse.jgit.api.TagCommand;
-import org.eclipse.jgit.api.errors.CannotDeleteCurrentBranchException;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.api.errors.DetachedHeadException;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.InvalidRefNameException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.NoFilepatternException;
-import org.eclipse.jgit.api.errors.NotMergedException;
-import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
-import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.lib.ConfigConstants;
 import org.eclipse.jgit.lib.Constants;
@@ -156,18 +152,21 @@ public class JGitConnection implements GitConnection {
     /** @see org.exoplatform.ide.git.server.GitConnection#branchCheckout(org.exoplatform.ide.git.shared.BranchCheckoutRequest) */
     @Override
     public void branchCheckout(BranchCheckoutRequest request) throws GitException {
-        CheckoutCommand checkoutCommand = new Git(repository).checkout().setName(request.getName());
+        CheckoutCommand checkoutCommand = new Git(repository).checkout();
         String startPoint = request.getStartPoint();
+        String cleanName = cleanRemoteName(request.getName());
         if (startPoint != null) {
             checkoutCommand.setStartPoint(startPoint);
         }
         checkoutCommand.setCreateBranch(request.isCreateNew());
-
+        checkoutCommand.setName(cleanName);
+        checkoutCommand.setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM);
         try {
             checkoutCommand.call();
-        } catch (CheckoutConflictException e) {
-            throw new IllegalArgumentException(e.getMessage());
         } catch (GitAPIException e) {
+            if (e.getMessage().endsWith("already exists")) {
+                throw new IllegalArgumentException("fatal: A branch named '" + cleanName + "' already exists.");
+            }
             throw new IllegalArgumentException(e.getMessage());
         }
     }
@@ -184,13 +183,7 @@ public class JGitConnection implements GitConnection {
             Ref brRef = createBranchCommand.call();
             String refName = brRef.getName();
 
-            return new Branch(refName, false, Repository.shortenRefName(refName));
-        } catch (RefAlreadyExistsException e) {
-            throw new IllegalArgumentException(e.getMessage());
-        } catch (RefNotFoundException e) {
-            throw new IllegalArgumentException(e.getMessage());
-        } catch (InvalidRefNameException e) {
-            throw new IllegalArgumentException(e.getMessage());
+            return new Branch(refName, false, Repository.shortenRefName(refName), false);
         } catch (GitAPIException e) {
             throw new GitException(e);
         }
@@ -201,10 +194,16 @@ public class JGitConnection implements GitConnection {
     public void branchDelete(BranchDeleteRequest request) throws GitException {
         try {
             new Git(repository).branchDelete().setBranchNames(request.getName()).setForce(request.isForce()).call();
-        } catch (NotMergedException e) {
-            throw new IllegalArgumentException(e.getMessage());
-        } catch (CannotDeleteCurrentBranchException e) {
-            throw new IllegalArgumentException(e.getMessage());
+        } catch (GitAPIException e) {
+            throw new GitException(e);
+        }
+    }
+
+    /** @see org.exoplatform.ide.git.server.GitConnection#branchRename(String oldName, String newName) */
+    @Override
+    public void branchRename(String oldName, String newName) throws GitException {
+        try {
+            new Git(repository).branchRename().setOldName(oldName).setNewName(newName).call();
         } catch (GitAPIException e) {
             throw new GitException(e);
         }
@@ -245,15 +244,15 @@ public class JGitConnection implements GitConnection {
 
         List<Branch> branches = new ArrayList<Branch>();
         if (current == null) {
-            branches.add(new Branch("(no branch)", true, "(no branch)"));
+            branches.add(new Branch("(no branch)", true, "(no branch)", false));
         }
 
         for (Ref brRef : refs) {
             String refName = brRef.getName();
-            Branch branch = new Branch(refName, refName.equals(current), Repository.shortenRefName(refName));
+            Branch branch = new Branch(refName, refName.equals(current), Repository.shortenRefName(refName),
+                                       brRef.getName().startsWith("refs/remotes"));
             branches.add(branch);
         }
-
         return branches;
     }
 
@@ -1056,5 +1055,24 @@ public class JGitConnection implements GitConnection {
         } catch (IOException e) {
             throw new GitException(e.getMessage(), e);
         }
+    }
+
+    /**
+     * Method for cleaning name of remote branch to be checked out. I.e. it takes something like "origin/testBranch" and returns
+     * "testBranch". This is needed for view-compatibility with console Git client.
+     * 
+     * @param branchName is a name of branch to be cleaned
+     * @return branchName without remote repository name
+     * @throws GitException
+     */
+    private String cleanRemoteName(String branchName) throws GitException {
+        String returnName = branchName;
+        List<Remote> remotes = this.remoteList(new RemoteListRequest());
+        for (Remote remote : remotes) {
+            if (branchName.startsWith(remote.getName())) {
+                returnName = branchName.replaceFirst(remote.getName() + "/", "");
+            }
+        }
+        return returnName;
     }
 }

@@ -64,7 +64,6 @@ import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
-import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
@@ -159,6 +158,18 @@ public class GitService {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.branchDelete(request);
+        } finally {
+            gitConnection.close();
+        }
+    }
+
+    @Path("branch-rename")
+    @POST
+    public void branchRename(@QueryParam("oldName") String oldName,
+                             @QueryParam("newName") String newName) throws GitException, VirtualFileSystemException {
+        GitConnection gitConnection = getGitConnection();
+        try {
+            gitConnection.branchRename(oldName, newName);
         } finally {
             gitConnection.close();
         }
