@@ -174,6 +174,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE {
             ext.initialize();
         }
         controlsRegistration.addControlsFormatter(new MainMenuControlsFormatter());
+        controlsRegistration.addControlsFormatter(new PaaSMenuControlsFormatter());
         controlsRegistration.formatControls();
 
 
