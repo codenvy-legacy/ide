@@ -115,7 +115,7 @@ public class ApplicationListPresenter extends GitPresenter implements ShowApplic
         /** Clear application's properties in grid. */
         void clearApplicationInfo();
 
-        ListGridItem<OpenShiftEmbeddableCartridge> getCartridgesGrid();
+        CartridgeGrid getCartridgesGrid();
 
         void addDeleteCartridgeButtonSelectionHandler(SelectionHandler<OpenShiftEmbeddableCartridge> handler);
 
@@ -340,6 +340,7 @@ public class ApplicationListPresenter extends GitPresenter implements ShowApplic
         properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationCreationTime(), time));
         display.getApplicationInfoGrid().setValue(properties);
         display.getCartridgesGrid().setValue(appInfo.getEmbeddedCartridges());
+        display.getCartridgesGrid().setApplicationInfo(appInfo);
     }
 
     /** Register {@link LoggedInHandler} handler. */
@@ -464,10 +465,11 @@ public class ApplicationListPresenter extends GitPresenter implements ShowApplic
                                       protected void onSuccess(Void result) {
                                           IDE.fireEvent(new ShowApplicationListEvent());
 
-                                          String haproxyStatusUrl = null;
-                                          if (cartridgeName.indexOf("haproxy") > 0) {
+                                          String haproxyStatusUrl = "";
+                                          if (cartridgeName.startsWith("haproxy")) {
                                               haproxyStatusUrl =
-                                                      "\nStatus url: <a href=\"" + currentViewedApp.getPublicUrl() + "haproxy-status/\">" +
+                                                      " Status url: <a href=\"" + currentViewedApp.getPublicUrl() +
+                                                      "haproxy-status/\" target=\"_blank\">" +
                                                       currentViewedApp.getPublicUrl() + "haproxy-status/</a>";
                                           }
 
