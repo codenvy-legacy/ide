@@ -315,12 +315,11 @@ public class CartridgeGrid extends ListGrid<OpenShiftEmbeddableCartridge> {
                         info.append(value.getProperties().get("database_name"));
                         info.append("</li>");
                     }
-
-                    if (value.getName().indexOf("haproxy") > 0) {
-                        info.append("<li><span style=\"font-weight: bold;\">Status url:</span>&nbsp;");
-                        info.append("<a href=\"" + appInfo.getPublicUrl() + "haproxy-status/\">" + appInfo.getPublicUrl() + "haproxy-status/</a>");
-                        info.append("</li>");
-                    }
+                } else if (value.getName().startsWith("haproxy")) {
+                    info.append("<li><span style=\"font-weight: bold;\">Status url:</span>&nbsp;");
+                    info.append(
+                            "<a href=\"" + appInfo.getPublicUrl() + "haproxy-status/\">" + appInfo.getPublicUrl() + "haproxy-status/</a>");
+                    info.append("</li>");
                 } else {
                     info.append("<li>No properties provided.</li>");
                 }
