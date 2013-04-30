@@ -29,7 +29,8 @@ import com.google.gwt.resources.client.ImageResource;
 public interface JavaClientBundle extends ClientBundle {
     JavaClientBundle INSTANCE = GWT.create(JavaClientBundle.class);
 
-    @Source("com/codenvy/ide/ext/java/client/styles/java.css")
+
+    @Source("java.css")
     JavaCss css();
 
     @Source("com/codenvy/ide/ext/java/client/images/annotation.gif")

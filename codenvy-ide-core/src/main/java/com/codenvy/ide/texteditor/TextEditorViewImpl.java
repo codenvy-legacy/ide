@@ -22,12 +22,25 @@ import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.json.JsonStringMap.IterationCallback;
 import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.mvp.UiComponent;
-import com.codenvy.ide.text.*;
+import com.codenvy.ide.text.BadLocationException;
+import com.codenvy.ide.text.Document;
+import com.codenvy.ide.text.DocumentCommand;
+import com.codenvy.ide.text.DocumentImpl;
+import com.codenvy.ide.text.TextUtilities;
 import com.codenvy.ide.text.annotation.AnnotationModel;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.text.store.TextStoreMutator;
-import com.codenvy.ide.texteditor.api.*;
+import com.codenvy.ide.texteditor.api.AutoEditStrategy;
+import com.codenvy.ide.texteditor.api.BeforeTextListener;
+import com.codenvy.ide.texteditor.api.KeyListener;
+import com.codenvy.ide.texteditor.api.NativeKeyUpListener;
+import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
+import com.codenvy.ide.texteditor.api.TextEditorOperations;
+import com.codenvy.ide.texteditor.api.TextEditorPartView;
+import com.codenvy.ide.texteditor.api.TextInputListener;
+import com.codenvy.ide.texteditor.api.TextListener;
+import com.codenvy.ide.texteditor.api.UndoManager;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.texteditor.api.parser.Parser;
 import com.codenvy.ide.texteditor.api.quickassist.QuickAssistAssistant;
@@ -38,12 +51,23 @@ import com.codenvy.ide.texteditor.codeassistant.QuickAssistAssistantImpl;
 import com.codenvy.ide.texteditor.documentparser.DocumentParser;
 import com.codenvy.ide.texteditor.gutter.Gutter;
 import com.codenvy.ide.texteditor.gutter.LeftGutterManager;
-import com.codenvy.ide.texteditor.input.*;
+import com.codenvy.ide.texteditor.input.ActionExecutor;
+import com.codenvy.ide.texteditor.input.CommonActions;
+import com.codenvy.ide.texteditor.input.InputController;
+import com.codenvy.ide.texteditor.input.InputScheme;
+import com.codenvy.ide.texteditor.input.RootActionExecutor;
 import com.codenvy.ide.texteditor.linedimensions.LineDimensionsCalculator;
 import com.codenvy.ide.texteditor.linedimensions.LineDimensionsUtils;
 import com.codenvy.ide.texteditor.parenmatch.ParenMatchHighlighter;
-import com.codenvy.ide.texteditor.renderer.*;
-import com.codenvy.ide.texteditor.selection.*;
+import com.codenvy.ide.texteditor.renderer.AnnotationRenderer;
+import com.codenvy.ide.texteditor.renderer.CurrentLineHighlighter;
+import com.codenvy.ide.texteditor.renderer.LineRenderer;
+import com.codenvy.ide.texteditor.renderer.RenderTimeExecutor;
+import com.codenvy.ide.texteditor.renderer.Renderer;
+import com.codenvy.ide.texteditor.selection.CursorView;
+import com.codenvy.ide.texteditor.selection.LocalCursorController;
+import com.codenvy.ide.texteditor.selection.SelectionLineRenderer;
+import com.codenvy.ide.texteditor.selection.SelectionManager;
 import com.codenvy.ide.texteditor.selection.SelectionModel;
 import com.codenvy.ide.texteditor.syntaxhighlighter.SyntaxHighlighter;
 import com.codenvy.ide.util.CssUtils;
@@ -99,6 +123,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
     private final RenderTimeExecutor                         renderTimeExecutor;
     private final com.codenvy.ide.Resources                  resources;
     private final UserActivityManager                        userActivityManager;
+    private final OverviewRuler                              overviewRuller;
     private       DocumentModel                              textStore;
     private       UndoManager                                editorUndoManager;
     private       LocalCursorController                      localCursorController;
@@ -130,9 +155,11 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
 
         focusManager = new FocusManagerImpl(buffer, input.getInputElement());
 
+        Gutter overviewGutter = createGutter(true, Gutter.Position.RIGHT, resources.workspaceEditorCss().leftGutterNotification());
         Gutter leftNotificationGutter = createGutter(false, Gutter.Position.LEFT,
                                                      resources.workspaceEditorCss().leftGutterNotification());
         verticalRuler = new VerticalRuler(leftNotificationGutter, this);
+        overviewRuller = new OverviewRuler(overviewGutter, this);
 
         Gutter leftGutter = createGutter(false, Gutter.Position.LEFT, resources.workspaceEditorCss().leftGutter());
         leftGutterManager = new LeftGutterManager(leftGutter, buffer);
@@ -143,7 +170,6 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         editorActivityManager = new EditorActivityManager(userActivityManager, buffer.getScrollListenerRegistrar(),
                                                           getKeyListenerRegistrar());
 
-        // TODO: instantiate input from here
         input.initializeFromEditor(this, editorDocumentMutator);
 
         setAnimationEnabled(true);
@@ -278,12 +304,6 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         return buffer;
     }
 
-    /*
-     * TODO: if left gutter manager gets public API, expose that
-     * instead of directly exposign the gutter. Or, if we don't want to expose
-     * Gutter#setWidth publicly for the left gutter, make LeftGutterManager the
-     * public API.
-     */
     public Gutter getLeftGutter() {
         return leftGutterManager.getGutter();
     }
@@ -669,7 +689,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
             annotationModel.connect(document);
             verticalRuler.setModel(annotationModel);
             new AnnotationRenderer(this, annotationModel.getAnnotationDecorations()).setMode(annotationModel);
-            //TODO overview ruler
+            overviewRuller.setModel(annotationModel);
         }
     }
 

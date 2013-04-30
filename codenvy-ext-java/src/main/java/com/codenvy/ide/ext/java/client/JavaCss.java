@@ -86,4 +86,18 @@ public interface JavaCss extends CssResource {
     @ClassName("packageItem")
     String packageItem();
 
+    @ClassName("overview-bottom-mark-error")
+    String overviewBottomMarkError();
+
+    @ClassName("overview-mark-warning")
+    String overviewMarkWarning();
+
+    @ClassName("overview-bottom-mark-warning")
+    String overviewBottomMarkWarning();
+
+    @ClassName("overview-mark-error")
+    String overviewMarkError();
+
+    @ClassName("overview-mark-task")
+    String overviewMarkTask();
 }

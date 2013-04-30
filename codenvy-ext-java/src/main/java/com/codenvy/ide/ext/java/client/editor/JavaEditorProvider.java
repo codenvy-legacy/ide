@@ -18,14 +18,13 @@
  */
 package com.codenvy.ide.ext.java.client.editor;
 
-import com.codenvy.ide.ext.java.client.JavaClientBundle;
-import com.codenvy.ide.ext.java.client.JavaPartitions;
-
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorProvider;
+import com.codenvy.ide.ext.java.client.JavaClientBundle;
+import com.codenvy.ide.ext.java.client.JavaPartitions;
 import com.codenvy.ide.text.DocumentFactory;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.google.inject.Inject;
@@ -55,7 +54,8 @@ public class JavaEditorProvider implements EditorProvider {
         this.resources = resources;
         this.activityManager = activityManager;
         this.editorProvider = editorProvider;
-        this.documentProvider = new CompilationUnitDocumentProvider(resources.workspaceEditorCss(), documentFactory);
+        this.documentProvider =
+                new CompilationUnitDocumentProvider(resources.workspaceEditorCss(), JavaClientBundle.INSTANCE.css(), documentFactory);
     }
 
     /** @see com.codenvy.ide.api.editor.EditorProvider#getEditor() */

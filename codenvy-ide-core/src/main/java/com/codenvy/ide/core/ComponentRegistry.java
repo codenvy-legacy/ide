@@ -64,7 +64,7 @@ public class ComponentRegistry {
             @Override
             public void onFailure(ComponentException reason) {
                 callback.onFailure(new ComponentException("Failed to start component", reason.getComponent()));
-                Log.info(ComponentRegistry.class, "FAILED to start service:" + reason.getComponent());
+                Log.info(ComponentRegistry.class, "FAILED to start service:" + reason.getComponent(), reason);
             }
         };
 

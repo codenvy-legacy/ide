@@ -18,7 +18,10 @@
  */
 package com.codenvy.ide.ext.java.client.editor;
 
+import com.codenvy.ide.api.editor.EditorInput;
+import com.codenvy.ide.core.editor.ResourceDocumentProvider;
 import com.codenvy.ide.ext.java.client.JavaClientBundle;
+import com.codenvy.ide.ext.java.client.JavaCss;
 import com.codenvy.ide.ext.java.client.JavaPartitions;
 import com.codenvy.ide.ext.java.client.core.IProblemRequestor;
 import com.codenvy.ide.ext.java.client.core.compiler.CategorizedProblem;
@@ -26,9 +29,6 @@ import com.codenvy.ide.ext.java.client.core.compiler.IProblem;
 import com.codenvy.ide.ext.java.client.core.dom.CompilationUnit;
 import com.codenvy.ide.ext.java.client.internal.text.correction.JavaCorrectionProcessor;
 import com.codenvy.ide.ext.java.client.internal.ui.text.FastJavaPartitionScanner;
-
-import com.codenvy.ide.api.editor.EditorInput;
-import com.codenvy.ide.core.editor.ResourceDocumentProvider;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.runtime.Assert;
@@ -64,14 +64,17 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
     };
     private AnnotationModel        annotationModel;
     private TextEditorViewImpl.Css css;
+    private JavaCss                javaCss;
 
     /**
      * @param css
+     * @param javaCss
      * @param documentFactory
      */
-    public CompilationUnitDocumentProvider(Css css, DocumentFactory documentFactory) {
+    public CompilationUnitDocumentProvider(Css css, JavaCss javaCss, DocumentFactory documentFactory) {
         super(documentFactory);
         this.css = css;
+        this.javaCss = javaCss;
     }
 
     /** {@inheritDoc} */
@@ -395,6 +398,17 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
             decorations.put("org.eclipse.jdt.ui.error", css.lineError());
             decorations.put("org.eclipse.jdt.ui.warning", css.lineWarning());
 
+            return decorations;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public JsonStringMap<String> getAnnotationStyle() {
+            JsonStringMap<String> decorations = JsonCollections.createStringMap();
+//            //TODO configure this
+            decorations.put("org.eclipse.jdt.ui.error", javaCss.overviewMarkError());
+            decorations.put("org.eclipse.jdt.ui.warning", javaCss.overviewMarkWarning());
+            decorations.put("org.eclipse.jdt.ui.info", javaCss.overviewMarkTask());
             return decorations;
         }
     }

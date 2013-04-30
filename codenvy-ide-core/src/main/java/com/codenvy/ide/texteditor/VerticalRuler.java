@@ -40,6 +40,8 @@ import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import java.util.Iterator;
 
 /**
+ * Ruler that render annotations in left gutter.
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
