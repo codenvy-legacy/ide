@@ -62,7 +62,7 @@ public class RefactoringRenameView extends ViewImpl implements Display {
     }
 
     @UiField
-    TextInput newNameField;
+    TextInput nameField;
 
     @UiField
     Label warningLabel;
@@ -81,62 +81,76 @@ public class RefactoringRenameView extends ViewImpl implements Display {
         setCloseOnEscape(true);
         add(uiBinder.createAndBindUi(this));
 
-        newNameField.setName(NEW_NAME_FIELD_ID);
+        nameField.setName(NEW_NAME_FIELD_ID);
         renameButton.setId(RENAME_BUTTON_ID);
         cancelButton.setId(CANCEL_BUTTON_ID);
     }
 
-    /** @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#getNewNameField() */
+    /**
+     * @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#getNameField()
+     */
     @Override
-    public TextFieldItem getNewNameField() {
-        return newNameField;
+    public TextFieldItem getNameField() {
+        return nameField;
     }
 
-    /** @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#getWarningLabel() */
+    /**
+     * @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#getWarningLabel()
+     */
     @Override
     public HasText getWarningLabel() {
         return warningLabel;
     }
 
-    /** @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#getErrorLabel() */
+    /**
+     * @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#getErrorLabel()
+     */
     @Override
     public HasText getErrorLabel() {
         return errorLabel;
     }
 
-    /** @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#getRenameButton() */
+    /**
+     * @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#getRenameButton()
+     */
     @Override
     public HasClickHandlers getRenameButton() {
         return renameButton;
     }
 
-    /** @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#getCancelButton() */
+    /**
+     * @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#getCancelButton()
+     */
     @Override
     public HasClickHandlers getCancelButton() {
         return cancelButton;
     }
 
-    /** @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#setFocusOnNewNameField() */
+    /**
+     * @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#focusNameField()
+     */
     @Override
-    public void setFocusOnNewNameField() {
-        newNameField.focus();
+    public void focusNameField() {
+        nameField.focus();
     }
 
     /** @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#selectAllTextInNewNameField() */
     @Override
-    public void selectAllTextInNewNameField() {
-        newNameField.selectAll();
+    public void selectNameField() {
+        nameField.selectAll();
     }
 
-    /** @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#setNewNameFieldValue(java.lang.String) */
-    @Override
-    public void setNewNameFieldValue(String value) {
-        newNameField.setText(value);
-    }
+//    /** @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#setNewNameFieldValue(java.lang.String) */
+//    @Override
+//    public void setNewNameFieldValue(String value) {
+//        newNameField.setText(value);
+//    }
 
-    /** @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#setEnableStateRenameButton(boolean) */
+    /**
+     * @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#setRenameButtonEnabled(boolean)
+     */
     @Override
-    public void setEnableStateRenameButton(boolean enabled) {
+    public void setRenameButtonEnabled(boolean enabled) {
         renameButton.setEnabled(enabled);
     }
 

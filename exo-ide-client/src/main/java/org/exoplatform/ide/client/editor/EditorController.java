@@ -149,13 +149,13 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
                 fileId = entry.getKey();
             }
         }
-
+        
         FileModel file = openedFiles.get(fileId);
         if (ignoreContentChangedList.contains(file.getId())) {
             ignoreContentChangedList.remove(file.getId());
             return;
         }
-
+        
         if (!(event.getEditor() instanceof CollabEditor && 
                 !MimeType.TEXT_HTML.equals(file.getMimeType()))) {
             file.setContentChanged(true);
@@ -165,8 +165,7 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
 
         IDE.fireEvent(new EditorFileContentChangedEvent(activeFile, 
                             event.getEditor().hasUndoChanges(), event.getEditor().hasRedoChanges()));
-
-
+        
         /*
         Editor editor = getEditorFromView(activeFile.getId());
         if (editor == null || !event.getEditor().getId().equals(editor.getId())) {
