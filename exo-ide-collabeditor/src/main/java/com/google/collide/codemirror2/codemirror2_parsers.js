@@ -1552,7 +1552,6 @@
             });
         CodeMirror.defineMIME("application/x-httpd-php", "php");
         CodeMirror.defineMIME("application/x-httpd-php-open", {name: "php", startOpen: !0});
-        CodeMirror.defineMIME("text/x-php",
-            g)
+        CodeMirror.defineMIME("text/x-php", g)
     })();
 })();

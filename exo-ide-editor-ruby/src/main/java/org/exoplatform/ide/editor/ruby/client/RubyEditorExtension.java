@@ -19,7 +19,6 @@
 package org.exoplatform.ide.editor.ruby.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.Messages;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
 
@@ -50,9 +49,6 @@ public class RubyEditorExtension extends Extension implements InitializeServices
         TextResource getSource();
     }
 
-    /** Localizable constants and messages */
-    private final Messages             messages        = GWT.create(Messages.class);
-
     public final static DefaultContent DEFAULT_CONTENT = GWT.create(DefaultContent.class);
 
     /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
@@ -67,6 +63,7 @@ public class RubyEditorExtension extends Extension implements InitializeServices
         RubyClientBundle.INSTANCE.css().ensureInjected();
     }
 
+    @Override
     public void onInitializeServices(InitializeServicesEvent event) {
         IDE.getInstance().getFileTypeRegistry()
            .addFileType(
