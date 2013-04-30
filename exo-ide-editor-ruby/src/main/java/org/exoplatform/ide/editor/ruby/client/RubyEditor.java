@@ -22,6 +22,8 @@ import com.google.collide.client.CollabEditor;
 
 import org.exoplatform.ide.editor.client.api.EditorCapability;
 import org.exoplatform.ide.editor.ruby.client.contentassist.RubyAutocompliter;
+import org.exoplatform.ide.editor.ruby.client.contentassist.RubyContentAssistProcessor;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 /**
  * Ruby editor based on {@link CollabEditor}.
@@ -39,6 +41,7 @@ public class RubyEditor extends CollabEditor {
     public RubyEditor(String mimeType) {
         super(mimeType);
         editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(new RubyAutocompliter());
+        editorBundle.getAutocompleter().addContentAssitProcessor(IDocument.DEFAULT_CONTENT_TYPE, new RubyContentAssistProcessor());
     }
 
     /** @see com.google.collide.client.CollabEditor#isCapable(org.exoplatform.ide.editor.client.api.EditorCapability) */

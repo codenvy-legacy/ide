@@ -50,9 +50,9 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * A {@link ContentAssistProcessor} proposes completions and computes context information for PHP content.
+ * A {@link PhpContentAssistProcessor} proposes completions and computes context information for PHP content.
  * 
- * TODO: For now, it supports autocompletion for keywords and special variables/arrays.
+ * TODO: For now, it supports autocompletion of keywords and special variables/arrays only.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: PhpContentAssistProcessor.java Apr 15, 2013 3:47:18 PM azatsarynnyy $
