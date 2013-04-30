@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationEvent;
 
 /**
@@ -39,12 +40,12 @@ public class StartApplicationControl extends AbstractCloudFoundryControl {
     /**
      *
      */
-    public StartApplicationControl() {
+    public StartApplicationControl(PAAS_PROVIDER paasProvider) {
         super(ID);
         setTitle(TITLE);
         setPrompt(PROMPT);
         setImages(CloudFoundryClientBundle.INSTANCE.startApp(), CloudFoundryClientBundle.INSTANCE.startAppDisabled());
-        setEvent(new StartApplicationEvent());
+        setEvent(new StartApplicationEvent(paasProvider));
         setDelimiterBefore(true);
     }
 

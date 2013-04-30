@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.cloudfoundry.client.services;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 
 /**
@@ -35,8 +36,12 @@ public class ManageServicesEvent extends GwtEvent<ManageServicesHandler> {
     /** Application. */
     private CloudFoundryApplication application;
 
-    public ManageServicesEvent(CloudFoundryApplication application) {
+    private final PAAS_PROVIDER paasProvider;
+
+    public ManageServicesEvent(CloudFoundryApplication application, PAAS_PROVIDER paasProvider) {
+        super();
         this.application = application;
+        this.paasProvider = paasProvider;
     }
 
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
@@ -54,5 +59,9 @@ public class ManageServicesEvent extends GwtEvent<ManageServicesHandler> {
     /** @return {@link CloudFoundryApplication application} application */
     public CloudFoundryApplication getApplication() {
         return application;
+    }
+
+    public PAAS_PROVIDER getPaasProvider() {
+        return paasProvider;
     }
 }

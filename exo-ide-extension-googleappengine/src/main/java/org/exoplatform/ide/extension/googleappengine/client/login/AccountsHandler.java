@@ -29,6 +29,7 @@ import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.extension.googleappengine.client.GaeTools;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
@@ -85,7 +86,7 @@ public class AccountsHandler implements LogoutHandler {
 
                         @Override
                         protected void onSuccess(GaeUser result) {
-                            IDE.fireEvent(new SetLoggedUserStateEvent(result.isAuthenticated()));
+                            IDE.fireEvent(new SetLoggedUserStateEvent(GaeTools.isAuthenticatedInAppEngine(result.getToken())));
                         }
 
                         /**

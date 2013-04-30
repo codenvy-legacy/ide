@@ -34,10 +34,9 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExten
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 21, 2012 2:11:53 PM anya $
  */
-public class CreateApplicationControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-                                                                       ProjectClosedHandler
-//   , ActiveProjectChangedHandler
-{
+public class CreateApplicationControl extends SimpleControl implements IDEControl, 
+            ProjectOpenedHandler, ProjectClosedHandler {
+    
     private static final String ID = "PaaS/Google App Engine/Create";
 
     private static final String TITLE = GoogleAppEngineExtension.GAE_LOCALIZATION.createApplicationControlTitle();
@@ -48,13 +47,10 @@ public class CreateApplicationControl extends SimpleControl implements IDEContro
         super(ID);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-//      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
         setTitle(TITLE);
         setPrompt(PROMPT);
-        setImages(GAEClientBundle.INSTANCE.createApplicationConrtol(),
-                  GAEClientBundle.INSTANCE.createApplicationConrtolDisabled());
+        setImages(GAEClientBundle.INSTANCE.createApplicationConrtol(), GAEClientBundle.INSTANCE.createApplicationConrtolDisabled());
         setEvent(new CreateApplicationEvent());
-
     }
 
     /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
@@ -76,12 +72,4 @@ public class CreateApplicationControl extends SimpleControl implements IDEContro
         }
     }
 
-//   @Override
-//   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-//   {
-//      if (event.getProject() != null && GoogleAppEngineExtension.isAppEngineProject(event.getProject()))
-//      {
-//         setEnabled(true);
-//      }
-//   }
 }

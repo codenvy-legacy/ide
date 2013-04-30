@@ -44,7 +44,12 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.ssh.client.JsonpAsyncCallback;
 import org.exoplatform.ide.extension.ssh.client.SshKeyService;
-import org.exoplatform.ide.extension.ssh.client.keymanager.event.*;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.GenerateGitHubKeyEvent;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.RefreshKeysEvent;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.RefreshKeysHandler;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowPublicSshKeyEvent;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowSshKeyManagerEvent;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowSshKeyManagerHandler;
 import org.exoplatform.ide.extension.ssh.client.keymanager.ui.HasSshGrid;
 import org.exoplatform.ide.extension.ssh.client.marshaller.SshKeysUnmarshaller;
 import org.exoplatform.ide.extension.ssh.shared.GenKeyRequest;
@@ -55,7 +60,7 @@ import org.exoplatform.ide.extension.ssh.shared.KeyItem;
  * @version $Id: SshKeyManagerPresenter May 18, 2011 10:16:44 AM evgen $
  */
 public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClosedHandler,
-                                               ConfigurationReceivedSuccessfullyHandler, PreferencePerformer, RefreshKeysHandler {
+                                   ConfigurationReceivedSuccessfullyHandler, PreferencePerformer, RefreshKeysHandler {
     public interface Display extends IsView {
         String ID = "ideSshKeyManagerView";
 
@@ -69,7 +74,7 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
 
     }
 
-    private Display display;
+    private Display          display;
 
     private IDEConfiguration configuration;
 
@@ -84,8 +89,10 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
         IDE.addHandler(RefreshKeysEvent.TYPE, this);
     }
 
-    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowSshKeyManagerHandler#onShowSshKeyManager(org.exoplatform.ide
-     * .extension.ssh.client.keymanager.event.ShowSshKeyManagerEvent) */
+    /**
+     * @see org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowSshKeyManagerHandler#onShowSshKeyManager(org.exoplatform.ide
+     *      .extension.ssh.client.keymanager.event.ShowSshKeyManagerEvent)
+     */
     @Override
     public void onShowSshKeyManager(ShowSshKeyManagerEvent event) {
         if (display != null) {
@@ -226,8 +233,10 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     *      .event.ViewClosedEvent)
+     */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
@@ -238,9 +247,11 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.configuration.event
-     * .ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ide.client.framework.configuration
-     * .event.ConfigurationReceivedSuccessfullyEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.configuration.event
+     *      .ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ide.client.framework.configuration
+     *      .event.ConfigurationReceivedSuccessfullyEvent)
+     */
     @Override
     public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event) {
         configuration = event.getConfiguration();
@@ -259,6 +270,8 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
 
     @Override
     public void onRefreshKeys(RefreshKeysEvent event) {
-        refreshKeys();
+        if (display != null) {
+            refreshKeys();
+        }
     }
 }

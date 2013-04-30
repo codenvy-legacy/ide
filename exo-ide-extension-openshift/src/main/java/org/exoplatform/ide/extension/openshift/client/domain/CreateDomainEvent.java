@@ -30,6 +30,16 @@ public class CreateDomainEvent extends GwtEvent<CreateDomainHandler> {
     /** Type used to register this event. */
     public static final GwtEvent.Type<CreateDomainHandler> TYPE = new GwtEvent.Type<CreateDomainHandler>();
 
+    /** Indicates that windows is showed from application info list, that after update namespace will be fired ShowApplicationListEvent */
+    private boolean fromUserInfo;
+
+    public CreateDomainEvent() {
+    }
+
+    public CreateDomainEvent(boolean fromUserInfo) {
+        this.fromUserInfo = fromUserInfo;
+    }
+
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
     @Override
     public com.google.gwt.event.shared.GwtEvent.Type<CreateDomainHandler> getAssociatedType() {
@@ -42,4 +52,11 @@ public class CreateDomainEvent extends GwtEvent<CreateDomainHandler> {
         handler.onCreateDomain(this);
     }
 
+    public boolean isFromUserInfo() {
+        return fromUserInfo;
+    }
+
+    public void setFromUserInfo(boolean fromUserInfo) {
+        this.fromUserInfo = fromUserInfo;
+    }
 }

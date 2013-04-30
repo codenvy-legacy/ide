@@ -20,6 +20,8 @@ package org.exoplatform.ide.extension.cloudfoundry.client.start;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
+
 /**
  * Event, occurs after pressing Stop Application command.
  *
@@ -32,16 +34,21 @@ public class StopApplicationEvent extends GwtEvent<StopApplicationHandler> {
 
     private String applicationName;
 
-    /**
-     *
-     */
-    public StopApplicationEvent() {
+    private PAAS_PROVIDER paasProvider;
+
+    private String server;
+
+    public StopApplicationEvent(PAAS_PROVIDER paasProvider) {
+        super();
+        this.paasProvider = paasProvider;
     }
 
     /** @param applicationName */
-    public StopApplicationEvent(String applicationName) {
+    public StopApplicationEvent(String applicationName, String server, PAAS_PROVIDER paasProvider) {
         super();
         this.applicationName = applicationName;
+        this.server = server;
+        this.paasProvider = paasProvider;
     }
 
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
@@ -59,6 +66,14 @@ public class StopApplicationEvent extends GwtEvent<StopApplicationHandler> {
     /** @return the applicationName */
     public String getApplicationName() {
         return applicationName;
+    }
+
+    public PAAS_PROVIDER getPaasProvider() {
+        return paasProvider;
+    }
+
+    public String getServer() {
+        return server;
     }
 
 }

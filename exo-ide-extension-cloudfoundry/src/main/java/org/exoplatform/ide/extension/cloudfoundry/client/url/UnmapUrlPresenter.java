@@ -41,6 +41,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
@@ -82,6 +83,8 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
     private String urlToMap;
 
     private boolean isBindingChanged = false;
+
+    private PAAS_PROVIDER paasProvider;
 
     public UnmapUrlPresenter() {
         IDE.addHandler(UnmapUrlEvent.TYPE, this);
@@ -136,7 +139,7 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
     /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
     private LoggedInHandler mapUrlLoggedInHandler = new LoggedInHandler() {
         @Override
-        public void onLoggedIn() {
+        public void onLoggedIn(String server) {
             mapUrl(urlToMap);
         }
     };
@@ -147,7 +150,8 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
 
         try {
             CloudFoundryClientService.getInstance().mapUrl(vfs.getId(), projectId, null, null, url,
-                                                           new CloudFoundryAsyncRequestCallback<String>(null, mapUrlLoggedInHandler, null) {
+                                                           new CloudFoundryAsyncRequestCallback<String>(null, mapUrlLoggedInHandler, null,
+                                                               paasProvider) {
                                                                @Override
                                                                protected void onSuccess(String result) {
                                                                    isBindingChanged = true;
@@ -185,7 +189,7 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
 
     LoggedInHandler unregisterUrlLoggedInHandler = new LoggedInHandler() {
         @Override
-        public void onLoggedIn() {
+        public void onLoggedIn(String server) {
             unregisterUrl(unregisterUrl);
         }
     };
@@ -198,7 +202,7 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
             CloudFoundryClientService.getInstance().unmapUrl(vfs.getId(), projectId, null, null, url,
                                                              new CloudFoundryAsyncRequestCallback<Object>(null,
                                                                                                           unregisterUrlLoggedInHandler,
-                                                                                                          null) {
+                                                                                                          null, paasProvider) {
                                                                  @Override
                                                                  protected void onSuccess(Object result) {
                                                                      isBindingChanged = true;
@@ -219,7 +223,7 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
 
     LoggedInHandler appInfoLoggedInHandler = new LoggedInHandler() {
         @Override
-        public void onLoggedIn() {
+        public void onLoggedIn(String server) {
             getAppRegisteredUrls();
         }
     };
@@ -228,6 +232,7 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
      * .extension.cloudfoundry.client.start.RestartApplicationEvent) */
     @Override
     public void onUnmapUrl(UnmapUrlEvent event) {
+        paasProvider = event.getPaasProvider();
         isBindingChanged = false;
         if (makeSelectionCheck()) {
             getAppRegisteredUrls();
@@ -245,9 +250,8 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
             AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                     new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-            CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
-                                                                       new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
-                                                                               unmarshaller, null, null) {
+            CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null, new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
+                                                                               unmarshaller, null, null, paasProvider) {
                                                                            @Override
                                                                            protected void onSuccess(CloudFoundryApplication result) {
                                                                                openView(result.getUris());

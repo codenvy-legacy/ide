@@ -43,8 +43,6 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.OAuthLoginFinishedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.OAuthLoginFinishedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
@@ -55,7 +53,9 @@ import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
 import org.exoplatform.ide.extension.samples.client.marshal.AllRepositoriesUnmarshaller;
-import org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginEvent;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.GenerateGitHubKeyEvent;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.GitHubKeyGeneratedEvent;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.GitHubKeyGeneratedHandler;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryCompleteEvent;
@@ -84,7 +84,7 @@ import java.util.Map;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ImportFromGithubPresenter.java Dec 7, 2011 3:37:11 PM vereshchaka $
  */
-public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewClosedHandler, OAuthLoginFinishedHandler,
+public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewClosedHandler, GitHubKeyGeneratedHandler,
                                       UserInfoReceivedHandler, VfsChangedHandler {
     public interface Display extends IsView {
         /**
@@ -224,6 +224,17 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
         }
     }
 
+    /** Open view. */
+    private void openView() {
+        if (display == null) {
+            Display d = GWT.create(Display.class);
+            IDE.getInstance().openView(d.asView());
+            display = d;
+            bindDisplay();
+            return;
+        }
+    }
+
     private void onListLoaded(final Map<String, List<GitHubRepository>> repositories) {
         this.repositories = repositories;
         openView();
@@ -273,17 +284,6 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
         }
     }
 
-    /** Open view. */
-    private void openView() {
-        if (display == null) {
-            Display d = GWT.create(Display.class);
-            IDE.getInstance().openView(d.asView());
-            display = d;
-            bindDisplay();
-            return;
-        }
-    }
-
     /**
      * @see org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler#onUserInfoReceived(org.exoplatform.ide.client
      *      .framework.userinfo.event.UserInfoReceivedEvent)
@@ -302,17 +302,12 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
 
                                                  @Override
                                                  protected void onSuccess(StringBuilder result) {
-                                                     if (result.toString() == null || result.toString().isEmpty()) {
-                                                         oAuthLoginStart();
-                                                     }
-                                                     else {
-                                                         getUserRepos();
-                                                     }
+                                                     generateGitHubKey();
                                                  }
 
                                                  @Override
                                                  protected void onFailure(Throwable exception) {
-                                                     oAuthLoginStart();
+                                                     generateGitHubKey();
                                                  }
                                              });
         } catch (RequestException e) {
@@ -320,17 +315,15 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
         }
     }
 
-    public void oAuthLoginStart() {
-        IDE.addHandler(OAuthLoginFinishedEvent.TYPE, this);
-        IDE.fireEvent(new OAuthLoginEvent());
+    public void generateGitHubKey() {
+        IDE.addHandler(GitHubKeyGeneratedEvent.TYPE, this);
+        IDE.fireEvent(new GenerateGitHubKeyEvent());
     }
 
     @Override
-    public void onOAuthLoginFinished(OAuthLoginFinishedEvent event) {
-        if (event.getStatus() == 2) {
-            getUserRepos();
-        }
-        IDE.removeHandler(OAuthLoginFinishedEvent.TYPE, this);
+    public void onGithubKeyGenerated(GitHubKeyGeneratedEvent event) {
+        IDE.removeHandler(GitHubKeyGeneratedEvent.TYPE, this);
+        getUserRepos();
     }
 
     private void deleteFolder(FolderModel path) {

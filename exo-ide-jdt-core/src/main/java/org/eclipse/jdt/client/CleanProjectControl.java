@@ -22,21 +22,20 @@ import org.eclipse.jdt.client.event.CleanProjectEvent;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.*;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 9:57:22 AM Mar 5, 2012 evgen $
  */
-public class CleanProjectControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-                                                                  ProjectClosedHandler, ActiveProjectChangedHandler {
+public class CleanProjectControl extends SimpleControl implements IDEControl, 
+            ProjectOpenedHandler, ProjectClosedHandler {
 
     private boolean isJavaProject = false;
 
-
-    /**
-     *
-     */
     public CleanProjectControl() {
         super(JdtExtension.LOCALIZATION_CONSTANT.updateDependencyControlId());
         setTitle(JdtExtension.LOCALIZATION_CONSTANT.updateDependencyControlTitle());
@@ -50,7 +49,6 @@ public class CleanProjectControl extends SimpleControl implements IDEControl, Pr
     public void initialize() {
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
-        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
         setVisible(false);
         setEnabled(false);
     }
@@ -71,12 +69,6 @@ public class CleanProjectControl extends SimpleControl implements IDEControl, Pr
         updateEnabling();
     }
 
-    @Override
-    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
-        isJavaProject = JdtExtension.get().isProjectSupported(event.getProject().getProjectType());
-        updateEnabling();
-    }
-
     /**
      *
      */
@@ -84,6 +76,5 @@ public class CleanProjectControl extends SimpleControl implements IDEControl, Pr
         setVisible(isJavaProject);
         setEnabled(isJavaProject);
     }
-
 
 }

@@ -20,6 +20,7 @@
 package org.exoplatform.ide.client.operation.uploadfile;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -35,20 +36,24 @@ import com.google.gwt.user.client.ui.HasValue;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.application.IDELoader;
+import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.api.TreeRefreshedEvent;
+import org.exoplatform.ide.client.framework.project.api.TreeRefreshedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.upload.FileSelectedEvent;
 import org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
-import org.exoplatform.ide.client.messages.IdeUploadLocalizationConstant;
+import org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFileCommand;
 import org.exoplatform.ide.client.operation.overwrite.ui.AbstarctOverwriteDialog;
 import org.exoplatform.ide.client.operation.uploadfile.UploadHelper.ErrorData;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.ExitCodes;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -64,7 +69,7 @@ import java.util.List;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler, ItemsSelectedHandler {
+public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler, ItemsSelectedHandler, TreeRefreshedHandler {
 
     public interface Display extends IsView {
 
@@ -96,13 +101,13 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
 
     }
 
-    IdeUploadLocalizationConstant lb = IDE.UPLOAD_CONSTANT;
-
     private Display display;
 
     private List<Item> selectedItems = new ArrayList<Item>();
 
     private String fileName;
+
+    public static boolean openAfterUpload;
 
     public UploadFilePresenter() {
         IDE.getInstance().addControl(new UploadFileControl());
@@ -128,6 +133,9 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
         if (display != null) {
             return;
         }
+
+        //flag indicate that open local file operation
+        openAfterUpload = event.isOpenAfterUpload();
 
         display = GWT.create(Display.class);
         IDE.getInstance().openView(display.asView());
@@ -285,6 +293,8 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
 
                 @Override
                 public void onRename(String value) {
+                    fileName = value;
+
                     display.setNameHiddedField(value);
                     display.getUploadForm().submit();
                 }
@@ -304,11 +314,34 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
     private void completeUpload() {
         closeView();
 
+        if (openAfterUpload) {
+            IDE.addHandler(TreeRefreshedEvent.TYPE, this);
+        }
+
         Item item = selectedItems.get(0);
         if (item instanceof FileModel) {
             IDE.fireEvent(new RefreshBrowserEvent(((FileModel)item).getParent()));
         } else if (item instanceof Folder) {
             IDE.fireEvent(new RefreshBrowserEvent((Folder)item));
+        }
+    }
+
+    @Override
+    public void onTreeRefreshed(final TreeRefreshedEvent event) {
+        if (openAfterUpload) {
+            IDE.removeHandler(TreeRefreshedEvent.TYPE, this);
+
+            Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+                @Override
+                public void execute() {
+                    for (Item item : event.getFolder().getChildren().getItems()) {
+                        if (fileName.equals(item.getName())) {
+                            IDE.fireEvent(new OpenFileEvent(item.getId()));
+                            return;
+                        }
+                    }
+                }
+            });
         }
     }
 

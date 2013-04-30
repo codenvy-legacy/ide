@@ -20,9 +20,11 @@ package org.exoplatform.ide.extension.cloudfoundry.client.start;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
+
 /**
  * Event, occurs after pressing Start Application command.
- *
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: StartApplicationEvent.java Jul 12, 2011 3:51:16 PM vereshchaka $
  */
@@ -30,18 +32,30 @@ public class StartApplicationEvent extends GwtEvent<StartApplicationHandler> {
     /** Type used to register this event. */
     public static final GwtEvent.Type<StartApplicationHandler> TYPE = new GwtEvent.Type<StartApplicationHandler>();
 
-    private String applicationName;
+    private String                                             applicationName;
+
+    private PAAS_PROVIDER                                      paasProvider;
+
+    private String                                             server;
 
     /**
      *
      */
-    public StartApplicationEvent() {
+    public StartApplicationEvent(PAAS_PROVIDER paasProvider) {
+        super();
+        this.paasProvider = paasProvider;
     }
 
-    /** @param applicationName */
-    public StartApplicationEvent(String applicationName) {
+    /**
+     * @param applicationName
+     * @param server
+     * @param paasProvider
+     */
+    public StartApplicationEvent(String applicationName, String server, PAAS_PROVIDER paasProvider) {
         super();
         this.applicationName = applicationName;
+        this.server = server;
+        this.paasProvider = paasProvider;
     }
 
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
@@ -59,6 +73,14 @@ public class StartApplicationEvent extends GwtEvent<StartApplicationHandler> {
     /** @return the applicationName */
     public String getApplicationName() {
         return applicationName;
+    }
+
+    public PAAS_PROVIDER getPaasProvider() {
+        return paasProvider;
+    }
+
+    public String getServer() {
+        return server;
     }
 
 }

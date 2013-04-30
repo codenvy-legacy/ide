@@ -14,7 +14,6 @@
 
 package com.google.collide.client.editor.input;
 
-
 import elemental.css.CSSStyleDeclaration;
 import elemental.events.Event;
 import elemental.events.EventListener;
@@ -261,6 +260,11 @@ public class InputController {
             public void handleEvent(Event event) {
                 try{
                 SignalEvent signalEvent = SignalEventUtils.create(event);
+                if (signalEvent == null) {
+                    return;
+                }
+                
+                Log.info(getClass(), signalEvent.getKeyCode());
                 if (signalEvent != null) {
                     if (selection.hasSelection() && signalEvent.getCommandKey() &&
                         (signalEvent.getKeyCode() == 99 || signalEvent.getKeyCode() == 120)) {

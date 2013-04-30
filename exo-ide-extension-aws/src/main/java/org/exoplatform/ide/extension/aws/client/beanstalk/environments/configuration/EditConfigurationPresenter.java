@@ -38,7 +38,10 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.project.*;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -46,7 +49,13 @@ import org.exoplatform.ide.extension.aws.client.AWSExtension;
 import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService;
 import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.aws.shared.beanstalk.*;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.Configuration;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOption;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStackConfigurationOptionsRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateEnvironmentRequest;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
@@ -61,8 +70,8 @@ import java.util.Map;
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: EditConfigurationPresenter.java Oct 5, 2012 5:59:23 PM azatsarynnyy $
  */
-public class EditConfigurationPresenter implements ProjectOpenedHandler, ProjectClosedHandler, VfsChangedHandler,
-                                                   EditConfigurationHandler, ViewClosedHandler, ActiveProjectChangedHandler {
+public class EditConfigurationPresenter implements ProjectOpenedHandler, ProjectClosedHandler,
+        VfsChangedHandler, EditConfigurationHandler, ViewClosedHandler {
 
     interface Display extends IsView {
         HasClickHandlers getOkButton();
@@ -129,7 +138,6 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
         IDE.addHandler(VfsChangedEvent.TYPE, this);
-        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
     }
 
     /** Bind presenter with display. */
@@ -519,11 +527,6 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
     /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent) */
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
-        this.openedProject = event.getProject();
-    }
-
-    @Override
-    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
         this.openedProject = event.getProject();
     }
 

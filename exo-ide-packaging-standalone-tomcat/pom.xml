@@ -72,7 +72,7 @@
             <groupId>com.codenvy.organization</groupId>
             <artifactId>codenvy-organization-packaging-api-war</artifactId>
             <type>war</type>
-            <version>0.1-SNAPSHOT</version>
+            <version>${com.codenvy.organization.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -277,6 +277,52 @@
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
                     <artifactId>codenvy-gwtframework-commons</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+          
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-nodejs-runtime</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-ui</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-commons</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>gwt-user</artifactId>
+                    <groupId>com.google.gwt</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>slf4j-log4j12</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-php-runtime</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-ui</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.exoplatform.gwt</groupId>
+                    <artifactId>codenvy-gwtframework-commons</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>gwt-user</artifactId>
+                    <groupId>com.google.gwt</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>slf4j-log4j12</artifactId>
+                    <groupId>org.slf4j</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -564,12 +610,6 @@
             <type>zip</type>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-python-sdk</artifactId>
-            <type>zip</type>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -604,12 +644,6 @@
                                 <artifactItem>
                                     <groupId>com.google.appengine</groupId>
                                     <artifactId>appengine-java-sdk</artifactId>
-                                    <version>${appengine.version}</version>
-                                    <type>zip</type>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>com.google.appengine</groupId>
-                                    <artifactId>appengine-python-sdk</artifactId>
                                     <version>${appengine.version}</version>
                                     <type>zip</type>
                                 </artifactItem>
@@ -742,7 +776,7 @@
                                       tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-gadget-server-${project.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/gadget-server.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-0.1-SNAPSHOT.war"
+                                <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true"/>
                                 <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"
                                        dest="${project.build.directory}/tomcat-ide"/>
@@ -767,20 +801,6 @@
                                 </unzip>
                                 <move file="${project.build.directory}/tomcat-ide/appengine-java-sdk-${appengine.version}"
                                       tofile="${project.build.directory}/tomcat-ide/appengine-java-sdk"/>
-                                <unzip src="${project.build.directory}/packager-conf/appengine/appengine-python-sdk.zip"
-                                       dest="${project.build.directory}/tomcat-ide">
-                                    <patternset>
-                                        <exclude name="**/demos/**"/>
-                                        <exclude name="**/new_project_template/**"/>
-                                        <exclude name="**/BUGS"/>
-                                        <exclude name="**/LICENSE"/>
-                                        <exclude name="**/README"/>
-                                        <exclude name="**/RELEASE_NOTES"/>
-                                    </patternset>
-                                </unzip>
-                                <move file="${project.build.directory}/tomcat-ide/google_appengine"
-                                      tofile="${project.build.directory}/tomcat-ide/appengine-python-sdk"/>
-
                             </tasks>
                         </configuration>
                         <goals>

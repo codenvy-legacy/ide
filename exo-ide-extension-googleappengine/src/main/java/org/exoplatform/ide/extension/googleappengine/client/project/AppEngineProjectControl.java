@@ -38,10 +38,9 @@ import org.exoplatform.ide.vfs.shared.Item;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 22, 2012 5:15:05 PM anya $
  */
-public class AppEngineProjectControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-                                                                      ProjectClosedHandler, ItemsSelectedHandler
-//   , ActiveProjectChangedHandler
-{
+public class AppEngineProjectControl extends SimpleControl implements IDEControl,
+            ProjectOpenedHandler, ProjectClosedHandler, ItemsSelectedHandler {
+    
     private static final String ID = "Project/PaaS/Google App Engine";
 
     private static final String TITLE = GoogleAppEngineExtension.GAE_LOCALIZATION.googleAppEngineControl();
@@ -63,7 +62,6 @@ public class AppEngineProjectControl extends SimpleControl implements IDEControl
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-//      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
     }
 
     /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
@@ -82,14 +80,6 @@ public class AppEngineProjectControl extends SimpleControl implements IDEControl
         setVisible(false);
         setEnabled(false);
     }
-
-//   @Override
-//   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-//   {
-//      boolean isAppEngine = isDeployed(event.getProject());
-//      setVisible(isAppEngine);
-//      setEnabled(isAppEngine);
-//   }
 
     private boolean isDeployed(ProjectModel project) {
         return project != null

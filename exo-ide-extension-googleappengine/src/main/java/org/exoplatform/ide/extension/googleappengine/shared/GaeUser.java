@@ -18,14 +18,16 @@
  */
 package org.exoplatform.ide.extension.googleappengine.shared;
 
-import org.exoplatform.ide.security.shared.User;
+import com.codenvy.commons.security.shared.Token;
+import com.codenvy.commons.security.shared.User;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public interface GaeUser extends User {
-    boolean isAuthenticated();
 
-    void setAuthenticated(boolean authenticated);
+    public Token getToken();
+
+    public void setToken(Token token);
 }

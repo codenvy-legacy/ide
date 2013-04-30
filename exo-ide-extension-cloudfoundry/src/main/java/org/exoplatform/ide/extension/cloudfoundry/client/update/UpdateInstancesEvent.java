@@ -20,6 +20,8 @@ package org.exoplatform.ide.extension.cloudfoundry.client.update;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
+
 /**
  * Event, occurs after pressing Update Instances command.
  *
@@ -29,6 +31,16 @@ import com.google.gwt.event.shared.GwtEvent;
 public class UpdateInstancesEvent extends GwtEvent<UpdateInstancesHandler> {
     /** Type used to register this event. */
     public static final GwtEvent.Type<UpdateInstancesHandler> TYPE = new GwtEvent.Type<UpdateInstancesHandler>();
+
+    private final PAAS_PROVIDER paasProvider;
+
+    /**
+     * @param paasProvider
+     */
+    public UpdateInstancesEvent(PAAS_PROVIDER paasProvider) {
+        super();
+        this.paasProvider = paasProvider;
+    }
 
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
     @Override
@@ -40,6 +52,10 @@ public class UpdateInstancesEvent extends GwtEvent<UpdateInstancesHandler> {
     @Override
     protected void dispatch(UpdateInstancesHandler handler) {
         handler.onUpdateInstances(this);
+    }
+
+    public PAAS_PROVIDER getPaasProvider() {
+        return paasProvider;
     }
 
 }

@@ -33,6 +33,7 @@ import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.operation.uploadfile.UploadFileEvent;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
@@ -67,7 +68,7 @@ public class OpenLocalFileCommand extends SimpleControl implements IDEControl, V
         setTitle(TITLE);
         setPrompt(TITLE);
         setImages(IDEImageBundle.INSTANCE.openLocalFile(), IDEImageBundle.INSTANCE.openLocalFileDisabled());
-        setEvent(new OpenLocalFileEvent());
+        setEvent(new UploadFileEvent(true));
         setGroupName(GroupNames.UPLOAD);
     }
 

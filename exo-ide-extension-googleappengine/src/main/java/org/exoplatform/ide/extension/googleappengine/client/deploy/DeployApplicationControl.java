@@ -21,7 +21,10 @@ package org.exoplatform.ide.extension.googleappengine.client.deploy;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.*;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 
@@ -31,8 +34,9 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExten
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 16, 2012 4:24:30 PM anya $
  */
-public class DeployApplicationControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-                                                                       ProjectClosedHandler, ActiveProjectChangedHandler {
+public class DeployApplicationControl extends SimpleControl implements IDEControl, 
+        ProjectOpenedHandler, ProjectClosedHandler {
+    
     private static final String ID = "PaaS/Google App Engine/Deploy";
 
     private static final String TITLE = GoogleAppEngineExtension.GAE_LOCALIZATION.deployApplicationControlTitle();
@@ -52,8 +56,6 @@ public class DeployApplicationControl extends SimpleControl implements IDEContro
     public void initialize() {
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
-        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
-
         setVisible(true);
         setEnabled(false);
     }
@@ -73,9 +75,4 @@ public class DeployApplicationControl extends SimpleControl implements IDEContro
         setEnabled(enabled);
     }
 
-    @Override
-    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
-        boolean enabled = GoogleAppEngineExtension.isAppEngineProject(event.getProject());
-        setEnabled(enabled);
-    }
 }

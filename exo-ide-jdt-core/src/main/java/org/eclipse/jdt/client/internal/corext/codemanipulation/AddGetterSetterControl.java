@@ -19,6 +19,8 @@
 package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
 import org.eclipse.jdt.client.event.AddGetterSetterEvent;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
@@ -34,7 +36,26 @@ public class AddGetterSetterControl extends JavaControl {
         setPrompt("Generate Getters and Setters");
         setEvent(new AddGetterSetterEvent());
         setImages(JavaClientBundle.INSTANCE.blankImage(), JavaClientBundle.INSTANCE.blankImage());
-        setShowInContextMenu(true);
     }
 
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     *      .ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+     */
+    @Override
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        if (event.getEditor() == null) {
+            setEnabled(false);
+            setShowInContextMenu(false);
+        } else {
+            if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA)) {
+                setEnabled(true);
+                setShowInContextMenu(true);
+            } else {
+                setEnabled(false);
+                setShowInContextMenu(false);
+            }
+        }
+    }
+  
 }

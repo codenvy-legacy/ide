@@ -21,15 +21,27 @@ package org.exoplatform.ide.extension.cloudfoundry.client.update;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
+
 /**
  * Event, occurs after pressing Update Application button.
- *
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: UpdateApplicationEvent.java Jul 14, 2011 11:45:11 AM vereshchaka $
  */
 public class UpdateApplicationEvent extends GwtEvent<UpdateApplicationHandler> {
     /** Type used to register this event. */
     public static final GwtEvent.Type<UpdateApplicationHandler> TYPE = new GwtEvent.Type<UpdateApplicationHandler>();
+
+    private final PAAS_PROVIDER                                 paasProvider;
+
+    /**
+     * @param paasProvider
+     */
+    public UpdateApplicationEvent(PAAS_PROVIDER paasProvider) {
+        super();
+        this.paasProvider = paasProvider;
+    }
 
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
     @Override
@@ -41,6 +53,10 @@ public class UpdateApplicationEvent extends GwtEvent<UpdateApplicationHandler> {
     @Override
     protected void dispatch(UpdateApplicationHandler handler) {
         handler.onUpdateApplication(this);
+    }
+
+    public PAAS_PROVIDER getPaasProvider() {
+        return paasProvider;
     }
 
 }

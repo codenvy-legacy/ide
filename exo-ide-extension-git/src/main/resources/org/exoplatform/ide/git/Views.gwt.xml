@@ -83,4 +83,8 @@
     <replace-with class="org.exoplatform.ide.git.client.github.CollaboratorsViewer">
         <when-type-is class="org.exoplatform.ide.git.client.github.GitHubCollaboratorsHandler.Display"/>
     </replace-with>
+    
+    <replace-with class="org.exoplatform.ide.git.client.github.CollaboratorsViewer">
+        <when-type-is class="org.exoplatform.ide.git.client.github.GitHubCollaboratorsHandler.Display"/>
+    </replace-with>    
 </module>

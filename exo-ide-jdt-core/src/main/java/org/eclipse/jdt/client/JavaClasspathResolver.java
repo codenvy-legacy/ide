@@ -26,7 +26,11 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.Timer;
 
 import org.eclipse.jdt.client.create.CreateJavaClassPresenter;
-import org.eclipse.jdt.client.event.*;
+import org.eclipse.jdt.client.event.CleanProjectEvent;
+import org.eclipse.jdt.client.event.CleanProjectHandler;
+import org.eclipse.jdt.client.event.PackageCreatedEvent;
+import org.eclipse.jdt.client.event.PackageCreatedHandler;
+import org.eclipse.jdt.client.event.ReparseOpenedFilesEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
@@ -41,7 +45,11 @@ import org.exoplatform.ide.client.framework.job.JobChangeEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.project.*;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
@@ -62,8 +70,8 @@ import java.util.Map;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  10:51:51 AM Mar 5, 2012 evgen $
  */
-public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpenedHandler, VfsChangedHandler,
-                                              ActiveProjectChangedHandler, FileSavedHandler, ProjectClosedHandler, PackageCreatedHandler {
+public class JavaClasspathResolver implements CleanProjectHandler, VfsChangedHandler, 
+        ProjectOpenedHandler, ProjectClosedHandler, FileSavedHandler, PackageCreatedHandler {
 
     private String vfsId;
 
@@ -88,7 +96,6 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
         IDE.addHandler(VfsChangedEvent.TYPE, this);
-        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
         IDE.addHandler(PackageCreatedEvent.TYPE, this);
         instance = this;
     }
@@ -214,11 +221,6 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
 
     }
 
-    @Override
-    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
-        project = event.getProject();
-    }
-
     private void resolveDependencies(ProjectModel... projects) {
         for (ProjectModel projectModel : projects) {
             //for each project create own update status handler and assign for each their project id
@@ -231,7 +233,6 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
         } else {
             resolveDependenciesRest(projects);
         }
-
     }
 
 
@@ -375,4 +376,5 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
             IDE.fireEvent(new JobChangeEvent(job));
         }
     }
+    
 }
