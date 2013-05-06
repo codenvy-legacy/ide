@@ -20,7 +20,6 @@ package com.codenvy.ide.websocket.rest.exceptions;
 
 import com.codenvy.ide.websocket.rest.ResponseMessage;
 
-
 /**
  * Thrown when there was a HTTP Status-Code 401 (Unauthorized) was received.
  *

@@ -87,19 +87,16 @@ public abstract class RequestCallback<T> implements ReplyHandler {
     /**
      * Perform actions when response message was received.
      *
-     * @param response
+     * @param message
      *         message
-     * @see com.codenvy.ide.client.framework.websocket.events.ReplyHandler#onReply(com.codenvy.ide.client.framework.websocket.Message)
      */
-    @Override
     public void onReply(Message message) {
         if (loader != null) {
             loader.hide();
         }
 
-        if (!(message instanceof ResponseMessage)) {
+        if (!(message instanceof ResponseMessage))
             throw new IllegalArgumentException("Invalid input message.");
-        }
 
         ResponseMessage response = (ResponseMessage)message;
 
@@ -136,6 +133,12 @@ public abstract class RequestCallback<T> implements ReplyHandler {
         }
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void onReply(String message) {
+
+    }
+
     /**
      * Is response successful?
      *
@@ -148,18 +151,14 @@ public abstract class RequestCallback<T> implements ReplyHandler {
             successCodes = DEFAULT_SUCCESS_CODES;
         }
 
-        for (Pair header : response.getHeaders()) {
+        for (Pair header : response.getHeaders())
             if (HTTPHeader.JAXRS_BODY_PROVIDED.equals(header.getName())
-                && "Authentication-required".equals(header.getValue())) {
+                && "Authentication-required".equals(header.getValue()))
                 return false;
-            }
-        }
 
-        for (int code : successCodes) {
-            if (response.getResponseCode() == code) {
+        for (int code : successCodes)
+            if (response.getResponseCode() == code)
                 return true;
-            }
-        }
 
         return false;
     }

@@ -25,7 +25,7 @@ package com.codenvy.ide.websocket;
  * @version $Id: WebSocketException.java Jul 12, 2012 2:44:19 PM azatsarynnyy $
  */
 @SuppressWarnings("serial")
-public class WebSocketException extends Exception {
+public class WebSocketException extends RuntimeException {
 
     public WebSocketException() {
         super();

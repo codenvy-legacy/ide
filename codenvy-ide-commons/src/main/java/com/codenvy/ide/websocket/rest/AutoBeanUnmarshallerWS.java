@@ -38,8 +38,7 @@ public class AutoBeanUnmarshallerWS<T> implements Unmarshallable<T> {
         this.bean = autoBean;
     }
 
-    /** @see com.codenvy.ide.client.framework.websocket.rest.Unmarshallable#unmarshal(com.codenvy.ide.client.framework.websocket.rest
-     * .ResponseMessage) */
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(ResponseMessage response) throws UnmarshallerException {
         if (response.getResponseCode() != HTTPStatus.NO_CONTENT && response.getBody() != null) {
@@ -48,7 +47,7 @@ public class AutoBeanUnmarshallerWS<T> implements Unmarshallable<T> {
         }
     }
 
-    /** @see com.codenvy.ide.client.framework.websocket.rest.Unmarshallable#getPayload() */
+    /** {@inheritDoc} */
     @Override
     public T getPayload() {
         return bean.as();
