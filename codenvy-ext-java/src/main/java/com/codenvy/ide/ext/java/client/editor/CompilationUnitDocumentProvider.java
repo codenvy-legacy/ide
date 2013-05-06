@@ -409,6 +409,7 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
             decorations.put("org.eclipse.jdt.ui.error", javaCss.overviewMarkError());
             decorations.put("org.eclipse.jdt.ui.warning", javaCss.overviewMarkWarning());
             decorations.put("org.eclipse.jdt.ui.info", javaCss.overviewMarkTask());
+            decorations.put("org.eclipse.ui.workbench.texteditor.task", javaCss.overviewMarkTask());
             return decorations;
         }
     }
