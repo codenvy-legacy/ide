@@ -20,19 +20,25 @@ package org.exoplatform.ide.vfs.impl.fs;
 
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 
 /**
  * Access Control List (ACL) contains set of permissionMap assigned to each user.
  * <p/>
- * NOTE: Implementation is not threadsafe and required external synchronization.
+ * NOTE: Implementation is not thread-safe and required external synchronization.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
@@ -55,7 +61,9 @@ public class AccessControlList {
     private static Map<String, Set<BasicPermissions>> copy(Map<String, Set<BasicPermissions>> source) {
         Map<String, Set<BasicPermissions>> copy = new HashMap<String, Set<BasicPermissions>>(source.size());
         for (Map.Entry<String, Set<BasicPermissions>> e : source.entrySet()) {
-            copy.put(e.getKey(), EnumSet.copyOf(e.getValue()));
+            if (!(e.getValue() == null || e.getValue().isEmpty())) {
+                copy.put(e.getKey(), EnumSet.copyOf(e.getValue()));
+            }
         }
         return copy;
     }
@@ -75,7 +83,6 @@ public class AccessControlList {
             for (BasicPermissions permission : e.getValue()) {
                 plainPermissions.add(permission.value());
             }
-
             acl.add(new AccessControlEntryImpl(e.getKey(), plainPermissions));
         }
         return acl;
@@ -85,33 +92,15 @@ public class AccessControlList {
         return copy(permissionMap);
     }
 
-    public boolean hasPermission(String userId, BasicPermissions permission) {
-        return hasPermission(userId, EnumSet.of(permission));
-    }
-
-    public boolean hasPermission(String userId, BasicPermissions permission1, BasicPermissions permission2) {
-        return hasPermission(userId, EnumSet.of(permission1, permission2));
-    }
-
-    public boolean hasPermission(String userId,
-                                 BasicPermissions permission1,
-                                 BasicPermissions permission2,
-                                 BasicPermissions permission3) {
-        return hasPermission(userId, EnumSet.of(permission1, permission2, permission3));
-    }
-
-    public boolean hasPermission(String userId, Set<BasicPermissions> permission) {
+    public Set<BasicPermissions> getPermissions(String userId) {
         if (permissionMap.isEmpty()) {
-            return true;
+            return null;
         }
-        final Set<BasicPermissions> anyUserPermissions = permissionMap.get(VirtualFileSystemInfo.ANY_PRINCIPAL);
-        if (anyUserPermissions != null
-            && (anyUserPermissions.contains(BasicPermissions.ALL) || anyUserPermissions.containsAll(permission))) {
-            return true;
+        Set<BasicPermissions> userPermissions = permissionMap.get(userId);
+        if (userPermissions == null) {
+            return null;
         }
-        final Set<BasicPermissions> userPermissions = permissionMap.get(userId);
-        return userPermissions != null
-               && (userPermissions.contains(BasicPermissions.ALL) || userPermissions.containsAll(permission));
+        return EnumSet.copyOf(userPermissions);
     }
 
     public void update(List<AccessControlEntry> acl, boolean override) {
@@ -148,12 +137,10 @@ public class AccessControlList {
         for (Map.Entry<String, Set<BasicPermissions>> entry : permissionMap.entrySet()) {
             String principal = entry.getKey();
             Set<BasicPermissions> permissions = entry.getValue();
-            if (permissions != null && permissions.size() > 0) {
-                output.writeUTF(principal);
-                output.writeInt(permissions.size());
-                for (BasicPermissions permission : permissions) {
-                    output.writeUTF(permission.value());
-                }
+            output.writeUTF(principal);
+            output.writeInt(permissions.size());
+            for (BasicPermissions permission : permissions) {
+                output.writeUTF(permission.value());
             }
         }
     }

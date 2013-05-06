@@ -161,10 +161,10 @@ final class Path {
     }
 
     private boolean needConvert() {
-        return '/' == java.io.File.separatorChar;
+        return '/' != java.io.File.separatorChar;
     }
 
-    String concat(char separator) {
+    private String concat(char separator) {
         StringBuilder builder = new StringBuilder();
         for (String element : elements) {
             builder.append(separator);

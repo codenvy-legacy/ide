@@ -34,27 +34,32 @@ import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ProjectProperties;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryServices;
 import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
+import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Presenter for managing CloudFondry services.
- *
+ * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 13, 2012 10:53:33 AM anya $
  */
-public class ManageServicesPresenter implements ManageServicesHandler, ViewClosedHandler,
-                                                ProvisionedServiceCreatedHandler {
+public class ManageServicesPresenter extends GitPresenter implements ManageServicesHandler, ViewClosedHandler,
+                                                         ProvisionedServiceCreatedHandler {
     interface Display extends IsView {
         HasClickHandlers getAddButton();
 
@@ -74,48 +79,50 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
 
     }
 
-    private Display display;
+    private Display                 display;
 
     /** Application, for which need to bind service. */
     private CloudFoundryApplication application;
 
-    /** Selected provisioned service. */
-    private ProvisionedService selectedService;
+    private PAAS_PROVIDER           paasProvider;
 
     /** Selected provisioned service. */
-    private String selectedBoundedService;
+    private ProvisionedService      selectedService;
 
-    private LoggedInHandler deleteServiceLoggedInHandler = new LoggedInHandler() {
+    /** Selected provisioned service. */
+    private String                  selectedBoundedService;
 
-        @Override
-        public void onLoggedIn() {
-            deleteService(selectedService);
-        }
-    };
+    private LoggedInHandler         deleteServiceLoggedInHandler      = new LoggedInHandler() {
 
-    private LoggedInHandler bindServiceLoggedInHandler = new LoggedInHandler() {
+                                                                          @Override
+                                                                          public void onLoggedIn(String server) {
+                                                                              deleteService(selectedService);
+                                                                          }
+                                                                      };
 
-        @Override
-        public void onLoggedIn() {
-            bindService(selectedService);
-        }
-    };
+    private LoggedInHandler         bindServiceLoggedInHandler        = new LoggedInHandler() {
 
-    private LoggedInHandler unBindServiceLoggedInHandler = new LoggedInHandler() {
+                                                                          @Override
+                                                                          public void onLoggedIn(String server) {
+                                                                              bindService(selectedService);
+                                                                          }
+                                                                      };
 
-        @Override
-        public void onLoggedIn() {
-            unbindService(selectedBoundedService);
-        }
-    };
+    private LoggedInHandler         unBindServiceLoggedInHandler      = new LoggedInHandler() {
 
-    private LoggedInHandler getApplicationInfoLoggedInHandler = new LoggedInHandler() {
+                                                                          @Override
+                                                                          public void onLoggedIn(String server) {
+                                                                              unbindService(selectedBoundedService);
+                                                                          }
+                                                                      };
 
-        @Override
-        public void onLoggedIn() {
-            getApplicationInfo();
-        }
-    };
+    private LoggedInHandler         getApplicationInfoLoggedInHandler = new LoggedInHandler() {
+
+                                                                          @Override
+                                                                          public void onLoggedIn(String server) {
+                                                                              getApplicationInfo();
+                                                                          }
+                                                                      };
 
     public ManageServicesPresenter() {
         IDE.addHandler(ManageServicesEvent.TYPE, this);
@@ -178,11 +185,14 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
         });
     }
 
-    /** @see org.exoplatform.ide.extension.cloudfoundry.client.services.ManageServicesHandler#onManageServices(org.exoplatform.ide
-     * .extension.cloudfoundry.client.services.ManageServicesEvent) */
+    /**
+     * @see org.exoplatform.ide.extension.cloudfoundry.client.services.ManageServicesHandler#onManageServices(org.exoplatform.ide
+     *      .extension.cloudfoundry.client.services.ManageServicesEvent)
+     */
     @Override
     public void onManageServices(ManageServicesEvent event) {
         this.application = event.getApplication();
+        this.paasProvider = event.getPaasProvider();
         if (display == null) {
             display = GWT.create(Display.class);
             IDE.getInstance().openView(display.asView());
@@ -192,8 +202,10 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
         getApplicationInfo();
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     *      .event.ViewClosedEvent)
+     */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
@@ -204,24 +216,26 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
     /** Get the list of CloudFoundry services (system and provisioned). */
     private void getServices() {
         try {
-            CloudFoundryClientService.getInstance().services(null,
-                                                             new AsyncRequestCallback<CloudfoundryServices>(
-                                                                     new CloudFoundryServicesUnmarshaller()) {
+            CloudFoundryClientService.getInstance()
+                                     .services(null, paasProvider,
+                                               new AsyncRequestCallback<CloudfoundryServices>(
+                                                                                              new CloudFoundryServicesUnmarshaller()) {
 
-                                                                 @Override
-                                                                 protected void onSuccess(CloudfoundryServices result) {
-                                                                     display.getProvisionedServicesGrid()
-                                                                            .setValue(Arrays.asList(result.getProvisioned()));
-                                                                     display.enableDeleteButton(false);
-                                                                 }
+                                                   @Override
+                                                   protected void onSuccess(CloudfoundryServices result) {
+                                                       display.getProvisionedServicesGrid()
+                                                              .setValue(Arrays.asList(result.getProvisioned()));
+                                                       display.enableDeleteButton(false);
+                                                   }
 
-                                                                 @Override
-                                                                 protected void onFailure(Throwable exception) {
-                                                                     Dialogs.getInstance().showError(
-                                                                             CloudFoundryExtension.LOCALIZATION_CONSTANT
-                                                                                                  .retrieveServicesFailed());
-                                                                 }
-                                                             });
+                                                   @Override
+                                                   protected void onFailure(Throwable exception) {
+                                                       Dialogs.getInstance()
+                                                              .showError(
+                                                                         CloudFoundryExtension.LOCALIZATION_CONSTANT
+                                                                                                                    .retrieveServicesFailed());
+                                                   }
+                                               });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
@@ -229,29 +243,31 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
 
     /** Perform adding new provisioned service. */
     private void doAdd() {
-        IDE.fireEvent(new CreateServiceEvent(this));
+        IDE.fireEvent(new CreateServiceEvent(this, paasProvider));
     }
 
     /**
      * Delete provisioned service.
-     *
-     * @param service
-     *         service to delete
+     * 
+     * @param service service to delete
      */
     private void deleteService(final ProvisionedService service) {
+        ProjectModel project = getSelectedProject();
+        final String server = project.getPropertyValue("vmc-target");
         try {
-            CloudFoundryClientService.getInstance().deleteService(null, service.getName(),
-                                                                  new CloudFoundryAsyncRequestCallback<Object>(null,
-                                                                                                               deleteServiceLoggedInHandler,
-                                                                                                               null) {
-                                                                      @Override
-                                                                      protected void onSuccess(Object result) {
-                                                                          getServices();
-                                                                          if (application.getServices().contains(service.getName())) {
-                                                                              getApplicationInfo();
-                                                                          }
-                                                                      }
-                                                                  });
+            CloudFoundryClientService.getInstance()
+                                     .deleteService(server, service.getName(), paasProvider,
+                                                    new CloudFoundryAsyncRequestCallback<Object>(null,
+                                                                                                 deleteServiceLoggedInHandler,
+                                                                                                 null, paasProvider) {
+                                                        @Override
+                                                        protected void onSuccess(Object result) {
+                                                            getServices();
+                                                            if (application.getServices().contains(service.getName())) {
+                                                                getApplicationInfo();
+                                                            }
+                                                        }
+                                                    });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
@@ -259,48 +275,31 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
 
     /**
      * Bind service to application.
-     *
-     * @param service
-     *         service to bind
+     * 
+     * @param service service to bind
      */
     private void bindService(final ProvisionedService service) {
         try {
-            CloudFoundryClientService.getInstance().bindService(null, service.getName(), application.getName(), null,
-                                                                null, new CloudFoundryAsyncRequestCallback<Object>(null,
+            CloudFoundryClientService.getInstance().bindService(null, service.getName(), application.getName(), vfs.getId(),
+                                                                getSelectedProject().getId(),
+                                                                new CloudFoundryAsyncRequestCallback<Object>(null,
+                                                                                                             bindServiceLoggedInHandler,
+                                                                                                             null, paasProvider) {
 
+                                                                    @Override
+                                                                    protected void onSuccess(Object result) {
+                                                                        getApplicationInfo();
+                                                                    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                                                                                   bindServiceLoggedInHandler,
-                                                                                                                   null) {
-
-                @Override
-                protected void onSuccess(Object result) {
-                    getApplicationInfo();
-                }
-
-                /**
-                 * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback#onFailure(java.lang.Throwable)
-                 */
-                @Override
-                protected void onFailure(Throwable exception) {
-                    super.onFailure(exception);
-                    getApplicationInfo();
-                }
-            });
+                                                                    /**
+                                                                     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback#onFailure(java.lang.Throwable)
+                                                                     */
+                                                                    @Override
+                                                                    protected void onFailure(Throwable exception) {
+                                                                        super.onFailure(exception);
+                                                                        getApplicationInfo();
+                                                                    }
+                                                                });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
@@ -308,21 +307,22 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
 
     /**
      * Unbind service from application.
-     *
+     * 
      * @param service
      */
     private void unbindService(String service) {
         try {
-            CloudFoundryClientService.getInstance().unbindService(null, service, application.getName(), null, null,
-                                                                  new CloudFoundryAsyncRequestCallback<Object>(null,
-                                                                                                               unBindServiceLoggedInHandler,
-                                                                                                               null) {
+            CloudFoundryClientService.getInstance()
+                                     .unbindService(null, service, application.getName(), vfs.getId(), getSelectedProject().getId(),
+                                                    new CloudFoundryAsyncRequestCallback<Object>(null,
+                                                                                                 unBindServiceLoggedInHandler,
+                                                                                                 null, paasProvider) {
 
-                                                                      @Override
-                                                                      protected void onSuccess(Object result) {
-                                                                          getApplicationInfo();
-                                                                      }
-                                                                  });
+                                                        @Override
+                                                        protected void onSuccess(Object result) {
+                                                            getApplicationInfo();
+                                                        }
+                                                    });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
@@ -330,7 +330,7 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
 
     /**
      * Ask user before deleting service.
-     *
+     * 
      * @param service
      */
     private void askBeforeDelete(final ProvisionedService service) {
@@ -355,26 +355,30 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
 
     private void getApplicationInfo() {
         AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-                CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
+                                                                    CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
 
         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-                new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+                                                                     new AutoBeanUnmarshaller<CloudFoundryApplication>(
+                                                                                                                       cloudFoundryApplication);
         try {
-            CloudFoundryClientService.getInstance().getApplicationInfo(
-                    null,
-                    null,
-                    application.getName(),
-                    null,
-                    new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
-                                                                                  getApplicationInfoLoggedInHandler, null) {
+            CloudFoundryClientService.getInstance()
+                                     .getApplicationInfo(
+                                                         vfs.getId(),
+                                                         getSelectedProject().getId(),
+                                                         application.getName(),
+                                                         null,
+                                                         new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
+                                                                                                                       unmarshaller,
+                                                                                                                       getApplicationInfoLoggedInHandler,
+                                                                                                                       null, paasProvider) {
 
-                        @Override
-                        protected void onSuccess(CloudFoundryApplication result) {
-                            application = result;
-                            getServices();
-                            display.getBoundedServicesGrid().setValue(result.getServices());
-                        }
-                    });
+                                                             @Override
+                                                             protected void onSuccess(CloudFoundryApplication result) {
+                                                                 application = result;
+                                                                 getServices();
+                                                                 display.getBoundedServicesGrid().setValue(result.getServices());
+                                                             }
+                                                         });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }

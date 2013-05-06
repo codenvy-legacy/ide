@@ -67,7 +67,7 @@
             <g:FlowPanel ui:field="cloudFoundryPanel" stylePrimaryName="{style.innerBox}">
                 <g:FlowPanel styleName="{style.title}">
                     <g:Image resource="{resource.cloudFoundryLogo}" styleName="{style.image}"></g:Image>
-                    <g:Label text="Deploy project to Cloud Foundry" styleName="{style.label}"></g:Label>
+                    <g:Label text="Deploy project to CloudFoundry" styleName="{style.label}"></g:Label>
                 </g:FlowPanel>
                 <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
                     <g:west size="115">

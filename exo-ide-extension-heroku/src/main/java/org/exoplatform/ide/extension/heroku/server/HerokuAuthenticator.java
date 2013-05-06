@@ -18,9 +18,10 @@
  */
 package org.exoplatform.ide.extension.heroku.server;
 
-import org.exoplatform.ide.commons.JsonHelper;
-import org.exoplatform.ide.commons.JsonNameConventions;
-import org.exoplatform.ide.commons.JsonParseException;
+import com.codenvy.commons.json.JsonHelper;
+import com.codenvy.commons.json.JsonNameConventions;
+import com.codenvy.commons.json.JsonParseException;
+
 import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.security.paas.Credential;
 

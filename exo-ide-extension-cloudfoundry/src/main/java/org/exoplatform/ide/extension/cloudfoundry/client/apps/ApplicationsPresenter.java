@@ -37,6 +37,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.ApplicationDeletedEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.ApplicationDeletedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationEvent;
@@ -52,6 +53,8 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER.CLOUD_FOUNDRY;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -91,9 +94,8 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
 
     private String currentServer;
 
-    /**
-     *
-     */
+    private PAAS_PROVIDER paasProvider = null;
+
     public ApplicationsPresenter() {
         IDE.addHandler(ShowApplicationsEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -120,7 +122,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
 
             @Override
             public void onSelection(SelectionEvent<CloudFoundryApplication> event) {
-                IDE.fireEvent(new StopApplicationEvent(event.getSelectedItem().getName()));
+                IDE.fireEvent(new StopApplicationEvent(event.getSelectedItem().getName(), currentServer, paasProvider));
             }
         });
 
@@ -128,7 +130,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
 
             @Override
             public void onSelection(SelectionEvent<CloudFoundryApplication> event) {
-                IDE.fireEvent(new StartApplicationEvent(event.getSelectedItem().getName()));
+                IDE.fireEvent(new StartApplicationEvent(event.getSelectedItem().getName(), currentServer, paasProvider));
             }
         });
 
@@ -136,7 +138,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
 
             @Override
             public void onSelection(SelectionEvent<CloudFoundryApplication> event) {
-                IDE.fireEvent(new RestartApplicationEvent(event.getSelectedItem().getName()));
+                IDE.fireEvent(new RestartApplicationEvent(event.getSelectedItem().getName(), currentServer, paasProvider));
             }
         });
 
@@ -144,7 +146,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
 
             @Override
             public void onSelection(SelectionEvent<CloudFoundryApplication> event) {
-                IDE.fireEvent(new DeleteApplicationEvent(event.getSelectedItem().getName(), currentServer));
+                IDE.fireEvent(new DeleteApplicationEvent(event.getSelectedItem().getName(), currentServer, paasProvider));
             }
         });
     }
@@ -153,7 +155,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
      * .extension.cloudfoundry.client.apps.ShowApplicationsEvent) */
     @Override
     public void onShowApplications(ShowApplicationsEvent event) {
-
+        this.paasProvider = event.getPaasProvider();
         checkLogginedToServer();
     }
 
@@ -170,16 +172,15 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
     private void checkLogginedToServer() {
         try {
             CloudFoundryClientService.getInstance().getTargets(
-                    new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>())) {
+                    paasProvider, new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>())) {
                         @Override
                         protected void onSuccess(List<String> result) {
-                            if (result.isEmpty()) {
-                                servers = new ArrayList<String>();
-                                servers.add(CloudFoundryExtension.DEFAULT_SERVER);
-                            } else {
+                            if (!result.isEmpty()) {
                                 servers = result;
+                            } else if (paasProvider == CLOUD_FOUNDRY) {
+                                servers = new ArrayList<String>();
+                                servers.add(CloudFoundryExtension.DEFAULT_CF_SERVER);
                             }
-                            // open view
                             openView();
                         }
 
@@ -211,14 +212,14 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
         try {
             CloudFoundryClientService.getInstance().getApplicationList(
                     currentServer,
-                    new CloudFoundryAsyncRequestCallback<List<CloudFoundryApplication>>(new ApplicationListUnmarshaller(
+                    paasProvider, new CloudFoundryAsyncRequestCallback<List<CloudFoundryApplication>>(new ApplicationListUnmarshaller(
                             new ArrayList<CloudFoundryApplication>()), new LoggedInHandler()//
                     {
                         @Override
-                        public void onLoggedIn() {
+                        public void onLoggedIn(String server) {
                             getApplicationList();
                         }
-                    }, null, currentServer) {
+                    }, null, currentServer, paasProvider) {
 
                         @Override
                         protected void onSuccess(List<CloudFoundryApplication> result) {
@@ -239,7 +240,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
     private void getServers() {
         try {
             CloudFoundryClientService.getInstance().getTargets(
-                    new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>())) {
+                    paasProvider, new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>())) {
                         @Override
                         protected void onSuccess(List<String> result) {
                             servers = result;

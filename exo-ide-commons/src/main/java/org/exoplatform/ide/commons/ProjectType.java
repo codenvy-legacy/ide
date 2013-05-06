@@ -31,7 +31,8 @@ public enum ProjectType {
     RUBY_ON_RAILS("Rails"), //
     SPRING("Spring"), //
     MULTI_MODULE("Maven Multi-module"),
-    DEFAULT("default");
+    DEFAULT("default"),
+    NODE_JS("nodejs");
 
     private final String value;
 

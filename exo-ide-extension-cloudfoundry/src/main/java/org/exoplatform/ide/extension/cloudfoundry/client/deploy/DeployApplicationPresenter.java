@@ -47,7 +47,12 @@ import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
-import org.exoplatform.ide.extension.cloudfoundry.client.*;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryRESTfulRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
@@ -65,6 +70,8 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER.CLOUD_FOUNDRY;
+
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeployApplicationPresenter.java Dec 2, 2011 10:17:23 AM vereshchaka $
@@ -79,7 +86,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
 
         /**
          * Set the list of servers to ServerSelectField.
-         *
+         * 
          * @param servers
          */
         void setServerValues(String[] servers);
@@ -90,24 +97,24 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
 
     private static final CloudFoundryLocalizationConstant lb = CloudFoundryExtension.LOCALIZATION_CONSTANT;
 
-    private VirtualFileSystemInfo vfs;
+    private VirtualFileSystemInfo                         vfs;
 
-    private Display display;
+    private Display                                       display;
 
-    private String server;
+    private String                                        server;
 
-    private String name;
+    private String                                        name;
 
-    private String url;
+    private String                                        url;
 
     /** Public url to war file of application. */
-    private String warUrl;
+    private String                                        warUrl;
 
-    private String projectName;
+    private String                                        projectName;
 
-    private ProjectModel project;
+    private ProjectModel                                  project;
 
-    private DeployResultHandler deployResultHandler;
+    private DeployResultHandler                           deployResultHandler;
 
     public DeployApplicationPresenter() {
         IDE.addHandler(VfsChangedEvent.TYPE, this);
@@ -138,7 +145,10 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
                 String target = display.getServerField().getValue();
                 String sufix = target.substring(target.indexOf("."));
                 String oldUrl = display.getUrlField().getValue();
-                String prefix = "<name>";
+                String prefix = "";
+                if (display.getNameField().getValue() != null) {
+                    prefix = display.getNameField().getValue();
+                }
                 if (!oldUrl.isEmpty() && oldUrl.contains(".")) {
                     prefix = oldUrl.substring(0, oldUrl.indexOf("."));
                 }
@@ -172,47 +182,50 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
     private void createApplication() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
-            public void onLoggedIn() {
+            public void onLoggedIn(String server) {
                 createApplication();
             }
         };
         JobManager.get().showJobSeparated();
         AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-                CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
+                                                                    CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
         AutoBeanUnmarshallerWS<CloudFoundryApplication> unmarshaller =
-                new AutoBeanUnmarshallerWS<CloudFoundryApplication>(cloudFoundryApplication);
+                                                                       new AutoBeanUnmarshallerWS<CloudFoundryApplication>(
+                                                                                                                           cloudFoundryApplication);
 
         try {
             // Application will be started after creation (IDE-1618)
             boolean noStart = false;
             CloudFoundryClientService.getInstance()
                                      .createWS(
-                                             server,
-                                             name,
-                                             null,
-                                             url,
-                                             0,
-                                             0,
-                                             noStart,
-                                             vfs.getId(),
-                                             project.getId(),
-                                             warUrl,
-                                             new CloudFoundryRESTfulRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler,
-                                                                                                             null,
-                                                                                                             server) {
-                                                 @Override
-                                                 protected void onSuccess(CloudFoundryApplication result) {
-                                                     onAppCreatedSuccess(result);
-                                                 }
+                                               server,
+                                               name,
+                                               null,
+                                               url,
+                                               0,
+                                               0,
+                                               noStart,
+                                               vfs.getId(),
+                                               project.getId(),
+                                               warUrl,
+                                               CLOUD_FOUNDRY,
+                                               new CloudFoundryRESTfulRequestCallback<CloudFoundryApplication>(unmarshaller,
+                                                                                                               loggedInHandler,
+                                                                                                               null,
+                                                                                                               server, CLOUD_FOUNDRY) {
+                                                   @Override
+                                                   protected void onSuccess(CloudFoundryApplication result) {
+                                                       onAppCreatedSuccess(result);
+                                                   }
 
-                                                 @Override
-                                                 protected void onFailure(Throwable exception) {
-                                                     deployResultHandler.onDeployFinished(false);
-                                                     IDE.fireEvent(
-                                                             new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
-                                                     super.onFailure(exception);
-                                                 }
-                                             });
+                                                   @Override
+                                                   protected void onFailure(Throwable exception) {
+                                                       deployResultHandler.onDeployFinished(false);
+                                                       IDE.fireEvent(
+                                                          new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+                                                       super.onFailure(exception);
+                                                   }
+                                               });
         } catch (WebSocketException e) {
             createApplicationREST(loggedInHandler);
         }
@@ -220,24 +233,25 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
 
     /**
      * Create application on CloudFoundry by sending request over HTTP.
-     *
-     * @param loggedInHandler
-     *         handler that should be called after success login
+     * 
+     * @param loggedInHandler handler that should be called after success login
      */
     private void createApplicationREST(LoggedInHandler loggedInHandler) {
         AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-                CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
+                                                                    CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-                new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+                                                                     new AutoBeanUnmarshaller<CloudFoundryApplication>(
+                                                                                                                       cloudFoundryApplication);
 
         try {
             // Application will be started after creation (IDE-1618)
             boolean noStart = false;
             CloudFoundryClientService.getInstance().create(server, name, null, url, 0, 0, noStart, vfs.getId(),
-                                                           project.getId(), warUrl,
+                                                           project.getId(), warUrl, CLOUD_FOUNDRY,
                                                            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
                                                                                                                          loggedInHandler,
-                                                                                                                         null, server) {
+                                                                                                                         null, server,
+                                                                                                                         CLOUD_FOUNDRY) {
                                                                @Override
                                                                protected void onSuccess(CloudFoundryApplication result) {
                                                                    onAppCreatedSuccess(result);
@@ -259,7 +273,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
 
     /**
      * Performs action when application successfully created.
-     *
+     * 
      * @param app
      * @link CloudFoundryApplication} which is created
      */
@@ -280,9 +294,8 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
 
     /**
      * Returns application URLs as string.
-     *
-     * @param application
-     *         {@link CloudFoundryApplication Cloud Foundry application}
+     * 
+     * @param application {@link CloudFoundryApplication Cloud Foundry application}
      * @return application URLs
      */
     private String getAppUrlsAsString(CloudFoundryApplication application) {
@@ -304,40 +317,44 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
     private void getServers() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
-            public void onLoggedIn() {
+            public void onLoggedIn(String server) {
                 getServers();
             }
         };
 
         try {
-            CloudFoundryClientService.getInstance().getTargets(
-                    new CloudFoundryAsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>()), loggedInHandler,
-                                                                       null) {
-                        @Override
-                        protected void onSuccess(List<String> result) {
-                            if (result.isEmpty()) {
-                                display.setServerValues(new String[]{CloudFoundryExtension.DEFAULT_SERVER});
-                                display.getServerField().setValue(CloudFoundryExtension.DEFAULT_SERVER);
-                            } else {
-                                String[] servers = result.toArray(new String[result.size()]);
-                                display.setServerValues(servers);
-                                display.getServerField().setValue(servers[0]);
-                            }
-                            display.getNameField().setValue(projectName);
-                            // don't forget to init values, that are stored, when
-                            // values in form fields are changed.
-                            name = projectName;
-                            server = display.getServerField().getValue();
-                            String urlSufix = server.substring(server.indexOf("."));
-                            display.getUrlField().setValue(name + urlSufix);
-                            url = display.getUrlField().getValue();
-                        }
+            CloudFoundryClientService.getInstance()
+                                     .getTargets(PAAS_PROVIDER.CLOUD_FOUNDRY,
+                                                 new CloudFoundryAsyncRequestCallback<List<String>>(
+                                                                                                    new TargetsUnmarshaller(
+                                                                                                                            new ArrayList<String>()),
+                                                                                                    loggedInHandler,
+                                                                                                    null, CLOUD_FOUNDRY) {
+                                                     @Override
+                                                     protected void onSuccess(List<String> result) {
+                                                         if (!result.isEmpty()) {
+                                                             String[] servers = result.toArray(new String[result.size()]);
+                                                             display.setServerValues(servers);
+                                                             display.getServerField().setValue(servers[0]);
+                                                         } else {
+                                                             display.setServerValues(new String[]{CloudFoundryExtension.DEFAULT_CF_SERVER});
+                                                             display.getServerField().setValue(CloudFoundryExtension.DEFAULT_CF_SERVER);
+                                                         }
+                                                         display.getNameField().setValue(projectName);
+                                                         // don't forget to init values, that are stored, when
+                                                         // values in form fields are changed
+                                                         name = projectName;
+                                                         server = display.getServerField().getValue();
+                                                         String urlSufix = server.substring(server.indexOf("."));
+                                                         display.getUrlField().setValue(name + urlSufix);
+                                                         url = display.getUrlField().getValue();
+                                                     }
 
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            IDE.fireEvent(new ExceptionThrownEvent(exception));
-                        }
-                    });
+                                                     @Override
+                                                     protected void onFailure(Throwable exception) {
+                                                         IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                     }
+                                                 });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
@@ -346,16 +363,26 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
     public void performValidation() {
         LoggedInHandler validateHandler = new LoggedInHandler() {
             @Override
-            public void onLoggedIn() {
+            public void onLoggedIn(String server) {
                 performValidation();
             }
         };
 
         try {
-            CloudFoundryClientService.getInstance().validateAction("create", server, name, null, url, vfs.getId(), null,
-                                                                   0, 0, true,
-                                                                   new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null,
-                                                                                                                server) {
+            CloudFoundryClientService.getInstance().validateAction("create",
+                                                                   server,
+                                                                   name,
+                                                                   null,
+                                                                   url,
+                                                                   vfs.getId(),
+                                                                   null,
+                                                                   CLOUD_FOUNDRY,
+                                                                   0,
+                                                                   0,
+                                                                   true,
+                                                                   new CloudFoundryAsyncRequestCallback<String>(null, validateHandler,
+                                                                                                                null,
+                                                                                                                server, CLOUD_FOUNDRY) {
                                                                        @Override
                                                                        protected void onSuccess(String result) {
                                                                            beforeDeploy();
@@ -384,29 +411,29 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
 
     private void beforeDeploy() {
         try {
-            VirtualFileSystem.getInstance().getChildren(project,
-                                                        new AsyncRequestCallback<List<Item>>(
-                                                                new ChildrenUnmarshaller(new ArrayList<Item>())) {
+            VirtualFileSystem.getInstance()
+                             .getChildren(project,
+                                          new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>())) {
 
-                                                            @Override
-                                                            protected void onSuccess(List<Item> result) {
-                                                                project.getChildren().setItems(result);
-                                                                for (Item i : result) {
-                                                                    if (i.getItemType() == ItemType.FILE && "pom.xml".equals(i.getName())) {
-                                                                        buildApplication();
-                                                                        return;
-                                                                    }
-                                                                }
-                                                                createApplication();
-                                                            }
+                                              @Override
+                                              protected void onSuccess(List<Item> result) {
+                                                  project.getChildren().setItems(result);
+                                                  for (Item i : result) {
+                                                      if (i.getItemType() == ItemType.FILE && "pom.xml".equals(i.getName())) {
+                                                          buildApplication();
+                                                          return;
+                                                      }
+                                                  }
+                                                  createApplication();
+                                              }
 
-                                                            @Override
-                                                            protected void onFailure(Throwable exception) {
-                                                                IDE.fireEvent(new ExceptionThrownEvent(exception,
-                                                                                                       "Can't receive project children "
-                                                                                                       + project.getName()));
-                                                            }
-                                                        });
+                                              @Override
+                                              protected void onFailure(Throwable exception) {
+                                                  IDE.fireEvent(new ExceptionThrownEvent(exception,
+                                                                                         "Can't receive project children "
+                                                                                             + project.getName()));
+                                              }
+                                          });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
@@ -428,25 +455,25 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
         loader.setMessage(lb.creatingProject());
         loader.show();
         try {
-            TemplateService.getInstance().createProjectFromTemplate(vfs.getId(), vfs.getRoot().getId(), projectName,
-                                                                    projectTemplate.getName(),
-                                                                    new AsyncRequestCallback<ProjectModel>(
-                                                                            new ProjectUnmarshaller(new ProjectModel())) {
+            TemplateService.getInstance()
+                           .createProjectFromTemplate(vfs.getId(), vfs.getRoot().getId(), projectName,
+                                                      projectTemplate.getName(),
+                                                      new AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(new ProjectModel())) {
 
-                                                                        @Override
-                                                                        protected void onSuccess(ProjectModel result) {
-                                                                            loader.hide();
-                                                                            project = result;
-                                                                            deployResultHandler.onProjectCreated(project);
-                                                                            beforeDeploy();
-                                                                        }
+                                                          @Override
+                                                          protected void onSuccess(ProjectModel result) {
+                                                              loader.hide();
+                                                              project = result;
+                                                              deployResultHandler.onProjectCreated(project);
+                                                              beforeDeploy();
+                                                          }
 
-                                                                        @Override
-                                                                        protected void onFailure(Throwable exception) {
-                                                                            loader.hide();
-                                                                            IDE.fireEvent(new ExceptionThrownEvent(exception));
-                                                                        }
-                                                                    });
+                                                          @Override
+                                                          protected void onFailure(Throwable exception) {
+                                                              loader.hide();
+                                                              IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                          }
+                                                      });
         } catch (RequestException e) {
             loader.hide();
             IDE.fireEvent(new ExceptionThrownEvent(e));
@@ -482,32 +509,33 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
         display.getNameField().setValue(projectName);
 
         try {
-            TemplateService.getInstance().createProjectFromTemplate(vfs.getId(), vfs.getRoot().getId(), projectName,
-                                                                    projectTemplate.getName(),
-                                                                    new AsyncRequestCallback<ProjectModel>(
-                                                                            new ProjectUnmarshaller(new ProjectModel())) {
+            TemplateService.getInstance()
+                           .createProjectFromTemplate(vfs.getId(), vfs.getRoot().getId(), projectName,
+                                                      projectTemplate.getName(),
+                                                      new AsyncRequestCallback<ProjectModel>(
+                                                                                             new ProjectUnmarshaller(new ProjectModel())) {
 
-                                                                        @Override
-                                                                        protected void onSuccess(ProjectModel result) {
-                                                                            getServers();
-                                                                            project = result;
-                                                                            deployResultHandler.onProjectCreated(project);
-                                                                            Scheduler.get()
-                                                                                     .scheduleDeferred(new Scheduler.ScheduledCommand() {
+                                                          @Override
+                                                          protected void onSuccess(ProjectModel result) {
+                                                              getServers();
+                                                              project = result;
+                                                              deployResultHandler.onProjectCreated(project);
+                                                              Scheduler.get()
+                                                                       .scheduleDeferred(new Scheduler.ScheduledCommand() {
 
 
-                                                                                         @Override
-                                                                                         public void execute() {
-                                                                                             beforeDeploy();
-                                                                                         }
-                                                                                     });
-                                                                        }
+                                                                           @Override
+                                                                           public void execute() {
+                                                                               beforeDeploy();
+                                                                           }
+                                                                       });
+                                                          }
 
-                                                                        @Override
-                                                                        protected void onFailure(Throwable exception) {
-                                                                            IDE.fireEvent(new ExceptionThrownEvent(exception));
-                                                                        }
-                                                                    });
+                                                          @Override
+                                                          protected void onFailure(Throwable exception) {
+                                                              IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                          }
+                                                      });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }

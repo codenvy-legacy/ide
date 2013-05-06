@@ -136,7 +136,7 @@ public class AddCartridgePresenter implements ViewClosedHandler, AddCartridgeHan
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    Dialogs.getInstance().showError("Error cartridge adding.\nReason: " + exception.getMessage());
+                    Dialogs.getInstance().showError("Error cartridge adding.\nOpenShift response: " + exception.getMessage());
                 }
             });
         } catch (RequestException e) {

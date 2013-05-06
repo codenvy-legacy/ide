@@ -56,7 +56,9 @@ public class UploadFileView extends ViewImpl implements
 
     private static final String ID = "ideUploadForm";
 
-    private static final String TITLE = IDE.UPLOAD_CONSTANT.uploadFileTitle();
+    private static final String TITLE_UPLOAD = IDE.UPLOAD_CONSTANT.uploadFileTitle();
+
+    private static final String TITLE_UPLOAD_AND_OPEN = IDE.UPLOAD_CONSTANT.openLocalFileTitle();
 
     private static UploadFileViewUiBinder uiBinder = GWT.create(UploadFileViewUiBinder.class);
 
@@ -88,7 +90,9 @@ public class UploadFileView extends ViewImpl implements
     private Hidden overwriteHiddenField;
 
     public UploadFileView() {
-        super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.upload()), WIDTH, HEIGHT, false);
+        super(ID, "modal", UploadFilePresenter.openAfterUpload ? TITLE_UPLOAD_AND_OPEN : TITLE_UPLOAD,
+              UploadFilePresenter.openAfterUpload ? new Image(IDEImageBundle.INSTANCE.openLocalFile())
+                                                  : new Image(IDEImageBundle.INSTANCE.upload()), WIDTH, HEIGHT, false);
         setCloseOnEscape(true);
         add(uiBinder.createAndBindUi(this));
 

@@ -16,27 +16,32 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.commons;
+package com.codenvy.ide.commons;
 
-import org.everrest.core.impl.provider.json.JsonException;
-import org.everrest.core.impl.provider.json.JsonWriter;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicLong;
 
-import java.io.Writer;
+/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+public class NamedThreadFactory implements ThreadFactory {
+    private static final AtomicLong threadPoolNumGen = new AtomicLong();
 
-/**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
- */
-public class NameConventionJsonWriter extends JsonWriter {
-    private final JsonNameConvention nameConvention;
+    private final String  namePrefix;
+    private final boolean daemon;
 
-    public NameConventionJsonWriter(Writer writer, JsonNameConvention nameConvention) {
-        super(writer);
-        this.nameConvention = nameConvention;
+    public NamedThreadFactory(String namePrefix, boolean daemon) {
+        if (namePrefix == null) {
+            throw new IllegalArgumentException();
+        }
+        this.namePrefix = namePrefix;
+        this.daemon = daemon;
     }
 
     @Override
-    public void writeKey(String key) throws JsonException {
-        super.writeKey(nameConvention.toJsonName(key));
+    public Thread newThread(Runnable r) {
+        final Thread t = new Thread(r, namePrefix + threadPoolNumGen.getAndIncrement());
+        if (daemon) {
+            t.setDaemon(true);
+        }
+        return t;
     }
 }

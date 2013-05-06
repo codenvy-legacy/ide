@@ -22,32 +22,34 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginEvent;
+
+import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER.WEB_FABRIC;
 
 /**
  * Control for switching between accounts.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Aug 16, 2011 12:54:05 PM anya $
+ * @version $Id: Aug 16, 2011 12:54:05 PM anya $
  */
 public class SwitchAccountControl extends AbstractCloudFoundryControl {
 
-    private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.switchAccountControlId();
+    private static final String CF_ID  = CloudFoundryExtension.LOCALIZATION_CONSTANT.switchAccountControlId();
 
-    private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.switchAccountControlTitle();
+    private static final String WF_ID  = CloudFoundryExtension.LOCALIZATION_CONSTANT.switchTier3WebFabricAccountControlId();
+
+    private static final String TITLE  = CloudFoundryExtension.LOCALIZATION_CONSTANT.switchAccountControlTitle();
 
     private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.switchAccountControlPrompt();
 
-    /**
-     *
-     */
-    public SwitchAccountControl() {
-        super(ID);
+    public SwitchAccountControl(PAAS_PROVIDER paasProvider) {
+        super(paasProvider == WEB_FABRIC ? WF_ID : CF_ID);
         setTitle(TITLE);
         setPrompt(PROMPT);
         setImages(CloudFoundryClientBundle.INSTANCE.switchAccount(),
                   CloudFoundryClientBundle.INSTANCE.switchAccountDisabled());
-        setEvent(new LoginEvent(null, null));
+        setEvent(new LoginEvent(paasProvider));
     }
 
     @Override

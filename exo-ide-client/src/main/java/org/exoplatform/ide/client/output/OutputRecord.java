@@ -40,7 +40,7 @@ public class OutputRecord extends HTML implements MouseOutHandler, MouseOverHand
 
     private static final String INFO_COLOR = "#007700";
 
-    private static final String GIT_COLOR = "#A76531";
+    private static final String GIT_COLOR = "#000000";
 
     private static final String WARNING_COLOR = "#AA0077";
 

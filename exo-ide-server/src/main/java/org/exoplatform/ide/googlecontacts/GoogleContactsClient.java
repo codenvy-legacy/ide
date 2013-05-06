@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.googlecontacts;
 
+import com.codenvy.commons.security.oauth.OAuthTokenProvider;
+import com.codenvy.commons.security.shared.Token;
 import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.gdata.client.Query;
@@ -31,7 +33,6 @@ import com.google.gdata.data.contacts.ContactFeed;
 import com.google.gdata.util.ServiceException;
 
 import org.apache.commons.codec.binary.Base64;
-import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
 import org.exoplatform.services.security.ConversationState;
 
 import java.io.ByteArrayOutputStream;
@@ -96,7 +97,8 @@ public class GoogleContactsClient {
      */
     public List<ContactEntry> getAllContacts() throws IOException, ServiceException {
         Credential credentials = new Credential(BearerToken.authorizationHeaderAccessMethod());
-        credentials.setAccessToken(oAuthTokenProvider.getToken("google", getUserId()));
+        Token token = oAuthTokenProvider.getToken("google", getUserId());
+        credentials.setAccessToken(token != null ? token.getToken() : null);
         service.setOAuth2Credentials(credentials);
         ContactFeed feed;
         Query query = new Query(new URL("https://www.google.com/m8/feeds/contacts/default/full"));

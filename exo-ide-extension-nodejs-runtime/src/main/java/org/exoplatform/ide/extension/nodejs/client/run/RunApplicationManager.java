@@ -33,8 +33,6 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -59,8 +57,9 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  * @version $Id: RunApplicationManager.java Apr 18, 2013 4:13:40 PM vsvydenko $
  *
  */
-public class RunApplicationManager implements RunApplicationHandler, StopApplicationHandler, VfsChangedHandler,
-                                              ProjectOpenedHandler, ProjectClosedHandler, ActiveProjectChangedHandler {
+public class RunApplicationManager implements RunApplicationHandler, StopApplicationHandler,
+        VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler {
+    
     private ProjectModel currentProject;
 
     private VirtualFileSystemInfo currentVfs;
@@ -77,7 +76,6 @@ public class RunApplicationManager implements RunApplicationHandler, StopApplica
         IDE.addHandler(VfsChangedEvent.TYPE, this);
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
-        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
     }
 
     /** @see org.exoplatform.ide.extension.nodejs.client.run.event.StopApplicationHandler#onStopApplication(org.exoplatform.ide.extension.nodejs.client.run.event.StopApplicationEvent) */
@@ -109,11 +107,6 @@ public class RunApplicationManager implements RunApplicationHandler, StopApplica
      * .project.ProjectOpenedEvent) */
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
-        this.currentProject = event.getProject();
-    }
-
-    @Override
-    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
         this.currentProject = event.getProject();
     }
 

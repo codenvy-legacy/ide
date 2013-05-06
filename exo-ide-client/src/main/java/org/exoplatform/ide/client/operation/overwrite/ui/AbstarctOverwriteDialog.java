@@ -52,7 +52,7 @@ public abstract class AbstarctOverwriteDialog extends ViewImpl {
 
     public static final int WIDTH = 400;
 
-    public static final int HEIGHT = 180;
+    public static final int HEIGHT = 155;
 
     public static final String TITLE = LOCALIZATION_CONSTANT.dialogTitle();
 

@@ -389,32 +389,31 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
      * Perform diff between selected commit and previous one.
      * 
      * @param filePatterns patterns for which to show diff
-     * @param revision selected commit
+     * @param revisionB selected commit
      */
-    protected void doDiffWithPrevVersion(String[] filePatterns, final Revision revision) {
+    protected void doDiffWithPrevVersion(String[] filePatterns, final Revision revisionB) {
         List<Revision> revisions = display.getRevisionGrid().getValue();
-        int index = revisions.indexOf(revision);
+        int index = revisions.indexOf(revisionB);
         if (index + 1 < revisions.size()) {
-            final Revision revisionB = revisions.get(index + 1);
-
+            final Revision revisionA = revisions.get(index + 1);
             String projectId = getSelectedProject().getId();
 
             try {
                 GitClientService.getInstance()
                                 .diff(vfs.getId(), projectId, filePatterns, DiffType.RAW, false, 0,
-                                      revision.getId(), revisionB.getId(),
+                                      revisionA.getId(), revisionB.getId(),
                                       new AsyncRequestCallback<StringBuilder>(
                                                                               new DiffResponseUnmarshaller(new StringBuilder())) {
 
                                           @Override
                                           protected void onSuccess(StringBuilder result) {
                                               display.displayDiffContent(result.toString());
-                                              display.displayCompareVersion(revision, revisionB);
+                                              display.displayCompareVersion(revisionB, revisionA);
                                           }
 
                                           @Override
                                           protected void onFailure(Throwable exception) {
-                                              nothingToDisplay(revision);
+                                              nothingToDisplay(revisionB);
                                               String errorMessage =
                                                                     (exception.getMessage() != null) ? exception.getMessage()
                                                                         : GitExtension.MESSAGES.diffFailed();
@@ -422,12 +421,12 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
                                           }
                                       });
             } catch (RequestException e) {
-                nothingToDisplay(revision);
+                nothingToDisplay(revisionB);
                 String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.diffFailed();
                 IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
             }
         } else {
-            nothingToDisplay(revision);
+            nothingToDisplay(revisionB);
         }
     }
 

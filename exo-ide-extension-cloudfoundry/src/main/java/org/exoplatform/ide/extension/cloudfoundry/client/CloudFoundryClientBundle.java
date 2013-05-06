@@ -24,12 +24,12 @@ import com.google.gwt.resources.client.ImageResource;
 
 /**
  * CloudFoundry client resources (images).
- *
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudFoundryClientBundle.java Jul 12, 2011 10:24:35 AM vereshchaka $
  */
 public interface CloudFoundryClientBundle extends ClientBundle {
-    CloudFoundryClientBundle INSTANCE = GWT.<CloudFoundryClientBundle>create(CloudFoundryClientBundle.class);
+    CloudFoundryClientBundle INSTANCE = GWT.<CloudFoundryClientBundle> create(CloudFoundryClientBundle.class);
 
     @Source("org/exoplatform/ide/extension/cloudfoundry/images/cloudfoundry_36.png")
     ImageResource cloudFoundryLogo();
@@ -92,7 +92,7 @@ public interface CloudFoundryClientBundle extends ClientBundle {
     ImageResource stopButtonDisabled();
 
     /*
-     * cloudfoundry controls
+     * CloudFoundry controls.
      */
     @Source("org/exoplatform/ide/extension/cloudfoundry/images/cloudfoundry.png")
     ImageResource cloudFoundry();
@@ -189,5 +189,23 @@ public interface CloudFoundryClientBundle extends ClientBundle {
 
     @Source("org/exoplatform/ide/extension/cloudfoundry/images/apps-list_Disabled.png")
     ImageResource appsListDisabled();
+
+    /*
+     * Tier3 Web Fabric controls.
+     */
+    @Source("org/exoplatform/ide/extension/cloudfoundry/images/tier3WebFabric_16.png")
+    ImageResource tier3WebFabric16();
+
+    @Source("org/exoplatform/ide/extension/cloudfoundry/images/tier3WebFabric_16_Disabled.png")
+    ImageResource tier3WebFabric16Disabled();
+
+    @Source("org/exoplatform/ide/extension/cloudfoundry/images/tier3WebFabric_48.png")
+    ImageResource tier3WebFabric48();
+
+    @Source("org/exoplatform/ide/extension/cloudfoundry/images/tier3WebFabric_48_Disabled.png")
+    ImageResource tier3WebFabric48Disabled();
+
+    @Source("org/exoplatform/ide/extension/cloudfoundry/images/tier3WebFabric_36.png")
+    ImageResource tier3WebFabricLogo();
 
 }

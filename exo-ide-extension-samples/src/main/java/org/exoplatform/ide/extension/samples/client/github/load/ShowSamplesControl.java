@@ -59,7 +59,7 @@ public class ShowSamplesControl extends SimpleControl implements IDEControl, Vfs
     /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
     @Override
     public void initialize() {
-        setVisible(true);
+        setVisible(false);
 
         IDE.addHandler(VfsChangedEvent.TYPE, this);
 

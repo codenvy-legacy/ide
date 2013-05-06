@@ -28,5 +28,6 @@
         <key>org.exoplatform.ide.security.paas.CredentialStore</key>
         <type>org.exoplatform.ide.security.paas.UserProfileCredentialStore</type>
     </component>
+    
 
 </configuration>

@@ -49,6 +49,7 @@ import org.exoplatform.ide.editor.client.api.event.*;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -142,6 +143,30 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
      * Editor content changed handler
      */
     public void onEditorContentChanged(EditorContentChangedEvent event) {
+        String fileId = null;
+        for (Entry<String, EditorView> entry : editorViewList.entrySet()) {
+            if (entry.getValue().getEditor().getId().equals(event.getEditor().getId())) {
+                fileId = entry.getKey();
+            }
+        }
+        
+        FileModel file = openedFiles.get(fileId);
+        if (ignoreContentChangedList.contains(file.getId())) {
+            ignoreContentChangedList.remove(file.getId());
+            return;
+        }
+        
+        if (!(event.getEditor() instanceof CollabEditor && 
+                !MimeType.TEXT_HTML.equals(file.getMimeType()))) {
+            file.setContentChanged(true);
+            updateTabTitle(file);
+        }
+        file.setContent(event.getEditor().getText());
+
+        IDE.fireEvent(new EditorFileContentChangedEvent(activeFile, 
+                            event.getEditor().hasUndoChanges(), event.getEditor().hasRedoChanges()));
+        
+        /*
         Editor editor = getEditorFromView(activeFile.getId());
         if (editor == null || !event.getEditor().getId().equals(editor.getId())) {
             return;
@@ -161,8 +186,10 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
         activeFile.setContent(editor.getText());
 
         IDE.fireEvent(new EditorFileContentChangedEvent(activeFile, editor.hasUndoChanges(), editor.hasRedoChanges()));
+        */
     }
 
+    
     public void onEditorFocusReceived(EditorFocusReceivedEvent event) {
         try {
             if (openedFiles.get(activeFile.getId()) != null) {
@@ -417,10 +444,9 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
     }
 
     public void onEditorReplaceFile(EditorReplaceFileEvent event) {
-        replaceFile(event.getFile(), event.getNewFile());
-    }
-
-    private void replaceFile(FileModel oldFile, FileModel newFile) {
+        FileModel oldFile = event.getFile();
+        FileModel newFile = event.getNewFile();
+        
         if (newFile == null) {
             updateTabTitle(oldFile);
             return;
@@ -429,18 +455,26 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
         ignoreContentChangedList.remove(oldFile.getId());
         ignoreContentChangedList.add(newFile.getId());
 
-        EditorView oldFileEditorView = editorViewList.get(oldFile.getId());
+        openedFiles.remove(oldFile.getId());
+        openedFiles.put(newFile.getId(), newFile);
+        
+        EditorView editorView = editorViewList.get(oldFile.getId());
         editorViewList.remove(oldFile.getId());
-        editorViewList.put(newFile.getId(), oldFileEditorView);
+        editorViewList.put(newFile.getId(), editorView);
 
-        oldFileEditorView.setIcon(new Image(ImageUtil.getIcon(newFile)));
-        IDE.fireEvent(new EditorActiveFileChangedEvent(newFile, oldFileEditorView.getEditor()));
-        if (newFile.getContent() != null) {
-            oldFileEditorView.getEditor().setText(newFile.getContent());
-        }
-
+        editorView.setFile(newFile);        
+        editorView.setIcon(new Image(ImageUtil.getIcon(newFile)));
         updateTabTitle(newFile);
-        oldFileEditorView.setFile(newFile);
+        
+        if (activeFile != null && activeFile.getId().equals(oldFile.getId())) {
+            IDE.fireEvent(new EditorActiveFileChangedEvent(newFile, editorView.getEditor()));            
+        }
+        //IDE.fireEvent(new EditorActiveFileChangedEvent(newFile, oldFileEditorView.getEditor()));
+        
+        if (event.isUpdateContent() && newFile.getContent() != null) {
+            //oldFileEditorView.getEditor().setText(newFile.getContent());
+            editorView.getEditor().getDocument().set(newFile.getContent());
+        }    
     }
 
     /** @see org.exoplatform.ide.client.event.edit.EditorDeleteCurrentLineHandler#onEditorDeleteCurrentLine(org.exoplatform.ide.client
@@ -553,6 +587,11 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
             }
 
             final EditorView editorView = (EditorView)event.getView();
+            if (editorView == null) {                
+                activeFile = null;
+                return;
+            }
+            
             activeFile = editorView.getFile();
 
             Timer timer = new Timer() {

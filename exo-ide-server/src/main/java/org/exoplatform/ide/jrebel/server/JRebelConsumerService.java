@@ -58,12 +58,8 @@ public class JRebelConsumerService {
             user.getProfile().setAttributes(values);
             userManager.updateUser(user);
 
-            String formatted =
-                    String.format("\"userId\",\"firstName\",\"lastName\",\"phone\"\n\"%s\",\"%s\",\"%s\",\"%s\"", userId,
-                                  values.get("firstName").replaceAll("\"", "'"), values.get("lastName").replaceAll("\"", "'"),
-                                  values.get("phone"));
-
-            LOG.error(formatted);
+            LOG.info("EVENT#jrebel-user-profile-info# USER-ID#" + userId + "# FIRSTNAME#" + values.get("firstName") + "# LASTNAME#" + values.get("lastName")
+                     + "# PHONE#" + values.get("phone") + "#");
         } catch (OrganizationServiceException e) {
             throw new JRebelConsumerException("Unable to register profile info. Please contact support.", e);
         }

@@ -16,24 +16,45 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.security.oauth;
+package org.eclipse.jdt.client.refactoring;
 
-import java.io.IOException;
 
-/** Retrieves oAuth token with help of OAuthAuthenticatorProvider. */
-public class OAuthAuthenticatorTokenProvider implements OAuthTokenProvider {
-    private final OAuthAuthenticatorProvider oAuthAuthenticatorProvider;
+/**
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
+ * @version $
+ */
+public class Action {
 
-    public OAuthAuthenticatorTokenProvider(OAuthAuthenticatorProvider oAuthAuthenticatorProvider) {
-        this.oAuthAuthenticatorProvider = oAuthAuthenticatorProvider;
+    public static final String MOVE = "move";
+
+    public static final String UPDATE_CONTENT = "update-content";
+
+    private String action;
+
+    private String resource;
+
+    private String destination;
+
+    public Action(String action, String resource, String destination) {
+        this.action = action;
+        this.resource = "" + resource;
+        this.destination = "" + destination;
     }
 
-    @Override
-    public String getToken(String oauthProviderName, String userId) throws IOException {
-        OAuthAuthenticator oAuthAuthenticator = oAuthAuthenticatorProvider.getAuthenticator(oauthProviderName);
-        if (oAuthAuthenticator != null) {
-            return oAuthAuthenticator.getToken(userId);
-        }
-        return null;
+    public Action(String action, String resource) {
+        this(action, resource, null);
     }
+
+    public String getAction() {
+        return action;
+    }
+
+    public String getResource() {
+        return resource;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
 }

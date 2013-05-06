@@ -19,12 +19,12 @@
 package org.exoplatform.ide.extension.cloudbees.server;
 
 import com.cloudbees.api.*;
+import com.codenvy.commons.json.JsonHelper;
+import com.codenvy.commons.json.JsonParseException;
 
 import org.apache.commons.codec.binary.Base64;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.commons.ContainerUtils;
-import org.exoplatform.ide.commons.JsonHelper;
-import org.exoplatform.ide.commons.JsonParseException;
 import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesAccount;
 import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser;

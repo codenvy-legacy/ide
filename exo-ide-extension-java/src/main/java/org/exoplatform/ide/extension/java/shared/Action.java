@@ -16,19 +16,45 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.security.oauth;
+package org.exoplatform.ide.extension.java.shared;
+
 
 /**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
+ * @version $
  */
-@SuppressWarnings("serial")
-public final class OAuthAuthenticationException extends Exception {
-    public OAuthAuthenticationException(String message) {
-        super(message);
+public class Action {
+
+    public static final String MOVE = "move";
+
+    public static final String UPDATE_CONTENT = "update-content";
+
+    private String action;
+
+    private String resource;
+
+    private String destination;
+
+    public Action(String action, String resource, String destination) {
+        this.action = action;
+        this.resource = "" + resource;
+        this.destination = "" + destination;
     }
 
-    public OAuthAuthenticationException(String message, Throwable cause) {
-        super(message, cause);
+    public Action(String action, String resource) {
+        this(action, resource, null);
     }
+
+    public String getAction() {
+        return action;
+    }
+
+    public String getResource() {
+        return resource;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
 }

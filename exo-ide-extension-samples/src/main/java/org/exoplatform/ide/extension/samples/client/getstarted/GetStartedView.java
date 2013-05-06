@@ -214,7 +214,7 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
 
     @Override
     public void setPaaSTypes(List<PaaS> paaSTypes) {
-        int columnCount = 8;
+        int columnCount = 9;
         int rowCount = (int)Math.ceil((double)paaSTypes.size() / columnCount);
 
         paasGrid.clear();
@@ -366,6 +366,8 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
             return !disable ? SamplesClientBundle.INSTANCE.gaePaaS() : SamplesClientBundle.INSTANCE.gaePaaSDisabled();
         } else if (paaS.getId().equals("AWS")) {
             return !disable ? SamplesClientBundle.INSTANCE.beansTalkPaaS() : SamplesClientBundle.INSTANCE.beansTalkPaaSDisabled();
+        } else if (paaS.getId().equals("Tier3WF")) {
+            return !disable ? SamplesClientBundle.INSTANCE.tier3WebFabricPaaS() : SamplesClientBundle.INSTANCE.tier3WebFabricPaaSDisabled();
         } else {
             return !disable ? SamplesClientBundle.INSTANCE.nonePaaS() : SamplesClientBundle.INSTANCE.nonePaaS();
         }

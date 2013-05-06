@@ -19,7 +19,11 @@
 package org.exoplatform.ide.extension.cloudfoundry.client.login;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
@@ -42,12 +46,15 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER.CLOUD_FOUNDRY;
 
 /**
  * Presenter for login view. The view must be pointed in Views.gwt.xml.
@@ -128,6 +135,13 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler {
     /** The last server, that user logged in. */
     private String server;
 
+    private PAAS_PROVIDER paasProvider;
+
+    /**
+     * Creates new instance {@link LoginPresenter} with the specified deploy <code>target</code>.
+     * 
+     * @param target deploy target
+     */
     public LoginPresenter() {
         IDE.addHandler(LoginEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -180,6 +194,15 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler {
                 }
             }
         });
+
+        display.getTargetSelectField().addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                if (event.getValue() != null) {
+                    server = event.getValue();
+                }
+            }
+        });
     }
 
     /**
@@ -192,10 +215,12 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler {
                 && display.getPasswordField().getValue() != null && !display.getPasswordField().getValue().isEmpty());
     }
 
-    /** @see org.exoplatform.ide.extension.openshift.client.login.LoginHandler#onLogin(org.exoplatform.ide.extension.openshift.client
-     * .login.LoginEvent) */
+    /**
+     * @see org.exoplatform.ide.extension.cloudfoundry.client.login.LoginHandler#onLogin(org.exoplatform.ide.extension.cloudfoundry.client.login.LoginEvent)
+     */
     @Override
     public void onLogin(LoginEvent event) {
+        paasProvider = event.getPaasProvider();
         loggedIn = event.getLoggedIn();
         loginCanceled = event.getLoginCanceled();
         if (event.getLoginUrl() != null) {
@@ -214,32 +239,31 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler {
 
     }
 
-    /** Get Cloud Foundry system information to fill the login field, if user is logged in. */
+    /** Get CloudFoundry system information to fill the login field, if user is logged in. */
     protected void getSystemInformation() {
         try {
             AutoBean<SystemInfo> systemInfo = CloudFoundryExtension.AUTO_BEAN_FACTORY.systemInfo();
             AutoBeanUnmarshaller<SystemInfo> unmarshaller = new AutoBeanUnmarshaller<SystemInfo>(systemInfo);
-            CloudFoundryClientService.getInstance().getSystemInfo(server,
-                                                                  new AsyncRequestCallback<SystemInfo>(unmarshaller) {
-                                                                      @Override
-                                                                      protected void onSuccess(SystemInfo result) {
-                                                                          display.getEmailField().setValue(result.getUser());
-                                                                          getTargets();
-                                                                      }
+            CloudFoundryClientService.getInstance().getSystemInfo(server, paasProvider,
+                  new AsyncRequestCallback<SystemInfo>(unmarshaller) {
+                      @Override
+                      protected void onSuccess(SystemInfo result) {
+                          display.getEmailField().setValue(result.getUser());
+                          getTargets();
+                      }
 
-                                                                      /**
-                                                                       * @see org.exoplatform.gwtframework.commons.rest
-                                                                       * .AsyncRequestCallback#onFailure(java.lang.Throwable)
-                                                                       */
-                                                                      @Override
-                                                                      protected void onFailure(Throwable exception) {
-                                                                          if (exception instanceof UnmarshallerException) {
-                                                                              Dialogs.getInstance().showError(exception.getMessage());
-                                                                          } else {
-                                                                              getTargets();
-                                                                          }
-                                                                      }
-                                                                  });
+                      /**
+                       * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+                       */
+                      @Override
+                      protected void onFailure(Throwable exception) {
+                          if (exception instanceof UnmarshallerException) {
+                              Dialogs.getInstance().showError(exception.getMessage());
+                          } else {
+                              getTargets();
+                          }
+                      }
+                  });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
@@ -247,14 +271,16 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler {
 
     private void getTargets() {
         try {
-            CloudFoundryClientService.getInstance().getTargets(
+            CloudFoundryClientService.getInstance().getTargets(paasProvider,
                     new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>())) {
                         @Override
                         protected void onSuccess(List<String> result) {
                             if (result.isEmpty()) {
-                                display.setTargetValues(new String[]{CloudFoundryExtension.DEFAULT_SERVER});
-                                if (server == null || server.isEmpty()) {
-                                    display.getTargetSelectField().setValue(CloudFoundryExtension.DEFAULT_SERVER);
+                                if (paasProvider == CLOUD_FOUNDRY) {
+                                    display.setTargetValues(new String[]{CloudFoundryExtension.DEFAULT_CF_SERVER});
+                                }
+                                if ((server == null || server.isEmpty()) && paasProvider == CLOUD_FOUNDRY) {
+                                    display.getTargetSelectField().setValue(CloudFoundryExtension.DEFAULT_CF_SERVER);
                                 } else
                                     display.getTargetSelectField().setValue(server);
                             } else {
@@ -278,58 +304,52 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler {
         }
     }
 
-    /** Perform log in OpenShift. */
+    /** Perform log in. */
     protected void doLogin() {
         final String enteredServer = display.getTargetSelectField().getValue();
         final String email = display.getEmailField().getValue();
         final String password = display.getPasswordField().getValue();
 
         try {
-            CloudFoundryClientService.getInstance().login(enteredServer, email, password,
-                                                          new AsyncRequestCallback<String>() {
+            CloudFoundryClientService.getInstance().login(enteredServer, email, password, paasProvider,
+                  new AsyncRequestCallback<String>() {
 
-                                                              /**
-                                                               * @see org.exoplatform.gwtframework.commons.rest.copy
-                                                               * .AsyncRequestCallback#onSuccess(java.lang.Object)
-                                                               */
-                                                              @Override
-                                                              protected void onSuccess(String result) {
-                                                                  server = enteredServer;
-                                                                  IDE.fireEvent(new OutputEvent(lb.loginSuccess(), Type.INFO));
-                                                                  if (loggedIn != null) {
-                                                                      loggedIn.onLoggedIn();
-                                                                  }
-                                                                  IDE.getInstance().closeView(display.asView().getId());
-                                                              }
+                      /**
+                       * @see org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback#onSuccess(java.lang.Object)
+                       */
+                      @Override
+                      protected void onSuccess(String result) {
+                          server = enteredServer;
+                          IDE.fireEvent(new OutputEvent(paasProvider == CLOUD_FOUNDRY ? lb.loginSuccess() : lb.tier3WebFabricLoginSuccess(), Type.INFO));
+                          if (loggedIn != null) {
+                              loggedIn.onLoggedIn(server);
+                          }
+                          IDE.getInstance().closeView(display.asView().getId());
+                      }
 
-                                                              /**
-                                                               * @see org.exoplatform.gwtframework.commons.rest
-                                                               * .AsyncRequestCallback#onFailure(java.lang.Throwable)
-                                                               */
-                                                              @Override
-                                                              protected void onFailure(Throwable exception) {
-                                                                  if (exception instanceof ServerException) {
-                                                                      ServerException serverException = (ServerException)exception;
-                                                                      if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus()
-                                                                          && serverException.getMessage() != null
-                                                                          &&
-                                                                          serverException.getMessage().contains("Can't access target.")) {
-                                                                          display.getErrorLabelField()
-                                                                                 .setValue(lb.loginViewErrorUnknownTarget());
-                                                                          return;
-                                                                      } else if (HTTPStatus.OK != serverException.getHTTPStatus() &&
-                                                                                 serverException.getMessage() != null
-                                                                                 && serverException.getMessage()
-                                                                                                   .contains("Operation not permitted")) {
-                                                                          display.getErrorLabelField()
-                                                                                 .setValue(lb.loginViewErrorInvalidUserOrPassword());
-                                                                          return;
-                                                                      }
-                                                                      // otherwise will be called method from superclass.
-                                                                  }
-                                                                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-                                                              }
-                                                          });
+                      /**
+                       * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+                       */
+                      @Override
+                      protected void onFailure(Throwable exception) {
+                          if (exception instanceof ServerException) {
+                              ServerException serverException = (ServerException)exception;
+                              if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus()
+                                  && serverException.getMessage() != null
+                                  && serverException.getMessage().contains("Can't access target.")) {
+                                  display.getErrorLabelField().setValue(lb.loginViewErrorUnknownTarget());
+                                  return;
+                              } else if (HTTPStatus.OK != serverException.getHTTPStatus() &&
+                                         serverException.getMessage() != null
+                                         && serverException.getMessage().contains("Operation not permitted")) {
+                                  display.getErrorLabelField().setValue(lb.loginViewErrorInvalidUserOrPassword());
+                                  return;
+                              }
+                              // otherwise will be called method from superclass.
+                          }
+                          IDE.fireEvent(new ExceptionThrownEvent(exception));
+                      }
+                  });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
@@ -342,6 +362,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler {
             display = null;
             loggedIn = null;
             loginCanceled = null;
+            server = "";
         }
     }
 }

@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server;
 
+import com.codenvy.commons.json.JsonHelper;
+import com.codenvy.commons.json.JsonParseException;
+
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
@@ -119,12 +122,12 @@ public class Cloudfoundry {
         }
     }
 
-    public void setTarget(String server) throws CredentialStoreException {
+    public void setTarget(String server, String paasProvider) throws CredentialStoreException {
         final Credential credential = new Credential();
         final String userId = getUserId();
-        credentialStore.load(userId, "cloudfoundry", credential);
+        credentialStore.load(userId, paasProvider, credential);
         credential.setAttribute("current_target", server);
-        credentialStore.save(userId, "cloudfoundry", credential);
+        credentialStore.save(userId, paasProvider, credential);
     }
 
     public String getTarget() throws CredentialStoreException {
@@ -133,9 +136,15 @@ public class Cloudfoundry {
         return credential.getAttribute("current_target");
     }
 
-    public Collection<String> getTargets() throws CredentialStoreException {
+    public String getTarget(String paasProvider) throws CredentialStoreException {
         final Credential credential = new Credential();
-        credentialStore.load(getUserId(), "cloudfoundry", credential);
+        credentialStore.load(getUserId(), paasProvider, credential);
+        return credential.getAttribute("current_target");
+    }
+
+    public Collection<String> getTargets(String paasProvider) throws CredentialStoreException {
+        final Credential credential = new Credential();
+        credentialStore.load(getUserId(), paasProvider, credential);
         List<String> targets = new ArrayList<String>(2);
         for (Map.Entry<String, String> entry : credential.getAttributes().entrySet()) {
             String key = entry.getKey();
@@ -156,6 +165,8 @@ public class Cloudfoundry {
      *         email address that used when create account at cloudfoundry.com
      * @param password
      *         password
+     * @param paasProvider
+     *         CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @throws CloudfoundryException
      *         if cloudfoundry server return unexpected or error status for request
      * @throws ParsingResponseException
@@ -163,16 +174,17 @@ public class Cloudfoundry {
      * @throws IOException
      *         if any i/o errors occurs
      */
-    public void login(String server, String email, String password)
+    public void login(String server, String email, String password, String paasProvider)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, IOException {
         final Credential credential = new Credential();
         final String userId = getUserId();
-        credentialStore.load(userId, "cloudfoundry", credential);
+        final String credentialTarget = paasProvider == null || paasProvider.isEmpty() ? "cloudfoundry" : paasProvider;
+        credentialStore.load(userId, credentialTarget, credential);
         if (server == null) {
             server = credential.getAttribute("current_target");
         }
         authenticator.login(server, email, password, credential);
-        credentialStore.save(userId, "cloudfoundry", credential);
+        credentialStore.save(userId, credentialTarget, credential);
     }
 
     public void login() throws CloudfoundryException, ParsingResponseException, CredentialStoreException, IOException {
@@ -184,12 +196,13 @@ public class Cloudfoundry {
     }
 
     /** Remove locally saved authentication token. Need use {@link #login(String, String, String)} again. */
-    public void logout(String server) throws CredentialStoreException {
+    public void logout(String server, String paasProvider) throws CredentialStoreException {
         final Credential credential = new Credential();
         final String userId = getUserId();
-        credentialStore.load(userId, "cloudfoundry", credential);
+        final String credentialTarget = paasProvider == null || paasProvider.isEmpty() ? "cloudfoundry" : paasProvider;
+        credentialStore.load(userId, credentialTarget, credential);
         credential.removeAttribute(server);
-        credentialStore.save(userId, "cloudfoundry", credential);
+        credentialStore.save(userId, credentialTarget, credential);
     }
 
     protected String getUserId() {
@@ -203,6 +216,8 @@ public class Cloudfoundry {
      *         location of Cloud Foundry instance to get info, e.g. http://api.cloudfoundry.com. If not specified
      *         then try determine server. If can't determine server from user context then use default server location,
      *         see {@link CloudfoundryAuthenticator#defaultTarget}
+     * @param paasProvider
+     *         CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @return account info
      * @throws CloudfoundryException
      *         if cloudfoundry server return unexpected or error status for request
@@ -214,9 +229,9 @@ public class Cloudfoundry {
      * @throws IOException
      *         if any i/o errors occurs
      */
-    public SystemInfo systemInfo(String server)
+    public SystemInfo systemInfo(String server, String paasProvider)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, IOException {
-        return systemInfo(getCredential(server));
+        return systemInfo(getCredential(server, paasProvider));
     }
 
     private SystemInfo systemInfo(CloudfoundryCredential cloudfoundryCredential)
@@ -274,7 +289,7 @@ public class Cloudfoundry {
     public CloudFoundryApplication applicationInfo(String server, String app, VirtualFileSystem vfs, String projectId)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         return applicationInfo(
-                getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
+                getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server, detectCloudFoundryProviderName(vfs, projectId)),
                 app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app);
     }
 
@@ -323,6 +338,8 @@ public class Cloudfoundry {
      *         identifier of project directory that contains source code
      * @param war
      *         URL to pre-builded war file. May be present for java (spring, grails, java-web) applications ONLY
+     * @param paasProvider
+     *         CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @return info about newly created application
      * @throws CloudfoundryException
      *         if cloudfoundry server return unexpected or error status for request
@@ -347,10 +364,11 @@ public class Cloudfoundry {
                                                      DebugMode debugMode,
                                                      VirtualFileSystem vfs,
                                                      String projectId,
-                                                     URL war)
+                                                     URL war,
+                                                     String paasProvider)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         return createApplication(server, app, framework, url, instances, memory, noStart, runtime, command, debugMode,
-                                 vfs, projectId, war, null);
+                                 vfs, projectId, war, paasProvider, null);
     }
 
     /**
@@ -370,6 +388,7 @@ public class Cloudfoundry {
                                                      VirtualFileSystem vfs,
                                                      String projectId,
                                                      URL war,
+                                                     String paasProvider,
                                                      Map<String, String> options)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         if (app == null || app.isEmpty()) {
@@ -381,9 +400,9 @@ public class Cloudfoundry {
         if (server == null || server.isEmpty()) {
             throw new IllegalArgumentException("Location of Cloud Foundry server required. ");
         }
-        CloudfoundryCredential cloudfoundryCredential = getCredential(server);
+        CloudfoundryCredential cloudfoundryCredential = getCredential(server, paasProvider);
         return createApplication(cloudfoundryCredential, app, framework, url, instances, memory, noStart, runtime, command, debugMode,
-                                 vfs, projectId, war, options);
+                                 vfs, projectId, war, paasProvider, options);
     }
 
     private static final Pattern suggestUrlPattern = Pattern.compile("(http(s)?://)?([^\\.]+)(.*)");
@@ -401,6 +420,7 @@ public class Cloudfoundry {
                                                       VirtualFileSystem vfs,
                                                       String projectId,
                                                       URL url,
+                                                      String paasProvider,
                                                       Map<String, String> options)
             throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException {
         final long start = System.currentTimeMillis();
@@ -487,6 +507,7 @@ public class Cloudfoundry {
             uploadApplication(cloudfoundryCredential, app, vfs, projectId, path);
 
             if (vfs != null && projectId != null) {
+                writeCloudFoundryProviderName(vfs, projectId, paasProvider);
                 writeApplicationName(vfs, projectId, app);
                 writeServerName(vfs, projectId, cloudfoundryCredential.target);
             }
@@ -523,6 +544,8 @@ public class Cloudfoundry {
      * @param projectId
      *         IDE project identifier. May be <code>null</code> if command executed out of project directory in
      *         this case <code>app</code> parameter must be not <code>null</code>
+     * @param paasProvider
+     *         CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @return since start application may take a while time return info with current state of application. If
      *         {@link CloudFoundryApplication#getState()} gives something other then 'STARTED' caller should wait and
      *         check status of application later to be sure it started
@@ -542,9 +565,14 @@ public class Cloudfoundry {
                                                     String app,
                                                     DebugMode debugMode,
                                                     VirtualFileSystem vfs,
-                                                    String projectId)
-            throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
-        return startApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
+                                                    String projectId,
+                                                    String paasProvider)
+                                                                     throws CloudfoundryException,
+                                                                     ParsingResponseException,
+                                                                     CredentialStoreException,
+                                                                     VirtualFileSystemException,
+                                                                     IOException {
+        return startApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server, paasProvider),
                                 app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app,
                                 debugMode != null ? debugMode.getMode() : null, true);
     }
@@ -623,6 +651,8 @@ public class Cloudfoundry {
      * @param projectId
      *         IDE project identifier. May be <code>null</code> if command executed out of project directory in
      *         this case <code>app</code> parameter must be not <code>null</code>
+     * @param paasProvider
+     *         CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @throws CloudfoundryException
      *         if cloudfoundry server return unexpected or error status for request
      * @throws ParsingResponseException
@@ -635,9 +665,9 @@ public class Cloudfoundry {
      * @throws IOException
      *         if any i/o errors occurs
      */
-    public void stopApplication(String server, String app, VirtualFileSystem vfs, String projectId)
+    public void stopApplication(String server, String app, VirtualFileSystem vfs, String projectId, String paasProvider)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
-        stopApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
+        stopApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server, paasProvider),
                         app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, true);
     }
 
@@ -670,6 +700,8 @@ public class Cloudfoundry {
      * @param projectId
      *         IDE project identifier. May be <code>null</code> if command executed out of project directory in
      *         this case <code>app</code> parameter must be not <code>null</code>
+     * @param paasProvider
+     *         CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @return since restart application may take a while time return info with current state of application. If
      *         {@link CloudFoundryApplication#getState()} gives something other then 'STARTED' caller should wait and
      *         check status of application later to be sure it started
@@ -689,9 +721,10 @@ public class Cloudfoundry {
                                                       String app,
                                                       DebugMode debugMode,
                                                       VirtualFileSystem vfs,
-                                                      String projectId)
+                                                      String projectId,
+                                                      String paasProvider)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
-        return restartApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
+        return restartApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server, paasProvider),
                                   app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app,
                                   debugMode == null ? null : debugMode.getMode());
     }
@@ -748,7 +781,8 @@ public class Cloudfoundry {
         if ((vfs == null || projectId == null) && war == null) {
             throw new IllegalArgumentException("Project directory or location to WAR file required. ");
         }
-        updateApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
+        final String paasProvider = detectCloudFoundryProviderName(vfs, projectId);
+        updateApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server, paasProvider),
                           app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app,
                           vfs, projectId, war);
     }
@@ -829,8 +863,9 @@ public class Cloudfoundry {
                            VirtualFileSystem vfs,
                            String projectId)
             throws CloudfoundryException, CredentialStoreException, VirtualFileSystemException, IOException {
+        final String paasProvider = detectCloudFoundryProviderName(vfs, projectId);
         CloudfoundryCredential cloudfoundryCredential =
-                getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server);
+                getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server, paasProvider);
         if (app == null || app.isEmpty()) {
             app = detectApplicationName(vfs, projectId, true);
         }
@@ -875,8 +910,9 @@ public class Cloudfoundry {
      */
     public String getLogs(String server, String app, String instance, VirtualFileSystem vfs, String projectId)
             throws CloudfoundryException, CredentialStoreException, VirtualFileSystemException, IOException {
+        final String paasProvider = detectCloudFoundryProviderName(vfs, projectId);
         CloudfoundryCredential cloudfoundryCredential =
-                getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server);
+                getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server, paasProvider);
         return getLogs(cloudfoundryCredential, app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app,
                        instance == null || instance.isEmpty() ? "0" : instance);
     }
@@ -938,7 +974,8 @@ public class Cloudfoundry {
         if (url == null) {
             throw new IllegalArgumentException("URL for mapping required. ");
         }
-        mapUrl(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
+        final String paasProvider = detectCloudFoundryProviderName(vfs, projectId);
+        mapUrl(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server, paasProvider),
                app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, url);
     }
 
@@ -1002,7 +1039,8 @@ public class Cloudfoundry {
         if (url == null) {
             throw new IllegalArgumentException("URL for unmapping required. ");
         }
-        unmapUrl(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
+        final String paasProvider = detectCloudFoundryProviderName(vfs, projectId);
+        unmapUrl(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server, paasProvider),
                  app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, url);
     }
 
@@ -1058,7 +1096,8 @@ public class Cloudfoundry {
         if (memory < 0) {
             throw new IllegalArgumentException("Memory reservation for application may not be negative. ");
         }
-        mem(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
+        final String paasProvider = detectCloudFoundryProviderName(vfs, projectId);
+        mem(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server, paasProvider),
             app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, memory, true);
     }
 
@@ -1115,7 +1154,8 @@ public class Cloudfoundry {
      */
     public Instance[] applicationInstances(String server, String app, VirtualFileSystem vfs, String projectId)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
-        return applicationInstances(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
+        final String paasProvider = detectCloudFoundryProviderName(vfs, projectId);
+        return applicationInstances(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server, paasProvider),
                                     app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app);
     }
 
@@ -1172,7 +1212,8 @@ public class Cloudfoundry {
      */
     public void instances(String server, String app, VirtualFileSystem vfs, String projectId, String expression)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
-        instances(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
+        final String paasProvider = detectCloudFoundryProviderName(vfs, projectId);
+        instances(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server, paasProvider),
                   app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, expression, false);
     }
 
@@ -1224,6 +1265,8 @@ public class Cloudfoundry {
      * @param projectId
      *         IDE project identifier. May be <code>null</code> if command executed out of project directory in
      *         this case <code>app</code> parameter must be not <code>null</code>
+     * @param paasProvider
+     *         CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param deleteServices
      *         if <code>true</code> then delete all services bounded to application
      * @throws CloudfoundryException
@@ -1238,9 +1281,9 @@ public class Cloudfoundry {
      * @throws IOException
      *         id any i/o errors occurs
      */
-    public void deleteApplication(String server, String app, VirtualFileSystem vfs, String projectId, boolean deleteServices)
+    public void deleteApplication(String server, String app, VirtualFileSystem vfs, String projectId, String paasProvider, boolean deleteServices)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
-        deleteApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
+        deleteApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server, paasProvider),
                           app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, deleteServices, vfs, projectId);
     }
 
@@ -1251,6 +1294,7 @@ public class Cloudfoundry {
         deleteJson(cloudfoundryCredential.target + "/apps/" + app, cloudfoundryCredential.token, 200);
         if (vfs != null && projectId != null) {
             writeApplicationName(vfs, projectId, null);
+            writeCloudFoundryProviderName(vfs, projectId, null);
             writeServerName(vfs, projectId, null);
         }
         if (deleteServices) {
@@ -1298,7 +1342,8 @@ public class Cloudfoundry {
                                                                            VirtualFileSystem vfs,
                                                                            String projectId)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
-        return applicationStats(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
+        return applicationStats(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server,
+            detectCloudFoundryProviderName(vfs, projectId)),
                                 app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app);
     }
 
@@ -1348,6 +1393,8 @@ public class Cloudfoundry {
      *         location of Cloud Foundry instance to get applications, e.g. http://api.cloudfoundry.com. If not
      *         specified then try determine server. If can't determine server from user context then use default server
      *         location, see {@link CloudfoundryAuthenticator#defaultTarget}
+     * @param paasProvider
+     *         CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @return list of applications
      * @throws CloudfoundryException
      *         if cloudfoundry server return unexpected or error status for request
@@ -1358,9 +1405,9 @@ public class Cloudfoundry {
      * @throws IOException
      *         if any i/o errors occurs
      */
-    public CloudFoundryApplication[] listApplications(String server)
+    public CloudFoundryApplication[] listApplications(String server, String paasProvider)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, IOException {
-        CloudfoundryCredential cloudfoundryCredential = getCredential(server);
+        CloudfoundryCredential cloudfoundryCredential = getCredential(server, paasProvider);
         return parseJsonResponse(
                 getJson(cloudfoundryCredential.target + "/apps", cloudfoundryCredential.token, 200), CloudFoundryApplication[].class, null);
     }
@@ -1372,6 +1419,8 @@ public class Cloudfoundry {
      *         location of Cloud Foundry instance to get services, e.g. http://api.cloudfoundry.com. If not
      *         specified then try determine server. If can't determine server from user context then use default server
      *         location, see {@link CloudfoundryAuthenticator#defaultTarget}
+     * @param paasProvider
+     *         CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @return info about available and used services
      * @throws CloudfoundryException
      *         if cloudfoundry server return unexpected or error status for request
@@ -1382,9 +1431,9 @@ public class Cloudfoundry {
      * @throws IOException
      *         if any i/o errors occurs
      */
-    public CloudfoundryServices services(String server)
+    public CloudfoundryServices services(String server, String paasProvider)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, IOException {
-        CloudfoundryCredential cloudfoundryCredential = getCredential(server);
+        CloudfoundryCredential cloudfoundryCredential = getCredential(server, paasProvider);
         return new CloudfoundryServicesImpl(systemServices(cloudfoundryCredential), provisionedServices(cloudfoundryCredential));
     }
 
@@ -1467,7 +1516,8 @@ public class Cloudfoundry {
         // If application name is null and working directory null or application
         // name cannot be determined in some reasons then not bind new service
         // to any application.
-        return createService(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
+        final String paasProvider = detectCloudFoundryProviderName(vfs, projectId);
+        return createService(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server, paasProvider),
                              service, name, app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, false) : app);
     }
 
@@ -1510,6 +1560,8 @@ public class Cloudfoundry {
      *         location, see {@link CloudfoundryAuthenticator#defaultTarget}
      * @param name
      *         name of service to delete
+     * @param paasProvider
+     *         CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @throws CloudfoundryException
      *         if cloudfoundry server return unexpected or error status for request
      * @throws ParsingResponseException
@@ -1519,12 +1571,12 @@ public class Cloudfoundry {
      * @throws IOException
      *         if any i/o errors occurs
      */
-    public void deleteService(String server, String name)
+    public void deleteService(String server, String name, String paasProvider)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, IOException {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Service name required. ");
         }
-        deleteService(getCredential(server == null || server.isEmpty() ? authenticator.getTarget() : server), name);
+        deleteService(getCredential(server == null || server.isEmpty() ? authenticator.getTarget() : server, paasProvider), name);
     }
 
     private void deleteService(CloudfoundryCredential cloudfoundryCredential, String name)
@@ -1568,7 +1620,8 @@ public class Cloudfoundry {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Service name required. ");
         }
-        bindService(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server), name,
+        bindService(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server,
+            detectCloudFoundryProviderName(vfs, projectId)), name,
                     app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, true);
     }
 
@@ -1629,7 +1682,8 @@ public class Cloudfoundry {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Service name required. ");
         }
-        unbindService(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server), name,
+        unbindService(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server,
+            detectCloudFoundryProviderName(vfs, projectId)), name,
                       app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, true);
     }
 
@@ -1683,7 +1737,8 @@ public class Cloudfoundry {
         if (key == null || key.isEmpty()) {
             throw new IllegalArgumentException("Key-value pair required. ");
         }
-        environmentAdd(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
+        final String paasProvider = detectCloudFoundryProviderName(vfs, projectId);
+        environmentAdd(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server, paasProvider),
                        app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, key, val, true);
     }
 
@@ -1744,7 +1799,8 @@ public class Cloudfoundry {
         if (key == null || key.isEmpty()) {
             throw new IllegalArgumentException("Key required. ");
         }
-        environmentDelete(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
+        environmentDelete(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server,
+            detectCloudFoundryProviderName(vfs, projectId)),
                           app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, key, true);
     }
 
@@ -1780,7 +1836,8 @@ public class Cloudfoundry {
                                int memory,
                                boolean noStart,
                                VirtualFileSystem vfs,
-                               String projectId)
+                               String projectId,
+                               String paasProvider)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         if ("create".equals(action)) {
             if (app == null || app.isEmpty()) {
@@ -1795,7 +1852,7 @@ public class Cloudfoundry {
             if (server == null || server.isEmpty()) {
                 throw new IllegalArgumentException("Location of Cloud Foundry server required. ");
             }
-            CloudfoundryCredential cloudfoundryCredential = getCredential(server);
+            CloudfoundryCredential cloudfoundryCredential = getCredential(server, paasProvider);
 
             SystemInfo systemInfo = systemInfo(cloudfoundryCredential);
             SystemResources limits = systemInfo.getLimits();
@@ -1825,7 +1882,8 @@ public class Cloudfoundry {
         } else if ("update".equals(action)) {
             String name = detectApplicationName(vfs, projectId, true);
             // Throw exception if application not found.
-            applicationInfo(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server), name);
+            applicationInfo(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server,
+                                          detectCloudFoundryProviderName(vfs, projectId)), name);
         } else {
             throw new IllegalArgumentException("Unknown action '" + action + "'. ");
         }
@@ -1895,9 +1953,9 @@ public class Cloudfoundry {
         throw new IllegalArgumentException("Service '" + name + "' not found. ");
     }
 
-    private CloudfoundryCredential getCredential(String server) throws CloudfoundryException, CredentialStoreException {
+    private CloudfoundryCredential getCredential(String server, String target) throws CloudfoundryException, CredentialStoreException {
         final Credential credential = new Credential();
-        credentialStore.load(getUserId(), "cloudfoundry", credential);
+        credentialStore.load(getUserId(), target, credential);
         if (server == null || server.isEmpty()) {
             server = credential.getAttribute("current_target");
         }
@@ -1909,7 +1967,15 @@ public class Cloudfoundry {
     }
 
     private void writeApplicationName(VirtualFileSystem vfs, String projectId, String name) throws VirtualFileSystemException {
-        Property p = new PropertyImpl("cloudfoundry-application", name);
+        final String propertyName = detectCloudFoundryProviderName(vfs, projectId) + "-application";
+        Property p = new PropertyImpl(propertyName, name);
+        List<Property> properties = new ArrayList<Property>(1);
+        properties.add(p);
+        vfs.updateItem(projectId, properties, null);
+    }
+
+    private void writeCloudFoundryProviderName(VirtualFileSystem vfs, String projectId, String name) throws VirtualFileSystemException {
+        Property p = new PropertyImpl("cloudfoundry-provider", name);
         List<Property> properties = new ArrayList<Property>(1);
         properties.add(p);
         vfs.updateItem(projectId, properties, null);
@@ -1918,15 +1984,28 @@ public class Cloudfoundry {
     private String detectApplicationName(VirtualFileSystem vfs, String projectId, boolean failIfCannotDetect)
             throws VirtualFileSystemException {
         String app = null;
+        final String propertyName = detectCloudFoundryProviderName(vfs, projectId) + "-application";
         if (vfs != null && projectId != null) {
-            Item item = vfs.getItem(projectId, PropertyFilter.valueOf("cloudfoundry-application"));
-            app = item.getPropertyValue("cloudfoundry-application");
+            Item item = vfs.getItem(projectId, PropertyFilter.valueOf(propertyName));
+            app = item.getPropertyValue(propertyName);
         }
         if (failIfCannotDetect && (app == null || app.isEmpty())) {
             throw new RuntimeException(
                     "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
         }
         return app;
+    }
+
+    private String detectCloudFoundryProviderName(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException {
+        String providerName = null;
+        if (vfs != null && projectId != null) {
+            Item item = vfs.getItem(projectId, PropertyFilter.valueOf("cloudfoundry-provider"));
+            providerName = item.getPropertyValue("cloudfoundry-provider");
+        }
+        if (providerName == null || providerName.isEmpty()) {
+            providerName = "cloudfoundry";
+        }
+        return providerName;
     }
 
     private void writeServerName(VirtualFileSystem vfs, String projectId, String server)

@@ -49,30 +49,41 @@ public abstract class ProjectExplorerTreeItem extends TreeItem {
         render();        
     }
     
+    private Grid gridWidget; 
+    
     /**
      * Render tree item.
      */
     protected void render()
     {
-        Grid grid = new Grid(1, 2);
-        grid.setWidth("100%");
+        if (gridWidget == null) {
+            gridWidget = new Grid(1, 2);
+            gridWidget.setWidth("100%");
+            
+            gridWidget.getCellFormatter().setWidth(0, 0, "16px");
+            gridWidget.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
+            gridWidget.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
+            gridWidget.getCellFormatter().setWidth(0, 1, "100%");
+            gridWidget.getCellFormatter().addStyleName(0, 1, "ide-Tree-label");
+            DOM.setStyleAttribute(gridWidget.getElement(), "display", "block");
+            setWidget(gridWidget);            
+        }
 
         TreeIcon treeNodeIcon = new TreeIcon(getItemIcon());
-        // treeNodeIcon.setWidth("16px");
         treeNodeIcon.setHeight("16px");
-        grid.setWidget(0, 0, treeNodeIcon);
-        // Label l = new Label(text, false);
+        gridWidget.setWidget(0, 0, treeNodeIcon);
+        
         HTMLPanel l = new HTMLPanel("div", getItemTitle());
         l.setStyleName("ide-Tree-label");
-        grid.setWidget(0, 1, l);
+        gridWidget.setWidget(0, 1, l);
 
-        grid.getCellFormatter().setWidth(0, 0, "16px");
-        grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
-        grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
-        grid.getCellFormatter().setWidth(0, 1, "100%");
-        grid.getCellFormatter().addStyleName(0, 1, "ide-Tree-label");
-        DOM.setStyleAttribute(grid.getElement(), "display", "block");
-        setWidget(grid);
+//        gridWidget.getCellFormatter().setWidth(0, 0, "16px");
+//        gridWidget.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
+//        gridWidget.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
+//        gridWidget.getCellFormatter().setWidth(0, 1, "100%");
+//        gridWidget.getCellFormatter().addStyleName(0, 1, "ide-Tree-label");
+//        DOM.setStyleAttribute(gridWidget.getElement(), "display", "block");
+//        setWidget(gridWidget);
 
         Item item = (Item)getUserObject();
         getElement().setId(PREFIX_ID + Utils.md5(item.getPath()));
