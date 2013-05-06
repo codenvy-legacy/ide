@@ -18,17 +18,9 @@
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-server</artifactId>
-        </dependency>
-        <dependency>
+       <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>eclipse-jdt-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-git</artifactId>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
