@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.texteditor;
 
+import elemental.events.Event;
+import elemental.events.EventListener;
 import elemental.html.Element;
 
 import com.codenvy.ide.json.JsonArray;
@@ -33,6 +35,8 @@ import com.codenvy.ide.text.annotation.AnnotationModelListener;
 import com.codenvy.ide.texteditor.api.TextEditorOperations;
 import com.codenvy.ide.texteditor.gutter.Gutter;
 import com.codenvy.ide.texteditor.gutter.Gutter.ClickListener;
+import com.codenvy.ide.ui.Tooltip;
+import com.codenvy.ide.ui.menu.PositionController;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
@@ -47,45 +51,12 @@ import java.util.Iterator;
  */
 public class VerticalRuler {
 
-    class InternalListener implements AnnotationModelListener {
-
-        /** {@inheritDoc} */
-        @Override
-        public void modelChanged(AnnotationModelEvent event) {
-            update();
-        }
-
-    }
-
-    class Mark extends CompositeView<Annotation> {
-        /**
-         *
-         */
-        public Mark(Annotation annotation) {
-            setElement((Element)AbstractImagePrototype.create(annotation.getImage()).createElement());
-            getElement().getStyle().setZIndex(annotation.getLayer());
-            getElement().getStyle().setPosition("absolute");
-            getElement().getStyle().setWidth("15px");
-            getElement().getStyle().setLeft("0px");
-            getElement().setTitle(annotation.getText());
-        }
-
-        public void setTopPosition(int top, String unit) {
-            getElement().getStyle().setTop(top, unit);
-        }
-    }
-
-    private AnnotationModel model;
-
-    private Remover remover;
-
-    private final Gutter view;
-
+    private final Gutter             view;
     private final TextEditorViewImpl editor;
-
-    private InternalListener listener;
-
-    private JsonArray<Element> elements;
+    private       AnnotationModel    model;
+    private       Remover            remover;
+    private       InternalListener   listener;
+    private       JsonArray<Mark>    elements;
 
     /** @param leftNotificationGutter */
     public VerticalRuler(Gutter leftNotificationGutter, TextEditorViewImpl editor) {
@@ -113,12 +84,33 @@ public class VerticalRuler {
         });
     }
 
+    private void showToolTip(Mark mark) {
+        JsonArray<String> messages = JsonCollections.createArray();
+        for (Mark m : elements.asIterable()) {
+            if (m.lineNumber == mark.lineNumber) {
+                messages.add(m.annotation.getText());
+            }
+        }
+        Tooltip tooltip = null;
+        if (messages.size() == 1) {
+            tooltip =
+                    Tooltip.create(mark.getElement(), PositionController.VerticalAlign.MIDDLE, PositionController.HorizontalAlign.RIGHT,
+                                   messages.get(0));
+        } else if (messages.size() > 1) {
+            tooltip = Tooltip.create(mark.getElement(), PositionController.VerticalAlign.MIDDLE, PositionController.HorizontalAlign.RIGHT,
+                                     formatMultipleMessages(messages));
+        }
+        if (tooltip == null)
+            return;
+        tooltip.show();
+    }
+
     /**
      *
      */
     private void update() {
-        for (Element e : elements.asIterable()) {
-            view.removeUnmanagedElement(e);
+        for (Mark e : elements.asIterable()) {
+            view.removeUnmanagedElement(e.getElement());
         }
         elements.clear();
 
@@ -129,9 +121,10 @@ public class VerticalRuler {
             Mark m = new Mark(annotation);
             Position position = model.getPosition(annotation);
             int lineNumber = getLineNumberForPosition(position);
+            m.lineNumber = lineNumber;
             m.setTopPosition(editor.getBuffer().calculateLineTop(lineNumber), "px");
             view.addUnmanagedElement(m.getElement());
-            elements.add(m.getElement());
+            elements.add(m);
         }
     }
 
@@ -148,6 +141,58 @@ public class VerticalRuler {
             }
             model = annotationModel;
             remover = model.addAnnotationModelListener(listener);
+        }
+    }
+
+    /**
+     * @param messages
+     *         the messages to format (element type: {@link String})
+     * @return the formatted message
+     */
+    protected String[] formatMultipleMessages(JsonArray<String> messages) {
+        String[] message = new String[messages.size() + 1];
+        message[0] = "Multiple markers at this line";
+        for (int i = 0; i < messages.size(); i++) {
+            message[i + 1] = " - " + messages.get(i);
+        }
+        return message;
+    }
+
+    class InternalListener implements AnnotationModelListener {
+
+        /** {@inheritDoc} */
+        @Override
+        public void modelChanged(AnnotationModelEvent event) {
+            update();
+        }
+
+    }
+
+    class Mark extends CompositeView<Annotation> {
+        private int        lineNumber;
+        private Annotation annotation;
+
+        /**
+         *
+         */
+        public Mark(Annotation annotation) {
+            this.annotation = annotation;
+            setElement((Element)AbstractImagePrototype.create(annotation.getImage()).createElement());
+            getElement().getStyle().setZIndex(annotation.getLayer());
+            getElement().getStyle().setPosition("absolute");
+            getElement().getStyle().setWidth("15px");
+            getElement().getStyle().setLeft("0px");
+            getElement().addEventListener(Event.MOUSEOVER, new EventListener() {
+                @Override
+                public void handleEvent(Event evt) {
+                    showToolTip(Mark.this);
+                }
+            }, false);
+
+        }
+
+        public void setTopPosition(int top, String unit) {
+            getElement().getStyle().setTop(top, unit);
         }
     }
 

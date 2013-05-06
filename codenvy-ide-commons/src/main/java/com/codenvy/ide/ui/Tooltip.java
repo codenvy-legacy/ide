@@ -32,6 +32,7 @@ import com.codenvy.ide.util.AnimationController;
 import com.codenvy.ide.util.HoverController;
 import com.codenvy.ide.util.dom.Elements;
 import com.codenvy.ide.util.loging.Log;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 
@@ -47,8 +48,9 @@ import com.google.gwt.resources.client.CssResource;
 public class Tooltip extends AutoHideComponent<AutoHideView<Void>,
         AutoHideComponent.AutoHideModel> {
 
-    private static final int SHOW_DELAY = 600;
-    private static final int HIDE_DELAY = 600;
+    private static final Resources RESOURCES  = GWT.create(Resources.class);
+    private static final int       SHOW_DELAY = 600;
+    private static final int       HIDE_DELAY = 600;
     /** The singleton view instance that all tooltips use. */
     private static AutoHideView<Void>            tooltipViewInstance;
     /** The currently active tooltip that is bound to the view. */
@@ -66,6 +68,11 @@ public class Tooltip extends AutoHideComponent<AutoHideView<Void>,
     private        String                        maxWidth;
     private boolean isEnabled = true;
     private boolean isShowDelayDisabled;
+
+    static {
+        RESOURCES.tooltipCss().ensureInjected();
+    }
+
 
     private Tooltip(AutoHideView<Void> view,
                     Resources res,
@@ -106,11 +113,11 @@ public class Tooltip extends AutoHideComponent<AutoHideView<Void>,
     }
 
     /** Static factory method for creating a simple tooltip. */
-    public static Tooltip create(Resources res, Element targetElement, PositionController.VerticalAlign vAlign,
+    public static Tooltip create(Element targetElement, PositionController.VerticalAlign vAlign,
                                  PositionController.HorizontalAlign hAlign, String... tooltipText) {
-        return new Builder(res, targetElement, new TooltipPositionerBuilder().setVerticalAlign(vAlign)
-                                                                             .setHorizontalAlign(hAlign)
-                                                                             .buildAnchorPositioner(targetElement)).setTooltipRenderer(
+        return new Builder(targetElement, new TooltipPositionerBuilder().setVerticalAlign(vAlign)
+                                                                        .setHorizontalAlign(hAlign)
+                                                                        .buildAnchorPositioner(targetElement)).setTooltipRenderer(
                 new SimpleStringRenderer(tooltipText)).build();
     }
 
@@ -375,8 +382,8 @@ public class Tooltip extends AutoHideComponent<AutoHideView<Void>,
         private TooltipRenderer renderer;
 
         /** @see TooltipPositionerBuilder */
-        public Builder(Resources res, Element targetElement, PositionController.Positioner positioner) {
-            this.res = res;
+        public Builder(Element targetElement, PositionController.Positioner positioner) {
+            this.res = RESOURCES;
             this.positioner = positioner;
             this.targetElements = JsonCollections.createArray(targetElement);
         }

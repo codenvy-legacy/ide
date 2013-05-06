@@ -18,7 +18,8 @@
  */
 package com.codenvy.ide.texteditor;
 
-import elemental.html.Element;
+import elemental.events.Event;
+import elemental.events.EventListener;
 
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
@@ -29,6 +30,8 @@ import com.codenvy.ide.text.annotation.AnnotationModel;
 import com.codenvy.ide.text.annotation.AnnotationModelEvent;
 import com.codenvy.ide.text.annotation.AnnotationModelListener;
 import com.codenvy.ide.texteditor.gutter.Gutter;
+import com.codenvy.ide.ui.Tooltip;
+import com.codenvy.ide.ui.menu.PositionController;
 import com.codenvy.ide.util.ListenerRegistrar;
 import com.codenvy.ide.util.dom.Elements;
 import com.codenvy.ide.util.loging.Log;
@@ -48,7 +51,7 @@ public class OverviewRuler {
     private       AnnotationModel           model;
     private       ListenerRegistrar.Remover remover;
     private       InternalListener          listener;
-    private       JsonArray<Element>        elements;
+    private       JsonArray<Mark>           elements;
 
     public OverviewRuler(Gutter view, TextEditorViewImpl editor) {
         this.view = view;
@@ -59,8 +62,8 @@ public class OverviewRuler {
 
     private void update() {
 
-        for (Element e : elements.asIterable()) {
-            view.removeUnmanagedElement(e);
+        for (Mark e : elements.asIterable()) {
+            view.removeUnmanagedElement(e.getElement());
         }
         elements.clear();
         int numberOfLines = editor.getDocument().getNumberOfLines();
@@ -72,10 +75,11 @@ public class OverviewRuler {
                 int lineNumber = editor.getDocument().getLineOfOffset(model.getPosition(annotation).getOffset());
 
                 mark.setTopPosition((100 * lineNumber) / numberOfLines, "%");
+                mark.setLineNumber(lineNumber);
                 mark.getElement().setAttribute("data-line-number", String.valueOf(lineNumber));
                 mark.getElement().setClassName(model.getAnnotationStyle().get(annotation.getType()));
                 view.addUnmanagedElement(mark.getElement());
-                elements.add(mark.getElement());
+                elements.add(mark);
             } catch (BadLocationException e) {
                 Log.error(getClass(), e);
             }
@@ -95,6 +99,41 @@ public class OverviewRuler {
         }
     }
 
+    private void showToolTip(Mark mark) {
+        JsonArray<String> messages = JsonCollections.createArray();
+        for (Mark m : elements.asIterable()) {
+            if (m.lineNumber == mark.lineNumber) {
+                messages.add(m.annotation.getText());
+            }
+        }
+        Tooltip tooltip = null;
+        if (messages.size() == 1) {
+            tooltip =
+                    Tooltip.create(mark.getElement(), PositionController.VerticalAlign.MIDDLE, PositionController.HorizontalAlign.LEFT,
+                                   messages.get(0));
+        } else if (messages.size() > 1) {
+            tooltip = Tooltip.create(mark.getElement(), PositionController.VerticalAlign.MIDDLE, PositionController.HorizontalAlign.LEFT,
+                                     formatMultipleMessages(messages));
+        }
+        if (tooltip == null)
+            return;
+        tooltip.show();
+    }
+
+    /**
+     * @param messages
+     *         the messages to format (element type: {@link String})
+     * @return the formatted message
+     */
+    protected String[] formatMultipleMessages(JsonArray<String> messages) {
+        String[] message = new String[messages.size() + 1];
+        message[0] = "Multiple markers at this line";
+        for (int i = 0; i < messages.size(); i++) {
+            message[i + 1] = " - " + messages.get(i);
+        }
+        return message;
+    }
+
     class InternalListener implements AnnotationModelListener {
 
         /** {@inheritDoc} */
@@ -106,19 +145,31 @@ public class OverviewRuler {
     }
 
     class Mark extends CompositeView<Annotation> {
+        private Annotation annotation;
+        private int        lineNumber;
+
         /**
          *
          */
-        public Mark(Annotation annotation) {
+        public Mark(final Annotation annotation) {
+            this.annotation = annotation;
             setElement(Elements.createDivElement());
             getElement().getStyle().setZIndex(annotation.getLayer());
-            getElement().setTitle(annotation.getText());
+            getElement().addEventListener(Event.MOUSEOVER, new EventListener() {
+                @Override
+                public void handleEvent(Event event) {
+                    showToolTip(Mark.this);
+                }
+            }, false);
         }
 
         public void setTopPosition(int top, String unit) {
             getElement().getStyle().setTop(top, unit);
         }
-    }
 
+        public void setLineNumber(int lineNumber) {
+            this.lineNumber = lineNumber;
+        }
+    }
 
 }
