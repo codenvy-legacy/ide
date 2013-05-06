@@ -85,7 +85,7 @@ public class JavaDocBuilderVfs extends JavaDocBuilder {
         for (Item i : list) {
             try {
                 addSource(new InputStreamReader(vfs.getContent(i.getId()).getStream()), i.getId());
-            } catch (VirtualFileSystemException e) {
+            } catch (Exception e) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug(e);
                 }
