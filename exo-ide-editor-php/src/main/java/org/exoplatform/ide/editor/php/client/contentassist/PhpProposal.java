@@ -58,7 +58,7 @@ public class PhpProposal implements CompletionProposal {
 
     private final Token token;
 
-    private List<Modifier> modifieres = new ArrayList<Modifier>();
+    private final List<Modifier> modifieres = new ArrayList<Modifier>();
 
     /**
      * Constructs new {@link PhpProposal} instance with the given proposal, prefix and offset.

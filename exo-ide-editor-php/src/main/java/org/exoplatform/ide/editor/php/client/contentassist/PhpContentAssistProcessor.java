@@ -157,6 +157,10 @@ public class PhpContentAssistProcessor implements ContentAssistProcessor {
     }
 
     private void init() {
+        if(keyWords != null) {
+            return;
+        }
+
         PhpBundle bundle = GWT.create(PhpBundle.class);
         try {
             bundle.phpKeyWords().getText(new ResourceCallback<TextResource>() {

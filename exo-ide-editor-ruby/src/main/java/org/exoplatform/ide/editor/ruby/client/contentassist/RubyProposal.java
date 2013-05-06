@@ -22,6 +22,9 @@ import com.codenvy.ide.client.util.logging.Log;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
+import org.exoplatform.ide.editor.api.codeassitant.TokenProperty;
 import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
 import org.exoplatform.ide.editor.client.api.contentassist.Point;
@@ -40,13 +43,17 @@ import org.exoplatform.ide.editor.shared.text.edits.ReplaceEdit;
 public class RubyProposal implements CompletionProposal {
 
     /** Proposal's text label. */
-    private String    proposal;
+    private String      proposal;
 
     /** Triggering string. */
-    private String    prefix;
+    private String      prefix;
 
     /** Text offset. */
-    private final int offset;
+    private final int   offset;
+
+    private final Token token;
+
+    private final int   modifieres;
 
     /**
      * Constructs new {@link RubyProposal} instance with the given proposal, prefix and offset.
@@ -54,11 +61,24 @@ public class RubyProposal implements CompletionProposal {
      * @param proposal proposal's text label
      * @param prefix
      * @param offset text offset
+     * @param token
      */
-    public RubyProposal(String proposal, String prefix, int offset) {
+    public RubyProposal(String proposal, String prefix, int offset, Token token) {
         this.proposal = proposal;
         this.prefix = prefix;
         this.offset = offset;
+        this.token = token;
+
+        if (token.hasProperty(TokenProperties.MODIFIERS)) {
+            final TokenProperty modifieresProperty = token.getProperty(TokenProperties.MODIFIERS);
+            if (modifieresProperty.isNumericProperty() != null)
+                modifieres = modifieresProperty.isNumericProperty().numericValue().intValue();
+            else {
+                modifieres = 0;
+            }
+        } else {
+            modifieres = 0;
+        }
     }
 
     /**
@@ -105,7 +125,29 @@ public class RubyProposal implements CompletionProposal {
      */
     @Override
     public Image getImage() {
-        return new Image(RubyClientBundle.INSTANCE.blankImage());
+        switch (token.getType()) {
+            case METHOD:
+                if (modifieres == 0) {
+                    return new Image(RubyClientBundle.INSTANCE.publicMethod());
+                } else {
+                    return new Image(RubyClientBundle.INSTANCE.defaultMethod());
+                }
+            case CLASS:
+                return new Image(RubyClientBundle.INSTANCE.classItem());
+            case CONSTANT:
+                return new Image(RubyClientBundle.INSTANCE.rubyConstant());
+            case VARIABLE:
+            case LOCAL_VARIABLE:
+                return new Image(RubyClientBundle.INSTANCE.variable());
+            case INSTANCE_VARIABLE:
+                return new Image(RubyClientBundle.INSTANCE.rubyObjectVariable());
+            case CLASS_VARIABLE:
+                return new Image(RubyClientBundle.INSTANCE.rubyClassVariable());
+            case GLOBAL_VARIABLE:
+                return new Image(RubyClientBundle.INSTANCE.rubyGlobalVariable());
+            default:
+                return new Image(RubyClientBundle.INSTANCE.blankImage());
+        }
     }
 
     /**
