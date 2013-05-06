@@ -23,6 +23,10 @@ import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemList;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -34,7 +38,6 @@ import java.util.List;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Nov 28, 2011 4:34:52 PM evgen $
  */
-@Ignore
 public class JavaDocBuilderVfsTest extends JavaDocBase {
 
     @Test
@@ -98,6 +101,14 @@ public class JavaDocBuilderVfsTest extends JavaDocBase {
                 constructors.add(methodInfo);
         }
         Assert.assertEquals(1, constructors.size());
+    }
+    
+    @Test
+    public void bugIDE2670() throws Exception {
+        Folder project = vfs.createFolder(vfs.getInfo().getRoot().getId(), "bug-ide-2670");
+        vfs.importZip(project.getId(), Thread.currentThread().getContextClassLoader().getResourceAsStream("bug-ide-2670.zip"), true);
+        TypeInfo clazz = javaCa.getClassByFqnFromProject("dashboard.AmazonLogsReader", project.getId(), VFS_ID);
+        Assert.assertNull(clazz);//Looks like bug in QDox http://jira.codehaus.org/browse/QDOX-241 fixed in 2.0 version
     }
 
 }
