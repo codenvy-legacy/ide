@@ -221,7 +221,7 @@ public class RubyContentAssistProcessor implements ContentAssistProcessor {
     private List<Token> getTokensFilteredByPrefix(String prefix) {
         List<Token> filteredTokens = new ArrayList<Token>();
         for (Token token : keyWords) {
-            if (token.getName().startsWith(prefix.toLowerCase())) {
+            if (token.getName().startsWith(prefix)) {
                 filteredTokens.add(token);
             }
         }
