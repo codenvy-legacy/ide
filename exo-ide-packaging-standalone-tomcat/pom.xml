@@ -9,7 +9,7 @@
     <parent>
         <groupId>org.exoplatform.ide</groupId>
         <artifactId>exo-ide-parent</artifactId>
-        <version>2.2.0-SNAPSHOT</version>
+        <version>2.2.0</version>
     </parent>
 
     <artifactId>exo-ide-packaging-standalone-tomcat</artifactId>
@@ -755,26 +755,16 @@
                                 </war>
 
 
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-rest-war-${project.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/rest.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${project.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-site-war-${project.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-shell-war-${project.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/shell.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${project.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${project.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-gadget-server-${project.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/gadget-server.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true"/>
-                                <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"
-                                       dest="${project.build.directory}/tomcat-ide"/>
-                                <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip"
-                                       dest="${project.build.directory}/tomcat-ide">
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-rest-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/rest.war" overwrite="true" />
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true" />
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-site-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true" />
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-shell-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/shell.war" overwrite="true" />
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" overwrite="true" />
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true" />
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-gadget-server-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/gadget-server.war" overwrite="true" />
+                                <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true" />
+                                <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip" dest="${project.build.directory}/tomcat-ide" />
+                                <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip" dest="${project.build.directory}/tomcat-ide">
                                     <patternset>
                                         <exclude name="**/bin/**" />
                                         <exclude name="**/demos/**" />
@@ -792,8 +782,7 @@
                                         <exclude name="**/RELEASE_NOTES.ORM" />
                                     </patternset>
                                 </unzip>
-                                <move file="${project.build.directory}/tomcat-ide/appengine-java-sdk-${appengine.version}"
-                                      tofile="${project.build.directory}/tomcat-ide/appengine-java-sdk"/>
+                                <move file="${project.build.directory}/tomcat-ide/appengine-java-sdk-${appengine.version}" tofile="${project.build.directory}/tomcat-ide/appengine-java-sdk" />
                             </tasks>
                         </configuration>
                         <goals>
