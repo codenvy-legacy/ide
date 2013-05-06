@@ -145,12 +145,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
 
         HasClickHandlers getCancelButton();
 
-        HasValue<String> getJRebelFirstNameField();
-
-        HasValue<String> getJRebelLastNameField();
-
-        HasValue<String> getJRebelPhoneNumberField();
-
         void enableNextButton(boolean enabled);
 
         void enableFinishButton(boolean enabled);
@@ -162,8 +156,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
         void showDeployProjectStep();
 
         void setDeployView(Composite deployView);
-
-        void setJRebelErrorMessageLabel(String message);
 
         void setJRebelFormVisible(boolean visible);
 
@@ -205,8 +197,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
     private static final Comparator<PaaS> PAAS_COMPARATOR = new PaaSComparator();
 
     private boolean createModule = false;
-
-//   private ProjectModel parentProject;
 
     private Item selectedItem;
 
@@ -273,9 +263,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
                 } else {
                     if (display.getUseJRebelPlugin().getValue()
                         && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING)) {
-                        if (!checkJRebelFieldFill()) {
-                            return;
-                        }
+                        //TODO
                     }
                     goNext();
                 }
@@ -296,10 +284,8 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
             public void onClick(ClickEvent event) {
                 if (display.getUseJRebelPlugin().getValue()
                     && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING)) {
-                    if (!checkJRebelFieldFill()) {
-                        return;
-                    }
                     sendProfileInfoToZeroTurnaround();
+                    //TODO 
                 }
                 if (isDeployStep) {
                     doDeploy((availableProjectTemplates.size() == 1) ? availableProjectTemplates.get(0) : selectedTemplate);
@@ -324,27 +310,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
                 } else {
                     display.setJRebelFormVisible(false);
                 }
-            }
-        });
-
-        display.getJRebelFirstNameField().addValueChangeHandler(new ValueChangeHandler<String>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<String> event) {
-                checkJRebelFieldFill();
-            }
-        });
-
-        display.getJRebelLastNameField().addValueChangeHandler(new ValueChangeHandler<String>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<String> event) {
-                checkJRebelFieldFill();
-            }
-        });
-
-        display.getJRebelPhoneNumberField().addValueChangeHandler(new ValueChangeHandler<String>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<String> event) {
-                checkJRebelFieldFill();
             }
         });
 
@@ -912,9 +877,9 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
         String url = Utils.getRestContext() + "/ide/jrebel/profile/send";
 
         JSONObject json = new JSONObject();
-        json.put("firstName", new JSONString(display.getJRebelFirstNameField().getValue()));
+        /*json.put("firstName", new JSONString(display.getJRebelFirstNameField().getValue()));
         json.put("lastName", new JSONString(display.getJRebelLastNameField().getValue()));
-        json.put("phone", new JSONString(display.getJRebelPhoneNumberField().getValue()));
+        json.put("phone", new JSONString(display.getJRebelPhoneNumberField().getValue()));*/
 
         try {
             AsyncRequest.build(RequestBuilder.POST, url)
@@ -935,27 +900,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
         }
     }
 
-    private boolean checkJRebelFieldFill() {
-        if (display.getUseJRebelPlugin().getValue()) {
-            if (!display.getJRebelFirstNameField().getValue().isEmpty()
-                && !display.getJRebelLastNameField().getValue().isEmpty()
-                && !display.getJRebelPhoneNumberField().getValue().isEmpty()) {
-                String phone = display.getJRebelPhoneNumberField().getValue();
-
-                boolean phoneMatched = phone.matches("^[+]?[\\d\\-\\s().]+$");
-                if (!phoneMatched) {
-                    display.setJRebelErrorMessageLabel(
-                            "Valid phone number consists of digits or special characters '+', '(', ')', '-' only.");
-                } else {
-                    display.setJRebelErrorMessageLabel("");
-                }
-                return phoneMatched;
-            }
-            display.setJRebelErrorMessageLabel("All fields are required!");
-        }
-        return false;
-    }
-
     private void getJRebelUserProfileInfo() {
         String url = Utils.getRestContext() + "/ide/jrebel/profile/get";
 
@@ -973,9 +917,9 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
                                         jsonObject.get("lastName") != null ? jsonObject.get("lastName").isString().stringValue() : "";
                                 String phone = jsonObject.get("phone") != null ? jsonObject.get("phone").isString().stringValue() : "";
 
-                                display.getJRebelFirstNameField().setValue(firstName);
+                                /*display.getJRebelFirstNameField().setValue(firstName);
                                 display.getJRebelLastNameField().setValue(lastName);
-                                display.getJRebelPhoneNumberField().setValue(phone);
+                                display.getJRebelPhoneNumberField().setValue(phone);*/
 
                                 if (!firstName.isEmpty() && !lastName.isEmpty() && !phone.isEmpty()) {
                                     //if all fields are filled then we hide form
