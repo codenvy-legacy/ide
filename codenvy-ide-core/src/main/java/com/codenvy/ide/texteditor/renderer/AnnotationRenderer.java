@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.texteditor.renderer;
 
+import com.codenvy.ide.dto.client.ClientDocOpFactory;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
@@ -31,6 +32,7 @@ import com.codenvy.ide.text.annotation.AnnotationModelListener;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.LineFinder;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
+import com.codenvy.ide.texteditor.ot.PositionMigrator;
 import com.codenvy.ide.util.loging.Log;
 
 import java.util.Iterator;
@@ -41,7 +43,8 @@ import java.util.Iterator;
  */
 public class AnnotationRenderer implements AnnotationModelListener {
 
-    private TextEditorViewImpl editor;
+    private final PositionMigrator   positionMigrator;
+    private       TextEditorViewImpl editor;
 
     private AnnotationModel annotationModel;
 
@@ -56,6 +59,7 @@ public class AnnotationRenderer implements AnnotationModelListener {
         this.decorations = decorations;
         renderer = new ErrorRenderer();
         editor.addLineRenderer(renderer);
+        this.positionMigrator = new PositionMigrator(ClientDocOpFactory.INSTANCE);
     }
 
     /** {@inheritDoc} */
@@ -96,8 +100,8 @@ public class AnnotationRenderer implements AnnotationModelListener {
         JsonArray<Line> linesToRender = JsonCollections.createArray();
         getLinesOfErrorsInViewport(renderer.getCodeErrors(), linesToRender);
         getLinesOfErrorsInViewport(newErrors, linesToRender);
-        //      positionMigrator.reset();
-        renderer.setCodeErrors(newErrors);
+        positionMigrator.reset();
+        renderer.setCodeErrors(newErrors, positionMigrator);
 
         for (int i = 0; i < linesToRender.size(); i++) {
             editor.getRenderer().requestRenderLine(linesToRender.get(i));
@@ -123,6 +127,7 @@ public class AnnotationRenderer implements AnnotationModelListener {
     public void setMode(AnnotationModel annotationModel) {
         this.annotationModel = annotationModel;
         annotationModel.addAnnotationModelListener(this);
+        positionMigrator.start(editor.getTextStore().getTextListenerRegistrar());
     }
 
 }

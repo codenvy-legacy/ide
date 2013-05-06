@@ -16,6 +16,8 @@ package com.codenvy.ide.texteditor.renderer;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.text.store.Line;
+import com.codenvy.ide.text.store.LineNumberAndColumn;
+import com.codenvy.ide.texteditor.ot.PositionMigrator;
 import com.codenvy.ide.util.SortedList;
 import com.codenvy.ide.util.loging.Log;
 
@@ -64,7 +66,7 @@ public class ErrorRenderer implements LineRenderer {
     // List of errors for a file.
     private JsonArray<AnnotationCode> codeErrors;
 
-//   private PositionMigrator positionMigrator;
+    private PositionMigrator positionMigrator;
 
     public ErrorRenderer() {
         codeErrors = JsonCollections.createArray();
@@ -155,14 +157,11 @@ public class ErrorRenderer implements LineRenderer {
     }
 
     private int migrateLineNumber(int lineNumber) {
-//      if (positionMigrator == null)
-//      {
-        return lineNumber;
-//      }
-//      else
-//      {
-//         return positionMigrator.migrateFromNow(lineNumber, 0).lineNumber;
-//      }
+        if (positionMigrator == null) {
+            return lineNumber;
+        } else {
+            return positionMigrator.migrateFromNow(lineNumber, 0).lineNumber;
+        }
     }
 
     private AnnotationCode migrateError(AnnotationCode oldError) {
@@ -178,18 +177,17 @@ public class ErrorRenderer implements LineRenderer {
     }
 
     private DocumentPosition migrateFilePositionToNow(DocumentPosition filePosition) {
-//      if (!positionMigrator.haveChanges())
-//      {
-        return filePosition;
-//      }
-//      LineNumberAndColumn newPosition =
-//         positionMigrator.migrateToNow(filePosition.getLineNumber(), filePosition.getColumn());
-//      return new DocumentPosition(newPosition.lineNumber, newPosition.column);
+        if (!positionMigrator.haveChanges()) {
+            return filePosition;
+        }
+        LineNumberAndColumn newPosition =
+                positionMigrator.migrateToNow(filePosition.getLineNumber(), filePosition.getColumn());
+        return new DocumentPosition(newPosition.lineNumber, newPosition.column);
     }
 
-    public void setCodeErrors(JsonArray<AnnotationCode> codeErrors) {
+    public void setCodeErrors(JsonArray<AnnotationCode> codeErrors, PositionMigrator positionMigrator) {
         this.codeErrors = codeErrors;
-//      this.positionMigrator = positionMigrator;
+        this.positionMigrator = positionMigrator;
     }
 
     private static String filePositionToString(DocumentPosition position) {
