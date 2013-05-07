@@ -33,6 +33,11 @@
     <component>
         <type>org.exoplatform.ide.IDEServiceApplication</type>
     </component>
+    
+    <component>
+      <key>org.exoplatform.ide.extension.ssh.server.SshKeyStore</key>
+      <type>org.exoplatform.ide.extension.ssh.server.DummySshKeyStore</type>
+    </component>
 
     <!-- VirtualFileSystem -->
     <component>
@@ -246,6 +251,10 @@
     ***************************************************************************************
     -->
 
+    <component>
+      <type>com.codenvy.commons.security.oauth.OAuthAuthenticationApplication</type>
+    </component>
+  
     <component>
         <type>org.exoplatform.ide.security.oauth.ExoOAuthAuthenticatorProvider</type>
     </component>

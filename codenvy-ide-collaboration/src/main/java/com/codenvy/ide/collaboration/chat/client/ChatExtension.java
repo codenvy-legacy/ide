@@ -151,7 +151,7 @@ public class ChatExtension extends Extension
     }
 
     @Override
-    public void onOpen() {
+    public void onConnectionOpened() {
         if (subscribeOnReady && currentProject != null) {
             subscribeToChanel();
         }
