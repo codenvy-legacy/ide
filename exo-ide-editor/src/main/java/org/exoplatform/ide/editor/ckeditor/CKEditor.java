@@ -32,12 +32,16 @@ import com.google.gwt.user.client.ui.Label;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.editor.client.api.FileContentLoader;
 import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.client.api.EditorCapability;
 import org.exoplatform.ide.editor.client.api.SelectionRange;
 import org.exoplatform.ide.editor.client.api.event.*;
 import org.exoplatform.ide.editor.shared.text.Document;
+import org.exoplatform.ide.editor.shared.text.DocumentEvent;
 import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocumentListener;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Created by The eXo Platform SAS .
@@ -289,6 +293,17 @@ public class CKEditor extends AbsolutePanel implements Editor {
     public String getText() {
         // replace "\t" delimiter on space symbol
         return getTextNative().replace("\t", " ");
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setFile(FileModel file) {
+        FileContentLoader.getFileContent(file, new FileContentLoader.ContentCallback() {
+            @Override
+            public void onContentReceived(String content) {
+                setText(content);
+            }
+        });
     }
 
     public native String getTextNative()
@@ -557,7 +572,18 @@ public class CKEditor extends AbsolutePanel implements Editor {
     /** @see org.exoplatform.ide.editor.client.api.Editor#getDocument() */
     @Override
     public IDocument getDocument() {
-        return new Document(getText());
+        Document document = new Document(getText());
+        document.addDocumentListener(new IDocumentListener() {
+            @Override
+            public void documentAboutToBeChanged(DocumentEvent event) {
+            }
+
+            @Override
+            public void documentChanged(DocumentEvent event) {
+                setText(event.getDocument().get());
+            }
+        });
+        return document;
     }
 
     /** @see org.exoplatform.ide.editor.client.api.Editor#getSelectionRange() */

@@ -29,6 +29,17 @@
             <artifactId>gwt-user</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-vfs</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.gwt</groupId>
+            <artifactId>codenvy-gwtframework-ui</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
     <build>
         <resources>

@@ -43,6 +43,7 @@ import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.EditorTokenListPreparedEvent;
 import org.exoplatform.ide.editor.api.EditorTokenListPreparedHandler;
+import org.exoplatform.ide.editor.client.api.FileContentLoader;
 import org.exoplatform.ide.editor.api.codeassitant.CanInsertImportStatement;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
@@ -52,6 +53,7 @@ import org.exoplatform.ide.editor.client.api.SelectionRange;
 import org.exoplatform.ide.editor.client.api.event.*;
 import org.exoplatform.ide.editor.client.marking.*;
 import org.exoplatform.ide.editor.shared.text.*;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.*;
 
@@ -658,7 +660,6 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
     }
 
     /**
-     * @param cursorCol
      * @return
      */
     public int getCursorOffsetX() {
@@ -878,8 +879,17 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
        return editor.getCode();
    }-*/;
 
-    /** @see org.exoplatform.ide.editor.client.api.Editor#setText(java.lang.String) */
     @Override
+    public void setFile(FileModel file) {
+        FileContentLoader.getFileContent(file, new FileContentLoader.ContentCallback() {
+            @Override
+            public void onContentReceived(String content) {
+                setText(content);
+            }
+        });
+    }
+
+
     public void setText(String text) {
         if (editorObject == null) {
             initialText = text;
@@ -1196,12 +1206,11 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
        return editor.lineNumber(cursor) - 1;
    }-*/;
 
-    /** @see org.exoplatform.ide.editor.client.api.Editor#getTokenList() */
+
     public List<? extends Token> getTokenList() {
         return (List<TokenBeenImpl>)configuration.getParser().getTokenList(id, editorObject);
     }
 
-    /** @see org.exoplatform.ide.editor.client.api.Editor#getTokenList() */
     public void getTokenListInBackground() {
         if (needUpdateTokenList) {
             configuration.getParser().getTokenListInBackground(id, editorObject, tokenListReceivedHandler);
@@ -1471,14 +1480,11 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
        editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].onmouseout = null;
    }-*/;
 
-    /** @see org.exoplatform.ide.editor.problem.Markable#addProblemClickHandler(org.exoplatform.ide.editor.problem.ProblemClickHandler) */
     @Override
     public HandlerRegistration addProblemClickHandler(ProblemClickHandler handler) {
         return addHandler(handler, ProblemClickEvent.TYPE);
     }
 
-    /** @see org.exoplatform.ide.editor.problem.Markable#addLineNumberDoubleClickHandler(org.exoplatform.ide.editor.problem
-     * .LineNumberDoubleClickHandler) */
     @Override
     public HandlerRegistration addLineNumberDoubleClickHandler(EditorLineNumberDoubleClickHandler handler) {
         return addHandler(handler, EditorLineNumberDoubleClickEvent.TYPE);
@@ -1615,15 +1621,15 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
        }
    }-*/;
 
-    /** @see org.exoplatform.ide.editor.shared.text.IDocumentListener#documentAboutToBeChanged(org.exoplatform.ide.editor.shared.text
-     * .DocumentEvent) */
+
+    /** {@inheritDoc} */
     @Override
     public void documentAboutToBeChanged(DocumentEvent event) {
         // TODO Auto-generated method stub
     }
 
-    /** @see org.exoplatform.ide.editor.shared.text.IDocumentListener#documentChanged(org.exoplatform.ide.editor.shared.text
-     * .DocumentEvent) */
+
+    /** {@inheritDoc} */
     @Override
     public void documentChanged(DocumentEvent event) {
         try {
@@ -1800,8 +1806,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
         System.out.println("CodeMirror: " + message);
     }
 
-    /** @see org.exoplatform.ide.editor.problem.Markable#addLineNumberContextMenuHandler(org.exoplatform.ide.editor.problem
-     * .LineNumberContextMenuHandler) */
+    /** {@inheritDoc} */
     @Override
     public HandlerRegistration addLineNumberContextMenuHandler(EditorLineNumberContextMenuHandler handler) {
         return addHandler(handler, EditorLineNumberContextMenuEvent.TYPE);
@@ -1831,43 +1836,38 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
         return 0;
     }
 
-    /** @see org.exoplatform.ide.editor.client.api.Editor#addContentChangedHandler(org.exoplatform.ide.editor.client.api.event
-     * .EditorContentChangedHandler) */
+
+    /** {@inheritDoc} */
     @Override
     public HandlerRegistration addContentChangedHandler(EditorContentChangedHandler handler) {
         return addHandler(handler, EditorContentChangedEvent.TYPE);
     }
 
-    /** @see org.exoplatform.ide.editor.client.api.Editor#addContextMenuHandler(org.exoplatform.ide.editor.client.api.event
-     * .EditorContextMenuHandler) */
+    /** {@inheritDoc} */
     @Override
     public HandlerRegistration addContextMenuHandler(EditorContextMenuHandler handler) {
         return addHandler(handler, EditorContextMenuEvent.TYPE);
     }
 
-    /** @see org.exoplatform.ide.editor.client.api.Editor#addCursorActivityHandler(org.exoplatform.ide.editor.client.api.event
-     * .EditorCursorActivityHandler) */
+    /** {@inheritDoc} */
     @Override
     public HandlerRegistration addCursorActivityHandler(EditorCursorActivityHandler handler) {
         return addHandler(handler, EditorCursorActivityEvent.TYPE);
     }
 
-    /** @see org.exoplatform.ide.editor.client.api.Editor#addFocusReceivedHandler(org.exoplatform.ide.editor.client.api.event
-     * .EditorFocusReceivedHandler) */
+    /** {@inheritDoc} */
     @Override
     public HandlerRegistration addFocusReceivedHandler(EditorFocusReceivedHandler handler) {
         return addHandler(handler, EditorFocusReceivedEvent.TYPE);
     }
 
-    /** @see org.exoplatform.ide.editor.client.api.Editor#addHotKeyPressedHandler(org.exoplatform.ide.editor.client.api.event
-     * .EditorHotKeyPressedHandler) */
+    /** {@inheritDoc} */
     @Override
     public HandlerRegistration addHotKeyPressedHandler(EditorHotKeyPressedHandler handler) {
         return addHandler(handler, EditorHotKeyPressedEvent.TYPE);
     }
 
-    /** @see org.exoplatform.ide.editor.client.api.Editor#addInitializedHandler(org.exoplatform.ide.editor.client.api.event
-     * .EditorInitializedHandler) */
+    /** {@inheritDoc} */
     @Override
     public HandlerRegistration addInitializedHandler(EditorInitializedHandler handler) {
         return addHandler(handler, EditorInitializedEvent.TYPE);
@@ -1880,8 +1880,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
             markProblem(m);
     }
 
-    /** @see org.exoplatform.ide.editor.client.api.Editor#search(java.lang.String, boolean, org.exoplatform.ide.editor.client.api.event
-     * .SearchCompleteCallback) */
+    /** {@inheritDoc} */
     @Override
     public void search(final String query, final boolean caseSensitive, final SearchCompleteCallback searchCompleteCallback) {
         if (searchCompleteCallback == null) {
