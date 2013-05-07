@@ -45,6 +45,9 @@ public class RubyProposal implements CompletionProposal {
     /** Proposal's text label. */
     private String      proposal;
 
+    /** Proposal's additional text. */
+    private String      additionalInfo;
+
     /** Triggering string. */
     private String      prefix;
 
@@ -59,12 +62,14 @@ public class RubyProposal implements CompletionProposal {
      * Constructs new {@link RubyProposal} instance with the given proposal, prefix and offset.
      * 
      * @param proposal proposal's text label
+     * @param additionalInfo proposal's additional text
      * @param prefix
      * @param offset text offset
      * @param token
      */
-    public RubyProposal(String proposal, String prefix, int offset, Token token) {
+    public RubyProposal(String proposal, String additionalInfo, String prefix, int offset, Token token) {
         this.proposal = proposal;
+        this.additionalInfo = additionalInfo;
         this.prefix = prefix;
         this.offset = offset;
         this.token = token;
@@ -118,6 +123,14 @@ public class RubyProposal implements CompletionProposal {
     @Override
     public String getDisplayString() {
         return proposal;
+    }
+
+    /**
+     * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getAdditionalDisplayString()
+     */
+    @Override
+    public String getAdditionalDisplayString() {
+        return additionalInfo;
     }
 
     /**

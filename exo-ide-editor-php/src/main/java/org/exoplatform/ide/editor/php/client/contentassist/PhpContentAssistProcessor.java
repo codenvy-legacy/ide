@@ -134,7 +134,7 @@ public class PhpContentAssistProcessor implements ContentAssistProcessor {
                 return htmlContentAssistProcessor.computeCompletionProposals(editor, offset);
             }
         } else if (CodeMirror2.PHP.equals(mode)) {
-            FindTokenResult findTokenResult = getTriggeringString(tokens, column);
+            FindTokenResult findTokenResult = findToken(tokens, column);
             String prefix = findTokenResult.inToken.getValue();
 
             switch (findTokenResult.inToken.getType()) {
@@ -183,7 +183,7 @@ public class PhpContentAssistProcessor implements ContentAssistProcessor {
     }
 
     /** Finds token at cursor position. */
-    private static FindTokenResult getTriggeringString(JsonArray<com.google.collide.codemirror2.Token> tokens, int column) {
+    private static FindTokenResult findToken(JsonArray<com.google.collide.codemirror2.Token> tokens, int column) {
         FindTokenResult result = new FindTokenResult();
 
         // Number of tokens in line.

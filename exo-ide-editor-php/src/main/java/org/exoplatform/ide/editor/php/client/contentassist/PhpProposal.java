@@ -116,6 +116,14 @@ public class PhpProposal implements CompletionProposal {
         return proposal;
     }
 
+    /**
+     * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getAdditionalDisplayString()
+     */
+    @Override
+    public String getAdditionalDisplayString() {
+        return null;
+    }
+
     /** @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getImage() */
     @Override
     public Image getImage() {
