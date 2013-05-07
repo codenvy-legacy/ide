@@ -63,6 +63,7 @@ import java.util.*;
 public class GetStartedPresenter implements DeployResultHandler, GetStartedHandler, ViewClosedHandler, VfsChangedHandler {
 
     interface Display extends IsView {
+        
         void showChooseNameStep();
 
         void showChooseTechnologyStep();
@@ -96,6 +97,7 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         void setProjectNameFocus();
 
         void setErrorVisible(boolean visible);
+        
     }
 
     /** representing display */
@@ -269,15 +271,15 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
             TemplateService.getInstance().getProjectTemplateList(
                     new AsyncRequestCallback<List<ProjectTemplate>>(new ProjectTemplateListUnmarshaller(
                             new ArrayList<ProjectTemplate>())) {
+                        
                         @Override
                         protected void onSuccess(List<ProjectTemplate> result) {
                             for (ProjectTemplate template : result) {
                                 availableProjectTypes.add(ProjectType.fromValue(template.getType()));
-
                                 availableProjectTemplates.add(template);
                             }
+                            
                             display.setProjectTypes(availableProjectTypes);
-
                             setProjectTypesButtonsHandlers();
                         }
 

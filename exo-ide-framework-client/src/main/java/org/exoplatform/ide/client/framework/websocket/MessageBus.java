@@ -98,7 +98,7 @@ public abstract class MessageBus implements MessageReceivedHandler {
                 send(message, null);
             } catch (WebSocketException e) {
                 if (getReadyState() == ReadyState.CLOSED) {
-                    wsListener.onClose(new WebSocketClosedEvent());
+                    wsListener.onConnectionClosed(new WebSocketClosedEvent());
                 } else {
                     Log.error(MessageBus.class, e);
                 }
@@ -137,29 +137,29 @@ public abstract class MessageBus implements MessageReceivedHandler {
     private class WsListener implements ConnectionOpenedHandler, ConnectionClosedHandler, ConnectionErrorHandler {
 
         @Override
-        public void onClose(final WebSocketClosedEvent event) {
+        public void onConnectionClosed(final WebSocketClosedEvent event) {
             heartbeatTimer.cancel();
             frequentlyReconnectionTimer.scheduleRepeating(FREQUENTLY_RECONNECTION_PERIOD);
             connectionClosedHandlers.dispatch(new Dispatcher<ConnectionClosedHandler>() {
                 @Override
                 public void dispatch(ConnectionClosedHandler listener) {
-                    listener.onClose(event);
+                    listener.onConnectionClosed(event);
                 }
             });
         }
 
         @Override
-        public void onError() {
+        public void onConnectionError() {
             connectionErrorHandlers.dispatch(new Dispatcher<ConnectionErrorHandler>() {
                 @Override
                 public void dispatch(ConnectionErrorHandler listener) {
-                    listener.onError();
+                    listener.onConnectionError();
                 }
             });
         }
 
         @Override
-        public void onOpen() {
+        public void onConnectionOpened() {
             // If the any timer has been started then stop it.
             if (frequentlyReconnectionAttemptsCounter > 0)
                 frequentlyReconnectionTimer.cancel();
@@ -172,7 +172,7 @@ public abstract class MessageBus implements MessageReceivedHandler {
             connectionOpenedHandlers.dispatch(new Dispatcher<ConnectionOpenedHandler>() {
                 @Override
                 public void dispatch(ConnectionOpenedHandler listener) {
-                    listener.onOpen();
+                    listener.onConnectionOpened();
                 }
             });
         }

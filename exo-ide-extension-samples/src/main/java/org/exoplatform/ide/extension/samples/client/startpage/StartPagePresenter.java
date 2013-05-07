@@ -43,6 +43,7 @@ import org.exoplatform.ide.git.client.clone.CloneRepositoryEvent;
 public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandler {
 
     public interface Display extends IsView {
+        
         HasClickHandlers getCloneLink();
 
         HasClickHandlers getProjectLink();
@@ -50,6 +51,7 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
         HasClickHandlers getImportLink();
 
         HasClickHandlers getInvitationsLink();
+        
     }
 
     private Display display;
