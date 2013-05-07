@@ -176,6 +176,7 @@ public class RubyContentAssistProcessor implements ContentAssistProcessor {
 
         FindTokenResult findTokenResult = findToken(tokens, column);
         String prefix = findTokenResult.inToken.getValue();
+        String previousTokenValue = findTokenResult.previousToken == null ? "" : findTokenResult.previousToken.getValue();
 
         switch (findTokenResult.inToken.getType()) {
             case WHITESPACE:
@@ -186,7 +187,7 @@ public class RubyContentAssistProcessor implements ContentAssistProcessor {
         }
 
         List<Token> filteredTokens = new ArrayList<Token>();
-        if (prefix.trim().equals(".") || findTokenResult.previousToken.getValue().equals(".")) {
+        if (prefix.trim().equals(".") || previousTokenValue.equals(".")) {
             if (prefix.trim().equals(".")) {
                 prefix = "";
             }
