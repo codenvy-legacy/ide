@@ -33,7 +33,7 @@ public enum ProjectType {
     MULTI_MODULE("Maven Multi-module"),
     DEFAULT("default"),
     NODE_JS("nodejs"),
-    ANDROID("android");
+    ANDROID("Android");
 
     private final String value;
 
