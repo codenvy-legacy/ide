@@ -110,6 +110,7 @@ public class ProjectResolver {
             projectImages.put(ProjectType.NODE_JS, IconImageBundle.INSTANCE.nodejsProject());
             projectImages.put(ProjectType.DJANGO, IconImageBundle.INSTANCE.djangoProject());
             projectImages.put(ProjectType.AWS, IconImageBundle.INSTANCE.awsProject());
+            projectImages.put(ProjectType.ANDROID, IconImageBundle.INSTANCE.androidType());
 
             projectLargeImages.put(ProjectType.JAR, IconImageBundle.INSTANCE.jarProject48());
             projectLargeImages.put(ProjectType.WAR, IconImageBundle.INSTANCE.jarProject48());
@@ -121,10 +122,11 @@ public class ProjectResolver {
             projectLargeImages.put(ProjectType.PHP, IconImageBundle.INSTANCE.phpProject48());
             projectLargeImages.put(ProjectType.NODE_JS, IconImageBundle.INSTANCE.nodejsProject48());
             projectLargeImages.put(ProjectType.MultiModule, IconImageBundle.INSTANCE.multiModule48());
+            projectLargeImages.put(ProjectType.ANDROID, IconImageBundle.INSTANCE.androidProject48());
         }
 
         projectTypes.put(Language.JAVA, Arrays.asList(ProjectType.JAVA, ProjectType.JSP, ProjectType.SPRING,//
-                                                      ProjectType.AWS, ProjectType.JAR, ProjectType.WAR));
+                                                      ProjectType.AWS, ProjectType.JAR, ProjectType.WAR, ProjectType.ANDROID));
         projectTypes.put(Language.GROOVY, Arrays.asList(ProjectType.EXO));
         projectTypes.put(Language.JAVASCRIPT, Arrays.asList(ProjectType.JAVASCRIPT));
         projectTypes.put(Language.PHP, Arrays.asList(ProjectType.PHP));
