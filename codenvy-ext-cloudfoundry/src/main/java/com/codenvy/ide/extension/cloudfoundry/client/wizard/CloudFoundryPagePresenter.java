@@ -225,7 +225,7 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
 
                                        @Override
                                        public void onFailure(Throwable caught) {
-                                           // do nothing
+                                           Log.error(CloudFoundryPagePresenter.class, "Can not refresh properties", caught);
                                        }
                                    });
                                }

@@ -37,6 +37,7 @@ import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -82,7 +83,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
 
         @Override
         public void onFailure(Throwable caught) {
-            // do nothing
+            Log.error(CloudFoundryProjectPresenter.class, "Can not change  information", caught);
         }
     };
 
@@ -266,7 +267,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
 
             @Override
             public void onFailure(Throwable caught) {
-                // do nothing
+                Log.error(CloudFoundryProjectPresenter.class, "Can not delete application", caught);
             }
         });
     }

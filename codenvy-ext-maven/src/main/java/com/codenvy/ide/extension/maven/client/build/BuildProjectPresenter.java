@@ -528,7 +528,7 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    // nothing to do
+                    Log.error(BuildProjectPresenter.class, "Can not get build result", exception);
                 }
             });
         } catch (RequestException e) {

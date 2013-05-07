@@ -31,6 +31,7 @@ import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -68,7 +69,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
 
         @Override
         public void onFailure(Throwable caught) {
-            // do nothing
+            Log.error(ApplicationsPresenter.class, "Can not change information", caught);
         }
     };
 

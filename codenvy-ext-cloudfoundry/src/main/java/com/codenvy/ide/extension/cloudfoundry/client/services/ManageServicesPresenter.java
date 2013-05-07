@@ -29,6 +29,7 @@ import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices;
 import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -130,7 +131,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
 
             @Override
             public void onFailure(Throwable caught) {
-                // do nothing
+                Log.error(ManageServicesPresenter.class, "Can not create service", caught);
             }
         });
     }
