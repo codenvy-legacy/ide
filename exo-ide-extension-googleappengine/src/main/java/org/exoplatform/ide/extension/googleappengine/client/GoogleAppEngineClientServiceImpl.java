@@ -421,7 +421,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
     @Override
     public String getAuthUrl() {
         return restServiceContext + AUTH_URL +
-               "?oauth_provider=google&scope=https://www.googleapis.com/auth/appengine.admin&redirect_after_login=/IDE/success_oauth.html";
+               "?oauth_provider=google&scope=https://www.googleapis.com/auth/appengine.admin&redirect_after_login=/success_oauth.html";
     }
 
     /** @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#logout(AsyncRequestCallback) */

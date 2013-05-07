@@ -126,6 +126,9 @@
             <Host name="localhost" appBase="webapps"
                   unpackWARs="true" autoDeploy="false" deployOnStartup="true">
 
+                <!-- Configure placement of IDE war into root of domain -->
+                <Context path="" docBase="IDE" reloadable="true"></Context>
+
                 <!-- SingleSignOn valve, share authentication between web applications
                      Documentation at: /docs/config/valve.html -->
                 <Valve className="org.apache.catalina.authenticator.SingleSignOn"/>

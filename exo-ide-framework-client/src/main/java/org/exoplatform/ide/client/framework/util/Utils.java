@@ -394,4 +394,8 @@ public class Utils {
         return $wnd.appConfig.context;
     }-*/;
 
+    public static String getWorkspaceName() {
+        return "dev-monit"; //TODO need to rewrite for automaticaly getting from $wnd.location
+    }
+
 }
