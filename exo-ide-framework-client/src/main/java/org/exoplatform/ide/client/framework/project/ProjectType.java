@@ -41,7 +41,8 @@ public enum ProjectType {
     UNDEFINED("Undefined"), //
     DEFAULT("default"), //
     AWS("Amazon Web Services"),//
-    MultiModule("Maven Multi-module");
+    MultiModule("Maven Multi-module"),
+    ANDROID("android");
 
     /** Project's type name. */
     private String type;
