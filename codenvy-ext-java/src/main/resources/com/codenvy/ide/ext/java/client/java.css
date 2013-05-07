@@ -128,3 +128,44 @@
         display: inline-block;
         background-position: center center;
     }
+
+    .overview-mark-error, .overview-bottom-mark-error,
+    .overview-mark-warning, .overview-bottom-mark-warning, .overview-mark-task {
+        border-width: 1px;
+        border-style: solid;
+        cursor: pointer;
+        left: 2px;
+        right: 2px;
+        height: 3px;
+        position: absolute;
+    }
+
+    .overview-mark-error {
+        background-color: #e4a5c5;
+        border-color: #f82c92;
+    }
+
+    .overview-mark-task {
+        background-color: #a5c5e4;
+        border-color: #2c92f8;
+    }
+
+    .overview-bottom-mark-warning, .overview-bottom-mark-error {
+        height: 8px;
+    }
+
+    .overview-bottom-mark-error {
+        background-color: #e4a5c5;
+        border-color: #f82c92;
+    }
+
+    .overview-mark-warning {
+        background-color: #fcf1ca;
+        border-color: #f6d357;
+
+    }
+
+    .overview-bottom-mark-warning {
+        background-color: #fcf1ca;
+        border-color: #f6d357;
+    }

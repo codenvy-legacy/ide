@@ -75,7 +75,7 @@ public interface AnnotationModel {
      * @param document
      *         the document the model gets disconnected from,
      *         may not be <code>null</code>
-     * @see #connect(IDocument) for further specification details
+     * @see #connect(Document) for further specification details
      */
     void disconnect(Document document);
 
@@ -149,4 +149,11 @@ public interface AnnotationModel {
      * @return all decorations
      */
     JsonStringMap<String> getAnnotationDecorations();
+
+    /**
+     * Returns styles (CSS styles) mapped to Annotation type
+     *
+     * @return all decorations
+     */
+    JsonStringMap<String> getAnnotationStyle();
 }

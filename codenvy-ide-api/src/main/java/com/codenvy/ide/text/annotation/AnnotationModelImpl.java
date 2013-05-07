@@ -21,14 +21,25 @@ package com.codenvy.ide.text.annotation;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.runtime.Assert;
-import com.codenvy.ide.text.*;
+import com.codenvy.ide.text.BadLocationException;
+import com.codenvy.ide.text.BadPositionCategoryException;
+import com.codenvy.ide.text.Document;
+import com.codenvy.ide.text.DocumentEvent;
+import com.codenvy.ide.text.DocumentListener;
+import com.codenvy.ide.text.Position;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * Default implementation of {@link AnnotationModel}
@@ -467,6 +478,11 @@ public class AnnotationModelImpl implements AnnotationModel {
     /** {@inheritDoc} */
     @Override
     public JsonStringMap<String> getAnnotationDecorations() {
+        return JsonCollections.createStringMap();
+    }
+
+    @Override
+    public JsonStringMap<String> getAnnotationStyle() {
         return JsonCollections.createStringMap();
     }
 
