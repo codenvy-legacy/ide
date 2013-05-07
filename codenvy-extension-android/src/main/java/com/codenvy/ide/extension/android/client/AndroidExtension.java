@@ -16,17 +16,41 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.extension.android.client;
+package org.exoplatform.ide.extension.android.client;
 
+import com.google.gwt.core.client.GWT;
+
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.extension.android.client.run.RunApplicationControl;
+import org.exoplatform.ide.extension.android.client.run.RunApplicationManager;
+import org.exoplatform.ide.extension.android.client.run.StopApplicationControl;
 
 /**
-* @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
-* @version $Id: $
-*/
-public class AndroidExtension extends Extension {
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
+ * @version $Id: $
+ */
+public class AndroidExtension extends Extension implements InitializeServicesHandler {
+
+    public static final AndroidExtensionAutoBeanFactory AUTO_BEAN_FACTORY = GWT
+            .create(AndroidExtensionAutoBeanFactory.class);
+
+    public static final AndroidExtensionLocalizationConstant LOCALIZATION = GWT.create(AndroidExtensionLocalizationConstant.class);
+
     @Override
     public void initialize() {
-        //TODO
+        IDE.addHandler(InitializeServicesEvent.TYPE, this);
+
+        IDE.getInstance().addControl(new RunApplicationControl());
+        IDE.getInstance().addControl(new StopApplicationControl());
+
+        new RunApplicationManager();
+    }
+
+    @Override
+    public void onInitializeServices(InitializeServicesEvent event) {
+        new AndroidExtensionServiceImpl(event.getApplicationConfiguration().getContext());
     }
 }
