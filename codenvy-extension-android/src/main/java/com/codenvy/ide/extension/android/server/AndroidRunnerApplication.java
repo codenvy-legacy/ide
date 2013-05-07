@@ -16,17 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.android.client;
+package com.codenvy.ide.extension.android.server;
 
-import org.exoplatform.ide.client.framework.module.Extension;
+import javax.ws.rs.core.Application;
+import java.util.HashSet;
+import java.util.Set;
 
-/**
- * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
- * @version $Id: $
- */
-public class AndroidExtension extends Extension {
+/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+public class AndroidRunnerApplication extends Application {
+    private final Set<Class<?>> classes;
+
+    public AndroidRunnerApplication() {
+        classes = new HashSet<Class<?>>(1);
+        classes.add(AndroidRunnerService.class);
+    }
+
     @Override
-    public void initialize() {
-        //TODO
+    public Set<Class<?>> getClasses() {
+        return classes;
     }
 }
