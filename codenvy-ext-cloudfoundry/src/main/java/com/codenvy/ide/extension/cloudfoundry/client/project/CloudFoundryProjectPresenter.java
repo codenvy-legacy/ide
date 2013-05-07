@@ -22,10 +22,7 @@ import com.codenvy.ide.api.event.RefreshBrowserEvent;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import com.codenvy.ide.extension.cloudfoundry.client.*;
 import com.codenvy.ide.extension.cloudfoundry.client.delete.DeleteApplicationPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
@@ -55,37 +52,23 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.ActionDelegate {
-    private CloudFoundryProjectView view;
-
-    private ApplicationInfoPresenter applicationInfoPresenter;
-
-    private UnmapUrlPresenter unmapUrlPresenter;
-
-    private UpdatePropertiesPresenter updateProperyPresenter;
-
-    private ManageServicesPresenter manageServicesPresenter;
-
-    private UpdateApplicationPresenter updateApplicationPresenter;
-
-    private EventBus eventBus;
-
-    private ResourceProvider resourceProvider;
-
-    private ConsolePart console;
-
-    private CloudFoundryApplication application;
-
-    private CloudFoundryLocalizationConstant constant;
-
-    private CloudFoundryAutoBeanFactory autoBeanFactory;
-
-    private StartApplicationPresenter startAppPresenter;
-
-    private DeleteApplicationPresenter deleteAppPresenter;
-
-    private LoginPresenter loginPresenter;
-
-    private CloudFoundryClientService service;
+    private CloudFoundryProjectView             view;
+    private ApplicationInfoPresenter            applicationInfoPresenter;
+    private UnmapUrlPresenter                   unmapUrlPresenter;
+    private UpdatePropertiesPresenter           updateProperyPresenter;
+    private ManageServicesPresenter             manageServicesPresenter;
+    private UpdateApplicationPresenter          updateApplicationPresenter;
+    private EventBus                            eventBus;
+    private ResourceProvider                    resourceProvider;
+    private ConsolePart                         console;
+    private CloudFoundryApplication             application;
+    private CloudFoundryLocalizationConstant    constant;
+    private CloudFoundryAutoBeanFactory         autoBeanFactory;
+    private StartApplicationPresenter           startAppPresenter;
+    private DeleteApplicationPresenter          deleteAppPresenter;
+    private LoginPresenter                      loginPresenter;
+    private CloudFoundryClientService           service;
+    private CloudFoundryExtension.PAAS_PROVIDER paasProvider;
 
     /** The callback what execute when some application's information was changed. */
     private AsyncCallback<String> appInfoChangedCallback = new AsyncCallback<String>() {
@@ -150,7 +133,9 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
     }
 
     /** Shows dialog. */
-    public void showDialog() {
+    public void showDialog(CloudFoundryExtension.PAAS_PROVIDER paasProvider) {
+        this.paasProvider = paasProvider;
+
         getApplicationInfo(resourceProvider.getActiveProject());
     }
 
@@ -163,7 +148,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
     /** {@inheritDoc} */
     @Override
     public void onUpdateClicked() {
-        updateApplicationPresenter.updateApp();
+        updateApplicationPresenter.updateApp(paasProvider);
     }
 
     /** {@inheritDoc} */
@@ -200,7 +185,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
     /** {@inheritDoc} */
     @Override
     public void onServicesClicked() {
-        manageServicesPresenter.showDialog(application);
+        manageServicesPresenter.showDialog(application, paasProvider);
     }
 
     /**
@@ -223,7 +208,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
             service.getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null, null,
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
                                                                                                      eventBus, console, constant,
-                                                                                                     loginPresenter) {
+                                                                                                     loginPresenter, paasProvider) {
                                            @Override
                                            protected void onSuccess(CloudFoundryApplication result) {
                                                if (!view.isShown()) {
@@ -269,7 +254,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
     /** {@inheritDoc} */
     @Override
     public void onDeleteClicked() {
-        deleteAppPresenter.deleteApp(null, null, new AsyncCallback<String>() {
+        deleteAppPresenter.deleteApp(null, null, paasProvider, new AsyncCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 Project openedProject = resourceProvider.getActiveProject();
@@ -289,42 +274,42 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
     /** {@inheritDoc} */
     @Override
     public void onInfoClicked() {
-        applicationInfoPresenter.showDialog();
+        applicationInfoPresenter.showDialog(paasProvider);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onStartClicked() {
-        startAppPresenter.startApp(null, appInfoChangedCallback);
+        startAppPresenter.startApp(null, null, paasProvider, appInfoChangedCallback);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onStopClicked() {
-        startAppPresenter.stopApp(null, appInfoChangedCallback);
+        startAppPresenter.stopApp(null, null, paasProvider, appInfoChangedCallback);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onRestartClicked() {
-        startAppPresenter.restartApp(null, appInfoChangedCallback);
+        startAppPresenter.restartApp(null, null, paasProvider, appInfoChangedCallback);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onEditMemoryClicked() {
-        updateProperyPresenter.showUpdateMemoryDialog(appInfoChangedCallback);
+        updateProperyPresenter.showUpdateMemoryDialog(paasProvider, appInfoChangedCallback);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onEditUrlClicked() {
-        unmapUrlPresenter.showDialog(appInfoChangedCallback);
+        unmapUrlPresenter.showDialog(paasProvider, appInfoChangedCallback);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onEditInstancesClicked() {
-        updateProperyPresenter.showUpdateInstancesDialog(appInfoChangedCallback);
+        updateProperyPresenter.showUpdateInstancesDialog(paasProvider, appInfoChangedCallback);
     }
 }

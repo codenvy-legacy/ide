@@ -40,10 +40,34 @@ import com.google.inject.Singleton;
 @Singleton
 @Extension(title = "Cloud Foundry Support.", version = "3.0.0")
 public class CloudFoundryExtension {
-    /** Default CloudFoundry server. */
-    public static final String DEFAULT_SERVER = "http://api.cloudfoundry.com";
 
-    public static final String ID = "CloudFoundry";
+    /** Defined CloudFoundry PaaS providers. */
+    public static enum PAAS_PROVIDER {
+        CLOUD_FOUNDRY("cloudfoundry"),
+        WEB_FABRIC("tier3webfabric");
+
+        /** Project's type name. */
+        private String label;
+
+        /**
+         * @param label
+         *         provider's label
+         */
+        private PAAS_PROVIDER(String label) {
+            this.label = label;
+        }
+
+        /** @return {@link String} provider's label */
+        public String value() {
+            return label;
+        }
+    }
+
+    /** Default CloudFoundry server. */
+    public static final  String DEFAULT_CF_SERVER = "http://api.cloudfoundry.com";
+    private static final String CF_ID             = "CloudFoundry";
+    private static final String WF_ID             = "Tier3WF";
+    public static final  String ID                = "CloudFoundry";
 
     /**
      * Create CloudFoundry extension.

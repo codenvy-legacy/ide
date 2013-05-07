@@ -20,10 +20,7 @@ package com.codenvy.ide.extension.cloudfoundry.client.services;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import com.codenvy.ide.extension.cloudfoundry.client.*;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryServicesUnmarshaller;
@@ -50,22 +47,15 @@ import java.util.LinkedHashMap;
  */
 @Singleton
 public class CreateServicePresenter implements CreateServiceView.ActionDelegate {
-    private CreateServiceView view;
-
-    private EventBus eventBus;
-
-    private ConsolePart console;
-
-    private CloudFoundryLocalizationConstant constant;
-
-    private CloudFoundryAutoBeanFactory autoBeanFactory;
-
-    private AsyncCallback<ProvisionedService> createServiceCallback;
-
-    private LoginPresenter loginPresenter;
-
-    private CloudFoundryClientService service;
-
+    private CreateServiceView                   view;
+    private EventBus                            eventBus;
+    private ConsolePart                         console;
+    private CloudFoundryLocalizationConstant    constant;
+    private CloudFoundryAutoBeanFactory         autoBeanFactory;
+    private AsyncCallback<ProvisionedService>   createServiceCallback;
+    private LoginPresenter                      loginPresenter;
+    private CloudFoundryClientService           service;
+    private CloudFoundryExtension.PAAS_PROVIDER paasProvider;
     /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
     private LoggedInHandler createServiceLoggedInHandler = new LoggedInHandler() {
         @Override
@@ -116,7 +106,8 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate 
 
             service.createService(null, type, name, null, null, null,
                                   new CloudFoundryAsyncRequestCallback<ProvisionedService>(unmarshaller, createServiceLoggedInHandler, null,
-                                                                                           eventBus, console, constant, loginPresenter) {
+                                                                                           eventBus, console, constant, loginPresenter,
+                                                                                           paasProvider) {
                                       @Override
                                       protected void onSuccess(ProvisionedService result) {
                                           createServiceCallback.onSuccess(result);
@@ -136,8 +127,9 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate 
     }
 
     /** Shows dialog. */
-    public void showDialog(AsyncCallback<ProvisionedService> callback) {
+    public void showDialog(CloudFoundryExtension.PAAS_PROVIDER paasProvider, AsyncCallback<ProvisionedService> callback) {
         this.createServiceCallback = callback;
+        this.paasProvider = paasProvider;
 
         getServices();
 
@@ -150,7 +142,7 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate 
     private void getServices() {
         try {
             CloudFoundryServicesUnmarshaller unmarshaller = new CloudFoundryServicesUnmarshaller(autoBeanFactory);
-            service.services(null, new AsyncRequestCallback<CloudFoundryServices>(unmarshaller) {
+            service.services(null, paasProvider, new AsyncRequestCallback<CloudFoundryServices>(unmarshaller) {
                 @Override
                 protected void onSuccess(CloudFoundryServices result) {
                     LinkedHashMap<String, String> values = new LinkedHashMap<String, String>();

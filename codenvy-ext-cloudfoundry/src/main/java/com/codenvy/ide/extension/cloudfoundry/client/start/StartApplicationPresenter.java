@@ -21,14 +21,10 @@ package com.codenvy.ide.extension.cloudfoundry.client.start;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import com.codenvy.ide.extension.cloudfoundry.client.*;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
-import com.codenvy.ide.extension.cloudfoundry.shared.Framework;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
@@ -38,8 +34,6 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
-import java.util.List;
-
 /**
  * Presenter for start and stop application commands.
  *
@@ -48,21 +42,15 @@ import java.util.List;
  */
 @Singleton
 public class StartApplicationPresenter {
-    private EventBus eventBus;
-
-    private ResourceProvider resourceProvider;
-
-    private ConsolePart console;
-
-    private CloudFoundryLocalizationConstant constant;
-
-    private CloudFoundryAutoBeanFactory autoBeanFactory;
-
-    private AsyncCallback<String> appInfoChangedCallback;
-
-    private LoginPresenter loginPresenter;
-
-    private CloudFoundryClientService service;
+    private EventBus                            eventBus;
+    private ResourceProvider                    resourceProvider;
+    private ConsolePart                         console;
+    private CloudFoundryLocalizationConstant    constant;
+    private CloudFoundryAutoBeanFactory         autoBeanFactory;
+    private AsyncCallback<String>               appInfoChangedCallback;
+    private LoginPresenter                      loginPresenter;
+    private CloudFoundryClientService           service;
+    private CloudFoundryExtension.PAAS_PROVIDER paasProvider;
 
     /**
      * Create presenter.
@@ -88,14 +76,11 @@ public class StartApplicationPresenter {
         this.service = service;
     }
 
-    public void bindDisplay(List<Framework> frameworks) {
-    }
-
     /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
     private LoggedInHandler startLoggedInHandler = new LoggedInHandler() {
         @Override
         public void onLoggedIn() {
-            startApplication(null, appInfoChangedCallback);
+            startApplication(null, null, appInfoChangedCallback);
         }
     };
 
@@ -103,7 +88,7 @@ public class StartApplicationPresenter {
     private LoggedInHandler stopLoggedInHandler = new LoggedInHandler() {
         @Override
         public void onLoggedIn() {
-            stopApplication(null, appInfoChangedCallback);
+            stopApplication(null, null, appInfoChangedCallback);
         }
     };
 
@@ -111,7 +96,7 @@ public class StartApplicationPresenter {
     private LoggedInHandler restartLoggedInHandler = new LoggedInHandler() {
         @Override
         public void onLoggedIn() {
-            restartApplication(null, appInfoChangedCallback);
+            restartApplication(null, null, appInfoChangedCallback);
         }
     };
 
@@ -136,13 +121,16 @@ public class StartApplicationPresenter {
      *
      * @param appName
      * @param callback
+     * @param paasProvider
      */
-    public void startApp(String appName, AsyncCallback<String> callback) {
+    public void startApp(String appName, String server, CloudFoundryExtension.PAAS_PROVIDER paasProvider, AsyncCallback<String> callback) {
         this.appInfoChangedCallback = callback;
+        this.paasProvider = paasProvider;
+
         if (appName == null) {
             checkIsStarted();
         } else {
-            startApplication(appName, callback);
+            startApplication(appName, server, callback);
         }
     }
 
@@ -158,7 +146,7 @@ public class StartApplicationPresenter {
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
                                                                                                      checkIsStartedLoggedInHandler,
                                                                                                      null, eventBus, console, constant,
-                                                                                                     loginPresenter) {
+                                                                                                     loginPresenter, paasProvider) {
                                            @Override
                                            protected void onSuccess(CloudFoundryApplication result) {
                                                if ("STARTED".equals(result.getState()) &&
@@ -166,7 +154,7 @@ public class StartApplicationPresenter {
                                                    String msg = constant.applicationAlreadyStarted(result.getName());
                                                    console.print(msg);
                                                } else {
-                                                   startApplication(null, appInfoChangedCallback);
+                                                   startApplication(null, null, appInfoChangedCallback);
                                                }
                                            }
                                        });
@@ -182,7 +170,7 @@ public class StartApplicationPresenter {
      * @param name
      * @param callback
      */
-    private void startApplication(String name, final AsyncCallback<String> callback) {
+    private void startApplication(String name, String server, final AsyncCallback<String> callback) {
         final String projectId =
                 resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId() : null;
 
@@ -191,10 +179,10 @@ public class StartApplicationPresenter {
             AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                     new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-            service.startApplication(resourceProvider.getVfsId(), projectId, name, null,
+            service.startApplication(resourceProvider.getVfsId(), projectId, name, server, paasProvider,
                                      new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, startLoggedInHandler, null,
                                                                                                    eventBus, console, constant,
-                                                                                                   loginPresenter) {
+                                                                                                   loginPresenter, paasProvider) {
                                          @Override
                                          protected void onSuccess(CloudFoundryApplication result) {
                                              if ("STARTED".equals(result.getState()) &&
@@ -247,12 +235,15 @@ public class StartApplicationPresenter {
      *
      * @param appName
      * @param callback
+     * @param paasProvider
      */
-    public void stopApp(String appName, AsyncCallback<String> callback) {
+    public void stopApp(String appName, String server, CloudFoundryExtension.PAAS_PROVIDER paasProvider, AsyncCallback<String> callback) {
+        this.paasProvider = paasProvider;
+
         if (appName == null) {
             checkIsStopped();
         } else {
-            stopApplication(appName, callback);
+            stopApplication(appName, server, callback);
         }
     }
 
@@ -269,14 +260,14 @@ public class StartApplicationPresenter {
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
                                                                                                      checkIsStoppedLoggedInHandler,
                                                                                                      null, eventBus, console, constant,
-                                                                                                     loginPresenter) {
+                                                                                                     loginPresenter, paasProvider) {
                                            @Override
                                            protected void onSuccess(CloudFoundryApplication result) {
                                                if ("STOPPED".equals(result.getState())) {
                                                    String msg = constant.applicationAlreadyStopped(result.getName());
                                                    console.print(msg);
                                                } else {
-                                                   stopApplication(null, appInfoChangedCallback);
+                                                   stopApplication(null, null, appInfoChangedCallback);
                                                }
                                            }
                                        });
@@ -292,14 +283,14 @@ public class StartApplicationPresenter {
      * @param name
      * @param callback
      */
-    private void stopApplication(final String name, final AsyncCallback<String> callback) {
+    private void stopApplication(final String name, String server, final AsyncCallback<String> callback) {
         final String projectId =
                 resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId() : null;
 
         try {
-            service.stopApplication(resourceProvider.getVfsId(), projectId, name, null,
+            service.stopApplication(resourceProvider.getVfsId(), projectId, name, server, paasProvider,
                                     new CloudFoundryAsyncRequestCallback<String>(null, stopLoggedInHandler, null, eventBus, console,
-                                                                                 constant, loginPresenter) {
+                                                                                 constant, loginPresenter, paasProvider) {
                                         @Override
                                         protected void onSuccess(String result) {
                                             try {
@@ -312,7 +303,7 @@ public class StartApplicationPresenter {
                                                 service.getApplicationInfo(resourceProvider.getVfsId(), projectId, name, null,
                                                                            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
                                                                                    unmarshaller, null, null, eventBus, console, constant,
-                                                                                   loginPresenter) {
+                                                                                   loginPresenter, paasProvider) {
                                                                                @Override
                                                                                protected void onSuccess(CloudFoundryApplication result) {
                                                                                    final String msg =
@@ -338,10 +329,13 @@ public class StartApplicationPresenter {
      *
      * @param appName
      * @param callback
+     * @param paasProvider
      */
-    public void restartApp(String appName, AsyncCallback<String> callback) {
+    public void restartApp(String appName, String server, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
+                           AsyncCallback<String> callback) {
         this.appInfoChangedCallback = callback;
-        restartApplication(appName, callback);
+        this.paasProvider = paasProvider;
+        restartApplication(appName, server, callback);
     }
 
     /**
@@ -350,7 +344,7 @@ public class StartApplicationPresenter {
      * @param name
      * @param callback
      */
-    private void restartApplication(String name, final AsyncCallback<String> callback) {
+    private void restartApplication(String name, String server, final AsyncCallback<String> callback) {
         final String projectId =
                 resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId() : null;
 
@@ -359,10 +353,10 @@ public class StartApplicationPresenter {
             AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                     new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-            service.restartApplication(resourceProvider.getVfsId(), projectId, name, null,
+            service.restartApplication(resourceProvider.getVfsId(), projectId, name, server, paasProvider,
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, restartLoggedInHandler,
                                                                                                      null, eventBus, console, constant,
-                                                                                                     loginPresenter) {
+                                                                                                     loginPresenter, paasProvider) {
                                            @Override
                                            protected void onSuccess(CloudFoundryApplication result) {
                                                if (result.getInstances() == result.getRunningInstances()) {

@@ -31,30 +31,38 @@ import com.google.web.bindery.event.shared.EventBus;
  * @version $Id: May 21, 2012 9:35:47 AM anya $
  */
 public class CreateApplicationRequestStatusHandler implements RequestStatusHandler {
-    private String applicationName;
-
-    private EventBus eventBus;
-
-    private CloudFoundryLocalizationConstant constant;
+    private String                              applicationName;
+    private EventBus                            eventBus;
+    private CloudFoundryLocalizationConstant    constant;
+    private CloudFoundryExtension.PAAS_PROVIDER paasProvider;
 
     /**
      * Create application request status handler.
      *
      * @param applicationName
      * @param eventBus
+     * @param constant
+     * @param paasProvider
      */
-    public CreateApplicationRequestStatusHandler(String applicationName, EventBus eventBus,
-                                                 CloudFoundryLocalizationConstant constant) {
+    public CreateApplicationRequestStatusHandler(String applicationName, EventBus eventBus, CloudFoundryLocalizationConstant constant,
+                                                 CloudFoundryExtension.PAAS_PROVIDER paasProvider) {
         this.applicationName = applicationName;
         this.eventBus = eventBus;
         this.constant = constant;
+        this.paasProvider = paasProvider;
     }
 
     /** {@inheritDoc} */
     @Override
     public void requestInProgress(String id) {
         Job job = new Job(id, JobStatus.STARTED);
-        job.setStartMessage(constant.createApplicationStarted(applicationName));
+
+        if (paasProvider == CloudFoundryExtension.PAAS_PROVIDER.WEB_FABRIC) {
+            job.setStartMessage(constant.createApplicationStartedWebFabric(applicationName));
+        } else {
+            job.setStartMessage(constant.createApplicationStartedCloudFoundry(applicationName));
+        }
+
         eventBus.fireEvent(new JobChangeEvent(job));
     }
 
@@ -62,7 +70,13 @@ public class CreateApplicationRequestStatusHandler implements RequestStatusHandl
     @Override
     public void requestFinished(String id) {
         Job job = new Job(id, JobStatus.FINISHED);
-        job.setFinishMessage(constant.createApplicationFinished(applicationName));
+
+        if (paasProvider == CloudFoundryExtension.PAAS_PROVIDER.WEB_FABRIC) {
+            job.setFinishMessage(constant.createApplicationFinishedWebFabric(applicationName));
+        } else {
+            job.setFinishMessage(constant.createApplicationFinishedCloudFoundry(applicationName));
+        }
+
         eventBus.fireEvent(new JobChangeEvent(job));
     }
 

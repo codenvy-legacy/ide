@@ -74,7 +74,7 @@ public interface CloudFoundryLocalizationConstant extends Messages {
     String addButton();
 
     /*
-     * Controls.
+     * Controls - CloudFoundry.
      */
     @Key("control.cloudfoundry.id")
     String cloudFoundryControlId();
@@ -212,7 +212,34 @@ public interface CloudFoundryLocalizationConstant extends Messages {
     String appsControlPrompt();
 
     /*
-     * LoginView.
+     * Controls - Tier3 Web Fabric.
+     */
+    @Key("control.tier3WebFabric.id")
+    String tier3WebFabricControlId();
+
+    @Key("control.tier3WebFabric.title")
+    String tier3WebFabricControlTitle();
+
+    @Key("control.tier3WebFabric.prompt")
+    String tier3WebFabricControlPrompt();
+
+    @Key("control.tier3WebFabric.createApp.id")
+    String createTier3WebFabricAppControlId();
+
+    @Key("control.tier3WebFabric.appInfo.id")
+    String tier3WebFabricApplicationInfoControlId();
+
+    @Key("control.tier3WebFabric.switchAccount.id")
+    String switchTier3WebFabricAccountControlId();
+
+    @Key("control.tier3WebFabric.appsList.id")
+    String tier3WebFabricAppsControlId();
+
+    @Key("control.tier3WebFabric.apps.List.prompt")
+    String tier3WebFabricAppsControlPrompt();
+
+    /*
+     * LoginView
      */
     @Key("login.title")
     String loginViewTitle();
@@ -271,14 +298,8 @@ public interface CloudFoundryLocalizationConstant extends Messages {
     @Key("createApp.field.server")
     String createAppServerField();
 
-    @Key("create.application.started")
-    String createApplicationStarted(String project);
-
-    @Key("create.application.finished")
-    String createApplicationFinished(String project);
-
     /*
-     * CreateApplicationPresenter
+     * CreateApplicationPresenter - CloudFoundry
      */
     @Key("createApp.appCreated")
     String applicationCreatedSuccessfully(String name);
@@ -301,12 +322,21 @@ public interface CloudFoundryLocalizationConstant extends Messages {
     @Key("create.application.failed")
     String applicationCreationFailed();
 
+    @Key("create.application.started.cloudFoundry")
+    String createApplicationStartedCloudFoundry(String project);
+
+    @Key("create.application.started.webFabric")
+    String createApplicationStartedWebFabric(String project);
+
+    @Key("create.application.finished.cloudFoundry")
+    String createApplicationFinishedCloudFoundry(String project);
+
+    @Key("create.application.finished.webFabric")
+    String createApplicationFinishedWebFabric(String project);
+
     /*
      * StartApplicationPresenter
      */
-    @Key("startApp.appStarted")
-    String applicationStarted(String name);
-
     @Key("startApp.appStarted.uris")
     String applicationStartedOnUrls(String name, String uris);
 
@@ -344,13 +374,10 @@ public interface CloudFoundryLocalizationConstant extends Messages {
     String updateApplicationNotFolder(String name);
 
     /*
-     * Messages
+     * Messages - CloudFoundry
      */
     @Key("loginSuccess")
     String loginSuccess();
-
-    @Key("loginFailed")
-    String loginFailed();
 
     @Key("systemInfo.umarshaller.error")
     String systemInfoUnmarshallerError();
@@ -360,6 +387,12 @@ public interface CloudFoundryLocalizationConstant extends Messages {
 
     @Key("creatingProject")
     String creatingProject();
+
+    /*
+     * Messages - Tier3 Web Fabric
+     */
+    @Key("tier3WebFabric.loginSuccess")
+    String tier3WebFabricLoginSuccess();
 
     /*
      * DeployApplicationPresenter

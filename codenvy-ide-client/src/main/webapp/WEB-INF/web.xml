@@ -30,6 +30,9 @@
     <listener>
         <listener-class>org.everrest.exoplatform.servlet.EverrestExoContextListener$StandaloneContainerStarter</listener-class>
     </listener>
+    <listener>
+        <listener-class>org.everrest.websockets.WSConnectionTracker</listener-class>
+    </listener>
 
     <!-- Servlets -->
 
@@ -42,6 +45,10 @@
         <servlet-name>EverrestServlet</servlet-name>
         <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ExoIdeWebSocketServlet</servlet-name>
+        <servlet-class>org.exoplatform.ide.websocket.ExoIdeWebSocketServlet</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>EverrestServlet</servlet-name>
@@ -51,6 +58,11 @@
     <servlet-mapping>
         <servlet-name>EverrestServlet</servlet-name>
         <url-pattern>/rest/private/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ExoIdeWebSocketServlet</servlet-name>
+        <url-pattern>/websocket</url-pattern>
     </servlet-mapping>
 
     <filter>
@@ -75,12 +87,28 @@
 
     <filter-mapping>
         <filter-name>SetCurrentIdentityFilter</filter-name>
+        <url-pattern>/websocket</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>SetCurrentIdentityFilter</filter-name>
         <url-pattern>/rest/*</url-pattern>
     </filter-mapping>
 
     <filter-mapping>
         <filter-name>SetEnvironmentContextFilter</filter-name>
         <url-pattern>/rest/*</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>SetEnvironmentContextFilter</filter-name>
+        <url-pattern>/websocket</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>StandaloneAuthenticationFilter</filter-name>
+        <url-pattern>/rest/private/*</url-pattern>
+        <url-pattern>/websocket</url-pattern>
     </filter-mapping>
 
     <session-config>

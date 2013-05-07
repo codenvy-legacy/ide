@@ -21,10 +21,7 @@ package com.codenvy.ide.extension.cloudfoundry.client.delete;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import com.codenvy.ide.extension.cloudfoundry.client.*;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
@@ -45,29 +42,20 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class DeleteApplicationPresenter implements DeleteApplicationView.ActionDelegate {
-    private DeleteApplicationView view;
-
+    private DeleteApplicationView               view;
     /** The name of application. */
-    private String appName;
-
+    private String                              appName;
     /** Name of the server. */
-    private String serverName;
-
-    private ResourceProvider resourceProvider;
-
-    private EventBus eventBus;
-
-    private ConsolePart console;
-
-    private CloudFoundryLocalizationConstant constant;
-
-    private CloudFoundryAutoBeanFactory autoBeanFactory;
-
-    private LoginPresenter loginPresenter;
-
-    private AsyncCallback<String> appDeleteCallback;
-
-    private CloudFoundryClientService service;
+    private String                              serverName;
+    private ResourceProvider                    resourceProvider;
+    private EventBus                            eventBus;
+    private ConsolePart                         console;
+    private CloudFoundryLocalizationConstant    constant;
+    private CloudFoundryAutoBeanFactory         autoBeanFactory;
+    private LoginPresenter                      loginPresenter;
+    private AsyncCallback<String>               appDeleteCallback;
+    private CloudFoundryClientService           service;
+    private CloudFoundryExtension.PAAS_PROVIDER paasProvider;
 
     /**
      * Create presenter.
@@ -114,13 +102,16 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
     /**
      * Deletes CloudFoundry application.
      *
-     * @param serverName
      * @param appName
+     * @param serverName
+     * @param paasProvider
      * @param callback
      */
-    public void deleteApp(String serverName, String appName, AsyncCallback<String> callback) {
+    public void deleteApp(String appName, String serverName, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
+                          AsyncCallback<String> callback) {
         this.serverName = serverName;
         this.appDeleteCallback = callback;
+        this.paasProvider = paasProvider;
 
         // If application name is absent then need to find it
         if (appName == null) {
@@ -151,7 +142,7 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
             service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, appInfoLoggedInHandler,
                                                                                                      null, eventBus, console, constant,
-                                                                                                     loginPresenter) {
+                                                                                                     loginPresenter, paasProvider) {
                                            @Override
                                            protected void onSuccess(CloudFoundryApplication result) {
                                                appName = result.getName();
@@ -177,7 +168,7 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
      *
      * @param callback
      */
-    private void deleteApplication(AsyncCallback<String> callback) {
+    private void deleteApplication(final AsyncCallback<String> callback) {
         boolean isDeleteServices = view.isDeleteServices();
         String projectId = null;
 
@@ -185,28 +176,40 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
         // Checking does current project work with deleting CloudFoundry application.
         // If project don't have the same CloudFoundry application name in properties
         // then this property won't be cleaned.
-        if (project != null && project.getPropertyValue("cloudfoundry-application") != null
-            && appName.equals(project.getPropertyValue("cloudfoundry-application"))) {
-            projectId = project.getId();
+        if (project != null) {
+            final boolean isCloudFoundryApp = paasProvider == CloudFoundryExtension.PAAS_PROVIDER.CLOUD_FOUNDRY &&
+                                              project.getPropertyValue("cloudfoundry-application") != null
+                                              && appName.equals(project.getPropertyValue("cloudfoundry-application"));
+
+            final boolean isWebFabricApp = paasProvider == CloudFoundryExtension.PAAS_PROVIDER.WEB_FABRIC &&
+                                           project.getPropertyValue("tier3webfabric-application") != null
+                                           && appName.equals(project.getPropertyValue("tier3webfabric-application"));
+
+            if (isCloudFoundryApp || isWebFabricApp) {
+                projectId = project.getId();
+            }
         }
 
         try {
-            service.deleteApplication(resourceProvider.getVfsId(), projectId, appName, serverName, isDeleteServices,
-                                      new CloudFoundryAsyncRequestCallback<String>(null, deleteAppLoggedInHandler, null, eventBus, console,
-                                                                                   constant, loginPresenter) {
+            service.deleteApplication(resourceProvider.getVfsId(), projectId, appName, serverName, paasProvider, isDeleteServices,
+                                      new CloudFoundryAsyncRequestCallback<String>(null, deleteAppLoggedInHandler, null, eventBus,
+                                                                                   console, constant, loginPresenter, paasProvider) {
                                           @Override
-                                          protected void onSuccess(String result) {
+                                          protected void onSuccess(final String result) {
                                               if (project != null) {
                                                   project.refreshProperties(new AsyncCallback<Project>() {
                                                       @Override
-                                                      public void onSuccess(Project result) {
+                                                      public void onSuccess(Project project) {
                                                           view.close();
                                                           console.print(constant.applicationDeletedMsg(appName));
                                                           appDeleteCallback.onSuccess(appName);
+
+                                                          callback.onSuccess(result);
                                                       }
 
                                                       @Override
                                                       public void onFailure(Throwable caught) {
+                                                          callback.onFailure(caught);
                                                       }
                                                   });
                                               }

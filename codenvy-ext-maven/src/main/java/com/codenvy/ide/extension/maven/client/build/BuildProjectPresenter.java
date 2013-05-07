@@ -25,11 +25,7 @@ import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
-import com.codenvy.ide.extension.maven.client.BuilderAutoBeanFactory;
-import com.codenvy.ide.extension.maven.client.BuilderClientService;
-import com.codenvy.ide.extension.maven.client.BuilderExtension;
-import com.codenvy.ide.extension.maven.client.BuilderLocalizationConstant;
-import com.codenvy.ide.extension.maven.client.BuilderResources;
+import com.codenvy.ide.extension.maven.client.*;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectHandler;
 import com.codenvy.ide.extension.maven.client.event.ProjectBuiltEvent;
@@ -44,6 +40,8 @@ import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.codenvy.ide.rest.RequestStatusHandler;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.util.loging.Log;
+import com.codenvy.ide.websocket.MessageBus;
+import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.AutoBeanUnmarshallerWS;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
 import com.google.gwt.http.client.RequestException;
@@ -118,6 +116,8 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
 
     private WorkspaceAgent workspaceAgent;
 
+    private MessageBus messageBus;
+
     /** Handler for processing Maven build status which is received over WebSocket connection. */
     private final SubscriptionHandler<BuildStatus> buildStatusHandler;
 
@@ -133,12 +133,13 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
      * @param autoBeanFactory
      * @param resources
      * @param workspaceAgent
+     * @param messageBus
      */
     @Inject
-    protected BuildProjectPresenter(final BuildProjectView view, final EventBus eventBus, ResourceProvider resourceProvider,
-                                    final ConsolePart console, BuilderClientService service, BuilderLocalizationConstant constant,
-                                    BuilderAutoBeanFactory autoBeanFactory, BuilderResources resources,
-                                    WorkspaceAgent workspaceAgent) {
+    protected BuildProjectPresenter(BuildProjectView view, EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
+                                    BuilderClientService service, BuilderLocalizationConstant constant,
+                                    BuilderAutoBeanFactory autoBeanFactory, BuilderResources resources, WorkspaceAgent workspaceAgent,
+                                    MessageBus messageBus) {
         this.view = view;
         this.workspaceAgent = workspaceAgent;
         this.view.setDelegate(this);
@@ -149,6 +150,7 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
         this.constant = constant;
         this.autoBeanFactory = autoBeanFactory;
         this.resources = resources;
+        this.messageBus = messageBus;
 
         buildStatusHandler = new SubscriptionHandler<BuildStatus>(
                 new AutoBeanUnmarshallerWS<BuildStatus>(this.autoBeanFactory.create(BuildStatus.class))) {
@@ -159,21 +161,16 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
 
             @Override
             protected void onFailure(Throwable exception) {
-                // TODO need to fix it after port websocket support
-                // Problem with using Websocket
-                //         try
-                //         {
-                //            IDE.messageBus().unsubscribe(buildStatusChannel, this);
-                //         }
-                //         catch (WebSocketException e)
-                //         {
-                //            // nothing to do
-                //         }
+                try {
+                    BuildProjectPresenter.this.messageBus.unsubscribe(buildStatusChannel, this);
+                } catch (WebSocketException e) {
+                    // nothing to do
+                }
 
                 setBuildInProgress(false);
-                view.stopAnimation();
-                eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                console.print(exception.getMessage());
+                BuildProjectPresenter.this.view.stopAnimation();
+                BuildProjectPresenter.this.eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                BuildProjectPresenter.this.console.print(exception.getMessage());
             }
         };
 
@@ -250,17 +247,12 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
      *         id of the build job to check status
      */
     private void startCheckingStatus(String buildId) {
-        // TODO need to fix it after port websocket support
-        // Problem with using Websocket
-        //      try
-        //      {
-        buildStatusChannel = BuilderExtension.BUILD_STATUS_CHANNEL + buildId;
-        //         IDE.messageBus().subscribe(buildStatusChannel, buildStatusHandler);
-        //      }
-        //      catch (WebSocketException e)
-        //      {
-        refreshBuildStatusTimer.schedule(delay);
-        //      }
+        try {
+            buildStatusChannel = BuilderExtension.BUILD_STATUS_CHANNEL + buildId;
+            messageBus.subscribe(buildStatusChannel, buildStatusHandler);
+        } catch (WebSocketException e) {
+            refreshBuildStatusTimer.schedule(delay);
+        }
     }
 
     /** Start the build of project and publish it to public repository. */
@@ -471,16 +463,11 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
      *         status of build job
      */
     private void afterBuildFinished(BuildStatus buildStatus) {
-        // TODO need to fix it after port websocket support
-        // Problem with using Websocket
-        //      try
-        //      {
-        //         IDE.messageBus().unsubscribe(buildStatusChannel, buildStatusHandler);
-        //      }
-        //      catch (Exception e)
-        //      {
-        //         // nothing to do
-        //      }
+        try {
+            messageBus.unsubscribe(buildStatusChannel, buildStatusHandler);
+        } catch (Exception e) {
+            // nothing to do
+        }
 
         setBuildInProgress(false);
         previousStatus = buildStatus.getStatus();

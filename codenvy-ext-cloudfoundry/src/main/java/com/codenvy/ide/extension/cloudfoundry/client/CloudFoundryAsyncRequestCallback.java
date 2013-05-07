@@ -39,20 +39,14 @@ import com.google.web.bindery.event.shared.EventBus;
  * @see CloudFoundryRESTfulRequestCallback
  */
 public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCallback<T> {
-    private LoggedInHandler loggedIn;
-
-    private LoginCanceledHandler loginCanceled;
-
-    private String loginUrl;
-
-    private EventBus eventBus;
-
-    private ConsolePart console;
-
-    private CloudFoundryLocalizationConstant constant;
-
-    private LoginPresenter loginPresenter;
-
+    private LoggedInHandler                     loggedIn;
+    private LoginCanceledHandler                loginCanceled;
+    private String                              loginUrl;
+    private EventBus                            eventBus;
+    private ConsolePart                         console;
+    private CloudFoundryLocalizationConstant    constant;
+    private LoginPresenter                      loginPresenter;
+    private CloudFoundryExtension.PAAS_PROVIDER paasProvider;
     private final static String CLOUDFOUNDRY_EXIT_CODE = "Cloudfoundry-Exit-Code";
 
     /**
@@ -65,11 +59,13 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
      * @param console
      * @param constant
      * @param loginPresenter
+     * @param paasProvider
      */
     public CloudFoundryAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
                                             LoginCanceledHandler loginCanceled, EventBus eventBus, ConsolePart console,
-                                            CloudFoundryLocalizationConstant constant, LoginPresenter loginPresenter) {
-        this(unmarshaller, loggedIn, loginCanceled, null, eventBus, console, constant, loginPresenter);
+                                            CloudFoundryLocalizationConstant constant, LoginPresenter loginPresenter,
+                                            CloudFoundryExtension.PAAS_PROVIDER paasProvider) {
+        this(unmarshaller, loggedIn, loginCanceled, null, eventBus, console, constant, loginPresenter, paasProvider);
     }
 
     /**
@@ -83,10 +79,12 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
      * @param console
      * @param constant
      * @param loginPresenter
+     * @param paasProvider
      */
     public CloudFoundryAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
                                             LoginCanceledHandler loginCanceled, String loginUrl, EventBus eventBus, ConsolePart console,
-                                            CloudFoundryLocalizationConstant constant, LoginPresenter loginPresenter) {
+                                            CloudFoundryLocalizationConstant constant, LoginPresenter loginPresenter,
+                                            CloudFoundryExtension.PAAS_PROVIDER paasProvider) {
         super(unmarshaller);
         this.loggedIn = loggedIn;
         this.loginCanceled = loginCanceled;
@@ -95,6 +93,7 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
         this.console = console;
         this.constant = constant;
         this.loginPresenter = loginPresenter;
+        this.paasProvider = paasProvider;
     }
 
     /** {@inheritDoc} */
@@ -104,12 +103,12 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
             ServerException serverException = (ServerException)exception;
             if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
                 && serverException.getMessage().contains("Authentication required.")) {
-                loginPresenter.showDialog(loggedIn, loginCanceled, loginUrl);
+                loginPresenter.showDialog(loggedIn, loginCanceled, loginUrl, paasProvider);
                 return;
             } else if (HTTPStatus.FORBIDDEN == serverException.getHTTPStatus()
                        && serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE) != null
                        && "200".equals(serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE))) {
-                loginPresenter.showDialog(loggedIn, loginCanceled, loginUrl);
+                loginPresenter.showDialog(loggedIn, loginCanceled, loginUrl, paasProvider);
                 return;
             } else if (HTTPStatus.NOT_FOUND == serverException.getHTTPStatus()
                        && serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE) != null

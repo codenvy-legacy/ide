@@ -48,16 +48,17 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class LoginPresenter implements LoginView.ActionDelegate {
-    private LoginView                        view;
-    private ConsolePart                      console;
+    private LoginView                           view;
+    private ConsolePart                         console;
     /** The last server, that user logged in. */
-    private String                           server;
-    private LoggedInHandler                  loggedIn;
-    private LoginCanceledHandler             loginCanceled;
-    private EventBus                         eventBus;
-    private CloudFoundryLocalizationConstant constant;
-    private CloudFoundryAutoBeanFactory      autoBeanFactory;
-    private CloudFoundryClientService        service;
+    private String                              server;
+    private LoggedInHandler                     loggedIn;
+    private LoginCanceledHandler                loginCanceled;
+    private EventBus                            eventBus;
+    private CloudFoundryLocalizationConstant    constant;
+    private CloudFoundryAutoBeanFactory         autoBeanFactory;
+    private CloudFoundryClientService           service;
+    private CloudFoundryExtension.PAAS_PROVIDER paasProvider;
 
     /**
      * Create presenter.
@@ -94,11 +95,12 @@ public class LoginPresenter implements LoginView.ActionDelegate {
         final String password = view.getPassword();
 
         try {
-            service.login(enteredServer, email, password, new AsyncRequestCallback<String>() {
+            service.login(enteredServer, email, password, paasProvider, new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
                     server = enteredServer;
-                    console.print(constant.loginSuccess());
+                    console.print(paasProvider == CloudFoundryExtension.PAAS_PROVIDER.CLOUD_FOUNDRY ? constant.loginSuccess() : constant
+                            .tier3WebFabricLoginSuccess());
                     if (loggedIn != null) {
                         loggedIn.onLoggedIn();
                     }
@@ -167,7 +169,8 @@ public class LoginPresenter implements LoginView.ActionDelegate {
     }
 
     /** Shows dialog. */
-    public void showDialog(LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled, String loginUrl) {
+    public void showDialog(LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled, String loginUrl,
+                           CloudFoundryExtension.PAAS_PROVIDER paasProvider) {
         this.loggedIn = loggedIn;
         this.loginCanceled = loginCanceled;
         if (loginUrl != null) {
@@ -177,11 +180,13 @@ public class LoginPresenter implements LoginView.ActionDelegate {
             }
         }
 
-        showDialog();
+        showDialog(paasProvider);
     }
 
     /** Shows dialog. */
-    public void showDialog() {
+    public void showDialog(CloudFoundryExtension.PAAS_PROVIDER paasProvider) {
+        this.paasProvider = paasProvider;
+
         fillViewFields();
 
         view.showDialog();
@@ -202,7 +207,7 @@ public class LoginPresenter implements LoginView.ActionDelegate {
         try {
             AutoBean<SystemInfo> systemInfo = autoBeanFactory.systemInfo();
             AutoBeanUnmarshaller<SystemInfo> unmarshaller = new AutoBeanUnmarshaller<SystemInfo>(systemInfo);
-            service.getSystemInfo(server, new AsyncRequestCallback<SystemInfo>(unmarshaller) {
+            service.getSystemInfo(server, paasProvider, new AsyncRequestCallback<SystemInfo>(unmarshaller) {
                 @Override
                 protected void onSuccess(SystemInfo result) {
                     view.setEmail(result.getUser());
@@ -228,15 +233,16 @@ public class LoginPresenter implements LoginView.ActionDelegate {
     private void getServers() {
         try {
             TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(JsonCollections.<String>createArray());
-            service.getTargets(new AsyncRequestCallback<JsonArray<String>>(unmarshaller) {
+            service.getTargets(paasProvider, new AsyncRequestCallback<JsonArray<String>>(unmarshaller) {
                 @Override
                 protected void onSuccess(JsonArray<String> result) {
                     if (result.isEmpty()) {
-                        JsonArray<String> servers = JsonCollections.createArray();
-                        servers.add(CloudFoundryExtension.DEFAULT_SERVER);
-                        view.setServerValues(servers);
-                        if (server == null || server.isEmpty()) {
-                            view.setServer(CloudFoundryExtension.DEFAULT_SERVER);
+                        if (paasProvider == CloudFoundryExtension.PAAS_PROVIDER.CLOUD_FOUNDRY) {
+                            JsonArray<String> servers = JsonCollections.createArray(CloudFoundryExtension.DEFAULT_CF_SERVER);
+                            view.setServerValues(servers);
+                        }
+                        if ((server == null || server.isEmpty()) && paasProvider == CloudFoundryExtension.PAAS_PROVIDER.CLOUD_FOUNDRY) {
+                            view.setServer(CloudFoundryExtension.DEFAULT_CF_SERVER);
                         } else {
                             view.setServer(server);
                         }

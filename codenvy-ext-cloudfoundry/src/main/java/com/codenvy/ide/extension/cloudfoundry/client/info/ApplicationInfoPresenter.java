@@ -21,10 +21,7 @@ package com.codenvy.ide.extension.cloudfoundry.client.info;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import com.codenvy.ide.extension.cloudfoundry.client.*;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
@@ -43,21 +40,15 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDelegate {
-    private ApplicationInfoView view;
-
-    private EventBus eventBus;
-
-    private ResourceProvider resourceProvider;
-
-    private ConsolePart console;
-
-    private CloudFoundryLocalizationConstant constant;
-
-    private CloudFoundryAutoBeanFactory autoBeanFactory;
-
-    private LoginPresenter loginPresenter;
-
-    private CloudFoundryClientService service;
+    private ApplicationInfoView                 view;
+    private EventBus                            eventBus;
+    private ResourceProvider                    resourceProvider;
+    private ConsolePart                         console;
+    private CloudFoundryLocalizationConstant    constant;
+    private CloudFoundryAutoBeanFactory         autoBeanFactory;
+    private LoginPresenter                      loginPresenter;
+    private CloudFoundryClientService           service;
+    private CloudFoundryExtension.PAAS_PROVIDER paasProvider;
 
     /**
      * Create presenter.
@@ -94,8 +85,8 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
     }
 
     /** Show dialog. */
-    public void showDialog() {
-        showApplicationInfo(resourceProvider.getActiveProject().getId());
+    public void showDialog(CloudFoundryExtension.PAAS_PROVIDER paasProvider) {
+        showApplicationInfo(resourceProvider.getActiveProject().getId(), paasProvider);
     }
 
     /**
@@ -103,22 +94,24 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
      *
      * @param projectId
      */
-    private void showApplicationInfo(final String projectId) {
+    private void showApplicationInfo(final String projectId, CloudFoundryExtension.PAAS_PROVIDER paasProvider) {
         try {
+            this.paasProvider = paasProvider;
+
             AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
             AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                     new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
             LoggedInHandler loggedInHandler = new LoggedInHandler() {
                 @Override
                 public void onLoggedIn() {
-                    showApplicationInfo(projectId);
+                    showApplicationInfo(projectId, ApplicationInfoPresenter.this.paasProvider);
                 }
             };
 
             service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
                                                                                                      eventBus, console, constant,
-                                                                                                     loginPresenter) {
+                                                                                                     loginPresenter, paasProvider) {
                                            @Override
                                            protected void onSuccess(CloudFoundryApplication result) {
                                                view.setName(result.getName());
