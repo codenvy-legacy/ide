@@ -244,7 +244,7 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
     @Key("appStarted.uris")
     String applicationStartedOnUrls(String name, String uris);
 
-    @DefaultMessage("Application <b>{0}</b> updated on {1}.")
+    @DefaultMessage("Updated application <b>{0}</b> on {1}.")
     @Key("appUpdated")
     String applicationUpdated(String name, String uris);
 

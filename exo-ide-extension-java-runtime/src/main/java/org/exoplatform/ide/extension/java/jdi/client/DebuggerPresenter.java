@@ -900,7 +900,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                                                                                                                                                                    runningApp));
                                                                                        IDE.fireEvent(new OutputEvent(
                                                                                                                      message,
-                                                                                                                     OutputMessage.Type.INFO));
+                                                                                                                     OutputMessage.Type.JRebel));
                                                                                    }
 
                                                                                    @Override

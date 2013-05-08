@@ -29,7 +29,7 @@ public class OutputMessage {
 
     public enum Type {
 
-        INFO, ERROR, WARNING, LOG, OUTPUT, GIT
+        INFO, ERROR, WARNING, LOG, OUTPUT, GIT, JRebel
 
     }
 
