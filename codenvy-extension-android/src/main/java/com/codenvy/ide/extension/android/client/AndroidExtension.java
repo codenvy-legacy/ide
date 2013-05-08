@@ -19,6 +19,8 @@
 package com.codenvy.ide.extension.android.client;
 
 import com.codenvy.ide.extension.android.client.deploy.DeployApplicationPresenter;
+import com.codenvy.ide.extension.android.client.run.ManyMoControlGroup;
+import com.codenvy.ide.extension.android.client.run.PaaSManyMoAndroid;
 import com.codenvy.ide.extension.android.client.run.RunApplicationControl;
 import com.codenvy.ide.extension.android.client.run.RunApplicationManager;
 import com.google.gwt.core.client.GWT;
@@ -48,7 +50,10 @@ public class AndroidExtension extends Extension implements InitializeServicesHan
 
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
+        
+        IDE.getInstance().addControl(new ManyMoControlGroup());
         IDE.getInstance().addControl(new RunApplicationControl());
+        IDE.getInstance().addControl(new PaaSManyMoAndroid());
 
         new RunApplicationManager();
     }
