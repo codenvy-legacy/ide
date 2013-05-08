@@ -18,6 +18,9 @@
  */
 package com.codenvy.ide.websocket;
 
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.loging.Log;
@@ -32,11 +35,6 @@ import com.google.inject.name.Named;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * The implementation of {@link MessageBus}.
@@ -156,10 +154,10 @@ public class MessageBusImpl implements MessageBus {
     /** WebSocket server URL. */
     private String    url;
     /** Map of the message identifier to the {@link ReplyHandler}. */
-    private Map<String, RequestCallback>             requestCallbackMap       = new HashMap<String, RequestCallback>();
-    private Map<String, ReplyHandler>                replyCallbackMap         = new HashMap<String, ReplyHandler>();
+    private JsonStringMap<RequestCallback>           requestCallbackMap       = JsonCollections.createStringMap();
+    private JsonStringMap<ReplyHandler>              replyCallbackMap         = JsonCollections.createStringMap();
     /** Map of the channel to the subscribers. */
-    private Map<String, Set<MessageHandler>>         channelToSubscribersMap  = new HashMap<String, Set<MessageHandler>>();
+    private JsonStringMap<JsonArray<MessageHandler>> channelToSubscribersMap  = JsonCollections.createStringMap();
     private ListenerManager<ConnectionOpenedHandler> connectionOpenedHandlers = ListenerManager.create();
     private ListenerManager<ConnectionClosedHandler> connectionClosedHandlers = ListenerManager.create();
     private ListenerManager<ConnectionErrorHandler>  connectionErrorHandlers  = ListenerManager.create();
@@ -266,13 +264,14 @@ public class MessageBusImpl implements MessageBus {
      */
     private void processSubscriptionMessage(Message message) {
         String channel = getChannel(message);
-        Set<MessageHandler> subscribersSet = channelToSubscribersMap.get(channel);
+        JsonArray<MessageHandler> subscribersSet = channelToSubscribersMap.get(channel);
         if (subscribersSet != null) {
             // TODO
             // Find way to avoid copying of set.
             // Copy a Set to avoid 'CuncurrentModificationException' when 'unsubscribe()' method will invoked while iterating.
-            Set<MessageHandler> subscribersSetCopy = new HashSet<MessageHandler>(subscribersSet);
-            for (MessageHandler handler : subscribersSetCopy) {
+            JsonArray<MessageHandler> subscribersSetCopy = JsonCollections.createArray();
+            for (int i = 0; i < subscribersSet.size(); i++) {
+                MessageHandler handler = subscribersSet.get(i);
                 //TODO this is nasty, need refactor this
                 if (handler instanceof SubscriptionHandler) {
                     ((SubscriptionHandler)handler).onMessage(message);
@@ -485,12 +484,12 @@ public class MessageBusImpl implements MessageBus {
     public void subscribe(String channel, MessageHandler handler) throws WebSocketException {
         checkWebSocketConnectionState();
 
-        Set<MessageHandler> subscribersSet = channelToSubscribersMap.get(channel);
+        JsonArray<MessageHandler> subscribersSet = channelToSubscribersMap.get(channel);
         if (subscribersSet != null) {
             subscribersSet.add(handler);
             return;
         }
-        subscribersSet = new HashSet<MessageHandler>();
+        subscribersSet = JsonCollections.createArray();
         subscribersSet.add(handler);
         channelToSubscribersMap.put(channel, subscribersSet);
         sendSubscribeMessage(channel);
@@ -501,9 +500,10 @@ public class MessageBusImpl implements MessageBus {
     public void unsubscribe(String channel, MessageHandler handler) throws WebSocketException {
         checkWebSocketConnectionState();
 
-        Set<MessageHandler> subscribersSet = channelToSubscribersMap.get(channel);
-        if (subscribersSet == null)
+        JsonArray<MessageHandler> subscribersSet = channelToSubscribersMap.get(channel);
+        if (subscribersSet == null) {
             throw new IllegalArgumentException("Handler not subscribed to any channel.");
+        }
 
         if (subscribersSet.remove(handler) && subscribersSet.isEmpty()) {
             channelToSubscribersMap.remove(channel);
@@ -514,9 +514,10 @@ public class MessageBusImpl implements MessageBus {
     /** {@inheritDoc} */
     @Override
     public boolean isHandlerSubscribed(MessageHandler handler, String channel) {
-        Set<MessageHandler> set = channelToSubscribersMap.get(channel);
-        if (set == null)
+        JsonArray<MessageHandler> set = channelToSubscribersMap.get(channel);
+        if (set == null) {
             return false;
+        }
         return set.contains(handler);
     }
 
