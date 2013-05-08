@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperty;
+import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
 import org.exoplatform.ide.editor.client.api.contentassist.Point;
@@ -106,6 +107,13 @@ public class RubyProposal implements CompletionProposal {
      */
     @Override
     public Point getSelection(IDocument document) {
+        if (token.getType() == TokenType.METHOD) {
+            final String parameters = token.getProperty(TokenProperties.PARAMETER_TYPES).isStringProperty().stringValue();
+            if (!parameters.equals("()")) {
+                final int indexOfParameters = proposal.indexOf(parameters);
+                return new Point(offset + indexOfParameters + 1, 0);
+            }
+        }
         return null;
     }
 
