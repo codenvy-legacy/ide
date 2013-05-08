@@ -17,19 +17,11 @@
 package com.codenvy.ide.core.inject;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.editor.CodenvyTextEditor;
-import com.codenvy.ide.api.editor.DocumentProvider;
-import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.editor.EditorProvider;
-import com.codenvy.ide.api.editor.EditorRegistry;
+import com.codenvy.ide.api.editor.*;
 import com.codenvy.ide.api.expressions.ExpressionManager;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.paas.PaaSAgent;
-import com.codenvy.ide.api.parts.ConsolePart;
-import com.codenvy.ide.api.parts.OutlinePart;
-import com.codenvy.ide.api.parts.ProjectExplorerPart;
-import com.codenvy.ide.api.parts.SearchPart;
-import com.codenvy.ide.api.parts.WelcomePart;
+import com.codenvy.ide.api.parts.*;
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ModelProvider;
@@ -64,13 +56,8 @@ import com.codenvy.ide.outline.OutlinePartPresenter;
 import com.codenvy.ide.outline.OutlinePartView;
 import com.codenvy.ide.outline.OutlinePartViewImpl;
 import com.codenvy.ide.paas.PaaSAgentImpl;
-import com.codenvy.ide.part.EditorPartStackPresenter;
-import com.codenvy.ide.part.EditorPartStackView;
-import com.codenvy.ide.part.FocusManager;
-import com.codenvy.ide.part.PartStackPresenter;
+import com.codenvy.ide.part.*;
 import com.codenvy.ide.part.PartStackPresenter.PartStackEventHandler;
-import com.codenvy.ide.part.PartStackUIResources;
-import com.codenvy.ide.part.PartStackViewImpl;
 import com.codenvy.ide.part.console.ConsolePartPresenter;
 import com.codenvy.ide.part.console.ConsolePartView;
 import com.codenvy.ide.part.console.ConsolePartViewImpl;
@@ -107,13 +94,10 @@ import com.codenvy.ide.wizard.newresource.NewResourcePageViewImpl;
 import com.codenvy.ide.wizard.template.TemplateAgentImpl;
 import com.codenvy.ide.wizard.template.TemplatePageView;
 import com.codenvy.ide.wizard.template.TemplatePageViewImpl;
-import com.codenvy.ide.workspace.PartStackPresenterFactory;
-import com.codenvy.ide.workspace.PartStackViewFactory;
-import com.codenvy.ide.workspace.WorkspacePresenter;
-import com.codenvy.ide.workspace.WorkspaceView;
-import com.codenvy.ide.workspace.WorkspaceViewImpl;
+import com.codenvy.ide.workspace.*;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -239,6 +223,8 @@ public class CoreGinModule extends AbstractGinModule {
     @Provides
     @Singleton
     protected MessageBus provideMessageBus() {
-        return new RESTMessageBus("wss://localhost/websocket");
+        boolean isSecureConnection = Window.Location.getProtocol().equals("https:");
+        String url = (isSecureConnection ? "wss://" : "ws://") + Window.Location.getHost() + "/IDE/websocket";
+        return new RESTMessageBus(url);
     }
 }

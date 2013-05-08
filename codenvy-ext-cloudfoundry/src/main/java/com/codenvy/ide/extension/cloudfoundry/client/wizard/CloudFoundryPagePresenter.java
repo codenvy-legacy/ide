@@ -181,8 +181,18 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
                                                                                              server, eventBus, console, constant,
                                                                                              loginPresenter, paasProvider) {
                                  @Override
-                                 protected void onSuccess(CloudFoundryApplication result) {
-                                     onAppCreatedSuccess(result);
+                                 protected void onSuccess(final CloudFoundryApplication result) {
+                                     project.refreshProperties(new AsyncCallback<Project>() {
+                                         @Override
+                                         public void onSuccess(Project project) {
+                                             onAppCreatedSuccess(result);
+                                         }
+
+                                         @Override
+                                         public void onFailure(Throwable caught) {
+                                             Log.error(CloudFoundryPagePresenter.class, "Can not refresh properties", caught);
+                                         }
+                                     });
                                  }
 
                                  @Override
