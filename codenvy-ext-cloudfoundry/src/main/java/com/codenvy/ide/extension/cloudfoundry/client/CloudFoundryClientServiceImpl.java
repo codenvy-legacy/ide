@@ -29,6 +29,7 @@ import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestMessage;
 import com.codenvy.ide.websocket.rest.RequestMessageBuilder;
+import com.codenvy.ide.websocket.rest.WebSocketAutoBeanFactory;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
@@ -84,6 +85,7 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
     private MessageBus                       wsMessageBus;
     private CloudFoundryLocalizationConstant constant;
     private CloudFoundryAutoBeanFactory      autoBeanFactory;
+    private WebSocketAutoBeanFactory         webSocketAutoBeanFactory;
 
     /**
      * Create CloudFoundry client service.
@@ -98,13 +100,15 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
     @Inject
     protected CloudFoundryClientServiceImpl(@Named("restContext") String restContext, Loader loader, MessageBus wsMessageBus,
                                             EventBus eventBus, CloudFoundryLocalizationConstant constant,
-                                            CloudFoundryAutoBeanFactory autoBeanFactory) {
+                                            CloudFoundryAutoBeanFactory autoBeanFactory,
+                                            WebSocketAutoBeanFactory webSocketAutoBeanFactory) {
         this.loader = loader;
         this.restServiceContext = restContext;
         this.wsMessageBus = wsMessageBus;
         this.eventBus = eventBus;
         this.constant = constant;
         this.autoBeanFactory = autoBeanFactory;
+        this.webSocketAutoBeanFactory = webSocketAutoBeanFactory;
     }
 
     /** {@inheritDoc} */
@@ -160,7 +164,7 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
         callback.setStatusHandler(new CreateApplicationRequestStatusHandler(name, eventBus, constant, paasProvider));
 
         RequestMessage message =
-                RequestMessageBuilder.build(RequestBuilder.POST, CREATE).data(data)
+                RequestMessageBuilder.build(RequestBuilder.POST, CREATE, webSocketAutoBeanFactory).data(data)
                                      .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
         wsMessageBus.send(message, callback);
     }

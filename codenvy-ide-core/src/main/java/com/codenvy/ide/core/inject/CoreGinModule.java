@@ -82,7 +82,7 @@ import com.codenvy.ide.toolbar.ToolbarViewImpl;
 import com.codenvy.ide.user.UserClientServiceImpl;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.codenvy.ide.websocket.MessageBus;
-import com.codenvy.ide.websocket.rest.RESTMessageBus;
+import com.codenvy.ide.websocket.MessageBusImpl;
 import com.codenvy.ide.welcome.WelcomePartPresenter;
 import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.codenvy.ide.wizard.newfile.NewGenericFilePageViewImpl;
@@ -122,6 +122,7 @@ public class CoreGinModule extends AbstractGinModule {
         install(new GinFactoryModuleBuilder().implement(PartStack.class, PartStackPresenter.class).build(PartStackPresenterFactory.class));
         bind(UserClientService.class).to(UserClientServiceImpl.class).in(Singleton.class);
         bind(PreferencesManager.class).to(PreferencesManagerImpl.class).in(Singleton.class);
+        bind(MessageBus.class).to(MessageBusImpl.class).in(Singleton.class);
 
         apiBindingConfigure();
 
@@ -221,10 +222,10 @@ public class CoreGinModule extends AbstractGinModule {
     }
 
     @Provides
+    @Named("websocketUrl")
     @Singleton
-    protected MessageBus provideMessageBus() {
+    protected String provideDefaultWebsocketUrl() {
         boolean isSecureConnection = Window.Location.getProtocol().equals("https:");
-        String url = (isSecureConnection ? "wss://" : "ws://") + Window.Location.getHost() + "/IDE/websocket";
-        return new RESTMessageBus(url);
+        return (isSecureConnection ? "wss://" : "ws://") + Window.Location.getHost() + "/IDE/websocket";
     }
 }
