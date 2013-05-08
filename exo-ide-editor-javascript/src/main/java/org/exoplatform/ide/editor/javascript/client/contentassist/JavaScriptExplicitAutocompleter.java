@@ -65,9 +65,9 @@ class JavaScriptExplicitAutocompleter extends ExplicitAutocompleter {
             }
         }
 
-        // TODO auto-complete as you type feature
+        // 'auto-complete as you type' feature
         final char signalChar = signal.getChar();
-        if (signalChar != '{') {
+        if (signalChar != '{' && signalChar != ';') {
             if (!popupIsShown && signalChar != 0 && KeyCodes.KEY_ENTER != signalChar) {
                 return ExplicitAction.DEFERRED_COMPLETE;
             }
