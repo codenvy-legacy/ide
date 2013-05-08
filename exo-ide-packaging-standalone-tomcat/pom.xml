@@ -477,6 +477,17 @@
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
+            <artifactId>codenvy-extension-android</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>gwt-user</artifactId>
+                    <groupId>com.google.gwt</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-logreader</artifactId>
         </dependency>
 

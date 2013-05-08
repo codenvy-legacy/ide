@@ -51,7 +51,7 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
 
     private static final int HEIGHT = 300;
 
-    private static final int WIDTH = 630;
+    private static final int WIDTH = 700;
 
     private static GetStartedUiBinder uiBinder = GWT.create(GetStartedUiBinder.class);
 
@@ -148,7 +148,7 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
 
     @Override
     public void setProjectTypes(Set<ProjectType> projectTypes) {
-        int columnCount = 9;
+        int columnCount = 10;
         int rowCount = (int)Math.ceil((double)projectTypes.size() / columnCount);
 
         projectTypesGrid.clear();
@@ -214,7 +214,7 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
 
     @Override
     public void setPaaSTypes(List<PaaS> paaSTypes) {
-        int columnCount = 9;
+        int columnCount = 10;
         int rowCount = (int)Math.ceil((double)paaSTypes.size() / columnCount);
 
         paasGrid.clear();
@@ -347,6 +347,7 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
             case RUBY_ON_RAILS: return SamplesClientBundle.INSTANCE.rorTechnology();
             case SPRING: return SamplesClientBundle.INSTANCE.springTechnology();
             case NODE_JS: return SamplesClientBundle.INSTANCE.nodejsTechnology();
+            case ANDROID: return SamplesClientBundle.INSTANCE.androidTechnology();
             default: return null;
         }
     }
@@ -368,6 +369,8 @@ public class GetStartedView extends ViewImpl implements GetStartedPresenter.Disp
             return !disable ? SamplesClientBundle.INSTANCE.beansTalkPaaS() : SamplesClientBundle.INSTANCE.beansTalkPaaSDisabled();
         } else if (paaS.getId().equals("Tier3WF")) {
             return !disable ? SamplesClientBundle.INSTANCE.tier3WebFabricPaaS() : SamplesClientBundle.INSTANCE.tier3WebFabricPaaSDisabled();
+        } else if (paaS.getId().equals("Manymo")) {
+            return !disable ? SamplesClientBundle.INSTANCE.manymoPaaS() : SamplesClientBundle.INSTANCE.manymoPaaS();
         } else {
             return !disable ? SamplesClientBundle.INSTANCE.nonePaaS() : SamplesClientBundle.INSTANCE.nonePaaS();
         }

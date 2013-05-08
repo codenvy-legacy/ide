@@ -16,17 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.android.client;
+package com.codenvy.ide.extension.android.client;
 
+import com.codenvy.ide.extension.android.client.deploy.DeployApplicationPresenter;
+import com.codenvy.ide.extension.android.client.run.RunApplicationControl;
+import com.codenvy.ide.extension.android.client.run.RunApplicationManager;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.extension.android.client.run.RunApplicationControl;
-import org.exoplatform.ide.extension.android.client.run.RunApplicationManager;
-import org.exoplatform.ide.extension.android.client.run.StopApplicationControl;
+import org.exoplatform.ide.client.framework.paas.PaaS;
+import org.exoplatform.ide.client.framework.project.ProjectType;
+
+import java.util.Arrays;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
@@ -34,17 +39,16 @@ import org.exoplatform.ide.extension.android.client.run.StopApplicationControl;
  */
 public class AndroidExtension extends Extension implements InitializeServicesHandler {
 
-    public static final AndroidExtensionAutoBeanFactory AUTO_BEAN_FACTORY = GWT
-            .create(AndroidExtensionAutoBeanFactory.class);
-
     public static final AndroidExtensionLocalizationConstant LOCALIZATION = GWT.create(AndroidExtensionLocalizationConstant.class);
 
     @Override
     public void initialize() {
+        IDE.getInstance().registerPaaS(new PaaS("Manymo", "Manymo Android Emulator", new Image(AndroidExtensionClientBundle.INSTANCE.manymoPaas()), new Image(AndroidExtensionClientBundle.INSTANCE.manymoPaasDisabled()),
+                                                Arrays.asList(ProjectType.ANDROID), new DeployApplicationPresenter()));
+
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
         IDE.getInstance().addControl(new RunApplicationControl());
-        IDE.getInstance().addControl(new StopApplicationControl());
 
         new RunApplicationManager();
     }

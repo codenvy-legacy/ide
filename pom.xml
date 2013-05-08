@@ -474,7 +474,7 @@
                 <version>${com.codenvy.commons.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.exoplatfrom.ide</groupId>
+                <groupId>org.exoplatform.ide</groupId>
                 <artifactId>codenvy-extension-android</artifactId>
                 <version>${project.version}</version>
             </dependency>

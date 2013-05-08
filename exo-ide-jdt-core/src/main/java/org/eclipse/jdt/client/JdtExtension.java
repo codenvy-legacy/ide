@@ -129,6 +129,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
         projectTypes.add(ProjectType.AWS.value());
         projectTypes.add(ProjectType.JAR.value());
         projectTypes.add(ProjectType.WAR.value());
+        projectTypes.add(ProjectType.ANDROID.value());
     }
 
     /**
