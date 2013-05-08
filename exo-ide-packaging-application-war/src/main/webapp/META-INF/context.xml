@@ -18,10 +18,8 @@
     02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
 -->
-<Context path="/IDE-application" docBase="IDE-application" reloadable="true" crossContext="false" sessionCookiePath="/">
+<Context path="/" docBase="" reloadable="true" crossContext="false" sessionCookiePath="/">
 
-    <Logger className='org.apache.catalina.logger.SystemOutLogger'
-            prefix='localhost_portal_log.' suffix='.txt' timestamp='true'/>
     <Manager className='org.apache.catalina.session.PersistentManager' saveOnRestart='false'/>
     <Realm className='org.apache.catalina.realm.JAASRealm'
            appName='exo-domain'

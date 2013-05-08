@@ -7,19 +7,11 @@
         <artifactId>exo-ide-parent</artifactId>
         <version>2.3.0-SNAPSHOT</version>
     </parent>
-    <groupId>org.exoplatform.ide</groupId>
     <artifactId>exo-ide-packaging-application-war</artifactId>
     <packaging>war</packaging>
     <name>Codenvy IDE :: Packaging :: Application</name>
 
     <dependencies>
-
-        <dependency>
-            <groupId>com.google.code.gwt-log</groupId>
-            <artifactId>gwt-log</artifactId>
-            <version>3.0.4</version>
-        </dependency>
-
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
@@ -36,23 +28,12 @@
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-client</artifactId>
         </dependency>
-
+        
         <!-- EDITOR EXTENSIONS -->
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-collabeditor</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-editor-gadget</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>xstream</groupId>
-                    <artifactId>xstream</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -85,35 +66,17 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>codenvy-ide-collaboration</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-gadget</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>guice-jmx</artifactId>
-                    <groupId>com.google.code.guice</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>guice</artifactId>
-                    <groupId>com.google.code.guice</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>xstream</artifactId>
-                    <groupId>com.thoughtworks.xstream</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>xstream</artifactId>
-                    <groupId>xstream</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-jdt-core</artifactId>
+            <exclusions>
+            	<exclusion>
+            		<artifactId>mail</artifactId>
+            		<groupId>javax.mail</groupId>
+            	</exclusion>
+            </exclusions>
         </dependency>
       
 
@@ -132,6 +95,10 @@
                 <exclusion>
                     <groupId>org.exoplatform.ide</groupId>
                     <artifactId>eclipse-jdt-core</artifactId>
+                </exclusion>
+                <exclusion>
+                	<artifactId>mail</artifactId>
+                	<groupId>javax.mail</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -155,6 +122,12 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-cloudbees</artifactId>
+            <exclusions>
+            	<exclusion>
+            		<artifactId>mail</artifactId>
+            		<groupId>javax.mail</groupId>
+            	</exclusion>
+            </exclusions>
         </dependency>
 
        <dependency>
@@ -190,6 +163,12 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-aws</artifactId>
+            <exclusions>
+            	<exclusion>
+            		<artifactId>mail</artifactId>
+            		<groupId>javax.mail</groupId>
+            	</exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -256,6 +235,10 @@
                 <exclusion>
                     <artifactId>httpclient</artifactId>
                     <groupId>org.apache.httpcomponents</groupId>
+                </exclusion>
+                <exclusion>
+                	<artifactId>mail</artifactId>
+                	<groupId>javax.mail</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -364,6 +347,16 @@
                             <tasks>
                                 <unjar src="${project.build.directory}/dependency/exo-ide-client-${project.version}.jar"
                                        dest="${project.build.directory}/share"/>
+                                 <unwar src="${project.build.directory}/dependency/exo-ide-packaging-shell-war-${project.version}.war" dest="${project.build.directory}/unwar/shell" >
+	                                <patternset>
+	                                    <exclude name="**/META-INF/**" />
+	                                    <exclude name="**/WEB-INF/**" />
+	                                    <exclude name="**/index.html" />
+	                                </patternset>
+                                </unwar>
+                                <copy todir="${project.build.directory}/${project.artifactId}-${project.version}/shell">
+                                    <fileset dir="${project.build.directory}/unwar/shell"/>
+                                </copy>
                             </tasks>
                         </configuration>
                         <goals>
@@ -388,7 +381,7 @@
                         </configuration>
                     </execution>
 
-                    <execution>
+                    <!-- execution>
                         <id>move-compile-resources</id>
                         <phase>prepare-package</phase>
                         <configuration>
@@ -401,7 +394,7 @@
                         <goals>
                             <goal>run</goal>
                         </goals>
-                    </execution>
+                    </execution-->
 
 
                 </executions>
@@ -423,6 +416,11 @@
                                     <groupId>org.exoplatform.ide</groupId>
                                     <artifactId>exo-ide-client</artifactId>
                                     <type>jar</type>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.exoplatform.ide</groupId>
+                                    <artifactId>exo-ide-packaging-shell-war</artifactId>
+                                    <type>war</type>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>

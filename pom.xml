@@ -48,7 +48,7 @@
       <com.codenvy.commons.version>0.4</com.codenvy.commons.version>
       <com.codenvy.organization.version>0.3</com.codenvy.organization.version>
 
-      <tomcat.version>7.0.32</tomcat.version>
+      <tomcat.version>7.0.37</tomcat.version>
       <javax.annotation.version>1.0</javax.annotation.version>
       <javax.ws.version>1.0</javax.ws.version>
       <javax.ws.rs.version>1.0</javax.ws.rs.version>
@@ -147,6 +147,7 @@
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-codeassistant-storage</artifactId>
+            <type>war</type>
             <version>${project.version}</version>
          </dependency>
          <dependency>
@@ -361,6 +362,7 @@
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-maven</artifactId>
+            <type>war</type>
             <version>${project.version}</version>
          </dependency>
 
@@ -475,12 +477,14 @@
            <artifactId>exo-ide-shell</artifactId>
             <version>${project.version}</version>
          </dependency>
-        <dependency>
+         
+         <dependency>
            <groupId>org.exoplatform.ide</groupId>
-           <artifactId>exo-ide-shell-war</artifactId>
-            <type>war</type>
-            <version>${project.version}</version>
+           <artifactId>exo-ide-packaging-shell-war</artifactId>
+           <type>war</type>
+           <version>${project.version}</version>
         </dependency>
+        
          <dependency>
            <groupId>com.codenvy.commons</groupId>
             <artifactId>codenvy-commons-log-reader</artifactId>

@@ -25,20 +25,7 @@
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-rest-war</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-packaging-shell-war</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-websocket</artifactId>
-            <version>${project.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>httpclient</artifactId>
@@ -53,19 +40,11 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-maven</artifactId>
-            <version>${project.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-codeassistant-storage</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-gadget-server</artifactId>
-            <version>${project.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
@@ -77,13 +56,11 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-codeassistant-asm</artifactId>
-            <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-shell</artifactId>
-            <version>${project.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.google.gwt</groupId>
@@ -95,12 +72,6 @@
                 </exclusion>
             </exclusions>
             <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-site-war</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -145,8 +116,7 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs-fs</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+            </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>log4j-over-slf4j</artifactId>
@@ -536,7 +506,6 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>codenvy-ide-collaboration</artifactId>
-            <version>${project.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.exoplatform.gwt</groupId>
@@ -618,6 +587,26 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
+                     <execution>
+                      <id>copy-clear-tomcat</id>
+                       <phase>process-resources</phase>
+                       <goals>
+                           <goal>copy</goal>
+                       </goals>
+                       <configuration>
+                           <artifactItems>
+                               <artifactItem>
+                                   <groupId>org.apache.tomcat</groupId>
+                                   <artifactId>tomcat</artifactId>
+                                   <type>zip</type>
+                                   <version>${tomcat.version}</version>
+                                   <overWrite>false</overWrite>
+                                   <outputDirectory>${project.build.directory}/packager-conf/zip</outputDirectory>
+                                   <destFileName>tomcat.zip</destFileName>
+                               </artifactItem>
+                           </artifactItems>
+                       </configuration>
+                     </execution>
                     <execution>
                         <id>copy-dependencies-war</id>
                         <phase>process-resources</phase>
@@ -702,22 +691,6 @@
                                         your applications servers
                                     </message>
                                 </requireProperty>
-                                <requireProperty>
-                                    <property>tomcat.version</property>
-                                    <message>You must define the property tomcat.version to give the name of the directory where is stored
-                                        tomcat
-                                    </message>
-                                    <regex>${tomcat.version}</regex>
-                                    <regexMessage>Tomcat version must be: ${tomcat.version}</regexMessage>
-                                </requireProperty>
-                                <requireFilesExist>
-                                    <files>
-                                        <file>${exo.projects.directory.dependencies}/apache-tomcat-${tomcat.version}/</file>
-                                    </files>
-                                    <message>The following Tomcat directory doesn't exist :
-                                        ${exo.projects.directory.dependencies}/apache-tomcat-${tomcat.version}
-                                    </message>
-                                </requireFilesExist>
                             </rules>
                             <fail>true</fail>
                         </configuration>
@@ -732,8 +705,18 @@
                         <phase>prepare-package</phase>
                         <configuration>
                             <tasks>
-                                <copy todir="${project.build.directory}/tomcat-ide">
-                                    <fileset dir="${exo.projects.directory.dependencies}/apache-tomcat-${tomcat.version}/"/>
+                                <unwar src="${project.build.directory}/packager-conf/zip/tomcat.zip"
+                                       dest="${project.build.directory}/packager-conf/zip/tomcat-ide">
+                                    <patternset>
+                                        <exclude name="**/ROOT/**"/>
+                                        <exclude name="**/docs/**"/>
+                                        <exclude name="**/examples/**"/>
+                                        <exclude name="**/host-manager/**"/>
+                                        <exclude name="**/manager/**"/>
+                                   </patternset>
+                                </unwar>
+                                <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
+                                    <fileset dir="${project.build.directory}/packager-conf/zip/tomcat-ide/apache-tomcat-${tomcat.version}"/>
                                 </copy>
                                 <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
                                     <fileset dir="${basedir}/src/main/resources/tomcat"/>
@@ -757,25 +740,15 @@
                                     </patternset>
                                 </unwar>
 
-                                <war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false">
+                                <war destfile="${project.build.directory}/tomcat-ide/webapps/ROOT.war" needxmlfile="false">
                                     <fileset dir="${project.build.directory}/packager-conf/war/IDE"/>
                                 </war>
-
-
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-rest-war-${project.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/rest.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${project.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-site-war-${project.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-shell-war-${project.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/shell.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${project.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${project.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true"/>
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-gadget-server-${project.version}.war"
-                                      tofile="${project.build.directory}/tomcat-ide/webapps/gadget-server.war" overwrite="true"/>
                                 <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war"
                                       tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true"/>
                                 <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"

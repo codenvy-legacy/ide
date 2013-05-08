@@ -27,6 +27,7 @@ import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.framework.util.Utils;
 
 /**
  * Created by The eXo Platform SAS .
@@ -58,7 +59,8 @@ public class IDEConfigurationLoader {
 
     public void loadConfiguration(AsyncRequestCallback<IDEInitializationConfiguration> callback) {
         try {
-            String url = getConfigurationURL();
+            
+            String url = Utils.getRestContext() + "/ide/configuration/init";
             if (url == null) {
                 throw new Exception(IDE.IDE_LOCALIZATION_MESSAGES.confMissingVariable("configurationURL"));
             }
@@ -71,10 +73,6 @@ public class IDEConfigurationLoader {
     public boolean isLoaded() {
         return loaded;
     }
-
-    private static native String getConfigurationURL()/*-{
-        return $wnd.configurationURL;
-    }-*/;
 
     public static native JavaScriptObject getAppConfig() /*-{
         return $wnd.appConfig;

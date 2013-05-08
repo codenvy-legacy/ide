@@ -93,11 +93,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                             if (result.getUserInfo().getRoles() != null && result.getUserInfo().getRoles().size() > 0) {
                                 controls.initControls(result.getUserInfo().getRoles());
 
-                                String registryURLParameter = applicationConfiguration.getRegistryURL();
-                                if (registryURLParameter == null) {
-                                    throw new Exception(org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES
-                                                                                      .confMissingVariable("registryURL"));
-                                }
+                               
                                 new SettingsServiceImpl(IDE.eventBus(), result.getUserInfo().getName(),
                                                         IDELoader.get(), applicationConfiguration.getContext());
                                 SettingsService.getInstance().restoreFromCookies(applicationSettings);
