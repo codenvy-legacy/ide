@@ -26,5 +26,7 @@ package org.exoplatform.ide.client.framework.websocket.events;
  * @version $Id: ConnectionClosedHandler.java Dec 7, 2012 11:17:44 AM azatsarynnyy $
  */
 public interface ConnectionClosedHandler {
-    void onClose(WebSocketClosedEvent event);
+    
+    void onConnectionClosed(WebSocketClosedEvent event);
+    
 }
