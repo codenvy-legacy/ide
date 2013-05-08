@@ -19,6 +19,7 @@
 package com.codenvy.ide.websocket;
 
 import com.codenvy.ide.websocket.events.*;
+import com.codenvy.ide.websocket.rest.RequestCallback;
 
 /**
  * WebSocket message bus, that provides two asynchronous messaging patterns: RPC and list-based PubSub.
@@ -76,7 +77,7 @@ public interface MessageBus extends MessageReceivedHandler {
      * @throws WebSocketException
      *         throws if an any error has occurred while sending data
      */
-    void send(Message message, ReplyHandler callback) throws WebSocketException;
+    void send(Message message, RequestCallback callback) throws WebSocketException;
 
     /**
      * Sends a message to an address.

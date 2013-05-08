@@ -25,7 +25,6 @@ import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.HTTPStatus;
 import com.codenvy.ide.rest.RequestStatusHandler;
 import com.codenvy.ide.websocket.Message;
-import com.codenvy.ide.websocket.events.ReplyHandler;
 import com.codenvy.ide.websocket.rest.exceptions.ServerException;
 import com.codenvy.ide.websocket.rest.exceptions.UnauthorizedException;
 import com.google.gwt.http.client.Response;
@@ -38,7 +37,7 @@ import com.google.gwt.http.client.Response;
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: RequestCallback.java Nov 12, 2012 10:13:13 AM azatsarynnyy $
  */
-public abstract class RequestCallback<T> implements ReplyHandler {
+public abstract class RequestCallback<T> {
 
     // http code 207 is "Multi-Status"
     // IE misinterpreting HTTP status code 204 as 1223 (http://www.mail-archive.com/jquery-en@googlegroups.com/msg13093.html)
@@ -131,12 +130,6 @@ public abstract class RequestCallback<T> implements ReplyHandler {
             }
             onFailure(exception);
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onReply(String message) {
-
     }
 
     /**

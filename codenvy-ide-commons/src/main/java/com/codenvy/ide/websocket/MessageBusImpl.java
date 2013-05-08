@@ -156,7 +156,8 @@ public class MessageBusImpl implements MessageBus {
     /** WebSocket server URL. */
     private String    url;
     /** Map of the message identifier to the {@link ReplyHandler}. */
-    private Map<String, ReplyHandler>                callbackMap              = new HashMap<String, ReplyHandler>();
+    private Map<String, RequestCallback>             requestCallbackMap       = new HashMap<String, RequestCallback>();
+    private Map<String, ReplyHandler>                replyCallbackMap         = new HashMap<String, ReplyHandler>();
     /** Map of the channel to the subscribers. */
     private Map<String, Set<MessageHandler>>         channelToSubscribersMap  = new HashMap<String, Set<MessageHandler>>();
     private ListenerManager<ConnectionOpenedHandler> connectionOpenedHandlers = ListenerManager.create();
@@ -245,13 +246,13 @@ public class MessageBusImpl implements MessageBus {
             // this is a message received by subscription
             processSubscriptionMessage(message);
         } else {
-            ReplyHandler callback = callbackMap.remove(message.getUuid());
-            if (callback != null) {
-                //TODO this is nasty, need refactor this
-                if (callback instanceof RequestCallback) {
-                    ((RequestCallback)callback).onReply(message);
-                } else {
-                    callback.onReply(message.getBody());
+            ReplyHandler replyCallback = replyCallbackMap.remove(message.getUuid());
+            if (replyCallback != null) {
+                replyCallback.onReply(message.getBody());
+            } else {
+                RequestCallback requestCallback = requestCallbackMap.remove(message.getUuid());
+                if (requestCallback != null) {
+                    requestCallback.onReply(message);
                 }
             }
         }
@@ -323,25 +324,21 @@ public class MessageBusImpl implements MessageBus {
 
     /** {@inheritDoc} */
     @Override
-    public void send(Message message, ReplyHandler callback) throws WebSocketException {
+    public void send(Message message, RequestCallback callback) throws WebSocketException {
         checkWebSocketConnectionState();
 
         AutoBean<?> autoBean = AutoBeanUtils.getAutoBean(message);
-        if (autoBean == null)
+        if (autoBean == null) {
             throw new NullPointerException("Failed to marshall message");
-
-        RequestCallback<?> requestCallback = null;
-        if (callback != null && callback instanceof RequestCallback) {
-            requestCallback = (RequestCallback<?>)callback;
         }
 
         String textMessage = AutoBeanCodex.encode(autoBean).getPayload();
         internalSend(message.getUuid(), textMessage, callback);
 
-        if (requestCallback != null) {
-            requestCallback.getLoader().show();
-            if (requestCallback.getStatusHandler() != null) {
-                requestCallback.getStatusHandler().requestInProgress(message.getUuid());
+        if (callback != null) {
+            callback.getLoader().show();
+            if (callback.getStatusHandler() != null) {
+                callback.getStatusHandler().requestInProgress(message.getUuid());
             }
         }
     }
@@ -358,11 +355,12 @@ public class MessageBusImpl implements MessageBus {
      * @throws WebSocketException
      *         throws if an any error has occurred while sending data
      */
-    private void internalSend(String uuid, String message, ReplyHandler callback) throws WebSocketException {
+    private void internalSend(String uuid, String message, RequestCallback callback) throws WebSocketException {
         checkWebSocketConnectionState();
 
-        if (callback != null)
-            callbackMap.put(uuid, callback);
+        if (callback != null) {
+            requestCallbackMap.put(uuid, callback);
+        }
 
         send(message);
     }
@@ -395,10 +393,41 @@ public class MessageBusImpl implements MessageBus {
     /** {@inheritDoc} */
     @Override
     public void send(String address, String message, ReplyHandler replyHandler) throws WebSocketException {
+        checkWebSocketConnectionState();
+
         RequestMessage requestMessage =
                 RequestMessageBuilder.build(RequestBuilder.POST, address, autoBeanFactory).header("content-type", "application/json")
                                      .data(message).getRequestMessage();
-        send(requestMessage, replyHandler);
+
+        AutoBean<?> autoBean = AutoBeanUtils.getAutoBean(requestMessage);
+        if (autoBean == null) {
+            throw new NullPointerException("Failed to marshall message");
+        }
+
+        String textMessage = AutoBeanCodex.encode(autoBean).getPayload();
+        internalSend(requestMessage.getUuid(), textMessage, replyHandler);
+    }
+
+    /**
+     * Send text message.
+     *
+     * @param uuid
+     *         a message identifier
+     * @param message
+     *         message to send
+     * @param callback
+     *         callback for receiving reply to message
+     * @throws WebSocketException
+     *         throws if an any error has occurred while sending data
+     */
+    private void internalSend(String uuid, String message, ReplyHandler callback) throws WebSocketException {
+        checkWebSocketConnectionState();
+
+        if (callback != null) {
+            replyCallbackMap.put(uuid, callback);
+        }
+
+        send(message);
     }
 
     /**
