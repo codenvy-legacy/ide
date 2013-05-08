@@ -50,7 +50,7 @@ public class UpdateAppControl extends SimpleControl implements IDEControl, Proje
         super(ID);
         setTitle(TITLE);
         setPrompt(PROMPT);
-        setImages(DebuggerClientBundle.INSTANCE.runApp(), DebuggerClientBundle.INSTANCE.runAppDisabled());
+        setImages(DebuggerClientBundle.INSTANCE.updateApp(), DebuggerClientBundle.INSTANCE.updateAppDisabled());
         setEvent(new UpdateAppEvent());
         setGroupName(GroupNames.RUNDEBUG);
     }
