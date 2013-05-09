@@ -14,10 +14,10 @@
 
 package com.google.collide.codemirror2;
 
+import com.codenvy.ide.json.shared.JsonCollections;
+import com.codenvy.ide.json.shared.JsonStringMap;
 import com.google.common.base.Preconditions;
 
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /**
  * Enumeration of javascript and python style tokens returned from

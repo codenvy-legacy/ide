@@ -14,6 +14,12 @@
 
 package com.google.collide.client.document.linedimensions;
 
+import com.codenvy.ide.commons.shared.StringUtils;
+import com.codenvy.ide.commons.shared.UnicodeUtils;
+import com.codenvy.ide.commons.shared.ListenerRegistrar.RemoverManager;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
+import com.codenvy.ide.json.shared.JsonStringMap;
 import com.google.collide.client.document.linedimensions.ColumnOffsetCache.ColumnOffset;
 import com.google.collide.client.util.dom.FontDimensionsCalculator;
 import com.google.collide.client.util.dom.FontDimensionsCalculator.FontDimensions;
@@ -27,12 +33,6 @@ import com.google.collide.shared.document.TextChange.Type;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.json.shared.JsonStringMap;
-import org.exoplatform.ide.shared.util.ListenerRegistrar.RemoverManager;
-import org.exoplatform.ide.shared.util.StringUtils;
-import org.exoplatform.ide.shared.util.UnicodeUtils;
 
 /**
  * An object which can accurately measure a {@link Line} and map X coordinates

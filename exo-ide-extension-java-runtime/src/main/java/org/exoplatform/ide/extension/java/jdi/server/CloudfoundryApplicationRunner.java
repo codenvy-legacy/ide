@@ -18,10 +18,11 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server;
 
+import com.codenvy.ide.commons.server.ParsingResponseException;
+
 import org.everrest.websockets.WSConnectionContext;
 import org.everrest.websockets.message.ChannelBroadcastMessage;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry;
 import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryException;
 import org.exoplatform.ide.extension.cloudfoundry.server.DebugMode;
@@ -49,11 +50,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
-import static org.exoplatform.ide.commons.FileUtils.*;
+import static com.codenvy.ide.commons.server.ContainerUtils.readValueParam;
+import static com.codenvy.ide.commons.server.FileUtils.*;
+import static com.codenvy.ide.commons.server.NameGenerator.generate;
+import static com.codenvy.ide.commons.server.ZipUtils.*;
+
+
 import static com.codenvy.commons.json.JsonHelper.toJson;
-import static org.exoplatform.ide.commons.NameGenerator.generate;
-import static org.exoplatform.ide.commons.ZipUtils.*;
 
 /**
  * ApplicationRunner for deploy Java applications at Cloud Foundry PaaS.

@@ -19,14 +19,14 @@
 package org.exoplatform.ide.client.framework.websocket;
 
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.commons.shared.ListenerManager;
+import com.codenvy.ide.commons.shared.ListenerManager.Dispatcher;
 import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.ide.client.framework.websocket.events.*;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.client.framework.websocket.rest.SubscriptionHandler;
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
 
 import java.util.HashMap;
 import java.util.HashSet;

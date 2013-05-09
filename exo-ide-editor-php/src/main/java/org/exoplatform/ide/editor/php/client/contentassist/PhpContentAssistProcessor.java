@@ -19,6 +19,7 @@
 package org.exoplatform.ide.editor.php.client.contentassist;
 
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.client.CollabEditor;
 import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.selection.SelectionModel;
@@ -42,7 +43,6 @@ import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor;
 import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
 import org.exoplatform.ide.editor.codeassistant.JSONTokenParser;
-import org.exoplatform.ide.json.shared.JsonArray;
 
 import java.util.ArrayList;
 import java.util.Collections;

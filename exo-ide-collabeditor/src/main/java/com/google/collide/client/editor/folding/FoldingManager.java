@@ -19,6 +19,11 @@
 package com.google.collide.client.editor.folding;
 
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.commons.shared.ListenerManager;
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
+import com.codenvy.ide.commons.shared.ListenerManager.Dispatcher;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.collide.client.Resources;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
@@ -40,11 +45,6 @@ import org.exoplatform.ide.editor.shared.text.Region;
 import org.exoplatform.ide.editor.shared.text.projection.IProjectionPosition;
 import org.exoplatform.ide.editor.shared.text.projection.ProjectionDocument;
 import org.exoplatform.ide.editor.shared.text.projection.ProjectionDocumentManager;
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 import java.util.ArrayList;
 import java.util.HashMap;

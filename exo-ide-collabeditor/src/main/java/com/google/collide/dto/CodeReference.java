@@ -13,10 +13,10 @@
 // limitations under the License.
 package com.google.collide.dto;
 
-import org.exoplatform.ide.dtogen.shared.CompactJsonDto;
-import org.exoplatform.ide.dtogen.shared.RoutingType;
-import org.exoplatform.ide.dtogen.shared.SerializationIndex;
-import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
+import com.codenvy.ide.dtogen.shared.CompactJsonDto;
+import com.codenvy.ide.dtogen.shared.RoutingType;
+import com.codenvy.ide.dtogen.shared.SerializationIndex;
+import com.codenvy.ide.dtogen.shared.ServerToClientDto;
 
 /** Representation of a reference from one code chunk to another. */
 @RoutingType(type = RoutingTypes.CODEREFERENCE)

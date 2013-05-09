@@ -26,17 +26,21 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
-import org.exoplatform.ide.extension.java.jdi.client.events.*;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.RunAppEvent;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 public class RunAppControl extends SimpleControl implements IDEControl,
-//ProjectClosedHandler, ProjectOpenedHandler,
-                                                            AppStartedHandler, AppStoppedHandler, ItemsSelectedHandler {
-    public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.runAppControlId();
+                                                // ProjectClosedHandler, ProjectOpenedHandler,
+                                                AppStartedHandler, AppStoppedHandler, ItemsSelectedHandler {
+    public static final String  ID     = DebuggerExtension.LOCALIZATION_CONSTANT.runAppControlId();
 
-    private static final String TITLE = "Run Application";
+    private static final String TITLE  = "Run Application";
 
     private static final String PROMPT = "Run Application";
 
@@ -60,36 +64,36 @@ public class RunAppControl extends SimpleControl implements IDEControl,
         IDE.addHandler(ItemsSelectedEvent.TYPE, this);
     }
 
-//   /**
-//    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
-// .project.ProjectClosedEvent)
-//    */
-//   @Override
-//   public void onProjectClosed(ProjectClosedEvent event)
-//   {
-//      setVisible(false);
-//      setEnabled(false);
-//   }
-//
-//   /**
-//    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
-// .project.ProjectOpenedEvent)
-//    */
-//   @Override
-//   public void onProjectOpened(ProjectOpenedEvent event)
-//   {
-////      String projectType = event.getProject().getProjectType();
-////      updateStatus(projectType);
-//   }
+    // /**
+    // * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+    // .project.ProjectClosedEvent)
+    // */
+    // @Override
+    // public void onProjectClosed(ProjectClosedEvent event)
+    // {
+    // setVisible(false);
+    // setEnabled(false);
+    // }
+    //
+    // /**
+    // * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
+    // .project.ProjectOpenedEvent)
+    // */
+    // @Override
+    // public void onProjectOpened(ProjectOpenedEvent event)
+    // {
+    // // String projectType = event.getProject().getProjectType();
+    // // updateStatus(projectType);
+    // }
 
     /** @param projectType */
     private void updateStatus(String projectType) {
-        boolean isJavaProject =
-                ProjectResolver.SPRING.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
-                || ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
-                || ProjectType.JSP.value().equals(projectType)
-                || ProjectType.WAR.value().equals(projectType)
-                || ProjectType.AWS.value().equals(projectType);
+        boolean isJavaProject = ProjectResolver.SPRING.equals(projectType)
+                                || ProjectResolver.SERVLET_JSP.equals(projectType)
+                                || ProjectResolver.APP_ENGINE_JAVA.equals(projectType)
+                                || ProjectType.JAVA.value().equals(projectType)
+                                || ProjectType.JSP.value().equals(projectType)
+                                || ProjectType.WAR.value().equals(projectType);
         setVisible(isJavaProject);
         setEnabled(isJavaProject);
         setShowInContextMenu(isJavaProject);
@@ -115,7 +119,7 @@ public class RunAppControl extends SimpleControl implements IDEControl,
             Item selectedItem = event.getSelectedItems().get(0);
 
             ProjectModel project = selectedItem instanceof ProjectModel ? (ProjectModel)selectedItem
-                                                                        : ((ItemContext)selectedItem).getProject();
+                : ((ItemContext)selectedItem).getProject();
             updateStatus(project.getProjectType());
         }
     }

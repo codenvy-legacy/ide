@@ -14,6 +14,7 @@
 
 package com.google.collide.dto.client;
 
+import com.codenvy.ide.json.client.JsoArray;
 import com.google.collide.dto.DocOp;
 import com.google.collide.dto.DocOpComponent;
 import com.google.collide.dto.DocOpComponent.Delete;
@@ -23,7 +24,6 @@ import com.google.collide.dto.DocOpComponent.RetainLine;
 import com.google.collide.dto.client.DtoClientImpls.*;
 import com.google.collide.dto.shared.DocOpFactory;
 
-import org.exoplatform.ide.json.client.JsoArray;
 
 import static com.google.collide.dto.DocOpComponent.Type.*;
 

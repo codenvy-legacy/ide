@@ -18,8 +18,9 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
+import com.codenvy.ide.commons.server.FileUtils;
+
 import org.everrest.core.impl.ContainerResponse;
-import org.exoplatform.ide.commons.FileUtils;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.observation.ChangeEvent;
 import org.exoplatform.ide.vfs.server.observation.ChangeEventFilter;

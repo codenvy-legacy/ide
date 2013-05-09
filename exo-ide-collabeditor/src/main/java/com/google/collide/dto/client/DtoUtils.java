@@ -14,8 +14,9 @@
 
 package com.google.collide.dto.client;
 
-import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
-import org.exoplatform.ide.json.client.Jso;
+import com.codenvy.ide.dtogen.shared.ServerToClientDto;
+import com.codenvy.ide.json.client.Jso;
+
 
 
 /** Utilities to simplify working with DTOs. */

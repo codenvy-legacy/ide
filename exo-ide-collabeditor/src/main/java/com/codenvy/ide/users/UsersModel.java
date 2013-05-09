@@ -19,6 +19,14 @@
 package com.codenvy.ide.users;
 
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.commons.shared.ListenerManager;
+import com.codenvy.ide.commons.shared.ListenerManager.Dispatcher;
+import com.codenvy.ide.dtogen.shared.ServerError.FailureReason;
+import com.codenvy.ide.json.client.JsoStringMap;
+import com.codenvy.ide.json.client.JsoStringSet;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
+import com.codenvy.ide.json.shared.JsonStringSet;
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.code.Participant;
 import com.google.collide.client.communication.FrontendApi;
@@ -28,14 +36,6 @@ import com.google.collide.dto.client.DtoClientImpls.GetWorkspaceParticipantsImpl
 import org.exoplatform.ide.client.framework.websocket.FrontendApi.ApiCallback;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter.MessageRecipient;
-import org.exoplatform.ide.dtogen.shared.ServerError.FailureReason;
-import org.exoplatform.ide.json.client.JsoStringMap;
-import org.exoplatform.ide.json.client.JsoStringSet;
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.json.shared.JsonStringSet;
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

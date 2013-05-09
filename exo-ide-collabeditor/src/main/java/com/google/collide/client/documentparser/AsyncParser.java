@@ -14,13 +14,13 @@
 
 package com.google.collide.client.documentparser;
 
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.collide.codemirror2.Token;
 import com.google.collide.shared.document.Line;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
 
 import javax.annotation.Nonnull;
 

@@ -14,6 +14,9 @@
 
 package com.google.collide.client.syntaxhighlighter;
 
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.ViewportModel;
@@ -24,9 +27,6 @@ import com.google.collide.codemirror2.Token;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 import javax.annotation.Nonnull;
 

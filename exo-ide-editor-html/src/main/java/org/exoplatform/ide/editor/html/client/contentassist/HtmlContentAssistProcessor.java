@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.editor.html.client.contentassist;
 
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.client.CollabEditor;
 import com.google.collide.client.code.autocomplete.AutocompleteProposal;
 import com.google.collide.client.code.autocomplete.integration.TaggableLineUtil;
@@ -40,7 +41,6 @@ import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor;
 import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
-import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * A content assist processor proposes completions and

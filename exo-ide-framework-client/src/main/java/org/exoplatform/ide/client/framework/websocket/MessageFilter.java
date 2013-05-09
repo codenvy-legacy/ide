@@ -14,9 +14,10 @@
 
 package org.exoplatform.ide.client.framework.websocket;
 
-import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.json.shared.JsonIntegerMap;
+import com.codenvy.ide.dtogen.shared.ServerToClientDto;
+import com.codenvy.ide.json.shared.JsonCollections;
+import com.codenvy.ide.json.shared.JsonIntegerMap;
+
 
 /**
  * Class responsible for routing JsonMessages based on the message type that get

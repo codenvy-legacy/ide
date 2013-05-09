@@ -14,6 +14,10 @@
 
 package com.google.collide.client.collaboration;
 
+import com.codenvy.ide.commons.shared.ListenerRegistrar.RemoverManager;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
+import com.codenvy.ide.json.shared.JsonIntegerMap;
 import com.google.collide.client.collaboration.FileConcurrencyController.DocOpListener;
 import com.google.collide.client.document.DocumentManager;
 import com.google.collide.client.document.DocumentMetadata;
@@ -21,10 +25,6 @@ import com.google.collide.dto.DocOp;
 import com.google.collide.shared.document.Document;
 import com.google.common.base.Preconditions;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.json.shared.JsonIntegerMap;
-import org.exoplatform.ide.shared.util.ListenerRegistrar.RemoverManager;
 
 import java.util.List;
 

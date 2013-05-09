@@ -18,11 +18,12 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
+import com.codenvy.ide.commons.server.FileUtils;
+import com.codenvy.ide.commons.server.ZipUtils;
+
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.EnvironmentContext;
 import org.everrest.test.mock.MockHttpServletRequest;
-import org.exoplatform.ide.commons.FileUtils;
-import org.exoplatform.ide.commons.ZipUtils;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Project;

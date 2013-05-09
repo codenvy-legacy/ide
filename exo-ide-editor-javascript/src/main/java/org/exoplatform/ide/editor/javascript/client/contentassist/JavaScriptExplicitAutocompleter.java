@@ -15,6 +15,8 @@
 package org.exoplatform.ide.editor.javascript.client.contentassist;
 
 import com.codenvy.ide.client.util.SignalEvent.KeySignalType;
+import com.codenvy.ide.commons.shared.StringUtils;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.client.code.autocomplete.DefaultAutocompleteResult;
 import com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter.ExplicitAction;
 import com.google.collide.client.code.autocomplete.SignalEventEssence;
@@ -27,8 +29,6 @@ import com.google.collide.shared.document.anchor.ReadOnlyAnchor;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.regexp.shared.RegExp;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.shared.util.StringUtils;
 
 /** Implementation that adds JavaScript-specific cases. */
 class JavaScriptExplicitAutocompleter extends ExplicitAutocompleter {

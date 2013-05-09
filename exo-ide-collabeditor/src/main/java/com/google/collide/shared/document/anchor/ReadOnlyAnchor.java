@@ -14,10 +14,10 @@
 
 package com.google.collide.shared.document.anchor;
 
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.anchor.Anchor.RemovalStrategy;
 
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 /** A read-only interface to {@link Anchor}. */
 public interface ReadOnlyAnchor {

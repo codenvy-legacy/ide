@@ -15,9 +15,9 @@
 package com.codenvy.ide.client.util;
 
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.dtogen.shared.ServerError.FailureReason;
 import com.google.common.base.Preconditions;
 
-import org.exoplatform.ide.dtogen.shared.ServerError.FailureReason;
 
 /** Class for common implementations of a {@link QueryCallback}. */
 public class QueryCallbacks {

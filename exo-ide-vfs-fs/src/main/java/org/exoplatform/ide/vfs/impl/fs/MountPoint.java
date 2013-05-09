@@ -21,14 +21,14 @@ package org.exoplatform.ide.vfs.impl.fs;
 import com.codenvy.ide.commons.cache.Cache;
 import com.codenvy.ide.commons.cache.LoadingValueSLRUCache;
 import com.codenvy.ide.commons.cache.SynchronizedCache;
+import com.codenvy.ide.commons.server.FileUtils;
+import com.codenvy.ide.commons.server.NameGenerator;
 
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonGenerator;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonWriter;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
-import org.exoplatform.ide.commons.FileUtils;
-import org.exoplatform.ide.commons.NameGenerator;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;

@@ -14,9 +14,10 @@
 
 package com.google.collide.dto;
 
-import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
-import org.exoplatform.ide.dtogen.shared.RoutingType;
-import org.exoplatform.ide.json.shared.JsonArray;
+import com.codenvy.ide.dtogen.shared.ClientToServerDto;
+import com.codenvy.ide.dtogen.shared.RoutingType;
+import com.codenvy.ide.json.shared.JsonArray;
+
 
 /**
  * A list of mutations to the workspace tree to perform.These get sent to the FE, applied to the

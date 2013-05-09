@@ -14,8 +14,8 @@
 
 package com.google.collide.dto;
 
-import org.exoplatform.ide.dtogen.shared.RoutingType;
-import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
+import com.codenvy.ide.dtogen.shared.RoutingType;
+import com.codenvy.ide.dtogen.shared.ServerToClientDto;
 
 /** A message meant to emulate a Tango invalidation using the push channel as the transport. */
 @RoutingType(type = RoutingTypes.INVALIDATIONMESSAGE)

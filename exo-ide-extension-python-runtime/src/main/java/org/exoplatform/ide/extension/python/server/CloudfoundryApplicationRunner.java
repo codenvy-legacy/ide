@@ -18,8 +18,9 @@
  */
 package org.exoplatform.ide.extension.python.server;
 
+import com.codenvy.ide.commons.server.ParsingResponseException;
+
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry;
 import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryException;
 import org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryPool;
@@ -44,11 +45,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
-import static org.exoplatform.ide.commons.FileUtils.createTempDirectory;
-import static org.exoplatform.ide.commons.FileUtils.deleteRecursive;
-import static org.exoplatform.ide.commons.NameGenerator.generate;
-import static org.exoplatform.ide.commons.ZipUtils.unzip;
+import static com.codenvy.ide.commons.server.ContainerUtils.readValueParam;
+import static com.codenvy.ide.commons.server.FileUtils.createTempDirectory;
+import static com.codenvy.ide.commons.server.FileUtils.deleteRecursive;
+import static com.codenvy.ide.commons.server.NameGenerator.generate;
+import static com.codenvy.ide.commons.server.ZipUtils.unzip;
+
+
 
 /**
  * ApplicationRunner for deploy Python applications at Cloud Foundry PaaS.

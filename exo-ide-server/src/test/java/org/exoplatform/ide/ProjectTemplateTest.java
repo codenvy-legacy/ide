@@ -18,12 +18,13 @@
  */
 package org.exoplatform.ide;
 
+import com.codenvy.ide.commons.server.StringUtils;
+
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.EnvironmentContext;
 import org.everrest.core.impl.MultivaluedMapImpl;
 import org.everrest.core.tools.SimpleSecurityContext;
 import org.everrest.test.mock.MockPrincipal;
-import org.exoplatform.ide.commons.StringUtils;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.shared.Item;

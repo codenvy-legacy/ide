@@ -113,7 +113,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class ChatMessageImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class ChatMessageImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.codenvy.ide.collaboration.dto.ChatMessage {
         protected ChatMessageImpl() {
         }
@@ -196,7 +196,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class ChatParticipantAddImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class ChatParticipantAddImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.codenvy.ide.collaboration.dto.ChatParticipantAdd {
         protected ChatParticipantAddImpl() {
         }
@@ -237,7 +237,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class ChatParticipantRemoveImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class ChatParticipantRemoveImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.codenvy.ide.collaboration.dto.ChatParticipantRemove {
         protected ChatParticipantRemoveImpl() {
         }
@@ -292,7 +292,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetChatParticipantsImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetChatParticipantsImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.codenvy.ide.collaboration.dto.GetChatParticipants {
         protected GetChatParticipantsImpl() {
         }
@@ -319,19 +319,19 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetChatParticipantsResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetChatParticipantsResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.codenvy.ide.collaboration.dto.GetChatParticipantsResponse {
         protected GetChatParticipantsResponseImpl() {
         }
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.codenvy.ide.collaboration.dto.ParticipantInfo> getParticipants
+        public final native com.codenvy.ide.json.shared.JsonArray<com.codenvy.ide.collaboration.dto.ParticipantInfo> getParticipants
                 () /*-{
             return this["participants"];
         }-*/;
 
         public final native GetChatParticipantsResponseImpl setParticipants(
-                org.exoplatform.ide.json.shared.JsonArray<com.codenvy.ide.collaboration.dto.ParticipantInfo> participants) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.codenvy.ide.collaboration.dto.ParticipantInfo> participants) /*-{
             this["participants"] = participants;
             return this;
         }-*/;
@@ -348,7 +348,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class ItemImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class ItemImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.codenvy.ide.collaboration.dto.Item {
         protected ItemImpl() {
         }
@@ -439,12 +439,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.codenvy.ide.collaboration.dto.Property> getProperties() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.codenvy.ide.collaboration.dto.Property> getProperties() /*-{
             return this[6];
         }-*/;
 
         public final native ItemImpl setProperties(
-                org.exoplatform.ide.json.shared.JsonArray<com.codenvy.ide.collaboration.dto.Property> properties) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.codenvy.ide.collaboration.dto.Property> properties) /*-{
             this[6] = properties;
             return this;
         }-*/;
@@ -454,12 +454,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonStringMap<com.codenvy.ide.collaboration.dto.Link> getLinks() /*-{
+        public final native com.codenvy.ide.json.shared.JsonStringMap<com.codenvy.ide.collaboration.dto.Link> getLinks() /*-{
             return this[7];
         }-*/;
 
         public final native ItemImpl setLinks(
-                org.exoplatform.ide.json.shared.JsonStringMap<com.codenvy.ide.collaboration.dto.Link> links) /*-{
+                com.codenvy.ide.json.shared.JsonStringMap<com.codenvy.ide.collaboration.dto.Link> links) /*-{
             this[7] = links;
             return this;
         }-*/;
@@ -474,7 +474,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class ItemCreatedDtoImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class ItemCreatedDtoImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.codenvy.ide.collaboration.dto.ItemCreatedDto {
         protected ItemCreatedDtoImpl() {
         }
@@ -515,7 +515,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class ItemDeletedDtoImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class ItemDeletedDtoImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.codenvy.ide.collaboration.dto.ItemDeletedDto {
         protected ItemDeletedDtoImpl() {
         }
@@ -570,7 +570,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class ItemMovedDtoImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class ItemMovedDtoImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.codenvy.ide.collaboration.dto.ItemMovedDto {
         protected ItemMovedDtoImpl() {
         }
@@ -625,7 +625,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class ItemRenamedDtoImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class ItemRenamedDtoImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.codenvy.ide.collaboration.dto.ItemRenamedDto {
         protected ItemRenamedDtoImpl() {
         }
@@ -680,7 +680,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class LinkImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class LinkImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.codenvy.ide.collaboration.dto.Link {
         protected LinkImpl() {
         }
@@ -733,7 +733,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class ParticipantInfoImpl extends org.exoplatform.ide.json.client.Jso
+    public static class ParticipantInfoImpl extends com.codenvy.ide.json.client.Jso
             implements com.codenvy.ide.collaboration.dto.ParticipantInfo {
         protected ParticipantInfoImpl() {
         }
@@ -774,7 +774,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class ProjectClosedDtoImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class ProjectClosedDtoImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.codenvy.ide.collaboration.dto.ProjectClosedDto {
         protected ProjectClosedDtoImpl() {
         }
@@ -829,7 +829,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class ProjectOpenedDtoImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class ProjectOpenedDtoImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.codenvy.ide.collaboration.dto.ProjectOpenedDto {
         protected ProjectOpenedDtoImpl() {
         }
@@ -884,7 +884,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class PropertyImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class PropertyImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.codenvy.ide.collaboration.dto.Property {
         protected PropertyImpl() {
         }
@@ -904,14 +904,14 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getValue() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<java.lang.String> getValue() /*-{
             if (!this.hasOwnProperty(1)) {
                 this[1] = [];
             }
             return this[1];
         }-*/;
 
-        public final native PropertyImpl setValue(org.exoplatform.ide.json.shared.JsonArray<java.lang.String> value) /*-{
+        public final native PropertyImpl setValue(com.codenvy.ide.json.shared.JsonArray<java.lang.String> value) /*-{
             this[1] = value;
             return this;
         }-*/;
@@ -926,7 +926,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class UserDetailsImpl extends org.exoplatform.ide.json.client.Jso
+    public static class UserDetailsImpl extends com.codenvy.ide.json.client.Jso
             implements com.codenvy.ide.collaboration.dto.UserDetails {
         protected UserDetailsImpl() {
         }

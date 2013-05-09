@@ -15,6 +15,7 @@
 package com.google.collide.client.code.autocomplete.integration;
 
 import com.codenvy.ide.client.util.SignalEvent;
+import com.codenvy.ide.commons.shared.ListenerRegistrar.RemoverManager;
 import com.google.collide.client.CollabEditor;
 import com.google.collide.client.Resources;
 import com.google.collide.client.code.autocomplete.AutocompleteBox;
@@ -28,7 +29,6 @@ import com.google.collide.shared.document.TextChange;
 
 import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor;
 import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistant;
-import org.exoplatform.ide.shared.util.ListenerRegistrar.RemoverManager;
 
 /** This class isolates {@link Autocompleter} from the UI. */
 public class AutocompleterFacade {

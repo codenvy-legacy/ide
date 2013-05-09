@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client;
 
+import com.codenvy.ide.commons.shared.ListenerRegistrar.Remover;
 import com.google.collide.client.editor.gutter.Gutter.ClickListener;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -44,7 +45,6 @@ import org.exoplatform.ide.extension.java.jdi.client.fqn.FqnResolverFactory;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.Location;
-import org.exoplatform.ide.shared.util.ListenerRegistrar.Remover;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.HashMap;

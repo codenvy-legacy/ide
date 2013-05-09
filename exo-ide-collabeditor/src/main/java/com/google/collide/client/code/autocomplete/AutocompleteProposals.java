@@ -14,11 +14,11 @@
 
 package com.google.collide.client.code.autocomplete;
 
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.collide.codemirror2.SyntaxType;
 import com.google.common.base.Preconditions;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
 
 /**
  * Object that holds a set of proposals produced by

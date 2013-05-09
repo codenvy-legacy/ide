@@ -15,6 +15,11 @@
 package com.google.collide.client.communication;
 
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.commons.shared.ListenerManager;
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
+import com.codenvy.ide.dtogen.client.RoutableDtoClientImpl;
+import com.codenvy.ide.dtogen.shared.ServerToClientDto;
+import com.codenvy.ide.json.client.Jso;
 import com.google.collide.client.AppContext;
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.status.StatusManager;
@@ -27,11 +32,6 @@ import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.events.*;
-import org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl;
-import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
-import org.exoplatform.ide.json.client.Jso;
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -14,12 +14,12 @@
 
 package org.exoplatform.ide.editor.css.client.contentassist;
 
+import com.codenvy.ide.json.client.JsoArray;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.collide.client.code.autocomplete.AbstractTrie;
 import com.google.collide.client.code.autocomplete.AutocompleteProposal;
 
-import org.exoplatform.ide.json.client.JsoArray;
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
 
 /** Holder of all possible CSS attributes. */
 public class CssTrie {

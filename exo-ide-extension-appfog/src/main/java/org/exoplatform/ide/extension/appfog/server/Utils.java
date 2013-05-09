@@ -34,7 +34,9 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import static org.exoplatform.ide.commons.ZipUtils.unzip;
+import static com.codenvy.ide.commons.server.ZipUtils.unzip;
+
+
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>

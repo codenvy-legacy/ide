@@ -21,6 +21,8 @@ package org.exoplatform.ide.vfs.impl.fs;
 import junit.framework.TestCase;
 
 import com.codenvy.commons.env.EnvironmentContext;
+import com.codenvy.ide.commons.server.FileUtils;
+import com.codenvy.ide.commons.server.NameGenerator;
 
 import org.apache.commons.codec.binary.Base64;
 import org.everrest.core.RequestHandler;
@@ -37,8 +39,6 @@ import org.everrest.core.impl.ResourceBinderImpl;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.everrest.core.tools.DependencySupplierImpl;
 import org.everrest.core.tools.ResourceLauncher;
-import org.exoplatform.ide.commons.FileUtils;
-import org.exoplatform.ide.commons.NameGenerator;
 import org.exoplatform.ide.vfs.server.URLHandlerFactorySetup;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemApplication;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;

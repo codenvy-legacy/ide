@@ -14,10 +14,10 @@
 
 package com.google.collide.server.shared.merge;
 
+import com.codenvy.ide.commons.shared.StringUtils;
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 
-import org.exoplatform.ide.shared.util.StringUtils;
 
 /**
  * Represents a part of a document that is the result of a 3-way merge.

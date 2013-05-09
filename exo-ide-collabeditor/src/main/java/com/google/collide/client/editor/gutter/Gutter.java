@@ -16,6 +16,9 @@ package com.google.collide.client.editor.gutter;
 
 import elemental.html.Element;
 
+import com.codenvy.ide.commons.shared.ListenerManager;
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
+import com.codenvy.ide.commons.shared.ListenerManager.Dispatcher;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.ElementManager;
@@ -24,9 +27,6 @@ import com.google.collide.client.editor.renderer.Renderer;
 import com.google.collide.mvp.UiComponent;
 import com.google.collide.shared.document.anchor.Anchor;
 
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 /**
  * A gutter is a slim vertical region adjacent to the text buffer of the editor.

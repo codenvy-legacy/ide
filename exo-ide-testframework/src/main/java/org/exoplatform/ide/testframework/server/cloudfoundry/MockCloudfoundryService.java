@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.testframework.server.cloudfoundry;
 
-import org.exoplatform.ide.commons.ParsingResponseException;
+import com.codenvy.ide.commons.server.ParsingResponseException;
+
 import org.exoplatform.ide.testframework.server.FSLocation;
 import org.exoplatform.ide.testframework.server.cloudfoundry.bean.*;
 

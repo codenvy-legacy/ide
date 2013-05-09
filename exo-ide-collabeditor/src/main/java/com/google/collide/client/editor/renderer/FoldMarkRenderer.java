@@ -24,13 +24,13 @@ import elemental.dom.NodeList;
 import elemental.html.Element;
 
 import com.codenvy.ide.client.util.Elements;
+import com.codenvy.ide.json.client.JsIntegerMap;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.ViewportModel;
 import com.google.collide.client.editor.folding.FoldMarker;
 import com.google.collide.client.editor.folding.FoldingManager;
 import com.google.collide.client.editor.gutter.Gutter;
 
-import org.exoplatform.ide.json.client.JsIntegerMap;
 
 /**
  * A renderer for the fold markers in the left gutter.

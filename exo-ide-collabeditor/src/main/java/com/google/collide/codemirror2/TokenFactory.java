@@ -14,7 +14,7 @@
 
 package com.google.collide.codemirror2;
 
-import org.exoplatform.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonArray;
 
 /**
  * Factory that produces mode-specific {@link Token}s.

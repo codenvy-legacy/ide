@@ -15,12 +15,12 @@
 package com.codenvy.ide.client.util;
 
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.commons.shared.SharedLogUtils;
+import com.codenvy.ide.commons.shared.StringUtils;
+import com.codenvy.ide.json.client.*;
+import com.codenvy.ide.json.shared.*;
 import com.google.gwt.core.client.GWT;
 
-import org.exoplatform.ide.json.client.*;
-import org.exoplatform.ide.json.shared.*;
-import org.exoplatform.ide.shared.util.SharedLogUtils;
-import org.exoplatform.ide.shared.util.StringUtils;
 
 /** Injects delegates for optimized client implementations. */
 public final class ClientImplementationsInjector {

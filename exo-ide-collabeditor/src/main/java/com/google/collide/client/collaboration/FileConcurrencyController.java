@@ -16,6 +16,11 @@ package com.google.collide.client.collaboration;
 
 import com.codenvy.ide.client.scheduler.SchedulerInstance;
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.commons.shared.ErrorCallback;
+import com.codenvy.ide.commons.shared.ListenerManager;
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
+import com.codenvy.ide.commons.shared.ListenerManager.Dispatcher;
+import com.codenvy.ide.commons.shared.Reorderer.TimeoutCallback;
 import com.google.collide.client.AppContext;
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.collaboration.cc.GenericOperationChannel;
@@ -32,11 +37,6 @@ import com.google.collide.shared.ot.OperationPair;
 import com.google.collide.shared.ot.PositionTransformer;
 import com.google.collide.shared.ot.Transformer;
 
-import org.exoplatform.ide.shared.util.ErrorCallback;
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
-import org.exoplatform.ide.shared.util.Reorderer.TimeoutCallback;
 
 import java.util.List;
 

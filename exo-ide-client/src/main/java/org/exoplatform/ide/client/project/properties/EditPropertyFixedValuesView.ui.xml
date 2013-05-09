@@ -1,0 +1,73 @@
+<!-- Copyright (C) 2012 eXo Platform SAS. This is free software; you can 
+	redistribute it and/or modify it under the terms of the GNU Lesser General 
+	Public License as published by the Free Software Foundation; either version 
+	2.1 of the License, or (at your option) any later version. This software 
+	is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+	without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+	PURPOSE. See the GNU Lesser General Public License for more details. You 
+	should have received a copy of the GNU Lesser General Public License along 
+	with this software; if not, write to the Free Software Foundation, Inc., 
+	51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site: 
+	http://www.fsf.org. -->
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component">
+
+	<ui:style>
+		.label {
+			width: 35px;
+			text-align: left;
+			display: inline-block;
+			margin-top: 10px;
+		}
+		
+		.entry {
+			display: inline-block;
+			position: absolute !important;
+			margin-left: 5px;
+			margin-top: 5px;
+		}
+		
+		.buttons {
+			display: block;
+			margin-left: 35px;
+			margin-right: 35px;
+		}
+		
+		.floatRight {
+			float: right;
+		}
+		
+		.floatLeft {
+			float: left;
+		}
+	</ui:style>
+
+	<c:Border margin="5" borderColor="transparent">
+		<c:layer height="30px" bottom="55px">
+			<g:FlowPanel>
+				<c:Label text="Name:" addStyleNames="{style.label}"></c:Label>
+				<g:TextBox ui:field="nameField" addStyleNames="{style.entry}"
+					width="215px"></g:TextBox>
+			</g:FlowPanel>
+		</c:layer>
+
+		<c:layer height="30px" bottom="27px">
+			<g:FlowPanel>
+				<c:Label text="Value:" addStyleNames="{style.label}"></c:Label>
+				<c:ComboBoxField ui:field="valueField" width="215px"
+					addStyleNames="{style.entry}"></c:ComboBoxField>
+			</g:FlowPanel>
+		</c:layer>
+
+		<c:layer height="22px" bottom="0px">
+			<g:FlowPanel styleName="{style.buttons}">
+				<c:ImageButton ui:field="okButton" addStyleNames="{style.floatLeft}"
+					text="Ok" imageName="ok"></c:ImageButton>
+				<c:ImageButton ui:field="cancelButton" addStyleNames="{style.floatRight}"
+					text="Cancel" imageName="cancel"></c:ImageButton>
+			</g:FlowPanel>
+		</c:layer>
+	</c:Border>
+
+</ui:UiBinder> 

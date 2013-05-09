@@ -14,6 +14,9 @@
 
 package com.google.collide.client.collaboration;
 
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
+import com.codenvy.ide.json.shared.JsonStringMap;
 import com.google.collide.dto.DocOp;
 import com.google.collide.dto.RoutingTypes;
 import com.google.collide.dto.client.DtoClientImpls.ServerToClientDocOpImpl;
@@ -21,9 +24,6 @@ import com.google.collide.dto.client.DtoClientImpls.ServerToClientDocOpsImpl;
 
 import org.exoplatform.ide.client.framework.websocket.MessageFilter;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter.MessageRecipient;
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /**
  * Receives {@link com.google.collide.dto.ServerToClientDocOp} from the {@link org.exoplatform.ide.client.framework.websocket.MessageFilter}
