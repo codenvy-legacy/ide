@@ -97,7 +97,7 @@ public class SearcherTest extends LocalFileSystemTest {
         env.setVariable(EnvironmentContext.VFS_INDEX_DIR, root.getParentFile());
 
         // Touch Searcher to initialize it.
-        searcher = (CleanableSearcher)searcherProvider.getSearcher(mountPoint);
+        searcher = (CleanableSearcher)searcherProvider.getSearcher(mountPoint, true);
         // Wait util searcher initialized.
         while (!searcher.isInitDone()) {
             Thread.sleep(100);
