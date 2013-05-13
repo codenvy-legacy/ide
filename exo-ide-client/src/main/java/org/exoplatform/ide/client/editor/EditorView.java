@@ -64,12 +64,14 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler {
     private LayoutPanel editorArea;
     private Map<Editor, EditorEventHandler> editorEventHandlers = new HashMap<Editor, EditorEventHandler>();
     private FileModel file;
+    private boolean fileReadOnly;
 
     /**
      */
     public EditorView(FileModel file, boolean isFileReadOnly, Editor[] editors, int currentEditorIndex) {
         super("editor-" + editorIndex++, "editor", getFileTitle(file, isFileReadOnly),
               new Image(ImageUtil.getIcon(file.getMimeType())));
+        fileReadOnly = isFileReadOnly;
         setCanShowContextMenu(true);
 
         this.file = file;
@@ -77,7 +79,7 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler {
 
         IDE.addHandler(ViewActivatedEvent.TYPE, this);
 
-        if (editors.length == 1) {
+        if (editors.length == 1 || isFileReadOnly) {
             Editor editor = editors[0];
             editor.setReadOnly(isFileReadOnly);
             addEditor(editor);
@@ -85,6 +87,7 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler {
             addEditors(editors);
             switchToEditor(0);
             getEditor().setFile(file);
+            getEditor().setReadOnly(fileReadOnly);
         }
     }
 
@@ -194,11 +197,17 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler {
                     return;
                 }
 
-                String newFileContent = getEditor().getText();
+                final String newFileContent = getEditor().getText();
 
                 switchToEditor(editorIndex);
-
-                getEditor().getDocument().set(newFileContent);
+                getEditor().getDocument().set("");
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        getEditor().getDocument().set(newFileContent);
+                    }
+                });
+                getEditor().setReadOnly(fileReadOnly);
 
             }
         });

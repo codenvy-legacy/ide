@@ -417,6 +417,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
     /** @see org.exoplatform.ide.editor.client.api.Editor#setReadOnly(boolean) */
     @Override
     public void setReadOnly(boolean readOnly) {
+        editorBundle.setReadOnly(readOnly);
         editor.setReadOnly(readOnly);
     }
 
@@ -460,6 +461,9 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
     @Override
     public SelectionRange getSelectionRange() {
         SelectionModel selection = editor.getSelection();
+        if(selection == null){
+            return null;
+        }
         return new SelectionRange(selection.getBaseLineNumber() + 1, selection.getBaseColumn(),
                                   selection.getCursorLineNumber() + 1, selection.getCursorColumn());
     }
@@ -470,9 +474,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
         LineFinder lineFinder = editor.getDocument().getLineFinder();
         LineInfo baseLineInfo = lineFinder.findLine(startLine - 1);
         LineInfo cursorLineInfo = lineFinder.findLine(endLine - 1);
-        int baseColumn = startChar;
-        int cursorColumn = endChar;
-        editor.getSelection().setSelection(baseLineInfo, baseColumn, cursorLineInfo, cursorColumn);
+        editor.getSelection().setSelection(baseLineInfo, startChar, cursorLineInfo, endChar);
     }
 
     /** @see org.exoplatform.ide.editor.client.api.Editor#selectAll() */

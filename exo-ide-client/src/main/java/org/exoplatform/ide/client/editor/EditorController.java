@@ -151,6 +151,10 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
         }
         
         FileModel file = openedFiles.get(fileId);
+        //TODO this mey happens in case multiple editors, like HTML, need fix this
+        if(file == null){
+            return;
+        }
         if (ignoreContentChangedList.contains(file.getId())) {
             ignoreContentChangedList.remove(file.getId());
             return;
@@ -393,13 +397,14 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
      * @return true if file is locked and client not have lock token, else return false
      */
     private boolean isReadOnly(FileModel file) {
-        if (file.isVersion()) {
-            return true;
-        } else if (file.isLocked()) {
-            return !(lockTokens.containsKey(file.getId()));
-        } else {
-            return false;
-        }
+//        if (file.isVersion()) {
+//            return true;
+//        } else if (file.isLocked()) {
+//            return !(lockTokens.containsKey(file.getId()));
+//        } else {
+//            return false;
+//        }
+        return false;
     }
 
     public void onFileSaved(FileSavedEvent event) {

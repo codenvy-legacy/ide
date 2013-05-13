@@ -264,7 +264,6 @@ public class InputController {
                     return;
                 }
                 
-                Log.info(getClass(), signalEvent.getKeyCode());
                 if (signalEvent != null) {
                     if (selection.hasSelection() && signalEvent.getCommandKey() &&
                         (signalEvent.getKeyCode() == 99 || signalEvent.getKeyCode() == 120)) {
