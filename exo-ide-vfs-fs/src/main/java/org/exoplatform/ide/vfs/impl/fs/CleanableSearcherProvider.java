@@ -57,10 +57,10 @@ public class CleanableSearcherProvider implements SearcherProvider {
     }
 
     @Override
-    public Searcher getSearcher(MountPoint mountPoint) throws VirtualFileSystemException {
+    public Searcher getSearcher(MountPoint mountPoint, boolean create) throws VirtualFileSystemException {
         final java.io.File vfsIoRoot = mountPoint.getRoot().getIoFile();
         CleanableSearcher searcher = instances.get(vfsIoRoot);
-        if (searcher == null) {
+        if (searcher == null && create) {
             final EnvironmentContext context = EnvironmentContext.getCurrent();
             final String workspaceId = (String)context.getVariable(EnvironmentContext.WORKSPACE_ID);
             if (workspaceId == null || workspaceId.isEmpty()) {
@@ -72,7 +72,6 @@ public class CleanableSearcherProvider implements SearcherProvider {
                 throw new VirtualFileSystemException(
                         String.format("Unable create searcher for virtual file system '%s'. Index directory is not set. ", workspaceId));
             }
-
 
             final java.io.File myIndexDir;
             CleanableSearcher newSearcher;
