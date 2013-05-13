@@ -97,7 +97,7 @@ public class EditSessions implements Startable {
      * <p/>
      * If there is no associated FileEditSession, we need log an error since that probably means we have a stale client.
      */
-    private final SelectionTracker                        selectionTracker         = new SelectionTracker();
+//    private final SelectionTracker                        selectionTracker         = new SelectionTracker();
     // This is important mapping for server side to avoid mapping the same resource twice.
     private final ConcurrentMap<String, FileEditSession>  editSessionsByResourceId = new ConcurrentHashMap<String, FileEditSession>();
     private final ConcurrentMap<String, InternalListener> listenersByEditsessionId = new ConcurrentHashMap<String, InternalListener>();
@@ -347,7 +347,7 @@ public class EditSessions implements Startable {
        * Currently, doc ops either contain text changes or selection changes (via annotation doc op
        * components). Both of these modify the user's selection/cursor.
        */
-        selectionTracker.selectionChanged(clientId, resourceId, document, documentSelection);
+//        selectionTracker.selectionChanged(clientId, resourceId, document, documentSelection);
     }
 
     public RecoverFromMissedDocOpsResponse recoverDocOps(RecoverFromMissedDocOps missedDocOpsRequest) {
