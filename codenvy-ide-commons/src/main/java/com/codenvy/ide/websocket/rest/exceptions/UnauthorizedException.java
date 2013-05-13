@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.websocket.rest.exceptions;
 
-import com.codenvy.ide.websocket.rest.ResponseMessage;
+import com.codenvy.ide.websocket.Message;
 
 /**
  * Thrown when there was a HTTP Status-Code 401 (Unauthorized) was received.
@@ -28,13 +28,13 @@ import com.codenvy.ide.websocket.rest.ResponseMessage;
  */
 @SuppressWarnings("serial")
 public class UnauthorizedException extends Exception {
-    private ResponseMessage response;
+    private Message message;
 
-    public UnauthorizedException(ResponseMessage response) {
-        this.response = response;
+    public UnauthorizedException(Message message) {
+        this.message = message;
     }
 
     public int getHTTPStatus() {
-        return response.getResponseCode();
+        return message.getResponseCode();
     }
 }

@@ -19,6 +19,7 @@
 package com.codenvy.ide.websocket.rest;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.events.MessageHandler;
 import com.codenvy.ide.websocket.rest.exceptions.ServerException;
@@ -30,7 +31,7 @@ import com.codenvy.ide.websocket.rest.exceptions.ServerException;
  * @version $Id: SubscriptionHandler.java Jul 30, 2012 9:54:41 AM azatsarynnyy $
  */
 public abstract class SubscriptionHandler<T> implements MessageHandler {
-    /** Deserializer for the body of the {@link ResponseMessage}. */
+    /** Deserializer for the body of the {@link Message}. */
     private final Unmarshallable<T> unmarshaller;
 
     /** An object deserialized from the response. */
@@ -58,29 +59,24 @@ public abstract class SubscriptionHandler<T> implements MessageHandler {
     }
 
     /**
-     * Perform actions when {@link ResponseMessage} was received.
+     * Perform actions when {@link Message} was received.
      *
      * @param message
-     *         received {@link ResponseMessage}
+     *         received {@link Message}
      */
     public void onMessage(Message message) {
 
-        if (!(message instanceof ResponseMessage))
-            throw new IllegalArgumentException("Invalid input message.");
-
-        ResponseMessage response = (ResponseMessage)message;
-
-        if (isSuccessful(response)) {
+        if (isSuccessful(message)) {
             try {
                 if (unmarshaller != null) {
-                    unmarshaller.unmarshal(response);
+                    unmarshaller.unmarshal(message);
                 }
-                onSuccess(payload);
+                onMessageReceived(payload);
             } catch (UnmarshallerException e) {
-                onFailure(e);
+                onErrorReceived(e);
             }
         } else {
-            onFailure(new ServerException(response));
+            onErrorReceived(new ServerException(message));
         }
     }
 
@@ -93,11 +89,13 @@ public abstract class SubscriptionHandler<T> implements MessageHandler {
      * Is message successful?
      *
      * @param message
-     *         {@link ResponseMessage}
+     *         {@link Message}
      * @return <code>true</code> if message is successful and <code>false</code> if not
      */
-    protected final boolean isSuccessful(ResponseMessage message) {
-        for (Pair header : message.getHeaders()) {
+    protected final boolean isSuccessful(Message message) {
+        JsonArray<Pair> headers = message.getHeaders();
+        for (int i = 0; i < headers.size(); i++) {
+            Pair header = headers.get(i);
             if ("x-everrest-websocket-message-type".equals(header.getName()) && "none".equals(header.getValue())) {
                 return true;
             }
@@ -107,12 +105,11 @@ public abstract class SubscriptionHandler<T> implements MessageHandler {
     }
 
     /**
-     * Invokes if response is successfully received and
-     * response status code is in set of success codes.
+     * Invokes if response is successfully received and response status code is in set of success codes.
      *
      * @param result
      */
-    protected abstract void onSuccess(T result);
+    protected abstract void onMessageReceived(T result);
 
     /**
      * Invokes if an error received from the server.
@@ -120,5 +117,5 @@ public abstract class SubscriptionHandler<T> implements MessageHandler {
      * @param exception
      *         caused failure
      */
-    protected abstract void onFailure(Throwable exception);
+    protected abstract void onErrorReceived(Throwable exception);
 }

@@ -155,12 +155,12 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
         buildStatusHandler = new SubscriptionHandler<BuildStatus>(
                 new AutoBeanUnmarshallerWS<BuildStatus>(this.autoBeanFactory.create(BuildStatus.class))) {
             @Override
-            protected void onSuccess(BuildStatus buildStatus) {
+            protected void onMessageReceived(BuildStatus buildStatus) {
                 updateBuildStatus(buildStatus);
             }
 
             @Override
-            protected void onFailure(Throwable exception) {
+            protected void onErrorReceived(Throwable exception) {
                 try {
                     BuildProjectPresenter.this.messageBus.unsubscribe(buildStatusChannel, this);
                 } catch (WebSocketException e) {

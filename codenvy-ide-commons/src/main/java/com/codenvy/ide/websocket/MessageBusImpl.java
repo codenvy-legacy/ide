@@ -25,16 +25,15 @@ import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.events.*;
-import com.codenvy.ide.websocket.rest.*;
+import com.codenvy.ide.websocket.rest.Pair;
+import com.codenvy.ide.websocket.rest.RequestCallback;
+import com.codenvy.ide.websocket.rest.SubscriptionHandler;
 import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.Timer;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
 /**
  * The implementation of {@link MessageBus}.
@@ -161,10 +160,8 @@ public class MessageBusImpl implements MessageBus {
     private ListenerManager<ConnectionOpenedHandler> connectionOpenedHandlers = ListenerManager.create();
     private ListenerManager<ConnectionClosedHandler> connectionClosedHandlers = ListenerManager.create();
     private ListenerManager<ConnectionErrorHandler>  connectionErrorHandlers  = ListenerManager.create();
-    protected     WsListener               wsListener;
-    private final WebSocketAutoBeanFactory autoBeanFactory;
-    private final RequestMessage           heartbeatMessage;
-
+    private       WsListener wsListener;
+    private final Message    heartbeatMessage;
 
     /**
      * Creates new {@link MessageBus} instance.
@@ -173,19 +170,20 @@ public class MessageBusImpl implements MessageBus {
      *         WebSocket server URL
      */
     @Inject
-    public MessageBusImpl(@Named("websocketUrl") String url, WebSocketAutoBeanFactory autoBeanFactory) {
+    public MessageBusImpl(@Named("websocketUrl") String url) {
         this.url = url;
-        this.autoBeanFactory = autoBeanFactory;
-        heartbeatMessage =
-                RequestMessageBuilder.build(RequestBuilder.POST, null, autoBeanFactory).header("x-everrest-websocket-message-type", "ping")
-                                     .getRequestMessage();
+
+        MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, null);
+        builder.header("x-everrest-websocket-message-type", "ping");
+        heartbeatMessage = builder.build();
+
         if (isSupported()) {
             initialize();
         }
     }
 
     /** Initialize the message bus. */
-    protected void initialize() {
+    private void initialize() {
         ws = WebSocket.create(url);
         wsListener = new WsListener();
         ws.setOnMessageHandler(this);
@@ -232,23 +230,24 @@ public class MessageBusImpl implements MessageBus {
     public void onMessageReceived(MessageReceivedEvent event) {
         Message message = parseMessage(event.getMessage());
 
-        // TODO temporary ignore the confirmation message
-        if (message instanceof ResponseMessage) {
-            ResponseMessage response = (ResponseMessage)message;
-            for (Pair header : response.getHeaders())
-                if (HTTPHeader.LOCATION.equals(header.getName()) && header.getValue().contains("async/"))
-                    return;
+        JsonArray<Pair> headers = message.getHeaders();
+        for (int i = 0; i < headers.size(); i++) {
+            Pair header = headers.get(i);
+            if (HTTPHeader.LOCATION.equals(header.getName()) && header.getValue().contains("async/")) {
+                return;
+            }
         }
 
         if (getChannel(message) != null) {
             // this is a message received by subscription
             processSubscriptionMessage(message);
         } else {
-            ReplyHandler replyCallback = replyCallbackMap.remove(message.getUuid());
+            String uuid = message.getStringField(MessageBuilder.UUID_FIELD);
+            ReplyHandler replyCallback = replyCallbackMap.remove(uuid);
             if (replyCallback != null) {
                 replyCallback.onReply(message.getBody());
             } else {
-                RequestCallback requestCallback = requestCallbackMap.remove(message.getUuid());
+                RequestCallback requestCallback = requestCallbackMap.remove(uuid);
                 if (requestCallback != null) {
                     requestCallback.onReply(message);
                 }
@@ -266,10 +265,6 @@ public class MessageBusImpl implements MessageBus {
         String channel = getChannel(message);
         JsonArray<MessageHandler> subscribersSet = channelToSubscribersMap.get(channel);
         if (subscribersSet != null) {
-            // TODO
-            // Find way to avoid copying of set.
-            // Copy a Set to avoid 'CuncurrentModificationException' when 'unsubscribe()' method will invoked while iterating.
-            JsonArray<MessageHandler> subscribersSetCopy = JsonCollections.createArray();
             for (int i = 0; i < subscribersSet.size(); i++) {
                 MessageHandler handler = subscribersSet.get(i);
                 //TODO this is nasty, need refactor this
@@ -289,8 +284,8 @@ public class MessageBusImpl implements MessageBus {
      *         text message
      * @return {@link Message}
      */
-    protected Message parseMessage(String message) {
-        return AutoBeanCodex.decode(autoBeanFactory, ResponseMessage.class, message).as();
+    private Message parseMessage(String message) {
+        return Message.deserialize(message);
     }
 
     /**
@@ -298,7 +293,7 @@ public class MessageBusImpl implements MessageBus {
      *
      * @return {@link Message}
      */
-    protected Message getHeartbeatMessage() {
+    private Message getHeartbeatMessage() {
         return heartbeatMessage;
     }
 
@@ -309,14 +304,15 @@ public class MessageBusImpl implements MessageBus {
      *         {@link Message}
      * @return channel identifier or <code>null</code> if message is invalid.
      */
-    protected String getChannel(Message message) {
-        if (!(message instanceof ResponseMessage))
-            return null;
+    private String getChannel(Message message) {
+        JsonArray<Pair> headers = message.getHeaders();
 
-        ResponseMessage restMessage = (ResponseMessage)message;
-        for (Pair header : restMessage.getHeaders())
-            if ("x-everrest-websocket-channel".equals(header.getName()))
+        for (int i = 0; i < headers.size(); i++) {
+            Pair header = headers.get(i);
+            if ("x-everrest-websocket-channel".equals(header.getName())) {
                 return header.getValue();
+            }
+        }
 
         return null;
     }
@@ -326,18 +322,14 @@ public class MessageBusImpl implements MessageBus {
     public void send(Message message, RequestCallback callback) throws WebSocketException {
         checkWebSocketConnectionState();
 
-        AutoBean<?> autoBean = AutoBeanUtils.getAutoBean(message);
-        if (autoBean == null) {
-            throw new NullPointerException("Failed to marshall message");
-        }
-
-        String textMessage = AutoBeanCodex.encode(autoBean).getPayload();
-        internalSend(message.getUuid(), textMessage, callback);
+        String textMessage = message.serialize();
+        String uuid = message.getStringField(MessageBuilder.UUID_FIELD);
+        internalSend(uuid, textMessage, callback);
 
         if (callback != null) {
             callback.getLoader().show();
             if (callback.getStatusHandler() != null) {
-                callback.getStatusHandler().requestInProgress(message.getUuid());
+                callback.getStatusHandler().requestInProgress(uuid);
             }
         }
     }
@@ -394,17 +386,15 @@ public class MessageBusImpl implements MessageBus {
     public void send(String address, String message, ReplyHandler replyHandler) throws WebSocketException {
         checkWebSocketConnectionState();
 
-        RequestMessage requestMessage =
-                RequestMessageBuilder.build(RequestBuilder.POST, address, autoBeanFactory).header("content-type", "application/json")
-                                     .data(message).getRequestMessage();
+        MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, address);
+        builder.header("content-type", "application/json")
+               .data(message);
 
-        AutoBean<?> autoBean = AutoBeanUtils.getAutoBean(requestMessage);
-        if (autoBean == null) {
-            throw new NullPointerException("Failed to marshall message");
-        }
+        Message requestMessage = builder.build();
 
-        String textMessage = AutoBeanCodex.encode(autoBean).getPayload();
-        internalSend(requestMessage.getUuid(), textMessage, replyHandler);
+        String textMessage = requestMessage.serialize();
+        String uuid = requestMessage.getStringField(MessageBuilder.UUID_FIELD);
+        internalSend(uuid, textMessage, replyHandler);
     }
 
     /**
@@ -437,11 +427,12 @@ public class MessageBusImpl implements MessageBus {
      * @throws WebSocketException
      *         throws if an any error has occurred while sending data
      */
-    protected void sendSubscribeMessage(String channel) throws WebSocketException {
-        RequestMessage message =
-                RequestMessageBuilder.build(RequestBuilder.POST, null, autoBeanFactory)
-                                     .header(MESSAGE_TYPE_HEADER_NAME, "subscribe-channel")
-                                     .data("{\"channel\":\"" + channel + "\"}").getRequestMessage();
+    private void sendSubscribeMessage(String channel) throws WebSocketException {
+        MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, null);
+        builder.header(MESSAGE_TYPE_HEADER_NAME, "subscribe-channel")
+               .data("{\"channel\":\"" + channel + "\"}");
+
+        Message message = builder.build();
         send(message, null);
     }
 
@@ -453,11 +444,12 @@ public class MessageBusImpl implements MessageBus {
      * @throws WebSocketException
      *         throws if an any error has occurred while sending data
      */
-    protected void sendUnsubscribeMessage(String channel) throws WebSocketException {
-        RequestMessage message =
-                RequestMessageBuilder.build(RequestBuilder.POST, null, autoBeanFactory)
-                                     .header(MESSAGE_TYPE_HEADER_NAME, "unsubscribe-channel")
-                                     .data("{\"channel\":\"" + channel + "\"}").getRequestMessage();
+    private void sendUnsubscribeMessage(String channel) throws WebSocketException {
+        MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, null);
+        builder.header(MESSAGE_TYPE_HEADER_NAME, "unsubscribe-channel")
+               .data("{\"channel\":\"" + channel + "\"}");
+
+        Message message = builder.build();
         send(message, null);
     }
 

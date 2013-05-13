@@ -21,9 +21,10 @@
 package com.codenvy.ide.websocket.rest;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
+import com.codenvy.ide.websocket.Message;
 
 /**
- * Deserializer for the body of the {@link ResponseMessage}.
+ * Deserializer for the body of the {@link Message}.
  * <p/>
  * By the contract:
  * <code>getPayload()</code> should never return <code>null</code> (should be initialized in impl's constructor
@@ -35,18 +36,18 @@ import com.codenvy.ide.commons.exception.UnmarshallerException;
  */
 public interface Unmarshallable<T> {
     /**
-     * Prepares an object from the incoming {@link ResponseMessage}.
+     * Prepares an object from the incoming {@link Message}.
      *
-     * @param resopnse
-     *         {@link ResponseMessage}
+     * @param response
+     *         {@link Message}
      */
-    void unmarshal(ResponseMessage response) throws UnmarshallerException;
+    void unmarshal(Message response) throws UnmarshallerException;
 
     /**
      * The content of the returned object normally differs before and
      * after <code>unmarshall()</code> but by the contract it should never be <code>null</code>.
      *
-     * @return an object deserialized from the {@link ResponseMessage}
+     * @return an object deserialized from the {@link Message}
      */
     T getPayload();
 }

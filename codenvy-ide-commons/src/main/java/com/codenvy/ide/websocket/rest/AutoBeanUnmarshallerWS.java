@@ -20,6 +20,7 @@ package com.codenvy.ide.websocket.rest;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.rest.HTTPStatus;
+import com.codenvy.ide.websocket.Message;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.Splittable;
@@ -40,7 +41,7 @@ public class AutoBeanUnmarshallerWS<T> implements Unmarshallable<T> {
 
     /** {@inheritDoc} */
     @Override
-    public void unmarshal(ResponseMessage response) throws UnmarshallerException {
+    public void unmarshal(Message response) throws UnmarshallerException {
         if (response.getResponseCode() != HTTPStatus.NO_CONTENT && response.getBody() != null) {
             Splittable data = StringQuoter.split(response.getBody());
             AutoBeanCodex.decodeInto(data, bean);

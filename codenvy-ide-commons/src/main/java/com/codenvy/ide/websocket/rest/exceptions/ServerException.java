@@ -20,9 +20,10 @@
 
 package com.codenvy.ide.websocket.rest.exceptions;
 
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.HTTPHeader;
+import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.rest.Pair;
-import com.codenvy.ide.websocket.rest.ResponseMessage;
 
 /**
  * Thrown when there was an any exception was received from the server over WebSocket.
@@ -32,11 +33,11 @@ import com.codenvy.ide.websocket.rest.ResponseMessage;
  */
 @SuppressWarnings("serial")
 public class ServerException extends Exception {
-    private ResponseMessage response;
+    private Message response;
 
     private boolean errorMessageProvided;
 
-    public ServerException(ResponseMessage response) {
+    public ServerException(Message response) {
         this.response = response;
         this.errorMessageProvided = checkErrorMessageProvided();
     }
@@ -53,7 +54,9 @@ public class ServerException extends Exception {
     }
 
     public String getHeader(String key) {
-        for (Pair header : response.getHeaders()) {
+        JsonArray<Pair> headers = response.getHeaders();
+        for (int i = 0; i < headers.size(); i++) {
+            Pair header = headers.get(i);
             if (key.equals(header.getName())) {
                 return header.getValue();
             }

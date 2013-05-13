@@ -19,19 +19,21 @@
 package com.codenvy.ide.websocket.rest;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.loader.EmptyLoader;
 import com.codenvy.ide.rest.AsyncRequestLoader;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.HTTPStatus;
 import com.codenvy.ide.rest.RequestStatusHandler;
 import com.codenvy.ide.websocket.Message;
+import com.codenvy.ide.websocket.MessageBuilder;
 import com.codenvy.ide.websocket.rest.exceptions.ServerException;
 import com.codenvy.ide.websocket.rest.exceptions.UnauthorizedException;
 import com.google.gwt.http.client.Response;
 
 
 /**
- * Callback to receive a {@link ResponseMessage}.
+ * Callback to receive a {@link Message}.
  *
  * @param <T>
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
@@ -47,7 +49,7 @@ public abstract class RequestCallback<T> {
     /** Status codes of the successful responses. */
     private int[] successCodes;
 
-    /** Deserializer for the body of the {@link ResponseMessage}. */
+    /** Deserializer for the body of the {@link Message}. */
     private final Unmarshallable<T> unmarshaller;
 
     /** An object deserialized from the response. */
@@ -94,39 +96,35 @@ public abstract class RequestCallback<T> {
             loader.hide();
         }
 
-        if (!(message instanceof ResponseMessage))
-            throw new IllegalArgumentException("Invalid input message.");
-
-        ResponseMessage response = (ResponseMessage)message;
-
-        if (response.getResponseCode() == HTTPStatus.UNAUTHORIZED) {
-            UnauthorizedException exception = new UnauthorizedException(response);
+        String uuid = message.getStringField(MessageBuilder.UUID_FIELD);
+        if (message.getResponseCode() == HTTPStatus.UNAUTHORIZED) {
+            UnauthorizedException exception = new UnauthorizedException(message);
             if (statusHandler != null) {
-                statusHandler.requestError(response.getUuid(), exception);
+                statusHandler.requestError(uuid, exception);
             }
             onFailure(exception);
             return;
         }
 
-        if (isSuccessful(response)) {
+        if (isSuccessful(message)) {
             try {
                 if (unmarshaller != null) {
-                    unmarshaller.unmarshal(response);
+                    unmarshaller.unmarshal(message);
                 }
                 if (statusHandler != null) {
-                    statusHandler.requestFinished(response.getUuid());
+                    statusHandler.requestFinished(uuid);
                 }
                 onSuccess(payload);
             } catch (UnmarshallerException e) {
                 if (statusHandler != null) {
-                    statusHandler.requestError(response.getUuid(), e);
+                    statusHandler.requestError(uuid, e);
                 }
                 onFailure(e);
             }
         } else {
-            ServerException exception = new ServerException(response);
+            ServerException exception = new ServerException(message);
             if (statusHandler != null) {
-                statusHandler.requestError(response.getUuid(), exception);
+                statusHandler.requestError(uuid, exception);
             }
             onFailure(exception);
         }
@@ -136,18 +134,21 @@ public abstract class RequestCallback<T> {
      * Is response successful?
      *
      * @param response
-     *         {@link ResponseMessage}
+     *         {@link Message}
      * @return <code>true</code> if response is successful and <code>false</code> if response is not successful
      */
-    protected final boolean isSuccessful(ResponseMessage response) {
+    protected final boolean isSuccessful(Message response) {
         if (successCodes == null) {
             successCodes = DEFAULT_SUCCESS_CODES;
         }
 
-        for (Pair header : response.getHeaders())
-            if (HTTPHeader.JAXRS_BODY_PROVIDED.equals(header.getName())
-                && "Authentication-required".equals(header.getValue()))
+        JsonArray<Pair> headers = response.getHeaders();
+        for (int i = 0; i < headers.size(); i++) {
+            Pair header = headers.get(i);
+            if (HTTPHeader.JAXRS_BODY_PROVIDED.equals(header.getName()) && "Authentication-required".equals(header.getValue())) {
                 return false;
+            }
+        }
 
         for (int code : successCodes)
             if (response.getResponseCode() == code)
@@ -211,5 +212,4 @@ public abstract class RequestCallback<T> {
      *         caused failure
      */
     protected abstract void onFailure(Throwable exception);
-
 }

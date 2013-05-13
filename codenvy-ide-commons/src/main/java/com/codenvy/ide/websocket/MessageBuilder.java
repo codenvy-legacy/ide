@@ -16,52 +16,37 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.websocket.rest;
+package com.codenvy.ide.websocket;
 
+import com.codenvy.ide.json.js.JsoArray;
 import com.codenvy.ide.util.UUID;
+import com.codenvy.ide.websocket.rest.Pair;
 import com.google.gwt.http.client.RequestBuilder.Method;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Builder for constructing {@link RequestMessage}.
+ * Builder for constructing {@link Message}.
  *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
- * @version $Id: RequestMessageBuilder.java Nov 9, 2012 4:14:46 PM azatsarynnyy $
+ * @version $Id: MessageBuilder.java Nov 9, 2012 4:14:46 PM azatsarynnyy $
  */
-public class RequestMessageBuilder {
+public class MessageBuilder {
+    public static final String UUID_FIELD = "uuid";
     /** Message which is constructing and may be send. */
-    private final RequestMessage           requestMessage;
-    private final WebSocketAutoBeanFactory autoBeanFactory;
+    private final Message message;
 
     /**
-     * Creates a {@link RequestMessageBuilder} using the parameters for configuration.
+     * Creates a {@link MessageBuilder} using the parameters for configuration.
      *
      * @param method
      *         HTTP method to use for the request
      * @param path
      *         URI
      */
-    protected RequestMessageBuilder(Method method, String path, WebSocketAutoBeanFactory autoBeanFactory) {
-        this.autoBeanFactory = autoBeanFactory;
-        requestMessage = autoBeanFactory.requestMessage().as();
-        requestMessage.setUuid(UUID.uuid());
-        requestMessage.setMethod((method == null) ? null : method.toString());
-        requestMessage.setPath(path);
-    }
-
-    /**
-     * Creates a {@link RequestMessageBuilder} using the parameters for configuration.
-     *
-     * @param method
-     *         HTTP method to use for the request
-     * @param path
-     *         URI
-     * @return a new {@link RequestMessageBuilder}
-     */
-    public static final RequestMessageBuilder build(Method method, String path, WebSocketAutoBeanFactory autoBeanFactory) {
-        return new RequestMessageBuilder(method, path, autoBeanFactory);
+    public MessageBuilder(Method method, String path) {
+        message = Message.create();
+        message.addField(UUID_FIELD, UUID.uuid());
+        message.setMethod((method == null) ? null : method.toString());
+        message.setPath(path);
     }
 
     /**
@@ -73,26 +58,27 @@ public class RequestMessageBuilder {
      *         the name of the header
      * @param value
      *         the value of the header
-     * @return this {@link RequestMessageBuilder}
+     * @return this {@link MessageBuilder}
      */
-    public final RequestMessageBuilder header(String name, String value) {
-        List<Pair> headers = requestMessage.getHeaders();
+    public final MessageBuilder header(String name, String value) {
+        JsoArray<Pair> headers = message.getHeaders();
         if (headers == null) {
-            headers = new ArrayList<Pair>();
+            headers = JsoArray.create();
         }
 
-        for (Pair header : headers) {
+        for (int i = 0; i < headers.size(); i++) {
+            Pair header = headers.get(i);
             if (name.equals(header.getName())) {
                 header.setValue(value);
                 return this;
             }
         }
 
-        Pair header = autoBeanFactory.pair().as();
+        Pair header = Pair.create();
         header.setName(name);
         header.setValue(value);
         headers.add(header);
-        requestMessage.setHeaders(headers);
+        message.setHeaders(headers);
         return this;
     }
 
@@ -101,15 +87,19 @@ public class RequestMessageBuilder {
      *
      * @param requestData
      *         the data to send as body of the request
-     * @return this {@link RequestMessageBuilder}
+     * @return this {@link MessageBuilder}
      */
-    public final RequestMessageBuilder data(String requestData) {
-        requestMessage.setBody(requestData);
+    public final MessageBuilder data(String requestData) {
+        message.setBody(requestData);
         return this;
     }
 
-    public RequestMessage getRequestMessage() {
-        return requestMessage;
+    /**
+     * Builds message.
+     *
+     * @return message
+     */
+    public Message build() {
+        return message;
     }
-
 }

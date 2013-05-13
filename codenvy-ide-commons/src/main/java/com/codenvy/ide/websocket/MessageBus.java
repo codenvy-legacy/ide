@@ -68,7 +68,7 @@ public interface MessageBus extends MessageReceivedHandler {
     ReadyState getReadyState() throws WebSocketException;
 
     /**
-     * Send {@link Message}.
+     * Send {@link Message} on Rest.
      *
      * @param message
      *         {@link Message} to send
@@ -92,7 +92,7 @@ public interface MessageBus extends MessageReceivedHandler {
     void send(String address, String message) throws WebSocketException;
 
     /**
-     * Sends a message to an address, providing an replyHandler.
+     * Sends a message to an address on Websocket, providing an replyHandler.
      *
      * @param address
      *         the address of receiver
