@@ -231,7 +231,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
     public void bindDisplay() {
         display.getUseJRebelPlugin().setValue(true);
         display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>() {
-
             @Override
             public void onValueChange(ValueChangeEvent<String> event) {
                 updateNavigationButtonsState();
@@ -239,7 +238,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
         });
 
         display.getTemplatesGrid().addSelectionHandler(new SelectionHandler<ProjectTemplate>() {
-
             @Override
             public void onSelection(SelectionEvent<ProjectTemplate> event) {
                 selectedTemplate = event.getSelectedItem();
@@ -248,7 +246,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
         });
 
         display.getBackButton().addClickHandler(new ClickHandler() {
-
             @Override
             public void onClick(ClickEvent event) {
                 goBack();

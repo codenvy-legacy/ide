@@ -196,7 +196,7 @@ public class CollabEditorExtension extends Extension implements ConnectionOpened
     }
 
     @Override
-    public void onOpen() {
+    public void onConnectionOpened() {
         if (collaborationManager != null) {
             return;
         }
