@@ -18,18 +18,36 @@
  */
 package com.codenvy.ide.websocket.rest;
 
+import com.codenvy.ide.json.js.Jso;
+
 /**
  * Pair that may be used to emulate headers of HTTP request/response.
  *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: Pair.java Nov 6, 2012 12:34:44 PM azatsarynnyy $
  */
-public interface Pair {
-    String getName();
+public class Pair extends Jso {
 
-    void setName(String name);
+    public static Pair create() {
+        return Jso.create().cast();
+    }
 
-    String getValue();
+    protected Pair() {
+    }
 
-    void setValue(String value);
+    public final String getName() {
+        return getStringField("name");
+    }
+
+    public final void setName(String name) {
+        addField("name", name);
+    }
+
+    public final String getValue() {
+        return getStringField("value");
+    }
+
+    public final void setValue(String value) {
+        addField("value", value);
+    }
 }

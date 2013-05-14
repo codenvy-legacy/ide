@@ -25,10 +25,10 @@ import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.MimeType;
+import com.codenvy.ide.websocket.Message;
+import com.codenvy.ide.websocket.MessageBuilder;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
-import com.codenvy.ide.websocket.rest.RequestMessage;
-import com.codenvy.ide.websocket.rest.RequestMessageBuilder;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
@@ -47,76 +47,43 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class CloudFoundryClientServiceImpl implements CloudFoundryClientService {
-    private static final String BASE_URL = "/ide/cloudfoundry";
-
-    private static final String CREATE = BASE_URL + "/apps/create";
-
-    private static final String FRAMEWORKS = BASE_URL + "/info/frameworks";
-
-    private static final String START = BASE_URL + "/apps/start";
-
-    private static final String RESTART = BASE_URL + "/apps/restart";
-
-    private static final String DELETE = BASE_URL + "/apps/delete";
-
-    private static final String STOP = BASE_URL + "/apps/stop";
-
-    private static final String LOGIN = BASE_URL + "/login";
-
-    private static final String LOGOUT = BASE_URL + "/logout";
-
-    private static final String APPS_INFO = BASE_URL + "/apps/info";
-
-    private static final String UPDATE = BASE_URL + "/apps/update";
-
-    private static final String RENAME = BASE_URL + "/apps/rename";
-
-    private static final String MAP_URL = BASE_URL + "/apps/map";
-
-    private static final String SYSTEM_INFO_URL = BASE_URL + "/info/system";
-
-    private static final String UNMAP_URL = BASE_URL + "/apps/unmap";
-
-    private static final String UPDATE_MEMORY = BASE_URL + "/apps/mem";
-
+    private static final String BASE_URL         = "/ide/cloudfoundry";
+    private static final String CREATE           = BASE_URL + "/apps/create";
+    private static final String FRAMEWORKS       = BASE_URL + "/info/frameworks";
+    private static final String START            = BASE_URL + "/apps/start";
+    private static final String RESTART          = BASE_URL + "/apps/restart";
+    private static final String DELETE           = BASE_URL + "/apps/delete";
+    private static final String STOP             = BASE_URL + "/apps/stop";
+    private static final String LOGIN            = BASE_URL + "/login";
+    private static final String LOGOUT           = BASE_URL + "/logout";
+    private static final String APPS_INFO        = BASE_URL + "/apps/info";
+    private static final String UPDATE           = BASE_URL + "/apps/update";
+    private static final String RENAME           = BASE_URL + "/apps/rename";
+    private static final String MAP_URL          = BASE_URL + "/apps/map";
+    private static final String SYSTEM_INFO_URL  = BASE_URL + "/info/system";
+    private static final String UNMAP_URL        = BASE_URL + "/apps/unmap";
+    private static final String UPDATE_MEMORY    = BASE_URL + "/apps/mem";
     private static final String UPDATE_INSTANCES = BASE_URL + "/apps/instances";
-
-    private static final String VALIDATE_ACTION = BASE_URL + "/apps/validate-action";
-
-    private static final String APPS = BASE_URL + "/apps";
-
-    private static final String TARGETS = BASE_URL + "/target/all";
-
-    private static final String TARGET = BASE_URL + "/target";
-
-    private static final String SERVICES = BASE_URL + "/services";
-
-    private static final String SERVICES_CREATE = SERVICES + "/create";
-
-    private static final String SERVICES_DELETE = SERVICES + "/delete";
-
-    private static final String SERVICES_BIND = SERVICES + "/bind";
-
-    private static final String SERVICES_UNBIND = SERVICES + "/unbind";
-
-    private static final String LOGS = BASE_URL + "/apps/logs";
-
+    private static final String VALIDATE_ACTION  = BASE_URL + "/apps/validate-action";
+    private static final String APPS             = BASE_URL + "/apps";
+    private static final String TARGETS          = BASE_URL + "/target/all";
+    private static final String TARGET           = BASE_URL + "/target";
+    private static final String SERVICES         = BASE_URL + "/services";
+    private static final String SERVICES_CREATE  = SERVICES + "/create";
+    private static final String SERVICES_DELETE  = SERVICES + "/delete";
+    private static final String SERVICES_BIND    = SERVICES + "/bind";
+    private static final String SERVICES_UNBIND  = SERVICES + "/unbind";
+    private static final String LOGS             = BASE_URL + "/apps/logs";
+    public static final  String SUPPORT          = "support";
     /** REST service context. */
-    private String restServiceContext;
-
+    private String                           restServiceContext;
     /** Loader to be displayed. */
-    private Loader loader;
-
-    private EventBus eventBus;
-
-    public static final String SUPPORT = "support";
-
+    private Loader                           loader;
+    private EventBus                         eventBus;
     /** WebSocket message bus. */
-    private MessageBus wsMessageBus;
-
+    private MessageBus                       wsMessageBus;
     private CloudFoundryLocalizationConstant constant;
-
-    private CloudFoundryAutoBeanFactory autoBeanFactory;
+    private CloudFoundryAutoBeanFactory      autoBeanFactory;
 
     /**
      * Create CloudFoundry client service.
@@ -143,8 +110,8 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
     /** {@inheritDoc} */
     @Override
     public void create(String server, String name, String type, String url, int instances, int memory, boolean nostart,
-                       String vfsId, String projectId, String war, CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback)
-            throws RequestException {
+                       String vfsId, String projectId, String war, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
+                       CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback) throws RequestException {
         final String requestUrl = restServiceContext + CREATE;
 
         server = checkServerUrl(server);
@@ -160,18 +127,19 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
         createApplicationRequest.setVfsid(vfsId);
         createApplicationRequest.setProjectid(projectId);
         createApplicationRequest.setWar(war);
+        createApplicationRequest.setPaasprovider(paasProvider != null ? paasProvider.value() : "");
 
         String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(createApplicationRequest)).getPayload();
 
         AsyncRequest.build(RequestBuilder.POST, requestUrl, true)
-                    .requestStatusHandler(new CreateApplicationRequestStatusHandler(name, eventBus, constant)).data(data)
+                    .requestStatusHandler(new CreateApplicationRequestStatusHandler(name, eventBus, constant, paasProvider)).data(data)
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
     public void createWS(String server, String name, String type, String url, int instances, int memory,
-                         boolean nostart, String vfsId, String projectId, String war,
+                         boolean nostart, String vfsId, String projectId, String war, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
                          CloudFoundryRESTfulRequestCallback<CloudFoundryApplication> callback) throws WebSocketException {
         server = checkServerUrl(server);
 
@@ -186,13 +154,17 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
         createApplicationRequest.setVfsid(vfsId);
         createApplicationRequest.setProjectid(projectId);
         createApplicationRequest.setWar(war);
+        createApplicationRequest.setPaasprovider(paasProvider != null ? paasProvider.value() : "");
 
         String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(createApplicationRequest)).getPayload();
-        callback.setStatusHandler(new CreateApplicationRequestStatusHandler(name, eventBus, constant));
+        callback.setStatusHandler(new CreateApplicationRequestStatusHandler(name, eventBus, constant, paasProvider));
 
-        RequestMessage message =
-                RequestMessageBuilder.build(RequestBuilder.POST, CREATE).data(data)
-                                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
+
+        MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, CREATE);
+        builder.data(data)
+               .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON);
+
+        Message message = builder.build();
         wsMessageBus.send(message, callback);
     }
 
@@ -205,11 +177,13 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
 
     /** {@inheritDoc} */
     @Override
-    public void login(String server, String email, String password, AsyncRequestCallback<String> callback)
-            throws RequestException {
+    public void login(String server, String email, String password, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
+                      AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + LOGIN;
 
         server = checkServerUrl(server);
+
+        String params = (paasProvider != null) ? "paasprovider=" + paasProvider.value() : "";
 
         Credentials credentialsBean = autoBeanFactory.credentials().as();
         credentialsBean.setServer(server);
@@ -217,21 +191,23 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
         credentialsBean.setPassword(password);
         String credentials = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(credentialsBean)).getPayload();
 
-        AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(credentials)
+        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(credentials)
                     .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void logout(String server, AsyncRequestCallback<String> callback) throws RequestException {
+    public void logout(String server, CloudFoundryExtension.PAAS_PROVIDER paasProvider, AsyncRequestCallback<String> callback)
+            throws RequestException {
         String url = restServiceContext + LOGOUT;
 
         server = checkServerUrl(server);
 
-        String params = (server != null) ? "?server=" + server : "";
+        String params = (server != null) ? "server=" + server : "";
+        params += (paasProvider != null) ? "paasprovider=" + paasProvider.value() : "";
 
-        AsyncRequest.build(RequestBuilder.POST, url + params).loader(loader).send(callback);
+        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
@@ -254,7 +230,8 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
 
     /** {@inheritDoc} */
     @Override
-    public void deleteApplication(String vfsId, String projectId, String appId, String server, boolean deleteServices,
+    public void deleteApplication(String vfsId, String projectId, String appId, String server,
+                                  CloudFoundryExtension.PAAS_PROVIDER paasProvider, boolean deleteServices,
                                   CloudFoundryAsyncRequestCallback<String> callback) throws RequestException {
         final String url = restServiceContext + DELETE;
 
@@ -264,6 +241,7 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
         params += (vfsId != null) ? "vfsid=" + vfsId + "&" : "";
         params += (projectId != null) ? "projectid=" + projectId + "&" : "";
         params += (server != null) ? "server=" + server + "&" : "";
+        params += (paasProvider != null) ? "paasprovider=" + paasProvider.value() + "&" : "";
         params += "delete-services=" + String.valueOf(deleteServices);
 
         AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader)
@@ -272,17 +250,21 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
 
     /** {@inheritDoc} */
     @Override
-    public void getFrameworks(AsyncRequestCallback<JsonArray<Framework>> callback, String server)
-            throws RequestException {
+    public void getFrameworks(String server, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
+                              AsyncRequestCallback<JsonArray<Framework>> callback) throws RequestException {
         String url = restServiceContext + FRAMEWORKS;
-        url += (server != null) ? "?server=" + server : "";
-        AsyncRequest.build(RequestBuilder.GET, url).loader(loader)
+
+        String params = (server != null) ? "server=" + server + "&" : "";
+        params += (paasProvider != null) ? "paasprovider=" + paasProvider.value() : "";
+
+        AsyncRequest.build(RequestBuilder.GET, url + "?" + params).loader(loader)
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
     public void startApplication(String vfsId, String projectId, String name, String server,
+                                 CloudFoundryExtension.PAAS_PROVIDER paasProvider,
                                  CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback) throws RequestException {
         final String url = restServiceContext + START;
 
@@ -292,6 +274,7 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
         params += (vfsId != null) ? "&vfsid=" + vfsId : "";
         params += (projectId != null) ? "&projectid=" + projectId : "";
         params += (server != null) ? "&server=" + server : "";
+        params += (paasProvider != null) ? "&paasprovider=" + paasProvider.value() : "";
         params = (params.startsWith("&")) ? params.substring(1) : params;
 
         AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader)
@@ -301,6 +284,7 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
     /** {@inheritDoc} */
     @Override
     public void stopApplication(String vfsId, String projectId, String name, String server,
+                                CloudFoundryExtension.PAAS_PROVIDER paasProvider,
                                 CloudFoundryAsyncRequestCallback<String> callback) throws RequestException {
         final String url = restServiceContext + STOP;
 
@@ -310,6 +294,7 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
         params += (vfsId != null) ? "&vfsid=" + vfsId : "";
         params += (projectId != null) ? "&projectid=" + projectId : "";
         params += (server != null) ? "&server=" + server : "";
+        params += (paasProvider != null) ? "&paasprovider=" + paasProvider.value() : "";
         params = (params.startsWith("&")) ? params.substring(1) : params;
 
         AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader)
@@ -319,6 +304,7 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
     /** {@inheritDoc} */
     @Override
     public void restartApplication(String vfsId, String projectId, String name, String server,
+                                   CloudFoundryExtension.PAAS_PROVIDER paasProvider,
                                    CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback) throws RequestException {
         final String url = restServiceContext + RESTART;
 
@@ -328,6 +314,7 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
         params += (vfsId != null) ? "&vfsid=" + vfsId : "";
         params += (projectId != null) ? "&projectid=" + projectId : "";
         params += (server != null) ? "&server=" + server : "";
+        params += (paasProvider != null) ? "&paasprovider=" + paasProvider.value() : "";
         params = (params.startsWith("&")) ? params.substring(1) : params;
 
         AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader)
@@ -446,9 +433,8 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
     /** {@inheritDoc} */
     @Override
     public void validateAction(String action, String server, String appName, String framework, String url, String vfsId,
-                               String projectId, int instances, int memory, boolean nostart,
-                               CloudFoundryAsyncRequestCallback<String> callback)
-            throws RequestException {
+                               String projectId, CloudFoundryExtension.PAAS_PROVIDER paasProvider, int instances, int memory,
+                               boolean nostart, CloudFoundryAsyncRequestCallback<String> callback) throws RequestException {
         final String postUrl = restServiceContext + VALIDATE_ACTION;
 
         server = checkServerUrl(server);
@@ -462,6 +448,7 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
         params += "&nostart=" + nostart;
         params += (vfsId != null) ? "&vfsid=" + vfsId : "";
         params += (projectId != null) ? "&projectid=" + projectId : "";
+        params += (paasProvider != null) ? "&paasprovider=" + paasProvider.value() : "";
         params += (server != null) ? "&server=" + server : "";
 
         AsyncRequest.build(RequestBuilder.POST, postUrl + "?" + params).loader(loader).send(callback);
@@ -469,12 +456,14 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
 
     /** {@inheritDoc} */
     @Override
-    public void getSystemInfo(String server, AsyncRequestCallback<SystemInfo> callback) throws RequestException {
+    public void getSystemInfo(String server, CloudFoundryExtension.PAAS_PROVIDER paasProvider, AsyncRequestCallback<SystemInfo> callback)
+            throws RequestException {
         final String url = restServiceContext + SYSTEM_INFO_URL;
 
         server = checkServerUrl(server);
 
-        String params = (server == null) ? "" : "?server=" + server;
+        String params = (server != null) ? "server=" + server + "&" : "";
+        params += (paasProvider != null) ? "paasprovider=" + paasProvider.value() : "";
 
         AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader)
                     .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
@@ -482,34 +471,39 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
 
     /** {@inheritDoc} */
     @Override
-    public void getApplicationList(String server,
+    public void getApplicationList(String server, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
                                    CloudFoundryAsyncRequestCallback<JsonArray<CloudFoundryApplication>> callback) throws RequestException {
         String url = restServiceContext + APPS;
 
         server = checkServerUrl(server);
 
-        if (server != null && !server.isEmpty()) {
-            url += "?server=" + server;
-        }
+        String params = (server != null) ? "server=" + server + "&" : "";
+        params += (paasProvider != null) ? "paasprovider=" + paasProvider.value() : "";
 
-        AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
+        AsyncRequest.build(RequestBuilder.GET, url + "?" + params).loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void getTargets(AsyncRequestCallback<JsonArray<String>> callback) throws RequestException {
+    public void getTargets(CloudFoundryExtension.PAAS_PROVIDER paasProvider, AsyncRequestCallback<JsonArray<String>> callback)
+            throws RequestException {
         String url = restServiceContext + TARGETS;
 
-        AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+        String params = (paasProvider != null) ? "paasprovider=" + paasProvider.value() : "";
+
+        AsyncRequest.build(RequestBuilder.GET, url + "?" + params).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
                     .send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void getTarget(AsyncRequestCallback<StringBuilder> callback) throws RequestException {
+    public void getTarget(CloudFoundryExtension.PAAS_PROVIDER paasProvider, AsyncRequestCallback<StringBuilder> callback)
+            throws RequestException {
         String url = restServiceContext + TARGET;
 
-        AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
+        String params = (paasProvider != null) ? "paasprovider=" + paasProvider.value() : "";
+
+        AsyncRequest.build(RequestBuilder.GET, url + "?" + params).loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
@@ -522,11 +516,14 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
 
     /** {@inheritDoc} */
     @Override
-    public void services(String server, AsyncRequestCallback<CloudFoundryServices> callback) throws RequestException {
+    public void services(String server, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
+                         AsyncRequestCallback<CloudFoundryServices> callback) throws RequestException {
         String url = restServiceContext + SERVICES;
-        String params = (server != null) ? "?server=" + server : "";
 
-        AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader)
+        String params = (server != null) ? "server=" + server + "&" : "";
+        params += (paasProvider != null) ? "paasprovider=" + paasProvider.value() : "";
+
+        AsyncRequest.build(RequestBuilder.GET, url + "?" + params).loader(loader)
                     .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
     }
 
@@ -557,12 +554,14 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
 
     /** {@inheritDoc} */
     @Override
-    public void deleteService(String server, String name, CloudFoundryAsyncRequestCallback<Object> callback)
-            throws RequestException {
+    public void deleteService(String server, String name, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
+                              CloudFoundryAsyncRequestCallback<Object> callback) throws RequestException {
         String url = restServiceContext + SERVICES_DELETE + "/" + name;
-        String params = (server != null) ? "?server=" + server : "";
 
-        AsyncRequest.build(RequestBuilder.POST, url + params).loader(loader)
+        String params = (server != null) ? "server=" + server + "&" : "";
+        params += (paasProvider != null) ? "paasprovider=" + paasProvider.value() : "";
+
+        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader)
                     .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
     }
 

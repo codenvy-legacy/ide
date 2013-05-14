@@ -20,6 +20,7 @@ package com.codenvy.ide.extension.cloudfoundry.client.command;
 
 import com.codenvy.ide.api.expressions.Expression;
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
 import com.codenvy.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter;
 import com.google.gwt.resources.client.ImageResource;
@@ -34,7 +35,6 @@ import com.google.inject.Singleton;
 @Singleton
 public class ShowApplicationsCommand implements ExtendedCommand {
     private final ApplicationsPresenter presenter;
-
     private final CloudFoundryResources resources;
 
     /**
@@ -52,7 +52,7 @@ public class ShowApplicationsCommand implements ExtendedCommand {
     /** {@inheritDoc} */
     @Override
     public void execute() {
-        presenter.showDialog();
+        presenter.showDialog(CloudFoundryExtension.PAAS_PROVIDER.CLOUD_FOUNDRY);
     }
 
     /** {@inheritDoc} */

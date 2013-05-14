@@ -20,10 +20,7 @@ package com.codenvy.ide.extension.cloudfoundry.client.services;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import com.codenvy.ide.extension.cloudfoundry.client.*;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryServicesUnmarshaller;
@@ -32,6 +29,7 @@ import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices;
 import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -50,43 +48,42 @@ import java.util.Arrays;
  */
 @Singleton
 public class ManageServicesPresenter implements ManageServicesView.ActionDelegate {
-    private ManageServicesView view;
-
+    private ManageServicesView                  view;
     /** Application, for which need to bind service. */
-    private CloudFoundryApplication application;
-
+    private CloudFoundryApplication             application;
     /** Selected provisioned service. */
-    private ProvisionedService selectedService;
-
+    private ProvisionedService                  selectedService;
     /** Selected provisioned service. */
-    private String selectedBoundedService;
-
-    private CreateServicePresenter createServicePresenter;
-
+    private String                              selectedBoundedService;
+    private CreateServicePresenter              createServicePresenter;
+    private EventBus                            eventBus;
+    private ConsolePart                         console;
+    private CloudFoundryLocalizationConstant    constant;
+    private CloudFoundryAutoBeanFactory         autoBeanFactory;
+    private LoginPresenter                      loginPresenter;
+    private CloudFoundryClientService           service;
+    private CloudFoundryExtension.PAAS_PROVIDER paasProvider;
     /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
-    private LoggedInHandler deleteServiceLoggedInHandler = new LoggedInHandler() {
+    private LoggedInHandler deleteServiceLoggedInHandler      = new LoggedInHandler() {
         @Override
         public void onLoggedIn() {
             deleteService(selectedService);
         }
     };
-
     /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
-    private LoggedInHandler bindServiceLoggedInHandler = new LoggedInHandler() {
+    private LoggedInHandler bindServiceLoggedInHandler        = new LoggedInHandler() {
         @Override
         public void onLoggedIn() {
             bindService(selectedService);
         }
     };
-
     /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
-    private LoggedInHandler unBindServiceLoggedInHandler = new LoggedInHandler() {
+    private LoggedInHandler unBindServiceLoggedInHandler      = new LoggedInHandler() {
         @Override
         public void onLoggedIn() {
             unbindService(selectedBoundedService);
         }
     };
-
     /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
     private LoggedInHandler getApplicationInfoLoggedInHandler = new LoggedInHandler() {
         @Override
@@ -94,18 +91,6 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
             getApplicationInfo();
         }
     };
-
-    private EventBus eventBus;
-
-    private ConsolePart console;
-
-    private CloudFoundryLocalizationConstant constant;
-
-    private CloudFoundryAutoBeanFactory autoBeanFactory;
-
-    private LoginPresenter loginPresenter;
-
-    private CloudFoundryClientService service;
 
     /**
      * Create presenter.
@@ -138,7 +123,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
     /** {@inheritDoc} */
     @Override
     public void onAddClicked() {
-        createServicePresenter.showDialog(new AsyncCallback<ProvisionedService>() {
+        createServicePresenter.showDialog(paasProvider, new AsyncCallback<ProvisionedService>() {
             @Override
             public void onSuccess(ProvisionedService result) {
                 getServices();
@@ -146,7 +131,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
 
             @Override
             public void onFailure(Throwable caught) {
-                // do nothing
+                Log.error(ManageServicesPresenter.class, "Can not create service", caught);
             }
         });
     }
@@ -183,9 +168,9 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
      */
     private void deleteService(final ProvisionedService service) {
         try {
-            this.service.deleteService(null, service.getName(),
+            this.service.deleteService(null, service.getName(), paasProvider,
                                        new CloudFoundryAsyncRequestCallback<Object>(null, deleteServiceLoggedInHandler, null, eventBus,
-                                                                                    console, constant, loginPresenter) {
+                                                                                    console, constant, loginPresenter, paasProvider) {
                                            @Override
                                            protected void onSuccess(Object result) {
                                                getServices();
@@ -210,7 +195,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
         try {
             this.service.bindService(null, service.getName(), application.getName(), null, null,
                                      new CloudFoundryAsyncRequestCallback<Object>(null, bindServiceLoggedInHandler, null, eventBus, console,
-                                                                                  constant, loginPresenter) {
+                                                                                  constant, loginPresenter, paasProvider) {
                                          @Override
                                          protected void onSuccess(Object result) {
                                              getApplicationInfo();
@@ -235,9 +220,10 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
      */
     private void unbindService(String service) {
         try {
+            selectedBoundedService = service;
             this.service.unbindService(null, service, application.getName(), null, null,
                                        new CloudFoundryAsyncRequestCallback<Object>(null, unBindServiceLoggedInHandler, null, eventBus,
-                                                                                    console, constant, loginPresenter) {
+                                                                                    console, constant, loginPresenter, paasProvider) {
                                            @Override
                                            protected void onSuccess(Object result) {
                                                getApplicationInfo();
@@ -270,7 +256,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
                                             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
                                                                                                           getApplicationInfoLoggedInHandler,
                                                                                                           null, eventBus, console, constant,
-                                                                                                          loginPresenter) {
+                                                                                                          loginPresenter, paasProvider) {
                                                 @Override
                                                 protected void onSuccess(CloudFoundryApplication result) {
                                                     application = result;
@@ -288,7 +274,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
     private void getServices() {
         try {
             CloudFoundryServicesUnmarshaller unmarshaller = new CloudFoundryServicesUnmarshaller(autoBeanFactory);
-            this.service.services(null, new AsyncRequestCallback<CloudFoundryServices>(unmarshaller) {
+            this.service.services(null, paasProvider, new AsyncRequestCallback<CloudFoundryServices>(unmarshaller) {
                 @Override
                 protected void onSuccess(CloudFoundryServices result) {
                     view.setProvisionedServices(Arrays.asList(result.getProvisioned()));
@@ -312,8 +298,9 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
      * @param application
      *         application where will manage services
      */
-    public void showDialog(CloudFoundryApplication application) {
+    public void showDialog(CloudFoundryApplication application, CloudFoundryExtension.PAAS_PROVIDER paasProvider) {
         this.application = application;
+        this.paasProvider = paasProvider;
 
         view.setEnableDeleteButton(false);
         getApplicationInfo();

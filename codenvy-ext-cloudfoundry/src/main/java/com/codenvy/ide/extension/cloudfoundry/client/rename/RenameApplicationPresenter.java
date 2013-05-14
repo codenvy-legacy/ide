@@ -21,10 +21,7 @@ package com.codenvy.ide.extension.cloudfoundry.client.rename;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import com.codenvy.ide.extension.cloudfoundry.client.*;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
@@ -43,24 +40,17 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class RenameApplicationPresenter implements RenameApplicationView.ActionDelegate {
-    private RenameApplicationView view;
-
-    private EventBus eventBus;
-
-    private ResourceProvider resourceProvider;
-
-    private ConsolePart console;
-
+    private RenameApplicationView               view;
+    private EventBus                            eventBus;
+    private ResourceProvider                    resourceProvider;
+    private ConsolePart                         console;
     /** The name of application. */
-    private String applicationName;
-
-    private CloudFoundryLocalizationConstant constant;
-
-    private CloudFoundryAutoBeanFactory autoBeanFactory;
-
-    private LoginPresenter loginPresenter;
-
-    private CloudFoundryClientService service;
+    private String                              applicationName;
+    private CloudFoundryLocalizationConstant    constant;
+    private CloudFoundryAutoBeanFactory         autoBeanFactory;
+    private LoginPresenter                      loginPresenter;
+    private CloudFoundryClientService           service;
+    private CloudFoundryExtension.PAAS_PROVIDER paasProvider;
 
     /**
      * Create presenter.
@@ -120,7 +110,7 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
         try {
             service.renameApplication(resourceProvider.getVfsId(), projectId, applicationName, null, newName,
                                       new CloudFoundryAsyncRequestCallback<String>(null, renameAppLoggedInHandler, null, eventBus, console,
-                                                                                   constant, loginPresenter) {
+                                                                                   constant, loginPresenter, paasProvider) {
                                           @Override
                                           protected void onSuccess(String result) {
                                               view.close();
@@ -160,11 +150,11 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
             service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, appInfoLoggedInHandler,
                                                                                                      null, eventBus, console, constant,
-                                                                                                     loginPresenter) {
+                                                                                                     loginPresenter, paasProvider) {
                                            @Override
                                            protected void onSuccess(CloudFoundryApplication result) {
                                                applicationName = result.getName();
-                                               showDialog();
+                                               view.showDialog();
                                            }
                                        });
         } catch (RequestException e) {
@@ -174,13 +164,13 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
     }
 
     /** Shows dialog. */
-    public void showDialog() {
+    public void showDialog(CloudFoundryExtension.PAAS_PROVIDER paasProvider) {
+        this.paasProvider = paasProvider;
+
         view.setName(applicationName);
         view.selectValueInRenameField();
         view.setEnableRenameButton(false);
 
         getApplicationInfo();
-
-        view.showDialog();
     }
 }

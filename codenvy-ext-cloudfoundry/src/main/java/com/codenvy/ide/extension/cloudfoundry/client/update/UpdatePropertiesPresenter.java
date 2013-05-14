@@ -21,10 +21,7 @@ package com.codenvy.ide.extension.cloudfoundry.client.update;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import com.codenvy.ide.extension.cloudfoundry.client.*;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
@@ -46,25 +43,17 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class UpdatePropertiesPresenter {
-    private int memory;
-
-    private String instances;
-
-    private EventBus eventBus;
-
-    private ResourceProvider resourceProvider;
-
-    private ConsolePart console;
-
-    private CloudFoundryLocalizationConstant constant;
-
-    private CloudFoundryAutoBeanFactory autoBeanFactory;
-
-    private AsyncCallback<String> updatePropertiesCallback;
-
-    private LoginPresenter loginPresenter;
-
-    private CloudFoundryClientService service;
+    private int                                 memory;
+    private String                              instances;
+    private EventBus                            eventBus;
+    private ResourceProvider                    resourceProvider;
+    private ConsolePart                         console;
+    private CloudFoundryLocalizationConstant    constant;
+    private CloudFoundryAutoBeanFactory         autoBeanFactory;
+    private AsyncCallback<String>               updatePropertiesCallback;
+    private LoginPresenter                      loginPresenter;
+    private CloudFoundryClientService           service;
+    private CloudFoundryExtension.PAAS_PROVIDER paasProvider;
 
     /**
      * Create presenter.
@@ -93,10 +82,13 @@ public class UpdatePropertiesPresenter {
     /**
      * Shows dialog for updating application's memory.
      *
+     * @param paasProvider
      * @param callback
      */
-    public void showUpdateMemoryDialog(AsyncCallback<String> callback) {
+    public void showUpdateMemoryDialog(CloudFoundryExtension.PAAS_PROVIDER paasProvider, AsyncCallback<String> callback) {
+        this.paasProvider = paasProvider;
         this.updatePropertiesCallback = callback;
+
         getOldMemoryValue();
     }
 
@@ -120,7 +112,7 @@ public class UpdatePropertiesPresenter {
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
                                                                                                      getOldMemoryValueLoggedInHandler, null,
                                                                                                      eventBus, console, constant,
-                                                                                                     loginPresenter) {
+                                                                                                     loginPresenter, paasProvider) {
                                            @Override
                                            protected void onSuccess(CloudFoundryApplication result) {
                                                askForNewMemoryValue(result.getResources().getMemory());
@@ -171,7 +163,7 @@ public class UpdatePropertiesPresenter {
         try {
             service.updateMemory(resourceProvider.getVfsId(), projectId, null, null, memory,
                                  new CloudFoundryAsyncRequestCallback<String>(null, updateMemoryLoggedInHandler, null, eventBus, console,
-                                                                              constant, loginPresenter) {
+                                                                              constant, loginPresenter, paasProvider) {
                                      @Override
                                      protected void onSuccess(String result) {
                                          String msg = constant.updateMemorySuccess(String.valueOf(memory));
@@ -188,10 +180,13 @@ public class UpdatePropertiesPresenter {
     /**
      * Shows dialog for updating application's instances.
      *
+     * @param paasProvider
      * @param callback
      */
-    public void showUpdateInstancesDialog(AsyncCallback<String> callback) {
+    public void showUpdateInstancesDialog(CloudFoundryExtension.PAAS_PROVIDER paasProvider, AsyncCallback<String> callback) {
+        this.paasProvider = paasProvider;
         this.updatePropertiesCallback = callback;
+
         getOldInstancesValue();
     }
 
@@ -216,7 +211,7 @@ public class UpdatePropertiesPresenter {
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
                                                                                                      getOldInstancesValueLoggedInHandler,
                                                                                                      null, eventBus, console, constant,
-                                                                                                     loginPresenter) {
+                                                                                                     loginPresenter, paasProvider) {
                                            @Override
                                            protected void onSuccess(CloudFoundryApplication result) {
                                                askForInstancesNumber(result.getInstances());
@@ -274,7 +269,7 @@ public class UpdatePropertiesPresenter {
         try {
             service.updateInstances(resourceProvider.getVfsId(), projectId, null, null, encodedExp,
                                     new CloudFoundryAsyncRequestCallback<String>(null, updateInstancesLoggedInHandler, null, eventBus,
-                                                                                 console, constant, loginPresenter) {
+                                                                                 console, constant, loginPresenter, paasProvider) {
                                         @Override
                                         protected void onSuccess(String result) {
                                             try {
@@ -286,7 +281,7 @@ public class UpdatePropertiesPresenter {
                                                 service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
                                                                            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
                                                                                    unmarshaller, null, null, eventBus, console, constant,
-                                                                                   loginPresenter) {
+                                                                                   loginPresenter, paasProvider) {
                                                                                @Override
                                                                                protected void onSuccess(CloudFoundryApplication result) {
                                                                                    String msg = constant.updateInstancesSuccess(

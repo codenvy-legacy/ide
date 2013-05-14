@@ -21,10 +21,7 @@ package com.codenvy.ide.extension.cloudfoundry.client.update;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import com.codenvy.ide.extension.cloudfoundry.client.*;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
@@ -51,23 +48,16 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 @Singleton
 public class UpdateApplicationPresenter implements ProjectBuiltHandler {
     /** Location of war file (Java only). */
-    private String warUrl;
-
-    private EventBus eventBus;
-
-    private ResourceProvider resourceProvider;
-
-    private ConsolePart console;
-
-    private CloudFoundryLocalizationConstant constant;
-
-    private CloudFoundryAutoBeanFactory autoBeanFactory;
-
-    private HandlerRegistration projectBuildHandler;
-
-    private LoginPresenter loginPresenter;
-
-    private CloudFoundryClientService service;
+    private String                              warUrl;
+    private EventBus                            eventBus;
+    private ResourceProvider                    resourceProvider;
+    private ConsolePart                         console;
+    private CloudFoundryLocalizationConstant    constant;
+    private CloudFoundryAutoBeanFactory         autoBeanFactory;
+    private HandlerRegistration                 projectBuildHandler;
+    private LoginPresenter                      loginPresenter;
+    private CloudFoundryClientService           service;
+    private CloudFoundryExtension.PAAS_PROVIDER paasProvider;
 
     /**
      * Create presenter.
@@ -102,7 +92,9 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler {
     };
 
     /** Updates CloudFoundry application. */
-    public void updateApp() {
+    public void updateApp(CloudFoundryExtension.PAAS_PROVIDER paasProvider) {
+        this.paasProvider = paasProvider;
+
         validateData();
     }
 
@@ -113,7 +105,7 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler {
         try {
             service.updateApplication(resourceProvider.getVfsId(), projectId, null, null, warUrl,
                                       new CloudFoundryAsyncRequestCallback<String>(null, loggedInHandler, null, eventBus, console, constant,
-                                                                                   loginPresenter) {
+                                                                                   loginPresenter, paasProvider) {
                                           @Override
                                           protected void onSuccess(String result) {
                                               try {
@@ -125,7 +117,7 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler {
                                                   service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
                                                                              new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
                                                                                      unmarshaller, null, null, eventBus, console, constant,
-                                                                                     loginPresenter) {
+                                                                                     loginPresenter, paasProvider) {
                                                                                  @Override
                                                                                  protected void onSuccess(CloudFoundryApplication result) {
                                                                                      console.print(constant.updateApplicationSuccess(
@@ -167,9 +159,9 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler {
         final String projectId = resourceProvider.getActiveProject().getId();
 
         try {
-            service.validateAction("update", null, null, null, null, resourceProvider.getVfsId(), projectId, 0, 0, false,
+            service.validateAction("update", null, null, null, null, resourceProvider.getVfsId(), projectId, paasProvider, 0, 0, false,
                                    new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null, eventBus, console, constant,
-                                                                                loginPresenter) {
+                                                                                loginPresenter, paasProvider) {
                                        @Override
                                        protected void onSuccess(String result) {
                                            isBuildApplication();

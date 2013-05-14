@@ -31,6 +31,7 @@ import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -46,27 +47,18 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
-    private ApplicationsView view;
-
-    private String currentServer;
-
-    private JsonArray<String> servers = JsonCollections.createArray();
-
-    private EventBus eventBus;
-
-    private ConsolePart console;
-
-    private CloudFoundryLocalizationConstant constant;
-
-    private CloudFoundryAutoBeanFactory autoBeanFactory;
-
-    private StartApplicationPresenter startAppPresenter;
-
-    private DeleteApplicationPresenter deleteAppPresenter;
-
-    private LoginPresenter loginPresenter;
-
-    private CloudFoundryClientService service;
+    private ApplicationsView                    view;
+    private String                              currentServer;
+    private JsonArray<String>                   servers;
+    private EventBus                            eventBus;
+    private ConsolePart                         console;
+    private CloudFoundryLocalizationConstant    constant;
+    private CloudFoundryAutoBeanFactory         autoBeanFactory;
+    private StartApplicationPresenter           startAppPresenter;
+    private DeleteApplicationPresenter          deleteAppPresenter;
+    private LoginPresenter                      loginPresenter;
+    private CloudFoundryClientService           service;
+    private CloudFoundryExtension.PAAS_PROVIDER paasProvider;
 
     /** The callback what execute when some application's information was changed. */
     private AsyncCallback<String> appInfoChangedCallback = new AsyncCallback<String>() {
@@ -77,7 +69,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
 
         @Override
         public void onFailure(Throwable caught) {
-            // do nothing
+            Log.error(ApplicationsPresenter.class, "Can not change information", caught);
         }
     };
 
@@ -109,6 +101,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
         this.deleteAppPresenter = deleteAppPresenter;
         this.loginPresenter = loginPresenter;
         this.service = service;
+        this.servers = JsonCollections.createArray();
     }
 
     /** {@inheritDoc} */
@@ -136,12 +129,13 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
                 }
             };
 
-            service.getApplicationList(currentServer,
+            service.getApplicationList(currentServer, paasProvider,
                                        new CloudFoundryAsyncRequestCallback<JsonArray<CloudFoundryApplication>>(unmarshaller,
                                                                                                                 loggedInHandler, null,
-                                                                                                                currentServer,
-                                                                                                                eventBus, console, constant,
-                                                                                                                loginPresenter) {
+                                                                                                                currentServer, eventBus,
+                                                                                                                console, constant,
+                                                                                                                loginPresenter,
+                                                                                                                paasProvider) {
 
                                            @Override
                                            protected void onSuccess(JsonArray<CloudFoundryApplication> result) {
@@ -164,7 +158,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
     private void getServers() {
         try {
             TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(JsonCollections.<String>createArray());
-            service.getTargets(new AsyncRequestCallback<JsonArray<String>>(unmarshaller) {
+            service.getTargets(paasProvider, new AsyncRequestCallback<JsonArray<String>>(unmarshaller) {
                 @Override
                 protected void onSuccess(JsonArray<String> result) {
                     servers = result;
@@ -184,7 +178,9 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
     }
 
     /** Show dialog. */
-    public void showDialog() {
+    public void showDialog(CloudFoundryExtension.PAAS_PROVIDER paasProvider) {
+        this.paasProvider = paasProvider;
+
         checkLogginedToServer();
     }
 
@@ -195,25 +191,24 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
     private void checkLogginedToServer() {
         try {
             TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(JsonCollections.<String>createArray());
-            service.getTargets(
-                    new AsyncRequestCallback<JsonArray<String>>(unmarshaller) {
-                        @Override
-                        protected void onSuccess(JsonArray<String> result) {
-                            if (result.isEmpty()) {
-                                servers = JsonCollections.createArray(CloudFoundryExtension.DEFAULT_SERVER);
-                            } else {
-                                servers = result;
-                            }
-                            // open view
-                            openView();
-                        }
+            service.getTargets(paasProvider, new AsyncRequestCallback<JsonArray<String>>(unmarshaller) {
+                @Override
+                protected void onSuccess(JsonArray<String> result) {
+                    if (!result.isEmpty()) {
+                        servers = result;
+                    } else if (paasProvider == CloudFoundryExtension.PAAS_PROVIDER.CLOUD_FOUNDRY) {
+                        servers = JsonCollections.createArray(CloudFoundryExtension.DEFAULT_CF_SERVER);
+                    }
+                    // open view
+                    openView();
+                }
 
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                            console.print(exception.getMessage());
-                        }
-                    });
+                @Override
+                protected void onFailure(Throwable exception) {
+                    eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                    console.print(exception.getMessage());
+                }
+            });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -235,24 +230,24 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onStartClicked(CloudFoundryApplication app) {
-        startAppPresenter.startApp(app.getName(), appInfoChangedCallback);
+        startAppPresenter.startApp(app.getName(), currentServer, paasProvider, appInfoChangedCallback);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onStopClicked(CloudFoundryApplication app) {
-        startAppPresenter.stopApp(app.getName(), appInfoChangedCallback);
+        startAppPresenter.stopApp(app.getName(), currentServer, paasProvider, appInfoChangedCallback);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onRestartClicked(CloudFoundryApplication app) {
-        startAppPresenter.restartApp(app.getName(), appInfoChangedCallback);
+        startAppPresenter.restartApp(app.getName(), currentServer, paasProvider, appInfoChangedCallback);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onDeleteClicked(CloudFoundryApplication app) {
-        deleteAppPresenter.deleteApp(currentServer, app.getName(), appInfoChangedCallback);
+        deleteAppPresenter.deleteApp(app.getName(), currentServer, paasProvider, appInfoChangedCallback);
     }
 }

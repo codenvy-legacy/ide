@@ -21,10 +21,7 @@ package com.codenvy.ide.extension.cloudfoundry.client.url;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import com.codenvy.ide.extension.cloudfoundry.client.*;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
@@ -47,31 +44,20 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
-    private UnmapUrlView view;
-
-    private JsonArray<String> registeredUrls;
-
-    private String unregisterUrl;
-
-    private String urlToMap;
-
+    private UnmapUrlView                        view;
+    private JsonArray<String>                   registeredUrls;
+    private String                              unregisterUrl;
+    private String                              urlToMap;
+    private ResourceProvider                    resourceProvider;
+    private EventBus                            eventBus;
+    private ConsolePart                         console;
+    private CloudFoundryLocalizationConstant    constant;
+    private CloudFoundryAutoBeanFactory         autoBeanFactory;
+    private AsyncCallback<String>               unmapUrlCallback;
+    private LoginPresenter                      loginPresenter;
+    private CloudFoundryClientService           service;
+    private CloudFoundryExtension.PAAS_PROVIDER paasProvider;
     private boolean isBindingChanged = false;
-
-    private ResourceProvider resourceProvider;
-
-    private EventBus eventBus;
-
-    private ConsolePart console;
-
-    private CloudFoundryLocalizationConstant constant;
-
-    private CloudFoundryAutoBeanFactory autoBeanFactory;
-
-    private AsyncCallback<String> unmapUrlCallback;
-
-    private LoginPresenter loginPresenter;
-
-    private CloudFoundryClientService service;
 
     /**
      * Create presenter.
@@ -147,8 +133,10 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
      *
      * @param callback
      */
-    public void showDialog(AsyncCallback<String> callback) {
+    public void showDialog(CloudFoundryExtension.PAAS_PROVIDER paasProvider, AsyncCallback<String> callback) {
+        this.paasProvider = paasProvider;
         this.unmapUrlCallback = callback;
+
         getAppRegisteredUrls();
     }
 
@@ -163,7 +151,8 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
 
             service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, null, null, eventBus,
-                                                                                                     console, constant, loginPresenter) {
+                                                                                                     console, constant, loginPresenter,
+                                                                                                     paasProvider) {
                                            @Override
                                            protected void onSuccess(CloudFoundryApplication result) {
                                                isBindingChanged = false;
@@ -202,7 +191,7 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
         try {
             service.mapUrl(resourceProvider.getVfsId(), projectId, null, null, url,
                            new CloudFoundryAsyncRequestCallback<String>(null, mapUrlLoggedInHandler, null, eventBus, console, constant,
-                                                                        loginPresenter) {
+                                                                        loginPresenter, paasProvider) {
                                @Override
                                protected void onSuccess(String result) {
                                    isBindingChanged = true;
@@ -254,7 +243,7 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
         try {
             service.unmapUrl(resourceProvider.getVfsId(), projectId, null, null, url,
                              new CloudFoundryAsyncRequestCallback<Object>(null, unregisterUrlLoggedInHandler, null, eventBus, console,
-                                                                          constant, loginPresenter) {
+                                                                          constant, loginPresenter, paasProvider) {
                                  @Override
                                  protected void onSuccess(Object result) {
                                      isBindingChanged = true;

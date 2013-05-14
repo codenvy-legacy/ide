@@ -41,6 +41,8 @@ import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
+import com.codenvy.ide.websocket.WebSocketException;
+import com.codenvy.ide.websocket.rest.AutoBeanUnmarshallerWS;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -76,6 +78,7 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
     private CloudFoundryClientService        service;
     private TemplateAgent                    templateAgent;
     private CreateProjectProvider            createProjectProvider;
+    private CloudFoundryExtension.PAAS_PROVIDER paasProvider = CloudFoundryExtension.PAAS_PROVIDER.CLOUD_FOUNDRY;
 
     /**
      * Create presenter.
@@ -156,49 +159,51 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
         // This class still doesn't have analog.
         //      JobManager.get().showJobSeparated();
 
-        // TODO This code uses WebSocket but we have not ported it yet.
-        //      AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
-        //      AutoBeanUnmarshallerWS<CloudFoundryApplication> unmarshaller =
-        //         new AutoBeanUnmarshallerWS<CloudFoundryApplication>(cloudFoundryApplication);
-        //
-        //      try
-        //      {
-        //         // Application will be started after creation (IDE-1618)
-        //         boolean noStart = false;
-        //         CloudFoundryClientService.getInstance().createWS(
-        //            server,
-        //            name,
-        //            null,
-        //            url,
-        //            0,
-        //            0,
-        //            noStart,
-        //            resourcesProvider.getVfsId(),
-        //            resourcesProvider.getActiveProject().getId(),
-        //            warUrl,
-        //            new CloudFoundryRESTfulRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
-        //               server, eventBus)
-        //            {
-        //               @Override
-        //               protected void onSuccess(CloudFoundryApplication result)
-        //               {
-        //                  onAppCreatedSuccess(result);
-        //               }
-        //
-        //               @Override
-        //               protected void onFailure(Throwable exception)
-        //               {
-        //                  //                  deployResultHandler.onDeployFinished(false);
-        //                  console.print(constant.applicationCreationFailed());
-        //                  super.onFailure(exception);
-        //               }
-        //            });
-        //      }
-        //      catch (WebSocketException e)
-        //      {
-        //         createApplicationREST(loggedInHandler);
-        //      }
-        createApplicationREST(loggedInHandler);
+        AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
+        AutoBeanUnmarshallerWS<CloudFoundryApplication> unmarshaller =
+                new AutoBeanUnmarshallerWS<CloudFoundryApplication>(cloudFoundryApplication);
+
+        try {
+            // Application will be started after creation (IDE-1618)
+            boolean noStart = false;
+            service.createWS(server,
+                             name,
+                             null,
+                             url,
+                             0,
+                             0,
+                             noStart,
+                             resourcesProvider.getVfsId(),
+                             resourcesProvider.getActiveProject().getId(),
+                             warUrl,
+                             paasProvider,
+                             new CloudFoundryRESTfulRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
+                                                                                             server, eventBus, console, constant,
+                                                                                             loginPresenter, paasProvider) {
+                                 @Override
+                                 protected void onSuccess(final CloudFoundryApplication result) {
+                                     project.refreshProperties(new AsyncCallback<Project>() {
+                                         @Override
+                                         public void onSuccess(Project project) {
+                                             onAppCreatedSuccess(result);
+                                         }
+
+                                         @Override
+                                         public void onFailure(Throwable caught) {
+                                             Log.error(CloudFoundryPagePresenter.class, "Can not refresh properties", caught);
+                                         }
+                                     });
+                                 }
+
+                                 @Override
+                                 protected void onFailure(Throwable exception) {
+                                     console.print(constant.applicationCreationFailed());
+                                     super.onFailure(exception);
+                                 }
+                             });
+        } catch (WebSocketException e) {
+            createApplicationREST(loggedInHandler);
+        }
     }
 
     /**
@@ -216,9 +221,10 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
             // Application will be started after creation (IDE-1618)
             boolean noStart = false;
             service.create(server, name, null, url, 0, 0, noStart, resourcesProvider.getVfsId(),
-                           resourcesProvider.getActiveProject().getId(), warUrl,
+                           resourcesProvider.getActiveProject().getId(), warUrl, paasProvider,
                            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null, server,
-                                                                                         eventBus, console, constant, loginPresenter) {
+                                                                                         eventBus, console, constant, loginPresenter,
+                                                                                         paasProvider) {
                                @Override
                                protected void onSuccess(final CloudFoundryApplication result) {
                                    project.refreshProperties(new AsyncCallback<Project>() {
@@ -229,7 +235,7 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
 
                                        @Override
                                        public void onFailure(Throwable caught) {
-                                           // do nothing
+                                           Log.error(CloudFoundryPagePresenter.class, "Can not refresh properties", caught);
                                        }
                                    });
                                }
@@ -293,37 +299,36 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
     private void getServers() {
         try {
             TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(JsonCollections.<String>createArray());
-            service.getTargets(
-                    new AsyncRequestCallback<JsonArray<String>>(unmarshaller) {
-                        @Override
-                        protected void onSuccess(JsonArray<String> result) {
-                            if (result.isEmpty()) {
-                                JsonArray<String> servers = JsonCollections.createArray();
-                                servers.add(CloudFoundryExtension.DEFAULT_SERVER);
-                                view.setServerValues(servers);
-                                view.setServer(CloudFoundryExtension.DEFAULT_SERVER);
-                            } else {
-                                view.setServerValues(result);
-                                view.setServer(result.get(0));
-                            }
-                            view.setName(projectName);
-                            // don't forget to init values, that are stored, when
-                            // values in form fields are changed.
-                            name = projectName;
-                            server = view.getServer();
-                            String urlSufix = server.substring(server.indexOf("."));
-                            view.setUrl(name + urlSufix);
-                            url = view.getUrl();
+            service.getTargets(paasProvider,
+                               new AsyncRequestCallback<JsonArray<String>>(unmarshaller) {
+                                   @Override
+                                   protected void onSuccess(JsonArray<String> result) {
+                                       if (result.isEmpty()) {
+                                           JsonArray<String> servers = JsonCollections.createArray(CloudFoundryExtension.DEFAULT_CF_SERVER);
+                                           view.setServerValues(servers);
+                                           view.setServer(CloudFoundryExtension.DEFAULT_CF_SERVER);
+                                       } else {
+                                           view.setServerValues(result);
+                                           view.setServer(result.get(0));
+                                       }
+                                       view.setName(projectName);
+                                       // don't forget to init values, that are stored, when
+                                       // values in form fields are changed.
+                                       name = projectName;
+                                       server = view.getServer();
+                                       String urlSufix = server.substring(server.indexOf("."));
+                                       view.setUrl(name + urlSufix);
+                                       url = view.getUrl();
 
-                            delegate.updateControls();
-                        }
+                                       delegate.updateControls();
+                                   }
 
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                            console.print(exception.getMessage());
-                        }
-                    });
+                                   @Override
+                                   protected void onFailure(Throwable exception) {
+                                       eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                                       console.print(exception.getMessage());
+                                   }
+                               });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -340,9 +345,9 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
         };
 
         try {
-            service.validateAction("create", server, name, null, url, resourcesProvider.getVfsId(), null, 0, 0, true,
+            service.validateAction("create", server, name, null, url, resourcesProvider.getVfsId(), null, paasProvider, 0, 0, true,
                                    new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null, server, eventBus, console,
-                                                                                constant, loginPresenter) {
+                                                                                constant, loginPresenter, paasProvider) {
                                        @Override
                                        protected void onSuccess(String result) {
                                            beforeDeploy();

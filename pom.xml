@@ -139,6 +139,11 @@
                 <version>${org.exoplatform.ide.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.exoplatform.ide</groupId>
+                <artifactId>exo-ide-websocket</artifactId>
+                <version>${org.exoplatform.ide.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.codenvy.ide</groupId>
                 <artifactId>codenvy-ide-commons</artifactId>
                 <version>${project.version}</version>
