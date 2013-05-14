@@ -170,6 +170,11 @@
             </dependency>
             <dependency>
                 <groupId>com.codenvy.ide</groupId>
+                <artifactId>codenvy-ext-appfog</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codenvy.ide</groupId>
                 <artifactId>codenvy-ext-maven</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -461,6 +466,7 @@
         <module>codenvy-ext-tasks</module>
         <module>codenvy-ext-java</module>
         <module>codenvy-ext-cloudfoundry</module>
+        <module>codenvy-ext-appfog</module>
         <module>codenvy-ext-maven</module>
         <module>codenvy-ide-client</module>
         <module>codenvy-ide-site-war</module>

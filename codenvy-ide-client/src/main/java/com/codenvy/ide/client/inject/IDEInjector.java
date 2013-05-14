@@ -15,6 +15,7 @@ import com.google.gwt.inject.client.Ginjector;
    com.codenvy.ide.ext.java.client.inject.JavaGinModule.class ,
    com.codenvy.ide.extension.cloudfoundry.client.inject.CloudFoundryGinModule.class ,
    com.codenvy.ide.extension.maven.client.inject.MavenGinModule.class ,
+   com.codenvy.ide.ext.appfog.client.inject.AppFogGinModule.class ,
    com.codenvy.ide.core.inject.CoreGinModule.class ,
    com.codenvy.ide.client.inject.IDEClientModule.class 
 })

@@ -103,6 +103,10 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-appfog</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-maven</artifactId>
         </dependency>
 
