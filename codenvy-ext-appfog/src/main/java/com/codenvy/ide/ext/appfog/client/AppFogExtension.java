@@ -19,6 +19,9 @@
 package com.codenvy.ide.ext.appfog.client;
 
 import com.codenvy.ide.api.extension.Extension;
+import com.codenvy.ide.api.paas.PaaSAgent;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -30,8 +33,14 @@ import com.google.inject.Singleton;
 @Singleton
 @Extension(title = "AppFog Support.", version = "3.0.0")
 public class AppFogExtension {
+    public static final  String DEFAULT_SERVER = "https://api.appfog.com";
+    private static final String ID             = "AppFog";
 
     @Inject
-    public AppFogExtension() {
+    public AppFogExtension(PaaSAgent paasAgent, AppfogResources resources) {
+        // TODO change hard code types
+        JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "Rails", "Spring", "War", "Python", "PHP");
+        // TODO wizard page is empty
+        paasAgent.registerPaaS(ID, ID, resources.appfog48(), requiredProjectTypes, null, null);
     }
 }
