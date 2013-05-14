@@ -67,57 +67,35 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class BuildProjectPresenter extends AbstractPartPresenter implements BuildProjectHandler, BuildProjectView.ActionDelegate {
-    private final static String LAST_SUCCESS_BUILD = "lastSuccessBuild";
-
+    private final static String LAST_SUCCESS_BUILD    = "lastSuccessBuild";
     private final static String ARTIFACT_DOWNLOAD_URL = "artifactDownloadUrl";
-
     private BuildProjectView view;
-
     /** Identifier of project we want to send for build. */
-    private String projectId = null;
-
+    private              String  projectId         = null;
     /** The builds identifier. */
-    private String buildID = null;
-
+    private              String  buildID           = null;
     /** Delay in millisecond between requests for build job status. */
-    private static final int delay = 3000;
-
+    private static final int     delay             = 3000;
     /** Status of previously build. */
-    private Status previousStatus = null;
-
+    private              Status  previousStatus    = null;
     /** Build of another project is performed. */
-    private boolean isBuildInProgress = false;
-
+    private              boolean isBuildInProgress = false;
     /** View closed flag. */
-    private boolean isViewClosed = true;
-
-    private boolean publishAfterBuild = false;
-
+    private              boolean isViewClosed      = true;
+    private              boolean publishAfterBuild = false;
     /** Project for build. */
-    private Project project;
-
-    protected RequestStatusHandler statusHandler;
-
-    private String buildStatusChannel;
-
-    private EventBus eventBus;
-
-    private ResourceProvider resourceProvider;
-
-    private ConsolePart console;
-
-    private BuilderClientService service;
-
-    private BuilderLocalizationConstant constant;
-
-    private BuilderAutoBeanFactory autoBeanFactory;
-
-    private BuilderResources resources;
-
-    private WorkspaceAgent workspaceAgent;
-
-    private MessageBus messageBus;
-
+    private       Project                          project;
+    private       RequestStatusHandler             statusHandler;
+    private       String                           buildStatusChannel;
+    private       EventBus                         eventBus;
+    private       ResourceProvider                 resourceProvider;
+    private       ConsolePart                      console;
+    private       BuilderClientService             service;
+    private       BuilderLocalizationConstant      constant;
+    private       BuilderAutoBeanFactory           autoBeanFactory;
+    private       BuilderResources                 resources;
+    private       WorkspaceAgent                   workspaceAgent;
+    private       MessageBus                       messageBus;
     /** Handler for processing Maven build status which is received over WebSocket connection. */
     private final SubscriptionHandler<BuildStatus> buildStatusHandler;
 
@@ -559,7 +537,7 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
         });
     }
 
-    /** Checks if project is uder watching. */
+    /** Checks if project is under watching. */
     private void checkIfProjectIsUnderWatching() {
         project.refreshProperties(new AsyncCallback<Project>() {
             @Override
@@ -571,42 +549,12 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
                         return;
                     }
                 }
-                startWatchingProjectChanges();
             }
 
             @Override
             public void onFailure(Throwable caught) {
             }
         });
-    }
-
-    /**
-     *
-     */
-    private void startWatchingProjectChanges() {
-        // TODO IDEX-62
-        // We don't have vfs module. Need to create or use some analog method
-        //      try
-        //      {
-        //         VirtualFileSystem.getInstance().startWatchUpdates(project.getId(), new AsyncRequestCallback<Object>()
-        //         {
-        //
-        //            @Override
-        //            protected void onSuccess(Object result)
-        //            {
-        //            }
-        //
-        //            @Override
-        //            protected void onFailure(Throwable exception)
-        //            {
-        //
-        //            }
-        //         });
-        //      }
-        //      catch (RequestException e)
-        //      {
-        //         e.printStackTrace();
-        //      }
     }
 
     /**

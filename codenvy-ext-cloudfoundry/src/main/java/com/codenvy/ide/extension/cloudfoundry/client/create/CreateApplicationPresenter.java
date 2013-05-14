@@ -38,7 +38,7 @@ import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
-import com.codenvy.ide.websocket.MessageBus;
+import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.AutoBeanUnmarshallerWS;
 import com.google.gwt.http.client.RequestException;
@@ -104,7 +104,6 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     private CloudFoundryAutoBeanFactory         autoBeanFactory;
     private LoginPresenter                      loginPresenter;
     private CloudFoundryClientService           service;
-    private MessageBus                          messageBus;
     private CloudFoundryExtension.PAAS_PROVIDER paasProvider;
 
     /**
@@ -311,9 +310,19 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                                                                                              appData.server, eventBus, console, constant,
                                                                                              loginPresenter, paasProvider) {
                                  @Override
-                                 protected void onSuccess(CloudFoundryApplication result) {
-                                     onAppCreatedSuccess(result);
-                                     eventBus.fireEvent(new RefreshBrowserEvent(project));
+                                 protected void onSuccess(final CloudFoundryApplication cloudFoundryApp) {
+                                     project.refreshProperties(new AsyncCallback<Project>() {
+                                         @Override
+                                         public void onSuccess(Project result) {
+                                             onAppCreatedSuccess(cloudFoundryApp);
+                                             eventBus.fireEvent(new RefreshBrowserEvent(project));
+                                         }
+
+                                         @Override
+                                         public void onFailure(Throwable caught) {
+                                             Log.error(CreateApplicationPresenter.class, "Can not refresh properties", caught);
+                                         }
+                                     });
                                  }
 
                                  @Override
@@ -359,6 +368,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
                                        @Override
                                        public void onFailure(Throwable caught) {
+                                           Log.error(CreateApplicationPresenter.class, "Can not refresh properties", caught);
                                        }
                                    });
                                }
