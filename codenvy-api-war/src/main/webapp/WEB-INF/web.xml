@@ -121,7 +121,7 @@
 
     <login-config>
         <auth-method>BASIC</auth-method>
-        <realm-name>exo-domain</realm-name>
+        <realm-name>codenvy</realm-name>
     </login-config>
 
     <security-role>

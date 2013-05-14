@@ -18,13 +18,13 @@
     02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
 -->
-<Context path="/api" docBase="api" reloadable="true" crossContext="false" sessionCookiePath="/">
+<Context path="/i" docBase="i" reloadable="true" crossContext="false" sessionCookiePath="/">
 
     <Logger className='org.apache.catalina.logger.SystemOutLogger'
             prefix='localhost_ide_log.' suffix='.txt' timestamp='true'/>
     <Manager className='org.apache.catalina.session.PersistentManager' saveOnRestart='false'/>
     <Realm className='org.apache.catalina.realm.JAASRealm'
-           appName='exo-git'
+           appName='codenvy'
            userClassNames="org.exoplatform.services.security.jaas.UserPrincipal"
            roleClassNames="org.exoplatform.services.security.jaas.RolePrincipal"
            debug='0' cache='false'/>

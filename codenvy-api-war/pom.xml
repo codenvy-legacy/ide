@@ -213,7 +213,6 @@
         <dependency>
             <groupId>com.google.gwt.inject</groupId>
             <artifactId>gin</artifactId>
-            <version>1.5.0</version>
             <classifier>sources</classifier>
             <scope>compile</scope>
         </dependency>
@@ -221,7 +220,6 @@
         <dependency>
             <groupId>com.google.gwt.inject</groupId>
             <artifactId>gin</artifactId>
-            <version>1.5.0</version>
             <scope>compile</scope>
         </dependency>
 
@@ -234,12 +232,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
             <scope>runtime</scope>
         </dependency>
 

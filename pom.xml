@@ -53,7 +53,7 @@
       <javax.ws.version>1.0</javax.ws.version>
       <javax.ws.rs.version>1.0</javax.ws.rs.version>
       <javax.inject.version>1</javax.inject.version>
-      <gin.version>1.5</gin.version>
+      <gin.version>1.5.0</gin.version>
 
    </properties>
 
@@ -515,12 +515,6 @@
             <version>1.2.1</version>
          </dependency>
          <dependency>
-            <groupId>org.hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
-            <version>2.0.0</version>
-         </dependency>
-
-         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${org.slf4j.version}</version>
@@ -577,6 +571,12 @@
             <artifactId>jsr311-api</artifactId>
             <version>1.0</version>
          </dependency>
+         <dependency>
+           <groupId>javax.servlet</groupId>
+           <artifactId>javax.servlet-api</artifactId>
+           <version>3.0.1</version>
+           <scope>provided</scope>
+        </dependency>
          <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
@@ -775,10 +775,6 @@
       <module>exo-ide-editor-javascript</module>
       <module>exo-ide-editor-css</module>
       <module>exo-ide-editor-html</module>
-      <module>exo-ide-editor-gadget</module>
-      <!--module>exo-ide-editor-groovy</module-->
-      <!--module>exo-ide-editor-gtmpl</module-->
-      <!--module>exo-ide-editor-chromattic</module-->
       <module>exo-ide-editor-java</module>
       <module>exo-ide-editor-jsp</module>
       <module>exo-ide-editor-ruby</module>
@@ -789,7 +785,7 @@
 
       <module>exo-ide-jdt-core</module>
 
-      <module>exo-ide-extension-gadget</module>
+      <module>exo-ide-extension-maven</module>
       <module>exo-ide-extension-java</module>
       <module>exo-ide-extension-java-runtime</module>
       <module>exo-ide-extension-python-runtime</module>
@@ -814,17 +810,12 @@
       <module>exo-ide-websocket</module>
 
       <module>exo-ide-git-server</module>
-      <module>exo-ide-gadget-server</module>
+      <module>exo-ide-packaging-shell-war</module>
       <module>codenvy-application-war</module>
       <module>codenvy-api-war</module>
-      <module>exo-ide-site-war</module>
-      <module>exo-ide-packaging-shell-war</module>
-
-      <module>exo-ide-packaging-standalone-tomcat</module>
 
       <module>exo-ide-maven</module>
-      <module>exo-ide-extension-maven</module>
-      <module>exo-ide-packaging-maven-builder</module>
+      <!--module>exo-ide-packaging-maven-builder</module-->
       <module>exo-ide-packaging-codeassistant-server</module>
       <module>exo-ide-jrebel-remote</module>
    </modules>
