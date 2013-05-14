@@ -34,9 +34,8 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ShowCreateApplicationCommand implements ExtendedCommand {
-    private final CreateApplicationPresenter          presenter;
-    private final CloudFoundryResources               resources;
-    private final CloudFoundryProjectOpenedExpression expression;
+    private final CreateApplicationPresenter presenter;
+    private final CloudFoundryResources      resources;
 
     /**
      * Create command.
@@ -45,11 +44,9 @@ public class ShowCreateApplicationCommand implements ExtendedCommand {
      * @param resources
      */
     @Inject
-    public ShowCreateApplicationCommand(CreateApplicationPresenter presenter, CloudFoundryResources resources,
-                                        CloudFoundryProjectOpenedExpression expression) {
+    public ShowCreateApplicationCommand(CreateApplicationPresenter presenter, CloudFoundryResources resources) {
         this.presenter = presenter;
         this.resources = resources;
-        this.expression = expression;
     }
 
     /** {@inheritDoc} */
@@ -79,6 +76,6 @@ public class ShowCreateApplicationCommand implements ExtendedCommand {
     /** {@inheritDoc} */
     @Override
     public Expression canExecute() {
-        return expression;
+        return null;
     }
 }
