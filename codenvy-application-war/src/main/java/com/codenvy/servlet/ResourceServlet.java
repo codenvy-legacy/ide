@@ -16,7 +16,8 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide;
+package com.codenvy.servlet;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,22 +32,32 @@ import java.io.IOException;
 
 /**
  * @author <a href="mailto:vparfonov@codenvy.com">Vitaly Parfonov</a>
- * @version $Id: ResourcesFilter.java May 8, 2013 vetal $
+ * @version $Id: ResourceServlet.java May 14, 2013 vetal $
  */
-public class WsServlet  extends HttpServlet {
+@SuppressWarnings("serial")
+public class ResourceServlet extends HttpServlet {
 
-    private static final Logger LOG = LoggerFactory.getLogger(WsServlet.class);
-    
-    @Override
+    private static final Logger LOG = LoggerFactory.getLogger(ResourceServlet.class);
+
+
     public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
-        super.service(req, res);
         HttpServletRequest request = (HttpServletRequest)req;
         String requestURI = request.getRequestURI();
-        int w = requestURI.lastIndexOf("/w/");
-        String substring = requestURI.substring(w);
-        String[] split = substring.split("/");
-        
-        
+        if (!requestURI.contains("w/ide"))
+        {
+            int i = requestURI.indexOf('/', 3);
+            String ws;
+            String newuri;
+            if (i == -1) {
+                ws = requestURI.substring(3);
+                newuri = requestURI.replace(ws, "ide/Application.html");
+            }
+            else {
+                ws = requestURI.substring(3, i + 1);
+                newuri = requestURI.replace(ws, "");
+            }
+            System.out.println("ResourceServlet : " + newuri);
+            req.getRequestDispatcher(newuri).forward(req, res);
+        }
     }
-
 }

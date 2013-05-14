@@ -71,9 +71,9 @@ public class AppContext {
         String url;
         boolean isSecureConnection = Window.Location.getProtocol().equals("https:");
         if (isSecureConnection) {
-            url = "wss://" + Window.Location.getHost() + "/i/collaboration";
+            url = "wss://" + Window.Location.getHost() + "/collaboration";
         } else {
-            url = "ws://" + Window.Location.getHost() + "/i/collaboration";
+            url = "ws://" + Window.Location.getHost() + "/collaboration";
         }
         return new RESTMessageBus(url);
     }

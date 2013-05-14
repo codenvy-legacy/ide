@@ -78,7 +78,11 @@
             	</exclusion>
             </exclusions>
         </dependency>
-      
+        
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>eclipse-jdt-core</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -91,10 +95,6 @@
                 <exclusion>
                     <artifactId>antlr</artifactId>
                     <groupId>antlr</groupId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.exoplatform.ide</groupId>
-                    <artifactId>eclipse-jdt-core</artifactId>
                 </exclusion>
                 <exclusion>
                 	<artifactId>mail</artifactId>
@@ -242,6 +242,16 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-vfs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-vfs-fs</artifactId>
+        </dependency>
+        
         <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
@@ -452,13 +462,47 @@
                             <goal>war</goal>
                         </goals>
                         <configuration>
-                            <packagingExcludes>**/classes/org/**,**/classes/gadget/**,
+                             <packagingExcludes>**/classes/org/**,**/classes/gadget/**,
                                 **/classes/default/**,**/classes/ide/**,
                                 **/Commons.css,
                                 **/hosted.html,**/applicationInitializer.js,**/init_preload_gadget.js,
                                 **/IDEShell.html,**/IDEGadget.html,**/ShowCase.html,**/preload.html,
                                 **/preloadIDE.js,
-                                **/lib/**
+                                **/lib/exo-ide-jdt-core*,
+                                **/lib/exo-jcr-services*,
+                                **/lib/slf4j-log4j*,
+                                **/lib/log4j*,
+                                **/lib/commons-logging-api*,
+                                **/lib/commons-logging*,
+                                **/lib/servlet-api*,
+                                **/lib/hsqldb.*,
+                                **/lib/carol*,
+                                **/lib/jacorb*,
+                                **/lib/ow2*,
+                                **/lib/irmi*,
+                                **/lib/avalon*,
+                                **/lib/logkit*,
+                                **/lib/howl*,
+                                **/lib/hibernate*,
+                                **/lib/infinispan*,
+                                **/lib/c3p0*,
+                                **/lib/stax-api*,
+                                **/lib/gwt-*,
+                                **/lib/sjsxp*,
+                                **/lib/*junit*,
+                                **/lib/jotm*,
+                                **/lib/xdoclet*,
+                                **/lib/activation*,
+                                **/lib/annotations-api*,
+                                **/lib/sjsxp*,
+                                **/lib/gwt-user*,
+                                **/lib/gwt-dev*,
+                                **/lib/postgresql*,
+                                **/lib/tools.jar,
+                                **/lib/guice-2.0.jar,
+                                **/lib/antlr-2.*,
+                                **/lib/xstream-1.0.2.jar,
+                                **/lib/xml-apis*
                             </packagingExcludes>
                         </configuration>
                     </execution>

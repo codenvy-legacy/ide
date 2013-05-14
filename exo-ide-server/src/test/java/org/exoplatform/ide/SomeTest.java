@@ -23,16 +23,37 @@ import org.junit.Test;
 import java.util.Arrays;
 
 public class SomeTest {
+//    
+//    @Test
+//    public void testname() throws Exception {
+//        
+//        String requestURI = "/w/dev-monit/some.js";
+//        int i = requestURI.indexOf('/', 3);
+//        String ws = requestURI.substring(3, i+1);
+//        System.out.println("SomeTest.testname()" + ws);
+//        String newuri = requestURI.replace(ws, "");
+//        System.out.println("SomeTest.testname()" + newuri);
+//    }
     
     @Test
-    public void testname() throws Exception {
+    public void testname2() throws Exception {
         
-        String requestURI = "http://localhost:8080/w/dev-monit/";
-        int w = requestURI.lastIndexOf("/w/");
-        String substring = requestURI.substring(w + 3);
-        System.out.println("SomeTest.testname()" + substring + " " + w);
-        String[] split = substring.split("/");
-        System.out.println("SomeTest.testname()" + Arrays.toString(split));
+        String requestURI = "/w/dev-monit";
+        int i = requestURI.indexOf('/', 3);
+        System.out.println("SomeTest.testname2()"+i);
+        String ws;
+        String newuri;
+        if (i == -1){
+            ws = requestURI.substring(3);
+            newuri= requestURI.replace("w/" + ws, "ide/Application.html");
+        }
+        else {
+            ws = requestURI.substring(3, i + 1);
+            newuri= requestURI.replace("w/" + ws, "");
+        }  
+        System.out.println("SomeTest.testname()" + newuri);
+        
+        
     }
 
 }
