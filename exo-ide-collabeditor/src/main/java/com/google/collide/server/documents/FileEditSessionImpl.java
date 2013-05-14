@@ -32,6 +32,7 @@ import com.google.common.hash.Hashing;
 import com.google.protobuf.ByteString;
 
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.observation.ChangeEvent;
 import org.exoplatform.ide.vfs.server.observation.ChangeEventFilter;
@@ -297,7 +298,10 @@ final class FileEditSessionImpl implements FileEditSession {
         LOG.debug("Saving file: {}", path);
         try {
             vfs.updateContent(resourceId, mediaType, new ByteArrayInputStream(text.getBytes()), null);
-        } catch (VirtualFileSystemException e) {
+        }catch (ItemNotFoundException e){
+            LOG.debug("Failed to save file", e);
+        }
+        catch (VirtualFileSystemException e) {
             throw new IOException(e.getMessage(), e);
         }
     }

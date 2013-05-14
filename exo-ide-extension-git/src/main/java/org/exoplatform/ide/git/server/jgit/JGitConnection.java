@@ -349,6 +349,7 @@ public class JGitConnection implements GitConnection {
             String comitterEmail = configEmail != null ? configEmail : gitEmail;
 
             commitCommand.setCommitter(comitterName, comitterEmail);
+            commitCommand.setAuthor(comitterName, comitterEmail);
             commitCommand.setMessage(request.getMessage());
             commitCommand.setAll(request.isAll());
             commitCommand.setAmend(request.isAmend());

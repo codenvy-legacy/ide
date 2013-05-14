@@ -165,9 +165,9 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
             @Override
             public void onValueChange(ValueChangeEvent<String> event) {
                 boolean empty = (event.getValue() == null || event.getValue().isEmpty());
-                empty =
-                        empty || display.getLocalBranchesValue().getValue() == null
-                            || display.getLocalBranchesValue().getValue().isEmpty();
+                empty = empty
+                        || display.getLocalBranchesValue().getValue() == null
+                        || display.getLocalBranchesValue().getValue().isEmpty();
 
                 display.enablePushButton(!empty);
             }
