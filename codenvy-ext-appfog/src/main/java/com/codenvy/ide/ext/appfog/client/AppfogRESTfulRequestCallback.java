@@ -1,0 +1,109 @@
+/*
+ * Copyright (C) 2012 eXo Platform SAS.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+package com.codenvy.ide.ext.appfog.client;
+
+import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
+import com.codenvy.ide.commons.exception.ServerException;
+import com.codenvy.ide.rest.HTTPStatus;
+import com.codenvy.ide.websocket.rest.RequestCallback;
+import com.codenvy.ide.websocket.rest.Unmarshallable;
+import com.google.gwt.regexp.shared.RegExp;
+import com.google.gwt.user.client.Window;
+import com.google.web.bindery.event.shared.EventBus;
+
+/**
+ * WebSocket AppFog request.
+ *
+ * @param <T>
+ * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
+ * @version $Id: AppfogRESTfulRequestCallback.java Nov 30, 2012 3:07:27 PM azatsarynnyy $
+ * @see AppfogAsyncRequestCallback
+ */
+public abstract class AppfogRESTfulRequestCallback<T> extends RequestCallback<T> {
+    private final static String APPFOG_EXIT_CODE = "Appfog-Exit-Code";
+    // TODO needs to port login package
+//    private LoggedInHandler            loggedIn;
+//    private LoginCanceledHandler       loginCanceled;
+    private String                     loginUrl;
+    private EventBus                   eventBus;
+    private AppfogLocalizationConstant constant;
+
+
+    public AppfogRESTfulRequestCallback(Unmarshallable<T> unmarshaller,
+//                                        LoggedInHandler loggedIn,
+//                                        LoginCanceledHandler loginCanceled,
+                                        EventBus eventBus, AppfogLocalizationConstant constant) {
+//        this(unmarshaller, loggedIn, loginCanceled, null, eventBus, constant);
+        this(unmarshaller, null, eventBus, constant);
+    }
+
+    public AppfogRESTfulRequestCallback(Unmarshallable<T> unmarshaller,
+//                                        LoggedInHandler loggedIn,
+//                                        LoginCanceledHandler loginCanceled,
+                                        String loginUrl,
+                                        EventBus eventBus, AppfogLocalizationConstant constant) {
+        super(unmarshaller);
+//        this.loggedIn = loggedIn;
+//        this.loginCanceled = loginCanceled;
+        this.loginUrl = loginUrl;
+        this.eventBus = eventBus;
+        this.constant = constant;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void onFailure(Throwable exception) {
+        if (exception instanceof ServerException) {
+            ServerException serverException = (ServerException)exception;
+            if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
+                && serverException.getMessage().contains("Authentication required.")) {
+                // TODO execute method on presenter
+//                eventBus.fireEvent(new LoginEvent(loggedIn, loginCanceled, loginUrl));
+                return;
+            } else if (HTTPStatus.FORBIDDEN == serverException.getHTTPStatus()
+                       && serverException.getHeader(APPFOG_EXIT_CODE) != null
+                       && "200".equals(serverException.getHeader(APPFOG_EXIT_CODE))) {
+                // TODO execute method on presenter
+//                eventBus.fireEvent(new LoginEvent(loggedIn, loginCanceled, loginUrl));
+                return;
+            } else if (HTTPStatus.NOT_FOUND == serverException.getHTTPStatus()
+                       && serverException.getHeader(APPFOG_EXIT_CODE) != null
+                       && "301".equals(serverException.getHeader(APPFOG_EXIT_CODE))) {
+                Window.alert(constant.applicationNotFound());
+                return;
+            } else {
+                String msg = "";
+                if (serverException.isErrorMessageProvided()) {
+                    msg = serverException.getLocalizedMessage();
+                    if (RegExp.compile("Application '.+' already exists. Use update or delete.").exec(msg) != null) {
+                        msg = "Application already exist on appfog";
+                    } else if (RegExp.compile("Unexpected response from service gateway").exec(msg) != null) {
+                        msg = "Appfog error: " + msg;
+                    }
+                } else {
+                    msg = "Status:&nbsp;" + serverException.getHTTPStatus();// + "&nbsp;" + serverException.getStatusText();
+                }
+
+                Window.alert(msg);
+                return;
+            }
+        }
+        eventBus.fireEvent(new ExceptionThrownEvent(exception));
+    }
+}

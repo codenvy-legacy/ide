@@ -54,6 +54,10 @@
             <artifactId>codenvy-ext-maven</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-cloudfoundry</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-appfog</artifactId>
             <version>${org.exoplatform.ide.version}</version>
