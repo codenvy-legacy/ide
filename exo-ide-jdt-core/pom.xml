@@ -41,6 +41,10 @@
                <groupId>javassist</groupId>
                <artifactId>javassist</artifactId>
             </exclusion>
+            <exclusion>
+            	<artifactId>mail</artifactId>
+            	<groupId>javax.mail</groupId>
+            </exclusion>
          </exclusions>
       </dependency>
 
@@ -59,16 +63,9 @@
          <artifactId>exo-ide-editor-java</artifactId>
       </dependency>
       
-     <!--  <dependency>
-         <groupId>aopalliance</groupId>
-         <artifactId>aopalliance</artifactId>
-         <version>1.0</version>
-      </dependency> -->
-
       <dependency>
          <groupId>com.google.gwt.inject</groupId>
          <artifactId>gin</artifactId>
-         <version>1.5.0</version>
       </dependency>
             
 

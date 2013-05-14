@@ -53,6 +53,7 @@
       <javax.ws.version>1.0</javax.ws.version>
       <javax.ws.rs.version>1.0</javax.ws.rs.version>
       <javax.inject.version>1</javax.inject.version>
+      <gin.version>1.5</gin.version>
 
    </properties>
 
@@ -540,6 +541,18 @@
             <version>3.0</version>
          </dependency>
          <dependency>
+            <groupId>com.google.gwt.inject</groupId>
+            <artifactId>gin</artifactId>
+            <version>${gin.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>com.google.gwt.inject</groupId>
+            <artifactId>gin</artifactId>
+            <version>${gin.version}</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
             <version>2.1</version>
@@ -548,11 +561,6 @@
             <groupId>javax.jcr</groupId>
             <artifactId>jcr</artifactId>
             <version>1.0</version>
-         </dependency>
-         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>3.0-alpha-1</version>
          </dependency>
          <dependency>
             <groupId>com.sun.xml.bind</groupId>
@@ -781,15 +789,12 @@
 
       <module>exo-ide-jdt-core</module>
 
-      <!--module>exo-ide-extension-gadget-gatein</module-->
       <module>exo-ide-extension-gadget</module>
-      <!--module>exo-ide-extension-groovy</module-->
       <module>exo-ide-extension-java</module>
       <module>exo-ide-extension-java-runtime</module>
       <module>exo-ide-extension-python-runtime</module>
       <module>exo-ide-extension-php-runtime</module>
       <module>exo-ide-extension-nodejs-runtime</module>
-      <!--module>exo-ide-extension-chromattic</module-->
       <module>exo-ide-extension-git</module>
       <module>exo-ide-extension-ssh</module>
       <module>exo-ide-extension-heroku</module>
@@ -810,8 +815,8 @@
 
       <module>exo-ide-git-server</module>
       <module>exo-ide-gadget-server</module>
-      <module>exo-ide-packaging-application-war</module>
-      <module>exo-ide-rest-war</module>
+      <module>codenvy-application-war</module>
+      <module>codenvy-api-war</module>
       <module>exo-ide-site-war</module>
       <module>exo-ide-packaging-shell-war</module>
 

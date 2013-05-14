@@ -1,0 +1,310 @@
+/**
+ * Copyright (C) 2012 eXo Platform SAS.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
+/*
+ * Collabeditor colors
+ */
+
+.collabeditor-scrollbar {
+    background-color: #313335 !important;
+}
+
+.collabeditor-scrollable {
+    background-color: #2b2b2b !important;
+}
+
+.collabeditor-root {
+    background-color: #313335 !important;
+}
+
+.collabeditor-line-number {
+    color: #888888 !important;
+}
+
+.collabeditor-active-line-number {
+    /*
+    color: #7777FF!important;
+    color: #909090!important;
+    color: #888888!important;
+    */
+    color: #BBBBBB !important;
+}
+
+.collabeditor-active-line {
+    background-color: #434343 !important;
+}
+
+.collabeditor-selection {
+    background-color: #575c5d !important;
+}
+
+.collabeditor-selection-inactive {
+    background-color: #3b3b24 !important;
+}
+
+/*
+ * Collabeditor Python colors
+ */
+
+.python-whitespace {
+}
+
+.python-keyword {
+    color: #cc7832 !important;
+}
+
+.python-variable {
+    color: #a9b7c6 !important;
+}
+
+.python-comment {
+    color: #72A56E !important;
+}
+
+.python-operator {
+    color: #a9b7c6 !important;
+}
+
+.python-nil {
+    color: #b079cc !important;
+}
+
+.python-def {
+    color: #bbb529 !important;
+}
+
+.python-number {
+    color: #73b4e6 !important;
+}
+
+.python-builtin {
+    color: #da4939 !important;
+}
+
+.python-meta {
+    color: #eee852 !important;
+}
+
+.python-string {
+    color: #a5c25c !important;
+}
+
+.python-error {
+    color: #a9b7c6 !important;
+}
+
+/*
+.python-atom {color: #219;}
+.python-property {color: black;}
+.python-tag {color: #170;}
+.python-attribute {color: #00c;}
+*/
+
+/*
+ * Collabeditor CSS colors
+ */
+
+.css-comment {
+    color: #A9B7C6 !important;
+}
+
+.css-variable {
+    color: #DA4939 !important;
+}
+
+.css-number {
+    color: #73b4e6 !important;
+}
+
+.css-nil {
+    color: #b079cc !important;
+}
+
+.css-keyword {
+    color: #eee852 !important;
+}
+
+.css-tag {
+    color: #cc7832 !important;
+}
+
+.css-atom {
+    color: #a5c25c !important;
+}
+
+.css-meta {
+    color: #eee852 !important;
+}
+
+.css-string {
+    color: #72A56E !important;
+}
+
+.css-string-2 {
+    color: #cc7832 !important;
+}
+
+/*
+.css-def {color: #00f;}
+.css-variable-2 {color: #05a;}
+.css-property {color: black;}
+.css-operator {color: black;}
+.css-error {}
+.css-builtin {color: #30a;}
+.css-attribute {color: #00c;}
+*/
+
+/*
+ * Collabeditor HTML colors
+ */
+.html-tag {
+    color: #cc7832 !important;
+}
+
+.html-string {
+    color: #72A56E !important;
+}
+
+.html-comment {
+    color: #A9B7C6 !important;
+}
+
+.html-attribute {
+    color: #eee852 !important;
+}
+
+.html-nil {
+    color: #eee852 !important;
+}
+
+.html-error {
+    color: #cc7832 !important;
+}
+
+.html-meta {
+    color: #A9B7C6 !important;
+}
+
+/*
+.html-atom {color: #219;}
+.html-tag {color: #170;}
+*/
+
+/*
+ * Collabeditor JavaScript colors
+ */
+.javascript-keyword {
+    color: #cc7832 !important;
+}
+
+.javascript-variable {
+    color: #a9b7c6 !important;
+}
+
+.javascript-variable-2 {
+    color: #b9b7c6 !important;
+}
+
+.javascript-nil {
+    color: #cc7832 !important;
+}
+
+.javascript-def {
+    color: #a9b7c6 !important;
+}
+
+.javascript-property {
+    color: #a9b7c6 !important;
+}
+
+.javascript-string {
+    color: #a5c25c !important;
+}
+
+.javascript-number {
+    color: #72A56E !important;
+}
+
+.javascript-comment {
+    color: #A9B7C6 !important;
+}
+
+/*
+.javascript-atom {color: #219;}
+.javascript-number {color: #164;}
+.javascript-variable-2 {color: #05a;}
+.javascript-operator {color: black;}
+.javascript-string-2 {color: #f50;}
+.javascript-meta {color: #555;}
+.javascript-error {}
+.javascript-builtin {color: #30a;}
+.javascript-tag {color: #170;}
+.javascript-attribute {color: #00c;}
+*/
+
+/*
+ * Collabeditor C-Like colors
+ */
+
+.clike-keyword {
+    color: #CC7832 !important;
+}
+
+.clike-word {
+    color: #A9B7C6 !important;
+}
+
+.clike-nil {
+    color: #B079CC !important;
+}
+
+.clike-meta {
+    color: #EEE852 !important;
+}
+
+.clike-operator {
+    color: #B079CC !important;
+}
+
+.clike-string {
+    color: #A5C25C !important;
+}
+
+.clike-atom {
+    color: #DA4939 !important;
+}
+
+.clike-number {
+    color: #73B4E6 !important;
+}
+
+.clike-comment {
+    color: #72A56E !important;
+}
+
+/*
+.clike-def {color: #00f;}
+.clike-variable {color: black;}
+.clike-variable-2 {color: #05a;}
+.clike-property {color: black;}
+.clike-error {color: #f00;}
+.clike-builtin {color: #30a;}
+.clike-tag {color: #170;}
+.clike-attribute {color: #00c;}
+*/
