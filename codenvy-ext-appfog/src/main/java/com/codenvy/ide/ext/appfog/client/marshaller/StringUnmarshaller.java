@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.extension.cloudfoundry.client.marshaller;
+package com.codenvy.ide.ext.appfog.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.rest.Unmarshallable;
@@ -25,7 +25,7 @@ import com.google.gwt.http.client.Response;
 /**
  * Unmarshaller for String object.
  *
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  */
 public class StringUnmarshaller implements Unmarshallable<StringBuilder> {
     protected StringBuilder builder;

@@ -110,13 +110,14 @@ public class LoginPresenter implements LoginView.ActionDelegate {
             AutoBeanUnmarshaller<SystemInfo> unmarshaller = new AutoBeanUnmarshaller<SystemInfo>(systemInfo);
             service.getSystemInfo(AppFogExtension.DEFAULT_SERVER,
                                   new AppfogAsyncRequestCallback<SystemInfo>(unmarshaller, loggedIn, loginCanceled, eventBus, constant,
-                                                                             this) {
+                                                                             console, this) {
                                       @Override
                                       protected void onSuccess(SystemInfo result) {
                                           view.setEmail(result.getUser());
                                       }
                                   });
         } catch (RequestException e) {
+            console.print(e.getMessage());
             eventBus.fireEvent(new ExceptionThrownEvent(e));
         }
     }
@@ -164,6 +165,8 @@ public class LoginPresenter implements LoginView.ActionDelegate {
                                       }
                                       // otherwise will be called method from superclass.
                                   }
+                                  // TODO doesn't show invalid password error
+                                  console.print(exception.getMessage());
                                   eventBus.fireEvent(new ExceptionThrownEvent(exception));
                               }
                           });

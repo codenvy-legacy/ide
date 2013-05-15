@@ -16,39 +16,49 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.extension.cloudfoundry.client.marshaller;
+package com.codenvy.ide.ext.appfog.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 
 /**
- * Unmarshaller for String object.
+ * Unmarshaller for the list of targets, received from server.
  *
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  */
-public class StringUnmarshaller implements Unmarshallable<StringBuilder> {
-    protected StringBuilder builder;
+public class TargetsUnmarshaller implements Unmarshallable<JsonArray<String>> {
+    private JsonArray<String> targets;
 
     /**
      * Create unmarshaller.
      *
-     * @param builder
+     * @param targets
      */
-    public StringUnmarshaller(StringBuilder builder) {
-        super();
-        this.builder = builder;
+    public TargetsUnmarshaller(JsonArray<String> targets) {
+        this.targets = targets;
     }
 
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
-        builder.append(response.getText());
+        JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
+
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JSONValue value = jsonArray.get(i);
+            if (value.isString() != null) {
+                targets.add(value.isString().stringValue());
+            }
+        }
     }
 
     /** {@inheritDoc} */
     @Override
-    public StringBuilder getPayload() {
-        return builder;
+    public JsonArray<String> getPayload() {
+        return targets;
     }
 }

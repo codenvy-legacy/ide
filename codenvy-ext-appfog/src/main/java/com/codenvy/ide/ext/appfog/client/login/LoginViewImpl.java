@@ -55,12 +55,6 @@ public class LoginViewImpl extends DialogBox implements LoginView {
     Label                     errorText;
     @UiField
     TextBox                   target;
-    @UiField
-    Label                     targetLabel;
-    @UiField
-    Label                     emailLabel;
-    @UiField
-    Label                     passwordLabel;
     @UiField(provided = true)
     final   AppfogResources            res;
     @UiField(provided = true)

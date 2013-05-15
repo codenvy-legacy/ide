@@ -20,6 +20,7 @@ package com.codenvy.ide.ext.appfog.client;
 
 import com.codenvy.ide.ext.appfog.shared.*;
 import com.codenvy.ide.extension.cloudfoundry.shared.Credentials;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -378,7 +379,7 @@ public class AppfogClientService {
         AsyncRequest.build(RequestBuilder.POST, postUrl + "?" + params).loader(loader).send(callback);
     }
 
-    public void getApplicationList(String server, AppfogAsyncRequestCallback<List<AppfogApplication>> callback)
+    public void getApplicationList(String server, AppfogAsyncRequestCallback<JsonArray<AppfogApplication>> callback)
             throws RequestException {
         String url = restServiceContext + APPS;
 
@@ -402,7 +403,7 @@ public class AppfogClientService {
                     .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
     }
 
-    public void getTargets(AsyncRequestCallback<List<String>> callback) throws RequestException {
+    public void getTargets(AsyncRequestCallback<JsonArray<String>> callback) throws RequestException {
         String url = restServiceContext + TARGETS;
 
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)

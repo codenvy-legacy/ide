@@ -31,7 +31,7 @@
         <g:north size="26.0">
             <g:DockLayoutPanel unit="PX" width="100%" height="100%" styleName="{style.spacing}">
                 <g:west size="100.0">
-                    <g:Label text="{locale.loginViewTargetField}" ui:field="targetLabel" addStyleNames="{res.appFogCSS.loginFont}"/>
+                    <g:Label text="{locale.loginViewTargetField}" addStyleNames="{res.appFogCSS.loginFont}"/>
                 </g:west>
                 <g:center>
                     <g:TextBox width="270px" ui:field="target" readOnly="true"/>
@@ -41,7 +41,7 @@
         <g:north size="26.0">
             <g:DockLayoutPanel unit="PX" width="100%" height="100%" styleName="{style.spacing}">
                 <g:west size="100.0">
-                    <g:Label text="{locale.loginViewEmailField}" ui:field="emailLabel" addStyleNames="{res.appFogCSS.loginFont}"/>
+                    <g:Label text="{locale.loginViewEmailField}" addStyleNames="{res.appFogCSS.loginFont}"/>
                 </g:west>
                 <g:center>
                     <g:TextBox width="270px" ui:field="email"/>
@@ -51,7 +51,7 @@
         <g:north size="26.0">
             <g:DockLayoutPanel unit="PX" width="100%" height="100%" styleName="{style.spacing}">
                 <g:west size="100.0">
-                    <g:Label text="{locale.loginViewPasswordField}" ui:field="passwordLabel" addStyleNames="{res.appFogCSS.loginFont}"/>
+                    <g:Label text="{locale.loginViewPasswordField}" addStyleNames="{res.appFogCSS.loginFont}"/>
                 </g:west>
                 <g:center>
                     <g:PasswordTextBox ui:field="password" width="270px"/>

@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.appfog.client;
 
+import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
@@ -46,6 +47,7 @@ public abstract class AppfogRESTfulRequestCallback<T> extends RequestCallback<T>
     private EventBus                   eventBus;
     private AppfogLocalizationConstant constant;
     private LoginPresenter             loginPresenter;
+    private ConsolePart                console;
 
     /**
      * Create callback.
@@ -55,11 +57,13 @@ public abstract class AppfogRESTfulRequestCallback<T> extends RequestCallback<T>
      * @param loginCanceled
      * @param eventBus
      * @param constant
+     * @param console
      * @param loginPresenter
      */
     public AppfogRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled,
-                                        EventBus eventBus, AppfogLocalizationConstant constant, LoginPresenter loginPresenter) {
-        this(unmarshaller, loggedIn, loginCanceled, null, eventBus, constant, loginPresenter);
+                                        EventBus eventBus, AppfogLocalizationConstant constant, ConsolePart console,
+                                        LoginPresenter loginPresenter) {
+        this(unmarshaller, loggedIn, loginCanceled, null, eventBus, constant, console, loginPresenter);
     }
 
     /**
@@ -71,10 +75,11 @@ public abstract class AppfogRESTfulRequestCallback<T> extends RequestCallback<T>
      * @param loginUrl
      * @param eventBus
      * @param constant
+     * @param console
      * @param loginPresenter
      */
     public AppfogRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled,
-                                        String loginUrl, EventBus eventBus, AppfogLocalizationConstant constant,
+                                        String loginUrl, EventBus eventBus, AppfogLocalizationConstant constant, ConsolePart console,
                                         LoginPresenter loginPresenter) {
         super(unmarshaller);
         this.loggedIn = loggedIn;
@@ -82,6 +87,7 @@ public abstract class AppfogRESTfulRequestCallback<T> extends RequestCallback<T>
         this.loginUrl = loginUrl;
         this.eventBus = eventBus;
         this.constant = constant;
+        this.console = console;
         this.loginPresenter = loginPresenter;
     }
 
@@ -121,6 +127,7 @@ public abstract class AppfogRESTfulRequestCallback<T> extends RequestCallback<T>
                 return;
             }
         }
+        console.print(exception.getMessage());
         eventBus.fireEvent(new ExceptionThrownEvent(exception));
     }
 }

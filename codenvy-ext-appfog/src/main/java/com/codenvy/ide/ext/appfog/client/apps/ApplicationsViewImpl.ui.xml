@@ -1,0 +1,41 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:p1='urn:import:com.google.gwt.user.cellview.client'
+             xmlns:c="urn:import:com.codenvy.ide.ui">
+    <ui:with field='locale'
+             type='com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant'/>
+    <ui:with field='res'
+             type='com.codenvy.ide.ext.appfog.client.AppfogResources'/>
+
+    <ui:style>
+        .label {
+            margin-right: 5px;
+            float: left;
+        }
+
+        .floatLeft {
+            float: left;
+            margin-left: 10px;
+        }
+
+        .floatRight {
+            float: right;
+        }
+    </ui:style>
+    <g:DockLayoutPanel unit="PX" width="930px" height="260px">
+        <g:south size="30.0">
+            <g:FlowPanel addStyleNames="{res.appFogCSS.login}}">
+                <g:Label text="{locale.appsServerLabel}" width="63px"
+                         addStyleNames="{style.floatLeft} {style.label} {res.appFogCSS.loginFont}"/>
+                <g:TextBox styleName="{style.floatLeft}" width="410px" ui:field="target" readOnly="true"/>
+                <c:Button addStyleNames="{style.floatLeft}" text="{locale.showButton}" size="SMALL" type="SUCCESS" ui:field="btnShow"/>
+                <c:Button addStyleNames="{style.floatRight}" text="{locale.closeButton}" size="SMALL" type="DANGER" ui:field="btnClose"/>
+            </g:FlowPanel>
+        </g:south>
+        <g:center>
+            <g:SimplePanel>
+                <p1:CellTable width="100%" ui:field="appsTable" focus="false"/>
+            </g:SimplePanel>
+        </g:center>
+    </g:DockLayoutPanel>
+</ui:UiBinder>
