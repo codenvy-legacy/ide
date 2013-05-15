@@ -18,27 +18,13 @@
  */
 package org.exoplatform.ide.client.project.create;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONString;
-import com.google.gwt.user.client.ui.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -63,8 +49,6 @@ import org.exoplatform.ide.client.framework.template.marshal.ProjectTemplateList
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
-import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
@@ -77,10 +61,22 @@ import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.ToggleButton;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -190,7 +186,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
 
     /** Name of the property for using JRebel. */
     private static final String JREBEL = "jrebel";
-
+    
     /** Comparator for ordering project types. */
     private static final Comparator<ProjectType> PROJECT_TYPES_COMPARATOR = new ProjectTypesComparator();
 
@@ -256,15 +252,12 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
                         return;
                     } else {
                         if (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING) {
-                            getJRebelUserProfileInfo();
+                            display.setJRebelStoredFormVisible(true);
+                            display.setJRebelFormVisible(display.getUseJRebelPlugin().getValue());
                         }
                         validateProjectNameForExistenceAndGoNext(display.getNameField().getValue());
                     }
                 } else {
-                    if (display.getUseJRebelPlugin().getValue()
-                        && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING)) {
-                        //TODO
-                    }
                     goNext();
                 }
             }
@@ -282,11 +275,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
 
             @Override
             public void onClick(ClickEvent event) {
-                if (display.getUseJRebelPlugin().getValue()
-                    && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING)) {
-                    sendProfileInfoToZeroTurnaround();
-                    //TODO 
-                }
                 if (isDeployStep) {
                     doDeploy((availableProjectTemplates.size() == 1) ? availableProjectTemplates.get(0) : selectedTemplate);
                 } else if (isChooseTemplateStep) {
@@ -707,7 +695,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
             // ignore this exception
         }
     }
-
+    
     private void doDeploy(ProjectTemplate projectTemplate) {
         if (currentPaaS != null) {
             if (projectTemplate != null || currentPaaS.isProvidesTemplate()) {
@@ -871,78 +859,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
         boolean visible =
                 (isChooseTemplateStep && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING));
         display.setJRebelPanelVisibility(visible);
-    }
-
-    private void sendProfileInfoToZeroTurnaround() {
-        String url = Utils.getRestContext() + "/ide/jrebel/profile/send";
-
-        JSONObject json = new JSONObject();
-        /*json.put("firstName", new JSONString(display.getJRebelFirstNameField().getValue()));
-        json.put("lastName", new JSONString(display.getJRebelLastNameField().getValue()));
-        json.put("phone", new JSONString(display.getJRebelPhoneNumberField().getValue()));*/
-
-        try {
-            AsyncRequest.build(RequestBuilder.POST, url)
-                        .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-                        .data(json.toString())
-                        .send(new AsyncRequestCallback<Void>() {
-                            @Override
-                            protected void onSuccess(Void result) {
-                                //success
-                            }
-
-                            @Override
-                            protected void onFailure(Throwable exception) {
-                            }
-                        });
-        } catch (RequestException e) {
-            IDE.fireEvent(new ExceptionThrownEvent(e));
-        }
-    }
-
-    private void getJRebelUserProfileInfo() {
-        String url = Utils.getRestContext() + "/ide/jrebel/profile/get";
-
-        try {
-            StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
-            AsyncRequest.build(RequestBuilder.GET, url)
-                        .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
-                        .send(new AsyncRequestCallback<StringBuilder>(unmarshaller) {
-                            @Override
-                            protected void onSuccess(StringBuilder result) {
-                                JSONObject jsonObject = JSONParser.parseStrict(result.toString()).isObject();
-                                String firstName =
-                                        jsonObject.get("firstName") != null ? jsonObject.get("firstName").isString().stringValue() : "";
-                                String lastName =
-                                        jsonObject.get("lastName") != null ? jsonObject.get("lastName").isString().stringValue() : "";
-                                String phone = jsonObject.get("phone") != null ? jsonObject.get("phone").isString().stringValue() : "";
-
-                                /*display.getJRebelFirstNameField().setValue(firstName);
-                                display.getJRebelLastNameField().setValue(lastName);
-                                display.getJRebelPhoneNumberField().setValue(phone);*/
-
-                                if (!firstName.isEmpty() && !lastName.isEmpty() && !phone.isEmpty()) {
-                                    //if all fields are filled then we hide form
-                                    display.setJRebelStoredFormVisible(false);
-                                } else if (!firstName.isEmpty() || !lastName.isEmpty() || !phone.isEmpty()) {
-                                    //if one or more fields are not filled then we show form
-                                    display.setJRebelStoredFormVisible(true);
-                                } else {
-                                    //if all fields are empty then we also show form
-                                    display.setJRebelStoredFormVisible(true);
-                                }
-                                display.setJRebelFormVisible(display.getUseJRebelPlugin().getValue());
-                            }
-
-                            @Override
-                            protected void onFailure(Throwable exception) {
-                                display.setJRebelStoredFormVisible(true);
-                                display.setJRebelFormVisible(display.getUseJRebelPlugin().getValue());
-                            }
-                        });
-        } catch (RequestException e) {
-            IDE.fireEvent(new ExceptionThrownEvent(e));
-        }
     }
 
     @Override

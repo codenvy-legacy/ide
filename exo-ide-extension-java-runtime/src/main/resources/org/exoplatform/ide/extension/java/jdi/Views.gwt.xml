@@ -29,4 +29,7 @@
     <replace-with class="org.exoplatform.ide.extension.java.jdi.client.ui.BreakpointPropertiesView">
         <when-type-is class="org.exoplatform.ide.extension.java.jdi.client.BreakpointPropertiesPresenter.Display"/>
     </replace-with>
+    <replace-with class="org.exoplatform.ide.extension.java.jdi.client.ui.JRebelUserInfoView">
+        <when-type-is class="org.exoplatform.ide.extension.java.jdi.client.JRebelUserInfoPresenter.Display"/>
+    </replace-with>
 </module>
