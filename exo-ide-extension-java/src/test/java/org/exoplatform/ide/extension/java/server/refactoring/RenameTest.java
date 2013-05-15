@@ -50,8 +50,7 @@ public class RenameTest extends ResourcesBaseTest {
             ResourcesPlugin.setDefaultWorkspace(new WorkspaceResource(vfs));
         }
         try {
-            project = (Folder)vfs.getItemByPath(JavaDocBuilderVfsTest.class.getSimpleName(), null,
-                                                PropertyFilter.NONE_FILTER);
+            project = (Folder)vfs.getItemByPath(JavaDocBuilderVfsTest.class.getSimpleName(), null, false, PropertyFilter.NONE_FILTER);
             vfs.delete(project.getId(), null);
             project = vfs.createFolder(vfs.getInfo().getRoot().getId(), JavaDocBuilderVfsTest.class.getSimpleName());
         } catch (ItemNotFoundException e) {

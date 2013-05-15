@@ -55,6 +55,8 @@ public abstract class ItemImpl implements Item {
     /** Links. */
     protected Map<String, Link> links;
 
+    private Set<String> permissions;
+
     /**
      * @param id
      *         id of item
@@ -219,6 +221,16 @@ public abstract class ItemImpl implements Item {
     @Override
     public Link getLinkByRelation(String rel) {
         return getLinks().get(rel);
+    }
+
+    @Override
+    public Set<String> getPermissions() {
+        return permissions;
+    }
+
+    @Override
+    public void setPermissions(Set<String> permissions) {
+        this.permissions = permissions;
     }
 
     @Override

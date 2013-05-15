@@ -54,7 +54,7 @@ public abstract class JavaDocBase extends Base {
         vfs = vfsRegistry.getProvider(VFS_ID).newInstance(null, eventListenerList);
         try {
             project =
-                    (Folder)vfs.getItemByPath(JavaDocBuilderVfsTest.class.getSimpleName(), null, PropertyFilter.NONE_FILTER);
+                    (Folder)vfs.getItemByPath(JavaDocBuilderVfsTest.class.getSimpleName(), null, false, PropertyFilter.NONE_FILTER);
             vfs.delete(project.getId(), null);
             project = vfs.createFolder(vfs.getInfo().getRoot().getId(), JavaDocBuilderVfsTest.class.getSimpleName());
         } catch (ItemNotFoundException e) {

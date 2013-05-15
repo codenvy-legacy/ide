@@ -632,7 +632,7 @@ public class WorkspaceResource implements IWorkspace {
      */
     String getVfsIdByFullPath(IPath path) throws CoreException, ItemNotFoundException {
         try {
-            return vfs.getItemByPath(path.toString(), null, PropertyFilter.NONE_FILTER).getId();
+            return vfs.getItemByPath(path.toString(), null, false, PropertyFilter.NONE_FILTER).getId();
         } catch (ItemNotFoundException e) {
             throw e;
         } catch (VirtualFileSystemException e) {
@@ -651,7 +651,7 @@ public class WorkspaceResource implements IWorkspace {
      */
     Item getVfsItemByFullPath(IPath path) throws CoreException, ItemNotFoundException {
         try {
-            return vfs.getItemByPath(path.toString(), null, PropertyFilter.NONE_FILTER);
+            return vfs.getItemByPath(path.toString(), null, false, PropertyFilter.NONE_FILTER);
         } catch (ItemNotFoundException e) {
             throw e;
         } catch (VirtualFileSystemException e) {
@@ -660,12 +660,8 @@ public class WorkspaceResource implements IWorkspace {
         }
     }
 
-    /** @see com.codenvy.eclipse.core.resources.IWorkspace#removeResourceChangeListener(com.codenvy.eclipse.core.resources
-     * .IResourceChangeListener) */
     @Override
     public void removeResourceChangeListener(IResourceChangeListener listener) {
-        // TODO Auto-generated method stub
-
     }
 
     /** @see com.codenvy.eclipse.core.resources.IWorkspace#removeSaveParticipant(java.lang.String) */
@@ -1136,7 +1132,7 @@ public class WorkspaceResource implements IWorkspace {
     }
 
     private Item getItemByPath(IPath path) throws VirtualFileSystemException {
-        return vfs.getItemByPath(path.toString(), null, PropertyFilter.ALL_FILTER);
+        return vfs.getItemByPath(path.toString(), null, false, PropertyFilter.ALL_FILTER);
     }
 
     /**
@@ -1154,23 +1150,23 @@ public class WorkspaceResource implements IWorkspace {
         try {
             Item item = getItemByPath(fullPath);
             if (item instanceof Folder) {
-                ItemList<Item> children = vfs.getChildren(item.getId(), -1, 0, null, PropertyFilter.ALL_FILTER);
-                IResource[] childrens = new IResource[children.getItems().size()];
-                List<Item> items = children.getItems();
+                ItemList<Item> vfsChildren = vfs.getChildren(item.getId(), -1, 0, null, false, PropertyFilter.ALL_FILTER);
+                IResource[] children = new IResource[vfsChildren.getItems().size()];
+                List<Item> items = vfsChildren.getItems();
                 for (int i = 0; i < items.size(); i++) {
                     Item c = items.get(i);
                     if (c instanceof Folder) {
-                        childrens[i] = new FolderResource(new Path(c.getPath()), this);
+                        children[i] = new FolderResource(new Path(c.getPath()), this);
                     } else if (c instanceof File) {
-                        childrens[i] = new FileResource(new Path(c.getPath()), this);
+                        children[i] = new FileResource(new Path(c.getPath()), this);
                     } else if (c instanceof Project) {
-                        childrens[i] = new ProjectResource(new Path(c.getPath()), this);
+                        children[i] = new ProjectResource(new Path(c.getPath()), this);
                     } else {
                         throw new CoreException(
                                 new Status(IStatus.ERROR, "", "Unknown type of item: " + c.getItemType().toString()));
                     }
                 }
-                return childrens;
+                return children;
             } else {
                 throw new CoreException(new Status(IStatus.ERROR, "", "Resource no a folder"));
             }
@@ -1345,7 +1341,7 @@ public class WorkspaceResource implements IWorkspace {
     public IProject[] getProjects() {
         try {
             Item rootItem = getVfsItemByFullPath(defaultRoot.getFullPath());
-            ItemList<Item> childrens = vfs.getChildren(rootItem.getId(), -1, 0, null, PropertyFilter.ALL_FILTER);
+            ItemList<Item> childrens = vfs.getChildren(rootItem.getId(), -1, 0, null, false, PropertyFilter.ALL_FILTER);
             List<IProject> projects = new ArrayList<IProject>();
 
             for (int i = 0; i < childrens.getItems().size(); i++) {
