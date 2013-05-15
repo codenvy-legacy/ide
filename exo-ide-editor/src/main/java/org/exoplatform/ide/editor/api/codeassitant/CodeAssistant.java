@@ -27,7 +27,7 @@ import org.exoplatform.ide.editor.client.api.Editor;
 import java.util.List;
 
 /**
- * Callback abstract calss for codeaasistant feature.
+ * Callback abstract class for codeassistant feature.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: CodeAssistant Feb 22, 2011 12:43:13 PM evgen $

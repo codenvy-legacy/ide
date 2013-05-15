@@ -36,6 +36,7 @@ import com.google.protobuf.ByteString;
 import org.exoplatform.ide.dtogen.server.ServerErrorImpl;
 import org.exoplatform.ide.dtogen.shared.ServerError;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
@@ -327,7 +328,10 @@ final class FileEditSessionImpl implements FileEditSession {
             }
             EnvironmentContext.setCurrent(environment);
             vfs.updateContent(resourceId, mediaType, new ByteArrayInputStream(text.getBytes()), null);
-        } catch (VirtualFileSystemException e) {
+        }catch (ItemNotFoundException e){
+            LOG.debug("Failed to save file", e);
+        }
+        catch (VirtualFileSystemException e) {
             throw new IOException(e.getMessage(), e);
         } finally {
             if (resetConversationState) {

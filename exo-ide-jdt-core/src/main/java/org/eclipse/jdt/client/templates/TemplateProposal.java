@@ -394,6 +394,11 @@ public class TemplateProposal implements IJavaCompletionProposal {
         return getStyledDisplayString().getString();
     }
 
+    @Override
+    public String getAdditionalDisplayString() {
+        return null;
+    }
+
     /*
      * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension6#getStyledDisplayString()
      * @since 3.4
