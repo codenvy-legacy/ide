@@ -19,6 +19,7 @@
 package com.codenvy.ide.ext.appfog.client;
 
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
@@ -26,6 +27,17 @@ import com.google.gwt.resources.client.ImageResource;
  * @version $Id: $
  */
 public interface AppfogResources extends ClientBundle {
+    public interface AppFogCSS extends CssResource {
+        String login();
+
+        String loginFont();
+
+        String loginErrorFont();
+    }
+
+    @Source({"AppFog.css", "com/codenvy/ide/api/ui/style.css"})
+    AppFogCSS appFogCSS();
+
     @Source("com/codenvy/ide/ext/appfog/images/appfog_36.png")
     ImageResource appfogLogo();
 

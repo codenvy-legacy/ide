@@ -20,6 +20,8 @@ package com.codenvy.ide.ext.appfog.client;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.paas.PaaSAgent;
+import com.codenvy.ide.api.ui.menu.MainMenuAgent;
+import com.codenvy.ide.ext.appfog.client.command.ShowLoginCommand;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.google.inject.Inject;
@@ -37,10 +39,14 @@ public class AppFogExtension {
     private static final String ID             = "AppFog";
 
     @Inject
-    public AppFogExtension(PaaSAgent paasAgent, AppfogResources resources) {
+    public AppFogExtension(PaaSAgent paasAgent, AppfogResources resources, MainMenuAgent menu, ShowLoginCommand loginCommand) {
+        resources.appFogCSS().ensureInjected();
+
         // TODO change hard code types
         JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "Rails", "Spring", "War", "Python", "PHP");
         // TODO wizard page is empty
         paasAgent.registerPaaS(ID, ID, resources.appfog48(), requiredProjectTypes, null, null);
+
+        menu.addMenuItem("PaaS/AppFog/Switch Account...", loginCommand);
     }
 }

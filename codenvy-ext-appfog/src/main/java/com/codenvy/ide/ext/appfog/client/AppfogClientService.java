@@ -20,8 +20,6 @@ package com.codenvy.ide.ext.appfog.client;
 
 import com.codenvy.ide.ext.appfog.shared.*;
 import com.codenvy.ide.extension.cloudfoundry.shared.Credentials;
-import com.codenvy.ide.extension.cloudfoundry.shared.Framework;
-import com.codenvy.ide.extension.cloudfoundry.shared.SystemInfo;
 import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;

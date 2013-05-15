@@ -20,6 +20,9 @@ package com.codenvy.ide.ext.appfog.client;
 
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
+import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
+import com.codenvy.ide.ext.appfog.client.login.LoginCanceledHandler;
+import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
 import com.codenvy.ide.rest.HTTPStatus;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.codenvy.ide.websocket.rest.Unmarshallable;
@@ -37,33 +40,49 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 public abstract class AppfogRESTfulRequestCallback<T> extends RequestCallback<T> {
     private final static String APPFOG_EXIT_CODE = "Appfog-Exit-Code";
-    // TODO needs to port login package
-//    private LoggedInHandler            loggedIn;
-//    private LoginCanceledHandler       loginCanceled;
+    private LoggedInHandler            loggedIn;
+    private LoginCanceledHandler       loginCanceled;
     private String                     loginUrl;
     private EventBus                   eventBus;
     private AppfogLocalizationConstant constant;
+    private LoginPresenter             loginPresenter;
 
-
-    public AppfogRESTfulRequestCallback(Unmarshallable<T> unmarshaller,
-//                                        LoggedInHandler loggedIn,
-//                                        LoginCanceledHandler loginCanceled,
-                                        EventBus eventBus, AppfogLocalizationConstant constant) {
-//        this(unmarshaller, loggedIn, loginCanceled, null, eventBus, constant);
-        this(unmarshaller, null, eventBus, constant);
+    /**
+     * Create callback.
+     *
+     * @param unmarshaller
+     * @param loggedIn
+     * @param loginCanceled
+     * @param eventBus
+     * @param constant
+     * @param loginPresenter
+     */
+    public AppfogRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled,
+                                        EventBus eventBus, AppfogLocalizationConstant constant, LoginPresenter loginPresenter) {
+        this(unmarshaller, loggedIn, loginCanceled, null, eventBus, constant, loginPresenter);
     }
 
-    public AppfogRESTfulRequestCallback(Unmarshallable<T> unmarshaller,
-//                                        LoggedInHandler loggedIn,
-//                                        LoginCanceledHandler loginCanceled,
-                                        String loginUrl,
-                                        EventBus eventBus, AppfogLocalizationConstant constant) {
+    /**
+     * Create callback.
+     *
+     * @param unmarshaller
+     * @param loggedIn
+     * @param loginCanceled
+     * @param loginUrl
+     * @param eventBus
+     * @param constant
+     * @param loginPresenter
+     */
+    public AppfogRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled,
+                                        String loginUrl, EventBus eventBus, AppfogLocalizationConstant constant,
+                                        LoginPresenter loginPresenter) {
         super(unmarshaller);
-//        this.loggedIn = loggedIn;
-//        this.loginCanceled = loginCanceled;
+        this.loggedIn = loggedIn;
+        this.loginCanceled = loginCanceled;
         this.loginUrl = loginUrl;
         this.eventBus = eventBus;
         this.constant = constant;
+        this.loginPresenter = loginPresenter;
     }
 
     /** {@inheritDoc} */
@@ -73,14 +92,12 @@ public abstract class AppfogRESTfulRequestCallback<T> extends RequestCallback<T>
             ServerException serverException = (ServerException)exception;
             if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
                 && serverException.getMessage().contains("Authentication required.")) {
-                // TODO execute method on presenter
-//                eventBus.fireEvent(new LoginEvent(loggedIn, loginCanceled, loginUrl));
+                loginPresenter.showDialog(loggedIn, loginCanceled, loginUrl);
                 return;
             } else if (HTTPStatus.FORBIDDEN == serverException.getHTTPStatus()
                        && serverException.getHeader(APPFOG_EXIT_CODE) != null
                        && "200".equals(serverException.getHeader(APPFOG_EXIT_CODE))) {
-                // TODO execute method on presenter
-//                eventBus.fireEvent(new LoginEvent(loggedIn, loginCanceled, loginUrl));
+                loginPresenter.showDialog(loggedIn, loginCanceled, loginUrl);
                 return;
             } else if (HTTPStatus.NOT_FOUND == serverException.getHTTPStatus()
                        && serverException.getHeader(APPFOG_EXIT_CODE) != null

@@ -1,0 +1,18 @@
+@CHARSET "UTF-8";
+
+.login .loginFont {
+    cursor: default;
+    font-family: mainFontFamily;
+    font-size: fontSize;
+    font-style: normal;
+    font-weight: normal;
+}
+
+.login .loginErrorFont {
+    cursor: default;
+    font-family: mainFontFamily;
+    font-size: fontSize;
+    font-style: normal;
+    font-weight: normal;
+    color: #d21a1a;
+}
