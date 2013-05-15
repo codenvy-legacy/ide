@@ -438,7 +438,7 @@ public class LocalFileSystem implements VirtualFileSystem {
                     .setMediaType(query.getFirst("mediaType"))
                     .setText(query.getFirst("text"));
 
-            final String[] result = searcherProvider.getSearcher(mountPoint).search(expr);
+            final String[] result = searcherProvider.getSearcher(mountPoint, true).search(expr);
             if (skipCount > 0) {
                 if (skipCount > result.length) {
                     throw new InvalidArgumentException("'skipCount' parameter is greater then total number of items. ");

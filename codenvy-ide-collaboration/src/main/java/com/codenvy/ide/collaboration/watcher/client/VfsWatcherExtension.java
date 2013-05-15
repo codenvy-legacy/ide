@@ -73,7 +73,7 @@ public class VfsWatcherExtension extends Extension implements ConnectionOpenedHa
     }
 
     @Override
-    public void onOpen() {
+    public void onConnectionOpened() {
         connectionOpened = true;
         if (userInfo != null) {
             subscribe();

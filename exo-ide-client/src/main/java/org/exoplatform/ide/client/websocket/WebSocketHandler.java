@@ -44,7 +44,7 @@ public class WebSocketHandler implements ApplicationClosedHandler {
     private void initialize() {
         IDE.messageBus().setOnErrorHandler(new ConnectionErrorHandler() {
             @Override
-            public void onError() {
+            public void onConnectionError() {
                 IDE.messageBus().close();
             }
         });

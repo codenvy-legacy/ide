@@ -23,6 +23,7 @@ import org.eclipse.jgit.merge.ResolveMerger;
 import org.exoplatform.ide.git.shared.MergeResult;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,7 +34,7 @@ public class JGitMergeResult implements MergeResult {
     private final org.eclipse.jgit.api.MergeResult jgitMergeResult;
 
     /**
-     * @param jgitMergeResult back-end instance of ArrayIndexOutOfBoundsException
+     * @param jgitMergeResult back-end instance
      */
     public JGitMergeResult(org.eclipse.jgit.api.MergeResult jgitMergeResult) {
         this.jgitMergeResult = jgitMergeResult;
@@ -66,6 +67,8 @@ public class JGitMergeResult implements MergeResult {
                 return MergeStatus.MERGED;
             case NOT_SUPPORTED:
                 return MergeStatus.NOT_SUPPORTED;
+            case CHECKOUT_CONFLICT:
+                return MergeStatus.CONFLICTING;
         }
         throw new IllegalStateException("Unknown merge status " + jgitMergeResult.getMergeStatus());
     }
@@ -74,6 +77,9 @@ public class JGitMergeResult implements MergeResult {
     @Override
     public String[] getMergedCommits() {
         ObjectId[] jgitMergedCommits = jgitMergeResult.getMergedCommits();
+        if (jgitMergedCommits == null) {
+            jgitMergedCommits = new ObjectId[0];
+        }
         String[] mergedCommits = new String[jgitMergedCommits.length];
         for (int i = 0; i < jgitMergedCommits.length; i++) {
             mergedCommits[i] = jgitMergedCommits[i].getName();
@@ -84,6 +90,10 @@ public class JGitMergeResult implements MergeResult {
     /** @see org.exoplatform.ide.git.shared.MergeResult#getConflicts() */
     @Override
     public String[] getConflicts() {
+        if (jgitMergeResult.getMergeStatus().equals(org.eclipse.jgit.api.MergeResult.MergeStatus.CHECKOUT_CONFLICT)) {
+            List<String> conflicts = jgitMergeResult.getCheckoutConflicts();
+            return conflicts.toArray(new String[conflicts.size()]);
+        }
         Map<String, int[][]> conflicts = jgitMergeResult.getConflicts();
         String[] files = null;
         if (conflicts != null) {

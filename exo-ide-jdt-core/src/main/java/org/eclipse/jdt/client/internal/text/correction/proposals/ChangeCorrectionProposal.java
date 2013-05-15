@@ -235,6 +235,11 @@ public class ChangeCorrectionProposal implements IJavaCompletionProposal, IComma
         return getName();
     }
 
+    @Override
+    public String getAdditionalDisplayString() {
+        return null;
+    }
+
     /* (non-Javadoc)
      * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension6#getStyledDisplayString()
      */

@@ -16,68 +16,74 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.php.client.contentassist;
+package org.exoplatform.ide.editor.ruby.client.contentassist;
 
 import com.codenvy.ide.client.util.logging.Log;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
-import org.exoplatform.ide.editor.api.codeassitant.Modifier;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
+import org.exoplatform.ide.editor.api.codeassitant.TokenProperty;
+import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
 import org.exoplatform.ide.editor.client.api.contentassist.Point;
-import org.exoplatform.ide.editor.php.client.PhpClientBundle;
+import org.exoplatform.ide.editor.ruby.client.RubyClientBundle;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.editor.shared.text.edits.MalformedTreeException;
 import org.exoplatform.ide.editor.shared.text.edits.ReplaceEdit;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 /**
- * Completion proposal for PHP.
+ * Completion proposal for Ruby.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: PhpCompletionProposal.java Apr 16, 2013 12:56:54 PM azatsarynnyy $
- *
+ * @version $Id: RubyProposal.java Apr 30, 2013 4:35:33 PM azatsarynnyy $
  */
-public class PhpProposal implements CompletionProposal {
+public class RubyProposal implements CompletionProposal {
 
     /** Proposal's text label. */
-    private String proposal;
+    private String      proposal;
+
+    /** Proposal's additional text. */
+    private String      additionalInfo;
 
     /** Triggering string. */
-    private String prefix;
+    private String      prefix;
 
     /** Text offset. */
-    private final int offset;
+    private final int   offset;
 
     private final Token token;
 
-    private final List<Modifier> modifieres = new ArrayList<Modifier>();
+    private final int   modifieres;
 
     /**
-     * Constructs new {@link PhpProposal} instance with the given proposal, prefix and offset.
+     * Constructs new {@link RubyProposal} instance with the given proposal, prefix and offset.
      * 
-     * @param proposal
-     *         proposal text label
+     * @param proposal proposal's text label
+     * @param additionalInfo proposal's additional text
      * @param prefix
-     * @param offset
+     * @param offset text offset
      * @param token
      */
-    @SuppressWarnings("unchecked")
-    public PhpProposal(String proposal, String prefix, int offset, Token token) {
+    public RubyProposal(String proposal, String additionalInfo, String prefix, int offset, Token token) {
         this.proposal = proposal;
+        this.additionalInfo = additionalInfo;
         this.prefix = prefix;
         this.offset = offset;
         this.token = token;
 
         if (token.hasProperty(TokenProperties.MODIFIERS)) {
-            modifieres.addAll((Collection<Modifier>)token.getProperty(TokenProperties.MODIFIERS).isObjectProperty().objectValue());
+            final TokenProperty modifieresProperty = token.getProperty(TokenProperties.MODIFIERS);
+            if (modifieresProperty.isNumericProperty() != null)
+                modifieres = modifieresProperty.isNumericProperty().numericValue().intValue();
+            else {
+                modifieres = 0;
+            }
+        } else {
+            modifieres = 0;
         }
     }
 
@@ -101,16 +107,27 @@ public class PhpProposal implements CompletionProposal {
      */
     @Override
     public Point getSelection(IDocument document) {
+        if (token.getType() == TokenType.METHOD) {
+            final String parameters = token.getProperty(TokenProperties.PARAMETER_TYPES).isStringProperty().stringValue();
+            if (!parameters.equals("()")) {
+                final int indexOfParameters = proposal.indexOf(parameters);
+                return new Point(offset + indexOfParameters + 1, 0);
+            }
+        }
         return null;
     }
 
-    /** @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getAdditionalProposalInfo() */
+    /**
+     * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getAdditionalProposalInfo()
+     */
     @Override
     public Widget getAdditionalProposalInfo() {
         return null;
     }
 
-    /** @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getDisplayString() */
+    /**
+     * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getDisplayString()
+     */
     @Override
     public String getDisplayString() {
         return proposal;
@@ -121,56 +138,58 @@ public class PhpProposal implements CompletionProposal {
      */
     @Override
     public String getAdditionalDisplayString() {
-        return null;
+        return additionalInfo;
     }
 
-    /** @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getImage() */
+    /**
+     * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getImage()
+     */
     @Override
     public Image getImage() {
         switch (token.getType()) {
-            case FUNCTION:
             case METHOD:
-                return new Image(PhpClientBundle.INSTANCE.publicMethod());
-            case PROPERTY:
-                if (modifieres.contains(Modifier.PRIVATE)) {
-                    return new Image(PhpClientBundle.INSTANCE.privateField());
-                } else if (modifieres.contains(Modifier.PROTECTED)) {
-                    return new Image(PhpClientBundle.INSTANCE.protectedField());
+                if (modifieres == 0) {
+                    return new Image(RubyClientBundle.INSTANCE.publicMethod());
                 } else {
-                    return new Image(PhpClientBundle.INSTANCE.publicField());
+                    return new Image(RubyClientBundle.INSTANCE.defaultMethod());
                 }
+            case CLASS:
+                return new Image(RubyClientBundle.INSTANCE.classItem());
             case CONSTANT:
-            case CLASS_CONSTANT:
-                return new Image(PhpClientBundle.INSTANCE.constantItem());
-            case PARAMETER:
+                return new Image(RubyClientBundle.INSTANCE.rubyConstant());
             case VARIABLE:
             case LOCAL_VARIABLE:
-                return new Image(PhpClientBundle.INSTANCE.variable());
-            case INTERFACE:
-                return new Image(PhpClientBundle.INSTANCE.interfaceItem());
-            case CLASS:
-                return new Image(PhpClientBundle.INSTANCE.classItem());
-            case KEYWORD:
+                return new Image(RubyClientBundle.INSTANCE.variable());
+            case INSTANCE_VARIABLE:
+                return new Image(RubyClientBundle.INSTANCE.rubyObjectVariable());
+            case CLASS_VARIABLE:
+                return new Image(RubyClientBundle.INSTANCE.rubyClassVariable());
+            case GLOBAL_VARIABLE:
+                return new Image(RubyClientBundle.INSTANCE.rubyGlobalVariable());
             default:
-                return new Image(PhpClientBundle.INSTANCE.blankImage());
+                return new Image(RubyClientBundle.INSTANCE.blankImage());
         }
     }
 
-    /** @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getContextInformation() */
+    /**
+     * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getContextInformation()
+     */
     @Override
     public ContextInformation getContextInformation() {
         return null;
     }
 
     /**
-     * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#apply(org.exoplatform.ide.editor.shared.text.IDocument, char, int)
+     * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#apply(org.exoplatform.ide.editor.shared.text.IDocument,
+     *      char, int)
      */
     @Override
     public void apply(IDocument document, char trigger, int offset) {
     }
 
     /**
-     * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#isValidFor(org.exoplatform.ide.editor.shared.text.IDocument, int)
+     * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#isValidFor(org.exoplatform.ide.editor.shared.text.IDocument,
+     *      int)
      */
     @Override
     public boolean isValidFor(IDocument document, int offset) {
