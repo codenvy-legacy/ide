@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,15 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.extension.cloudfoundry.client.start;
+package com.codenvy.ide.ext.appfog.client.start;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.*;
-import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
-import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import com.codenvy.ide.ext.appfog.client.AppfogAsyncRequestCallback;
+import com.codenvy.ide.ext.appfog.client.AppfogAutoBeanFactory;
+import com.codenvy.ide.ext.appfog.client.AppfogClientService;
+import com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant;
+import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
+import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
+import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
@@ -37,20 +40,18 @@ import com.google.web.bindery.event.shared.EventBus;
 /**
  * Presenter for start and stop application commands.
  *
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: StartApplicationPresenter.java Jul 12, 2011 3:58:22 PM vereshchaka $
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  */
 @Singleton
 public class StartApplicationPresenter {
-    private EventBus                            eventBus;
-    private ResourceProvider                    resourceProvider;
-    private ConsolePart                         console;
-    private CloudFoundryLocalizationConstant    constant;
-    private CloudFoundryAutoBeanFactory         autoBeanFactory;
-    private AsyncCallback<String>               appInfoChangedCallback;
-    private LoginPresenter                      loginPresenter;
-    private CloudFoundryClientService           service;
-    private CloudFoundryExtension.PAAS_PROVIDER paasProvider;
+    private EventBus                   eventBus;
+    private ResourceProvider           resourceProvider;
+    private ConsolePart                console;
+    private AppfogLocalizationConstant constant;
+    private AppfogAutoBeanFactory      autoBeanFactory;
+    private AsyncCallback<String>      appInfoChangedCallback;
+    private LoginPresenter             loginPresenter;
+    private AppfogClientService        service;
 
     /**
      * Create presenter.
@@ -60,47 +61,50 @@ public class StartApplicationPresenter {
      * @param console
      * @param constant
      * @param autoBeanFactory
+     * @param appInfoChangedCallback
      * @param loginPresenter
      * @param service
      */
     @Inject
     protected StartApplicationPresenter(EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
-                                        CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
-                                        LoginPresenter loginPresenter, CloudFoundryClientService service) {
+                                        AppfogLocalizationConstant constant, AppfogAutoBeanFactory autoBeanFactory,
+                                        AsyncCallback<String> appInfoChangedCallback, LoginPresenter loginPresenter,
+                                        AppfogClientService service) {
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
         this.console = console;
         this.constant = constant;
         this.autoBeanFactory = autoBeanFactory;
+        this.appInfoChangedCallback = appInfoChangedCallback;
         this.loginPresenter = loginPresenter;
         this.service = service;
     }
 
-    /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
+    /** If user is not logged in to AppFog, this handler will be called, after user logged in. */
     private LoggedInHandler startLoggedInHandler = new LoggedInHandler() {
         @Override
         public void onLoggedIn() {
-            startApplication(null, null, appInfoChangedCallback);
+            startApplication(null, appInfoChangedCallback);
         }
     };
 
-    /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
+    /** If user is not logged in to AppFog, this handler will be called, after user logged in. */
     private LoggedInHandler stopLoggedInHandler = new LoggedInHandler() {
         @Override
         public void onLoggedIn() {
-            stopApplication(null, null, appInfoChangedCallback);
+            stopApplication(null, appInfoChangedCallback);
         }
     };
 
-    /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
+    /** If user is not logged in to AppFog, this handler will be called, after user logged in. */
     private LoggedInHandler restartLoggedInHandler = new LoggedInHandler() {
         @Override
         public void onLoggedIn() {
-            restartApplication(null, null, appInfoChangedCallback);
+            restartApplication(null, appInfoChangedCallback);
         }
     };
 
-    /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
+    /** If user is not logged in to AppFog, this handler will be called, after user logged in. */
     private LoggedInHandler checkIsStartedLoggedInHandler = new LoggedInHandler() {
         @Override
         public void onLoggedIn() {
@@ -108,7 +112,7 @@ public class StartApplicationPresenter {
         }
     };
 
-    /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
+    /** If user is not logged in to AppFog, this handler will be called, after user logged in. */
     private LoggedInHandler checkIsStoppedLoggedInHandler = new LoggedInHandler() {
         @Override
         public void onLoggedIn() {
@@ -117,20 +121,18 @@ public class StartApplicationPresenter {
     };
 
     /**
-     * Starts CloudFounry application.
+     * Starts AppFog application.
      *
      * @param appName
      * @param callback
-     * @param paasProvider
      */
-    public void startApp(String appName, String server, CloudFoundryExtension.PAAS_PROVIDER paasProvider, AsyncCallback<String> callback) {
-        this.appInfoChangedCallback = callback;
-        this.paasProvider = paasProvider;
+    public void startApp(String appName, AsyncCallback<String> callback) {
+        appInfoChangedCallback = callback;
 
         if (appName == null) {
             checkIsStarted();
         } else {
-            startApplication(appName, server, callback);
+            startApplication(appName, callback);
         }
     }
 
@@ -139,22 +141,21 @@ public class StartApplicationPresenter {
         Project project = resourceProvider.getActiveProject();
 
         try {
-            AutoBean<CloudFoundryApplication> CloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
-            AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-                    new AutoBeanUnmarshaller<CloudFoundryApplication>(CloudFoundryApplication);
+            AutoBean<AppfogApplication> appfogApplication = autoBeanFactory.appfogApplication();
+            AutoBeanUnmarshaller<AppfogApplication> unmarshaller = new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
+
             service.getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null, null,
-                                       new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
-                                                                                                     checkIsStartedLoggedInHandler,
-                                                                                                     null, eventBus, console, constant,
-                                                                                                     loginPresenter, paasProvider) {
+                                       new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, checkIsStartedLoggedInHandler,
+                                                                                         null, eventBus, constant, console,
+                                                                                         loginPresenter) {
                                            @Override
-                                           protected void onSuccess(CloudFoundryApplication result) {
+                                           protected void onSuccess(AppfogApplication result) {
                                                if ("STARTED".equals(result.getState()) &&
                                                    result.getInstances() == result.getRunningInstances()) {
                                                    String msg = constant.applicationAlreadyStarted(result.getName());
                                                    console.print(msg);
                                                } else {
-                                                   startApplication(null, null, appInfoChangedCallback);
+                                                   startApplication(null, appInfoChangedCallback);
                                                }
                                            }
                                        });
@@ -168,32 +169,32 @@ public class StartApplicationPresenter {
      * Starts application.
      *
      * @param name
-     * @param server
      * @param callback
      */
-    private void startApplication(String name, String server, final AsyncCallback<String> callback) {
-        final String projectId =
-                resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId() : null;
+    private void startApplication(String name, final AsyncCallback<String> callback) {
+        Project project = resourceProvider.getActiveProject();
+
+        final String server = project.getProperty("appfog-target").getValue().get(0);
+        final String appName = (name == null) ? project.getProperty("appfog-application").getValue().get(0) : name;
+        final String projectId = project.getId();
 
         try {
-            AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
-            AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-                    new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+            AutoBean<AppfogApplication> appfogApplication = autoBeanFactory.appfogApplication();
+            AutoBeanUnmarshaller<AppfogApplication> unmarshaller = new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
 
-            service.startApplication(resourceProvider.getVfsId(), projectId, name, server, paasProvider,
-                                     new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, startLoggedInHandler, null,
-                                                                                                   eventBus, console, constant,
-                                                                                                   loginPresenter, paasProvider) {
+            service.startApplication(null, null, appName, server,
+                                     new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, startLoggedInHandler, null, eventBus,
+                                                                                       constant, console, loginPresenter) {
                                          @Override
-                                         protected void onSuccess(CloudFoundryApplication result) {
+                                         protected void onSuccess(AppfogApplication result) {
                                              if ("STARTED".equals(result.getState()) &&
                                                  result.getInstances() == result.getRunningInstances()) {
                                                  String msg = constant.applicationCreatedSuccessfully(result.getName());
                                                  if (result.getUris().isEmpty()) {
                                                      msg += "<br>" + constant.applicationStartedWithNoUrls();
                                                  } else {
-                                                     msg += "<br>" +
-                                                            constant.applicationStartedOnUrls(result.getName(), getAppUrisAsString(result));
+                                                     msg += "<br>" + constant.applicationStartedOnUrls(result.getName(),
+                                                                                                       getAppUrisAsString(result));
                                                  }
 
                                                  console.print(msg);
@@ -202,6 +203,7 @@ public class StartApplicationPresenter {
                                                  String msg = constant.applicationWasNotStarted(result.getName());
                                                  console.print(msg);
                                              }
+
                                          }
                                      });
         } catch (RequestException e) {
@@ -216,7 +218,7 @@ public class StartApplicationPresenter {
      * @param application
      * @return
      */
-    private String getAppUrisAsString(CloudFoundryApplication application) {
+    private String getAppUrisAsString(AppfogApplication application) {
         String appUris = "";
         for (String uri : application.getUris()) {
             if (!uri.startsWith("http")) {
@@ -232,19 +234,18 @@ public class StartApplicationPresenter {
     }
 
     /**
-     * Stops CloudFounry application.
+     * Stops AppFog application.
      *
      * @param appName
      * @param callback
-     * @param paasProvider
      */
-    public void stopApp(String appName, String server, CloudFoundryExtension.PAAS_PROVIDER paasProvider, AsyncCallback<String> callback) {
-        this.paasProvider = paasProvider;
+    public void stopApp(String appName, AsyncCallback<String> callback) {
+        appInfoChangedCallback = callback;
 
         if (appName == null) {
             checkIsStopped();
         } else {
-            stopApplication(appName, server, callback);
+            stopApplication(appName, callback);
         }
     }
 
@@ -253,22 +254,21 @@ public class StartApplicationPresenter {
         Project project = resourceProvider.getActiveProject();
 
         try {
-            AutoBean<CloudFoundryApplication> CloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
-            AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-                    new AutoBeanUnmarshaller<CloudFoundryApplication>(CloudFoundryApplication);
+            AutoBean<AppfogApplication> appfogApplication = autoBeanFactory.appfogApplication();
+            AutoBeanUnmarshaller<AppfogApplication> unmarshaller = new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
 
             service.getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null, null,
-                                       new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
-                                                                                                     checkIsStoppedLoggedInHandler,
-                                                                                                     null, eventBus, console, constant,
-                                                                                                     loginPresenter, paasProvider) {
+                                       new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, checkIsStoppedLoggedInHandler,
+                                                                                         null, eventBus, constant, console,
+                                                                                         loginPresenter) {
+
                                            @Override
-                                           protected void onSuccess(CloudFoundryApplication result) {
+                                           protected void onSuccess(AppfogApplication result) {
                                                if ("STOPPED".equals(result.getState())) {
                                                    String msg = constant.applicationAlreadyStopped(result.getName());
                                                    console.print(msg);
                                                } else {
-                                                   stopApplication(null, null, appInfoChangedCallback);
+                                                   stopApplication(null, appInfoChangedCallback);
                                                }
                                            }
                                        });
@@ -284,29 +284,31 @@ public class StartApplicationPresenter {
      * @param name
      * @param callback
      */
-    private void stopApplication(final String name, String server, final AsyncCallback<String> callback) {
-        final String projectId =
-                resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId() : null;
+    private void stopApplication(final String name, final AsyncCallback<String> callback) {
+        Project project = resourceProvider.getActiveProject();
+
+        final String server = project.getProperty("appfog-target").getValue().get(0);
+        final String appName = (name == null) ? project.getProperty("appfog-application").getValue().get(0) : name;
+        final String projectId = project.getId();
 
         try {
-            service.stopApplication(resourceProvider.getVfsId(), projectId, name, server, paasProvider,
-                                    new CloudFoundryAsyncRequestCallback<String>(null, stopLoggedInHandler, null, eventBus, console,
-                                                                                 constant, loginPresenter, paasProvider) {
+            service.stopApplication(null, null, appName, server,
+                                    new AppfogAsyncRequestCallback<String>(null, stopLoggedInHandler, null, eventBus, constant, console,
+                                                                           loginPresenter) {
                                         @Override
                                         protected void onSuccess(String result) {
                                             try {
-                                                AutoBean<CloudFoundryApplication> CloudFoundryApplication =
-                                                        autoBeanFactory.cloudFoundryApplication();
-                                                AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-                                                        new AutoBeanUnmarshaller<CloudFoundryApplication>(
-                                                                CloudFoundryApplication);
+                                                AutoBean<AppfogApplication> appfogApplication = autoBeanFactory.appfogApplication();
+                                                AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
+                                                        new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
 
                                                 service.getApplicationInfo(resourceProvider.getVfsId(), projectId, name, null,
-                                                                           new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
-                                                                                   unmarshaller, null, null, eventBus, console, constant,
-                                                                                   loginPresenter, paasProvider) {
+                                                                           new AppfogAsyncRequestCallback<AppfogApplication>(
+                                                                                   unmarshaller, null, null, eventBus, constant, console,
+                                                                                   loginPresenter) {
                                                                                @Override
-                                                                               protected void onSuccess(CloudFoundryApplication result) {
+                                                                               protected void
+                                                                               onSuccess(AppfogApplication result) {
                                                                                    final String msg =
                                                                                            constant.applicationStopped(result.getName());
                                                                                    console.print(msg);
@@ -326,17 +328,15 @@ public class StartApplicationPresenter {
     }
 
     /**
-     * Restarts CloudFoundry application.
+     * Restarts AppFog application.
      *
      * @param appName
      * @param callback
-     * @param paasProvider
      */
-    public void restartApp(String appName, String server, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
-                           AsyncCallback<String> callback) {
-        this.appInfoChangedCallback = callback;
-        this.paasProvider = paasProvider;
-        restartApplication(appName, server, callback);
+    public void restartApp(String appName, AsyncCallback<String> callback) {
+        appInfoChangedCallback = callback;
+
+        restartApplication(appName, callback);
     }
 
     /**
@@ -345,30 +345,30 @@ public class StartApplicationPresenter {
      * @param name
      * @param callback
      */
-    private void restartApplication(String name, String server, final AsyncCallback<String> callback) {
-        final String projectId =
-                resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId() : null;
+    private void restartApplication(String name, final AsyncCallback<String> callback) {
+        Project project = resourceProvider.getActiveProject();
+
+        final String server = project.getProperty("appfog-target").getValue().get(0);
+        final String appName = (name == null) ? project.getProperty("appfog-application").getValue().get(0) : name;
+        final String projectId = project.getId();
 
         try {
-            AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
-            AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-                    new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+            AutoBean<AppfogApplication> appfogApplication = autoBeanFactory.appfogApplication();
+            AutoBeanUnmarshaller<AppfogApplication> unmarshaller = new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
 
-            service.restartApplication(resourceProvider.getVfsId(), projectId, name, server, paasProvider,
-                                       new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, restartLoggedInHandler,
-                                                                                                     null, eventBus, console, constant,
-                                                                                                     loginPresenter, paasProvider) {
+            service.restartApplication(null, null, appName, server,
+                                       new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, restartLoggedInHandler, null,
+                                                                                         eventBus, constant, console, loginPresenter) {
                                            @Override
-                                           protected void onSuccess(CloudFoundryApplication result) {
+                                           protected void onSuccess(AppfogApplication result) {
                                                if (result.getInstances() == result.getRunningInstances()) {
                                                    final String appUris = getAppUrisAsString(result);
-                                                   String msg = "";
+                                                   String msg;
                                                    if (appUris.isEmpty()) {
                                                        msg = constant.applicationRestarted(result.getName());
                                                    } else {
                                                        msg = constant.applicationRestartedUris(result.getName(), appUris);
                                                    }
-
                                                    console.print(msg);
                                                    callback.onSuccess(projectId);
                                                } else {

@@ -25,11 +25,14 @@ import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
 import com.codenvy.ide.ext.appfog.client.marshaller.ApplicationListUnmarshaller;
 import com.codenvy.ide.ext.appfog.client.marshaller.TargetsUnmarshaller;
+import com.codenvy.ide.ext.appfog.client.start.StartApplicationPresenter;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -48,14 +51,29 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
     private AppfogLocalizationConstant constant;
     private AppfogAutoBeanFactory      autoBeanFactory;
     private LoginPresenter             loginPresenter;
+    private StartApplicationPresenter  startApplicationPresenter;
     private AppfogClientService        service;
     private JsonArray<String>          servers;
     private String                     currentServer;
 
+    /** The callback what execute when some application's information was changed. */
+    private AsyncCallback<String> appInfoChangedCallback = new AsyncCallback<String>() {
+        @Override
+        public void onSuccess(String result) {
+            getApplicationList();
+        }
+
+        @Override
+        public void onFailure(Throwable caught) {
+            Log.error(ApplicationsPresenter.class, "Can not change information", caught);
+        }
+    };
+
     @Inject
     protected ApplicationsPresenter(ApplicationsView view, EventBus eventBus, ConsolePart console,
                                     AppfogLocalizationConstant constant, AppfogAutoBeanFactory autoBeanFactory,
-                                    LoginPresenter loginPresenter, AppfogClientService service) {
+                                    LoginPresenter loginPresenter, AppfogClientService service,
+                                    StartApplicationPresenter startApplicationPresenter) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
@@ -64,6 +82,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
         this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
+        this.startApplicationPresenter = startApplicationPresenter;
     }
 
     /** Show dialog. */
@@ -153,19 +172,19 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onStartClicked(AppfogApplication app) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        startApplicationPresenter.startApp(app.getName(), appInfoChangedCallback);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onStopClicked(AppfogApplication app) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        startApplicationPresenter.stopApp(app.getName(), appInfoChangedCallback);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onRestartClicked(AppfogApplication app) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        startApplicationPresenter.restartApp(app.getName(), appInfoChangedCallback);
     }
 
     /** {@inheritDoc} */
