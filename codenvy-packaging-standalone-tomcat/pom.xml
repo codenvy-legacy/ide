@@ -210,7 +210,7 @@
                                        dest="${project.build.directory}/packager-conf/war/IDE">
                                 </unwar>
 
-                                <war destfile="${project.build.directory}/tomcat-ide/webapps/w.war" needxmlfile="false">
+                                <war destfile="${project.build.directory}/tomcat-ide/webapps/ROOT.war" needxmlfile="false">
                                     <fileset dir="${project.build.directory}/packager-conf/war/IDE"/>
                                 </war>
                                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${project.version}.war"

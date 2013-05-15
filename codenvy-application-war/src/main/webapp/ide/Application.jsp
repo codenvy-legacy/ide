@@ -26,21 +26,25 @@
 
     <script type="text/javascript" language="javascript">
         var appConfig = {
-            "context": "/i/rest",
+            "context": "/w/rest"
         }
-        var authorizationContext = "/site/rest";
-        var authorizationPageURL = "/site/index.html";
-        var authorizationErrorPageURL = "/site/error_oauth.html";
-        var securityCheckURL = "/site/j_security_check";
         var hiddenFiles = ".*";
+        var ws = <%= request.getAttribute("ws")%>;
+        var project = <%= request.getAttribute("project")%>;
+        var path = <%= request.getAttribute("path")%>;
+        var authorizationContext = "/w/rest";
+        var authorizationPageURL = "/w/ide/" + ws;
+        var authorizationErrorPageURL = "/w/ide/error_oauth.html";
+        var securityCheckURL = "/w/j_security_check";
     </script>
 
-    <script type="text/javascript" language="javascript" src="ide.nocache.js"></script>
-    <link type="text/css" rel="stylesheet" href="top-menu.css" media="all">
+    <script type="text/javascript" language="javascript" src='<%= com.codenvy.servlet.DispatcherServlet.genStaticResourceUrl(request, "ide.nocache.js")%>'></script>
+    <link type="text/css" rel="stylesheet" href='<%= com.codenvy.servlet.DispatcherServlet.genStaticResourceUrl(request, "top-menu.css")%>' media="all">
 </head>
 
 <body>
-<script type="text/javascript" language="javascript" src="browserNotSupported.js"></script>
+
+<script type="text/javascript" language="javascript" src='<%= com.codenvy.servlet.DispatcherServlet.genStaticResourceUrl(request, "browserNotSupported.js")%>'></script>
 
 <div id="ide-menu-additions" align="right" class="ideMenuAdditions">
     <table cellspacing="0" cellpadding="0" border="0"

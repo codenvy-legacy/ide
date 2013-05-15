@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
 
     Copyright (C) 2010 eXo Platform SAS.
@@ -18,12 +19,10 @@
     02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
 -->
-<Context path="/" docBase="" reloadable="true" crossContext="false" sessionCookiePath="/">
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+               xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
-    <Manager className='org.apache.catalina.session.PersistentManager' saveOnRestart='false'/>
-    <Realm className='org.apache.catalina.realm.JAASRealm'
-           appName='codenvy'
-           userClassNames="org.exoplatform.services.security.jaas.UserPrincipal"
-           roleClassNames="org.exoplatform.services.security.jaas.RolePrincipal"
-           debug='0' cache='false'/>
-</Context>
+    <import>cf-configuration.xml</import>
+    <import>ide-configuration.xml</import>
+</configuration>

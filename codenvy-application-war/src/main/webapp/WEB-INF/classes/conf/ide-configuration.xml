@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+
+    Copyright (C) 2010 eXo Platform SAS.
+
+    This is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation; either version 2.1 of
+    the License, or (at your option) any later version.
+
+    This software is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this software; if not, write to the Free
+    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+    02110-1301 USA, or see the FSF site: http://www.fsf.org.
+
+-->
+
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+               xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+
+
+    <!--
+    ***************************************************************************************
+    ********************** eXo IDE Commons Components *************************************
+    ***************************************************************************************
+    -->
+    <component>
+        <type>org.exoplatform.ide.IDEServiceApplication</type>
+    </component>
+    
+    <component>
+      <key>org.exoplatform.ide.extension.ssh.server.SshKeyStore</key>
+      <type>org.exoplatform.ide.extension.ssh.server.DummySshKeyStore</type>
+    </component>
+
+    <!-- VirtualFileSystem -->
+    <component>
+        <type>org.exoplatform.ide.vfs.impl.fs.LocalFileSystemInitializer</type>
+        <init-params>
+            <values-param>
+                <name>ids</name>
+                <value>dev-monit</value>
+            </values-param>
+        </init-params>
+    </component>
+
+    <!-- End VirtualFileSystem -->
+
+    <!-- LogReader -->
+    <component>
+        <key>com.codenvy.logreader.LogPathProvider</key>
+        <type>com.codenvy.logreader.SystemLogPathProvider</type>
+    </component>
+    <!-- End LogReader -->
+
+
+    <!--
+    ***************************************************************************************
+    ********************** Language & Technology Supporting *******************************
+    ***************************************************************************************
+    -->
+
+    <!--  Java  Support-->
+    <component>
+        <type>org.exoplatform.ide.extension.java.server.JavaServiceApplication</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.extension.java.server.JavaCodeAssistant</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.extension.java.jdi.server.DebuggerApplication</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorageClient</type>
+        <init-params>
+            <value-param>
+                <name>codeassistant-storage-base-url</name>
+                <value>http://localhost:8080/codeassistant-storage</value>
+            </value-param>
+        </init-params>
+    </component>
+
+    <component>
+        <key>org.exoplatform.ide.extension.java.jdi.server.ApplicationRunner</key>
+        <type>org.exoplatform.ide.extension.java.jdi.server.CloudfoundryApplicationRunner</type>
+    </component>
+
+    <!-- End Java Support -->
+
+    <!-- Python Support -->
+
+    <component>
+        <key>org.exoplatform.ide.extension.python.server.ApplicationRunner</key>
+        <type>org.exoplatform.ide.extension.python.server.CloudfoundryApplicationRunner</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.extension.python.server.AppRunnerApplication</type>
+    </component>
+
+    <!-- End Python Support -->
+
+    <!--
+    ***************************************************************************************
+    **************************** Builder System Supporting ********************************
+    ***************************************************************************************
+    -->
+
+    <component>
+        <type>org.exoplatform.ide.extension.jenkins.server.rest.JenkinsApplication</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.extension.maven.server.BuilderApplication</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.extension.maven.server.BuilderClient</type>
+        <init-params>
+            <value-param>
+                <name>build-server-base-url</name>
+                <value>http://localhost:8080/builder</value>
+            </value-param>
+        </init-params>
+    </component>
+
+    <!--
+    ***************************************************************************************
+    ********************************** PaaS's *********************************************
+    ***************************************************************************************
+    -->
+
+    <component>
+
+        <type>org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryPool</type>
+
+        <init-params>
+
+            <object-param>
+
+                <name>CF0</name>
+
+                <object type="org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryServerConfiguration">
+
+                    <field name="target">
+
+                        <string>http://api.javarun4.exoplatform.com</string>
+
+
+                    </field>
+
+                    <field name="user">
+
+                        <string>exoidedev@exoplatform.com</string>
+
+
+                    </field>
+
+                    <field name="password">
+
+                        <string>1234qwer</string>
+
+                    </field>
+
+                </object>
+
+            </object-param>
+
+
+        </init-params>
+
+    </component>
+    <!-- End CloudFoundry -->
+
+
+    <!-- Google AppEngine  -->
+    <component>
+        <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineClient</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineApplication</type>
+    </component>
+
+    <!-- End Google AppEngine  -->
+
+
+    <!--
+    ***************************************************************************************
+    ********************************* IDE Shell *******************************************
+    ***************************************************************************************
+    -->
+
+    <component>
+        <type>org.exoplatform.ide.shell.server.rest.ShellApplication</type>
+        <init-params>
+            <value-param>
+                <name>defaultEntryPoint</name>
+                <value>dev-monit</value>
+            </value-param>
+            <value-param>
+                <name>discoverable</name>
+                <value>true</value>
+            </value-param>
+            <value-param>
+                <name>workspace</name>
+                <value>production</value>
+            </value-param>
+            <value-param>
+                <name>user-config</name>
+                <value>/ide-home/users/</value>
+            </value-param>
+        </init-params>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.shell.server.CLIResourceFactory</type>
+    </component>
+
+    <!-- Google AppEngine  -->
+    <component>
+        <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineClient</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineApplication</type>
+    </component>
+
+    <!-- End Google AppEngine  -->
+
+    <component>
+        <type>org.exoplatform.ide.security.login.FederatedLoginApplication</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.security.login.FederatedLoginList</type>
+    </component>
+
+    <!--
+    ***************************************************************************************
+    ********************************** OAuth Support **************************************
+    ***************************************************************************************
+    -->
+
+    <component>
+      <type>com.codenvy.commons.security.oauth.OAuthAuthenticationApplication</type>
+    </component>
+  
+    <component>
+        <type>org.exoplatform.ide.security.oauth.ExoOAuthAuthenticatorProvider</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.security.oauth.ExoGoogleOAuthAuthenticator</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.security.oauth.ExoGitHubOAuthAuthenticator</type>
+    </component>
+
+    <!--
+    ***************************************************************************************
+    ********************************** Collaboration Editor *******************************
+    ***************************************************************************************
+    -->
+    <component>
+        <type>com.google.collide.server.CollaborationEditorApplication</type>
+    </component>
+
+    <component>
+        <type>com.google.collide.server.participants.Participants</type>
+    </component>
+
+    <component>
+        <type>com.google.collide.server.documents.EditSessions</type>
+    </component>
+
+    <component>
+        <type>com.codenvy.organization.client.http.OrganizationServiceRequestTemplate</type>
+    </component>
+
+    <component>
+        <type>com.codenvy.organization.client.UserManager</type>
+    </component>
+
+    <component>
+        <type>com.codenvy.organization.client.AccountManager</type>
+    </component>
+
+    <component>
+        <type>com.codenvy.organization.client.WorkspaceManager</type>
+    </component>
+
+    <component>
+        <type>com.codenvy.organization.client.InvitationManager</type>
+    </component>
+
+    <component>
+        <type>com.codenvy.organization.client.http.AccountServiceConnector</type>
+    </component>
+
+    <component>
+        <type>com.codenvy.organization.client.http.InvitationServiceConnector</type>
+    </component>
+
+    <component>
+        <type>com.codenvy.organization.client.http.UserServiceConnector</type>
+    </component>
+
+    <component>
+        <type>com.codenvy.organization.client.http.WorkspaceServiceConnector</type>
+    </component>
+
+    <!--
+    ***************************************************************************************
+    ******************************* GitIgnoreConfigChecker ********************************
+    ***************************************************************************************
+    -->
+    <component>
+        <type>org.exoplatform.ide.git.server.GitIgnoreConfigChecker</type>
+    </component>
+
+</configuration>
