@@ -39,8 +39,6 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.event.shared.EventBus;
 
-import java.util.List;
-
 /** @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a> */
 @Singleton
 public class AppfogClientService {
@@ -90,7 +88,7 @@ public class AppfogClientService {
         this.autoBeanFactory = autoBeanFactory;
     }
 
-    public void getFrameworks(AsyncRequestCallback<List<Framework>> callback, String server) throws RequestException {
+    public void getFrameworks(String server, AsyncRequestCallback<JsonArray<Framework>> callback) throws RequestException {
         String url = restServiceContext + FRAMEWORKS;
         url += (server != null) ? "?server=" + server : "";
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader)

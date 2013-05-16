@@ -1,0 +1,117 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:c="urn:import:com.codenvy.ide.ui">
+    <ui:with field="locale"
+             type="com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant"></ui:with>
+    <ui:with field='res'
+             type='com.codenvy.ide.ext.appfog.client.AppfogResources'/>
+    <ui:style>
+        .alignBtn {
+            float: right;
+        }
+
+        .spacing {
+            margin-bottom: 10px;
+        }
+    </ui:style>
+    <g:DockLayoutPanel unit="PX" width="480px" height="330px">
+        <g:south size="26.0">
+            <g:FlowPanel width="100%">
+                <c:Button addStyleNames="{style.alignBtn}" text="{locale.createButton}" size="SMALL" type="SUCCESS" ui:field="btnCreate"/>
+                <c:Button addStyleNames="{style.alignBtn}" text="{locale.cancelButton}" size="SMALL" type="DANGER" ui:field="btnCancel"/>
+            </g:FlowPanel>
+        </g:south>
+        <g:center>
+            <g:DockLayoutPanel unit="PX" width="100%" height="100%">
+                <g:north size="36.0">
+                    <g:DockLayoutPanel unit="PX" width="100%" addStyleNames="{style.spacing} {res.appFogCSS.loginFont}">
+                        <g:west size="140.0">
+                            <g:Label text="{locale.createAppServerField}" addStyleNames="{res.appFogCSS.loginFont}"/>
+                        </g:west>
+                        <g:center>
+                            <g:TextBox width="220px" ui:field="server" readOnly="true"/>
+                        </g:center>
+                    </g:DockLayoutPanel>
+                </g:north>
+                <g:north size="36.0">
+                    <g:DockLayoutPanel unit="PX" width="100%" addStyleNames="{style.spacing} {res.appFogCSS.loginFont}">
+                        <g:west size="140.0">
+                            <g:Label text="{locale.createAppInfraField}" addStyleNames="{res.appFogCSS.loginFont}"/>
+                        </g:west>
+                        <g:center>
+                            <g:ListBox width="227px" ui:field="infra"/>
+                        </g:center>
+                    </g:DockLayoutPanel>
+                </g:north>
+                <g:north size="36.0">
+                    <g:DockLayoutPanel unit="PX" width="100%" addStyleNames="{style.spacing} {res.appFogCSS.loginFont}">
+                        <g:west size="140.0">
+                            <g:Label text="{locale.createAppNameField}" addStyleNames="{res.appFogCSS.loginFont}"/>
+                        </g:west>
+                        <g:center>
+                            <g:TextBox width="220px" visibleLength="50" ui:field="name"/>
+                        </g:center>
+                    </g:DockLayoutPanel>
+                </g:north>
+                <g:north size="36.0">
+                    <g:DockLayoutPanel unit="PX" width="100%" addStyleNames="{style.spacing} {res.appFogCSS.loginFont}">
+                        <g:west size="140.0">
+                            <g:Label text="{locale.createAppTypeField}" addStyleNames="{res.appFogCSS.loginFont}"/>
+                        </g:west>
+                        <g:east size="110.0">
+                            <g:CheckBox text="{locale.createAppAutodetectTypeLabel}"
+                                        ui:field="autodetectType"/>
+                        </g:east>
+                        <g:center>
+                            <g:ListBox width="227px" ui:field="type"/>
+                        </g:center>
+                    </g:DockLayoutPanel>
+                </g:north>
+                <g:north size="36.0">
+                    <g:DockLayoutPanel unit="PX" width="100%" addStyleNames="{style.spacing} {res.appFogCSS.loginFont}">
+                        <g:west size="140.0">
+                            <g:Label text="{locale.createAppUrlField}" addStyleNames="{res.appFogCSS.loginFont}"/>
+                        </g:west>
+                        <g:east size="110.0">
+                            <g:CheckBox text="{locale.createAppUseDefaultUrlLabel}"
+                                        ui:field="customUrl"/>
+                        </g:east>
+                        <g:center>
+                            <g:TextBox width="220px" ui:field="url"/>
+                        </g:center>
+                    </g:DockLayoutPanel>
+                </g:north>
+                <g:north size="36.0">
+                    <g:DockLayoutPanel unit="PX" width="100%" addStyleNames="{style.spacing} {res.appFogCSS.loginFont}">
+                        <g:west size="140.0">
+                            <g:Label text="{locale.createAppInstancesField}" addStyleNames="{res.appFogCSS.loginFont}"/>
+                        </g:west>
+                        <g:center>
+                            <g:TextBox width="220px" ui:field="instances"/>
+                        </g:center>
+                    </g:DockLayoutPanel>
+                </g:north>
+                <g:north size="36.0">
+                    <g:DockLayoutPanel unit="PX" width="100%" addStyleNames="{style.spacing} {res.appFogCSS.loginFont}">
+                        <g:west size="140.0">
+                            <g:Label text="{locale.createAppMemoryField}" addStyleNames="{res.appFogCSS.loginFont}"/>
+                        </g:west>
+                        <g:center>
+                            <g:TextBox width="220px" ui:field="memory"/>
+                        </g:center>
+                    </g:DockLayoutPanel>
+                </g:north>
+                <g:north size="36.0">
+                    <g:DockLayoutPanel unit="PX" width="100%" addStyleNames="{style.spacing} {res.appFogCSS.loginFont}">
+                        <g:west size="140.0">
+                            <g:Label text="{locale.createAppStartAfterCreationField}" addStyleNames="{res.appFogCSS.loginFont}"/>
+                        </g:west>
+                        <g:center>
+                            <g:SimpleCheckBox ui:field="startAfterCreation"/>
+                        </g:center>
+                    </g:DockLayoutPanel>
+                </g:north>
+            </g:DockLayoutPanel>
+        </g:center>
+    </g:DockLayoutPanel>
+</ui:UiBinder>

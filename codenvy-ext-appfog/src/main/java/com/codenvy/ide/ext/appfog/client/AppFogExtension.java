@@ -22,6 +22,7 @@ import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.menu.MainMenuAgent;
 import com.codenvy.ide.ext.appfog.client.command.ShowApplicationsCommand;
+import com.codenvy.ide.ext.appfog.client.command.ShowCreateApplicationCommand;
 import com.codenvy.ide.ext.appfog.client.command.ShowLoginCommand;
 import com.codenvy.ide.ext.appfog.client.wizard.AppFogPagePresenter;
 import com.codenvy.ide.json.JsonArray;
@@ -42,7 +43,8 @@ public class AppFogExtension {
     private static final String ID             = "AppFog";
 
     @Inject
-    public AppFogExtension(PaaSAgent paasAgent, AppfogResources resources, MainMenuAgent menu, ShowLoginCommand loginCommand,
+    public AppFogExtension(PaaSAgent paasAgent, AppfogResources resources, MainMenuAgent menu,
+                           ShowCreateApplicationCommand createApplicationCommand, ShowLoginCommand loginCommand,
                            ShowApplicationsCommand showApplicationsCommand, Provider<AppFogPagePresenter> wizardPage) {
         resources.appFogCSS().ensureInjected();
 
@@ -50,6 +52,7 @@ public class AppFogExtension {
         JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "Rails", "Spring", "War", "Python", "PHP");
         paasAgent.registerPaaS(ID, ID, resources.appfog48(), requiredProjectTypes, wizardPage, null);
 
+        menu.addMenuItem("PaaS/AppFog/Create Application...", createApplicationCommand);
         menu.addMenuItem("PaaS/AppFog/Applications...", showApplicationsCommand);
         menu.addMenuItem("PaaS/AppFog/Switch Account...", loginCommand);
     }
