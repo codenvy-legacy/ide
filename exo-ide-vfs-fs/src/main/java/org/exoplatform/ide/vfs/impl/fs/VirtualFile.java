@@ -84,8 +84,7 @@ public class VirtualFile implements Comparable<VirtualFile> {
         return mountPoint.getContent(this);
     }
 
-    public VirtualFile updateContent(String mediaType, InputStream content, String lockToken)
-            throws VirtualFileSystemException {
+    public VirtualFile updateContent(String mediaType, InputStream content, String lockToken) throws VirtualFileSystemException {
         mountPoint.updateContent(this, mediaType, content, lockToken);
         return this;
     }
@@ -185,8 +184,7 @@ public class VirtualFile implements Comparable<VirtualFile> {
         return mountPoint.getACL(this);
     }
 
-    public VirtualFile updateACL(List<AccessControlEntry> acl, boolean override, String lockToken)
-            throws VirtualFileSystemException {
+    public VirtualFile updateACL(List<AccessControlEntry> acl, boolean override, String lockToken) throws VirtualFileSystemException {
         mountPoint.updateACL(this, acl, override, lockToken);
         return this;
     }

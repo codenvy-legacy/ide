@@ -122,7 +122,7 @@ public class VfsWatcher implements ProjectOpenedHandler, ProjectClosedHandler {
         });
         IDE.messageBus().setOnOpenHandler(new ConnectionOpenedHandler() {
             @Override
-            public void onOpen() {
+            public void onConnectionOpened() {
                 if (project != null) {
                     addVfsListener();
                 }

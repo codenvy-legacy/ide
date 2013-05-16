@@ -139,7 +139,7 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
     /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
     private LoggedInHandler mapUrlLoggedInHandler = new LoggedInHandler() {
         @Override
-        public void onLoggedIn() {
+        public void onLoggedIn(String server) {
             mapUrl(urlToMap);
         }
     };
@@ -189,7 +189,7 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
 
     LoggedInHandler unregisterUrlLoggedInHandler = new LoggedInHandler() {
         @Override
-        public void onLoggedIn() {
+        public void onLoggedIn(String server) {
             unregisterUrl(unregisterUrl);
         }
     };
@@ -223,7 +223,7 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
 
     LoggedInHandler appInfoLoggedInHandler = new LoggedInHandler() {
         @Override
-        public void onLoggedIn() {
+        public void onLoggedIn(String server) {
             getAppRegisteredUrls();
         }
     };

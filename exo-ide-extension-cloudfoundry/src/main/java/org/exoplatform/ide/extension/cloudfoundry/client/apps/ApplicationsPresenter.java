@@ -54,7 +54,7 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER.WEB_FABRIC;
+import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER.CLOUD_FOUNDRY;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -122,7 +122,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
 
             @Override
             public void onSelection(SelectionEvent<CloudFoundryApplication> event) {
-                IDE.fireEvent(new StopApplicationEvent(event.getSelectedItem().getName(), paasProvider));
+                IDE.fireEvent(new StopApplicationEvent(event.getSelectedItem().getName(), currentServer, paasProvider));
             }
         });
 
@@ -130,7 +130,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
 
             @Override
             public void onSelection(SelectionEvent<CloudFoundryApplication> event) {
-                IDE.fireEvent(new StartApplicationEvent(event.getSelectedItem().getName(), paasProvider));
+                IDE.fireEvent(new StartApplicationEvent(event.getSelectedItem().getName(), currentServer, paasProvider));
             }
         });
 
@@ -138,7 +138,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
 
             @Override
             public void onSelection(SelectionEvent<CloudFoundryApplication> event) {
-                IDE.fireEvent(new RestartApplicationEvent(event.getSelectedItem().getName(), paasProvider));
+                IDE.fireEvent(new RestartApplicationEvent(event.getSelectedItem().getName(), currentServer, paasProvider));
             }
         });
 
@@ -156,11 +156,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
     @Override
     public void onShowApplications(ShowApplicationsEvent event) {
         this.paasProvider = event.getPaasProvider();
-        if (paasProvider == WEB_FABRIC) {
-            openView();
-        } else {
-            checkLogginedToServer();
-        }
+        checkLogginedToServer();
     }
 
     /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
@@ -181,7 +177,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
                         protected void onSuccess(List<String> result) {
                             if (!result.isEmpty()) {
                                 servers = result;
-                            } else {
+                            } else if (paasProvider == CLOUD_FOUNDRY) {
                                 servers = new ArrayList<String>();
                                 servers.add(CloudFoundryExtension.DEFAULT_CF_SERVER);
                             }
@@ -220,7 +216,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
                             new ArrayList<CloudFoundryApplication>()), new LoggedInHandler()//
                     {
                         @Override
-                        public void onLoggedIn() {
+                        public void onLoggedIn(String server) {
                             getApplicationList();
                         }
                     }, null, currentServer, paasProvider) {

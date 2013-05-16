@@ -115,7 +115,7 @@ public class ApplicationListPresenter extends GitPresenter implements ShowApplic
         /** Clear application's properties in grid. */
         void clearApplicationInfo();
 
-        ListGridItem<OpenShiftEmbeddableCartridge> getCartridgesGrid();
+        CartridgeGrid getCartridgesGrid();
 
         void addDeleteCartridgeButtonSelectionHandler(SelectionHandler<OpenShiftEmbeddableCartridge> handler);
 
@@ -340,6 +340,7 @@ public class ApplicationListPresenter extends GitPresenter implements ShowApplic
         properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationCreationTime(), time));
         display.getApplicationInfoGrid().setValue(properties);
         display.getCartridgesGrid().setValue(appInfo.getEmbeddedCartridges());
+        display.getCartridgesGrid().setApplicationInfo(appInfo);
     }
 
     /** Register {@link LoggedInHandler} handler. */
@@ -446,7 +447,7 @@ public class ApplicationListPresenter extends GitPresenter implements ShowApplic
 
                                       @Override
                                       protected void onFailure(Throwable exception) {
-                                          Dialogs.getInstance().showError(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteCartridgeError());
+                                          Dialogs.getInstance().showError(exception.getMessage());
                                       }
                                   });
         } catch (RequestException e) {
@@ -463,7 +464,18 @@ public class ApplicationListPresenter extends GitPresenter implements ShowApplic
                                       @Override
                                       protected void onSuccess(Void result) {
                                           IDE.fireEvent(new ShowApplicationListEvent());
-                                          IDE.fireEvent(new OutputEvent("Cartridge " + cartridgeName + " successfully started."));
+
+                                          String haproxyStatusUrl = "";
+                                          if (cartridgeName.startsWith("haproxy")) {
+                                              haproxyStatusUrl =
+                                                      " Status url: <a href=\"" + currentViewedApp.getPublicUrl() +
+                                                      "haproxy-status/\" target=\"_blank\">" +
+                                                      currentViewedApp.getPublicUrl() + "haproxy-status/</a>";
+                                          }
+
+                                          IDE.fireEvent(new OutputEvent(
+                                                  "Cartridge " + cartridgeName + " successfully started." + haproxyStatusUrl));
+
                                       }
 
                                       @Override

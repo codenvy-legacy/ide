@@ -349,7 +349,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
     private void validateData(final AppData app) {
         LoggedInHandler validateHandler = new LoggedInHandler() {
             @Override
-            public void onLoggedIn() {
+            public void onLoggedIn(String server) {
                 validateData(app);
             }
         };
@@ -365,6 +365,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                                                                    app.url,
                                                                    vfs.getId(),
                                                                    project.getId(),
+                                                                   paasProvider,
                                                                    app.instances,
                                                                    app.memory,
                                                                    app.nostart,
@@ -388,7 +389,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
     private void getFrameworks(final String server) {
         LoggedInHandler getFrameworksLoggedInHandler = new LoggedInHandler() {
             @Override
-            public void onLoggedIn() {
+            public void onLoggedIn(String server) {
                 getFrameworks(server);
             }
         };
@@ -432,7 +433,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
     private void createApplication(final AppData appData) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
-            public void onLoggedIn() {
+            public void onLoggedIn(String server) {
                 createApplication(appData);
             }
         };

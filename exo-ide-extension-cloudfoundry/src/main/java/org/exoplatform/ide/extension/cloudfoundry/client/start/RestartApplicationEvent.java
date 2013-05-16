@@ -34,6 +34,8 @@ public class RestartApplicationEvent extends GwtEvent<RestartApplicationHandler>
 
     private String                                               applicationName;
 
+    private String                                               server;
+
     private PAAS_PROVIDER                                        paasProvider;
 
     /**
@@ -45,9 +47,10 @@ public class RestartApplicationEvent extends GwtEvent<RestartApplicationHandler>
     }
 
     /** @param applicationName */
-    public RestartApplicationEvent(String applicationName, PAAS_PROVIDER paasProvider) {
+    public RestartApplicationEvent(String applicationName, String server, PAAS_PROVIDER paasProvider) {
         super();
         this.applicationName = applicationName;
+        this.server = server;
         this.paasProvider = paasProvider;
     }
 
@@ -70,6 +73,10 @@ public class RestartApplicationEvent extends GwtEvent<RestartApplicationHandler>
 
     public PAAS_PROVIDER getPaasProvider() {
         return paasProvider;
+    }
+
+    public String getServer() {
+        return server;
     }
 
 }

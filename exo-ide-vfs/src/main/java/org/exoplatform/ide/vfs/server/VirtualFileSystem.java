@@ -411,7 +411,7 @@ public interface VirtualFileSystem {
      * @param path
      *         item path
      * @param versionId
-     *         version id for File item. Must be <code>null</code> for Folders.
+     *         version id for File item. Pass <code>null</code> to get last version. Must be <code>null</code> for Folders.
      * @param propertyFilter
      *         only properties which are accepted by filter should be included in response. See
      *         {@link PropertyFilter#accept(String)}

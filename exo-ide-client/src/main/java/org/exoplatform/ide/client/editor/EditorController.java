@@ -151,8 +151,8 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
         }
         
         FileModel file = openedFiles.get(fileId);
-        if (ignoreContentChangedList.contains(file.getPath())) {
-            ignoreContentChangedList.remove(file.getPath());
+        if (ignoreContentChangedList.contains(file.getId())) {
+            ignoreContentChangedList.remove(file.getId());
             return;
         }
         
@@ -165,7 +165,6 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
 
         IDE.fireEvent(new EditorFileContentChangedEvent(activeFile, 
                             event.getEditor().hasUndoChanges(), event.getEditor().hasRedoChanges()));
-        
         
         /*
         Editor editor = getEditorFromView(activeFile.getId());

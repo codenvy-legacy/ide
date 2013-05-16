@@ -120,7 +120,7 @@ public class ApplicationInfoPresenter extends GitPresenter implements Applicatio
             CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null, new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
                                                                                unmarshaller, new LoggedInHandler() {
                                                                            @Override
-                                                                           public void onLoggedIn() {
+                                                                           public void onLoggedIn(String server) {
                                                                                showApplicationInfo(projectId);
                                                                            }
                                                                        }, null, paasProvider) {

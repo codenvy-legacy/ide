@@ -136,7 +136,7 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
 
     private LoggedInHandler appInfoLoggedInHandler = new LoggedInHandler() {
                                                        @Override
-                                                       public void onLoggedIn() {
+                                                       public void onLoggedIn(String server) {
                                                            getApplicationInfo();
                                                        }
                                                    };
@@ -172,7 +172,7 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
 
     private LoggedInHandler deleteAppLoggedInHandler = new LoggedInHandler() {
                                                          @Override
-                                                         public void onLoggedIn() {
+                                                         public void onLoggedIn(String server) {
                                                              deleteApplication();
                                                          }
                                                      };
@@ -204,7 +204,7 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
 
         try {
             CloudFoundryClientService.getInstance()
-                                     .deleteApplication(vfs.getId(), projectId, appName, serverName,
+                                     .deleteApplication(vfs.getId(), projectId, appName, serverName, paasProvider,
                                                         isDeleteServices, new CloudFoundryAsyncRequestCallback<String>(null,
                                                                                                      deleteAppLoggedInHandler,
                                                                                                      null, paasProvider) {

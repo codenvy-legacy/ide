@@ -25,5 +25,7 @@ package org.exoplatform.ide.client.framework.websocket.events;
  * @version $Id: ConnectionOpenedHandler.java Dec 7, 2012 11:17:16 AM azatsarynnyy $
  */
 public interface ConnectionOpenedHandler {
-    void onOpen();
+    
+    void onConnectionOpened();
+    
 }

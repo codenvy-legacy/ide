@@ -134,7 +134,7 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
 
     private LoggedInHandler appInfoLoggedInHandler = new LoggedInHandler() {
         @Override
-        public void onLoggedIn() {
+        public void onLoggedIn(String server) {
             getApplicationInfo();
         }
     };
@@ -176,7 +176,7 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
 
     private LoggedInHandler renameAppLoggedInHandler = new LoggedInHandler() {
         @Override
-        public void onLoggedIn() {
+        public void onLoggedIn(String server) {
             renameApplication();
         }
     };

@@ -32,9 +32,12 @@ public interface SearcherProvider {
      *
      * @param mountPoint
      *         MountPoint
+     * @param create
+     *         <code>true</code> to create new Searcher if there is no Searcher for specified <code>mountPoint</code> and <code>false</code>
+     *         to return <code>null</code> if there is no Searcher
      * @return instance of Searcher
      * @throws VirtualFileSystemException
      * @see MountPoint
      */
-    Searcher getSearcher(MountPoint mountPoint) throws VirtualFileSystemException;
+    Searcher getSearcher(MountPoint mountPoint, boolean create) throws VirtualFileSystemException;
 }

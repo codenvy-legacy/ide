@@ -74,7 +74,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
     /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
     private LoggedInHandler getOldMemoryValueLoggedInHandler = new LoggedInHandler() {
         @Override
-        public void onLoggedIn() {
+        public void onLoggedIn(String server) {
             getOldMemoryValue();
         }
     };
@@ -132,7 +132,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
     /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
     private LoggedInHandler updateMemoryLoggedInHandler = new LoggedInHandler() {
         @Override
-        public void onLoggedIn() {
+        public void onLoggedIn(String server) {
             updateMemory(memory);
         }
     };
@@ -172,7 +172,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
     /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
     private LoggedInHandler getOldInstancesValueLoggedInHandler = new LoggedInHandler() {
         @Override
-        public void onLoggedIn() {
+        public void onLoggedIn(String server) {
             getOldInstancesValue();
         }
     };
@@ -233,7 +233,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
 
     private LoggedInHandler updateInstancesLoggedInHandler = new LoggedInHandler() {
         @Override
-        public void onLoggedIn() {
+        public void onLoggedIn(String server) {
             updateInstances(instances);
         }
     };
