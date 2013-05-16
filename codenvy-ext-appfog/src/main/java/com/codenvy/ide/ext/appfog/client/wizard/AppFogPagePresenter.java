@@ -79,6 +79,7 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
     private CreateProjectProvider      createProjectProvider;
     private InfraDetail                currentInfra;
     private JsonArray<InfraDetail>     infras;
+    private boolean                    isLogined;
 
     /**
      * Create presenter.
@@ -185,14 +186,16 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
 
     /** Checking entered information on view. */
     public boolean validate() {
-        return view.getName() != null && !view.getName().isEmpty() && view.getUrl() != null && !view.getUrl().isEmpty() &&
-               currentInfra != null;
+        return isLogined ? view.getName() != null && !view.getName().isEmpty() && view.getUrl() != null && !view.getUrl().isEmpty() &&
+                           currentInfra != null : true;
     }
 
     /** {@inheritDoc} */
     @Override
     public String getNotice() {
-        if (view.getName().isEmpty()) {
+        if (!isLogined) {
+            return "This project will be created without deploy on AppFog.";
+        } else if (view.getName().isEmpty()) {
             return "Please, enter a application's name.";
         } else if (view.getUrl().isEmpty()) {
             return "Please, enter application's url.";
@@ -210,7 +213,8 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
         server = AppFogExtension.DEFAULT_SERVER;
         view.setTarget(server);
         view.setName(projectName);
-        getInfras(AppFogExtension.DEFAULT_SERVER, false);
+        getInfras(AppFogExtension.DEFAULT_SERVER);
+        isLogined = true;
 
         container.setWidget(view);
     }
@@ -360,20 +364,19 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
     }
 
     /** Get the list of infrastructure and put them to select field. */
-    private void getInfras(final String server, final boolean startedWizard) {
+    private void getInfras(final String server) {
         LoggedInHandler getInfrasHandler = new LoggedInHandler() {
             @Override
             public void onLoggedIn() {
-                getInfras(server, startedWizard);
+                isLogined = true;
+                getInfras(server);
             }
         };
         LoginCanceledHandler loginCanceledHandler = new LoginCanceledHandler() {
             @Override
             public void onLoginCanceled() {
-                // TODO
-                // if (initializeDeployViewHandler != null) {
-                //     initializeDeployViewHandler.onInitializeDeployViewError();
-                // }
+                isLogined = false;
+                delegate.updateControls();
             }
         };
 
@@ -402,9 +405,8 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
 
                                        updateUrlField();
                                        url = view.getUrl();
-                                       if (startedWizard) {
-                                           beforeDeploy();
-                                       }
+
+                                       delegate.updateControls();
                                    }
                                }
                            });
@@ -467,7 +469,9 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
         createProjectProvider.create(new AsyncCallback<Project>() {
             @Override
             public void onSuccess(Project result) {
-                deploy(result);
+                if (isLogined) {
+                    deploy(result);
+                }
             }
 
             @Override
