@@ -18,6 +18,7 @@
  */
 package com.google.collide.server;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import com.google.collide.dto.server.DtoServerImpls.GetWorkspaceParticipantsResponseImpl;
 import com.google.collide.dto.server.DtoServerImpls.ParticipantUserDetailsImpl;
 import com.google.collide.dto.server.DtoServerImpls.UserLogInDtoImpl;
@@ -45,24 +46,38 @@ public class ParticipantsService {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("list")
     public String getParticipants() {
-        return ((GetWorkspaceParticipantsResponseImpl)participants.getParticipants()).toJson();
+        return ((GetWorkspaceParticipantsResponseImpl)participants.getParticipants(getWorkspaceId())).toJson();
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("add")
     public String addParticipant(@Context SecurityContext securityContext, @Context WSConnection connection) {
+        String workspace = getWorkspaceId();
         Principal principal = securityContext.getUserPrincipal();
         LoggedInUser user = new LoggedInUser(principal != null ? principal.getName() : "anonymous",
-                                             connection.getHttpSession()
-                                                       .getId()); // HTTP session ID is easiest way to identify users with the same name,
-                                                       // if they use different browsers.
-        Set<String> participantsToBroadcast = participants.getAllParticipantId();
+                                             // HTTP session ID is easiest way to identify users with the same name,
+                                             connection.getHttpSession().getId(),
+                                             workspace);
+        // if they use different browsers.
+        Set<String> participantsToBroadcast = participants.getAllParticipantIds(workspace);
         participants.addParticipant(user);
         ParticipantUserDetailsImpl participant = participants.getParticipant(user.getId());
         UserLogInDtoImpl userLogInDto = UserLogInDtoImpl.make();
         userLogInDto.setParticipant(participant);
         WSUtil.broadcastToClients(userLogInDto.toJson(), participantsToBroadcast);
         return String.format("{\"userId\":\"%s\",\"activeClientId\":\"%s\"}", user.getName(), user.getId());
+    }
+
+    protected String getWorkspaceId() {
+        EnvironmentContext environmentContext = EnvironmentContext.getCurrent();
+        String workspace = null;
+        if (environmentContext != null) {
+            workspace = (String)environmentContext.getVariable(EnvironmentContext.WORKSPACE_ID);
+        }
+        if (workspace == null) {
+            throw new IllegalStateException("Workspace id is not set. ");
+        }
+        return workspace;
     }
 }

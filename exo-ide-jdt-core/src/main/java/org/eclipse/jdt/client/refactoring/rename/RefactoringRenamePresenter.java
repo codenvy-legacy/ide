@@ -114,7 +114,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
          *
          * @return name field
          */
-        TextFieldItem getNewNameField();
+        TextFieldItem getNameField();
 
         /**
          * Returns label for warning messages.
@@ -143,7 +143,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
          * @param enabled
          *         <code>true</code> - enable, <code>false</code> - disable
          */
-        void setEnableStateRenameButton(boolean enabled);
+        void setRenameButtonEnabled(boolean enabled);
 
         /**
          * Returns the cancel button.
@@ -152,19 +152,19 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
          */
         HasClickHandlers getCancelButton();
 
-        /**
-         * Set the new value for the name field.
-         *
-         * @param value
-         *         new value for name field
-         */
-        void setNewNameFieldValue(String value);
+//        /**
+//         * Set the new value for the name field.
+//         *
+//         * @param value
+//         *         new value for name field
+//         */
+//        void setNewNameFieldValue(String value);
 
         /** Give focus to the name field. */
-        void setFocusOnNewNameField();
+        void focusNameField();
 
         /** Select all text in the name field. */
-        void selectAllTextInNewNameField();
+        void selectNameField();
     }
 
     /** Default Maven 'sourceDirectory' value. */
@@ -227,10 +227,9 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
     }
 
     public void bindDisplay() {
-        display.setEnableStateRenameButton(false);
+        display.setRenameButtonEnabled(false);
 
-        display.getNewNameField().addValueChangeHandler(new ValueChangeHandler<String>() {
-
+        display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>() {
             @Override
             public void onValueChange(ValueChangeEvent<String> event) {
                 validateName(event.getValue(),
@@ -238,8 +237,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
             }
         });
 
-        display.getNewNameField().addKeyPressHandler(new KeyPressHandler() {
-
+        display.getNameField().addKeyPressHandler(new KeyPressHandler() {
             @Override
             public void onKeyPress(KeyPressEvent event) {
                 if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER && isNameChanged()) {
@@ -249,7 +247,6 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
         });
 
         display.getCancelButton().addClickHandler(new ClickHandler() {
-
             @Override
             public void onClick(ClickEvent event) {
                 IDE.getInstance().closeView(display.asView().getId());
@@ -257,7 +254,6 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
         });
 
         display.getRenameButton().addClickHandler(new ClickHandler() {
-
             @Override
             public void onClick(ClickEvent event) {
                 doRename();
@@ -266,7 +262,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
     }
 
     private boolean isNameChanged() {
-        String newName = display.getNewNameField().getValue();
+        String newName = display.getNameField().getValue();
         return (newName != null && !newName.isEmpty() && !newName.equals(originElementName));
     }
 
@@ -325,13 +321,14 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
         originElementName = getElementName(elementToRename);
 
         openView();
-        display.setNewNameFieldValue(originElementName != null ? originElementName : "");
-        display.setFocusOnNewNameField();
+        //display.setNewNameFieldValue(originElementName != null ? originElementName : "");
+        display.getNameField().setValue(originElementName != null ? originElementName : "");
+        display.focusNameField();
+        
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-
             @Override
             public void execute() {
-                display.selectAllTextInNewNameField();
+                display.selectNameField();
             }
         });
     }
@@ -450,7 +447,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
             String fqn = getFqn(originalFile);
             ActionListUnmarshaller unmarshaller = new ActionListUnmarshaller();
             RefactoringClientService.getInstance().renameWS(vfsInfo.getId(), openedProject.getId(), fqn, cursorOffset,
-                     display.getNewNameField().getValue(), new RequestCallback<List<Action>>(unmarshaller) {
+                     display.getNameField().getValue(), new RequestCallback<List<Action>>(unmarshaller) {
 
                 @Override
                 protected void onSuccess(List<Action> result) {
@@ -480,7 +477,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
             String fqn = getFqn(originalFile);
             ActionListUnmarshaller unmarshaller = new ActionListUnmarshaller();
             RefactoringClientService.getInstance().rename(vfsInfo.getId(), openedProject.getId(), fqn, cursorOffset,
-                                                          display.getNewNameField().getValue(), new AsyncRequestCallback<List<Action>>(unmarshaller) {
+                                                          display.getNameField().getValue(), new AsyncRequestCallback<List<Action>>(unmarshaller) {
                 @Override
                 protected void onSuccess(List<Action> result) {
                     postRenameActions = result;
@@ -730,17 +727,17 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
 
         switch (status.getSeverity()) {
             case IStatus.WARNING:
-                display.setEnableStateRenameButton(isNameChanged());
+                display.setRenameButtonEnabled(isNameChanged());
                 display.getWarningLabel().setText(status.getMessage());
                 display.getErrorLabel().setText("");
                 break;
             case IStatus.OK:
-                display.setEnableStateRenameButton(isNameChanged());
+                display.setRenameButtonEnabled(isNameChanged());
                 display.getWarningLabel().setText("");
                 display.getErrorLabel().setText("");
                 break;
             default:
-                display.setEnableStateRenameButton(false);
+                display.setRenameButtonEnabled(false);
                 display.getWarningLabel().setText("");
                 display.getErrorLabel().setText(status.getMessage());
                 break;

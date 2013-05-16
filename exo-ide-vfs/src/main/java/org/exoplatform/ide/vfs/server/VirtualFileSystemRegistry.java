@@ -33,11 +33,10 @@ import java.util.concurrent.ConcurrentMap;
  * @see VirtualFileSystemFactory
  */
 public class VirtualFileSystemRegistry {
-    private final ConcurrentMap<String, VirtualFileSystemProvider> providers =
-            new ConcurrentHashMap<String, VirtualFileSystemProvider>();
+    private final ConcurrentMap<String, VirtualFileSystemProvider> providers = new ConcurrentHashMap<String, VirtualFileSystemProvider>();
 
     public void registerProvider(String vfsId, VirtualFileSystemProvider provider) throws VirtualFileSystemException {
-        if (providers.putIfAbsent(vfsId, provider) != null) {
+        if (providers.putIfAbsent(id(vfsId), provider) != null) {
             throw new VirtualFileSystemException("Virtual file system " + vfsId + " already registered. ");
         }
     }

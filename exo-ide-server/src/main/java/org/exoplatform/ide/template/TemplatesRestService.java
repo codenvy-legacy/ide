@@ -327,7 +327,7 @@ public class TemplatesRestService {
             try {
                 String path2pom = projectFolder.getPath() + "/pom.xml";
                 File pom =
-                        (File)vfs.getItemByPath(path2pom, null, PropertyFilter.NONE_FILTER);
+                        (File)vfs.getItemByPath(path2pom, null, false, PropertyFilter.NONE_FILTER);
                 String content = StringUtils.toString(vfs.getContent(pom.getId()).getStream());
                 String host = uriInfo.getAbsolutePath().getHost();
                 String groupId = null;
@@ -352,7 +352,7 @@ public class TemplatesRestService {
                 //Goto change groupId & artifactId for child project for MultiModule project IDE-2025
                 //TODO: need fix it remove hardcode
                 pom =
-                        (File)vfs.getItemByPath(projectFolder.getPath() + "/my-lib/pom.xml", null, PropertyFilter.NONE_FILTER);
+                        (File)vfs.getItemByPath(projectFolder.getPath() + "/my-lib/pom.xml", null, false, PropertyFilter.NONE_FILTER);
                 content = StringUtils.toString(vfs.getContent(pom.getId()).getStream());
                 newContent = PATTERN_GROUP_ID_OF_PARENT.matcher(content).replaceFirst("<groupId>" + groupId + "</groupId>");
                 newContent = PATTERN_ARTIFACT_ID_OF_PARENT.matcher(newContent).replaceFirst("<artifactId>" + name + "</artifactId>");
@@ -361,7 +361,7 @@ public class TemplatesRestService {
 
                 //TODO: need fix it remove hardcode
                 pom =
-                        (File)vfs.getItemByPath(projectFolder.getPath() + "/my-webapp/pom.xml", null, PropertyFilter.NONE_FILTER);
+                        (File)vfs.getItemByPath(projectFolder.getPath() + "/my-webapp/pom.xml", null, false, PropertyFilter.NONE_FILTER);
                 content = StringUtils.toString(vfs.getContent(pom.getId()).getStream());
                 newContent = PATTERN_GROUP_ID_OF_PARENT.matcher(content).replaceFirst("<groupId>" + groupId + "</groupId>");
                 newContent = PATTERN_GROUP_ID.matcher(newContent).replaceFirst("<groupId>" + groupId + "</groupId>");//change dependency
@@ -381,7 +381,7 @@ public class TemplatesRestService {
             if (templateStream != null)
                 templateStream.close();
         }
-        org.exoplatform.ide.vfs.shared.Item projectItem = vfs.getItem(projectFolder.getId(), PropertyFilter.ALL_FILTER);
+        org.exoplatform.ide.vfs.shared.Item projectItem = vfs.getItem(projectFolder.getId(), false, PropertyFilter.ALL_FILTER);
         if (projectItem instanceof ProjectImpl) {
             return (Project)projectItem;
         } else

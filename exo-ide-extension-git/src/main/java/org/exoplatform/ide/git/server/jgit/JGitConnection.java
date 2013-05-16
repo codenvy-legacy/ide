@@ -348,6 +348,7 @@ public class JGitConnection implements GitConnection {
             String comitterEmail = configEmail != null ? configEmail : gitEmail;
 
             commitCommand.setCommitter(comitterName, comitterEmail);
+            commitCommand.setAuthor(comitterName, comitterEmail);
             commitCommand.setMessage(request.getMessage());
             commitCommand.setAll(request.isAll());
             commitCommand.setAmend(request.isAmend());
@@ -495,6 +496,9 @@ public class JGitConnection implements GitConnection {
                 throw new IllegalArgumentException("Invalid reference to commit for merge " + request.getCommit());
             }
             org.eclipse.jgit.api.MergeResult jgitMergeResult = new Git(repository).merge().include(ref).call();
+            return new JGitMergeResult(jgitMergeResult);
+        } catch (CheckoutConflictException e) {
+            org.eclipse.jgit.api.MergeResult jgitMergeResult = new org.eclipse.jgit.api.MergeResult(e.getConflictingPaths());
             return new JGitMergeResult(jgitMergeResult);
         } catch (IOException e) {
             throw new GitException(e.getMessage(), e);

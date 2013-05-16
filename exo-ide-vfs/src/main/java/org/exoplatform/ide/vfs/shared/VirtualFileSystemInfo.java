@@ -168,6 +168,8 @@ public interface VirtualFileSystemInfo {
         READ("read"),
         /** Write permission. */
         WRITE("write"),
+        /** Update item permissions (ACL). */
+        UPDATE_ACL("update_acl"),
         /** All. Any operation allowed. */
         ALL("all");
 

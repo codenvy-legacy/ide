@@ -20,6 +20,8 @@ package org.exoplatform.ide.editor.python.client;
 
 import com.google.collide.client.CollabEditor;
 
+import org.exoplatform.ide.editor.client.api.EditorCapability;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
@@ -28,5 +30,14 @@ public class PythonEditor extends CollabEditor {
     public PythonEditor(String mimeType) {
         super(mimeType);
         editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(new PyAutocompliter());
+    }
+
+    /** @see com.google.collide.client.CollabEditor#isCapable(org.exoplatform.ide.editor.client.api.EditorCapability) */
+    @Override
+    public boolean isCapable(EditorCapability capability) {
+        if (capability == EditorCapability.OUTLINE) {
+            return false;
+        }
+        return super.isCapable(capability);
     }
 }

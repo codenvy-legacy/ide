@@ -156,7 +156,7 @@ public class ApplicationListView extends ViewImpl implements ApplicationListPres
     }
 
     @Override
-    public ListGridItem<OpenShiftEmbeddableCartridge> getCartridgesGrid() {
+    public CartridgeGrid getCartridgesGrid() {
         return cartridgeGrid;
     }
 

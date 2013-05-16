@@ -65,7 +65,7 @@ public class ApplicationRunnerService {
         app.setStopURL(uriInfo.getBaseUriBuilder().path(getClass(), "stopApplication")
                               .queryParam("name", app.getName()).build().toString());
 
-        Project project = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+        Project project = (Project)vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
         LOG.info("EVENT#application-created# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
                  + "# PAAS#LOCAL#");
         return app;

@@ -575,3 +575,74 @@
     .xml-attribute {
         color: #00c;
     }
+
+        /*
+         * Ruby token types.
+         */
+    @external ruby-keyword, ruby-atom, ruby-number, ruby-def, ruby-variable, ruby-variable-2, ruby-variable-3;
+    @external ruby-property, ruby-operator, ruby-comment, ruby-string, ruby-meta, ruby-error;
+    @external ruby-builtin, ruby-tag, ruby-attribute;
+
+    .ruby-keyword {
+        color: #708;
+    }
+
+    .ruby-atom {
+        color: #219;
+    }
+
+    .ruby-number {
+        color: #164;
+    }
+
+    .ruby-def {
+        color: #00f;
+    }
+
+    .ruby-variable {
+        color: black;
+    }
+
+    .ruby-variable-2 {
+        color: #05a;
+    }
+
+    .ruby-variable-3 {
+        color: #05a;
+    }
+
+    .ruby-property {
+        color: black;
+    }
+
+    .ruby-operator {
+        color: black;
+    }
+
+    .ruby-comment {
+        color: #a50;
+    }
+
+    .ruby-string {
+        color: #a11;
+    }
+
+    .ruby-meta {
+        color: #049;
+    }
+
+    .ruby-error {
+        color: #f00;
+    }
+
+    .ruby-builtin {
+        color: #30a;
+    }
+
+    .ruby-tag {
+        color: #170;
+    }
+
+    .ruby-attribute {
+        color: #00c;
+    }

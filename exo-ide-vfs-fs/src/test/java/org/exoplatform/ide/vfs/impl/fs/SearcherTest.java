@@ -34,7 +34,12 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 
 import java.io.ByteArrayInputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SearcherTest extends LocalFileSystemTest {
     private Pair<String[], String>[] queryToResult;
@@ -97,10 +102,14 @@ public class SearcherTest extends LocalFileSystemTest {
         env.setVariable(EnvironmentContext.VFS_INDEX_DIR, root.getParentFile());
 
         // Touch Searcher to initialize it.
-        searcher = (CleanableSearcher)searcherProvider.getSearcher(mountPoint);
+        searcher = (CleanableSearcher)searcherProvider.getSearcher(mountPoint, true);
         // Wait util searcher initialized.
-        while (!searcher.isInitDone()) {
+        Throwable error;
+        while ((error = searcher.getInitError()) == null && !searcher.isInitDone()) {
             Thread.sleep(100);
+        }
+        if (error != null) {
+          fail(error.getMessage());
         }
 
         assertNull(searcher.getInitError());

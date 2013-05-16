@@ -67,8 +67,7 @@ public class GitUrlResolverFsImpl implements GitUrlResolver {
             String path = mountStrategy.getMountPath().getAbsolutePath();
             path = path.substring(rootPath.length());
 
-            final String vfsId = vfs.getInfo().getId();
-            final Item item = vfs.getItem(id, PropertyFilter.NONE_FILTER);
+            final Item item = vfs.getItem(id, false, PropertyFilter.NONE_FILTER);
 
             StringBuilder result = new StringBuilder();
             // Set schema hardcode to "http",

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,20 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+package com.google.collide.server;
 
-package org.exoplatform.ide.client.navigator;
+import org.exoplatform.ide.dtogen.server.JsonSerializable;
 
-import com.google.gwt.event.shared.EventHandler;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
 
 /**
- * Created by The eXo Platform SAS .
- *
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @see CollaborationEditorException
  */
-
-public interface ShowNavigatorHandler extends EventHandler {
-
-    void onShowNavigator(ShowNavigatorEvent event);
-
+public final class CollaborationEditorExceptionMapper implements ExceptionMapper<CollaborationEditorException> {
+    @Override
+    public Response toResponse(CollaborationEditorException exception) {
+        return Response.serverError().type(MediaType.APPLICATION_JSON).entity(((JsonSerializable)exception.getError()).toJson()).build();
+    }
 }

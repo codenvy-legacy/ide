@@ -95,13 +95,13 @@ public class FileTemplateTest extends BaseTest {
         ContainerResponse cres = launcher.service("PUT", "/ide/templates/file/add", "", headers, b, null, ctx);
         Assert.assertEquals(204, cres.getStatus());
         Assert
-                .assertTrue(vfs.getItemByPath("/ide-home/templates/fileTemplates", null, PropertyFilter.NONE_FILTER) instanceof File);
+                .assertTrue(vfs.getItemByPath("/ide-home/templates/fileTemplates", null, false, PropertyFilter.NONE_FILTER) instanceof File);
     }
 
     @After
     public void after() throws InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException {
         ItemList<Item> children =
-                vfs.getChildren(vfs.getInfo().getRoot().getId(), -1, 0, null, PropertyFilter.NONE_FILTER);
+                vfs.getChildren(vfs.getInfo().getRoot().getId(), -1, 0, null, false, PropertyFilter.NONE_FILTER);
         for (Item i : children.getItems()) {
             if (i.getName().equals("ide-home")) {
                 try {

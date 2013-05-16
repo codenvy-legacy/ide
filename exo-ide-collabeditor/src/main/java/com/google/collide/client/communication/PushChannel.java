@@ -96,7 +96,7 @@ public class PushChannel {
 
     private final ConnectionClosedHandler closedHandler = new ConnectionClosedHandler() {
         @Override
-        public void onClose(WebSocketClosedEvent event) {
+        public void onConnectionClosed(WebSocketClosedEvent event) {
             hasReceivedOnDisconnected = true;
             disconnectedTooLongTimer.schedule();
         }
@@ -104,7 +104,7 @@ public class PushChannel {
 
     private final ConnectionOpenedHandler openedHandler = new ConnectionOpenedHandler() {
         @Override
-        public void onOpen() {
+        public void onConnectionOpened() {
             // Lazily initialize the messageHandler and register to handle messages.
             if (messageHandler == null) {
                 messageHandler = new MessageHandler() {

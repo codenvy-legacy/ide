@@ -81,7 +81,7 @@ public class ProjectPrepareService {
         }
 
         try {
-            ItemList<Item> children = vfs.getChildren(projectId, -1, 0, null, PropertyFilter.ALL_FILTER);
+            ItemList<Item> children = vfs.getChildren(projectId, -1, 0, null, false, PropertyFilter.ALL_FILTER);
             for (Item item : children.getItems()) {
                 if ("pom.xml".equals(item.getName())) {
                     MultiModuleProjectProcessor processor = new MultiModuleProjectProcessor(vfs);

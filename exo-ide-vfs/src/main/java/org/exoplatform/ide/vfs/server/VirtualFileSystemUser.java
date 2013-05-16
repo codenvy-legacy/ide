@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,30 +16,28 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+package org.exoplatform.ide.vfs.server;
 
-package org.exoplatform.ide.client.navigator;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
-import com.google.gwt.event.shared.GwtEvent;
+/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+public class VirtualFileSystemUser {
+    private final String             userId;
+    private final Collection<String> groups;
 
-/**
- * Created by The eXo Platform SAS .
- *
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
- */
-
-public class ShowNavigatorEvent extends GwtEvent<ShowNavigatorHandler> {
-
-    public static final GwtEvent.Type<ShowNavigatorHandler> TYPE = new GwtEvent.Type<ShowNavigatorHandler>();
-
-    @Override
-    public com.google.gwt.event.shared.GwtEvent.Type<ShowNavigatorHandler> getAssociatedType() {
-        return TYPE;
+    VirtualFileSystemUser(String userId, Set<String> groups) {
+        this.userId = userId;
+        this.groups = Collections.unmodifiableSet(new HashSet<String>(groups));
     }
 
-    @Override
-    protected void dispatch(ShowNavigatorHandler handler) {
-        handler.onShowNavigator(this);
+    public String getUserId() {
+        return userId;
     }
 
+    public Collection<String> getGroups() {
+        return groups;
+    }
 }

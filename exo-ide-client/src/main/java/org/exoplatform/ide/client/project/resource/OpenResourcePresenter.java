@@ -158,42 +158,68 @@ public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHan
         if (project == null || display != null) {
             return;
         }
+        
+        allFiles.clear();
+        addItem(project);
+        
+        display = GWT.create(Display.class);
+        bindDisplay();
+        IDE.getInstance().openView(display.asView());
+    }
+    
+    private void addItem(Item item) {
+        if (item instanceof FileModel) {
+            allFiles.add((FileModel)item);            
+        } else if (item instanceof FolderModel) {
+            FolderModel folder = (FolderModel)item;            
 
-        HashMap<String, String> query = new HashMap<String, String>();
-        String path = project.getPath();
-        if (!"".equals(path) && !path.startsWith("/")) {
-            path = "/" + path;
-        }
-        query.put("path", path);
-
-        try {
-            VirtualFileSystem.getInstance().search(query, -1, 0,
-                                                   new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>())) {
-                                                       @Override
-                                                       protected void onSuccess(List<Item> result) {
-                                                           IDELoader.hide();
-
-                                                           allFiles.clear();
-                                                           for (Item item : result) {
-                                                               if (item instanceof FileModel) {
-                                                                   allFiles.add((FileModel)item);
-                                                               }
-                                                           }
-
-                                                           display = GWT.create(Display.class);
-                                                           bindDisplay();
-                                                           IDE.getInstance().openView(display.asView());
-                                                       }
-
-                                                       @Override
-                                                       protected void onFailure(Throwable exception) {
-                                                           IDE.fireEvent(new ExceptionThrownEvent(exception, SEARCH_ERROR_MESSAGE));
-                                                       }
-                                                   });
-        } catch (RequestException e) {
-            IDE.fireEvent(new ExceptionThrownEvent(e, SEARCH_ERROR_MESSAGE));
+            for (Item child : folder.getChildren().getItems()) {
+                addItem(child);
+            }
         }
     }
+    
+//    @Override
+//    public void onOpenResource(OpenResourceEvent event) {
+//        if (project == null || display != null) {
+//            return;
+//        }
+//
+//        HashMap<String, String> query = new HashMap<String, String>();
+//        String path = project.getPath();
+//        if (!"".equals(path) && !path.startsWith("/")) {
+//            path = "/" + path;
+//        }
+//        query.put("path", path);
+//
+//        try {
+//            VirtualFileSystem.getInstance().search(query, -1, 0,
+//                                                   new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>())) {
+//                                                       @Override
+//                                                       protected void onSuccess(List<Item> result) {
+//                                                           IDELoader.hide();
+//
+//                                                           allFiles.clear();
+//                                                           for (Item item : result) {
+//                                                               if (item instanceof FileModel) {
+//                                                                   allFiles.add((FileModel)item);
+//                                                               }
+//                                                           }
+//
+//                                                           display = GWT.create(Display.class);
+//                                                           bindDisplay();
+//                                                           IDE.getInstance().openView(display.asView());
+//                                                       }
+//
+//                                                       @Override
+//                                                       protected void onFailure(Throwable exception) {
+//                                                           IDE.fireEvent(new ExceptionThrownEvent(exception, SEARCH_ERROR_MESSAGE));
+//                                                       }
+//                                                   });
+//        } catch (RequestException e) {
+//            IDE.fireEvent(new ExceptionThrownEvent(e, SEARCH_ERROR_MESSAGE));
+//        }
+//    }
 
     private void bindDisplay() {
         display.setItemFolderName(null);

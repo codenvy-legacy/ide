@@ -31,11 +31,10 @@ import java.util.List;
  * @version $Id: Jan 20, 2011 2:51:47 PM anya $
  */
 public class MainMenuControlsFormatter implements ControlsFormatter {
-    private List<String> controlIdsOrder;
-
-    private void initControlsOrder() {
-        controlIdsOrder = new ArrayList<String>();
-
+    
+    private List<String> controlIdsOrder = new ArrayList<String>();
+    
+    public MainMenuControlsFormatter() {
         controlIdsOrder.add("File");
         controlIdsOrder.add("Project");
         controlIdsOrder.add("Edit");
@@ -45,12 +44,11 @@ public class MainMenuControlsFormatter implements ControlsFormatter {
         controlIdsOrder.add("PaaS");
         controlIdsOrder.add("Ssh");
         controlIdsOrder.add("Window");
-        controlIdsOrder.add("Help");
+        controlIdsOrder.add("Help");        
     }
-
+    
     /** @see org.exoplatform.ide.client.framework.control.ControlsFormatter#format(java.util.List) */
     public void format(List<Control> controls) {
-        initControlsOrder();
         Collections.sort(controls, controlComparator);
     }
 

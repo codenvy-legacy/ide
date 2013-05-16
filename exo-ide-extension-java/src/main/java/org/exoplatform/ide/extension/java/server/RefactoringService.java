@@ -91,35 +91,20 @@ public class RefactoringService {
         Object tenantName = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID);
         
         if (tenantName == null) {
-            
-            System.out.println("tenant name > NULL");            
-            
             if (ResourcesPlugin.getDefaultWorkspace() == null) {
-
-                System.out.println("Default workspace is NULL");
-                
                 try {
                     VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null, eventListenerList);
-                    
                     //ResourcesPlugin.setDefaultWorkspace(new WorkspaceResource(vfs));
                     ResourcesPlugin.setDefaultWorkspace(new ObservableWorkspace(vfs));
-                    
                 } catch (VirtualFileSystemException e) {
                     LOG.error("Can't initialize Workspace.", e);
                 }
-            } else {
-                System.out.println("Default workspace present");
             }
         } else {
-            
-            System.out.println("tenant name is not NULL");
-            
             try {
                 VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null, eventListenerList);
-                
                 //ResourcesPlugin.addWorkspace(new WorkspaceResource(vfs));
                 ResourcesPlugin.addWorkspace(new ObservableWorkspace(vfs));
-                
             } catch (VirtualFileSystemException e) {
                 LOG.error("Can't initialize Workspace.", e);
             }
@@ -187,6 +172,7 @@ public class RefactoringService {
 
     private RenameSupport getRenameSupport(String newname, IJavaElement element) throws CoreException {
         RenameSupport renameSupport;
+        
         switch (element.getElementType()) {
             case IJavaElement.COMPILATION_UNIT:
                 renameSupport = RenameSupport.create((ICompilationUnit)element, newname, RenameSupport.UPDATE_REFERENCES);
@@ -215,6 +201,9 @@ public class RefactoringService {
                 renameSupport = RenameSupport.create(((IInitializer)element).getDeclaringType(), newname,
                                                      RenameSupport.UPDATE_REFERENCES);
                 break;
+            case IJavaElement.PACKAGE_FRAGMENT:
+                //renameSupport = RenameSupport.create( (IPackageFragment)element , newname, RenameSupport.UPDATE_REFERENCES);
+                throw new UnsupportedOperationException("Currently we do not support renaming packages");
             default:
                 throw new IllegalArgumentException("Rename of element '" + element.getElementName() + "' is not supported");
         }
@@ -224,7 +213,7 @@ public class RefactoringService {
     private IJavaProject getOrCreateJavaProject(WorkspaceResource workspace, String projectid) {
         VirtualFileSystem vfs = workspace.getVFS();
         try {
-            Item item = vfs.getItem(projectid, PropertyFilter.ALL_FILTER);
+            Item item = vfs.getItem(projectid, false, PropertyFilter.ALL_FILTER);
             if (item instanceof Project) {
                 if (!checkProjectInitialized(vfs, item)) {
                     initializeProject(item, workspace);
@@ -307,7 +296,7 @@ public class RefactoringService {
     }
 
     private boolean checkProjectInitialized(VirtualFileSystem vfs, Item item) throws VirtualFileSystemException {
-        ItemList<Item> children = vfs.getChildren(item.getId(), -1, 0, null, PropertyFilter.ALL_FILTER);
+        ItemList<Item> children = vfs.getChildren(item.getId(), -1, 0, null, false, PropertyFilter.ALL_FILTER);
         for (Item i : children.getItems()) {
             if (i.getName().equals(".classpath")) {
                 return true;

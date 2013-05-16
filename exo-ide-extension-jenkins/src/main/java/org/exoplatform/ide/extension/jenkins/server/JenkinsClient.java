@@ -467,7 +467,7 @@ public abstract class JenkinsClient {
                         input.close();
                     }
                 }
-                return (body != null) ? true : false;
+                return (body != null);
             } else if (responseCode == 404) {
                 //means that our task is not in queue
                 return false;
@@ -598,8 +598,8 @@ public abstract class JenkinsClient {
     }
 
     private String readJenkinsJobName(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException {
-        Item item = vfs.getItem(projectId, PropertyFilter.valueOf("jenkins-job"));
-        String job = (String)item.getPropertyValue("jenkins-job");
+        Item item = vfs.getItem(projectId, false, PropertyFilter.valueOf("jenkins-job"));
+        String job = item.getPropertyValue("jenkins-job");
         if (job == null || job.isEmpty()) {
             throw new RuntimeException("Job name required. ");
         }

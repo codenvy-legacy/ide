@@ -153,6 +153,10 @@ public class MultiVariableGuess {
             return fReplacementString;
         }
 
+        public String getAdditionalDisplayString() {
+            return null;
+        }
+
         /*
          * @see ICompletionProposal#getAdditionalProposalInfo()
          */
