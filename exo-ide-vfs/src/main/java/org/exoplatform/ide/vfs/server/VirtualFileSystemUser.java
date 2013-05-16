@@ -16,28 +16,28 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.python.client;
+package org.exoplatform.ide.vfs.server;
 
-import com.google.collide.client.CollabEditor;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.exoplatform.ide.editor.client.api.EditorCapability;
+/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+public class VirtualFileSystemUser {
+    private final String             userId;
+    private final Collection<String> groups;
 
-/**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
- */
-public class PythonEditor extends CollabEditor {
-    public PythonEditor(String mimeType) {
-        super(mimeType);
-        editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(new PyAutocompliter());
+    VirtualFileSystemUser(String userId, Set<String> groups) {
+        this.userId = userId;
+        this.groups = Collections.unmodifiableSet(new HashSet<String>(groups));
     }
 
-    /** @see com.google.collide.client.CollabEditor#isCapable(org.exoplatform.ide.editor.client.api.EditorCapability) */
-    @Override
-    public boolean isCapable(EditorCapability capability) {
-        if (capability == EditorCapability.OUTLINE) {
-            return false;
-        }
-        return super.isCapable(capability);
+    public String getUserId() {
+        return userId;
+    }
+
+    public Collection<String> getGroups() {
+        return groups;
     }
 }

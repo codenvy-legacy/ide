@@ -26,12 +26,12 @@ import java.util.Set;
 public class CollaborationEditorApplication extends Application {
     @Override
     public Set<Object> getSingletons() {
-        return Collections.emptySet();
+        return Collections.<Object>singleton(new CollaborationEditorExceptionMapper());
     }
 
     @Override
     public Set<Class<?>> getClasses() {
-        Set<Class<?>> classes = new HashSet<Class<?>>(2);
+        Set<Class<?>> classes = new HashSet<Class<?>>(3);
         classes.add(ParticipantsService.class);
         classes.add(EditSessionsService.class);
         classes.add(CommunicationService.class);

@@ -61,7 +61,7 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
 
     private JavaDocBuilderVfs parseProject(String projectId,
                                            String vfsId)
-            throws VirtualFileSystemException, ItemNotFoundException, PermissionDeniedException, CodeAssistantException {
+            throws VirtualFileSystemException, CodeAssistantException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
 
         ProjectImpl project = getProject(projectId, vfs);
@@ -94,7 +94,7 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
             sourcePath = DEFAULT_SOURCE_FOLDER;
         }
 
-        Item sourceFolder = vfs.getItemByPath(project.getPath() + "/" + sourcePath, null, PropertyFilter.NONE_FILTER);
+        Item sourceFolder = vfs.getItemByPath(project.getPath() + "/" + sourcePath, null, false, PropertyFilter.NONE_FILTER);
 
         if (sourceFolder.getItemType() != ItemType.FOLDER) {
             throw new CodeAssistantException(500, "Can't find project source, in " + sourcePath);
@@ -132,7 +132,7 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
     private List<ShortTypeInfo> findClassesInPackage(File file, Project project,
                                                      VirtualFileSystem vfs) throws CodeAssistantException, VirtualFileSystemException {
         List<ShortTypeInfo> classes = new ArrayList<ShortTypeInfo>();
-        ItemList<Item> children = vfs.getChildren(file.getParentId(), -1, 0, "file", PropertyFilter.ALL_FILTER);
+        ItemList<Item> children = vfs.getChildren(file.getParentId(), -1, 0, "file", false, PropertyFilter.ALL_FILTER);
         for (Item i : children.getItems()) {
             if (i.getName().endsWith(".java")) {
                 if (!file.getId().equals(i.getId())) {
@@ -251,12 +251,12 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
                                                      String vfsId) throws VirtualFileSystemException, CodeAssistantException {
         List<ShortTypeInfo> classNames = null;
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        Item item = vfs.getItem(fileId, PropertyFilter.ALL_FILTER);
+        Item item = vfs.getItem(fileId, false, PropertyFilter.ALL_FILTER);
         if (item.getItemType() != ItemType.FILE) {
             throw new InvalidArgumentException("Unable find Classes. Item " + item.getName() + " is not a file. ");
         }
 
-        Item p = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+        Item p = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
 
         Project project = null;
         if (p instanceof ProjectImpl) {

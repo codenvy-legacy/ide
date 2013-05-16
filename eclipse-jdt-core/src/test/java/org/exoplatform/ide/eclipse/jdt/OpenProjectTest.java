@@ -70,7 +70,7 @@ public class OpenProjectTest extends ResourcesBaseTest {
         Project project = vfs.createProject(vfs.getInfo().getRoot().getId(), "proj", null, prop);
         vfs.createFolder(project.getId(), "bin");
         vfs.createFolder(project.getId(), "src/main/java/com/exo");
-        Item folder = vfs.getItemByPath("/proj/src/main/java/com/exo", null, PropertyFilter.NONE_FILTER);
+        Item folder = vfs.getItemByPath("/proj/src/main/java/com/exo", null, false, PropertyFilter.NONE_FILTER);
         vfs.createFile(folder.getId(), "My.java", MediaType.TEXT_PLAIN_TYPE,
                        new ByteArrayInputStream(
                                "package com.exo;\npublic class My{ private My ins = null; public void dodo(){}}".getBytes()));

@@ -411,7 +411,7 @@ public class MountPoint {
 
             if (searcherProvider != null) {
                 try {
-                    searcherProvider.getSearcher(this).add(newVirtualFile);
+                    searcherProvider.getSearcher(this, true).add(newVirtualFile);
                 } catch (IOException e) {
                     LOG.error(e.getMessage(), e);
                 }
@@ -526,7 +526,7 @@ public class MountPoint {
 
             if (searcherProvider != null) {
                 try {
-                    searcherProvider.getSearcher(this).add(destination);
+                    searcherProvider.getSearcher(this, true).add(destination);
                 } catch (IOException e) {
                     LOG.error(e.getMessage(), e); // just log about i/o error in index
                 }
@@ -702,7 +702,7 @@ public class MountPoint {
 
             if (searcherProvider != null) {
                 try {
-                    searcherProvider.getSearcher(this).update(virtualFile);
+                    searcherProvider.getSearcher(this, true).update(virtualFile);
                 } catch (IOException e) {
                     LOG.error(e.getMessage(), e);
                 }
@@ -796,7 +796,7 @@ public class MountPoint {
 
         if (searcherProvider != null) {
             try {
-                searcherProvider.getSearcher(this).delete(path);
+                searcherProvider.getSearcher(this, true).delete(path);
             } catch (IOException e) {
                 LOG.error(e.getMessage(), e);
             }

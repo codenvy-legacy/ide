@@ -149,6 +149,14 @@ public class CssProposal implements CompletionProposal {
         return escapedLabel;
     }
 
+    /**
+     * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getAdditionalDisplayString()
+     */
+    @Override
+    public String getAdditionalDisplayString() {
+        return null;
+    }
+
     /** @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getImage() */
     @Override
     public Image getImage() {

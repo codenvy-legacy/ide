@@ -16,28 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.python.client;
+package com.google.collide.server;
 
-import com.google.collide.client.CollabEditor;
+import org.exoplatform.ide.dtogen.server.JsonSerializable;
 
-import org.exoplatform.ide.editor.client.api.EditorCapability;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @see CollaborationEditorException
  */
-public class PythonEditor extends CollabEditor {
-    public PythonEditor(String mimeType) {
-        super(mimeType);
-        editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(new PyAutocompliter());
-    }
-
-    /** @see com.google.collide.client.CollabEditor#isCapable(org.exoplatform.ide.editor.client.api.EditorCapability) */
+public final class CollaborationEditorExceptionMapper implements ExceptionMapper<CollaborationEditorException> {
     @Override
-    public boolean isCapable(EditorCapability capability) {
-        if (capability == EditorCapability.OUTLINE) {
-            return false;
-        }
-        return super.isCapable(capability);
+    public Response toResponse(CollaborationEditorException exception) {
+        return Response.serverError().type(MediaType.APPLICATION_JSON).entity(((JsonSerializable)exception.getError()).toJson()).build();
     }
 }

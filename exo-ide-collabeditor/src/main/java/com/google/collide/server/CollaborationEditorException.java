@@ -16,28 +16,33 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.impl.fs;
+package com.google.collide.server;
 
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.dtogen.server.ServerErrorImpl;
+import org.exoplatform.ide.dtogen.shared.ServerError;
 
 /**
- * Manages instances of Searcher.
+ * Wraps any exception in collaboration editor at server side.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
  */
-public interface SearcherProvider {
-    /**
-     * Get Searcher for specified MountPoint.
-     *
-     * @param mountPoint
-     *         MountPoint
-     * @param create
-     *         <code>true</code> to create new Searcher if there is no Searcher for specified <code>mountPoint</code> and <code>false</code>
-     *         to return <code>null</code> if there is no Searcher
-     * @return instance of Searcher
-     * @throws VirtualFileSystemException
-     * @see MountPoint
-     */
-    Searcher getSearcher(MountPoint mountPoint, boolean create) throws VirtualFileSystemException;
+@SuppressWarnings("serial")
+public final class CollaborationEditorException extends RuntimeException {
+    private final ServerError error;
+
+    public CollaborationEditorException(Throwable cause) {
+        super(cause);
+        ServerErrorImpl myError = ServerErrorImpl.make();
+        myError.setDetails(cause.getMessage());
+        myError.setFailureReason(ServerError.FailureReason.UNKNOWN);
+        this.error = myError;
+    }
+
+    public CollaborationEditorException(ServerError error) {
+        this.error = error;
+    }
+
+    public ServerError getError() {
+        return error;
+    }
 }
