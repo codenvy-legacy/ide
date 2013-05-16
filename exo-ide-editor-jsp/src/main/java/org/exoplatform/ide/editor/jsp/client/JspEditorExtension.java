@@ -87,7 +87,7 @@ public class JspEditorExtension extends Extension implements InitializeServicesH
     public void onInitializeServices(InitializeServicesEvent event) {
         CodeAssistantService service;
         if (JavaCodeAssistantService.get() == null)
-            service = new JavaCodeAssistantService(event.getLoader());
+            service = new JavaCodeAssistantService(Utils.getRestContext(), Utils.getWorkspaceName(), event.getLoader());
         else
             service = JavaCodeAssistantService.get();
 

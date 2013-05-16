@@ -68,7 +68,7 @@ public abstract class MemoryFileSystemTest extends TestCase {
 
     protected static final String MY_WORKSPACE_ID       = "my-ws";
     protected final        String BASE_URI              = "http://localhost/service";
-    protected final        String SERVICE_URI           = BASE_URI + "/ide/vfs/v2/";
+    protected final        String SERVICE_URI           = BASE_URI + "/my-ws/vfs/v2/";
     protected final        String DEFAULT_CONTENT       = "__TEST__";
     protected final        byte[] DEFAULT_CONTENT_BYTES = DEFAULT_CONTENT.getBytes();
 

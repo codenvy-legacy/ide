@@ -58,7 +58,7 @@ public class JavaEditorExtension extends Extension implements InitializeServices
     public void onInitializeServices(InitializeServicesEvent event) {
 
         if (JavaCodeAssistantService.get() == null)
-            new JavaCodeAssistantService(event.getLoader());
+            new JavaCodeAssistantService(Utils.getRestContext(), Utils.getWorkspaceName(), event.getLoader());
 
         IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_JAVA, new JavaCommentsModifier()));
     }

@@ -52,10 +52,10 @@ public abstract class CodeAssistantService {
 
     protected String restServiceContext;
 
-    protected CodeAssistantService(Loader loader, String getClassUrl,
+    protected CodeAssistantService(String restContext, Loader loader, String getClassUrl,
                                    String findClassByPrefix, String findType) {
         this.loader = loader;
-        this.restServiceContext = Utils.getRestContext();
+        this.restServiceContext = restContext;
 
         this.GET_CLASS_URL = getClassUrl;
         this.FIND_CLASS_BY_PREFIX = findClassByPrefix;

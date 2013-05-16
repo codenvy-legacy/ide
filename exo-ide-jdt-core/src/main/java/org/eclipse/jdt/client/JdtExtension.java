@@ -186,7 +186,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
         IDE.addHandler(ApplicationClosedEvent.TYPE, this);
         IDE.addHandler(VfsChangedEvent.TYPE, this);
 //      new CodeAssistantPresenter(this);
-        new JavaCodeController(this);
+        new JavaCodeController(Utils.getRestContext(), Utils.getWorkspaceName(), this);
         new OutlinePresenter();
         new TypeInfoUpdater();
         new JavaClasspathResolver(this);
