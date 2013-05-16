@@ -34,6 +34,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.paas.PaaS;
@@ -159,17 +160,14 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
 
     @SuppressWarnings("deprecation")
     private Property getTarget(Property currentType) {
-        String target = "";
+        List<String> target = new ArrayList<String>();
         org.exoplatform.ide.client.framework.project.ProjectType currentProjType =
                                                                                    org.exoplatform.ide.client.framework.project.ProjectType.fromValue(currentType.getValue()
                                                                                                                                                                  .get(0));
         List<PaaS> paases = IDE.getInstance().getPaaSes();
         for (PaaS paas : paases) {
             if (paas.getSupportedProjectTypes().contains(currentProjType)) {
-                if (!target.equals("")) {
-                    target += ",";
-                }
-                target += paas.getId();
+                target.add(paas.getId());
             }
         }
         return new PropertyImpl("exoide:target", target);
@@ -258,6 +256,7 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         } finally {
+            IDE.fireEvent(new RefreshBrowserEvent());
             if (display != null) {
                 IDE.getInstance().closeView(display.asView().getId());
             }

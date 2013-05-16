@@ -34,13 +34,13 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectProperties;
+import org.exoplatform.ide.client.framework.project.api.PropertiesChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -286,19 +286,20 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
                 @Override
                 protected void onSuccess(ItemWrapper result) {
                     IDE.getInstance().closeView(display.asView().getId());
-                    IDE.fireEvent(new RefreshBrowserEvent());
+                    IDE.fireEvent(new PropertiesChangedEvent(currentProject));
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
                     IDE.fireEvent(new ExceptionThrownEvent(exception));
+                    IDE.fireEvent(new PropertiesChangedEvent(currentProject));
                 }
             });
 
         } catch (Exception e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
+            IDE.fireEvent(new PropertiesChangedEvent(currentProject));
+
         }
-
     }
-
 }

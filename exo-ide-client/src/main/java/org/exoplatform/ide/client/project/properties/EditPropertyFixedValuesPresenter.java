@@ -141,12 +141,10 @@ public class EditPropertyFixedValuesPresenter implements ViewClosedHandler {
         return false;
     }
 
-    private void setProperty(String propertyName, String propertyValue) {
+    private void setProperty(String propertyName, List<String> propertyValue) {
         for (Property property : propertyList) {
             if (propertyName.equals(property.getName())) {
-                List<String> value = new ArrayList<String>();
-                value.add(propertyValue);
-                property.setValue(value);
+                property.setValue(propertyValue);
                 return;
             }
         }
@@ -212,7 +210,7 @@ public class EditPropertyFixedValuesPresenter implements ViewClosedHandler {
 
     @SuppressWarnings("deprecation")
     private void setTarget() {
-        String target = "";
+        List<String> target = new ArrayList<String>();
         org.exoplatform.ide.client.framework.project.ProjectType currentType = null;
 
         for (Property prop : propertyList) {
@@ -224,10 +222,7 @@ public class EditPropertyFixedValuesPresenter implements ViewClosedHandler {
         List<PaaS> paases = IDE.getInstance().getPaaSes();
         for (PaaS paas : paases) {
             if (paas.getSupportedProjectTypes().contains(currentType)) {
-                if (!target.equals("")) {
-                    target += ",";
-                }
-                target += paas.getId();
+                target.add(paas.getId());
             }
         }
         setProperty("exoide:target", target);
