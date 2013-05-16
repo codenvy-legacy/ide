@@ -83,7 +83,7 @@ public class ChildrenTest extends MemoryFileSystemTest {
 
     public void testGetChildrenNoPermissions() throws Exception {
         AccessControlEntry ace = new AccessControlEntryImpl();
-        ace.setPrincipal("admin");
+        ace.setPrincipal(new PrincipalImpl("admin", Principal.Type.USER));
         ace.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
         memoryContext.getItem(folderId).updateACL(Arrays.asList(ace), true);
 

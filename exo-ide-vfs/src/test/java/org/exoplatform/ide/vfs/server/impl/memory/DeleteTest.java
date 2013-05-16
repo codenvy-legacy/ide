@@ -24,6 +24,8 @@ import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFile;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFolder;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
+import org.exoplatform.ide.vfs.shared.Principal;
+import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl;
 
 import java.io.ByteArrayInputStream;
@@ -88,10 +90,10 @@ public class DeleteTest extends MemoryFileSystemTest {
 
     public void testDeleteFileNoPermissionsFile() throws Exception {
         AccessControlEntry adminACE = new AccessControlEntryImpl();
-        adminACE.setPrincipal("admin");
+        adminACE.setPrincipal(new PrincipalImpl("john", Principal.Type.USER));
         adminACE.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
         AccessControlEntry userACE = new AccessControlEntryImpl();
-        adminACE.setPrincipal("john");
+        userACE.setPrincipal(new PrincipalImpl("john", Principal.Type.USER));
         adminACE.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.READ.value())));
         file.updateACL(Arrays.asList(adminACE, userACE), true);
 

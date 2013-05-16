@@ -28,8 +28,8 @@ import java.util.Set;
  * @version $Id: AccessControlEntryImpl.java 79579 2012-02-17 13:27:25Z andrew00x $
  */
 public class AccessControlEntryImpl implements AccessControlEntry {
-    /** Principal name. */
-    private String principal;
+    /** Principal. */
+    private Principal principal;
 
     /** Permissions. */
     private Set<String> permissions;
@@ -46,7 +46,7 @@ public class AccessControlEntryImpl implements AccessControlEntry {
      * @param permissions
      *         permissions
      */
-    public AccessControlEntryImpl(String principal, Set<String> permissions) {
+    public AccessControlEntryImpl(Principal principal, Set<String> permissions) {
         this.principal = principal;
         this.permissions = permissions;
     }
@@ -65,12 +65,12 @@ public class AccessControlEntryImpl implements AccessControlEntry {
     }
 
     @Override
-    public String getPrincipal() {
+    public Principal getPrincipal() {
         return principal;
     }
 
     @Override
-    public void setPrincipal(String principal) {
+    public void setPrincipal(Principal principal) {
         this.principal = principal;
     }
 

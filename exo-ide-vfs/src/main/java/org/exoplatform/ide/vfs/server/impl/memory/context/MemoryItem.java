@@ -21,6 +21,8 @@ package org.exoplatform.ide.vfs.server.impl.memory.context;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
+import org.exoplatform.ide.vfs.shared.Principal;
+import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
@@ -47,10 +49,12 @@ import static org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissi
  * @version $Id: $
  */
 public abstract class MemoryItem {
-    private final String                             id;
-    private final Map<String, Set<BasicPermissions>> permissionsMap;
-    private final Map<String, List<String>>          properties;
-    private final long                               creationDate;
+    private static final PrincipalImpl ANY_PRINCIPAL_INST = new PrincipalImpl(VirtualFileSystemInfo.ANY_PRINCIPAL, Principal.Type.USER);
+    private final String                                    id;
+    // Use known implementation of Principal as key. Keep in mind that Principal is 'transport' interface.
+    private final Map<PrincipalImpl, Set<BasicPermissions>> permissionsMap;
+    private final Map<String, List<String>>                 properties;
+    private final long                                      creationDate;
 
     private MemoryFolder parent;
     private String       name;
@@ -60,7 +64,7 @@ public abstract class MemoryItem {
     MemoryItem(String id, String name) {
         this.id = id;
         this.name = name;
-        this.permissionsMap = new HashMap<String, Set<BasicPermissions>>();
+        this.permissionsMap = new HashMap<PrincipalImpl, Set<BasicPermissions>>();
         this.properties = new HashMap<String, List<String>>();
         this.creationDate = this.lastModificationDate = System.currentTimeMillis();
     }
@@ -144,23 +148,24 @@ public abstract class MemoryItem {
                 return Collections.emptyList();
             }
             List<AccessControlEntry> acl = new ArrayList<AccessControlEntry>(permissionsMap.size());
-            for (Map.Entry<String, Set<BasicPermissions>> e : permissionsMap.entrySet()) {
+            for (Map.Entry<PrincipalImpl, Set<BasicPermissions>> e : permissionsMap.entrySet()) {
                 Set<BasicPermissions> basicPermissions = e.getValue();
                 Set<String> plainPermissions = new HashSet<String>(basicPermissions.size());
                 for (BasicPermissions permission : e.getValue()) {
                     plainPermissions.add(permission.value());
                 }
 
-                acl.add(new AccessControlEntryImpl(e.getKey(), plainPermissions));
+                acl.add(new AccessControlEntryImpl(new PrincipalImpl(e.getKey()), plainPermissions));
             }
             return acl;
         }
     }
 
     public final void updateACL(List<AccessControlEntry> acl, boolean override) {
-        Map<String, Set<BasicPermissions>> update = new HashMap<String, Set<BasicPermissions>>(acl.size());
+        Map<PrincipalImpl, Set<BasicPermissions>> update = new HashMap<PrincipalImpl, Set<BasicPermissions>>(acl.size());
         for (AccessControlEntry ace : acl) {
-            String principal = ace.getPrincipal();
+            // Do not use 'transport' object directly.
+            PrincipalImpl principal = new PrincipalImpl(ace.getPrincipal());
             Set<BasicPermissions> permissions = update.get(principal);
             if (permissions == null) {
                 permissions = EnumSet.noneOf(BasicPermissions.class);
@@ -182,11 +187,11 @@ public abstract class MemoryItem {
         lastModificationDate = System.currentTimeMillis();
     }
 
-    public final Map<String, Set<BasicPermissions>> getPermissions() {
+    public final Map<Principal, Set<BasicPermissions>> getPermissions() {
         synchronized (permissionsMap) {
-            Map<String, Set<BasicPermissions>> copy = new HashMap<String, Set<BasicPermissions>>(permissionsMap.size());
-            for (Map.Entry<String, Set<BasicPermissions>> e : permissionsMap.entrySet()) {
-                copy.put(e.getKey(), EnumSet.copyOf(e.getValue()));
+            Map<Principal, Set<BasicPermissions>> copy = new HashMap<Principal, Set<BasicPermissions>>(permissionsMap.size());
+            for (Map.Entry<PrincipalImpl, Set<BasicPermissions>> e : permissionsMap.entrySet()) {
+                copy.put(new PrincipalImpl(e.getKey()), EnumSet.copyOf(e.getValue()));
             }
             return copy;
         }
@@ -197,22 +202,22 @@ public abstract class MemoryItem {
         final Identity user = cs != null ? cs.getIdentity() : new Identity(VirtualFileSystemInfo.ANONYMOUS_PRINCIPAL);
         MemoryItem object = this;
         while (object != null) {
-            final Map<String, Set<BasicPermissions>> objectPermissions = object.getPermissions();
+            final Map<Principal, Set<BasicPermissions>> objectPermissions = object.getPermissions();
             if (!objectPermissions.isEmpty()) {
-                Set<BasicPermissions> userPermissions = objectPermissions.get(user.getUserId());
+                Set<BasicPermissions> userPermissions = objectPermissions.get(new PrincipalImpl(user.getUserId(), Principal.Type.USER));
                 if (userPermissions != null) {
                     return userPermissions.contains(permission) || userPermissions.contains(BasicPermissions.ALL);
                 }
                 Collection<String> roles = user.getRoles();
                 if (!roles.isEmpty()) {
                     for (String role : roles) {
-                        userPermissions = objectPermissions.get("role:" + role);
+                        userPermissions = objectPermissions.get(new PrincipalImpl(role, Principal.Type.GROUP));
                         if (userPermissions != null) {
                             return userPermissions.contains(permission) || userPermissions.contains(BasicPermissions.ALL);
                         }
                     }
                 }
-                userPermissions = objectPermissions.get(VirtualFileSystemInfo.ANY_PRINCIPAL);
+                userPermissions = objectPermissions.get(ANY_PRINCIPAL_INST);
                 return userPermissions != null &&
                        (userPermissions.contains(permission) || userPermissions.contains(BasicPermissions.ALL));
             }

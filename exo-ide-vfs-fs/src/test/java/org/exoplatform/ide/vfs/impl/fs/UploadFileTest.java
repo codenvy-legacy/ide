@@ -22,6 +22,8 @@ import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.EnvironmentContext;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.everrest.test.mock.MockHttpServletRequest;
+import org.exoplatform.ide.vfs.shared.Principal;
+import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
@@ -43,9 +45,9 @@ public class UploadFileTest extends LocalFileSystemTest {
         folderPath = createDirectory(testRootPath, "UploadTest");
         protectedFolderPath = createDirectory(testRootPath, "UploadTest_Protected");
 
-        Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(2);
-        permissions.put("admin", EnumSet.of(BasicPermissions.READ));
-        permissions.put("andrew", EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
+        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<Principal, Set<BasicPermissions>>(2);
+        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
+        permissions.put(new PrincipalImpl("admin", Principal.Type.USER), EnumSet.of(BasicPermissions.READ));
         writePermissions(protectedFolderPath, permissions);
 
         folderId = pathToId(folderPath);
@@ -147,9 +149,9 @@ public class UploadFileTest extends LocalFileSystemTest {
         final String fileMediaType = "application/octet-stream";
         final String fileContent = "existed protected file";
         String path = createFile(folderPath, fileName, fileContent.getBytes());
-        Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(2);
-        permissions.put("admin", EnumSet.of(BasicPermissions.READ));
-        permissions.put("andrew", EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
+        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<Principal, Set<BasicPermissions>>(2);
+        permissions.put(new PrincipalImpl("admin", Principal.Type.USER), EnumSet.of(BasicPermissions.READ));
+        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
         writePermissions(path, permissions);
         // File is protected by ACL and may not be overwritten even if 'overwrite' parameter is 'true'
         ContainerResponse response = doUploadFile(folderId, fileName, fileMediaType, DEFAULT_CONTENT, "", "", true);

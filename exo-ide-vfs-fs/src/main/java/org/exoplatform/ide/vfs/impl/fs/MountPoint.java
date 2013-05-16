@@ -41,6 +41,8 @@ import org.exoplatform.ide.vfs.server.util.DeleteOnCloseFileInputStream;
 import org.exoplatform.ide.vfs.server.util.NotClosableInputStream;
 import org.exoplatform.ide.vfs.server.util.ZipContent;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.Principal;
+import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
@@ -1230,20 +1232,21 @@ public class MountPoint {
         while (path != null) {
             final AccessControlList accessControlList = aclCache[path.hashCode() & MASK].get(path);
             if (!accessControlList.isEmpty()) {
-                Set<BasicPermissions> userPermissions = accessControlList.getPermissions(user.getUserId());
+                Set<BasicPermissions> userPermissions =
+                        accessControlList.getPermissions(new PrincipalImpl(user.getUserId(), Principal.Type.USER));
                 if (userPermissions != null) {
                     return userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL);
                 }
                 Collection<String> roles = user.getRoles();
                 if (!roles.isEmpty()) {
                     for (String role : roles) {
-                        userPermissions = accessControlList.getPermissions("role:" + role);
+                        userPermissions = accessControlList.getPermissions(new PrincipalImpl(role, Principal.Type.GROUP));
                         if (userPermissions != null) {
                             return userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL);
                         }
                     }
                 }
-                userPermissions = accessControlList.getPermissions(VirtualFileSystemInfo.ANY_PRINCIPAL);
+                userPermissions = accessControlList.getPermissions(new PrincipalImpl(VirtualFileSystemInfo.ANY_PRINCIPAL, Principal.Type.USER)); // TODO : constant
                 return userPermissions != null && (userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL));
             }
             if (checkParent) {

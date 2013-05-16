@@ -25,6 +25,8 @@ import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.ide.commons.FileUtils;
 import org.exoplatform.ide.commons.ZipUtils;
+import org.exoplatform.ide.vfs.shared.Principal;
+import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.services.security.ConversationState;
@@ -65,8 +67,8 @@ public class ExportTest extends LocalFileSystemTest {
         protectedFolderPath = createDirectory(testRootPath, "ExportTest_ProtectedFolder");
         createTree(protectedFolderPath, 6, 4, null);
 
-        Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(1);
-        permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
+        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<Principal, Set<BasicPermissions>>(1);
+        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.ALL));
         writePermissions(protectedFolderPath, permissions);
 
         folderId = pathToId(folderPath);
@@ -112,8 +114,8 @@ public class ExportTest extends LocalFileSystemTest {
     }
 
     public void testExportFolderNoPermissions2() throws Exception {
-        Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(1);
-        permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
+        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<Principal, Set<BasicPermissions>>(1);
+        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.ALL));
         List<String> l = flattenDirectory(folderPath);
         // Find one child in the list and remove write permission for 'admin'.
         String myProtectedItemPath = folderPath + '/' + l.get(new Random().nextInt(l.size()));

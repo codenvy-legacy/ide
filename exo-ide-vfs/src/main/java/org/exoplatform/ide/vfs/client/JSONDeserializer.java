@@ -18,13 +18,36 @@
  */
 package org.exoplatform.ide.vfs.client;
 
-import com.google.gwt.json.client.*;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONBoolean;
+import com.google.gwt.json.client.JSONNumber;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
+import com.google.gwt.json.client.JSONValue;
 
-import org.exoplatform.ide.vfs.shared.*;
+import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
+import org.exoplatform.ide.vfs.shared.FolderImpl;
+import org.exoplatform.ide.vfs.shared.Link;
+import org.exoplatform.ide.vfs.shared.LinkImpl;
+import org.exoplatform.ide.vfs.shared.LockToken;
+import org.exoplatform.ide.vfs.shared.LockTokenImpl;
+import org.exoplatform.ide.vfs.shared.Principal;
+import org.exoplatform.ide.vfs.shared.PrincipalImpl;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.QueryCapability;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
@@ -97,15 +120,34 @@ public abstract class JSONDeserializer<O> {
                     JSONObject jsonObject = json.isObject();
                     if (jsonObject == null)
                         return null;
-                    return new AccessControlEntryImpl( //
-                                                       STRING_DESERIALIZER.toObject(jsonObject.get("principal")), //
-                                                       STRING_DESERIALIZER.toSet(jsonObject.get("permissions")) //
+                    return new AccessControlEntryImpl(PRINCIPAL_DESERIALIZER.toObject(jsonObject.get("principal")), //
+                                                      STRING_DESERIALIZER.toSet(jsonObject.get("permissions")) //
                     );
                 }
 
                 @Override
                 protected AccessControlEntry[] createArray(int length) {
                     return new AccessControlEntry[length];
+                }
+            };
+
+    public static final JSONDeserializer<Principal> PRINCIPAL_DESERIALIZER =
+            new JSONDeserializer<Principal>() {
+                @Override
+                public Principal toObject(JSONValue json) {
+                    if (json == null)
+                        return null;
+                    JSONObject jsonObject = json.isObject();
+                    if (jsonObject == null)
+                        return null;
+                    return new PrincipalImpl(STRING_DESERIALIZER.toObject(jsonObject.get("name")), //
+                                             Principal.Type.valueOf(STRING_DESERIALIZER.toObject(jsonObject.get("type"))) //
+                    );
+                }
+
+                @Override
+                protected Principal[] createArray(int length) {
+                    return new Principal[length];
                 }
             };
 

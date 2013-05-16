@@ -24,6 +24,8 @@ import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFile;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFolder;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
+import org.exoplatform.ide.vfs.shared.Principal;
+import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl;
 
 import java.io.ByteArrayInputStream;
@@ -53,8 +55,8 @@ public class UpdateACLTest extends MemoryFileSystemTest {
 
     public void testUpdateAcl() throws Exception {
         String path = SERVICE_URI + "acl/" + objectId;
-        String body = "[{\"principal\":\"admin\",\"permissions\":[\"all\"]}," + //
-                      "{\"principal\":\"john\",\"permissions\":[\"read\"]}]";
+        String body = "[{\"principal\":{\"name\":\"admin\",\"type\":\"USER\"},\"permissions\":[\"all\"]}," + //
+                      "{\"principal\":{\"name\":\"john\",\"type\":\"USER\"},\"permissions\":[\"read\"]}]";
         Map<String, List<String>> h = new HashMap<String, List<String>>(1);
         h.put("Content-Type", Arrays.asList("application/json"));
         ContainerResponse response = launcher.service("POST", path, BASE_URI, h, body.getBytes(), null);
@@ -67,14 +69,14 @@ public class UpdateACLTest extends MemoryFileSystemTest {
 
     public void testUpdateAclOverride() throws Exception {
         AccessControlEntry ace = new AccessControlEntryImpl();
-        ace.setPrincipal("any");
+        ace.setPrincipal(new PrincipalImpl("any", Principal.Type.USER));
         ace.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
         memoryContext.getItem(objectId).updateACL(Arrays.asList(ace), false);
 
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         String path = SERVICE_URI + "acl/" + objectId + '?' + "override=" + true;
-        String body = "[{\"principal\":\"admin\",\"permissions\":[\"all\"]}," + //
-                      "{\"principal\":\"john\",\"permissions\":[\"read\"]}]";
+        String body = "[{\"principal\":{\"name\":\"admin\",\"type\":\"USER\"},\"permissions\":[\"all\"]}," + //
+                      "{\"principal\":{\"name\":\"john\",\"type\":\"USER\"},\"permissions\":[\"read\"]}]";
         Map<String, List<String>> h = new HashMap<String, List<String>>(1);
         h.put("Content-Type", Arrays.asList("application/json"));
         ContainerResponse response = launcher.service("POST", path, BASE_URI, h, body.getBytes(), writer, null);
@@ -89,13 +91,13 @@ public class UpdateACLTest extends MemoryFileSystemTest {
 
     public void testUpdateAclMerge() throws Exception {
         AccessControlEntry ace = new AccessControlEntryImpl();
-        ace.setPrincipal("any");
+        ace.setPrincipal(new PrincipalImpl("any", Principal.Type.USER));
         ace.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
         memoryContext.getItem(objectId).updateACL(Arrays.asList(ace), false);
 
         String path = SERVICE_URI + "acl/" + objectId;
-        String body = "[{\"principal\":\"admin\",\"permissions\":[\"all\"]}," + //
-                      "{\"principal\":\"john\",\"permissions\":[\"read\"]}]";
+        String body = "[{\"principal\":{\"name\":\"admin\",\"type\":\"USER\"},\"permissions\":[\"all\"]}," + //
+                      "{\"principal\":{\"name\":\"john\",\"type\":\"USER\"},\"permissions\":[\"read\"]}]";
         Map<String, List<String>> h = new HashMap<String, List<String>>(1);
         h.put("Content-Type", Arrays.asList("application/json"));
         ContainerResponse response = launcher.service("POST", path, BASE_URI, h, body.getBytes(), null);
@@ -112,8 +114,8 @@ public class UpdateACLTest extends MemoryFileSystemTest {
         String lockToken = ((MemoryFile)memoryContext.getItem(objectId)).lock();
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         String path = SERVICE_URI + "acl/" + objectId + '?' + "lockToken=" + lockToken;
-        String body = "[{\"principal\":\"admin\",\"permissions\":[\"all\"]}," + //
-                      "{\"principal\":\"john\",\"permissions\":[\"read\"]}]";
+        String body = "[{\"principal\":{\"name\":\"admin\",\"type\":\"USER\"},\"permissions\":[\"all\"]}," + //
+                      "{\"principal\":{\"name\":\"john\",\"type\":\"USER\"},\"permissions\":[\"read\"]}]";
         Map<String, List<String>> h = new HashMap<String, List<String>>(1);
         h.put("Content-Type", Arrays.asList("application/json"));
         ContainerResponse response = launcher.service("POST", path, BASE_URI, h, body.getBytes(), writer, null);
@@ -129,8 +131,8 @@ public class UpdateACLTest extends MemoryFileSystemTest {
         ((MemoryFile)memoryContext.getItem(objectId)).lock();
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         String path = SERVICE_URI + "acl/" + objectId;
-        String body = "[{\"principal\":\"admin\",\"permissions\":[\"all\"]}," + //
-                      "{\"principal\":\"john\",\"permissions\":[\"read\"]}]";
+        String body = "[{\"principal\":{\"name\":\"admin\",\"type\":\"USER\"},\"permissions\":[\"all\"]}," + //
+                      "{\"principal\":{\"name\":\"john\",\"type\":\"USER\"},\"permissions\":[\"read\"]}]";
         Map<String, List<String>> h = new HashMap<String, List<String>>(1);
         h.put("Content-Type", Arrays.asList("application/json"));
         ContainerResponse response = launcher.service("POST", path, BASE_URI, h, body.getBytes(), writer, null);
@@ -141,14 +143,14 @@ public class UpdateACLTest extends MemoryFileSystemTest {
     public void testUpdateAclNoPermissions() throws Exception {
         // Remove permissions for any users except 'admin'.
         AccessControlEntry ace = new AccessControlEntryImpl();
-        ace.setPrincipal("admin");
+        ace.setPrincipal(new PrincipalImpl("admin", Principal.Type.USER));
         ace.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
         memoryContext.getItem(objectId).updateACL(Arrays.asList(ace), true);
 
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         String path = SERVICE_URI + "acl/" + objectId;
-        String body = "[{\"principal\":\"admin\",\"permissions\":[\"all\"]}," + //
-                      "{\"principal\":\"john\",\"permissions\":[\"read\"]}]";
+        String body = "[{\"principal\":{\"name\":\"admin\",\"type\":\"USER\"},\"permissions\":[\"all\"]}," + //
+                      "{\"principal\":{\"name\":\"john\",\"type\":\"USER\"},\"permissions\":[\"read\"]}]";
         Map<String, List<String>> h = new HashMap<String, List<String>>(1);
         h.put("Content-Type", Arrays.asList("application/json"));
         ContainerResponse response = launcher.service("POST", path, BASE_URI, h, body.getBytes(), writer, null);
@@ -159,7 +161,7 @@ public class UpdateACLTest extends MemoryFileSystemTest {
     private Map<String, Set<String>> toMap(List<AccessControlEntry> acl) {
         Map<String, Set<String>> m = new HashMap<String, Set<String>>();
         for (AccessControlEntry e : acl) {
-            m.put(e.getPrincipal(), e.getPermissions());
+            m.put(e.getPrincipal().getName(), e.getPermissions());
         }
         return m;
     }
