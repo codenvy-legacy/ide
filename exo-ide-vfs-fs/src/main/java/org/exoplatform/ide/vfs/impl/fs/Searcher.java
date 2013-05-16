@@ -93,9 +93,9 @@ public class Searcher {
      */
     public void init(MountPoint mountPoint) throws IOException, VirtualFileSystemException {
         final long start = System.currentTimeMillis();
-        int indexedFiles = addTree(mountPoint.getRoot());
+        addTree(mountPoint.getRoot());
         final long end = System.currentTimeMillis();
-        LOG.debug("Index creation time: {} ms, indexed: {} files", (end - start), indexedFiles);
+        LOG.debug("Index creation time: {} ms", (end - start));
     }
 
     /**
@@ -227,7 +227,7 @@ public class Searcher {
         }
     }
 
-    private int addTree(VirtualFile tree) throws IOException, VirtualFileSystemException {
+    private void addTree(VirtualFile tree) throws IOException, VirtualFileSystemException {
         final MountPoint mountPoint = tree.getMountPoint();
         final java.io.File ioRoot = tree.getMountPoint().getRoot().getIoFile();
         final LinkedList<VirtualFile> q = new LinkedList<VirtualFile>();
@@ -236,41 +236,45 @@ public class Searcher {
         int indexedFiles = 0;
         while (!q.isEmpty()) {
             final VirtualFile folder = q.pop();
-            names = folder.getIoFile().list(HIDDEN_DIR_FILTER);
-            if (names == null) {
-                // Something wrong. According to java docs may be null only if i/o error occurs.
-                throw new VirtualFileSystemException(String.format("Unable get children '%s'. ", folder.getPath()));
-            }
+            if (folder.exists()) {
+                names = folder.getIoFile().list(HIDDEN_DIR_FILTER);
+                if (names == null) {
+                    // Something wrong. According to java docs may be null only if i/o error occurs.
+                    throw new VirtualFileSystemException(String.format("Unable get children '%s'. ", folder.getPath()));
+                }
 
-            for (String name : names) {
-                final Path childPath = folder.getInternalPath().newPath(name);
-                final VirtualFile child = new VirtualFile(new java.io.File(ioRoot, childPath.toIoPath()), childPath, mountPoint);
-                if (child.isFolder()) {
-                    q.push(child);
-                } else {
-                    if (indexedMediaTypes.contains(getMediaType(child))) {
-                        addFile(child);
-                        indexedFiles++;
+                for (String name : names) {
+                    final Path childPath = folder.getInternalPath().newPath(name);
+                    final VirtualFile child = new VirtualFile(new java.io.File(ioRoot, childPath.toIoPath()), childPath, mountPoint);
+                    if (child.isFolder()) {
+                        q.push(child);
+                    } else {
+                        if (indexedMediaTypes.contains(getMediaType(child))) {
+                            addFile(child);
+                            indexedFiles++;
+                        }
                     }
                 }
             }
         }
-        return indexedFiles;
+        LOG.debug("Indexed {} files from {}", indexedFiles, tree.getPath());
     }
 
     private void addFile(VirtualFile file) throws IOException, VirtualFileSystemException {
-        Reader fContentReader = null;
-        try {
-            fContentReader = new BufferedReader(new InputStreamReader(file.getContent().getStream()));
-            luceneIndexWriter.addDocument(createDocument(file, fContentReader));
-        } catch (OutOfMemoryError oome) {
-            close();
-            throw oome;
-        } finally {
-            if (fContentReader != null) {
-                try {
-                    fContentReader.close();
-                } catch (IOException ignored) {
+        if (file.exists()) {
+            Reader fContentReader = null;
+            try {
+                fContentReader = new BufferedReader(new InputStreamReader(file.getContent().getStream()));
+                luceneIndexWriter.addDocument(createDocument(file, fContentReader));
+            } catch (OutOfMemoryError oome) {
+                close();
+                throw oome;
+            } finally {
+                if (fContentReader != null) {
+                    try {
+                        fContentReader.close();
+                    } catch (IOException ignored) {
+                    }
                 }
             }
         }

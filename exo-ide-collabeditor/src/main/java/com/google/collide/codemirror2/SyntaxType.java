@@ -34,6 +34,7 @@ public enum SyntaxType {
 //    PHP("php", "text/x-php", State.class, new BasicTokenFactory(), false),
     PHP("php", "application/x-httpd-php", State.class, new BasicTokenFactory(), false),
     PY("python", "text/x-python", PyState.class, new PyTokenFactory(), false),
+    RUBY("ruby", "text/x-ruby", State.class, new BasicTokenFactory(), false),
     SVG("xml", "application/xml", State.class, new BasicTokenFactory(), true),
     XML("xml", "application/xml", State.class, new BasicTokenFactory(), true),
     YAML("yaml", "text/x-yaml", State.class, new BasicTokenFactory(), true);
@@ -167,6 +168,8 @@ public enum SyntaxType {
         tmp.put(MimeType.APPLICATION_X_PHP, SyntaxType.PHP);
         tmp.put(MimeType.APPLICATION_X_HTTPD_PHP, SyntaxType.PHP);
         tmp.put(MimeType.TEXT_X_PYTHON, SyntaxType.PY);
+        tmp.put(MimeType.APPLICATION_RUBY, SyntaxType.RUBY);
+        tmp.put(MimeType.APPLICATION_RUBY_HTML, SyntaxType.RUBY);
         tmp.put(MimeType.TEXT_XML, SyntaxType.XML);
         tmp.put(MimeType.TEXT_YAML, SyntaxType.YAML);
         return tmp;

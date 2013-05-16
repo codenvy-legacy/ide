@@ -25,7 +25,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
-import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -68,7 +67,7 @@ public class PushToRemoteView extends ViewImpl implements PushToRemotePresenter.
     SelectItem                  localBranchesField;
 
     @UiField
-    ComboBoxField               remoteBranchesField;
+    SelectItem                  remoteBranchesField;
 
     interface PushToRemoteViewUiBinder extends UiBinder<Widget, PushToRemoteView> {
     }
@@ -76,7 +75,7 @@ public class PushToRemoteView extends ViewImpl implements PushToRemotePresenter.
     private static PushToRemoteViewUiBinder uiBinder = GWT.create(PushToRemoteViewUiBinder.class);
 
     public PushToRemoteView() {
-        super(ID, ViewType.MODAL, GitExtension.MESSAGES.pushViewTitle(), null, 490, 205);
+        super(ID, ViewType.MODAL, GitExtension.MESSAGES.pushViewTitle(), null, 490, 205, false);
         add(uiBinder.createAndBindUi(this));
 
         remoteField.setName(REMOTE_FIELD_ID);

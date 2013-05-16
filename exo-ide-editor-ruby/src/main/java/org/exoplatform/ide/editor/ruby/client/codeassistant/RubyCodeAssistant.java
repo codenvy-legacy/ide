@@ -87,8 +87,8 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
             parseTokenLine(lineContent, editor.getCursorColumn());
 
             if (defaultTokens == null) {
-                RubyBundle buandle = GWT.create(RubyBundle.class);
-                buandle.rubyTokens().getText(new ResourceCallback<TextResource>() {
+                RubyBundle bundle = GWT.create(RubyBundle.class);
+                bundle.rubyTokens().getText(new ResourceCallback<TextResource>() {
 
                     @Override
                     public void onSuccess(TextResource resource) {

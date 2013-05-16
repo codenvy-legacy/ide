@@ -16,20 +16,32 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.python.client;
+package org.exoplatform.ide.editor.ruby.client;
 
 import com.google.collide.client.CollabEditor;
 
 import org.exoplatform.ide.editor.client.api.EditorCapability;
+import org.exoplatform.ide.editor.ruby.client.contentassist.RubyAutocompliter;
+import org.exoplatform.ide.editor.ruby.client.contentassist.RubyContentAssistProcessor;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
+ * Ruby editor based on {@link CollabEditor}.
+ * 
+ * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @version $Id: RubyEditor.java Apr 29, 2013 12:38:51 PM azatsarynnyy $
  */
-public class PythonEditor extends CollabEditor {
-    public PythonEditor(String mimeType) {
+public class RubyEditor extends CollabEditor {
+
+    /**
+     * Constructs new editor for the given MIME-type.
+     * 
+     * @param mimeType MIME-type
+     */
+    public RubyEditor(String mimeType) {
         super(mimeType);
-        editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(new PyAutocompliter());
+        editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(new RubyAutocompliter());
+        editorBundle.getAutocompleter().addContentAssitProcessor(IDocument.DEFAULT_CONTENT_TYPE, new RubyContentAssistProcessor());
     }
 
     /** @see com.google.collide.client.CollabEditor#isCapable(org.exoplatform.ide.editor.client.api.EditorCapability) */
@@ -40,4 +52,5 @@ public class PythonEditor extends CollabEditor {
         }
         return super.isCapable(capability);
     }
+
 }

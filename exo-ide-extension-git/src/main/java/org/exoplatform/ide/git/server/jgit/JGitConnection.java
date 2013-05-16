@@ -498,6 +498,9 @@ public class JGitConnection implements GitConnection {
             }
             org.eclipse.jgit.api.MergeResult jgitMergeResult = new Git(repository).merge().include(ref).call();
             return new JGitMergeResult(jgitMergeResult);
+        } catch (CheckoutConflictException e) {
+            org.eclipse.jgit.api.MergeResult jgitMergeResult = new org.eclipse.jgit.api.MergeResult(e.getConflictingPaths());
+            return new JGitMergeResult(jgitMergeResult);
         } catch (IOException e) {
             throw new GitException(e.getMessage(), e);
         } catch (GitAPIException e) {

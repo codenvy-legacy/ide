@@ -43,6 +43,7 @@ public class LanguageHelperResolver {
         mapping.put(SyntaxType.JS.getName(), new JsLanguageHelper());
         mapping.put(SyntaxType.PHP.getName(), new NoneLanguageHelper());
         mapping.put(SyntaxType.PY.getName(), new PyLanguageHelper());
+        mapping.put(SyntaxType.RUBY.getName(), new NoneLanguageHelper());
         mapping.put(SyntaxType.XML.getName(), new NoneLanguageHelper());
         mapping.put(SyntaxType.YAML.getName(), new NoneLanguageHelper());
     }

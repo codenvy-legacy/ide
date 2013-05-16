@@ -97,7 +97,9 @@ public class AutocompleteUiController implements AutocompleteBox {
                     if (itemData != CAPPED_INDICATOR) {
                         icon.appendChild((Node)itemData.getImage().getElement());
                         label.setInnerHTML(itemData.getDisplayString());
-                        //group.setTextContent(itemData.getPath().getPathString());
+                        if (itemData.getAdditionalDisplayString() != null) {
+                            group.setTextContent(itemData.getAdditionalDisplayString());
+                        }
                     } else {
                         label.setTextContent("Type for more results");
                         label.addClassName(css.cappedProposalLabel());
@@ -473,6 +475,14 @@ public class AutocompleteUiController implements AutocompleteBox {
         /** @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getDisplayString() */
         @Override
         public String getDisplayString() {
+            return null;
+        }
+
+        /**
+         * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getAdditionalDisplayString()
+         */
+        @Override
+        public String getAdditionalDisplayString() {
             return null;
         }
 
