@@ -16,28 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.extension.cloudfoundry.client.delete;
-
-import com.codenvy.ide.api.mvp.View;
+package com.codenvy.ide.ext.appfog.client.delete;
 
 /**
  * The view of {@link DeleteApplicationPresenter}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public interface DeleteApplicationView extends View<DeleteApplicationView.ActionDelegate> {
+public interface DeleteApplicationView {
     /** Needs for delegate some function into DeleteApplication view. */
     public interface ActionDelegate {
-        /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Delete button.
-         */
+        /** Performs any actions appropriate in response to the user having pressed the Delete button. */
         public void onDeleteClicked();
 
-        /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Cancel button.
-         */
+        /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
         public void onCancelClicked();
     }
 
@@ -64,13 +56,6 @@ public interface DeleteApplicationView extends View<DeleteApplicationView.Action
      * @param message
      */
     public void setAskMessage(String message);
-
-    /**
-     * Set the ask message to delete services.
-     *
-     * @param text
-     */
-    public void setAskDeleteServices(String text);
 
     /** Show dialog. */
     public void showDialog();

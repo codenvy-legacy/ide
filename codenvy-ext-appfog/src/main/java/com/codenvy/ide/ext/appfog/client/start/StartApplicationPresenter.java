@@ -61,21 +61,18 @@ public class StartApplicationPresenter {
      * @param console
      * @param constant
      * @param autoBeanFactory
-     * @param appInfoChangedCallback
      * @param loginPresenter
      * @param service
      */
     @Inject
     protected StartApplicationPresenter(EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
                                         AppfogLocalizationConstant constant, AppfogAutoBeanFactory autoBeanFactory,
-                                        AsyncCallback<String> appInfoChangedCallback, LoginPresenter loginPresenter,
-                                        AppfogClientService service) {
+                                        LoginPresenter loginPresenter, AppfogClientService service) {
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
         this.console = console;
         this.constant = constant;
         this.autoBeanFactory = autoBeanFactory;
-        this.appInfoChangedCallback = appInfoChangedCallback;
         this.loginPresenter = loginPresenter;
         this.service = service;
     }

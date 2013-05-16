@@ -21,6 +21,7 @@ package com.codenvy.ide.ext.appfog.client.apps;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.appfog.client.*;
+import com.codenvy.ide.ext.appfog.client.delete.DeleteApplicationPresenter;
 import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
 import com.codenvy.ide.ext.appfog.client.marshaller.ApplicationListUnmarshaller;
@@ -52,6 +53,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
     private AppfogAutoBeanFactory      autoBeanFactory;
     private LoginPresenter             loginPresenter;
     private StartApplicationPresenter  startApplicationPresenter;
+    private DeleteApplicationPresenter deleteApplicationPresenter;
     private AppfogClientService        service;
     private JsonArray<String>          servers;
     private String                     currentServer;
@@ -69,11 +71,25 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
         }
     };
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param eventBus
+     * @param console
+     * @param constant
+     * @param autoBeanFactory
+     * @param loginPresenter
+     * @param service
+     * @param startApplicationPresenter
+     * @param deleteApplicationPresenter
+     */
     @Inject
     protected ApplicationsPresenter(ApplicationsView view, EventBus eventBus, ConsolePart console,
                                     AppfogLocalizationConstant constant, AppfogAutoBeanFactory autoBeanFactory,
                                     LoginPresenter loginPresenter, AppfogClientService service,
-                                    StartApplicationPresenter startApplicationPresenter) {
+                                    StartApplicationPresenter startApplicationPresenter,
+                                    DeleteApplicationPresenter deleteApplicationPresenter) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
@@ -83,6 +99,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
         this.loginPresenter = loginPresenter;
         this.service = service;
         this.startApplicationPresenter = startApplicationPresenter;
+        this.deleteApplicationPresenter = deleteApplicationPresenter;
     }
 
     /** Show dialog. */
@@ -190,6 +207,6 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onDeleteClicked(AppfogApplication app) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        deleteApplicationPresenter.deleteApp(app.getName(), currentServer, appInfoChangedCallback);
     }
 }
