@@ -23,9 +23,11 @@ import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.menu.MainMenuAgent;
 import com.codenvy.ide.ext.appfog.client.command.ShowApplicationsCommand;
 import com.codenvy.ide.ext.appfog.client.command.ShowLoginCommand;
+import com.codenvy.ide.ext.appfog.client.wizard.AppFogPagePresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -41,13 +43,12 @@ public class AppFogExtension {
 
     @Inject
     public AppFogExtension(PaaSAgent paasAgent, AppfogResources resources, MainMenuAgent menu, ShowLoginCommand loginCommand,
-                           ShowApplicationsCommand showApplicationsCommand) {
+                           ShowApplicationsCommand showApplicationsCommand, Provider<AppFogPagePresenter> wizardPage) {
         resources.appFogCSS().ensureInjected();
 
         // TODO change hard code types
         JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "Rails", "Spring", "War", "Python", "PHP");
-        // TODO wizard page is empty
-        paasAgent.registerPaaS(ID, ID, resources.appfog48(), requiredProjectTypes, null, null);
+        paasAgent.registerPaaS(ID, ID, resources.appfog48(), requiredProjectTypes, wizardPage, null);
 
         menu.addMenuItem("PaaS/AppFog/Applications...", showApplicationsCommand);
         menu.addMenuItem("PaaS/AppFog/Switch Account...", loginCommand);

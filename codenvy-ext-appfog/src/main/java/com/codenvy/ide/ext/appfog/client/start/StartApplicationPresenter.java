@@ -171,9 +171,9 @@ public class StartApplicationPresenter {
     private void startApplication(String name, final AsyncCallback<String> callback) {
         Project project = resourceProvider.getActiveProject();
 
-        final String server = project.getProperty("appfog-target").getValue().get(0);
-        final String appName = (name == null) ? project.getProperty("appfog-application").getValue().get(0) : name;
-        final String projectId = project.getId();
+        final String server = project != null ? project.getProperty("appfog-target").getValue().get(0) : null;
+        final String appName = (project != null && name == null) ? project.getProperty("appfog-application").getValue().get(0) : name;
+        final String projectId = project != null ? project.getId() : null;
 
         try {
             AutoBean<AppfogApplication> appfogApplication = autoBeanFactory.appfogApplication();
@@ -284,9 +284,9 @@ public class StartApplicationPresenter {
     private void stopApplication(final String name, final AsyncCallback<String> callback) {
         Project project = resourceProvider.getActiveProject();
 
-        final String server = project.getProperty("appfog-target").getValue().get(0);
-        final String appName = (name == null) ? project.getProperty("appfog-application").getValue().get(0) : name;
-        final String projectId = project.getId();
+        final String server = project != null ? project.getProperty("appfog-target").getValue().get(0) : null;
+        final String appName = (project != null && name == null) ? project.getProperty("appfog-application").getValue().get(0) : name;
+        final String projectId = project != null ? project.getId() : null;
 
         try {
             service.stopApplication(null, null, appName, server,
@@ -345,9 +345,9 @@ public class StartApplicationPresenter {
     private void restartApplication(String name, final AsyncCallback<String> callback) {
         Project project = resourceProvider.getActiveProject();
 
-        final String server = project.getProperty("appfog-target").getValue().get(0);
-        final String appName = (name == null) ? project.getProperty("appfog-application").getValue().get(0) : name;
-        final String projectId = project.getId();
+        final String server = project != null ? project.getProperty("appfog-target").getValue().get(0) : null;
+        final String appName = (project != null && name == null) ? project.getProperty("appfog-application").getValue().get(0) : name;
+        final String projectId = project != null ? project.getId() : null;
 
         try {
             AutoBean<AppfogApplication> appfogApplication = autoBeanFactory.appfogApplication();

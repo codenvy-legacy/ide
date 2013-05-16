@@ -510,7 +510,7 @@ public class AppfogClientService {
                     .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
     }
 
-    public void infras(String server, String vfsId, String projectId, AsyncRequestCallback<List<InfraDetail>> callback)
+    public void infras(String server, String vfsId, String projectId, AsyncRequestCallback<JsonArray<InfraDetail>> callback)
             throws RequestException {
         String url = restServiceContext + INFRAS;
         StringBuilder params = new StringBuilder("?");
