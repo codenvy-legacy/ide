@@ -76,7 +76,7 @@ import java.util.concurrent.TimeUnit;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-@Path("/ide/refactoring/java")
+@Path("{ws-name}/refactoring/java")
 public class RefactoringService {
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;

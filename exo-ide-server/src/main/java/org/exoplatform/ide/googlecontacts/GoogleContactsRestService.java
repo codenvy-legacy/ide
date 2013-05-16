@@ -47,7 +47,7 @@ import java.util.List;
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: GoogleContactsService.java Aug 20, 2012 4:44:58 PM azatsarynnyy $
  */
-@Path("/ide/googlecontacts")
+@Path("{ws-name}/googlecontacts")
 public class GoogleContactsRestService {
     @Inject
     private GoogleContactsClient contactsClient;

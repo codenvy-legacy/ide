@@ -816,7 +816,7 @@
 
       <module>exo-ide-maven</module>
       <!--module>exo-ide-packaging-maven-builder</module-->
-      <module>exo-ide-packaging-codeassistant-server</module>
+      <!--module>exo-ide-packaging-codeassistant-server</module-->
       <module>exo-ide-jrebel-remote</module>
    </modules>
 </project>

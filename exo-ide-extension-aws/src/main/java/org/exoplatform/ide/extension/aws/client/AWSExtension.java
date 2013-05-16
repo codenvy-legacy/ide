@@ -102,8 +102,8 @@ public class AWSExtension extends Extension implements InitializeServicesHandler
      * .client.framework.application.event.InitializeServicesEvent) */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        new BeanstalkClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
-        new EC2ClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
+        new BeanstalkClientServiceImpl(event.getLoader());
+        new EC2ClientServiceImpl(event.getLoader());
     }
 
     public static boolean canBeDeployedToBeanstalk(ProjectModel project) {

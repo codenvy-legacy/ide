@@ -30,6 +30,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.java.jdi.shared.*;
 
 /**
@@ -45,9 +46,9 @@ public class DebuggerClientService {
 
     private final String restContext;
 
-    public DebuggerClientService(String restContext) {
-        this.restContext = restContext;
-        BASE_URL = restContext + "/ide/java/debug";
+    public DebuggerClientService() {
+        this.restContext = Utils.getRestContext();
+        BASE_URL = restContext + Utils.getWorkspaceName() + "/java/debug";
         instance = this;
     }
 
@@ -142,10 +143,5 @@ public class DebuggerClientService {
                     .loader(new EmptyLoader()).send(callback);
     }
 
-    //   public void checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException
-    //   {
-    //      final String requestUrl = restContext + "/ide/maven/check_download_url?url=" + url;
-    //      AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(new EmptyLoader()).send(callback);
-    //   }
 
 }

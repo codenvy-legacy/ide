@@ -93,7 +93,7 @@ import java.util.List;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: GitService.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
-@Path("ide/git")
+@Path("{ws-name}/git")
 public class GitService {
     private static final Log          LOG = ExoLogger.getLogger(GitService.class);
 

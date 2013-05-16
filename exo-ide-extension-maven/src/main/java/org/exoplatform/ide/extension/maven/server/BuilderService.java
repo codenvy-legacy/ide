@@ -40,7 +40,7 @@ import java.net.URI;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/maven")
+@Path("{ws-name}/maven")
 public class BuilderService {
     @Inject
     private BuilderClient builder;

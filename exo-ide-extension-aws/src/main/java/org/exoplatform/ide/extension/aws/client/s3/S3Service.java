@@ -43,12 +43,12 @@ public class S3Service {
 
     public static S3Service getInstance() {
         if (instance == null) {
-            instance = new S3Service(Utils.getRestContext(), new S3Loader());
+            instance = new S3Service(new S3Loader());
         }
         return instance;
     }
 
-    private static final String BASE_URL = "/ide/aws/s3";
+    private static final String BASE_URL = Utils.getWorkspaceName() + "/aws/s3";
 
     private static final String BUCKETS = BASE_URL + "/buckets";
 
@@ -68,9 +68,9 @@ public class S3Service {
     /** Loader to be displayed. */
     private Loader loader;
 
-    private S3Service(String restContext, Loader loader) {
+    private S3Service(Loader loader) {
         this.loader = loader;
-        this.restServiceContext = restContext;
+        this.restServiceContext = Utils.getRestContext();
     }
 
     /** @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#getAvailableSolutionStacks(org.exoplatform

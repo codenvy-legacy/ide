@@ -56,8 +56,7 @@ public class SshKeyExtension extends Extension implements InitializeServicesHand
      * .client.framework.application.event.InitializeServicesEvent) */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        new SshKeyService(event.getApplicationConfiguration().getContext(), event.getApplicationConfiguration()
-                                                                                 .getHttpsPort(), event.getLoader());
+        new SshKeyService(event.getApplicationConfiguration().getHttpsPort(), event.getLoader());
     }
 
     /** @see org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowPublicSshKeyHandler#onShowPublicSshKey(org.exoplatform.ide

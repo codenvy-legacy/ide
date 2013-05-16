@@ -34,7 +34,7 @@ import java.util.Map;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/java/runner")
+@Path("{ws-name}/java/runner")
 public class ApplicationRunnerService {
     @Inject
     private ApplicationRunner runner;

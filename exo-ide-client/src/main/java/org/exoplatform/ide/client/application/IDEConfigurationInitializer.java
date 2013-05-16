@@ -95,7 +95,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
                                
                                 new SettingsServiceImpl(IDE.eventBus(), result.getUserInfo().getName(),
-                                                        IDELoader.get(), applicationConfiguration.getContext());
+                                                        IDELoader.get());
                                 SettingsService.getInstance().restoreFromCookies(applicationSettings);
 
                                 initialOpenedProject = applicationSettings.getValueAsString("opened-project");

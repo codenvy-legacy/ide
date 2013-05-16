@@ -62,6 +62,7 @@ import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypesInfoList;
 import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
@@ -82,8 +83,6 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
                                                        VfsChangedHandler {
 
     public static String DOC_CONTEXT;
-
-    static String REST_CONTEXT;
 
     private static final HoverResources resources = GWT.create(HoverResources.class);
 
@@ -222,11 +221,10 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
      * .client.framework.application.event.InitializeServicesEvent) */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        REST_CONTEXT = event.getApplicationConfiguration().getContext();
-        DOC_CONTEXT = REST_CONTEXT + "/ide/code-assistant/java/class-doc?fqn=";
+        DOC_CONTEXT = Utils.getRestContext() + Utils.getWorkspaceName() + "/code-assistant/java/class-doc?fqn=";
         new CreatePackagePresenter(VirtualFileSystem.getInstance());
         new CreateJavaClassPresenter(VirtualFileSystem.getInstance());
-        new RefactoringClientServiceImpl(REST_CONTEXT, event.getLoader(), IDE.messageBus());
+        new RefactoringClientServiceImpl(event.getLoader(), IDE.messageBus());
     }
 
     private void loadWellKnownClasses(String[] fqns) {

@@ -43,7 +43,7 @@ import javax.ws.rs.core.UriInfo;
  * @version $Id: ApplicationRunnerService.java Apr 17, 2013 4:39:33 PM azatsarynnyy $
  *
  */
-@Path("ide/php/runner")
+@Path("{ws-name}/php/runner")
 public class ApplicationRunnerService {
     private static final Log LOG = ExoLogger.getLogger(ApplicationRunnerService.class);
 

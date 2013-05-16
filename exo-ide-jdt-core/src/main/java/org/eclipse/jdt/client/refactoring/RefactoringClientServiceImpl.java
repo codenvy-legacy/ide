@@ -24,6 +24,7 @@ import com.google.gwt.http.client.RequestException;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
@@ -41,13 +42,12 @@ import java.util.List;
 public class RefactoringClientServiceImpl extends RefactoringClientService {
 
     /** Base url. */
-    private static final String BASE_URL = "/ide/refactoring/java";
+    private static final String BASE_URL = Utils.getWorkspaceName() + "/refactoring/java";
 
     /** Build project method's path. */
     private static final String RENAME = BASE_URL + "/rename";
 
-    /** REST-service context. */
-    private String restServiceContext;
+  
 
     /** Loader to be displayed. */
     private Loader loader;
@@ -63,9 +63,8 @@ public class RefactoringClientServiceImpl extends RefactoringClientService {
      * @param wsMessageBus
      *         {@link MessageBus} to send messages over WebSocket
      */
-    public RefactoringClientServiceImpl(String restContext, Loader loader, MessageBus wsMessageBus) {
+    public RefactoringClientServiceImpl(Loader loader, MessageBus wsMessageBus) {
         this.loader = loader;
-        this.restServiceContext = restContext;
         this.wsMessageBus = wsMessageBus;
     }
 
@@ -95,7 +94,7 @@ public class RefactoringClientServiceImpl extends RefactoringClientService {
     @Override
     public void rename(String vfsId, String projectId, String fqn, int offset, String newName,
                        AsyncRequestCallback<List<Action>> callback) throws RequestException {
-        final String requesrUrl = restServiceContext + RENAME;
+        final String requesrUrl = Utils.getRestContext() + RENAME;
 
         String params =
                 "vfsid=" + vfsId + "&projectid=" + projectId + "&fqn=" + fqn + "&offset=" + offset + "&newName=" + newName;

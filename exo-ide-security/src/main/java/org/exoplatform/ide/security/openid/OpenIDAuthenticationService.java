@@ -49,7 +49,7 @@ import java.util.Map;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/openid")
+@Path("{ws-name}/openid")
 public class OpenIDAuthenticationService {
     private static final Log LOG = ExoLogger.getLogger(OpenIDAuthenticationService.class);
 

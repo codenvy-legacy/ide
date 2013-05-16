@@ -144,7 +144,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
             @Override
             public void onClick(ClickEvent event) {
                 String authUrl = Utils.getAuthorizationContext()
-                                 + "/ide/oauth/authenticate?oauth_provider=google&mode=federated_login"
+                                 + "/" + Utils.getWorkspaceName() + "/oauth/authenticate?oauth_provider=google&mode=federated_login"
                                  + "&scope=https://www.googleapis.com/auth/userinfo.profile"
                                  + "&scope=https://www.googleapis.com/auth/userinfo.email"
                                  + "&redirect_after_login="
@@ -162,7 +162,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
             @Override
             public void onClick(ClickEvent event) {
                 String authUrl = Utils.getAuthorizationContext()
-                                 + "/ide/oauth/authenticate?oauth_provider=github&mode=federated_login"
+                                 + "/" + Utils.getWorkspaceName() + "/oauth/authenticate?oauth_provider=github&mode=federated_login"
                                  + "&scope=user&scope=repo&redirect_after_login="
                                  + Utils.getAuthorizationPageURL();
                 JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500);

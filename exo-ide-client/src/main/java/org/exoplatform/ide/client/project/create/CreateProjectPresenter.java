@@ -906,7 +906,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
     }
 
     private void sendProfileInfoToZeroTurnaround() {
-        String url = Utils.getRestContext() + "/ide/jrebel/profile/send";
+        String url = Utils.getRestContext() + Utils.getWorkspaceName() + "/jrebel/profile/send";
 
         JSONObject json = new JSONObject();
         json.put("firstName", new JSONString(display.getJRebelFirstNameField().getValue()));
@@ -954,7 +954,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
     }
 
     private void getJRebelUserProfileInfo() {
-        String url = Utils.getRestContext() + "/ide/jrebel/profile/get";
+        String url = Utils.getRestContext() + Utils.getWorkspaceName() + "/jrebel/profile/get";
 
         try {
             StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());

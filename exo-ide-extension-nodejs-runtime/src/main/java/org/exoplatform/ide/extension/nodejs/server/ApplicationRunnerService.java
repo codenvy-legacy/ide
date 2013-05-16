@@ -43,7 +43,7 @@ import org.exoplatform.services.log.Log;
  * @version $Id: ApplicationRunnerService.java Apr 18, 2013 5:26:11 PM vsvydenko $
  *
  */
-@Path("ide/node/runner")
+@Path("{ws-name}/node/runner")
 public class ApplicationRunnerService {
     private static final Log LOG = ExoLogger.getLogger(ApplicationRunnerService.class);
     

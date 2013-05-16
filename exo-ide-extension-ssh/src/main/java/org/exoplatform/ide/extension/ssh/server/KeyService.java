@@ -49,7 +49,7 @@ import java.util.Set;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/ssh-keys")
+@Path("{ws-name}/ssh-keys")
 public class KeyService {
     private final SshKeyStore keyStore;
 

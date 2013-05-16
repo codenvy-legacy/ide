@@ -35,7 +35,7 @@ import java.util.*;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/cloudfoundry")
+@Path("{ws-name}/cloudfoundry")
 public class MockCloudfoundryService {
 
     private static List<Framework> frameworkList;

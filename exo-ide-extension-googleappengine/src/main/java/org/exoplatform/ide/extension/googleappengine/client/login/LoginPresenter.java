@@ -90,7 +90,8 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, OAuthLog
     public void onLogin(LoginEvent event) {
         IDE.addHandler(OAuthLoginFinishedEvent.TYPE, this);
         String authUrl = Utils.getAuthorizationContext()
-                         + "/ide/oauth/authenticate?oauth_provider=google"
+                         + "/" + Utils.getWorkspaceName() 
+                         + "/oauth/authenticate?oauth_provider=google"
                          + "&scope=https://www.googleapis.com/auth/appengine.admin"
                          + "&userId=" + IDE.userId + "&redirect_after_login="
                          + Utils.getAuthorizationPageURL();

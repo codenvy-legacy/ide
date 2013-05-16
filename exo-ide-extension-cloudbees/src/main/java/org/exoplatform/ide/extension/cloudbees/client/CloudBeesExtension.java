@@ -65,7 +65,7 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
      * .client.framework.application.event.InitializeServicesEvent) */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        new CloudBeesClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader(), IDE.messageBus());
+        new CloudBeesClientServiceImpl(event.getLoader(), IDE.messageBus());
     }
 
     /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */

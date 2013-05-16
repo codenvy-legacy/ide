@@ -100,7 +100,7 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
      * .client.framework.application.event.InitializeServicesEvent) */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        new CloudFoundryClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader(), IDE.messageBus());
+        new CloudFoundryClientServiceImpl(event.getLoader(), IDE.messageBus());
     }
 
     /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */

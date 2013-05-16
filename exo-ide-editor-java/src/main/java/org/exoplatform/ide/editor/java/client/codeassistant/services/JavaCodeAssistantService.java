@@ -25,6 +25,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.*;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypesInfoList;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypesList;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.String2ArrayMarshaller;
@@ -41,15 +42,17 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 public class JavaCodeAssistantService extends CodeAssistantService {
 
     private static JavaCodeAssistantService instance;
+    
+    private static final String ws = Utils.getWorkspaceName();
 
-    private static final String FIND_BY_PROJECT = "/ide/code-assistant/java/find-in-package";
+    private static final String FIND_BY_PROJECT = ws + "/code-assistant/java/find-in-package";
 
-    private static final String TYPES_BY_FQNS = "/ide/code-assistant/java/types-by-fqns";
+    private static final String TYPES_BY_FQNS = ws + "/code-assistant/java/types-by-fqns";
 
-    public JavaCodeAssistantService(String restServiceContext, Loader loader) {
-        super(restServiceContext, loader, "/ide/code-assistant/java/class-description?fqn=", // GET_CLASS_URL
-              "/ide/code-assistant/java/find-by-prefix/", // FIND_CLASS_BY_PREFIX
-              "/ide/code-assistant/java/find-by-type/");
+    public JavaCodeAssistantService(Loader loader) {
+        super(loader, ws +"/code-assistant/java/class-description?fqn=", // GET_CLASS_URL
+              ws + "/code-assistant/java/find-by-prefix/", // FIND_CLASS_BY_PREFIX
+              ws + "/code-assistant/java/find-by-type/");
         instance = this;
     }
 

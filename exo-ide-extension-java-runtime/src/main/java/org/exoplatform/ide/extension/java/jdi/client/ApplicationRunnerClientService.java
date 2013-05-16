@@ -29,6 +29,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
@@ -43,23 +44,21 @@ import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
  * @version $Id: $
  */
 public class ApplicationRunnerClientService {
-    public static final String RUN = "/ide/java/runner/run";
+    
+    public static final String RUN = "/run";
 
-    public static final String DEBUG = "/ide/java/runner/debug";
+    public static final String DEBUG = "/debug";
 
-    public static final String PROLONG = "/ide/java/runner/prolong";
+    public static final String PROLONG = "/prolong";
 
     private static String BASE_URL;
 
     private static ApplicationRunnerClientService instance;
 
-    private String restContext;
-
     private MessageBus wsMessageBus;
 
-    public ApplicationRunnerClientService(String restContext, MessageBus wsMessageBus) {
-        this.restContext = restContext;
-        BASE_URL = restContext + "/ide/java/runner";
+    public ApplicationRunnerClientService(MessageBus wsMessageBus) {
+        BASE_URL = Utils.getRestContext() + Utils.getWorkspaceName() + "/java/runner";
         this.wsMessageBus = wsMessageBus;
         instance = this;
     }
@@ -106,7 +105,7 @@ public class ApplicationRunnerClientService {
 
         callback.setStatusHandler(new RunningAppStatusHandler(project));
         RequestMessage message =
-                RequestMessageBuilder.build(RequestBuilder.POST, RUN + params)
+                RequestMessageBuilder.build(RequestBuilder.POST, BASE_URL + RUN + params)
                                      .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data).getRequestMessage();
         wsMessageBus.send(message, callback);
     }
@@ -148,7 +147,7 @@ public class ApplicationRunnerClientService {
 
         callback.setStatusHandler(new RunningAppStatusHandler(project));
         RequestMessage message =
-                RequestMessageBuilder.build(RequestBuilder.POST, DEBUG + param)
+                RequestMessageBuilder.build(RequestBuilder.POST, BASE_URL + DEBUG + param)
                                      .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data).getRequestMessage();
         wsMessageBus.send(message, callback);
     }
@@ -178,7 +177,7 @@ public class ApplicationRunnerClientService {
     public void prolongExpirationTime(String name, long time, RequestCallback<Object> callback)
             throws WebSocketException {
         StringBuilder params = new StringBuilder("?name=").append(name).append("&time=").append(time);
-        RequestMessage message = RequestMessageBuilder.build(RequestBuilder.GET, PROLONG + params).getRequestMessage();
+        RequestMessage message = RequestMessageBuilder.build(RequestBuilder.GET, BASE_URL + PROLONG + params).getRequestMessage();
         wsMessageBus.send(message, callback);
     }
 

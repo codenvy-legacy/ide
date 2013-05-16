@@ -60,7 +60,7 @@ public class IDEConfigurationLoader {
     public void loadConfiguration(AsyncRequestCallback<IDEInitializationConfiguration> callback) {
         try {
             
-            String url = Utils.getRestContext() + "/ide/configuration/init";
+            String url = Utils.getRestContext() + Utils.getWorkspaceName() + "/configuration/init";
             if (url == null) {
                 throw new Exception(IDE.IDE_LOCALIZATION_MESSAGES.confMissingVariable("configurationURL"));
             }

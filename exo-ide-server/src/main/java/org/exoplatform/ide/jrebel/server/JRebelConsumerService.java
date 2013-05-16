@@ -37,7 +37,7 @@ import java.util.Map;
  * @author <a href="vzhukovskii@exoplatform.com">Vladyslav Zhukovskii</a>
  * @version $Id: JRebelProfilerService.java 34027 19.12.12 17:02Z vzhukovskii $
  */
-@Path("ide/jrebel")
+@Path("{ws-name}/jrebel")
 public class JRebelConsumerService {
     @Inject
     UserManager userManager;

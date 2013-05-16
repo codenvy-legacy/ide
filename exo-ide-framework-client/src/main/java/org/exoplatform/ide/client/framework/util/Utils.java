@@ -391,11 +391,20 @@ public class Utils {
     }-*/;
 
     public static native String getRestContext() /*-{
-        return $wnd.appConfig.context;
+        function endsWith(str, suffix) {
+          return str.indexOf(suffix, str.length - suffix.length) !== -1;
+        }
+        rc = $wnd.appConfig.context;
+        
+        if (endsWith(rc,'/'))
+         return rc;
+        else
+         return rc + '/';  
     }-*/;
 
-    public static String getWorkspaceName() {
-        return "dev-monit"; //TODO need to rewrite for automaticaly getting from $wnd.location
-    }
+    public static native String getWorkspaceName() /*-{
+        console.info($wnd.ws);
+        return $wnd.ws;
+    }-*/;
 
 }

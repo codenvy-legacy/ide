@@ -46,6 +46,7 @@ import org.exoplatform.ide.client.framework.job.JobChangeEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.client.marking.Markable;
 import org.exoplatform.ide.editor.client.marking.Marker;
@@ -68,7 +69,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
                                            CancelParseHandler, EditorFileOpenedHandler, ReparseOpenedFilesHandler, EditorFileClosedHandler {
 
     /** Get build log method's path. */
-    private static final String LOG = "/ide/maven/log";
+    private static final String LOG = Utils.getWorkspaceName() + "/maven/log";
 
     /** Active file in editor. */
     private FileModel activeFile;
@@ -245,7 +246,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
 
     /** @param buildid */
     private void getBuildLog(String buildid) {
-        final String requestUrl = JdtExtension.REST_CONTEXT + LOG + "/" + buildid;
+        final String requestUrl = Utils.getRestContext() + LOG + "/" + buildid;
 
         try {
             AsyncRequest.build(RequestBuilder.GET, requestUrl).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)

@@ -44,7 +44,7 @@ import java.util.Map;
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: ShellConfigurationService.java Mar 6, 2012 4:46:36 PM azatsarynnyy $
  */
-@Path("/ide/shell/configuration")
+@Path("{ws-name}/shell/configuration")
 public class ShellConfigurationService {
     private static Log LOG = ExoLogger.getLogger(ShellConfigurationService.class);
 

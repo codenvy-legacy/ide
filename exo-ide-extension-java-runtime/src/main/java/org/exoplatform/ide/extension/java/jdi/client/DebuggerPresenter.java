@@ -733,11 +733,11 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                                                                                     //but it must be like:
                                                                                     //http://127.0.0.1:8080/IDE/rest/private/ide/java/runner/stop?name=app-8gkiomg9q4qrhkxz
                                                                                     if (!result.getStopURL().matches(
-                                                                                            "http[s]?://.+/IDE/rest/private/.*/stop\\?name=.+")) {
+                                                                                            "http[s]?://.+/" + Utils.getRestContext() + Utils.getWorkspaceName() + "/.*/stop\\?name=.+")) {
                                                                                         String fixedStopURL =
                                                                                                 Window.Location.getProtocol() + "//" +
                                                                                                 Window.Location.getHost() +
-                                                                                                Utils.getRestContext() + "/"
+                                                                                                Utils.getRestContext() + "/" 
                                                                                                 + result.getStopURL();
                                                                                         result.setStopURL(fixedStopURL);
                                                                                     }
@@ -806,7 +806,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                                                                                   //but it must be like:
                                                                                   //http://127.0.0.1:8080/IDE/rest/private/ide/java/runner/stop?name=app-8gkiomg9q4qrhkxz
                                                                                   if (!result.getStopURL().matches(
-                                                                                          "http[s]?://.+/IDE/rest/private/.*/stop\\?name=.+")) {
+                                                                                          "http[s]?://.+/" + Utils.getRestContext() + Utils.getWorkspaceName() + "/.*/stop\\?name=.+")) {
                                                                                       String fixedStopURL =
                                                                                               Window.Location.getProtocol() + "//" +
                                                                                               Window.Location.getHost() +

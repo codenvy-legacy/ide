@@ -172,7 +172,7 @@ public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, V
                 }
             };
 
-            String url = Utils.getRestContext() + "/ide/github/ssh/generate";
+            String url = Utils.getRestContext() + Utils.getWorkspaceName() + "/github/ssh/generate";
             AsyncRequest.build(RequestBuilder.POST, url).loader(new EmptyLoader()).send(callback);
         } catch (RequestException e) {
             loader.hide();

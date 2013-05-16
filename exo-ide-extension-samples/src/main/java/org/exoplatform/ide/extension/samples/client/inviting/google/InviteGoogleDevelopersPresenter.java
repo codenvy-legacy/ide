@@ -168,7 +168,8 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
             public void booleanValueReceived(Boolean aBoolean) {
                 if (aBoolean != null && aBoolean) {
                     String authUrl = Utils.getAuthorizationContext()
-                                     + "/ide/oauth/authenticate?oauth_provider=google&mode=federated_login"
+                                     + "/" + Utils.getWorkspaceName() 
+                                     + "/oauth/authenticate?oauth_provider=google&mode=federated_login"
                                      + "&scope=https://www.google.com/m8/feeds"
                                      + "&userId=" + IDE.userId
                                      + "&redirect_after_login="

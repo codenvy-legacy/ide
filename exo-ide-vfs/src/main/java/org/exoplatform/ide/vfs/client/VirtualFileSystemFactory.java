@@ -35,7 +35,7 @@ public class VirtualFileSystemFactory {
     /** VFS factory instance. */
     private static VirtualFileSystemFactory instance;
 
-    private final String VFS_URL = "/ide/vfs";
+    private final String VFS_URL = "/" + getWorkspaceName() + "/vfs";
 
     private String restContext;
 
@@ -48,6 +48,10 @@ public class VirtualFileSystemFactory {
         instance = this;
         this.restContext = restContext;
     }
+    
+    public static native String getWorkspaceName() /*-{
+       return $wnd.ws;
+    }-*/;
 
     public void getAvailableFileSystems(AsyncRequestCallback<List<VirtualFileSystemInfo>> callback)
             throws RequestException {

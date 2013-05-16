@@ -66,7 +66,8 @@ public class OAuthLoginPresenter implements OAuthLoginHandler, ViewClosedHandler
             @Override
             public void onClick(ClickEvent event) {
                 String authUrl = Utils.getAuthorizationContext()
-                                 + "/ide/oauth/authenticate?oauth_provider=github"
+                                 + "/" + Utils.getWorkspaceName()
+                                 + "/oauth/authenticate?oauth_provider=github"
                                  + "&scope=user&userId=" + IDE.userId
                                  + "&scope=repo&redirect_after_login="
                                  + Utils.getAuthorizationPageURL();

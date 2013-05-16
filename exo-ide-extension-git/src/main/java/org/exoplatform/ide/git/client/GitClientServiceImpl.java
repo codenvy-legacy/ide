@@ -27,6 +27,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
@@ -97,54 +98,57 @@ import java.util.List;
  * @version $Id: Mar 23, 2011 11:52:24 AM anya $
  */
 public class GitClientServiceImpl extends GitClientService {
-    public static final String ADD               = "/ide/git/add";
+    
+    private static final String WS               = Utils.getWorkspaceName();
+    
+    public static final String ADD               = WS + "/git/add";
 
-    public static final String BRANCH_LIST       = "/ide/git/branch-list";
+    public static final String BRANCH_LIST       = WS + "/git/branch-list";
 
-    public static final String BRANCH_CHECKOUT   = "/ide/git/branch-checkout";
+    public static final String BRANCH_CHECKOUT   = WS + "/git/branch-checkout";
 
-    public static final String BRANCH_CREATE     = "/ide/git/branch-create";
+    public static final String BRANCH_CREATE     = WS + "/git/branch-create";
 
-    public static final String BRANCH_DELETE     = "/ide/git/branch-delete";
+    public static final String BRANCH_DELETE     = WS + "/git/branch-delete";
 
-    public static final String CLONE             = "/ide/git/clone";
+    public static final String CLONE             = WS + "/git/clone";
 
-    public static final String COMMIT            = "/ide/git/commit";
+    public static final String COMMIT            = WS + "/git/commit";
 
-    public static final String DIFF              = "/ide/git/diff";
+    public static final String DIFF              = WS + "/git/diff";
 
-    public static final String FETCH             = "/ide/git/fetch";
+    public static final String FETCH             = WS + "/git/fetch";
 
-    public static final String INIT              = "/ide/git/init";
+    public static final String INIT              = WS + "/git/init";
 
-    public static final String LOG               = "/ide/git/log";
+    public static final String LOG               = WS + "/git/log";
 
-    public static final String MERGE             = "/ide/git/merge";
+    public static final String MERGE             = WS + "/git/merge";
 
-    public static final String STATUS            = "/ide/git/status";
+    public static final String STATUS            = WS + "/git/status";
 
-    public static final String RO_URL            = "/ide/git/read-only-url";
+    public static final String RO_URL            = WS + "/git/read-only-url";
 
-    public static final String PUSH              = "/ide/git/push";
+    public static final String PUSH              = WS + "/git/push";
 
-    public static final String PULL              = "/ide/git/pull";
+    public static final String PULL              = WS + "/git/pull";
 
-    public static final String REMOTE_LIST       = "/ide/git/remote-list";
+    public static final String REMOTE_LIST       = WS + "/git/remote-list";
 
-    public static final String REMOTE_ADD        = "/ide/git/remote-add";
+    public static final String REMOTE_ADD        = WS + "/git/remote-add";
 
-    public static final String REMOTE_DELETE     = "/ide/git/remote-delete";
+    public static final String REMOTE_DELETE     = WS + "/git/remote-delete";
 
-    public static final String REMOVE            = "/ide/git/rm";
+    public static final String REMOVE            = WS + "/git/rm";
 
-    public static final String RESET             = "/ide/git/reset";
+    public static final String RESET             = WS + "/git/reset";
 
-    public static final String COMMITERS         = "/ide/git/commiters";
+    public static final String COMMITERS         = WS + "/git/commiters";
 
-    public static final String DELETE_REPOSITORY = "/ide/git/delete-repository";
+    public static final String DELETE_REPOSITORY = WS + "/git/delete-repository";
 
     /** REST service context. */
-    private String             restServiceContext;
+    private final String             restServiceContext = Utils.getRestContext();
 
     /** Loader to be displayed. */
     private Loader             loader;
@@ -158,9 +162,8 @@ public class GitClientServiceImpl extends GitClientService {
      * @param restContext rest context
      * @param loader loader to show on server request
      */
-    public GitClientServiceImpl(String restContext, Loader loader, MessageBus wsMessageBus) {
+    public GitClientServiceImpl(Loader loader, MessageBus wsMessageBus) {
         this.loader = loader;
-        this.restServiceContext = restContext;
         this.wsMessageBus = wsMessageBus;
     }
 

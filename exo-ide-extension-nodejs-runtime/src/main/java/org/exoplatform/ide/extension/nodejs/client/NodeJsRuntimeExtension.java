@@ -44,7 +44,7 @@ public class NodeJsRuntimeExtension extends Extension implements InitializeServi
      * .client.framework.application.event.InitializeServicesEvent) */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        new NodeJsRuntimeServiceImpl(event.getApplicationConfiguration().getContext());
+        new NodeJsRuntimeServiceImpl();
     }
 
     /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */

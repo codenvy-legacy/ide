@@ -27,6 +27,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus;
 
 /**
@@ -38,7 +39,7 @@ import org.exoplatform.ide.extension.maven.shared.BuildStatus;
 public class BuilderClientServiceImpl extends BuilderClientService {
 
     /** Base url. */
-    private static final String BASE_URL = "/ide/maven";
+    private static final String BASE_URL = Utils.getWorkspaceName() + "/maven";
 
     /** Build project method's path. */
     private static final String BUILD = BASE_URL + "/build";
@@ -70,9 +71,9 @@ public class BuilderClientServiceImpl extends BuilderClientService {
      * @param loader
      *         loader to show on server request
      */
-    public BuilderClientServiceImpl(String restContext, Loader loader) {
+    public BuilderClientServiceImpl(Loader loader) {
         this.loader = loader;
-        this.restServiceContext = restContext;
+        this.restServiceContext = Utils.getRestContext();
     }
 
     /**
@@ -168,7 +169,7 @@ public class BuilderClientServiceImpl extends BuilderClientService {
      */
 
     public void checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException {
-        final String requestUrl = restServiceContext + "/ide/maven/check_download_url?url=" + url;
+        final String requestUrl = restServiceContext + Utils.getWorkspaceName() + "/maven/check_download_url?url=" + url;
         AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(new EmptyLoader()).send(callback);
     }
 }

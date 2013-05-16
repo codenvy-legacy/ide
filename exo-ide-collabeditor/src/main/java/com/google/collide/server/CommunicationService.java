@@ -37,7 +37,7 @@ import java.util.Set;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-@Path("ide/collab_editor/communication")
+@Path("{ws-name}/collab_editor/communication")
 public class CommunicationService {
     private static final Log LOG = ExoLogger.getLogger(CommunicationService.class);
 

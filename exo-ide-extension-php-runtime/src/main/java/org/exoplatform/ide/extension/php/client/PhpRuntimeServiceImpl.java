@@ -27,6 +27,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.php.shared.ApplicationInstance;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
@@ -37,16 +38,19 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  *
  */
 public class PhpRuntimeServiceImpl extends PhpRuntimeService {
-    private static final String LOGS = "/ide/php/runner/logs";
+    
+    private static final String BASE_URL = Utils.getWorkspaceName() + "/php/runner";
+    
+    private static final String LOGS = BASE_URL + "/logs";
 
     private String restContext;
 
-    private static final String RUN_APPLICATION = "/ide/php/runner/run";
+    private static final String RUN_APPLICATION = BASE_URL + "/run";
 
-    private static final String STOP_APPLICATION = "/ide/php/runner/stop";
+    private static final String STOP_APPLICATION = BASE_URL + "/stop";
 
-    public PhpRuntimeServiceImpl(String restContext) {
-        this.restContext = restContext;
+    public PhpRuntimeServiceImpl() {
+        this.restContext = Utils.getRestContext();
     }
 
     /**

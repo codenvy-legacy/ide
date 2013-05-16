@@ -84,7 +84,7 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
     public void onConvertToProject(final ConvertToProjectEvent event) {
         folderId = event.getFolderId();
         String url =
-                Utils.getRestContext() + "/ide/project/prepare?vfsid=" + event.getVfsId() + "&folderid=" + event.getFolderId() +
+                Utils.getRestContext() + Utils.getWorkspaceName() + "/project/prepare?vfsid=" + event.getVfsId() + "&folderid=" + event.getFolderId() +
                 (event.getProjectType() != null ? "&projecttype=" + event.getProjectType() : "");
 
         properties = event.getProperties();

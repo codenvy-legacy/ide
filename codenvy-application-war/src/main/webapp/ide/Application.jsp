@@ -26,12 +26,12 @@
 
     <script type="text/javascript" language="javascript">
         var appConfig = {
-            "context": "/w/rest"
+            "context": "/w/rest/"
         }
         var hiddenFiles = ".*";
-        var ws = <%= request.getAttribute("ws")%>;
-        var project = <%= request.getAttribute("project")%>;
-        var path = <%= request.getAttribute("path")%>;
+        var ws = "<%= request.getAttribute("ws")%>";
+        var project = "<%= request.getAttribute("project")%>";
+        var path = "<%= request.getAttribute("path")%>";
         var authorizationContext = "/w/rest";
         var authorizationPageURL = "/w/ide/" + ws;
         var authorizationErrorPageURL = "/w/ide/error_oauth.html";

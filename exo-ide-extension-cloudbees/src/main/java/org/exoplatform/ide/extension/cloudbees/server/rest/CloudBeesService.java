@@ -39,7 +39,7 @@ import java.util.Map;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/cloudbees")
+@Path("{ws-name}/cloudbees")
 public class CloudBeesService {
     private static final Log LOG = ExoLogger.getLogger(CloudBeesService.class);
 

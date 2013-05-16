@@ -28,6 +28,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.Credentials;
@@ -43,7 +44,7 @@ import java.util.Map;
  * @version $Id: SamplesClientServiceImpl.java Sep 2, 2011 12:34:27 PM vereshchaka $
  */
 public class GitHubClientServiceImpl extends GitHubClientService {
-    private static final String BASE_URL      = "/ide/github";
+    private static final String BASE_URL      = Utils.getWorkspaceName() + "/github";
 
     private static final String LIST          = BASE_URL + "/list";
 
@@ -65,9 +66,9 @@ public class GitHubClientServiceImpl extends GitHubClientService {
 
     public static final String  SUPPORT       = "support";
 
-    public GitHubClientServiceImpl(String restContext, Loader loader) {
+    public GitHubClientServiceImpl(Loader loader) {
         this.loader = loader;
-        this.restServiceContext = restContext;
+        this.restServiceContext = Utils.getRestContext();
     }
 
     /**

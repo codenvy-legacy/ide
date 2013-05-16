@@ -26,6 +26,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.googleappengine.client.backends.UpdateBackendStatusHandler;
 import org.exoplatform.ide.extension.googleappengine.client.backends.UpdateBackendsStatusHandler;
 import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployRequestStatusHandler;
@@ -50,12 +51,14 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
 
     /** Loader to be displayed. */
     private Loader loader;
+    
+    private final static String WS = Utils.getWorkspaceName();
 
-    private final String AUTH_URL = "/ide/oauth/authenticate";
+    private final String AUTH_URL = WS + "/oauth/authenticate";
 
-    private final String LOGOUT = "/ide/oauth/invalidate";
+    private final String LOGOUT = WS + "/oauth/invalidate";
 
-    private final String APP_ENGINE = "/ide/appengine/";
+    private final String APP_ENGINE = WS + "/appengine/";
 
     private final String USER = APP_ENGINE + "user";
 
@@ -105,8 +108,8 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
      * @param loader
      *         loader to be displayed on request
      */
-    public GoogleAppEngineClientServiceImpl(String restServiceContext, Loader loader) {
-        this.restServiceContext = restServiceContext;
+    public GoogleAppEngineClientServiceImpl(Loader loader) {
+        this.restServiceContext = Utils.getRestContext();
         this.loader = loader;
     }
 

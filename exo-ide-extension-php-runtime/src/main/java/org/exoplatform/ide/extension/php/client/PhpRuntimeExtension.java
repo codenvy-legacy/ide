@@ -44,7 +44,7 @@ public class PhpRuntimeExtension extends Extension implements InitializeServices
      * .client.framework.application.event.InitializeServicesEvent) */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        new PhpRuntimeServiceImpl(event.getApplicationConfiguration().getContext());
+        new PhpRuntimeServiceImpl();
     }
 
     /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */

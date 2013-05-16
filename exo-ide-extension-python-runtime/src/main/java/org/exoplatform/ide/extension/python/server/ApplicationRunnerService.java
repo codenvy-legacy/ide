@@ -37,7 +37,7 @@ import javax.ws.rs.core.UriInfo;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/python/runner")
+@Path("{ws-name}/python/runner")
 public class ApplicationRunnerService {
     @Inject
     private ApplicationRunner runner;

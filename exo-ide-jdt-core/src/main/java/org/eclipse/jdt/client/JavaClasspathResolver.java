@@ -240,7 +240,7 @@ public class JavaClasspathResolver implements CleanProjectHandler, VfsChangedHan
         for (ProjectModel project : projects) {
             final String projectId = project.getId();
             statusHandler.get(projectId).requestInProgress(projectId);
-            String url = "/ide/code-assistant/java/update-dependencies?projectid=" + projectId + "&vfsid=" + vfsId;
+            String url = "/" + Utils.getWorkspaceName() + "/code-assistant/java/update-dependencies?projectid=" + projectId + "&vfsid=" + vfsId;
             StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
 
             RequestMessage message = RequestMessageBuilder.build(RequestBuilder.GET, url).getRequestMessage();
@@ -277,7 +277,7 @@ public class JavaClasspathResolver implements CleanProjectHandler, VfsChangedHan
             final String projectId = project.getId();
             statusHandler.get(projectId).requestInProgress(projectId);
             String url =
-                    Utils.getRestContext() + "/ide/code-assistant/java/update-dependencies?projectid=" + projectId + "&vfsid="
+                    Utils.getRestContext() + Utils.getWorkspaceName() + "/code-assistant/java/update-dependencies?projectid=" + projectId + "&vfsid="
                     + vfsId;
             StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
 
