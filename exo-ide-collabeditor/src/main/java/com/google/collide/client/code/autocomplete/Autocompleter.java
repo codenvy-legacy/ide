@@ -72,6 +72,7 @@ public class Autocompleter implements ContentAssistant {
     private LanguageSpecificAutocompleter autocompleters;
 
     public JsonStringMap<ContentAssistProcessor> processors = JsonCollections.createMap();
+    private boolean defferedAction;
 
     //  /**
     //   * Proxy that distributes notifications to all code analyzers.
@@ -283,6 +284,7 @@ public class Autocompleter implements ContentAssistant {
         if (popup.isShowing() && popup.consumeKeySignal(trigger)) {
             return true;
         }
+        defferedAction = false;
         String contentType;
         try {
             contentType = exoEditor.getDocument().getContentType(getOffset(exoEditor.getDocument()));
@@ -308,6 +310,7 @@ public class Autocompleter implements ContentAssistant {
 
             case DEFERRED_COMPLETE:
                 boxTrigger = trigger;
+                defferedAction = true;
                 scheduleRequestAutocomplete();
                 return false;
 
@@ -451,7 +454,8 @@ public class Autocompleter implements ContentAssistant {
         int offset = getOffset(document);
         CompletionProposal[] proposals = contentAssistProcessor.computeCompletionProposals(exoEditor, offset);
         if (proposals != null && proposals.length > 0) {
-            if (proposals.length == 1 && !popup.isShowing() && proposals[0].isAutoInsertable()) {
+
+            if (!defferedAction && proposals.length == 1 && !popup.isShowing() && proposals[0].isAutoInsertable()) {
                 onSelectCommand.scheduleAutocompletion(proposals[0]);
                 return;
             }
