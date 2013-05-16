@@ -50,8 +50,11 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.*;
@@ -112,6 +115,9 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
 
     /** current selected PaaS */
     private PaaS currentPaaS;
+    
+    /** Name of the property for using JRebel. */
+    private static final String JREBEL = "jrebel";
 
     /** available project templates */
     private List<ProjectTemplate> availableProjectTemplates = new ArrayList<ProjectTemplate>();
@@ -369,6 +375,10 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
                                                                             new ProjectUnmarshaller(new ProjectModel())) {
                                                                         @Override
                                                                         protected void onSuccess(final ProjectModel result) {
+                                                                            if ((currentProjectType == ProjectType.JSP ||
+                                                                                currentProjectType == ProjectType.SPRING)) {
+                                                                               writeUseJRebelProperty(result);
+                                                                           }
                                                                             IDELoader.getInstance().hide();
                                                                             IDE.getInstance().closeView(display.asView().getId());
                                                                             IDE.fireEvent(new ProjectCreatedEvent(result));
@@ -387,6 +397,32 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         }
     }
 
+    /**
+     * Writes 'jrebel' property to the project properties.
+     *
+     * @param project
+     *         {@link ProjectModel}
+     */
+    private void writeUseJRebelProperty(ProjectModel project) {
+        project.getProperties().add(new PropertyImpl(JREBEL, String.valueOf(true)));
+        try {
+            VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>() {
+
+                @Override
+                protected void onSuccess(ItemWrapper result) {
+                    // nothing to do
+                }
+
+                @Override
+                protected void onFailure(Throwable ignore) {
+                    // ignore this exception
+                }
+            });
+        } catch (RequestException e) {
+            // ignore this exception
+        }
+    }
+    
     private ProjectTemplate selectProjectTemplate(PaaS paaS) {
         String startWithName;
 
