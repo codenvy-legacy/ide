@@ -19,6 +19,7 @@
 package com.codenvy.ide.extension.cloudfoundry.client.command;
 
 import com.codenvy.ide.api.expressions.Expression;
+import com.codenvy.ide.api.expressions.ProjectOpenedExpression;
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
@@ -36,6 +37,7 @@ import com.google.inject.Singleton;
 public class ShowCreateApplicationCommand implements ExtendedCommand {
     private final CreateApplicationPresenter presenter;
     private final CloudFoundryResources      resources;
+    private final ProjectOpenedExpression    projectOpenedExpression;
 
     /**
      * Create command.
@@ -44,9 +46,11 @@ public class ShowCreateApplicationCommand implements ExtendedCommand {
      * @param resources
      */
     @Inject
-    public ShowCreateApplicationCommand(CreateApplicationPresenter presenter, CloudFoundryResources resources) {
+    public ShowCreateApplicationCommand(CreateApplicationPresenter presenter, CloudFoundryResources resources,
+                                        ProjectOpenedExpression projectOpenedExpression) {
         this.presenter = presenter;
         this.resources = resources;
+        this.projectOpenedExpression = projectOpenedExpression;
     }
 
     /** {@inheritDoc} */
@@ -76,6 +80,6 @@ public class ShowCreateApplicationCommand implements ExtendedCommand {
     /** {@inheritDoc} */
     @Override
     public Expression canExecute() {
-        return null;
+        return projectOpenedExpression;
     }
 }

@@ -75,6 +75,7 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
                                          ConsolePart console, AppfogLocalizationConstant constant, AppfogAutoBeanFactory autoBeanFactory,
                                          LoginPresenter loginPresenter, AppfogClientService service) {
         this.view = view;
+        this.view.setDelegate(this);
         this.resourceProvider = resourceProvider;
         this.eventBus = eventBus;
         this.console = console;
@@ -184,6 +185,12 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
                                                           callback.onFailure(caught);
                                                       }
                                                   });
+                                              } else {
+                                                  view.close();
+                                                  console.print(constant.applicationDeletedMsg(appName));
+                                                  appDeleteCallback.onSuccess(appName);
+
+                                                  callback.onSuccess(result);
                                               }
                                           }
                                       });

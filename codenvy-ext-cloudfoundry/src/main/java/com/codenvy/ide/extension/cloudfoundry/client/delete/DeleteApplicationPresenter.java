@@ -210,6 +210,12 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
                                                           callback.onFailure(caught);
                                                       }
                                                   });
+                                              } else {
+                                                  view.close();
+                                                  console.print(constant.applicationDeletedMsg(appName));
+                                                  appDeleteCallback.onSuccess(appName);
+
+                                                  callback.onSuccess(result);
                                               }
                                           }
                                       });

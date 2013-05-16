@@ -21,8 +21,10 @@ package com.codenvy.ide.ext.appfog.client.delete;
 import com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant;
 import com.codenvy.ide.ext.appfog.client.AppfogResources;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Label;
@@ -51,9 +53,10 @@ public class DeleteApplicationViewImpl extends DialogBox implements DeleteApplic
     @UiField
     Label                     askLabel;
     @UiField(provided = true)
-    final AppfogResources            res;
+    final   AppfogResources            res;
     @UiField(provided = true)
-    final AppfogLocalizationConstant locale;
+    final   AppfogLocalizationConstant locale;
+    private ActionDelegate             delegate;
 
     /**
      * Create view.
@@ -92,6 +95,12 @@ public class DeleteApplicationViewImpl extends DialogBox implements DeleteApplic
 
     /** {@inheritDoc} */
     @Override
+    public void setDelegate(ActionDelegate delegate) {
+        this.delegate = delegate;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void showDialog() {
         this.center();
         this.show();
@@ -101,5 +110,15 @@ public class DeleteApplicationViewImpl extends DialogBox implements DeleteApplic
     @Override
     public void close() {
         this.hide();
+    }
+
+    @UiHandler("btnDelete")
+    void onBtnDeleteClick(ClickEvent event) {
+        delegate.onDeleteClicked();
+    }
+
+    @UiHandler("btnCancel")
+    void onBtnCancelClick(ClickEvent event) {
+        delegate.onCancelClicked();
     }
 }

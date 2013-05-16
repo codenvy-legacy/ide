@@ -18,12 +18,14 @@
  */
 package com.codenvy.ide.ext.appfog.client.delete;
 
+import com.codenvy.ide.api.mvp.View;
+
 /**
  * The view of {@link DeleteApplicationPresenter}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public interface DeleteApplicationView {
+public interface DeleteApplicationView extends View<DeleteApplicationView.ActionDelegate> {
     /** Needs for delegate some function into DeleteApplication view. */
     public interface ActionDelegate {
         /** Performs any actions appropriate in response to the user having pressed the Delete button. */
