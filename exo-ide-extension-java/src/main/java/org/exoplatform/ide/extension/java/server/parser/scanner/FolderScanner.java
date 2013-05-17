@@ -55,7 +55,7 @@ public class FolderScanner {
         };
         ItemList<Item> children;
 
-        children = vfs.getChildren(folder.getId(), -1, 0, null, PropertyFilter.NONE_FILTER);
+        children = vfs.getChildren(folder.getId(), -1, 0, null, false, PropertyFilter.NONE_FILTER);
         for (Item item : children.getItems()) {
             scan(item, visitor);
         }
@@ -67,7 +67,7 @@ public class FolderScanner {
         if (i.getItemType() == ItemType.FOLDER) {
             applyFilters(i, v);
 
-            ItemList<Item> children = vfs.getChildren(i.getId(), -1, 0, null, PropertyFilter.NONE_FILTER);
+            ItemList<Item> children = vfs.getChildren(i.getId(), -1, 0, null, false, PropertyFilter.NONE_FILTER);
             for (Item item : children.getItems()) {
                 scan(item, v);
             }

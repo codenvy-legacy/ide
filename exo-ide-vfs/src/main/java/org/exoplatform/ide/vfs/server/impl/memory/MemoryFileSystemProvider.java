@@ -32,8 +32,8 @@ import java.net.URI;
  * @version $Id: $
  */
 public class MemoryFileSystemProvider implements VirtualFileSystemProvider {
-    private final String                  id;
-    private final MemoryFileSystemContext memoryContext;
+    private final String                       id;
+    private final MemoryFileSystemContext      memoryContext;
 
     public MemoryFileSystemProvider(String id, MemoryFileSystemContext memoryContext) {
         this.id = id;
@@ -46,7 +46,8 @@ public class MemoryFileSystemProvider implements VirtualFileSystemProvider {
                 requestContext != null ? requestContext.getUriInfo().getBaseUri() : URI.create(""),
                 listeners,
                 id,
-                memoryContext);
+                memoryContext
+                );
     }
 
     @Override

@@ -121,7 +121,7 @@ public class ExpressService {
                                           instanceType,
                                           (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
 
-        Project project = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+        Project project = (Project)vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
         String value = project.getPropertyValue("isGitRepository");
         if (value == null || !value.equals("true")) {
             Property isGitRepositoryProperty = new PropertyImpl("isGitRepository", "true");

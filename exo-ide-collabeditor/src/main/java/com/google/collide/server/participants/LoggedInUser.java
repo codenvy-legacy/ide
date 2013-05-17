@@ -27,9 +27,13 @@ public final class LoggedInUser {
      */
     private final String id;
 
-    public LoggedInUser(String name, String id) {
+    /** Workspace id which user logged in. */
+    private final String workspace; // At the moment user may be logged in to only one workspace at the time.
+
+    public LoggedInUser(String name, String id, String workspace) {
         this.name = name;
         this.id = id;
+        this.workspace = workspace;
     }
 
     public String getName() {
@@ -38,5 +42,13 @@ public final class LoggedInUser {
 
     public String getId() {
         return id;
+    }
+
+    public String getWorkspace() {
+        return workspace;
+    }
+
+    public boolean isLoggedIn(String workspace) {
+        return this.workspace.equals(workspace);
     }
 }

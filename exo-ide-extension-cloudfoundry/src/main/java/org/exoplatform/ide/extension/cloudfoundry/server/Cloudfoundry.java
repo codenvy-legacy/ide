@@ -195,7 +195,7 @@ public class Cloudfoundry {
         credentialStore.save(userId, "cloudfoundry", credential);
     }
 
-    /** Remove locally saved authentication token. Need use {@link #login(String, String, String)} again. */
+    /** Remove locally saved authentication token. Need use {@link #login(String, String, String, String)} again. */
     public void logout(String server, String paasProvider) throws CredentialStoreException {
         final Credential credential = new Credential();
         final String userId = getUserId();
@@ -1478,7 +1478,7 @@ public class Cloudfoundry {
      *         not specified then try determine server. If can't determine server from application or user context then
      *         use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
      * @param service
-     *         type of service to create. Should be one from system service, see {@link #services(String)}, e.g.
+     *         type of service to create. Should be one from system service, see {@link #services(String, String)}, e.g.
      *         <i>mysql</i> or <i>mongodb</i>
      * @param name
      *         name for new service (optional). If not specified that random name generated
@@ -1986,7 +1986,7 @@ public class Cloudfoundry {
         String app = null;
         final String propertyName = detectCloudFoundryProviderName(vfs, projectId) + "-application";
         if (vfs != null && projectId != null) {
-            Item item = vfs.getItem(projectId, PropertyFilter.valueOf(propertyName));
+            Item item = vfs.getItem(projectId, false, PropertyFilter.valueOf(propertyName));
             app = item.getPropertyValue(propertyName);
         }
         if (failIfCannotDetect && (app == null || app.isEmpty())) {
@@ -1999,7 +1999,7 @@ public class Cloudfoundry {
     private String detectCloudFoundryProviderName(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException {
         String providerName = null;
         if (vfs != null && projectId != null) {
-            Item item = vfs.getItem(projectId, PropertyFilter.valueOf("cloudfoundry-provider"));
+            Item item = vfs.getItem(projectId, false, PropertyFilter.valueOf("cloudfoundry-provider"));
             providerName = item.getPropertyValue("cloudfoundry-provider");
         }
         if (providerName == null || providerName.isEmpty()) {
@@ -2019,7 +2019,7 @@ public class Cloudfoundry {
     private String detectServer(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException {
         String server = null;
         if (vfs != null && projectId != null) {
-            Item item = vfs.getItem(projectId, PropertyFilter.valueOf("vmc-target"));
+            Item item = vfs.getItem(projectId, false, PropertyFilter.valueOf("vmc-target"));
             server = item.getPropertyValue("vmc-target");
         }
         if (server == null) {

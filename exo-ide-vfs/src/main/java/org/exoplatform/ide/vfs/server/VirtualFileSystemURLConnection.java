@@ -79,8 +79,8 @@ public final class VirtualFileSystemURLConnection extends URLConnection {
             vfs = registry.getProvider(vfsId).newInstance(null, listeners);
             final String itemIdentifier = theUri.getFragment();
             item = (itemIdentifier.startsWith("/")) //
-                   ? vfs.getItemByPath(itemIdentifier, null, PropertyFilter.NONE_FILTER) //
-                   : vfs.getItem(itemIdentifier, PropertyFilter.NONE_FILTER);
+                   ? vfs.getItemByPath(itemIdentifier, null, false, PropertyFilter.NONE_FILTER) //
+                   : vfs.getItem(itemIdentifier, false, PropertyFilter.NONE_FILTER);
         } catch (VirtualFileSystemException e) {
             throw new IOException(e.getMessage(), e);
         }
@@ -173,7 +173,7 @@ public final class VirtualFileSystemURLConnection extends URLConnection {
                 return content.getStream();
             }
             // Folder. Show plain list of child.
-            ItemList<Item> children = vfs.getChildren(item.getId(), -1, 0, null, PropertyFilter.NONE_FILTER);
+            ItemList<Item> children = vfs.getChildren(item.getId(), -1, 0, null, false, PropertyFilter.NONE_FILTER);
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             Writer w = new OutputStreamWriter(out);
             for (Item i : children.getItems()) {

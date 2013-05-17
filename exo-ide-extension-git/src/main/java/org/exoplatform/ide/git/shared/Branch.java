@@ -34,15 +34,19 @@ public class Branch {
     /** <code>true</code> if branch is checked out in working tree (active) */
     private boolean active;
 
+    /** <code>true</code> if branch is a remote branch */
+    private boolean remote;
+
     /**
      * @param name the name of branch
      * @param active indicate is current branch active or not
      * @param displayName short name of branch. Full name 'refs/heads/master' may be represented by short name 'master'
      */
-    public Branch(String name, boolean active, String displayName) {
+    public Branch(String name, boolean active, String displayName, boolean remote) {
         this.name = name;
         this.active = active;
         this.displayName = displayName;
+        this.remote = remote;
     }
 
     /** Corresponding setters used to setup required fields. */
@@ -85,9 +89,23 @@ public class Branch {
         this.active = active;
     }
 
+    /**
+     * @return <code>true</code> if branch is a remote branch
+     */
+    public boolean isRemote() {
+        return remote;
+    }
+
+    /**
+     * @param remote <code>true</code> if branch is a remote branch
+     */
+    public void setRemote(boolean remote) {
+        this.remote = remote;
+    }
+
     /** @see java.lang.Object#toString() */
     @Override
     public String toString() {
-        return "Branch [displayName=" + displayName + ", name=" + name + ", active=" + active + "]";
+        return "Branch [displayName=" + displayName + ", name=" + name + ", active=" + active + ", remote=" + remote + "]";
     }
 }

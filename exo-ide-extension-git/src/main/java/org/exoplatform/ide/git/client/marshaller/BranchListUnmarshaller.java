@@ -65,8 +65,12 @@ public class BranchListUnmarshaller implements Unmarshallable<List<Branch>>, Con
             String name = "";
             String displayName = "";
             boolean active = false;
+            boolean remote = false;
             if (object.containsKey(ACTIVE)) {
                 active = (object.get(ACTIVE).isBoolean() != null) ? object.get(ACTIVE).isBoolean().booleanValue() : false;
+            }
+            if (object.containsKey(REMOTE)) {
+                remote = (object.get(REMOTE).isBoolean() != null) ? object.get(REMOTE).isBoolean().booleanValue() : false;
             }
             if (object.containsKey(NAME)) {
                 name = (object.get(NAME).isString() != null) ? object.get(NAME).isString().stringValue() : name;
@@ -77,7 +81,7 @@ public class BranchListUnmarshaller implements Unmarshallable<List<Branch>>, Con
                                   : displayName;
             }
 
-            branches.add(new Branch(name, active, displayName));
+            branches.add(new Branch(name, active, displayName, remote));
         }
     }
 
