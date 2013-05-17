@@ -2,7 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:c="urn:import:com.codenvy.ide.ui">
     <ui:with field="locale"
-             type="com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant"></ui:with>
+             type="com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant"/>
     <ui:with field='res'
              type='com.codenvy.ide.ext.appfog.client.AppfogResources'/>
     <ui:style>
@@ -13,12 +13,21 @@
         .spacing {
             margin-bottom: 10px;
         }
+
+        .emptyBorder {
+            margin: 6px;
+        }
+
+        .space {
+            margin-right: 5px;
+        }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="480px" height="330px">
+    <g:DockLayoutPanel unit="PX" width="480px" height="330px" addStyleNames="{style.emptyBorder}">
         <g:south size="26.0">
             <g:FlowPanel width="100%">
                 <c:Button addStyleNames="{style.alignBtn}" text="{locale.createButton}" size="SMALL" type="SUCCESS" ui:field="btnCreate"/>
-                <c:Button addStyleNames="{style.alignBtn}" text="{locale.cancelButton}" size="SMALL" type="DANGER" ui:field="btnCancel"/>
+                <c:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.cancelButton}" size="SMALL" type="DANGER"
+                          ui:field="btnCancel"/>
             </g:FlowPanel>
         </g:south>
         <g:center>

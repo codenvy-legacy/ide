@@ -21,8 +21,12 @@
         .floatRight {
             float: right;
         }
+
+        .emptyBorder {
+            margin: 6px;
+        }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="930px" height="260px">
+    <g:DockLayoutPanel unit="PX" width="930px" height="260px" addStyleNames="{style.emptyBorder}">
         <g:south size="30.0">
             <g:FlowPanel addStyleNames="{res.appFogCSS.login}}">
                 <g:Label text="{locale.appsServerLabel}" width="63px"

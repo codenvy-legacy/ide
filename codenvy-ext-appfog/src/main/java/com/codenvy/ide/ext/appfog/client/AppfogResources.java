@@ -33,6 +33,14 @@ public interface AppfogResources extends ClientBundle {
         String loginFont();
 
         String loginErrorFont();
+
+        String project();
+
+        String labelH();
+
+        String link();
+
+        String textinput();
     }
 
     @Source({"AppFog.css", "com/codenvy/ide/api/ui/style.css"})

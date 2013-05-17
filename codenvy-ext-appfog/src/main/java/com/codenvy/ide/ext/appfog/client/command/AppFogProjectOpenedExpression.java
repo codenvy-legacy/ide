@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.extension.cloudfoundry.client.command;
+package com.codenvy.ide.ext.appfog.client.command;
 
 import com.codenvy.ide.api.expressions.AbstractExpression;
 import com.codenvy.ide.api.expressions.ExpressionManager;
@@ -26,26 +26,26 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Detects opening CloudFoundry project.
+ * Detects opening AppFog project.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class CloudFoundryProjectOpenedExpression extends AbstractExpression implements ProjectConstraintExpression {
+public class AppFogProjectOpenedExpression extends AbstractExpression implements ProjectConstraintExpression {
     /**
      * Create expression.
      *
      * @param expressionManager
      */
     @Inject
-    public CloudFoundryProjectOpenedExpression(ExpressionManager expressionManager) {
+    public AppFogProjectOpenedExpression(ExpressionManager expressionManager) {
         super(expressionManager, false);
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean onProjectChanged(Project project) {
-        value = project.getProperty("cloudfoundry-application") != null;
+        value = project.getProperty("appfog-application") != null;
         return value;
     }
 }

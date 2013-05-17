@@ -263,6 +263,9 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
                     && result.equals(openedProject.getPropertyValue("cloudfoundry-application"))) {
                     eventBus.fireEvent(new RefreshBrowserEvent(openedProject));
                 }
+                if (view.isShown()) {
+                    view.close();
+                }
             }
 
             @Override

@@ -16,3 +16,21 @@
     font-weight: normal;
     color: #d21a1a;
 }
+
+.project .labelH {
+    font-family: mainFontFamily;
+    font-size: fontSize;
+    font-weight: bold;
+}
+
+.project .link {
+    font-family: mainFontFamily;
+    font-size: fontSize;
+    overflow-x: hidden;
+    white-space: nowrap;
+}
+
+.project .textinput {
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+}

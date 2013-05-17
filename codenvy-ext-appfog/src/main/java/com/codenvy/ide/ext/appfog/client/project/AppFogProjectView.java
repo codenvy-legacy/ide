@@ -16,17 +16,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.extension.cloudfoundry.client.project;
+package com.codenvy.ide.ext.appfog.client.project;
 
 import com.codenvy.ide.api.mvp.View;
 
 /**
- * The view of {@link CloudFoundryProjectPresenter}.
+ * The view of {@link AppFogProjectPresenter}.
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface CloudFoundryProjectView extends View<CloudFoundryProjectView.ActionDelegate> {
-    /** Needs for delegate some function into CloudFoundryProject view. */
+public interface AppFogProjectView extends View<AppFogProjectView.ActionDelegate> {
+    /** Needs for delegate some function into AppFogProject view. */
     public interface ActionDelegate {
         /** Performs any actions appropriate in response to the user having pressed the Close button. */
         public void onCloseClicked();
@@ -78,6 +78,20 @@ public interface CloudFoundryProjectView extends View<CloudFoundryProjectView.Ac
      * @param name
      */
     public void setApplicationName(String name);
+
+    /**
+     * Returns application's infrastructure.
+     *
+     * @return application's infrastructure
+     */
+    public String getApplicationInfra();
+
+    /**
+     * Sets application's infrastructure.
+     *
+     * @param infra
+     */
+    public void setApplicationInfra(String infra);
 
     /**
      * Returns application's model.

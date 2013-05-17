@@ -20,12 +20,20 @@
         .spacing {
             margin-bottom: 10px;
         }
+
+        .emptyBorder {
+            margin: 6px;
+        }
+
+        .space {
+            margin-right: 5px;
+        }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="380px" height="180px" addStyleNames="{res.appFogCSS.login}">
+    <g:DockLayoutPanel unit="PX" width="380px" height="180px" addStyleNames="{res.appFogCSS.login} {style.emptyBorder}">
         <g:south size="26.0">
             <g:FlowPanel>
                 <c:Button addStyleNames="{style.alignBtn}" text="Cancel" size="SMALL" type="DANGER" ui:field="btnCancel"/>
-                <c:Button addStyleNames="{style.alignBtn}" text="Log In" size="SMALL" type="SUCCESS" ui:field="btnLogin"/>
+                <c:Button addStyleNames="{style.alignBtn} {style.space}" text="Log In" size="SMALL" type="SUCCESS" ui:field="btnLogin"/>
             </g:FlowPanel>
         </g:south>
         <g:north size="26.0">
