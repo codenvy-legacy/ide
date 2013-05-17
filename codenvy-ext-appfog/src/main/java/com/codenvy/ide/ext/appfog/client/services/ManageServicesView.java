@@ -16,10 +16,10 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.extension.cloudfoundry.client.services;
+package com.codenvy.ide.ext.appfog.client.services;
 
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
+import com.codenvy.ide.ext.appfog.shared.AppfogProvisionedService;
 
 import java.util.List;
 
@@ -54,7 +54,7 @@ public interface ManageServicesView extends View<ManageServicesView.ActionDelega
          * @param service
          *         service what needs to bind
          */
-        public void onBindServiceClicked(ProvisionedService service);
+        public void onBindServiceClicked(AppfogProvisionedService service);
 
         /**
          * Performs any actions appropriate in response to the user having selected other service.
@@ -62,7 +62,7 @@ public interface ManageServicesView extends View<ManageServicesView.ActionDelega
          * @param service
          *         selected service
          */
-        public void onSelectedService(ProvisionedService service);
+        public void onSelectedService(AppfogProvisionedService service);
     }
 
     /**
@@ -79,7 +79,7 @@ public interface ManageServicesView extends View<ManageServicesView.ActionDelega
      *
      * @param services
      */
-    public void setProvisionedServices(List<ProvisionedService> services);
+    public void setProvisionedServices(List<AppfogProvisionedService> services);
 
     /**
      * Sets bounded services.

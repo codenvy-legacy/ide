@@ -2,11 +2,8 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:c="urn:import:com.codenvy.ide.ui">
-    <ui:with field='locale'
-             type='com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant'/>
-    <ui:with field='res'
-             type='com.codenvy.ide.ext.appfog.client.AppfogResources'/>
-
+    <ui:with field='locale' type='com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant'/>
+    <ui:with field='res' type='com.codenvy.ide.ext.appfog.client.AppfogResources'/>
     <ui:style>
         .alignBtn {
             float: right;
@@ -32,8 +29,9 @@
     <g:DockLayoutPanel unit="PX" width="380px" height="180px" addStyleNames="{res.appFogCSS.login} {style.emptyBorder}">
         <g:south size="26.0">
             <g:FlowPanel>
-                <c:Button addStyleNames="{style.alignBtn}" text="Cancel" size="SMALL" type="DANGER" ui:field="btnCancel"/>
-                <c:Button addStyleNames="{style.alignBtn} {style.space}" text="Log In" size="SMALL" type="SUCCESS" ui:field="btnLogin"/>
+                <c:Button addStyleNames="{style.alignBtn}" text="Cancel" width="50px" size="SMALL" type="DANGER" ui:field="btnCancel"/>
+                <c:Button addStyleNames="{style.alignBtn} {style.space}" width="50px" text="Log In" size="SMALL" type="SUCCESS"
+                          ui:field="btnLogin"/>
             </g:FlowPanel>
         </g:south>
         <g:north size="26.0">
