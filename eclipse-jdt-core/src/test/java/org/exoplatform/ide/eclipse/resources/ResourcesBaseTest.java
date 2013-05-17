@@ -18,9 +18,8 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
-import com.codenvy.eclipse.resources.WorkspaceResource;
-
 import com.codenvy.eclipse.core.resources.ResourcesPlugin;
+import com.codenvy.eclipse.resources.WorkspaceResource;
 
 import org.everrest.core.RequestHandler;
 import org.everrest.core.ResourceBinder;
@@ -41,7 +40,6 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.impl.memory.MemoryFileSystemProvider;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFileSystemContext;
-import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFolder;
 import org.exoplatform.ide.vfs.server.observation.EventListenerList;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
@@ -66,7 +64,6 @@ public abstract class ResourcesBaseTest {
 
 
     protected static MemoryFileSystemContext memoryContext;
-
 
     protected static VirtualFileSystem vfs;
 

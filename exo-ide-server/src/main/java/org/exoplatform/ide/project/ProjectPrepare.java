@@ -77,7 +77,7 @@ public class ProjectPrepare {
 
                 //Just set for all modules where we find pom.xml that it is maven module and default project type
                 for (Map.Entry<String, File> entry : mavenModules.entrySet()) {
-                    vfs.updateItem(vfs.getItemByPath(entry.getKey(), null, PropertyFilter.ALL_FILTER).getId(), properties, null);
+                    vfs.updateItem(vfs.getItemByPath(entry.getKey(), null, false, PropertyFilter.ALL_FILTER).getId(), properties, null);
                 }
 
                 setJavaProjectTypesProperties(mavenModules);
@@ -144,7 +144,7 @@ public class ProjectPrepare {
             if (detectedType != ProjectType.DEFAULT) {
                 List<Property> properties = Collections.<Property>singletonList(
                         new PropertyImpl("vfs:projectType", detectedType.toString()));
-                vfs.updateItem(vfs.getItemByPath(entry.getKey(), null, PropertyFilter.ALL_FILTER).getId(), properties, null);
+                vfs.updateItem(vfs.getItemByPath(entry.getKey(), null, false, PropertyFilter.ALL_FILTER).getId(), properties, null);
             }
         }
     }

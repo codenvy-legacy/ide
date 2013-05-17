@@ -73,7 +73,7 @@ public class ProjectTemplateTest extends BaseTest {
         vfs = vfsRegistry.getProvider("dev-monit").newInstance(null, null);
 
         ItemList<Item> children =
-                vfs.getChildren(vfs.getInfo().getRoot().getId(), -1, 0, null, PropertyFilter.ALL_FILTER);
+                vfs.getChildren(vfs.getInfo().getRoot().getId(), -1, 0, null, false, PropertyFilter.ALL_FILTER);
         for (Item i : children.getItems()) {
             vfs.delete(i.getId(), null);
         }

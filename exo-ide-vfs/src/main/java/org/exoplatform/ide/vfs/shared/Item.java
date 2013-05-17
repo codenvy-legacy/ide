@@ -157,4 +157,15 @@ public interface Item {
      * @return corresponding hyperlink or null if no such relation found
      */
     Link getLinkByRelation(String rel);
+
+    /**
+     * Get permissions of current user. Current user is user who retrieved this item.
+     *
+     * @return set of permissions of current user.
+     * @see VirtualFileSystemInfo.BasicPermissions
+     */
+    Set<String> getPermissions();
+
+    /** @see #getPermissions() */
+    void setPermissions(Set<String> permissions);
 }

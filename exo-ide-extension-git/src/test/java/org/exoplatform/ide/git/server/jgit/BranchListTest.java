@@ -46,7 +46,7 @@ public class BranchListTest extends BaseTest {
         File workDir = new File(repository.getWorkTree().getParentFile(), "ListBranchTest");
         // Clone repository.
         JGitConnection client2 =
-                new JGitConnection(new FileRepository(new File(workDir, ".git")), new GitUser("andrey", "andrey@mail.com"));
+                                 new JGitConnection(new FileRepository(new File(workDir, ".git")), new GitUser("andrey", "andrey@mail.com"));
         client2.clone(new CloneRequest(repository.getWorkTree().getAbsolutePath(), //
                                        null /* .git directory already set. Not need to pass it in this implementation. */));
         repository2 = client2.getRepository();
@@ -65,31 +65,29 @@ public class BranchListTest extends BaseTest {
     public void testListBranchSimple() throws Exception {
         BranchListRequest request = new BranchListRequest();
         List<Branch> branchList = getDefaultConnection().branchList(request);
-        validateBranchList(branchList, Arrays.asList(new Branch("refs/heads/master", true, "master")));
+        validateBranchList(branchList, Arrays.asList(new Branch("refs/heads/master", true, "master", false)));
     }
 
     public void testListBranchRemote() throws Exception {
-        BranchListRequest request = new BranchListRequest("r");
+        BranchListRequest request = new BranchListRequest(BranchListRequest.LIST_REMOTE);
         List<Branch> branchList = getDefaultConnection().branchList(request);
-        validateBranchList(branchList, Arrays.asList(new Branch("refs/remotes/test", false, "test")));
+        validateBranchList(branchList, Arrays.asList(new Branch("refs/remotes/test", false, "test", true)));
     }
 
-    // Fails with IllegalArgumentException. Looks like it is not possible get all (local and remote) branches via JGit.
-    // IllegalArgumentException is caused by adding 'refs/remotes/test' in RefMap.
-    // But getting remote branches ONLY works as well. It seems to be bug in JGit.
-    public void __testListBranchAll() throws Exception {
-        BranchListRequest request = new BranchListRequest("a");
+    public void testListBranchAll() throws Exception {
+        BranchListRequest request = new BranchListRequest(BranchListRequest.LIST_ALL);
         List<Branch> branchList = getDefaultConnection().branchList(request);
         validateBranchList(branchList,
-                           Arrays.asList(new Branch("refs/remotes/test", false, "test"), new Branch("refs/heads/master", true, "master")));
+                           Arrays.asList(new Branch("refs/remotes/test", false, "test", true), new Branch("refs/heads/master", true,
+                                                                                                          "master", false)));
     }
 
     public void testListBranch2() throws Exception {
         new Git(getDefaultRepository()).branchCreate().setName("testListBranch2").call();
         BranchListRequest request = new BranchListRequest();
         List<Branch> branchList = getDefaultConnection().branchList(request);
-        validateBranchList(branchList, Arrays.asList(new Branch("refs/heads/testListBranch2", false, "testListBranch2"),
-                                                     new Branch("refs/heads/master", true, "master")));
+        validateBranchList(branchList, Arrays.asList(new Branch("refs/heads/testListBranch2", false, "testListBranch2", false),
+                                                     new Branch("refs/heads/master", true, "master", false)));
     }
 
     public void testListBranch3() throws Exception {
@@ -100,7 +98,7 @@ public class BranchListTest extends BaseTest {
 
         BranchListRequest request = new BranchListRequest();
         List<Branch> branchList = getDefaultConnection().branchList(request);
-        validateBranchList(branchList, Arrays.asList(new Branch("refs/heads/master", false, "master"), new Branch(
-                "refs/heads/testListBranch3", true, "testListBranch3")));
+        validateBranchList(branchList, Arrays.asList(new Branch("refs/heads/master", false, "master", false),
+                                                     new Branch("refs/heads/testListBranch3", true, "testListBranch3", false)));
     }
 }

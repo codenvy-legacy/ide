@@ -41,6 +41,7 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.marshaller.BranchListUnmarshaller;
 import org.exoplatform.ide.git.shared.Branch;
+import org.exoplatform.ide.git.shared.BranchListRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +74,13 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
          * @return {@link HasClickHandlers}
          */
         HasClickHandlers getDeleteBranchButton();
+
+        /**
+         * Click handler for rename branch button.
+         * 
+         * @return {@link HasClickHandlers}
+         */
+        HasClickHandlers getRenameBranchButton();
 
         /**
          * Click handler for close button.
@@ -108,6 +116,13 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
          * @param enabled is enabled
          */
         void enableCheckoutButton(boolean enabled);
+
+        /**
+         * Change the enable state of the rename button.
+         * 
+         * @param enabled is enabled
+         */
+        void enableRenameButton(boolean enabled);
     }
 
     /** Presenter's display. */
@@ -135,6 +150,9 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
                 boolean enabled = (event.getSelectedItem() != null && !event.getSelectedItem().isActive());
                 display.enableDeleteButton(enabled);
                 display.enableCheckoutButton(enabled);
+
+                boolean renameEnabled = (event.getSelectedItem() != null && !event.getSelectedItem().isRemote());
+                display.enableRenameButton(renameEnabled);
             }
         });
 
@@ -162,6 +180,14 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
             }
         });
 
+        display.getRenameBranchButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                askRenameBranch();
+            }
+        });
+
         display.getCloseButton().addClickHandler(new ClickHandler() {
 
             @Override
@@ -181,7 +207,7 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
     public void getBranches(String projectId) {
         try {
             GitClientService.getInstance()
-                            .branchList(vfs.getId(), projectId, false,
+                            .branchList(vfs.getId(), projectId, BranchListRequest.LIST_ALL,
                                         new AsyncRequestCallback<List<Branch>>(
                                                                                new BranchListUnmarshaller(new ArrayList<Branch>())) {
 
@@ -241,7 +267,6 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
      * @param name new branch's name
      */
     private void doCreateBranch(String name) {
-        // final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
         final String projectId = getSelectedProject().getId();
 
         try {
@@ -274,14 +299,18 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
     /** Checkout the branch. */
     private void doCheckoutBranch() {
         String name = display.getSelectedBranch().getDisplayName();
-        // final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+        String startingPoint = null;
+        if (display.getSelectedBranch().isRemote()) {
+            startingPoint = display.getSelectedBranch().getDisplayName();
+        }
         final String projectId = getSelectedProject().getId();
         if (name == null) {
             return;
         }
 
         try {
-            GitClientService.getInstance().branchCheckout(vfs.getId(), projectId, name, null, false,
+            GitClientService.getInstance().branchCheckout(vfs.getId(), projectId, name, startingPoint,
+                                                          display.getSelectedBranch().isRemote(),
                                                           new AsyncRequestCallback<String>() {
                                                               @Override
                                                               protected void onSuccess(String result) {
@@ -320,6 +349,49 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
                                           }
                                       }
                                   });
+    }
+
+    private void askRenameBranch() {
+        final String currentBranchName = display.getSelectedBranch().getDisplayName();
+        Dialogs.getInstance().askForValue(GitExtension.MESSAGES.branchRename(), GitExtension.MESSAGES.branchRenameDescription(),
+                                          currentBranchName, new StringValueReceivedHandler() {
+
+                                              @Override
+                                              public void stringValueReceived(String value) {
+                                                  if (value != null) {
+                                                      doRenameBranch(currentBranchName, value);
+                                                  }
+                                              }
+                                          });
+    }
+
+    /**
+     * Rename branch with pointed name.
+     * 
+     * @param name name of branch to delete
+     */
+    private void doRenameBranch(String oldName, String newName) {
+        final String projectId = getSelectedProject().getId();
+        try {
+            GitClientService.getInstance().branchRename(vfs.getId(), projectId, oldName, newName,
+                                                        new AsyncRequestCallback<String>() {
+                                                            @Override
+                                                            protected void onSuccess(String result) {
+                                                                getBranches(projectId);
+                                                            }
+
+                                                            @Override
+                                                            protected void onFailure(Throwable exception) {
+                                                                String errorMessage = (exception.getMessage() != null)
+                                                                    ? exception.getMessage()
+                                                                    : GitExtension.MESSAGES.branchRenameFailed();
+                                                                IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+                                                            }
+                                                        });
+        } catch (RequestException e) {
+            String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.branchRenameFailed();
+            IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+        }
     }
 
     /**

@@ -68,14 +68,13 @@ public class VfsClassLibrary extends ClassLibrary {
         for (Folder f : sourceFolders) {
 
             try {
-                Item i = vfs.getItemByPath(f + "/" + path, null, PropertyFilter.NONE_FILTER);
+                Item i = vfs.getItemByPath(f + "/" + path, null, false, PropertyFilter.NONE_FILTER);
                 if (i instanceof File) {
                     return vfs.getContent(i.getId()).getStream();
                 }
             } catch (ItemNotFoundException e) {
                 if (LOG.isDebugEnabled())
                     LOG.debug(e);
-                continue;
             } catch (PermissionDeniedException e) {
                 if (LOG.isWarnEnabled())
                     LOG.warn(e);

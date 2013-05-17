@@ -1641,7 +1641,7 @@ public class Beanstalk extends AWSClient {
     private String detectApplicationName(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException {
         String applicationName = null;
         if (vfs != null && projectId != null) {
-            Item item = vfs.getItem(projectId, PropertyFilter.valueOf("aws-application"));
+            Item item = vfs.getItem(projectId, false, PropertyFilter.valueOf("aws-application"));
             applicationName = item.getPropertyValue("aws-application");
         }
         if (applicationName == null || applicationName.isEmpty()) {

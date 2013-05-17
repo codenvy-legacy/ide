@@ -311,16 +311,15 @@ public class AppEngineClient {
 
     private GenericApplication createApplication(VirtualFileSystem vfs,
                                                  String projectId) throws VirtualFileSystemException, IOException {
-        Project project = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+        Project project = (Project)vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
         ProjectType type = getApplicationType(vfs, project);
         switch (type) {
             case JAVA: {
-                Folder webApp = (Folder)vfs.getItemByPath(project.createPath("src/main/webapp"), null,
-                                                          PropertyFilter.NONE_FILTER);
+                Folder webApp = (Folder)vfs.getItemByPath(project.createPath("src/main/webapp"), null, false, PropertyFilter.NONE_FILTER);
                 java.io.File appDir = createTempDirectory(null, "ide-appengine");
                 unzip(vfs.exportZip(webApp.getId()).getStream(), appDir);
                 JavaApplication app = new JavaApplication(Application.readApplication(appDir.getAbsolutePath()));
-                if (vfs != null && projectId != null) {
+                if (projectId != null) {
                     writeProjectProperty(vfs, projectId, "gae-application", app.getAppId());
                     writeProjectProperty(vfs, projectId, "gae-target", app.getServer());
                 }
@@ -336,7 +335,7 @@ public class AppEngineClient {
                     projectFile.delete();
                 }
                 PythonApplication app = new PythonApplication(appDir);
-                if (vfs != null && projectId != null) {
+                if (projectId != null) {
                     writeProjectProperty(vfs, projectId, "gae-application", app.getAppId());
                     writeProjectProperty(vfs, projectId, "gae-target", app.getServer());
                 }
@@ -364,7 +363,7 @@ public class AppEngineClient {
     private ProjectType getApplicationType(VirtualFileSystem vfs,
                                            Project project) throws VirtualFileSystemException, IOException {
         try {
-            vfs.getItemByPath(project.createPath("src/main/webapp/WEB-INF/web.xml"), null, PropertyFilter.NONE_FILTER);
+            vfs.getItemByPath(project.createPath("src/main/webapp/WEB-INF/web.xml"), null, false, PropertyFilter.NONE_FILTER);
             return ProjectType.JAVA;
         } catch (ItemNotFoundException e) {
             try {

@@ -1156,7 +1156,7 @@ public class Appfog {
     private String detectServer(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException {
         String server = null;
         if (vfs != null && projectId != null) {
-            Item item = vfs.getItem(projectId, PropertyFilter.valueOf("appfog-target"));
+            Item item = vfs.getItem(projectId, false, PropertyFilter.valueOf("appfog-target"));
             server = item.getPropertyValue("appfog-target");
         }
         return server;
@@ -1174,7 +1174,7 @@ public class Appfog {
             throws VirtualFileSystemException {
         String app = null;
         if (vfs != null && projectId != null) {
-            Item item = vfs.getItem(projectId, PropertyFilter.valueOf("appfog-application"));
+            Item item = vfs.getItem(projectId, false, PropertyFilter.valueOf("appfog-application"));
             app = item.getPropertyValue("appfog-application");
         }
         if (failIfCannotDetect && (app == null || app.isEmpty())) {

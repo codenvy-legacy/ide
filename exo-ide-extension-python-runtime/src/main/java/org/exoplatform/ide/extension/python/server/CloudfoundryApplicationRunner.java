@@ -114,7 +114,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                                                                                       VirtualFileSystemException {
         java.io.File path = null;
         try {
-            Item project = vfs.getItem(projectId, PropertyFilter.NONE_FILTER);
+            Item project = vfs.getItem(projectId, false, PropertyFilter.NONE_FILTER);
             if (project.getItemType() != ItemType.PROJECT) {
                 throw new ApplicationRunnerException("Item '" + project.getPath() + "' is not a project. ");
             }

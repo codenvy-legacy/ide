@@ -83,20 +83,21 @@ public class VirtualFileSystemAdapter {
         return virtualFileSystem.getACL(id);
     }
 
-    public ItemList<Item> getChildren(String folderId) throws VirtualFileSystemException {
-        return getChildren(folderId, -1, 0, null);
+    public ItemList<Item> getChildren(String folderId, boolean includePermissions) throws VirtualFileSystemException {
+        return getChildren(folderId, -1, 0, null, includePermissions);
     }
 
-    public ItemList<Item> getChildren(String folderId, String itemType) throws VirtualFileSystemException {
-        return getChildren(folderId, -1, 0, itemType);
+    public ItemList<Item> getChildren(String folderId, String itemType, boolean includePermissions) throws VirtualFileSystemException {
+        return getChildren(folderId, -1, 0, itemType, includePermissions);
     }
 
-    public ItemList<Item> getChildren(String folderId, int maxItems, int skipCount, String itemType) throws VirtualFileSystemException {
-        return virtualFileSystem.getChildren(folderId, maxItems, skipCount, itemType, PropertyFilter.ALL_FILTER);
+    public ItemList<Item> getChildren(String folderId, int maxItems, int skipCount, String itemType, boolean includePermissions)
+            throws VirtualFileSystemException {
+        return virtualFileSystem.getChildren(folderId, maxItems, skipCount, itemType, includePermissions, PropertyFilter.ALL_FILTER);
     }
 
-    public ItemNode getTree(String folderId, int depth) throws VirtualFileSystemException {
-        return virtualFileSystem.getTree(folderId, depth, PropertyFilter.ALL_FILTER);
+    public ItemNode getTree(String folderId, int depth, boolean includePermissions) throws VirtualFileSystemException {
+        return virtualFileSystem.getTree(folderId, depth, includePermissions, PropertyFilter.ALL_FILTER);
     }
 
     public ContentStream getContent(String id) throws VirtualFileSystemException {
@@ -115,16 +116,16 @@ public class VirtualFileSystemAdapter {
         return virtualFileSystem.getInfo();
     }
 
-    public Item getItem(String id) throws VirtualFileSystemException {
-        return virtualFileSystem.getItem(id, PropertyFilter.ALL_FILTER);
+    public Item getItem(String id, boolean includePermissions) throws VirtualFileSystemException {
+        return virtualFileSystem.getItem(id, includePermissions, PropertyFilter.ALL_FILTER);
     }
 
-    public Item getItemByPath(String path) throws VirtualFileSystemException {
-        return getItemByPath(path, null);
+    public Item getItemByPath(String path, boolean includePermissions) throws VirtualFileSystemException {
+        return getItemByPath(path, null, includePermissions);
     }
 
-    public Item getItemByPath(String path, String versionId) throws VirtualFileSystemException {
-        return virtualFileSystem.getItemByPath(path, versionId, PropertyFilter.ALL_FILTER);
+    public Item getItemByPath(String path, String versionId, boolean includePermissions) throws VirtualFileSystemException {
+        return virtualFileSystem.getItemByPath(path, versionId, includePermissions, PropertyFilter.ALL_FILTER);
     }
 
     public ContentStream getVersion(String id, String versionId) throws VirtualFileSystemException {
@@ -206,7 +207,7 @@ public class VirtualFileSystemAdapter {
 
     public void updateContentByPath(String path, String mediaType, InputStream newcontent, String lockToken)
             throws VirtualFileSystemException {
-        final Item item = getItemByPath(path);
+        final Item item = getItemByPath(path, false);
         updateContent(item.getId(), mediaType, newcontent, lockToken);
     }
 

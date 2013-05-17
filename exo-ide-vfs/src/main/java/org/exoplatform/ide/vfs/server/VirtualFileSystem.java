@@ -19,10 +19,31 @@
 package org.exoplatform.ide.vfs.server;
 
 import org.apache.commons.fileupload.FileItem;
-import org.exoplatform.ide.vfs.server.exceptions.*;
-import org.exoplatform.ide.vfs.shared.*;
+import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
+import org.exoplatform.ide.vfs.server.exceptions.LockException;
+import org.exoplatform.ide.vfs.server.exceptions.NotSupportedException;
+import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemList;
+import org.exoplatform.ide.vfs.shared.ItemNode;
+import org.exoplatform.ide.vfs.shared.LockToken;
+import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
@@ -264,6 +285,10 @@ public interface VirtualFileSystem {
      *         <li>folder</li>
      *         <li>project</li>
      *         </ul>
+     * @param includePermissions
+     *         if <code>true</code> add permissions for current user for each item. See {@link
+     *         org.exoplatform.ide.vfs.shared.Item#getPermissions()}.  If parameter is not set (<code>null</code>) then result is
+     *         implementation specific.
      * @param propertyFilter
      *         only properties which are accepted by filter should be included in response. See
      *         {@link PropertyFilter#accept(String)}
@@ -286,7 +311,12 @@ public interface VirtualFileSystem {
     @GET
     @Path("children")
     @Produces({MediaType.APPLICATION_JSON})
-    ItemList<Item> getChildren(String folderId, int maxItems, int skipCount, String itemType, PropertyFilter propertyFilter)
+    ItemList<Item> getChildren(String folderId,
+                               int maxItems,
+                               int skipCount,
+                               String itemType,
+                               Boolean includePermissions,
+                               PropertyFilter propertyFilter)
             throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
 
     /**
@@ -296,6 +326,10 @@ public interface VirtualFileSystem {
      *         folder's id
      * @param depth
      *         depth for discover children if -1 then children at all levels
+     * @param includePermissions
+     *         if <code>true</code> add permissions for current user for each item. See {@link
+     *         org.exoplatform.ide.vfs.shared.Item#getPermissions()}.  If parameter is not set (<code>null</code>) then result is
+     *         implementation specific.
      * @param propertyFilter
      *         only properties which are accepted by filter should be included in response. See
      *         {@link PropertyFilter#accept(String)}
@@ -312,7 +346,7 @@ public interface VirtualFileSystem {
     @GET
     @Path("tree")
     @Produces({MediaType.APPLICATION_JSON})
-    ItemNode getTree(String folderId, int depth, PropertyFilter propertyFilter)
+    ItemNode getTree(String folderId, int depth, Boolean includePermissions, PropertyFilter propertyFilter)
             throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
 
     /**
@@ -388,6 +422,10 @@ public interface VirtualFileSystem {
      *
      * @param id
      *         id of item
+     * @param includePermissions
+     *         if <code>true</code> add permissions for current user in item description. See {@link
+     *         org.exoplatform.ide.vfs.shared.Item#getPermissions()}.  If parameter is not set (<code>null</code>) then result is
+     *         implementation specific.
      * @param propertyFilter
      *         only properties which are accepted by filter should be included in response. See
      *         {@link PropertyFilter#accept(String)}
@@ -402,8 +440,8 @@ public interface VirtualFileSystem {
     @GET
     @Path("item")
     @Produces({MediaType.APPLICATION_JSON})
-    Item getItem(String id, PropertyFilter propertyFilter) throws ItemNotFoundException, PermissionDeniedException,
-                                                                  VirtualFileSystemException;
+    Item getItem(String id, Boolean includePermissions, PropertyFilter propertyFilter)
+            throws ItemNotFoundException, PermissionDeniedException, VirtualFileSystemException;
 
     /**
      * Get item by path.
@@ -412,6 +450,10 @@ public interface VirtualFileSystem {
      *         item path
      * @param versionId
      *         version id for File item. Pass <code>null</code> to get last version. Must be <code>null</code> for Folders.
+     * @param includePermissions
+     *         if <code>true</code> add permissions for current user in item description. See {@link
+     *         org.exoplatform.ide.vfs.shared.Item#getPermissions()}.  If parameter is not set (<code>null</code>) then result is
+     *         implementation specific.
      * @param propertyFilter
      *         only properties which are accepted by filter should be included in response. See
      *         {@link PropertyFilter#accept(String)}
@@ -426,9 +468,8 @@ public interface VirtualFileSystem {
     @GET
     @Path("itembypath")
     @Produces({MediaType.APPLICATION_JSON})
-    Item getItemByPath(String path, String versionId, PropertyFilter propertyFilter) throws ItemNotFoundException,
-                                                                                            PermissionDeniedException,
-                                                                                            VirtualFileSystemException;
+    Item getItemByPath(String path, String versionId, Boolean includePermissions, PropertyFilter propertyFilter)
+            throws ItemNotFoundException, PermissionDeniedException, VirtualFileSystemException;
 
     /**
      * Get binary content of version of File item.

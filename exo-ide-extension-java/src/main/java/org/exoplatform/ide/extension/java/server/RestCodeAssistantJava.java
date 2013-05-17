@@ -104,12 +104,6 @@ public class RestCodeAssistantJava {
 
     /**
      * Returns the class objects associated with the class or interface with the given simple name prefix.
-     *
-     * @param fqn
-     *         the Full Qualified Name
-     * @return {@link TypeInfo}
-     * @throws CodeAssistantException
-     * @throws VirtualFileSystemException
      */
     @GET
     @Path("/classes-by-prefix")
@@ -375,13 +369,6 @@ public class RestCodeAssistantJava {
 
     /**
      * Get list of all package names in project
-     *
-     * @param vfsId
-     * @param projectId
-     * @param packagePrefix
-     * @return
-     * @throws CodeAssistantException
-     * @throws VirtualFileSystemException
      */
     @GET
     @Path("/get-packages")
@@ -395,16 +382,6 @@ public class RestCodeAssistantJava {
 
     /**
      * Get list of all package names in project
-     *
-     * @param vfsId
-     * @param projectId
-     * @param packagePrefix
-     * @return
-     * @throws CodeAssistantException
-     * @throws VirtualFileSystemException
-     * @throws BuilderException
-     * @throws IOException
-     * @throws JsonException
      */
     @GET
     @Path("/update-dependencies")
@@ -412,7 +389,7 @@ public class RestCodeAssistantJava {
     public List<String> updateDependency(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId)
             throws CodeAssistantException, VirtualFileSystemException, IOException, BuilderException, JsonException {
         final VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        Item item = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+        Item item = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
         Project project = null;
         if (item.getItemType().equals(ItemType.PROJECT))
             project = (Project)item;
@@ -444,7 +421,7 @@ public class RestCodeAssistantJava {
             LOG.warn("Build failed, exit code: " + buildStatus.getExitCode() + ", message: " + buildStatus.getError());
             throw new BuilderException(buildStatus.getExitCode(), buildStatus.getError(), "text/plain");
         }
-        if (dependencies.isEmpty() || buildStatus.getDownloadUrl().isEmpty())
+        if (dependencies == null || dependencies.isEmpty() || buildStatus.getDownloadUrl().isEmpty())
             return Collections.emptyList();
         String statusUrl = storageClient.updateTypeIndex(dependencies, buildStatus.getDownloadUrl());
         waitStorageTaskFinish(statusUrl);
@@ -465,11 +442,6 @@ public class RestCodeAssistantJava {
         return codeAssistant.getAllPackages(project, vfs);
     }
 
-    /**
-     * @param dependencies
-     * @param buildStatus
-     * @return
-     */
     private String makeRequest(String requestUrl) {
         HttpURLConnection http = null;
         String response = null;
@@ -495,17 +467,6 @@ public class RestCodeAssistantJava {
         return response;
     }
 
-    /**
-     * @param projectId
-     * @param vfs
-     * @param buildId
-     * @throws IOException
-     * @throws BuilderException
-     * @throws VirtualFileSystemException
-     * @throws UnsupportedEncodingException
-     * @throws MalformedURLException
-     * @throws JsonException
-     */
     private BuildStatus waitBuildTaskFinish(String buildId) throws IOException, BuilderException,
                                                                    VirtualFileSystemException, UnsupportedEncodingException,
                                                                    MalformedURLException, JsonException {
@@ -530,17 +491,6 @@ public class RestCodeAssistantJava {
         return buildStatus;
     }
 
-    /**
-     * @param projectId
-     * @param vfs
-     * @param buildId
-     * @throws IOException
-     * @throws BuilderException
-     * @throws VirtualFileSystemException
-     * @throws UnsupportedEncodingException
-     * @throws MalformedURLException
-     * @throws JsonException
-     */
     private BuildStatus waitStorageTaskFinish(String buildId) throws IOException, BuilderException,
                                                                      VirtualFileSystemException, UnsupportedEncodingException,
                                                                      MalformedURLException, JsonException {

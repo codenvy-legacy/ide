@@ -564,7 +564,7 @@ public class CloudBees extends JenkinsClient {
             throws VirtualFileSystemException {
         String app = null;
         if (vfs != null && projectId != null) {
-            Item project = vfs.getItem(projectId, PropertyFilter.valueOf("cloudbees-application"));
+            Item project = vfs.getItem(projectId, false, PropertyFilter.valueOf("cloudbees-application"));
             app = project.getPropertyValue("cloudbees-application");
         }
         if (failIfCannotDetect && (app == null || app.isEmpty())) {

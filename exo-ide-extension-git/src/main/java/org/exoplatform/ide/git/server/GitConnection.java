@@ -18,7 +18,36 @@
  */
 package org.exoplatform.ide.git.server;
 
-import org.exoplatform.ide.git.shared.*;
+import org.exoplatform.ide.git.shared.AddRequest;
+import org.exoplatform.ide.git.shared.Branch;
+import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
+import org.exoplatform.ide.git.shared.BranchCreateRequest;
+import org.exoplatform.ide.git.shared.BranchDeleteRequest;
+import org.exoplatform.ide.git.shared.BranchListRequest;
+import org.exoplatform.ide.git.shared.CloneRequest;
+import org.exoplatform.ide.git.shared.CommitRequest;
+import org.exoplatform.ide.git.shared.DiffRequest;
+import org.exoplatform.ide.git.shared.FetchRequest;
+import org.exoplatform.ide.git.shared.GitUser;
+import org.exoplatform.ide.git.shared.InitRequest;
+import org.exoplatform.ide.git.shared.LogRequest;
+import org.exoplatform.ide.git.shared.MergeRequest;
+import org.exoplatform.ide.git.shared.MergeResult;
+import org.exoplatform.ide.git.shared.MoveRequest;
+import org.exoplatform.ide.git.shared.PullRequest;
+import org.exoplatform.ide.git.shared.PushRequest;
+import org.exoplatform.ide.git.shared.Remote;
+import org.exoplatform.ide.git.shared.RemoteAddRequest;
+import org.exoplatform.ide.git.shared.RemoteListRequest;
+import org.exoplatform.ide.git.shared.RemoteUpdateRequest;
+import org.exoplatform.ide.git.shared.ResetRequest;
+import org.exoplatform.ide.git.shared.Revision;
+import org.exoplatform.ide.git.shared.RmRequest;
+import org.exoplatform.ide.git.shared.Status;
+import org.exoplatform.ide.git.shared.Tag;
+import org.exoplatform.ide.git.shared.TagCreateRequest;
+import org.exoplatform.ide.git.shared.TagDeleteRequest;
+import org.exoplatform.ide.git.shared.TagListRequest;
 
 import java.net.URISyntaxException;
 import java.util.List;
@@ -83,6 +112,15 @@ public interface GitConnection {
      * @see BranchDeleteRequest
      */
     void branchDelete(BranchDeleteRequest request) throws GitException;
+
+    /**
+     * Rename branch.
+     * 
+     * @param oldName current name of branch
+     * @param newName new name of branch
+     * @throws GitException if any error occurs when delete branch
+     */
+    void branchRename(String oldName, String newName) throws GitException;
 
     /**
      * List branches.
