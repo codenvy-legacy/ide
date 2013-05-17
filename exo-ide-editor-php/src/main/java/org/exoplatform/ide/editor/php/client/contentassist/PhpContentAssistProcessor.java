@@ -50,9 +50,9 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * A {@link ContentAssistProcessor} proposes completions and computes context information for PHP content.
+ * A {@link PhpContentAssistProcessor} proposes completions and computes context information for PHP content.
  * 
- * TODO: For now, it supports autocompletion for keywords and special variables/arrays.
+ * TODO: For now, it supports autocompletion of keywords and special variables/arrays only.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: PhpContentAssistProcessor.java Apr 15, 2013 3:47:18 PM azatsarynnyy $
@@ -134,7 +134,7 @@ public class PhpContentAssistProcessor implements ContentAssistProcessor {
                 return htmlContentAssistProcessor.computeCompletionProposals(editor, offset);
             }
         } else if (CodeMirror2.PHP.equals(mode)) {
-            FindTokenResult findTokenResult = getTriggeringString(tokens, column);
+            FindTokenResult findTokenResult = findToken(tokens, column);
             String prefix = findTokenResult.inToken.getValue();
 
             switch (findTokenResult.inToken.getType()) {
@@ -157,6 +157,10 @@ public class PhpContentAssistProcessor implements ContentAssistProcessor {
     }
 
     private void init() {
+        if(keyWords != null) {
+            return;
+        }
+
         PhpBundle bundle = GWT.create(PhpBundle.class);
         try {
             bundle.phpKeyWords().getText(new ResourceCallback<TextResource>() {
@@ -179,7 +183,7 @@ public class PhpContentAssistProcessor implements ContentAssistProcessor {
     }
 
     /** Finds token at cursor position. */
-    private static FindTokenResult getTriggeringString(JsonArray<com.google.collide.codemirror2.Token> tokens, int column) {
+    private static FindTokenResult findToken(JsonArray<com.google.collide.codemirror2.Token> tokens, int column) {
         FindTokenResult result = new FindTokenResult();
 
         // Number of tokens in line.
