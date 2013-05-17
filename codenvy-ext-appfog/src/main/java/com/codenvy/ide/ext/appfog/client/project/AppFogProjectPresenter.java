@@ -27,6 +27,7 @@ import com.codenvy.ide.ext.appfog.client.AppfogAutoBeanFactory;
 import com.codenvy.ide.ext.appfog.client.AppfogClientService;
 import com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant;
 import com.codenvy.ide.ext.appfog.client.delete.DeleteApplicationPresenter;
+import com.codenvy.ide.ext.appfog.client.info.ApplicationInfoPresenter;
 import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
 import com.codenvy.ide.ext.appfog.client.marshaller.StringUnmarshaller;
@@ -51,8 +52,7 @@ import com.google.web.bindery.event.shared.EventBus;
 @Singleton
 public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate {
     private AppFogProjectView          view;
-    //    private ApplicationInfoPresenter         applicationInfoPresenter;
-//    private UnmapUrlPresenter                unmapUrlPresenter;
+    //    private UnmapUrlPresenter                unmapUrlPresenter;
 //    private UpdatePropertiesPresenter        updateProperyPresenter;
 //    private ManageServicesPresenter          manageServicesPresenter;
 //    private UpdateApplicationPresenter       updateApplicationPresenter;
@@ -66,6 +66,7 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
     private DeleteApplicationPresenter deleteAppPresenter;
     private LoginPresenter             loginPresenter;
     private AppfogClientService        service;
+    private ApplicationInfoPresenter   applicationInfoPresenter;
 
     /** The callback what execute when some application's information was changed. */
     private AsyncCallback<String> appInfoChangedCallback = new AsyncCallback<String>() {
@@ -87,7 +88,8 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
     protected AppFogProjectPresenter(AppFogProjectView view, EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
                                      AppfogLocalizationConstant constant, AppfogAutoBeanFactory autoBeanFactory,
                                      StartApplicationPresenter startAppPresenter, DeleteApplicationPresenter deleteAppPresenter,
-                                     LoginPresenter loginPresenter, AppfogClientService service) {
+                                     LoginPresenter loginPresenter, AppfogClientService service,
+                                     ApplicationInfoPresenter applicationInfoPresenter) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
@@ -99,6 +101,7 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
         this.deleteAppPresenter = deleteAppPresenter;
         this.loginPresenter = loginPresenter;
         this.service = service;
+        this.applicationInfoPresenter = applicationInfoPresenter;
     }
 
     /** Shows dialog. */
@@ -179,7 +182,7 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
     /** {@inheritDoc} */
     @Override
     public void onInfoClicked() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        applicationInfoPresenter.showDialog();
     }
 
     /** {@inheritDoc} */

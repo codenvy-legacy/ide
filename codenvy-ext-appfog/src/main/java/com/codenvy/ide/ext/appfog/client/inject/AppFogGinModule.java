@@ -25,6 +25,8 @@ import com.codenvy.ide.ext.appfog.client.create.CreateApplicationView;
 import com.codenvy.ide.ext.appfog.client.create.CreateApplicationViewImpl;
 import com.codenvy.ide.ext.appfog.client.delete.DeleteApplicationView;
 import com.codenvy.ide.ext.appfog.client.delete.DeleteApplicationViewImpl;
+import com.codenvy.ide.ext.appfog.client.info.ApplicationInfoView;
+import com.codenvy.ide.ext.appfog.client.info.ApplicationInfoViewImpl;
 import com.codenvy.ide.ext.appfog.client.login.LoginView;
 import com.codenvy.ide.ext.appfog.client.login.LoginViewImpl;
 import com.codenvy.ide.ext.appfog.client.project.AppFogProjectView;
@@ -46,5 +48,6 @@ public class AppFogGinModule extends AbstractGinModule {
         bind(AppFogPageView.class).to(AppFogPageViewImpl.class).in(Singleton.class);
         bind(CreateApplicationView.class).to(CreateApplicationViewImpl.class).in(Singleton.class);
         bind(AppFogProjectView.class).to(AppFogProjectViewImpl.class).in(Singleton.class);
+        bind(ApplicationInfoView.class).to(ApplicationInfoViewImpl.class).in(Singleton.class);
     }
 }

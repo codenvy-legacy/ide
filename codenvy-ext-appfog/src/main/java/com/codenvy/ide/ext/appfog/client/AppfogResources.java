@@ -41,6 +41,10 @@ public interface AppfogResources extends ClientBundle {
         String link();
 
         String textinput();
+
+        String appInfo();
+
+        String event();
     }
 
     @Source({"AppFog.css", "com/codenvy/ide/api/ui/style.css"})

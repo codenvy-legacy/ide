@@ -34,3 +34,7 @@
     background-color: #FFFFFF !important;
     color: #000000 !important;
 }
+
+.appInfo .event {
+    background: #f1f2f5;
+}
