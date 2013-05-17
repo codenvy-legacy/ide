@@ -38,6 +38,7 @@ import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.remote.HasBranchesPresenter;
 import org.exoplatform.ide.git.shared.Branch;
+import org.exoplatform.ide.git.shared.BranchListRequest;
 import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
@@ -281,8 +282,8 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
         }
         display.setRemoteValues(remoteValues);
 
-        getBranches(projectId, false);
-        getBranches(projectId, true);
+        getBranches(projectId, BranchListRequest.LIST_REMOTE);
+        getBranches(projectId, BranchListRequest.LIST_LOCAL);
     }
 
     /** @see org.exoplatform.ide.git.client.remote.HasBranchesPresenter#setRemoteBranches(java.util.List) */

@@ -43,6 +43,9 @@ public interface GitLocalizationConstant extends Messages {
     @Key("button.delete")
     String buttonDelete();
 
+    @Key("button.rename")
+    String buttonRename();
+
     @Key("button.close")
     String buttonClose();
 
@@ -110,6 +113,9 @@ public interface GitLocalizationConstant extends Messages {
 
     @Key("messages.branch_delete_failed")
     String branchDeleteFailed();
+
+    @Key("messages.branch_rename_failed")
+    String branchRenameFailed();
 
     @Key("messages.clone_success")
     String cloneSuccess(String repoUrl);
@@ -310,6 +316,12 @@ public interface GitLocalizationConstant extends Messages {
 
     @Key("view.branch.delete_ask")
     String branchDeleteAsk(String name);
+
+    @Key("view.branch.rename")
+    String branchRename();
+
+    @Key("view.branch.rename.description")
+    String branchRenameDescription();
 
     @Key("view.branch.title")
     String branchTitle();

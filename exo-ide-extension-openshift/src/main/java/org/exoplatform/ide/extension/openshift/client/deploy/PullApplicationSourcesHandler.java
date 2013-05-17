@@ -32,6 +32,7 @@ import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.remote.HasBranchesPresenter;
 import org.exoplatform.ide.git.shared.Branch;
+import org.exoplatform.ide.git.shared.BranchListRequest;
 import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
@@ -46,13 +47,13 @@ public class PullApplicationSourcesHandler extends HasBranchesPresenter {
 
     private PullCompleteCallback callback;
 
-    private ProjectModel project;
+    private ProjectModel         project;
 
-    private List<Remote> remotes;
+    private List<Remote>         remotes;
 
-    private List<Branch> remoteBranches;
+    private List<Branch>         remoteBranches;
 
-    private List<Branch> localBranches;
+    private List<Branch>         localBranches;
 
     public void pullApplicationSources(VirtualFileSystemInfo vfsInfo, ProjectModel project, PullCompleteCallback callback) {
         this.project = project;
@@ -65,13 +66,13 @@ public class PullApplicationSourcesHandler extends HasBranchesPresenter {
     @Override
     public void onRemotesReceived(List<Remote> remotes) {
         this.remotes = remotes;
-        getBranches(project.getId(), false);
+        getBranches(project.getId(), BranchListRequest.LIST_REMOTE);
     }
 
     @Override
     protected void setLocalBranches(List<Branch> branches) {
         localBranches = branches;
-        getBranches(project.getId(), true);
+        getBranches(project.getId(), BranchListRequest.LIST_LOCAL);
     }
 
     @Override
@@ -84,15 +85,13 @@ public class PullApplicationSourcesHandler extends HasBranchesPresenter {
         String remoteName = remotes.get(0).getName();
         final String remoteUrl = remotes.get(0).getUrl();
 
-        String localBranch =
-                localBranches != null && !localBranches.isEmpty() ? localBranches.get(0).getDisplayName() : "master";
+        String localBranch = localBranches != null && !localBranches.isEmpty() ? localBranches.get(0).getDisplayName() : "master";
 
-        String remoteBranch =
-                remoteBranches != null && !remoteBranches.isEmpty() ? remoteBranches.get(0).getDisplayName() : localBranch;
+        String remoteBranch = remoteBranches != null && !remoteBranches.isEmpty() ? remoteBranches.get(0).getDisplayName() : localBranch;
 
-        String refs =
-                (localBranch == null || localBranch.length() == 0) ? remoteBranch : "refs/heads/" + remoteBranch + ":"
-                                                                                    + "refs/remotes/" + remoteName + "/" + remoteBranch;
+        String refs = (localBranch == null || localBranch.length() == 0) ? remoteBranch : "refs/heads/" + remoteBranch + ":"
+                                                                                          + "refs/remotes/" + remoteName + "/"
+                                                                                          + remoteBranch;
 
         JobManager.get().showJobSeparated();
 
@@ -133,9 +132,8 @@ public class PullApplicationSourcesHandler extends HasBranchesPresenter {
 
     /**
      * Performs action when pull of Git-repository is successfully completed.
-     *
-     * @param remoteUrl
-     *         URL of Git-repository
+     * 
+     * @param remoteUrl URL of Git-repository
      */
     private void onPullSuccess(String remoteUrl) {
         IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.GIT));
