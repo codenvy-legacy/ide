@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
-    <ui:with field="locale" type="com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant"></ui:with>
+    <ui:with field="locale" type="com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant"/>
 
     <ui:style>
         .alignRight {
