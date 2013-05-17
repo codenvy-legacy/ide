@@ -22,6 +22,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.FileItem;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemUser;
 import org.exoplatform.ide.vfs.server.exceptions.HtmlErrorFormatter;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
@@ -45,6 +46,8 @@ import org.exoplatform.ide.vfs.shared.ItemNodeImpl;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.LockTokenImpl;
+import org.exoplatform.ide.vfs.shared.Principal;
+import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.ProjectImpl;
 import org.exoplatform.ide.vfs.shared.Property;
@@ -75,6 +78,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import static org.exoplatform.ide.vfs.server.observation.ChangeEvent.ChangeType;
 import static org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
@@ -89,12 +93,12 @@ public class LocalFileSystem implements VirtualFileSystem {
     private static final Log    LOG             = ExoLogger.getLogger(LocalFileSystem.class);
     private static final String FAKE_VERSION_ID = "0";
 
-    final String                       vfsId;
-    final String                       rootId;
-    final URI                          baseUri;
-    final EventListenerList            listeners;
-    final MountPoint                   mountPoint;
-    final SearcherProvider             searcherProvider;
+    final String            vfsId;
+    final String            rootId;
+    final URI               baseUri;
+    final EventListenerList listeners;
+    final MountPoint        mountPoint;
+    final SearcherProvider  searcherProvider;
 
     private VirtualFileSystemInfoImpl vfsInfo;
 
@@ -123,8 +127,9 @@ public class LocalFileSystem implements VirtualFileSystem {
         final VirtualFile virtualFileCopy = idToVirtualFile(id).copyTo(idToVirtualFile(parentId));
         final Item copy = fromVirtualFile(virtualFileCopy, false, PropertyFilter.ALL_FILTER);
         if (listeners != null) {
-            listeners.notifyListeners(new ChangeEvent(
-                    this, copy.getId(), copy.getPath(), copy.getMimeType(), ChangeType.CREATED, mountPoint.getCurrentUserId()));
+            listeners.notifyListeners(
+                    new ChangeEvent(this, copy.getId(), copy.getPath(), copy.getMimeType(), ChangeType.CREATED,
+                                    mountPoint.getCurrentVirtualFileSystemUser()));
         }
         return copy;
     }
@@ -139,8 +144,9 @@ public class LocalFileSystem implements VirtualFileSystem {
                 .createFile(name, mediaType != null ? mediaType.toString() : null, content);
         final File file = (File)fromVirtualFile(newVirtualFile, false, PropertyFilter.ALL_FILTER);
         if (listeners != null) {
-            listeners.notifyListeners(new ChangeEvent(
-                    this, file.getId(), file.getPath(), file.getMimeType(), ChangeType.CREATED, mountPoint.getCurrentUserId()));
+            listeners.notifyListeners(
+                    new ChangeEvent(this, file.getId(), file.getPath(), file.getMimeType(), ChangeType.CREATED,
+                                    mountPoint.getCurrentVirtualFileSystemUser()));
         }
         return file;
     }
@@ -152,8 +158,9 @@ public class LocalFileSystem implements VirtualFileSystem {
         final VirtualFile newVirtualFile = idToVirtualFile(parentId).createFolder(name);
         final Folder folder = (Folder)fromVirtualFile(newVirtualFile, false, PropertyFilter.ALL_FILTER);
         if (listeners != null) {
-            listeners.notifyListeners(new ChangeEvent(
-                    this, folder.getId(), folder.getPath(), folder.getMimeType(), ChangeType.CREATED, mountPoint.getCurrentUserId()));
+            listeners.notifyListeners(
+                    new ChangeEvent(this, folder.getId(), folder.getPath(), folder.getMimeType(), ChangeType.CREATED,
+                                    mountPoint.getCurrentVirtualFileSystemUser()));
         }
         return folder;
     }
@@ -176,8 +183,9 @@ public class LocalFileSystem implements VirtualFileSystem {
         final VirtualFile newVirtualFile = idToVirtualFile(parentId).createProject(name, properties);
         final Project project = (Project)fromVirtualFile(newVirtualFile, false, PropertyFilter.ALL_FILTER);
         if (listeners != null) {
-            listeners.notifyListeners(new ChangeEvent(
-                    this, project.getId(), project.getPath(), project.getMimeType(), ChangeType.CREATED, mountPoint.getCurrentUserId()));
+            listeners.notifyListeners(
+                    new ChangeEvent(this, project.getId(), project.getPath(), project.getMimeType(), ChangeType.CREATED,
+                                    mountPoint.getCurrentVirtualFileSystemUser()));
         }
         LOG.info("EVENT#project-created# PROJECT#{}# TYPE#{}#", name, project.getProjectType());
         return project;
@@ -199,7 +207,8 @@ public class LocalFileSystem implements VirtualFileSystem {
         }
         virtualFile.delete(lockToken);
         if (listeners != null) {
-            listeners.notifyListeners(new ChangeEvent(this, id, path, mediaType, ChangeType.DELETED, mountPoint.getCurrentUserId()));
+            listeners.notifyListeners(
+                    new ChangeEvent(this, id, path, mediaType, ChangeType.DELETED, mountPoint.getCurrentVirtualFileSystemUser()));
         }
         if (isProject) {
             LOG.info("EVENT#project-destroyed# PROJECT#{}# TYPE#{}#", name, projectType);
@@ -425,8 +434,9 @@ public class LocalFileSystem implements VirtualFileSystem {
         final String oldPath = origin.getPath();
         final Item moved = fromVirtualFile(origin.moveTo(idToVirtualFile(parentId), lockToken), false, PropertyFilter.ALL_FILTER);
         if (listeners != null) {
-            listeners.notifyListeners(new ChangeEvent(
-                    this, moved.getId(), moved.getPath(), oldPath, moved.getMimeType(), ChangeType.MOVED, mountPoint.getCurrentUserId()));
+            listeners.notifyListeners(
+                    new ChangeEvent(this, moved.getId(), moved.getPath(), oldPath, moved.getMimeType(), ChangeType.MOVED,
+                                    mountPoint.getCurrentVirtualFileSystemUser()));
         }
         return moved;
     }
@@ -449,9 +459,9 @@ public class LocalFileSystem implements VirtualFileSystem {
         final Item renamed = fromVirtualFile(renamedVriVirtualFile, false, PropertyFilter.ALL_FILTER);
         final boolean isProjectAfter = renamedVriVirtualFile.isProject();
         if (listeners != null) {
-            listeners.notifyListeners(new ChangeEvent(
-                    this, renamed.getId(), renamed.getPath(), oldPath, renamed.getMimeType(), ChangeType.RENAMED,
-                    mountPoint.getCurrentUserId()));
+            listeners.notifyListeners(
+                    new ChangeEvent(this, renamed.getId(), renamed.getPath(), oldPath, renamed.getMimeType(), ChangeType.RENAMED,
+                                    mountPoint.getCurrentVirtualFileSystemUser()));
         }
         if (isProjectAfter && !isProjectBefore) {
             LOG.info("EVENT#project-created# PROJECT#{}# TYPE#{}#", renamed.getName(), ((Project)renamed).getProjectType());
@@ -526,8 +536,10 @@ public class LocalFileSystem implements VirtualFileSystem {
                          ) throws VirtualFileSystemException {
         final VirtualFile virtualFile = idToVirtualFile(id).updateACL(acl, override, lockToken);
         if (listeners != null) {
-            listeners.notifyListeners(new ChangeEvent(this, virtualFileToId(virtualFile), virtualFile.getPath(),
-                                                      virtualFile.getMediaType(), ChangeType.ACL_UPDATED, mountPoint.getCurrentUserId()));
+            listeners.notifyListeners(
+                    new ChangeEvent(this, virtualFileToId(virtualFile), virtualFile.getPath(), virtualFile.getMediaType(),
+                                    ChangeType.ACL_UPDATED,
+                                    mountPoint.getCurrentVirtualFileSystemUser()));
         }
     }
 
@@ -541,9 +553,9 @@ public class LocalFileSystem implements VirtualFileSystem {
         final VirtualFile virtualFile = idToVirtualFile(id)
                 .updateContent(mediaType != null ? mediaType.toString() : null, newContent, lockToken);
         if (listeners != null) {
-            listeners.notifyListeners(new ChangeEvent(this, virtualFileToId(virtualFile), virtualFile.getPath(),
-                                                      virtualFile.getMediaType(), ChangeType.CONTENT_UPDATED,
-                                                      mountPoint.getCurrentUserId()));
+            listeners.notifyListeners(
+                    new ChangeEvent(this, virtualFileToId(virtualFile), virtualFile.getPath(), virtualFile.getMediaType(),
+                                    ChangeType.CONTENT_UPDATED, mountPoint.getCurrentVirtualFileSystemUser()));
         }
     }
 
@@ -558,8 +570,9 @@ public class LocalFileSystem implements VirtualFileSystem {
         final boolean isProjectAfter = virtualFile.isProject();
         final Item updated = fromVirtualFile(virtualFile, false, PropertyFilter.ALL_FILTER);
         if (listeners != null) {
-            listeners.notifyListeners(new ChangeEvent(this, updated.getId(), updated.getPath(), updated.getMimeType(),
-                                                      ChangeType.PROPERTIES_UPDATED, mountPoint.getCurrentUserId()));
+            listeners.notifyListeners(
+                    new ChangeEvent(this, updated.getId(), updated.getPath(), updated.getMimeType(), ChangeType.PROPERTIES_UPDATED,
+                                    mountPoint.getCurrentVirtualFileSystemUser()));
         }
         if (isProjectAfter && !isProjectBefore) {
             LOG.info("EVENT#project-created# PROJECT#{}# TYPE#{}#", updated.getName(), ((Project)updated).getProjectType());
@@ -670,9 +683,9 @@ public class LocalFileSystem implements VirtualFileSystem {
                 final VirtualFile file = getVirtualFileByPath(idToVirtualFile(parentId).getPath() + '/' + name)
                         .updateContent(mediaType, contentItem.getInputStream(), null);
                 if (listeners != null) {
-                    listeners.notifyListeners(new ChangeEvent(this, virtualFileToId(file), file.getPath(),
-                                                              file.getMediaType(), ChangeType.CONTENT_UPDATED,
-                                                              mountPoint.getCurrentUserId()));
+                    listeners.notifyListeners(
+                            new ChangeEvent(this, virtualFileToId(file), file.getPath(), file.getMediaType(), ChangeType.CONTENT_UPDATED,
+                                            mountPoint.getCurrentVirtualFileSystemUser()));
                 }
             }
 
@@ -842,37 +855,40 @@ public class LocalFileSystem implements VirtualFileSystem {
         }
 
         if (includePermissions) {
-//            VirtualFileSystemUser user = userContext.getVirtualFileSystemUser();
-//            VirtualFile current = virtualFile;
-//            while (current != null) {
-//                final Map<String, Set<BasicPermissions>> objectPermissions = null;
-//                if (!objectPermissions.isEmpty()) {
-//                    Set<String> userPermissions = new HashSet<String>(4);
-//                    Set<BasicPermissions> permissionsSet = objectPermissions.get(user.getUserId());
-//                    if (permissionsSet != null) {
-//                        for (BasicPermissions basicPermission : permissionsSet) {
-//                            userPermissions.add(basicPermission.value());
-//                        }
-//                    }
-//                    permissionsSet = objectPermissions.get(VirtualFileSystemInfo.ANY_PRINCIPAL);
-//                    if (permissionsSet != null) {
-//                        for (BasicPermissions basicPermission : permissionsSet) {
-//                            userPermissions.add(basicPermission.value());
-//                        }
-//                    }
-//                    // TODO
-////                    for (String group : user.getGroups()) {
-////                        permissionsSet = objectPermissions.get(group);
-////                        if (permissionsSet!=null){
-////
-////                        }
-////                    }
-//                    item.setPermissions(userPermissions);
-//                    break;
-//                } else {
-//                    current = current.getParent();
-//                }
-//            }
+            VirtualFileSystemUser user = mountPoint.getCurrentVirtualFileSystemUser();
+            VirtualFile current = virtualFile;
+            while (current != null) {
+                final AccessControlList objectPermissions = mountPoint.getACL(current);
+                if (!objectPermissions.isEmpty()) {
+                    Set<String> userPermissions = new HashSet<String>(4);
+                    Set<BasicPermissions> permissionsSet =
+                            objectPermissions.getPermissions(new PrincipalImpl(user.getUserId(), Principal.Type.USER));
+                    if (permissionsSet != null) {
+                        for (BasicPermissions basicPermission : permissionsSet) {
+                            userPermissions.add(basicPermission.value());
+                        }
+                    }
+                    permissionsSet =
+                            objectPermissions.getPermissions(new PrincipalImpl(VirtualFileSystemInfo.ANY_PRINCIPAL, Principal.Type.USER));
+                    if (permissionsSet != null) {
+                        for (BasicPermissions basicPermission : permissionsSet) {
+                            userPermissions.add(basicPermission.value());
+                        }
+                    }
+                    for (String group : user.getGroups()) {
+                        permissionsSet = objectPermissions.getPermissions(new PrincipalImpl(group, Principal.Type.GROUP));
+                        if (permissionsSet != null) {
+                            for (BasicPermissions basicPermission : permissionsSet) {
+                                userPermissions.add(basicPermission.value());
+                            }
+                        }
+                    }
+                    item.setPermissions(userPermissions);
+                    break;
+                } else {
+                    current = current.getParent();
+                }
+            }
             if (item.getPermissions() == null) {
                 item.setPermissions(new HashSet<String>(Arrays.asList(BasicPermissions.ALL.value())));
             }

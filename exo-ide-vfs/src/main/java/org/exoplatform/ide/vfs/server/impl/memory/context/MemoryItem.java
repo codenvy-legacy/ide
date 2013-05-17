@@ -26,13 +26,9 @@ import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
-import org.exoplatform.services.security.ConversationState;
-import org.exoplatform.services.security.Identity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -49,7 +45,6 @@ import static org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissi
  * @version $Id: $
  */
 public abstract class MemoryItem {
-    private static final PrincipalImpl ANY_PRINCIPAL_INST = new PrincipalImpl(VirtualFileSystemInfo.ANY_PRINCIPAL, Principal.Type.USER);
     private final String                                    id;
     // Use known implementation of Principal as key. Keep in mind that Principal is 'transport' interface.
     private final Map<PrincipalImpl, Set<BasicPermissions>> permissionsMap;
@@ -195,39 +190,6 @@ public abstract class MemoryItem {
             }
             return copy;
         }
-    }
-
-    public boolean hasPermissions(BasicPermissions permission, boolean checkParent) {
-        final ConversationState cs = ConversationState.getCurrent();
-        final Identity user = cs != null ? cs.getIdentity() : new Identity(VirtualFileSystemInfo.ANONYMOUS_PRINCIPAL);
-        MemoryItem object = this;
-        while (object != null) {
-            final Map<Principal, Set<BasicPermissions>> objectPermissions = object.getPermissions();
-            if (!objectPermissions.isEmpty()) {
-                Set<BasicPermissions> userPermissions = objectPermissions.get(new PrincipalImpl(user.getUserId(), Principal.Type.USER));
-                if (userPermissions != null) {
-                    return userPermissions.contains(permission) || userPermissions.contains(BasicPermissions.ALL);
-                }
-                Collection<String> roles = user.getRoles();
-                if (!roles.isEmpty()) {
-                    for (String role : roles) {
-                        userPermissions = objectPermissions.get(new PrincipalImpl(role, Principal.Type.GROUP));
-                        if (userPermissions != null) {
-                            return userPermissions.contains(permission) || userPermissions.contains(BasicPermissions.ALL);
-                        }
-                    }
-                }
-                userPermissions = objectPermissions.get(ANY_PRINCIPAL_INST);
-                return userPermissions != null &&
-                       (userPermissions.contains(permission) || userPermissions.contains(BasicPermissions.ALL));
-            }
-            if (checkParent) {
-                object = object.getParent();
-            } else {
-                break;
-            }
-        }
-        return true;
     }
 
     public final List<Property> getProperties(PropertyFilter filter) {
