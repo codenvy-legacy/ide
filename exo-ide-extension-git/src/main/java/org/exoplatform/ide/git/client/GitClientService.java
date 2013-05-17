@@ -150,12 +150,12 @@ public abstract class GitClientService {
      * 
      * @param vfsId virtual file system id
      * @param projectid project's id (root of GIT repository)
-     * @param remote get remote branches
+     * @param mode get remote branches
      * @param callback callback
      */
     public abstract void branchList(String vfsId,
                                     String projectid,
-                                    boolean remote,
+                                    String mode,
                                     AsyncRequestCallback<List<Branch>> callback) throws RequestException;
 
     /**
@@ -171,6 +171,21 @@ public abstract class GitClientService {
                                       String projectid,
                                       String name,
                                       boolean force,
+                                      AsyncRequestCallback<String> callback) throws RequestException;
+
+    /**
+     * Checkout the branch with pointed name.
+     * 
+     * @param vfsId virtual file system id
+     * @param projectid project's id (root of GIT repository)
+     * @param oldName branch's current name
+     * @param newName branch's new name
+     * @param callback callback
+     */
+    public abstract void branchRename(String vfsId,
+                                      String projectid,
+                                      String oldName,
+                                      String newName,
                                       AsyncRequestCallback<String> callback) throws RequestException;
 
     /**

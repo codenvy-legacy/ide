@@ -40,17 +40,18 @@ import org.exoplatform.ide.git.shared.Branch;
 public class BranchView extends ViewImpl implements BranchPresenter.Display {
     private static final int    HEIGHT             = 300;
 
-    private static final int    WIDTH              = 470;
+    private static final int    WIDTH              = 522;
 
     public static final String  ID                 = "ideBranchView";
 
     /* Elements IDs */
-
     private static final String CREATE_BUTTON_ID   = "ideBranchViewCreateButton";
 
     private static final String CHECKOUT_BUTTON_ID = "ideBranchViewCheckoutButton";
 
     private static final String DELETE_BUTTON_ID   = "ideBranchViewDeleteButton";
+
+    private static final String RENAME_BUTTON_ID   = "ideBranchViewRenameButton";
 
     private static final String CLOSE_BUTTON_ID    = "ideBranchViewCloseButton";
 
@@ -66,6 +67,10 @@ public class BranchView extends ViewImpl implements BranchPresenter.Display {
     @UiField
     ImageButton                 deleteButton;
 
+    /** Rename branch button. */
+    @UiField
+    ImageButton                 renameButton;
+
     /** Cancel button. */
     @UiField
     ImageButton                 closeButton;
@@ -79,13 +84,14 @@ public class BranchView extends ViewImpl implements BranchPresenter.Display {
     private static BranchViewUiBinder uiBinder = GWT.create(BranchViewUiBinder.class);
 
     public BranchView() {
-        super(ID, ViewType.MODAL, GitExtension.MESSAGES.branchTitle(), null, WIDTH, HEIGHT);
+        super(ID, ViewType.MODAL, GitExtension.MESSAGES.branchTitle(), null, WIDTH, HEIGHT, false);
         setCloseOnEscape(true);
         add(uiBinder.createAndBindUi(this));
 
         checkoutButton.setButtonId(CHECKOUT_BUTTON_ID);
         createButton.setButtonId(CREATE_BUTTON_ID);
         deleteButton.setButtonId(DELETE_BUTTON_ID);
+        renameButton.setButtonId(RENAME_BUTTON_ID);
         closeButton.setButtonId(CLOSE_BUTTON_ID);
     }
 
@@ -105,6 +111,12 @@ public class BranchView extends ViewImpl implements BranchPresenter.Display {
     @Override
     public HasClickHandlers getDeleteBranchButton() {
         return deleteButton;
+    }
+
+    /** @see org.exoplatform.ide.git.client.branch.BranchPresenter.Display#getRenameBranchButton() */
+    @Override
+    public HasClickHandlers getRenameBranchButton() {
+        return renameButton;
     }
 
     /** @see org.exoplatform.ide.git.client.branch.BranchPresenter.Display#getCloseButton() */
@@ -135,6 +147,12 @@ public class BranchView extends ViewImpl implements BranchPresenter.Display {
     @Override
     public void enableCheckoutButton(boolean enabled) {
         checkoutButton.setEnabled(enabled);
+    }
+
+    /** @see org.exoplatform.ide.git.client.branch.BranchPresenter.Display#enableRenameButton(boolean) */
+    @Override
+    public void enableRenameButton(boolean enabled) {
+        renameButton.setEnabled(enabled);
     }
 
 }

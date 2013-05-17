@@ -20,6 +20,7 @@ package org.exoplatform.ide.git.server.jgit;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Ref;
+import org.exoplatform.ide.git.server.GitException;
 import org.exoplatform.ide.git.shared.BranchDeleteRequest;
 
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class BranchDeleteTest extends BaseTest {
         try {
             getDefaultConnection().branchDelete(new BranchDeleteRequest("master", true));
             fail("Expected exception was not thrown. ");
-        } catch (IllegalArgumentException e) {
+        } catch (GitException e) {
             // expected
         }
         testBranch(new String[]{"refs/heads/master", "refs/heads/branch1", "refs/heads/branch2"});
@@ -64,7 +65,7 @@ public class BranchDeleteTest extends BaseTest {
         try {
             getDefaultConnection().branchDelete(request);
             fail("Expected exception was not thrown. ");
-        } catch (IllegalArgumentException e) {
+        } catch (GitException e) {
             // expected
         }
         testBranch(new String[]{"refs/heads/master", "refs/heads/branch1", "refs/heads/branch2"});
