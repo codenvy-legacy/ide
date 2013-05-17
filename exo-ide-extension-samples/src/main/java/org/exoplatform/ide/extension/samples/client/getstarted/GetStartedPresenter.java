@@ -76,7 +76,7 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
 
         HasClickHandlers getSkipButton();
 
-        void setProjectTypes(Set<ProjectType> projectTypes);
+        void setProjectTypes(List<ProjectType> projectTypes);
 
         void setPaaSTypes(List<PaaS> paaSTypes);
 
@@ -117,10 +117,15 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
     private List<ProjectTemplate> availableProjectTemplates = new ArrayList<ProjectTemplate>();
 
     /** available project types */
-    private Set<ProjectType> availableProjectTypes = new TreeSet<ProjectType>();
+    private List<ProjectType> availableProjectTypes = new ArrayList<ProjectType>();
 
     /** non selected PaaS */
     private final PaaS noneTarget = new NoneTarget();
+    
+    /** Comparator for ordering project types. */
+    private static final Comparator<ProjectType> PROJECT_TYPES_COMPARATOR = new ProjectTypesComparator();
+    
+    private static final Comparator<PaaS> PAAS_COMPARATOR = new PaaSComparator();
 
     private VirtualFileSystemInfo vfsInfo;
 
@@ -247,6 +252,7 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         currentStep = WizardStep.PAAS;
 
         List<PaaS> availablePaaSes = new ArrayList<PaaS>(IDE.getInstance().getPaaSes());
+        Collections.sort(availablePaaSes, PAAS_COMPARATOR);
         availablePaaSes.add(noneTarget);
 
         display.setPaaSTypes(availablePaaSes);
@@ -274,11 +280,9 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
                         
                         @Override
                         protected void onSuccess(List<ProjectTemplate> result) {
-                            for (ProjectTemplate template : result) {
-                                availableProjectTypes.add(ProjectType.fromValue(template.getType()));
-                                availableProjectTemplates.add(template);
-                            }
-                            
+                            availableProjectTemplates = result;
+                            availableProjectTypes = getProjectTypesFromTemplates(availableProjectTemplates);
+                            Collections.sort(availableProjectTypes, PROJECT_TYPES_COMPARATOR);
                             display.setProjectTypes(availableProjectTypes);
                             setProjectTypesButtonsHandlers();
                         }
@@ -291,6 +295,24 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         } catch (RequestException e) {
             Dialogs.getInstance().showError("Something wrong while taking request.");
         }
+    }
+    
+    /**
+     * Prepare project type list to be displayed.
+     *
+     * @param projectTemplates
+     *         available project templates
+     * @return {@link List}
+     */
+    private List<ProjectType> getProjectTypesFromTemplates(List<ProjectTemplate> projectTemplates) {
+        List<ProjectType> projectTypes = new ArrayList<ProjectType>();
+        for (ProjectTemplate projectTemplate : projectTemplates) {
+            ProjectType projectType = ProjectType.fromValue(projectTemplate.getType());
+            if (!projectTypes.contains(projectType)) {
+                projectTypes.add(projectType);
+            }
+        }
+        return projectTypes;
     }
 
     @Override

@@ -190,8 +190,8 @@ public class ProjectUpdateTest extends LocalFileSystemTest {
 
     public void testUpdateAcl() throws Exception {
         long longLastUpdateTime = readUpdateTime();
-        String acl = "[{\"principal\":\"admin\",\"permissions\":[\"all\"]}," +
-                     "{\"principal\":\"john\",\"permissions\":[\"read\", \"write\"]}]";
+        String acl = "[{\"principal\":{\"name\":\"admin\",\"type\":\"USER\"},\"permissions\":[\"all\"]}," +
+                     "{\"principal\":{\"name\":\"john\",\"type\":\"USER\"},\"permissions\":[\"read\", \"write\"]}]";
         Map<String, List<String>> h = new HashMap<String, List<String>>(1);
         h.put("Content-Type", Arrays.asList("application/json"));
         String requestPath = SERVICE_URI + "acl/" + projectFileId;

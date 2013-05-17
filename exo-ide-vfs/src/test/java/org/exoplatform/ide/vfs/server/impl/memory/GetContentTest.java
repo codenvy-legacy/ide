@@ -24,6 +24,8 @@ import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFile;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFolder;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
+import org.exoplatform.ide.vfs.shared.Principal;
+import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl;
 
 import javax.ws.rs.core.HttpHeaders;
@@ -96,7 +98,7 @@ public class GetContentTest extends MemoryFileSystemTest {
 
     public void testGetContentNoPermissions() throws Exception {
         AccessControlEntry ace = new AccessControlEntryImpl();
-        ace.setPrincipal("admin");
+        ace.setPrincipal(new PrincipalImpl("admin", Principal.Type.USER));
         ace.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
         memoryContext.getItem(fileId).updateACL(Arrays.asList(ace), true);
 

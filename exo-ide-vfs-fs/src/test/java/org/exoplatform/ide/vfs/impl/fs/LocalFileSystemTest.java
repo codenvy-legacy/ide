@@ -48,13 +48,13 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
+import org.exoplatform.ide.vfs.shared.Principal;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
-import org.exoplatform.services.security.MembershipEntry;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
@@ -72,7 +72,6 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -434,7 +433,7 @@ public abstract class LocalFileSystemTest extends TestCase {
         validateProperties(vfsPath, expectedProperties, false);
     }
 
-    protected java.io.File writePermissions(String vfsPath, Map<String, Set<BasicPermissions>> permissions) throws IOException {
+    protected java.io.File writePermissions(String vfsPath, Map<Principal, Set<BasicPermissions>> permissions) throws IOException {
         java.io.File file = getIoFile(vfsPath);
         java.io.File aclDir = new java.io.File(file.getParentFile(), MountPoint.ACL_DIR);
         if (!(aclDir.exists() || aclDir.mkdirs())) {
@@ -457,7 +456,7 @@ public abstract class LocalFileSystemTest extends TestCase {
         return aclFile;
     }
 
-    protected Map<String, Set<BasicPermissions>> readPermissions(String vfsPath) throws Exception {
+    protected Map<Principal, Set<BasicPermissions>> readPermissions(String vfsPath) throws Exception {
         java.io.File file = getIoFile(vfsPath);
         java.io.File aclDir = new java.io.File(file.getParentFile(), MountPoint.ACL_DIR);
         java.io.File aclFile = new java.io.File(aclDir, file.getName() + MountPoint.ACL_FILE_SUFFIX);
@@ -468,7 +467,7 @@ public abstract class LocalFileSystemTest extends TestCase {
             return null;
         }
         DataInputStream dis = new DataInputStream(new BufferedInputStream(fIn));
-        Map<String, Set<BasicPermissions>> accessList = AccessControlList.read(dis).getPermissionMap();
+        Map<Principal, Set<BasicPermissions>> accessList = AccessControlList.read(dis).getPermissionMap();
         dis.close();
         return accessList;
     }

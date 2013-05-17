@@ -43,6 +43,7 @@ import com.google.collide.dto.server.DtoServerImpls.RecoverFromMissedDocOpsRespo
 import com.google.collide.dto.server.DtoServerImpls.ServerToClientDocOpImpl;
 import com.google.collide.dto.server.DtoServerImpls.ServerToClientDocOpsImpl;
 import com.google.collide.server.WSUtil;
+import com.google.collide.server.participants.LoggedInUser;
 import com.google.collide.server.participants.Participants;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -67,6 +68,7 @@ import org.picocontainer.Startable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -208,10 +210,14 @@ public class EditSessions implements Startable {
             }
 
             if (editSession.removeCollaborator(userId)) {
-                if (!editSession.getCollaborators().isEmpty()) {
+                LoggedInUser user = participants.getUser(userId);
+                // need send to all users in workspace
+                Set<String> allParticipantIds = new HashSet<String>(participants.getAllParticipantIds(user.getWorkspace()));
+                allParticipantIds.remove(userId);
+                if (!allParticipantIds.isEmpty()) {
                     WSUtil.broadcastToClients(FileCollaboratorGoneImpl.make().setPath(editSession.getPath())
                                                                       .setParticipant(participants.getParticipant(userId)).toJson(),
-                                              editSession.getCollaborators());
+                                              allParticipantIds);
                 }
                 LOG.debug("Close edit session {}, user {} ", closeMessage.getFileEditSessionKey(), closeMessage.getClientId());
             }

@@ -26,6 +26,8 @@ import org.everrest.core.impl.EnvironmentContext;
 import org.everrest.test.mock.MockHttpServletRequest;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Principal;
+import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 import org.exoplatform.ide.vfs.shared.Project;
 
 import javax.servlet.http.HttpServletRequest;
@@ -65,9 +67,9 @@ public class ImportTest extends LocalFileSystemTest {
         folderWithFilesPath = createDirectory(testRootPath, "ImportTest_WithFiles");
         protectedFolderPath = createDirectory(testRootPath, "ImportTest_Protected");
 
-        Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(2);
-        permissions.put("admin", EnumSet.of(BasicPermissions.READ));
-        permissions.put("andrew", EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
+        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<Principal, Set<BasicPermissions>>(2);
+        permissions.put(new PrincipalImpl("admin", Principal.Type.USER), EnumSet.of(BasicPermissions.READ));
+        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
         writePermissions(protectedFolderPath, permissions);
 
         srcFolderPath = createDirectory(testRootPath, "ImportTestFolderSource");
@@ -185,9 +187,9 @@ public class ImportTest extends LocalFileSystemTest {
     }
 
     public void testImportFileExistsAndProtected() throws Exception {
-        Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(2);
-        permissions.put("admin", EnumSet.of(BasicPermissions.READ));
-        permissions.put("andrew", EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
+        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<Principal, Set<BasicPermissions>>(2);
+        permissions.put(new PrincipalImpl("admin", Principal.Type.USER), EnumSet.of(BasicPermissions.READ));
+        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
         writePermissions(existedFile, permissions);
 
         String path = SERVICE_URI + "import/" + folderWithFilesId + '?' + "overwrite=" + true;

@@ -20,6 +20,8 @@ package org.exoplatform.ide.vfs.impl.fs;
 
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
+import org.exoplatform.ide.vfs.shared.Principal;
+import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -44,25 +46,25 @@ import static org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissi
  * @version $Id: $
  */
 public class AccessControlList {
-    private final Map<String, Set<BasicPermissions>> permissionMap;
+    private final Map<Principal, Set<BasicPermissions>> permissionMap;
 
     public AccessControlList() {
-        permissionMap = new HashMap<String, Set<BasicPermissions>>(4);
+        permissionMap = new HashMap<Principal, Set<BasicPermissions>>(4);
     }
 
     public AccessControlList(AccessControlList accessControlList) {
         this(accessControlList.permissionMap);
     }
 
-    public AccessControlList(Map<String, Set<BasicPermissions>> permissions) {
+    public AccessControlList(Map<Principal, Set<BasicPermissions>> permissions) {
         this.permissionMap = copy(permissions);
     }
 
-    private static Map<String, Set<BasicPermissions>> copy(Map<String, Set<BasicPermissions>> source) {
-        Map<String, Set<BasicPermissions>> copy = new HashMap<String, Set<BasicPermissions>>(source.size());
-        for (Map.Entry<String, Set<BasicPermissions>> e : source.entrySet()) {
+    private static Map<Principal, Set<BasicPermissions>> copy(Map<Principal, Set<BasicPermissions>> source) {
+        Map<Principal, Set<BasicPermissions>> copy = new HashMap<Principal, Set<BasicPermissions>>(source.size());
+        for (Map.Entry<Principal, Set<BasicPermissions>> e : source.entrySet()) {
             if (!(e.getValue() == null || e.getValue().isEmpty())) {
-                copy.put(e.getKey(), EnumSet.copyOf(e.getValue()));
+                copy.put(new PrincipalImpl(e.getKey()), EnumSet.copyOf(e.getValue()));
             }
         }
         return copy;
@@ -77,26 +79,26 @@ public class AccessControlList {
             return Collections.emptyList();
         }
         List<AccessControlEntry> acl = new ArrayList<AccessControlEntry>(permissionMap.size());
-        for (Map.Entry<String, Set<BasicPermissions>> e : permissionMap.entrySet()) {
+        for (Map.Entry<Principal, Set<BasicPermissions>> e : permissionMap.entrySet()) {
             Set<BasicPermissions> basicPermissions = e.getValue();
             Set<String> plainPermissions = new HashSet<String>(basicPermissions.size());
             for (BasicPermissions permission : e.getValue()) {
                 plainPermissions.add(permission.value());
             }
-            acl.add(new AccessControlEntryImpl(e.getKey(), plainPermissions));
+            acl.add(new AccessControlEntryImpl(new PrincipalImpl(e.getKey()), plainPermissions));
         }
         return acl;
     }
 
-    Map<String, Set<BasicPermissions>> getPermissionMap() {
+    Map<Principal, Set<BasicPermissions>> getPermissionMap() {
         return copy(permissionMap);
     }
 
-    public Set<BasicPermissions> getPermissions(String userId) {
+    public Set<BasicPermissions> getPermissions(Principal principal) {
         if (permissionMap.isEmpty()) {
             return null;
         }
-        Set<BasicPermissions> userPermissions = permissionMap.get(userId);
+        Set<BasicPermissions> userPermissions = permissionMap.get(principal);
         if (userPermissions == null) {
             return null;
         }
@@ -115,15 +117,15 @@ public class AccessControlList {
         }
 
         for (AccessControlEntry ace : acl) {
-            String name = ace.getPrincipal();
+            final PrincipalImpl principal = new PrincipalImpl(ace.getPrincipal());
             Set<String> plainPermissions = ace.getPermissions();
             if (plainPermissions == null || plainPermissions.isEmpty()) {
-                permissionMap.remove(name);
+                permissionMap.remove(principal);
             } else {
-                Set<BasicPermissions> basicPermissions = permissionMap.get(name);
+                Set<BasicPermissions> basicPermissions = permissionMap.get(principal);
                 if (basicPermissions == null) {
                     basicPermissions = EnumSet.noneOf(BasicPermissions.class);
-                    permissionMap.put(name, basicPermissions);
+                    permissionMap.put(principal, basicPermissions);
                 }
                 for (String strPermission : plainPermissions) {
                     basicPermissions.add(BasicPermissions.fromValue(strPermission));
@@ -134,10 +136,11 @@ public class AccessControlList {
 
     void write(DataOutput output) throws IOException {
         output.writeInt(permissionMap.size());
-        for (Map.Entry<String, Set<BasicPermissions>> entry : permissionMap.entrySet()) {
-            String principal = entry.getKey();
+        for (Map.Entry<Principal, Set<BasicPermissions>> entry : permissionMap.entrySet()) {
+            Principal principal = entry.getKey();
             Set<BasicPermissions> permissions = entry.getValue();
-            output.writeUTF(principal);
+            output.writeUTF(principal.getName());
+            output.writeUTF(principal.getType().toString());
             output.writeInt(permissions.size());
             for (BasicPermissions permission : permissions) {
                 output.writeUTF(permission.value());
@@ -147,10 +150,11 @@ public class AccessControlList {
 
     static AccessControlList read(DataInput input) throws IOException {
         int recordsNum = input.readInt();
-        HashMap<String, Set<BasicPermissions>> permissionsMap = new HashMap<String, Set<BasicPermissions>>(recordsNum);
+        HashMap<Principal, Set<BasicPermissions>> permissionsMap = new HashMap<Principal, Set<BasicPermissions>>(recordsNum);
         int readRecords = 0;
         while (readRecords < recordsNum) {
-            String principal = input.readUTF();
+            String principalName = input.readUTF();
+            String principalType = input.readUTF();
             int permissionsNum = input.readInt();
             if (permissionsNum > 0) {
                 Set<BasicPermissions> permissions = EnumSet.noneOf(BasicPermissions.class);
@@ -159,7 +163,7 @@ public class AccessControlList {
                     permissions.add(BasicPermissions.fromValue(input.readUTF()));
                     ++readPermissions;
                 }
-                permissionsMap.put(principal, permissions);
+                permissionsMap.put(new PrincipalImpl(principalName, Principal.Type.valueOf(principalType)), permissions);
             }
             ++readRecords;
         }

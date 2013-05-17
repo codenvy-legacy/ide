@@ -188,8 +188,8 @@ public class EventsTest extends LocalFileSystemTest {
         String requestPath = SERVICE_URI + "acl/" + fileId;
         Map<String, List<String>> headers = new HashMap<String, List<String>>(1);
         headers.put("Content-Type", Arrays.asList("application/json"));
-        String acl = "[{\"principal\":\"admin\",\"permissions\":[\"all\"]}," +
-                     "{\"principal\":\"john\",\"permissions\":[\"read\", \"write\"]}]";
+        String acl = "[{\"principal\":{\"name\":\"admin\",\"type\":\"USER\"},\"permissions\":[\"all\"]}," +
+                     "{\"principal\":{\"name\":\"john\",\"type\":\"USER\"},\"permissions\":[\"read\", \"write\"]}]";
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, acl.getBytes(), null);
         assertEquals("Error: " + response.getEntity(), 204, response.getStatus());
 

@@ -19,12 +19,15 @@
 package com.codenvy.ide.commons.server;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
@@ -63,7 +66,8 @@ public class PomUtils {
                 getArtifactId(xpath, doc),
                 getPackaging(xpath, doc),
                 getModules(xpath, doc),
-                getSourcePath(xpath, doc)
+                getSourcePath(xpath, doc),
+                getDependencies(xpath, doc)
         );
     }
 
@@ -127,6 +131,34 @@ public class PomUtils {
         return modules;
     }
 
+    /** @throws XPathExpressionException */
+    private static List<Dependency> getDependencies(XPath xpath, Document doc) throws XPathExpressionException {
+        NodeList nodes = (NodeList)xpath.compile("/project/dependencies/dependency").evaluate(doc, XPathConstants.NODESET);
+
+        List<Dependency> dependencies = new ArrayList<Dependency>(nodes.getLength());
+        for (int i = 0; i < nodes.getLength(); i++) {
+            String groupId = null;
+            String artifactId = null;
+
+            for (int j = 0; j < nodes.item(i).getChildNodes().getLength(); j++) {
+                Node node = nodes.item(i).getChildNodes().item(j);
+
+                if ("groupId".equals(node.getNodeName())) {
+                    groupId = node.getTextContent();
+                }
+                if ("artifactId".equals(node.getNodeName())) {
+                    artifactId = node.getTextContent();
+                }
+            }
+
+            if (groupId != null && artifactId != null) {
+                dependencies.add(new Dependency(groupId, artifactId));
+            }
+        }
+
+        return dependencies;
+    }
+
     public static class Pom {
         private final String version;
 
@@ -140,6 +172,8 @@ public class PomUtils {
 
         private final String sourcePath;
 
+        private final List<Dependency> dependencies;
+
         /**
          * @param version
          * @param groupId
@@ -147,28 +181,15 @@ public class PomUtils {
          * @param packaging
          * @param modules
          */
-        public Pom(String version, String groupId, String artifactId, String packaging, List<String> modules, String sourcePath) {
+        public Pom(String version, String groupId, String artifactId, String packaging, List<String> modules, String sourcePath,
+                   List<Dependency> dependencies) {
             this.version = version;
             this.groupId = groupId;
             this.artifactId = artifactId;
             this.packaging = packaging;
             this.modules = modules;
             this.sourcePath = sourcePath;
-        }
-
-        /**
-         * @param version
-         * @param groupId
-         * @param artifactId
-         * @param modules
-         */
-        public Pom(String version, String groupId, String artifactId, List<String> modules, String sourcePath) {
-            this.version = version;
-            this.groupId = groupId;
-            this.artifactId = artifactId;
-            this.packaging = "jar";
-            this.modules = modules;
-            this.sourcePath = sourcePath;
+            this.dependencies = dependencies;
         }
 
         /** @return the version */
@@ -200,6 +221,10 @@ public class PomUtils {
             return sourcePath;
         }
 
+        public List<Dependency> getDependencies() {
+            return dependencies;
+        }
+
         /**
          * Return dependency String ready for inserting to the pom.xml
          * like: <dependency><groupId>com.mycom</groupId><artifactId>tools</artifactId><version>1.0</version></dependency>
@@ -215,6 +240,26 @@ public class PomUtils {
             }
             builder.append("</dependency>");
             return builder.toString();
+        }
+    }
+
+    public static class Dependency {
+        private final String groupId;
+
+        private final String artifactId;
+
+
+        public Dependency(String groupId, String artifactId) {
+            this.groupId = groupId;
+            this.artifactId = artifactId;
+        }
+
+        public String getGroupId() {
+            return groupId;
+        }
+
+        public String getArtifactId() {
+            return artifactId;
         }
     }
 
