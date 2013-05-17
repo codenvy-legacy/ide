@@ -20,6 +20,7 @@ package org.exoplatform.ide.vfs.impl.fs;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.FileItem;
+import org.exoplatform.ide.commons.ProjectType;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemUser;
@@ -200,10 +201,12 @@ public class LocalFileSystem implements VirtualFileSystem {
         final String mediaType = virtualFile.getMediaType();
         String name = null;
         String projectType = null;
+        boolean mavenModule = false;
         final boolean isProject = virtualFile.isProject();
         if (isProject) {
             name = virtualFile.getName();
             projectType = virtualFile.getPropertyValue("vfs:projectType");
+            mavenModule = Boolean.parseBoolean(virtualFile.getPropertyValue("Maven Module"));
         }
         virtualFile.delete(lockToken);
         if (listeners != null) {
@@ -211,7 +214,10 @@ public class LocalFileSystem implements VirtualFileSystem {
                     new ChangeEvent(this, id, path, mediaType, ChangeType.DELETED, mountPoint.getCurrentVirtualFileSystemUser()));
         }
         if (isProject) {
-            LOG.info("EVENT#project-destroyed# PROJECT#{}# TYPE#{}#", name, projectType);
+            //For module from multi-module project no need to fire event for delete project
+            if (!(mavenModule && ProjectType.fromValue(projectType) != ProjectType.MULTI_MODULE)) {
+                LOG.info("EVENT#project-destroyed# PROJECT#{}# TYPE#{}#", name, projectType);
+            }
         }
     }
 
@@ -575,7 +581,13 @@ public class LocalFileSystem implements VirtualFileSystem {
                                     mountPoint.getCurrentVirtualFileSystemUser()));
         }
         if (isProjectAfter && !isProjectBefore) {
-            LOG.info("EVENT#project-created# PROJECT#{}# TYPE#{}#", updated.getName(), ((Project)updated).getProjectType());
+            //Filter nested modules from multi-module project. For them no need to generate creating event.
+            Project project = ((Project)updated);
+            if (!(Boolean.parseBoolean(project.getPropertyValue("Maven Module")) &&
+                ProjectType.fromValue(project.getProjectType()) != ProjectType.MULTI_MODULE)) {
+                LOG.info("EVENT#project-created# PROJECT#{}# TYPE#{}#", updated.getName(), ((Project)updated).getProjectType());
+            }
+
         }
 
         boolean wasJRebelPropertyUpdated = false;
