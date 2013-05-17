@@ -67,7 +67,7 @@ public class GoogleContactsService {
      */
     public GoogleContactsService() {
         this.loader = IDELoader.get();
-        this.restContext = Utils.getRestContext();
+        this.restContext = restContext;
     }
 
     /** @see org.exoplatform.ide.client.framework.invite.GoogleContactsService#getContacts(org.exoplatform.gwtframework.commons.rest

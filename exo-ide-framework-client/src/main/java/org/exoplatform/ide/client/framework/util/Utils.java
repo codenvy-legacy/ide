@@ -403,7 +403,6 @@ public class Utils {
     }-*/;
 
     public static native String getWorkspaceName() /*-{
-        console.info($wnd.ws);
         return $wnd.ws;
     }-*/;
 

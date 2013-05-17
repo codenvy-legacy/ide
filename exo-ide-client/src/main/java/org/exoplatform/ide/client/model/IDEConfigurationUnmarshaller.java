@@ -43,8 +43,6 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable<IDEInitializ
 
     private final static String GADGET_SERVER = "gadgetServer";
 
-    private final static String PUBLIC_CONTEXT = "publicContext";
-
     public static final String LOOPBACK_SERVICE_CONTEXT = "/ide/loopbackcontent";
 
     private static final String APP_CONFIG = "configuration";
@@ -76,7 +74,6 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable<IDEInitializ
         this.initializationConfiguration = initializationConfiguration;
         this.defaultAppConfiguration = defaultAppConfiguration;
         configuration = new IDEConfiguration();
-        configuration.setRegistryURL(getRegistryURL());
         configuration.setHiddenFiles(getHiddenFiles());
         this.initializationConfiguration.setIdeConfiguration(configuration);
     }
@@ -135,13 +132,6 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable<IDEInitializ
             configuration.setLoopbackServiceContext(configuration.getContext() + LOOPBACK_SERVICE_CONTEXT);
         } else {
             showErrorMessage(CONTEXT);
-            return;
-        }
-
-        if (jsonConfiguration.containsKey(PUBLIC_CONTEXT))
-            configuration.setPublicContext(jsonConfiguration.get(PUBLIC_CONTEXT).isString().stringValue());
-        else {
-            showErrorMessage(PUBLIC_CONTEXT);
             return;
         }
 

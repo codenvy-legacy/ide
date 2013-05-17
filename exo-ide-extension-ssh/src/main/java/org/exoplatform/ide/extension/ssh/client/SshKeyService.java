@@ -49,8 +49,8 @@ public class SshKeyService {
     /**
      *
      */
-    public SshKeyService(int httpsPort, Loader loader) {
-        this.restContext = Utils.getRestContext();
+    public SshKeyService(String restContext, Loader loader) {
+        this.restContext = restContext;
         this.loader = loader;
         instance = this;
     }

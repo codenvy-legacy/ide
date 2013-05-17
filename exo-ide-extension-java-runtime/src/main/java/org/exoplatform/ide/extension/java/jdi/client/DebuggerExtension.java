@@ -29,6 +29,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.java.jdi.client.events.*;
 import org.exoplatform.ide.extension.java.jdi.client.fqn.FqnResolverFactory;
 import org.exoplatform.ide.extension.java.jdi.client.fqn.JavaFqnResolver;
@@ -70,7 +71,7 @@ public class DebuggerExtension extends Extension implements InitializeServicesHa
         FqnResolverFactory resolverFactory = new FqnResolverFactory();
         resolverFactory.addResolver(MimeType.APPLICATION_JAVA, new JavaFqnResolver());
         new DebuggerClientService();
-        new ApplicationRunnerClientService(IDE.messageBus());
+        new ApplicationRunnerClientService(IDE.messageBus(), Utils.getWorkspaceName(), Utils.getRestContext());
         BreakpointsManager breakpointsManager =
                 new BreakpointsManager(IDE.eventBus(), DebuggerClientService.getInstance(), AUTO_BEAN_FACTORY, resolverFactory);
 

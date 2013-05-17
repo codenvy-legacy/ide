@@ -163,10 +163,10 @@ public class GitClientServiceImpl extends GitClientService {
      * @param eventBus eventBus
      * @param restContext rest context
      * @param loader loader to show on server request
+     * @param restContext 
      */
     public GitClientServiceImpl(Loader loader, MessageBus wsMessageBus) {
         this.loader = loader;
-        this.restServiceContext = restContext;
         this.wsMessageBus = wsMessageBus;
     }
 

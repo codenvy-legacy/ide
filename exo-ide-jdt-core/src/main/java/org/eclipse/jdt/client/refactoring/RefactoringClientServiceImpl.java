@@ -24,7 +24,6 @@ import com.google.gwt.http.client.RequestException;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
@@ -42,18 +41,17 @@ import java.util.List;
 public class RefactoringClientServiceImpl extends RefactoringClientService {
 
     /** Base url. */
-    private static final String BASE_URL = Utils.getWorkspaceName() + "/refactoring/java";
+    private final String BASE_URL;
 
     /** Build project method's path. */
-    private static final String RENAME = BASE_URL + "/rename";
-
-  
+    private final String RENAME;
 
     /** Loader to be displayed. */
     private Loader loader;
 
     /** WebSocket message bus. */
     private MessageBus wsMessageBus;
+
 
     /**
      * @param restContext
@@ -63,7 +61,9 @@ public class RefactoringClientServiceImpl extends RefactoringClientService {
      * @param wsMessageBus
      *         {@link MessageBus} to send messages over WebSocket
      */
-    public RefactoringClientServiceImpl(Loader loader, MessageBus wsMessageBus) {
+    public RefactoringClientServiceImpl(String restContext, String wsName, Loader loader, MessageBus wsMessageBus) {
+        BASE_URL = restContext + wsName + "/refactoring/java";
+        RENAME = BASE_URL + "/rename";
         this.loader = loader;
         this.wsMessageBus = wsMessageBus;
     }
@@ -94,11 +94,9 @@ public class RefactoringClientServiceImpl extends RefactoringClientService {
     @Override
     public void rename(String vfsId, String projectId, String fqn, int offset, String newName,
                        AsyncRequestCallback<List<Action>> callback) throws RequestException {
-        final String requesrUrl = Utils.getRestContext() + RENAME;
-
         String params =
                 "vfsid=" + vfsId + "&projectid=" + projectId + "&fqn=" + fqn + "&offset=" + offset + "&newName=" + newName;
-        AsyncRequest.build(RequestBuilder.POST, requesrUrl + "?" + params).loader(loader).send(callback);
+        AsyncRequest.build(RequestBuilder.POST, RENAME + "?" + params).loader(loader).send(callback);
     }
 
 }

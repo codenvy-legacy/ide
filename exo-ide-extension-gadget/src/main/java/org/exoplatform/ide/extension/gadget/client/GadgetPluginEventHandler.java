@@ -70,7 +70,7 @@ public class GadgetPluginEventHandler implements EditorActiveFileChangedHandler,
     @Override
     public void onPreviewGadget(PreviewGadgetEvent event) {
         String href = activeFile.getLinkByRelation(Link.REL_CONTENT_BY_PATH).getHref();
-        href = href.replace(applicationConfiguration.getContext(), applicationConfiguration.getPublicContext());
+        href = href.replace(applicationConfiguration.getContext(), "");//
         if (gadgetPreviewPane == null) {
             gadgetPreviewPane = new GadgetPreviewPane(href, applicationConfiguration.getGadgetServer());
             gadgetPreviewPane.setIcon(new Image(GadgetClientBundle.INSTANCE.preview()));

@@ -17,6 +17,11 @@
             <artifactId>gwt-user</artifactId>
             <scope>provided</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-servlet</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>

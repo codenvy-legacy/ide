@@ -57,8 +57,8 @@ public class ApplicationRunnerClientService {
 
     private MessageBus wsMessageBus;
 
-    public ApplicationRunnerClientService(MessageBus wsMessageBus) {
-        BASE_URL = Utils.getRestContext() + Utils.getWorkspaceName() + "/java/runner";
+    public ApplicationRunnerClientService(MessageBus wsMessageBus, String ws, String restContext) {
+        BASE_URL = restContext + ws  + "/java/runner";
         this.wsMessageBus = wsMessageBus;
         instance = this;
     }
