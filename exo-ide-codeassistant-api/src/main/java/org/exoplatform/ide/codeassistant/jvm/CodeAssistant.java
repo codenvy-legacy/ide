@@ -157,7 +157,7 @@ public abstract class CodeAssistant {
     protected ProjectImpl getProject(String projectId, VirtualFileSystem vfs) throws ItemNotFoundException,
                                                                                      PermissionDeniedException, VirtualFileSystemException,
                                                                                      CodeAssistantException {
-        Item item = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+        Item item = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
         ProjectImpl project = null;
         if (item instanceof ProjectImpl)
             project = (ProjectImpl)item;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,25 +16,28 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.google.collide.server;
+package org.exoplatform.ide.vfs.server;
 
-import javax.ws.rs.core.Application;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CollaborationEditorApplication extends Application {
-    @Override
-    public Set<Object> getSingletons() {
-        return Collections.<Object>singleton(new CollaborationEditorExceptionMapper());
+/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+public class VirtualFileSystemUser {
+    private final String             userId;
+    private final Collection<String> groups;
+
+    VirtualFileSystemUser(String userId, Set<String> groups) {
+        this.userId = userId;
+        this.groups = Collections.unmodifiableSet(new HashSet<String>(groups));
     }
 
-    @Override
-    public Set<Class<?>> getClasses() {
-        Set<Class<?>> classes = new HashSet<Class<?>>(3);
-        classes.add(ParticipantsService.class);
-        classes.add(EditSessionsService.class);
-        classes.add(CommunicationService.class);
-        return classes;
+    public String getUserId() {
+        return userId;
+    }
+
+    public Collection<String> getGroups() {
+        return groups;
     }
 }

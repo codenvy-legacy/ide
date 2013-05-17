@@ -34,6 +34,8 @@ public class BranchListRequest extends GitRequest {
      */
     public static final String LIST_REMOTE = "r";
 
+    public static final String LIST_LOCAL  = null;
+
     /** Branches list mode. */
     private String             listMode;
 

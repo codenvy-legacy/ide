@@ -34,6 +34,7 @@ import org.exoplatform.ide.git.client.marshaller.RemoteListUnmarshaller;
 import org.exoplatform.ide.git.client.pull.PullPresenter;
 import org.exoplatform.ide.git.client.push.PushToRemotePresenter;
 import org.exoplatform.ide.git.shared.Branch;
+import org.exoplatform.ide.git.shared.BranchListRequest;
 import org.exoplatform.ide.git.shared.Remote;
 
 import java.util.ArrayList;
@@ -91,18 +92,18 @@ public abstract class HasBranchesPresenter extends GitPresenter {
      * Get the list of branches.
      * 
      * @param workDir Git repository work tree location
-     * @param remote get remote branches if <code>true</code>
+     * @param remoteMode is a remote mode
      */
-    public void getBranches(String projectId, final boolean remote) {
+    public void getBranches(String projectId, final String remoteMode) {
         try {
             GitClientService.getInstance()
-                            .branchList(vfs.getId(), projectId, remote,
+                            .branchList(vfs.getId(), projectId, remoteMode,
                                         new AsyncRequestCallback<List<Branch>>(
                                                                                new BranchListUnmarshaller(new ArrayList<Branch>())) {
 
                                             @Override
                                             protected void onSuccess(List<Branch> result) {
-                                                if (remote) {
+                                                if (remoteMode.equals(BranchListRequest.LIST_REMOTE)) {
                                                     remoteBranches = result;
                                                     setRemoteBranches(remoteBranches);
                                                     return;

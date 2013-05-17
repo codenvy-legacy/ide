@@ -213,7 +213,7 @@ public class RefactoringService {
     private IJavaProject getOrCreateJavaProject(WorkspaceResource workspace, String projectid) {
         VirtualFileSystem vfs = workspace.getVFS();
         try {
-            Item item = vfs.getItem(projectid, PropertyFilter.ALL_FILTER);
+            Item item = vfs.getItem(projectid, false, PropertyFilter.ALL_FILTER);
             if (item instanceof Project) {
                 if (!checkProjectInitialized(vfs, item)) {
                     initializeProject(item, workspace);
@@ -296,7 +296,7 @@ public class RefactoringService {
     }
 
     private boolean checkProjectInitialized(VirtualFileSystem vfs, Item item) throws VirtualFileSystemException {
-        ItemList<Item> children = vfs.getChildren(item.getId(), -1, 0, null, PropertyFilter.ALL_FILTER);
+        ItemList<Item> children = vfs.getChildren(item.getId(), -1, 0, null, false, PropertyFilter.ALL_FILTER);
         for (Item i : children.getItems()) {
             if (i.getName().equals(".classpath")) {
                 return true;

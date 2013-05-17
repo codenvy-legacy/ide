@@ -44,6 +44,7 @@ import org.exoplatform.ide.git.client.marshaller.Merge;
 import org.exoplatform.ide.git.client.marshaller.MergeUnmarshaller;
 import org.exoplatform.ide.git.client.merge.Reference.RefType;
 import org.exoplatform.ide.git.shared.Branch;
+import org.exoplatform.ide.git.shared.BranchListRequest;
 import org.exoplatform.ide.git.shared.MergeResult;
 
 import java.util.ArrayList;
@@ -119,7 +120,7 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
 
             try {
                 GitClientService.getInstance()
-                                .branchList(vfs.getId(), projectId, false,
+                                .branchList(vfs.getId(), projectId, BranchListRequest.LIST_LOCAL,
                                             new AsyncRequestCallback<List<Branch>>(
                                                                                    new BranchListUnmarshaller(new ArrayList<Branch>())) {
 
@@ -141,7 +142,7 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
 
             try {
                 GitClientService.getInstance()
-                                .branchList(vfs.getId(), projectId, true,
+                                .branchList(vfs.getId(), projectId, BranchListRequest.LIST_REMOTE,
                                             new AsyncRequestCallback<List<Branch>>(
                                                                                    new BranchListUnmarshaller(new ArrayList<Branch>())) {
 

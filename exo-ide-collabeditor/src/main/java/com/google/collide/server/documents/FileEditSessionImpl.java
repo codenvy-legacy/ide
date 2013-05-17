@@ -14,8 +14,10 @@
 
 package com.google.collide.server.documents;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import com.google.collide.dto.DocOp;
 import com.google.collide.dto.DocumentSelection;
+import com.google.collide.server.CollaborationEditorException;
 import com.google.collide.server.documents.VersionedDocument.DocumentOperationException;
 import com.google.collide.server.documents.VersionedDocument.VersionedText;
 import com.google.collide.server.shared.merge.ConflictChunk;
@@ -31,18 +33,15 @@ import com.google.common.collect.Lists;
 import com.google.common.hash.Hashing;
 import com.google.protobuf.ByteString;
 
+import org.exoplatform.ide.dtogen.server.ServerErrorImpl;
+import org.exoplatform.ide.dtogen.shared.ServerError;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.server.observation.ChangeEvent;
-import org.exoplatform.ide.vfs.server.observation.ChangeEventFilter;
-import org.exoplatform.ide.vfs.server.observation.EventListener;
-import org.exoplatform.ide.vfs.server.observation.EventListenerList;
-import org.exoplatform.ide.vfs.server.observation.PathFilter;
-import org.exoplatform.ide.vfs.server.observation.TypeFilter;
-import org.exoplatform.ide.vfs.server.observation.VfsIDFilter;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 
 import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
@@ -64,22 +63,19 @@ final class FileEditSessionImpl implements FileEditSession {
     private static final Log                         LOG            = ExoLogger.getLogger(FileEditSessionImpl.class);
     /** The list of conflict chunks for this file. */
     private final        List<AnchoredConflictChunk> conflictChunks = Lists.newArrayList();
+
+    private final String    workspace;
     /** The ID of the resource this edit session is opened for. */
     private       String    resourceId;
     private       String    path;
     private final MediaType mediaType;
     private final Set<String> editSessionParticipants         = new CopyOnWriteArraySet<String>();
-    /*
-     * The size and sha1 fields don't actually need to stay in lock-step with the doc contents since
-     * there's no public API for retrieving a snapshot of both values. Thus, we don't need blocking
-     * synchronization. We do however need to ensure that updates made by one thread are seen by other
-     * threads, so they must be declared volatile.
-     */
     private final Set<String> editSessionParticipantsReadOnly = Collections.unmodifiableSet(editSessionParticipants);
     private final String            editSessionKey;
     private final VirtualFileSystem vfs;
+
     /** Document that contains the file contents. */
-    private       VersionedDocument contents;
+    private VersionedDocument contents;
     /** Size of the file, in bytes. Lazily computed by {@link #getSize()}. */
     private Integer    size = null;
     /** SHA-1 hash of the file contents. Lazily computed by {@link #getSha1()}. */
@@ -91,15 +87,18 @@ final class FileEditSessionImpl implements FileEditSession {
     /** True if the file-edit session has been closed */
     private boolean closed = false;
     /** When this file edit session was closed. Makes sense only if closed = true. */
-    private long              closedTimeMs;
+    private long            closedTimeMs;
     /** Time that this FileEditSession was created (millis since epoch) */
     //private final long createdAt = System.currentTimeMillis();
 
-    private OnCloseListener   onCloseListener;
+    private OnCloseListener onCloseListener;
+
+    private       ConversationState  lastAuthor;
+    private final EnvironmentContext environment;
 
     FileEditSessionImpl(String editSessionKey,
                         VirtualFileSystem vfs,
-                        EventListenerList listenerList,
+                        String workspace,
                         String resourceId,
                         String path,
                         String mediaType,
@@ -107,6 +106,7 @@ final class FileEditSessionImpl implements FileEditSession {
                         @Nullable MergeResult mergeResult) {
         this.editSessionKey = editSessionKey;
         this.vfs = vfs;
+        this.workspace = workspace;
         this.resourceId = resourceId;
         this.mediaType = MediaType.valueOf(mediaType);
         this.contents = new VersionedDocument(initialContents);
@@ -129,6 +129,10 @@ final class FileEditSessionImpl implements FileEditSession {
         final long createdAt = System.currentTimeMillis();
         this.lastSavedCcRevision = contents.getCcRevision();
         this.lastMutationCcRevision = 0;
+
+        lastAuthor = ConversationState.getCurrent();
+        environment = EnvironmentContext.getCurrent();
+
         LOG.debug("FileEditSession {} was created at {}", this, createdAt);
     }
 
@@ -193,11 +197,12 @@ final class FileEditSessionImpl implements FileEditSession {
                                                    String authorClientId,
                                                    int intendedCcRevision,
                                                    DocumentSelection selection) throws DocumentOperationException {
-
         checkNotClosed();
-
+        ConversationState author = ConversationState.getCurrent();
         boolean containsMutation = DocOpUtils.containsMutation(docOps);
-
+        if (containsMutation) {
+            checkPermissions(author);
+        }
         VersionedDocument.ConsumeResult result = contents.consume(docOps, authorClientId, intendedCcRevision, selection);
 
         if (containsMutation) {
@@ -208,7 +213,27 @@ final class FileEditSessionImpl implements FileEditSession {
             size = null;
             sha1 = null;
         }
+
+        lastAuthor = author; // save last author
         return result;
+    }
+
+    private void checkPermissions(ConversationState author) {
+        try {
+            final long begin = System.currentTimeMillis();
+            // TODO : need to avoid check permissions before each merge ??
+            final Set<String> permissions = vfs.getItem(resourceId, true, PropertyFilter.NONE_FILTER).getPermissions();
+            final long end = System.currentTimeMillis();
+            LOG.debug("check permission time: {}ms", (end - begin));
+            if (permissions == null || !(permissions.contains("write") || permissions.contains("all"))) {
+                ServerErrorImpl error = ServerErrorImpl.make();
+                error.setFailureReason(ServerError.FailureReason.UNAUTHORIZED);
+                error.setDetails(String.format("There is no write permission for this file for user %s. ", author.getIdentity().getUserId()));
+                throw new CollaborationEditorException(error);
+            }
+        } catch (VirtualFileSystemException e) {
+            throw new CollaborationEditorException(e);
+        }
     }
 
     private String getText() {
@@ -296,13 +321,23 @@ final class FileEditSessionImpl implements FileEditSession {
 
     private void saveChanges(String text) throws IOException {
         LOG.debug("Saving file: {}", path);
+        boolean resetConversationState = false;
         try {
+            if (resetConversationState = (ConversationState.getCurrent() == null)) {
+                ConversationState.setCurrent(lastAuthor);
+            }
+            EnvironmentContext.setCurrent(environment);
             vfs.updateContent(resourceId, mediaType, new ByteArrayInputStream(text.getBytes()), null);
         }catch (ItemNotFoundException e){
             LOG.debug("Failed to save file", e);
         }
         catch (VirtualFileSystemException e) {
             throw new IOException(e.getMessage(), e);
+        } finally {
+            if (resetConversationState) {
+                ConversationState.setCurrent(null);
+            }
+            EnvironmentContext.reset();
         }
     }
 
@@ -389,6 +424,10 @@ final class FileEditSessionImpl implements FileEditSession {
     @Override
     public void setPath(String newPath) {
         path = newPath;
+    }
+
+    String getWorkspace() {
+        return workspace;
     }
 
     /** Bundles together a snapshot of the text of this file with any conflict chunks. */

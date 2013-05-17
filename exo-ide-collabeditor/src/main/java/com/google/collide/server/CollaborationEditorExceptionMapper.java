@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -18,23 +18,19 @@
  */
 package com.google.collide.server;
 
-import javax.ws.rs.core.Application;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import org.exoplatform.ide.dtogen.server.JsonSerializable;
 
-public class CollaborationEditorApplication extends Application {
-    @Override
-    public Set<Object> getSingletons() {
-        return Collections.<Object>singleton(new CollaborationEditorExceptionMapper());
-    }
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
 
+/**
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @see CollaborationEditorException
+ */
+public final class CollaborationEditorExceptionMapper implements ExceptionMapper<CollaborationEditorException> {
     @Override
-    public Set<Class<?>> getClasses() {
-        Set<Class<?>> classes = new HashSet<Class<?>>(3);
-        classes.add(ParticipantsService.class);
-        classes.add(EditSessionsService.class);
-        classes.add(CommunicationService.class);
-        return classes;
+    public Response toResponse(CollaborationEditorException exception) {
+        return Response.serverError().type(MediaType.APPLICATION_JSON).entity(((JsonSerializable)exception.getError()).toJson()).build();
     }
 }
