@@ -82,9 +82,9 @@ public class RenameTest extends LocalFileSystemTest {
 
         createLock(lockedFilePath, lockToken);
 
-        HashMap<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(2);
-        permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
-        permissions.put("admin", EnumSet.of(BasicPermissions.READ));
+        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<Principal, Set<BasicPermissions>>(2);
+        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.ALL));
+        permissions.put(new PrincipalImpl("admin", Principal.Type.USER), EnumSet.of(BasicPermissions.READ));
         writePermissions(protectedFilePath, permissions);
         writePermissions(protectedFolderPath, permissions);
 

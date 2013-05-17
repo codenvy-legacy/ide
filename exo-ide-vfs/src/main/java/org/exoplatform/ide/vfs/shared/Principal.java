@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,32 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package org.exoplatform.ide.vfs.shared;
 
-import java.util.Set;
+/** @author <a href="mailto:aparfonov@codenvy.com">Andrey Parfonov</a> */
+public interface Principal {
 
-/**
- * Representation of Access Control Entry used to interaction with client via JSON.
- *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
- */
-public interface AccessControlEntry {
-    /** @return principal's permissions */
-    Set<String> getPermissions();
+    public enum Type {
+        USER,
+        GROUP
+    }
 
-    /**
-     * @param permissions
-     *         new set of permissions
-     */
-    void setPermissions(Set<String> permissions);
+    String getName();
 
-    /** @return principal */
-    Principal getPrincipal();
+    void setName(String name);
 
-    /**
-     * @param principal
-     *         principal
-     */
-    void setPrincipal(Principal principal);
+    Type getType();
+
+    void setType(Type type);
 }

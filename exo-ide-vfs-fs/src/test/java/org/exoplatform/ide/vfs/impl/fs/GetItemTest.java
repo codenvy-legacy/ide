@@ -22,6 +22,8 @@ import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Principal;
+import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 
@@ -59,8 +61,8 @@ public class GetItemTest extends LocalFileSystemTest {
         properties.put("MyProperty02", new String[]{"to be or not to be"});
         writeProperties(filePath, properties);
 
-        Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(1);
-        permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
+        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<Principal, Set<BasicPermissions>>(1);
+        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.ALL));
         writePermissions(protectedFilePath, permissions);
         writePermissions(protectedParent, permissions);
 
@@ -127,9 +129,9 @@ public class GetItemTest extends LocalFileSystemTest {
 
     @SuppressWarnings("rawtypes")
     public void testGetFilePropertyFilter() throws Exception {
-        Iterator<Map.Entry<String, String[]>> iter = properties.entrySet().iterator();
-        Map.Entry<String, String[]> e1 = iter.next();
-        Map.Entry<String, String[]> e2 = iter.next();
+        Iterator<Map.Entry<String, String[]>> iterator = properties.entrySet().iterator();
+        Map.Entry<String, String[]> e1 = iterator.next();
+        Map.Entry<String, String[]> e2 = iterator.next();
 
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         // No filter - all properties

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,32 +16,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.shared;
+package org.exoplatform.ide.extension.samples.client.getstarted;
 
-import java.util.Set;
+import org.exoplatform.ide.client.framework.paas.PaaS;
+
+import java.util.Comparator;
 
 /**
- * Representation of Access Control Entry used to interaction with client via JSON.
+ * Comparator for ordering PaaSes alphabetically.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * @author <a href="mailto:vsvydenko@codenvy.com">Valeriy Svydenko</a>
+ * @version $Id: PaaSComparator.java May 17, 2013 4:47:56 PM vsvydenko $
  */
-public interface AccessControlEntry {
-    /** @return principal's permissions */
-    Set<String> getPermissions();
+final class PaaSComparator implements Comparator<PaaS> {
+    /** @see java.util.Comparator#compare(java.lang.Object, java.lang.Object) */
+    @Override
+    public int compare(PaaS p1, PaaS p2) {
+        String title1 = p1.getTitle();
+        String title2 = p2.getTitle();
 
-    /**
-     * @param permissions
-     *         new set of permissions
-     */
-    void setPermissions(Set<String> permissions);
-
-    /** @return principal */
-    Principal getPrincipal();
-
-    /**
-     * @param principal
-     *         principal
-     */
-    void setPrincipal(Principal principal);
+        return title1.compareTo(title2);
+    }
 }

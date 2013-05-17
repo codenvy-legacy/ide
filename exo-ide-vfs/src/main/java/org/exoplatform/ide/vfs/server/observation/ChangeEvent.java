@@ -19,6 +19,7 @@
 package org.exoplatform.ide.vfs.server.observation;
 
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemUser;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
@@ -50,21 +51,21 @@ public class ChangeEvent {
         }
     }
 
-    private final VirtualFileSystem vfs;
-    private final String            itemId;
-    private final String            itemPath;
-    private final String            oldItemPath;
-    private final String            mimeType;
-    private final ChangeType        type;
-    private final String            userId;
+    private final VirtualFileSystem     vfs;
+    private final String                itemId;
+    private final String                itemPath;
+    private final String                oldItemPath;
+    private final String                mimeType;
+    private final ChangeType            type;
+    private final VirtualFileSystemUser user;
 
     public ChangeEvent(VirtualFileSystem vfs,
                        String itemId,
                        String itemPath,
                        String mimeType,
                        ChangeType type,
-                       String userId) {
-        this(vfs, itemId, itemPath, null, mimeType, type, userId);
+                       VirtualFileSystemUser user) {
+        this(vfs, itemId, itemPath, null, mimeType, type, user);
     }
 
     public ChangeEvent(VirtualFileSystem vfs,
@@ -73,7 +74,7 @@ public class ChangeEvent {
                        String oldItemPath,
                        String mimeType,
                        ChangeType type,
-                       String userId) {
+                       VirtualFileSystemUser user) {
         if (vfs == null) {
             throw new IllegalArgumentException("Virtual File System may not be null. ");
         }
@@ -86,7 +87,7 @@ public class ChangeEvent {
         if (type == null) {
             throw new IllegalArgumentException("Change type may not be null. ");
         }
-        if (userId == null) {
+        if (user == null) {
             throw new IllegalArgumentException("User may not be null. ");
         }
         this.vfs = vfs;
@@ -95,7 +96,7 @@ public class ChangeEvent {
         this.oldItemPath = oldItemPath;
         this.mimeType = mimeType;
         this.type = type;
-        this.userId = userId;
+        this.user = user;
     }
 
     public VirtualFileSystem getVirtualFileSystem() {
@@ -122,8 +123,8 @@ public class ChangeEvent {
         return type;
     }
 
-    public String getUserId() {
-        return userId;
+    public VirtualFileSystemUser getUser() {
+        return user;
     }
 
     @Override
@@ -135,7 +136,7 @@ public class ChangeEvent {
                ", oldItemPath='" + oldItemPath + '\'' +
                ", mimeType='" + mimeType + '\'' +
                ", type=" + type +
-               ", userId='" + userId + '\'' +
+               ", user='" + user + '\'' +
                '}';
     }
 }
