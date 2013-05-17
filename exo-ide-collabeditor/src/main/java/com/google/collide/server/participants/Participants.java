@@ -125,4 +125,8 @@ public class Participants {
         LOG.debug("Add participant: name={}, id={} ", user.getName(), user.getId());
         loggedInUsers.putIfAbsent(user.getId(), user);
     }
+
+    public LoggedInUser getUser(String userId){
+        return  loggedInUsers.get(userId);
+    }
 }

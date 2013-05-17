@@ -112,7 +112,7 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
 
                                                                 FileModel file = (FileModel)result.getItem();
                                                                 if(MAX_FILE_CONTENT_LENGHT < file.getLength()){
-                                                                    Dialogs.getInstance().showError("Can't open file, content to long.");
+                                                                    Dialogs.getInstance().showError("File opening failed. Size limit reached.");
                                                                     return;
                                                                 }
                                                                 getFileContent(file);
