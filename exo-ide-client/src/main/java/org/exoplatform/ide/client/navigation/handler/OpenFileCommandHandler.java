@@ -41,6 +41,7 @@ import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.editor.event.*;
 import org.exoplatform.ide.client.framework.event.CursorPosition;
@@ -63,6 +64,8 @@ import java.util.Map;
  * @version $Id: $
  */
 public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpenedHandler, EditorFileClosedHandler {
+
+    private static final double MAX_FILE_CONTENT_LENGHT = 1000000;
 
     private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
@@ -106,7 +109,13 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
                                                         new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(file))) {
                                                             @Override
                                                             protected void onSuccess(ItemWrapper result) {
-                                                                getFileContent((FileModel)result.getItem());
+
+                                                                FileModel file = (FileModel)result.getItem();
+                                                                if(MAX_FILE_CONTENT_LENGHT < file.getLength()){
+                                                                    Dialogs.getInstance().showError("Can't open file, content to long.");
+                                                                    return;
+                                                                }
+                                                                getFileContent(file);
                                                             }
 
                                                             @Override
