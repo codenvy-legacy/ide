@@ -111,6 +111,8 @@ public class GitClientServiceImpl extends GitClientService {
 
     public static final String BRANCH_DELETE     = WS + "/git/branch-delete";
 
+    public static final String BRANCH_RENAME     = WS + "/ide/git/branch-rename";
+
     public static final String CLONE             = WS + "/git/clone";
 
     public static final String COMMIT            = WS + "/git/commit";
@@ -148,7 +150,7 @@ public class GitClientServiceImpl extends GitClientService {
     public static final String DELETE_REPOSITORY = WS + "/git/delete-repository";
 
     /** REST service context. */
-    private final String             restServiceContext = Utils.getRestContext();
+    private String             restServiceContext;
 
     /** Loader to be displayed. */
     private Loader             loader;
@@ -164,6 +166,7 @@ public class GitClientServiceImpl extends GitClientService {
      */
     public GitClientServiceImpl(Loader loader, MessageBus wsMessageBus) {
         this.loader = loader;
+        this.restServiceContext = restContext;
         this.wsMessageBus = wsMessageBus;
     }
 
@@ -419,14 +422,12 @@ public class GitClientServiceImpl extends GitClientService {
      *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
      */
     @Override
-    public void branchList(String vfsId, String projectid, boolean remote, AsyncRequestCallback<List<Branch>> callback)
-                                                                                                                       throws RequestException {
+    public void branchList(String vfsId, String projectid, String remoteMode, AsyncRequestCallback<List<Branch>> callback)
+                                                                                                                          throws RequestException {
         String url = restServiceContext + BRANCH_LIST;
 
         BranchListRequest branchListRequest = new BranchListRequest();
-        if (remote) {
-            branchListRequest.setListMode(BranchListRequest.LIST_REMOTE);
-        }
+        branchListRequest.setListMode(remoteMode);
 
         BranchListRequestMarshaller marshaller = new BranchListRequestMarshaller(branchListRequest);
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
@@ -466,6 +467,23 @@ public class GitClientServiceImpl extends GitClientService {
 
         AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(marshaller.marshal())
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+    }
+
+    /**
+     * @throws RequestException
+     * @see org.exoplatform.ide.git.client.GitClientService#branchRename(java.lang.String, java.lang.String, java.lang.String,
+     *      java.lang.String)
+     */
+    @Override
+    public void branchRename(String vfsId, String projectid, String oldName, String newName,
+                             AsyncRequestCallback<String> callback) throws RequestException {
+
+        String url = restServiceContext + BRANCH_RENAME;
+
+        String params = "vfsid=" + vfsId + "&projectid=" + projectid + "&oldName=" + oldName + "&newName=" + newName;
+
+        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader)
+                    .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_FORM_URLENCODED).send(callback);
     }
 
     /**

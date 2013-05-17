@@ -80,7 +80,7 @@ public class VfsWatcher implements Startable {
             String path = event.getItemPath();
             path = path.substring(0, path.indexOf("/", 1));
             try {
-                Item project = event.getVirtualFileSystem().getItemByPath(path, null, PropertyFilter.ALL_FILTER);
+                Item project = event.getVirtualFileSystem().getItemByPath(path, null, false, PropertyFilter.ALL_FILTER);
                 if (!projectId.equals(project.getId())) {
                     return;
                 }
@@ -132,7 +132,7 @@ public class VfsWatcher implements Startable {
 
     private ItemImpl getDtoItem(VirtualFileSystem vfs, String itemId) {
         try {
-            Item item = vfs.getItem(itemId, PropertyFilter.ALL_FILTER);
+            Item item = vfs.getItem(itemId, false, PropertyFilter.ALL_FILTER);
             ItemImpl dtoItem = ItemImpl.make();
             dtoItem.setId(item.getId());
             dtoItem.setItemType(ItemType.fromValue(item.getItemType().value()));

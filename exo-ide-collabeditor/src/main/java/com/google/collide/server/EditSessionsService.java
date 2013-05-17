@@ -39,8 +39,7 @@ public class EditSessionsService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String openSession(String message) {
-        return ((GetFileContentsResponseImpl)editSessions.openSession(
-                GetFileContentsImpl.fromJsonString(message))).toJson();
+        return ((GetFileContentsResponseImpl)editSessions.openSession(GetFileContentsImpl.fromJsonString(message))).toJson();
     }
 
     @POST

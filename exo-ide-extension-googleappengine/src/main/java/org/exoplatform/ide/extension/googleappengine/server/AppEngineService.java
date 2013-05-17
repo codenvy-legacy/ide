@@ -277,7 +277,7 @@ public class AppEngineService {
                                         @QueryParam("app_id") String appId,//
                                         @Context UriInfo uriInfo) throws VirtualFileSystemException, IOException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        Item item = vfs.getItem(projectId, PropertyFilter.NONE_FILTER);
+        Item item = vfs.getItem(projectId, false, PropertyFilter.NONE_FILTER);
         String path = item.getPath().endsWith("/") ? item.getPath().substring(0, item.getPath().length() - 1) : item
                 .getPath();
         appId = StringUtils.removeStart(appId, "s~");
@@ -312,7 +312,7 @@ public class AppEngineService {
     private void changeAppEngXml(VirtualFileSystem vfs, String path,
                                  String appId) throws VirtualFileSystemException, IOException {
         String path2appengineXml = path + "/src/main/webapp/WEB-INF/appengine-web.xml";
-        File fileAppEngXml = (File)vfs.getItemByPath(path2appengineXml, null, PropertyFilter.NONE_FILTER);
+        File fileAppEngXml = (File)vfs.getItemByPath(path2appengineXml, null, false, PropertyFilter.NONE_FILTER);
         String content = IOUtils.toString(vfs.getContent(fileAppEngXml.getId()).getStream());
         String newContent = PATTERN_XML.matcher(content).replaceFirst("<application>" + appId + "</application>");
         vfs.updateContent(fileAppEngXml.getId(), MediaType.valueOf(fileAppEngXml.getMimeType()),
@@ -332,7 +332,7 @@ public class AppEngineService {
     private void changeAppEngYaml(VirtualFileSystem vfs, String path,
                                   String appId) throws VirtualFileSystemException, IOException {
         String path2appengineYaml = path + "/app.yaml";
-        File fileAppEngYaml = (File)vfs.getItemByPath(path2appengineYaml, null, PropertyFilter.NONE_FILTER);
+        File fileAppEngYaml = (File)vfs.getItemByPath(path2appengineYaml, null, false, PropertyFilter.NONE_FILTER);
         String content = IOUtils.toString(vfs.getContent(fileAppEngYaml.getId()).getStream());
         String newContent = PATTERN_YAML.matcher(content).replaceFirst("application: " + appId);
         vfs.updateContent(fileAppEngYaml.getId(), MediaType.valueOf(fileAppEngYaml.getMimeType()),

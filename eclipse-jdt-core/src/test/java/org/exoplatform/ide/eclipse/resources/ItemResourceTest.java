@@ -90,7 +90,7 @@ public class ItemResourceTest extends ResourcesBaseTest {
         fileResource.create(null, true, new NullProgressMonitor());
 
         long actualModificationStamp = fileResource.getModificationStamp();
-        FileImpl file = (FileImpl)vfs.getItemByPath(originPath.toString(), null, PropertyFilter.NONE_FILTER);
+        FileImpl file = (FileImpl)vfs.getItemByPath(originPath.toString(), null, false, PropertyFilter.NONE_FILTER);
         long expectedModificationStamp = file.getLastModificationDate();
 
         assertEquals(expectedModificationStamp, actualModificationStamp);

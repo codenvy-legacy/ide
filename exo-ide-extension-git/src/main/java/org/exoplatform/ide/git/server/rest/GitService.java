@@ -64,7 +64,6 @@ import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
-import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
@@ -164,6 +163,18 @@ public class GitService {
         }
     }
 
+    @Path("branch-rename")
+    @POST
+    public void branchRename(@QueryParam("oldName") String oldName,
+                             @QueryParam("newName") String newName) throws GitException, VirtualFileSystemException {
+        GitConnection gitConnection = getGitConnection();
+        try {
+            gitConnection.branchRename(oldName, newName);
+        } finally {
+            gitConnection.close();
+        }
+    }
+
     @Path("branch-list")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -205,7 +216,7 @@ public class GitService {
 
     private void setGitRepositoryProp() throws VirtualFileSystemException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        Item project = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+        Item project = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
         String value = project.getPropertyValue("isGitRepository");
         if (value == null || !value.equals("true")) {
             Property isGitRepositoryProperty = new PropertyImpl("isGitRepository", "true");
@@ -491,7 +502,7 @@ public class GitService {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         Item project = getGitProject(vfs, projectId);
         String path2gitFolder = project.getPath() + "/.git";
-        Item gitItem = vfs.getItemByPath(path2gitFolder, null, PropertyFilter.NONE_FILTER);
+        Item gitItem = vfs.getItemByPath(path2gitFolder, null, false, PropertyFilter.NONE_FILTER);
         vfs.delete(gitItem.getId(), null);
         List<Property> properties = project.getProperties();
         List<Property> propertiesNew = new ArrayList<Property>(properties.size() - 1);
@@ -507,12 +518,11 @@ public class GitService {
 
     private Item getGitProject(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException
     {
-        Item project = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
-        Item parent = vfs.getItem(project.getParentId(), PropertyFilter.ALL_FILTER);
+        Item project = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
+        Item parent = vfs.getItem(project.getParentId(), false, PropertyFilter.ALL_FILTER);
         if (parent.getItemType().equals(ItemType.PROJECT)) // MultiModule project
             return parent;
-        else
-            return project;
+        return project;
     }
 
 

@@ -155,7 +155,7 @@ public class BuilderClient {
         URL url = new URL(baseURL + "/builder/maven/build");
         String buildId = run(url, vfs.exportZip(projectId));
         if (projectId != null) {
-            Project proj = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+            Project proj = (Project)vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
             LOG.info("EVENT#project-built# PROJECT#" + proj.getName() + "# TYPE#" + proj.getProjectType() + "#");
         }
         startCheckingBuildStatus(buildId);

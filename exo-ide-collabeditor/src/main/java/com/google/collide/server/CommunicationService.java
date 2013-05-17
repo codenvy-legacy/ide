@@ -22,9 +22,6 @@ import com.google.collide.dto.server.DtoServerImpls.FileOperationNotificationImp
 import com.google.collide.server.documents.EditSessions;
 import com.google.collide.server.participants.Participants;
 
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -39,9 +36,6 @@ import java.util.Set;
  */
 @Path("{ws-name}/collab_editor/communication")
 public class CommunicationService {
-    private static final Log LOG = ExoLogger.getLogger(CommunicationService.class);
-
-
     @Inject
     private Participants participants;
 
