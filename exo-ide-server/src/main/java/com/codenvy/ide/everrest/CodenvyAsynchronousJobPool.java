@@ -22,6 +22,8 @@ import com.codenvy.commons.env.EnvironmentContext;
 
 import org.everrest.core.impl.EverrestConfiguration;
 import org.everrest.core.impl.async.AsynchronousJobPool;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.IdentityConstants;
@@ -38,8 +40,26 @@ import java.util.concurrent.Callable;
  */
 @Provider
 public class CodenvyAsynchronousJobPool extends AsynchronousJobPool implements ContextResolver<AsynchronousJobPool> {
+    private static final Log LOG = ExoLogger.getLogger(CodenvyAsynchronousJobPool.class);
+
     public CodenvyAsynchronousJobPool(EverrestConfiguration config) {
         super(config);
+    }
+
+    private static Method  mdc_getCopyOfContextMap;
+    private static Method  mdc_setContextMap;
+    private static Method  mdc_clear;
+    private static boolean setUpLogger;
+
+    static {
+        try {
+            Class<?> c = Thread.currentThread().getContextClassLoader().loadClass("org.slf4j.MDC");
+            mdc_getCopyOfContextMap = c.getDeclaredMethod("getCopyOfContextMap");
+            mdc_setContextMap = c.getDeclaredMethod("setContextMap", java.util.Map.class);
+            mdc_clear = c.getDeclaredMethod("clear");
+            setUpLogger = mdc_getCopyOfContextMap != null && mdc_setContextMap != null && mdc_clear != null;
+        } catch (Exception ignore) {
+        }
     }
 
     /**
@@ -55,11 +75,19 @@ public class CodenvyAsynchronousJobPool extends AsynchronousJobPool implements C
         private final EnvironmentContext envContext;
         private final ConversationState  state;
         private final Callable<Object>   callable;
+        private       Object             loggerContext;
 
         public CallableWrapper(Callable<Object> callable) {
             this.callable = callable;
             state = ConversationState.getCurrent();
             envContext = EnvironmentContext.getCurrent();
+            if (setUpLogger) {
+                try {
+                    loggerContext = mdc_getCopyOfContextMap.invoke(null);
+                } catch (Throwable t) {
+                    LOG.error(t.getMessage(), t);
+                }
+            }
         }
 
         @Override
@@ -67,11 +95,25 @@ public class CodenvyAsynchronousJobPool extends AsynchronousJobPool implements C
             ConversationState.setCurrent(state == null
                                          ? new ConversationState(new Identity(IdentityConstants.ANONIM)) : state);
             EnvironmentContext.setCurrent(envContext);
+            if (loggerContext != null) {
+                try {
+                    mdc_setContextMap.invoke(null, loggerContext);
+                } catch (Throwable t) {
+                    LOG.error(t.getMessage(), t);
+                }
+            }
             try {
                 return callable.call();
             } finally {
                 EnvironmentContext.reset();
                 ConversationState.setCurrent(null);
+                if (loggerContext != null) {
+                    try {
+                        mdc_clear.invoke(null);
+                    } catch (Throwable t) {
+                        LOG.error(t.getMessage(), t);
+                    }
+                }
             }
         }
     }
