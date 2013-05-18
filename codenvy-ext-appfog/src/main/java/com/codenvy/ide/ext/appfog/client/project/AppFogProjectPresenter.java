@@ -33,6 +33,7 @@ import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
 import com.codenvy.ide.ext.appfog.client.marshaller.StringUnmarshaller;
 import com.codenvy.ide.ext.appfog.client.services.ManageServicesPresenter;
 import com.codenvy.ide.ext.appfog.client.start.StartApplicationPresenter;
+import com.codenvy.ide.ext.appfog.client.update.UpdatePropertiesPresenter;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -54,7 +55,7 @@ import com.google.web.bindery.event.shared.EventBus;
 public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate {
     private AppFogProjectView          view;
     //    private UnmapUrlPresenter                unmapUrlPresenter;
-//    private UpdatePropertiesPresenter        updateProperyPresenter;
+    private UpdatePropertiesPresenter  updateProperyPresenter;
     private ManageServicesPresenter    manageServicesPresenter;
     //    private UpdateApplicationPresenter       updateApplicationPresenter;
     private EventBus                   eventBus;
@@ -90,7 +91,8 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
                                      AppfogLocalizationConstant constant, AppfogAutoBeanFactory autoBeanFactory,
                                      StartApplicationPresenter startAppPresenter, DeleteApplicationPresenter deleteAppPresenter,
                                      LoginPresenter loginPresenter, AppfogClientService service,
-                                     ApplicationInfoPresenter applicationInfoPresenter, ManageServicesPresenter manageServicesPresenter) {
+                                     ApplicationInfoPresenter applicationInfoPresenter, ManageServicesPresenter manageServicesPresenter,
+                                     UpdatePropertiesPresenter updateProperyPresenter) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
@@ -104,6 +106,7 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
         this.service = service;
         this.applicationInfoPresenter = applicationInfoPresenter;
         this.manageServicesPresenter = manageServicesPresenter;
+        this.updateProperyPresenter = updateProperyPresenter;
     }
 
     /** Shows dialog. */
@@ -208,7 +211,7 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
     /** {@inheritDoc} */
     @Override
     public void onEditMemoryClicked() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        updateProperyPresenter.showUpdateMemoryDialog(appInfoChangedCallback);
     }
 
     /** {@inheritDoc} */
@@ -220,7 +223,7 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
     /** {@inheritDoc} */
     @Override
     public void onEditInstancesClicked() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        updateProperyPresenter.showUpdateInstancesDialog(appInfoChangedCallback);
     }
 
     /**
