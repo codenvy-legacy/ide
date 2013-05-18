@@ -152,7 +152,9 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
                 display.enableCheckoutButton(enabled);
 
                 boolean renameEnabled = (event.getSelectedItem() != null && !event.getSelectedItem().isRemote());
+                boolean deleteEnabled = (event.getSelectedItem() != null && !event.getSelectedItem().isRemote());
                 display.enableRenameButton(renameEnabled);
+                display.enableDeleteButton(deleteEnabled);
             }
         });
 
