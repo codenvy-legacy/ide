@@ -56,11 +56,14 @@ public class VfsWatcher implements ProjectOpenedHandler, ProjectClosedHandler {
     public static final int DURATION = 7000;
 
     private CollaborationApi collaborationApi;
+    private NotificationManager notificationManager;
 
     private ProjectModel project;
 
-    public VfsWatcher(MessageFilter messageFilter, HandlerManager handlerManager, CollaborationApi collaborationApi) {
+    public VfsWatcher(MessageFilter messageFilter, HandlerManager handlerManager, CollaborationApi collaborationApi,
+                      NotificationManager notificationManager) {
         this.collaborationApi = collaborationApi;
+        this.notificationManager = notificationManager;
         handlerManager.addHandler(ProjectClosedEvent.TYPE, this);
         handlerManager.addHandler(ProjectOpenedEvent.TYPE, this);
         messageFilter.registerMessageRecipient(RoutingTypes.ITEM_MOVED, new MessageRecipient<ItemMovedDto>() {
@@ -120,6 +123,12 @@ public class VfsWatcher implements ProjectOpenedHandler, ProjectClosedHandler {
                 NotificationManager.get().addNotification(notification);
             }
         });
+        messageFilter.registerMessageRecipient(RoutingTypes.PROJECT_OPERATION_NOTIFICATION, new MessageRecipient<ProjectOperationNotification>() {
+            @Override
+            public void onMessageReceived(ProjectOperationNotification message) {
+                showProjectNotification(message);
+            }
+        });
         IDE.messageBus().setOnOpenHandler(new ConnectionOpenedHandler() {
             @Override
             public void onConnectionOpened() {
@@ -128,6 +137,10 @@ public class VfsWatcher implements ProjectOpenedHandler, ProjectClosedHandler {
                 }
             }
         });
+    }
+
+    private void showProjectNotification(ProjectOperationNotification message) {
+        notificationManager.addNotification(new Notification(message.message(), -1));
     }
 
     private org.exoplatform.ide.vfs.shared.Item convertDto2VfsItem(Item messageItem) {

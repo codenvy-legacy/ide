@@ -232,7 +232,7 @@ public class VfsWatcher implements Startable {
     }
 
 
-    private static void broadcastToClients(String message, Set<String> collaborators) {
+    public static void broadcastToClients(String message, Set<String> collaborators) {
         for (String collaborator : collaborators) {
             ChannelBroadcastMessage broadcastMessage = new ChannelBroadcastMessage();
             broadcastMessage.setChannel("vfs_watcher." + collaborator);

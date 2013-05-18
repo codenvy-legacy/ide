@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.client.operation.deleteitem;
 
+import com.codenvy.ide.collaboration.watcher.client.ProjectLockedPresenter;
 import com.codenvy.ide.collaboration.ResourceLockedPresenter;
+import com.codenvy.ide.collaboration.chat.client.ChatExtension;
 import com.google.collide.client.CollabEditor;
 import com.google.collide.client.CollabEditorExtension;
 import com.google.collide.client.collaboration.CollaborationManager;
@@ -129,6 +131,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event) {
         ApplicationSettings applicationSettings = event.getApplicationSettings();
@@ -138,29 +141,29 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
         lockTokens = applicationSettings.getValueAsMap("lock-tokens");
     }
 
-    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
-     * .framework.navigation.event.ItemsSelectedEvent) */
+
+    /** {@inheritDoc} */
     public void onItemsSelected(ItemsSelectedEvent event) {
         items = event.getSelectedItems();
         isProjectExplorer = (event.getView() instanceof ProjectExplorerDisplay);
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client
-     * .framework.editor.event.EditorFileOpenedEvent) */
+
+    /** {@inheritDoc} */
     public void onEditorFileOpened(EditorFileOpenedEvent event) {
         openedFiles = event.getOpenedFiles();
         openedEditors.put(event.getFile().getPath(), event.getEditor());
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client
-     * .framework.editor.event.EditorFileClosedEvent) */
+
+    /** {@inheritDoc} */
     public void onEditorFileClosed(EditorFileClosedEvent event) {
         openedFiles = event.getOpenedFiles();
         openedEditors.remove(event.getFile().getPath());
     }
 
-    /** @see org.exoplatform.ide.client.operation.deleteitem.DeleteItemHandler#onDeleteItem(org.exoplatform.ide.client.operation
-     * .deleteitem.DeleteItemEvent) */
+
+    /** {@inheritDoc} */
     public void onDeleteItem(DeleteItemEvent event) {
         if (display != null) {
             return;
@@ -183,6 +186,12 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
 
         //check if deleted file in collaboration mode
         for (Item i : itemsToDelete) {
+            if(i instanceof ProjectModel){
+                if(ChatExtension.get().getCurrentProjectParticipants().size() > 1){
+                    new ProjectLockedPresenter((ProjectModel)i, Operation.DELETE);
+                    return false;
+                }
+            }
             if (openedEditors.containsKey(i.getId())) {
                 if (openedEditors.get(i.getId()) instanceof CollabEditor) {
                     if (collaborationManager.isFileOpened(i.getPath())) {
@@ -190,7 +199,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
                         // other users.");
                         new ResourceLockedPresenter(
                                 new SafeHtmlBuilder().appendHtmlConstant("Can't delete <b>").appendEscaped(
-                                        i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), true,
+                                        i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), i,
                                 i.getPath(), Operation.DELETE);
                         return false;
                     }
@@ -198,7 +207,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
             }
             if (collaborationManager.isFileOpened(i.getPath())) {
                 new ResourceLockedPresenter(new SafeHtmlBuilder().appendHtmlConstant("Can't delete <b>").appendEscaped(
-                        i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), true,
+                        i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), i,
                                             i.getPath(), Operation.DELETE);
                 //            Dialogs.getInstance().showError("Can't delete <b>" + i.getName() + "</b>. This file opened by other users.");
                 return false;
@@ -208,7 +217,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
                 if (path.startsWith(i.getPath())) {
                     new ResourceLockedPresenter(new SafeHtmlBuilder().appendHtmlConstant("Can't delete <b>").appendEscaped(
                             i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, path,
-                                                i instanceof FileModel, i.getPath(), Operation.DELETE);
+                                                i, i.getPath(), Operation.DELETE);
                     //               Dialogs.getInstance().showError("Can't delete <b>" + i.getName() + "</b>. This file opened by other
                     // users.");
                     return false;
@@ -440,6 +449,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
@@ -447,18 +457,20 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
         }
     }
 
-    /** @see org.exoplatform.ide.client.project.explorer.ProjectSelectedHandler#onProjectSelected(org.exoplatform.ide.client.project
-     * .explorer.ProjectSelectedEvent) */
+
+    /** {@inheritDoc} */
     @Override
     public void onProjectSelected(ProjectSelectedEvent event) {
         this.selectedProject = event.getProject();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
         openedProject = event.getProject();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onProjectClosed(ProjectClosedEvent event) {
         openedProject = null;
