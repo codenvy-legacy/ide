@@ -21,6 +21,11 @@
          <artifactId>gwt-dev</artifactId>
          <scope>test</scope>
       </dependency>
+      
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-commons</artifactId>
+      </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>

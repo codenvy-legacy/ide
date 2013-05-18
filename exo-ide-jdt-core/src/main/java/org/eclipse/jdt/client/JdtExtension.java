@@ -82,6 +82,7 @@ import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypesInfoList;
 import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
@@ -146,7 +147,6 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
         projectTypes.add(ProjectType.JAVA.value());
         projectTypes.add(ProjectType.SPRING.value());
         projectTypes.add(ProjectType.JSP.value());
-        projectTypes.add(ProjectType.AWS.value());
         projectTypes.add(ProjectType.JAR.value());
         projectTypes.add(ProjectType.WAR.value());
     }
