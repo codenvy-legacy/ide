@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.collaboration.dto;
 
-import org.exoplatform.ide.dtogen.shared.*;
+import com.codenvy.ide.dtogen.shared.*;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>

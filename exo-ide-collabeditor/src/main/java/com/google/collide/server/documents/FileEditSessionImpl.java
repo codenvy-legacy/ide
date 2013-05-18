@@ -15,6 +15,8 @@
 package com.google.collide.server.documents;
 
 import com.codenvy.commons.env.EnvironmentContext;
+import com.codenvy.ide.dtogen.server.ServerErrorImpl;
+import com.codenvy.ide.dtogen.shared.ServerError;
 import com.google.collide.dto.DocOp;
 import com.google.collide.dto.DocumentSelection;
 import com.google.collide.server.CollaborationEditorException;
@@ -33,8 +35,6 @@ import com.google.common.collect.Lists;
 import com.google.common.hash.Hashing;
 import com.google.protobuf.ByteString;
 
-import org.exoplatform.ide.dtogen.server.ServerErrorImpl;
-import org.exoplatform.ide.dtogen.shared.ServerError;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;

@@ -19,8 +19,8 @@
 package org.exoplatform.ide.git.server.rest;
 
 import com.codenvy.commons.security.oauth.OAuthTokenProvider;
+import com.codenvy.ide.commons.server.ParsingResponseException;
 
-import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.ssh.server.SshKeyStoreException;
 import org.exoplatform.ide.git.server.github.GitHub;
 import org.exoplatform.ide.git.server.github.GitHubException;

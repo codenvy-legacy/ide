@@ -7,7 +7,8 @@
         <artifactId>exo-ide-parent</artifactId>
         <version>2.4.0-SNAPSHOT</version>
     </parent>
-    <artifactId>codenvy-application-war</artifactId>
+    <groupId>org.exoplatform.ide</groupId>
+    <artifactId>exo-ide-packaging-application-war</artifactId>
     <packaging>war</packaging>
     <name>Codenvy IDE :: Packaging :: Application</name>
 
@@ -33,7 +34,7 @@
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-client</artifactId>
         </dependency>
-        
+
         <!-- EDITOR EXTENSIONS -->
 
         <dependency>
@@ -71,8 +72,6 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>codenvy-ide-collaboration</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-jdt-core</artifactId>
@@ -88,6 +87,7 @@
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>eclipse-jdt-core</artifactId>
         </dependency>
+      
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -473,14 +473,35 @@
                             <goal>war</goal>
                         </goals>
                         <configuration>
-                             <packagingExcludes>**/classes/org/**,**/classes/gadget/**,
+                            <packagingExcludes>**/classes/org/**,**/classes/gadget/**,
                                 **/classes/default/**,**/classes/ide/**,
                                 **/Commons.css,
                                 **/hosted.html,**/applicationInitializer.js,**/init_preload_gadget.js,
                                 **/IDEShell.html,**/IDEGadget.html,**/ShowCase.html,**/preload.html,
                                 **/preloadIDE.js,
+                                **/lib/exo-ide-client*,
+                                **/lib/exo-ide-editor-chromattic*,
+                                **/lib/exo-ide-editor-codemirror2*,
+                                **/lib/exo-ide-editor-css*,
+                                **/lib/exo-ide-editor-gadget*,
+                                **/lib/exo-ide-editor-groovy*,
+                                **/lib/exo-ide-editor-gtmpl*,
+                                **/lib/exo-ide-editor-html*,
+                                **/lib/exo-ide-editor-java*,
+                                **/lib/exo-ide-editor-javascript*,
+                                **/lib/exo-ide-editor-jsp*,
+                                **/lib/exo-ide-editor-php*,
+                                **/lib/exo-ide-editor-python*,
+                                **/lib/exo-ide-editor-ruby*,
+                                **/lib/exo-ide-editor-xml*,
+                                **/lib/exo-ide-editor-yaml*,
+                                **/lib/exo-ide-extension-samples*,
+                                **/lib/exo-ide-framework-client*,
                                 **/lib/exo-ide-jdt-core*,
                                 **/lib/exo-jcr-services*,
+                                **/lib/exo-gwtframework*,
+                                **/lib/gwt-elemental-collide*,
+                                **/lib/gwt-gadgets*,
                                 **/lib/slf4j-log4j*,
                                 **/lib/log4j*,
                                 **/lib/commons-logging-api*,
@@ -533,5 +554,5 @@
             </plugin>
 
         </plugins>
-    </build>
+      </build>
 </project>

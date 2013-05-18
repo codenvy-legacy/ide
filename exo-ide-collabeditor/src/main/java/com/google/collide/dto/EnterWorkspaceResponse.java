@@ -14,11 +14,11 @@
 
 package com.google.collide.dto;
 
+import com.codenvy.ide.dtogen.shared.RoutingType;
+import com.codenvy.ide.dtogen.shared.ServerToClientDto;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.dto.GetSyncStateResponse.SyncState;
 
-import org.exoplatform.ide.dtogen.shared.RoutingType;
-import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
-import org.exoplatform.ide.json.shared.JsonArray;
 
 /** Response to a client's request to enter a workspace. */
 @RoutingType(type = RoutingTypes.ENTERWORKSPACERESPONSE)

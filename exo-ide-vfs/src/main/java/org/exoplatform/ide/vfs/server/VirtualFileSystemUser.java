@@ -40,4 +40,12 @@ public class VirtualFileSystemUser {
     public Collection<String> getGroups() {
         return groups;
     }
+
+    @Override
+    public String toString() {
+        return "VirtualFileSystemUser{" +
+               "userId='" + userId + '\'' +
+               ", groups=" + groups +
+               '}';
+    }
 }

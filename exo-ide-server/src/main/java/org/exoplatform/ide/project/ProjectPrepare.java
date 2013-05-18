@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -18,289 +18,159 @@
  */
 package org.exoplatform.ide.project;
 
-import org.exoplatform.ide.commons.PomUtils;
-import org.exoplatform.ide.commons.ProjectType;
+import com.codenvy.ide.commons.server.PomUtils;
+import com.codenvy.ide.commons.shared.ProjectType;
+
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.Property;
-import org.exoplatform.ide.vfs.shared.PropertyFilter;
-import org.exoplatform.ide.vfs.shared.PropertyImpl;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
+import org.exoplatform.ide.vfs.server.exceptions.*;
+import org.exoplatform.ide.vfs.shared.*;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.FileInputStream;
+import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
- * Preparing source directory with setting properties on folder to indicate them as Codenvy project based on sources.
- * For example if we find pom.xml than we sett type of folder as Java project, if ruby - Ruby project, etc.
- * If we can't determine with what sources we works it throws exception with message and client ask user to set
- * custom project type for source folder.
- *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class ProjectPrepare {
+    private final Pattern SPRING_FRAMEWORK_PATTERN = Pattern.compile("spring");
+
     private VirtualFileSystem vfs;
+
+    private boolean multiModuleProject = false;
 
     public ProjectPrepare(VirtualFileSystem vfs) {
         this.vfs = vfs;
     }
 
     /**
-     * Convert specified folder in file system to Codenvy project
+     * Detecting what kind of project we have, if pom.xml detected in children list that we have maven project,
+     * after that we try to parse maven project. If maven project is multi-module - try to parse modules and set
+     * their types. Otherwise if we can't found pom.xml - it seems that we have non-java project.
      *
-     * @param sourcePath
-     *         - absolute project path where sources are stored
-     * @throws ProjectPrepareException
+     * @param sourcePathFolderId
+     *         id for source folder
      */
-    public void doPrepare(String sourcePath, String folderId, List<Property> otherProperties)
-            throws ProjectPrepareException, VirtualFileSystemException {
-        //if pom.xml exist in the source directory it means that we have java project
-        if (new File(sourcePath, "pom.xml").exists()) {
-            try {
-                Map<String, File> mavenModules = listMavenModulesByPath(new File(sourcePath));
+    public void doPrepare(String sourcePathFolderId)
+            throws VirtualFileSystemException, ParserConfigurationException, SAXException, XPathExpressionException, IOException,
+                   ProjectPrepareException {
+        ItemNode sourceFolderNode = vfs.getTree(sourcePathFolderId, -1, Boolean.FALSE, PropertyFilter.ALL_FILTER);
 
-                List<Property> properties = new ArrayList<Property>(2);
-                properties.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-                properties.add(new PropertyImpl("Maven Module", "true"));
-                properties.addAll(otherProperties);
-
-                //Just set for all modules where we find pom.xml that it is maven module and default project type
-                for (Map.Entry<String, File> entry : mavenModules.entrySet()) {
-                    vfs.updateItem(vfs.getItemByPath(entry.getKey(), null, false, PropertyFilter.ALL_FILTER).getId(), properties, null);
-                }
-
-                setJavaProjectTypesProperties(mavenModules);
-            } catch (VirtualFileSystemException e) {
-                throw new ProjectPrepareException(e.getMessage());
-            }
+        if (isMavenProject(sourceFolderNode)) {
+            parseMavenProject(sourceFolderNode);
         } else {
-            ProjectType detectedType = detectNonJavaProjectType(sourcePath);
-            if (detectedType != null) {
-                writeNonJavaProjectProperty(folderId, detectedType);
-            } else {
-                throw new ProjectPrepareException(400, "autodetection:failed");
-            }
+            parseNonMavenProject(sourceFolderNode);
         }
     }
 
-    /**
-     * Find all pom.xml in specified path. if we find pom.xml in directory it will be means that this directory is maven
-     * module
-     *
-     * @param path
-     *         - path to search all pom.xml
-     * @return - map contains module relative path and physical path to maven module
-     */
-    private Map<String, File> listMavenModulesByPath(File path) {
-        Map<String, File> modules = new HashMap<String, File>();
-        LinkedList<File> q = new LinkedList<File>();
-        q.add(path);
-        while (!q.isEmpty()) {
-            File current = q.pop();
-            File[] list = current.listFiles();
-            if (list != null) {
-                for (File f : list) {
-                    if (f.isDirectory()) {
-                        q.push(f);
-                        continue;
-                    }
-
-                    if ("pom.xml".equals(f.getName())) {
-                        String filePath = f.getParent();
-                        String concated = filePath.substring(path.getParent().length());
-
-                        modules.put(concated, f.getParentFile());
-                    }
+    private boolean isMavenProject(ItemNode sourceFolderNode)
+            throws VirtualFileSystemException, ParserConfigurationException, SAXException, XPathExpressionException, IOException {
+        for (ItemNode nestedNode : sourceFolderNode.getChildren()) {
+            if ("pom.xml".equals(nestedNode.getItem().getName())) {
+                ContentStream parentPom = vfs.getContent(nestedNode.getItem().getId());
+                PomUtils.Pom pom = PomUtils.parse(parentPom.getStream());
+                if (pom.getModules().size() > 0) {
+                    multiModuleProject = true;
                 }
-            }
-        }
-        return modules;
-    }
-
-    /**
-     * Writing properties for each maven module. Properties contains information about project type
-     *
-     * @param mavenModules
-     *         - path where maven module is placed
-     * @throws VirtualFileSystemException
-     *         - if writing properties is failed
-     */
-    private void setJavaProjectTypesProperties(Map<String, File> mavenModules) throws VirtualFileSystemException {
-        for (Map.Entry<String, File> entry : mavenModules.entrySet()) {
-            ProjectType detectedType = detectJavaProjectType(entry.getValue());
-
-            //If detected project type is default it isn't necessary to set default project type, it already exist
-            if (detectedType != ProjectType.DEFAULT) {
-                List<Property> properties = Collections.<Property>singletonList(
-                        new PropertyImpl("vfs:projectType", detectedType.toString()));
-                vfs.updateItem(vfs.getItemByPath(entry.getKey(), null, false, PropertyFilter.ALL_FILTER).getId(), properties, null);
-            }
-        }
-    }
-
-    /**
-     * Detecting project type of specified maven module path
-     *
-     * @param modulePath
-     *         - path where maven module is placed
-     * @return detected project type specified on source files
-     */
-    private ProjectType detectJavaProjectType(File modulePath) {
-        File pomXML = new File(modulePath, "pom.xml");
-        InputStream pomXMLStream = null;
-
-        try {
-            pomXMLStream = new FileInputStream(pomXML);
-            PomUtils.Pom pomObject = PomUtils.parse(pomXMLStream);
-
-            //Detecting multimodule project type
-            if (pomObject.getModules().size() != 0) {
-                return ProjectType.MULTI_MODULE;
-            }
-
-            //Detecting spring project type
-            File webXML = findWebXML(pomObject, modulePath);
-            if (webXML.exists() && detectSpringApp(webXML)) {
-                return ProjectType.SPRING;
-            }
-
-            //Detecting GAE project type
-            if (detectGAEApp(pomObject, modulePath)) {
-                return ProjectType.WAR;
-            }
-
-            String pomPackaging = pomObject.getPackaging();
-
-            //Detecting  simple jar lib project
-            if ("jar".equals(pomPackaging)) {
-                return ProjectType.JAR;
-            }
-            if ("war".equals(pomPackaging)) {
-                return ProjectType.WAR;
-            }
-        } catch (Exception e) { //ignore this exception, at the end it will return default project type
-        } finally {
-            if (pomXMLStream != null) {
-                try {
-                    pomXMLStream.close();
-                } catch (IOException e) {
-                }
-            }
-        }
-
-        return ProjectType.DEFAULT;
-    }
-
-    /**
-     * Find WEB-INF/web.xml for feature parsing, e.g. to find declaration of spring framework servlets.
-     *
-     * @param pomObject
-     *         - representing of pom.xml to find source path
-     * @param modulePath
-     *         - path where maven module is placed
-     * @return web.xml file object
-     */
-    private File findWebXML(PomUtils.Pom pomObject, File modulePath) {
-        //TODO not sure about this trick, learn about custom setting warSourceDirectory
-        File baseModulePath = new File(modulePath, pomObject.getSourcePath()).getParentFile();
-        File webXML = new File(baseModulePath, "webapp/WEB-INF/web.xml");
-
-        return webXML;
-    }
-
-    /**
-     * Detecting Google App Engine. Detect processing by finding WEB-INF/appengine-web.xml file. If it present it means
-     * that our project is GAE.
-     *
-     * @param pomObject
-     *         - representing of pom.xml to find source path
-     * @param modulePath
-     *         - path where maven module is placed
-     * @return - true if file found, otherwise false
-     */
-    private boolean detectGAEApp(PomUtils.Pom pomObject, File modulePath) {
-        File baseModulePath = new File(modulePath, pomObject.getSourcePath()).getParentFile();
-        File appengineWebXML = new File(baseModulePath, "webapp/WEB-INF/appengine-web.xml");
-
-        return appengineWebXML.exists();
-    }
-
-    /**
-     * Detect Spring application. Detect processing by parsing WEB-INF/web.xml file by presenting of DispatcherServlet
-     * declaration.
-     *
-     * @param webXML
-     *         - path to webapp/WEB-INF/web.xml file for searching DispatcherServlet declaration
-     * @return - true if specified declaration found, otherwise it returns false
-     * @throws ParserConfigurationException
-     *         - if parsing web.xml is failed
-     * @throws IOException
-     *         - if parsing web.xml is failed
-     * @throws SAXException
-     *         - if parsing web.xml is failed
-     */
-    private boolean detectSpringApp(File webXML) throws ParserConfigurationException, IOException, SAXException {
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document doc = dBuilder.parse(webXML);
-        doc.getDocumentElement().normalize();
-
-        NodeList nList = doc.getElementsByTagName("servlet-class");
-
-        if (nList.getLength() != 0) {
-            for (int i = 0; i < nList.getLength(); i++) {
-                if (nList.item(i).getTextContent().matches(".*DispatcherServlet.*")) {
-                    return true;
-                }
+                return true;
             }
         }
         return false;
     }
 
-    private ProjectType detectNonJavaProjectType(String sourcePath) {
-        LinkedList<File> q = new LinkedList<File>();
-        q.add(new File(sourcePath));
+    private void parseNonMavenProject(ItemNode sourceFolderNode) throws VirtualFileSystemException, ProjectPrepareException {
+        LinkedList<ItemNode> q = new LinkedList<ItemNode>();
+        q.add(sourceFolderNode);
+
         while (!q.isEmpty()) {
-            File current = q.pop();
-            File[] list = current.listFiles();
-            if (list != null) {
-                for (File f : list) {
-                    if (f.isDirectory()) {
-                        q.push(f);
-                    } else {
-                        if (f.getName().endsWith(".rb")) {
-                            return ProjectType.RUBY_ON_RAILS;
-                        } else if (f.getName().equals("package.json") || f.getName().equals("app.js") || f.getName().equals("server.js")) {
-                            return ProjectType.NODE_JS;
-                        } else if (f.getName().endsWith(".js")) {
-                            return ProjectType.JAVASCRIPT;
-                        } else if (f.getName().endsWith(".py")) {
-                            return ProjectType.PYTHON;
-                        } else if (f.getName().endsWith(".php")) {
-                            return ProjectType.PHP;
-                        }
-                    }
+            ItemNode node = q.pop();
+            if (node.getItem() instanceof FolderImpl) {
+                q.addAll(node.getChildren());
+            } else if (node.getItem() instanceof FileImpl) {
+                ProjectType type = null;
+
+                if (node.getItem().getName().endsWith(".php")) {
+                    type = ProjectType.PHP;
+                } else if (node.getItem().getName().endsWith(".py")) {
+                    type = ProjectType.PYTHON;
+                } else if (node.getItem().getName().endsWith(".rb")) {
+                    type = ProjectType.RUBY_ON_RAILS;
+                } else if (node.getItem().getName().equals("server.js") || node.getItem().getName().equals("app.js") ||
+                           node.getItem().getName().equals("package.json")) {
+                    type = ProjectType.NODE_JS;
                 }
+
+                if (type == null) {
+                    throw new ProjectPrepareException(400, "autodetection:failed");
+                }
+
+                List<Property> props = new ArrayList<Property>();
+                props.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+                props.add(new PropertyImpl("vfs:projectType", type.toString()));
+
+                vfs.updateItem(node.getItem().getParentId(), props, null);
             }
         }
-        return null;
     }
 
-    private void writeNonJavaProjectProperty(String folderId, ProjectType type) throws VirtualFileSystemException {
-        List<Property> properties = new ArrayList<Property>(2);
-        properties.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-        properties.add(new PropertyImpl("vfs:projectType", type.toString()));
+    private void parseMavenProject(ItemNode sourceFolderNode)
+            throws VirtualFileSystemException, ParserConfigurationException, SAXException, XPathExpressionException, IOException {
+        LinkedList<ItemNode> q = new LinkedList<ItemNode>();
+        q.add(sourceFolderNode);
 
-        vfs.updateItem(folderId, properties, null);
+        while (!q.isEmpty()) {
+            ItemNode node = q.pop();
+            if (node.getItem() instanceof FolderImpl) {
+                q.addAll(node.getChildren());
+            } else if (node.getItem() instanceof FileImpl && "pom.xml".equals(node.getItem().getName())) {
+                ProjectType type = detectMavenModuleProjectType(node);
+
+                List<Property> props = new ArrayList<Property>();
+
+                Item itemToUpdate = vfs.getItem(node.getItem().getParentId(), false, PropertyFilter.ALL_FILTER);
+                props.addAll(itemToUpdate.getProperties());
+                props.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+                props.add(new PropertyImpl("vfs:projectType", type.toString()));
+
+                if (multiModuleProject) {
+                    props.add(new PropertyImpl("Maven Module", "true"));
+                }
+
+                vfs.updateItem(itemToUpdate.getId(), props, null);
+            }
+        }
+    }
+
+    private ProjectType detectMavenModuleProjectType(ItemNode pomXmlNode)
+            throws VirtualFileSystemException, ParserConfigurationException, SAXException, XPathExpressionException, IOException {
+        ContentStream parentPom = vfs.getContent(pomXmlNode.getItem().getId());
+        PomUtils.Pom pom = PomUtils.parse(parentPom.getStream());
+
+        if (pom.getModules().size() > 0) {
+            return ProjectType.MULTI_MODULE;
+        }
+
+        for (PomUtils.Dependency dependency : pom.getDependencies()) {
+            if (SPRING_FRAMEWORK_PATTERN.matcher(dependency.getGroupId()).find()) {
+                return ProjectType.SPRING;
+            }
+        }
+
+        if ("war".equals(pom.getPackaging())) {
+            return ProjectType.WAR;
+        }
+        if ("jar".equals(pom.getPackaging())) {
+            return ProjectType.JAR;
+        }
+
+        return ProjectType.DEFAULT;
     }
 }

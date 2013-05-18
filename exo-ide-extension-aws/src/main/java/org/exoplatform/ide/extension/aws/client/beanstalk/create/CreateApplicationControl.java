@@ -25,19 +25,21 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.api.PropertiesChangedEvent;
+import org.exoplatform.ide.client.framework.project.api.PropertiesChangedHandler;
 import org.exoplatform.ide.extension.aws.client.AWSClientBundle;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 17, 2012 11:26:26 AM anya $
  */
-public class CreateApplicationControl extends SimpleControl implements IDEControl,
-            ProjectOpenedHandler, ProjectClosedHandler
-{
-    private static final String ID = AWSExtension.LOCALIZATION_CONSTANT.createApplicationControlId();
+public class CreateApplicationControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler,
+                                                           PropertiesChangedHandler {
+    private static final String ID     = AWSExtension.LOCALIZATION_CONSTANT.createApplicationControlId();
 
-    private static final String TITLE = AWSExtension.LOCALIZATION_CONSTANT.createApplicationControlTitle();
+    private static final String TITLE  = AWSExtension.LOCALIZATION_CONSTANT.createApplicationControlTitle();
 
     private static final String PROMPT = AWSExtension.LOCALIZATION_CONSTANT.createApplicationControlPrompt();
 
@@ -54,21 +56,34 @@ public class CreateApplicationControl extends SimpleControl implements IDEContro
     public void initialize() {
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        IDE.addHandler(PropertiesChangedEvent.TYPE, this);
         setVisible(true);
     }
 
-    /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
-     * .project.ProjectOpenedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
+     *      .project.ProjectOpenedEvent)
+     */
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
         setEnabled(event.getProject() != null && AWSExtension.canBeDeployedToBeanstalk(event.getProject()));
     }
 
-    /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
-     * .project.ProjectClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+     *      .project.ProjectClosedEvent)
+     */
     @Override
     public void onProjectClosed(ProjectClosedEvent event) {
         setEnabled(false);
     }
 
+    @Override
+    public void onPropertiesChanged(PropertiesChangedEvent event) {
+        ProjectModel project = event.getProject();
+        while (project.getProject() != null) {
+            project = project.getProject();
+        }
+        setEnabled(AWSExtension.canBeDeployedToBeanstalk(project));
+    }
 }

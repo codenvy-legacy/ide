@@ -14,8 +14,8 @@
 
 package com.google.collide.dto;
 
-import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
-import org.exoplatform.ide.dtogen.shared.RoutingType;
+import com.codenvy.ide.dtogen.shared.ClientToServerDto;
+import com.codenvy.ide.dtogen.shared.RoutingType;
 
 /** Lets the client request Tango invalidation payloads from a version onward. */
 @RoutingType(type = RoutingTypes.RECOVERFROMDROPPEDTANGOINVALIDATION)

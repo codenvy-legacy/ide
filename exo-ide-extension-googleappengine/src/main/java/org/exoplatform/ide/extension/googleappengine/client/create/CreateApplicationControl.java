@@ -25,21 +25,24 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.api.PropertiesChangedEvent;
+import org.exoplatform.ide.client.framework.project.api.PropertiesChangedHandler;
 import org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * Control for creating new application on Google App Engine.
- *
+ * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 21, 2012 2:11:53 PM anya $
  */
-public class CreateApplicationControl extends SimpleControl implements IDEControl, 
-            ProjectOpenedHandler, ProjectClosedHandler {
-    
-    private static final String ID = "PaaS/Google App Engine/Create";
+public class CreateApplicationControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler,
+                                                           PropertiesChangedHandler {
 
-    private static final String TITLE = GoogleAppEngineExtension.GAE_LOCALIZATION.createApplicationControlTitle();
+    private static final String ID     = "PaaS/Google App Engine/Create";
+
+    private static final String TITLE  = GoogleAppEngineExtension.GAE_LOCALIZATION.createApplicationControlTitle();
 
     private static final String PROMPT = GoogleAppEngineExtension.GAE_LOCALIZATION.createApplicationControlPrompt();
 
@@ -47,6 +50,7 @@ public class CreateApplicationControl extends SimpleControl implements IDEContro
         super(ID);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(PropertiesChangedEvent.TYPE, this);
         setTitle(TITLE);
         setPrompt(PROMPT);
         setImages(GAEClientBundle.INSTANCE.createApplicationConrtol(), GAEClientBundle.INSTANCE.createApplicationConrtolDisabled());
@@ -72,4 +76,12 @@ public class CreateApplicationControl extends SimpleControl implements IDEContro
         }
     }
 
+    @Override
+    public void onPropertiesChanged(PropertiesChangedEvent event) {
+        ProjectModel project = event.getProject();
+        while (project.getProject() != null) {
+            project = project.getProject();
+        }
+        setEnabled(GoogleAppEngineExtension.isAppEngineProject(project));
+    }
 }

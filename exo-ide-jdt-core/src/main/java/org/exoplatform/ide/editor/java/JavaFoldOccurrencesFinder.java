@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.editor.java;
 
+import com.codenvy.ide.commons.shared.TextUtils;
 import com.google.collide.client.editor.folding.AbstractFoldRange;
 import com.google.collide.client.editor.folding.FoldOccurrencesFinder;
 
@@ -29,7 +30,6 @@ import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.editor.shared.text.IRegion;
 import org.exoplatform.ide.editor.shared.text.Region;
-import org.exoplatform.ide.shared.util.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;

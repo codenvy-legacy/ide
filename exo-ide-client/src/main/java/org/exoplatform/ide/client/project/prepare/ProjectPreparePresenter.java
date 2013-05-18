@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.project.prepare;
 
+import com.codenvy.ide.commons.shared.ProjectType;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -33,12 +34,13 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
 import org.exoplatform.ide.client.framework.project.ConvertToProjectHandler;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.vfs.client.JSONSerializer;
@@ -70,9 +72,9 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
     }
 
     /** Instance of opened {@link Display}. */
-    private Display display;
+    private Display        display;
 
-    private String folderId;
+    private String         folderId;
 
     private List<Property> properties;
 
@@ -83,10 +85,8 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
     @Override
     public void onConvertToProject(final ConvertToProjectEvent event) {
         folderId = event.getFolderId();
-        String url =
-                Utils.getRestContext() + Utils.getWorkspaceName() + "/project/prepare?vfsid=" + event.getVfsId() + "&folderid=" + event.getFolderId() +
-                (event.getProjectType() != null ? "&projecttype=" + event.getProjectType() : "");
-
+        String url = Utils.getRestContext() + "/ide/project/prepare?vfsid=" + event.getVfsId() + "&folderid=" + event.getFolderId() +
+                     (event.getProjectType() != null ? "&projecttype=" + event.getProjectType() : "");
         properties = event.getProperties();
         String data = JSONSerializer.PROPERTY_SERIALIZER.fromCollection(event.getProperties()).toString();
 
@@ -98,7 +98,7 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
                         .send(new AsyncRequestCallback<Void>() {
                             @Override
                             protected void onSuccess(Void result) {
-                                //Conversion successful, open project
+                                // Conversion successful, open project
                                 IDE.fireEvent(new OutputEvent("Project preparing successful.", OutputMessage.Type.INFO));
                                 new Timer() {
                                     @Override
@@ -106,16 +106,18 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
                                         openPreparedProject(event.getFolderId());
                                     }
                                 }.schedule(500);
+                                writeTarget(event.getFolderId());
                             }
 
                             @Override
                             protected void onFailure(Throwable e) {
-                                //Show user selection menu
+                                // Show user selection menu
                                 createAndBindDisplay();
                             }
                         });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e.getMessage()));
+            createAndBindDisplay();
         }
     }
 
@@ -123,13 +125,66 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
     public void initialize() {
     }
 
+    private void writeTarget(String folderId) {
+        try {
+            ProjectModel project = new ProjectModel();
+            ItemWrapper item = new ItemWrapper(project);
+            ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
+            VirtualFileSystem.getInstance().getItemById(folderId, new AsyncRequestCallback<ItemWrapper>(unmarshaller) {
+                @Override
+                protected void onSuccess(ItemWrapper result) {
+                    boolean targetSet = false;
+                    Property pt = result.getItem().getProperty("vfs:projectType");
+                    Property target = getTarget(pt);
+                    for (Property p : result.getItem().getProperties()) {
+                        if (p.getName().equals(target.getName())) {
+                            p.setValue(target.getValue());
+                            targetSet = true;
+                        }
+                    }
+                    if (!targetSet) {
+                        result.getItem().getProperties().add(target);
+                    }
+                    writeUserPropertiesToProject(result.getItem());
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    IDE.fireEvent(new ExceptionThrownEvent(exception));
+                }
+            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    private Property getTarget(Property currentType) {
+        List<String> target = new ArrayList<String>();
+        org.exoplatform.ide.client.framework.project.ProjectType currentProjType =
+                                                                                   org.exoplatform.ide.client.framework.project.ProjectType.fromValue(currentType.getValue()
+                                                                                                                                                                 .get(0));
+        List<PaaS> paases = IDE.getInstance().getPaaSes();
+        for (PaaS paas : paases) {
+            if (paas.getSupportedProjectTypes().contains(currentProjType)) {
+                target.add(paas.getId());
+            }
+        }
+        return new PropertyImpl("exoide:target", target);
+    }
+
     /** Creates and binds display. */
     private void createAndBindDisplay() {
         display = GWT.create(Display.class);
 
-        String[] types = new String[]{"Jar", "War", "Spring", "JavaScript", "Rails", "Python", "PHP"};
-
+        ProjectType[] vals = ProjectType.values();
+        int valsLen = vals.length;
+        String[] types = new String[valsLen];
+        for (int i = 0; i < valsLen; i++) {
+            types[i] = vals[i].toString();
+        }
         display.setProjectTypeValues(types);
+
         org.exoplatform.ide.client.framework.module.IDE.getInstance().openView(display.asView());
         display.getProjectTypeField().setValue(types[0]);
 
@@ -137,6 +192,7 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
             @Override
             public void onClick(ClickEvent event) {
                 setUserProjectType(display.getProjectTypeField().getValue());
+
             }
         });
 
@@ -153,7 +209,9 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
         properties.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
         properties.addAll(this.properties);
         if (!"none".equals(projectType)) {
-            properties.add(new PropertyImpl("vfs:projectType", ProjectType.fromValue(projectType).value()));
+            Property pt = new PropertyImpl("vfs:projectType", ProjectType.fromValue(projectType).toString());
+            properties.add(pt);
+            properties.add(getTarget(pt));
         }
 
         try {
@@ -198,6 +256,7 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         } finally {
+            IDE.fireEvent(new RefreshBrowserEvent());
             if (display != null) {
                 IDE.getInstance().closeView(display.asView().getId());
             }
@@ -217,7 +276,6 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    exception.printStackTrace();
                     IDE.fireEvent(new ExceptionThrownEvent("Failed to opened prepared project."));
                 }
             });

@@ -41,9 +41,11 @@ import java.io.*;
 import java.net.URL;
 import java.util.*;
 
-import static org.exoplatform.ide.commons.FileUtils.createTempDirectory;
-import static org.exoplatform.ide.commons.FileUtils.downloadFile;
-import static org.exoplatform.ide.commons.ZipUtils.unzip;
+import static com.codenvy.ide.commons.server.FileUtils.createTempDirectory;
+import static com.codenvy.ide.commons.server.FileUtils.downloadFile;
+import static com.codenvy.ide.commons.server.ZipUtils.unzip;
+
+
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>

@@ -21,9 +21,9 @@
 // GENERATED SOURCE. DO NOT EDIT.
 package com.codenvy.ide.collaboration.dto.server;
 
+import com.codenvy.ide.dtogen.server.JsonSerializable;
 import com.google.gson.*;
 
-import org.exoplatform.ide.dtogen.server.JsonSerializable;
 
 import java.util.Map;
 
@@ -329,7 +329,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class ChatMessageImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class ChatMessageImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.codenvy.ide.collaboration.dto.ChatMessage, JsonSerializable {
 
         private ChatMessageImpl() {
@@ -575,7 +575,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class ChatParticipantAddImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class ChatParticipantAddImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.codenvy.ide.collaboration.dto.ChatParticipantAdd, JsonSerializable {
 
         private ChatParticipantAddImpl() {
@@ -716,7 +716,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class ChatParticipantRemoveImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class ChatParticipantRemoveImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.codenvy.ide.collaboration.dto.ChatParticipantRemove, JsonSerializable {
 
         private ChatParticipantRemoveImpl() {
@@ -892,7 +892,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetChatParticipantsImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetChatParticipantsImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.codenvy.ide.collaboration.dto.GetChatParticipants, JsonSerializable {
 
         private GetChatParticipantsImpl() {
@@ -994,7 +994,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetChatParticipantsResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetChatParticipantsResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.codenvy.ide.collaboration.dto.GetChatParticipantsResponse, JsonSerializable {
 
         private GetChatParticipantsResponseImpl() {
@@ -1017,9 +1017,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.codenvy.ide.collaboration.dto.ParticipantInfo> getParticipants() {
+        public com.codenvy.ide.json.shared.JsonArray<com.codenvy.ide.collaboration.dto.ParticipantInfo> getParticipants() {
             ensureParticipants();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(participants);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(participants);
         }
 
         public GetChatParticipantsResponseImpl setParticipants(java.util.List<ParticipantInfoImpl> v) {
@@ -1131,7 +1131,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class ItemImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class ItemImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.codenvy.ide.collaboration.dto.Item, JsonSerializable {
 
         public static ItemImpl make() {
@@ -1250,9 +1250,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.codenvy.ide.collaboration.dto.Property> getProperties() {
+        public com.codenvy.ide.json.shared.JsonArray<com.codenvy.ide.collaboration.dto.Property> getProperties() {
             ensureProperties();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(properties);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(properties);
         }
 
         public ItemImpl setProperties(java.util.List<PropertyImpl> v) {
@@ -1282,9 +1282,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonStringMap<com.codenvy.ide.collaboration.dto.Link> getLinks() {
+        public com.codenvy.ide.json.shared.JsonStringMap<com.codenvy.ide.collaboration.dto.Link> getLinks() {
             ensureLinks();
-            return (org.exoplatform.ide.json.shared.JsonStringMap)new org.exoplatform.ide.json.server.JsonStringMapAdapter(links);
+            return (com.codenvy.ide.json.shared.JsonStringMap)new com.codenvy.ide.json.server.JsonStringMapAdapter(links);
         }
 
         public ItemImpl setLinks(java.util.Map<String, LinkImpl> v) {
@@ -1537,7 +1537,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class ItemCreatedDtoImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class ItemCreatedDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.codenvy.ide.collaboration.dto.ItemCreatedDto, JsonSerializable {
 
         private ItemCreatedDtoImpl() {
@@ -1678,7 +1678,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class ItemDeletedDtoImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class ItemDeletedDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.codenvy.ide.collaboration.dto.ItemDeletedDto, JsonSerializable {
 
         private ItemDeletedDtoImpl() {
@@ -1854,7 +1854,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class ItemMovedDtoImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class ItemMovedDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.codenvy.ide.collaboration.dto.ItemMovedDto, JsonSerializable {
 
         private ItemMovedDtoImpl() {
@@ -2030,7 +2030,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class ItemRenamedDtoImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class ItemRenamedDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.codenvy.ide.collaboration.dto.ItemRenamedDto, JsonSerializable {
 
         private ItemRenamedDtoImpl() {
@@ -2206,7 +2206,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class LinkImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class LinkImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.codenvy.ide.collaboration.dto.Link, JsonSerializable {
 
         public static LinkImpl make() {
@@ -2501,7 +2501,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class ProjectClosedDtoImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class ProjectClosedDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.codenvy.ide.collaboration.dto.ProjectClosedDto, JsonSerializable {
 
         private ProjectClosedDtoImpl() {
@@ -2673,7 +2673,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class ProjectOpenedDtoImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class ProjectOpenedDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.codenvy.ide.collaboration.dto.ProjectOpenedDto, JsonSerializable {
 
         private ProjectOpenedDtoImpl() {
@@ -2845,7 +2845,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class PropertyImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class PropertyImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.codenvy.ide.collaboration.dto.Property, JsonSerializable {
 
         public static PropertyImpl make() {
@@ -2877,9 +2877,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getValue() {
+        public com.codenvy.ide.json.shared.JsonArray<java.lang.String> getValue() {
             ensureValue();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(value);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(value);
         }
 
         public PropertyImpl setValue(java.util.List<java.lang.String> v) {

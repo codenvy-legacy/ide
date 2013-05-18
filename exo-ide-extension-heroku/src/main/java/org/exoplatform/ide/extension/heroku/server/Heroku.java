@@ -18,12 +18,13 @@
  */
 package org.exoplatform.ide.extension.heroku.server;
 
+import com.codenvy.ide.commons.server.ContainerUtils;
+import com.codenvy.ide.commons.server.ParsingResponseException;
+
 import org.eclipse.jgit.transport.URIish;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.commons.ContainerUtils;
-import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
 import org.exoplatform.ide.extension.heroku.shared.Stack;
 import org.exoplatform.ide.extension.ssh.server.SshKey;

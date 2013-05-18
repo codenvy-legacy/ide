@@ -32,7 +32,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.exoplatform.ide.commons.ContainerUtils.readValuesParam;
+import static com.codenvy.ide.commons.server.ContainerUtils.readValuesParam;
+
+
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>

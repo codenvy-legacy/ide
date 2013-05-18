@@ -15,9 +15,9 @@
 package com.google.collide.client.editor.renderer;
 
 import com.codenvy.ide.client.util.Executor;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
 
 /**
  * An executor that will defer the commands given to {@link #execute(Runnable)}

@@ -44,11 +44,31 @@ import org.eclipse.jdt.client.packaging.PackageExplorerPresenter;
 import org.eclipse.jdt.client.refactoring.RefactoringClientServiceImpl;
 import org.eclipse.jdt.client.refactoring.rename.RefactoringRenameControl;
 import org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter;
-import org.eclipse.jdt.client.templates.*;
+import org.eclipse.jdt.client.templates.CodeTemplateContextType;
+import org.eclipse.jdt.client.templates.ContextTypeRegistry;
+import org.eclipse.jdt.client.templates.ElementTypeResolver;
+import org.eclipse.jdt.client.templates.ExceptionVariableNameResolver;
+import org.eclipse.jdt.client.templates.FieldResolver;
+import org.eclipse.jdt.client.templates.ImportsResolver;
+import org.eclipse.jdt.client.templates.JavaContextType;
+import org.eclipse.jdt.client.templates.JavaDocContextType;
+import org.eclipse.jdt.client.templates.LinkResolver;
+import org.eclipse.jdt.client.templates.LocalVarResolver;
+import org.eclipse.jdt.client.templates.NameResolver;
+import org.eclipse.jdt.client.templates.StaticImportResolver;
+import org.eclipse.jdt.client.templates.TemplateStore;
+import org.eclipse.jdt.client.templates.TypeResolver;
+import org.eclipse.jdt.client.templates.TypeVariableResolver;
+import org.eclipse.jdt.client.templates.VarResolver;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.framework.application.event.*;
+import org.exoplatform.ide.client.framework.application.event.ApplicationClosedEvent;
+import org.exoplatform.ide.client.framework.application.event.ApplicationClosedHandler;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.editor.AddCodeFormatterEvent;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -62,7 +82,6 @@ import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
-import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypesInfoList;
 import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
@@ -83,6 +102,8 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
                                                        VfsChangedHandler {
 
     public static String DOC_CONTEXT;
+
+    static String REST_CONTEXT;
 
     private static final HoverResources resources = GWT.create(HoverResources.class);
 

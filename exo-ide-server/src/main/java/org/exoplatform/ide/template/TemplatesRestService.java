@@ -18,13 +18,14 @@
  */
 package org.exoplatform.ide.template;
 
+import com.codenvy.ide.commons.server.ParsingResponseException;
+import com.codenvy.ide.commons.server.StringUtils;
+
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.everrest.core.impl.provider.json.*;
 import org.exoplatform.ide.FileTemplate;
 import org.exoplatform.ide.ProjectTemplate;
-import org.exoplatform.ide.commons.ParsingResponseException;
-import org.exoplatform.ide.commons.StringUtils;
 import org.exoplatform.ide.vfs.server.RequestContext;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;

@@ -31,18 +31,18 @@ public class DtoClientImpls {
     public static final String CLIENT_SERVER_PROTOCOL_HASH = "d4930e5ce742090ffe80386650d985fbcd832c45";
 
 
-    public static class AddMembersResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class AddMembersResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.AddMembersResponse {
         protected AddMembersResponseImpl() {
         }
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getInvalidEmails() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<java.lang.String> getInvalidEmails() /*-{
             return this["invalidEmails"];
         }-*/;
 
         public final native AddMembersResponseImpl setInvalidEmails(
-                org.exoplatform.ide.json.shared.JsonArray<java.lang.String> invalidEmails) /*-{
+                com.codenvy.ide.json.shared.JsonArray<java.lang.String> invalidEmails) /*-{
             this["invalidEmails"] = invalidEmails;
             return this;
         }-*/;
@@ -52,12 +52,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> getNewMembers() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> getNewMembers() /*-{
             return this["newMembers"];
         }-*/;
 
         public final native AddMembersResponseImpl setNewMembers(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> newMembers) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> newMembers) /*-{
             this["newMembers"] = newMembers;
             return this;
         }-*/;
@@ -74,7 +74,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class AddProjectMembersImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class AddProjectMembersImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.AddProjectMembers {
         protected AddProjectMembersImpl() {
         }
@@ -129,7 +129,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class AddWorkspaceMembersImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class AddWorkspaceMembersImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.AddWorkspaceMembers {
         protected AddWorkspaceMembersImpl() {
         }
@@ -198,7 +198,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class BeginUploadSessionImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class BeginUploadSessionImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.BeginUploadSession {
         protected BeginUploadSessionImpl() {
         }
@@ -232,12 +232,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getWorkspacePathsToReplace() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<java.lang.String> getWorkspacePathsToReplace() /*-{
             return this["workspacePathsToReplace"];
         }-*/;
 
         public final native BeginUploadSessionImpl setWorkspacePathsToReplace(
-                org.exoplatform.ide.json.shared.JsonArray<java.lang.String> workspacePathsToReplace) /*-{
+                com.codenvy.ide.json.shared.JsonArray<java.lang.String> workspacePathsToReplace) /*-{
             this["workspacePathsToReplace"] = workspacePathsToReplace;
             return this;
         }-*/;
@@ -247,12 +247,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getWorkspacePathsToUnzip() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<java.lang.String> getWorkspacePathsToUnzip() /*-{
             return this["workspacePathsToUnzip"];
         }-*/;
 
         public final native BeginUploadSessionImpl setWorkspacePathsToUnzip(
-                org.exoplatform.ide.json.shared.JsonArray<java.lang.String> workspacePathsToUnzip) /*-{
+                com.codenvy.ide.json.shared.JsonArray<java.lang.String> workspacePathsToUnzip) /*-{
             this["workspacePathsToUnzip"] = workspacePathsToUnzip;
             return this;
         }-*/;
@@ -262,12 +262,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getWorkspaceDirsToCreate() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<java.lang.String> getWorkspaceDirsToCreate() /*-{
             return this["workspaceDirsToCreate"];
         }-*/;
 
         public final native BeginUploadSessionImpl setWorkspaceDirsToCreate(
-                org.exoplatform.ide.json.shared.JsonArray<java.lang.String> workspaceDirsToCreate) /*-{
+                com.codenvy.ide.json.shared.JsonArray<java.lang.String> workspaceDirsToCreate) /*-{
             this["workspaceDirsToCreate"] = workspaceDirsToCreate;
             return this;
         }-*/;
@@ -298,7 +298,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class ChangeRoleInfoImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class ChangeRoleInfoImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.ChangeRoleInfo {
         protected ChangeRoleInfoImpl() {
         }
@@ -368,17 +368,17 @@ public class DtoClientImpls {
     }
 
 
-    public static class ClientToServerDocOpImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class ClientToServerDocOpImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.ClientToServerDocOp {
         protected ClientToServerDocOpImpl() {
         }
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getDocOps2() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<java.lang.String> getDocOps2() /*-{
             return this["docOps2"];
         }-*/;
 
-        public final native ClientToServerDocOpImpl setDocOps2(org.exoplatform.ide.json.shared.JsonArray<java.lang.String> docOps2) /*-{
+        public final native ClientToServerDocOpImpl setDocOps2(com.codenvy.ide.json.shared.JsonArray<java.lang.String> docOps2) /*-{
             this["docOps2"] = docOps2;
             return this;
         }-*/;
@@ -465,7 +465,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class CloseEditorImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class CloseEditorImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.CloseEditor {
         protected CloseEditorImpl() {
         }
@@ -506,7 +506,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class CodeBlockImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class CodeBlockImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.CodeBlock {
         protected CodeBlockImpl() {
         }
@@ -610,7 +610,7 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.CodeBlock> getChildren() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.CodeBlock> getChildren() /*-{
             if (!this.hasOwnProperty(7)) {
                 this[7] = [];
             }
@@ -618,7 +618,7 @@ public class DtoClientImpls {
         }-*/;
 
         public final native CodeBlockImpl setChildren(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.CodeBlock> children) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.CodeBlock> children) /*-{
             this[7] = children;
             return this;
         }-*/;
@@ -633,7 +633,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class CodeBlockAssociationImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class CodeBlockAssociationImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.CodeBlockAssociation {
         protected CodeBlockAssociationImpl() {
         }
@@ -714,7 +714,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class CodeErrorImpl extends org.exoplatform.ide.json.client.Jso implements com.google.collide.dto.CodeError {
+    public static class CodeErrorImpl extends com.codenvy.ide.json.client.Jso implements com.google.collide.dto.CodeError {
         protected CodeErrorImpl() {
         }
 
@@ -782,7 +782,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class CodeErrorsImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class CodeErrorsImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.CodeErrors {
         protected CodeErrorsImpl() {
         }
@@ -802,12 +802,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.CodeError> getCodeErrors() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.CodeError> getCodeErrors() /*-{
             return this["codeErrors"];
         }-*/;
 
         public final native CodeErrorsImpl setCodeErrors(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.CodeError> codeErrors) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.CodeError> codeErrors) /*-{
             this["codeErrors"] = codeErrors;
             return this;
         }-*/;
@@ -824,7 +824,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class CodeErrorsRequestImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class CodeErrorsRequestImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.CodeErrorsRequest {
         protected CodeErrorsRequestImpl() {
         }
@@ -865,17 +865,17 @@ public class DtoClientImpls {
     }
 
 
-    public static class CodeGraphImpl extends org.exoplatform.ide.json.client.Jso implements com.google.collide.dto.CodeGraph {
+    public static class CodeGraphImpl extends com.codenvy.ide.json.client.Jso implements com.google.collide.dto.CodeGraph {
         protected CodeGraphImpl() {
         }
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonStringMap<com.google.collide.dto.CodeBlock> getCodeBlockMap() /*-{
+        public final native com.codenvy.ide.json.shared.JsonStringMap<com.google.collide.dto.CodeBlock> getCodeBlockMap() /*-{
             return this["codeBlockMap"];
         }-*/;
 
         public final native CodeGraphImpl setCodeBlockMap(
-                org.exoplatform.ide.json.shared.JsonStringMap<com.google.collide.dto.CodeBlock> codeBlockMap) /*-{
+                com.codenvy.ide.json.shared.JsonStringMap<com.google.collide.dto.CodeBlock> codeBlockMap) /*-{
             this["codeBlockMap"] = codeBlockMap;
             return this;
         }-*/;
@@ -899,13 +899,13 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.InheritanceAssociation>
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.InheritanceAssociation>
         getInheritanceAssociations() /*-{
             return this["inheritanceAssociations"];
         }-*/;
 
         public final native CodeGraphImpl setInheritanceAssociations(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.InheritanceAssociation> inheritanceAssociations) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.InheritanceAssociation> inheritanceAssociations) /*-{
             this["inheritanceAssociations"] = inheritanceAssociations;
             return this;
         }-*/;
@@ -915,12 +915,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.TypeAssociation> getTypeAssociations() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.TypeAssociation> getTypeAssociations() /*-{
             return this["typeAssociations"];
         }-*/;
 
         public final native CodeGraphImpl setTypeAssociations(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.TypeAssociation> typeAssociations) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.TypeAssociation> typeAssociations) /*-{
             this["typeAssociations"] = typeAssociations;
             return this;
         }-*/;
@@ -930,12 +930,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ImportAssociation> getImportAssociations() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ImportAssociation> getImportAssociations() /*-{
             return this["importAssociations"];
         }-*/;
 
         public final native CodeGraphImpl setImportAssociations(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ImportAssociation> importAssociations) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ImportAssociation> importAssociations) /*-{
             this["importAssociations"] = importAssociations;
             return this;
         }-*/;
@@ -952,7 +952,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class CodeGraphFreshnessImpl extends org.exoplatform.ide.json.client.Jso
+    public static class CodeGraphFreshnessImpl extends com.codenvy.ide.json.client.Jso
             implements com.google.collide.dto.CodeGraphFreshness {
         protected CodeGraphFreshnessImpl() {
         }
@@ -1063,7 +1063,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class CodeGraphRequestImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class CodeGraphRequestImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.CodeGraphRequest {
         protected CodeGraphRequestImpl() {
         }
@@ -1118,7 +1118,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class CodeGraphResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class CodeGraphResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.CodeGraphResponse {
         protected CodeGraphResponseImpl() {
         }
@@ -1229,7 +1229,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class CodeReferenceImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class CodeReferenceImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.CodeReference {
         protected CodeReferenceImpl() {
         }
@@ -1339,17 +1339,17 @@ public class DtoClientImpls {
     }
 
 
-    public static class CodeReferencesImpl extends org.exoplatform.ide.json.client.Jso implements com.google.collide.dto.CodeReferences {
+    public static class CodeReferencesImpl extends com.codenvy.ide.json.client.Jso implements com.google.collide.dto.CodeReferences {
         protected CodeReferencesImpl() {
         }
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.CodeReference> getReferences() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.CodeReference> getReferences() /*-{
             return this["references"];
         }-*/;
 
         public final native CodeReferencesImpl setReferences(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.CodeReference> references) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.CodeReference> references) /*-{
             this["references"] = references;
             return this;
         }-*/;
@@ -1366,7 +1366,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class ConflictChunkImpl extends org.exoplatform.ide.json.client.Jso implements com.google.collide.dto.ConflictChunk {
+    public static class ConflictChunkImpl extends com.codenvy.ide.json.client.Jso implements com.google.collide.dto.ConflictChunk {
         protected ConflictChunkImpl() {
         }
 
@@ -1462,7 +1462,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class ConflictChunkResolvedImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class ConflictChunkResolvedImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.ConflictChunkResolved {
         protected ConflictChunkResolvedImpl() {
         }
@@ -1532,7 +1532,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class CreateAppEngineAppStatusImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class CreateAppEngineAppStatusImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.CreateAppEngineAppStatus {
         protected CreateAppEngineAppStatusImpl() {
         }
@@ -1560,7 +1560,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class CreateProjectImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class CreateProjectImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.CreateProject {
         protected CreateProjectImpl() {
         }
@@ -1601,7 +1601,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class CreateProjectResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class CreateProjectResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.CreateProjectResponse {
         protected CreateProjectResponseImpl() {
         }
@@ -1628,7 +1628,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class CreateWorkspaceImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class CreateWorkspaceImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.CreateWorkspace {
         protected CreateWorkspaceImpl() {
         }
@@ -1697,7 +1697,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class CreateWorkspaceResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class CreateWorkspaceResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.CreateWorkspaceResponse {
         protected CreateWorkspaceResponseImpl() {
         }
@@ -1724,7 +1724,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class CubePingImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class CubePingImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.CubePing {
         protected CubePingImpl() {
         }
@@ -1819,7 +1819,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class DeployWorkspaceStatusImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class DeployWorkspaceStatusImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.DeployWorkspaceStatus {
         protected DeployWorkspaceStatusImpl() {
         }
@@ -1874,7 +1874,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class DiffChunkResponseImpl extends org.exoplatform.ide.json.client.Jso
+    public static class DiffChunkResponseImpl extends com.codenvy.ide.json.client.Jso
             implements com.google.collide.dto.DiffChunkResponse {
         protected DiffChunkResponseImpl() {
         }
@@ -1930,7 +1930,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class DiffStatsDtoImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class DiffStatsDtoImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.DiffStatsDto {
         protected DiffStatsDtoImpl() {
         }
@@ -2018,12 +2018,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.DirInfo> getSubDirectories() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.DirInfo> getSubDirectories() /*-{
             return this["subDirectories"];
         }-*/;
 
         public final native DirInfoImpl setSubDirectories(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.DirInfo> subDirectories) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.DirInfo> subDirectories) /*-{
             this["subDirectories"] = subDirectories;
             return this;
         }-*/;
@@ -2033,11 +2033,11 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.FileInfo> getFiles() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.FileInfo> getFiles() /*-{
             return this["files"];
         }-*/;
 
-        public final native DirInfoImpl setFiles(org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.FileInfo> files) /*-{
+        public final native DirInfoImpl setFiles(com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.FileInfo> files) /*-{
             this["files"] = files;
             return this;
         }-*/;
@@ -2054,17 +2054,17 @@ public class DtoClientImpls {
     }
 
 
-    public static class DocOpImpl extends org.exoplatform.ide.json.client.Jso implements com.google.collide.dto.DocOp {
+    public static class DocOpImpl extends com.codenvy.ide.json.client.Jso implements com.google.collide.dto.DocOp {
         protected DocOpImpl() {
         }
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.DocOpComponent> getComponents() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.DocOpComponent> getComponents() /*-{
             return this["components"];
         }-*/;
 
         public final native DocOpImpl setComponents(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.DocOpComponent> components) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.DocOpComponent> components) /*-{
             this["components"] = components;
             return this;
         }-*/;
@@ -2199,7 +2199,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class DocOpComponentImpl extends org.exoplatform.ide.json.client.Jso implements com.google.collide.dto.DocOpComponent {
+    public static class DocOpComponentImpl extends com.codenvy.ide.json.client.Jso implements com.google.collide.dto.DocOpComponent {
         protected DocOpComponentImpl() {
         }
 
@@ -2225,7 +2225,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class DocumentSelectionImpl extends org.exoplatform.ide.json.client.Jso
+    public static class DocumentSelectionImpl extends com.codenvy.ide.json.client.Jso
             implements com.google.collide.dto.DocumentSelection {
         protected DocumentSelectionImpl() {
         }
@@ -2280,7 +2280,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class EmptyMessageImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class EmptyMessageImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.EmptyMessage {
         protected EmptyMessageImpl() {
         }
@@ -2293,7 +2293,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class EndUploadSessionImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class EndUploadSessionImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.EndUploadSession {
         protected EndUploadSessionImpl() {
         }
@@ -2334,7 +2334,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class UnzipFailureImpl extends org.exoplatform.ide.json.client.Jso
+    public static class UnzipFailureImpl extends com.codenvy.ide.json.client.Jso
             implements com.google.collide.dto.EndUploadSessionFinished.UnzipFailure {
         protected UnzipFailureImpl() {
         }
@@ -2354,12 +2354,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getDisplayFailedWorkspacePaths() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<java.lang.String> getDisplayFailedWorkspacePaths() /*-{
             return this["displayFailedWorkspacePaths"];
         }-*/;
 
         public final native UnzipFailureImpl setDisplayFailedWorkspacePaths(
-                org.exoplatform.ide.json.shared.JsonArray<java.lang.String> displayFailedWorkspacePaths) /*-{
+                com.codenvy.ide.json.shared.JsonArray<java.lang.String> displayFailedWorkspacePaths) /*-{
             this["displayFailedWorkspacePaths"] = displayFailedWorkspacePaths;
             return this;
         }-*/;
@@ -2376,18 +2376,18 @@ public class DtoClientImpls {
     }
 
 
-    public static class EndUploadSessionFinishedImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class EndUploadSessionFinishedImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.EndUploadSessionFinished {
         protected EndUploadSessionFinishedImpl() {
         }
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getFailedFileWorkspacePaths() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<java.lang.String> getFailedFileWorkspacePaths() /*-{
             return this["failedFileWorkspacePaths"];
         }-*/;
 
         public final native EndUploadSessionFinishedImpl setFailedFileWorkspacePaths(
-                org.exoplatform.ide.json.shared.JsonArray<java.lang.String> failedFileWorkspacePaths) /*-{
+                com.codenvy.ide.json.shared.JsonArray<java.lang.String> failedFileWorkspacePaths) /*-{
             this["failedFileWorkspacePaths"] = failedFileWorkspacePaths;
             return this;
         }-*/;
@@ -2397,12 +2397,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getFailedDirWorkspacePaths() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<java.lang.String> getFailedDirWorkspacePaths() /*-{
             return this["failedDirWorkspacePaths"];
         }-*/;
 
         public final native EndUploadSessionFinishedImpl setFailedDirWorkspacePaths(
-                org.exoplatform.ide.json.shared.JsonArray<java.lang.String> failedDirWorkspacePaths) /*-{
+                com.codenvy.ide.json.shared.JsonArray<java.lang.String> failedDirWorkspacePaths) /*-{
             this["failedDirWorkspacePaths"] = failedDirWorkspacePaths;
             return this;
         }-*/;
@@ -2412,13 +2412,13 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.EndUploadSessionFinished.UnzipFailure>
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.EndUploadSessionFinished.UnzipFailure>
         getUnzipFailures() /*-{
             return this["unzipFailures"];
         }-*/;
 
         public final native EndUploadSessionFinishedImpl setUnzipFailures(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.EndUploadSessionFinished.UnzipFailure> unzipFailures) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.EndUploadSessionFinished.UnzipFailure> unzipFailures) /*-{
             this["unzipFailures"] = unzipFailures;
             return this;
         }-*/;
@@ -2449,7 +2449,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class EnterWorkspaceImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class EnterWorkspaceImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.EnterWorkspace {
         protected EnterWorkspaceImpl() {
         }
@@ -2490,18 +2490,18 @@ public class DtoClientImpls {
     }
 
 
-    public static class EnterWorkspaceResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class EnterWorkspaceResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.EnterWorkspaceResponse {
         protected EnterWorkspaceResponseImpl() {
         }
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> getParticipants() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> getParticipants() /*-{
             return this["participants"];
         }-*/;
 
         public final native EnterWorkspaceResponseImpl setParticipants(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> participants) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> participants) /*-{
             this["participants"] = participants;
             return this;
         }-*/;
@@ -2646,7 +2646,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class FileCollaboratorGoneImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class FileCollaboratorGoneImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.FileCollaboratorGone {
         protected FileCollaboratorGoneImpl() {
         }
@@ -2687,7 +2687,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class FileContentsImpl extends org.exoplatform.ide.json.client.Jso implements com.google.collide.dto.FileContents {
+    public static class FileContentsImpl extends com.codenvy.ide.json.client.Jso implements com.google.collide.dto.FileContents {
         protected FileContentsImpl() {
         }
 
@@ -2734,12 +2734,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ConflictChunk> getConflicts() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ConflictChunk> getConflicts() /*-{
             return this["conflicts"];
         }-*/;
 
         public final native FileContentsImpl setConflicts(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ConflictChunk> conflicts) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ConflictChunk> conflicts) /*-{
             this["conflicts"] = conflicts;
             return this;
         }-*/;
@@ -2763,11 +2763,11 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getSelections() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<java.lang.String> getSelections() /*-{
             return this["selections"];
         }-*/;
 
-        public final native FileContentsImpl setSelections(org.exoplatform.ide.json.shared.JsonArray<java.lang.String> selections) /*-{
+        public final native FileContentsImpl setSelections(com.codenvy.ide.json.shared.JsonArray<java.lang.String> selections) /*-{
             this["selections"] = selections;
             return this;
         }-*/;
@@ -2853,7 +2853,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class FileOperationNotificationImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class FileOperationNotificationImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.FileOperationNotification {
         protected FileOperationNotificationImpl() {
         }
@@ -2938,7 +2938,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class FilePositionImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class FilePositionImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.FilePosition {
         protected FilePositionImpl() {
         }
@@ -2977,7 +2977,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetAppEngineClusterTypeImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetAppEngineClusterTypeImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetAppEngineClusterType {
         protected GetAppEngineClusterTypeImpl() {
         }
@@ -3005,7 +3005,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetDeployInformationImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetDeployInformationImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetDeployInformation {
         protected GetDeployInformationImpl() {
         }
@@ -3046,7 +3046,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class DeployInformationImpl extends org.exoplatform.ide.json.client.Jso
+    public static class DeployInformationImpl extends com.codenvy.ide.json.client.Jso
             implements com.google.collide.dto.GetDeployInformationResponse.DeployInformation {
         protected DeployInformationImpl() {
         }
@@ -3101,19 +3101,19 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetDeployInformationResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetDeployInformationResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetDeployInformationResponse {
         protected GetDeployInformationResponseImpl() {
         }
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.GetDeployInformationResponse
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.GetDeployInformationResponse
                 .DeployInformation> getDeployInformation() /*-{
             return this["deployInformation"];
         }-*/;
 
         public final native GetDeployInformationResponseImpl setDeployInformation(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.GetDeployInformationResponse.DeployInformation>
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.GetDeployInformationResponse.DeployInformation>
                         deployInformation) /*-{
             this["deployInformation"] = deployInformation;
             return this;
@@ -3131,7 +3131,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetDirectoryImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetDirectoryImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetDirectory {
         protected GetDirectoryImpl() {
         }
@@ -3186,7 +3186,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetDirectoryResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetDirectoryResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetDirectoryResponse {
         protected GetDirectoryResponseImpl() {
         }
@@ -3241,7 +3241,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetEditSessionCollaboratorsImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetEditSessionCollaboratorsImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetEditSessionCollaborators {
         protected GetEditSessionCollaboratorsImpl() {
         }
@@ -3268,18 +3268,18 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetEditSessionCollaboratorsResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetEditSessionCollaboratorsResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetEditSessionCollaboratorsResponse {
         protected GetEditSessionCollaboratorsResponseImpl() {
         }
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> getParticipants() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> getParticipants() /*-{
             return this["participants"];
         }-*/;
 
         public final native GetEditSessionCollaboratorsResponseImpl setParticipants(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> participants) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> participants) /*-{
             this["participants"] = participants;
             return this;
         }-*/;
@@ -3296,7 +3296,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetFileContentsImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetFileContentsImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetFileContents {
         protected GetFileContentsImpl() {
         }
@@ -3351,7 +3351,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetFileContentsResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetFileContentsResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetFileContentsResponse {
         protected GetFileContentsResponseImpl() {
         }
@@ -3392,7 +3392,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetFileDiffImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetFileDiffImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetFileDiff {
         protected GetFileDiffImpl() {
         }
@@ -3504,18 +3504,18 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetFileDiffResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetFileDiffResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetFileDiffResponse {
         protected GetFileDiffResponseImpl() {
         }
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.DiffChunkResponse> getDiffChunks() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.DiffChunkResponse> getDiffChunks() /*-{
             return this["diffChunks"];
         }-*/;
 
         public final native GetFileDiffResponseImpl setDiffChunks(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.DiffChunkResponse> diffChunks) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.DiffChunkResponse> diffChunks) /*-{
             this["diffChunks"] = diffChunks;
             return this;
         }-*/;
@@ -3574,7 +3574,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetFileRevisionsImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetFileRevisionsImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetFileRevisions {
         protected GetFileRevisionsImpl() {
         }
@@ -3727,7 +3727,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetFileRevisionsResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetFileRevisionsResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetFileRevisionsResponse {
         protected GetFileRevisionsResponseImpl() {
         }
@@ -3747,12 +3747,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.Revision> getRevisions() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.Revision> getRevisions() /*-{
             return this["revisions"];
         }-*/;
 
         public final native GetFileRevisionsResponseImpl setRevisions(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.Revision> revisions) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.Revision> revisions) /*-{
             this["revisions"] = revisions;
             return this;
         }-*/;
@@ -3783,19 +3783,19 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetOpenedFilesInWorkspaceResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetOpenedFilesInWorkspaceResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetOpenedFilesInWorkspaceResponse {
         protected GetOpenedFilesInWorkspaceResponseImpl() {
         }
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonStringMap<org.exoplatform.ide.json.shared.JsonArray<com.google.collide
+        public final native com.codenvy.ide.json.shared.JsonStringMap<com.codenvy.ide.json.shared.JsonArray<com.google.collide
                 .dto.ParticipantUserDetails>> getOpenedFiles() /*-{
             return this["openedFiles"];
         }-*/;
 
         public final native GetOpenedFilesInWorkspaceResponseImpl setOpenedFiles(
-                org.exoplatform.ide.json.shared.JsonStringMap<org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto
+                com.codenvy.ide.json.shared.JsonStringMap<com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto
                         .ParticipantUserDetails>> openedFiles) /*-{
             this["openedFiles"] = openedFiles;
             return this;
@@ -3813,7 +3813,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetOpenendFilesInWorkspaceImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetOpenendFilesInWorkspaceImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetOpenendFilesInWorkspace {
         protected GetOpenendFilesInWorkspaceImpl() {
         }
@@ -3826,7 +3826,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetOwningProjectImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetOwningProjectImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetOwningProject {
         protected GetOwningProjectImpl() {
         }
@@ -3853,7 +3853,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetOwningProjectResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetOwningProjectResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetOwningProjectResponse {
         protected GetOwningProjectResponseImpl() {
         }
@@ -3909,7 +3909,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetProjectByIdImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetProjectByIdImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetProjectById {
         protected GetProjectByIdImpl() {
         }
@@ -3993,18 +3993,18 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetProjectByIdResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetProjectByIdResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetProjectByIdResponse {
         protected GetProjectByIdResponseImpl() {
         }
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.WorkspaceInfo> getWorkspaces() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.WorkspaceInfo> getWorkspaces() /*-{
             return this["workspaces"];
         }-*/;
 
         public final native GetProjectByIdResponseImpl setWorkspaces(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.WorkspaceInfo> workspaces) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.WorkspaceInfo> workspaces) /*-{
             this["workspaces"] = workspaces;
             return this;
         }-*/;
@@ -4050,7 +4050,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetProjectMembersImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetProjectMembersImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetProjectMembers {
         protected GetProjectMembersImpl() {
         }
@@ -4077,18 +4077,18 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetProjectMembersResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetProjectMembersResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetProjectMembersResponse {
         protected GetProjectMembersResponseImpl() {
         }
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> getPendingMembers() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> getPendingMembers() /*-{
             return this["pendingMembers"];
         }-*/;
 
         public final native GetProjectMembersResponseImpl setPendingMembers(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> pendingMembers) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> pendingMembers) /*-{
             this["pendingMembers"] = pendingMembers;
             return this;
         }-*/;
@@ -4098,12 +4098,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> getMembers() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> getMembers() /*-{
             return this["members"];
         }-*/;
 
         public final native GetProjectMembersResponseImpl setMembers(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> members) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> members) /*-{
             this["members"] = members;
             return this;
         }-*/;
@@ -4120,7 +4120,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetProjectsResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetProjectsResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetProjectsResponse {
         protected GetProjectsResponseImpl() {
         }
@@ -4155,12 +4155,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getHiddenProjectIds() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<java.lang.String> getHiddenProjectIds() /*-{
             return this["hiddenProjectIds"];
         }-*/;
 
         public final native GetProjectsResponseImpl setHiddenProjectIds(
-                org.exoplatform.ide.json.shared.JsonArray<java.lang.String> hiddenProjectIds) /*-{
+                com.codenvy.ide.json.shared.JsonArray<java.lang.String> hiddenProjectIds) /*-{
             this["hiddenProjectIds"] = hiddenProjectIds;
             return this;
         }-*/;
@@ -4170,12 +4170,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ProjectInfo> getProjects() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ProjectInfo> getProjects() /*-{
             return this["projects"];
         }-*/;
 
         public final native GetProjectsResponseImpl setProjects(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ProjectInfo> projects) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ProjectInfo> projects) /*-{
             this["projects"] = projects;
             return this;
         }-*/;
@@ -4192,7 +4192,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetStagingServerInfoResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetStagingServerInfoResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetStagingServerInfoResponse {
         protected GetStagingServerInfoResponseImpl() {
         }
@@ -4261,7 +4261,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetSyncStateImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetSyncStateImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetSyncState {
         protected GetSyncStateImpl() {
         }
@@ -4288,7 +4288,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetSyncStateResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetSyncStateResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetSyncStateResponse {
         protected GetSyncStateResponseImpl() {
         }
@@ -4316,7 +4316,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetTemplatesImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetTemplatesImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetTemplates {
         protected GetTemplatesImpl() {
         }
@@ -4343,18 +4343,18 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetTemplatesResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetTemplatesResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetTemplatesResponse {
         protected GetTemplatesResponseImpl() {
         }
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonStringMap<java.lang.String> getTemplates() /*-{
+        public final native com.codenvy.ide.json.shared.JsonStringMap<java.lang.String> getTemplates() /*-{
             return this["templates"];
         }-*/;
 
         public final native GetTemplatesResponseImpl setTemplates(
-                org.exoplatform.ide.json.shared.JsonStringMap<java.lang.String> templates) /*-{
+                com.codenvy.ide.json.shared.JsonStringMap<java.lang.String> templates) /*-{
             this["templates"] = templates;
             return this;
         }-*/;
@@ -4384,18 +4384,18 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetUserAppEngineAppIdsResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetUserAppEngineAppIdsResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetUserAppEngineAppIdsResponse {
         protected GetUserAppEngineAppIdsResponseImpl() {
         }
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getAppIds() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<java.lang.String> getAppIds() /*-{
             return this["appIds"];
         }-*/;
 
         public final native GetUserAppEngineAppIdsResponseImpl setAppIds(
-                org.exoplatform.ide.json.shared.JsonArray<java.lang.String> appIds) /*-{
+                com.codenvy.ide.json.shared.JsonArray<java.lang.String> appIds) /*-{
             this["appIds"] = appIds;
             return this;
         }-*/;
@@ -4412,7 +4412,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetWorkspaceImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetWorkspaceImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetWorkspace {
         protected GetWorkspaceImpl() {
         }
@@ -4453,7 +4453,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetWorkspaceChangeSummaryImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetWorkspaceChangeSummaryImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetWorkspaceChangeSummary {
         protected GetWorkspaceChangeSummaryImpl() {
         }
@@ -4494,18 +4494,18 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetWorkspaceChangeSummaryResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetWorkspaceChangeSummaryResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetWorkspaceChangeSummaryResponse {
         protected GetWorkspaceChangeSummaryResponseImpl() {
         }
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.NodeMutationDto> getNodeMutations() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.NodeMutationDto> getNodeMutations() /*-{
             return this["nodeMutations"];
         }-*/;
 
         public final native GetWorkspaceChangeSummaryResponseImpl setNodeMutations(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.NodeMutationDto> nodeMutations) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.NodeMutationDto> nodeMutations) /*-{
             this["nodeMutations"] = nodeMutations;
             return this;
         }-*/;
@@ -4550,7 +4550,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetWorkspaceMembersImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetWorkspaceMembersImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetWorkspaceMembers {
         protected GetWorkspaceMembersImpl() {
         }
@@ -4591,18 +4591,18 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetWorkspaceMembersResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetWorkspaceMembersResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetWorkspaceMembersResponse {
         protected GetWorkspaceMembersResponseImpl() {
         }
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> getMembers() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> getMembers() /*-{
             return this["members"];
         }-*/;
 
         public final native GetWorkspaceMembersResponseImpl setMembers(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> members) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> members) /*-{
             this["members"] = members;
             return this;
         }-*/;
@@ -4619,7 +4619,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetWorkspaceMetaDataImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetWorkspaceMetaDataImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetWorkspaceMetaData {
         protected GetWorkspaceMetaDataImpl() {
         }
@@ -4632,7 +4632,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetWorkspaceMetaDataResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetWorkspaceMetaDataResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetWorkspaceMetaDataResponse {
         protected GetWorkspaceMetaDataResponseImpl() {
         }
@@ -4652,12 +4652,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getLastOpenFiles() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<java.lang.String> getLastOpenFiles() /*-{
             return this["lastOpenFiles"];
         }-*/;
 
         public final native GetWorkspaceMetaDataResponseImpl setLastOpenFiles(
-                org.exoplatform.ide.json.shared.JsonArray<java.lang.String> lastOpenFiles) /*-{
+                com.codenvy.ide.json.shared.JsonArray<java.lang.String> lastOpenFiles) /*-{
             this["lastOpenFiles"] = lastOpenFiles;
             return this;
         }-*/;
@@ -4688,7 +4688,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetWorkspaceParticipantsImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetWorkspaceParticipantsImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetWorkspaceParticipants {
         protected GetWorkspaceParticipantsImpl() {
         }
@@ -4708,12 +4708,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getParticipantIds() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<java.lang.String> getParticipantIds() /*-{
             return this["participantIds"];
         }-*/;
 
         public final native GetWorkspaceParticipantsImpl setParticipantIds(
-                org.exoplatform.ide.json.shared.JsonArray<java.lang.String> participantIds) /*-{
+                com.codenvy.ide.json.shared.JsonArray<java.lang.String> participantIds) /*-{
             this["participantIds"] = participantIds;
             return this;
         }-*/;
@@ -4730,18 +4730,18 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetWorkspaceParticipantsResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetWorkspaceParticipantsResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetWorkspaceParticipantsResponse {
         protected GetWorkspaceParticipantsResponseImpl() {
         }
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> getParticipants() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> getParticipants() /*-{
             return this["participants"];
         }-*/;
 
         public final native GetWorkspaceParticipantsResponseImpl setParticipants(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> participants) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> participants) /*-{
             this["participants"] = participants;
             return this;
         }-*/;
@@ -4758,7 +4758,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class GetWorkspaceResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class GetWorkspaceResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.GetWorkspaceResponse {
         protected GetWorkspaceResponseImpl() {
         }
@@ -4806,7 +4806,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class InvalidationMessageImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class InvalidationMessageImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.InvalidationMessage {
         protected InvalidationMessageImpl() {
         }
@@ -4861,7 +4861,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class KeepAliveImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class KeepAliveImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.KeepAlive {
         protected KeepAliveImpl() {
         }
@@ -4888,7 +4888,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class LeaveWorkspaceImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class LeaveWorkspaceImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.LeaveWorkspace {
         protected LeaveWorkspaceImpl() {
         }
@@ -4915,7 +4915,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class LoadTemplateImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class LoadTemplateImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.LoadTemplate {
         protected LoadTemplateImpl() {
         }
@@ -4970,7 +4970,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class LoadTemplateResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class LoadTemplateResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.LoadTemplateResponse {
         protected LoadTemplateResponseImpl() {
         }
@@ -4997,7 +4997,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class LogFatalRecordImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class LogFatalRecordImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.LogFatalRecord {
         protected LogFatalRecordImpl() {
         }
@@ -5031,12 +5031,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getRecentHistory() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<java.lang.String> getRecentHistory() /*-{
             return this["recentHistory"];
         }-*/;
 
         public final native LogFatalRecordImpl setRecentHistory(
-                org.exoplatform.ide.json.shared.JsonArray<java.lang.String> recentHistory) /*-{
+                com.codenvy.ide.json.shared.JsonArray<java.lang.String> recentHistory) /*-{
             this["recentHistory"] = recentHistory;
             return this;
         }-*/;
@@ -5081,7 +5081,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class LogFatalRecordResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class LogFatalRecordResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.LogFatalRecordResponse {
         protected LogFatalRecordResponseImpl() {
         }
@@ -5136,7 +5136,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class LogMetricImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class LogMetricImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.LogMetric {
         protected LogMetricImpl() {
         }
@@ -5205,18 +5205,18 @@ public class DtoClientImpls {
     }
 
 
-    public static class LogMetricsImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class LogMetricsImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.LogMetrics {
         protected LogMetricsImpl() {
         }
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.LogMetric> getMetrics() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.LogMetric> getMetrics() /*-{
             return this["metrics"];
         }-*/;
 
         public final native LogMetricsImpl setMetrics(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.LogMetric> metrics) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.LogMetric> metrics) /*-{
             this["metrics"] = metrics;
             return this;
         }-*/;
@@ -5233,7 +5233,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class MembershipChangedPayloadImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class MembershipChangedPayloadImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.MembershipChangedPayload {
         protected MembershipChangedPayloadImpl() {
         }
@@ -5276,7 +5276,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class MutationImpl extends org.exoplatform.ide.json.client.Jso implements com.google.collide.dto.Mutation {
+    public static class MutationImpl extends com.codenvy.ide.json.client.Jso implements com.google.collide.dto.Mutation {
         protected MutationImpl() {
         }
 
@@ -5345,7 +5345,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class NewFileCollaboratorImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class NewFileCollaboratorImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.NewFileCollaborator {
         protected NewFileCollaboratorImpl() {
         }
@@ -5400,7 +5400,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class ConflictHandleImpl extends org.exoplatform.ide.json.client.Jso
+    public static class ConflictHandleImpl extends com.codenvy.ide.json.client.Jso
             implements com.google.collide.dto.NodeConflictDto.ConflictHandle {
         protected ConflictHandleImpl() {
         }
@@ -5441,7 +5441,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class ConflictedPathImpl extends org.exoplatform.ide.json.client.Jso
+    public static class ConflictedPathImpl extends com.codenvy.ide.json.client.Jso
             implements com.google.collide.dto.NodeConflictDto.ConflictedPath {
         protected ConflictedPathImpl() {
         }
@@ -5524,7 +5524,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class NodeConflictDtoImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class NodeConflictDtoImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.NodeConflictDto {
         protected NodeConflictDtoImpl() {
         }
@@ -5558,7 +5558,7 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ResolveTreeConflict
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ResolveTreeConflict
                 .ConflictResolutionChoice> getValidResolutions() /*-{
             _tmp = [];
             this["validResolutions"].forEach(function (in1, tmp0) {
@@ -5569,7 +5569,7 @@ public class DtoClientImpls {
         }-*/;
 
         public final native NodeConflictDtoImpl setValidResolutions(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ResolveTreeConflict.ConflictResolutionChoice>
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ResolveTreeConflict.ConflictResolutionChoice>
                         validResolutions) /*-{
             _tmp = validResolutions;
             tmp0 = [];
@@ -5646,12 +5646,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.NodeConflictDto> getGroupedConflicts() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.NodeConflictDto> getGroupedConflicts() /*-{
             return this["groupedConflicts"];
         }-*/;
 
         public final native NodeConflictDtoImpl setGroupedConflicts(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.NodeConflictDto> groupedConflicts) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.NodeConflictDto> groupedConflicts) /*-{
             this["groupedConflicts"] = groupedConflicts;
             return this;
         }-*/;
@@ -5661,13 +5661,13 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.NodeConflictDto.ConflictedPath>
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.NodeConflictDto.ConflictedPath>
         getParentPaths() /*-{
             return this["parentPaths"];
         }-*/;
 
         public final native NodeConflictDtoImpl setParentPaths(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.NodeConflictDto.ConflictedPath> parentPaths) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.NodeConflictDto.ConflictedPath> parentPaths) /*-{
             this["parentPaths"] = parentPaths;
             return this;
         }-*/;
@@ -5724,7 +5724,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class NodeMutationDtoImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class NodeMutationDtoImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.NodeMutationDto {
         protected NodeMutationDtoImpl() {
         }
@@ -5836,7 +5836,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class ParticipantImpl extends org.exoplatform.ide.json.client.Jso implements com.google.collide.dto.Participant {
+    public static class ParticipantImpl extends com.codenvy.ide.json.client.Jso implements com.google.collide.dto.Participant {
         protected ParticipantImpl() {
         }
 
@@ -5876,7 +5876,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class ParticipantUserDetailsImpl extends org.exoplatform.ide.json.client.Jso
+    public static class ParticipantUserDetailsImpl extends com.codenvy.ide.json.client.Jso
             implements com.google.collide.dto.ParticipantUserDetails {
         protected ParticipantUserDetailsImpl() {
         }
@@ -5917,7 +5917,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class ProjectInfoImpl extends org.exoplatform.ide.json.client.Jso implements com.google.collide.dto.ProjectInfo {
+    public static class ProjectInfoImpl extends com.codenvy.ide.json.client.Jso implements com.google.collide.dto.ProjectInfo {
         protected ProjectInfoImpl() {
         }
 
@@ -6014,7 +6014,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class ProjectMembersInfoImpl extends org.exoplatform.ide.json.client.Jso
+    public static class ProjectMembersInfoImpl extends com.codenvy.ide.json.client.Jso
             implements com.google.collide.dto.ProjectMembersInfo {
         protected ProjectMembersInfoImpl() {
         }
@@ -6034,12 +6034,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.UserDetails> getMembers() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.UserDetails> getMembers() /*-{
             return this["members"];
         }-*/;
 
         public final native ProjectMembersInfoImpl setMembers(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.UserDetails> members) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.UserDetails> members) /*-{
             this["members"] = members;
             return this;
         }-*/;
@@ -6056,7 +6056,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class RecoverFromDroppedTangoInvalidationImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class RecoverFromDroppedTangoInvalidationImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.RecoverFromDroppedTangoInvalidation {
         protected RecoverFromDroppedTangoInvalidationImpl() {
         }
@@ -6111,7 +6111,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class RecoveredPayloadImpl extends org.exoplatform.ide.json.client.Jso
+    public static class RecoveredPayloadImpl extends com.codenvy.ide.json.client.Jso
             implements com.google.collide.dto.RecoverFromDroppedTangoInvalidationResponse.RecoveredPayload {
         protected RecoveredPayloadImpl() {
         }
@@ -6152,19 +6152,19 @@ public class DtoClientImpls {
     }
 
 
-    public static class RecoverFromDroppedTangoInvalidationResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class RecoverFromDroppedTangoInvalidationResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.RecoverFromDroppedTangoInvalidationResponse {
         protected RecoverFromDroppedTangoInvalidationResponseImpl() {
         }
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.RecoverFromDroppedTangoInvalidationResponse
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.RecoverFromDroppedTangoInvalidationResponse
                 .RecoveredPayload> getPayloads() /*-{
             return this["payloads"];
         }-*/;
 
         public final native RecoverFromDroppedTangoInvalidationResponseImpl setPayloads(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.RecoverFromDroppedTangoInvalidationResponse
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.RecoverFromDroppedTangoInvalidationResponse
                         .RecoveredPayload> payloads) /*-{
             this["payloads"] = payloads;
             return this;
@@ -6196,17 +6196,17 @@ public class DtoClientImpls {
     }
 
 
-    public static class RecoverFromMissedDocOpsImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class RecoverFromMissedDocOpsImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.RecoverFromMissedDocOps {
         protected RecoverFromMissedDocOpsImpl() {
         }
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getDocOps2() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<java.lang.String> getDocOps2() /*-{
             return this["docOps2"];
         }-*/;
 
-        public final native RecoverFromMissedDocOpsImpl setDocOps2(org.exoplatform.ide.json.shared.JsonArray<java.lang.String> docOps2) /*-{
+        public final native RecoverFromMissedDocOpsImpl setDocOps2(com.codenvy.ide.json.shared.JsonArray<java.lang.String> docOps2) /*-{
             this["docOps2"] = docOps2;
             return this;
         }-*/;
@@ -6279,7 +6279,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class RecoverFromMissedDocOpsResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class RecoverFromMissedDocOpsResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.RecoverFromMissedDocOpsResponse {
         protected RecoverFromMissedDocOpsResponseImpl() {
         }
@@ -6299,12 +6299,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ServerToClientDocOp> getDocOps() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ServerToClientDocOp> getDocOps() /*-{
             return this["docOps"];
         }-*/;
 
         public final native RecoverFromMissedDocOpsResponseImpl setDocOps(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ServerToClientDocOp> docOps) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ServerToClientDocOp> docOps) /*-{
             this["docOps"] = docOps;
             return this;
         }-*/;
@@ -6321,7 +6321,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class RefreshWorkspaceImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class RefreshWorkspaceImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.RefreshWorkspace {
         protected RefreshWorkspaceImpl() {
         }
@@ -6362,7 +6362,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class RequestProjectMembershipImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class RequestProjectMembershipImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.RequestProjectMembership {
         protected RequestProjectMembershipImpl() {
         }
@@ -6389,7 +6389,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class ResolveConflictChunkImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class ResolveConflictChunkImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.ResolveConflictChunk {
         protected ResolveConflictChunkImpl() {
         }
@@ -6473,7 +6473,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class ResolveTreeConflictImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class ResolveTreeConflictImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.ResolveTreeConflict {
         protected ResolveTreeConflictImpl() {
         }
@@ -6546,7 +6546,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class ResolveTreeConflictResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class ResolveTreeConflictResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.ResolveTreeConflictResponse {
         protected ResolveTreeConflictResponseImpl() {
         }
@@ -6573,7 +6573,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class RetryAlreadyTransferredUploadImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class RetryAlreadyTransferredUploadImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.RetryAlreadyTransferredUpload {
         protected RetryAlreadyTransferredUploadImpl() {
         }
@@ -6607,12 +6607,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getFileWorkspacePaths() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<java.lang.String> getFileWorkspacePaths() /*-{
             return this["fileWorkspacePaths"];
         }-*/;
 
         public final native RetryAlreadyTransferredUploadImpl setFileWorkspacePaths(
-                org.exoplatform.ide.json.shared.JsonArray<java.lang.String> fileWorkspacePaths) /*-{
+                com.codenvy.ide.json.shared.JsonArray<java.lang.String> fileWorkspacePaths) /*-{
             this["fileWorkspacePaths"] = fileWorkspacePaths;
             return this;
         }-*/;
@@ -6622,12 +6622,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getUnzipWorkspacePaths() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<java.lang.String> getUnzipWorkspacePaths() /*-{
             return this["unzipWorkspacePaths"];
         }-*/;
 
         public final native RetryAlreadyTransferredUploadImpl setUnzipWorkspacePaths(
-                org.exoplatform.ide.json.shared.JsonArray<java.lang.String> unzipWorkspacePaths) /*-{
+                com.codenvy.ide.json.shared.JsonArray<java.lang.String> unzipWorkspacePaths) /*-{
             this["unzipWorkspacePaths"] = unzipWorkspacePaths;
             return this;
         }-*/;
@@ -6644,7 +6644,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class RevisionImpl extends org.exoplatform.ide.json.client.Jso implements com.google.collide.dto.Revision {
+    public static class RevisionImpl extends com.codenvy.ide.json.client.Jso implements com.google.collide.dto.Revision {
         protected RevisionImpl() {
         }
 
@@ -6755,7 +6755,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class RunTargetImpl extends org.exoplatform.ide.json.client.Jso implements com.google.collide.dto.RunTarget {
+    public static class RunTargetImpl extends com.codenvy.ide.json.client.Jso implements com.google.collide.dto.RunTarget {
         protected RunTargetImpl() {
         }
 
@@ -6810,7 +6810,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class SearchImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class SearchImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.Search {
         protected SearchImpl() {
         }
@@ -6865,7 +6865,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class SearchResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class SearchResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.SearchResponse {
         protected SearchResponseImpl() {
         }
@@ -6913,12 +6913,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.SearchResult> getResults() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.SearchResult> getResults() /*-{
             return this["results"];
         }-*/;
 
         public final native SearchResponseImpl setResults(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.SearchResult> results) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.SearchResult> results) /*-{
             this["results"] = results;
             return this;
         }-*/;
@@ -6935,7 +6935,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class SearchResultImpl extends org.exoplatform.ide.json.client.Jso implements com.google.collide.dto.SearchResult {
+    public static class SearchResultImpl extends com.codenvy.ide.json.client.Jso implements com.google.collide.dto.SearchResult {
         protected SearchResultImpl() {
         }
 
@@ -6954,12 +6954,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.Snippet> getSnippets() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.Snippet> getSnippets() /*-{
             return this["snippets"];
         }-*/;
 
         public final native SearchResultImpl setSnippets(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.Snippet> snippets) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.Snippet> snippets) /*-{
             this["snippets"] = snippets;
             return this;
         }-*/;
@@ -6990,7 +6990,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class ServerToClientDocOpImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class ServerToClientDocOpImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.ServerToClientDocOp {
         protected ServerToClientDocOpImpl() {
         }
@@ -7101,18 +7101,18 @@ public class DtoClientImpls {
     }
 
 
-    public static class ServerToClientDocOpsImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class ServerToClientDocOpsImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.ServerToClientDocOps {
         protected ServerToClientDocOpsImpl() {
         }
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ServerToClientDocOp> getDocOps() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ServerToClientDocOp> getDocOps() /*-{
             return this["docOps"];
         }-*/;
 
         public final native ServerToClientDocOpsImpl setDocOps(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ServerToClientDocOp> docOps) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ServerToClientDocOp> docOps) /*-{
             this["docOps"] = docOps;
             return this;
         }-*/;
@@ -7129,7 +7129,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class SetActiveProjectImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class SetActiveProjectImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.SetActiveProject {
         protected SetActiveProjectImpl() {
         }
@@ -7156,7 +7156,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class SetProjectHiddenImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class SetProjectHiddenImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.SetProjectHidden {
         protected SetProjectHiddenImpl() {
         }
@@ -7197,7 +7197,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class SetProjectRoleImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class SetProjectRoleImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.SetProjectRole {
         protected SetProjectRoleImpl() {
         }
@@ -7252,7 +7252,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class SetRoleResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class SetRoleResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.SetRoleResponse {
         protected SetRoleResponseImpl() {
         }
@@ -7279,7 +7279,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class SetStagingServerAppIdImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class SetStagingServerAppIdImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.SetStagingServerAppId {
         protected SetStagingServerAppIdImpl() {
         }
@@ -7306,7 +7306,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class SetWorkspaceArchiveStateImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class SetWorkspaceArchiveStateImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.SetWorkspaceArchiveState {
         protected SetWorkspaceArchiveStateImpl() {
         }
@@ -7361,7 +7361,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class SetWorkspaceArchiveStateResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class SetWorkspaceArchiveStateResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.SetWorkspaceArchiveStateResponse {
         protected SetWorkspaceArchiveStateResponseImpl() {
         }
@@ -7402,7 +7402,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class SetWorkspaceRoleImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class SetWorkspaceRoleImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.SetWorkspaceRole {
         protected SetWorkspaceRoleImpl() {
         }
@@ -7471,7 +7471,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class SnippetImpl extends org.exoplatform.ide.json.client.Jso implements com.google.collide.dto.Snippet {
+    public static class SnippetImpl extends com.codenvy.ide.json.client.Jso implements com.google.collide.dto.Snippet {
         protected SnippetImpl() {
         }
 
@@ -7511,7 +7511,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class StackTraceElementDtoImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class StackTraceElementDtoImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.StackTraceElementDto {
         protected StackTraceElementDtoImpl() {
         }
@@ -7580,7 +7580,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class SubmitImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class SubmitImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.Submit {
         protected SubmitImpl() {
         }
@@ -7663,7 +7663,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class SubmitResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class SubmitResponseImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.SubmitResponse {
         protected SubmitResponseImpl() {
         }
@@ -7704,7 +7704,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class SubmittedWorkspaceImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class SubmittedWorkspaceImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.SubmittedWorkspace {
         protected SubmittedWorkspaceImpl() {
         }
@@ -7717,7 +7717,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class SyncImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.Sync {
+    public static class SyncImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.Sync {
         protected SyncImpl() {
         }
 
@@ -7757,17 +7757,17 @@ public class DtoClientImpls {
     }
 
 
-    public static class SyncConflictsImpl extends org.exoplatform.ide.json.client.Jso implements com.google.collide.dto.SyncConflicts {
+    public static class SyncConflictsImpl extends com.codenvy.ide.json.client.Jso implements com.google.collide.dto.SyncConflicts {
         protected SyncConflictsImpl() {
         }
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.NodeConflictDto> getConflicts() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.NodeConflictDto> getConflicts() /*-{
             return this["conflicts"];
         }-*/;
 
         public final native SyncConflictsImpl setConflicts(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.NodeConflictDto> conflicts) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.NodeConflictDto> conflicts) /*-{
             this["conflicts"] = conflicts;
             return this;
         }-*/;
@@ -7798,7 +7798,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class ThrowableDtoImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class ThrowableDtoImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.ThrowableDto {
         protected ThrowableDtoImpl() {
         }
@@ -7832,12 +7832,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.StackTraceElementDto> getStackTrace() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.StackTraceElementDto> getStackTrace() /*-{
             return this["stackTrace"];
         }-*/;
 
         public final native ThrowableDtoImpl setStackTrace(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.StackTraceElementDto> stackTrace) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.StackTraceElementDto> stackTrace) /*-{
             this["stackTrace"] = stackTrace;
             return this;
         }-*/;
@@ -7868,7 +7868,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class TreeNodeInfoImpl extends org.exoplatform.ide.json.client.Jso implements com.google.collide.dto.TreeNodeInfo {
+    public static class TreeNodeInfoImpl extends com.codenvy.ide.json.client.Jso implements com.google.collide.dto.TreeNodeInfo {
         protected TreeNodeInfoImpl() {
         }
 
@@ -7932,7 +7932,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class UndoLastSyncImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class UndoLastSyncImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.UndoLastSync {
         protected UndoLastSyncImpl() {
         }
@@ -7973,7 +7973,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class UpdateProjectImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class UpdateProjectImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.UpdateProject {
         protected UpdateProjectImpl() {
         }
@@ -8028,7 +8028,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class UpdateUserWorkspaceMetadataImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class UpdateUserWorkspaceMetadataImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.UpdateUserWorkspaceMetadata {
         protected UpdateUserWorkspaceMetadataImpl() {
         }
@@ -8070,7 +8070,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class UpdateWorkspaceImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class UpdateWorkspaceImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.UpdateWorkspace {
         protected UpdateWorkspaceImpl() {
         }
@@ -8125,7 +8125,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class UpdateWorkspaceRunTargetsImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class UpdateWorkspaceRunTargetsImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.UpdateWorkspaceRunTargets {
         protected UpdateWorkspaceRunTargetsImpl() {
         }
@@ -8180,7 +8180,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class UserDetailsImpl extends org.exoplatform.ide.json.client.Jso implements com.google.collide.dto.UserDetails {
+    public static class UserDetailsImpl extends com.codenvy.ide.json.client.Jso implements com.google.collide.dto.UserDetails {
         protected UserDetailsImpl() {
         }
 
@@ -8317,7 +8317,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class UserLogInDtoImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class UserLogInDtoImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.UserLogInDto {
         protected UserLogInDtoImpl() {
         }
@@ -8344,7 +8344,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class UserLogOutDtoImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class UserLogOutDtoImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.UserLogOutDto {
         protected UserLogOutDtoImpl() {
         }
@@ -8371,7 +8371,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class WorkspaceInfoImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class WorkspaceInfoImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.WorkspaceInfo {
         protected WorkspaceInfoImpl() {
         }
@@ -8598,7 +8598,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class WorkspaceTreeUpdateImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class WorkspaceTreeUpdateImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.WorkspaceTreeUpdate {
         protected WorkspaceTreeUpdateImpl() {
         }
@@ -8618,12 +8618,12 @@ public class DtoClientImpls {
         }-*/;
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.Mutation> getMutations() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.Mutation> getMutations() /*-{
             return this["mutations"];
         }-*/;
 
         public final native WorkspaceTreeUpdateImpl setMutations(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.Mutation> mutations) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.Mutation> mutations) /*-{
             this["mutations"] = mutations;
             return this;
         }-*/;
@@ -8640,18 +8640,18 @@ public class DtoClientImpls {
     }
 
 
-    public static class WorkspaceTreeUpdateBroadcastImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl
+    public static class WorkspaceTreeUpdateBroadcastImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.google.collide.dto.WorkspaceTreeUpdateBroadcast {
         protected WorkspaceTreeUpdateBroadcastImpl() {
         }
 
         @Override
-        public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.Mutation> getMutations() /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.Mutation> getMutations() /*-{
             return this["mutations"];
         }-*/;
 
         public final native WorkspaceTreeUpdateBroadcastImpl setMutations(
-                org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.Mutation> mutations) /*-{
+                com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.Mutation> mutations) /*-{
             this["mutations"] = mutations;
             return this;
         }-*/;

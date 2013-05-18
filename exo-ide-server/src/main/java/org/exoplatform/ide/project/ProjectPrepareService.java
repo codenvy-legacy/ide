@@ -26,9 +26,13 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.xml.sax.SAXException;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -60,8 +64,18 @@ public class ProjectPrepareService {
                     "Can't resolve path on the Local File System : Virtual file system not initialized");
         }
 
-        ProjectPrepare project = new ProjectPrepare(vfs);
-        project.doPrepare(localPathResolver.resolve(vfs, folderId), folderId, properties);
+        ProjectPrepare newProjectPrepare = new ProjectPrepare(vfs);
+        try {
+            newProjectPrepare.doPrepare(folderId);
+        } catch (ParserConfigurationException e) {
+            throw new ProjectPrepareException(e.getMessage(), e);
+        } catch (SAXException e) {
+            throw new ProjectPrepareException(e.getMessage(), e);
+        } catch (XPathExpressionException e) {
+            throw new ProjectPrepareException(e.getMessage(), e);
+        } catch (IOException e) {
+            throw new ProjectPrepareException(e.getMessage(), e);
+        }
     }
 
     @Path("addModule")

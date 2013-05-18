@@ -13,9 +13,10 @@
 // limitations under the License.
 package com.google.collide.dto;
 
-import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
-import org.exoplatform.ide.dtogen.shared.RoutingType;
-import org.exoplatform.ide.json.shared.JsonArray;
+import com.codenvy.ide.dtogen.shared.ClientToServerDto;
+import com.codenvy.ide.dtogen.shared.RoutingType;
+import com.codenvy.ide.json.shared.JsonArray;
+
 
 /**
  * Fatal log messages are annotated with the window location, permutation, and a

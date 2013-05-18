@@ -13,7 +13,7 @@
 // limitations under the License.
 package com.google.collide.codemirror2;
 
-import org.exoplatform.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonArray;
 
 /** Object that represents css-parser state. */
 public class CssState extends CmState {

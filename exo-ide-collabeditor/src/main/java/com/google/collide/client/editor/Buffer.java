@@ -28,6 +28,12 @@ import com.codenvy.ide.client.util.CssUtils;
 import com.codenvy.ide.client.util.Elements;
 import com.codenvy.ide.client.util.Executor;
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.commons.shared.ListenerManager;
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
+import com.codenvy.ide.commons.shared.TextUtils;
+import com.codenvy.ide.commons.shared.ListenerManager.Dispatcher;
+import com.codenvy.ide.commons.shared.ListenerRegistrar.RemoverManager;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.client.AppContext;
 import com.google.collide.client.common.BaseResources;
 import com.google.collide.client.common.Constants;
@@ -51,12 +57,6 @@ import com.google.collide.shared.document.anchor.ReadOnlyAnchor;
 import com.google.collide.shared.document.util.LineUtils;
 
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
-import org.exoplatform.ide.shared.util.ListenerRegistrar.RemoverManager;
-import org.exoplatform.ide.shared.util.TextUtils;
 
 /*
  * TODO: Buffer has turned into an EditorSurface, but is still

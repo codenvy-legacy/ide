@@ -14,10 +14,10 @@
 
 package com.google.collide.dto;
 
+import com.codenvy.ide.dtogen.shared.RoutingType;
+import com.codenvy.ide.dtogen.shared.ServerToClientDto;
 import com.google.collide.dto.NodeConflictDto.ConflictHandle;
 
-import org.exoplatform.ide.dtogen.shared.RoutingType;
-import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
 /**
  * Message sent to clients to indicate a change in the resolution status of a

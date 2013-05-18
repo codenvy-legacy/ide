@@ -20,12 +20,12 @@ package org.exoplatform.ide.extension.cloudfoundry.server;
 
 import com.codenvy.commons.json.JsonHelper;
 import com.codenvy.commons.json.JsonParseException;
+import com.codenvy.ide.commons.server.*;
 
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
-import org.exoplatform.ide.commons.*;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.*;
 import org.exoplatform.ide.extension.cloudfoundry.shared.*;
 import org.exoplatform.ide.security.paas.Credential;

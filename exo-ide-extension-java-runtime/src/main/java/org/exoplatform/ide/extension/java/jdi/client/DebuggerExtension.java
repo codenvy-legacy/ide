@@ -79,6 +79,7 @@ public class DebuggerExtension extends Extension implements InitializeServicesHa
         new ChangeValuePresenter();
         new EvaluateExpressionPresenter();
         new BreakpointPropertiesPresenter();
+        new JRebelUserInfoPresenter();
 
         IDE.addHandler(DebuggerConnectedEvent.TYPE, debuggerPresenter);
         IDE.addHandler(DebuggerDisconnectedEvent.TYPE, debuggerPresenter);

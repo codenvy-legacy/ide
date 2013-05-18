@@ -18,14 +18,9 @@
  */
 package org.exoplatform.ide.extension.php.server;
 
-import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
-import static org.exoplatform.ide.commons.FileUtils.createTempDirectory;
-import static org.exoplatform.ide.commons.FileUtils.deleteRecursive;
-import static org.exoplatform.ide.commons.NameGenerator.generate;
-import static org.exoplatform.ide.commons.ZipUtils.unzip;
+import com.codenvy.ide.commons.server.ParsingResponseException;
 
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry;
 import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryException;
 import org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryPool;
@@ -50,23 +45,28 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static com.codenvy.ide.commons.server.ContainerUtils.readValueParam;
+import static com.codenvy.ide.commons.server.FileUtils.createTempDirectory;
+import static com.codenvy.ide.commons.server.FileUtils.deleteRecursive;
+import static com.codenvy.ide.commons.server.NameGenerator.generate;
+import static com.codenvy.ide.commons.server.ZipUtils.unzip;
+
 /**
  * ApplicationRunner for deploy PHP applications at Cloud Foundry.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: CloudfoundryApplicationRunner.java Apr 17, 2013 4:40:15 PM azatsarynnyy $
- *
  */
 public class CloudfoundryApplicationRunner implements ApplicationRunner, Startable {
     /** Default application lifetime (in minutes). After this time application may be stopped automatically. */
-    private static final int DEFAULT_APPLICATION_LIFETIME = 10;
+    private static final int               DEFAULT_APPLICATION_LIFETIME = 10;
 
-    private static final Log LOG = ExoLogger.getLogger(CloudfoundryApplicationRunner.class);
+    private static final Log               LOG                          = ExoLogger.getLogger(CloudfoundryApplicationRunner.class);
 
-    private final int  applicationLifetime;
-    private final long applicationLifetimeMillis;
+    private final int                      applicationLifetime;
+    private final long                     applicationLifetimeMillis;
 
-    private final CloudfoundryPool cfServers;
+    private final CloudfoundryPool         cfServers;
 
     private final Map<String, Application> applications;
     private final ScheduledExecutorService applicationTerminator;
@@ -100,7 +100,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
     @Override
     public ApplicationInstance runApplication(VirtualFileSystem vfs, String projectId) throws ApplicationRunnerException,
-                                                                                              VirtualFileSystemException {
+                                                                                      VirtualFileSystemException {
         java.io.File path = null;
         try {
             Item project = vfs.getItem(projectId, false, PropertyFilter.NONE_FILTER);
@@ -166,8 +166,8 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
     }
 
     /**
-     * Get applications logs and hide any errors. This method is used for getting logs of failed application to help
-     * user understand what is going wrong.
+     * Get applications logs and hide any errors. This method is used for getting logs of failed application to help user understand what is
+     * going wrong.
      */
     private String safeGetLogs(Cloudfoundry cloudfoundry, String name) {
         try {
@@ -271,7 +271,11 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                                                       String target,
                                                       String name,
                                                       java.io.File path)
-            throws CloudfoundryException, IOException, ParsingResponseException, VirtualFileSystemException, CredentialStoreException {
+                                                                        throws CloudfoundryException,
+                                                                        IOException,
+                                                                        ParsingResponseException,
+                                                                        VirtualFileSystemException,
+                                                                        CredentialStoreException {
         return cloudfoundry.createApplication(target, name, "php", null, 1, 128, false, "php", null, null, null,
                                               null, path.toURI().toURL(), null);
     }
@@ -307,7 +311,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
     private static class Application {
         final String name;
         final String server;
-        final long expirationTime;
+        final long   expirationTime;
 
         Application(String name, String server, long expirationTime) {
             this.name = name;

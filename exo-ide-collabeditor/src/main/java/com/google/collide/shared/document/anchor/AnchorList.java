@@ -14,9 +14,9 @@
 
 package com.google.collide.shared.document.anchor;
 
+import com.codenvy.ide.commons.shared.SortedList;
 import com.google.common.annotations.VisibleForTesting;
 
-import org.exoplatform.ide.shared.util.SortedList;
 
 /**
  * List with anchor-specific optimizations. This class assumes all the anchors

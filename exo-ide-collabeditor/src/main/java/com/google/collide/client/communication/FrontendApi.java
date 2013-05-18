@@ -14,6 +14,15 @@
 
 package com.google.collide.client.communication;
 
+import com.codenvy.ide.dtogen.client.RoutableDtoClientImpl;
+import com.codenvy.ide.dtogen.client.ServerErrorImpl;
+import com.codenvy.ide.dtogen.shared.ClientToServerDto;
+import com.codenvy.ide.dtogen.shared.RoutableDto;
+import com.codenvy.ide.dtogen.shared.ServerToClientDto;
+import com.codenvy.ide.json.client.Jso;
+import com.codenvy.ide.json.shared.JsonCollections;
+import com.codenvy.ide.json.shared.JsonStringMap;
+import com.codenvy.ide.json.shared.JsonStringMap.IterationCallback;
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.status.StatusManager;
 import com.google.collide.dto.*;
@@ -24,15 +33,6 @@ import org.exoplatform.ide.client.framework.websocket.FrontendApi.ApiCallback;
 import org.exoplatform.ide.client.framework.websocket.FrontendApi.RequestResponseApi;
 import org.exoplatform.ide.client.framework.websocket.FrontendApi.SendApi;
 import org.exoplatform.ide.client.framework.websocket.events.ReplyHandler;
-import org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl;
-import org.exoplatform.ide.dtogen.client.ServerErrorImpl;
-import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
-import org.exoplatform.ide.dtogen.shared.RoutableDto;
-import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
-import org.exoplatform.ide.json.client.Jso;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.json.shared.JsonStringMap;
-import org.exoplatform.ide.json.shared.JsonStringMap.IterationCallback;
 
 /**
  * The EventBus APIs for the Collide server.

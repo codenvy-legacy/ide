@@ -23,6 +23,10 @@ import elemental.events.EventListener;
 import elemental.html.Element;
 
 import com.codenvy.ide.client.util.Elements;
+import com.codenvy.ide.json.client.JsIntegerMap;
+import com.codenvy.ide.json.client.JsoArray;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonIntegerMap.IterationCallback;
 import com.google.collide.client.Resources;
 import com.google.collide.client.code.errorrenderer.ErrorReceiver.ErrorListener;
 import com.google.collide.client.editor.Buffer;
@@ -50,10 +54,6 @@ import org.exoplatform.ide.editor.client.marking.ProblemClickEvent;
 import org.exoplatform.ide.editor.client.marking.ProblemClickHandler;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
-import org.exoplatform.ide.json.client.JsIntegerMap;
-import org.exoplatform.ide.json.client.JsoArray;
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonIntegerMap.IterationCallback;
 
 import java.util.ArrayList;
 import java.util.Iterator;

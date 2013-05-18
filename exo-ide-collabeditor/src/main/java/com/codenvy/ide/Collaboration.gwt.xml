@@ -1,12 +1,10 @@
 <module>
     <inherits name='com.google.gwt.user.User'/>
-    <inherits name="com.google.collide.dto.Dto"/>
-    <inherits name="com.google.collide.dto.Dto"/>
-    <inherits name="org.exoplatform.ide.json.Json"/>
+    <inherits name="com.codenvy.ide.json.Json"/>
     <inherits name="com.google.collide.Views"/>
     <inherits name="org.exoplatform.ide.client.framework.IDEClientFramework"/>
-    <inherits name="org.exoplatform.ide.dtogen.DtoGen"/>
-    <inherits name="org.exoplatform.ide.shared.Util"/>
+    <inherits name="com.codenvy.ide.dtogen.DtoGen"/>
+    <inherits name="com.codenvy.ide.commons.Commons"/>
     <source path=""/>
 
     <replace-with class="com.codenvy.ide.collaboration.ResourceLocked">

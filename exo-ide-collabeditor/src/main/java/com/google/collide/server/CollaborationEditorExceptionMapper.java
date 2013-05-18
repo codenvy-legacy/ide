@@ -18,7 +18,8 @@
  */
 package com.google.collide.server;
 
-import org.exoplatform.ide.dtogen.server.JsonSerializable;
+
+import com.codenvy.ide.dtogen.server.JsonSerializable;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;

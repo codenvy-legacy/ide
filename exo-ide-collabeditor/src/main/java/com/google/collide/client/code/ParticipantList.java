@@ -18,13 +18,13 @@ import elemental.html.DivElement;
 import elemental.html.SpanElement;
 
 import com.codenvy.ide.client.util.Elements;
+import com.codenvy.ide.json.client.JsoStringMap;
+import com.codenvy.ide.json.shared.JsonStringMap.IterationCallback;
 import com.google.collide.mvp.CompositeView;
 import com.google.collide.mvp.UiComponent;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 
-import org.exoplatform.ide.json.client.JsoStringMap;
-import org.exoplatform.ide.json.shared.JsonStringMap.IterationCallback;
 
 /** Presenter for the participant list in the navigation bar. */
 public class ParticipantList extends UiComponent<ParticipantList.View>

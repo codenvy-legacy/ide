@@ -14,6 +14,8 @@
 
 package com.google.collide.server.documents;
 
+import com.codenvy.ide.commons.server.StringUtils;
+import com.codenvy.ide.json.server.JsonArrayListAdapter;
 import com.google.collide.dto.ClientToServerDocOp;
 import com.google.collide.dto.CloseEditor;
 import com.google.collide.dto.DocOp;
@@ -48,8 +50,6 @@ import com.google.gson.GsonBuilder;
 
 import org.everrest.websockets.WSConnection;
 import org.everrest.websockets.WSConnectionContext;
-import org.exoplatform.ide.commons.StringUtils;
-import org.exoplatform.ide.json.server.JsonArrayListAdapter;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;

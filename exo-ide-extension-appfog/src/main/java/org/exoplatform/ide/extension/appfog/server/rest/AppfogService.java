@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.extension.appfog.server.rest;
 
-import org.exoplatform.ide.commons.ParsingResponseException;
+import com.codenvy.ide.commons.server.ParsingResponseException;
+
 import org.exoplatform.ide.extension.appfog.server.Appfog;
 import org.exoplatform.ide.extension.appfog.server.AppfogException;
 import org.exoplatform.ide.extension.appfog.server.DebugMode;

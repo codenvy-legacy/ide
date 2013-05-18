@@ -14,6 +14,7 @@
 
 package com.google.collide.client.syntaxhighlighter;
 
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.Editor.Css;
 import com.google.collide.client.editor.renderer.LineRenderer;
@@ -24,7 +25,6 @@ import com.google.common.base.Preconditions;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 
-import org.exoplatform.ide.json.shared.JsonArray;
 
 /** A {@link LineRenderer} to render the syntax highlighting. */
 public class SyntaxHighlighterRenderer implements LineRenderer {

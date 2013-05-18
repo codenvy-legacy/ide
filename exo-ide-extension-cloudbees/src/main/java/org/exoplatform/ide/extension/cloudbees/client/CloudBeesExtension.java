@@ -47,22 +47,24 @@ import java.util.List;
 
 /**
  * CloudBees extension for IDE.
- *
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudBeesExtension.java Jun 23, 2011 10:11:59 AM vereshchaka $
  */
 public class CloudBeesExtension extends Extension implements InitializeServicesHandler {
 
     /** The generator of an {@link AutoBean}. */
-    public static final CloudBeesAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(CloudBeesAutoBeanFactory.class);
+    public static final CloudBeesAutoBeanFactory      AUTO_BEAN_FACTORY     = GWT.create(CloudBeesAutoBeanFactory.class);
 
     public static final CloudBeesLocalizationConstant LOCALIZATION_CONSTANT = GWT
-            .create(CloudBeesLocalizationConstant.class);
+                                                                                 .create(CloudBeesLocalizationConstant.class);
 
-    private static final String ID = "CloudBees";
+    public static final String                        ID                    = "CloudBees";
 
-    /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
-     * .client.framework.application.event.InitializeServicesEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
+     *      .client.framework.application.event.InitializeServicesEvent)
+     */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
         new CloudBeesClientServiceImpl(event.getLoader(), IDE.messageBus());
@@ -72,9 +74,11 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
     @Override
     public void initialize() {
         IDE.getInstance().registerPaaS(
-                new PaaS("CloudBees", "CloudBees", new Image(CloudBeesClientBundle.INSTANCE.cloudBees48()), new Image(
-                        CloudBeesClientBundle.INSTANCE.cloudBees48Disabled()), Arrays.asList(ProjectType.JSP, ProjectType.WAR),
-                         new org.exoplatform.ide.extension.cloudbees.client.deploy.DeployApplicationPresenter()));
+                                       new PaaS("CloudBees", "CloudBees", new Image(CloudBeesClientBundle.INSTANCE.cloudBees48()),
+                                                new Image(
+                                                          CloudBeesClientBundle.INSTANCE.cloudBees48Disabled()),
+                                                Arrays.asList(ProjectType.JSP, ProjectType.WAR),
+                                                new org.exoplatform.ide.extension.cloudbees.client.deploy.DeployApplicationPresenter()));
 
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
 

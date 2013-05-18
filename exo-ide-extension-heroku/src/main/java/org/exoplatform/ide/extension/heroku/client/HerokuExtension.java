@@ -53,21 +53,23 @@ import java.util.List;
 
 /**
  * Heroku extension to be added to IDE Application.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 25, 2011 11:38:06 AM anya $
  */
 public class HerokuExtension extends Extension implements InitializeServicesHandler {
 
     /** The generator for an {@link AutoBean} */
-    public static final HerokuAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(HerokuAutoBeanFactory.class);
+    public static final HerokuAutoBeanFactory      AUTO_BEAN_FACTORY     = GWT.create(HerokuAutoBeanFactory.class);
 
     public static final HerokuLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(HerokuLocalizationConstant.class);
 
-    private static final String ID = "Heroku";
+    public static final String                     ID                    = "Heroku";
 
-    /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
-     * .client.framework.application.event.InitializeServicesEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
+     *      .client.framework.application.event.InitializeServicesEvent)
+     */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
         new HerokuClientServiceImpl(event.getLoader(), IDE.messageBus());
@@ -77,9 +79,11 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
     @Override
     public void initialize() {
         IDE.getInstance().registerPaaS(
-                new PaaS("Heroku", "Heroku", new Image(HerokuClientBundle.INSTANCE.heroku48()), new Image(
-                        HerokuClientBundle.INSTANCE.heroku48Disabled()), Arrays.asList(ProjectType.RUBY_ON_RAILS),
-                         new DeployApplicationPresenter()));
+                                       new PaaS("Heroku", "Heroku", new Image(HerokuClientBundle.INSTANCE.heroku48()),
+                                                new Image(
+                                                          HerokuClientBundle.INSTANCE.heroku48Disabled()),
+                                                Arrays.asList(ProjectType.RUBY_ON_RAILS),
+                                                new DeployApplicationPresenter()));
 
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
