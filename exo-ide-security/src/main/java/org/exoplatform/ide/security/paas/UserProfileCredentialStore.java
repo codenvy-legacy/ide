@@ -28,6 +28,7 @@ import com.codenvy.organization.exception.OrganizationServiceException;
 import com.codenvy.organization.exception.UserExistenceException;
 import com.codenvy.organization.model.User;
 
+
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;

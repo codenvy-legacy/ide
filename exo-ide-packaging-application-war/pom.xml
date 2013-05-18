@@ -484,6 +484,7 @@
                                 **/lib/exo-ide-editor-ruby*,
                                 **/lib/exo-ide-editor-xml*,
                                 **/lib/exo-ide-editor-yaml*,
+                                **/lib/exo-ide-commons*,
                                 **/lib/exo-ide-extension-samples*,
                                 **/lib/exo-ide-framework-client*,
                                 **/lib/exo-ide-jdt-core*,

@@ -16,6 +16,8 @@ package com.google.collide.client.editor.search;
 
 import com.codenvy.ide.client.util.BasicIncrementalScheduler;
 import com.codenvy.ide.client.util.IncrementalScheduler;
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
+import com.codenvy.ide.commons.shared.RegExpUtils;
 import com.google.collide.client.AppContext;
 import com.google.collide.client.editor.ViewportModel;
 import com.google.collide.client.editor.renderer.Renderer;
@@ -26,8 +28,6 @@ import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
 import com.google.gwt.regexp.shared.RegExp;
 
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
-import org.exoplatform.ide.shared.util.RegExpUtils;
 
 /**
  * External handle to search functions in the editor.

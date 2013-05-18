@@ -14,7 +14,7 @@
 
 package com.google.collide.mvp;
 
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
 
 /**
  * A component which can be explicitly shown and hidden. Implementors of this

@@ -14,9 +14,9 @@
 
 package com.google.collide.client.util.collections;
 
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.common.base.Preconditions;
 
-import org.exoplatform.ide.json.shared.JsonArray;
 
 import javax.annotation.Nonnull;
 

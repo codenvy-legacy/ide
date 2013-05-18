@@ -35,8 +35,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static com.codenvy.ide.commons.server.FileUtils.deleteRecursive;
+
+
 import static com.google.appengine.tools.admin.AppAdminFactory.ApplicationProcessingOptions;
-import static org.exoplatform.ide.commons.FileUtils.deleteRecursive;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>

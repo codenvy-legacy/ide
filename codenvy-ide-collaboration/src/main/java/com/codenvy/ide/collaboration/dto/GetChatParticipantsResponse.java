@@ -18,9 +18,10 @@
  */
 package com.codenvy.ide.collaboration.dto;
 
-import org.exoplatform.ide.dtogen.shared.RoutingType;
-import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
-import org.exoplatform.ide.json.shared.JsonArray;
+import com.codenvy.ide.dtogen.shared.RoutingType;
+import com.codenvy.ide.dtogen.shared.ServerToClientDto;
+import com.codenvy.ide.json.shared.JsonArray;
+
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>

@@ -14,8 +14,8 @@
 
 package com.google.collide.dto;
 
-import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
-import org.exoplatform.ide.dtogen.shared.RoutingType;
+import com.codenvy.ide.dtogen.shared.ClientToServerDto;
+import com.codenvy.ide.dtogen.shared.RoutingType;
 
 /** DTO for updating user-specific workspace metadata. */
 @RoutingType(type = RoutingTypes.UPDATEUSERWORKSPACEMETADATA)

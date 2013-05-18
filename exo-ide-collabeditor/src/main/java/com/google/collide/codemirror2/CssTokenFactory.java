@@ -14,7 +14,7 @@
 
 package com.google.collide.codemirror2;
 
-import org.exoplatform.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonArray;
 
 /** Token factory for CSS; uses information from {@link CssState}. */
 public class CssTokenFactory implements TokenFactory<CssState> {

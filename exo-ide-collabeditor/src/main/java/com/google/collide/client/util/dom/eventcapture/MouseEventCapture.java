@@ -14,12 +14,13 @@
 
 package com.google.collide.client.util.dom.eventcapture;
 
+import com.codenvy.ide.json.client.JsoArray;
+
 import elemental.client.Browser;
 import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.events.EventTarget;
 
-import org.exoplatform.ide.json.client.JsoArray;
 
 /** Utility class which allows simulation of Event Capture. */
 public class MouseEventCapture {

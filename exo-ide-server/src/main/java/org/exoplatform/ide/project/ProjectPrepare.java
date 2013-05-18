@@ -18,8 +18,9 @@
  */
 package org.exoplatform.ide.project;
 
-import org.exoplatform.ide.commons.PomUtils;
-import org.exoplatform.ide.commons.ProjectType;
+import com.codenvy.ide.commons.server.PomUtils;
+import com.codenvy.ide.commons.shared.ProjectType;
+
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;

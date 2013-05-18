@@ -14,10 +14,10 @@
 
 package com.google.collide.client.code.autocomplete;
 
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.codemirror2.Token;
 import com.google.collide.shared.TaggableLine;
 
-import org.exoplatform.ide.json.shared.JsonArray;
 
 import javax.annotation.Nonnull;
 

@@ -14,6 +14,8 @@
 
 package com.google.collide.client.code.autocomplete.codegraph;
 
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.documentparser.ParseResult;
 import com.google.collide.codemirror2.State;
@@ -22,8 +24,6 @@ import com.google.collide.codemirror2.TokenType;
 import com.google.collide.shared.document.Position;
 import com.google.common.base.Preconditions;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
 
 import javax.annotation.Nonnull;
 

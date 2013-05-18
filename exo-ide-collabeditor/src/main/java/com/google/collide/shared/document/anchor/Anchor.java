@@ -14,12 +14,12 @@
 
 package com.google.collide.shared.document.anchor;
 
+import com.codenvy.ide.commons.shared.ListenerManager;
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
+import com.codenvy.ide.commons.shared.ListenerManager.Dispatcher;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
 
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 import static com.google.common.base.Preconditions.checkArgument;
 

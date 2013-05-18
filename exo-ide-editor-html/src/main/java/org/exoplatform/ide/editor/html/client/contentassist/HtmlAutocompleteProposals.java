@@ -14,12 +14,11 @@
 
 package org.exoplatform.ide.editor.html.client.contentassist;
 
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.client.code.autocomplete.AutocompleteProposal;
 import com.google.collide.client.code.autocomplete.AutocompleteProposals;
 import com.google.collide.codemirror2.SyntaxType;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-//import com.google.common.base.Preconditions;
 
 /** Html-specific implementation. */
 public class HtmlAutocompleteProposals extends AutocompleteProposals {

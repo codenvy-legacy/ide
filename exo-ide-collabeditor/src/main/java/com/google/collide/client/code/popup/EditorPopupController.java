@@ -19,6 +19,8 @@ import elemental.html.Element;
 import elemental.util.Timer;
 
 import com.codenvy.ide.client.util.Elements;
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.renderer.SingleChunkLineRenderer;
@@ -33,8 +35,6 @@ import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.anchor.Anchor;
 import com.google.collide.shared.document.anchor.AnchorType;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 import javax.annotation.Nullable;
 

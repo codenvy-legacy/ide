@@ -14,7 +14,7 @@
 
 package com.google.collide.dto;
 
-import org.exoplatform.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonArray;
 
 /**
  * DTO for client-visible directory information in a directory listing.

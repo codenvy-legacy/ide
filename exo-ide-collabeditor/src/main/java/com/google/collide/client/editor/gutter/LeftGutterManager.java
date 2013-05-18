@@ -14,10 +14,10 @@
 
 package com.google.collide.client.editor.gutter;
 
+import com.codenvy.ide.commons.shared.ListenerRegistrar.Remover;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.shared.document.Document;
 
-import org.exoplatform.ide.shared.util.ListenerRegistrar.Remover;
 
 
 public class LeftGutterManager {

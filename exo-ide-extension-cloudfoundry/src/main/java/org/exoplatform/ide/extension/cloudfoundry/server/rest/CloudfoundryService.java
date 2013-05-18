@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server.rest;
 
-import org.exoplatform.ide.commons.ParsingResponseException;
+import com.codenvy.ide.commons.server.ParsingResponseException;
+
 import org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry;
 import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryException;
 import org.exoplatform.ide.extension.cloudfoundry.server.DebugMode;

@@ -27,6 +27,8 @@ import com.codenvy.ide.collaboration.chat.client.ChatResources.ChatCss;
 import com.codenvy.ide.collaboration.chat.client.ParticipantList.View;
 import com.codenvy.ide.collaboration.chat.client.ProjectChatPresenter.Display;
 import com.codenvy.ide.collaboration.chat.client.ProjectChatPresenter.MessageCallback;
+import com.codenvy.ide.json.shared.JsonCollections;
+import com.codenvy.ide.json.shared.JsonStringMap;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -39,8 +41,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.json.shared.JsonStringMap;
 
 import java.util.Date;
 

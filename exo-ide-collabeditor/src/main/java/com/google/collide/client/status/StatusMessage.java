@@ -19,10 +19,10 @@ import elemental.html.AnchorElement;
 import elemental.html.SpanElement;
 
 import com.codenvy.ide.client.util.Elements;
+import com.codenvy.ide.json.client.JsoArray;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 
-import org.exoplatform.ide.json.client.JsoArray;
 
 /**
  * This is the base of all message types.

@@ -19,6 +19,7 @@
 package org.exoplatform.ide.editor.ruby.client.contentassist;
 
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.client.CollabEditor;
 import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.selection.SelectionModel;
@@ -48,7 +49,6 @@ import org.exoplatform.ide.editor.ruby.client.codeassistant.model.BuiltinMethods
 import org.exoplatform.ide.editor.ruby.client.codeassistant.model.BuiltinMethodsDatabase.Metaclass;
 import org.exoplatform.ide.editor.ruby.client.codeassistant.model.BuiltinMethodsDatabase.MethodInfo;
 import org.exoplatform.ide.editor.ruby.client.codeassistant.model.BuiltinMethodsDatabase.ModuleMetaclass;
-import org.exoplatform.ide.json.shared.JsonArray;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,66 +71,66 @@ public class RubyContentAssistProcessor implements ContentAssistProcessor {
     }
 
     private Comparator<Token> tokenComparator = new Comparator<Token>() {
-          @Override
-          public int compare(Token t1, Token t2) {
-              if (t1.getType() == t2.getType()) {
-                  return t1.getName().compareTo(t2.getName());
-              }
+                                                  @Override
+                                                  public int compare(Token t1, Token t2) {
+                                                      if (t1.getType() == t2.getType()) {
+                                                          return t1.getName().compareTo(t2.getName());
+                                                      }
 
-              if ((t1.getType() == TokenType.PARAMETER && t2.getType() == TokenType.LOCAL_VARIABLE)
-                  || (t1.getType() == TokenType.LOCAL_VARIABLE && t2.getType() == TokenType.PARAMETER)) {
-                  return t1.getName().compareTo(t2.getName());
-              }
+                                                      if ((t1.getType() == TokenType.PARAMETER && t2.getType() == TokenType.LOCAL_VARIABLE)
+                                                          || (t1.getType() == TokenType.LOCAL_VARIABLE && t2.getType() == TokenType.PARAMETER)) {
+                                                          return t1.getName().compareTo(t2.getName());
+                                                      }
 
-              if (t2.getType() == TokenType.PARAMETER) {
-                  return 1;
-              }
-              if (t1.getType() == TokenType.PARAMETER) {
-                  return -1;
-              }
+                                                      if (t2.getType() == TokenType.PARAMETER) {
+                                                          return 1;
+                                                      }
+                                                      if (t1.getType() == TokenType.PARAMETER) {
+                                                          return -1;
+                                                      }
 
-              if (t2.getType() == TokenType.LOCAL_VARIABLE) {
-                  return 1;
-              }
-              if (t1.getType() == TokenType.LOCAL_VARIABLE) {
-                  return -1;
-              }
+                                                      if (t2.getType() == TokenType.LOCAL_VARIABLE) {
+                                                          return 1;
+                                                      }
+                                                      if (t1.getType() == TokenType.LOCAL_VARIABLE) {
+                                                          return -1;
+                                                      }
 
-              if (t1.getType() == TokenType.CLASS_VARIABLE) {
-                  return -1;
-              }
+                                                      if (t1.getType() == TokenType.CLASS_VARIABLE) {
+                                                          return -1;
+                                                      }
 
-              if (t2.getType() == TokenType.CLASS_VARIABLE) {
-                  return 1;
-              }
+                                                      if (t2.getType() == TokenType.CLASS_VARIABLE) {
+                                                          return 1;
+                                                      }
 
-              if (t1.getType() == TokenType.INSTANCE_VARIABLE) {
-                  return -1;
-              }
+                                                      if (t1.getType() == TokenType.INSTANCE_VARIABLE) {
+                                                          return -1;
+                                                      }
 
-              if (t2.getType() == TokenType.INSTANCE_VARIABLE) {
-                  return 1;
-              }
+                                                      if (t2.getType() == TokenType.INSTANCE_VARIABLE) {
+                                                          return 1;
+                                                      }
 
-              if (t1.getType() == TokenType.GLOBAL_VARIABLE) {
-                  return -1;
-              }
+                                                      if (t1.getType() == TokenType.GLOBAL_VARIABLE) {
+                                                          return -1;
+                                                      }
 
-              if (t2.getType() == TokenType.GLOBAL_VARIABLE) {
-                  return 1;
-              }
+                                                      if (t2.getType() == TokenType.GLOBAL_VARIABLE) {
+                                                          return 1;
+                                                      }
 
-              if (t1.getType() == TokenType.METHOD || t1.getType() == TokenType.PROPERTY) {
-                  return -1;
-              }
+                                                      if (t1.getType() == TokenType.METHOD || t1.getType() == TokenType.PROPERTY) {
+                                                          return -1;
+                                                      }
 
-              if (t2.getType() == TokenType.METHOD || t2.getType() == TokenType.PROPERTY) {
-                  return 1;
-              }
+                                                      if (t2.getType() == TokenType.METHOD || t2.getType() == TokenType.PROPERTY) {
+                                                          return 1;
+                                                      }
 
-              return t1.getName().compareTo(t2.getName());
-          }
-      };
+                                                      return t1.getName().compareTo(t2.getName());
+                                                  }
+                                              };
 
     /** Bean that holds {@link #findToken} results. */
     private static class FindTokenResult {
@@ -140,7 +140,7 @@ public class RubyContentAssistProcessor implements ContentAssistProcessor {
         com.google.collide.codemirror2.Token inToken;
 
         /** Number of characters between "inToken" start and the cursor position. */
-        int cut;
+        int                                  cut;
     }
 
     /** List of Ruby language keywords. */

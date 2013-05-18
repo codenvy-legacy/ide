@@ -24,7 +24,7 @@ import com.google.gwt.resources.client.ImageResource;
 
 /**
  * Image bundle for folder and default file icons.
- *
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ImageBundle.java Sep 2, 2011 4:40:03 PM vereshchaka $
  */
@@ -61,10 +61,10 @@ public interface IconImageBundle extends ClientBundle {
 
     @Source("org/exoplatform/ide/client/bundled-images/projects/python48x48.png")
     ImageResource pythonProject48();
-    
+
     @Source("org/exoplatform/ide/client/bundled-images/projects/nodejs48x48.png")
     ImageResource nodejsProject48();
-    
+
     @Source("org/exoplatform/ide/client/bundled-images/projects/nodejs.png")
     ImageResource nodejsProject();
 
@@ -86,9 +86,6 @@ public interface IconImageBundle extends ClientBundle {
     @Source("org/exoplatform/ide/client/bundled-images/projects/groovy-project.png")
     ImageResource groovyProject();
 
-    @Source("org/exoplatform/ide/client/bundled-images/projects/exo.png")
-    ImageResource exoProject();
-
     @Source("org/exoplatform/ide/client/bundled-images/projects/php.png")
     ImageResource phpProject();
 
@@ -103,9 +100,6 @@ public interface IconImageBundle extends ClientBundle {
 
     @Source("org/exoplatform/ide/client/bundled-images/projects/default-project.png")
     ImageResource defaultProject();
-
-    @Source("org/exoplatform/ide/client/bundled-images/projects/aws.png")
-    ImageResource awsProject();
 
     @Source("org/exoplatform/ide/client/bundled-images/projects/jar48x48.png")
     ImageResource jarProject48();

@@ -21,9 +21,9 @@
 // GENERATED SOURCE. DO NOT EDIT.
 package com.google.collide.dto.server;
 
+import com.codenvy.ide.dtogen.server.JsonSerializable;
 import com.google.gson.*;
 
-import org.exoplatform.ide.dtogen.server.JsonSerializable;
 
 import java.util.Map;
 
@@ -38,7 +38,7 @@ public class DtoServerImpls {
 
     public static final String CLIENT_SERVER_PROTOCOL_HASH = "d4930e5ce742090ffe80386650d985fbcd832c45";
 
-    public static class AddMembersResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class AddMembersResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.AddMembersResponse, JsonSerializable {
 
         private AddMembersResponseImpl() {
@@ -63,9 +63,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getInvalidEmails() {
+        public com.codenvy.ide.json.shared.JsonArray<java.lang.String> getInvalidEmails() {
             ensureInvalidEmails();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(invalidEmails);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(invalidEmails);
         }
 
         public AddMembersResponseImpl setInvalidEmails(java.util.List<java.lang.String> v) {
@@ -95,9 +95,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> getNewMembers() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> getNewMembers() {
             ensureNewMembers();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(newMembers);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(newMembers);
         }
 
         public AddMembersResponseImpl setNewMembers(java.util.List<UserDetailsWithRoleImpl> v) {
@@ -241,7 +241,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class AddProjectMembersImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class AddProjectMembersImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.AddProjectMembers, JsonSerializable {
 
         private AddProjectMembersImpl() {
@@ -413,7 +413,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class AddWorkspaceMembersImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class AddWorkspaceMembersImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.AddWorkspaceMembers, JsonSerializable {
 
         private AddWorkspaceMembersImpl() {
@@ -620,7 +620,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class BeginUploadSessionImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class BeginUploadSessionImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.BeginUploadSession, JsonSerializable {
 
         private BeginUploadSessionImpl() {
@@ -679,9 +679,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getWorkspacePathsToReplace() {
+        public com.codenvy.ide.json.shared.JsonArray<java.lang.String> getWorkspacePathsToReplace() {
             ensureWorkspacePathsToReplace();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(
                     workspacePathsToReplace);
         }
 
@@ -713,9 +713,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getWorkspacePathsToUnzip() {
+        public com.codenvy.ide.json.shared.JsonArray<java.lang.String> getWorkspacePathsToUnzip() {
             ensureWorkspacePathsToUnzip();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(
                     workspacePathsToUnzip);
         }
 
@@ -747,9 +747,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getWorkspaceDirsToCreate() {
+        public com.codenvy.ide.json.shared.JsonArray<java.lang.String> getWorkspaceDirsToCreate() {
             ensureWorkspaceDirsToCreate();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(
                     workspaceDirsToCreate);
         }
 
@@ -1000,7 +1000,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class ChangeRoleInfoImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class ChangeRoleInfoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.ChangeRoleInfo, JsonSerializable {
 
         private ChangeRoleInfoImpl() {
@@ -1207,7 +1207,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class ClientToServerDocOpImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class ClientToServerDocOpImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.ClientToServerDocOp, JsonSerializable {
 
         private ClientToServerDocOpImpl() {
@@ -1236,9 +1236,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getDocOps2() {
+        public com.codenvy.ide.json.shared.JsonArray<java.lang.String> getDocOps2() {
             ensureDocOps2();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(docOps2);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(docOps2);
         }
 
         public ClientToServerDocOpImpl setDocOps2(java.util.List<java.lang.String> v) {
@@ -1515,7 +1515,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class CloseEditorImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class CloseEditorImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.CloseEditor, JsonSerializable {
 
         private CloseEditorImpl() {
@@ -1652,7 +1652,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class CodeBlockImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class CodeBlockImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.CodeBlock, JsonSerializable {
 
         private CodeBlockImpl() {
@@ -1794,9 +1794,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.CodeBlock> getChildren() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.CodeBlock> getChildren() {
             ensureChildren();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(children);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(children);
         }
 
         public CodeBlockImpl setChildren(java.util.List<CodeBlockImpl> v) {
@@ -2035,7 +2035,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class CodeBlockAssociationImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class CodeBlockAssociationImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.CodeBlockAssociation, JsonSerializable {
 
         private CodeBlockAssociationImpl() {
@@ -2478,7 +2478,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class CodeErrorsImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class CodeErrorsImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.CodeErrors, JsonSerializable {
 
         private CodeErrorsImpl() {
@@ -2518,9 +2518,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.CodeError> getCodeErrors() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.CodeError> getCodeErrors() {
             ensureCodeErrors();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(codeErrors);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(codeErrors);
         }
 
         public CodeErrorsImpl setCodeErrors(java.util.List<CodeErrorImpl> v) {
@@ -2650,7 +2650,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class CodeErrorsRequestImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class CodeErrorsRequestImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.CodeErrorsRequest, JsonSerializable {
 
         private CodeErrorsRequestImpl() {
@@ -2809,9 +2809,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonStringMap<com.google.collide.dto.CodeBlock> getCodeBlockMap() {
+        public com.codenvy.ide.json.shared.JsonStringMap<com.google.collide.dto.CodeBlock> getCodeBlockMap() {
             ensureCodeBlockMap();
-            return (org.exoplatform.ide.json.shared.JsonStringMap)new org.exoplatform.ide.json.server.JsonStringMapAdapter(codeBlockMap);
+            return (com.codenvy.ide.json.shared.JsonStringMap)new com.codenvy.ide.json.server.JsonStringMapAdapter(codeBlockMap);
         }
 
         public CodeGraphImpl setCodeBlockMap(java.util.Map<String, CodeBlockImpl> v) {
@@ -2856,9 +2856,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.InheritanceAssociation> getInheritanceAssociations() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.InheritanceAssociation> getInheritanceAssociations() {
             ensureInheritanceAssociations();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(
                     inheritanceAssociations);
         }
 
@@ -2890,9 +2890,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.TypeAssociation> getTypeAssociations() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.TypeAssociation> getTypeAssociations() {
             ensureTypeAssociations();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(typeAssociations);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(typeAssociations);
         }
 
         public CodeGraphImpl setTypeAssociations(java.util.List<TypeAssociationImpl> v) {
@@ -2922,9 +2922,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ImportAssociation> getImportAssociations() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ImportAssociation> getImportAssociations() {
             ensureImportAssociations();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(importAssociations);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(importAssociations);
         }
 
         public CodeGraphImpl setImportAssociations(java.util.List<ImportAssociationImpl> v) {
@@ -3453,7 +3453,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class CodeGraphRequestImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class CodeGraphRequestImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.CodeGraphRequest, JsonSerializable {
 
         private CodeGraphRequestImpl() {
@@ -3625,7 +3625,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class CodeGraphResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class CodeGraphResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.CodeGraphResponse, JsonSerializable {
 
         private CodeGraphResponseImpl() {
@@ -3941,7 +3941,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class CodeReferenceImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class CodeReferenceImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.CodeReference, JsonSerializable {
 
         private CodeReferenceImpl() {
@@ -4271,9 +4271,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.CodeReference> getReferences() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.CodeReference> getReferences() {
             ensureReferences();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(references);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(references);
         }
 
         public CodeReferencesImpl setReferences(java.util.List<CodeReferenceImpl> v) {
@@ -4649,7 +4649,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class ConflictChunkResolvedImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class ConflictChunkResolvedImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.ConflictChunkResolved, JsonSerializable {
 
         private ConflictChunkResolvedImpl() {
@@ -4860,7 +4860,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class CreateAppEngineAppStatusImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class CreateAppEngineAppStatusImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.CreateAppEngineAppStatus, JsonSerializable {
 
         private CreateAppEngineAppStatusImpl() {
@@ -4967,7 +4967,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class CreateProjectImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class CreateProjectImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.CreateProject, JsonSerializable {
 
         private CreateProjectImpl() {
@@ -5104,7 +5104,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class CreateProjectResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class CreateProjectResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.CreateProjectResponse, JsonSerializable {
 
         private CreateProjectResponseImpl() {
@@ -5210,7 +5210,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class CreateWorkspaceImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class CreateWorkspaceImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.CreateWorkspace, JsonSerializable {
 
         private CreateWorkspaceImpl() {
@@ -5417,7 +5417,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class CreateWorkspaceResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class CreateWorkspaceResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.CreateWorkspaceResponse, JsonSerializable {
 
         private CreateWorkspaceResponseImpl() {
@@ -5523,7 +5523,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class CubePingImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class CubePingImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.CubePing, JsonSerializable {
 
         private CubePingImpl() {
@@ -5846,7 +5846,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class DeployWorkspaceStatusImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class DeployWorkspaceStatusImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.DeployWorkspaceStatus, JsonSerializable {
 
         private DeployWorkspaceStatusImpl() {
@@ -6186,7 +6186,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class DiffStatsDtoImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class DiffStatsDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.DiffStatsDto, JsonSerializable {
 
         private DiffStatsDtoImpl() {
@@ -6430,9 +6430,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.DirInfo> getSubDirectories() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.DirInfo> getSubDirectories() {
             ensureSubDirectories();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(subDirectories);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(subDirectories);
         }
 
         public DirInfoImpl setSubDirectories(java.util.List<DirInfoImpl> v) {
@@ -6462,9 +6462,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.FileInfo> getFiles() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.FileInfo> getFiles() {
             ensureFiles();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(files);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(files);
         }
 
         public DirInfoImpl setFiles(java.util.List<FileInfoImpl> v) {
@@ -6666,9 +6666,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.DocOpComponent> getComponents() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.DocOpComponent> getComponents() {
             ensureComponents();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(components);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(components);
         }
 
         public DocOpImpl setComponents(java.util.List<DocOpComponentImpl> v) {
@@ -7448,7 +7448,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class EmptyMessageImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class EmptyMessageImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.EmptyMessage, JsonSerializable {
 
         private EmptyMessageImpl() {
@@ -7519,7 +7519,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class EndUploadSessionImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class EndUploadSessionImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.EndUploadSession, JsonSerializable {
 
         private EndUploadSessionImpl() {
@@ -7687,9 +7687,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getDisplayFailedWorkspacePaths() {
+        public com.codenvy.ide.json.shared.JsonArray<java.lang.String> getDisplayFailedWorkspacePaths() {
             ensureDisplayFailedWorkspacePaths();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(
                     displayFailedWorkspacePaths);
         }
 
@@ -7820,7 +7820,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class EndUploadSessionFinishedImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class EndUploadSessionFinishedImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.EndUploadSessionFinished, JsonSerializable {
 
         private EndUploadSessionFinishedImpl() {
@@ -7849,9 +7849,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getFailedFileWorkspacePaths() {
+        public com.codenvy.ide.json.shared.JsonArray<java.lang.String> getFailedFileWorkspacePaths() {
             ensureFailedFileWorkspacePaths();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(
                     failedFileWorkspacePaths);
         }
 
@@ -7883,9 +7883,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getFailedDirWorkspacePaths() {
+        public com.codenvy.ide.json.shared.JsonArray<java.lang.String> getFailedDirWorkspacePaths() {
             ensureFailedDirWorkspacePaths();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(
                     failedDirWorkspacePaths);
         }
 
@@ -7917,9 +7917,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.EndUploadSessionFinished.UnzipFailure> getUnzipFailures() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.EndUploadSessionFinished.UnzipFailure> getUnzipFailures() {
             ensureUnzipFailures();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(unzipFailures);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(unzipFailures);
         }
 
         public EndUploadSessionFinishedImpl setUnzipFailures(java.util.List<UnzipFailureImpl> v) {
@@ -8132,7 +8132,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class EnterWorkspaceImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class EnterWorkspaceImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.EnterWorkspace, JsonSerializable {
 
         private EnterWorkspaceImpl() {
@@ -8269,7 +8269,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class EnterWorkspaceResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class EnterWorkspaceResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.EnterWorkspaceResponse, JsonSerializable {
 
         private EnterWorkspaceResponseImpl() {
@@ -8310,9 +8310,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> getParticipants() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> getParticipants() {
             ensureParticipants();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(participants);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(participants);
         }
 
         public EnterWorkspaceResponseImpl setParticipants(java.util.List<ParticipantUserDetailsImpl> v) {
@@ -8726,7 +8726,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class FileCollaboratorGoneImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class FileCollaboratorGoneImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.FileCollaboratorGone, JsonSerializable {
 
         private FileCollaboratorGoneImpl() {
@@ -8942,9 +8942,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ConflictChunk> getConflicts() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ConflictChunk> getConflicts() {
             ensureConflicts();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(conflicts);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(conflicts);
         }
 
         public FileContentsImpl setConflicts(java.util.List<ConflictChunkImpl> v) {
@@ -8989,9 +8989,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getSelections() {
+        public com.codenvy.ide.json.shared.JsonArray<java.lang.String> getSelections() {
             ensureSelections();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(selections);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(selections);
         }
 
         public FileContentsImpl setSelections(java.util.List<java.lang.String> v) {
@@ -9426,7 +9426,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class FileOperationNotificationImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class FileOperationNotificationImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.FileOperationNotification, JsonSerializable {
 
         private FileOperationNotificationImpl() {
@@ -9673,7 +9673,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class FilePositionImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class FilePositionImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.FilePosition, JsonSerializable {
 
         private FilePositionImpl() {
@@ -9813,7 +9813,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetAppEngineClusterTypeImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetAppEngineClusterTypeImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetAppEngineClusterType, JsonSerializable {
 
         private GetAppEngineClusterTypeImpl() {
@@ -9916,7 +9916,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetDeployInformationImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetDeployInformationImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetDeployInformation, JsonSerializable {
 
         private GetDeployInformationImpl() {
@@ -10217,7 +10217,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetDeployInformationResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetDeployInformationResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetDeployInformationResponse, JsonSerializable {
 
         private GetDeployInformationResponseImpl() {
@@ -10240,10 +10240,10 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.GetDeployInformationResponse.DeployInformation>
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.GetDeployInformationResponse.DeployInformation>
         getDeployInformation() {
             ensureDeployInformation();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(deployInformation);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(deployInformation);
         }
 
         public GetDeployInformationResponseImpl setDeployInformation(java.util.List<DeployInformationImpl> v) {
@@ -10355,7 +10355,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetDirectoryImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetDirectoryImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetDirectory, JsonSerializable {
 
         private GetDirectoryImpl() {
@@ -10527,7 +10527,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetDirectoryResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetDirectoryResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetDirectoryResponse, JsonSerializable {
 
         private GetDirectoryResponseImpl() {
@@ -10703,7 +10703,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetEditSessionCollaboratorsImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetEditSessionCollaboratorsImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetEditSessionCollaborators, JsonSerializable {
 
         private GetEditSessionCollaboratorsImpl() {
@@ -10805,7 +10805,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetEditSessionCollaboratorsResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetEditSessionCollaboratorsResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetEditSessionCollaboratorsResponse, JsonSerializable {
 
         private GetEditSessionCollaboratorsResponseImpl() {
@@ -10828,9 +10828,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> getParticipants() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> getParticipants() {
             ensureParticipants();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(participants);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(participants);
         }
 
         public GetEditSessionCollaboratorsResponseImpl setParticipants(java.util.List<ParticipantUserDetailsImpl> v) {
@@ -10942,7 +10942,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetFileContentsImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetFileContentsImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetFileContents, JsonSerializable {
 
         private GetFileContentsImpl() {
@@ -11114,7 +11114,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetFileContentsResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetFileContentsResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetFileContentsResponse, JsonSerializable {
 
         private GetFileContentsResponseImpl() {
@@ -11255,7 +11255,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetFileDiffImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetFileDiffImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetFileDiff, JsonSerializable {
 
         private GetFileDiffImpl() {
@@ -11568,7 +11568,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetFileDiffResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetFileDiffResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetFileDiffResponse, JsonSerializable {
 
         private GetFileDiffResponseImpl() {
@@ -11597,9 +11597,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.DiffChunkResponse> getDiffChunks() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.DiffChunkResponse> getDiffChunks() {
             ensureDiffChunks();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(diffChunks);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(diffChunks);
         }
 
         public GetFileDiffResponseImpl setDiffChunks(java.util.List<DiffChunkResponseImpl> v) {
@@ -11810,7 +11810,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetFileRevisionsImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetFileRevisionsImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetFileRevisions, JsonSerializable {
 
         private GetFileRevisionsImpl() {
@@ -12227,7 +12227,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetFileRevisionsResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetFileRevisionsResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetFileRevisionsResponse, JsonSerializable {
 
         private GetFileRevisionsResponseImpl() {
@@ -12269,9 +12269,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.Revision> getRevisions() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.Revision> getRevisions() {
             ensureRevisions();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(revisions);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(revisions);
         }
 
         public GetFileRevisionsResponseImpl setRevisions(java.util.List<RevisionImpl> v) {
@@ -12434,7 +12434,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetOpenedFilesInWorkspaceResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetOpenedFilesInWorkspaceResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetOpenedFilesInWorkspaceResponse, JsonSerializable {
 
         private GetOpenedFilesInWorkspaceResponseImpl() {
@@ -12457,10 +12457,10 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonStringMap<org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto
+        public com.codenvy.ide.json.shared.JsonStringMap<com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto
                 .ParticipantUserDetails>> getOpenedFiles() {
             ensureOpenedFiles();
-            return (org.exoplatform.ide.json.shared.JsonStringMap)new org.exoplatform.ide.json.server.JsonStringMapAdapter(openedFiles);
+            return (com.codenvy.ide.json.shared.JsonStringMap)new com.codenvy.ide.json.server.JsonStringMapAdapter(openedFiles);
         }
 
         public GetOpenedFilesInWorkspaceResponseImpl setOpenedFiles(
@@ -12588,7 +12588,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetOpenendFilesInWorkspaceImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetOpenendFilesInWorkspaceImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetOpenendFilesInWorkspace, JsonSerializable {
 
         private GetOpenendFilesInWorkspaceImpl() {
@@ -12655,7 +12655,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetOwningProjectImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetOwningProjectImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetOwningProject, JsonSerializable {
 
         private GetOwningProjectImpl() {
@@ -12757,7 +12757,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetOwningProjectResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetOwningProjectResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetOwningProjectResponse, JsonSerializable {
 
         private GetOwningProjectResponseImpl() {
@@ -12933,7 +12933,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetProjectByIdImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetProjectByIdImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetProjectById, JsonSerializable {
 
         private GetProjectByIdImpl() {
@@ -13176,7 +13176,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetProjectByIdResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetProjectByIdResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetProjectByIdResponse, JsonSerializable {
 
         private GetProjectByIdResponseImpl() {
@@ -13203,9 +13203,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.WorkspaceInfo> getWorkspaces() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.WorkspaceInfo> getWorkspaces() {
             ensureWorkspaces();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(workspaces);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(workspaces);
         }
 
         public GetProjectByIdResponseImpl setWorkspaces(java.util.List<WorkspaceInfoImpl> v) {
@@ -13383,7 +13383,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetProjectMembersImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetProjectMembersImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetProjectMembers, JsonSerializable {
 
         private GetProjectMembersImpl() {
@@ -13485,7 +13485,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetProjectMembersResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetProjectMembersResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetProjectMembersResponse, JsonSerializable {
 
         private GetProjectMembersResponseImpl() {
@@ -13510,9 +13510,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> getPendingMembers() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> getPendingMembers() {
             ensurePendingMembers();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(pendingMembers);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(pendingMembers);
         }
 
         public GetProjectMembersResponseImpl setPendingMembers(java.util.List<UserDetailsWithRoleImpl> v) {
@@ -13542,9 +13542,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> getMembers() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> getMembers() {
             ensureMembers();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(members);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(members);
         }
 
         public GetProjectMembersResponseImpl setMembers(java.util.List<UserDetailsWithRoleImpl> v) {
@@ -13688,7 +13688,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetProjectsResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetProjectsResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetProjectsResponse, JsonSerializable {
 
         private GetProjectsResponseImpl() {
@@ -13747,9 +13747,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getHiddenProjectIds() {
+        public com.codenvy.ide.json.shared.JsonArray<java.lang.String> getHiddenProjectIds() {
             ensureHiddenProjectIds();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(hiddenProjectIds);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(hiddenProjectIds);
         }
 
         public GetProjectsResponseImpl setHiddenProjectIds(java.util.List<java.lang.String> v) {
@@ -13779,9 +13779,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ProjectInfo> getProjects() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ProjectInfo> getProjects() {
             ensureProjects();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(projects);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(projects);
         }
 
         public GetProjectsResponseImpl setProjects(java.util.List<ProjectInfoImpl> v) {
@@ -13963,7 +13963,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetStagingServerInfoResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetStagingServerInfoResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetStagingServerInfoResponse, JsonSerializable {
 
         private GetStagingServerInfoResponseImpl() {
@@ -14174,7 +14174,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetSyncStateImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetSyncStateImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetSyncState, JsonSerializable {
 
         private GetSyncStateImpl() {
@@ -14276,7 +14276,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetSyncStateResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetSyncStateResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetSyncStateResponse, JsonSerializable {
 
         private GetSyncStateResponseImpl() {
@@ -14383,7 +14383,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetTemplatesImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetTemplatesImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetTemplates, JsonSerializable {
 
         private GetTemplatesImpl() {
@@ -14485,7 +14485,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetTemplatesResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetTemplatesResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetTemplatesResponse, JsonSerializable {
 
         private GetTemplatesResponseImpl() {
@@ -14508,9 +14508,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonStringMap<java.lang.String> getTemplates() {
+        public com.codenvy.ide.json.shared.JsonStringMap<java.lang.String> getTemplates() {
             ensureTemplates();
-            return (org.exoplatform.ide.json.shared.JsonStringMap)new org.exoplatform.ide.json.server.JsonStringMapAdapter(templates);
+            return (com.codenvy.ide.json.shared.JsonStringMap)new com.codenvy.ide.json.server.JsonStringMapAdapter(templates);
         }
 
         public GetTemplatesResponseImpl setTemplates(java.util.Map<String, java.lang.String> v) {
@@ -14700,7 +14700,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetUserAppEngineAppIdsResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetUserAppEngineAppIdsResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetUserAppEngineAppIdsResponse, JsonSerializable {
 
         private GetUserAppEngineAppIdsResponseImpl() {
@@ -14723,9 +14723,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getAppIds() {
+        public com.codenvy.ide.json.shared.JsonArray<java.lang.String> getAppIds() {
             ensureAppIds();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(appIds);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(appIds);
         }
 
         public GetUserAppEngineAppIdsResponseImpl setAppIds(java.util.List<java.lang.String> v) {
@@ -14837,7 +14837,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetWorkspaceImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetWorkspaceImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetWorkspace, JsonSerializable {
 
         private GetWorkspaceImpl() {
@@ -14974,7 +14974,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetWorkspaceChangeSummaryImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetWorkspaceChangeSummaryImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetWorkspaceChangeSummary, JsonSerializable {
 
         private GetWorkspaceChangeSummaryImpl() {
@@ -15111,7 +15111,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetWorkspaceChangeSummaryResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetWorkspaceChangeSummaryResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetWorkspaceChangeSummaryResponse, JsonSerializable {
 
         private GetWorkspaceChangeSummaryResponseImpl() {
@@ -15138,9 +15138,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.NodeMutationDto> getNodeMutations() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.NodeMutationDto> getNodeMutations() {
             ensureNodeMutations();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(nodeMutations);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(nodeMutations);
         }
 
         public GetWorkspaceChangeSummaryResponseImpl setNodeMutations(java.util.List<NodeMutationDtoImpl> v) {
@@ -15318,7 +15318,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetWorkspaceMembersImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetWorkspaceMembersImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetWorkspaceMembers, JsonSerializable {
 
         private GetWorkspaceMembersImpl() {
@@ -15455,7 +15455,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetWorkspaceMembersResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetWorkspaceMembersResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetWorkspaceMembersResponse, JsonSerializable {
 
         private GetWorkspaceMembersResponseImpl() {
@@ -15478,9 +15478,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> getMembers() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> getMembers() {
             ensureMembers();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(members);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(members);
         }
 
         public GetWorkspaceMembersResponseImpl setMembers(java.util.List<UserDetailsWithRoleImpl> v) {
@@ -15592,7 +15592,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetWorkspaceMetaDataImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetWorkspaceMetaDataImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetWorkspaceMetaData, JsonSerializable {
 
         private GetWorkspaceMetaDataImpl() {
@@ -15659,7 +15659,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetWorkspaceMetaDataResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetWorkspaceMetaDataResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetWorkspaceMetaDataResponse, JsonSerializable {
 
         private GetWorkspaceMetaDataResponseImpl() {
@@ -15701,9 +15701,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getLastOpenFiles() {
+        public com.codenvy.ide.json.shared.JsonArray<java.lang.String> getLastOpenFiles() {
             ensureLastOpenFiles();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(lastOpenFiles);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(lastOpenFiles);
         }
 
         public GetWorkspaceMetaDataResponseImpl setLastOpenFiles(java.util.List<java.lang.String> v) {
@@ -15866,7 +15866,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetWorkspaceParticipantsImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetWorkspaceParticipantsImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetWorkspaceParticipants, JsonSerializable {
 
         private GetWorkspaceParticipantsImpl() {
@@ -15902,9 +15902,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getParticipantIds() {
+        public com.codenvy.ide.json.shared.JsonArray<java.lang.String> getParticipantIds() {
             ensureParticipantIds();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(participantIds);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(participantIds);
         }
 
         public GetWorkspaceParticipantsImpl setParticipantIds(java.util.List<java.lang.String> v) {
@@ -16034,7 +16034,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetWorkspaceParticipantsResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetWorkspaceParticipantsResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetWorkspaceParticipantsResponse, JsonSerializable {
 
         private GetWorkspaceParticipantsResponseImpl() {
@@ -16057,9 +16057,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> getParticipants() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> getParticipants() {
             ensureParticipants();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(participants);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(participants);
         }
 
         public GetWorkspaceParticipantsResponseImpl setParticipants(java.util.List<ParticipantUserDetailsImpl> v) {
@@ -16171,7 +16171,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class GetWorkspaceResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class GetWorkspaceResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.GetWorkspaceResponse, JsonSerializable {
 
         private GetWorkspaceResponseImpl() {
@@ -16507,7 +16507,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class InvalidationMessageImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class InvalidationMessageImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.InvalidationMessage, JsonSerializable {
 
         private InvalidationMessageImpl() {
@@ -16683,7 +16683,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class KeepAliveImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class KeepAliveImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.KeepAlive, JsonSerializable {
 
         private KeepAliveImpl() {
@@ -16785,7 +16785,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class LeaveWorkspaceImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class LeaveWorkspaceImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.LeaveWorkspace, JsonSerializable {
 
         private LeaveWorkspaceImpl() {
@@ -16887,7 +16887,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class LoadTemplateImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class LoadTemplateImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.LoadTemplate, JsonSerializable {
 
         private LoadTemplateImpl() {
@@ -17059,7 +17059,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class LoadTemplateResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class LoadTemplateResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.LoadTemplateResponse, JsonSerializable {
 
         private LoadTemplateResponseImpl() {
@@ -17165,7 +17165,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class LogFatalRecordImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class LogFatalRecordImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.LogFatalRecord, JsonSerializable {
 
         private LogFatalRecordImpl() {
@@ -17222,9 +17222,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getRecentHistory() {
+        public com.codenvy.ide.json.shared.JsonArray<java.lang.String> getRecentHistory() {
             ensureRecentHistory();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(recentHistory);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(recentHistory);
         }
 
         public LogFatalRecordImpl setRecentHistory(java.util.List<java.lang.String> v) {
@@ -17439,7 +17439,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class LogFatalRecordResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class LogFatalRecordResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.LogFatalRecordResponse, JsonSerializable {
 
         private LogFatalRecordResponseImpl() {
@@ -17615,7 +17615,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class LogMetricImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class LogMetricImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.LogMetric, JsonSerializable {
 
         private LogMetricImpl() {
@@ -17822,7 +17822,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class LogMetricsImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class LogMetricsImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.LogMetrics, JsonSerializable {
 
         private LogMetricsImpl() {
@@ -17841,9 +17841,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.LogMetric> getMetrics() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.LogMetric> getMetrics() {
             ensureMetrics();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(metrics);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(metrics);
         }
 
         public LogMetricsImpl setMetrics(java.util.List<LogMetricImpl> v) {
@@ -17955,7 +17955,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class MembershipChangedPayloadImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class MembershipChangedPayloadImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.MembershipChangedPayload, JsonSerializable {
 
         private MembershipChangedPayloadImpl() {
@@ -18296,7 +18296,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class NewFileCollaboratorImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class NewFileCollaboratorImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.NewFileCollaborator, JsonSerializable {
 
         private NewFileCollaboratorImpl() {
@@ -18833,7 +18833,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class NodeConflictDtoImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class NodeConflictDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.NodeConflictDto, JsonSerializable {
 
         private NodeConflictDtoImpl() {
@@ -18902,10 +18902,10 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ResolveTreeConflict.ConflictResolutionChoice>
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ResolveTreeConflict.ConflictResolutionChoice>
         getValidResolutions() {
             ensureValidResolutions();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(validResolutions);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(validResolutions);
         }
 
         public NodeConflictDtoImpl setValidResolutions(
@@ -18998,9 +18998,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.NodeConflictDto> getGroupedConflicts() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.NodeConflictDto> getGroupedConflicts() {
             ensureGroupedConflicts();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(groupedConflicts);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(groupedConflicts);
         }
 
         public NodeConflictDtoImpl setGroupedConflicts(java.util.List<NodeConflictDtoImpl> v) {
@@ -19030,9 +19030,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.NodeConflictDto.ConflictedPath> getParentPaths() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.NodeConflictDto.ConflictedPath> getParentPaths() {
             ensureParentPaths();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(parentPaths);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(parentPaths);
         }
 
         public NodeConflictDtoImpl setParentPaths(java.util.List<ConflictedPathImpl> v) {
@@ -19479,7 +19479,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class NodeMutationDtoImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class NodeMutationDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.NodeMutationDto, JsonSerializable {
 
         private NodeMutationDtoImpl() {
@@ -20351,9 +20351,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.UserDetails> getMembers() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.UserDetails> getMembers() {
             ensureMembers();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(members);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(members);
         }
 
         public ProjectMembersInfoImpl setMembers(java.util.List<UserDetailsImpl> v) {
@@ -20479,7 +20479,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class RecoverFromDroppedTangoInvalidationImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class RecoverFromDroppedTangoInvalidationImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.RecoverFromDroppedTangoInvalidation, JsonSerializable {
 
         private RecoverFromDroppedTangoInvalidationImpl() {
@@ -20780,7 +20780,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class RecoverFromDroppedTangoInvalidationResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class RecoverFromDroppedTangoInvalidationResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.RecoverFromDroppedTangoInvalidationResponse, JsonSerializable {
 
         private RecoverFromDroppedTangoInvalidationResponseImpl() {
@@ -20805,10 +20805,10 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.RecoverFromDroppedTangoInvalidationResponse
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.RecoverFromDroppedTangoInvalidationResponse
                 .RecoveredPayload> getPayloads() {
             ensurePayloads();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(payloads);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(payloads);
         }
 
         public RecoverFromDroppedTangoInvalidationResponseImpl setPayloads(java.util.List<RecoveredPayloadImpl> v) {
@@ -20953,7 +20953,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class RecoverFromMissedDocOpsImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class RecoverFromMissedDocOpsImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.RecoverFromMissedDocOps, JsonSerializable {
 
         private RecoverFromMissedDocOpsImpl() {
@@ -20980,9 +20980,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getDocOps2() {
+        public com.codenvy.ide.json.shared.JsonArray<java.lang.String> getDocOps2() {
             ensureDocOps2();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(docOps2);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(docOps2);
         }
 
         public RecoverFromMissedDocOpsImpl setDocOps2(java.util.List<java.lang.String> v) {
@@ -21226,7 +21226,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class RecoverFromMissedDocOpsResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class RecoverFromMissedDocOpsResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.RecoverFromMissedDocOpsResponse, JsonSerializable {
 
         private RecoverFromMissedDocOpsResponseImpl() {
@@ -21266,9 +21266,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ServerToClientDocOp> getDocOps() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ServerToClientDocOp> getDocOps() {
             ensureDocOps();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(docOps);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(docOps);
         }
 
         public RecoverFromMissedDocOpsResponseImpl setDocOps(java.util.List<ServerToClientDocOpImpl> v) {
@@ -21398,7 +21398,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class RefreshWorkspaceImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class RefreshWorkspaceImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.RefreshWorkspace, JsonSerializable {
 
         private RefreshWorkspaceImpl() {
@@ -21539,7 +21539,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class RequestProjectMembershipImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class RequestProjectMembershipImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.RequestProjectMembership, JsonSerializable {
 
         private RequestProjectMembershipImpl() {
@@ -21641,7 +21641,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class ResolveConflictChunkImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class ResolveConflictChunkImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.ResolveConflictChunk, JsonSerializable {
 
         private ResolveConflictChunkImpl() {
@@ -21883,7 +21883,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class ResolveTreeConflictImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class ResolveTreeConflictImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.ResolveTreeConflict, JsonSerializable {
 
         private ResolveTreeConflictImpl() {
@@ -22091,7 +22091,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class ResolveTreeConflictResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class ResolveTreeConflictResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.ResolveTreeConflictResponse, JsonSerializable {
 
         private ResolveTreeConflictResponseImpl() {
@@ -22197,7 +22197,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class RetryAlreadyTransferredUploadImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class RetryAlreadyTransferredUploadImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.RetryAlreadyTransferredUpload, JsonSerializable {
 
         private RetryAlreadyTransferredUploadImpl() {
@@ -22252,9 +22252,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getFileWorkspacePaths() {
+        public com.codenvy.ide.json.shared.JsonArray<java.lang.String> getFileWorkspacePaths() {
             ensureFileWorkspacePaths();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(fileWorkspacePaths);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(fileWorkspacePaths);
         }
 
         public RetryAlreadyTransferredUploadImpl setFileWorkspacePaths(java.util.List<java.lang.String> v) {
@@ -22284,9 +22284,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getUnzipWorkspacePaths() {
+        public com.codenvy.ide.json.shared.JsonArray<java.lang.String> getUnzipWorkspacePaths() {
             ensureUnzipWorkspacePaths();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(unzipWorkspacePaths);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(unzipWorkspacePaths);
         }
 
         public RetryAlreadyTransferredUploadImpl setUnzipWorkspacePaths(java.util.List<java.lang.String> v) {
@@ -22936,7 +22936,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class SearchImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class SearchImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.Search, JsonSerializable {
 
         private SearchImpl() {
@@ -23108,7 +23108,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class SearchResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class SearchResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.SearchResponse, JsonSerializable {
 
         private SearchResponseImpl() {
@@ -23182,9 +23182,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.SearchResult> getResults() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.SearchResult> getResults() {
             ensureResults();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(results);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(results);
         }
 
         public SearchResponseImpl setResults(java.util.List<SearchResultImpl> v) {
@@ -23383,9 +23383,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.Snippet> getSnippets() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.Snippet> getSnippets() {
             ensureSnippets();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(snippets);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(snippets);
         }
 
         public SearchResultImpl setSnippets(java.util.List<SnippetImpl> v) {
@@ -23544,7 +23544,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class ServerToClientDocOpImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class ServerToClientDocOpImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.ServerToClientDocOp, JsonSerializable {
 
         private ServerToClientDocOpImpl() {
@@ -23860,7 +23860,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class ServerToClientDocOpsImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class ServerToClientDocOpsImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.ServerToClientDocOps, JsonSerializable {
 
         private ServerToClientDocOpsImpl() {
@@ -23883,9 +23883,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ServerToClientDocOp> getDocOps() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.ServerToClientDocOp> getDocOps() {
             ensureDocOps();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(docOps);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(docOps);
         }
 
         public ServerToClientDocOpsImpl setDocOps(java.util.List<ServerToClientDocOpImpl> v) {
@@ -23997,7 +23997,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class SetActiveProjectImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class SetActiveProjectImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.SetActiveProject, JsonSerializable {
 
         private SetActiveProjectImpl() {
@@ -24099,7 +24099,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class SetProjectHiddenImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class SetProjectHiddenImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.SetProjectHidden, JsonSerializable {
 
         private SetProjectHiddenImpl() {
@@ -24236,7 +24236,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class SetProjectRoleImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class SetProjectRoleImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.SetProjectRole, JsonSerializable {
 
         private SetProjectRoleImpl() {
@@ -24408,7 +24408,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class SetRoleResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class SetRoleResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.SetRoleResponse, JsonSerializable {
 
         private SetRoleResponseImpl() {
@@ -24514,7 +24514,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class SetStagingServerAppIdImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class SetStagingServerAppIdImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.SetStagingServerAppId, JsonSerializable {
 
         private SetStagingServerAppIdImpl() {
@@ -24616,7 +24616,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class SetWorkspaceArchiveStateImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class SetWorkspaceArchiveStateImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.SetWorkspaceArchiveState, JsonSerializable {
 
         private SetWorkspaceArchiveStateImpl() {
@@ -24788,7 +24788,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class SetWorkspaceArchiveStateResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class SetWorkspaceArchiveStateResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.SetWorkspaceArchiveStateResponse, JsonSerializable {
 
         private SetWorkspaceArchiveStateResponseImpl() {
@@ -24929,7 +24929,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class SetWorkspaceRoleImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class SetWorkspaceRoleImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.SetWorkspaceRole, JsonSerializable {
 
         private SetWorkspaceRoleImpl() {
@@ -25264,7 +25264,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class StackTraceElementDtoImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class StackTraceElementDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.StackTraceElementDto, JsonSerializable {
 
         private StackTraceElementDtoImpl() {
@@ -25471,7 +25471,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class SubmitImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class SubmitImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.Submit, JsonSerializable {
 
         private SubmitImpl() {
@@ -25714,7 +25714,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class SubmitResponseImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class SubmitResponseImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.SubmitResponse, JsonSerializable {
 
         private SubmitResponseImpl() {
@@ -25855,7 +25855,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class SubmittedWorkspaceImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class SubmittedWorkspaceImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.SubmittedWorkspace, JsonSerializable {
 
         private SubmittedWorkspaceImpl() {
@@ -25926,7 +25926,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class SyncImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class SyncImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.Sync, JsonSerializable {
 
         private SyncImpl() {
@@ -26079,9 +26079,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.NodeConflictDto> getConflicts() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.NodeConflictDto> getConflicts() {
             ensureConflicts();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(conflicts);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(conflicts);
         }
 
         public SyncConflictsImpl setConflicts(java.util.List<NodeConflictDtoImpl> v) {
@@ -26222,7 +26222,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class ThrowableDtoImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class ThrowableDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.ThrowableDto, JsonSerializable {
 
         private ThrowableDtoImpl() {
@@ -26281,9 +26281,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.StackTraceElementDto> getStackTrace() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.StackTraceElementDto> getStackTrace() {
             ensureStackTrace();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(stackTrace);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(stackTrace);
         }
 
         public ThrowableDtoImpl setStackTrace(java.util.List<StackTraceElementDtoImpl> v) {
@@ -26742,7 +26742,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class UndoLastSyncImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class UndoLastSyncImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.UndoLastSync, JsonSerializable {
 
         private UndoLastSyncImpl() {
@@ -26879,7 +26879,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class UpdateProjectImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class UpdateProjectImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.UpdateProject, JsonSerializable {
 
         private UpdateProjectImpl() {
@@ -27051,7 +27051,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class UpdateUserWorkspaceMetadataImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class UpdateUserWorkspaceMetadataImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.UpdateUserWorkspaceMetadata, JsonSerializable {
 
         private UpdateUserWorkspaceMetadataImpl() {
@@ -27190,7 +27190,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class UpdateWorkspaceImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class UpdateWorkspaceImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.UpdateWorkspace, JsonSerializable {
 
         private UpdateWorkspaceImpl() {
@@ -27362,7 +27362,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class UpdateWorkspaceRunTargetsImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class UpdateWorkspaceRunTargetsImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.UpdateWorkspaceRunTargets, JsonSerializable {
 
         private UpdateWorkspaceRunTargetsImpl() {
@@ -27988,7 +27988,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class UserLogInDtoImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class UserLogInDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.UserLogInDto, JsonSerializable {
 
         private UserLogInDtoImpl() {
@@ -28094,7 +28094,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class UserLogOutDtoImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class UserLogOutDtoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.UserLogOutDto, JsonSerializable {
 
         private UserLogOutDtoImpl() {
@@ -28200,7 +28200,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class WorkspaceInfoImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class WorkspaceInfoImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.WorkspaceInfo, JsonSerializable {
 
         private WorkspaceInfoImpl() {
@@ -28799,7 +28799,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class WorkspaceTreeUpdateImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class WorkspaceTreeUpdateImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.WorkspaceTreeUpdate, JsonSerializable {
 
         private WorkspaceTreeUpdateImpl() {
@@ -28835,9 +28835,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.Mutation> getMutations() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.Mutation> getMutations() {
             ensureMutations();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(mutations);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(mutations);
         }
 
         public WorkspaceTreeUpdateImpl setMutations(java.util.List<MutationImpl> v) {
@@ -28967,7 +28967,7 @@ public class DtoServerImpls {
         }
     }
 
-    public static class WorkspaceTreeUpdateBroadcastImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl
+    public static class WorkspaceTreeUpdateBroadcastImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl
             implements com.google.collide.dto.WorkspaceTreeUpdateBroadcast, JsonSerializable {
 
         private WorkspaceTreeUpdateBroadcastImpl() {
@@ -28992,9 +28992,9 @@ public class DtoServerImpls {
         }
 
         @Override
-        public org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.Mutation> getMutations() {
+        public com.codenvy.ide.json.shared.JsonArray<com.google.collide.dto.Mutation> getMutations() {
             ensureMutations();
-            return (org.exoplatform.ide.json.shared.JsonArray)new org.exoplatform.ide.json.server.JsonArrayListAdapter(mutations);
+            return (com.codenvy.ide.json.shared.JsonArray)new com.codenvy.ide.json.server.JsonArrayListAdapter(mutations);
         }
 
         public WorkspaceTreeUpdateBroadcastImpl setMutations(java.util.List<MutationImpl> v) {

@@ -14,6 +14,9 @@
 
 package com.google.collide.client.editor;
 
+import com.codenvy.ide.commons.shared.ListenerManager;
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
+import com.codenvy.ide.commons.shared.ListenerManager.Dispatcher;
 import com.google.collide.client.editor.Editor.BeforeTextListener;
 import com.google.collide.client.editor.Editor.TextListener;
 import com.google.collide.client.editor.selection.SelectionModel;
@@ -23,9 +26,6 @@ import com.google.collide.shared.document.Position;
 import com.google.collide.shared.document.TextChange;
 import com.google.collide.shared.document.util.LineUtils;
 
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 /**
  * A document mutator for the editor which will notify editor text listeners

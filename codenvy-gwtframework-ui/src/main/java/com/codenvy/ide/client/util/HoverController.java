@@ -18,10 +18,10 @@ import elemental.dom.Node;
 import elemental.events.*;
 import elemental.html.Element;
 
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.gwt.user.client.Timer;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
 
 /**
  * Controller to manage a group of elements that are hovered and unhovered

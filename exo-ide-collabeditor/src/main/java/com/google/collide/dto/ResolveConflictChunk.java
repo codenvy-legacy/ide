@@ -14,10 +14,10 @@
 
 package com.google.collide.dto;
 
+import com.codenvy.ide.dtogen.shared.ClientToServerDto;
+import com.codenvy.ide.dtogen.shared.RoutingType;
 import com.google.collide.dto.NodeConflictDto.ConflictHandle;
 
-import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
-import org.exoplatform.ide.dtogen.shared.RoutingType;
 
 /** Message sent by the client to resolve (or un-resolve) a conflict chunk. */
 @RoutingType(type = RoutingTypes.RESOLVECONFLICTCHUNK)

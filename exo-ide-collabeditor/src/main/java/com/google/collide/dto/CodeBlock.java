@@ -14,11 +14,12 @@
 
 package com.google.collide.dto;
 
-import org.exoplatform.ide.dtogen.shared.CompactJsonDto;
-import org.exoplatform.ide.dtogen.shared.RoutingType;
-import org.exoplatform.ide.dtogen.shared.SerializationIndex;
-import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
-import org.exoplatform.ide.json.shared.JsonArray;
+import com.codenvy.ide.dtogen.shared.CompactJsonDto;
+import com.codenvy.ide.dtogen.shared.RoutingType;
+import com.codenvy.ide.dtogen.shared.SerializationIndex;
+import com.codenvy.ide.dtogen.shared.ServerToClientDto;
+import com.codenvy.ide.json.shared.JsonArray;
+
 
 /**
  * An interface representing a continuous namespace in the source code. It may

@@ -14,6 +14,9 @@
 
 package com.google.collide.client.editor.selection;
 
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.collide.client.AppContext;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
@@ -21,9 +24,6 @@ import com.google.collide.client.editor.Editor.ReadOnlyListener;
 import com.google.collide.client.editor.FocusManager;
 import com.google.collide.shared.document.LineInfo;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 /**
  * A controller responsible for keeping the local user's cursor renderer

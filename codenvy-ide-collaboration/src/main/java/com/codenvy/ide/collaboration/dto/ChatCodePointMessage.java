@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.collaboration.dto;
 
-import org.exoplatform.ide.dtogen.shared.RoutingType;
+import com.codenvy.ide.dtogen.shared.RoutingType;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>

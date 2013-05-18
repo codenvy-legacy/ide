@@ -18,11 +18,12 @@
  */
 package org.exoplatform.ide.maven;
 
+import com.codenvy.ide.commons.server.PomUtils;
+import com.codenvy.ide.commons.server.PomUtils.Pom;
+
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.InvocationRequest;
 import org.apache.maven.shared.invoker.MavenInvocationException;
-import org.exoplatform.ide.commons.PomUtils;
-import org.exoplatform.ide.commons.PomUtils.Pom;
 
 import java.io.*;
 import java.util.*;
@@ -30,10 +31,12 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
 
-import static org.exoplatform.ide.commons.FileUtils.createTempDirectory;
-import static org.exoplatform.ide.commons.FileUtils.deleteRecursive;
-import static org.exoplatform.ide.commons.ZipUtils.unzip;
-import static org.exoplatform.ide.commons.ZipUtils.zipDir;
+import static com.codenvy.ide.commons.server.FileUtils.createTempDirectory;
+import static com.codenvy.ide.commons.server.FileUtils.deleteRecursive;
+import static com.codenvy.ide.commons.server.ZipUtils.unzip;
+import static com.codenvy.ide.commons.server.ZipUtils.zipDir;
+
+
 
 /**
  * Build manager.

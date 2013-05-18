@@ -14,11 +14,11 @@
 
 package com.google.collide.codemirror2;
 
+import com.codenvy.ide.json.shared.JsonCollections;
+import com.codenvy.ide.json.shared.JsonStringMap;
 import com.google.common.base.Preconditions;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /** Syntax types (languages / file formats) enumeration. */
 public enum SyntaxType {

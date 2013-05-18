@@ -15,6 +15,7 @@
 package org.exoplatform.ide.editor.html.client.contentassist;
 
 import com.codenvy.ide.client.util.Preconditions;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.client.code.autocomplete.AutocompleteProposal;
 import com.google.collide.client.code.autocomplete.AutocompleteProposals;
 import com.google.collide.client.code.autocomplete.AutocompleteProposals.ProposalWithContext;
@@ -47,7 +48,6 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import org.exoplatform.ide.editor.css.client.contentassist.CssAutocompleter;
 import org.exoplatform.ide.editor.html.client.contentassist.HtmlAutocompleteProposals.HtmlProposalWithContext;
 import org.exoplatform.ide.editor.javascript.client.contentassist.JavaScriptAutocompleter;
-import org.exoplatform.ide.json.shared.JsonArray;
 
 //import javax.annotation.Nonnull;
 

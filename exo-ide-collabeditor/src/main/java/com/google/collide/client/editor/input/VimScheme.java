@@ -21,6 +21,9 @@ import com.codenvy.ide.client.util.Elements;
 import com.codenvy.ide.client.util.JsoIntMap;
 import com.codenvy.ide.client.util.SignalEvent;
 import com.codenvy.ide.client.util.SignalEvent.MoveUnit;
+import com.codenvy.ide.commons.shared.ScopeMatcher;
+import com.codenvy.ide.commons.shared.StringUtils;
+import com.codenvy.ide.commons.shared.TextUtils;
 import com.google.collide.client.editor.search.SearchModel;
 import com.google.collide.client.editor.selection.LocalCursorController;
 import com.google.collide.client.editor.selection.SelectionModel;
@@ -36,9 +39,6 @@ import com.google.collide.shared.document.util.LineUtils;
 import com.google.collide.shared.document.util.PositionUtils;
 import com.google.common.base.Preconditions;
 
-import org.exoplatform.ide.shared.util.ScopeMatcher;
-import org.exoplatform.ide.shared.util.StringUtils;
-import org.exoplatform.ide.shared.util.TextUtils;
 
 /**
  * Basic Vi(m) keybinding support. This is limited to single file operations.

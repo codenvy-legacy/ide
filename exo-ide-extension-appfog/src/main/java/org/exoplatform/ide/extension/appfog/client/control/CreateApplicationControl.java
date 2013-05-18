@@ -23,22 +23,25 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.api.PropertiesChangedEvent;
+import org.exoplatform.ide.client.framework.project.api.PropertiesChangedHandler;
 import org.exoplatform.ide.extension.appfog.client.AppfogClientBundle;
 import org.exoplatform.ide.extension.appfog.client.AppfogExtension;
 import org.exoplatform.ide.extension.appfog.client.create.CreateApplicationEvent;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * Control for creating application on CloudFoundry.
- *
+ * 
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class CreateApplicationControl extends AbstractAppfogControl implements ProjectOpenedHandler,
-        ProjectClosedHandler {
+public class CreateApplicationControl extends AbstractAppfogControl implements ProjectOpenedHandler, PropertiesChangedHandler,
+                                                                   ProjectClosedHandler {
 
-    private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.createAppControlId();
+    private static final String ID     = AppfogExtension.LOCALIZATION_CONSTANT.createAppControlId();
 
-    private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.createAppControlTitle();
+    private static final String TITLE  = AppfogExtension.LOCALIZATION_CONSTANT.createAppControlTitle();
 
     private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.createAppControlPrompt();
 
@@ -55,21 +58,34 @@ public class CreateApplicationControl extends AbstractAppfogControl implements P
     public void initialize() {
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        IDE.addHandler(PropertiesChangedEvent.TYPE, this);
         setVisible(true);
     }
 
-    /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
-     * .project.ProjectClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+     *      .project.ProjectClosedEvent)
+     */
     @Override
     public void onProjectClosed(ProjectClosedEvent event) {
         setEnabled(false);
     }
 
-    /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
-     * .project.ProjectOpenedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
+     *      .project.ProjectOpenedEvent)
+     */
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
         setEnabled(event.getProject() != null && AppfogExtension.canBeDeployedToAF(event.getProject()));
     }
 
+    @Override
+    public void onPropertiesChanged(PropertiesChangedEvent event) {
+        ProjectModel project = event.getProject();
+        while (project.getProject() != null) {
+            project = project.getProject();
+        }
+        setEnabled(AppfogExtension.canBeDeployedToAF(project));
+    }
 }

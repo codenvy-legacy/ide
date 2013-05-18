@@ -14,6 +14,11 @@
 
 package com.google.collide.client.editor;
 
+import com.codenvy.ide.commons.shared.ListenerManager;
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
+import com.codenvy.ide.commons.shared.MathUtils;
+import com.codenvy.ide.commons.shared.ListenerManager.Dispatcher;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.client.editor.folding.FoldingManager;
 import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.shared.document.Document;
@@ -28,11 +33,6 @@ import com.google.collide.shared.document.util.LineUtils;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
-import org.exoplatform.ide.shared.util.MathUtils;
 
 /**
  * The model for the editor's viewport. This model also listens for events that

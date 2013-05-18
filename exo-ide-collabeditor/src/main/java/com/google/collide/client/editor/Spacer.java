@@ -20,11 +20,11 @@ import elemental.events.EventListener;
 import elemental.html.Element;
 
 import com.codenvy.ide.client.util.Elements;
+import com.codenvy.ide.commons.shared.SortedList;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.anchor.Anchor;
 
-import org.exoplatform.ide.shared.util.SortedList;
 
 /*
  * TODO: Knowledge about what lines the spacer is logically linked
