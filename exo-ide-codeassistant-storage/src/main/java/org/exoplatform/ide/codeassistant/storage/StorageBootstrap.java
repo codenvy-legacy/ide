@@ -37,22 +37,27 @@ import java.util.Map;
  */
 public class StorageBootstrap implements ServletContextListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(StorageBootstrap.class);
+    private static final Logger LOG                       = LoggerFactory.getLogger(StorageBootstrap.class);
 
-    public static final String STORAGE_PATH_NAME = "storage-path";
+    public static final String  STORAGE_PATH_NAME         = "storage-path";
 
-    private LuceneInfoStorage luceneStorageWriter;
+    public static final String  SYSPROP_STORAGE_PATH_NAME = "codeassitant.storage-path";
 
-    private String storagePath;
+    private LuceneInfoStorage   luceneStorageWriter;
 
-    private LuceneInfoStorage luceneStorageReader;
+    private String              storagePath;
+
+    private LuceneInfoStorage   luceneStorageReader;
 
     /** @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent) */
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         Map<String, Object> options = new HashMap<String, Object>();
         ServletContext ctx = sce.getServletContext();
-        storagePath = ctx.getInitParameter(STORAGE_PATH_NAME);
+        storagePath = (System.getProperty(SYSPROP_STORAGE_PATH_NAME) != null) ?
+                       System.getProperty(SYSPROP_STORAGE_PATH_NAME) :
+                       ctx.getInitParameter(STORAGE_PATH_NAME);
+
         if (storagePath == null)
             storagePath = System.getProperty("java.io.tmpdir") + "/" + "ide-codeassistant-lucene-index";
 
@@ -97,7 +102,8 @@ public class StorageBootstrap implements ServletContextListener {
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         UpdateStorageService updateStorageService =
-                (UpdateStorageService)sce.getServletContext().getAttribute(UpdateStorageService.class.getName());
+                                                    (UpdateStorageService)sce.getServletContext()
+                                                                             .getAttribute(UpdateStorageService.class.getName());
         if (updateStorageService != null)
             updateStorageService.shutdown();
         if (luceneStorageWriter != null)
