@@ -35,7 +35,7 @@ import com.google.inject.Singleton;
 /**
  * The implementation of {@link CreateApplicationView}.
  *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
 public class CreateApplicationViewImpl extends DialogBox implements CreateApplicationView {

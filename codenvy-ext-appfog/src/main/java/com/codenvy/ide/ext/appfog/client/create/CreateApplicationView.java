@@ -24,7 +24,7 @@ import com.codenvy.ide.json.JsonArray;
 /**
  * The view of {@link CreateApplicationView}.
  *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public interface CreateApplicationView extends View<CreateApplicationView.ActionDelegate> {
     /** Needs for delegate some function into CreateApplication view. */

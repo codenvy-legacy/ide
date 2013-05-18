@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * The view of {@link ApplicationInfoPresenter}.
  *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public interface ApplicationInfoView extends View<ApplicationInfoView.ActionDelegate> {
     /** Needs for delegate some function into CreateApplication view. */

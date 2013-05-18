@@ -29,7 +29,7 @@ import com.google.inject.Singleton;
 /**
  * Command for "Project/Paas/AppFog" action.
  *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
 public class ShowAppFogProjectCommand implements ExtendedCommand {

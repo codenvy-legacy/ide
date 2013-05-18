@@ -29,7 +29,7 @@ import com.google.inject.Singleton;
 /**
  * Command for "PaaS/AppFog/Switch Account" action.
  *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
 public class ShowLoginCommand implements ExtendedCommand {

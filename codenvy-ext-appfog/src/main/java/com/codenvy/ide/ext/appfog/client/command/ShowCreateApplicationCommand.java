@@ -29,7 +29,7 @@ import com.google.inject.Inject;
 /**
  * Command for "PaaS/AppFog/Create Application" action.
  *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public class ShowCreateApplicationCommand implements ExtendedCommand {
     private final CreateApplicationPresenter presenter;

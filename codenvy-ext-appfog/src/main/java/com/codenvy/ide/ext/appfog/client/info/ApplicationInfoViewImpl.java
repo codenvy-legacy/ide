@@ -39,7 +39,7 @@ import java.util.List;
 /**
  * The implementation of {@link ApplicationInfoView}.
  *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
 public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInfoView {

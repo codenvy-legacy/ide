@@ -23,7 +23,7 @@ import com.codenvy.ide.api.mvp.View;
 /**
  * The view of {@link AppFogProjectPresenter}.
  *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public interface AppFogProjectView extends View<AppFogProjectView.ActionDelegate> {
     /** Needs for delegate some function into AppFogProject view. */

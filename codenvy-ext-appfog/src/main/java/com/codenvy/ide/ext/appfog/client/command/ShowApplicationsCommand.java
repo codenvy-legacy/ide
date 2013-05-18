@@ -29,7 +29,7 @@ import com.google.inject.Singleton;
 /**
  * Command for "PaaS/AppFog/Applications" action.
  *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
 public class ShowApplicationsCommand implements ExtendedCommand {

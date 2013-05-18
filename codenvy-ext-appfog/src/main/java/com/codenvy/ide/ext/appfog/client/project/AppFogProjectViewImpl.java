@@ -32,7 +32,7 @@ import com.google.inject.Singleton;
 /**
  * The implementation of {@link AppFogProjectView}.
  *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
 public class AppFogProjectViewImpl extends DialogBox implements AppFogProjectView {

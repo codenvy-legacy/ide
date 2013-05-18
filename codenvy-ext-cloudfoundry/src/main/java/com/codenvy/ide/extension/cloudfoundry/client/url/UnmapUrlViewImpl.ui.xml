@@ -1,10 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p1="urn:import:com.google.gwt.user.cellview.client">
-
-    <ui:with field="locale"
-             type="com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant"></ui:with>
-
+    <ui:with field="locale" type="com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant"/>
     <ui:style>
         .alignRight {
             float: right;

@@ -35,6 +35,7 @@ import com.codenvy.ide.ext.appfog.client.services.ManageServicesPresenter;
 import com.codenvy.ide.ext.appfog.client.start.StartApplicationPresenter;
 import com.codenvy.ide.ext.appfog.client.update.UpdateApplicationPresenter;
 import com.codenvy.ide.ext.appfog.client.update.UpdatePropertiesPresenter;
+import com.codenvy.ide.ext.appfog.client.url.UnmapUrlPresenter;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -55,7 +56,7 @@ import com.google.web.bindery.event.shared.EventBus;
 @Singleton
 public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate {
     private AppFogProjectView          view;
-    //    private UnmapUrlPresenter                unmapUrlPresenter;
+    private UnmapUrlPresenter          unmapUrlPresenter;
     private UpdatePropertiesPresenter  updateProperyPresenter;
     private ManageServicesPresenter    manageServicesPresenter;
     private UpdateApplicationPresenter updateApplicationPresenter;
@@ -87,6 +88,25 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
         }
     };
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param eventBus
+     * @param resourceProvider
+     * @param console
+     * @param constant
+     * @param autoBeanFactory
+     * @param startAppPresenter
+     * @param deleteAppPresenter
+     * @param loginPresenter
+     * @param service
+     * @param applicationInfoPresenter
+     * @param manageServicesPresenter
+     * @param updateProperyPresenter
+     * @param updateApplicationPresenter
+     * @param unmapUrlPresenter
+     */
     @Inject
     protected AppFogProjectPresenter(AppFogProjectView view, EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
                                      AppfogLocalizationConstant constant, AppfogAutoBeanFactory autoBeanFactory,
@@ -94,7 +114,7 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
                                      LoginPresenter loginPresenter, AppfogClientService service,
                                      ApplicationInfoPresenter applicationInfoPresenter, ManageServicesPresenter manageServicesPresenter,
                                      UpdatePropertiesPresenter updateProperyPresenter,
-                                     UpdateApplicationPresenter updateApplicationPresenter) {
+                                     UpdateApplicationPresenter updateApplicationPresenter, UnmapUrlPresenter unmapUrlPresenter) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
@@ -110,6 +130,7 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
         this.manageServicesPresenter = manageServicesPresenter;
         this.updateProperyPresenter = updateProperyPresenter;
         this.updateApplicationPresenter = updateApplicationPresenter;
+        this.unmapUrlPresenter = unmapUrlPresenter;
     }
 
     /** Shows dialog. */
@@ -135,6 +156,7 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
         getLogs();
     }
 
+    /** Getting logs for AppFog Application. */
     protected void getLogs() {
         try {
             StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
@@ -220,7 +242,7 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
     /** {@inheritDoc} */
     @Override
     public void onEditUrlClicked() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        unmapUrlPresenter.showDialog(appInfoChangedCallback);
     }
 
     /** {@inheritDoc} */
