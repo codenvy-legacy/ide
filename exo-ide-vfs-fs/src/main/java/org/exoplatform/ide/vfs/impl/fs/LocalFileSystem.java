@@ -18,9 +18,10 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
+import com.codenvy.ide.commons.shared.ProjectType;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.FileItem;
-import org.exoplatform.ide.commons.ProjectType;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemUser;

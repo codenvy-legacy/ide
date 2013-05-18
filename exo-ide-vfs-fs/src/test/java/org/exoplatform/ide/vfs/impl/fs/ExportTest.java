@@ -18,13 +18,14 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
+import com.codenvy.ide.commons.server.FileUtils;
+import com.codenvy.ide.commons.server.ZipUtils;
+
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
-import org.exoplatform.ide.commons.FileUtils;
-import org.exoplatform.ide.commons.ZipUtils;
 import org.exoplatform.ide.vfs.shared.Principal;
 import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 import org.exoplatform.ide.vfs.shared.Project;
