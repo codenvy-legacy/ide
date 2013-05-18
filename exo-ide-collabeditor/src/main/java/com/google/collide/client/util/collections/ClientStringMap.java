@@ -16,6 +16,7 @@ package com.google.collide.client.util.collections;
 
 import com.codenvy.ide.json.client.JsoArray;
 import com.codenvy.ide.json.client.JsoStringMap;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.codenvy.ide.json.shared.JsonStringMap;
 
 

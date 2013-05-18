@@ -20,10 +20,12 @@ package com.codenvy.ide.collaboration.chat.client;
 
 import com.codenvy.ide.collaboration.dto.GetChatParticipantsResponse;
 import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.GetChatParticipantsImpl;
+import com.codenvy.ide.commons.shared.ListenerManager;
 import com.codenvy.ide.dtogen.client.RoutableDtoClientImpl;
-import com.codenvy.ide.dtogen.shared.ServerToClientDto;
 import com.codenvy.ide.dtogen.shared.ServerError.FailureReason;
+import com.codenvy.ide.dtogen.shared.ServerToClientDto;
 import com.codenvy.ide.json.client.Jso;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.client.CollabEditorExtension;
 import com.google.gwt.core.client.GWT;
 
@@ -42,11 +44,6 @@ import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter;
 import org.exoplatform.ide.client.framework.websocket.events.ConnectionOpenedHandler;
 import org.exoplatform.ide.client.framework.websocket.events.MessageHandler;
-import org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl;
-import org.exoplatform.ide.dtogen.shared.ServerError.FailureReason;
-import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
-import org.exoplatform.ide.json.client.Jso;
-import org.exoplatform.ide.shared.util.ListenerManager;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
@@ -170,11 +167,11 @@ public class ChatExtension extends Extension
         createPresenter();
     }
 
-    public JsonArray<Participant> getCurrentProjectParticipants(){
-        return  chatPresenter.getParticipants().getValues();
+    public JsonArray<Participant> getCurrentProjectParticipants() {
+        return chatPresenter.getParticipants().getValues();
     }
 
-    public ListenerManager<ProjectUsersListener> getProjectUserListeners(){
+    public ListenerManager<ProjectUsersListener> getProjectUserListeners() {
         return chatPresenter.getProjectUsersListeners();
     }
 

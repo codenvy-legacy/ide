@@ -34,6 +34,7 @@ import com.codenvy.ide.collaboration.dto.RoutingTypes;
 import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.ChatCodePointMessageImpl;
 import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.ChatMessageImpl;
 import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.UserDetailsImpl;
+import com.codenvy.ide.commons.shared.ListenerManager;
 import com.codenvy.ide.commons.shared.StringUtils;
 import com.codenvy.ide.json.client.JsoStringMap;
 import com.codenvy.ide.json.shared.JsonArray;
