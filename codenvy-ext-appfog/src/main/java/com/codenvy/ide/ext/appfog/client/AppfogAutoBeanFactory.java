@@ -23,25 +23,79 @@ import com.codenvy.ide.extension.cloudfoundry.shared.Credentials;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
-/** @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a> */
+/**
+ * The interface for the AutoBean generator.
+ *
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
+ */
 public interface AppfogAutoBeanFactory extends AutoBeanFactory {
+    /**
+     * A factory method for an application info bean.
+     *
+     * @return an {@link AutoBean} of type {@link AppfogApplication}
+     */
     AutoBean<AppfogApplication> appfogApplication();
 
+    /**
+     * A factory method for a system info bean.
+     *
+     * @return an {@link AutoBean} of type {@link SystemInfo}
+     */
     AutoBean<SystemInfo> systemInfo();
 
+    /**
+     * A factory method for a system resources bean.
+     *
+     * @return an {@link AutoBean} of type {@link SystemResources}
+     */
     AutoBean<SystemResources> systemResources();
 
+    /**
+     * A factory method for a system resources bean.
+     *
+     * @return an {@link AutoBean} of type {@link Framework}
+     */
     AutoBean<Framework> framework();
 
+    /**
+     * A factory method for a credentials bean.
+     *
+     * @return an {@link AutoBean} of type {@link Credentials}
+     */
     AutoBean<Credentials> credentials();
 
+    /**
+     * A factory method for a create application request bean.
+     *
+     * @return an {@link AutoBean} of type {@link CreateAppfogApplicationRequest}
+     */
     AutoBean<CreateAppfogApplicationRequest> createAppfogApplicationRequest();
 
+    /**
+     * A factory method for AppFog services bean.
+     *
+     * @return an {@link AutoBean} of type {@link AppfogServices}
+     */
     AutoBean<AppfogServices> services();
 
+    /**
+     * A factory method for AppFog system service bean.
+     *
+     * @return an {@link AutoBean} of type {@link AppfogSystemService}
+     */
     AutoBean<AppfogSystemService> systemService();
 
+    /**
+     * A factory method for AppFog provisioned service bean.
+     *
+     * @return an {@link AutoBean} of type {@link AppfogProvisionedService}
+     */
     AutoBean<AppfogProvisionedService> provisionedService();
 
+    /**
+     * A factory method for AppFog infrastructure bean.
+     *
+     * @return an {@link AutoBean} of type {@link InfraDetail}
+     */
     AutoBean<InfraDetail> infraDetail();
 }

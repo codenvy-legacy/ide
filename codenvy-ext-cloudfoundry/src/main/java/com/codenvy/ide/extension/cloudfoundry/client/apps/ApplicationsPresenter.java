@@ -184,10 +184,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
         checkLogginedToServer();
     }
 
-    /**
-     * Gets target from CloudFoundry server. If this works well then we will know
-     * we have connect to CloudFoundry server.
-     */
+    /** Gets target from CloudFoundry server. If this works well then we will know we have connect to CloudFoundry server. */
     private void checkLogginedToServer() {
         try {
             TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(JsonCollections.<String>createArray());

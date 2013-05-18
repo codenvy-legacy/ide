@@ -189,7 +189,7 @@ public class UpdatePropertiesPresenter {
         getOldInstancesValue();
     }
 
-    /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
+    /** If user is not logged in to AppFog, this handler will be called, after user logged in. */
     private LoggedInHandler getOldInstancesValueLoggedInHandler = new LoggedInHandler() {
         @Override
         public void onLoggedIn() {

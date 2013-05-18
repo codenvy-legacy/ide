@@ -24,14 +24,22 @@ import com.codenvy.ide.rest.RequestStatusHandler;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * The class helps to work with status of application.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
- * @version $Id: $
  */
 public class CreateApplicationRequestStatusHandler implements RequestStatusHandler {
     private String                     applicationName;
     private EventBus                   eventBus;
     private AppfogLocalizationConstant constant;
 
+    /**
+     * Create application request status handler.
+     *
+     * @param applicationName
+     * @param eventBus
+     * @param constant
+     */
     public CreateApplicationRequestStatusHandler(String applicationName, EventBus eventBus, AppfogLocalizationConstant constant) {
         this.applicationName = applicationName;
         this.eventBus = eventBus;

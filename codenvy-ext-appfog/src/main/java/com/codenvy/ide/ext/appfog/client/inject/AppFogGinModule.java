@@ -19,6 +19,8 @@
 package com.codenvy.ide.ext.appfog.client.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
+import com.codenvy.ide.ext.appfog.client.AppfogClientService;
+import com.codenvy.ide.ext.appfog.client.AppfogClientServiceImpl;
 import com.codenvy.ide.ext.appfog.client.apps.ApplicationsView;
 import com.codenvy.ide.ext.appfog.client.apps.ApplicationsViewImpl;
 import com.codenvy.ide.ext.appfog.client.create.CreateApplicationView;
@@ -48,6 +50,9 @@ public class AppFogGinModule extends AbstractGinModule {
     /** {@inheritDoc} */
     @Override
     protected void configure() {
+        bind(AppfogClientService.class).to(AppfogClientServiceImpl.class).in(Singleton.class);
+
+        // Views
         bind(LoginView.class).to(LoginViewImpl.class).in(Singleton.class);
         bind(ApplicationsView.class).to(ApplicationsViewImpl.class).in(Singleton.class);
         bind(DeleteApplicationView.class).to(DeleteApplicationViewImpl.class).in(Singleton.class);

@@ -43,6 +43,18 @@ public class AppFogExtension {
     public static final  String DEFAULT_SERVER = "https://api.appfog.com";
     private static final String ID             = "AppFog";
 
+    /**
+     * Create AppFog extension.
+     *
+     * @param paasAgent
+     * @param resources
+     * @param menu
+     * @param createApplicationCommand
+     * @param loginCommand
+     * @param showApplicationsCommand
+     * @param showAppFogProjectCommand
+     * @param wizardPage
+     */
     @Inject
     public AppFogExtension(PaaSAgent paasAgent, AppfogResources resources, MainMenuAgent menu,
                            ShowCreateApplicationCommand createApplicationCommand, ShowLoginCommand loginCommand,

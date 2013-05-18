@@ -107,6 +107,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
         checkLogginedToServer();
     }
 
+    /** Gets target from AppFog server. If this works well then we will know we have connect to AppFog server. */
     private void checkLogginedToServer() {
         try {
             TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(JsonCollections.<String>createArray());

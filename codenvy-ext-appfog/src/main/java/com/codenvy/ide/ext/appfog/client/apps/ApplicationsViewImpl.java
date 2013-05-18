@@ -122,6 +122,12 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView 
     private ActionDelegate delegate;
     private boolean        isShown;
 
+    /**
+     * Create view.
+     *
+     * @param resources
+     * @param constant
+     */
     @Inject
     protected ApplicationsViewImpl(AppfogResources resources, AppfogLocalizationConstant constant) {
         this.res = resources;

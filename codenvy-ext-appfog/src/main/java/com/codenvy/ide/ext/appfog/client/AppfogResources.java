@@ -23,8 +23,9 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
+ * AppFog client resources.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
- * @version $Id: $
  */
 public interface AppfogResources extends ClientBundle {
     public interface AppFogCSS extends CssResource {

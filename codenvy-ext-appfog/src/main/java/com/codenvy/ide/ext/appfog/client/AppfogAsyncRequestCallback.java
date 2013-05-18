@@ -32,8 +32,10 @@ import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Asynchronous AppFog request. The {@link #onFailure(Throwable)} method contains the check for user not authorized exception, in this
+ * case - showDialog method calls on {@link LoginPresenter}.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
- * @version $Id: $
  * @see AppfogRESTfulRequestCallback
  */
 public abstract class AppfogAsyncRequestCallback<T> extends AsyncRequestCallback<T> {

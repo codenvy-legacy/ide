@@ -103,7 +103,7 @@ public class LoginPresenter implements LoginView.ActionDelegate {
         }
     }
 
-    /** Get Cloud Foundry system information to fill the login field, if user is logged in. */
+    /** Get AppFog system information to fill the login field, if user is logged in. */
     protected void getSystemInformation() {
         try {
             AutoBean<SystemInfo> systemInfo = autoBeanFactory.systemInfo();

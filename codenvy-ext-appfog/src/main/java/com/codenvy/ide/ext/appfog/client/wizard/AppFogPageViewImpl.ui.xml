@@ -1,7 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-    <ui:with field='res'
-             type='com.codenvy.ide.ext.appfog.client.AppfogResources'/>
+    <ui:with field='res' type='com.codenvy.ide.ext.appfog.client.AppfogResources'/>
     <ui:style>
         .spacing {
             margin-bottom: 6px;

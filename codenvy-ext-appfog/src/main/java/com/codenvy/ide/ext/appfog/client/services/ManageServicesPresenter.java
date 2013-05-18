@@ -223,7 +223,6 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
      */
     private void bindService(final AppfogProvisionedService service) {
         try {
-            selectedBoundedService = service.getName();
             this.service.bindService(AppFogExtension.DEFAULT_SERVER, service.getName(), application.getName(), null, null,
                                      new AppfogAsyncRequestCallback<Object>(null, bindServiceLoggedInHandler, null, eventBus,
                                                                             constant, console, loginPresenter) {
@@ -254,6 +253,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
      */
     private void unbindService(String service) {
         try {
+            selectedBoundedService = service;
             this.service.unbindService(AppFogExtension.DEFAULT_SERVER, service, application.getName(), null, null,
                                        new AppfogAsyncRequestCallback<Object>(null, unBindServiceLoggedInHandler, null, eventBus, constant,
                                                                               console, loginPresenter) {

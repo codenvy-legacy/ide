@@ -325,7 +325,7 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
      * Performs action when application successfully created.
      *
      * @param app
-     * @link AppfogApplication} which is created
+     *         {@link AppfogApplication} which is created
      */
     private void onAppCreatedSuccess(AppfogApplication app) {
         warUrl = null;
@@ -481,6 +481,7 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
         });
     }
 
+    /** Deploy project to AppFog. */
     public void deploy(Project project) {
         this.project = project;
 

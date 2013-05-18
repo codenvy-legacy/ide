@@ -2,11 +2,8 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:p1='urn:import:com.google.gwt.user.cellview.client'
              xmlns:c="urn:import:com.codenvy.ide.ui">
-    <ui:with field='locale'
-             type='com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant'/>
-    <ui:with field='res'
-             type='com.codenvy.ide.ext.appfog.client.AppfogResources'/>
-
+    <ui:with field='locale' type='com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant'/>
+    <ui:with field='res' type='com.codenvy.ide.ext.appfog.client.AppfogResources'/>
     <ui:style>
         .label {
             margin-right: 5px;

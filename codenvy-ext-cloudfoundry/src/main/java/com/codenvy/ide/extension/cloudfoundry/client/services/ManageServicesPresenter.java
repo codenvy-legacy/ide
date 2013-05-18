@@ -193,7 +193,6 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
      */
     private void bindService(final ProvisionedService service) {
         try {
-            selectedBoundedService = service.getName();
             this.service.bindService(null, service.getName(), application.getName(), null, null,
                                      new CloudFoundryAsyncRequestCallback<Object>(null, bindServiceLoggedInHandler, null, eventBus, console,
                                                                                   constant, loginPresenter, paasProvider) {
@@ -221,6 +220,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
      */
     private void unbindService(String service) {
         try {
+            selectedBoundedService = service;
             this.service.unbindService(null, service, application.getName(), null, null,
                                        new CloudFoundryAsyncRequestCallback<Object>(null, unBindServiceLoggedInHandler, null, eventBus,
                                                                                     console, constant, loginPresenter, paasProvider) {
