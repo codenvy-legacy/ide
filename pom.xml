@@ -812,7 +812,7 @@
       <module>exo-ide-git-server</module>
       <module>exo-ide-packaging-shell-war</module>
       <module>codenvy-application-war</module>
-      <module>codenvy-api-war</module>
+      <!--module>codenvy-api-war</module-->
       <module>codenvy-packaging-standalone-tomcat</module>
 
       <module>exo-ide-maven</module>

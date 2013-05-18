@@ -234,6 +234,10 @@
     <replace-with class="org.exoplatform.ide.client.project.properties.EditPropertyView">
         <when-type-is class="org.exoplatform.ide.client.project.properties.EditPropertyPresenter.Display"/>
     </replace-with>
+    
+    <replace-with class="org.exoplatform.ide.client.project.properties.EditPropertyFixedValuesView">
+        <when-type-is class="org.exoplatform.ide.client.project.properties.EditPropertyFixedValuesPresenter.Display"/>
+    </replace-with>
 
     <replace-with class="org.exoplatform.ide.client.debug.ShowImagesView">
         <when-type-is class="org.exoplatform.ide.client.debug.ShowImagesPresenter.Display"/>
