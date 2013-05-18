@@ -23,13 +23,16 @@ import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.appfog.client.*;
 import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
+import com.codenvy.ide.ext.appfog.client.marshaller.AppfogServicesUnmarshaller;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
 import com.codenvy.ide.ext.appfog.shared.AppfogProvisionedService;
 import com.codenvy.ide.ext.appfog.shared.AppfogServices;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -52,8 +55,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
     private AppfogProvisionedService   selectedService;
     /** Selected provisioned service. */
     private String                     selectedBoundedService;
-    // TODO
-    //    private CreateServicePresenter           createServicePresenter;
+    private CreateServicePresenter     createServicePresenter;
     private EventBus                   eventBus;
     private ConsolePart                console;
     private AppfogLocalizationConstant constant;
@@ -93,9 +95,22 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
         }
     };
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param eventBus
+     * @param console
+     * @param constant
+     * @param autoBeanFactory
+     * @param loginPresenter
+     * @param service
+     * @param createServicePresenter
+     */
     @Inject
     protected ManageServicesPresenter(ManageServicesView view, EventBus eventBus, ConsolePart console, AppfogLocalizationConstant constant,
-                                      AppfogAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter, AppfogClientService service) {
+                                      AppfogAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter, AppfogClientService service,
+                                      CreateServicePresenter createServicePresenter) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
@@ -104,6 +119,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
         this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
+        this.createServicePresenter = createServicePresenter;
     }
 
     /**
@@ -124,7 +140,17 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
     /** {@inheritDoc} */
     @Override
     public void onAddClicked() {
-        // TODO
+        createServicePresenter.showDialog(new AsyncCallback<AppfogProvisionedService>() {
+            @Override
+            public void onSuccess(AppfogProvisionedService result) {
+                getServices();
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                Log.error(ManageServicesPresenter.class, "Can not create service", caught);
+            }
+        });
     }
 
     /** {@inheritDoc} */
@@ -197,6 +223,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
      */
     private void bindService(final AppfogProvisionedService service) {
         try {
+            selectedBoundedService = service.getName();
             this.service.bindService(AppFogExtension.DEFAULT_SERVER, service.getName(), application.getName(), null, null,
                                      new AppfogAsyncRequestCallback<Object>(null, bindServiceLoggedInHandler, null, eventBus,
                                                                             constant, console, loginPresenter) {
