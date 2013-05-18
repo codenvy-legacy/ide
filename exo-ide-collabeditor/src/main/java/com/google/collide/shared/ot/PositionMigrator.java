@@ -14,6 +14,9 @@
 
 package com.google.collide.shared.ot;
 
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.collide.dto.DocOp;
 import com.google.collide.dto.shared.DocOpFactory;
 import com.google.collide.shared.document.Document;
@@ -21,9 +24,6 @@ import com.google.collide.shared.document.Document.TextListener;
 import com.google.collide.shared.document.LineNumberAndColumn;
 import com.google.collide.shared.document.TextChange;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 /**
  * A mechanism that translates file positions to/from file position at

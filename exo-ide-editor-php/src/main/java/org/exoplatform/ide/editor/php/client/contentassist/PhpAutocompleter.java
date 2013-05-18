@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.editor.php.client.contentassist;
 
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.client.code.autocomplete.AutocompleteProposals;
 import com.google.collide.client.code.autocomplete.AutocompleteProposals.ProposalWithContext;
 import com.google.collide.client.code.autocomplete.AutocompleteResult;
@@ -34,7 +35,6 @@ import com.google.collide.shared.document.Position;
 import com.google.collide.shared.document.anchor.AnchorType;
 
 import org.exoplatform.ide.editor.html.client.contentassist.HtmlAutocompleter;
-import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * Autocompleter for PHP.

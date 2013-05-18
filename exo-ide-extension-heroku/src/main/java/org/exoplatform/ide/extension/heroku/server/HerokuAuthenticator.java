@@ -21,8 +21,8 @@ package org.exoplatform.ide.extension.heroku.server;
 import com.codenvy.commons.json.JsonHelper;
 import com.codenvy.commons.json.JsonNameConventions;
 import com.codenvy.commons.json.JsonParseException;
+import com.codenvy.ide.commons.server.ParsingResponseException;
 
-import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.security.paas.Credential;
 
 import java.io.IOException;

@@ -20,10 +20,10 @@ import elemental.events.EventRemover;
 import elemental.events.MouseEvent;
 import elemental.html.Element;
 
+import com.codenvy.ide.commons.shared.ListenerRegistrar.Remover;
 import com.google.collide.client.util.dom.eventcapture.MouseCaptureListener;
 import com.google.gwt.user.client.Timer;
 
-import org.exoplatform.ide.shared.util.ListenerRegistrar.Remover;
 
 /**
  * An {@link EventListener} implementation that parses the low-level events and

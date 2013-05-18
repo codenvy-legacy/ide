@@ -14,8 +14,8 @@
 
 package com.google.collide.dto;
 
-import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
-import org.exoplatform.ide.dtogen.shared.RoutingType;
+import com.codenvy.ide.dtogen.shared.ClientToServerDto;
+import com.codenvy.ide.dtogen.shared.RoutingType;
 
 /** DTO for setting the user's active project on the ProjectLanding page. */
 @RoutingType(type = RoutingTypes.SETACTIVEPROJECT)

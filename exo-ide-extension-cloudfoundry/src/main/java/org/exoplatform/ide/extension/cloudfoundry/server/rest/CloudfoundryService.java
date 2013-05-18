@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server.rest;
 
-import org.exoplatform.ide.commons.ParsingResponseException;
+import com.codenvy.ide.commons.server.ParsingResponseException;
+
 import org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry;
 import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryException;
 import org.exoplatform.ide.extension.cloudfoundry.server.DebugMode;
@@ -149,7 +150,7 @@ public class CloudfoundryService {
 
         String projectId = params.get("projectid");
         if (projectId != null) {
-            Project proj = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+            Project proj = (Project)vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
             String paasName;
             if (paasProvider.equalsIgnoreCase("tier3webfabric")) {
                 paasName = "Tier3 Web Fabric";

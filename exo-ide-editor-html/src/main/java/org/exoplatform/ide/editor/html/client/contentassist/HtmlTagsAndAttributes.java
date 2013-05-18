@@ -14,16 +14,16 @@
 
 package org.exoplatform.ide.editor.html.client.contentassist;
 
+import com.codenvy.ide.json.client.Jso;
+import com.codenvy.ide.json.client.JsoArray;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
+import com.codenvy.ide.json.shared.JsonStringMap;
+import com.codenvy.ide.json.shared.JsonStringSet;
 import com.google.collide.client.code.autocomplete.AutocompleteProposal;
 import com.google.collide.client.util.collections.SkipListStringBag;
 import com.google.collide.client.util.collections.StringMultiset;
 
-import org.exoplatform.ide.json.client.Jso;
-import org.exoplatform.ide.json.client.JsoArray;
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.json.shared.JsonStringMap;
-import org.exoplatform.ide.json.shared.JsonStringSet;
 
 // TODO: Implement and use unmodifiable-sored-string-list.
 // TODO: Implement type-specific attributes filtering.

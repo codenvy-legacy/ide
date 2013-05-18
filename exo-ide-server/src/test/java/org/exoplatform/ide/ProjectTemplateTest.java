@@ -18,12 +18,13 @@
  */
 package org.exoplatform.ide;
 
+import com.codenvy.ide.commons.server.StringUtils;
+
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.EnvironmentContext;
 import org.everrest.core.impl.MultivaluedMapImpl;
 import org.everrest.core.tools.SimpleSecurityContext;
 import org.everrest.test.mock.MockPrincipal;
-import org.exoplatform.ide.commons.StringUtils;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -72,7 +73,7 @@ public class ProjectTemplateTest extends BaseTest {
         vfs = vfsRegistry.getProvider("dev-monit").newInstance(null, null);
 
         ItemList<Item> children =
-                vfs.getChildren(vfs.getInfo().getRoot().getId(), -1, 0, null, PropertyFilter.ALL_FILTER);
+                vfs.getChildren(vfs.getInfo().getRoot().getId(), -1, 0, null, false, PropertyFilter.ALL_FILTER);
         for (Item i : children.getItems()) {
             vfs.delete(i.getId(), null);
         }

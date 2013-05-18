@@ -20,6 +20,7 @@ import static com.google.collide.codemirror2.TokenType.NULL;
 
 import com.codenvy.ide.client.util.Preconditions;
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.client.code.autocomplete.AbstractTrie;
 import com.google.collide.client.code.autocomplete.AutocompleteProposal;
 import com.google.collide.client.code.autocomplete.AutocompleteProposals;
@@ -39,7 +40,6 @@ import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.Position;
 import com.google.gwt.event.dom.client.KeyCodes;
 
-import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * Autocompleter for CSS. Currently, this only supports CSS2.

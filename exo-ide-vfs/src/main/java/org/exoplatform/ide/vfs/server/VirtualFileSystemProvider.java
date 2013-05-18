@@ -38,8 +38,7 @@ public interface VirtualFileSystemProvider {
      * @return instance of VirtualFileSystem
      * @throws VirtualFileSystemException
      */
-    VirtualFileSystem newInstance(RequestContext requestContext, EventListenerList listeners)
-            throws VirtualFileSystemException;
+    VirtualFileSystem newInstance(RequestContext requestContext, EventListenerList listeners) throws VirtualFileSystemException;
 
     /**
      * Close this provider. Call this method after unregister provider from VirtualFileSystemRegistry. Typically this

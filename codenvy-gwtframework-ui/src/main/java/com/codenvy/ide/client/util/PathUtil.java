@@ -14,11 +14,11 @@
 
 package com.codenvy.ide.client.util;
 
+import com.codenvy.ide.commons.shared.StringUtils;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.common.base.Preconditions;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.shared.util.StringUtils;
 
 /**
  * Utility class for dealing with File paths on the client.

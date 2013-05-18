@@ -14,11 +14,11 @@
 
 package com.google.collide.client.code.lang;
 
+import com.codenvy.ide.json.shared.JsonCollections;
+import com.codenvy.ide.json.shared.JsonStringMap;
 import com.google.collide.codemirror2.SyntaxType;
 import com.google.common.base.Preconditions;
 
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /**
  * Object thad holds instances of {@link LanguageHelper} and returns
@@ -43,6 +43,7 @@ public class LanguageHelperResolver {
         mapping.put(SyntaxType.JS.getName(), new JsLanguageHelper());
         mapping.put(SyntaxType.PHP.getName(), new NoneLanguageHelper());
         mapping.put(SyntaxType.PY.getName(), new PyLanguageHelper());
+        mapping.put(SyntaxType.RUBY.getName(), new NoneLanguageHelper());
         mapping.put(SyntaxType.XML.getName(), new NoneLanguageHelper());
         mapping.put(SyntaxType.YAML.getName(), new NoneLanguageHelper());
     }

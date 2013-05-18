@@ -14,8 +14,8 @@
 
 package com.google.collide.shared.document.anchor;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
 
 /**
  * Helper class to defer the dispatching of anchor callbacks until state has

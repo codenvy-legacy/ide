@@ -15,6 +15,7 @@
 package org.exoplatform.ide.editor.javascript.client.contentassist;
 
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.commons.shared.StringUtils;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -26,7 +27,6 @@ import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.editor.shared.text.edits.InsertEdit;
 import org.exoplatform.ide.editor.shared.text.edits.MalformedTreeException;
-import org.exoplatform.ide.shared.util.StringUtils;
 
 /**
  * Proposal that contains template and knows how to process it.
@@ -112,6 +112,12 @@ public class TemplateProposal implements CompletionProposal {
     @Override
     public String getDisplayString() {
         return name;
+    }
+
+    /** @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getAdditionalDisplayString() */
+    @Override
+    public String getAdditionalDisplayString() {
+        return null;
     }
 
     /** @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getImage() */

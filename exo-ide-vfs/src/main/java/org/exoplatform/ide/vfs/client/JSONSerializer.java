@@ -21,6 +21,7 @@ package org.exoplatform.ide.vfs.client;
 import com.google.gwt.json.client.*;
 
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.Principal;
 import org.exoplatform.ide.vfs.shared.Property;
 
 import java.util.Collection;
@@ -65,8 +66,21 @@ public abstract class JSONSerializer<O> {
                 return JSONNull.getInstance();
             }
             JSONObject target = new JSONObject();
-            target.put("principal", STRING_SERIALIZER.fromObject(source.getPrincipal()));
+            target.put("principal", PRINCIPAL_SERIALIZER.fromObject(source.getPrincipal()));
             target.put("permissions", STRING_SERIALIZER.fromCollection(source.getPermissions()));
+            return target;
+        }
+    };
+
+    public static final JSONSerializer<Principal> PRINCIPAL_SERIALIZER = new JSONSerializer<Principal>() {
+        @Override
+        public JSONValue fromObject(Principal source) {
+            if (source == null) {
+                return JSONNull.getInstance();
+            }
+            JSONObject target = new JSONObject();
+            target.put("name", STRING_SERIALIZER.fromObject(source.getName()));
+            target.put("type", STRING_SERIALIZER.fromObject(source.getType().toString()));
             return target;
         }
     };

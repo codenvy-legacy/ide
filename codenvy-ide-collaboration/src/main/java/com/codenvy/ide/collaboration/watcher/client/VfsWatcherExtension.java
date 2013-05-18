@@ -18,6 +18,10 @@
  */
 package com.codenvy.ide.collaboration.watcher.client;
 
+import com.codenvy.ide.dtogen.client.RoutableDtoClientImpl;
+import com.codenvy.ide.dtogen.shared.ServerToClientDto;
+import com.codenvy.ide.json.client.Jso;
+
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
@@ -26,9 +30,6 @@ import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandl
 import org.exoplatform.ide.client.framework.websocket.MessageFilter;
 import org.exoplatform.ide.client.framework.websocket.events.ConnectionOpenedHandler;
 import org.exoplatform.ide.client.framework.websocket.events.MessageHandler;
-import org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl;
-import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
-import org.exoplatform.ide.json.client.Jso;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
@@ -73,7 +74,7 @@ public class VfsWatcherExtension extends Extension implements ConnectionOpenedHa
     }
 
     @Override
-    public void onOpen() {
+    public void onConnectionOpened() {
         connectionOpened = true;
         if (userInfo != null) {
             subscribe();

@@ -14,9 +14,9 @@
 
 package com.codenvy.ide.client.util;
 
-import org.exoplatform.ide.shared.util.Timer;
+import com.codenvy.ide.commons.shared.Timer;
 
-/** A client implementation of {@link org.exoplatform.ide.shared.util.Timer}. */
+/** A client implementation of {@link com.codenvy.ide.commons.shared.Timer}. */
 public class ClientTimer implements Timer {
 
     public static Factory FACTORY = new Factory() {

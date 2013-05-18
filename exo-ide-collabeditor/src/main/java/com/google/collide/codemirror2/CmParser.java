@@ -14,10 +14,10 @@
 
 package com.google.collide.codemirror2;
 
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.gwt.core.client.JavaScriptObject;
 
-import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * One of the CodeMirror2 parsing modes, with utilities for saving/restoring the

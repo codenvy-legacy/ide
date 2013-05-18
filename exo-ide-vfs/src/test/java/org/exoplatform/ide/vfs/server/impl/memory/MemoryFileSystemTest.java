@@ -92,7 +92,8 @@ public abstract class MemoryFileSystemTest extends TestCase {
         memoryContext.putItem(testRoot);
 
         DependencySupplierImpl dependencies = new DependencySupplierImpl();
-        virtualFileSystemRegistry.registerProvider(MY_WORKSPACE_ID, new MemoryFileSystemProvider(MY_WORKSPACE_ID, memoryContext));
+        virtualFileSystemRegistry.registerProvider(MY_WORKSPACE_ID,
+                                                   new MemoryFileSystemProvider(MY_WORKSPACE_ID, memoryContext));
         dependencies.addComponent(VirtualFileSystemRegistry.class, virtualFileSystemRegistry);
         dependencies.addComponent(EventListenerList.class, eventListenerList);
         ResourceBinder resources = new ResourceBinderImpl();

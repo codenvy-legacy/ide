@@ -14,7 +14,7 @@
 
 package com.codenvy.ide.client.util;
 
-import org.exoplatform.ide.dtogen.shared.ServerError.FailureReason;
+import com.codenvy.ide.dtogen.shared.ServerError.FailureReason;
 
 /** Generic callback for any requests that return a single value. */
 public interface QueryCallback<E> {

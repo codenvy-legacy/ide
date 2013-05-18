@@ -551,6 +551,11 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
       return ""; //$NON-NLS-1$
    }
 
+   @Override
+   public String getAdditionalDisplayString() {
+       return null;
+   }
+
    /*
     * @see ICompletionProposal#getAdditionalProposalInfo()
     */

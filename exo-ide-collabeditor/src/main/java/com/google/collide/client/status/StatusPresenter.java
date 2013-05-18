@@ -28,6 +28,7 @@ import elemental.html.SpanElement;
 import com.codenvy.ide.client.util.CssUtils;
 import com.codenvy.ide.client.util.Elements;
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.json.client.JsoArray;
 import com.google.collide.client.status.StatusMessage.MessageType;
 import com.google.collide.client.testing.DebugAttributeSetter;
 import com.google.collide.client.testing.DebugId;
@@ -39,7 +40,6 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
-import org.exoplatform.ide.json.client.JsoArray;
 
 /**
  * The StatusPresenter handles status events and renders them into the UI. This

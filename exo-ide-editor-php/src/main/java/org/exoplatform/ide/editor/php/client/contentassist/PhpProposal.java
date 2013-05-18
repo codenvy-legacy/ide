@@ -58,7 +58,7 @@ public class PhpProposal implements CompletionProposal {
 
     private final Token token;
 
-    private List<Modifier> modifieres = new ArrayList<Modifier>();
+    private final List<Modifier> modifieres = new ArrayList<Modifier>();
 
     /**
      * Constructs new {@link PhpProposal} instance with the given proposal, prefix and offset.
@@ -114,6 +114,14 @@ public class PhpProposal implements CompletionProposal {
     @Override
     public String getDisplayString() {
         return proposal;
+    }
+
+    /**
+     * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getAdditionalDisplayString()
+     */
+    @Override
+    public String getAdditionalDisplayString() {
+        return null;
     }
 
     /** @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getImage() */

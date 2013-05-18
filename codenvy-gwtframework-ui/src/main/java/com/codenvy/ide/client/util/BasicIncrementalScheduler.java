@@ -16,9 +16,9 @@ package com.codenvy.ide.client.util;
 
 import com.codenvy.ide.client.util.UserActivityManager.UserActivityListener;
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.commons.shared.ListenerRegistrar.Remover;
 import com.google.gwt.core.client.Duration;
 
-import org.exoplatform.ide.shared.util.ListenerRegistrar.Remover;
 
 /** A scheduler that can incrementally run a task. */
 public class BasicIncrementalScheduler implements IncrementalScheduler {

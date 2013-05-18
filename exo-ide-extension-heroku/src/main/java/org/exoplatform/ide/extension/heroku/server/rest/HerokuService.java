@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.extension.heroku.server.rest;
 
-import org.exoplatform.ide.commons.ParsingResponseException;
+import com.codenvy.ide.commons.server.ParsingResponseException;
+
 import org.exoplatform.ide.extension.heroku.server.Heroku;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
@@ -119,7 +120,7 @@ public class HerokuService {
         properties.add(herokuAppProperty);
         vfs.updateItem(projectId, properties, null);
 
-        Project project = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+        Project project = (Project)vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
         String value = project.getPropertyValue("isGitRepository");
         if (value == null || !value.equals("true")) {
             Property isGitRepositoryProperty = new PropertyImpl("isGitRepository", "true");

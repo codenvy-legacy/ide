@@ -18,9 +18,10 @@
  */
 package com.codenvy.ide.collaboration.dto;
 
-import org.exoplatform.ide.dtogen.shared.*;
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonStringMap;
+import com.codenvy.ide.dtogen.shared.*;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonStringMap;
+
 
 /**
  * Partial copy of {@link org.exoplatform.ide.vfs.shared.Item}

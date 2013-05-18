@@ -20,35 +20,32 @@ package org.exoplatform.ide.client.framework.project;
 
 /**
  * Defined types of projects.
- *
+ * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 24, 2012 12:15:43 PM anya $
  */
+@Deprecated
 public enum ProjectType {
-    PHP("PHP"), //
-    JSP("Servlet/JSP"), //
-    JAVA("Java"), //
-    JAR("Jar"), //
-    WAR("War"), //
-    JAVASCRIPT("JavaScript"), //
-    NODE_JS("nodejs"), //
-    PYTHON("Python"), //
-    DJANGO("Django"), //
-    RUBY_ON_RAILS("Rails"), //
-    RUBY("Ruby"), //
-    SPRING("Spring"), //
-    EXO("eXo"), //
-    UNDEFINED("Undefined"), //
-    DEFAULT("default"), //
-    AWS("Amazon Web Services"),//
+    PHP("PHP"),
+    JSP("Servlet/JSP"),
+    JAVA("Java"),
+    JAR("Jar"),
+    WAR("War"),
+    JAVASCRIPT("JavaScript"),
+    NODE_JS("nodejs"),
+    PYTHON("Python"),
+    DJANGO("Django"),
+    RUBY_ON_RAILS("Rails"),
+    RUBY("Ruby"),
+    SPRING("Spring"),
+    DEFAULT("default"),
     MultiModule("Maven Multi-module");
 
     /** Project's type name. */
     private String type;
 
     /**
-     * @param type
-     *         project's type name
+     * @param type project's type name
      */
     private ProjectType(String type) {
         this.type = type;
@@ -60,8 +57,7 @@ public enum ProjectType {
     }
 
     /**
-     * @param v
-     *         project's type value
+     * @param v project's type value
      * @return {@link ProjectType}
      */
     public static ProjectType fromValue(String v) {

@@ -14,11 +14,11 @@
 
 package com.codenvy.ide.client.util;
 
+import com.codenvy.ide.commons.shared.ListenerManager;
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
+import com.codenvy.ide.commons.shared.ListenerManager.Dispatcher;
 import com.google.gwt.user.client.Timer;
 
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 /**
  * A class that manages the active status of the user so that other objects can

@@ -44,18 +44,6 @@ public interface GitClientBundle extends ClientBundle {
     @Source("org/exoplatform/ide/git/images/buttons/add_Disabled.png")
     ImageResource addDisabled();
 
-    @Source("org/exoplatform/ide/git/images/controls/remove.png")
-    ImageResource removeFiles();
-
-    @Source("org/exoplatform/ide/git/images/controls/remove_Disabled.png")
-    ImageResource removeFilesDisabled();
-
-    @Source("org/exoplatform/ide/git/images/controls/reset.png")
-    ImageResource reset();
-
-    @Source("org/exoplatform/ide/git/images/controls/reset_Disabled.png")
-    ImageResource resetDisabled();
-
     @Source("org/exoplatform/ide/git/images/buttons/cancel.png")
     ImageResource cancel();
 
@@ -67,6 +55,24 @@ public interface GitClientBundle extends ClientBundle {
 
     @Source("org/exoplatform/ide/git/images/buttons/remove_Disabled.png")
     ImageResource removeDisabled();
+
+    @Source("org/exoplatform/ide/git/images/buttons/rename.png")
+    ImageResource rename();
+
+    @Source("org/exoplatform/ide/git/images/buttons/rename_Disabled.png")
+    ImageResource renameDisabled();
+
+    @Source("org/exoplatform/ide/git/images/controls/remove.png")
+    ImageResource removeFiles();
+
+    @Source("org/exoplatform/ide/git/images/controls/remove_Disabled.png")
+    ImageResource removeFilesDisabled();
+
+    @Source("org/exoplatform/ide/git/images/controls/reset.png")
+    ImageResource reset();
+
+    @Source("org/exoplatform/ide/git/images/controls/reset_Disabled.png")
+    ImageResource resetDisabled();
 
     @Source("org/exoplatform/ide/git/images/controls/cloneRepo.png")
     ImageResource cloneRepo();

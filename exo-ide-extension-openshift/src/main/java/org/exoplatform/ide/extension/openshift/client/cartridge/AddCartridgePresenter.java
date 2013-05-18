@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -125,13 +126,15 @@ public class AddCartridgePresenter implements ViewClosedHandler, AddCartridgeHan
         }
     }
 
-    private void addCartridge(String cartridgeName) {
+    private void addCartridge(final String cartridgeName) {
         try {
             OpenShiftClientService.getInstance().addCartridge(appInfo.getName(), cartridgeName, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     IDE.fireEvent(new ShowApplicationListEvent());
                     IDE.getInstance().closeView(display.asView().getId());
+                    IDE.fireEvent(new OutputEvent("Cartridge " + cartridgeName +
+                                                  " successfully added."));
                 }
 
                 @Override

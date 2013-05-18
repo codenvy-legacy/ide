@@ -112,7 +112,10 @@ public class LocalFileSystemProvider implements VirtualFileSystemProvider {
             mount.reset();
             if (searcherProvider != null) {
                 try {
-                    searcherProvider.getSearcher(mount).close();
+                    final Searcher searcher = searcherProvider.getSearcher(mount, false);
+                    if (searcher != null) {
+                        searcher.close();
+                    }
                 } catch (VirtualFileSystemException e) {
                     LOG.error(e.getMessage(), e);
                 }

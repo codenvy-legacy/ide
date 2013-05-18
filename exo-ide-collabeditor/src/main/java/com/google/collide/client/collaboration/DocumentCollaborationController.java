@@ -14,6 +14,11 @@
 
 package com.google.collide.client.collaboration;
 
+import com.codenvy.ide.commons.shared.ErrorCallback;
+import com.codenvy.ide.commons.shared.ListenerRegistrar.RemoverManager;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
+import com.codenvy.ide.json.shared.JsonStringMap;
 import com.google.collide.client.AppContext;
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.code.ParticipantModel;
@@ -34,11 +39,6 @@ import com.google.collide.shared.ot.DocOpApplier;
 import com.google.collide.shared.ot.DocOpBuilder;
 import com.google.collide.shared.ot.DocOpUtils;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.json.shared.JsonStringMap;
-import org.exoplatform.ide.shared.util.ErrorCallback;
-import org.exoplatform.ide.shared.util.ListenerRegistrar.RemoverManager;
 
 /**
  * Controller that adds real-time collaboration at the document level.

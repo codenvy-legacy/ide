@@ -14,6 +14,9 @@
 
 package com.google.collide.client.autoindenter;
 
+import com.codenvy.ide.commons.shared.StringUtils;
+import com.codenvy.ide.commons.shared.TextUtils;
+import com.codenvy.ide.commons.shared.ListenerRegistrar.Remover;
 import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.EditorDocumentMutator;
@@ -25,9 +28,6 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.regexp.shared.RegExp;
 
-import org.exoplatform.ide.shared.util.ListenerRegistrar.Remover;
-import org.exoplatform.ide.shared.util.StringUtils;
-import org.exoplatform.ide.shared.util.TextUtils;
 
 /** A class responsible for automatically adding indentation when appropriate. */
 public class Autoindenter {

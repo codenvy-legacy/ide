@@ -17,6 +17,11 @@ package com.google.collide.client.documentparser;
 import com.codenvy.ide.client.util.BasicIncrementalScheduler;
 import com.codenvy.ide.client.util.IncrementalScheduler;
 import com.codenvy.ide.client.util.UserActivityManager;
+import com.codenvy.ide.commons.shared.ListenerManager;
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
+import com.codenvy.ide.commons.shared.ListenerManager.Dispatcher;
+import com.codenvy.ide.commons.shared.ListenerRegistrar.Remover;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.codemirror2.Parser;
 import com.google.collide.codemirror2.State;
 import com.google.collide.codemirror2.SyntaxType;
@@ -33,11 +38,6 @@ import com.google.collide.shared.document.anchor.AnchorType;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
-import org.exoplatform.ide.shared.util.ListenerRegistrar.Remover;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

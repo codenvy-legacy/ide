@@ -41,7 +41,7 @@ public class DocumentationControl extends SimpleControl implements IDEControl {
         setEnabled(true);
         setImages(SamplesClientBundle.INSTANCE.help(), SamplesClientBundle.INSTANCE.helpDisabled());
 
-        getAttributes().put("onClick", "javascript:window.open('https://codenvy.com/docs/');");
+        getAttributes().put("onClick", "javascript:window.open('http://docs.codenvy.com/');");
     }
 
 

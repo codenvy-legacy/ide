@@ -19,6 +19,9 @@
 package com.google.collide.client;
 
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.commons.shared.StringUtils;
+import com.codenvy.ide.commons.shared.TextUtils;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.client.code.EditableContentArea;
 import com.google.collide.client.code.EditorBundle;
 import com.google.collide.client.code.errorrenderer.EditorErrorListener;
@@ -55,9 +58,6 @@ import org.exoplatform.ide.editor.client.marking.*;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.editor.shared.text.IRegion;
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.shared.util.StringUtils;
-import org.exoplatform.ide.shared.util.TextUtils;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -95,7 +95,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
 
         /**
          * @see com.google.collide.shared.document.Document.TextListener#onTextChange(com.google.collide.shared.document.Document,
-         *      org.exoplatform.ide.json.shared.JsonArray)
+         *      com.codenvy.ide.json.shared.JsonArray)
          */
         @Override
         public void onTextChange(Document document, JsonArray<TextChange> textChanges) {

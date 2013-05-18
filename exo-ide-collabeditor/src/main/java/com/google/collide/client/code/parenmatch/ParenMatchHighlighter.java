@@ -16,6 +16,10 @@ package com.google.collide.client.code.parenmatch;
 
 import com.codenvy.ide.client.util.BasicIncrementalScheduler;
 import com.codenvy.ide.client.util.IncrementalScheduler;
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
+import com.codenvy.ide.commons.shared.RegExpUtils;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.ViewportModel;
 import com.google.collide.client.editor.renderer.LineRenderer;
@@ -38,10 +42,6 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.user.client.Timer;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
-import org.exoplatform.ide.shared.util.RegExpUtils;
 
 /*
  * TODO : Make this language specific and utilize code

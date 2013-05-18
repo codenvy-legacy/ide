@@ -24,6 +24,8 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemImpl;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Principal;
+import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 
@@ -66,8 +68,8 @@ public class ChildrenTest extends LocalFileSystemTest {
         String filePath = createFile(testRootPath, "ChildrenTest_File", DEFAULT_CONTENT_BYTES);
 
         String protectedFolderPath = createDirectory(testRootPath, "ChildrenTest_ProtectedFolder");
-        Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(1);
-        permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
+        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<Principal, Set<BasicPermissions>>(1);
+        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.ALL));
         writePermissions(protectedFolderPath, permissions);
 
         fileId = pathToId(filePath);
@@ -131,16 +133,31 @@ public class ChildrenTest extends LocalFileSystemTest {
 
     public void testGetChildrenNoPermissions2() throws Exception {
         // Have permission for read folder but have not permission to read one of its child.
-        String protectedItemPath = folderPath + '/' + childrenNames.iterator().next();
-        Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(1);
-        permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
+        String protectedItemName = childrenNames.iterator().next();
+        String protectedItemPath = folderPath + '/' + protectedItemName;
+        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<Principal, Set<BasicPermissions>>(1);
+        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.ALL));
         writePermissions(protectedItemPath, permissions);
+        childrenNames.remove(protectedItemName); // this should not appears in result
 
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         String requestPath = SERVICE_URI + "children/" + folderId;
         ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
-        assertEquals(403, response.getStatus());
+        assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
         log.info(new String(writer.getBody()));
+        @SuppressWarnings("unchecked")
+        ItemList<Item> children = (ItemList<Item>)response.getEntity();
+        List<String> list = new ArrayList<String>(3);
+        for (Item i : children.getItems()) {
+            validateLinks(i);
+            list.add(i.getName());
+        }
+
+        assertEquals(3, list.size());
+        childrenNames.removeAll(list);
+        if (!childrenNames.isEmpty()) {
+            fail("Expected items " + childrenNames + " missed in response. ");
+        }
     }
 
     public void testGetChildrenPagingSkipCount() throws Exception {
@@ -202,9 +219,9 @@ public class ChildrenTest extends LocalFileSystemTest {
     }
 
     public void testGetChildrenPropertyFilter() throws Exception {
-        Iterator<Map.Entry<String, String[]>> iter = properties.entrySet().iterator();
-        Map.Entry<String, String[]> e1 = iter.next();
-        Map.Entry<String, String[]> e2 = iter.next();
+        Iterator<Map.Entry<String, String[]>> iterator = properties.entrySet().iterator();
+        Map.Entry<String, String[]> e1 = iterator.next();
+        Map.Entry<String, String[]> e2 = iterator.next();
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         // Get children and apply filter for properties.
         String requestPath = SERVICE_URI + "children/" + folderId + '?' + "propertyFilter=" + e1.getKey();

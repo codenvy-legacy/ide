@@ -24,8 +24,8 @@
 
     <inherits name='com.google.gwt.user.User'/>
     <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework'/>
-    <inherits name="org.exoplatform.ide.dtogen.DtoGen"/>
-    <inherits name="org.exoplatform.ide.json.Json"/>
+    <inherits name="com.codenvy.ide.dtogen.DtoGen"/>
+    <inherits name="com.codenvy.ide.json.Json"/>
     <inherits name="com.codenvy.ide.collaboration.dto.Dto"/>
 
     <entry-point class='com.codenvy.ide.collaboration.watcher.client.VfsWatcherExtension'/>

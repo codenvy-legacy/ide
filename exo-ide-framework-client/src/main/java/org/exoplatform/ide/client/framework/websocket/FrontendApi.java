@@ -18,15 +18,16 @@
  */
 package org.exoplatform.ide.client.framework.websocket;
 
+import com.codenvy.ide.dtogen.client.RoutableDtoClientImpl;
+import com.codenvy.ide.dtogen.client.ServerErrorImpl;
+import com.codenvy.ide.dtogen.shared.ClientToServerDto;
+import com.codenvy.ide.dtogen.shared.RoutableDto;
+import com.codenvy.ide.dtogen.shared.ServerToClientDto;
+import com.codenvy.ide.dtogen.shared.ServerError.FailureReason;
+import com.codenvy.ide.json.client.Jso;
+
 import org.exoplatform.ide.client.framework.websocket.MessageFilter.MessageRecipient;
 import org.exoplatform.ide.client.framework.websocket.events.ReplyHandler;
-import org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl;
-import org.exoplatform.ide.dtogen.client.ServerErrorImpl;
-import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
-import org.exoplatform.ide.dtogen.shared.RoutableDto;
-import org.exoplatform.ide.dtogen.shared.ServerError.FailureReason;
-import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
-import org.exoplatform.ide.json.client.Jso;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>

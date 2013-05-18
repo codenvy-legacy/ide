@@ -13,7 +13,7 @@
 // limitations under the License.
 package com.google.collide.dto;
 
-import org.exoplatform.ide.dtogen.shared.*;
+import com.codenvy.ide.dtogen.shared.*;
 
 /** Represents character position in a single file. */
 @RoutingType(type = RoutingTypes.FILEPOSITION)

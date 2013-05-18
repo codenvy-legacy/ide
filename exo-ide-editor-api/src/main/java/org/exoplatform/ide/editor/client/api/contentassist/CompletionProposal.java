@@ -66,6 +66,15 @@ public interface CompletionProposal {
     String getDisplayString();
 
     /**
+     * Returns the string to be displayed in the list of completion proposals. The additional display string would typically be
+     * shown to the right of the main display string.
+     *
+     * @return the string to be displayed
+     * @see ICompletionProposalExtension6#getStyledDisplayString()
+     */
+    String getAdditionalDisplayString();
+
+    /**
      * Returns the image to be displayed in the list of completion proposals. The image would typically be shown to the left of the
      * display string.
      *

@@ -19,7 +19,6 @@
 package org.exoplatform.ide.vfs.server.util;
 
 import org.exoplatform.ide.vfs.server.VirtualFileSystemFactory;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.LinkImpl;
 
@@ -43,7 +42,7 @@ public class LinksHelper {
                                                     String itemPath,
                                                     String mediaType,
                                                     boolean locked,
-                                                    String parentId) throws VirtualFileSystemException {
+                                                    String parentId) {
         // This method is used extremely actively so it is imported to set size of map directly
         // and prevent unnecessary growth of map.
         final Map<String, Link> links = new HashMap<String, Link>(16, 1.0f);
@@ -117,8 +116,7 @@ public class LinksHelper {
                                                       String vfsId,
                                                       String itemId,
                                                       boolean isRoot,
-                                                      String parentId)
-            throws VirtualFileSystemException {
+                                                      String parentId) {
         final UriBuilder baseUriBuilder = UriBuilder.fromUri(baseUri).path(VirtualFileSystemFactory.class, "getFileSystem");
         // This method is used extremely actively so it is imported to set size of map directly
         // and prevent unnecessary growth of map.

@@ -17,6 +17,10 @@ package com.google.collide.client.editor;
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
+import com.codenvy.ide.json.shared.JsonIntegerMap;
 import com.google.collide.client.editor.renderer.Renderer;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.anchor.Anchor;
@@ -26,10 +30,6 @@ import com.google.collide.shared.document.anchor.AnchorUtils;
 import com.google.collide.shared.document.anchor.ReadOnlyAnchor;
 import com.google.collide.shared.document.util.LineUtils;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.json.shared.JsonIntegerMap;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 // TODO: support RangeAnchoredElements
 

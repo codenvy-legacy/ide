@@ -30,12 +30,12 @@ import org.exoplatform.ide.client.framework.util.ProjectResolver;
 
 /**
  * Control for build project by maven builder.
- *
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuildProjectControl.java Feb 17, 2012 3:51:08 PM azatsarynnyy $
  */
 public abstract class BuildProjectControlAbstract extends SimpleControl implements IDEControl,
-        ProjectClosedHandler, ProjectOpenedHandler {
+                                                                       ProjectClosedHandler, ProjectOpenedHandler {
 
     public BuildProjectControlAbstract(String id) {
         super(id);
@@ -51,15 +51,19 @@ public abstract class BuildProjectControlAbstract extends SimpleControl implemen
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
     }
 
-    /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
-     * .project.ProjectClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+     *      .project.ProjectClosedEvent)
+     */
     @Override
     public void onProjectClosed(ProjectClosedEvent event) {
         setEnabled(false);
     }
 
-    /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
-     * .project.ProjectOpenedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
+     *      .project.ProjectOpenedEvent)
+     */
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
         String projectType = event.getProject().getProjectType();
@@ -74,8 +78,8 @@ public abstract class BuildProjectControlAbstract extends SimpleControl implemen
     private boolean chekProjectType(String projectType) {
         return ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
                || ProjectResolver.SPRING.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
-               || ProjectType.JSP.value().equals(projectType) || ProjectType.AWS.value().equals(projectType)
-               || ProjectType.WAR.value().equals(projectType) || ProjectType.JAR.value().equals(projectType)
+               || ProjectType.JSP.value().equals(projectType) || ProjectType.WAR.value().equals(projectType)
+               || ProjectType.JAR.value().equals(projectType)
                || ProjectType.MultiModule.value().equals(projectType);
     }
 

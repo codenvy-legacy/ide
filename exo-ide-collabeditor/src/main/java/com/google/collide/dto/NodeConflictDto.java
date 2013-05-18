@@ -14,12 +14,12 @@
 
 package com.google.collide.dto;
 
+import com.codenvy.ide.dtogen.shared.ClientToServerDto;
+import com.codenvy.ide.dtogen.shared.RoutingType;
+import com.codenvy.ide.dtogen.shared.ServerToClientDto;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.dto.ResolveTreeConflict.ConflictResolutionChoice;
 
-import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
-import org.exoplatform.ide.dtogen.shared.RoutingType;
-import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
-import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * Information that the client needs to display UI for resolving a conflicted

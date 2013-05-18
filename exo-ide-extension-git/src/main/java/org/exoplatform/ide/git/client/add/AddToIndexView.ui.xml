@@ -58,7 +58,7 @@
 		<f:layer height="22px" bottom="25">
 			<g:FlowPanel>
 				<g:CheckBox ui:field="updateField"
-					HTML="{locale.addToIndexUpdateFieldTitle}"></g:CheckBox>
+					text="{locale.addToIndexUpdateFieldTitle}"></g:CheckBox>
 			</g:FlowPanel>
 		</f:layer>
 		<f:layer height="22px" bottom="0">

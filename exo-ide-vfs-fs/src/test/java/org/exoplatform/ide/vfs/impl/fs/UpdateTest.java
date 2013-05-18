@@ -23,6 +23,8 @@ import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Principal;
+import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
@@ -55,9 +57,9 @@ public class UpdateTest extends LocalFileSystemTest {
         lockedFilePath = createFile(testRootPath, "UpdateTest_LockedFile", DEFAULT_CONTENT_BYTES);
         protectedFilePath = createFile(testRootPath, "UpdateTest_ProtectedFile", DEFAULT_CONTENT_BYTES);
 
-        Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(2);
-        permissions.put("admin", EnumSet.of(BasicPermissions.READ));
-        permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
+        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<Principal, Set<BasicPermissions>>(2);
+        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.ALL));
+        permissions.put(new PrincipalImpl("admin", Principal.Type.USER), EnumSet.of(BasicPermissions.READ));
 
         writePermissions(protectedFilePath, permissions);
         createLock(lockedFilePath, lockToken);

@@ -18,17 +18,17 @@ import elemental.events.Event;
 
 import com.codenvy.ide.client.util.SignalEvent;
 import com.codenvy.ide.client.util.UserAgent;
+import com.codenvy.ide.commons.shared.ListenerManager;
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
+import com.codenvy.ide.commons.shared.ListenerRegistrar.Remover;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
+import com.codenvy.ide.json.shared.JsonStringMap;
 import com.google.collide.client.common.Constants;
 import com.google.collide.shared.document.LineInfo;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Timer;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.json.shared.JsonStringMap;
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
-import org.exoplatform.ide.shared.util.ListenerRegistrar.Remover;
 
 /**
  * Manages mouse hover events, optionally when a key modifier combination is

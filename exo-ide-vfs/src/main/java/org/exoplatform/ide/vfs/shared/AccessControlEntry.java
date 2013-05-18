@@ -36,12 +36,12 @@ public interface AccessControlEntry {
      */
     void setPermissions(Set<String> permissions);
 
-    /** @return principal name */
-    String getPrincipal();
+    /** @return principal */
+    Principal getPrincipal();
 
     /**
      * @param principal
-     *         principal name
+     *         principal
      */
-    void setPrincipal(String principal);
+    void setPrincipal(Principal principal);
 }

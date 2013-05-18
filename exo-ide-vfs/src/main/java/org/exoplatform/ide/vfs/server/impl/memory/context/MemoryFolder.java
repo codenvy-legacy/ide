@@ -18,13 +18,19 @@
  */
 package org.exoplatform.ide.vfs.server.impl.memory.context;
 
-import org.exoplatform.ide.vfs.server.exceptions.*;
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
-import org.exoplatform.ide.vfs.shared.PropertyImpl;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
@@ -53,7 +59,11 @@ public class MemoryFolder extends MemoryItem {
     }
 
     public List<MemoryItem> getChildren() {
-        return new ArrayList<MemoryItem>(children.values());
+        List<MemoryItem> copy;
+        synchronized (children) {
+            copy = new ArrayList<MemoryItem>(children.values());
+        }
+        return copy;
     }
 
     public void addChild(MemoryItem child) throws VirtualFileSystemException {
@@ -101,7 +111,7 @@ public class MemoryFolder extends MemoryItem {
 
     @Override
     public MemoryItem copy(MemoryFolder parent) throws VirtualFileSystemException {
-        MemoryFolder copy = new MemoryFolder(ObjectIdGenerator.generateId(), name);
+        MemoryFolder copy = new MemoryFolder(ObjectIdGenerator.generateId(), getName());
         for (MemoryItem i : getChildren()) {
             i.copy(copy);
         }
@@ -125,11 +135,6 @@ public class MemoryFolder extends MemoryItem {
         }
         List<String> values = properties.get(0).getValue();
         return !(values == null || values.isEmpty()) && Project.PROJECT_MIME_TYPE.equals(values.get(0));
-    }
-
-    public void setProjectType(String projectType) throws VirtualFileSystemException {
-        updateProperties(Arrays.<Property>asList(new PropertyImpl("vfs:projectType", projectType)));
-        lastModificationDate = System.currentTimeMillis();
     }
 
     @Override

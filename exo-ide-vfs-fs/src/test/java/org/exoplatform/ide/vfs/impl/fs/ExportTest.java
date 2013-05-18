@@ -18,12 +18,16 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
+import com.codenvy.ide.commons.server.FileUtils;
+import com.codenvy.ide.commons.server.ZipUtils;
+
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
-import org.exoplatform.ide.commons.ZipUtils;
+import org.exoplatform.ide.vfs.shared.Principal;
+import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.services.security.ConversationState;
@@ -64,8 +68,8 @@ public class ExportTest extends LocalFileSystemTest {
         protectedFolderPath = createDirectory(testRootPath, "ExportTest_ProtectedFolder");
         createTree(protectedFolderPath, 6, 4, null);
 
-        Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(1);
-        permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
+        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<Principal, Set<BasicPermissions>>(1);
+        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.ALL));
         writePermissions(protectedFolderPath, permissions);
 
         folderId = pathToId(folderPath);
@@ -111,18 +115,27 @@ public class ExportTest extends LocalFileSystemTest {
     }
 
     public void testExportFolderNoPermissions2() throws Exception {
-        Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(1);
-        permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
+        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<Principal, Set<BasicPermissions>>(1);
+        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.ALL));
         List<String> l = flattenDirectory(folderPath);
         // Find one child in the list and remove write permission for 'admin'.
-        writePermissions(folderPath + '/' + l.get(new Random().nextInt(l.size())), permissions);
+        String myProtectedItemPath = folderPath + '/' + l.get(new Random().nextInt(l.size()));
+        writePermissions(myProtectedItemPath, permissions);
 
-        // From now have permission to read folder but have not permission to read any child of folder.
+        // From now have permission to read folder but have not permission to read 'myProtectedItemPath' .
+        // It should not be in result zip.
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         String path = SERVICE_URI + "export/" + folderId;
         ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
-        assertEquals(403, response.getStatus());
-        log.info(new String(writer.getBody()));
+        assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
+        assertEquals("application/zip", writer.getHeaders().getFirst("Content-Type"));
+
+        java.io.File unzip = getIoFile(createDirectory(testRootPath, "__unzip__"));
+        ZipUtils.unzip(new ByteArrayInputStream(writer.getBody()), unzip);
+
+        // Remove file from source folder and compare directories
+        assertTrue(FileUtils.deleteRecursive(getIoFile(myProtectedItemPath)));
+        compareDirectories(getIoFile(folderPath), unzip);
     }
 
     public void testExportProject() throws Exception {

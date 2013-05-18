@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server;
 
-import org.exoplatform.ide.commons.ZipUtils;
+import com.codenvy.ide.commons.server.ZipUtils;
+
 import org.exoplatform.ide.extension.cloudfoundry.shared.*;
 import org.exoplatform.ide.security.paas.Credential;
 import org.exoplatform.ide.security.paas.DummyCredentialStore;
@@ -35,7 +36,9 @@ import java.net.URI;
 import java.net.URL;
 import java.util.*;
 
-import static org.exoplatform.ide.commons.NameGenerator.generate;
+import static com.codenvy.ide.commons.server.NameGenerator.generate;
+
+
 import static org.junit.Assert.*;
 
 /**

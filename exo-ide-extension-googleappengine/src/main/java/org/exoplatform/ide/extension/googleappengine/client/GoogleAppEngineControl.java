@@ -27,7 +27,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  */
 public class GoogleAppEngineControl extends SimpleControl implements IDEControl {
 
-    private static final String ID = "PaaS/Google App Engine";
+    private static final String ID    = "PaaS/Google App Engine";
 
     private static final String TITLE = GoogleAppEngineExtension.GAE_LOCALIZATION.googleAppEngineControl();
 

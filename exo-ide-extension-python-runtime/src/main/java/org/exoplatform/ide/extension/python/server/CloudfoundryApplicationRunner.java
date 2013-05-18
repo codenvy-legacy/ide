@@ -18,8 +18,9 @@
  */
 package org.exoplatform.ide.extension.python.server;
 
+import com.codenvy.ide.commons.server.ParsingResponseException;
+
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry;
 import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryException;
 import org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryPool;
@@ -36,8 +37,6 @@ import org.exoplatform.services.log.Log;
 import org.picocontainer.Startable;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,12 +45,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
-import static org.exoplatform.ide.commons.FileUtils.copy;
-import static org.exoplatform.ide.commons.FileUtils.createTempDirectory;
-import static org.exoplatform.ide.commons.FileUtils.deleteRecursive;
-import static org.exoplatform.ide.commons.NameGenerator.generate;
-import static org.exoplatform.ide.commons.ZipUtils.unzip;
+import static com.codenvy.ide.commons.server.ContainerUtils.readValueParam;
+import static com.codenvy.ide.commons.server.FileUtils.createTempDirectory;
+import static com.codenvy.ide.commons.server.FileUtils.deleteRecursive;
+import static com.codenvy.ide.commons.server.NameGenerator.generate;
+import static com.codenvy.ide.commons.server.ZipUtils.unzip;
+
+
 
 /**
  * ApplicationRunner for deploy Python applications at Cloud Foundry PaaS.
@@ -98,12 +98,6 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
         this.applications = new ConcurrentHashMap<String, Application>();
         this.applicationTerminator = Executors.newSingleThreadScheduledExecutor();
         this.applicationTerminator.scheduleAtFixedRate(new TerminateApplicationTask(), 1, 1, TimeUnit.MINUTES);
-
-        URL cs = getClass().getProtectionDomain().getCodeSource().getLocation();
-        java.io.File f = new java.io.File(URI.create(cs.toString()));
-        while (!(f == null)) {
-            f = f.getParentFile();
-        }
     }
 
     private enum APPLICATION_TYPE {
@@ -120,7 +114,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                                                                                       VirtualFileSystemException {
         java.io.File path = null;
         try {
-            Item project = vfs.getItem(projectId, PropertyFilter.NONE_FILTER);
+            Item project = vfs.getItem(projectId, false, PropertyFilter.NONE_FILTER);
             if (project.getItemType() != ItemType.PROJECT) {
                 throw new ApplicationRunnerException("Item '" + project.getPath() + "' is not a project. ");
             }
@@ -132,18 +126,6 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             }
 
             APPLICATION_TYPE type = determineApplicationType(path);
-            if (APPLICATION_TYPE.PYTHON_APP_ENGINE == type) {
-                final java.io.File appengineApplication = createTempDirectory(null, "gae-app-");
-
-                // copy application
-                java.io.File application = new java.io.File(appengineApplication, "application");
-                if (!application.mkdir()) {
-                    throw new IOException("Unable create directory " + application.getAbsolutePath());
-                }
-                copy(path, application, null);
-                deleteRecursive(path);
-                path = appengineApplication;
-            }
 
             final Cloudfoundry cloudfoundry = cfServers.next();
             final String name = generate("app-", 16);

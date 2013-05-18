@@ -9,7 +9,7 @@
     <parent>
         <groupId>org.exoplatform.ide</groupId>
         <artifactId>exo-ide-parent</artifactId>
-        <version>2.2.1-SNAPSHOT</version>
+        <version>2.3.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>exo-ide-packaging-standalone-tomcat</artifactId>
@@ -62,12 +62,6 @@
             <type>war</type>
         </dependency>
         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-gadget-server</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
             <groupId>com.codenvy.organization</groupId>
             <artifactId>codenvy-organization-packaging-api-war</artifactId>
             <type>war</type>
@@ -107,41 +101,6 @@
             <type>war</type>
         </dependency>
         <dependency>
-            <groupId>org.exoplatform</groupId>
-            <artifactId>user-service</artifactId>
-            <version>1.0-Alpha02</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-collections</groupId>
-                    <artifactId>commons-collections</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>servlet-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.exoplatform.ws</groupId>
-                    <artifactId>exo.ws.rest.core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.portlet</groupId>
-                    <artifactId>portlet-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.ow2.spec.ee</groupId>
-                    <artifactId>ow2-jta-1.1-spec</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.faces</groupId>
-                    <artifactId>jsf-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>xstream</groupId>
-                    <artifactId>xstream</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs-fs</artifactId>
             <version>${project.version}</version>
@@ -175,28 +134,6 @@
             <groupId>org.crsh</groupId>
             <artifactId>crsh.shell.core</artifactId>
             <version>${crash.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-gadget</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-ui</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.exoplatform.gwt</groupId>
-                    <artifactId>codenvy-gwtframework-commons</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>gwt-user</artifactId>
-                    <groupId>com.google.gwt</groupId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.httpcomponents</groupId>
-                    <artifactId>httpclient</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -755,16 +692,24 @@
                                 </war>
 
 
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-rest-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/rest.war" overwrite="true" />
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true" />
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-site-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true" />
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-shell-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/shell.war" overwrite="true" />
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" overwrite="true" />
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true" />
-                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-gadget-server-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/gadget-server.war" overwrite="true" />
-                                <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true" />
-                                <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip" dest="${project.build.directory}/tomcat-ide" />
-                                <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip" dest="${project.build.directory}/tomcat-ide">
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-rest-war-${project.version}.war"
+                                      tofile="${project.build.directory}/tomcat-ide/webapps/rest.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${project.version}.war"
+                                      tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-site-war-${project.version}.war"
+                                      tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-shell-war-${project.version}.war"
+                                      tofile="${project.build.directory}/tomcat-ide/webapps/shell.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${project.version}.war"
+                                      tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${project.version}.war"
+                                      tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true"/>
+                                <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war"
+                                      tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true"/>
+                                <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"
+                                       dest="${project.build.directory}/tomcat-ide"/>
+                                <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip"
+                                       dest="${project.build.directory}/tomcat-ide">
                                     <patternset>
                                         <exclude name="**/bin/**" />
                                         <exclude name="**/demos/**" />

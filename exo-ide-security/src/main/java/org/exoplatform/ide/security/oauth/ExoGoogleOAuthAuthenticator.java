@@ -19,13 +19,13 @@
 package org.exoplatform.ide.security.oauth;
 
 import com.codenvy.commons.security.oauth.GoogleOAuthAuthenticator;
+import com.codenvy.ide.commons.server.ContainerUtils;
 import com.google.api.client.auth.oauth2.CredentialStore;
 import com.google.api.client.auth.oauth2.MemoryCredentialStore;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.json.jackson.JacksonFactory;
 
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.commons.ContainerUtils;
 
 import java.io.IOException;
 import java.io.InputStream;

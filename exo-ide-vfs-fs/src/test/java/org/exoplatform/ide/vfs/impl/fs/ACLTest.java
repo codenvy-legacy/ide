@@ -21,6 +21,8 @@ package org.exoplatform.ide.vfs.impl.fs;
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.Principal;
+import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 
@@ -28,7 +30,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.util.*;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 
@@ -45,7 +52,7 @@ public class ACLTest extends LocalFileSystemTest {
     private String lockedFilePath;
     private String lockedFileId;
 
-    private Map<String, Set<BasicPermissions>> permissions;
+    private Map<Principal, Set<BasicPermissions>> permissions;
 
     @Override
     protected void setUp() throws Exception {
@@ -54,10 +61,11 @@ public class ACLTest extends LocalFileSystemTest {
         filePath = createFile(testRootPath, "ACLTest_File", DEFAULT_CONTENT_BYTES);
         lockedFilePath = createFile(testRootPath, "ACLTest_LockedFile", DEFAULT_CONTENT_BYTES);
 
-        permissions = new HashMap<String, Set<BasicPermissions>>(3);
-        permissions.put("admin", EnumSet.of(BasicPermissions.ALL));
-        permissions.put("andrew", EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
-        permissions.put("john", EnumSet.of(BasicPermissions.READ));
+        permissions = new HashMap<Principal, Set<BasicPermissions>>(3);
+        permissions.put(new PrincipalImpl("admin", Principal.Type.USER), EnumSet.of(BasicPermissions.ALL));
+        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER),
+                        EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE, BasicPermissions.UPDATE_ACL));
+        permissions.put(new PrincipalImpl("john", Principal.Type.USER), EnumSet.of(BasicPermissions.READ));
 
         writePermissions(filePath, permissions);
         createLock(lockedFilePath, lockToken);
@@ -79,7 +87,7 @@ public class ACLTest extends LocalFileSystemTest {
 
     public void testGetACLNoPermissions() throws Exception {
         // Remove permissions for current user, see LocalFileSystemTest.setUp()
-        permissions.remove("admin");
+        permissions.remove(new PrincipalImpl("admin", Principal.Type.USER));
         writePermissions(filePath, permissions);
         // Request must fail since we have not permissions any more to read ACL.
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
@@ -93,15 +101,15 @@ public class ACLTest extends LocalFileSystemTest {
     public void testUpdateACL() throws Exception {
         String requestPath = SERVICE_URI + "acl/" + fileId;
         // Give write permission for john. No changes for other users.
-        String acl = "[{\"principal\":\"john\",\"permissions\":[\"read\", \"write\"]}]";
+        String acl = "[{\"principal\":{\"name\":\"john\",\"type\":\"USER\"},\"permissions\":[\"read\", \"write\"]}]";
         Map<String, List<String>> h = new HashMap<String, List<String>>(1);
         h.put("Content-Type", Arrays.asList("application/json"));
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, acl.getBytes(), null);
         assertEquals(204, response.getStatus());
 
-        permissions.get("john").add(BasicPermissions.WRITE);
+        permissions.get(new PrincipalImpl("john", Principal.Type.USER)).add(BasicPermissions.WRITE);
         // check backend
-        Map<String, Set<BasicPermissions>> updatedAccessList = readPermissions(filePath);
+        Map<? extends Principal, Set<BasicPermissions>> updatedAccessList = readPermissions(filePath);
         log.info(updatedAccessList);
         assertEquals(permissions, updatedAccessList);
 
@@ -114,17 +122,17 @@ public class ACLTest extends LocalFileSystemTest {
     public void testUpdateACLOverride() throws Exception {
         String requestPath = SERVICE_URI + "acl/" + fileId + '?' + "override=" + true;
         // Give 'all' rights to admin and take away all rights for other users.
-        String acl = "[{\"principal\":\"admin\",\"permissions\":[\"all\"]}]";
+        String acl = "[{\"principal\":{\"name\":\"admin\",\"type\":\"USER\"},\"permissions\":[\"all\"]}]";
         Map<String, List<String>> h = new HashMap<String, List<String>>(1);
         h.put("Content-Type", Arrays.asList("application/json"));
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, acl.getBytes(), null);
         assertEquals(204, response.getStatus());
 
-        permissions.remove("andrew");
-        permissions.remove("john");
+        permissions.remove(new PrincipalImpl("andrew", Principal.Type.USER));
+        permissions.remove(new PrincipalImpl("john", Principal.Type.USER));
 
         // check backend
-        Map<String, Set<BasicPermissions>> updatedAccessList = readPermissions(filePath);
+        Map<Principal, Set<BasicPermissions>> updatedAccessList = readPermissions(filePath);
         log.info(updatedAccessList);
         assertEquals(permissions, updatedAccessList);
 
@@ -155,15 +163,15 @@ public class ACLTest extends LocalFileSystemTest {
     @SuppressWarnings("unchecked")
     public void testUpdateACLHavePermissions() throws Exception {
         // Remove permissions for current user, see LocalFileSystemTest.setUp()
-        permissions.put("admin", EnumSet.of(BasicPermissions.READ));
+        permissions.put(new PrincipalImpl("admin", Principal.Type.USER), EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
         writePermissions(filePath, permissions);
 
         String requestPath = SERVICE_URI + "acl/" + fileId;
         // Give write permission for john. No changes for other users.
-        String acl = "[{\"principal\":\"admin\",\"permissions\":[\"read\", \"write\"]}]";
+        String acl = "[{\"principal\":{\"name\":\"admin\",\"type\":\"USER\"},\"permissions\":[\"read\", \"write\"]}]";
         Map<String, List<String>> h = new HashMap<String, List<String>>(1);
         h.put("Content-Type", Arrays.asList("application/json"));
-        // File is protected and default principal 'admin' has not write permission.
+        // File is protected and default principal 'admin' has not update_acl permission.
         // Replace default principal by principal who has write permission.
         ConversationState user = new ConversationState(new Identity("andrew"));
         user.setAttribute("currentTenant", ConversationState.getCurrent().getAttribute("currentTenant"));
@@ -171,9 +179,9 @@ public class ACLTest extends LocalFileSystemTest {
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, acl.getBytes(), null);
         assertEquals(204, response.getStatus());
 
-        permissions.get("admin").add(BasicPermissions.WRITE);
+        permissions.get(new PrincipalImpl("admin", Principal.Type.USER)).add(BasicPermissions.WRITE);
         // check backend
-        Map<String, Set<BasicPermissions>> updatedAccessList = readPermissions(filePath);
+        Map<Principal, Set<BasicPermissions>> updatedAccessList = readPermissions(filePath);
         log.info(updatedAccessList);
         assertEquals(permissions, updatedAccessList);
 
@@ -185,10 +193,10 @@ public class ACLTest extends LocalFileSystemTest {
     @SuppressWarnings("unchecked")
     public void testUpdateACLNoPermissions() throws Exception {
         // Remove permissions for current user, see LocalFileSystemTest.setUp()
-        permissions.put("admin", EnumSet.of(BasicPermissions.READ));
+        permissions.put(new PrincipalImpl("admin", Principal.Type.USER), EnumSet.of(BasicPermissions.READ));
         writePermissions(filePath, permissions);
 
-        String acl = "[{\"principal\":\"admin\",\"permissions\":[\"all\"]}]";
+        String acl = "[{\"principal\":{\"name\":\"admin\",\"type\":\"USER\"},\"permissions\":[\"all\"]}]";
         Map<String, List<String>> h = new HashMap<String, List<String>>(1);
         h.put("Content-Type", Arrays.asList("application/json"));
 
@@ -201,7 +209,7 @@ public class ACLTest extends LocalFileSystemTest {
 
         // ACL must not be changed.
         // check backend
-        Map<String, Set<BasicPermissions>> updatedAccessList = readPermissions(filePath);
+        Map<Principal, Set<BasicPermissions>> updatedAccessList = readPermissions(filePath);
         log.info(updatedAccessList);
         assertEquals(permissions, updatedAccessList);
 
@@ -212,8 +220,9 @@ public class ACLTest extends LocalFileSystemTest {
 
     @SuppressWarnings("unchecked")
     public void testUpdateACLLocked() throws Exception {
-        String acl = "[{\"principal\":\"john\",\"permissions\":[\"read\", \"write\"]}," +
-                     "{\"principal\":\"any\",\"permissions\":null},{\"principal\":\"admin\",\"permissions\":[\"read\"]}]";
+        String acl = "[{\"principal\":{\"name\":\"john\",\"type\":\"USER\"},\"permissions\":[\"read\", \"write\"]}," +
+                     "{\"principal\":{\"name\":\"any\",\"type\":\"USER\"},\"permissions\":null}," +
+                     "{\"principal\":{\"name\":\"admin\",\"type\":\"USER\"},\"permissions\":[\"read\"]}]";
         Map<String, List<String>> h = new HashMap<String, List<String>>(1);
         h.put("Content-Type", Arrays.asList("application/json"));
 
@@ -222,12 +231,12 @@ public class ACLTest extends LocalFileSystemTest {
 
         assertEquals(204, response.getStatus());
 
-        Map<String, Set<BasicPermissions>> thisTestAccessList = new HashMap<String, Set<BasicPermissions>>(2);
-        thisTestAccessList.put("john", EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
-        thisTestAccessList.put("admin", EnumSet.of(BasicPermissions.READ));
+        Map<Principal, Set<BasicPermissions>> thisTestAccessList = new HashMap<Principal, Set<BasicPermissions>>(2);
+        thisTestAccessList.put(new PrincipalImpl("john", Principal.Type.USER), EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
+        thisTestAccessList.put(new PrincipalImpl("admin", Principal.Type.USER), EnumSet.of(BasicPermissions.READ));
 
         // check backend
-        Map<String, Set<BasicPermissions>> updatedAccessList = readPermissions(lockedFilePath);
+        Map<Principal, Set<BasicPermissions>> updatedAccessList = readPermissions(lockedFilePath);
         log.info(updatedAccessList);
         assertEquals(thisTestAccessList, updatedAccessList);
 
@@ -238,8 +247,9 @@ public class ACLTest extends LocalFileSystemTest {
 
     @SuppressWarnings("unchecked")
     public void testUpdateACLLocked_NoLockToken() throws Exception {
-        String acl = "[{\"principal\":\"john\",\"permissions\":[\"read\", \"write\"]}," +
-                     "{\"principal\":\"any\",\"permissions\":null},{\"principal\":\"admin\",\"permissions\":[\"read\"]}]";
+        String acl = "[{\"principal\":{\"name\":\"john\",\"type\":\"USER\"},\"permissions\":[\"read\", \"write\"]}," +
+                     "{\"principal\":{\"name\":\"any\",\"type\":\"USER\"},\"permissions\":null}," +
+                     "{\"principal\":{\"name\":\"admin\",\"type\":\"USER\"},\"permissions\":[\"read\"]}]";
         Map<String, List<String>> h = new HashMap<String, List<String>>(1);
         h.put("Content-Type", Arrays.asList("application/json"));
 
@@ -254,10 +264,10 @@ public class ACLTest extends LocalFileSystemTest {
         assertTrue(updatedAcl.isEmpty());
     }
 
-    private Map<String, Set<BasicPermissions>> toMap(List<AccessControlEntry> acl) {
-        Map<String, Set<BasicPermissions>> map = new HashMap<String, Set<BasicPermissions>>(acl.size());
+    private Map<Principal, Set<BasicPermissions>> toMap(List<AccessControlEntry> acl) {
+        Map<Principal, Set<BasicPermissions>> map = new HashMap<Principal, Set<BasicPermissions>>(acl.size());
         for (AccessControlEntry ace : acl) {
-            String principal = ace.getPrincipal();
+            Principal principal = new PrincipalImpl(ace.getPrincipal());
             Set<BasicPermissions> permissions = map.get(principal);
             if (permissions == null) {
                 permissions = EnumSet.noneOf(BasicPermissions.class);
@@ -271,64 +281,6 @@ public class ACLTest extends LocalFileSystemTest {
             }
         }
         return map;
-    }
-
-    // -------------------------------------------
-
-    public void testHasPermission1() {
-        AccessControlList accessControlList = new AccessControlList(permissions);
-        assertTrue(accessControlList.hasPermission("admin", BasicPermissions.ALL));
-        assertTrue(accessControlList.hasPermission("admin", BasicPermissions.READ));
-        assertTrue(accessControlList.hasPermission("admin", BasicPermissions.WRITE));
-
-        assertTrue(accessControlList.hasPermission("admin", BasicPermissions.WRITE, BasicPermissions.READ,
-                                                   BasicPermissions.ALL));
-        assertTrue(accessControlList.hasPermission("admin", BasicPermissions.WRITE, BasicPermissions.READ));
-    }
-
-    public void testHasPermission2() {
-        AccessControlList accessControlList = new AccessControlList(permissions);
-        assertFalse(accessControlList.hasPermission("andrew", BasicPermissions.ALL));
-        assertTrue(accessControlList.hasPermission("andrew", BasicPermissions.READ));
-        assertTrue(accessControlList.hasPermission("andrew", BasicPermissions.WRITE));
-
-        assertFalse(accessControlList.hasPermission("andrew", BasicPermissions.WRITE, BasicPermissions.READ,
-                                                    BasicPermissions.ALL));
-        assertTrue(accessControlList.hasPermission("andrew", BasicPermissions.WRITE, BasicPermissions.READ));
-    }
-
-    public void testHasPermission3() {
-        AccessControlList accessControlList = new AccessControlList(permissions);
-        assertFalse(accessControlList.hasPermission("john", BasicPermissions.ALL));
-        assertFalse(accessControlList.hasPermission("john", BasicPermissions.WRITE));
-        assertTrue(accessControlList.hasPermission("john", BasicPermissions.READ));
-
-        assertFalse(accessControlList.hasPermission("john", BasicPermissions.WRITE, BasicPermissions.READ,
-                                                    BasicPermissions.ALL));
-        assertFalse(accessControlList.hasPermission("john", BasicPermissions.WRITE, BasicPermissions.READ));
-    }
-
-    public void testHasPermission4() {
-        AccessControlList accessControlList = new AccessControlList(permissions);
-        assertFalse(accessControlList.hasPermission("anonymous", BasicPermissions.ALL));
-        assertFalse(accessControlList.hasPermission("anonymous", BasicPermissions.WRITE));
-        assertFalse(accessControlList.hasPermission("anonymous", BasicPermissions.READ));
-
-        assertFalse(accessControlList.hasPermission("anonymous", BasicPermissions.WRITE, BasicPermissions.READ,
-                                                    BasicPermissions.ALL));
-        assertFalse(accessControlList.hasPermission("anonymous", BasicPermissions.WRITE, BasicPermissions.READ));
-    }
-
-    public void testEmptyAccessControlList() {
-        AccessControlList emptyAccessControlList = new AccessControlList();
-        assertTrue(emptyAccessControlList.hasPermission("admin", BasicPermissions.WRITE, BasicPermissions.READ,
-                                                        BasicPermissions.ALL));
-        assertTrue(emptyAccessControlList.hasPermission("andrew", BasicPermissions.WRITE, BasicPermissions.READ,
-                                                        BasicPermissions.ALL));
-        assertTrue(emptyAccessControlList.hasPermission("john", BasicPermissions.WRITE, BasicPermissions.READ,
-                                                        BasicPermissions.ALL));
-        assertTrue(emptyAccessControlList.hasPermission("anonymous", BasicPermissions.WRITE, BasicPermissions.READ,
-                                                        BasicPermissions.ALL));
     }
 
     public void testReadWrite() throws Exception {

@@ -14,6 +14,8 @@
 
 package com.google.collide.client.editor.search;
 
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.collide.client.editor.renderer.LineRenderer;
 import com.google.collide.shared.document.Line;
 import com.google.gwt.regexp.shared.MatchResult;
@@ -21,8 +23,6 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
 
 /** Search match highlighting. */
 public class SearchMatchRenderer implements LineRenderer {

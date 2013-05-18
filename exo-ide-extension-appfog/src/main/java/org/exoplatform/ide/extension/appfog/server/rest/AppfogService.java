@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.extension.appfog.server.rest;
 
-import org.exoplatform.ide.commons.ParsingResponseException;
+import com.codenvy.ide.commons.server.ParsingResponseException;
+
 import org.exoplatform.ide.extension.appfog.server.Appfog;
 import org.exoplatform.ide.extension.appfog.server.AppfogException;
 import org.exoplatform.ide.extension.appfog.server.DebugMode;
@@ -150,7 +151,7 @@ public class AppfogService {
 
         String projectId = params.get("projectid");
         if (projectId != null) {
-            Project proj = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+            Project proj = (Project)vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
             LOG.info("EVENT#application-created# PROJECT#" + proj.getName() + "# TYPE#" + proj.getProjectType()
                      + "# PAAS#Appfog#");
         }

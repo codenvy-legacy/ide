@@ -14,6 +14,9 @@
 package com.google.collide.client.code.errorrenderer;
 
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.commons.shared.SortedList;
+import com.codenvy.ide.json.client.JsoArray;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.renderer.LineRenderer;
 import com.google.collide.dto.CodeError;
@@ -23,9 +26,6 @@ import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineNumberAndColumn;
 import com.google.collide.shared.ot.PositionMigrator;
 
-import org.exoplatform.ide.json.client.JsoArray;
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.shared.util.SortedList;
 
 /** Renders code errors in the editor. */
 public class ErrorRenderer implements LineRenderer {

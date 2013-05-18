@@ -76,7 +76,7 @@ public class GitIgnoreConfigChecker implements Startable {
     /** Change Git cross-repository configuration. */
     private void checkGitGlobalConfiguration() {
         try {
-            // Do not run git command as a process because git is not installed on the server.
+            // Do not run 'git config' command because 'git-core' does not installed on the server.
             // Runtime.getRuntime().exec("git config --global core.excludesfile " + GIT_IGNORE_GLOBAL_FILE_NAME);
             // Update .gitconfig file manually.
             File file = new File(System.getProperty("user.home") + GIT_GLOBAL_CONFIG_FILE_NAME);
@@ -108,7 +108,7 @@ public class GitIgnoreConfigChecker implements Startable {
                + ".vfs/\n";
     }
 
-    private static String readFileContent(String filePath) throws java.io.IOException {
+    private static String readFileContent(String filePath) throws IOException {
         StringBuffer fileData = new StringBuffer();
         BufferedReader reader = new BufferedReader(new FileReader(filePath));
         char[] buf = new char[1024];

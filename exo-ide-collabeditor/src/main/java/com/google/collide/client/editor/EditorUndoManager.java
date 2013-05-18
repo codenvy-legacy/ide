@@ -14,6 +14,9 @@
 
 package com.google.collide.client.editor;
 
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.dto.DocOp;
 import com.google.collide.dto.client.ClientDocOpFactory;
@@ -25,9 +28,6 @@ import com.google.collide.shared.document.util.PositionUtils;
 import com.google.collide.shared.ot.*;
 import com.google.collide.shared.ot.Composer.ComposeException;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
 import org.waveprotocol.wave.model.operation.OperationPair;
 import org.waveprotocol.wave.model.operation.TransformException;
 import org.waveprotocol.wave.model.undo.UndoManagerImpl;

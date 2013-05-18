@@ -24,6 +24,8 @@ import elemental.html.TableElement;
 import com.codenvy.ide.client.util.CssUtils;
 import com.codenvy.ide.client.util.Elements;
 import com.codenvy.ide.client.util.SignalEvent;
+import com.codenvy.ide.json.client.JsoArray;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.client.code.autocomplete.AutocompleteBox;
 import com.google.collide.client.code.autocomplete.SignalEventEssence;
 import com.google.collide.client.editor.Editor;
@@ -47,8 +49,6 @@ import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
 import org.exoplatform.ide.editor.client.api.contentassist.Point;
 import org.exoplatform.ide.editor.shared.text.IDocument;
-import org.exoplatform.ide.json.client.JsoArray;
-import org.exoplatform.ide.json.shared.JsonArray;
 
 /** A controller for managing the UI for showing autocomplete proposals. */
 public class AutocompleteUiController implements AutocompleteBox {
@@ -97,7 +97,9 @@ public class AutocompleteUiController implements AutocompleteBox {
                     if (itemData != CAPPED_INDICATOR) {
                         icon.appendChild((Node)itemData.getImage().getElement());
                         label.setInnerHTML(itemData.getDisplayString());
-                        //group.setTextContent(itemData.getPath().getPathString());
+                        if (itemData.getAdditionalDisplayString() != null) {
+                            group.setTextContent(itemData.getAdditionalDisplayString());
+                        }
                     } else {
                         label.setTextContent("Type for more results");
                         label.addClassName(css.cappedProposalLabel());
@@ -473,6 +475,14 @@ public class AutocompleteUiController implements AutocompleteBox {
         /** @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getDisplayString() */
         @Override
         public String getDisplayString() {
+            return null;
+        }
+
+        /**
+         * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getAdditionalDisplayString()
+         */
+        @Override
+        public String getAdditionalDisplayString() {
             return null;
         }
 

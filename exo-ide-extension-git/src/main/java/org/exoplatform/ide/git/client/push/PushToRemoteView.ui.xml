@@ -39,6 +39,7 @@
         }
 
         .labelH {
+			margin-top: 6px;
             margin-right: 5px;
             font-size: 11px;
             font-family: Verdana, Bitstream Vera Sans, sans-serif;
@@ -88,8 +89,7 @@
                 <g:east size="47">
                     <g:FlowPanel>
                         <g:Label text="{locale.pushViewRemoteBranchFieldTitle}" addStyleNames="{style.labelV}" width="100%"></g:Label>
-                        <f:ComboBoxField ui:field="remoteBranchesField" width="100%" height="20px"
-                                         addStyleNames="{style.floatLeft}"></f:ComboBoxField>
+                        <f:SelectItem ui:field="remoteBranchesField" width="100%"></f:SelectItem>
                     </g:FlowPanel>
                 </g:east>
             </g:DockLayoutPanel>

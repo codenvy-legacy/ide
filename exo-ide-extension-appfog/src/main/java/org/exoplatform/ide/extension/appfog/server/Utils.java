@@ -34,7 +34,9 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import static org.exoplatform.ide.commons.ZipUtils.unzip;
+import static com.codenvy.ide.commons.server.ZipUtils.unzip;
+
+
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
@@ -102,10 +104,10 @@ public class Utils {
     }
 
     static void delete(VirtualFileSystem vfs, String parentId, String name) throws VirtualFileSystemException {
-        Item item = vfs.getItem(parentId, PropertyFilter.NONE_FILTER);
+        Item item = vfs.getItem(parentId, false, PropertyFilter.NONE_FILTER);
         String parentPath = item.getPath();
         try {
-            Item file = vfs.getItemByPath(parentPath + '/' + name, null, PropertyFilter.NONE_FILTER);
+            Item file = vfs.getItemByPath(parentPath + '/' + name, null, false, PropertyFilter.NONE_FILTER);
             vfs.delete(file.getId(), null);
         } catch (ItemNotFoundException ignored) {
         }
@@ -155,13 +157,13 @@ public class Utils {
     }
 
     public static String detectFramework(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException, IOException {
-        Item project = vfs.getItem(projectId, PropertyFilter.NONE_FILTER);
+        Item project = vfs.getItem(projectId, false, PropertyFilter.NONE_FILTER);
         try {
-            vfs.getItemByPath(project.getPath() + "/config/environment.rb", null, PropertyFilter.NONE_FILTER);
+            vfs.getItemByPath(project.getPath() + "/config/environment.rb", null, false, PropertyFilter.NONE_FILTER);
             return "rails3";
         } catch (ItemNotFoundException ignored) {
         }
-        List<Item> children = vfs.getChildren(projectId, -1, 0, "file", PropertyFilter.NONE_FILTER).getItems();
+        List<Item> children = vfs.getChildren(projectId, -1, 0, "file", false, PropertyFilter.NONE_FILTER).getItems();
         for (Item i : children) {
             if (RUBY_FILTER.accept(i.getName())) {
                 InputStream in = null;

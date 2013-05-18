@@ -23,6 +23,8 @@ import com.codenvy.ide.client.util.AnimationController;
 import com.codenvy.ide.client.util.Elements;
 import com.codenvy.ide.client.util.HoverController.HoverListener;
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.collide.client.common.Constants;
 import com.google.collide.client.ui.menu.AutoHideComponent;
 import com.google.collide.client.ui.menu.AutoHideView;
@@ -31,8 +33,6 @@ import com.google.collide.client.ui.menu.PositionController.*;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
 
 /**
  * Represents a single tooltip instance attached to any element, activated by

@@ -20,12 +20,12 @@ package org.exoplatform.ide.extension.appfog.server;
 
 import com.codenvy.commons.json.JsonHelper;
 import com.codenvy.commons.json.JsonParseException;
+import com.codenvy.ide.commons.server.*;
 
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
-import org.exoplatform.ide.commons.*;
 import org.exoplatform.ide.extension.appfog.server.json.*;
 import org.exoplatform.ide.extension.appfog.shared.*;
 import org.exoplatform.ide.security.paas.Credential;
@@ -1156,7 +1156,7 @@ public class Appfog {
     private String detectServer(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException {
         String server = null;
         if (vfs != null && projectId != null) {
-            Item item = vfs.getItem(projectId, PropertyFilter.valueOf("appfog-target"));
+            Item item = vfs.getItem(projectId, false, PropertyFilter.valueOf("appfog-target"));
             server = item.getPropertyValue("appfog-target");
         }
         return server;
@@ -1174,7 +1174,7 @@ public class Appfog {
             throws VirtualFileSystemException {
         String app = null;
         if (vfs != null && projectId != null) {
-            Item item = vfs.getItem(projectId, PropertyFilter.valueOf("appfog-application"));
+            Item item = vfs.getItem(projectId, false, PropertyFilter.valueOf("appfog-application"));
             app = item.getPropertyValue("appfog-application");
         }
         if (failIfCannotDetect && (app == null || app.isEmpty())) {

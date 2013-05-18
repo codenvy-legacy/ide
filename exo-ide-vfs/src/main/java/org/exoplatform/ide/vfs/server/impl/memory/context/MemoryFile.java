@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.vfs.server.impl.memory.context;
 
-import org.exoplatform.ide.commons.NameGenerator;
+import com.codenvy.ide.commons.server.NameGenerator;
+
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -137,8 +138,7 @@ public class MemoryFile extends MemoryItem {
     @Override
     public MemoryItem copy(MemoryFolder parent) throws VirtualFileSystemException {
         byte[] bytes = this.bytes;
-        MemoryFile copy =
-                new MemoryFile(ObjectIdGenerator.generateId(), name, getMediaType(), Arrays.copyOf(bytes, bytes.length));
+        MemoryFile copy = new MemoryFile(ObjectIdGenerator.generateId(), getName(), getMediaType(), Arrays.copyOf(bytes, bytes.length));
         copy.updateProperties(getProperties(PropertyFilter.ALL_FILTER));
         copy.updateACL(getACL(), true);
         parent.addChild(copy);

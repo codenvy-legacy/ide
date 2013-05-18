@@ -14,8 +14,8 @@
 
 package com.google.collide.dto;
 
-import org.exoplatform.ide.dtogen.shared.RoutingType;
-import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
+import com.codenvy.ide.dtogen.shared.RoutingType;
+import com.codenvy.ide.dtogen.shared.ServerToClientDto;
 
 /** Response when setting a project or workspace roles. */
 @RoutingType(type = RoutingTypes.SETROLERESPONSE)

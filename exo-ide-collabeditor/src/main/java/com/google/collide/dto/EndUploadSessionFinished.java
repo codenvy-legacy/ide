@@ -14,9 +14,10 @@
 
 package com.google.collide.dto;
 
-import org.exoplatform.ide.dtogen.shared.RoutingType;
-import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
-import org.exoplatform.ide.json.shared.JsonArray;
+import com.codenvy.ide.dtogen.shared.RoutingType;
+import com.codenvy.ide.dtogen.shared.ServerToClientDto;
+import com.codenvy.ide.json.shared.JsonArray;
+
 
 /**
  * Notification from server that it has finished processing the uploaded files in the

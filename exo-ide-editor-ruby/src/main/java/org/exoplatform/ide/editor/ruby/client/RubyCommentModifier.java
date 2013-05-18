@@ -29,13 +29,15 @@ public class RubyCommentModifier extends AbstractCommentsModifier {
     /** @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#getOpenBlockComment() */
     @Override
     public String getOpenBlockComment() {
-        return "=begin";
+//        return "=begin";
+        return "";
     }
 
     /** @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#getCloseBlockComment() */
     @Override
     public String getCloseBlockComment() {
-        return "=end";
+//        return "=end";
+        return "";
     }
 
     /** @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#getSingleLineComment() */

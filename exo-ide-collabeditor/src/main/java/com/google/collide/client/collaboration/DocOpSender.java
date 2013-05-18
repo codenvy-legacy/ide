@@ -14,6 +14,11 @@
 
 package com.google.collide.client.collaboration;
 
+import com.codenvy.ide.commons.shared.ListenerManager;
+import com.codenvy.ide.commons.shared.ListenerManager.Dispatcher;
+import com.codenvy.ide.dtogen.shared.ServerError.FailureReason;
+import com.codenvy.ide.json.client.Jso;
+import com.codenvy.ide.json.client.JsoArray;
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.collaboration.FileConcurrencyController.DocOpListener;
 import com.google.collide.client.collaboration.cc.GenericOperationChannel.SendOpService;
@@ -27,11 +32,6 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
 import org.exoplatform.ide.client.framework.websocket.FrontendApi.ApiCallback;
-import org.exoplatform.ide.dtogen.shared.ServerError.FailureReason;
-import org.exoplatform.ide.json.client.Jso;
-import org.exoplatform.ide.json.client.JsoArray;
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
 
 import java.util.List;
 

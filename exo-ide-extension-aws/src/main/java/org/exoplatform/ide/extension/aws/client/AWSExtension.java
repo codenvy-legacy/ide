@@ -27,9 +27,8 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.paas.PaaS;
-import org.exoplatform.ide.client.framework.project.Language;
+import org.exoplatform.ide.client.framework.project.ProjectProperties;
 import org.exoplatform.ide.client.framework.project.ProjectType;
-import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientServiceImpl;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkControl;
 import org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationPresenter;
@@ -52,6 +51,7 @@ import org.exoplatform.ide.extension.aws.client.s3.S3Manager;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -60,22 +60,25 @@ import java.util.Arrays;
 public class AWSExtension extends Extension implements InitializeServicesHandler {
 
     /** The generator of an {@link AutoBean}. */
-    public static final AWSAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(AWSAutoBeanFactory.class);
+    public static final AWSAutoBeanFactory      AUTO_BEAN_FACTORY     = GWT.create(AWSAutoBeanFactory.class);
 
     /** AWS Localization. */
     public static final AWSLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(AWSLocalizationConstant.class);
 
-    public static final String INIT_VER_LABEL = "initial version";
+    public static final String                  INIT_VER_LABEL        = "initial version";
+
+    public static final String                  ID                    = "AWS";
 
     /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
     @Override
     public void initialize() {
         IDE.getInstance().registerPaaS(
-                new PaaS("AWS", "AWS Elastic Beanstalk", new Image(AWSClientBundle.INSTANCE.elasticBeanstalk48()), new Image(
-                        AWSClientBundle.INSTANCE.elasticBeanstalk48Disabled()), Arrays.asList(ProjectType.JAVA, ProjectType.SPRING,
-                                                                                              ProjectType.JSP, ProjectType.AWS,
-                                                                                              ProjectType.WAR, ProjectType.WAR),
-                         new DeployApplicationPresenter()));
+                                       new PaaS("AWS", "AWS Elastic Beanstalk", new Image(AWSClientBundle.INSTANCE.elasticBeanstalk48()),
+                                                new Image(
+                                                          AWSClientBundle.INSTANCE.elasticBeanstalk48Disabled()),
+                                                Arrays.asList(ProjectType.JAVA, ProjectType.SPRING,
+                                                              ProjectType.JSP, ProjectType.WAR),
+                                                new DeployApplicationPresenter()));
 
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
@@ -98,8 +101,10 @@ public class AWSExtension extends Extension implements InitializeServicesHandler
         new S3Manager();
     }
 
-    /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
-     * .client.framework.application.event.InitializeServicesEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
+     *      .client.framework.application.event.InitializeServicesEvent)
+     */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
         new BeanstalkClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
@@ -107,12 +112,8 @@ public class AWSExtension extends Extension implements InitializeServicesHandler
     }
 
     public static boolean canBeDeployedToBeanstalk(ProjectModel project) {
-        ProjectType projectType = ProjectType.fromValue(project.getProjectType());
-        if (ProjectResolver.getProjectTypesByLanguage(Language.JAVA).contains(projectType)) {
-            return true;
-        } else {
-            return false;
-        }
+        List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());
+        return (targets != null && targets.contains(ID));
     }
 
     public static boolean isAWSApplication(ProjectModel project) {

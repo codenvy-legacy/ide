@@ -244,7 +244,7 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
     @Key("appStarted.uris")
     String applicationStartedOnUrls(String name, String uris);
 
-    @DefaultMessage("Application <b>{0}</b> updated on {1}.")
+    @DefaultMessage("Updated application <b>{0}</b> on {1}.")
     @Key("appUpdated")
     String applicationUpdated(String name, String uris);
 
@@ -323,7 +323,32 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
     @DefaultMessage("Cancel")
     @Key("view.changeValue.cancelButton.title")
     String changeValueViewCancelButtonTitle();
+    
+    /*************************************************************************
+     * JRebel value view
+     *************************************************************************/
 
+    /**
+     * Translated "JRebel".
+     *
+     * @return translated "JRebel"
+     */
+    @DefaultMessage("JRebel")
+    @Key("view.jRebelUserInfo.title")
+    String jRebelUserInfoViewTitle();
+    
+    @DefaultMessage("Tell us a little about yourself to continue using JRebel.")
+    @Key("view.jRebelUserInfo.label1.title")
+    String jRebelUserInfoViewLabelWelcome1();
+    
+    @DefaultMessage("JRebel is great and Zero Turnaround is letting you use it free of charge. Help us help them!")
+    @Key("view.jRebelUserInfo.label2.title")
+    String jRebelUserInfoViewLabelWelcome2();
+    
+    @DefaultMessage("Redeploy failed. Please tell us about yourself to continue using JRebel.")
+    @Key("jrebel.redeploy.failed")
+    String jRebelRedeployFailed();
+    
     /*************************************************************************
      * Evaluate expression view
      *************************************************************************/
