@@ -61,7 +61,7 @@ public class JavaScriptContentAssistProcessor implements ContentAssistProcessor 
     @Override
     public CompletionProposal[] computeCompletionProposals(Editor viewer, int offset) {
         Context c = Context.create();
-        String prefix = computatePrefix(viewer.getDocument(), offset);
+        String prefix = computePrefix(viewer.getDocument(), offset);
         c.setPrefix(prefix);
         JsonArray<CompletionProposal> prop = JsonCollections.createArray();
 
@@ -94,7 +94,7 @@ public class JavaScriptContentAssistProcessor implements ContentAssistProcessor 
      * @param offset
      * @return
      */
-    private String computatePrefix(IDocument document, int offset) {
+    private String computePrefix(IDocument document, int offset) {
         isTextToCompleteBeforeDot = false;
         try {
             IRegion lineInfo = document.getLineInformationOfOffset(offset);

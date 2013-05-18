@@ -64,6 +64,16 @@ class JavaScriptExplicitAutocompleter extends ExplicitAutocompleter {
                 return new ExplicitAction(new DefaultAutocompleteResult(text.toString(), "", spaces.length() + 3));
             }
         }
+
+        // 'auto-complete as you type' feature
+        final char signalChar = signal.getChar();
+        if (signalChar != '{' && signalChar != ';' && signalChar != ' ' && signalChar != '(' && signalChar != ')' && signalChar != '\'' && signalChar != '"') {
+            if (!popupIsShown && signalChar != 0 && KeyCodes.KEY_ENTER != signalChar) {
+                return ExplicitAction.DEFERRED_COMPLETE;
+            }
+            return ExplicitAction.DEFAULT;
+        }
+
         return super.getExplicitAction(selectionModel, signal, popupIsShown, parser);
     }
 
