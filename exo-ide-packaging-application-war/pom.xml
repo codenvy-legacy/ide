@@ -46,17 +46,6 @@
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-editor-gadget</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>xstream</groupId>
-                    <artifactId>xstream</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-jsp</artifactId>
         </dependency>
 
@@ -86,29 +75,6 @@
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>codenvy-ide-collaboration</artifactId>
             <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-gadget</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>guice-jmx</artifactId>
-                    <groupId>com.google.code.guice</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>guice</artifactId>
-                    <groupId>com.google.code.guice</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>xstream</artifactId>
-                    <groupId>com.thoughtworks.xstream</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>xstream</artifactId>
-                    <groupId>xstream</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
