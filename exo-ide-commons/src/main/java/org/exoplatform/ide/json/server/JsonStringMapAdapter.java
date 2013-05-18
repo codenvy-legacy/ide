@@ -19,6 +19,7 @@ import com.google.common.collect.Lists;
 import org.exoplatform.ide.json.shared.JsonArray;
 import org.exoplatform.ide.json.shared.JsonStringMap;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -81,6 +82,12 @@ public class JsonStringMapAdapter<T> implements JsonStringMap<T> {
     @Override
     public int size() {
         return delegate.size();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public JsonArray<T> getValues() {
+        return new JsonArrayListAdapter<T>(new ArrayList<T>(delegate.values()));
     }
 
     @Override

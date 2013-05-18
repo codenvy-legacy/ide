@@ -16,6 +16,7 @@ package com.google.collide.client.util.collections;
 
 import org.exoplatform.ide.json.client.JsoArray;
 import org.exoplatform.ide.json.client.JsoStringMap;
+import org.exoplatform.ide.json.shared.JsonArray;
 import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /**
@@ -114,5 +115,11 @@ public final class ClientStringMap<T> implements JsonStringMap<T> {
             result++;
         }
         return result;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public JsonArray<T> getValues() {
+        return delegate.getValues();
     }
 }

@@ -18,8 +18,11 @@
  */
 package com.codenvy.ide.collaboration.watcher.server;
 
-import javax.ws.rs.core.Application;
-import java.util.Collections;
+import com.codenvy.ide.collaboration.dto.server.DtoServerImpls;
+
+import javax.inject.Inject;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,19 +30,22 @@ import java.util.Set;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class VfsWatcherApplication extends Application {
-    /** {@inheritDoc} */
-    @Override
-    public Set<Object> getSingletons() {
-        return Collections.emptySet();
-    }
+@Path("ide/collaboration/notification")
+public class NotificationService {
 
-    /** {@inheritDoc} */
-    @Override
-    public Set<Class<?>> getClasses() {
-        Set<Class<?>> classes = new HashSet<Class<?>>();
-        classes.add(VfsWatcherService.class);
-        classes.add(NotificationService.class);
-        return classes;
+    @Inject
+    private ProjectUsers projectUsers;
+
+    @Path("project")
+    @POST
+    public void projectNotification(String message) {
+        DtoServerImpls.ProjectOperationNotificationImpl notification =
+                DtoServerImpls.ProjectOperationNotificationImpl.fromJsonString(message);
+        Set<String> users = projectUsers.getProjectUsers(notification.projectId());
+        if (users == null)
+            return;
+        Set<String> broadcast = new HashSet<String>(users);
+        broadcast.remove(notification.clientId());
+        VfsWatcher.broadcastToClients(message, broadcast);
     }
 }

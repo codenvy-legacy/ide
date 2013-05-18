@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.collaboration.watcher.client;
 
+import com.codenvy.ide.notification.NotificationManager;
+
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
@@ -40,13 +42,20 @@ public class VfsWatcherExtension extends Extension implements ConnectionOpenedHa
 
     private MessageFilter messageFilter = new MessageFilter();
 
-    private CollaborationApi collaborationApi;
+    CollaborationApi collaborationApi;
 
     private boolean connectionOpened = false;
+
+    public static VfsWatcherExtension instance;
+
+    public static VfsWatcherExtension get(){
+        return instance;
+    }
 
     /** {@inheritDoc} */
     @Override
     public void initialize() {
+        instance = this;
         IDE.eventBus().addHandler(UserInfoReceivedEvent.TYPE, this);
         IDE.messageBus().setOnOpenHandler(this);
     }
@@ -62,7 +71,7 @@ public class VfsWatcherExtension extends Extension implements ConnectionOpenedHa
 
     private void subscribe() {
         collaborationApi = new CollaborationApi(IDE.messageBus());
-        new VfsWatcher(messageFilter, IDE.eventBus(), collaborationApi);
+        new VfsWatcher(messageFilter, IDE.eventBus(), collaborationApi, NotificationManager.get());
         IDE.messageBus().subscribe("vfs_watcher." + userInfo.getClientId(), new MessageHandler() {
             @Override
             public void onMessage(String message) {
