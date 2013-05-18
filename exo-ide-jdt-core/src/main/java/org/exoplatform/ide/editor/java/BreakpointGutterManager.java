@@ -22,6 +22,8 @@ import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 
 import com.codenvy.ide.client.util.Elements;
+import com.codenvy.ide.commons.shared.ListenerRegistrar.Remover;
+import com.codenvy.ide.json.client.JsIntegerMap;
 import com.google.collide.client.CollabEditorExtension;
 import com.google.collide.client.Resources;
 import com.google.collide.client.editor.Buffer;
@@ -36,8 +38,6 @@ import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.ide.editor.java.Breakpoint.Type;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
-import org.exoplatform.ide.json.client.JsIntegerMap;
-import org.exoplatform.ide.shared.util.ListenerRegistrar.Remover;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

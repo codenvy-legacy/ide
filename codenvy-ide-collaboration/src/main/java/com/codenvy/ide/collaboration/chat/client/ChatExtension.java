@@ -20,6 +20,10 @@ package com.codenvy.ide.collaboration.chat.client;
 
 import com.codenvy.ide.collaboration.dto.GetChatParticipantsResponse;
 import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.GetChatParticipantsImpl;
+import com.codenvy.ide.dtogen.client.RoutableDtoClientImpl;
+import com.codenvy.ide.dtogen.shared.ServerToClientDto;
+import com.codenvy.ide.dtogen.shared.ServerError.FailureReason;
+import com.codenvy.ide.json.client.Jso;
 import com.google.collide.client.CollabEditorExtension;
 import com.google.gwt.core.client.GWT;
 
@@ -42,7 +46,6 @@ import org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl;
 import org.exoplatform.ide.dtogen.shared.ServerError.FailureReason;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 import org.exoplatform.ide.json.client.Jso;
-import org.exoplatform.ide.json.shared.JsonArray;
 import org.exoplatform.ide.shared.util.ListenerManager;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 

@@ -20,11 +20,11 @@ import elemental.html.*;
 import elemental.js.html.JsElement;
 import elemental.ranges.Range;
 
+import com.codenvy.ide.commons.shared.StringUtils;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.shared.util.StringUtils;
 
 /** Simple utility class for shortening frequent calls to Elemental libraries. */
 public class Elements {

@@ -93,38 +93,36 @@ public class VfsWatcher implements Startable {
                 case CREATED:
                     ItemCreatedDtoImpl createdDto = ItemCreatedDtoImpl.make();
                     createdDto.setItem(getDtoItem(event.getVirtualFileSystem(), event.getItemId()));
-                    createdDto.setUserId(event.getUserId());
+                    createdDto.setUserId(event.getUser().getUserId());
                     message = createdDto.toJson();
                     break;
                 case DELETED:
                     ItemDeletedDtoImpl deletedDto = ItemDeletedDtoImpl.make();
                     deletedDto.setFileId(event.getItemId());
                     deletedDto.setFilePath(event.getItemPath());
-                    deletedDto.setUserId(event.getUserId());
+                    deletedDto.setUserId(event.getUser().getUserId());
                     message = deletedDto.toJson();
                     break;
                 case MOVED:
                     ItemMovedDtoImpl movedDto = ItemMovedDtoImpl.make();
                     movedDto.setOldPath(event.getOldItemPath());
                     movedDto.setMovedItem(getDtoItem(event.getVirtualFileSystem(), event.getItemId()));
-                    movedDto.setUserId(event.getUserId());
+                    movedDto.setUserId(event.getUser().getUserId());
                     message = movedDto.toJson();
                     break;
                 case RENAMED:
                     ItemRenamedDtoImpl renamedDto = ItemRenamedDtoImpl.make();
                     renamedDto.setOldPath(event.getOldItemPath());
                     renamedDto.setRenamedItem(getDtoItem(event.getVirtualFileSystem(), event.getItemId()));
-                    renamedDto.setUserId(event.getUserId());
+                    renamedDto.setUserId(event.getUser().getUserId());
                     message = renamedDto.toJson();
                     break;
                 default:
                     return;
             }
             Set<String> clientIds = new HashSet<String>(projectUsers.getProjectUsers(projectId));
-            if (event.getUserId() != null) {
-                clientIds.removeAll(projectUsers.getClientIds(event.getUserId()));
-            }
-            if (message != null && clientIds != null) {
+            clientIds.removeAll(projectUsers.getClientIds(event.getUser().getUserId()));
+            if (!clientIds.isEmpty() && message != null) {
                 broadcastToClients(message, clientIds);
             }
         }

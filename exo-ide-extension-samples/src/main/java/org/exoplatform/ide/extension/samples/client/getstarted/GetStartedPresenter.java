@@ -50,8 +50,11 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.*;
@@ -76,7 +79,7 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
 
         HasClickHandlers getSkipButton();
 
-        void setProjectTypes(Set<ProjectType> projectTypes);
+        void setProjectTypes(List<ProjectType> projectTypes);
 
         void setPaaSTypes(List<PaaS> paaSTypes);
 
@@ -112,15 +115,23 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
 
     /** current selected PaaS */
     private PaaS currentPaaS;
+    
+    /** Name of the property for using JRebel. */
+    private static final String JREBEL = "jrebel";
 
     /** available project templates */
     private List<ProjectTemplate> availableProjectTemplates = new ArrayList<ProjectTemplate>();
 
     /** available project types */
-    private Set<ProjectType> availableProjectTypes = new TreeSet<ProjectType>();
+    private List<ProjectType> availableProjectTypes = new ArrayList<ProjectType>();
 
     /** non selected PaaS */
     private final PaaS noneTarget = new NoneTarget();
+    
+    /** Comparator for ordering project types. */
+    private static final Comparator<ProjectType> PROJECT_TYPES_COMPARATOR = new ProjectTypesComparator();
+    
+    private static final Comparator<PaaS> PAAS_COMPARATOR = new PaaSComparator();
 
     private VirtualFileSystemInfo vfsInfo;
 
@@ -247,6 +258,7 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         currentStep = WizardStep.PAAS;
 
         List<PaaS> availablePaaSes = new ArrayList<PaaS>(IDE.getInstance().getPaaSes());
+        Collections.sort(availablePaaSes, PAAS_COMPARATOR);
         availablePaaSes.add(noneTarget);
 
         display.setPaaSTypes(availablePaaSes);
@@ -274,11 +286,9 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
                         
                         @Override
                         protected void onSuccess(List<ProjectTemplate> result) {
-                            for (ProjectTemplate template : result) {
-                                availableProjectTypes.add(ProjectType.fromValue(template.getType()));
-                                availableProjectTemplates.add(template);
-                            }
-                            
+                            availableProjectTemplates = result;
+                            availableProjectTypes = getProjectTypesFromTemplates(availableProjectTemplates);
+                            Collections.sort(availableProjectTypes, PROJECT_TYPES_COMPARATOR);
                             display.setProjectTypes(availableProjectTypes);
                             setProjectTypesButtonsHandlers();
                         }
@@ -291,6 +301,24 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         } catch (RequestException e) {
             Dialogs.getInstance().showError("Something wrong while taking request.");
         }
+    }
+    
+    /**
+     * Prepare project type list to be displayed.
+     *
+     * @param projectTemplates
+     *         available project templates
+     * @return {@link List}
+     */
+    private List<ProjectType> getProjectTypesFromTemplates(List<ProjectTemplate> projectTemplates) {
+        List<ProjectType> projectTypes = new ArrayList<ProjectType>();
+        for (ProjectTemplate projectTemplate : projectTemplates) {
+            ProjectType projectType = ProjectType.fromValue(projectTemplate.getType());
+            if (!projectTypes.contains(projectType)) {
+                projectTypes.add(projectType);
+            }
+        }
+        return projectTypes;
     }
 
     @Override
@@ -369,6 +397,10 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
                                                                             new ProjectUnmarshaller(new ProjectModel())) {
                                                                         @Override
                                                                         protected void onSuccess(final ProjectModel result) {
+                                                                            if ((currentProjectType == ProjectType.JSP ||
+                                                                                currentProjectType == ProjectType.SPRING)) {
+                                                                               writeUseJRebelProperty(result);
+                                                                           }
                                                                             IDELoader.getInstance().hide();
                                                                             IDE.getInstance().closeView(display.asView().getId());
                                                                             IDE.fireEvent(new ProjectCreatedEvent(result));
@@ -387,6 +419,32 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         }
     }
 
+    /**
+     * Writes 'jrebel' property to the project properties.
+     *
+     * @param project
+     *         {@link ProjectModel}
+     */
+    private void writeUseJRebelProperty(ProjectModel project) {
+        project.getProperties().add(new PropertyImpl(JREBEL, String.valueOf(true)));
+        try {
+            VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>() {
+
+                @Override
+                protected void onSuccess(ItemWrapper result) {
+                    // nothing to do
+                }
+
+                @Override
+                protected void onFailure(Throwable ignore) {
+                    // ignore this exception
+                }
+            });
+        } catch (RequestException e) {
+            // ignore this exception
+        }
+    }
+    
     private ProjectTemplate selectProjectTemplate(PaaS paaS) {
         String startWithName;
 

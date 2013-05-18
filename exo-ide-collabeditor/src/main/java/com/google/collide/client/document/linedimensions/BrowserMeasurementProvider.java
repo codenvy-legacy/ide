@@ -18,10 +18,10 @@ import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 
 import com.codenvy.ide.client.util.Elements;
+import com.codenvy.ide.commons.shared.StringUtils;
 import com.google.collide.client.util.dom.FontDimensionsCalculator;
 import com.google.collide.client.util.dom.FontDimensionsCalculator.FontDimensions;
 
-import org.exoplatform.ide.shared.util.StringUtils;
 
 /** A {@link MeasurementProvider} which utilizes the DOM to measure a string. */
 class BrowserMeasurementProvider implements MeasurementProvider {

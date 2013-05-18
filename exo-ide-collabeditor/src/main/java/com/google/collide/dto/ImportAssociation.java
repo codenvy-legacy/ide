@@ -13,7 +13,7 @@
 // limitations under the License.
 package com.google.collide.dto;
 
-import org.exoplatform.ide.dtogen.shared.RoutingType;
+import com.codenvy.ide.dtogen.shared.RoutingType;
 
 /**
  * Import association between two code blocks.The semantics is

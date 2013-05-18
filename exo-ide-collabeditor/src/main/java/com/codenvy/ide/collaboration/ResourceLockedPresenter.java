@@ -19,6 +19,7 @@
 package com.codenvy.ide.collaboration;
 
 import com.codenvy.ide.collaboration.ResourceLockedView.ActionDelegate;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.client.CollabEditorExtension;
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.collaboration.CollaborationManager;
@@ -35,7 +36,6 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.json.shared.JsonArray;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Item;

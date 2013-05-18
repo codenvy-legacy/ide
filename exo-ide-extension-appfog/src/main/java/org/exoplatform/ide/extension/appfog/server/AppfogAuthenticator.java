@@ -18,10 +18,11 @@
  */
 package org.exoplatform.ide.extension.appfog.server;
 
+import com.codenvy.ide.commons.server.ParsingResponseException;
+
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
-import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.security.paas.Credential;
 
 import java.io.IOException;

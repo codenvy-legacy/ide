@@ -181,7 +181,7 @@ public class VirtualFile implements Comparable<VirtualFile> {
     //
 
     public List<AccessControlEntry> getACL() throws VirtualFileSystemException {
-        return mountPoint.getACL(this);
+        return mountPoint.getACL(this).getEntries();
     }
 
     public VirtualFile updateACL(List<AccessControlEntry> acl, boolean override, String lockToken) throws VirtualFileSystemException {

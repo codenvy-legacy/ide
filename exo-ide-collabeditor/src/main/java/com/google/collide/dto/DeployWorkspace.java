@@ -14,7 +14,7 @@
 
 package com.google.collide.dto;
 
-import org.exoplatform.ide.dtogen.shared.RoutingType;
+import com.codenvy.ide.dtogen.shared.RoutingType;
 
 
 /** Request to deploy a workspace to App Engine. */

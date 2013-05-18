@@ -41,6 +41,8 @@ public class OutputRecord extends HTML implements MouseOutHandler, MouseOverHand
     private static final String INFO_COLOR = "#007700";
 
     private static final String GIT_COLOR = "#000000";
+    
+    private static final String JREBEL_COLOR = "#000000";
 
     private static final String WARNING_COLOR = "#AA0077";
 
@@ -76,6 +78,9 @@ public class OutputRecord extends HTML implements MouseOutHandler, MouseOverHand
         } else if (message.getType() == OutputMessage.Type.GIT) {
             setContents("<font color=\"" + GIT_COLOR + "\">"
                         + message.getMessage().replace("\n", "<br>").replace(" ", "&nbsp;") + "</font>");
+        } else if (message.getType() == OutputMessage.Type.JRebel) {
+            setContents("<font color=\"" + JREBEL_COLOR + "\">[" + OutputMessage.Type.JRebel.name() + "] "
+                        + message.getMessage() + "</font>");
         }
 
         if (odd) {

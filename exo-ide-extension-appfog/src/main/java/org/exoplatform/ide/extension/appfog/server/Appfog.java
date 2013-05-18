@@ -20,12 +20,12 @@ package org.exoplatform.ide.extension.appfog.server;
 
 import com.codenvy.commons.json.JsonHelper;
 import com.codenvy.commons.json.JsonParseException;
+import com.codenvy.ide.commons.server.*;
 
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
-import org.exoplatform.ide.commons.*;
 import org.exoplatform.ide.extension.appfog.server.json.*;
 import org.exoplatform.ide.extension.appfog.shared.*;
 import org.exoplatform.ide.security.paas.Credential;

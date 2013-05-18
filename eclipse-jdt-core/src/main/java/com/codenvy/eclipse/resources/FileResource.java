@@ -29,8 +29,8 @@ import com.codenvy.eclipse.core.runtime.IStatus;
 import com.codenvy.eclipse.core.runtime.Status;
 import com.codenvy.eclipse.core.runtime.content.IContentDescription;
 import com.codenvy.eclipse.core.runtime.jobs.ISchedulingRule;
+import com.codenvy.ide.commons.server.StringUtils;
 
-import org.exoplatform.ide.commons.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

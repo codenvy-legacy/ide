@@ -24,6 +24,8 @@ import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFile;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFolder;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
+import org.exoplatform.ide.vfs.shared.Principal;
+import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl;
 
 import java.io.ByteArrayInputStream;
@@ -51,11 +53,11 @@ public class GetACLTest extends MemoryFileSystemTest {
         getAclTestFolder.addChild(file);
 
         AccessControlEntry adminACE = new AccessControlEntryImpl();
-        adminACE.setPrincipal("admin");
+        adminACE.setPrincipal(new PrincipalImpl("admin", Principal.Type.USER));
         adminACE.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
         AccessControlEntry userACE = new AccessControlEntryImpl();
-        adminACE.setPrincipal("john");
-        adminACE.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.READ.value())));
+        userACE.setPrincipal(new PrincipalImpl("john", Principal.Type.USER));
+        userACE.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.READ.value())));
         file.updateACL(Arrays.asList(adminACE, userACE), true);
 
         fileId = file.getId();
@@ -70,10 +72,10 @@ public class GetACLTest extends MemoryFileSystemTest {
         @SuppressWarnings("unchecked")
         List<AccessControlEntry> acl = (List<AccessControlEntry>)response.getEntity();
         for (AccessControlEntry ace : acl) {
-            if ("root".equals(ace.getPrincipal())) {
+            if ("root".equals(ace.getPrincipal().getName())) {
                 ace.getPermissions().contains("all");
             }
-            if ("john".equals(ace.getPrincipal())) {
+            if ("john".equals(ace.getPrincipal().getName())) {
                 ace.getPermissions().contains("read");
             }
         }
@@ -81,7 +83,7 @@ public class GetACLTest extends MemoryFileSystemTest {
 
     public void testGetACLNoPermissions() throws Exception {
         AccessControlEntry ace = new AccessControlEntryImpl();
-        ace.setPrincipal("admin");
+        ace.setPrincipal(new PrincipalImpl("admin", Principal.Type.USER));
         ace.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
         file.updateACL(Arrays.asList(ace), true);
 

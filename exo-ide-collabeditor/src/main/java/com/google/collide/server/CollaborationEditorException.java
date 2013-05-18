@@ -18,8 +18,9 @@
  */
 package com.google.collide.server;
 
-import org.exoplatform.ide.dtogen.server.ServerErrorImpl;
-import org.exoplatform.ide.dtogen.shared.ServerError;
+import com.codenvy.ide.dtogen.server.ServerErrorImpl;
+import com.codenvy.ide.dtogen.shared.ServerError;
+
 
 /**
  * Wraps any exception in collaboration editor at server side.

@@ -14,9 +14,9 @@
 
 package com.google.collide.dto;
 
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.dto.NodeConflictDto.ConflictHandle;
 
-import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * DTO sent from the server to the client containing the contents of a File in

@@ -14,10 +14,10 @@
 
 package com.google.collide.client.util.collections;
 
-import org.exoplatform.ide.json.client.JsoArray;
-import org.exoplatform.ide.json.client.JsoStringMap;
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonStringMap;
+import com.codenvy.ide.json.client.JsoArray;
+import com.codenvy.ide.json.client.JsoStringMap;
+import com.codenvy.ide.json.shared.JsonStringMap;
+
 
 /**
  * Implementation with "__proto__" key workaround.

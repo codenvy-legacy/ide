@@ -14,13 +14,13 @@
 
 package com.google.collide.shared.util;
 
+import com.codenvy.ide.commons.shared.SortedList;
+import com.codenvy.ide.commons.shared.SortedList.Comparator;
+import com.codenvy.ide.commons.shared.SortedList.OneWayComparator;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.collide.shared.document.util.LineUtils;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.shared.util.SortedList;
-import org.exoplatform.ide.shared.util.SortedList.Comparator;
-import org.exoplatform.ide.shared.util.SortedList.OneWayComparator;
 
 /** A map with a key of (line number, column) and an arbitrary value. */
 public class SortedPositionMap<T> {

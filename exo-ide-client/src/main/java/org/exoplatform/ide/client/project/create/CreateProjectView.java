@@ -18,12 +18,11 @@
  */
 package org.exoplatform.ide.client.project.create;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
@@ -37,11 +36,22 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.ToggleButton;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -67,14 +77,6 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
     private final String CANCEL_BUTTON_ID = "eXoCreateNewProjectViewCancelButton";
 
     private final String USE_JREBEL_PLUGIN_FIELD_ID = "usejrebelpluginfield";
-
-    private final String JREBEL_PROFILE_FIRSTNAME_ID = "jrebelprofilefirstname";
-
-    private final String JREBEL_PROFILE_LASTNAME_ID = "jrebelprofilelastname";
-
-    private final String JREBEL_PROFILE_PHONE_ID = "jrebelprofilephone";
-
-    private final String JREBEL_ERROR_MESSAGE_LABEL_ID = "jrebelerrormessagelabel";
 
     private final String JREBEL_PROFILE_FIELDS_ID = "jrebelprofilefields";
 
@@ -126,18 +128,6 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
     DockLayoutPanel jRebelPanel;
 
     @UiField
-    TextInput jRebelProfileFirstName;
-
-    @UiField
-    TextInput jRebelProfileLastName;
-
-    @UiField
-    TextInput jRebelProfilePhone;
-
-    @UiField
-    Label jRebelErrorMessageLabel;
-
-    @UiField
     DockLayoutPanel jRebelProfileFields;
 
     @UiField
@@ -167,17 +157,12 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
         finishButton.setButtonId(FINISH_BUTTON_ID);
         cancelButton.setButtonId(CANCEL_BUTTON_ID);
 
-        jRebelErrorMessageLabel.setID(JREBEL_ERROR_MESSAGE_LABEL_ID);
         jRebelProfileFields.getElement().setId(JREBEL_PROFILE_FIELDS_ID);
-        jRebelProfileFirstName.getElement().setId(JREBEL_PROFILE_FIRSTNAME_ID);
-        jRebelProfileLastName.getElement().setId(JREBEL_PROFILE_LASTNAME_ID);
-        jRebelProfilePhone.getElement().setId(JREBEL_PROFILE_PHONE_ID);
         useJRebelPluginField.getElement().setId(USE_JREBEL_PLUGIN_FIELD_ID);
 
         projectNameField.setName(NAME_FIELD_ID);
 
         deployProjectStep.setVisible(false);
-        jRebelErrorMessageLabel.setValue("");
     }
 
     /** @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#switchToCreateModule() */
@@ -475,7 +460,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
                             chooseTemplateStep.setHeight("88%");
                             return;
                         }
-                        chooseTemplateStep.setHeight("58%");
+                        chooseTemplateStep.setHeight("82%");
                     } else {
                         chooseTemplateStep.setHeight("88%");
                     }
@@ -527,26 +512,6 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
         titleLabel.getElement().getStyle().setFontSize(11, Unit.PX);
         titleLabel.getElement().getStyle().setColor("#545454");
         return titleLabel;
-    }
-
-    @Override
-    public HasValue<String> getJRebelFirstNameField() {
-        return jRebelProfileFirstName;
-    }
-
-    @Override
-    public HasValue<String> getJRebelLastNameField() {
-        return jRebelProfileLastName;
-    }
-
-    @Override
-    public HasValue<String> getJRebelPhoneNumberField() {
-        return jRebelProfilePhone;
-    }
-
-    @Override
-    public void setJRebelErrorMessageLabel(String message) {
-        jRebelErrorMessageLabel.setValue(message);
     }
 
     @Override

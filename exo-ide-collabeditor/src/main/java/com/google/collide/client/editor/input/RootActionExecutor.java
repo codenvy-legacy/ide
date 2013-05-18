@@ -15,9 +15,9 @@
 package com.google.collide.client.editor.input;
 
 import com.codenvy.ide.client.util.SignalEvent;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
 
 /** Implementation of proxy that delegated execution to a list of executors. */
 public class RootActionExecutor implements ActionExecutor {

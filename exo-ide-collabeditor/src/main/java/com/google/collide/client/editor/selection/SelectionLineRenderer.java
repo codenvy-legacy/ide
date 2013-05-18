@@ -14,6 +14,7 @@
 
 package com.google.collide.client.editor.selection;
 
+import com.codenvy.ide.commons.shared.MathUtils;
 import com.google.collide.client.common.ThemeConstants;
 import com.google.collide.client.editor.FocusManager;
 import com.google.collide.client.editor.renderer.LineRenderer;
@@ -22,7 +23,6 @@ import com.google.collide.shared.document.Position;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 
-import org.exoplatform.ide.shared.util.MathUtils;
 
 /** A line renderer that styles the lines contained in the user's selection. */
 public class SelectionLineRenderer implements LineRenderer {

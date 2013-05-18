@@ -14,9 +14,10 @@
 
 package com.google.collide.server.shared.util;
 
+import com.codenvy.ide.dtogen.server.JsonSerializable;
+
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectValue;
-import org.exoplatform.ide.dtogen.server.JsonSerializable;
 
 /** Utility for wrapping and unwrapping serialized Dtos. */
 public class Dto {

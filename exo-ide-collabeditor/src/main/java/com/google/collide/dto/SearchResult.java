@@ -14,7 +14,7 @@
 
 package com.google.collide.dto;
 
-import org.exoplatform.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonArray;
 
 /** A single search result. */
 public interface SearchResult {

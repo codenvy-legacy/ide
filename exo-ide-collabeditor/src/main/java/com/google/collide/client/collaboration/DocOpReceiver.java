@@ -16,6 +16,11 @@ package com.google.collide.client.collaboration;
 
 import com.codenvy.ide.client.util.ClientTimer;
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.commons.shared.Reorderer;
+import com.codenvy.ide.commons.shared.Reorderer.ItemSink;
+import com.codenvy.ide.commons.shared.Reorderer.TimeoutCallback;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.collide.client.collaboration.IncomingDocOpDemultiplexer.Receiver;
 import com.google.collide.client.collaboration.cc.GenericOperationChannel.ReceiveOpChannel;
 import com.google.collide.client.collaboration.cc.RevisionProvider;
@@ -26,11 +31,6 @@ import com.google.collide.dto.client.DtoClientImpls.ServerToClientDocOpImpl;
 import com.google.collide.shared.Pair;
 import com.google.common.base.Preconditions;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.shared.util.Reorderer;
-import org.exoplatform.ide.shared.util.Reorderer.ItemSink;
-import org.exoplatform.ide.shared.util.Reorderer.TimeoutCallback;
 
 /**
  * Helper to receive messages from the transport and pass it onto the local

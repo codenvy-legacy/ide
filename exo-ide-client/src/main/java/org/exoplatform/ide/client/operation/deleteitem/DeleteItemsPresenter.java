@@ -397,7 +397,11 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
                             }
                         }
                         if (item instanceof ProjectModel && openedProject != null) {
-                            IDE.fireEvent(new CloseProjectEvent());
+                            //fix that disallow close project while user try to delete nested module from multi-module project
+                            if (!(Boolean.parseBoolean(item.getPropertyValue("Maven Module")) &&
+                                  ProjectType.fromValue(((ProjectModel)item).getProjectType()) != ProjectType.MultiModule)) {
+                                IDE.fireEvent(new CloseProjectEvent());
+                            }
                         }
                     }
                     lastDeletedItem = item;

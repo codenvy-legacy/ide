@@ -21,9 +21,9 @@ import elemental.html.Element;
 
 import com.codenvy.ide.client.util.BrowserUtils;
 import com.codenvy.ide.client.util.UserAgent;
+import com.codenvy.ide.json.client.Jso;
 import com.google.collide.client.editor.Buffer.ScrollListener;
 
-import org.exoplatform.ide.json.client.Jso;
 
 /*
  * We want to behave as close to native scrolling as possible, but still prevent

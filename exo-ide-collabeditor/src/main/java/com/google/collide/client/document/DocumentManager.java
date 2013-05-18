@@ -15,6 +15,12 @@
 package com.google.collide.client.document;
 
 import com.codenvy.ide.client.util.PathUtil;
+import com.codenvy.ide.commons.shared.ListenerManager;
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
+import com.codenvy.ide.commons.shared.ListenerManager.Dispatcher;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
+import com.codenvy.ide.json.shared.JsonStringMap;
 import com.google.collide.client.AppContext;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.dto.ConflictChunk;
@@ -24,12 +30,6 @@ import com.google.collide.shared.Pair;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.json.shared.JsonStringMap;
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 /**
  * Manager for documents and editors.

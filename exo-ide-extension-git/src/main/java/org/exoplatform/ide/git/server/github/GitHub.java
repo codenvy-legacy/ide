@@ -23,11 +23,11 @@ import com.codenvy.commons.json.JsonNameConventions;
 import com.codenvy.commons.json.JsonParseException;
 import com.codenvy.commons.security.oauth.OAuthTokenProvider;
 import com.codenvy.commons.security.shared.Token;
+import com.codenvy.ide.commons.server.ContainerUtils;
+import com.codenvy.ide.commons.server.ParsingResponseException;
 
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.commons.ContainerUtils;
-import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.ssh.server.SshKey;
 import org.exoplatform.ide.extension.ssh.server.SshKeyStore;
 import org.exoplatform.ide.extension.ssh.server.SshKeyStoreException;
@@ -81,7 +81,7 @@ public class GitHub {
      * @return an array of repositories
      * @throws IOException if any i/o errors occurs
      * @throws GitHubException if GitHub server return unexpected or error status for request
-     * @throws org.exoplatform.ide.commons.ParsingResponseException if any error occurs when parse response body
+     * @throws com.codenvy.ide.commons.server.ParsingResponseException if any error occurs when parse response body
      */
     public GitHubRepository[] listUserPublicRepositories(String user) throws IOException, GitHubException, ParsingResponseException {
         user = (user == null || user.isEmpty()) ? myGitHubUser : user;
@@ -101,7 +101,7 @@ public class GitHub {
      * @return an array of repositories
      * @throws IOException if any i/o errors occurs
      * @throws GitHubException if GitHub server return unexpected or error status for request
-     * @throws org.exoplatform.ide.commons.ParsingResponseException if any error occurs when parse response body
+     * @throws com.codenvy.ide.commons.server.ParsingResponseException if any error occurs when parse response body
      */
     public GitHubRepository[] listAllUserRepositories(String user) throws IOException, GitHubException, ParsingResponseException {
         final String oauthToken = getToken(getUserId());
@@ -118,7 +118,7 @@ public class GitHub {
      * @return an array of repositories
      * @throws IOException if any i/o errors occurs
      * @throws GitHubException if GitHub server return unexpected or error status for request
-     * @throws org.exoplatform.ide.commons.ParsingResponseException if any error occurs when parse response body
+     * @throws com.codenvy.ide.commons.server.ParsingResponseException if any error occurs when parse response body
      */
     public GitHubRepository[] listAllOrganizationRepositories(String organization) throws IOException,
                                                                                   GitHubException,
@@ -136,7 +136,7 @@ public class GitHub {
      * @return array of the repositories
      * @throws IOException if any i/o errors occurs
      * @throws GitHubException if GitHub server return unexpected or error status for request
-     * @throws org.exoplatform.ide.commons.ParsingResponseException if any error occurs when parse response body
+     * @throws com.codenvy.ide.commons.server.ParsingResponseException if any error occurs when parse response body
      */
     public GitHubRepository[] listCurrentUserRepositories() throws IOException, GitHubException, ParsingResponseException {
         final String oauthToken = getToken(getUserId());
@@ -152,7 +152,7 @@ public class GitHub {
      * @return ap which contains available repositories in format Map<Organization name, List<Available repositories>>
      * @throws IOException if any i/o errors occurs
      * @throws GitHubException if GitHub server return unexpected or error status for request
-     * @throws org.exoplatform.ide.commons.ParsingResponseException if any error occurs when parse response body
+     * @throws com.codenvy.ide.commons.server.ParsingResponseException if any error occurs when parse response body
      */
     public Map<String, List<GitHubRepository>> availableRepositoriesList() throws IOException, GitHubException,
                                                                           ParsingResponseException {
@@ -174,7 +174,7 @@ public class GitHub {
      * @return array of the organizations
      * @throws IOException if any i/o errors occurs
      * @throws GitHubException if GitHub server return unexpected or error status for request
-     * @throws org.exoplatform.ide.commons.ParsingResponseException if any error occurs when parse response body
+     * @throws com.codenvy.ide.commons.server.ParsingResponseException if any error occurs when parse response body
      */
     public List<String> listOrganizations() throws IOException, GitHubException, ParsingResponseException {
         final String oauthToken = getToken(getUserId());

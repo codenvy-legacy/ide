@@ -19,6 +19,7 @@
 
 package org.exoplatform.ide.client.project.properties;
 
+import com.codenvy.ide.commons.shared.ProjectType;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -38,6 +39,8 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectProperties;
+import org.exoplatform.ide.client.framework.project.api.PropertiesChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -83,13 +86,15 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
 
     }
 
-    private Display               display;
+    private Display                          display;
 
-    private ProjectModel          currentProject;
+    private ProjectModel                     currentProject;
 
-    private Property              selectedProperty;
+    private Property                         selectedProperty;
 
-    private EditPropertyPresenter editPropertyPresenter = new EditPropertyPresenter();
+    private EditPropertyPresenter            editPropertyPresenter           = new EditPropertyPresenter();
+
+    private EditPropertyFixedValuesPresenter editPropertyFixedValuePresenter = new EditPropertyFixedValuesPresenter();
 
     public ProjectPropertiesPresenter() {
         IDE.getInstance().addControl(new ShowProjectPropertiesControl());
@@ -120,9 +125,8 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
                                               @Override
                                               protected void onSuccess(ItemWrapper result) {
                                                   if (!(result.getItem() instanceof ProjectModel)) {
-                                                      Dialogs.getInstance().showError(
-                                                                                      "Item " + result.getItem().getPath()
-                                                                                          + " is not a project.");
+                                                      Dialogs.getInstance().showError("Item " + result.getItem().getPath()
+                                                                                      + " is not a project.");
                                                       return;
                                                   }
 
@@ -184,15 +188,6 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
             }
         });
 
-        // display.getAddButton().addClickHandler(new ClickHandler()
-        // {
-        // @Override
-        // public void onClick(ClickEvent event)
-        // {
-        // createProperty();
-        // }
-        // });
-
         display.getEditButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -223,7 +218,16 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
     }
 
     private void editSelectedProperty() {
-        editPropertyPresenter.editProperty(selectedProperty, currentProject.getProperties(), propertyEditCompleteHandler);
+        if (selectedProperty.getName().equals(ProjectProperties.TYPE.value())) {
+            List<String> projectTypes = new ArrayList<String>();
+            for (ProjectType typ : ProjectType.values()) {
+                projectTypes.add(typ.toString());
+            }
+            editPropertyFixedValuePresenter.editProperty(selectedProperty, currentProject.getProperties(), projectTypes,
+                                                         propertyEditCompleteHandler);
+        } else {
+            editPropertyPresenter.editProperty(selectedProperty, currentProject.getProperties(), propertyEditCompleteHandler);
+        }
     }
 
     private EditCompleteHandler propertyEditCompleteHandler = new EditCompleteHandler() {
@@ -282,18 +286,20 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
                 @Override
                 protected void onSuccess(ItemWrapper result) {
                     IDE.getInstance().closeView(display.asView().getId());
+                    IDE.fireEvent(new PropertiesChangedEvent(currentProject));
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
                     IDE.fireEvent(new ExceptionThrownEvent(exception));
+                    IDE.fireEvent(new PropertiesChangedEvent(currentProject));
                 }
             });
 
         } catch (Exception e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
+            IDE.fireEvent(new PropertiesChangedEvent(currentProject));
+
         }
-
     }
-
 }

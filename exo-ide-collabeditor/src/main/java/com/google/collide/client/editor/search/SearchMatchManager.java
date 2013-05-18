@@ -14,6 +14,10 @@
 
 package com.google.collide.client.editor.search;
 
+import com.codenvy.ide.commons.shared.ListenerManager;
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
+import com.codenvy.ide.commons.shared.RegExpUtils;
+import com.codenvy.ide.commons.shared.ListenerManager.Dispatcher;
 import com.google.collide.client.editor.search.SearchModel.MatchCountListener;
 import com.google.collide.client.editor.search.SearchTask.SearchTaskExecutor;
 import com.google.collide.client.editor.selection.SelectionModel;
@@ -21,10 +25,6 @@ import com.google.collide.shared.document.*;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
-import org.exoplatform.ide.shared.util.RegExpUtils;
 
 /**
  * Manages search matches and can be queried to determine the current match and

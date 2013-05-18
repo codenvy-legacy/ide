@@ -16,6 +16,8 @@ package com.google.collide.client.collaboration;
 
 import com.codenvy.ide.client.util.WindowUnloadingController;
 import com.codenvy.ide.client.util.WindowUnloadingController.Message;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.collide.client.collaboration.FileConcurrencyController.DocOpListener;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.status.StatusManager;
@@ -25,8 +27,6 @@ import com.google.collide.dto.DocOp;
 import com.google.collide.shared.ot.DocOpUtils;
 import com.google.gwt.user.client.Timer;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
 
 import java.util.List;
 

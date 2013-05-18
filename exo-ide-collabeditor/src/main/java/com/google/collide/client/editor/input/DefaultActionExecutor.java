@@ -15,9 +15,9 @@
 package com.google.collide.client.editor.input;
 
 import com.codenvy.ide.client.util.SignalEvent;
+import com.codenvy.ide.json.shared.JsonCollections;
+import com.codenvy.ide.json.shared.JsonStringMap;
 
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /** Default implementation that executed actions placed in map. */
 public class DefaultActionExecutor implements ActionExecutor {

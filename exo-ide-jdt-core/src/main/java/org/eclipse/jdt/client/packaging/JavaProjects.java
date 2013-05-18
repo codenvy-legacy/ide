@@ -41,7 +41,6 @@ public class JavaProjects {
         projects.add(ProjectType.JAR.value());
         projects.add(ProjectType.WAR.value());
         projects.add(ProjectType.JSP.value());
-        projects.add(ProjectType.AWS.value());
         projects.add(ProjectType.MultiModule.value());
     }
 

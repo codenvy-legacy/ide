@@ -22,10 +22,25 @@ import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFile;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFolder;
-import org.exoplatform.ide.vfs.shared.*;
+import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryItem;
+import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemImpl;
+import org.exoplatform.ide.vfs.shared.ItemList;
+import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Principal;
+import org.exoplatform.ide.vfs.shared.PrincipalImpl;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl;
 
 import java.io.ByteArrayInputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
@@ -83,7 +98,7 @@ public class ChildrenTest extends MemoryFileSystemTest {
 
     public void testGetChildrenNoPermissions() throws Exception {
         AccessControlEntry ace = new AccessControlEntryImpl();
-        ace.setPrincipal("admin");
+        ace.setPrincipal(new PrincipalImpl("admin", Principal.Type.USER));
         ace.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
         memoryContext.getItem(folderId).updateACL(Arrays.asList(ace), true);
 
@@ -92,6 +107,33 @@ public class ChildrenTest extends MemoryFileSystemTest {
         ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
         assertEquals(403, response.getStatus());
         log.info(new String(writer.getBody()));
+    }
+
+    public void testGetChildrenNoPermissions2() throws Exception {
+        MemoryFolder folder = (MemoryFolder)memoryContext.getItem(folderId);
+        MemoryItem protectedItem = folder.getChild("ChildrenTest_FILE01");
+        AccessControlEntry ace = new AccessControlEntryImpl();
+        ace.setPrincipal(new PrincipalImpl("admin", Principal.Type.USER));
+        ace.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
+        // after that item must not appear in response
+        protectedItem.updateACL(Arrays.asList(ace), true);
+
+        // Have permission for read folder but have not permission to read one of its child.
+        ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+        String path = SERVICE_URI + "children/" + folderId;
+        ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+        assertEquals(200, response.getStatus());
+        //log.info(new String(writer.getBody()));
+        @SuppressWarnings("unchecked")
+        ItemList<Item> children = (ItemList<Item>)response.getEntity();
+        List<String> list = new ArrayList<String>(2);
+        for (Item i : children.getItems()) {
+            validateLinks(i);
+            list.add(i.getName());
+        }
+        assertEquals(2, list.size());
+        assertTrue(list.contains("ChildrenTest_FOLDER01"));
+        assertTrue(list.contains("ChildrenTest_FOLDER02"));
     }
 
     @SuppressWarnings("unchecked")

@@ -19,10 +19,10 @@ import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.html.Element;
 
+import com.codenvy.ide.json.client.Jso;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
-import org.exoplatform.ide.json.client.Jso;
 
 /*
  * TODO: Here's the list of short-term TODOs:

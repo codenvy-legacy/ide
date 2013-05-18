@@ -23,8 +23,8 @@ import com.codenvy.eclipse.core.resources.IResource;
 import com.codenvy.eclipse.core.runtime.CoreException;
 import com.codenvy.eclipse.core.runtime.NullProgressMonitor;
 import com.codenvy.eclipse.core.runtime.Path;
+import com.codenvy.ide.commons.server.StringUtils;
 
-import org.exoplatform.ide.commons.StringUtils;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
