@@ -90,6 +90,12 @@ public interface DebuggerClientBundle extends ClientBundle {
 
     @Source("org/exoplatform/ide/extension/java/jdi/images/runApp_Disabled.png")
     ImageResource runAppDisabled();
+    
+    @Source("org/exoplatform/ide/extension/java/jdi/images/updateApp.png")
+    ImageResource updateApp();
+
+    @Source("org/exoplatform/ide/extension/java/jdi/images/updateApp_Disabled.png")
+    ImageResource updateAppDisabled();
 
     @Source("org/exoplatform/ide/extension/java/jdi/images/logs.png")
     ImageResource logs();

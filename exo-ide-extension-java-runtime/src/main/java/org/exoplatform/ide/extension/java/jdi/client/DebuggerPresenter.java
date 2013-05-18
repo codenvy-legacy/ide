@@ -18,14 +18,11 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.UrlBuilder;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
-import com.google.web.bindery.autobean.shared.AutoBean;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
@@ -68,6 +65,7 @@ import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedHan
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.EvaluateExpressionEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.JRebelUserInfoEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.RunAppEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.RunAppHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.StopAppEvent;
@@ -98,63 +96,75 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.UrlBuilder;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
 public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisconnectedHandler,
-        ViewClosedHandler, BreakPointsUpdatedHandler, RunAppHandler, DebugAppHandler, 
-        ProjectBuiltHandler, StopAppHandler, UpdateAppHandler, AppStoppedHandler, ProjectClosedHandler, 
-        ProjectOpenedHandler, EditorActiveFileChangedHandler, UpdateVariableValueInTreeHandler {
+                              ViewClosedHandler, BreakPointsUpdatedHandler, RunAppHandler, DebugAppHandler,
+                              ProjectBuiltHandler, StopAppHandler, UpdateAppHandler, AppStoppedHandler, ProjectClosedHandler,
+                              ProjectOpenedHandler, EditorActiveFileChangedHandler, UpdateVariableValueInTreeHandler {
 
-    private Display display;
+    private Display                 display;
 
-    private DebuggerInfo debuggerInfo;
+    private DebuggerInfo            debuggerInfo;
 
     private CurrentEditorBreakPoint currentBreakPoint;
 
-    private ApplicationInstance runningApp;
+    private ApplicationInstance     runningApp;
 
-    private BreakpointsManager breakpointsManager;
+    private BreakpointsManager      breakpointsManager;
 
-    private boolean startDebugger;
+    private boolean                 startDebugger;
 
-    private boolean updateApp;
+    private boolean                 updateApp;
 
-    private FileModel activeFile;
+    private FileModel               activeFile;
 
-    private ProjectModel project;
+    private ProjectModel            project;
 
     /** Default time (in milliseconds) to prolong application expiration time. */
-    private static long DEFAULT_PROLONG_TIME = 10 * 60 * 1000; // 10 minutes
+    private static long             DEFAULT_PROLONG_TIME     = 10 * 60 * 1000; // 10 minutes
 
     /** Name of 'JRebel' project property. */
-    private static final String JREBEL = "jrebel";
+    private static final String     JREBEL                   = "jrebel";
+
+    /** Name of 'JRebel update' project property. */
+    private final String            JREBEL_COUNT             = "jrebelCount";
+
+    /** Max number of JRebel updating. */
+    private final byte              MAX_NUMBER_JREBEL_UPDATE = 10;
+    /** Value of 'JRebel update' project property if user data  forward to ZeroTurnaround. */
+    private final byte              JREBEL_UPDATED           = 0;
 
     /** Channel identifier to receive events from debugger over WebSocket. */
-    private String debuggerEventsChannel;
+    private String                  debuggerEventsChannel;
 
     /** Channel identifier to receive event when debugger will disconnected. */
-    private String debuggerDisconnectedChannel;
+    private String                  debuggerDisconnectedChannel;
 
     /** Channel identifier to receive events when application expiration time will left. */
-    private String expireSoonAppChannel;
+    private String                  expireSoonAppChannel;
 
     /** Channel identifier to receive events when application stop. */
-    private String applicationStoppedChannel;
+    private String                  applicationStoppedChannel;
 
 
     /** Used to check if events from debugger receiving over WebSocket or over HTTP. */
-    private boolean isCheckEventsTimerRunned;
+    private boolean                 isCheckEventsTimerRunned;
 
     public interface Display extends IsView {
 
@@ -246,7 +256,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
             @Override
             public void onClick(ClickEvent event) {
                 doDisconnectDebugger();
-//            doStopApp();
+                // doStopApp();
             }
         });
 
@@ -449,54 +459,60 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
     /** A timer for checking events */
     private Timer checkEventsTimer = new Timer() {
-        @Override
-        public void run() {
-            AutoBean<DebuggerEventList> debuggerEventList =
-                    DebuggerExtension.AUTO_BEAN_FACTORY.create(DebuggerEventList.class);
-            DebuggerEventListUnmarshaller unmarshaller = new DebuggerEventListUnmarshaller(debuggerEventList.as());
-            try {
-                DebuggerClientService.getInstance().checkEvents(debuggerInfo.getId(),
-                                                                new AsyncRequestCallback<DebuggerEventList>(unmarshaller) {
-                                                                    @Override
-                                                                    protected void onSuccess(DebuggerEventList result) {
-                                                                        onEventListReceived(result);
-                                                                    }
+                                       @Override
+                                       public void run() {
+                                           AutoBean<DebuggerEventList> debuggerEventList =
+                                                                                           DebuggerExtension.AUTO_BEAN_FACTORY.create(DebuggerEventList.class);
+                                           DebuggerEventListUnmarshaller unmarshaller =
+                                                                                        new DebuggerEventListUnmarshaller(
+                                                                                                                          debuggerEventList.as());
+                                           try {
+                                               DebuggerClientService.getInstance()
+                                                                    .checkEvents(debuggerInfo.getId(),
+                                                                                 new AsyncRequestCallback<DebuggerEventList>(unmarshaller) {
+                                                                                     @Override
+                                                                                     protected void onSuccess(DebuggerEventList result) {
+                                                                                         onEventListReceived(result);
+                                                                                     }
 
-                                                                    @Override
-                                                                    protected void onFailure(Throwable exception) {
-                                                                        cancel();
-                                                                        if (display != null)
-                                                                            IDE.getInstance().closeView(display.asView().getId());
-                                                                        if (runningApp != null) {
-                                                                            if (exception instanceof ServerException) {
-                                                                                ServerException serverException =
-                                                                                        (ServerException)exception;
-                                                                                if (HTTPStatus.INTERNAL_ERROR ==
-                                                                                    serverException.getHTTPStatus()
-                                                                                    && serverException.getMessage() != null
-                                                                                    && serverException.getMessage().contains("not found")) {
-                                                                                    IDE.fireEvent(new OutputEvent(
-                                                                                            DebuggerExtension.LOCALIZATION_CONSTANT
-                                                                                                             .debuggerDisconnected(),
-                                                                                            Type.WARNING));
-                                                                                    IDE.fireEvent(new AppStoppedEvent(runningApp.getName(),
-                                                                                                                      false));
-                                                                                    return;
-                                                                                }
-                                                                            }
-                                                                            IDE.fireEvent(new ExceptionThrownEvent(exception));
-                                                                        }
-                                                                    }
-                                                                });
-            } catch (RequestException e) {
-                IDE.fireEvent(new ExceptionThrownEvent(e));
-            }
-        }
-    };
+                                                                                     @Override
+                                                                                     protected void onFailure(Throwable exception) {
+                                                                                         cancel();
+                                                                                         if (display != null)
+                                                                                             IDE.getInstance().closeView(display.asView()
+                                                                                                                                .getId());
+                                                                                         if (runningApp != null) {
+                                                                                             if (exception instanceof ServerException) {
+                                                                                                 ServerException serverException =
+                                                                                                                                   (ServerException)exception;
+                                                                                                 if (HTTPStatus.INTERNAL_ERROR ==
+                                                                                                     serverException.getHTTPStatus()
+                                                                                                     && serverException.getMessage() != null
+                                                                                                     && serverException.getMessage()
+                                                                                                                       .contains("not found")) {
+                                                                                                     IDE.fireEvent(new OutputEvent(
+                                                                                                                                   DebuggerExtension.LOCALIZATION_CONSTANT
+                                                                                                                                                                          .debuggerDisconnected(),
+                                                                                                                                   Type.WARNING));
+                                                                                                     IDE.fireEvent(new AppStoppedEvent(
+                                                                                                                                       runningApp.getName(),
+                                                                                                                                       false));
+                                                                                                     return;
+                                                                                                 }
+                                                                                             }
+                                                                                             IDE.fireEvent(new ExceptionThrownEvent(
+                                                                                                                                    exception));
+                                                                                         }
+                                                                                     }
+                                                                                 });
+                                           } catch (RequestException e) {
+                                               IDE.fireEvent(new ExceptionThrownEvent(e));
+                                           }
+                                       }
+                                   };
 
     /**
-     * Start checking events from debugger.
-     * Subscribes on WebSocket channel or starts timer for checking events over HTTP.
+     * Start checking events from debugger. Subscribes on WebSocket channel or starts timer for checking events over HTTP.
      */
     private void startCheckingEvents() {
         debuggerEventsChannel = DebuggerExtension.EVENTS_CHANNEL + debuggerInfo.getId();
@@ -511,9 +527,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
     }
 
     /**
-     * Stop checking events from debugger.
-     * If not subscribed on appropriate WebSocket channel then stops previously launched timer.
-     * If subscribed then unsubscribe from channel.
+     * Stop checking events from debugger. If not subscribed on appropriate WebSocket channel then stops previously launched timer. If
+     * subscribed then unsubscribe from channel.
      */
     private void stopCheckingEvents() {
         if (isCheckEventsTimerRunned) {
@@ -534,9 +549,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
     /**
      * Performs actions when event list was received.
-     *
-     * @param eventList
-     *         debugger event list
+     * 
+     * @param eventList debugger event list
      */
     private void onEventListReceived(DebuggerEventList eventList) {
         String filePath = null;
@@ -575,25 +589,27 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
         if (fileModel == null) {
             String path = resolveFilePath(location);
             try {
-                VirtualFileSystem.getInstance().getItemByPath(path,
-                                                              new AsyncRequestCallback<ItemWrapper>(
-                                                                      new ItemUnmarshaller(new ItemWrapper(new FileModel()))) {
+                VirtualFileSystem.getInstance()
+                                 .getItemByPath(path,
+                                                new AsyncRequestCallback<ItemWrapper>(
+                                                                                      new ItemUnmarshaller(new ItemWrapper(new FileModel()))) {
 
-                                                                  @Override
-                                                                  protected void onSuccess(ItemWrapper result) {
-                                                                      IDE.eventBus().fireEvent(
-                                                                              new OpenFileEvent((FileModel)result.getItem(),
-                                                                                                new CursorPosition(
-                                                                                                        location.getLineNumber())));
-                                                                  }
+                                                    @Override
+                                                    protected void onSuccess(ItemWrapper result) {
+                                                        IDE.eventBus()
+                                                           .fireEvent(
+                                                                      new OpenFileEvent((FileModel)result.getItem(),
+                                                                                        new CursorPosition(
+                                                                                                           location.getLineNumber())));
+                                                    }
 
-                                                                  @Override
-                                                                  protected void onFailure(Throwable exception) {
-                                                                      Dialogs.getInstance().showInfo("Source not found",
-                                                                                                     "Can't load source of the " +
-                                                                                                     location.getClassName() + " class.");
-                                                                  }
-                                                              });
+                                                    @Override
+                                                    protected void onFailure(Throwable exception) {
+                                                        Dialogs.getInstance().showInfo("Source not found",
+                                                                                       "Can't load source of the " +
+                                                                                           location.getClassName() + " class.");
+                                                    }
+                                                });
             } catch (RequestException e) {
                 IDE.fireEvent(new ExceptionThrownEvent(e));
             }
@@ -605,7 +621,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
     private String resolveFilePath(final Location location) {
         String sourcePath =
-                project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder") : "src/main/java";
+                            project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder") : "src/main/java";
         String path = project.getPath() + "/" + sourcePath + "/" + location.getClassName().replace(".", "/") + ".java";
         return path;
     }
@@ -617,8 +633,10 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
         IDE.getInstance().openView(view.asView());
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     *      .event.ViewClosedEvent)
+     */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
@@ -626,8 +644,10 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
         }
     }
 
-    /** @see org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedHandler#onDebuggerDisconnected(org.exoplatform.ide
-     * .extension.java.jdi.client.events.DebuggerDisconnectedEvent) */
+    /**
+     * @see org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedHandler#onDebuggerDisconnected(org.exoplatform.ide
+     *      .extension.java.jdi.client.events.DebuggerDisconnectedEvent)
+     */
     @Override
     public void onDebuggerDisconnected(DebuggerDisconnectedEvent event) {
         if (display != null) {
@@ -636,8 +656,10 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
         }
     }
 
-    /** @see org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedHandler#onBreakPointsUpdated(org.exoplatform.ide
-     * .extension.java.jdi.client.events.BreakPointsUpdatedEvent) */
+    /**
+     * @see org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedHandler#onBreakPointsUpdated(org.exoplatform.ide
+     *      .extension.java.jdi.client.events.BreakPointsUpdatedEvent)
+     */
     @Override
     public void onBreakPointsUpdated(BreakPointsUpdatedEvent event) {
         if (event.getBreakPoints() != null) {
@@ -652,8 +674,10 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
         }
     }
 
-    /** @see org.exoplatform.ide.extension.java.jdi.client.events.RunAppHandler#onRunApp(org.exoplatform.ide.extension.java.jdi.client
-     * .events.RunAppEvent) */
+    /**
+     * @see org.exoplatform.ide.extension.java.jdi.client.events.RunAppHandler#onRunApp(org.exoplatform.ide.extension.java.jdi.client
+     *      .events.RunAppEvent)
+     */
     @Override
     public void onRunApp(RunAppEvent event) {
         IDE.addHandler(ProjectBuiltEvent.TYPE, this);
@@ -661,8 +685,10 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
         IDE.fireEvent(new BuildProjectEvent());
     }
 
-    /** @see org.exoplatform.ide.extension.java.jdi.client.events.DebugAppHandler#onDebugApp(org.exoplatform.ide.extension.java.jdi
-     * .client.events.DebugAppEvent) */
+    /**
+     * @see org.exoplatform.ide.extension.java.jdi.client.events.DebugAppHandler#onDebugApp(org.exoplatform.ide.extension.java.jdi
+     *      .client.events.DebugAppEvent)
+     */
     @Override
     public void onDebugApp(DebugAppEvent event) {
         IDE.addHandler(ProjectBuiltEvent.TYPE, this);
@@ -670,8 +696,10 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
         IDE.fireEvent(new BuildProjectEvent());
     }
 
-    /** @see org.exoplatform.ide.extension.java.jdi.client.events.UpdateAppHandler#onUpdateApp(org.exoplatform.ide.extension.java.jdi
-     * .client.events.UpdateAppEvent) */
+    /**
+     * @see org.exoplatform.ide.extension.java.jdi.client.events.UpdateAppHandler#onUpdateApp(org.exoplatform.ide.extension.java.jdi
+     *      .client.events.UpdateAppEvent)
+     */
     @Override
     public void onUpdateApp(UpdateAppEvent event) {
         IDE.addHandler(ProjectBuiltEvent.TYPE, this);
@@ -682,8 +710,10 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
         IDE.fireEvent(new BuildProjectEvent());
     }
 
-    /** @see org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler#onProjectBuilt(org.exoplatform.ide.extension.maven
-     * .client.event.ProjectBuiltEvent) */
+    /**
+     * @see org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler#onProjectBuilt(org.exoplatform.ide.extension.maven
+     *      .client.event.ProjectBuiltEvent)
+     */
     @Override
     public void onProjectBuilt(ProjectBuiltEvent event) {
         if (IDE.eventBus().isEventHandled(ProjectBuiltEvent.TYPE)) {
@@ -692,14 +722,64 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
         BuildStatus buildStatus = event.getBuildStatus();
         if (buildStatus.getStatus().equals(BuildStatus.Status.SUCCESSFUL)) {
             IDE.eventBus().fireEvent(
-                    new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.applicationStarting(), Type.INFO));
+                                     new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.applicationStarting(), Type.INFO));
             if (updateApp) {
                 updateApp = false;
-                updateApplication(buildStatus.getDownloadUrl());
+                if (writeJRebelCountProperty(project)) {
+                    updateApplication(buildStatus.getDownloadUrl());
+                }
             } else {
                 startApplication(buildStatus.getDownloadUrl());
             }
         }
+    }
+
+    /**
+     * Writes 'jrebelCount' property to the project properties.
+     * 
+     * @param project {@link ProjectModel}
+     */
+    private boolean writeJRebelCountProperty(ProjectModel project) {
+        if (project.getPropertyValue(JREBEL_COUNT) == null) {
+            project.getProperties().add(new PropertyImpl(JREBEL_COUNT, Integer.toString(1)));
+        }
+        else {
+            int countJRebel = Integer.parseInt(project.getPropertyValue(JREBEL_COUNT));
+            if (countJRebel == JREBEL_UPDATED) {
+                return true;
+            } else if (countJRebel < MAX_NUMBER_JREBEL_UPDATE) {
+                countJRebel++;
+            }
+            else {
+                IDE.fireEvent(new JRebelUserInfoEvent());
+                return false;
+            }
+            for (Property prop : project.getProperties()) {
+                if (prop.getName().equals(JREBEL_COUNT)) {
+                    List<String> value = new ArrayList<String>();
+                    value.add(Integer.toString(countJRebel));
+                    prop.setValue(value);
+                    break;
+                }
+            }
+        }
+        try {
+            VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>() {
+
+                @Override
+                protected void onSuccess(ItemWrapper result) {
+                    // nothing to do
+                }
+
+                @Override
+                protected void onFailure(Throwable ignore) {
+                    // ignore this exception
+                }
+            });
+        } catch (RequestException e) {
+            // ignore this exception
+        }
+        return true;
     }
 
     private void startApplication(String url) {
@@ -712,33 +792,36 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
     /**
      * Run application in debug mode by sending request over WebSocket or HTTP.
-     *
-     * @param warUrl
-     *         location of .war file
+     * 
+     * @param warUrl location of .war file
      */
     private void debugApplication(String warUrl) {
         AutoBean<ApplicationInstance> debugApplicationInstance =
-                DebuggerExtension.AUTO_BEAN_FACTORY.debugApplicationInstance();
+                                                                 DebuggerExtension.AUTO_BEAN_FACTORY.debugApplicationInstance();
         AutoBeanUnmarshallerWS<ApplicationInstance> unmarshaller =
-                new AutoBeanUnmarshallerWS<ApplicationInstance>(debugApplicationInstance);
+                                                                   new AutoBeanUnmarshallerWS<ApplicationInstance>(debugApplicationInstance);
 
         try {
             ApplicationRunnerClientService.getInstance().debugApplicationWS(project.getName(), warUrl, isUseJRebel(),
                                                                             new RequestCallback<ApplicationInstance>(unmarshaller) {
                                                                                 @Override
                                                                                 protected void onSuccess(ApplicationInstance result) {
-                                                                                    //Need this temporary fix because with using
+                                                                                    // Need this temporary fix because with using
                                                                                     // websocket we get stopURL like:
-                                                                                    //ide/java/runner/stop?name=app-zcuz5b5wawcn5u23
-                                                                                    //but it must be like:
-                                                                                    //http://127.0.0.1:8080/IDE/rest/private/ide/java/runner/stop?name=app-8gkiomg9q4qrhkxz
-                                                                                    if (!result.getStopURL().matches(
-                                                                                            "http[s]?://.+/IDE/rest/private/.*/stop\\?name=.+")) {
+                                                                                    // ide/java/runner/stop?name=app-zcuz5b5wawcn5u23
+                                                                                    // but it must be like:
+                                                                                    // http://127.0.0.1:8080/IDE/rest/private/ide/java/runner/stop?name=app-8gkiomg9q4qrhkxz
+                                                                                    if (!result.getStopURL()
+                                                                                               .matches(
+                                                                                                        "http[s]?://.+/IDE/rest/private/.*/stop\\?name=.+")) {
                                                                                         String fixedStopURL =
-                                                                                                Window.Location.getProtocol() + "//" +
-                                                                                                Window.Location.getHost() +
-                                                                                                Utils.getRestContext() + "/"
-                                                                                                + result.getStopURL();
+                                                                                                              Window.Location.getProtocol()
+                                                                                                                  + "//" +
+                                                                                                                  Window.Location.getHost()
+                                                                                                                  +
+                                                                                                                  Utils.getRestContext()
+                                                                                                                  + "/"
+                                                                                                                  + result.getStopURL();
                                                                                         result.setStopURL(fixedStopURL);
                                                                                     }
 
@@ -757,15 +840,14 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
     /**
      * Run application in debug mode by sending request over HTTP.
-     *
-     * @param warUrl
-     *         location of .war file
+     * 
+     * @param warUrl location of .war file
      */
     private void debugApplicationREST(String warUrl) {
         AutoBean<ApplicationInstance> debugApplicationInstance =
-                DebuggerExtension.AUTO_BEAN_FACTORY.debugApplicationInstance();
+                                                                 DebuggerExtension.AUTO_BEAN_FACTORY.debugApplicationInstance();
         AutoBeanUnmarshaller<ApplicationInstance> unmarshaller =
-                new AutoBeanUnmarshaller<ApplicationInstance>(debugApplicationInstance);
+                                                                 new AutoBeanUnmarshaller<ApplicationInstance>(debugApplicationInstance);
 
         try {
             ApplicationRunnerClientService.getInstance().debugApplication(project.getName(), warUrl, isUseJRebel(),
@@ -787,31 +869,34 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
     /**
      * Run application by sending request over WebSocket or HTTP.
-     *
-     * @param warUrl
-     *         location of .war file
+     * 
+     * @param warUrl location of .war file
      */
     private void runApplication(String warUrl) {
         AutoBean<ApplicationInstance> applicationInstance = DebuggerExtension.AUTO_BEAN_FACTORY.applicationInstance();
         AutoBeanUnmarshallerWS<ApplicationInstance> unmarshaller =
-                new AutoBeanUnmarshallerWS<ApplicationInstance>(applicationInstance);
+                                                                   new AutoBeanUnmarshallerWS<ApplicationInstance>(applicationInstance);
 
         try {
             ApplicationRunnerClientService.getInstance().runApplicationWS(project.getName(), warUrl, isUseJRebel(),
                                                                           new RequestCallback<ApplicationInstance>(unmarshaller) {
                                                                               @Override
                                                                               protected void onSuccess(ApplicationInstance result) {
-                                                                                  //Need this temporary fix because with using websocket we get stopURL like:
-                                                                                  //ide/java/runner/stop?name=app-zcuz5b5wawcn5u23
-                                                                                  //but it must be like:
-                                                                                  //http://127.0.0.1:8080/IDE/rest/private/ide/java/runner/stop?name=app-8gkiomg9q4qrhkxz
-                                                                                  if (!result.getStopURL().matches(
-                                                                                          "http[s]?://.+/IDE/rest/private/.*/stop\\?name=.+")) {
+                                                                                  // Need this temporary fix because with using websocket we
+                                                                                  // get stopURL like:
+                                                                                  // ide/java/runner/stop?name=app-zcuz5b5wawcn5u23
+                                                                                  // but it must be like:
+                                                                                  // http://127.0.0.1:8080/IDE/rest/private/ide/java/runner/stop?name=app-8gkiomg9q4qrhkxz
+                                                                                  if (!result.getStopURL()
+                                                                                             .matches(
+                                                                                                      "http[s]?://.+/IDE/rest/private/.*/stop\\?name=.+")) {
                                                                                       String fixedStopURL =
-                                                                                              Window.Location.getProtocol() + "//" +
-                                                                                              Window.Location.getHost() +
-                                                                                              Utils.getRestContext() + "/"
-                                                                                              + result.getStopURL();
+                                                                                                            Window.Location.getProtocol()
+                                                                                                                + "//" +
+                                                                                                                Window.Location.getHost() +
+                                                                                                                Utils.getRestContext()
+                                                                                                                + "/"
+                                                                                                                + result.getStopURL();
                                                                                       result.setStopURL(fixedStopURL);
                                                                                   }
 
@@ -830,14 +915,13 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
     /**
      * Run application by sending request over HTTP.
-     *
-     * @param warUrl
-     *         location of .war file
+     * 
+     * @param warUrl location of .war file
      */
     private void runApplicationREST(String warUrl) {
         AutoBean<ApplicationInstance> applicationInstance = DebuggerExtension.AUTO_BEAN_FACTORY.applicationInstance();
         AutoBeanUnmarshaller<ApplicationInstance> unmarshaller =
-                new AutoBeanUnmarshaller<ApplicationInstance>(applicationInstance);
+                                                                 new AutoBeanUnmarshaller<ApplicationInstance>(applicationInstance);
 
         try {
             ApplicationRunnerClientService.getInstance().runApplication(project.getName(), warUrl, isUseJRebel(),
@@ -881,9 +965,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
     /**
      * Update deployed application using JRebel.
-     *
-     * @param warUrl
-     *         URL to download project WAR
+     * 
+     * @param warUrl URL to download project WAR
      */
     private void updateApplication(String warUrl) {
         if (runningApp != null) {
@@ -900,7 +983,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                                                                                                                                                                    runningApp));
                                                                                        IDE.fireEvent(new OutputEvent(
                                                                                                                      message,
-                                                                                                                     OutputMessage.Type.INFO));
+                                                                                                                     OutputMessage.Type.JRebel));
                                                                                    }
 
                                                                                    @Override
@@ -924,8 +1007,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
     private void onApplicationStarted(ApplicationInstance app) {
         String msg = DebuggerExtension.LOCALIZATION_CONSTANT.applicationStarted(app.getName());
         msg +=
-                "<br>"
-                + DebuggerExtension.LOCALIZATION_CONSTANT.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
+               "<br>"
+                   + DebuggerExtension.LOCALIZATION_CONSTANT.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
         IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
         IDE.fireEvent(new AppStartedEvent(app));
         runningApp = app;
@@ -948,8 +1031,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
     private void onDebugStarted(ApplicationInstance app) {
         String msg = DebuggerExtension.LOCALIZATION_CONSTANT.applicationStarted(app.getName());
         msg +=
-                "<br>"
-                + DebuggerExtension.LOCALIZATION_CONSTANT.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
+               "<br>"
+                   + DebuggerExtension.LOCALIZATION_CONSTANT.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
         IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
         connectDebugger(app);
         IDE.fireEvent(new AppStartedEvent(app));
@@ -980,7 +1063,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-//      doStopApp();
+        // doStopApp();
     }
 
     private void doStopApp() {
@@ -997,8 +1080,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                     @Override
                     protected void onFailure(Throwable exception) {
                         String message =
-                                (exception.getMessage() != null) ? exception.getMessage()
-                                                                 : DebuggerExtension.LOCALIZATION_CONSTANT.stopApplicationFailed();
+                                         (exception.getMessage() != null) ? exception.getMessage()
+                                             : DebuggerExtension.LOCALIZATION_CONSTANT.stopApplicationFailed();
                         IDE.fireEvent(new OutputEvent(message, OutputMessage.Type.WARNING));
 
                         if (exception instanceof ServerException) {
@@ -1050,7 +1133,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
     }
 
     private void resetStates() {
-        display.setVariables(Collections.<Variable>emptyList());
+        display.setVariables(Collections.<Variable> emptyList());
         breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
         currentBreakPoint = null;
     }
@@ -1064,7 +1147,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                                                                         @Override
                                                                         protected void onSuccess(String result) {
                                                                             IDE.fireEvent(new BreakPointsUpdatedEvent(
-                                                                                    Collections.<String, Set<EditorBreakPoint>>emptyMap()));
+                                                                                                                      Collections.<String, Set<EditorBreakPoint>> emptyMap()));
                                                                         }
 
                                                                         @Override
@@ -1100,8 +1183,9 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                                                                                    @Override
                                                                                    protected void onSuccess(Object result) {
                                                                                        try {
-                                                                                           IDE.messageBus().subscribe(expireSoonAppChannel,
-                                                                                                                      expireSoonAppsHandler);
+                                                                                           IDE.messageBus()
+                                                                                              .subscribe(expireSoonAppChannel,
+                                                                                                         expireSoonAppsHandler);
                                                                                        } catch (WebSocketException e) {
                                                                                            // nothing to do
                                                                                        }
@@ -1110,9 +1194,10 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                                                                                    @Override
                                                                                    protected void onFailure(Throwable exception) {
                                                                                        if (exception.getMessage() == null) {
-                                                                                           Dialogs.getInstance().showError(
-                                                                                                   DebuggerExtension.LOCALIZATION_CONSTANT
-                                                                                                                    .prolongExpirationTimeFailed());
+                                                                                           Dialogs.getInstance()
+                                                                                                  .showError(
+                                                                                                             DebuggerExtension.LOCALIZATION_CONSTANT
+                                                                                                                                                    .prolongExpirationTimeFailed());
                                                                                        } else {
                                                                                            Dialogs.getInstance()
                                                                                                   .showError(exception.getMessage());
@@ -1126,7 +1211,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
     /**
      * Whether to use JRebel feature for the current project.
-     *
+     * 
      * @return <code>true</code> if need to use JRebel
      */
     private boolean isUseJRebel() {
@@ -1143,133 +1228,166 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
     }
 
     /** Handler for processing received application name which will be stopped soon. */
-    private SubscriptionHandler<Object> expireSoonAppsHandler = new SubscriptionHandler<Object>() {
+    private SubscriptionHandler<Object>            expireSoonAppsHandler       = new SubscriptionHandler<Object>() {
 
-        @Override
-        public void onSuccess(Object result) {
-            // unsubscribe to receiving events to avoid receiving messages while user not press any button in appeared dialog
-            try {
-                IDE.messageBus().unsubscribe(expireSoonAppChannel, this);
-            } catch (WebSocketException e) {
-                // nothing to do
-            }
+                                                                                   @Override
+                                                                                   public void onSuccess(Object result) {
+                                                                                       // unsubscribe to receiving events to avoid receiving
+                                                                                       // messages while user not press any button in
+                                                                                       // appeared dialog
+                                                                                       try {
+                                                                                           IDE.messageBus()
+                                                                                              .unsubscribe(expireSoonAppChannel, this);
+                                                                                       } catch (WebSocketException e) {
+                                                                                           // nothing to do
+                                                                                       }
 
-            display.showExpirationDialog(new BooleanValueReceivedHandler() {
-                @Override
-                public void booleanValueReceived(Boolean value) {
-                    if (value) {
-                        prolongExpirationTime();
-                    } else {
-                        doDisconnectDebugger();
-                    }
-                }
-            });
-            return;
-        }
+                                                                                       display.showExpirationDialog(new BooleanValueReceivedHandler() {
+                                                                                           @Override
+                                                                                           public void booleanValueReceived(Boolean value) {
+                                                                                               if (value) {
+                                                                                                   prolongExpirationTime();
+                                                                                               } else {
+                                                                                                   doDisconnectDebugger();
+                                                                                               }
+                                                                                           }
+                                                                                       });
+                                                                                       return;
+                                                                                   }
 
-        @Override
-        public void onFailure(Throwable exception) {
-            try {
-                IDE.messageBus().unsubscribe(expireSoonAppChannel, this);
-            } catch (WebSocketException e) {
-                // nothing to do
-            }
-        }
-    };
-
-    /** Handler for processing debugger disconnected event. */
-    private SubscriptionHandler<Object> debuggerDisconnectedHandler = new SubscriptionHandler<Object>() {
-        @Override
-        protected void onSuccess(Object result) {
-            try {
-                IDE.messageBus().unsubscribe(debuggerDisconnectedChannel, this);
-            } catch (WebSocketException e) {
-                // nothing to do
-            }
-            if (display != null) {
-                display.closeExpirationDialog();
-                IDE.getInstance().closeView(display.asView().getId());
-            }
-            if (runningApp != null) {
-                IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.debuggerDisconnected(), Type.INFO));
-                IDE.fireEvent(new DebuggerDisconnectedEvent());
-                IDE.fireEvent(new AppStoppedEvent(runningApp.getName(), false));
-            }
-        }
-
-        @Override
-        protected void onFailure(Throwable exception) {
-            try {
-                IDE.messageBus().unsubscribe(debuggerDisconnectedChannel, this);
-            } catch (WebSocketException e) {
-                // nothing to do
-            }
-        }
-    };
-
+                                                                                   @Override
+                                                                                   public void onFailure(Throwable exception) {
+                                                                                       try {
+                                                                                           IDE.messageBus()
+                                                                                              .unsubscribe(expireSoonAppChannel, this);
+                                                                                       } catch (WebSocketException e) {
+                                                                                           // nothing to do
+                                                                                       }
+                                                                                   }
+                                                                               };
 
     /** Handler for processing debugger disconnected event. */
-    private SubscriptionHandler<Object> applicationStoppedHandler = new SubscriptionHandler<Object>() {
-        @Override
-        protected void onSuccess(Object result) {
-            try {
-                IDE.messageBus().unsubscribe(applicationStoppedChannel, this);
-            } catch (WebSocketException e) {
-                // nothing to do
-            }
+    private SubscriptionHandler<Object>            debuggerDisconnectedHandler = new SubscriptionHandler<Object>() {
+                                                                                   @Override
+                                                                                   protected void onSuccess(Object result) {
+                                                                                       try {
+                                                                                           IDE.messageBus()
+                                                                                              .unsubscribe(debuggerDisconnectedChannel,
+                                                                                                           this);
+                                                                                       } catch (WebSocketException e) {
+                                                                                           // nothing to do
+                                                                                       }
+                                                                                       if (display != null) {
+                                                                                           display.closeExpirationDialog();
+                                                                                           IDE.getInstance().closeView(display.asView()
+                                                                                                                              .getId());
+                                                                                       }
+                                                                                       if (runningApp != null) {
+                                                                                           IDE.fireEvent(new OutputEvent(
+                                                                                                                         DebuggerExtension.LOCALIZATION_CONSTANT.debuggerDisconnected(),
+                                                                                                                         Type.INFO));
+                                                                                           IDE.fireEvent(new DebuggerDisconnectedEvent());
+                                                                                           IDE.fireEvent(new AppStoppedEvent(
+                                                                                                                             runningApp.getName(),
+                                                                                                                             false));
+                                                                                       }
+                                                                                   }
 
-            if (display != null)
-                IDE.getInstance().closeView(display.asView().getId());
-            if (runningApp != null) {
-//            IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.debuggerDisconnected(), Type.INFO));
-                IDE.fireEvent(new AppStoppedEvent(runningApp.getName(), false));
-            }
-        }
+                                                                                   @Override
+                                                                                   protected void onFailure(Throwable exception) {
+                                                                                       try {
+                                                                                           IDE.messageBus()
+                                                                                              .unsubscribe(debuggerDisconnectedChannel,
+                                                                                                           this);
+                                                                                       } catch (WebSocketException e) {
+                                                                                           // nothing to do
+                                                                                       }
+                                                                                   }
+                                                                               };
 
-        @Override
-        protected void onFailure(Throwable exception) {
-            try {
-                IDE.messageBus().unsubscribe(applicationStoppedChannel, this);
-            } catch (WebSocketException e) {
-                // nothing to do
-            }
-        }
-    };
+
+    /** Handler for processing debugger disconnected event. */
+    private SubscriptionHandler<Object>            applicationStoppedHandler   = new SubscriptionHandler<Object>() {
+                                                                                   @Override
+                                                                                   protected void onSuccess(Object result) {
+                                                                                       try {
+                                                                                           IDE.messageBus()
+                                                                                              .unsubscribe(applicationStoppedChannel, this);
+                                                                                       } catch (WebSocketException e) {
+                                                                                           // nothing to do
+                                                                                       }
+
+                                                                                       if (display != null)
+                                                                                           IDE.getInstance().closeView(display.asView()
+                                                                                                                              .getId());
+                                                                                       if (runningApp != null) {
+                                                                                           // IDE.fireEvent(new
+                                                                                           // OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.debuggerDisconnected(),
+                                                                                           // Type.INFO));
+                                                                                           IDE.fireEvent(new AppStoppedEvent(
+                                                                                                                             runningApp.getName(),
+                                                                                                                             false));
+                                                                                       }
+                                                                                   }
+
+                                                                                   @Override
+                                                                                   protected void onFailure(Throwable exception) {
+                                                                                       try {
+                                                                                           IDE.messageBus()
+                                                                                              .unsubscribe(applicationStoppedChannel, this);
+                                                                                       } catch (WebSocketException e) {
+                                                                                           // nothing to do
+                                                                                       }
+                                                                                   }
+                                                                               };
 
 
     /** Handler for processing events which is received from debugger over WebSocket connection. */
-    private SubscriptionHandler<DebuggerEventList> debuggerEventsHandler = new SubscriptionHandler<DebuggerEventList>(
-            new DebuggerEventListUnmarshallerWS(DebuggerExtension.AUTO_BEAN_FACTORY.create(DebuggerEventList.class).as())) {
-        @Override
-        public void onSuccess(DebuggerEventList result) {
-            onEventListReceived(result);
-        }
+    private SubscriptionHandler<DebuggerEventList> debuggerEventsHandler       =
+                                                                                 new SubscriptionHandler<DebuggerEventList>(
+                                                                                                                            new DebuggerEventListUnmarshallerWS(
+                                                                                                                                                                DebuggerExtension.AUTO_BEAN_FACTORY.create(DebuggerEventList.class)
+                                                                                                                                                                                                   .as())) {
+                                                                                     @Override
+                                                                                     public void onSuccess(DebuggerEventList result) {
+                                                                                         onEventListReceived(result);
+                                                                                     }
 
-        @Override
-        public void onFailure(Throwable exception) {
-            try {
-                IDE.messageBus().unsubscribe(debuggerEventsChannel, this);
-                IDE.messageBus().unsubscribe(expireSoonAppChannel, expireSoonAppsHandler);
-            } catch (WebSocketException e) {
-                // nothing to do
-            }
+                                                                                     @Override
+                                                                                     public void onFailure(Throwable exception) {
+                                                                                         try {
+                                                                                             IDE.messageBus()
+                                                                                                .unsubscribe(debuggerEventsChannel, this);
+                                                                                             IDE.messageBus()
+                                                                                                .unsubscribe(expireSoonAppChannel,
+                                                                                                             expireSoonAppsHandler);
+                                                                                         } catch (WebSocketException e) {
+                                                                                             // nothing to do
+                                                                                         }
 
-            IDE.getInstance().closeView(display.asView().getId());
-            if (runningApp != null) {
-                if (exception instanceof org.exoplatform.ide.client.framework.websocket.rest.exceptions.ServerException) {
-                    org.exoplatform.ide.client.framework.websocket.rest.exceptions.ServerException serverException =
-                            (org.exoplatform.ide.client.framework.websocket.rest.exceptions.ServerException)exception;
-                    if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus() && serverException.getMessage() != null
-                        && serverException.getMessage().contains("not found")) {
-                        IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.debuggerDisconnected(),
-                                                      Type.WARNING));
-                        IDE.fireEvent(new AppStoppedEvent(runningApp.getName(), false));
-                        return;
-                    }
-                }
-                IDE.fireEvent(new ExceptionThrownEvent(exception));
-            }
-        }
-    };
+                                                                                         IDE.getInstance().closeView(display.asView()
+                                                                                                                            .getId());
+                                                                                         if (runningApp != null) {
+                                                                                             if (exception instanceof org.exoplatform.ide.client.framework.websocket.rest.exceptions.ServerException) {
+                                                                                                 org.exoplatform.ide.client.framework.websocket.rest.exceptions.ServerException serverException =
+                                                                                                                                                                                                  (org.exoplatform.ide.client.framework.websocket.rest.exceptions.ServerException)exception;
+                                                                                                 if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus()
+                                                                                                     && serverException.getMessage() != null
+                                                                                                     && serverException.getMessage()
+                                                                                                                       .contains("not found")) {
+                                                                                                     IDE.fireEvent(new OutputEvent(
+                                                                                                                                   DebuggerExtension.LOCALIZATION_CONSTANT.debuggerDisconnected(),
+                                                                                                                                   Type.WARNING));
+                                                                                                     IDE.fireEvent(new AppStoppedEvent(
+                                                                                                                                       runningApp.getName(),
+                                                                                                                                       false));
+                                                                                                     return;
+                                                                                                 }
+                                                                                             }
+                                                                                             IDE.fireEvent(new ExceptionThrownEvent(
+                                                                                                                                    exception));
+                                                                                         }
+                                                                                     }
+                                                                                 };
 
 }

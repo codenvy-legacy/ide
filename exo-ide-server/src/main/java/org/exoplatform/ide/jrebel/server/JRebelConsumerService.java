@@ -51,10 +51,6 @@ public class JRebelConsumerService {
         String userId = ConversationState.getCurrent().getIdentity().getUserId();
         try {
             User user = userManager.getUserByAlias(userId);
-            if (user.getProfile().getAttribute("firstName") != null && user.getProfile().getAttribute("lastName") != null
-                && user.getProfile().getAttribute("phone") != null) {
-                return; //no need to send already filled profile to ZTA
-            }
             user.getProfile().setAttributes(values);
             userManager.updateUser(user);
 
