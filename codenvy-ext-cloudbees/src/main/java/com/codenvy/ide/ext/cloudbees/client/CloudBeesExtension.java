@@ -19,6 +19,10 @@
 package com.codenvy.ide.ext.cloudbees.client;
 
 import com.codenvy.ide.api.extension.Extension;
+import com.codenvy.ide.api.paas.PaaSAgent;
+import com.codenvy.ide.api.ui.menu.MainMenuAgent;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -30,8 +34,13 @@ import com.google.inject.Singleton;
 @Singleton
 @Extension(title = "CloudBees Support.", version = "3.0.0")
 public class CloudBeesExtension {
+    private static final String ID = "CloudBees";
 
     @Inject
-    public CloudBeesExtension() {
+    public CloudBeesExtension(PaaSAgent paasAgent, CloudBeesResources resources, MainMenuAgent menu) {
+        // TODO change hard code types
+        JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "War");
+        // TODO wizard page is empty
+        paasAgent.registerPaaS(ID, ID, resources.cloudBees48(), requiredProjectTypes, null, null);
     }
 }
