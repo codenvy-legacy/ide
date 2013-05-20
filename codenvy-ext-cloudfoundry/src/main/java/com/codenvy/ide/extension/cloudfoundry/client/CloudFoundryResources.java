@@ -30,50 +30,26 @@ import com.google.gwt.resources.client.ImageResource;
  */
 public interface CloudFoundryResources extends ClientBundle {
     public interface CloudFoundryCSS extends CssResource {
-        @ClassName("createService")
-        String createService();
-
-        @ClassName("serviceLabel")
-        String serviceLabel();
-
-        @ClassName("optinalLabel")
-        String optinalLabel();
-
-        @ClassName("login")
         String login();
 
-        @ClassName("loginFont")
         String loginFont();
 
-        @ClassName("loginErrorFont")
         String loginErrorFont();
 
-        @ClassName("project")
         String project();
 
-        @ClassName("labelH")
         String labelH();
 
-        @ClassName("link")
         String link();
 
-        @ClassName("textinput")
         String textinput();
 
-        @ClassName("manageService")
-        String manageService();
-
-        @ClassName("manageLabel")
-        String manageLabel();
-
-        @ClassName("appInfo")
         String appInfo();
 
-        @ClassName("event")
         String event();
     }
 
-    @Source("CloudFoundry.css")
+    @Source({"CloudFoundry.css", "com/codenvy/ide/api/ui/style.css"})
     CloudFoundryCSS cloudFoundryCss();
 
     @Source("com/codenvy/ide/extension/cloudfoundry/images/cloudfoundry_36.png")

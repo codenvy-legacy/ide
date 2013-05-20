@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.create;
 
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
 import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -37,49 +39,45 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class CreateApplicationViewImpl extends DialogBox implements CreateApplicationView {
-    private static CreateApplicationViewImplUiBinder uiBinder = GWT.create(CreateApplicationViewImplUiBinder.class);
-
-    @UiField
-    TextBox name;
-
-    @UiField
-    TextBox url;
-
-    @UiField
-    CheckBox customUrl;
-
-    @UiField
-    TextBox instances;
-
-    @UiField
-    TextBox memory;
-
-    @UiField
-    ListBox server;
-
-    @UiField
-    ListBox type;
-
-    @UiField
-    SimpleCheckBox startAfterCreation;
-
-    @UiField
-    CheckBox autodetectType;
-
-    @UiField
-    Button btnCreate;
-
-    @UiField
-    Button btnCancel;
-
-    private ActionDelegate delegate;
-
     interface CreateApplicationViewImplUiBinder extends UiBinder<Widget, CreateApplicationViewImpl> {
     }
 
+    private static CreateApplicationViewImplUiBinder uiBinder = GWT.create(CreateApplicationViewImplUiBinder.class);
+
+    @UiField
+    TextBox                   name;
+    @UiField
+    TextBox                   url;
+    @UiField
+    CheckBox                  customUrl;
+    @UiField
+    TextBox                   instances;
+    @UiField
+    TextBox                   memory;
+    @UiField
+    ListBox                   server;
+    @UiField
+    ListBox                   type;
+    @UiField
+    SimpleCheckBox            startAfterCreation;
+    @UiField
+    CheckBox                  autodetectType;
+    @UiField
+    com.codenvy.ide.ui.Button btnCreate;
+    @UiField
+    com.codenvy.ide.ui.Button btnCancel;
+    @UiField(provided = true)
+    final   CloudFoundryResources            res;
+    @UiField(provided = true)
+    final   CloudFoundryLocalizationConstant locale;
+    private ActionDelegate                   delegate;
+
     /** Create view. */
     @Inject
-    protected CreateApplicationViewImpl() {
+    protected CreateApplicationViewImpl(CloudFoundryResources resources, CloudFoundryLocalizationConstant constant) {
+        this.res = resources;
+        this.locale = constant;
+
         Widget widget = uiBinder.createAndBindUi(this);
 
         this.setText("Create Application");

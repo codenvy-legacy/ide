@@ -28,9 +28,11 @@ import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.*;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import com.codenvy.ide.extension.cloudfoundry.client.login.LoginCanceledHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import com.codenvy.ide.extension.cloudfoundry.shared.SystemInfo;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
 import com.codenvy.ide.extension.maven.client.event.ProjectBuiltEvent;
 import com.codenvy.ide.extension.maven.client.event.ProjectBuiltHandler;
@@ -79,6 +81,7 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
     private TemplateAgent                    templateAgent;
     private CreateProjectProvider            createProjectProvider;
     private CloudFoundryExtension.PAAS_PROVIDER paasProvider = CloudFoundryExtension.PAAS_PROVIDER.CLOUD_FOUNDRY;
+    private boolean isLogined;
 
     /**
      * Create presenter.
@@ -166,17 +169,8 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
         try {
             // Application will be started after creation (IDE-1618)
             boolean noStart = false;
-            service.createWS(server,
-                             name,
-                             null,
-                             url,
-                             0,
-                             0,
-                             noStart,
-                             resourcesProvider.getVfsId(),
-                             resourcesProvider.getActiveProject().getId(),
-                             warUrl,
-                             paasProvider,
+            service.createWS(server, name, null, url, 0, 0, noStart, resourcesProvider.getVfsId(),
+                             resourcesProvider.getActiveProject().getId(), warUrl, paasProvider,
                              new CloudFoundryRESTfulRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
                                                                                              server, eventBus, console, constant,
                                                                                              loginPresenter, paasProvider) {
@@ -390,7 +384,7 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
 
     /** Checking entered information on view. */
     public boolean validate() {
-        return view.getName() != null && !view.getName().isEmpty() && view.getUrl() != null && !view.getUrl().isEmpty();
+        return isLogined ? view.getName() != null && !view.getName().isEmpty() && view.getUrl() != null && !view.getUrl().isEmpty() : true;
     }
 
     /** {@inheritDoc} */
@@ -430,7 +424,9 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
     /** {@inheritDoc} */
     @Override
     public String getNotice() {
-        if (view.getName().isEmpty()) {
+        if (!isLogined) {
+            return "This project will be created without deploy on CloudFoundry.";
+        } else if (view.getName().isEmpty()) {
             return "Please, enter a application's name.";
         } else if (view.getUrl().isEmpty()) {
             return "Please, enter application's url.";
@@ -444,8 +440,48 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
     public void go(AcceptsOneWidget container) {
         createProjectProvider = templateAgent.getSelectedTemplate().getCreateProjectProvider();
         projectName = createProjectProvider.getProjectName();
+        isLogined = true;
         getServers();
+
+        isLogged();
+
         container.setWidget(view);
+    }
+
+    /** Checks the user is logged. */
+    private void isLogged() {
+        LoggedInHandler loggedInHandler = new LoggedInHandler() {
+            @Override
+            public void onLoggedIn() {
+                isLogined = true;
+                delegate.updateControls();
+            }
+        };
+
+        LoginCanceledHandler loginCanceledHandler = new LoginCanceledHandler() {
+            @Override
+            public void onLoginCanceled() {
+                isLogined = false;
+                delegate.updateControls();
+            }
+        };
+
+        AutoBean<SystemInfo> systemInfo = autoBeanFactory.systemInfo();
+        AutoBeanUnmarshaller<SystemInfo> unmarshaller = new AutoBeanUnmarshaller<SystemInfo>(systemInfo);
+        try {
+            service.getSystemInfo(server, paasProvider,
+                                  new CloudFoundryAsyncRequestCallback<SystemInfo>(unmarshaller, loggedInHandler, loginCanceledHandler,
+                                                                                   server, eventBus, console, constant, loginPresenter,
+                                                                                   paasProvider) {
+                                      @Override
+                                      protected void onSuccess(SystemInfo result) {
+                                          // do nothing
+                                      }
+                                  });
+        } catch (RequestException e) {
+            eventBus.fireEvent(new ExceptionThrownEvent(e));
+            console.print(e.getMessage());
+        }
     }
 
     /** {@inheritDoc} */
@@ -454,7 +490,9 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
         createProjectProvider.create(new AsyncCallback<Project>() {
             @Override
             public void onSuccess(Project result) {
-                deploy(result);
+                if (isLogined) {
+                    deploy(result);
+                }
             }
 
             @Override

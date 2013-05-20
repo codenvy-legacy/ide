@@ -1,3 +1,4 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:c='urn:import:com.codenvy.ide.ui'>
@@ -20,7 +21,7 @@
             margin-right: 5px;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="480px" height="330px" addStyleNames="{style.emptyBorder}">
+    <g:DockLayoutPanel unit="PX" width="480px" height="310px" addStyleNames="{style.emptyBorder}">
         <g:south size="26.0">
             <g:FlowPanel width="100%">
                 <c:Button addStyleNames="{style.alignBtn}" text="{locale.createButton}" size="SMALL" type="SUCCESS" ui:field="btnCreate"/>
@@ -36,7 +37,7 @@
                             <g:Label text="{locale.createAppServerField}" addStyleNames="{res.appFogCSS.loginFont}"/>
                         </g:west>
                         <g:center>
-                            <g:TextBox width="220px" ui:field="server" readOnly="true"/>
+                            <g:TextBox width="240px" ui:field="server" readOnly="true"/>
                         </g:center>
                     </g:DockLayoutPanel>
                 </g:north>
@@ -46,7 +47,7 @@
                             <g:Label text="{locale.createAppInfraField}" addStyleNames="{res.appFogCSS.loginFont}"/>
                         </g:west>
                         <g:center>
-                            <g:ListBox width="227px" ui:field="infra"/>
+                            <g:ListBox width="247px" ui:field="infra"/>
                         </g:center>
                     </g:DockLayoutPanel>
                 </g:north>
@@ -56,7 +57,7 @@
                             <g:Label text="{locale.createAppNameField}" addStyleNames="{res.appFogCSS.loginFont}"/>
                         </g:west>
                         <g:center>
-                            <g:TextBox width="220px" visibleLength="50" ui:field="name"/>
+                            <g:TextBox width="240px" visibleLength="50" ui:field="name"/>
                         </g:center>
                     </g:DockLayoutPanel>
                 </g:north>
@@ -65,12 +66,12 @@
                         <g:west size="140.0">
                             <g:Label text="{locale.createAppTypeField}" addStyleNames="{res.appFogCSS.loginFont}"/>
                         </g:west>
-                        <g:east size="110.0">
+                        <g:east size="90.0">
                             <g:CheckBox text="{locale.createAppAutodetectTypeLabel}"
                                         ui:field="autodetectType"/>
                         </g:east>
                         <g:center>
-                            <g:ListBox width="227px" ui:field="type"/>
+                            <g:ListBox width="247px" ui:field="type"/>
                         </g:center>
                     </g:DockLayoutPanel>
                 </g:north>
@@ -79,12 +80,12 @@
                         <g:west size="140.0">
                             <g:Label text="{locale.createAppUrlField}" addStyleNames="{res.appFogCSS.loginFont}"/>
                         </g:west>
-                        <g:east size="110.0">
+                        <g:east size="90.0">
                             <g:CheckBox text="{locale.createAppUseDefaultUrlLabel}"
                                         ui:field="customUrl"/>
                         </g:east>
                         <g:center>
-                            <g:TextBox width="220px" ui:field="url"/>
+                            <g:TextBox width="240px" ui:field="url"/>
                         </g:center>
                     </g:DockLayoutPanel>
                 </g:north>
@@ -94,7 +95,7 @@
                             <g:Label text="{locale.createAppInstancesField}" addStyleNames="{res.appFogCSS.loginFont}"/>
                         </g:west>
                         <g:center>
-                            <g:TextBox width="220px" ui:field="instances"/>
+                            <g:TextBox width="240px" ui:field="instances"/>
                         </g:center>
                     </g:DockLayoutPanel>
                 </g:north>
@@ -104,7 +105,7 @@
                             <g:Label text="{locale.createAppMemoryField}" addStyleNames="{res.appFogCSS.loginFont}"/>
                         </g:west>
                         <g:center>
-                            <g:TextBox width="220px" ui:field="memory"/>
+                            <g:TextBox width="240px" ui:field="memory"/>
                         </g:center>
                     </g:DockLayoutPanel>
                 </g:north>

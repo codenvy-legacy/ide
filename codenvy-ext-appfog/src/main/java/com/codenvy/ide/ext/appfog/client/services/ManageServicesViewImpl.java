@@ -32,7 +32,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.NoSelectionModel;
 import com.google.gwt.view.client.SelectionChangeEvent;
@@ -59,10 +58,6 @@ public class ManageServicesViewImpl extends DialogBox implements ManageServicesV
     com.codenvy.ide.ui.Button btnAdd;
     @UiField
     com.codenvy.ide.ui.Button btnDelete;
-    @UiField
-    Label                     boundServiceLabel;
-    @UiField
-    Label                     provisionServiceLabel;
     @UiField(provided = true)
     CellTable<String>                   boundedServices = new CellTable<String>();
     @UiField(provided = true)

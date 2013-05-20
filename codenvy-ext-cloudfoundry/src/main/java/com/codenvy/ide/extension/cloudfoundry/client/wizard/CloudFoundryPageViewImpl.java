@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.wizard;
 
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
 import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -39,25 +40,30 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class CloudFoundryPageViewImpl extends Composite implements CloudFoundryPageView {
+    interface CloudFoundryPageViewImplUiBinder extends UiBinder<Widget, CloudFoundryPageViewImpl> {
+    }
+
     private static CloudFoundryPageViewImplUiBinder uiBinder = GWT.create(CloudFoundryPageViewImplUiBinder.class);
 
     @UiField
     ListBox targetField;
-
     @UiField
     TextBox nameField;
-
     @UiField
     TextBox urlField;
+    @UiField(provided = true)
+    final   CloudFoundryResources res;
+    private ActionDelegate        delegate;
 
-    interface CloudFoundryPageViewImplUiBinder extends UiBinder<Widget, CloudFoundryPageViewImpl> {
-    }
-
-    private ActionDelegate delegate;
-
-    /** Create view. */
+    /**
+     * Create view.
+     *
+     * @param resources
+     */
     @Inject
-    protected CloudFoundryPageViewImpl() {
+    protected CloudFoundryPageViewImpl(CloudFoundryResources resources) {
+        this.res = resources;
+
         initWidget(uiBinder.createAndBindUi(this));
     }
 

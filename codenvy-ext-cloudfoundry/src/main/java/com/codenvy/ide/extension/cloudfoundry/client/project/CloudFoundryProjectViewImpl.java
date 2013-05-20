@@ -36,133 +36,71 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class CloudFoundryProjectViewImpl extends DialogBox implements CloudFoundryProjectView {
-    private static CloudFoundryProjectViewImplUiBinder uiBinder = GWT.create(CloudFoundryProjectViewImplUiBinder.class);
-
-    @UiField
-    TextBox applicationName;
-
-    @UiField
-    Button btnInfo;
-
-    @UiField
-    Anchor url;
-
-    @UiField
-    Button btnEditUrl;
-
-    @UiField
-    TextBox memory;
-
-    @UiField
-    Button btnEditMemory;
-
-    @UiField
-    TextBox instances;
-
-    @UiField
-    Button btnEditInstances;
-
-    @UiField
-    Label stack;
-
-    @UiField
-    Label model;
-
-    @UiField
-    Label status;
-
-    @UiField
-    Button btnStart;
-
-    @UiField
-    Button btnStop;
-
-    @UiField
-    Button btnRestart;
-
-    @UiField
-    Button btnUpdate;
-
-    @UiField
-    Button btnDelete;
-
-    @UiField
-    Button btnServices;
-
-    @UiField
-    Button btnLogs;
-
-    @UiField
-    Button btnClose;
-
-    @UiField
-    Label applicationLabel;
-
-    @UiField
-    Label urlLabel;
-
-    @UiField
-    Label memoryLabel;
-
-    @UiField
-    Label instanceLabel;
-
-    @UiField
-    Label stackLabel;
-
-    @UiField
-    Label modelLabel;
-
-    @UiField
-    Label statusLabel;
-
-    @UiField
-    Label actionLabel;
-
     interface CloudFoundryProjectViewImplUiBinder extends UiBinder<Widget, CloudFoundryProjectViewImpl> {
     }
 
-    private CloudFoundryProjectView.ActionDelegate delegate;
+    private static CloudFoundryProjectViewImplUiBinder uiBinder = GWT.create(CloudFoundryProjectViewImplUiBinder.class);
 
-    private boolean isShown;
+    @UiField
+    TextBox                   applicationName;
+    @UiField
+    com.codenvy.ide.ui.Button btnInfo;
+    @UiField
+    Anchor                    url;
+    @UiField
+    com.codenvy.ide.ui.Button btnEditUrl;
+    @UiField
+    TextBox                   memory;
+    @UiField
+    com.codenvy.ide.ui.Button btnEditMemory;
+    @UiField
+    TextBox                   instances;
+    @UiField
+    com.codenvy.ide.ui.Button btnEditInstances;
+    @UiField
+    Label                     stack;
+    @UiField
+    Label                     model;
+    @UiField
+    Label                     status;
+    @UiField
+    com.codenvy.ide.ui.Button btnStart;
+    @UiField
+    com.codenvy.ide.ui.Button btnStop;
+    @UiField
+    com.codenvy.ide.ui.Button btnRestart;
+    @UiField
+    com.codenvy.ide.ui.Button btnUpdate;
+    @UiField
+    com.codenvy.ide.ui.Button btnDelete;
+    @UiField
+    com.codenvy.ide.ui.Button btnServices;
+    @UiField
+    com.codenvy.ide.ui.Button btnLogs;
+    @UiField
+    com.codenvy.ide.ui.Button btnClose;
+    @UiField(provided = true)
+    final   CloudFoundryResources                  res;
+    @UiField(provided = true)
+    final   CloudFoundryLocalizationConstant       locale;
+    private CloudFoundryProjectView.ActionDelegate delegate;
+    private boolean                                isShown;
 
     /**
      * Create view.
      *
      * @param resources
-     * @param constants
+     * @param constant
      */
     @Inject
-    protected CloudFoundryProjectViewImpl(CloudFoundryResources resources, CloudFoundryLocalizationConstant constants) {
+    protected CloudFoundryProjectViewImpl(CloudFoundryResources resources, CloudFoundryLocalizationConstant constant) {
+        this.res = resources;
+        this.locale = constant;
+
         Widget widget = uiBinder.createAndBindUi(this);
 
         this.setText("CloudFoundry Project");
         this.setWidget(widget);
-
-        // adds styles to graphic components
-        this.addStyleName(resources.cloudFoundryCss().project());
-        applicationLabel.addStyleName(resources.cloudFoundryCss().labelH());
-        urlLabel.addStyleName(resources.cloudFoundryCss().labelH());
-        memoryLabel.addStyleName(resources.cloudFoundryCss().labelH());
-        instanceLabel.addStyleName(resources.cloudFoundryCss().labelH());
-        stackLabel.addStyleName(resources.cloudFoundryCss().labelH());
-        modelLabel.addStyleName(resources.cloudFoundryCss().labelH());
-        statusLabel.addStyleName(resources.cloudFoundryCss().labelH());
-        actionLabel.addStyleName(resources.cloudFoundryCss().labelH());
-        url.addStyleName(resources.cloudFoundryCss().link());
-        applicationName.addStyleName(resources.cloudFoundryCss().textinput());
-        memory.addStyleName(resources.cloudFoundryCss().textinput());
-        instances.addStyleName(resources.cloudFoundryCss().textinput());
-
-        // adds icon into buttons
-        btnInfo.setHTML(new Image(resources.propertiesButton()).toString());
-        btnEditMemory.setHTML(new Image(resources.editButton()).toString());
-        btnEditInstances.setHTML(new Image(resources.editButton()).toString());
-        btnStart.setHTML(new Image(resources.startApp()).toString());
-        btnStop.setHTML(new Image(resources.stopApp()).toString());
-        btnRestart.setHTML(new Image(resources.restartApp()).toString());
-        // adds text with icon into buttons
-        btnClose.setHTML(new Image(resources.cancelButton()) + " " + constants.closeButton());
     }
 
     /** {@inheritDoc} */

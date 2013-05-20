@@ -1,44 +1,31 @@
 @CHARSET "UTF-8";
 
-.createService .serviceLabel {
-    cursor: default;
-    font-family: Verdana, Bitstream Vera Sans, sans-serif;
-    font-size: 11px;
-    font-style: normal;
-    font-weight: normal;
-}
-
-.createService .optinalLabel {
-    color: #ACACAC;
-}
-
 .login .loginFont {
     cursor: default;
-    font-family: Verdana, Bitstream Vera Sans, sans-serif;
-    font-size: 11px;
+    font-family: mainFontFamily;
+    font-size: fontSize;
     font-style: normal;
     font-weight: normal;
 }
 
 .login .loginErrorFont {
     cursor: default;
-    font-family: Verdana, Bitstream Vera Sans, sans-serif;
-    font-size: 11px;
+    font-family: mainFontFamily;
+    font-size: fontSize;
     font-style: normal;
     font-weight: normal;
     color: #d21a1a;
-    height: 14px;
 }
 
 .project .labelH {
-    font-size: 11px;
-    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-family: mainFontFamily;
+    font-size: fontSize;
     font-weight: bold;
 }
 
 .project .link {
-    font-size: 11px;
-    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-family: mainFontFamily;
+    font-size: fontSize;
     overflow-x: hidden;
     white-space: nowrap;
 }
@@ -46,12 +33,6 @@
 .project .textinput {
     background-color: #FFFFFF !important;
     color: #000000 !important;
-}
-
-.manageService .manageLabel {
-    font-size: 11px;
-    font-family: Verdana, Bitstream Vera Sans, sans-serif;
-    height: 22px;
 }
 
 .appInfo .event {

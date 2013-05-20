@@ -464,7 +464,7 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
         String params = (server != null) ? "server=" + server + "&" : "";
         params += (paasProvider != null) ? "paasprovider=" + paasProvider.value() : "";
 
-        AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader)
+        AsyncRequest.build(RequestBuilder.GET, url + "?" + params).loader(loader)
                     .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
     }
 

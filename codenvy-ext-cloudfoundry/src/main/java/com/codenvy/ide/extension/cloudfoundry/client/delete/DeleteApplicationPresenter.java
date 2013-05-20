@@ -233,7 +233,6 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
      */
     private void showDialog(String appName) {
         view.setAskMessage(constant.deleteApplicationQuestion(appName));
-        view.setAskDeleteServices(constant.deleteApplicationAskDeleteServices());
         view.setDeleteServices(false);
 
         view.showDialog();

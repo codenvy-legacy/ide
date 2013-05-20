@@ -31,7 +31,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.NoSelectionModel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.inject.Inject;
@@ -46,35 +47,26 @@ import java.util.List;
  */
 @Singleton
 public class ManageServicesViewImpl extends DialogBox implements ManageServicesView {
-    private static ManageServicesViewImplUiBinder uiBinder = GWT.create(ManageServicesViewImplUiBinder.class);
-
-    @UiField(provided = true)
-    CellTable<String> boundedServices = new CellTable<String>();
-
-    @UiField(provided = true)
-    CellTable<ProvisionedService> services = new CellTable<ProvisionedService>();
-
-    @UiField
-    Button btnClose;
-
-    @UiField
-    Button btnAdd;
-
-    @UiField
-    Button btnDelete;
-
-    @UiField
-    Label boundServiceLabel;
-
-    @UiField
-    Label provisionServiceLabel;
-
     interface ManageServicesViewImplUiBinder extends UiBinder<Widget, ManageServicesViewImpl> {
     }
 
-    private ActionDelegate delegate;
+    private static ManageServicesViewImplUiBinder uiBinder = GWT.create(ManageServicesViewImplUiBinder.class);
 
-    private CloudFoundryLocalizationConstant constant;
+    @UiField
+    com.codenvy.ide.ui.Button btnClose;
+    @UiField
+    com.codenvy.ide.ui.Button btnAdd;
+    @UiField
+    com.codenvy.ide.ui.Button btnDelete;
+    @UiField(provided = true)
+    CellTable<String>             boundedServices = new CellTable<String>();
+    @UiField(provided = true)
+    CellTable<ProvisionedService> services        = new CellTable<ProvisionedService>();
+    @UiField(provided = true)
+    final   CloudFoundryResources            res;
+    @UiField(provided = true)
+    final   CloudFoundryLocalizationConstant locale;
+    private ActionDelegate                   delegate;
 
     /**
      * Create view.
@@ -84,7 +76,8 @@ public class ManageServicesViewImpl extends DialogBox implements ManageServicesV
      */
     @Inject
     protected ManageServicesViewImpl(CloudFoundryResources resources, CloudFoundryLocalizationConstant constant) {
-        this.constant = constant;
+        this.res = resources;
+        this.locale = constant;
 
         createBoundServicesTable();
         createServicesTable();
@@ -93,16 +86,6 @@ public class ManageServicesViewImpl extends DialogBox implements ManageServicesV
 
         this.setWidget(widget);
         this.setText("Manage CloudFoundry Services");
-
-        // adds styles to graphic components
-        this.addStyleName(resources.cloudFoundryCss().manageService());
-        boundServiceLabel.addStyleName(resources.cloudFoundryCss().manageLabel());
-        provisionServiceLabel.addStyleName(resources.cloudFoundryCss().manageLabel());
-
-        // adds text with icon into button
-        btnClose.setHTML(new Image(resources.cancelButton()) + " " + constant.closeButton());
-        btnAdd.setHTML(new Image(resources.addButton()) + " " + constant.addButton());
-        btnDelete.setHTML(new Image(resources.deleteButton()) + " " + constant.deleteButton());
     }
 
     /** Creates BoundServices table. */
@@ -117,7 +100,7 @@ public class ManageServicesViewImpl extends DialogBox implements ManageServicesV
         Column<String, String> unbindColumn = new Column<String, String>(new ButtonCell()) {
             @Override
             public String getValue(String object) {
-                return constant.unBindButton();
+                return locale.unBindButton();
             }
         };
 
@@ -153,7 +136,7 @@ public class ManageServicesViewImpl extends DialogBox implements ManageServicesV
         Column<ProvisionedService, String> bindColumn = new Column<ProvisionedService, String>(new ButtonCell()) {
             @Override
             public String getValue(ProvisionedService object) {
-                return constant.bindButton();
+                return locale.bindButton();
             }
         };
 

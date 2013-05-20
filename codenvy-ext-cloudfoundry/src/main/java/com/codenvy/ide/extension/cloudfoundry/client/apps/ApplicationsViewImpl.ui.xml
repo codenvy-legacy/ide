@@ -1,11 +1,16 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p1="urn:import:com.google.gwt.user.cellview.client">
-
-    <ui:with field="locale"
-             type="com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant"></ui:with>
-
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:p1="urn:import:com.google.gwt.user.cellview.client"
+             xmlns:c="urn:import:com.codenvy.ide.ui">
+    <ui:with field='locale' type='com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant'/>
+    <ui:with field='res' type='com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources'/>
     <ui:style>
+        .label {
+            margin-right: 5px;
+            float: left;
+        }
+
         .floatLeft {
             float: left;
             margin-left: 10px;
@@ -14,16 +19,19 @@
         .floatRight {
             float: right;
         }
+
+        .emptyBorder {
+            margin: 6px;
+        }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="930px" height="260px">
+    <g:DockLayoutPanel unit="PX" width="930px" height="260px" addStyleNames="{style.emptyBorder}">
         <g:south size="30.0">
-            <g:FlowPanel>
+            <g:FlowPanel addStyleNames="{res.cloudFoundryCss.login}}">
                 <g:Label text="{locale.appsServerLabel}" width="63px"
-                         styleName="{style.floatLeft}"/>
-                <g:ListBox styleName="{style.floatLeft}" width="410px"
-                           ui:field="server"/>
-                <g:Button addStyleNames="{style.floatLeft}" ui:field="btnShow"/>
-                <g:Button addStyleNames="{style.floatRight}" ui:field="btnClose"/>
+                         addStyleNames="{style.floatLeft} {style.label} {res.cloudFoundryCss.loginFont}"/>
+                <g:ListBox styleName="{style.floatLeft}" width="410px" ui:field="target"/>
+                <c:Button addStyleNames="{style.floatLeft}" text="{locale.showButton}" size="SMALL" type="SUCCESS" ui:field="btnShow"/>
+                <c:Button addStyleNames="{style.floatRight}" text="{locale.closeButton}" size="SMALL" type="DANGER" ui:field="btnClose"/>
             </g:FlowPanel>
         </g:south>
         <g:center>

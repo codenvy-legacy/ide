@@ -19,13 +19,13 @@
 package com.codenvy.ide.extension.cloudfoundry.client.rename;
 
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -39,32 +39,37 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class RenameApplicationViewImpl extends DialogBox implements RenameApplicationView {
-    private static RenameApplicationViewImplUiBinder uiBinder = GWT.create(RenameApplicationViewImplUiBinder.class);
-
-    @UiField
-    Button btnRename;
-
-    @UiField
-    Button btnCancel;
-
-    @UiField
-    TextBox nameField;
-
     interface RenameApplicationViewImplUiBinder extends UiBinder<Widget, RenameApplicationViewImpl> {
     }
 
-    private ActionDelegate delegate;
+    private static RenameApplicationViewImplUiBinder uiBinder = GWT.create(RenameApplicationViewImplUiBinder.class);
+
+    @UiField
+    com.codenvy.ide.ui.Button btnRename;
+    @UiField
+    com.codenvy.ide.ui.Button btnCancel;
+    @UiField
+    TextBox                   nameField;
+    @UiField(provided = true)
+    final   CloudFoundryResources            res;
+    @UiField(provided = true)
+    final   CloudFoundryLocalizationConstant locale;
+    private ActionDelegate                   delegate;
 
     /**
      * Create view.
      *
-     * @param constants
+     * @param resources
+     * @param constant
      */
     @Inject
-    protected RenameApplicationViewImpl(CloudFoundryLocalizationConstant constants) {
+    protected RenameApplicationViewImpl(CloudFoundryResources resources, CloudFoundryLocalizationConstant constant) {
+        this.res = resources;
+        this.locale = constant;
+
         Widget widget = uiBinder.createAndBindUi(this);
 
-        this.setText(constants.renameApplicationViewTitle());
+        this.setText(constant.renameApplicationViewTitle());
         this.setWidget(widget);
     }
 

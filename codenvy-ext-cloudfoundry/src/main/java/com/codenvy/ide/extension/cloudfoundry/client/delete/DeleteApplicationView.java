@@ -65,13 +65,6 @@ public interface DeleteApplicationView extends View<DeleteApplicationView.Action
      */
     public void setAskMessage(String message);
 
-    /**
-     * Set the ask message to delete services.
-     *
-     * @param text
-     */
-    public void setAskDeleteServices(String text);
-
     /** Show dialog. */
     public void showDialog();
 
