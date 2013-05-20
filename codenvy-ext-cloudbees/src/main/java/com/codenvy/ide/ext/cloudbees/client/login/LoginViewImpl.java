@@ -16,10 +16,10 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.appfog.client.login;
+package com.codenvy.ide.ext.cloudbees.client.login;
 
-import com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant;
-import com.codenvy.ide.ext.appfog.client.AppfogResources;
+import com.codenvy.ide.ext.cloudbees.client.CloudBeesLocalizationConstant;
+import com.codenvy.ide.ext.cloudbees.client.CloudBeesResources;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -52,24 +52,27 @@ public class LoginViewImpl extends DialogBox implements LoginView {
     com.codenvy.ide.ui.Button btnCancel;
     @UiField
     Label                     errorText;
-    @UiField
-    TextBox                   target;
     @UiField(provided = true)
-    final   AppfogResources            res;
+    final   CloudBeesResources            res;
     @UiField(provided = true)
-    final   AppfogLocalizationConstant locale;
-    private ActionDelegate             delegate;
-    private boolean                    isShown;
+    final   CloudBeesLocalizationConstant locale;
+    private ActionDelegate                delegate;
+    private boolean                       isShown;
 
-    /** Create view. */
+    /**
+     * Create view.
+     *
+     * @param resources
+     * @param constant
+     */
     @Inject
-    protected LoginViewImpl(AppfogResources resources, AppfogLocalizationConstant constant) {
+    protected LoginViewImpl(CloudBeesResources resources, CloudBeesLocalizationConstant constant) {
         this.res = resources;
         this.locale = constant;
 
         Widget widget = uiBinder.createAndBindUi(this);
 
-        this.setText("Login to AppFog");
+        this.setText("Login to CloudBees");
         this.setWidget(widget);
     }
 
@@ -95,18 +98,6 @@ public class LoginViewImpl extends DialogBox implements LoginView {
     @Override
     public void setPassword(String password) {
         this.password.setText(password);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getTarget() {
-        return target.getText();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setTarget(String target) {
-        this.target.setText(target);
     }
 
     /** {@inheritDoc} */

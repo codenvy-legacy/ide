@@ -19,6 +19,7 @@
 package com.codenvy.ide.ext.cloudbees.client;
 
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
@@ -28,6 +29,17 @@ import com.google.gwt.resources.client.ImageResource;
  * @version $Id: CloudBeesResources.java Jun 23, 2011 10:03:22 AM vereshchaka $
  */
 public interface CloudBeesResources extends ClientBundle {
+    public interface CloudBeesCSS extends CssResource {
+        String login();
+
+        String loginFont();
+
+        String loginErrorFont();
+    }
+
+    @Source({"CloudBees.css", "com/codenvy/ide/api/ui/style.css"})
+    CloudBeesCSS cloudBeesCSS();
+
     /*
      * Buttons
      */

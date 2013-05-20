@@ -20,6 +20,9 @@ package com.codenvy.ide.ext.cloudbees.client;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
+import com.codenvy.ide.ext.cloudbees.client.login.LoggedInHandler;
+import com.codenvy.ide.ext.cloudbees.client.login.LoginCanceledHandler;
+import com.codenvy.ide.ext.cloudbees.client.login.LoginPresenter;
 import com.codenvy.ide.rest.HTTPStatus;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.codenvy.ide.websocket.rest.Unmarshallable;
@@ -36,30 +39,44 @@ import com.google.web.bindery.event.shared.EventBus;
  * @see CloudBeesAsyncRequestCallback
  */
 public abstract class CloudBeesRESTfulRequestCallback<T> extends RequestCallback<T> {
-    // TODO Login package have not been ported yet
-//    private LoggedInHandler loggedIn;
-//    private LoginCanceledHandler loginCanceled;
-    private EventBus    eventBus;
-    private ConsolePart console;
+    private LoggedInHandler      loggedIn;
+    private LoginCanceledHandler loginCanceled;
+    private EventBus             eventBus;
+    private ConsolePart          console;
+    private LoginPresenter       loginPresenter;
 
-    public CloudBeesRESTfulRequestCallback(Unmarshallable<T> unmarshaller, EventBus eventBus, ConsolePart console
-//                                           LoggedInHandler loggedIn,
-//                                           LoginCanceledHandler loginCanceled
-                                          ) {
+    /**
+     * Create callback.
+     *
+     * @param unmarshaller
+     * @param eventBus
+     * @param console
+     * @param loggedIn
+     * @param loginCanceled
+     * @param loginPresenter
+     */
+    public CloudBeesRESTfulRequestCallback(Unmarshallable<T> unmarshaller, EventBus eventBus, ConsolePart console, LoggedInHandler loggedIn,
+                                           LoginCanceledHandler loginCanceled, LoginPresenter loginPresenter) {
         super(unmarshaller);
-//        this.loggedIn = loggedIn;
-//        this.loginCanceled = loginCanceled;
+        this.loggedIn = loggedIn;
+        this.loginCanceled = loginCanceled;
         this.eventBus = eventBus;
         this.console = console;
+        this.loginPresenter = loginPresenter;
     }
 
-    public CloudBeesRESTfulRequestCallback(EventBus eventBus, ConsolePart console
-//            LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled
-                                          ) {
-//        this.loggedIn = loggedIn;
-//        this.loginCanceled = loginCanceled;
-        this.eventBus = eventBus;
-        this.console = console;
+    /**
+     * Create callback.
+     *
+     * @param eventBus
+     * @param console
+     * @param loggedIn
+     * @param loginCanceled
+     * @param loginPresenter
+     */
+    public CloudBeesRESTfulRequestCallback(EventBus eventBus, ConsolePart console, LoggedInHandler loggedIn,
+                                           LoginCanceledHandler loginCanceled, LoginPresenter loginPresenter) {
+        this(null, eventBus, console, loggedIn, loginCanceled, loginPresenter);
     }
 
     /** {@inheritDoc} */
@@ -73,8 +90,7 @@ public abstract class CloudBeesRESTfulRequestCallback<T> extends RequestCallback
             final String exceptionMsg = serverException.getMessage();
             if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus() && serverException.getMessage() != null
                 && exceptionMsg.contains("AuthFailure")) {
-                // TODO execute method on login presenter
-//                IDE.fireEvent(new LoginEvent(loggedIn, loginCanceled));
+                loginPresenter.showDialog(loggedIn, loginCanceled);
                 return;
             }
         }

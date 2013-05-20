@@ -21,6 +21,7 @@ package com.codenvy.ide.ext.cloudbees.client;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.menu.MainMenuAgent;
+import com.codenvy.ide.ext.cloudbees.client.command.ShowLoginCommand;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.google.inject.Inject;
@@ -37,10 +38,15 @@ public class CloudBeesExtension {
     private static final String ID = "CloudBees";
 
     @Inject
-    public CloudBeesExtension(PaaSAgent paasAgent, CloudBeesResources resources, MainMenuAgent menu) {
+    public CloudBeesExtension(PaaSAgent paasAgent, CloudBeesResources resources, MainMenuAgent menu,
+                              ShowLoginCommand loginCommand) {
+        resources.cloudBeesCSS().ensureInjected();
+
         // TODO change hard code types
         JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "War");
         // TODO wizard page is empty
         paasAgent.registerPaaS(ID, ID, resources.cloudBees48(), requiredProjectTypes, null, null);
+
+        menu.addMenuItem("PaaS/CloudBees/Switch Account...", loginCommand);
     }
 }

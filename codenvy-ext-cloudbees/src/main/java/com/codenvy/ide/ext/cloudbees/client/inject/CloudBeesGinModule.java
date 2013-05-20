@@ -21,6 +21,8 @@ package com.codenvy.ide.ext.cloudbees.client.inject;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesClientService;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesClientServiceImpl;
+import com.codenvy.ide.ext.cloudbees.client.login.LoginView;
+import com.codenvy.ide.ext.cloudbees.client.login.LoginViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
@@ -31,5 +33,8 @@ public class CloudBeesGinModule extends AbstractGinModule {
     @Override
     protected void configure() {
         bind(CloudBeesClientService.class).to(CloudBeesClientServiceImpl.class).in(Singleton.class);
+
+        // Views
+        bind(LoginView.class).to(LoginViewImpl.class).in(Singleton.class);
     }
 }

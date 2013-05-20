@@ -99,7 +99,7 @@ public interface CloudBeesClientService {
      * @param callback
      *         callback
      */
-    public abstract void logout(AsyncRequestCallback<String> callback) throws RequestException;
+    void logout(AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Get the application info.
