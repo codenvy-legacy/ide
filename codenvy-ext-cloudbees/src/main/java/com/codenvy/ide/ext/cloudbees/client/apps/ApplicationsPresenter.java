@@ -23,6 +23,7 @@ import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesAsyncRequestCallback;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesAutoBeanFactory;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesClientService;
+import com.codenvy.ide.ext.cloudbees.client.info.ApplicationInfoPresenter;
 import com.codenvy.ide.ext.cloudbees.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.cloudbees.client.login.LoginPresenter;
 import com.codenvy.ide.ext.cloudbees.client.marshaller.ApplicationListUnmarshaller;
@@ -49,10 +50,12 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
     private CloudBeesAutoBeanFactory autoBeanFactory;
     private LoginPresenter           loginPresenter;
     private CloudBeesClientService   service;
+    private ApplicationInfoPresenter applicationInfoPresenter;
 
     @Inject
     protected ApplicationsPresenter(ApplicationsView view, EventBus eventBus, ConsolePart console, CloudBeesAutoBeanFactory autoBeanFactory,
-                                    LoginPresenter loginPresenter, CloudBeesClientService service) {
+                                    LoginPresenter loginPresenter, CloudBeesClientService service,
+                                    ApplicationInfoPresenter applicationInfoPresenter) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
@@ -60,6 +63,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
         this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
+        this.applicationInfoPresenter = applicationInfoPresenter;
     }
 
     /** Show dialog. */
@@ -104,7 +108,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onInfoClicked(ApplicationInfo app) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        applicationInfoPresenter.showDialog(app);
     }
 
     /** {@inheritDoc} */

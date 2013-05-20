@@ -35,6 +35,10 @@ public interface CloudBeesResources extends ClientBundle {
         String loginFont();
 
         String loginErrorFont();
+
+        String appInfo();
+
+        String event();
     }
 
     @Source({"CloudBees.css", "com/codenvy/ide/api/ui/style.css"})
