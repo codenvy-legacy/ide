@@ -19,6 +19,8 @@
 package org.exoplatform.ide.client.dialogs;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -108,9 +110,14 @@ public class AskForValueView extends ViewImpl implements org.exoplatform.ide.cli
     @Override
     protected void onAttach() {
         super.onAttach();
-
-        textField.focus();
-        textField.selectAll();
+        
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                textField.focus();
+                textField.selectAll();
+            }
+        });
     }
 
 }

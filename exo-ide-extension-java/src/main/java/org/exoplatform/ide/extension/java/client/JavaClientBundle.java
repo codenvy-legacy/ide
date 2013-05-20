@@ -80,4 +80,10 @@ public interface JavaClientBundle extends ClientBundle {
     @Source("org/exoplatform/ide/extension/java/images/libraries.png")
     ImageResource libraries();
 
+    @Source("org/exoplatform/ide/extension/java/images/datasource.png")
+    ImageResource datasource();
+    
+    @Source("org/exoplatform/ide/extension/java/images/datasource-disabled.png")
+    ImageResource datasourceDisabled();
+    
 }

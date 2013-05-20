@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,22 +16,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.client;
+package org.exoplatform.ide.extension.java.client.datasource;
 
-import org.exoplatform.ide.client.framework.module.Extension;
-import org.exoplatform.ide.extension.java.client.datasource.ConfigureDatasourcePresenter;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Java extension for IDE.
- *
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: JavaExtension.java Jun 21, 2011 12:29:16 PM vereshchaka $
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
+ * @version $
+ * 
  */
-public class JavaExtension extends Extension {
+public class ConfigureDatasourceEvent extends GwtEvent<ConfigureDatasourceHandler> {
+
+    public static final GwtEvent.Type<ConfigureDatasourceHandler> TYPE = new GwtEvent.Type<ConfigureDatasourceHandler>();
+    
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ConfigureDatasourceHandler> getAssociatedType() {
+        return TYPE;
+    }
 
     @Override
-    public void initialize() {
-        new ConfigureDatasourcePresenter();
+    protected void dispatch(ConfigureDatasourceHandler handler) {
+        handler.onConfigureDatasource(this);
     }
 
 }
