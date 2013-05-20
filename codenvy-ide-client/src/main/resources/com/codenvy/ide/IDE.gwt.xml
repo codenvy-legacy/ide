@@ -22,6 +22,7 @@
     <inherits name='com.codenvy.ide.extension.css.Css'/>
     <inherits name='com.codenvy.ide.extension.cloudfoundry.CloudFoundry'/>
     <inherits name='com.codenvy.ide.ext.appfog.AppFog'/>
+    <inherits name='com.codenvy.ide.ext.cloudbees.CloudBees'/>
     <inherits name='com.codenvy.ide.extension.maven.Maven'/>
     <inherits name='com.codenvy.ide.extension.tasks.Tasks'/>
 

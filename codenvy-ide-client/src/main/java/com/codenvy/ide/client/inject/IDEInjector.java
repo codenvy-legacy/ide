@@ -13,6 +13,7 @@ import com.google.gwt.inject.client.Ginjector;
  */
 @GinModules({
    com.codenvy.ide.ext.java.client.inject.JavaGinModule.class ,
+   com.codenvy.ide.ext.cloudbees.client.inject.CloudBeesGinModule.class ,
    com.codenvy.ide.extension.cloudfoundry.client.inject.CloudFoundryGinModule.class ,
    com.codenvy.ide.extension.maven.client.inject.MavenGinModule.class ,
    com.codenvy.ide.ext.appfog.client.inject.AppFogGinModule.class ,
