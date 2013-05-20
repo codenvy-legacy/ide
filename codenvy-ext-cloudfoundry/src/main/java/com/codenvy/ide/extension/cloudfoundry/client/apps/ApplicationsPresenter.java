@@ -136,7 +136,6 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
                                                                                                                 console, constant,
                                                                                                                 loginPresenter,
                                                                                                                 paasProvider) {
-
                                            @Override
                                            protected void onSuccess(JsonArray<CloudFoundryApplication> result) {
                                                view.setApplications(result);
@@ -145,6 +144,10 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
                                                // update the list of servers, if was enter value, that doesn't present in list
                                                if (!servers.contains(currentServer)) {
                                                    getServers();
+                                               }
+
+                                               if (!view.isShown()) {
+                                                   view.showDialog();
                                                }
                                            }
                                        });
@@ -218,10 +221,6 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
         // fill the list of applications
         currentServer = servers.get(0);
         getApplicationList();
-
-        if (!view.isShown()) {
-            view.showDialog();
-        }
     }
 
     /** {@inheritDoc} */

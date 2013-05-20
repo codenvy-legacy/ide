@@ -1,0 +1,29 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:p1='urn:import:com.google.gwt.user.cellview.client'
+             xmlns:c="urn:import:com.codenvy.ide.ui">
+    <ui:with field='locale' type='com.codenvy.ide.ext.cloudbees.client.CloudBeesLocalizationConstant'/>
+    <ui:style>
+        .floatRight {
+            float: right;
+        }
+
+        .emptyBorder {
+            margin: 6px;
+        }
+    </ui:style>
+    <g:DockLayoutPanel unit="PX" width="830px" height="260px" addStyleNames="{style.emptyBorder}">
+        <g:south size="30.0">
+            <g:FlowPanel>
+                <c:Button width="50px" addStyleNames="{style.floatRight}" text="{locale.okButton}" size="SMALL" type="SUCCESS"
+                          ui:field="btnOk"/>
+            </g:FlowPanel>
+        </g:south>
+        <g:center>
+            <g:SimplePanel>
+                <p1:CellTable width="100%" ui:field="appsTable" focus="false"/>
+            </g:SimplePanel>
+        </g:center>
+    </g:DockLayoutPanel>
+</ui:UiBinder>

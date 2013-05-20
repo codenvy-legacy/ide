@@ -141,10 +141,6 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
         // fill the list of applications
         currentServer = servers.get(0);
         getApplicationList();
-
-        if (!view.isShown()) {
-            view.showDialog();
-        }
     }
 
     /** Gets list of available application for current user. */
@@ -167,6 +163,10 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
                                            protected void onSuccess(JsonArray<AppfogApplication> result) {
                                                view.setApplications(result);
                                                view.setTarget(AppFogExtension.DEFAULT_SERVER);
+
+                                               if (!view.isShown()) {
+                                                   view.showDialog();
+                                               }
                                            }
                                        });
         } catch (RequestException e) {

@@ -266,11 +266,7 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView 
         appsTable.setLoadingIndicator(null);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param apps
-     */
+    /** {@inheritDoc} */
     @Override
     public void setApplications(JsonArray<AppfogApplication> apps) {
         // Wraps JsonArray in java.util.List

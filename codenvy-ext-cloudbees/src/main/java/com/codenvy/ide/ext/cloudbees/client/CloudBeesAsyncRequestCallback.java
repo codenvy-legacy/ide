@@ -48,14 +48,15 @@ public abstract class CloudBeesAsyncRequestCallback<T> extends AsyncRequestCallb
      * Create callback.
      *
      * @param unmarshaller
-     * @param eventBus
-     * @param console
      * @param loggedIn
      * @param loginCanceled
+     * @param eventBus
+     * @param console
      * @param loginPresenter
      */
-    public CloudBeesAsyncRequestCallback(Unmarshallable<T> unmarshaller, EventBus eventBus, ConsolePart console, LoggedInHandler loggedIn,
-                                         LoginCanceledHandler loginCanceled, LoginPresenter loginPresenter) {
+    public CloudBeesAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
+                                         LoginCanceledHandler loginCanceled, EventBus eventBus, ConsolePart console,
+                                         LoginPresenter loginPresenter) {
         super(unmarshaller);
         this.loggedIn = loggedIn;
         this.loginCanceled = loginCanceled;
@@ -67,15 +68,15 @@ public abstract class CloudBeesAsyncRequestCallback<T> extends AsyncRequestCallb
     /**
      * Create callback.
      *
-     * @param eventBus
-     * @param console
      * @param loggedIn
      * @param loginCanceled
+     * @param eventBus
+     * @param console
      * @param loginPresenter
      */
-    public CloudBeesAsyncRequestCallback(EventBus eventBus, ConsolePart console, LoggedInHandler loggedIn,
-                                         LoginCanceledHandler loginCanceled, LoginPresenter loginPresenter) {
-        this(null, eventBus, console, loggedIn, loginCanceled, loginPresenter);
+    public CloudBeesAsyncRequestCallback(LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled, EventBus eventBus,
+                                         ConsolePart console, LoginPresenter loginPresenter) {
+        this(null, loggedIn, loginCanceled, eventBus, console, loginPresenter);
     }
 
     /** {@inheritDoc} */

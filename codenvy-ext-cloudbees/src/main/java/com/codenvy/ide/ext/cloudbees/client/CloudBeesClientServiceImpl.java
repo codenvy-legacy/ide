@@ -22,6 +22,7 @@ import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
 import com.codenvy.ide.ext.cloudbees.shared.CloudBeesAccount;
 import com.codenvy.ide.ext.cloudbees.shared.CloudBeesUser;
 import com.codenvy.ide.ext.cloudbees.shared.Credentials;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -217,7 +218,7 @@ public class CloudBeesClientServiceImpl implements CloudBeesClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void applicationList(CloudBeesAsyncRequestCallback<List<ApplicationInfo>> callback) throws RequestException {
+    public void applicationList(CloudBeesAsyncRequestCallback<JsonArray<ApplicationInfo>> callback) throws RequestException {
         final String url = restServiceContext + APP_LIST;
 
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);

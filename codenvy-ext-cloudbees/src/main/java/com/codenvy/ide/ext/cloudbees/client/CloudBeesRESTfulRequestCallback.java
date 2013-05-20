@@ -49,14 +49,14 @@ public abstract class CloudBeesRESTfulRequestCallback<T> extends RequestCallback
      * Create callback.
      *
      * @param unmarshaller
-     * @param eventBus
-     * @param console
      * @param loggedIn
      * @param loginCanceled
+     * @param eventBus
+     * @param console
      * @param loginPresenter
      */
-    public CloudBeesRESTfulRequestCallback(Unmarshallable<T> unmarshaller, EventBus eventBus, ConsolePart console, LoggedInHandler loggedIn,
-                                           LoginCanceledHandler loginCanceled, LoginPresenter loginPresenter) {
+    public CloudBeesRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled,
+                                           EventBus eventBus, ConsolePart console, LoginPresenter loginPresenter) {
         super(unmarshaller);
         this.loggedIn = loggedIn;
         this.loginCanceled = loginCanceled;
@@ -68,15 +68,15 @@ public abstract class CloudBeesRESTfulRequestCallback<T> extends RequestCallback
     /**
      * Create callback.
      *
-     * @param eventBus
-     * @param console
      * @param loggedIn
      * @param loginCanceled
+     * @param eventBus
+     * @param console
      * @param loginPresenter
      */
-    public CloudBeesRESTfulRequestCallback(EventBus eventBus, ConsolePart console, LoggedInHandler loggedIn,
-                                           LoginCanceledHandler loginCanceled, LoginPresenter loginPresenter) {
-        this(null, eventBus, console, loggedIn, loginCanceled, loginPresenter);
+    public CloudBeesRESTfulRequestCallback(LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled, EventBus eventBus,
+                                           ConsolePart console, LoginPresenter loginPresenter) {
+        this(null, loggedIn, loginCanceled, eventBus, console, loginPresenter);
     }
 
     /** {@inheritDoc} */

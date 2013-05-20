@@ -21,6 +21,7 @@ package com.codenvy.ide.ext.cloudbees.client;
 import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
 import com.codenvy.ide.ext.cloudbees.shared.CloudBeesAccount;
 import com.codenvy.ide.ext.cloudbees.shared.CloudBeesUser;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.google.gwt.http.client.RequestException;
@@ -166,7 +167,7 @@ public interface CloudBeesClientService {
             throws RequestException;
 
     /** Receive all CB applications for this account. */
-    void applicationList(CloudBeesAsyncRequestCallback<List<ApplicationInfo>> callback) throws RequestException;
+    void applicationList(CloudBeesAsyncRequestCallback<JsonArray<ApplicationInfo>> callback) throws RequestException;
 
     /**
      * Create new CloudBees account/domain.
