@@ -16,6 +16,7 @@ package com.google.collide.client.util.collections;
 
 import com.codenvy.ide.json.client.JsoArray;
 import com.codenvy.ide.json.client.JsoStringMap;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.codenvy.ide.json.shared.JsonStringMap;
 
 
@@ -115,5 +116,11 @@ public final class ClientStringMap<T> implements JsonStringMap<T> {
             result++;
         }
         return result;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public JsonArray<T> getValues() {
+        return delegate.getValues();
     }
 }

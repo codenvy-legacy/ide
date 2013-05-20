@@ -20,10 +20,12 @@ package com.codenvy.ide.collaboration.chat.client;
 
 import com.codenvy.ide.collaboration.dto.GetChatParticipantsResponse;
 import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.GetChatParticipantsImpl;
+import com.codenvy.ide.commons.shared.ListenerManager;
 import com.codenvy.ide.dtogen.client.RoutableDtoClientImpl;
-import com.codenvy.ide.dtogen.shared.ServerToClientDto;
 import com.codenvy.ide.dtogen.shared.ServerError.FailureReason;
+import com.codenvy.ide.dtogen.shared.ServerToClientDto;
 import com.codenvy.ide.json.client.Jso;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.client.CollabEditorExtension;
 import com.google.gwt.core.client.GWT;
 
@@ -51,6 +53,7 @@ public class ChatExtension extends Extension
         implements ConnectionOpenedHandler, ProjectOpenedHandler, ProjectClosedHandler, UserInfoReceivedHandler {
 
     public static final ChatResources resources = GWT.create(ChatResources.class);
+    private static ChatExtension instance;
 
     private ShowChatControl chatControl;
 
@@ -76,9 +79,15 @@ public class ChatExtension extends Extension
 
     private SendCodePointerControl pointerControl;
 
+    public static ChatExtension get() {
+        return instance;
+    }
+
+
     /** {@inheritDoc} */
     @Override
     public void initialize() {
+        instance = this;
         resources.chatCss().ensureInjected();
         chatControl = new ShowChatControl(resources);
         IDE.getInstance().addControl(chatControl, Docking.TOOLBAR_RIGHT);
@@ -101,11 +110,11 @@ public class ChatExtension extends Extension
     @Override
     public void onProjectClosed(ProjectClosedEvent event) {
         try {
-            IDE.messageBus().unsubscribe("project_chat." + event.getProject().getId(), handler);            
+            IDE.messageBus().unsubscribe("project_chat." + event.getProject().getId(), handler);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         currentProject = null;
         chatPresenter.projectClosed();
     }
@@ -157,4 +166,13 @@ public class ChatExtension extends Extension
         }
         createPresenter();
     }
+
+    public JsonArray<Participant> getCurrentProjectParticipants() {
+        return chatPresenter.getParticipants().getValues();
+    }
+
+    public ListenerManager<ProjectUsersListener> getProjectUserListeners() {
+        return chatPresenter.getProjectUsersListeners();
+    }
+
 }
