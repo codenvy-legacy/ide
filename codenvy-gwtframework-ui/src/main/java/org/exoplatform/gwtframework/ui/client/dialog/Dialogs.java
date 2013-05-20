@@ -51,7 +51,7 @@ public abstract class Dialogs {
     */
 
     public void showInfo(String message) {
-        showInfo("Info", message, null);
+        showInfo("IDE", message, null);
     }
 
     public void showInfo(String title, String message) {
@@ -69,7 +69,7 @@ public abstract class Dialogs {
     */
 
     public void showError(String message) {
-        showError("Error", message, null);
+        showError("IDE", message, null);
     }
 
     public void showError(String title, String message) {
