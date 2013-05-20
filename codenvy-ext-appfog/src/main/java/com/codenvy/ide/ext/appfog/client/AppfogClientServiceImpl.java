@@ -40,7 +40,7 @@ import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
- * Client service for AppFog.
+ * Implementation for {@link AppfogClientService}.
  *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  */

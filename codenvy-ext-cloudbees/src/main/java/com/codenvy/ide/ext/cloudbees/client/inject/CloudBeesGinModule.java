@@ -19,7 +19,10 @@
 package com.codenvy.ide.ext.cloudbees.client.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
+import com.codenvy.ide.ext.cloudbees.client.CloudBeesClientService;
+import com.codenvy.ide.ext.cloudbees.client.CloudBeesClientServiceImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
+import com.google.inject.Singleton;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 @ExtensionGinModule
@@ -27,6 +30,6 @@ public class CloudBeesGinModule extends AbstractGinModule {
     /** {@inheritDoc} */
     @Override
     protected void configure() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        bind(CloudBeesClientService.class).to(CloudBeesClientServiceImpl.class).in(Singleton.class);
     }
 }
