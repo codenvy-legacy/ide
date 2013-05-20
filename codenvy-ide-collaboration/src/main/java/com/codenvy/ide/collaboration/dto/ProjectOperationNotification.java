@@ -16,30 +16,24 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.collaboration.watcher.server;
+package com.codenvy.ide.collaboration.dto;
 
-import javax.ws.rs.core.Application;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+
+import com.codenvy.ide.dtogen.shared.ClientToServerDto;
+import com.codenvy.ide.dtogen.shared.RoutingType;
+import com.codenvy.ide.dtogen.shared.ServerToClientDto;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class VfsWatcherApplication extends Application {
-    /** {@inheritDoc} */
-    @Override
-    public Set<Object> getSingletons() {
-        return Collections.emptySet();
-    }
+@RoutingType(type = RoutingTypes.PROJECT_OPERATION_NOTIFICATION)
+public interface ProjectOperationNotification extends ClientToServerDto, ServerToClientDto {
 
-    /** {@inheritDoc} */
-    @Override
-    public Set<Class<?>> getClasses() {
-        Set<Class<?>> classes = new HashSet<Class<?>>();
-        classes.add(VfsWatcherService.class);
-        classes.add(NotificationService.class);
-        return classes;
-    }
+    String projectId();
+
+    String message();
+
+    String clientId();
+
 }

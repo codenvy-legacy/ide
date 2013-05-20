@@ -28,7 +28,7 @@ public class DtoClientImpls {
     private DtoClientImpls() {
     }
 
-    public static final String CLIENT_SERVER_PROTOCOL_HASH = "7646fd5a2b173b74234103890b4b0db46740f9ed";
+    public static final String CLIENT_SERVER_PROTOCOL_HASH = "f191fc76b865ef0162270c080089003080f97d97";
 
 
     public static class ChatCodePointMessageImpl extends ChatMessageImpl implements com.codenvy.ide.collaboration.dto.ChatCodePointMessage {
@@ -119,20 +119,6 @@ public class DtoClientImpls {
         }
 
         @Override
-        public final native java.lang.String getDateTime() /*-{
-            return this["dateTime"];
-        }-*/;
-
-        public final native ChatMessageImpl setDateTime(java.lang.String dateTime) /*-{
-            this["dateTime"] = dateTime;
-            return this;
-        }-*/;
-
-        public final native boolean hasDateTime() /*-{
-            return this.hasOwnProperty("dateTime");
-        }-*/;
-
-        @Override
         public final native java.lang.String getClientId() /*-{
             return this["clientId"];
         }-*/;
@@ -144,6 +130,20 @@ public class DtoClientImpls {
 
         public final native boolean hasClientId() /*-{
             return this.hasOwnProperty("clientId");
+        }-*/;
+
+        @Override
+        public final native java.lang.String getDateTime() /*-{
+            return this["dateTime"];
+        }-*/;
+
+        public final native ChatMessageImpl setDateTime(java.lang.String dateTime) /*-{
+            this["dateTime"] = dateTime;
+            return this;
+        }-*/;
+
+        public final native boolean hasDateTime() /*-{
+            return this.hasOwnProperty("dateTime");
         }-*/;
 
         @Override
@@ -325,8 +325,7 @@ public class DtoClientImpls {
         }
 
         @Override
-        public final native com.codenvy.ide.json.shared.JsonArray<com.codenvy.ide.collaboration.dto.ParticipantInfo> getParticipants
-                () /*-{
+        public final native com.codenvy.ide.json.shared.JsonArray<com.codenvy.ide.collaboration.dto.ParticipantInfo> getParticipants() /*-{
             return this["participants"];
         }-*/;
 
@@ -458,8 +457,7 @@ public class DtoClientImpls {
             return this[7];
         }-*/;
 
-        public final native ItemImpl setLinks(
-                com.codenvy.ide.json.shared.JsonStringMap<com.codenvy.ide.collaboration.dto.Link> links) /*-{
+        public final native ItemImpl setLinks(com.codenvy.ide.json.shared.JsonStringMap<com.codenvy.ide.collaboration.dto.Link> links) /*-{
             this[7] = links;
             return this;
         }-*/;
@@ -576,20 +574,6 @@ public class DtoClientImpls {
         }
 
         @Override
-        public final native java.lang.String oldPath() /*-{
-            return this["oldPath"];
-        }-*/;
-
-        public final native ItemMovedDtoImpl setOldPath(java.lang.String oldPath) /*-{
-            this["oldPath"] = oldPath;
-            return this;
-        }-*/;
-
-        public final native boolean hasOldPath() /*-{
-            return this.hasOwnProperty("oldPath");
-        }-*/;
-
-        @Override
         public final native com.codenvy.ide.collaboration.dto.Item movedItem() /*-{
             return this["movedItem"];
         }-*/;
@@ -601,6 +585,20 @@ public class DtoClientImpls {
 
         public final native boolean hasMovedItem() /*-{
             return this.hasOwnProperty("movedItem");
+        }-*/;
+
+        @Override
+        public final native java.lang.String oldPath() /*-{
+            return this["oldPath"];
+        }-*/;
+
+        public final native ItemMovedDtoImpl setOldPath(java.lang.String oldPath) /*-{
+            this["oldPath"] = oldPath;
+            return this;
+        }-*/;
+
+        public final native boolean hasOldPath() /*-{
+            return this.hasOwnProperty("oldPath");
         }-*/;
 
         @Override
@@ -739,20 +737,6 @@ public class DtoClientImpls {
         }
 
         @Override
-        public final native java.lang.String getClientId() /*-{
-            return this["clientId"];
-        }-*/;
-
-        public final native ParticipantInfoImpl setClientId(java.lang.String clientId) /*-{
-            this["clientId"] = clientId;
-            return this;
-        }-*/;
-
-        public final native boolean hasClientId() /*-{
-            return this.hasOwnProperty("clientId");
-        }-*/;
-
-        @Override
         public final native com.codenvy.ide.collaboration.dto.UserDetails getUserDetails() /*-{
             return this["userDetails"];
         }-*/;
@@ -764,6 +748,20 @@ public class DtoClientImpls {
 
         public final native boolean hasUserDetails() /*-{
             return this.hasOwnProperty("userDetails");
+        }-*/;
+
+        @Override
+        public final native java.lang.String getClientId() /*-{
+            return this["clientId"];
+        }-*/;
+
+        public final native ParticipantInfoImpl setClientId(java.lang.String clientId) /*-{
+            this["clientId"] = clientId;
+            return this;
+        }-*/;
+
+        public final native boolean hasClientId() /*-{
+            return this.hasOwnProperty("clientId");
         }-*/;
 
         public static native ParticipantInfoImpl make() /*-{
@@ -884,6 +882,61 @@ public class DtoClientImpls {
     }
 
 
+    public static class ProjectOperationNotificationImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
+            implements com.codenvy.ide.collaboration.dto.ProjectOperationNotification {
+        protected ProjectOperationNotificationImpl() {
+        }
+
+        @Override
+        public final native java.lang.String clientId() /*-{
+            return this["clientId"];
+        }-*/;
+
+        public final native ProjectOperationNotificationImpl setClientId(java.lang.String clientId) /*-{
+            this["clientId"] = clientId;
+            return this;
+        }-*/;
+
+        public final native boolean hasClientId() /*-{
+            return this.hasOwnProperty("clientId");
+        }-*/;
+
+        @Override
+        public final native java.lang.String message() /*-{
+            return this["message"];
+        }-*/;
+
+        public final native ProjectOperationNotificationImpl setMessage(java.lang.String message) /*-{
+            this["message"] = message;
+            return this;
+        }-*/;
+
+        public final native boolean hasMessage() /*-{
+            return this.hasOwnProperty("message");
+        }-*/;
+
+        @Override
+        public final native java.lang.String projectId() /*-{
+            return this["projectId"];
+        }-*/;
+
+        public final native ProjectOperationNotificationImpl setProjectId(java.lang.String projectId) /*-{
+            this["projectId"] = projectId;
+            return this;
+        }-*/;
+
+        public final native boolean hasProjectId() /*-{
+            return this.hasOwnProperty("projectId");
+        }-*/;
+
+        public static native ProjectOperationNotificationImpl make() /*-{
+            return {
+                _type: 14
+            };
+        }-*/;
+    }
+
+
     public static class PropertyImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl
             implements com.codenvy.ide.collaboration.dto.Property {
         protected PropertyImpl() {
@@ -926,8 +979,7 @@ public class DtoClientImpls {
     }
 
 
-    public static class UserDetailsImpl extends com.codenvy.ide.json.client.Jso
-            implements com.codenvy.ide.collaboration.dto.UserDetails {
+    public static class UserDetailsImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.collaboration.dto.UserDetails {
         protected UserDetailsImpl() {
         }
 

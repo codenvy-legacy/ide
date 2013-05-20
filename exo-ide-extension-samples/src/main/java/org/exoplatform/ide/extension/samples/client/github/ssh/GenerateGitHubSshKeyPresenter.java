@@ -27,6 +27,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
@@ -61,10 +62,10 @@ import java.util.List;
  * @version $Id: $
  */
 public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, ViewClosedHandler,
-                                          GenerateGitHubKeyHandler, OAuthLoginFinishedHandler {
+                                                      GenerateGitHubKeyHandler, OAuthLoginFinishedHandler {
     private UserInfo userInfo;
 
-    EmptyLoader      loader;
+    EmptyLoader loader;
 
 
     interface Display extends IsView {
@@ -136,8 +137,7 @@ public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, V
                     if (!githubKeyExists) {
                         getLoader().hide();
                         openView();
-                    }
-                    else {
+                    } else {
                         getLoader().hide();
                         IDE.fireEvent(new GitHubKeyGeneratedEvent());
                     }
@@ -169,6 +169,7 @@ public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, V
                 @Override
                 protected void onFailure(Throwable exception) {
                     loader.hide();
+                    getFailedKey();
                 }
             };
 
@@ -180,12 +181,59 @@ public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, V
         }
     }
 
+    /**
+     * Need to remove failed uploaded keys from local storage if they can't be uploaded to github
+     */
+    private void getFailedKey() {
+        SshKeyService.get().getAllKeys(new JsonpAsyncCallback<JavaScriptObject>() {
+
+            @Override
+            public void onSuccess(JavaScriptObject result) {
+                getLoader().hide();
+                try {
+                    List<KeyItem> keys = SshKeysUnmarshaller.unmarshal(result);
+                    for (KeyItem key : keys) {
+                        if (key.getHost().equals("github.com")) {
+                            removeFailedKey(key);
+                            return;
+                        }
+                    }
+                    IDE.fireEvent(new RefreshKeysEvent());
+                } catch (UnmarshallerException e) {
+                    IDE.fireEvent(new ExceptionThrownEvent(e));
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable exception) {
+                getLoader().hide();
+                IDE.fireEvent(new RefreshKeysEvent());
+                IDE.fireEvent(new ExceptionThrownEvent(exception));
+            }
+        });
+    }
+
+    private void removeFailedKey(KeyItem key) {
+        SshKeyService.get().deleteKey(key, new JsonpAsyncCallback<Void>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                IDE.fireEvent(new RefreshKeysEvent());
+            }
+
+            @Override
+            public void onSuccess(Void result) {
+                Dialogs.getInstance().showError("Failed to delete invalid ssh key.");
+                IDE.fireEvent(new RefreshKeysEvent());
+            }
+        });
+    }
+
     private void getToken(String user) {
         try {
             GitHubClientService.getInstance()
                                .getUserToken(user,
                                              new AsyncRequestCallback<StringBuilder>(
-                                                                                     new StringUnmarshaller(new StringBuilder())) {
+                                                     new StringUnmarshaller(new StringBuilder())) {
 
                                                  @Override
                                                  protected void onSuccess(StringBuilder result) {
