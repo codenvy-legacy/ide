@@ -22,7 +22,7 @@ import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.json.JsonArray;
 
 /**
- * The view of {@link CreateApplicationView}.
+ * The view of {@link CreateApplicationPresenter}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
@@ -85,8 +85,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
     /**
      * Returns whether need to auto detect type of project.
      *
-     * @return <code>true</code> if need to auto detect type of project, and
-     *         <code>false</code> otherwise
+     * @return <code>true</code> if need to auto detect type of project, and <code>false</code> otherwise
      */
     boolean isAutodetectType();
 
@@ -94,8 +93,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
      * Sets whether need to auto detect project type.
      *
      * @param autodetected
-     *         <code>true</code> need to auto detect project type, <code>false</code>
-     *         otherwise
+     *         <code>true</code> need to auto detect project type, <code>false</code> otherwise
      */
     void setAutodetectType(boolean autodetected);
 
@@ -132,8 +130,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
     /**
      * Returns whether use custom url.
      *
-     * @return <code>true</code> if need to use custom url, and
-     *         <code>false</code> otherwise
+     * @return <code>true</code> if need to use custom url, and <code>false</code> otherwise
      */
     boolean isCustomUrl();
 
@@ -184,8 +181,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
     /**
      * Returns whether need to start application after create.
      *
-     * @return <code>true</code> if need to start application after create, and
-     *         <code>false</code> otherwise
+     * @return <code>true</code> if need to start application after create, and <code>false</code> otherwise
      */
     boolean isStartAfterCreation();
 
@@ -193,8 +189,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
      * Sets whether need to start application after create.
      *
      * @param start
-     *         <code>true</code> need to start, <code>false</code>
-     *         otherwise
+     *         <code>true</code> need to start, <code>false</code> otherwise
      */
     void setStartAfterCreation(boolean start);
 
@@ -202,8 +197,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
      * Sets whether Create button is enabled.
      *
      * @param enable
-     *         <code>true</code> to enable the button, <code>false</code>
-     *         to disable it
+     *         <code>true</code> to enable the button, <code>false</code> to disable it
      */
     void setEnableCreateButton(boolean enable);
 
@@ -222,8 +216,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
      * Sets whether Type field is enabled.
      *
      * @param enable
-     *         <code>true</code> to enable the field, <code>false</code>
-     *         to disable it
+     *         <code>true</code> to enable the field, <code>false</code> to disable it
      */
     void setEnableTypeField(boolean enable);
 
@@ -231,8 +224,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
      * Sets whether Url field is enabled.
      *
      * @param enable
-     *         <code>true</code> to enable the field, <code>false</code>
-     *         to disable it
+     *         <code>true</code> to enable the field, <code>false</code> to disable it
      */
     void setEnableUrlField(boolean enable);
 
@@ -240,8 +232,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
      * Sets whether Memory field is enabled.
      *
      * @param enable
-     *         <code>true</code> to enable the field, <code>false</code>
-     *         to disable it
+     *         <code>true</code> to enable the field, <code>false</code> to disable it
      */
     void setEnableMemoryField(boolean enable);
 
@@ -260,8 +251,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
      * Sets whether Auto detect type checkitem is enabled.
      *
      * @param enable
-     *         <code>true</code> to enable the checkitem, <code>false</code>
-     *         to disable it
+     *         <code>true</code> to enable the checkitem, <code>false</code> to disable it
      */
     void setEnableAutodetectTypeCheckItem(boolean enable);
 
