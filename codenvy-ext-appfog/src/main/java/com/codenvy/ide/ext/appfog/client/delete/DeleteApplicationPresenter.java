@@ -175,7 +175,6 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
                                                       public void onSuccess(Project project) {
                                                           view.close();
                                                           console.print(constant.applicationDeletedMsg(appName));
-                                                          appDeleteCallback.onSuccess(appName);
 
                                                           callback.onSuccess(result);
                                                       }
@@ -188,7 +187,6 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
                                               } else {
                                                   view.close();
                                                   console.print(constant.applicationDeletedMsg(appName));
-                                                  appDeleteCallback.onSuccess(appName);
 
                                                   callback.onSuccess(result);
                                               }

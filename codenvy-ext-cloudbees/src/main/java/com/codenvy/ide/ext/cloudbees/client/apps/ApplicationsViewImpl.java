@@ -61,6 +61,7 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView 
     @UiField(provided = true)
     CellTable<ApplicationInfo> appsTable = new CellTable<ApplicationInfo>();
     private ActionDelegate delegate;
+    private boolean        isShown;
 
     /**
      * Create view.
@@ -190,13 +191,21 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView 
 
     /** {@inheritDoc} */
     @Override
+    public boolean isShown() {
+        return isShown;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void close() {
+        this.isShown = false;
         this.hide();
     }
 
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
+        this.isShown = true;
         this.center();
         this.show();
     }

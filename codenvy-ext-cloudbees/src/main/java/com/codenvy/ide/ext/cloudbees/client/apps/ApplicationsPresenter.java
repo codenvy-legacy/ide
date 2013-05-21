@@ -23,6 +23,7 @@ import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesAsyncRequestCallback;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesAutoBeanFactory;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesClientService;
+import com.codenvy.ide.ext.cloudbees.client.delete.DeleteApplicationPresenter;
 import com.codenvy.ide.ext.cloudbees.client.info.ApplicationInfoPresenter;
 import com.codenvy.ide.ext.cloudbees.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.cloudbees.client.login.LoginPresenter;
@@ -30,7 +31,9 @@ import com.codenvy.ide.ext.cloudbees.client.marshaller.ApplicationListUnmarshall
 import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -44,18 +47,32 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
-    private ApplicationsView         view;
-    private EventBus                 eventBus;
-    private ConsolePart              console;
-    private CloudBeesAutoBeanFactory autoBeanFactory;
-    private LoginPresenter           loginPresenter;
-    private CloudBeesClientService   service;
-    private ApplicationInfoPresenter applicationInfoPresenter;
+    private ApplicationsView           view;
+    private EventBus                   eventBus;
+    private ConsolePart                console;
+    private CloudBeesAutoBeanFactory   autoBeanFactory;
+    private LoginPresenter             loginPresenter;
+    private CloudBeesClientService     service;
+    private ApplicationInfoPresenter   applicationInfoPresenter;
+    private DeleteApplicationPresenter deleteApplicationPresenter;
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param eventBus
+     * @param console
+     * @param autoBeanFactory
+     * @param loginPresenter
+     * @param service
+     * @param applicationInfoPresenter
+     * @param deleteApplicationPresenter
+     */
     @Inject
     protected ApplicationsPresenter(ApplicationsView view, EventBus eventBus, ConsolePart console, CloudBeesAutoBeanFactory autoBeanFactory,
                                     LoginPresenter loginPresenter, CloudBeesClientService service,
-                                    ApplicationInfoPresenter applicationInfoPresenter) {
+                                    ApplicationInfoPresenter applicationInfoPresenter,
+                                    DeleteApplicationPresenter deleteApplicationPresenter) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
@@ -64,6 +81,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
         this.loginPresenter = loginPresenter;
         this.service = service;
         this.applicationInfoPresenter = applicationInfoPresenter;
+        this.deleteApplicationPresenter = deleteApplicationPresenter;
     }
 
     /** Show dialog. */
@@ -90,7 +108,9 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
                         protected void onSuccess(JsonArray<ApplicationInfo> result) {
                             view.setApplications(result);
 
-                            view.showDialog();
+                            if (!view.isShown()) {
+                                view.showDialog();
+                            }
                         }
                     });
         } catch (RequestException e) {
@@ -114,6 +134,16 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onDeleteClicked(ApplicationInfo app) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        deleteApplicationPresenter.deleteApp(app.getId(), app.getTitle(), new AsyncCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                getOrUpdateAppList();
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                Log.error(ApplicationsPresenter.class, "Can not delete application", caught);
+            }
+        });
     }
 }

@@ -58,6 +58,14 @@ public interface ApplicationsView extends View<ApplicationsView.ActionDelegate> 
      */
     void setApplications(JsonArray<ApplicationInfo> apps);
 
+    /**
+     * Returns whether the view is shown.
+     *
+     * @return <code>true</code> if the view is shown, and
+     *         <code>false</code> otherwise
+     */
+    boolean isShown();
+
     /** Close dialog. */
     void close();
 
