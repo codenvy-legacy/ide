@@ -24,9 +24,10 @@
     <g:DockLayoutPanel unit="PX" width="480px" height="310px" addStyleNames="{style.emptyBorder}">
         <g:south size="26.0">
             <g:FlowPanel width="100%">
-                <c:Button addStyleNames="{style.alignBtn}" text="{locale.createButton}" size="SMALL" type="SUCCESS" ui:field="btnCreate"/>
-                <c:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.cancelButton}" size="SMALL" type="DANGER"
+                <c:Button addStyleNames="{style.alignBtn}" text="{locale.cancelButton}" size="SMALL" type="DANGER"
                           ui:field="btnCancel"/>
+                <c:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.createButton}" size="SMALL" type="SUCCESS"
+                          ui:field="btnCreate"/>
             </g:FlowPanel>
         </g:south>
         <g:center>
