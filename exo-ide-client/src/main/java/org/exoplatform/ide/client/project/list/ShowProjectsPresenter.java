@@ -53,8 +53,8 @@ import java.util.List;
  * @version $
  */
 
-public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHandler, ProjectOpenedHandler,
-                                              ProjectClosedHandler, VfsChangedHandler {
+public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHandler,
+        ProjectOpenedHandler, ProjectClosedHandler, VfsChangedHandler {
 
     public interface Display extends IsView {
 

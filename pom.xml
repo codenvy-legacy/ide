@@ -487,7 +487,11 @@
             <version>${com.codenvy.commons.version}</version>
          </dependency>
 
-
+        <dependency>
+            <groupId>com.codenvy.commons</groupId>
+            <artifactId>codenvy-commons-json</artifactId>
+            <version>${com.codenvy.commons.version}</version>
+        </dependency>
 
          <dependency>
             <groupId>com.google.gwt</groupId>

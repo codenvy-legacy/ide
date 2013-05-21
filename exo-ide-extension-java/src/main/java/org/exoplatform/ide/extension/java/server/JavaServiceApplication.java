@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
+import org.exoplatform.ide.extension.java.server.datasource.DataSourceConfigurationService;
+
 import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,10 +35,11 @@ public class JavaServiceApplication extends Application {
     private final Set<Object> singletons;
 
     public JavaServiceApplication() {
-        classes = new HashSet<Class<?>>(1);
+        classes = new HashSet<Class<?>>(3);
         singletons = new HashSet<Object>(1);
         classes.add(RestCodeAssistantJava.class);
         classes.add(RefactoringService.class);
+        classes.add(DataSourceConfigurationService.class);
         singletons.add(new RefactoringExceptionMapper());
     }
 
