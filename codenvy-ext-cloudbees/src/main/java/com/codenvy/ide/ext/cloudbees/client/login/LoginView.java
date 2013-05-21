@@ -29,13 +29,13 @@ public interface LoginView extends View<LoginView.ActionDelegate> {
     /** Needs for delegate some function into Login view. */
     public interface ActionDelegate {
         /** Performs any actions appropriate in response to the user having pressed the Login button. */
-        public void onLoginClicked();
+        void onLoginClicked();
 
         /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
-        public void onCancelClicked();
+        void onCancelClicked();
 
         /** Performs any actions appropriate in response to the user having changed something. */
-        public void onValueChanged();
+        void onValueChanged();
     }
 
     /**
@@ -43,35 +43,35 @@ public interface LoginView extends View<LoginView.ActionDelegate> {
      *
      * @return email.
      */
-    public String getEmail();
+    String getEmail();
 
     /**
      * Sets email.
      *
      * @param email
      */
-    public void setEmail(String email);
+    void setEmail(String email);
 
     /**
      * Returns password.
      *
      * @return password
      */
-    public String getPassword();
+    String getPassword();
 
     /**
      * Sets password.
      *
      * @param password
      */
-    public void setPassword(String password);
+    void setPassword(String password);
 
     /**
      * Sets error message.
      *
      * @param message
      */
-    public void setError(String message);
+    void setError(String message);
 
     /**
      * Change the enable state of the login button.
@@ -89,7 +89,7 @@ public interface LoginView extends View<LoginView.ActionDelegate> {
      * @return <code>true</code> if the view is shown, and
      *         <code>false</code> otherwise
      */
-    public boolean isShown();
+    boolean isShown();
 
     /** Close dialog. */
     void close();

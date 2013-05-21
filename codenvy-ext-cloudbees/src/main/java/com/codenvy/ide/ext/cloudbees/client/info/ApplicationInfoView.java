@@ -29,7 +29,7 @@ public interface ApplicationInfoView extends View<ApplicationInfoView.ActionDele
     /** Needs for delegate some function into CreateApplication view. */
     public interface ActionDelegate {
         /** Performs any actions appropriate in response to the user having pressed the Ok button. */
-        public void onOKClicked();
+        void onOKClicked();
     }
 
     /**

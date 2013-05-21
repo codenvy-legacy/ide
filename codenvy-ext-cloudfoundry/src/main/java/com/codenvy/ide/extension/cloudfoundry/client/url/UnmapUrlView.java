@@ -30,10 +30,10 @@ public interface UnmapUrlView extends View<UnmapUrlView.ActionDelegate> {
     /** Needs for delegate some function into UnmapUrl view. */
     public interface ActionDelegate {
         /** Performs any actions appropriate in response to the user having pressed the Close button. */
-        public void onCloseClicked();
+        void onCloseClicked();
 
         /** Performs any actions appropriate in response to the user having pressed the Map url button. */
-        public void onMapUrlClicked();
+        void onMapUrlClicked();
 
         /**
          * Performs any actions appropriate in response to the user having pressed the Unmap url button.
@@ -41,10 +41,10 @@ public interface UnmapUrlView extends View<UnmapUrlView.ActionDelegate> {
          * @param url
          *         url what needs to unmap
          */
-        public void onUnMapUrlClicked(String url);
+        void onUnMapUrlClicked(String url);
 
         /** Performs any actions appropriate in response to the user having pressed the Create button. */
-        public void onMapUrlChanged();
+        void onMapUrlChanged();
     }
 
     /**
@@ -52,21 +52,21 @@ public interface UnmapUrlView extends View<UnmapUrlView.ActionDelegate> {
      *
      * @return map url
      */
-    public String getMapUrl();
+    String getMapUrl();
 
     /**
      * Sets map url.
      *
      * @param url
      */
-    public void setMapUrl(String url);
+    void setMapUrl(String url);
 
     /**
      * Sets registered urls.
      *
      * @param urls
      */
-    public void setRegisteredUrls(JsonArray<String> urls);
+    void setRegisteredUrls(JsonArray<String> urls);
 
     /**
      * Sets whether Map url button is enabled.
@@ -75,11 +75,11 @@ public interface UnmapUrlView extends View<UnmapUrlView.ActionDelegate> {
      *         <code>true</code> to enable the button, <code>false</code>
      *         to disable it
      */
-    public void setEnableMapUrlButton(boolean enable);
+    void setEnableMapUrlButton(boolean enable);
 
     /** Show dialog. */
-    public void showDialog();
+    void showDialog();
 
     /** Close dialog. */
-    public void close();
+    void close();
 }

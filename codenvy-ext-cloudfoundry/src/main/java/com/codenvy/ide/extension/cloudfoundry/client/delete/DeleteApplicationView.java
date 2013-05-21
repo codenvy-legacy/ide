@@ -28,17 +28,11 @@ import com.codenvy.ide.api.mvp.View;
 public interface DeleteApplicationView extends View<DeleteApplicationView.ActionDelegate> {
     /** Needs for delegate some function into DeleteApplication view. */
     public interface ActionDelegate {
-        /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Delete button.
-         */
-        public void onDeleteClicked();
+        /** Performs any actions appropriate in response to the user having pressed the Delete button. */
+        void onDeleteClicked();
 
-        /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Cancel button.
-         */
-        public void onCancelClicked();
+        /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
+        void onCancelClicked();
     }
 
     /**
@@ -47,7 +41,7 @@ public interface DeleteApplicationView extends View<DeleteApplicationView.Action
      * @return <code>true</code> if need to delete services, and
      *         <code>false</code> otherwise
      */
-    public boolean isDeleteServices();
+    boolean isDeleteServices();
 
     /**
      * Sets whether need to delete services.
@@ -56,18 +50,18 @@ public interface DeleteApplicationView extends View<DeleteApplicationView.Action
      *         <code>true</code> need to delete, <code>false</code>
      *         otherwise
      */
-    public void setDeleteServices(boolean isDeleted);
+    void setDeleteServices(boolean isDeleted);
 
     /**
      * Set the ask message to delete application.
      *
      * @param message
      */
-    public void setAskMessage(String message);
+    void setAskMessage(String message);
 
     /** Show dialog. */
-    public void showDialog();
+    void showDialog();
 
     /** Close dialog. */
-    public void close();
+    void close();
 }

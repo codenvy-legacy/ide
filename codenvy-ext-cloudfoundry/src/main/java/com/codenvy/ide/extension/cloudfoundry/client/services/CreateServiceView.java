@@ -31,10 +31,10 @@ public interface CreateServiceView extends View<CreateServiceView.ActionDelegate
     /** Needs for delegate some function into CreateService view. */
     public interface ActionDelegate {
         /** Performs any actions appropriate in response to the user having pressed the Create button. */
-        public void onCreateClicked();
+        void onCreateClicked();
 
         /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
-        public void onCancelClicked();
+        void onCancelClicked();
     }
 
     /**
@@ -42,7 +42,7 @@ public interface CreateServiceView extends View<CreateServiceView.ActionDelegate
      *
      * @return system's service.
      */
-    public String getSystemServices();
+    String getSystemServices();
 
     /**
      * Sets available services.
@@ -50,25 +50,25 @@ public interface CreateServiceView extends View<CreateServiceView.ActionDelegate
      * @param services
      *         available services
      */
-    public void setServices(LinkedHashMap<String, String> services);
+    void setServices(LinkedHashMap<String, String> services);
 
     /**
      * Returns service's name.
      *
      * @return service's name
      */
-    public String getName();
+    String getName();
 
     /**
      * Sets service's name.
      *
      * @param name
      */
-    public void setName(String name);
+    void setName(String name);
 
     /** Show dialog. */
-    public void showDialog();
+    void showDialog();
 
     /** Close dialog. */
-    public void close();
+    void close();
 }

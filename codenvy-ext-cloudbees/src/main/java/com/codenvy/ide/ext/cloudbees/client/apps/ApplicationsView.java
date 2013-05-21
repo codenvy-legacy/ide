@@ -31,7 +31,7 @@ public interface ApplicationsView extends View<ApplicationsView.ActionDelegate> 
     /** Needs for delegate some function into Applications view. */
     public interface ActionDelegate {
         /** Performs any actions appropriate in response to the user having pressed the Ok button. */
-        public void onOkClicked();
+        void onOkClicked();
 
         /**
          * Performs any actions appropriate in response to the user having pressed the Info button.
@@ -39,7 +39,7 @@ public interface ApplicationsView extends View<ApplicationsView.ActionDelegate> 
          * @param app
          *         current application about what need to show information.
          */
-        public void onInfoClicked(ApplicationInfo app);
+        void onInfoClicked(ApplicationInfo app);
 
         /**
          * Performs any actions appropriate in response to the user having pressed the Delete button.
@@ -47,7 +47,7 @@ public interface ApplicationsView extends View<ApplicationsView.ActionDelegate> 
          * @param app
          *         current application what need to delete.
          */
-        public void onDeleteClicked(ApplicationInfo app);
+        void onDeleteClicked(ApplicationInfo app);
     }
 
     /**
@@ -56,11 +56,11 @@ public interface ApplicationsView extends View<ApplicationsView.ActionDelegate> 
      * @param apps
      *         list of available applications.
      */
-    public void setApplications(JsonArray<ApplicationInfo> apps);
+    void setApplications(JsonArray<ApplicationInfo> apps);
 
     /** Close dialog. */
-    public void close();
+    void close();
 
     /** Show dialog. */
-    public void showDialog();
+    void showDialog();
 }

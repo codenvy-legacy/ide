@@ -29,47 +29,26 @@ import com.codenvy.ide.json.JsonArray;
 public interface CreateApplicationView extends View<CreateApplicationView.ActionDelegate> {
     /** Needs for delegate some function into CreateApplication view. */
     public interface ActionDelegate {
-        /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Create button.
-         */
-        public void onCreateClicked();
+        /** Performs any actions appropriate in response to the user having pressed the Create button. */
+        void onCreateClicked();
 
-        /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Cancel button.
-         */
-        public void onCancelClicked();
+        /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
+        void onCancelClicked();
 
-        /**
-         * Performs any actions appropriate in response to the user
-         * having changed auto detect application's type value.
-         */
-        public void onAutoDetectTypeChanged();
+        /** Performs any actions appropriate in response to the user having changed auto detect application's type value. */
+        void onAutoDetectTypeChanged();
 
-        /**
-         * Performs any actions appropriate in response to the user
-         * having changed custom url.
-         */
-        public void onCustomUrlChanged();
+        /** Performs any actions appropriate in response to the user having changed custom url. */
+        void onCustomUrlChanged();
 
-        /**
-         * Performs any actions appropriate in response to the user
-         * having changed application's name.
-         */
-        public void onApplicationNameChanged();
+        /** Performs any actions appropriate in response to the user having changed application's name. */
+        void onApplicationNameChanged();
 
-        /**
-         * Performs any actions appropriate in response to the user
-         * having changed application's type.
-         */
-        public void onTypeChanged();
+        /** Performs any actions appropriate in response to the user having changed application's type. */
+        void onTypeChanged();
 
-        /**
-         * Performs any actions appropriate in response to the user
-         * having changed server.
-         */
-        public void onServerChanged();
+        /** Performs any actions appropriate in response to the user having changed server. */
+        void onServerChanged();
     }
 
     /**
@@ -77,7 +56,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
      *
      * @return type's name
      */
-    public String getType();
+    String getType();
 
     /**
      * Returns whether need to auto detect type of project.
@@ -85,7 +64,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
      * @return <code>true</code> if need to auto detect type of project, and
      *         <code>false</code> otherwise
      */
-    public boolean isAutodetectType();
+    boolean isAutodetectType();
 
     /**
      * Sets whether need to auto detect project type.
@@ -94,14 +73,14 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
      *         <code>true</code> need to auto detect project type, <code>false</code>
      *         otherwise
      */
-    public void setAutodetectType(boolean autodetected);
+    void setAutodetectType(boolean autodetected);
 
     /**
      * Returns CloudFoundry application's name.
      *
      * @return application name
      */
-    public String getName();
+    String getName();
 
     /**
      * Sets CloudFoundry application's name.
@@ -109,14 +88,14 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
      * @param name
      *         application's name
      */
-    public void setName(String name);
+    void setName(String name);
 
     /**
      * Returns CloudFounry application's url.
      *
      * @return application's url
      */
-    public String getUrl();
+    String getUrl();
 
     /**
      * Sets CloudFoundry application's url.
@@ -124,7 +103,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
      * @param url
      *         application's url
      */
-    public void setUrl(String url);
+    void setUrl(String url);
 
     /**
      * Returns whether use custom url.
@@ -132,14 +111,14 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
      * @return <code>true</code> if need to use custom url, and
      *         <code>false</code> otherwise
      */
-    public boolean isCustomUrl();
+    boolean isCustomUrl();
 
     /**
      * Returns amount of instances.
      *
      * @return instances
      */
-    public String getInstances();
+    String getInstances();
 
     /**
      * Sets amount of instances.
@@ -147,14 +126,14 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
      * @param instances
      *         amount of instances
      */
-    public void setInstances(String instances);
+    void setInstances(String instances);
 
     /**
      * Returns amount of memory.
      *
      * @return memory.
      */
-    public String getMemory();
+    String getMemory();
 
     /**
      * Sets amount of memory.
@@ -162,21 +141,21 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
      * @param memory
      *         amount of memory
      */
-    public void setMemory(String memory);
+    void setMemory(String memory);
 
     /**
      * Returns selected server.
      *
      * @return server
      */
-    public String getServer();
+    String getServer();
 
     /**
      * Select new server.
      *
      * @param server
      */
-    public void setServer(String server);
+    void setServer(String server);
 
     /**
      * Returns whether need to start application after create.
@@ -184,7 +163,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
      * @return <code>true</code> if need to start application after create, and
      *         <code>false</code> otherwise
      */
-    public boolean isStartAfterCreation();
+    boolean isStartAfterCreation();
 
     /**
      * Sets whether need to start application after create.
@@ -193,7 +172,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
      *         <code>true</code> need to start, <code>false</code>
      *         otherwise
      */
-    public void setStartAfterCreation(boolean start);
+    void setStartAfterCreation(boolean start);
 
     /**
      * Sets whether Create button is enabled.
@@ -202,10 +181,10 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
      *         <code>true</code> to enable the button, <code>false</code>
      *         to disable it
      */
-    public void setEnableCreateButton(boolean enable);
+    void setEnableCreateButton(boolean enable);
 
     /** Sets focus in the name field. */
-    public void focusInNameField();
+    void focusInNameField();
 
     /**
      * Sets available application's types.
@@ -213,7 +192,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
      * @param types
      *         available types.
      */
-    public void setTypeValues(JsonArray<String> types);
+    void setTypeValues(JsonArray<String> types);
 
     /**
      * Sets whether Type field is enabled.
@@ -222,7 +201,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
      *         <code>true</code> to enable the field, <code>false</code>
      *         to disable it
      */
-    public void setEnableTypeField(boolean enable);
+    void setEnableTypeField(boolean enable);
 
     /**
      * Sets whether Url field is enabled.
@@ -231,7 +210,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
      *         <code>true</code> to enable the field, <code>false</code>
      *         to disable it
      */
-    public void setEnableUrlField(boolean enable);
+    void setEnableUrlField(boolean enable);
 
     /**
      * Sets whether Memory field is enabled.
@@ -240,7 +219,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
      *         <code>true</code> to enable the field, <code>false</code>
      *         to disable it
      */
-    public void setEnableMemoryField(boolean enable);
+    void setEnableMemoryField(boolean enable);
 
     /**
      * Sets selected item into the application type field with index.
@@ -248,10 +227,10 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
      * @param index
      *         the index of the item to be selected
      */
-    public void setSelectedIndexForTypeSelectItem(int index);
+    void setSelectedIndexForTypeSelectItem(int index);
 
     /** Sets focus in the url field. */
-    public void focusInUrlField();
+    void focusInUrlField();
 
     /**
      * Sets whether Auto detect type checkitem is enabled.
@@ -260,7 +239,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
      *         <code>true</code> to enable the checkitem, <code>false</code>
      *         to disable it
      */
-    public void setEnableAutodetectTypeCheckItem(boolean enable);
+    void setEnableAutodetectTypeCheckItem(boolean enable);
 
     /**
      * Sets the list of servers.

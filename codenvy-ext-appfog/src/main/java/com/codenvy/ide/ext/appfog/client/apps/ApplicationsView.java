@@ -31,10 +31,10 @@ public interface ApplicationsView extends View<ApplicationsView.ActionDelegate> 
     /** Needs for delegate some function into Applications view. */
     public interface ActionDelegate {
         /** Performs any actions appropriate in response to the user having pressed the Close button. */
-        public void onCloseClicked();
+        void onCloseClicked();
 
         /** Performs any actions appropriate in response to the user having pressed the Show button. */
-        public void onShowClicked();
+        void onShowClicked();
 
         /**
          * Performs any actions appropriate in response to the user having pressed the Start button.
@@ -42,7 +42,7 @@ public interface ApplicationsView extends View<ApplicationsView.ActionDelegate> 
          * @param app
          *         current application what need to start.
          */
-        public void onStartClicked(AppfogApplication app);
+        void onStartClicked(AppfogApplication app);
 
         /**
          * Performs any actions appropriate in response to the user having pressed the Stop button.
@@ -50,7 +50,7 @@ public interface ApplicationsView extends View<ApplicationsView.ActionDelegate> 
          * @param app
          *         current application what need to stop.
          */
-        public void onStopClicked(AppfogApplication app);
+        void onStopClicked(AppfogApplication app);
 
         /**
          * Performs any actions appropriate in response to the user having pressed the Restart button.
@@ -58,7 +58,7 @@ public interface ApplicationsView extends View<ApplicationsView.ActionDelegate> 
          * @param app
          *         current application what need to restart.
          */
-        public void onRestartClicked(AppfogApplication app);
+        void onRestartClicked(AppfogApplication app);
 
         /**
          * Performs any actions appropriate in response to the user having pressed the Delete button.
@@ -66,7 +66,7 @@ public interface ApplicationsView extends View<ApplicationsView.ActionDelegate> 
          * @param app
          *         current application what need to delete.
          */
-        public void onDeleteClicked(AppfogApplication app);
+        void onDeleteClicked(AppfogApplication app);
     }
 
     /**
@@ -75,21 +75,21 @@ public interface ApplicationsView extends View<ApplicationsView.ActionDelegate> 
      * @param apps
      *         list of available applications.
      */
-    public void setApplications(JsonArray<AppfogApplication> apps);
+    void setApplications(JsonArray<AppfogApplication> apps);
 
     /**
      * Returns target's name.
      *
      * @return
      */
-    public String getTarget();
+    String getTarget();
 
     /**
      * Sets new target's name.
      *
      * @param target
      */
-    public void setTarget(String target);
+    void setTarget(String target);
 
     /**
      * Returns whether the view is shown.
@@ -97,11 +97,11 @@ public interface ApplicationsView extends View<ApplicationsView.ActionDelegate> 
      * @return <code>true</code> if the view is shown, and
      *         <code>false</code> otherwise
      */
-    public boolean isShown();
+    boolean isShown();
 
     /** Close dialog. */
-    public void close();
+    void close();
 
     /** Show dialog. */
-    public void showDialog();
+    void showDialog();
 }

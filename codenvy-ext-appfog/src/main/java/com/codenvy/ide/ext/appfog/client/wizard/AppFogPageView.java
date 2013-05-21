@@ -30,13 +30,13 @@ public interface AppFogPageView extends View<AppFogPageView.ActionDelegate> {
     /** Needs for delegate some function into AppFog view. */
     public interface ActionDelegate {
         /** Performs any actions appropriate in response to the user having changed application name. */
-        public void onNameChanged();
+        void onNameChanged();
 
         /** Performs any actions appropriate in response to the user having changed url. */
-        public void onUrlChanged();
+        void onUrlChanged();
 
         /** Performs any actions appropriate in response to the user having changed infrastructure. */
-        public void onInfraChanged();
+        void onInfraChanged();
     }
 
     /**
@@ -44,42 +44,42 @@ public interface AppFogPageView extends View<AppFogPageView.ActionDelegate> {
      *
      * @return application's name
      */
-    public String getName();
+    String getName();
 
     /**
      * Sets application's name.
      *
      * @param name
      */
-    public void setName(String name);
+    void setName(String name);
 
     /**
      * Returns application's url.
      *
      * @return url
      */
-    public String getUrl();
+    String getUrl();
 
     /**
      * Sets application's url.
      *
      * @param url
      */
-    public void setUrl(String url);
+    void setUrl(String url);
 
     /**
      * Returns target.
      *
      * @return target
      */
-    public String getTarget();
+    String getTarget();
 
     /**
      * Sets target.
      *
      * @param target
      */
-    public void setTarget(String target);
+    void setTarget(String target);
 
 
     /**
@@ -87,7 +87,7 @@ public interface AppFogPageView extends View<AppFogPageView.ActionDelegate> {
      *
      * @return infrastructure
      */
-    public String getInfra();
+    String getInfra();
 
 
     /**
@@ -96,7 +96,7 @@ public interface AppFogPageView extends View<AppFogPageView.ActionDelegate> {
      * @param infra
      *         infrastructure
      */
-    public void setInfra(String infra);
+    void setInfra(String infra);
 
     /**
      * Sets infrastructures.
@@ -104,5 +104,5 @@ public interface AppFogPageView extends View<AppFogPageView.ActionDelegate> {
      * @param infras
      *         infrastructures
      */
-    public void setInfras(JsonArray<String> infras);
+    void setInfras(JsonArray<String> infras);
 }

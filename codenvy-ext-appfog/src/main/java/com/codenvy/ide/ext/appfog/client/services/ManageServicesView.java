@@ -32,13 +32,13 @@ public interface ManageServicesView extends View<ManageServicesView.ActionDelega
     /** Needs for delegate some function into ManageServices view. */
     public interface ActionDelegate {
         /** Performs any actions appropriate in response to the user having pressed the Add button. */
-        public void onAddClicked();
+        void onAddClicked();
 
         /** Performs any actions appropriate in response to the user having pressed the Delete button. */
-        public void onDeleteClicked();
+        void onDeleteClicked();
 
         /** Performs any actions appropriate in response to the user having pressed the Close button. */
-        public void onCloseClicked();
+        void onCloseClicked();
 
         /**
          * Performs any actions appropriate in response to the user having pressed the Unbind service button.
@@ -46,7 +46,7 @@ public interface ManageServicesView extends View<ManageServicesView.ActionDelega
          * @param service
          *         service what needs to unbind
          */
-        public void onUnbindServiceClicked(String service);
+        void onUnbindServiceClicked(String service);
 
         /**
          * Performs any actions appropriate in response to the user having pressed the Bind service button.
@@ -54,7 +54,7 @@ public interface ManageServicesView extends View<ManageServicesView.ActionDelega
          * @param service
          *         service what needs to bind
          */
-        public void onBindServiceClicked(AppfogProvisionedService service);
+        void onBindServiceClicked(AppfogProvisionedService service);
 
         /**
          * Performs any actions appropriate in response to the user having selected other service.
@@ -62,7 +62,7 @@ public interface ManageServicesView extends View<ManageServicesView.ActionDelega
          * @param service
          *         selected service
          */
-        public void onSelectedService(AppfogProvisionedService service);
+        void onSelectedService(AppfogProvisionedService service);
     }
 
     /**
@@ -72,25 +72,25 @@ public interface ManageServicesView extends View<ManageServicesView.ActionDelega
      *         <code>true</code> to enable the button, <code>false</code>
      *         to disable it
      */
-    public void setEnableDeleteButton(boolean enabled);
+    void setEnableDeleteButton(boolean enabled);
 
     /**
      * Sets provisioned services.
      *
      * @param services
      */
-    public void setProvisionedServices(List<AppfogProvisionedService> services);
+    void setProvisionedServices(List<AppfogProvisionedService> services);
 
     /**
      * Sets bounded services.
      *
      * @param services
      */
-    public void setBoundedServices(List<String> services);
+    void setBoundedServices(List<String> services);
 
     /** Show dialog. */
-    public void showDialog();
+    void showDialog();
 
     /** Close dialog. */
-    public void close();
+    void close();
 }
