@@ -22,17 +22,16 @@ import com.codenvy.ide.resources.ResourceProviderComponent;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Callback;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 
 /** @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> */
 public class ComponentRegistry {
-    private JsonArray<Component>                   pendingComponents;
-    private Provider<StandardComponentInitializer> componentInitializer;
+    private JsonArray<Component>         pendingComponents;
+    private StandardComponentInitializer componentInitializer;
 
     /** Instantiates Component Registry. All components should be listed in this constructor */
     @Inject
-    public ComponentRegistry(ResourceProviderComponent resourceManager, Provider<StandardComponentInitializer> componentInitializer) {
+    public ComponentRegistry(ResourceProviderComponent resourceManager, StandardComponentInitializer componentInitializer) {
         this.componentInitializer = componentInitializer;
         pendingComponents = JsonCollections.createArray();
         pendingComponents.add(resourceManager);
@@ -53,7 +52,7 @@ public class ComponentRegistry {
                     Log.info(ComponentRegistry.class, "All services initialized. Starting.");
                     //initialize standard components
                     try {
-                        componentInitializer.get();
+                        componentInitializer.initialize();
                     } catch (Throwable e) {
                         Log.error(ComponentRegistry.class, e);
                     }

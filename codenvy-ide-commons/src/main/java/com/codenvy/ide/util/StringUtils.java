@@ -140,6 +140,10 @@ public class StringUtils {
         return s.regionMatches(true, s.length() - suffix.length(), suffix, 0, suffix.length());
     }
 
+    public static boolean endsWithChar(CharSequence s, char suffix) {
+        return s != null && s.length() != 0 && s.charAt(s.length() - 1) == suffix;
+    }
+
     public static boolean looksLikeImage(String path) {
         String lowercase = path.toLowerCase();
         return lowercase.endsWith(".jpg") || lowercase.endsWith(".jpeg") || lowercase.endsWith(".ico")
@@ -248,6 +252,13 @@ public class StringUtils {
 
     public static String trimNullToEmpty(String s) {
         return s == null ? "" : s.trim();
+    }
+
+    public static String trimStart(String s, String prefix) {
+        if (s.startsWith(prefix)) {
+            return s.substring(prefix.length());
+        }
+        return s;
     }
 
     public static String ensureNotEmpty(String s, String defaultStr) {
