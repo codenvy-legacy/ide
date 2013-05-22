@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.codenvy</groupId>
         <artifactId>maven-parent-pom</artifactId>
-        <version>1.1.0</version>
+        <version>1.0.1</version>
     </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-parent</artifactId>
@@ -487,7 +487,11 @@
             <version>${com.codenvy.commons.version}</version>
          </dependency>
 
-
+        <dependency>
+            <groupId>com.codenvy.commons</groupId>
+            <artifactId>codenvy-commons-json</artifactId>
+            <version>${com.codenvy.commons.version}</version>
+        </dependency>
 
          <dependency>
             <groupId>com.google.gwt</groupId>

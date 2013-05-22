@@ -130,8 +130,12 @@ public class Toolbar extends FlowPanel {
      *
      * @param item
      */
-    public void add(ToolbarItem item) {
-        super.add(item);
+    public void add(Widget widget) {
+        if (widget instanceof ToolbarItem) {
+            super.add(widget);            
+        } else {
+            addItem(widget);
+        }
     }
 
     /** Remove all items from toolbar. */
