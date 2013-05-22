@@ -65,7 +65,7 @@
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-jenkins</artifactId>
             <version>${org.exoplatform.ide.version}</version>
-            <scope>provided</scope>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
