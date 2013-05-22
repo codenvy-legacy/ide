@@ -294,20 +294,6 @@
             <executions>
 
                <execution>
-                  <id>unwar-ide</id>
-                  <phase>process-resources</phase>
-                  <configuration>
-                     <tasks>
-                        <unwar src="${project.build.directory}/dependency/exo-ide-client-${project.version}.jar"
-                               dest="${project.build.directory}/share"/>
-                     </tasks>
-                  </configuration>
-                  <goals>
-                     <goal>run</goal>
-                  </goals>
-               </execution>
-
-               <execution>
                   <id>buildnumber</id>
                   <goals>
                      <goal>run</goal>

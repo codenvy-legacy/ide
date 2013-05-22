@@ -61,29 +61,34 @@
 
    <filter-mapping>
       <filter-name>SetCurrentIdentityFilter</filter-name>
-      <url-pattern>/w/rest/*</url-pattern>
+      <url-pattern>/rest/*</url-pattern>
    </filter-mapping>
    <filter-mapping>
       <filter-name>SetCurrentIdentityFilter</filter-name>
-      <url-pattern>/w/websocket</url-pattern>
+      <url-pattern>/websocket</url-pattern>
    </filter-mapping>
    <filter-mapping>
       <filter-name>SetCurrentIdentityFilter</filter-name>
-      <url-pattern>/w/collaboration</url-pattern>
+      <url-pattern>/collaboration</url-pattern>
    </filter-mapping>
    <filter-mapping>
       <filter-name>SetEnvironmentContextFilter</filter-name>
-      <url-pattern>/w/rest/*</url-pattern>
+      <url-pattern>/rest/*</url-pattern>
    </filter-mapping>
    <filter-mapping>
       <filter-name>SetEnvironmentContextFilter</filter-name>
-      <url-pattern>/w/websocket</url-pattern>
+      <url-pattern>/websocket</url-pattern>
    </filter-mapping>
    <filter-mapping>
       <filter-name>SetEnvironmentContextFilter</filter-name>
-      <url-pattern>/w/collaboration</url-pattern>
+      <url-pattern>/collaboration</url-pattern>
    </filter-mapping>
-   
+
+   <servlet>
+       <servlet-name>main</servlet-name>
+       <jsp-file>/ide/Application.jsp</jsp-file>
+   </servlet>
+
    <servlet>
       <servlet-name>EverrestServlet</servlet-name>
       <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
@@ -98,23 +103,33 @@
       <servlet-name>DispatcherServlet</servlet-name>
       <servlet-class>com.codenvy.servlet.DispatcherServlet</servlet-class>
    </servlet>
-...
+
+   <servlet-mapping>
+      <servlet-name>main</servlet-name>
+      <url-pattern>/ide/main</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>default</servlet-name>
+      <url-pattern>/ide/*</url-pattern>
+   </servlet-mapping>
+
    <servlet-mapping>
       <servlet-name>DispatcherServlet</servlet-name>
-      <url-pattern>/w/*</url-pattern>
+      <url-pattern>/*</url-pattern>
    </servlet-mapping>
    
    <servlet-mapping>
       <servlet-name>EverrestServlet</servlet-name>
-      <url-pattern>/w/rest/*</url-pattern>
+      <url-pattern>/rest/*</url-pattern>
    </servlet-mapping>
    <servlet-mapping>
       <servlet-name>ExoIdeWebSocketServlet</servlet-name>
-      <url-pattern>/w/websocket</url-pattern>
+      <url-pattern>/websocket</url-pattern>
    </servlet-mapping>
    <servlet-mapping>
       <servlet-name>ExoIdeWebSocketServlet</servlet-name>
-      <url-pattern>/w/collaboration</url-pattern>
+      <url-pattern>/collaboration</url-pattern>
    </servlet-mapping>
 
     <security-constraint>
