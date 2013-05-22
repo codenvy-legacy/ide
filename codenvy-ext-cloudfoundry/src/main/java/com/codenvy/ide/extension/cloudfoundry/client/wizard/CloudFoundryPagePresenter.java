@@ -384,7 +384,10 @@ public class CloudFoundryPagePresenter extends AbstractWizardPagePresenter
 
     /** Checking entered information on view. */
     public boolean validate() {
-        return isLogined ? view.getName() != null && !view.getName().isEmpty() && view.getUrl() != null && !view.getUrl().isEmpty() : true;
+        if (isLogined) {
+            return view.getName() != null && !view.getName().isEmpty() && view.getUrl() != null && !view.getUrl().isEmpty();
+        }
+        return true;
     }
 
     /** {@inheritDoc} */

@@ -186,8 +186,11 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
 
     /** Checking entered information on view. */
     public boolean validate() {
-        return isLogined ? view.getName() != null && !view.getName().isEmpty() && view.getUrl() != null && !view.getUrl().isEmpty() &&
-                           currentInfra != null : true;
+        if (isLogined) {
+            return view.getName() != null && !view.getName().isEmpty() && view.getUrl() != null && !view.getUrl().isEmpty() &&
+                   currentInfra != null;
+        }
+        return true;
     }
 
     /** {@inheritDoc} */

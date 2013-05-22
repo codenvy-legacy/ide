@@ -26,7 +26,6 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.google.gwt.http.client.RequestException;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -80,7 +79,7 @@ public interface CloudBeesClientService {
      * @param callback
      *         - callback that client has to implement
      */
-    void getDomains(CloudBeesAsyncRequestCallback<List<String>> callback) throws RequestException;
+    void getDomains(CloudBeesAsyncRequestCallback<JsonArray<String>> callback) throws RequestException;
 
     /**
      * Login CloudBees.

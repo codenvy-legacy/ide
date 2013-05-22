@@ -24,9 +24,11 @@ import com.codenvy.ide.api.ui.menu.MainMenuAgent;
 import com.codenvy.ide.ext.cloudbees.client.command.ShowApplicationsCommand;
 import com.codenvy.ide.ext.cloudbees.client.command.ShowCreateAccountCommand;
 import com.codenvy.ide.ext.cloudbees.client.command.ShowLoginCommand;
+import com.codenvy.ide.ext.cloudbees.client.wizard.CloudBeesPagePresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -42,13 +44,12 @@ public class CloudBeesExtension {
     @Inject
     public CloudBeesExtension(PaaSAgent paasAgent, CloudBeesResources resources, MainMenuAgent menu,
                               ShowLoginCommand loginCommand, ShowApplicationsCommand applicationsCommand,
-                              ShowCreateAccountCommand createAccountCommand) {
+                              ShowCreateAccountCommand createAccountCommand, Provider<CloudBeesPagePresenter> wizardPage) {
         resources.cloudBeesCSS().ensureInjected();
 
         // TODO change hard code types
         JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "War");
-        // TODO wizard page is empty
-        paasAgent.registerPaaS(ID, ID, resources.cloudBees48(), requiredProjectTypes, null, null);
+        paasAgent.registerPaaS(ID, ID, resources.cloudBees48(), requiredProjectTypes, wizardPage, null);
 
         menu.addMenuItem("PaaS/CloudBees/Applications...", applicationsCommand);
         menu.addMenuItem("PaaS/CloudBees/Switch Account...", loginCommand);

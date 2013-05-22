@@ -105,7 +105,7 @@ public class CloudBeesClientServiceImpl implements CloudBeesClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void getDomains(CloudBeesAsyncRequestCallback<List<String>> callback) throws RequestException {
+    public void getDomains(CloudBeesAsyncRequestCallback<JsonArray<String>> callback) throws RequestException {
         final String url = restServiceContext + DOMAINS;
 
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader)
