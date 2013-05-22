@@ -224,6 +224,7 @@ public abstract class JSONDeserializer<O> {
                     JSONObject jsonObject = json.isObject();
 
                     JSONObject root = jsonObject.get("root").isObject();
+                    String vfsId = root.get("vfsId").isString().stringValue();
                     String rootId = root.get("id").isString().stringValue();
                     String rootName = root.get("name").isString().stringValue();
                     String rootMimeType = null;
@@ -235,7 +236,7 @@ public abstract class JSONDeserializer<O> {
                     Map links = JSONDeserializer.LINK_DESERIALIZER.toMap(root.get("links"));
 
                     FolderImpl rootFolder =
-                            new FolderImpl(rootId, rootName, rootMimeType, rootPath, null, rootCreationDate, (List<Property>)properties,
+                            new FolderImpl(vfsId, rootId, rootName, rootMimeType, rootPath, null, rootCreationDate, (List<Property>)properties,
                                            (Map<String, Link>)links);
 
                     return new VirtualFileSystemInfoImpl(
