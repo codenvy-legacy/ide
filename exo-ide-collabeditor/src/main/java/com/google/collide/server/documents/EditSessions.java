@@ -99,7 +99,7 @@ public class EditSessions implements Startable {
      */
 //    private final SelectionTracker                        selectionTracker         = new SelectionTracker();
     // This is important mapping for server side to avoid mapping the same resource twice.
-    private final ConcurrentMap<String, FileEditSession>  editSessionsByResourceId  = new ConcurrentHashMap<String, FileEditSession>();
+    private final ConcurrentMap<String, FileEditSession>  editSessions              = new ConcurrentHashMap<String, FileEditSession>();
     private final ConcurrentMap<String, InternalListener> listenersByEditSessionsId = new ConcurrentHashMap<String, InternalListener>();
     private EventListenerList listenerList;
     private WSConnectionListener listener = new WSConnectionListener();
@@ -129,17 +129,17 @@ public class EditSessions implements Startable {
         final String userId = contentsRequest.getClientId();
 
         FileEditSession editSession;
-        final String resourceId;
 
         try {
             VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, listenerList);
             org.exoplatform.ide.vfs.shared.File file =
                     (org.exoplatform.ide.vfs.shared.File)vfs.getItemByPath(path, null, false, PropertyFilter.NONE_FILTER);
-            resourceId = file.getId();
-            editSession = editSessionsByResourceId.get(resourceId);
+            final String resourceId = file.getId();
+            final String editSessionKey = file.getVfsId() + resourceId;
+            editSession = editSessions.get(editSessionKey);
             if (editSession == null) {
                 String text = loadFileContext(vfs, resourceId);
-                FileEditSession newEditSession = new FileEditSessionImpl(/*UUID.randomUUID().toString()*/resourceId,
+                FileEditSession newEditSession = new FileEditSessionImpl(editSessionKey,
                                                                          vfs,
                                                                          vfsId,
                                                                          resourceId,
@@ -147,10 +147,10 @@ public class EditSessions implements Startable {
                                                                          file.getMimeType(),
                                                                          text,
                                                                          null);
-                editSession = editSessionsByResourceId.putIfAbsent(resourceId, newEditSession);
+                editSession = editSessions.putIfAbsent(editSessionKey, newEditSession);
                 if (editSession == null) {
                     editSession = newEditSession;
-                    addVfsListener(vfsId, path, resourceId, editSession);
+                    addVfsListener(vfsId, path, editSession);
                 }
             }
         } catch (ItemNotFoundException e) {
@@ -159,11 +159,9 @@ public class EditSessions implements Startable {
         } catch (VirtualFileSystemException e) {
             LOG.error(e.getMessage(), e);
             throw new CollaborationEditorException(e);
-            /*return GetFileContentsResponseImpl.make().setFileExists(false);*/
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
             throw new CollaborationEditorException(e);
-            /*return GetFileContentsResponseImpl.make().setFileExists(false);*/
         }
 
         if (editSession.addCollaborator(userId)) {
@@ -181,33 +179,21 @@ public class EditSessions implements Startable {
         return GetFileContentsResponseImpl.make().setFileExists(true).setFileContents(fileContents);
     }
 
-    private String genEditSessionKey(org.exoplatform.ide.vfs.shared.File file) {
-       /*return UUID.randomUUID().toString();*/
-       return null;
-    }
-
-    private void addVfsListener(String vfsId, String path, String itemId, FileEditSession fileEditSession) {
+    private void addVfsListener(String vfsId, String path, FileEditSession fileEditSession) {
         ChangeEventFilter myFilter = ChangeEventFilter.createAndFilter(new VfsIDFilter(vfsId),
                                                                        new PathFilter(path),
                                                                        ChangeEventFilter.createOrFilter(
                                                                                new TypeFilter(ChangeEvent.ChangeType.RENAMED),
                                                                                new TypeFilter(ChangeEvent.ChangeType.MOVED)));
-        InternalListener internalListener = new InternalListener(itemId, vfsId, myFilter);
+        InternalListener internalListener = new InternalListener(fileEditSession.getFileEditSessionKey(), myFilter);
         if (listenersByEditSessionsId.putIfAbsent(fileEditSession.getFileEditSessionKey(), internalListener) == null) {
             listenerList.addEventListener(myFilter, internalListener);
         }
     }
 
     private FileEditSession findEditSession(String editSessionId) {
-        // Client required to have different 'session key' even for the same resources :( . Since mapping resourceId to
-        // editSession is more important for us we keep only this mapping and lookup session by id if need.
-        /*for (FileEditSession editSession : editSessionsByResourceId.values()) {
-            if (editSessionId.equals(editSession.getFileEditSessionKey())) {
-                return editSession;
-            }
-        }*/
-        FileEditSession editSession = editSessionsByResourceId.get(editSessionId);
-        if (editSession!=null){
+        FileEditSession editSession = editSessions.get(editSessionId);
+        if (editSession != null) {
             return editSession;
         }
         ServerErrorImpl error = ServerErrorImpl.make();
@@ -253,7 +239,7 @@ public class EditSessions implements Startable {
     }
 
     private void cleanUpEditSession(FileEditSession editSession) {
-        editSessionsByResourceId.remove(editSession.getResourceId());
+        editSessions.remove(editSession.getFileEditSessionKey());
         InternalListener internalListener = listenersByEditSessionsId.get(editSession.getFileEditSessionKey());
         if (internalListener != null) {
             listenerList.removeEventListener(internalListener.myFilter, internalListener);
@@ -262,7 +248,7 @@ public class EditSessions implements Startable {
 
     public List<String> closeAllSessions(String userId) {
         List<String> result = new ArrayList<String>();
-        for (Map.Entry<String, FileEditSession> e : editSessionsByResourceId.entrySet()) {
+        for (Map.Entry<String, FileEditSession> e : editSessions.entrySet()) {
             FileEditSession editSession = e.getValue();
             if (editSession.removeCollaborator(userId)) {
                 if (!editSession.getCollaborators().isEmpty()) {
@@ -280,8 +266,7 @@ public class EditSessions implements Startable {
         return result;
     }
 
-    private String loadFileContext(VirtualFileSystem vfs,
-                                   String resourceId) throws VirtualFileSystemException, IOException {
+    private String loadFileContext(VirtualFileSystem vfs, String resourceId) throws VirtualFileSystemException, IOException {
         InputStream input = null;
         try {
             ContentStream content = vfs.getContent(resourceId);
@@ -298,11 +283,11 @@ public class EditSessions implements Startable {
     }
 
     public ServerToClientDocOps mutate(ClientToServerDocOp docOpRequest) {
-        String resourceId = docOpRequest.getFileEditSessionKey();
-        FileEditSession editSession = findEditSession(resourceId);
+        String docOpEditSessionKey = docOpRequest.getFileEditSessionKey();
+        FileEditSession editSession = findEditSession(docOpEditSessionKey);
         List<String> docOps = ((JsonArrayListAdapter<String>)docOpRequest.getDocOps2()).asList();
         return applyMutation(docOps, docOpRequest.getClientId(), docOpRequest.getCcRevision(),
-                             docOpRequest.getSelection(), docOpRequest.getWorkspaceId(), resourceId, editSession);
+                             docOpRequest.getSelection(), docOpRequest.getWorkspaceId(), docOpEditSessionKey, editSession);
     }
 
     private List<DocOp> deserializeDocOps(List<String> serializedDocOps) {
@@ -313,8 +298,12 @@ public class EditSessions implements Startable {
         return docOps;
     }
 
-    private ServerToClientDocOpsImpl applyMutation(List<String> serializedDocOps, String authorId, int ccRevision,
-                                                   DocumentSelection selection, String workspaceId, String resourceId,
+    private ServerToClientDocOpsImpl applyMutation(List<String> serializedDocOps,
+                                                   String authorId,
+                                                   int ccRevision,
+                                                   DocumentSelection selection,
+                                                   String workspaceId,
+                                                   String docOpEditSessionKey,
                                                    FileEditSession editSession) {
         ServerToClientDocOpsImpl broadcastedDocOps = ServerToClientDocOpsImpl.make();
 
@@ -330,7 +319,7 @@ public class EditSessions implements Startable {
         }
 
         // See if we need to update the selection
-        checkForSelectionChange(authorId, resourceId, editSession.getDocument(), result.transformedDocumentSelection);
+        checkForSelectionChange(authorId, docOpEditSessionKey, editSession.getDocument(), result.transformedDocumentSelection);
 
         // Construct the Applied DocOp that we want to broadcast.
         SortedMap<Integer, VersionedDocument.AppliedDocOp> appliedDocOps = result.appliedDocOps;
@@ -339,7 +328,7 @@ public class EditSessions implements Startable {
             DocOpImpl docOp = (DocOpImpl)entry.getValue().docOp;
             ServerToClientDocOpImpl wrappedBroadcastDocOp = ServerToClientDocOpImpl.make().setClientId(
                     authorId).setAppliedCcRevision(entry.getKey()).setDocOp2(docOp).setWorkspaceId(
-                    workspaceId).setFileEditSessionKey(resourceId).setFilePath(editSession.getPath());
+                    workspaceId).setFileEditSessionKey(docOpEditSessionKey).setFilePath(editSession.getPath());
             appliedDocOpsList.add(wrappedBroadcastDocOp);
         }
 
@@ -361,13 +350,13 @@ public class EditSessions implements Startable {
         return broadcastedDocOps;
     }
 
-    private void checkForSelectionChange(String clientId, String resourceId, VersionedDocument document,
+    private void checkForSelectionChange(String clientId, String docOpEditSessionKey, VersionedDocument document,
                                          DocumentSelection documentSelection) {
       /*
        * Currently, doc ops either contain text changes or selection changes (via annotation doc op
        * components). Both of these modify the user's selection/cursor.
        */
-//        selectionTracker.selectionChanged(clientId, resourceId, document, documentSelection);
+//        selectionTracker.selectionChanged(clientId, docOpEditSessionKey, document, documentSelection);
     }
 
     public RecoverFromMissedDocOpsResponse recoverDocOps(RecoverFromMissedDocOps missedDocOpsRequest) {
@@ -406,8 +395,7 @@ public class EditSessions implements Startable {
 
     public GetOpenedFilesInWorkspaceResponse getOpenedFiles() {
         GetOpenedFilesInWorkspaceResponseImpl response = GetOpenedFilesInWorkspaceResponseImpl.make();
-        for (FileEditSession session : editSessionsByResourceId.values()) {
-
+        for (FileEditSession session : editSessions.values()) {
             ArrayList<ParticipantUserDetailsImpl> list = (ArrayList<ParticipantUserDetailsImpl>)participants.getParticipants(
                     session.getCollaborators());
             if (!list.isEmpty()) {
@@ -434,14 +422,13 @@ public class EditSessions implements Startable {
         public void onClose(WSConnection connection) {
             String userId = connection.getHttpSession().getId();
             closeAllSessions(userId);
-//         participants.removeParticipant(userId);
         }
     }
 
     private class SaveTask implements Runnable {
         @Override
         public void run() {
-            for (FileEditSession editSession : editSessionsByResourceId.values()) {
+            for (FileEditSession editSession : editSessions.values()) {
                 try {
                     if (editSession.hasChanges()) {
                         editSession.save();
@@ -454,26 +441,24 @@ public class EditSessions implements Startable {
     }
 
     private class InternalListener implements org.exoplatform.ide.vfs.server.observation.EventListener {
-        private final String            itemId;
-        private final String            vfsId;
+        private final String            editSessionKey;
         private final ChangeEventFilter myFilter;
 
-        InternalListener(String itemId, String vfsId, ChangeEventFilter myFilter) {
-            this.itemId = itemId;
-            this.vfsId = vfsId;
+        InternalListener(String editSessionKey, ChangeEventFilter myFilter) {
+            this.editSessionKey = editSessionKey;
             this.myFilter = myFilter;
         }
 
         @Override
         public void handleEvent(ChangeEvent event) throws VirtualFileSystemException {
-            FileEditSession fileEditSession = editSessionsByResourceId.remove(itemId);
+            FileEditSession fileEditSession = editSessions.remove(editSessionKey);
             listenerList.removeEventListener(myFilter, this);
             if (fileEditSession != null) {
                 listenersByEditSessionsId.remove(fileEditSession.getFileEditSessionKey());
                 fileEditSession.setPath(event.getItemPath());
                 fileEditSession.setResourceId(event.getItemId());
-                editSessionsByResourceId.putIfAbsent(event.getItemId(), fileEditSession);
-                addVfsListener(vfsId, event.getItemPath(), event.getItemId(), fileEditSession);
+                editSessions.putIfAbsent(event.getItemId(), fileEditSession);
+                addVfsListener(event.getVirtualFileSystem().getInfo().getId(), event.getItemPath(), fileEditSession);
             }
         }
     }
