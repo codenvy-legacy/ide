@@ -73,7 +73,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -165,8 +164,7 @@ public class EditSessions implements Startable {
         }
 
         if (editSession.addCollaborator(userId)) {
-            Set<String> sendTo = new LinkedHashSet<String>();
-            sendTo.addAll(participants.getAllParticipantIds(((FileEditSessionImpl)editSession).getWorkspace()));
+            Set<String> sendTo = new HashSet<String>(participants.getAllParticipantIds(((FileEditSessionImpl)editSession).getWorkspace()));
             sendTo.remove(userId);
             if (!sendTo.isEmpty()) {
                 WSUtil.broadcastToClients(NewFileCollaboratorImpl.make().setPath(path).setEditSessionId(
@@ -341,8 +339,7 @@ public class EditSessions implements Startable {
         // Broadcast the applied DocOp all the participants, ignoring the sender.
         broadcastedDocOps.setDocOps(appliedDocOpsList);
 
-        Set<String> sendTo = new LinkedHashSet<String>();
-        sendTo.addAll(editSession.getCollaborators());
+        Set<String> sendTo = new HashSet<String>(editSession.getCollaborators());
         sendTo.remove(authorId);
         if (!sendTo.isEmpty()) {
             WSUtil.broadcastToClients(broadcastedDocOps.toJson(), sendTo);
