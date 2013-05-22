@@ -8,7 +8,7 @@
         <version>2.4.0-SNAPSHOT</version>
     </parent>
     <groupId>org.exoplatform.ide</groupId>
-    <artifactId>exo-ide-packaging-application-war</artifactId>
+    <artifactId>codenvy-application-war</artifactId>
     <packaging>war</packaging>
     <name>Codenvy IDE :: Packaging :: Application</name>
 
