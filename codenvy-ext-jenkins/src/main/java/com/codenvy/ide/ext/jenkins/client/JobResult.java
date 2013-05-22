@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,20 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.jenkins.client.inject;
+package com.codenvy.ide.ext.jenkins.client;
 
-import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.codenvy.ide.ext.jenkins.client.JenkinsService;
-import com.codenvy.ide.ext.jenkins.client.JenkinsServiceImpl;
-import com.google.gwt.inject.client.AbstractGinModule;
-import com.google.inject.Singleton;
-
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
-@ExtensionGinModule
-public class JenkinsGinModule extends AbstractGinModule {
-    /** {@inheritDoc} */
-    @Override
-    protected void configure() {
-        bind(JenkinsService.class).to(JenkinsServiceImpl.class).in(Singleton.class);
-    }
+/**
+ * This enum represent Jenkins last build result
+ *
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id: Aug 3, 2011 evgen $
+ */
+public enum JobResult {
+    SUCCESS, UNSTABLE, FAILURE, NOT_BUILT, ABORTED
 }
