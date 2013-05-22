@@ -103,10 +103,9 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
                                 new Timer() {
                                     @Override
                                     public void run() {
-                                        openPreparedProject(event.getFolderId());
+                                        writeTarget(event.getFolderId());
                                     }
                                 }.schedule(500);
-                                writeTarget(event.getFolderId());
                             }
 
                             @Override
