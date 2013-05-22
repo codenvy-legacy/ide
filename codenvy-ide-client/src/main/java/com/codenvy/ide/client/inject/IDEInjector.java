@@ -18,6 +18,7 @@ import com.google.gwt.inject.client.Ginjector;
    com.codenvy.ide.extension.maven.client.inject.MavenGinModule.class ,
    com.codenvy.ide.ext.appfog.client.inject.AppFogGinModule.class ,
    com.codenvy.ide.core.inject.CoreGinModule.class ,
+   com.codenvy.ide.ext.jenkins.client.inject.JenkinsGinModule.class ,
    com.codenvy.ide.client.inject.IDEClientModule.class 
 })
 public interface IDEInjector extends Ginjector
