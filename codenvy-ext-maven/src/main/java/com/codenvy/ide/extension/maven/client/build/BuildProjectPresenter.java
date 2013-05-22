@@ -60,7 +60,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
- * Presenter for created builder view. The view must be pointed in Views.gwt.xml.
+ * Presenter for build project with maven.
  *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuildProjectPresenter.java Feb 17, 2012 5:39:10 PM azatsarynnyy $
@@ -130,8 +130,10 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
         this.resources = resources;
         this.messageBus = messageBus;
 
-        buildStatusHandler = new SubscriptionHandler<BuildStatus>(
-                new AutoBeanUnmarshallerWS<BuildStatus>(this.autoBeanFactory.create(BuildStatus.class))) {
+        AutoBean<BuildStatus> autoBean = this.autoBeanFactory.create(BuildStatus.class);
+        AutoBeanUnmarshallerWS<BuildStatus> unmarshaller = new AutoBeanUnmarshallerWS<BuildStatus>(autoBean);
+
+        buildStatusHandler = new SubscriptionHandler<BuildStatus>(unmarshaller) {
             @Override
             protected void onMessageReceived(BuildStatus buildStatus) {
                 updateBuildStatus(buildStatus);

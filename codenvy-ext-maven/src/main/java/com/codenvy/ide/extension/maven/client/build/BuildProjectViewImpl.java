@@ -42,15 +42,11 @@ public class BuildProjectViewImpl extends Composite implements BuildProjectView 
     }
 
     @UiField
-    Button btnClearOutput;
-
+    Button    btnClearOutput;
     @UiField
     FlowPanel output;
-
     private ActionDelegate delegate;
-
     private int animationCharIndex = 1;
-
     private Label progress;
 
     /**

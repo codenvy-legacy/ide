@@ -190,6 +190,11 @@
             </dependency>
             <dependency>
                 <groupId>com.codenvy.ide</groupId>
+                <artifactId>codenvy-ext-git</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codenvy.ide</groupId>
                 <artifactId>codenvy-ext-tasks</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -479,6 +484,7 @@
         <module>codenvy-ext-cloudbees</module>
         <module>codenvy-ext-appfog</module>
         <module>codenvy-ext-jenkins</module>
+        <module>codenvy-ext-git</module>
         <module>codenvy-ext-maven</module>
         <module>codenvy-ide-client</module>
         <module>codenvy-ide-site-war</module>

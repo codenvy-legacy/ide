@@ -23,6 +23,7 @@ public class ExtensionManager
       Provider<com.codenvy.ide.extension.demo.DemoExtension> demoextension,
       Provider<com.codenvy.ide.extension.maven.client.BuilderExtension> builderextension,
       Provider<com.codenvy.ide.extension.tasks.TasksExtension> tasksextension,
+      Provider<com.codenvy.ide.ext.git.client.GitExtension> gitextension,
       Provider<com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension> cloudfoundryextension,
       Provider<com.codenvy.ide.ext.cloudbees.client.CloudBeesExtension> cloudbeesextension,
       Provider<com.codenvy.ide.ext.appfog.client.AppFogExtension> appfogextension,
@@ -34,6 +35,7 @@ public class ExtensionManager
       this.extensions.put("com.codenvy.ide.extension.demo.DemoExtension",demoextension);
       this.extensions.put("com.codenvy.ide.extension.maven.client.BuilderExtension",builderextension);
       this.extensions.put("com.codenvy.ide.extension.tasks.TasksExtension",tasksextension);
+      this.extensions.put("com.codenvy.ide.ext.git.client.GitExtension",gitextension);
       this.extensions.put("com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension",cloudfoundryextension);
       this.extensions.put("com.codenvy.ide.ext.cloudbees.client.CloudBeesExtension",cloudbeesextension);
       this.extensions.put("com.codenvy.ide.ext.appfog.client.AppFogExtension",appfogextension);
