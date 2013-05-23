@@ -852,17 +852,17 @@ public class LocalFileSystem implements VirtualFileSystem {
             final boolean locked = virtualFile.isLocked();
             final long length = virtualFile.getLength();
             final long modified = virtualFile.getLastModificationDate();
-            item = new FileImpl(id, name, path, parentId, created, modified, FAKE_VERSION_ID, mediaType, length, locked,
+            item = new FileImpl(vfsId, id, name, path, parentId, created, modified, FAKE_VERSION_ID, mediaType, length, locked,
                                 virtualFile.getProperties(propertyFilter),
                                 addLinks ? LinksHelper.createFileLinks(baseUri, vfsId, id, id, path, mediaType, locked, parentId) : null);
         } else {
             if (virtualFile.isProject()) {
                 final String projectType = virtualFile.getPropertyValue("vfs:projectType");
-                item = new ProjectImpl(id, name, mediaType, path, parentId, created, virtualFile.getProperties(propertyFilter),
+                item = new ProjectImpl(vfsId, id, name, mediaType, path, parentId, created, virtualFile.getProperties(propertyFilter),
                                        addLinks ? LinksHelper.createProjectLinks(baseUri, vfsId, id, parentId) : null,
                                        projectType == null ? "default" : projectType);
             } else {
-                item = new FolderImpl(id, name, mediaType, path, parentId, created, virtualFile.getProperties(propertyFilter),
+                item = new FolderImpl(vfsId, id, name, mediaType, path, parentId, created, virtualFile.getProperties(propertyFilter),
                                       addLinks ? LinksHelper.createFolderLinks(baseUri, vfsId, id, isRoot, parentId) : null);
             }
         }
