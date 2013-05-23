@@ -27,9 +27,9 @@ public class ProjectImpl extends FolderImpl implements Project {
     protected String projectType;
 
     @SuppressWarnings("rawtypes")
-    public ProjectImpl(String id, String name, String mimeType, String path, String parentId, long creationDate,
+    public ProjectImpl(String vfsId, String id, String name, String mimeType, String path, String parentId, long creationDate,
                        List<Property> properties, Map<String, Link> links, String projectType) {
-        super(id, name, ItemType.PROJECT, mimeType, path, parentId, creationDate, properties, links);
+        super(vfsId, id, name, ItemType.PROJECT, mimeType, path, parentId, creationDate, properties, links);
         this.projectType = projectType;
     }
 

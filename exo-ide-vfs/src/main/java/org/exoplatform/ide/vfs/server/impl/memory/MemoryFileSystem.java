@@ -1202,7 +1202,7 @@ public class MemoryFileSystem implements VirtualFileSystem {
             final boolean locked = file.isLocked();
             final long length = file.getContent().getLength();
             final long modified = file.getLastModificationDate();
-            item = new FileImpl(id, name, path, parentId, created, modified, versionId, mediaType, length,
+            item = new FileImpl(vfsId, id, name, path, parentId, created, modified, versionId, mediaType, length,
                                 locked, file.getProperties(propertyFilter),
                                 addLinks ? LinksHelper
                                         .createFileLinks(baseUri, vfsId, id, latestVersionId, path, mediaType, locked, parentId) : null);
@@ -1218,11 +1218,11 @@ public class MemoryFileSystem implements VirtualFileSystem {
                     }
                 }
 
-                item = new ProjectImpl(id, name, mediaType, path, parentId, created, folder.getProperties(propertyFilter),
+                item = new ProjectImpl(vfsId, id, name, mediaType, path, parentId, created, folder.getProperties(propertyFilter),
                                        addLinks ? LinksHelper.createProjectLinks(baseUri, vfsId, id, parentId) : null, projectType);
             } else {
 
-                item = new FolderImpl(id, name, mediaType == null ? Folder.FOLDER_MIME_TYPE : mediaType, path, parentId, created,
+                item = new FolderImpl(vfsId, id, name, mediaType == null ? Folder.FOLDER_MIME_TYPE : mediaType, path, parentId, created,
                                       object.getProperties(propertyFilter),
                                       addLinks ? LinksHelper.createFolderLinks(baseUri, vfsId, id, isRoot, parentId) : null);
             }
