@@ -125,11 +125,11 @@
    </servlet-mapping>
    <servlet-mapping>
       <servlet-name>ExoIdeWebSocketServlet</servlet-name>
-      <url-pattern>/websocket</url-pattern>
+      <url-pattern>/websocket/*</url-pattern>
    </servlet-mapping>
    <servlet-mapping>
       <servlet-name>ExoIdeWebSocketServlet</servlet-name>
-      <url-pattern>/collaboration</url-pattern>
+      <url-pattern>/collaboration/*</url-pattern>
    </servlet-mapping>
 
     <security-constraint>
