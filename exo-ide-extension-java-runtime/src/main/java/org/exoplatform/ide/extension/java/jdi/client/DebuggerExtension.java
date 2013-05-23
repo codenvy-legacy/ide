@@ -18,20 +18,29 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client;
 
-import com.google.gwt.core.client.GWT;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.extension.java.jdi.client.events.*;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebugAppEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.RunAppEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.StopAppEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.UpdateAppEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.UpdateVariableValueInTreeEvent;
 import org.exoplatform.ide.extension.java.jdi.client.fqn.FqnResolverFactory;
 import org.exoplatform.ide.extension.java.jdi.client.fqn.JavaFqnResolver;
+
+import com.google.gwt.core.client.GWT;
 
 /** Entry point classes define <code>onModuleLoad()</code>. */
 public class DebuggerExtension extends Extension implements InitializeServicesHandler {
@@ -62,6 +71,7 @@ public class DebuggerExtension extends Extension implements InitializeServicesHa
         IDE.getInstance().addControl(new StopAppControl());
         IDE.getInstance().addControl(new UpdateAppControl());
         IDE.getInstance().addControl(new ShowBreakpointPropertiesControl());
+        IDE.getInstance().addControl(new RunAppControl(), Docking.TOOLBAR_RIGHT);
         new LogsHandler();
     }
 
