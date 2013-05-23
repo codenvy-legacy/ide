@@ -26,6 +26,8 @@ import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
+import com.codenvy.ide.client.DtoClientImpls;
+import com.codenvy.ide.client.marshaller.UserUnmarshaller;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitExtension;
@@ -128,23 +130,6 @@ public class BuildApplicationPresenter extends AbstractPartPresenter implements 
         this.resources = resources;
         this.gitClientService = gitClientService;
         this.gitConstant = gitConstant;
-
-        try {
-            this.userClientService.getUser(new AsyncRequestCallback<User>() {
-                @Override
-                protected void onSuccess(User result) {
-                    BuildApplicationPresenter.this.user = result;
-                }
-
-                @Override
-                protected void onFailure(Throwable exception) {
-                    Log.error(BuildApplicationPresenter.class, "Can not get current user", exception);
-                }
-            });
-        } catch (RequestException e) {
-            this.eventBus.fireEvent(new ExceptionThrownEvent(e));
-            this.console.print(e.getMessage());
-        }
 
         AutoBean<JobStatus> autoBean = this.autoBeanFactory.create(JobStatus.class);
         AutoBeanUnmarshallerWS<JobStatus> unmarshaller = new AutoBeanUnmarshallerWS<JobStatus>(autoBean);
@@ -276,14 +261,12 @@ public class BuildApplicationPresenter extends AbstractPartPresenter implements 
      * @param status
      *         build job status
      */
-    private void onJobFinished(JobStatus status) {
+    private void onJobFinished(final JobStatus status) {
         try {
             messageBus.unsubscribe(jobStatusChannel, jobStatusHandler);
         } catch (WebSocketException e) {
             // nothing to do
         }
-
-        buildApplicationCallback.onSuccess(status);
 
         try {
             StringContentUnmarshaller unmarshaller = new StringContentUnmarshaller(new StringBuilder());
@@ -293,6 +276,7 @@ public class BuildApplicationPresenter extends AbstractPartPresenter implements 
                                          @Override
                                          protected void onSuccess(StringBuilder result) {
                                              showBuildMessage(result.toString());
+                                             buildApplicationCallback.onSuccess(status);
                                          }
 
                                          @Override
@@ -320,10 +304,28 @@ public class BuildApplicationPresenter extends AbstractPartPresenter implements 
 
         Project activeProject = project;
         if (activeProject == null) {
-            project = resourceProvider.getActiveProject();
+            this.project = resourceProvider.getActiveProject();
         }
 
-        checkIsGitRepository(project);
+        try {
+            DtoClientImpls.UserImpl user = DtoClientImpls.UserImpl.make();
+            UserUnmarshaller unmarshaller = new UserUnmarshaller(user);
+            this.userClientService.getUser(new AsyncRequestCallback<User>(unmarshaller) {
+                @Override
+                protected void onSuccess(User result) {
+                    BuildApplicationPresenter.this.user = result;
+                    checkIsGitRepository(BuildApplicationPresenter.this.project);
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    Log.error(BuildApplicationPresenter.class, "Can not get current user", exception);
+                }
+            });
+        } catch (RequestException e) {
+            this.eventBus.fireEvent(new ExceptionThrownEvent(e));
+            this.console.print(e.getMessage());
+        }
     }
 
     private void checkIsGitRepository(final Project project) {
@@ -368,7 +370,6 @@ public class BuildApplicationPresenter extends AbstractPartPresenter implements 
 
                                 @Override
                                 public void onFailure(Throwable caught) {
-
                                     Log.error(BuildApplicationPresenter.class, "Can not refresh project's properties", caught);
                                 }
                             });

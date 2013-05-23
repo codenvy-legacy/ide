@@ -32,10 +32,11 @@ import com.codenvy.ide.ext.cloudbees.client.login.LoginCanceledHandler;
 import com.codenvy.ide.ext.cloudbees.client.login.LoginPresenter;
 import com.codenvy.ide.ext.cloudbees.client.marshaller.DomainsUnmarshaller;
 import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
+import com.codenvy.ide.ext.jenkins.client.build.BuildApplicationPresenter;
+import com.codenvy.ide.ext.jenkins.shared.JobStatus;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
@@ -47,7 +48,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.event.shared.HandlerRegistration;
 
 /**
  * Presenter for creating application on CloudBees from New project wizard.
@@ -62,10 +62,10 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
     private ConsolePart                   console;
     private CloudBeesLocalizationConstant constant;
     private CloudBeesAutoBeanFactory      autoBeanFactory;
-    private HandlerRegistration           projectBuildHandler;
     private LoginPresenter                loginPresenter;
     private CloudBeesClientService        service;
     private TemplateAgent                 templateAgent;
+    private BuildApplicationPresenter     buildApplicationPresenter;
     private CreateProjectProvider         createProjectProvider;
     private boolean                       isLogined;
     /** Public url to war file of application. */
@@ -75,11 +75,26 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
     private String                        name;
     private Project                       project;
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param eventBus
+     * @param resourcesProvider
+     * @param console
+     * @param constant
+     * @param autoBeanFactory
+     * @param loginPresenter
+     * @param service
+     * @param templateAgent
+     * @param resources
+     * @param buildApplicationPresenter
+     */
     @Inject
     protected CloudBeesPagePresenter(CloudBeesPageView view, EventBus eventBus, ResourceProvider resourcesProvider, ConsolePart console,
                                      CloudBeesLocalizationConstant constant, CloudBeesAutoBeanFactory autoBeanFactory,
                                      LoginPresenter loginPresenter, CloudBeesClientService service, TemplateAgent templateAgent,
-                                     CloudBeesResources resources) {
+                                     CloudBeesResources resources, BuildApplicationPresenter buildApplicationPresenter) {
         super("Deploy project to CloudBees", resources.cloudBees48());
 
         this.view = view;
@@ -92,13 +107,15 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
         this.loginPresenter = loginPresenter;
         this.service = service;
         this.templateAgent = templateAgent;
+        this.buildApplicationPresenter = buildApplicationPresenter;
     }
 
     /** {@inheritDoc} */
     @Override
     public void onValueChanged() {
-        String url = view.getDomain() + "/" + view.getName();
-        view.setUrl(url);
+        domain = view.getDomain();
+        name = view.getName();
+        view.setUrl(domain + "/" + name);
 
         delegate.updateControls();
     }
@@ -203,11 +220,9 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
             @Override
             public void onSuccess(Project result) {
                 project = result;
-                // TODO
-//                if (isLogined) {
-//                    getFirstDeployDomains();
-////                    buildApplication();
-//                }
+                if (isLogined) {
+                    getFirstDeployDomains();
+                }
             }
 
             @Override
@@ -215,20 +230,6 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
                 Log.error(CloudBeesPagePresenter.class, caught);
             }
         });
-    }
-
-    private void beforeDeploy() {
-        JsonArray<Resource> children = project.getChildren();
-
-        for (int i = 0; i < children.size(); i++) {
-            Resource child = children.get(i);
-            if (child.isFile() && "pom.xml".equals(child.getName())) {
-                buildApplication();
-                return;
-            }
-        }
-
-        createApplication();
     }
 
     /** Create application on Cloud Bees by sending request over WebSocket or HTTP. */
@@ -248,7 +249,7 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
             AutoBeanUnmarshallerWS<ApplicationInfo> unmarshaller =
                     new AutoBeanUnmarshallerWS<ApplicationInfo>(autoBean);
 
-            service.initializeApplicationWS(view.getUrl(), resourcesProvider.getVfsId(), project.getId(), warUrl, null,
+            service.initializeApplicationWS(domain + "/" + name, resourcesProvider.getVfsId(), project.getId(), warUrl, null,
                                             new CloudBeesRESTfulRequestCallback<ApplicationInfo>(unmarshaller, loggedInHandler, null,
                                                                                                  eventBus, console, loginPresenter) {
                                                 @Override
@@ -284,7 +285,7 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
             AutoBean<ApplicationInfo> autoBean = autoBeanFactory.applicationInfo();
             AutoBeanUnmarshaller<ApplicationInfo> unmarshaller = new AutoBeanUnmarshaller<ApplicationInfo>(autoBean);
 
-            service.initializeApplication(view.getUrl(), resourcesProvider.getVfsId(), project.getId(), warUrl, null,
+            service.initializeApplication(domain + "/" + name, resourcesProvider.getVfsId(), project.getId(), warUrl, null,
                                           new CloudBeesAsyncRequestCallback<ApplicationInfo>(unmarshaller, loggedInHandler, null, eventBus,
                                                                                              console, loginPresenter) {
                                               @Override
@@ -314,6 +315,11 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
         }
     }
 
+    /**
+     * Shows information about Success application build.
+     *
+     * @param appInfo
+     */
     private void onCreatedSuccess(ApplicationInfo appInfo) {
         StringBuilder output = new StringBuilder(constant.deployApplicationSuccess()).append("<br>");
         output.append(constant.deployApplicationInfo()).append("<br>");
@@ -332,6 +338,7 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
         console.print(output.toString());
     }
 
+    /** Gets deploy domains. */
     private void getFirstDeployDomains() {
         try {
             DomainsUnmarshaller unmarshaller = new DomainsUnmarshaller(JsonCollections.<String>createArray());
@@ -356,11 +363,8 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
                                                                          console, loginPresenter) {
                         @Override
                         protected void onSuccess(JsonArray<String> result) {
-                            view.setDomainValues(result);
                             domain = view.getDomain();
-                            view.setName(projectName);
                             name = view.getName();
-                            view.setUrl(domain + "/" + name);
                             buildApplication();
                         }
                     });
@@ -372,8 +376,19 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
 
     /** Builds application. */
     private void buildApplication() {
-        // TODO
+        buildApplicationPresenter.build(project, new AsyncCallback<JobStatus>() {
+            @Override
+            public void onSuccess(JobStatus result) {
+                if (result.getArtifactUrl() != null) {
+                    warUrl = result.getArtifactUrl();
+                    createApplication();
+                }
+            }
 
-
+            @Override
+            public void onFailure(Throwable caught) {
+                Log.error(CloudBeesPagePresenter.class, "Can not build project on Jenkins", caught);
+            }
+        });
     }
 }

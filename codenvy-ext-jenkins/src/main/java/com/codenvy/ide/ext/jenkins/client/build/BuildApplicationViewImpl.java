@@ -56,7 +56,13 @@ public class BuildApplicationViewImpl extends Composite implements BuildApplicat
     /** {@inheritDoc} */
     @Override
     public void showMessageInOutput(String text) {
-        output.add(new Label(text));
+        if (progress != null) {
+            output.remove(progress);
+            output.add(new Label(text));
+            output.add(progress);
+        } else {
+            output.add(new Label(text));
+        }
     }
 
     /** {@inheritDoc} */
