@@ -37,6 +37,10 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
@@ -51,17 +55,20 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.java.client.datasource.service.DatasourceClientService;
 import org.exoplatform.ide.extension.java.shared.DataSourceOptions;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  */
-public class ConfigureDatasourcePresenter implements ConfigureDatasourceHandler, ViewClosedHandler,
+public class ConfigureDatasourcePresenter implements ConfigureDatasourceHandler, ViewClosedHandler, 
         VfsChangedHandler, ConfigurationReceivedSuccessfullyHandler,
-        ProjectOpenedHandler, ProjectClosedHandler, TreeRefreshedHandler {
+        ProjectOpenedHandler, ProjectClosedHandler, TreeRefreshedHandler, 
+        EditorFileOpenedHandler, EditorFileClosedHandler {
 
     public interface Display extends IsView {
         
@@ -97,6 +104,8 @@ public class ConfigureDatasourcePresenter implements ConfigureDatasourceHandler,
     
     private IDEProject project;
     
+    private Map<String, FileModel> openedFiles;
+    
     private List<DataSourceOptions> datasourceList;
     
     public ConfigureDatasourcePresenter() {
@@ -111,6 +120,9 @@ public class ConfigureDatasourcePresenter implements ConfigureDatasourceHandler,
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
         
         IDE.addHandler(TreeRefreshedEvent.TYPE, this);
+        
+        IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+        IDE.addHandler(EditorFileClosedEvent.TYPE, this);
     }
 
     @Override
@@ -293,6 +305,16 @@ public class ConfigureDatasourcePresenter implements ConfigureDatasourceHandler,
 
     @Override
     public void onTreeRefreshed(TreeRefreshedEvent event) {
+    }
+
+    @Override
+    public void onEditorFileOpened(EditorFileOpenedEvent event) {
+        openedFiles = event.getOpenedFiles();
+    }
+
+    @Override
+    public void onEditorFileClosed(EditorFileClosedEvent event) {
+        openedFiles = event.getOpenedFiles();
     }
 
 }
