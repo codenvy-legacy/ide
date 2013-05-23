@@ -28,7 +28,7 @@ import com.google.gwt.http.client.Response;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  */
 public class StringUnmarshaller implements Unmarshallable<StringBuilder> {
-    protected StringBuilder builder;
+    private StringBuilder builder;
 
     /**
      * Create unmarshaller.

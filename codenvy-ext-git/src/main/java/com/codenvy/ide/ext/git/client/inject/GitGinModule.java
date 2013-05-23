@@ -19,7 +19,10 @@
 package com.codenvy.ide.ext.git.client.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
+import com.codenvy.ide.ext.git.client.GitClientService;
+import com.codenvy.ide.ext.git.client.GitClientServiceImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
+import com.google.inject.Singleton;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 @ExtensionGinModule
@@ -27,5 +30,6 @@ public class GitGinModule extends AbstractGinModule {
     /** {@inheritDoc} */
     @Override
     protected void configure() {
+        bind(GitClientService.class).to(GitClientServiceImpl.class).in(Singleton.class);
     }
 }
