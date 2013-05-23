@@ -62,11 +62,6 @@
     </filter>
 
 
-    <filter>
-        <filter-name>StandaloneAuthenticationFilter</filter-name>
-        <filter-class>org.exoplatform.ide.authentication.StandaloneAuthenticationFilter</filter-class>
-    </filter>
-
     <filter-mapping>
         <filter-name>SetCurrentIdentityFilter</filter-name>
         <url-pattern>/rest/*</url-pattern>
@@ -96,18 +91,25 @@
         <filter-name>SetEnvironmentContextFilter</filter-name>
         <url-pattern>/collaboration/*</url-pattern>
     </filter-mapping>
+  
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>api</web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>developer</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>NONE</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
 
-    <filter-mapping>
-        <filter-name>StandaloneAuthenticationFilter</filter-name>
-        <url-pattern>/rest/*</url-pattern>
-        <url-pattern>/websocket/*</url-pattern>
-        <url-pattern>/collaboration/*</url-pattern>
-    </filter-mapping>
-
-    <session-config>
-        <session-timeout>30</session-timeout>
-    </session-config>
-
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>codenvy</realm-name>
+    </login-config>
+    
     <security-role>
         <description>the user role</description>
         <role-name>developer</role-name>

@@ -18,7 +18,7 @@
     02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
 -->
-<module rename-to="IDE">
+<module rename-to="ide">
    
    <inherits name="com.google.gwt.i18n.I18N"/>
    <inherits name='com.google.gwt.user.User' />
@@ -27,8 +27,6 @@
 	<inherits name='org.exoplatform.ide.IDECore' />
    <inherits name="org.exoplatform.ide.IDEExtensions" />
    
-   <add-linker name="xsiframe"/>
-   <set-configuration-property name="devModeRedirectEnabled" value="true"/>
 
    <!-- Specify the app entry point class. -->
    <entry-point class='org.exoplatform.ide.client.IDEShell' />
