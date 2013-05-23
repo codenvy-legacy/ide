@@ -21,6 +21,8 @@ package com.codenvy.ide.ext.jenkins.client.inject;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.ext.jenkins.client.JenkinsService;
 import com.codenvy.ide.ext.jenkins.client.JenkinsServiceImpl;
+import com.codenvy.ide.ext.jenkins.client.build.BuildApplicationView;
+import com.codenvy.ide.ext.jenkins.client.build.BuildApplicationViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
@@ -31,5 +33,7 @@ public class JenkinsGinModule extends AbstractGinModule {
     @Override
     protected void configure() {
         bind(JenkinsService.class).to(JenkinsServiceImpl.class).in(Singleton.class);
+
+        bind(BuildApplicationView.class).to(BuildApplicationViewImpl.class).in(Singleton.class);
     }
 }

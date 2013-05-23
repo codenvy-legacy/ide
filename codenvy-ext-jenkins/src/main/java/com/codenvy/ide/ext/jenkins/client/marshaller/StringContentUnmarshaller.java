@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,25 +16,38 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.jenkins.client;
+package com.codenvy.ide.ext.jenkins.client.marshaller;
 
-import com.codenvy.ide.api.extension.Extension;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import com.codenvy.ide.commons.exception.UnmarshallerException;
+import com.codenvy.ide.rest.Unmarshallable;
+import com.google.gwt.http.client.Response;
 
 /**
- * IDE Jenkins extension entry point
+ * Unmarshaller for String object.
  *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  */
-@Singleton
-@Extension(title = "Jenkins Support.", version = "3.0.0")
-public class JenkinsExtension {
-    /** Channel for the messages containing status of the Jenkins job. */
-    public static final String JOB_STATUS_CHANNEL = "jenkins:jobStatus:";
+public class StringContentUnmarshaller implements Unmarshallable<StringBuilder> {
+    private StringBuilder content;
 
-    @Inject
-    public JenkinsExtension() {
+    /**
+     * Create unmarshaller.
+     *
+     * @param content
+     */
+    public StringContentUnmarshaller(StringBuilder content) {
+        this.content = content;
+    }
 
+    /** {@inheritDoc} */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        content.append(response.getText());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public StringBuilder getPayload() {
+        return content;
     }
 }

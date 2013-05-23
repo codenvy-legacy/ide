@@ -16,25 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.jenkins.client;
+package com.codenvy.ide.ext.jenkins.client.build;
 
-import com.codenvy.ide.api.extension.Extension;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import com.codenvy.ide.api.mvp.View;
 
 /**
- * IDE Jenkins extension entry point
+ * The view of {@link BuildApplicationView}.
  *
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-@Singleton
-@Extension(title = "Jenkins Support.", version = "3.0.0")
-public class JenkinsExtension {
-    /** Channel for the messages containing status of the Jenkins job. */
-    public static final String JOB_STATUS_CHANNEL = "jenkins:jobStatus:";
-
-    @Inject
-    public JenkinsExtension() {
-
+public interface BuildApplicationView extends View<BuildApplicationView.ActionDelegate> {
+    /** Needs for delegate some function into BuildApplication view. */
+    public interface ActionDelegate {
     }
+
+    /**
+     * Shows message.
+     *
+     * @param text
+     */
+    void showMessageInOutput(String text);
+
+    /** Starts animation. */
+    void startAnimation();
+
+    /** Stops animation. */
+    void stopAnimation();
 }

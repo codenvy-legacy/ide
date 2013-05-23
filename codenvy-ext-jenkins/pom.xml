@@ -62,6 +62,10 @@
             <artifactId>codenvy-ide-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-git</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-jenkins</artifactId>
             <version>${org.exoplatform.ide.version}</version>
