@@ -16,33 +16,32 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.marshaller;
+package com.codenvy.ide.ext.git.client.marshaller;
 
+import com.codenvy.ide.ext.git.shared.RemoteUpdateRequest;
+import com.codenvy.ide.rest.Marshallable;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 
-import org.exoplatform.gwtframework.commons.rest.Marshallable;
-import org.exoplatform.ide.git.shared.RemoteUpdateRequest;
-
 /**
  * Marshaller for update remote repository request in JSON format.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 19, 2011 12:16:57 PM anya $
  */
 public class RemoteUpdateRequestMarshaller implements Marshallable, Constants {
-
     /** Update remote repository request. */
     private RemoteUpdateRequest remoteUpdateRequest;
 
     /**
-     * @param remoteUpdateRequest update remote repository request
+     * @param remoteUpdateRequest
+     *         update remote repository request
      */
     public RemoteUpdateRequestMarshaller(RemoteUpdateRequest remoteUpdateRequest) {
         this.remoteUpdateRequest = remoteUpdateRequest;
     }
 
-    /** @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal() */
+    /** {@inheritDoc} */
     @Override
     public String marshal() {
         JSONObject jsonObject = new JSONObject();
@@ -51,5 +50,4 @@ public class RemoteUpdateRequestMarshaller implements Marshallable, Constants {
 
         return jsonObject.toString();
     }
-
 }

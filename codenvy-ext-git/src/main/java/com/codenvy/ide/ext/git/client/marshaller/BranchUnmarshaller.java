@@ -16,19 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.marshaller;
+package com.codenvy.ide.ext.git.client.marshaller;
 
+import com.codenvy.ide.commons.exception.UnmarshallerException;
+import com.codenvy.ide.ext.git.shared.Branch;
+import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.git.shared.Branch;
-
 /**
  * Unmarshaller for {@link Branch} in JSON format.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 11, 2011 12:29:46 PM anya $
  */
@@ -37,13 +36,14 @@ public class BranchUnmarshaller implements Unmarshallable<Branch>, Constants {
     private Branch branch;
 
     /**
-     * @param branch branch
+     * @param branch
+     *         branch
      */
     public BranchUnmarshaller(Branch branch) {
         this.branch = branch;
     }
 
-    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         if (response.getText() == null || response.getText().isEmpty()) {
@@ -55,7 +55,7 @@ public class BranchUnmarshaller implements Unmarshallable<Branch>, Constants {
             return;
         if (object.containsKey(ACTIVE)) {
             boolean active =
-                             (object.get(ACTIVE).isBoolean() != null) ? object.get(ACTIVE).isBoolean().booleanValue() : false;
+                    (object.get(ACTIVE).isBoolean() != null) ? object.get(ACTIVE).isBoolean().booleanValue() : false;
             branch.setActive(active);
         }
         if (object.containsKey(NAME)) {
@@ -64,12 +64,12 @@ public class BranchUnmarshaller implements Unmarshallable<Branch>, Constants {
         }
         if (object.containsKey(DISPLAY_NAME)) {
             String displayName =
-                                 (object.get(DISPLAY_NAME).isString() != null) ? object.get(DISPLAY_NAME).isString().stringValue() : "";
+                    (object.get(DISPLAY_NAME).isString() != null) ? object.get(DISPLAY_NAME).isString().stringValue() : "";
             branch.setDisplayName(displayName);
         }
     }
 
-    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
+    /** {@inheritDoc} */
     @Override
     public Branch getPayload() {
         return branch;

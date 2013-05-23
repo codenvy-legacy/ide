@@ -42,6 +42,9 @@ import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -50,6 +53,7 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 23, 2011 11:52:24 AM anya $
  */
+@Singleton
 public class GitClientServiceImpl implements GitClientService {
     public static final String ADD               = "/ide/git/add";
     public static final String BRANCH_LIST       = "/ide/git/branch-list";
@@ -89,7 +93,8 @@ public class GitClientServiceImpl implements GitClientService {
      * @param loader
      *         loader to show on server request
      */
-    protected GitClientServiceImpl(String restContext, Loader loader, MessageBus wsMessageBus, EventBus eventBus,
+    @Inject
+    protected GitClientServiceImpl(@Named("restContext") String restContext, Loader loader, MessageBus wsMessageBus, EventBus eventBus,
                                    GitLocalizationConstant constant) {
         this.loader = loader;
         this.restServiceContext = restContext;

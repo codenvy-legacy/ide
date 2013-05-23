@@ -16,37 +16,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.marshaller;
+package com.codenvy.ide.ext.git.client.marshaller;
 
+import com.codenvy.ide.commons.exception.UnmarshallerException;
+import com.codenvy.ide.ext.git.shared.Branch;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.git.shared.Branch;
-
-import java.util.List;
-
 /**
  * Unmarshaller for list of branches.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 5, 2011 2:14:51 PM anya $
  */
-public class BranchListUnmarshaller implements Unmarshallable<List<Branch>>, Constants {
+public class BranchListUnmarshaller implements Unmarshallable<JsonArray<Branch>>, Constants {
     /** List of branches. */
-    private List<Branch> branches;
+    private JsonArray<Branch> branches;
 
     /**
-     * @param branches branches
+     * @param branches
+     *         branches
      */
-    public BranchListUnmarshaller(List<Branch> branches) {
+    public BranchListUnmarshaller(JsonArray<Branch> branches) {
         this.branches = branches;
     }
 
-    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         if (response.getText() == null || response.getText().isEmpty()) {
@@ -77,18 +76,17 @@ public class BranchListUnmarshaller implements Unmarshallable<List<Branch>>, Con
             }
             if (object.containsKey(DISPLAY_NAME)) {
                 displayName =
-                              (object.get(DISPLAY_NAME).isString() != null) ? object.get(DISPLAY_NAME).isString().stringValue()
-                                  : displayName;
+                        (object.get(DISPLAY_NAME).isString() != null) ? object.get(DISPLAY_NAME).isString().stringValue()
+                                                                      : displayName;
             }
 
             branches.add(new Branch(name, active, displayName, remote));
         }
     }
 
-    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
+    /** {@inheritDoc} */
     @Override
-    public List<Branch> getPayload() {
+    public JsonArray<Branch> getPayload() {
         return branches;
     }
-
 }
