@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.extension.python.client.run;
 
-import com.google.gwt.http.client.RequestException;
-import com.google.web.bindery.autobean.shared.AutoBean;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -29,6 +26,7 @@ import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
@@ -51,6 +49,9 @@ import org.exoplatform.ide.extension.python.shared.ApplicationInstance;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
+import com.google.gwt.http.client.RequestException;
+import com.google.web.bindery.autobean.shared.AutoBean;
+
 /**
  * Manager for running/stopping Python application.
  *
@@ -70,6 +71,7 @@ public class RunApplicationManager implements RunApplicationHandler, StopApplica
     public RunApplicationManager() {
         IDE.getInstance().addControl(new RunApplicationControl());
         IDE.getInstance().addControl(new StopApplicationControl());
+        IDE.getInstance().addControl(new RunApplicationControl(), Docking.TOOLBAR_RIGHT);
 
         IDE.addHandler(RunApplicationEvent.TYPE, this);
         IDE.addHandler(StopApplicationEvent.TYPE, this);

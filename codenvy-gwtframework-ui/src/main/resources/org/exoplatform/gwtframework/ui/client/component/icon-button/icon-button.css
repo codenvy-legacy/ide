@@ -1,4 +1,4 @@
-.exoIconButtonPanel,
+@sprite .exoIconButtonPanel,
 .exoIconButtonPanelOver,
 .exoIconButtonPanelDown,
 .exoIconButtonPanelSelected,
@@ -7,7 +7,7 @@
     width: 24px;
     height: 24px;
     overflow: hidden;
-    background: url(button-background.png);
+    gwt-image: 'buttonBackground';
 }
 
 .exoIconButtonPanel {
