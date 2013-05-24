@@ -29,11 +29,12 @@
         height: 24px;
     }
 
-    .exo-statusText-table-left,
+    @sprite .exo-statusText-table-left,
     .exo-statusText-table-left-over,
     .exo-statusText-table-left-down {
-        background: url(images/statusbar/statustext/statusTextLeft.png);
+        gwt-image: 'left';
         width: 3px;
+        height: 24px;
     }
 
     .exo-statusText-table-left {
@@ -48,14 +49,15 @@
         background-position: 0px -48px;
     }
 
-    .exo-statusText-table-middle,
+    @sprite .exo-statusText-table-middle,
     .exo-statusText-table-middle-over,
     .exo-statusText-table-middle-down {
-        background: url(images/statusbar/statustext/statusTextMiddle.png) repeat-x;
+        gwt-image: 'middle';
         font-family: Verdana, Bitstream Vera Sans, sans-serif;
         font-size: 11px;
         font-weight: normal;
         font-style: normal;
+        height: 24px;
     }
 
     .exo-statusText-table-middle {
@@ -70,11 +72,12 @@
         background-position: 0px -48px;
     }
 
-    .exo-statusText-table-right,
+    @sprite .exo-statusText-table-right,
     .exo-statusText-table-right-over,
     .exo-statusText-table-right-down {
-        background: url(images/statusbar/statustext/statusTextRight.png);
+        gwt-image: 'right';
         width: 3px;
+        height: 24px;
     }
 
     .exo-statusText-table-right {
