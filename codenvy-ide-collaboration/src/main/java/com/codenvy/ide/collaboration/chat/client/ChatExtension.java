@@ -26,6 +26,7 @@ import com.codenvy.ide.dtogen.shared.ServerError.FailureReason;
 import com.codenvy.ide.dtogen.shared.ServerToClientDto;
 import com.codenvy.ide.json.client.Jso;
 import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.collide.client.CollabEditorExtension;
 import com.google.gwt.core.client.GWT;
 
@@ -116,7 +117,9 @@ public class ChatExtension extends Extension
         }
 
         currentProject = null;
-        chatPresenter.projectClosed();
+        if (chatPresenter != null) {
+            chatPresenter.projectClosed();
+        }
     }
 
     @Override
@@ -168,6 +171,10 @@ public class ChatExtension extends Extension
     }
 
     public JsonArray<Participant> getCurrentProjectParticipants() {
+        if (chatPresenter == null) {
+            return JsonCollections.createArray();
+        }
+        
         return chatPresenter.getParticipants().getValues();
     }
 
