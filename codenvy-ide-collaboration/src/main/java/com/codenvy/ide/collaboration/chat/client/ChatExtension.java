@@ -174,7 +174,7 @@ public class ChatExtension extends Extension
         if (chatPresenter == null) {
             return JsonCollections.createArray();
         }
-
+        
         return chatPresenter.getParticipants().getValues();
     }
 
@@ -183,4 +183,3 @@ public class ChatExtension extends Extension
     }
 
 }
-
