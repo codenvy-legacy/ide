@@ -33,6 +33,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -197,8 +198,14 @@ public class UserProfileSshKeyStore implements SshKeyStore {
         try {
             final String userId = getUserId();
             final User myUser = userManager.getUserByAlias(userId);
-            cache.remove(cacheKey(userId, host, PRIVATE));
-            cache.remove(cacheKey(userId, host, PUBLIC));
+            Iterator<Entry<String, SshKey>> it = cache.iterator();
+            while (it.hasNext()) {
+                Entry<String, SshKey> el = it.next();
+                String[] cacheKey = parseCacheKey(el.getKey());
+                if (cacheKey[0].equals(userId) && cacheKey[1].endsWith(host)) {
+                    it.remove();
+                }
+            }
             myUser.getProfile().removeAttribute(sshKeyAttributeName(host, PRIVATE));
             myUser.getProfile().removeAttribute(sshKeyAttributeName(host, PUBLIC));
             userManager.updateUser(myUser);
@@ -251,5 +258,15 @@ public class UserProfileSshKeyStore implements SshKeyStore {
     private String sshKeyAttributeName(String host, int i) {
         // Returns something like: ssh.key.private.codenvy.com or ssh.key.public.codenvy.com
         return (i == PRIVATE ? PRIVATE_KEY_ATTRIBUTE_PREFIX : PUBLIC_KEY_ATTRIBUTE_PREFIX) + host;
+    }
+
+    private String[] parseCacheKey(String cacheKey) {
+        String[] result = new String[3];
+        int firstColonIndex = cacheKey.indexOf(":");
+        int lastColonIndex = cacheKey.lastIndexOf(":");
+        result[0] = cacheKey.substring(0, firstColonIndex); // user
+        result[1] = cacheKey.substring(firstColonIndex, lastColonIndex);// host
+        result[2] = cacheKey.substring(lastColonIndex, cacheKey.length());// key type
+        return result;
     }
 }
