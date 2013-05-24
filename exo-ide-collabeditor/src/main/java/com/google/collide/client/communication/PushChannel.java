@@ -105,45 +105,7 @@ public class PushChannel {
     private final ConnectionOpenedHandler openedHandler = new ConnectionOpenedHandler() {
         @Override
         public void onConnectionOpened() {
-            // Lazily initialize the messageHandler and register to handle messages.
-            if (messageHandler == null) {
-                messageHandler = new MessageHandler() {
-                    @Override
-                    public void onMessage(String message) {
-                        ServerToClientDto dto = (ServerToClientDto)Jso.deserialize(message).<RoutableDtoClientImpl>cast();
-                        messageFilter.dispatchMessage(dto);
-                    }
-                };
-                try {
-                    eventBus.subscribe("collab_editor." + BootstrapSession.getBootstrapSession().getActiveClientId(),
-                                       messageHandler);
-                } catch (WebSocketException e) {
-                    Log.error(PushChannel.class, e);
-                }
-            }
-
-            // Notify listeners who handle reconnections.
-            if (hasReceivedOnDisconnected) {
-                disconnectedTooLongTimer.cancel();
-
-                listenerManager.dispatch(new ListenerManager.Dispatcher<Listener>() {
-                    @Override
-                    public void dispatch(Listener listener) {
-                        listener.onReconnectedSuccessfully();
-                    }
-                });
-                hasReceivedOnDisconnected = false;
-            }
-
-            // Drain any messages that came in while the channel was not open.
-            try {
-                for (QueuedMessage msg : queuedMessages) {
-                    eventBus.send(msg.address, msg.msg, msg.replyHandler);
-                }
-            } catch (WebSocketException e) {
-                Log.error(PushChannel.class, e);
-            }
-            queuedMessages.clear();
+            initialize();
         }
     };
 
@@ -166,6 +128,7 @@ public class PushChannel {
     }
 
     private void init() {
+        initialize();
         eventBus.setOnOpenHandler(openedHandler);
         eventBus.setOnCloseHandler(closedHandler);
     }
@@ -194,5 +157,50 @@ public class PushChannel {
 
     public ListenerRegistrar<Listener> getListenerRegistrar() {
         return listenerManager;
+    }
+
+    /**
+     * 
+     */
+    private void initialize() {
+        // Lazily initialize the messageHandler and register to handle messages.
+        if (messageHandler == null) {
+            messageHandler = new MessageHandler() {
+                @Override
+                public void onMessage(String message) {
+                    ServerToClientDto dto = (ServerToClientDto)Jso.deserialize(message).<RoutableDtoClientImpl>cast();
+                    messageFilter.dispatchMessage(dto);
+                }
+            };
+            try {
+                eventBus.subscribe("collab_editor." + BootstrapSession.getBootstrapSession().getActiveClientId(),
+                                   messageHandler);
+            } catch (WebSocketException e) {
+                Log.error(PushChannel.class, e);
+            }
+        }
+
+        // Notify listeners who handle reconnections.
+        if (hasReceivedOnDisconnected) {
+            disconnectedTooLongTimer.cancel();
+
+            listenerManager.dispatch(new ListenerManager.Dispatcher<Listener>() {
+                @Override
+                public void dispatch(Listener listener) {
+                    listener.onReconnectedSuccessfully();
+                }
+            });
+            hasReceivedOnDisconnected = false;
+        }
+
+        // Drain any messages that came in while the channel was not open.
+        try {
+            for (QueuedMessage msg : queuedMessages) {
+                eventBus.send(msg.address, msg.msg, msg.replyHandler);
+            }
+        } catch (WebSocketException e) {
+            Log.error(PushChannel.class, e);
+        }
+        queuedMessages.clear();
     }
 }

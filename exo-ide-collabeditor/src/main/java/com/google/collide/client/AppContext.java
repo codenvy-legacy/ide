@@ -22,6 +22,7 @@ import com.google.collide.client.status.StatusManager;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter;
@@ -69,14 +70,15 @@ public class AppContext {
     }
 
     public static MessageBus getMessageBus() {
-        String url;
-        boolean isSecureConnection = Window.Location.getProtocol().equals("https:");
-        if (isSecureConnection) {
-            url = "wss://" + Window.Location.getHost() + "/w/collaboration/" + Utils.getWorkspaceName();
-        } else {
-            url = "ws://" + Window.Location.getHost() + "/w/collaboration/" + Utils.getWorkspaceName();
-        }
-        return new RESTMessageBus(url);
+//        String url;
+//        boolean isSecureConnection = Window.Location.getProtocol().equals("https:");
+//        if (isSecureConnection) {
+//            url = "wss://" + Window.Location.getHost() + "/w/collaboration/" + Utils.getWorkspaceName();
+//        } else {
+//            url = "ws://" + Window.Location.getHost() + "/w/collaboration/" + Utils.getWorkspaceName();
+//        }
+//        return new RESTMessageBus(url);
+        return IDE.messageBus();
     }
 
     //  public KeyBindings getKeyBindings() {

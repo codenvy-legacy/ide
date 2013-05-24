@@ -46,11 +46,6 @@
         <url-pattern>/websocket/*</url-pattern>
     </servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>ExoIdeWebSocketServlet</servlet-name>
-        <url-pattern>/collaboration/*</url-pattern>
-    </servlet-mapping>
-
     <filter>
         <filter-name>SetCurrentIdentityFilter</filter-name>
         <filter-class>org.exoplatform.services.security.web.SetCurrentIdentityFilter</filter-class>
@@ -73,11 +68,6 @@
     </filter-mapping>
 
     <filter-mapping>
-        <filter-name>SetCurrentIdentityFilter</filter-name>
-        <url-pattern>/collaboration/*</url-pattern>
-    </filter-mapping>
-
-    <filter-mapping>
         <filter-name>SetEnvironmentContextFilter</filter-name>
         <url-pattern>/rest/*</url-pattern>
     </filter-mapping>
@@ -87,11 +77,6 @@
         <url-pattern>/websocket/*</url-pattern>
     </filter-mapping>
 
-    <filter-mapping>
-        <filter-name>SetEnvironmentContextFilter</filter-name>
-        <url-pattern>/collaboration/*</url-pattern>
-    </filter-mapping>
-  
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>api</web-resource-name>
