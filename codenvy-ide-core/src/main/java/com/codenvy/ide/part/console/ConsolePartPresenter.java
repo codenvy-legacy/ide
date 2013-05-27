@@ -32,14 +32,13 @@ import com.google.inject.Singleton;
 @Singleton
 public class ConsolePartPresenter extends BasePresenter implements ConsolePartView.ActionDelegate, ConsolePart {
     private static final String TITLE = "Console";
-
     private ConsolePartView view;
 
     /** Construct empty Part */
     @Inject
     public ConsolePartPresenter(ConsolePartView view) {
         this.view = view;
-        view.setTitle(TITLE);
+        this.view.setTitle(TITLE);
         this.view.setDelegate(this);
     }
 
@@ -71,5 +70,8 @@ public class ConsolePartPresenter extends BasePresenter implements ConsolePartVi
     @Override
     public void print(String message) {
         view.print(message);
+        if (!partStack.getActivePart().equals(this)) {
+            partStack.setActivePart(this);
+        }
     }
 }

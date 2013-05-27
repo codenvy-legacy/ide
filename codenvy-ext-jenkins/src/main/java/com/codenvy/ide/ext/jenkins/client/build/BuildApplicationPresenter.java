@@ -21,7 +21,6 @@ package com.codenvy.ide.ext.jenkins.client.build;
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.workspace.AbstractPartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.api.user.User;
@@ -40,6 +39,7 @@ import com.codenvy.ide.ext.jenkins.client.marshaller.StringContentUnmarshaller;
 import com.codenvy.ide.ext.jenkins.shared.Job;
 import com.codenvy.ide.ext.jenkins.shared.JobStatus;
 import com.codenvy.ide.ext.jenkins.shared.JobStatusBean;
+import com.codenvy.ide.part.base.BasePresenter;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
@@ -67,7 +67,8 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  */
 @Singleton
-public class BuildApplicationPresenter extends AbstractPartPresenter implements BuildApplicationView.ActionDelegate {
+public class BuildApplicationPresenter extends BasePresenter implements BuildApplicationView.ActionDelegate {
+    private static final String TITLE = "Building";
     private BuildApplicationView   view;
     private ResourceProvider       resourceProvider;
     private JenkinsAutoBeanFactory autoBeanFactory;
@@ -119,6 +120,7 @@ public class BuildApplicationPresenter extends AbstractPartPresenter implements 
                                         GitClientService gitClientService, GitLocalizationConstant gitConstant) {
         this.view = view;
         this.view.setDelegate(this);
+        this.view.setTitle(TITLE);
         this.resourceProvider = resourceProvider;
         this.autoBeanFactory = autoBeanFactory;
         this.service = service;
@@ -242,8 +244,6 @@ public class BuildApplicationPresenter extends AbstractPartPresenter implements 
      */
     private void setBuildStatusFinished(JobStatus status) {
         buildInProgress = false;
-        // TODO
-        workspaceAgent.setActivePart(this);
 
         prevStatus = JobStatusBean.Status.END;
 
@@ -485,10 +485,13 @@ public class BuildApplicationPresenter extends AbstractPartPresenter implements 
      *         message for output
      */
     private void showBuildMessage(String message) {
-
         if (isViewClosed) {
             workspaceAgent.openPart(this, PartStackType.INFORMATION);
             isViewClosed = false;
+        }
+
+        if (!partStack.getActivePart().equals(this)) {
+            partStack.setActivePart(this);
         }
 
         view.showMessageInOutput(message);
@@ -512,7 +515,7 @@ public class BuildApplicationPresenter extends AbstractPartPresenter implements 
     /** {@inheritDoc} */
     @Override
     public String getTitle() {
-        return "Building";
+        return TITLE;
     }
 
     /** {@inheritDoc} */

@@ -21,9 +21,7 @@ package com.codenvy.ide.ext.cloudbees.client;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.menu.MainMenuAgent;
-import com.codenvy.ide.ext.cloudbees.client.command.ShowApplicationsCommand;
-import com.codenvy.ide.ext.cloudbees.client.command.ShowCreateAccountCommand;
-import com.codenvy.ide.ext.cloudbees.client.command.ShowLoginCommand;
+import com.codenvy.ide.ext.cloudbees.client.command.*;
 import com.codenvy.ide.ext.cloudbees.client.wizard.CloudBeesPagePresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
@@ -43,16 +41,19 @@ public class CloudBeesExtension {
 
     @Inject
     public CloudBeesExtension(PaaSAgent paasAgent, CloudBeesResources resources, MainMenuAgent menu,
-                              ShowLoginCommand loginCommand, ShowApplicationsCommand applicationsCommand,
-                              ShowCreateAccountCommand createAccountCommand, Provider<CloudBeesPagePresenter> wizardPage) {
+                              ShowLoginCommand loginCommand, ShowCreateApplicationCommand createApplicationCommand,
+                              ShowApplicationsCommand applicationsCommand, ShowCreateAccountCommand createAccountCommand,
+                              ShowCloudBeesProjectCommand showCloudBeesProjectCommand, Provider<CloudBeesPagePresenter> wizardPage) {
         resources.cloudBeesCSS().ensureInjected();
 
         // TODO change hard code types
         JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "War");
         paasAgent.registerPaaS(ID, ID, resources.cloudBees48(), requiredProjectTypes, wizardPage, null);
 
+        menu.addMenuItem("PaaS/CloudBees/Create Application...", createApplicationCommand);
         menu.addMenuItem("PaaS/CloudBees/Applications...", applicationsCommand);
         menu.addMenuItem("PaaS/CloudBees/Switch Account...", loginCommand);
         menu.addMenuItem("PaaS/CloudBees/Create Account...", createAccountCommand);
+        menu.addMenuItem("Project/Paas/CloudBes", showCloudBeesProjectCommand);
     }
 }

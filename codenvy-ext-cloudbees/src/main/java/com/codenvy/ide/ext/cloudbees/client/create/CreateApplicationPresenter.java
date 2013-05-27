@@ -16,19 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.cloudbees.client.wizard;
+package com.codenvy.ide.ext.cloudbees.client.create;
 
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.template.CreateProjectProvider;
-import com.codenvy.ide.api.template.TemplateAgent;
-import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
-import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.cloudbees.client.*;
 import com.codenvy.ide.ext.cloudbees.client.login.LoggedInHandler;
-import com.codenvy.ide.ext.cloudbees.client.login.LoginCanceledHandler;
 import com.codenvy.ide.ext.cloudbees.client.login.LoginPresenter;
 import com.codenvy.ide.ext.cloudbees.client.marshaller.DomainsUnmarshaller;
 import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
@@ -43,20 +38,20 @@ import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.AutoBeanUnmarshallerWS;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
- * Presenter for creating application on CloudBees from New project wizard.
+ * Presenter for creating application on CloudBees.
  *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @version $Id: InitializeApplicationPresenter.java Jun 23, 2011 12:49:09 PM vereshchaka $
  */
 @Singleton
-public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implements CloudBeesPageView.ActionDelegate {
-    private CloudBeesPageView             view;
+public class CreateApplicationPresenter implements CreateApplicationView.ActionDelegate {
+    private CreateApplicationView         view;
     private EventBus                      eventBus;
     private ResourceProvider              resourcesProvider;
     private ConsolePart                   console;
@@ -64,10 +59,7 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
     private CloudBeesAutoBeanFactory      autoBeanFactory;
     private LoginPresenter                loginPresenter;
     private CloudBeesClientService        service;
-    private TemplateAgent                 templateAgent;
     private BuildApplicationPresenter     buildApplicationPresenter;
-    private CreateProjectProvider         createProjectProvider;
-    private boolean                       isLogined;
     /** Public url to war file of application. */
     private String                        warUrl;
     private String                        projectName;
@@ -86,17 +78,13 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
      * @param autoBeanFactory
      * @param loginPresenter
      * @param service
-     * @param templateAgent
-     * @param resources
      * @param buildApplicationPresenter
      */
     @Inject
-    protected CloudBeesPagePresenter(CloudBeesPageView view, EventBus eventBus, ResourceProvider resourcesProvider, ConsolePart console,
-                                     CloudBeesLocalizationConstant constant, CloudBeesAutoBeanFactory autoBeanFactory,
-                                     LoginPresenter loginPresenter, CloudBeesClientService service, TemplateAgent templateAgent,
-                                     CloudBeesResources resources, BuildApplicationPresenter buildApplicationPresenter) {
-        super("Deploy project to CloudBees", resources.cloudBees48());
-
+    protected CreateApplicationPresenter(CreateApplicationView view, EventBus eventBus, ResourceProvider resourcesProvider,
+                                         ConsolePart console, CloudBeesLocalizationConstant constant,
+                                         CloudBeesAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter,
+                                         CloudBeesClientService service, BuildApplicationPresenter buildApplicationPresenter) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
@@ -106,74 +94,15 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
         this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
-        this.templateAgent = templateAgent;
         this.buildApplicationPresenter = buildApplicationPresenter;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onValueChanged() {
-        domain = view.getDomain();
-        name = view.getName();
-        view.setUrl(domain + "/" + name);
+    /** Shows dialog. */
+    public void showDialog() {
+        project = resourcesProvider.getActiveProject();
+        projectName = project.getName();
 
-        delegate.updateControls();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public WizardPagePresenter flipToNext() {
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean canFinish() {
-        return validate();
-    }
-
-    /** Checking entered information on view. */
-    private boolean validate() {
-        if (isLogined) {
-            return view.getName() != null && !view.getName().isEmpty();
-        }
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean hasNext() {
-        return false;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean isCompleted() {
-        return validate();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getNotice() {
-        if (!isLogined) {
-            return "This project will be created without deploy on CloudBees.";
-        } else if (view.getName().isEmpty()) {
-            return "Please, enter a application's name.";
-        }
-
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void go(AcceptsOneWidget container) {
-        createProjectProvider = templateAgent.getSelectedTemplate().getCreateProjectProvider();
-        projectName = createProjectProvider.getProjectName();
-
-        isLogined = true;
         getDomains();
-
-        container.setWidget(view);
     }
 
     /** Gets domains. */
@@ -183,21 +112,13 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
             LoggedInHandler loggedInHandler = new LoggedInHandler() {
                 @Override
                 public void onLoggedIn() {
-                    isLogined = true;
                     getDomains();
-                }
-            };
-            LoginCanceledHandler loginCanceledHandler = new LoginCanceledHandler() {
-                @Override
-                public void onLoginCanceled() {
-                    isLogined = false;
-                    delegate.updateControls();
                 }
             };
 
             service.getDomains(
-                    new CloudBeesAsyncRequestCallback<JsonArray<String>>(unmarshaller, loggedInHandler, loginCanceledHandler, eventBus,
-                                                                         console, loginPresenter) {
+                    new CloudBeesAsyncRequestCallback<JsonArray<String>>(unmarshaller, loggedInHandler, null, eventBus, console,
+                                                                         loginPresenter) {
                         @Override
                         protected void onSuccess(JsonArray<String> result) {
                             view.setDomainValues(result);
@@ -205,6 +126,8 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
                             view.setName(projectName);
                             name = view.getName();
                             view.setUrl(domain + "/" + name);
+
+                            view.showDialog();
                         }
                     });
         } catch (RequestException e) {
@@ -215,55 +138,60 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
 
     /** {@inheritDoc} */
     @Override
-    public void doFinish() {
-        createProjectProvider.create(new AsyncCallback<Project>() {
+    public void onCreateClicked() {
+        buildApplication();
+    }
+
+    /** Builds application. */
+    private void buildApplication() {
+        buildApplicationPresenter.build(project, new AsyncCallback<JobStatus>() {
             @Override
-            public void onSuccess(Project result) {
-                project = result;
-                if (isLogined) {
-                    getFirstDeployDomains();
+            public void onSuccess(JobStatus result) {
+                if (result.getArtifactUrl() != null) {
+                    warUrl = result.getArtifactUrl();
+                    doDeployApplication();
                 }
             }
 
             @Override
             public void onFailure(Throwable caught) {
-                Log.error(CloudBeesPagePresenter.class, caught);
+                Log.error(CreateApplicationPresenter.class, "Can not build project on Jenkins", caught);
             }
         });
+
+        view.close();
     }
 
-    /** Create application on Cloud Bees by sending request over WebSocket or HTTP. */
-    private void createApplication() {
-        LoggedInHandler loggedInHandler = new LoggedInHandler() {
-            @Override
-            public void onLoggedIn() {
-                createApplication();
-            }
-        };
-        // TODO Need to create some special service after this class
-        // This class still doesn't have analog.
-        //        JobManager.get().showJobSeparated();
+    /** If user is not logged in to CloudBees, this handler will be called, after user logged in. */
+    private LoggedInHandler deployWarLoggedInHandler = new LoggedInHandler() {
+        @Override
+        public void onLoggedIn() {
+            doDeployApplication();
+        }
+    };
+
+    /** Deploy application to Cloud Bees by sending request over WebSocket or HTTP. */
+    private void doDeployApplication() {
         AutoBean<ApplicationInfo> autoBean = autoBeanFactory.applicationInfo();
 
         try {
-            AutoBeanUnmarshallerWS<ApplicationInfo> unmarshaller =
-                    new AutoBeanUnmarshallerWS<ApplicationInfo>(autoBean);
-
-            service.initializeApplicationWS(domain + "/" + name, resourcesProvider.getVfsId(), project.getId(), warUrl, null,
-                                            new CloudBeesRESTfulRequestCallback<ApplicationInfo>(unmarshaller, loggedInHandler, null,
-                                                                                                 eventBus, console, loginPresenter) {
+            AutoBeanUnmarshallerWS<ApplicationInfo> unmarshaller = new AutoBeanUnmarshallerWS<ApplicationInfo>(autoBean);
+            service.initializeApplicationWS(view.getUrl(), resourcesProvider.getVfsId(), project.getId(), warUrl, null,
+                                            new CloudBeesRESTfulRequestCallback<ApplicationInfo>(unmarshaller, deployWarLoggedInHandler,
+                                                                                                 null, eventBus, console, loginPresenter) {
                                                 @Override
                                                 protected void onSuccess(final ApplicationInfo appInfo) {
                                                     project.refreshProperties(new AsyncCallback<Project>() {
                                                         @Override
                                                         public void onSuccess(Project project) {
-                                                            onCreatedSuccess(appInfo);
+                                                            onDeploySuccess(appInfo);
                                                             eventBus.fireEvent(new RefreshBrowserEvent(project));
                                                         }
 
                                                         @Override
                                                         public void onFailure(Throwable caught) {
-                                                            Log.error(CloudBeesPagePresenter.class, "Can not refresh properties", caught);
+                                                            Log.error(CreateApplicationPresenter.class, "Can not refresh properties",
+                                                                      caught);
                                                         }
                                                     });
                                                 }
@@ -275,31 +203,31 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
                                                 }
                                             });
         } catch (WebSocketException e) {
-            createApplicationREST(loggedInHandler);
+            doDeployApplicationREST();
         }
     }
 
-    /** Create application on Cloud Bees by sending request over HTTP. */
-    private void createApplicationREST(LoggedInHandler loggedInHandler) {
+    /** Deploy application to Cloud Bees by sending request over HTTP. */
+    private void doDeployApplicationREST() {
+        AutoBean<ApplicationInfo> autoBean = autoBeanFactory.applicationInfo();
         try {
-            AutoBean<ApplicationInfo> autoBean = autoBeanFactory.applicationInfo();
             AutoBeanUnmarshaller<ApplicationInfo> unmarshaller = new AutoBeanUnmarshaller<ApplicationInfo>(autoBean);
-
-            service.initializeApplication(domain + "/" + name, resourcesProvider.getVfsId(), project.getId(), warUrl, null,
-                                          new CloudBeesAsyncRequestCallback<ApplicationInfo>(unmarshaller, loggedInHandler, null, eventBus,
-                                                                                             console, loginPresenter) {
+            service.initializeApplication(view.getUrl(), resourcesProvider.getVfsId(), project.getId(), warUrl, null,
+                                          new CloudBeesAsyncRequestCallback<ApplicationInfo>(unmarshaller, deployWarLoggedInHandler, null,
+                                                                                             eventBus, console, loginPresenter) {
                                               @Override
                                               protected void onSuccess(final ApplicationInfo appInfo) {
                                                   project.refreshProperties(new AsyncCallback<Project>() {
                                                       @Override
                                                       public void onSuccess(Project project) {
-                                                          onCreatedSuccess(appInfo);
+                                                          onDeploySuccess(appInfo);
                                                           eventBus.fireEvent(new RefreshBrowserEvent(project));
                                                       }
 
                                                       @Override
                                                       public void onFailure(Throwable caught) {
-                                                          Log.error(CloudBeesPagePresenter.class, "Can not refresh properties", caught);
+                                                          Log.error(CreateApplicationPresenter.class, "Can not refresh properties",
+                                                                    caught);
                                                       }
                                                   });
                                               }
@@ -311,6 +239,7 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
                                               }
                                           });
         } catch (RequestException e) {
+            eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(constant.deployApplicationFailureMessage());
         }
     }
@@ -320,7 +249,7 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
      *
      * @param appInfo
      */
-    private void onCreatedSuccess(ApplicationInfo appInfo) {
+    private void onDeploySuccess(ApplicationInfo appInfo) {
         StringBuilder output = new StringBuilder(constant.deployApplicationSuccess()).append("<br>");
         output.append(constant.deployApplicationInfo()).append("<br>");
         output.append(constant.applicationInfoListGridId()).append(" : ").append(appInfo.getId()).append("<br>");
@@ -338,57 +267,24 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
         console.print(output.toString());
     }
 
-    /** Gets deploy domains. */
-    private void getFirstDeployDomains() {
-        try {
-            DomainsUnmarshaller unmarshaller = new DomainsUnmarshaller(JsonCollections.<String>createArray());
-            LoggedInHandler loggedInHandler = new LoggedInHandler() {
-                @Override
-                public void onLoggedIn() {
-                    isLogined = true;
-                    getFirstDeployDomains();
-                }
-            };
-
-            LoginCanceledHandler loginCanceledHandler = new LoginCanceledHandler() {
-                @Override
-                public void onLoginCanceled() {
-                    isLogined = false;
-                    delegate.updateControls();
-                }
-            };
-
-            service.getDomains(
-                    new CloudBeesAsyncRequestCallback<JsonArray<String>>(unmarshaller, loggedInHandler, loginCanceledHandler, eventBus,
-                                                                         console, loginPresenter) {
-                        @Override
-                        protected void onSuccess(JsonArray<String> result) {
-                            domain = view.getDomain();
-                            name = view.getName();
-                            buildApplication();
-                        }
-                    });
-        } catch (RequestException e) {
-            eventBus.fireEvent(new ExceptionThrownEvent(e));
-            console.print(e.getMessage());
-        }
+    /** {@inheritDoc} */
+    @Override
+    public void onCancelClicked() {
+        view.close();
     }
 
-    /** Builds application. */
-    private void buildApplication() {
-        buildApplicationPresenter.build(project, new AsyncCallback<JobStatus>() {
-            @Override
-            public void onSuccess(JobStatus result) {
-                if (result.getArtifactUrl() != null) {
-                    warUrl = result.getArtifactUrl();
-                    createApplication();
-                }
-            }
+    /** {@inheritDoc} */
+    @Override
+    public void onValueChanged() {
+        domain = view.getDomain();
+        name = view.getName();
+        view.setUrl(domain + "/" + name);
 
-            @Override
-            public void onFailure(Throwable caught) {
-                Log.error(CloudBeesPagePresenter.class, "Can not build project on Jenkins", caught);
-            }
-        });
+        view.setEnableCreateButton(validate());
+    }
+
+    /** Checking entered information on view. */
+    private boolean validate() {
+        return view.getName() != null && !view.getName().isEmpty();
     }
 }
