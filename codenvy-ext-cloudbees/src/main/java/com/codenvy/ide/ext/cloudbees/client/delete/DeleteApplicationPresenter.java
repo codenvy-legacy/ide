@@ -164,9 +164,24 @@ public class DeleteApplicationPresenter {
             service.deleteApplication(appId, resourceProvider.getVfsId(), projectId,
                                       new CloudBeesAsyncRequestCallback<String>(loggedInHandler, null, eventBus, console, loginPresenter) {
                                           @Override
-                                          protected void onSuccess(String result) {
-                                              console.print(constant.applicationDeletedMsg(appTitle));
-                                              callback.onSuccess(result);
+                                          protected void onSuccess(final String result) {
+                                              if (project != null) {
+                                                  project.refreshProperties(new AsyncCallback<Project>() {
+                                                      @Override
+                                                      public void onSuccess(Project project) {
+                                                          console.print(constant.applicationDeletedMsg(appTitle));
+                                                          callback.onSuccess(result);
+                                                      }
+
+                                                      @Override
+                                                      public void onFailure(Throwable caught) {
+                                                          callback.onFailure(caught);
+                                                      }
+                                                  });
+                                              } else {
+                                                  console.print(constant.applicationDeletedMsg(appTitle));
+                                                  callback.onSuccess(result);
+                                              }
                                           }
                                       });
         } catch (RequestException e) {

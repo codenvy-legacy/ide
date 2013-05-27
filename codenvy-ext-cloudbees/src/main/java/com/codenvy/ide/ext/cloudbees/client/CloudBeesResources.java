@@ -39,6 +39,14 @@ public interface CloudBeesResources extends ClientBundle {
         String appInfo();
 
         String event();
+
+        String project();
+
+        String labelH();
+
+        String link();
+
+        String textinput();
     }
 
     @Source({"CloudBees.css", "com/codenvy/ide/api/ui/style.css"})
