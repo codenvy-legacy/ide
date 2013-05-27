@@ -50,7 +50,7 @@ public class ShowApplicationsCommand implements ExtendedCommand {
 
     @Override
     public ImageResource getIcon() {
-        return null;
+        return resources.showApplications();
     }
 
     @Override

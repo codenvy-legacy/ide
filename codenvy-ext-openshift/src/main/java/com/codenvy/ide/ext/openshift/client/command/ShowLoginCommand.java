@@ -50,7 +50,7 @@ public class ShowLoginCommand implements ExtendedCommand {
 
     @Override
     public ImageResource getIcon() {
-        return null;
+        return resources.switchAccount();
     }
 
     @Override

@@ -26,7 +26,7 @@
             margin-right: 5px;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="380px" height="180px" addStyleNames="{resources.openShiftCSS.login} {style.emptyBorder}">
+    <g:DockLayoutPanel unit="PX" width="380px" height="120px" addStyleNames="{resources.openShiftCSS.login} {style.emptyBorder}">
         <g:south size="26.0">
             <g:FlowPanel>
                 <c:Button addStyleNames="{style.alignBtn}" text="{locale.loginViewButtonCancel}" width="50px" size="SMALL" type="DANGER"

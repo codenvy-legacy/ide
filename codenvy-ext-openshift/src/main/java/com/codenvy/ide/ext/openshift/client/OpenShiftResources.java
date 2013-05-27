@@ -59,4 +59,33 @@ public interface OpenShiftResources extends ClientBundle {
 
     @Source("com/codenvy/ide/ext/openshift/images/openshift_48_Disabled.png")
     ImageResource openShift48Disabled();
+
+    /*
+     * Controls
+     */
+    @Source("com/codenvy/ide/ext/openshift/images/switchAccount.png")
+    ImageResource switchAccount();
+
+    @Source("com/codenvy/ide/ext/openshift/images/switchAccount_Disabled.png")
+    ImageResource switchAccoundDisabled();
+
+    @Source("com/codenvy/ide/ext/openshift/images/apps-list.png")
+    ImageResource showApplications();
+
+    @Source("com/codenvy/ide/ext/openshift/images/apps-list_Disabled.png")
+    ImageResource showApplicationsDisabled();
+
+    @Source("com/codenvy/ide/ext/openshift/images/domain-edit.png")
+    ImageResource domainEdit();
+
+    @Source("com/codenvy/ide/ext/openshift/images/domain-edit_Disabled.png")
+    ImageResource domainEditDisabled();
+
+    @Source("com/codenvy/ide/ext/openshift/images/update-ssh.png")
+    ImageResource updateSshPublicKey();
+
+    @Source("com/codenvy/ide/ext/openshift/images/update-ssh_Disabled.png")
+    ImageResource updateSshPublicKeyDisabled();
+
+
 }

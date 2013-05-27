@@ -33,13 +33,16 @@ import com.google.inject.Inject;
  * @version $Id: $
  */
 public class ShowOpenShiftProjectCommand implements ExtendedCommand {
-    private final ProjectPresenter     projectPresenter;
-    private final OpenShiftResources   resources;
+    private final ProjectPresenter                 projectPresenter;
+    private final OpenShiftResources               resources;
+    private final OpenShiftProjectOpenedExpression expression;
 
     @Inject
-    public ShowOpenShiftProjectCommand(ProjectPresenter projectPresenter, OpenShiftResources resources) {
+    public ShowOpenShiftProjectCommand(ProjectPresenter projectPresenter, OpenShiftResources resources,
+                                       OpenShiftProjectOpenedExpression expression) {
         this.projectPresenter = projectPresenter;
         this.resources = resources;
+        this.expression = expression;
     }
 
     @Override
@@ -49,7 +52,7 @@ public class ShowOpenShiftProjectCommand implements ExtendedCommand {
 
     @Override
     public ImageResource getIcon() {
-        return null;
+        return resources.openShift();
     }
 
     @Override
@@ -59,7 +62,7 @@ public class ShowOpenShiftProjectCommand implements ExtendedCommand {
 
     @Override
     public Expression inContext() {
-        return null;
+        return expression;
     }
 
     @Override

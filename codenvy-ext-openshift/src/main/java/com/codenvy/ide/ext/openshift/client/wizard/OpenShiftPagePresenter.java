@@ -271,6 +271,12 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
                                           protected void onSuccess(AppInfo result) {
                                               updatePublicKey(result);
                                           }
+
+                                          @Override
+                                          protected void onFailure(Throwable exception) {
+                                              super.onFailure(exception);
+                                              //TODO cleanup project if creation of application on OpenShift is failed.
+                                          }
                                       });
         } catch (RequestException e) {
             console.print(e.getMessage());
@@ -325,12 +331,10 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
         project.refreshTree(new AsyncCallback<Project>() {
             @Override
             public void onFailure(Throwable caught) {
-                console.print("refresh failed");
             }
 
             @Override
             public void onSuccess(Project result) {
-                console.print("refresh successful");
                 projectExplorer.setContent(result.getParent());
             }
         });

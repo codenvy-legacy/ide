@@ -50,7 +50,7 @@ public class ChangeDomainCommand implements ExtendedCommand {
 
     @Override
     public ImageResource getIcon() {
-        return null;
+        return resources.domainEdit();
     }
 
     @Override
