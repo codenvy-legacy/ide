@@ -200,4 +200,20 @@ public class CreateProjectService {
         InputStream webIS = new ByteArrayInputStream(webContent.getBytes());
         vfs.createFile(webInf.getId(), "web.xml", MediaType.TEXT_XML_TYPE, webIS);
     }
+
+    @Path("project/empty")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public void createEmptyProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name, List<Property> properties)
+            throws VirtualFileSystemException {
+        VirtualFileSystem vfs = registry.getProvider(vfsId).newInstance(null, eventListenerList);
+        Project project =
+                vfs.createProject(vfs.getInfo().getRoot().getId(), name, "deprecated.project.type", properties);
+        String projectId = project.getId();
+
+        String readMeContent = "This file was auto created when you created this project.";
+        InputStream readMeIS = new ByteArrayInputStream(readMeContent.getBytes());
+        vfs.createFile(projectId, "Readme.txt", MediaType.TEXT_PLAIN_TYPE, readMeIS);
+    }
+
 }
