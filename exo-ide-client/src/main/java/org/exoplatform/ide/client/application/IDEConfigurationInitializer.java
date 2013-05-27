@@ -36,7 +36,6 @@ import org.exoplatform.ide.client.framework.codenow.CodeNowSpec10;
 import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsEvent;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
-import org.exoplatform.ide.client.framework.discovery.event.IsDiscoverableResultReceivedEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.DirectoryFilter;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
@@ -117,7 +116,6 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                 DirectoryFilter.get().setPattern(hiddenFilesParameter);
 
                                 IDE.fireEvent(new ApplicationSettingsReceivedEvent(result.getSettings()));
-                                IDE.fireEvent(new IsDiscoverableResultReceivedEvent(result.isDiscoverable()));
                                 IDE.fireEvent(new UserInfoReceivedEvent(result.getUserInfo()));
                                 checkEntryPoint();
 

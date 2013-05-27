@@ -107,10 +107,6 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable<IDEInitializ
                     initializationConfiguration.getIdeConfiguration().setVfsId("dev-monit");//object.get(VFS_ID).isString().stringValue());
                 }
 
-                if (object.containsKey(IS_DISCOVERABLE)) {
-                    initializationConfiguration.setDiscoverable(object.get(IS_DISCOVERABLE).isBoolean().booleanValue());
-                }
-
                 if (object.containsKey(USER)) {
                     String payload = object.get(USER).isObject().toString();
                     AutoBean<UserInfo> autoBean = AutoBeanCodex.decode(IDE.AUTO_BEAN_FACTORY, UserInfo.class, payload);
@@ -134,16 +130,6 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable<IDEInitializ
             showErrorMessage(CONTEXT);
             return;
         }
-
-        if (jsonConfiguration.containsKey(GADGET_SERVER))
-            // TODO: now we can load gadget only from current host
-            configuration.setGadgetServer(Location.getProtocol() + "//" + Location.getHost()
-                                          + jsonConfiguration.get(GADGET_SERVER).isString().stringValue());
-        else {
-            showErrorMessage(GADGET_SERVER);
-            return;
-        }
-
     }
 
     private void showErrorMessage(String message) {

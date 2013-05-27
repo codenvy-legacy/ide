@@ -20,9 +20,17 @@ package org.exoplatform.gwtframework.ui.client.tab;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -59,10 +67,33 @@ public class TabButton extends Composite implements HasClickHandlers {
 
         String buttonDown();
 
+        String iconPanel();
+
+        String controlTable();
+
+        String button();
+
+        String controlPanel();
+
+        String controlCell();
+    }
+
+    interface Resources extends ClientBundle {
+        @Source("Tab.css")
+        Style css();
+
+        @Source("tab-button-background2.png")
+        ImageResource background();
+    }
+
+    private static final Resources RESOURCES = GWT.create(Resources.class);
+
+    static {
+        RESOURCES.css().ensureInjected();
     }
 
     /** Instance of Style Resource. */
-    @UiField
+    @UiField(provided = true)
     Style style;
 
     @UiField
@@ -87,6 +118,7 @@ public class TabButton extends Composite implements HasClickHandlers {
     }
 
     public TabButton(String id, Image image, Image disabledImage) {
+        style = RESOURCES.css();
         this.image = image;
         this.disabledImage = disabledImage;
 

@@ -44,7 +44,7 @@ public class FolderModel extends FolderImpl implements ItemContext {
 
     @SuppressWarnings("rawtypes")
     public FolderModel(String name, FolderModel parent) {
-        super(null, name, FOLDER_MIME_TYPE, parent.createPath(name), parent.getId(), new Date().getTime(),
+        super(null, null, name, FOLDER_MIME_TYPE, parent.createPath(name), parent.getId(), new Date().getTime(),
               new ArrayList<Property>(), new HashMap<String, Link>());
         this.parent = parent;
         this.persisted = false;
@@ -52,7 +52,7 @@ public class FolderModel extends FolderImpl implements ItemContext {
 
     @SuppressWarnings("rawtypes")
     public FolderModel(String name, FolderModel parent, Map<String, Link> links) {
-        super(null, name, FOLDER_MIME_TYPE, parent.createPath(name), parent.getId(), new Date().getTime(),
+        super(null, null, name, FOLDER_MIME_TYPE, parent.createPath(name), parent.getId(), new Date().getTime(),
               new ArrayList<Property>(), links);
         this.parent = parent;
         this.persisted = false;
@@ -64,25 +64,25 @@ public class FolderModel extends FolderImpl implements ItemContext {
     }
 
     public FolderModel(Folder folder) {
-        this(folder.getId(), folder.getName(), ItemType.FOLDER, FOLDER_MIME_TYPE, folder.getPath(), folder.getParentId(), folder
+        this(folder.getVfsId(), folder.getId(), folder.getName(), ItemType.FOLDER, FOLDER_MIME_TYPE, folder.getPath(), folder.getParentId(), folder
                 .getCreationDate(), folder.getProperties(), folder.getLinks());
     }
 
-    public FolderModel(String id, String name, ItemType itemType, String mimeType, String path, String parentId, long creationDate,
+    public FolderModel(String vfsId, String id, String name, ItemType itemType, String mimeType, String path, String parentId, long creationDate,
                        List<Property> properties, Map<String, Link> links) {
-        super(id, name, itemType, mimeType, path, parentId, creationDate, properties, links);
+        super(vfsId, id, name, itemType, mimeType, path, parentId, creationDate, properties, links);
         this.persisted = true;
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void init(JSONObject itemObject) {
+        vfsId = itemObject.get("vfsId").isString().stringValue();
         id = itemObject.get("id").isString().stringValue();
         name = itemObject.get("name").isString().stringValue();
         if (itemObject.get("mimeType").isString() != null)
             mimeType = itemObject.get("mimeType").isString().stringValue();
         path = itemObject.get("path").isString().stringValue();
-        parentId =
-                (itemObject.get("parentId").isNull() != null) ? null : itemObject.get("parentId").isString().stringValue();
+        parentId = (itemObject.get("parentId").isNull() != null) ? null : itemObject.get("parentId").isString().stringValue();
         creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
         properties = (List)JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
         links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));

@@ -35,8 +35,6 @@ public class IDEConfiguration {
 
     private String gadgetURL = GWT.getModuleBaseURL();
 
-    private String gadgetServer;
-
     private String vfsId;
 
     private String vfsBaseUrl;
@@ -71,15 +69,7 @@ public class IDEConfiguration {
         this.gadgetURL = gadgetURL;
     }
 
-    public String getGadgetServer() {
-        return gadgetServer;
-    }
-
-    public void setGadgetServer(String gadgetServer) {
-        this.gadgetServer = gadgetServer;
-    }
-
-    public String getVfsBaseUrl() {
+       public String getVfsBaseUrl() {
         return vfsBaseUrl;
     }
 
