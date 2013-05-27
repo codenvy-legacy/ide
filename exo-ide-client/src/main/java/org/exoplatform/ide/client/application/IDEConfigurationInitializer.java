@@ -45,7 +45,6 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceived
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.menu.RefreshMenuEvent;
 import org.exoplatform.ide.client.model.*;
-import org.exoplatform.ide.client.workspace.event.SelectWorkspaceEvent;
 import org.exoplatform.ide.client.workspace.event.SwitchVFSEvent;
 
 import java.util.ArrayList;
@@ -152,17 +151,12 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                     IDE.fireEvent(new SwitchVFSEvent(entryPoint));
                 }
             });
-        } else {
-            promptToSelectEntryPoint();
-        }
+        } 
     }
 
     public void onVfsChanged(VfsChangedEvent event) {
         IDE.removeHandler(VfsChangedEvent.TYPE, this);
-        if (event.getVfsInfo() == null || event.getVfsInfo().getId() == null) {
-            promptToSelectEntryPoint();
-        }
-
+        
         Map<String, List<String>> parameterMap = Location.getParameterMap();
 
         if (parameterMap != null && parameterMap.get(CodeNowSpec10.VERSION_PARAMETER) != null
@@ -173,18 +167,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
         }
     }
 
-    protected void promptToSelectEntryPoint() {
-        // TODO [IDE-307] handle incorrect appConfig["entryPoint"] property value
-        Dialogs.getInstance().showError(org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.confWorkspaceWasNotSetTitle(),
-                                        org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.confWorkspaceWasNotSetText(),
-                                        new BooleanValueReceivedHandler() {
-                                            public void booleanValueReceived(Boolean value) {
-                                                if (value) {
-                                                    IDE.fireEvent(new SelectWorkspaceEvent());
-                                                }
-                                            }
-                                        });
-    }
+  
 
     public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event) {
 

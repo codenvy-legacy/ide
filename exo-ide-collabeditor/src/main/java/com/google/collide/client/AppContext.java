@@ -20,13 +20,10 @@ import com.google.collide.client.communication.FrontendApi;
 import com.google.collide.client.communication.PushChannel;
 import com.google.collide.client.status.StatusManager;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter;
-import org.exoplatform.ide.client.framework.websocket.rest.RESTMessageBus;
 
 /** Application context object that exposes getters for our PushChannel and our Event Bus. */
 public class AppContext {
