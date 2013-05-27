@@ -28,6 +28,7 @@ import com.codenvy.ide.ext.cloudbees.client.delete.DeleteApplicationPresenter;
 import com.codenvy.ide.ext.cloudbees.client.info.ApplicationInfoPresenter;
 import com.codenvy.ide.ext.cloudbees.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.cloudbees.client.login.LoginPresenter;
+import com.codenvy.ide.ext.cloudbees.client.update.UpdateApplicationPresenter;
 import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
@@ -49,7 +50,7 @@ import com.google.web.bindery.event.shared.EventBus;
 public class CloudBeesProjectPresenter implements CloudBeesProjectView.ActionDelegate {
     private CloudBeesProjectView       view;
     private ApplicationInfoPresenter   applicationInfoPresenter;
-    //    private UpdateApplicationPresenter       updateApplicationPresenter;
+    private UpdateApplicationPresenter updateApplicationPresenter;
     private EventBus                   eventBus;
     private ResourceProvider           resourceProvider;
     private ConsolePart                console;
@@ -62,7 +63,7 @@ public class CloudBeesProjectPresenter implements CloudBeesProjectView.ActionDel
     protected CloudBeesProjectPresenter(CloudBeesProjectView view, ApplicationInfoPresenter applicationInfoPresenter, EventBus eventBus,
                                         ResourceProvider resourceProvider, ConsolePart console, CloudBeesAutoBeanFactory autoBeanFactory,
                                         DeleteApplicationPresenter deleteAppPresenter, LoginPresenter loginPresenter,
-                                        CloudBeesClientService service) {
+                                        CloudBeesClientService service, UpdateApplicationPresenter updateApplicationPresenter) {
         this.view = view;
         this.view.setDelegate(this);
         this.applicationInfoPresenter = applicationInfoPresenter;
@@ -73,6 +74,7 @@ public class CloudBeesProjectPresenter implements CloudBeesProjectView.ActionDel
         this.deleteAppPresenter = deleteAppPresenter;
         this.loginPresenter = loginPresenter;
         this.service = service;
+        this.updateApplicationPresenter = updateApplicationPresenter;
     }
 
     /** Shows dialog. */
@@ -134,7 +136,7 @@ public class CloudBeesProjectPresenter implements CloudBeesProjectView.ActionDel
     /** {@inheritDoc} */
     @Override
     public void onUpdateClicked() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        updateApplicationPresenter.updateApp(null, null);
     }
 
     /** {@inheritDoc} */
