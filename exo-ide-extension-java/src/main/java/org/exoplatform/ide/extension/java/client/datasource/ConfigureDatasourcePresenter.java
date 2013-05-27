@@ -31,7 +31,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialog.StringValueReceivedHandler;
