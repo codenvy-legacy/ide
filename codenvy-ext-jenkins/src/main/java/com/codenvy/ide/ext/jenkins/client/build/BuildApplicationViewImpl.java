@@ -18,11 +18,12 @@
  */
 package com.codenvy.ide.ext.jenkins.client.build;
 
+import com.codenvy.ide.part.PartStackUIResources;
+import com.codenvy.ide.part.base.BaseView;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -35,7 +36,7 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class BuildApplicationViewImpl extends Composite implements BuildApplicationView {
+public class BuildApplicationViewImpl extends BaseView<BuildApplicationView.ActionDelegate> implements BuildApplicationView {
     interface BuildApplicationViewImplUiBinder extends UiBinder<Widget, BuildApplicationViewImpl> {
     }
 
@@ -47,10 +48,15 @@ public class BuildApplicationViewImpl extends Composite implements BuildApplicat
     private int animationCharIndex = 1;
     private Label progress;
 
-    /** Create view. */
+    /**
+     * Create view.
+     *
+     * @param partStackUIResources
+     */
     @Inject
-    protected BuildApplicationViewImpl() {
-        initWidget(ourUiBinder.createAndBindUi(this));
+    protected BuildApplicationViewImpl(PartStackUIResources partStackUIResources) {
+        super(partStackUIResources);
+        container.add(ourUiBinder.createAndBindUi(this));
     }
 
     /** {@inheritDoc} */

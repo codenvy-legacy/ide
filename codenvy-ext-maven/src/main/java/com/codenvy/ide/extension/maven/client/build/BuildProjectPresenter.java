@@ -20,7 +20,6 @@ package com.codenvy.ide.extension.maven.client.build;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.workspace.AbstractPartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
@@ -32,6 +31,7 @@ import com.codenvy.ide.extension.maven.client.event.ProjectBuiltEvent;
 import com.codenvy.ide.extension.maven.shared.BuildStatus;
 import com.codenvy.ide.extension.maven.shared.BuildStatus.Status;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.part.base.BasePresenter;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.ProjectDescription;
 import com.codenvy.ide.resources.model.Property;
@@ -66,9 +66,10 @@ import com.google.web.bindery.event.shared.EventBus;
  * @version $Id: BuildProjectPresenter.java Feb 17, 2012 5:39:10 PM azatsarynnyy $
  */
 @Singleton
-public class BuildProjectPresenter extends AbstractPartPresenter implements BuildProjectHandler, BuildProjectView.ActionDelegate {
+public class BuildProjectPresenter extends BasePresenter implements BuildProjectHandler, BuildProjectView.ActionDelegate {
     private final static String LAST_SUCCESS_BUILD    = "lastSuccessBuild";
     private final static String ARTIFACT_DOWNLOAD_URL = "artifactDownloadUrl";
+    private final static String TITLE                 = "Output";
     private BuildProjectView view;
     /** Identifier of project we want to send for build. */
     private              String  projectId         = null;
@@ -119,8 +120,9 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
                                     BuilderAutoBeanFactory autoBeanFactory, BuilderResources resources, WorkspaceAgent workspaceAgent,
                                     MessageBus messageBus) {
         this.view = view;
-        this.workspaceAgent = workspaceAgent;
         this.view.setDelegate(this);
+        this.view.setTitle(TITLE);
+        this.workspaceAgent = workspaceAgent;
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
         this.console = console;
@@ -566,10 +568,13 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
      *         message for output
      */
     private void showBuildMessage(String message) {
-
         if (isViewClosed) {
             workspaceAgent.openPart(this, PartStackType.INFORMATION);
             isViewClosed = false;
+        }
+
+        if (!partStack.getActivePart().equals(this)) {
+            partStack.setActivePart(this);
         }
 
         view.setClearOutputButtonEnabled(true);
@@ -618,7 +623,7 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
     /** {@inheritDoc} */
     @Override
     public String getTitle() {
-        return "Output";
+        return TITLE;
     }
 
     /** {@inheritDoc} */

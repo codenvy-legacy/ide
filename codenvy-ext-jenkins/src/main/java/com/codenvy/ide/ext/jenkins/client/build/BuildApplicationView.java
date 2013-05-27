@@ -19,6 +19,7 @@
 package com.codenvy.ide.ext.jenkins.client.build;
 
 import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.part.base.BaseActionDelegate;
 
 /**
  * The view of {@link BuildApplicationView}.
@@ -27,7 +28,7 @@ import com.codenvy.ide.api.mvp.View;
  */
 public interface BuildApplicationView extends View<BuildApplicationView.ActionDelegate> {
     /** Needs for delegate some function into BuildApplication view. */
-    public interface ActionDelegate {
+    public interface ActionDelegate extends BaseActionDelegate {
     }
 
     /**
@@ -42,4 +43,11 @@ public interface BuildApplicationView extends View<BuildApplicationView.ActionDe
 
     /** Stops animation. */
     void stopAnimation();
+
+    /**
+     * Sets title.
+     *
+     * @param title
+     */
+    void setTitle(String title);
 }
