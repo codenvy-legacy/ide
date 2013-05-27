@@ -25,6 +25,8 @@ import com.codenvy.ide.ext.cloudbees.client.account.CreateAccountView;
 import com.codenvy.ide.ext.cloudbees.client.account.CreateAccountViewImpl;
 import com.codenvy.ide.ext.cloudbees.client.apps.ApplicationsView;
 import com.codenvy.ide.ext.cloudbees.client.apps.ApplicationsViewImpl;
+import com.codenvy.ide.ext.cloudbees.client.create.CreateApplicationView;
+import com.codenvy.ide.ext.cloudbees.client.create.CreateApplicationViewImpl;
 import com.codenvy.ide.ext.cloudbees.client.info.ApplicationInfoView;
 import com.codenvy.ide.ext.cloudbees.client.info.ApplicationInfoViewImpl;
 import com.codenvy.ide.ext.cloudbees.client.login.LoginView;
@@ -48,5 +50,6 @@ public class CloudBeesGinModule extends AbstractGinModule {
         bind(ApplicationInfoView.class).to(ApplicationInfoViewImpl.class).in(Singleton.class);
         bind(CreateAccountView.class).to(CreateAccountViewImpl.class).in(Singleton.class);
         bind(CloudBeesPageView.class).to(CloudBeesPageViewImpl.class).in(Singleton.class);
+        bind(CreateApplicationView.class).to(CreateApplicationViewImpl.class).in(Singleton.class);
     }
 }
