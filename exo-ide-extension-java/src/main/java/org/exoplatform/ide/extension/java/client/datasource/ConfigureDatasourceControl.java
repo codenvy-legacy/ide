@@ -52,19 +52,25 @@ public class ConfigureDatasourceControl extends SimpleControl implements IDECont
     @Override
     public void initialize() {
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-        IDE.addHandler(ProjectClosedEvent.TYPE, this);
-        
-        setVisible(true);
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);        
     }
 
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
-        setEnabled(true);
+        if (JavaProjects.contains(event.getProject())) {
+            setVisible(true);
+            setEnabled(true);
+            return;
+        }
+        
+        setEnabled(false);
+        setVisible(false);
     }
 
     @Override
     public void onProjectClosed(ProjectClosedEvent event) {
         setEnabled(false);
+        setVisible(false);
     }
     
 }

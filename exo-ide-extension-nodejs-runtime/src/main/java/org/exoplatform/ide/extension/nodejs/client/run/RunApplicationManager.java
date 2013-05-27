@@ -69,7 +69,6 @@ public class RunApplicationManager implements RunApplicationHandler, StopApplica
     private ApplicationInstance runApplication;
 
     public RunApplicationManager() {
-        IDE.getInstance().addControl(new RunApplicationControl());
         IDE.getInstance().addControl(new StopApplicationControl());
         IDE.getInstance().addControl(new RunApplicationControl(), Docking.TOOLBAR_RIGHT);
 
