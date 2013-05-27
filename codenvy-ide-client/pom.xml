@@ -111,6 +111,10 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-openshift</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-jenkins</artifactId>
         </dependency>
         <dependency>

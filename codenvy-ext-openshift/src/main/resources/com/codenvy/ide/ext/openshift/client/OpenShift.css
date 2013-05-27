@@ -1,0 +1,21 @@
+@CHARSET "UTF-8";
+
+@CHARSET "UTF-8";
+
+.login .loginFont {
+    cursor: default;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: normal;
+}
+
+.login .loginErrorFont {
+    cursor: default;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: normal;
+    color: #d21a1a;
+    height: 14px;
+}
