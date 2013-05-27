@@ -167,6 +167,7 @@ public abstract class LocalFileSystemTest extends TestCase {
         EnvironmentContext env = EnvironmentContext.getCurrent();
         env.setVariable(EnvironmentContext.VFS_ROOT_DIR, root);
         env.setVariable(EnvironmentContext.WORKSPACE_ID, MY_WORKSPACE_ID);
+        env.setVariable(EnvironmentContext.WORKSPACE_NAME, MY_WORKSPACE_ID);
     }
 
     // Directory "fs-root" in "target" folder of maven project.

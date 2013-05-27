@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.ide.commons.shared.ProjectType;
 
 import org.apache.commons.codec.binary.Base64;
@@ -353,7 +354,7 @@ public class LocalFileSystem implements VirtualFileSystem {
                     new VirtualFileSystemInfoImpl(this.vfsId, false, true, VirtualFileSystemInfo.ANONYMOUS_PRINCIPAL,
                                                   VirtualFileSystemInfo.ANY_PRINCIPAL, permissions, ACLCapability.MANAGE,
                                                   searcherProvider == null ? QueryCapability.NONE : QueryCapability.FULLTEXT,
-                                                  LinksHelper.createUrlTemplates(baseUri, vfsId),
+                                                  LinksHelper.createUrlTemplates(baseUri, EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString()),
                                                   (Folder)fromVirtualFile(mountPoint.getRoot(), true, PropertyFilter.ALL_FILTER));
         }
         return vfsInfo;

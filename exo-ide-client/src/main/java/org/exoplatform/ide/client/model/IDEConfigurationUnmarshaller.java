@@ -41,8 +41,6 @@ import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 public class IDEConfigurationUnmarshaller implements Unmarshallable<IDEInitializationConfiguration> {
     private final static String CONTEXT = "context";
 
-    private final static String GADGET_SERVER = "gadgetServer";
-
     public static final String LOOPBACK_SERVICE_CONTEXT = "/ide/loopbackcontent";
 
     private static final String APP_CONFIG = "configuration";
@@ -52,8 +50,6 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable<IDEInitializ
     private static final String VFS_ID = "vfsId";
 
     private static final String VFS_BASE_URL = "vfsBaseUrl";
-
-    private static final String IS_DISCOVERABLE = "discoverable";
 
     private static final String USER = "user";
 
@@ -85,12 +81,8 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable<IDEInitializ
             JSONValue value = JSONParser.parseStrict(response.getText());
             if (value.isObject() != null) {
                 JSONObject object = value.isObject();
-                if (object.containsKey(APP_CONFIG)) {
-                    parseAppConfig(object.get(APP_CONFIG).isObject());
-                } else {
-                    parseAppConfig(defaultAppConfiguration);
-                }
-
+                
+                parseAppConfig(defaultAppConfiguration);
                 ApplicationSettings applicationSettings = new ApplicationSettings();
                 initializationConfiguration.setSettings(applicationSettings);
                 if (object.containsKey(USER_SETTINGS)) {
@@ -102,9 +94,9 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable<IDEInitializ
                             object.get(VFS_BASE_URL).isString().stringValue());
                 }
 
-                if (object.containsKey(VFS_ID))//&& object.get(VFS_ID).isNull().toString().equals(null))
+                if (object.containsKey(VFS_ID))
                 {
-                    initializationConfiguration.getIdeConfiguration().setVfsId("dev-monit");//object.get(VFS_ID).isString().stringValue());
+                    initializationConfiguration.getIdeConfiguration().setVfsId(object.get(VFS_ID).isString().stringValue());
                 }
 
                 if (object.containsKey(USER)) {
@@ -136,10 +128,6 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable<IDEInitializ
         String m = IDE.IDE_LOCALIZATION_MESSAGES.configurationInvalidConfiguration(message);
         Dialogs.getInstance().showError(INVALID_CONFIGURATION_TITLE, m);
     }
-
-    private static native String getRegistryURL() /*-{
-        return $wnd.registryURL;
-    }-*/;
 
     private static native String getHiddenFiles() /*-{
         return $wnd.hiddenFiles;
