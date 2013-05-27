@@ -40,9 +40,10 @@ import com.google.inject.name.Named;
  */
 @Singleton
 public class CreateProjectClientServiceImpl implements CreateProjectClientService {
-    private static final String BASE_URL            = "/ide/maven/create";
-    private static final String CREATE_WAR_PROJECT  = BASE_URL + "/project/war";
-    private static final String CREATE_JAVA_PROJECT = BASE_URL + "/project/java";
+    private static final String BASE_URL             = "/ide/maven/create";
+    private static final String CREATE_WAR_PROJECT   = BASE_URL + "/project/war";
+    private static final String CREATE_JAVA_PROJECT  = BASE_URL + "/project/java";
+    private static final String CREATE_EMPTY_PROJECT = BASE_URL + "/project/empty";
 
     private String           restContext;
     private Loader           loader;
@@ -88,6 +89,22 @@ public class CreateProjectClientServiceImpl implements CreateProjectClientServic
         url = URL.encode(url);
 
         loader.setMessage("Creating new project...");
+
+        AsyncRequest.build(RequestBuilder.POST, url)
+                    .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(properties).toString())
+                    .header(HTTPHeader.CONTENT_TYPE, "application/json").loader(loader).send(callback);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void createEmptyProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback)
+            throws RequestException {
+        String requestUrl = restContext + CREATE_EMPTY_PROJECT;
+
+        String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName;
+        String url = requestUrl + param;
+
+        loader.setMessage("Creating project...");
 
         AsyncRequest.build(RequestBuilder.POST, url)
                     .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(properties).toString())
