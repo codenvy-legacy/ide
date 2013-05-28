@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
+import com.codenvy.commons.env.EnvironmentContext;
+
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.*;
@@ -49,6 +51,9 @@ public abstract class JavaDocBase extends Base {
 
     @BeforeClass
     public static void init() throws VirtualFileSystemException, IOException, InterruptedException {
+        EnvironmentContext env = EnvironmentContext.getCurrent();
+        env.setVariable(EnvironmentContext.WORKSPACE_ID, VFS_ID);
+        env.setVariable(EnvironmentContext.WORKSPACE_NAME, VFS_ID);
         vfsRegistry = (VirtualFileSystemRegistry)container.getComponentInstanceOfType(VirtualFileSystemRegistry.class);
         EventListenerList eventListenerList = (EventListenerList)container.getComponentInstanceOfType(EventListenerList.class);
         vfs = vfsRegistry.getProvider(VFS_ID).newInstance(null, eventListenerList);
