@@ -19,16 +19,17 @@
 package com.codenvy.ide.extension.cloudfoundry.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
+import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices;
 import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
 import com.codenvy.ide.extension.cloudfoundry.shared.SystemService;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 /**
  * Unmarshaller for CloudFoundry services.
@@ -37,25 +38,17 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
  * @version $Id: Jul 13, 2012 2:07:24 PM anya $
  */
 public class CloudFoundryServicesUnmarshaller implements Unmarshallable<CloudFoundryServices> {
-    /** CloudFoundry services (system and provisioned). */
-    private CloudFoundryServices cloudfoundryServices;
-
-    private CloudFoundryAutoBeanFactory autoBeanFactory;
-
     private final class Keys {
-        public static final String SYSTEM = "system";
-
+        public static final String SYSTEM      = "system";
         public static final String PROVISIONED = "provisioned";
     }
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param autoBeanFactory
-     */
-    public CloudFoundryServicesUnmarshaller(CloudFoundryAutoBeanFactory autoBeanFactory) {
-        this.autoBeanFactory = autoBeanFactory;
-        this.cloudfoundryServices = this.autoBeanFactory.services().as();
+    /** CloudFoundry services (system and provisioned). */
+    private DtoClientImpls.CloudFoundryServicesImpl cloudfoundryServices;
+
+    /** Create unmarshaller. */
+    public CloudFoundryServicesUnmarshaller() {
+        this.cloudfoundryServices = DtoClientImpls.CloudFoundryServicesImpl.make();
     }
 
     /** {@inheritDoc} */
@@ -70,28 +63,30 @@ public class CloudFoundryServicesUnmarshaller implements Unmarshallable<CloudFou
         if (jsonObject.containsKey(Keys.SYSTEM)) {
             JSONArray systemServices = jsonObject.get(Keys.SYSTEM).isArray();
             if (systemServices.size() > 0) {
-                SystemService[] services = new SystemService[systemServices.size()];
+                JsonArray<SystemService> services = JsonCollections.createArray();
                 for (int i = 0; i < systemServices.size(); i++) {
                     String value = systemServices.get(i).isObject().toString();
-                    services[i] = AutoBeanCodex.decode(autoBeanFactory, SystemService.class, value).as();
+                    DtoClientImpls.SystemServiceImpl service = DtoClientImpls.SystemServiceImpl.deserialize(value);
+                    services.add(service);
                 }
                 cloudfoundryServices.setSystem(services);
             } else {
-                cloudfoundryServices.setSystem(new SystemService[0]);
+                cloudfoundryServices.setSystem(JsonCollections.<SystemService>createArray());
             }
         }
 
         if (jsonObject.containsKey(Keys.PROVISIONED)) {
             JSONArray provisionedServices = jsonObject.get(Keys.PROVISIONED).isArray();
             if (provisionedServices.size() > 0) {
-                ProvisionedService[] services = new ProvisionedService[provisionedServices.size()];
+                JsonArray<ProvisionedService> services = JsonCollections.createArray();
                 for (int i = 0; i < provisionedServices.size(); i++) {
                     String value = provisionedServices.get(i).isObject().toString();
-                    services[i] = AutoBeanCodex.decode(autoBeanFactory, ProvisionedService.class, value).as();
+                    DtoClientImpls.ProvisionedServiceImpl service = DtoClientImpls.ProvisionedServiceImpl.deserialize(value);
+                    services.add(service);
                 }
                 cloudfoundryServices.setProvisioned(services);
             } else {
-                cloudfoundryServices.setProvisioned(new ProvisionedService[0]);
+                cloudfoundryServices.setProvisioned(JsonCollections.<ProvisionedService>createArray());
             }
         }
     }

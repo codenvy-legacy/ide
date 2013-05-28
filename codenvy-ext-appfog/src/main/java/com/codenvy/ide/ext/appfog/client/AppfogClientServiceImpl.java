@@ -19,7 +19,7 @@
 package com.codenvy.ide.ext.appfog.client;
 
 import com.codenvy.ide.ext.appfog.shared.*;
-import com.codenvy.ide.extension.cloudfoundry.shared.Credentials;
+import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.rest.AsyncRequest;
@@ -178,13 +178,13 @@ public class AppfogClientServiceImpl implements AppfogClientService {
 
         server = checkServerUrl(server);
 
-        Credentials credentialsBean = autoBeanFactory.credentials().as();
-        credentialsBean.setServer(server);
-        credentialsBean.setEmail(email);
-        credentialsBean.setPassword(password);
-        String credentials = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(credentialsBean)).getPayload();
+        DtoClientImpls.CredentialsImpl credentials = DtoClientImpls.CredentialsImpl.make();
+        credentials.setServer(server);
+        credentials.setEmail(email);
+        credentials.setPassword(password);
+        String serialize = credentials.serialize();
 
-        AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(credentials)
+        AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(serialize)
                     .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
     }

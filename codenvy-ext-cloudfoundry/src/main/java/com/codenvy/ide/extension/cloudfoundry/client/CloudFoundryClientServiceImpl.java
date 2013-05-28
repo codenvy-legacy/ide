@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client;
 
+import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.*;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.loader.Loader;
@@ -33,8 +34,6 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.inject.Singleton;
@@ -83,7 +82,6 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
     /** WebSocket message bus. */
     private MessageBus                       wsMessageBus;
     private CloudFoundryLocalizationConstant constant;
-    private CloudFoundryAutoBeanFactory      autoBeanFactory;
 
     /**
      * Create CloudFoundry client service.
@@ -93,18 +91,15 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
      * @param wsMessageBus
      * @param eventBus
      * @param constant
-     * @param autoBeanFactory
      */
     @Inject
     protected CloudFoundryClientServiceImpl(@Named("restContext") String restContext, Loader loader, MessageBus wsMessageBus,
-                                            EventBus eventBus, CloudFoundryLocalizationConstant constant,
-                                            CloudFoundryAutoBeanFactory autoBeanFactory) {
+                                            EventBus eventBus, CloudFoundryLocalizationConstant constant) {
         this.loader = loader;
         this.restServiceContext = restContext;
         this.wsMessageBus = wsMessageBus;
         this.eventBus = eventBus;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
     }
 
     /** {@inheritDoc} */
@@ -116,20 +111,20 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
 
         server = checkServerUrl(server);
 
-        CreateApplicationRequest createApplicationRequest = autoBeanFactory.createApplicationRequest().as();
+        DtoClientImpls.CreateApplicationRequestImpl createApplicationRequest = DtoClientImpls.CreateApplicationRequestImpl.make();
         createApplicationRequest.setName(name);
         createApplicationRequest.setServer(server);
         createApplicationRequest.setType(type);
         createApplicationRequest.setUrl(url);
         createApplicationRequest.setInstances(instances);
         createApplicationRequest.setMemory(memory);
-        createApplicationRequest.setNostart(nostart);
+        createApplicationRequest.setIsNostart(nostart);
         createApplicationRequest.setVfsid(vfsId);
         createApplicationRequest.setProjectid(projectId);
         createApplicationRequest.setWar(war);
         createApplicationRequest.setPaasprovider(paasProvider != null ? paasProvider.value() : "");
 
-        String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(createApplicationRequest)).getPayload();
+        String data = createApplicationRequest.serialize();
 
         AsyncRequest.build(RequestBuilder.POST, requestUrl, true)
                     .requestStatusHandler(new CreateApplicationRequestStatusHandler(name, eventBus, constant, paasProvider)).data(data)
@@ -143,20 +138,20 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
                          CloudFoundryRESTfulRequestCallback<CloudFoundryApplication> callback) throws WebSocketException {
         server = checkServerUrl(server);
 
-        CreateApplicationRequest createApplicationRequest = autoBeanFactory.createApplicationRequest().as();
+        DtoClientImpls.CreateApplicationRequestImpl createApplicationRequest = DtoClientImpls.CreateApplicationRequestImpl.make();
         createApplicationRequest.setName(name);
         createApplicationRequest.setServer(server);
         createApplicationRequest.setType(type);
         createApplicationRequest.setUrl(url);
         createApplicationRequest.setInstances(instances);
         createApplicationRequest.setMemory(memory);
-        createApplicationRequest.setNostart(nostart);
+        createApplicationRequest.setIsNostart(nostart);
         createApplicationRequest.setVfsid(vfsId);
         createApplicationRequest.setProjectid(projectId);
         createApplicationRequest.setWar(war);
         createApplicationRequest.setPaasprovider(paasProvider != null ? paasProvider.value() : "");
 
-        String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(createApplicationRequest)).getPayload();
+        String data = createApplicationRequest.serialize();
         callback.setStatusHandler(new CreateApplicationRequestStatusHandler(name, eventBus, constant, paasProvider));
 
         MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, CREATE);
@@ -184,13 +179,13 @@ public class CloudFoundryClientServiceImpl implements CloudFoundryClientService 
 
         String params = (paasProvider != null) ? "paasprovider=" + paasProvider.value() : "";
 
-        Credentials credentialsBean = autoBeanFactory.credentials().as();
-        credentialsBean.setServer(server);
-        credentialsBean.setEmail(email);
-        credentialsBean.setPassword(password);
-        String credentials = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(credentialsBean)).getPayload();
+        DtoClientImpls.CredentialsImpl credentials = DtoClientImpls.CredentialsImpl.make();
+        credentials.setServer(server);
+        credentials.setEmail(email);
+        credentials.setPassword(password);
+        String serialize = credentials.serialize();
 
-        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(credentials)
+        AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(serialize)
                     .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
     }

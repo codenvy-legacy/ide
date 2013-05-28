@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.shared;
 
-import java.util.List;
+import com.codenvy.ide.json.JsonArray;
 
 /**
  * Cloud Foundry application info.
@@ -29,51 +29,25 @@ import java.util.List;
 public interface CloudFoundryApplication {
     String getName();
 
-    void setName(String name);
-
-    List<String> getUris();
-
-    void setUris(List<String> uris);
+    JsonArray<String> getUris();
 
     int getInstances();
 
-    void setInstances(int instances);
-
     int getRunningInstances();
-
-    void setRunningInstances(int runningInstances);
 
     String getState();
 
-    void setState(String state);
-
-    List<String> getServices();
-
-    void setServices(List<String> services);
+    JsonArray<String> getServices();
 
     String getVersion();
 
-    void setVersion(String version);
-
-    List<String> getEnv();
-
-    void setEnv(List<String> env);
+    JsonArray<String> getEnv();
 
     CloudFoundryApplicationResources getResources();
 
-    void setResources(CloudFoundryApplicationResources resources);
-
     Staging getStaging();
 
-    void setStaging(Staging staging);
-
-    // Switch debug mode.
     String getDebug();
 
-    void setDebug(String debug);
-    // ------------------
-
     ApplicationMetaInfo getMeta();
-
-    void setMeta(ApplicationMetaInfo mi);
 }

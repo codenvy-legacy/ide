@@ -24,101 +24,35 @@ package com.codenvy.ide.extension.cloudfoundry.shared;
  */
 public interface CreateApplicationRequest {
     /** @return the server */
-    public abstract String getServer();
-
-    /**
-     * @param server
-     *         the server to set
-     */
-    public abstract void setServer(String server);
+    String getServer();
 
     /** @return the name */
-    public abstract String getName();
-
-    /**
-     * @param name
-     *         the name to set
-     */
-    public abstract void setName(String name);
+    String getName();
 
     /** @return the type */
-    public abstract String getType();
-
-    /**
-     * @param type
-     *         the type to set
-     */
-    public abstract void setType(String type);
+    String getType();
 
     /** @return the url */
-    public abstract String getUrl();
-
-    /**
-     * @param url
-     *         the url to set
-     */
-    public abstract void setUrl(String url);
+    String getUrl();
 
     /** @return the instances */
-    public abstract int getInstances();
-
-    /**
-     * @param instances
-     *         the instances to set
-     */
-    public abstract void setInstances(int instances);
+    int getInstances();
 
     /** @return the memory */
-    public abstract int getMemory();
-
-    /**
-     * @param memory
-     *         the memory to set
-     */
-    public abstract void setMemory(int memory);
+    int getMemory();
 
     /** @return the nostart */
-    public abstract boolean isNostart();
-
-    /**
-     * @param nostart
-     *         the nostart to set
-     */
-    public abstract void setNostart(boolean nostart);
+    boolean isNostart();
 
     /** @return the vfsId */
-    public abstract String getVfsid();
-
-    /**
-     * @param vfsId
-     *         the vfsId to set
-     */
-    public abstract void setVfsid(String vfsId);
+    String getVfsid();
 
     /** @return the projectId */
-    public abstract String getProjectid();
-
-    /**
-     * @param projectId
-     *         the projectId to set
-     */
-    public abstract void setProjectid(String projectId);
+    String getProjectid();
 
     /** @return the war */
-    public abstract String getWar();
-
-    /**
-     * @param war
-     *         the war to set
-     */
-    public abstract void setWar(String war);
+    String getWar();
 
     /** @return CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc. */
-    public abstract String getPaasprovider();
-
-    /**
-     * @param paasProvider
-     *         CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
-     */
-    public abstract void setPaasprovider(String paasProvider);
+    String getPaasprovider();
 }

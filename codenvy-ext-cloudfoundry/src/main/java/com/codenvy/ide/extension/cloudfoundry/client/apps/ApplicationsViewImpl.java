@@ -169,7 +169,13 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView 
                 new Column<CloudFoundryApplication, List<String>>(new ListLink()) {
                     @Override
                     public List<String> getValue(CloudFoundryApplication object) {
-                        return object.getUris();
+                        ArrayList<String> list = new ArrayList<String>();
+                        JsonArray<String> uris = object.getUris();
+                        for (int i = 0; i < uris.size(); i++) {
+                            String s = uris.get(i);
+                            list.add(s);
+                        }
+                        return list;
                     }
                 };
 
@@ -178,7 +184,9 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView 
                     @Override
                     public String getValue(CloudFoundryApplication object) {
                         StringBuilder b = new StringBuilder();
-                        for (String s : object.getServices()) {
+                        JsonArray<String> services = object.getServices();
+                        for (int i = 0; i < services.size(); i++) {
+                            String s = services.get(i);
                             b.append(s).append(";");
                         }
                         return b.toString();
