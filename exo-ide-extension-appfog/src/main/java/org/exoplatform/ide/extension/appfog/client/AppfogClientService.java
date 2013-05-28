@@ -109,7 +109,7 @@ public class AppfogClientService {
     //------------------------------------------------------------------
     private static AppfogClientService instance;
 
-    private String wsName;
+    private  String wsName;
 
     public static AppfogClientService getInstance() {
         return instance;
@@ -124,7 +124,7 @@ public class AppfogClientService {
     public AppfogClientService(String restContext, String wsName, Loader loader, MessageBus wsMessageBus) {
         this.wsName = wsName;
         this.loader = loader;
-        this.restServiceContext = restContext;
+        this.restServiceContext = restContext + wsName;
         this.wsMessageBus = wsMessageBus;
         instance = this;
     }
