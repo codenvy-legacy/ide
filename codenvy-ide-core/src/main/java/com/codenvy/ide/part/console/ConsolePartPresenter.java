@@ -17,6 +17,7 @@
 package com.codenvy.ide.part.console;
 
 import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.part.base.BasePresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -70,7 +71,8 @@ public class ConsolePartPresenter extends BasePresenter implements ConsolePartVi
     @Override
     public void print(String message) {
         view.print(message);
-        if (!partStack.getActivePart().equals(this)) {
+        PartPresenter activePart = partStack.getActivePart();
+        if (activePart == null || !activePart.equals(this)) {
             partStack.setActivePart(this);
         }
     }

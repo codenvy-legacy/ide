@@ -20,6 +20,7 @@ package com.codenvy.ide.extension.maven.client.build;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
@@ -185,9 +186,9 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
     private void doBuild() {
         projectId = project.getId();
         statusHandler.requestInProgress(projectId);
+        StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
 
         try {
-            StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
             service.build(projectId, resourceProvider.getVfsId(), project.getName(),
                           (String)project.getPropertyValue(ProjectDescription.PROPERTY_PRIMARY_NATURE),
                           new AsyncRequestCallback<StringBuilder>(unmarshaller) {
@@ -573,7 +574,8 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
             isViewClosed = false;
         }
 
-        if (!partStack.getActivePart().equals(this)) {
+        PartPresenter activePart = partStack.getActivePart();
+        if (activePart == null || !activePart.equals(this)) {
             partStack.setActivePart(this);
         }
 

@@ -21,6 +21,7 @@ package com.codenvy.ide.ext.jenkins.client.build;
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.api.user.User;
@@ -490,7 +491,8 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
             isViewClosed = false;
         }
 
-        if (!partStack.getActivePart().equals(this)) {
+        PartPresenter activePart = partStack.getActivePart();
+        if (activePart == null || !activePart.equals(this)) {
             partStack.setActivePart(this);
         }
 
