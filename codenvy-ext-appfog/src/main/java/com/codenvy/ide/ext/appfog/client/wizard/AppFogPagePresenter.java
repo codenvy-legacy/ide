@@ -30,7 +30,10 @@ import com.codenvy.ide.ext.appfog.client.*;
 import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.appfog.client.login.LoginCanceledHandler;
 import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
+import com.codenvy.ide.ext.appfog.client.marshaller.AppFogApplicationUnmarshaller;
+import com.codenvy.ide.ext.appfog.client.marshaller.AppFogApplicationUnmarshallerWS;
 import com.codenvy.ide.ext.appfog.client.marshaller.InfrasUnmarshaller;
+import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
 import com.codenvy.ide.ext.appfog.shared.InfraDetail;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
@@ -40,16 +43,13 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
-import com.codenvy.ide.websocket.rest.AutoBeanUnmarshallerWS;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
@@ -71,7 +71,6 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
     private ResourceProvider           resourcesProvider;
     private ConsolePart                console;
     private AppfogLocalizationConstant constant;
-    private AppfogAutoBeanFactory      autoBeanFactory;
     private HandlerRegistration        projectBuildHandler;
     private LoginPresenter             loginPresenter;
     private AppfogClientService        service;
@@ -90,15 +89,14 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
      * @param console
      * @param resources
      * @param constant
-     * @param autoBeanFactory
      * @param loginPresenter
      * @param service
      * @param templateAgent
      */
     @Inject
     protected AppFogPagePresenter(AppFogPageView view, EventBus eventBus, ResourceProvider resourcesProvider, ConsolePart console,
-                                  AppfogResources resources, AppfogLocalizationConstant constant, AppfogAutoBeanFactory autoBeanFactory,
-                                  LoginPresenter loginPresenter, AppfogClientService service, TemplateAgent templateAgent) {
+                                  AppfogResources resources, AppfogLocalizationConstant constant, LoginPresenter loginPresenter,
+                                  AppfogClientService service, TemplateAgent templateAgent) {
 
         super("Deploy project to AppFog", resources.appfog48());
 
@@ -108,7 +106,6 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
         this.resourcesProvider = resourcesProvider;
         this.console = console;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
         this.templateAgent = templateAgent;
@@ -243,11 +240,10 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
         // TODO Need to create some special service after this class
         // This class still doesn't have analog.
         // JobManager.get().showJobSeparated();
+        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
+        AppFogApplicationUnmarshallerWS unmarshaller = new AppFogApplicationUnmarshallerWS(appfogApplication);
 
         try {
-            AutoBean<AppfogApplication> appfogApplication = autoBeanFactory.appfogApplication();
-            AutoBeanUnmarshallerWS<AppfogApplication> unmarshaller = new AutoBeanUnmarshallerWS<AppfogApplication>(appfogApplication);
-
             // Application will be started after creation (IDE-1618)
             boolean noStart = false;
             service.createWS(server, projectName, null, url, 0, 0, noStart, resourcesProvider.getVfsId(), project.getId(), warUrl,
@@ -287,10 +283,10 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
      *         handler that should be called after success login
      */
     private void createApplicationREST(LoggedInHandler loggedInHandler) {
-        try {
-            AutoBean<AppfogApplication> appfogApplication = autoBeanFactory.appfogApplication();
-            AutoBeanUnmarshaller<AppfogApplication> unmarshaller = new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
+        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
 
+        try {
             // Application will be started after creation (IDE-1618)
             boolean noStart = false;
             service.create(server, projectName, null, url, 0, 0, noStart, resourcesProvider.getVfsId(), project.getId(), warUrl,
@@ -353,7 +349,9 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
      */
     private String getAppUrlsAsString(AppfogApplication application) {
         String appUris = "";
-        for (String uri : application.getUris()) {
+        JsonArray<String> uris = application.getUris();
+        for (int i = 0; i < uris.size(); i++) {
+            String uri = uris.get(i);
             if (!uri.startsWith("http")) {
                 uri = "http://" + uri;
             }
@@ -382,9 +380,9 @@ public class AppFogPagePresenter extends AbstractWizardPagePresenter implements 
                 delegate.updateControls();
             }
         };
+        InfrasUnmarshaller unmarshaller = new InfrasUnmarshaller(JsonCollections.<InfraDetail>createArray());
 
         try {
-            InfrasUnmarshaller unmarshaller = new InfrasUnmarshaller(JsonCollections.<InfraDetail>createArray(), autoBeanFactory);
             service.infras(server, null, null,
                            new AppfogAsyncRequestCallback<JsonArray<InfraDetail>>(unmarshaller, getInfrasHandler, loginCanceledHandler,
                                                                                   server, eventBus, constant, console, loginPresenter) {

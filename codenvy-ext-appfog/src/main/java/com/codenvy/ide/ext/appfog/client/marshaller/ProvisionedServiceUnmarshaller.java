@@ -16,29 +16,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.extension.cloudfoundry.client.marshaller;
+package com.codenvy.ide.ext.appfog.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
-import com.codenvy.ide.extension.cloudfoundry.shared.SystemInfo;
+import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
+import com.codenvy.ide.ext.appfog.shared.AppfogProvisionedService;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 
 /**
- * Unmarshaller for CloudFoundry system info.
+ * Unmarshaller for CloudFoundry provisioned service.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class SystemInfoUnmarshaller implements Unmarshallable<SystemInfo> {
-    private DtoClientImpls.SystemInfoImpl systemInfo;
+public class ProvisionedServiceUnmarshaller implements Unmarshallable<AppfogProvisionedService> {
+    private DtoClientImpls.AppfogProvisionedServiceImpl service;
 
     /**
      * Create unmarshaller.
      *
-     * @param systemInfo
+     * @param service
      */
-    public SystemInfoUnmarshaller(DtoClientImpls.SystemInfoImpl systemInfo) {
-        this.systemInfo = systemInfo;
+    public ProvisionedServiceUnmarshaller(DtoClientImpls.AppfogProvisionedServiceImpl service) {
+        this.service = service;
     }
 
     /** {@inheritDoc} */
@@ -50,21 +50,17 @@ public class SystemInfoUnmarshaller implements Unmarshallable<SystemInfo> {
             return;
         }
 
-        DtoClientImpls.SystemInfoImpl systemInfo = DtoClientImpls.SystemInfoImpl.deserialize(text);
+        DtoClientImpls.AppfogProvisionedServiceImpl service = DtoClientImpls.AppfogProvisionedServiceImpl.deserialize(text);
 
-        this.systemInfo.setUsage(systemInfo.getUsage());
-        this.systemInfo.setLimits(systemInfo.getLimits());
-        this.systemInfo.setDescription(systemInfo.getDescription());
-        this.systemInfo.setUser(systemInfo.getUser());
-        this.systemInfo.setVersion(systemInfo.getVersion());
-        this.systemInfo.setName(systemInfo.getName());
-        this.systemInfo.setSupport(systemInfo.getSupport());
-        this.systemInfo.setFrameworks(systemInfo.getFrameworks());
+        this.service.setName(service.getName());
+        this.service.setType(service.getType());
+        this.service.setVendor(service.getVendor());
+        this.service.setVendor(service.getVersion());
     }
 
     /** {@inheritDoc} */
     @Override
-    public SystemInfo getPayload() {
-        return systemInfo;
+    public AppfogProvisionedService getPayload() {
+        return service;
     }
 }

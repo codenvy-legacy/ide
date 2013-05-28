@@ -18,28 +18,15 @@
  */
 package com.codenvy.ide.ext.appfog.shared;
 
-/**
- * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
- * @version $Id: $
- */
+/** @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a> */
 public interface AppfogProvisionedService {
     String getName();
 
-    void setName(String name);
-
     String getType();
-
-    void setType(String type);
 
     String getVendor();
 
-    void setVendor(String vendor);
-
     String getVersion();
 
-    void setVersion(String version);
-
     Infra getInfra();
-
-    void setInfra(Infra infra);
 }

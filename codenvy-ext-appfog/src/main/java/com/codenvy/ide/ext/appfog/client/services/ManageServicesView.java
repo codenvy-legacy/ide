@@ -20,8 +20,7 @@ package com.codenvy.ide.ext.appfog.client.services;
 
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.ext.appfog.shared.AppfogProvisionedService;
-
-import java.util.List;
+import com.codenvy.ide.json.JsonArray;
 
 /**
  * The view of {@link ManageServicesPresenter}.
@@ -79,14 +78,14 @@ public interface ManageServicesView extends View<ManageServicesView.ActionDelega
      *
      * @param services
      */
-    void setProvisionedServices(List<AppfogProvisionedService> services);
+    void setProvisionedServices(JsonArray<AppfogProvisionedService> services);
 
     /**
      * Sets bounded services.
      *
      * @param services
      */
-    void setBoundedServices(List<String> services);
+    void setBoundedServices(JsonArray<String> services);
 
     /** Show dialog. */
     void showDialog();

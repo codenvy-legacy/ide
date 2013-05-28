@@ -18,24 +18,13 @@
  */
 package com.codenvy.ide.ext.appfog.shared;
 
-/**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
- */
+/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
 public interface ApplicationMetaInfo {
     String getDebug();
 
-    void setDebug(String v);
-
     String getConsole();
 
-    void setConsole(String v);
+    double getVersion();
 
-    long getVersion();
-
-    void setVersion(long v);
-
-    long getCreated();
-
-    void setCreated(long date);
+    double getCreated();
 }

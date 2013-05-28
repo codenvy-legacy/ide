@@ -18,8 +18,8 @@
  */
 package com.codenvy.ide.ext.appfog.client;
 
+import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.*;
-import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.rest.AsyncRequest;
@@ -35,8 +35,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -79,7 +77,6 @@ public class AppfogClientServiceImpl implements AppfogClientService {
     private MessageBus                 wsMessageBus;
     private EventBus                   eventBus;
     private AppfogLocalizationConstant constant;
-    private AppfogAutoBeanFactory      autoBeanFactory;
 
     /**
      * Create AppFog client service.
@@ -89,17 +86,15 @@ public class AppfogClientServiceImpl implements AppfogClientService {
      * @param wsMessageBus
      * @param eventBus
      * @param constant
-     * @param autoBeanFactory
      */
     @Inject
     protected AppfogClientServiceImpl(@Named("restContext") String restContext, Loader loader, MessageBus wsMessageBus, EventBus eventBus,
-                                      AppfogLocalizationConstant constant, AppfogAutoBeanFactory autoBeanFactory) {
+                                      AppfogLocalizationConstant constant) {
         this.loader = loader;
         this.restServiceContext = restContext;
         this.wsMessageBus = wsMessageBus;
         this.eventBus = eventBus;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
     }
 
     /** {@inheritDoc} */
@@ -120,20 +115,21 @@ public class AppfogClientServiceImpl implements AppfogClientService {
 
         server = checkServerUrl(server);
 
-        CreateAppfogApplicationRequest createApplicationRequest = autoBeanFactory.createAppfogApplicationRequest().as();
+        DtoClientImpls.CreateAppfogApplicationRequestImpl createApplicationRequest =
+                DtoClientImpls.CreateAppfogApplicationRequestImpl.make();
         createApplicationRequest.setName(name);
         createApplicationRequest.setServer(server);
         createApplicationRequest.setType(type);
         createApplicationRequest.setUrl(url);
         createApplicationRequest.setInstances(instances);
         createApplicationRequest.setMemory(memory);
-        createApplicationRequest.setNostart(nostart);
+        createApplicationRequest.setIsNostart(nostart);
         createApplicationRequest.setVfsid(vfsId);
         createApplicationRequest.setProjectid(projectId);
         createApplicationRequest.setWar(war);
         createApplicationRequest.setInfra(infra);
 
-        String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(createApplicationRequest)).getPayload();
+        String data = createApplicationRequest.serialize();
 
         AsyncRequest.build(RequestBuilder.POST, requestUrl, true)
                     .requestStatusHandler(new CreateApplicationRequestStatusHandler(name, eventBus, constant)).data(data)
@@ -147,20 +143,21 @@ public class AppfogClientServiceImpl implements AppfogClientService {
             throws WebSocketException {
         server = checkServerUrl(server);
 
-        CreateAppfogApplicationRequest createApplicationRequest = autoBeanFactory.createAppfogApplicationRequest().as();
+        DtoClientImpls.CreateAppfogApplicationRequestImpl createApplicationRequest =
+                DtoClientImpls.CreateAppfogApplicationRequestImpl.make();
         createApplicationRequest.setName(name);
         createApplicationRequest.setServer(server);
         createApplicationRequest.setType(type);
         createApplicationRequest.setUrl(url);
         createApplicationRequest.setInstances(instances);
         createApplicationRequest.setMemory(memory);
-        createApplicationRequest.setNostart(nostart);
+        createApplicationRequest.setIsNostart(nostart);
         createApplicationRequest.setVfsid(vfsId);
         createApplicationRequest.setProjectid(projectId);
         createApplicationRequest.setWar(war);
         createApplicationRequest.setInfra(infra);
 
-        String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(createApplicationRequest)).getPayload();
+        String data = createApplicationRequest.serialize();
         callback.setStatusHandler(new CreateApplicationRequestStatusHandler(name, eventBus, constant));
 
         MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, CREATE);
@@ -178,7 +175,8 @@ public class AppfogClientServiceImpl implements AppfogClientService {
 
         server = checkServerUrl(server);
 
-        DtoClientImpls.CredentialsImpl credentials = DtoClientImpls.CredentialsImpl.make();
+        com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls.CredentialsImpl credentials =
+                com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls.CredentialsImpl.make();
         credentials.setServer(server);
         credentials.setEmail(email);
         credentials.setPassword(password);

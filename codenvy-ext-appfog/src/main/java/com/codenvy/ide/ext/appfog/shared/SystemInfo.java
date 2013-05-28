@@ -18,44 +18,27 @@
  */
 package com.codenvy.ide.ext.appfog.shared;
 
-import java.util.Map;
+import com.codenvy.ide.json.JsonStringMap;
 
 /**
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: $
  */
 public interface SystemInfo {
     SystemResources getUsage();
 
-    void setUsage(SystemResources usage);
-
     SystemResources getLimits();
-
-    void setLimits(SystemResources limits);
 
     String getDescription();
 
-    void setDescription(String description);
-
     String getUser();
-
-    void setUser(String user);
 
     String getVersion();
 
-    void setVersion(String version);
-
     String getName();
-
-    void setName(String name);
 
     String getSupport();
 
-    void setSupport(String support);
-
-    Map<String, Framework> getFrameworks();
-
-    void setFrameworks(Map<String, Framework> frameworks);
+    JsonStringMap<Framework> getFrameworks();
 }

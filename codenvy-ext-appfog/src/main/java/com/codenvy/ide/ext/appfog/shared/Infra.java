@@ -18,16 +18,9 @@
  */
 package com.codenvy.ide.ext.appfog.shared;
 
-/**
- * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
- * @version $Id: $
- */
+/** @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a> */
 public interface Infra {
     String getProvider();
 
-    void setProvider(String provider);
-
     String getName();
-
-    void setName(String name);
 }

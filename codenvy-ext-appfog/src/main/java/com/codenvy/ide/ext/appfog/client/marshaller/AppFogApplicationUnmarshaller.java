@@ -16,41 +16,41 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.extension.cloudfoundry.client.marshaller;
+package com.codenvy.ide.ext.appfog.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
-import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
-import com.codenvy.ide.websocket.Message;
-import com.codenvy.ide.websocket.rest.Unmarshallable;
+import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
+import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
+import com.codenvy.ide.rest.Unmarshallable;
+import com.google.gwt.http.client.Response;
 
 /**
- * Unmarshaller for CloudFoundry application.
+ * Unmarshaller for AppFog application.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class CloudFoundryApplicationUnmarshallerWS implements Unmarshallable<CloudFoundryApplication> {
-    private DtoClientImpls.CloudFoundryApplicationImpl application;
+public class AppFogApplicationUnmarshaller implements Unmarshallable<AppfogApplication> {
+    private DtoClientImpls.AppfogApplicationImpl application;
 
     /**
      * Create unmarshaller.
      *
      * @param application
      */
-    public CloudFoundryApplicationUnmarshallerWS(DtoClientImpls.CloudFoundryApplicationImpl application) {
+    public AppFogApplicationUnmarshaller(DtoClientImpls.AppfogApplicationImpl application) {
         this.application = application;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void unmarshal(Message response) throws UnmarshallerException {
-        String text = response.getBody();
+    public void unmarshal(Response response) throws UnmarshallerException {
+        String text = response.getText();
 
         if (text == null || text.isEmpty()) {
             return;
         }
 
-        DtoClientImpls.CloudFoundryApplicationImpl application = DtoClientImpls.CloudFoundryApplicationImpl.deserialize(text);
+        DtoClientImpls.AppfogApplicationImpl application = DtoClientImpls.AppfogApplicationImpl.deserialize(text);
 
         this.application.setName(application.getName());
         this.application.setUris(application.getUris());
@@ -64,11 +64,12 @@ public class CloudFoundryApplicationUnmarshallerWS implements Unmarshallable<Clo
         this.application.setStaging(application.getStaging());
         this.application.setDebug(application.getDebug());
         this.application.setMeta(application.getMeta());
+        this.application.setInfra(application.getInfra());
     }
 
     /** {@inheritDoc} */
     @Override
-    public CloudFoundryApplication getPayload() {
+    public AppfogApplication getPayload() {
         return application;
     }
 }

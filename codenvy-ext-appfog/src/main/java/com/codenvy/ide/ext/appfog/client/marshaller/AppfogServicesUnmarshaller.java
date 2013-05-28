@@ -19,16 +19,17 @@
 package com.codenvy.ide.ext.appfog.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.ext.appfog.client.AppfogAutoBeanFactory;
+import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.AppfogProvisionedService;
 import com.codenvy.ide.ext.appfog.shared.AppfogServices;
 import com.codenvy.ide.ext.appfog.shared.AppfogSystemService;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 /**
  * Unmarshaller for Appfog services.
@@ -37,24 +38,16 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
  */
 public class AppfogServicesUnmarshaller implements Unmarshallable<AppfogServices> {
     private final class Keys {
-        public static final String SYSTEM = "appfogSystemService";
-
+        public static final String SYSTEM      = "appfogSystemService";
         public static final String PROVISIONED = "appfogProvisionedService";
     }
 
     /** Appfog services (system and provisioned). */
-    private AppfogServices        appfogServices;
-    private AppfogAutoBeanFactory autoBeanFactory;
+    private DtoClientImpls.AppfogServicesImpl appfogServices;
 
-    /**
-     * Create unmarshaller.
-     *
-     * @param autoBeanFactory
-     */
-    public AppfogServicesUnmarshaller(AppfogAutoBeanFactory autoBeanFactory) {
-        this.autoBeanFactory = autoBeanFactory;
-
-        appfogServices = autoBeanFactory.services().as();
+    /** Create unmarshaller. */
+    public AppfogServicesUnmarshaller() {
+        appfogServices = DtoClientImpls.AppfogServicesImpl.make();
     }
 
     /** {@inheritDoc} */
@@ -69,29 +62,30 @@ public class AppfogServicesUnmarshaller implements Unmarshallable<AppfogServices
         if (jsonObject.containsKey(Keys.SYSTEM)) {
             JSONArray systemServices = jsonObject.get(Keys.SYSTEM).isArray();
             if (systemServices.size() > 0) {
-                AppfogSystemService[] services = new AppfogSystemService[systemServices.size()];
+                JsonArray<AppfogSystemService> services = JsonCollections.createArray();
                 for (int i = 0; i < systemServices.size(); i++) {
                     String value = systemServices.get(i).isObject().toString();
-                    services[i] = AutoBeanCodex.decode(autoBeanFactory, AppfogSystemService.class, value).as();
+                    DtoClientImpls.AppfogSystemServiceImpl service = DtoClientImpls.AppfogSystemServiceImpl.deserialize(value);
+                    services.add(service);
                 }
                 appfogServices.setAppfogSystemService(services);
             } else {
-                appfogServices.setAppfogSystemService(new AppfogSystemService[0]);
+                appfogServices.setAppfogSystemService(JsonCollections.<AppfogSystemService>createArray());
             }
         }
 
         if (jsonObject.containsKey(Keys.PROVISIONED)) {
             JSONArray provisionedServices = jsonObject.get(Keys.PROVISIONED).isArray();
             if (provisionedServices.size() > 0) {
-                AppfogProvisionedService[] services = new AppfogProvisionedService[provisionedServices.size()];
+                JsonArray<AppfogProvisionedService> services = JsonCollections.createArray();
                 for (int i = 0; i < provisionedServices.size(); i++) {
                     String value = provisionedServices.get(i).isObject().toString();
-                    services[i] =
-                            AutoBeanCodex.decode(autoBeanFactory, AppfogProvisionedService.class, value).as();
+                    DtoClientImpls.AppfogProvisionedServiceImpl service = DtoClientImpls.AppfogProvisionedServiceImpl.deserialize(value);
+                    services.add(service);
                 }
                 appfogServices.setAppfogProvisionedService(services);
             } else {
-                appfogServices.setAppfogProvisionedService(new AppfogProvisionedService[0]);
+                appfogServices.setAppfogProvisionedService(JsonCollections.<AppfogProvisionedService>createArray());
             }
         }
     }

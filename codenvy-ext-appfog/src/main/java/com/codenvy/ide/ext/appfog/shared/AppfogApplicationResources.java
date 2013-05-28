@@ -33,25 +33,9 @@ public interface AppfogApplicationResources {
     int getMemory();
 
     /**
-     * Set amount of memory available for application (in MB).
-     *
-     * @param memory
-     *         amount of memory.
-     */
-    void setMemory(int memory);
-
-    /**
      * Get amount disk space available for application (in MB).
      *
      * @return amount of disk space.
      */
     int getDisk();
-
-    /**
-     * Set amount disk space available for application (in MB).
-     *
-     * @param disk
-     *         amount of disk space.
-     */
-    void setDisk(int disk);
 }

@@ -22,19 +22,19 @@ import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.appfog.client.AppfogAsyncRequestCallback;
-import com.codenvy.ide.ext.appfog.client.AppfogAutoBeanFactory;
 import com.codenvy.ide.ext.appfog.client.AppfogClientService;
 import com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant;
 import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
+import com.codenvy.ide.ext.appfog.client.marshaller.AppFogApplicationUnmarshaller;
+import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -48,7 +48,6 @@ public class StartApplicationPresenter {
     private ResourceProvider           resourceProvider;
     private ConsolePart                console;
     private AppfogLocalizationConstant constant;
-    private AppfogAutoBeanFactory      autoBeanFactory;
     private AsyncCallback<String>      appInfoChangedCallback;
     private LoginPresenter             loginPresenter;
     private AppfogClientService        service;
@@ -60,19 +59,16 @@ public class StartApplicationPresenter {
      * @param resourceProvider
      * @param console
      * @param constant
-     * @param autoBeanFactory
      * @param loginPresenter
      * @param service
      */
     @Inject
     protected StartApplicationPresenter(EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
-                                        AppfogLocalizationConstant constant, AppfogAutoBeanFactory autoBeanFactory,
-                                        LoginPresenter loginPresenter, AppfogClientService service) {
+                                        AppfogLocalizationConstant constant, LoginPresenter loginPresenter, AppfogClientService service) {
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
         this.console = console;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
     }
@@ -136,11 +132,10 @@ public class StartApplicationPresenter {
     /** Gets information about active project and check its state. */
     private void checkIsStarted() {
         Project project = resourceProvider.getActiveProject();
+        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
 
         try {
-            AutoBean<AppfogApplication> appfogApplication = autoBeanFactory.appfogApplication();
-            AutoBeanUnmarshaller<AppfogApplication> unmarshaller = new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
-
             service.getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null, null,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, checkIsStartedLoggedInHandler,
                                                                                          null, eventBus, constant, console,
@@ -175,10 +170,10 @@ public class StartApplicationPresenter {
         final String appName = (project != null && name == null) ? project.getProperty("appfog-application").getValue().get(0) : name;
         final String projectId = project != null ? project.getId() : null;
 
-        try {
-            AutoBean<AppfogApplication> appfogApplication = autoBeanFactory.appfogApplication();
-            AutoBeanUnmarshaller<AppfogApplication> unmarshaller = new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
+        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
 
+        try {
             service.startApplication(null, null, appName, server,
                                      new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, startLoggedInHandler, null, eventBus,
                                                                                        constant, console, loginPresenter) {
@@ -217,7 +212,9 @@ public class StartApplicationPresenter {
      */
     private String getAppUrisAsString(AppfogApplication application) {
         String appUris = "";
-        for (String uri : application.getUris()) {
+        JsonArray<String> uris = application.getUris();
+        for (int i = 0; i < uris.size(); i++) {
+            String uri = uris.get(i);
             if (!uri.startsWith("http")) {
                 uri = "http://" + uri;
             }
@@ -249,11 +246,10 @@ public class StartApplicationPresenter {
     /** Gets information about active project and check its state. */
     private void checkIsStopped() {
         Project project = resourceProvider.getActiveProject();
+        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
 
         try {
-            AutoBean<AppfogApplication> appfogApplication = autoBeanFactory.appfogApplication();
-            AutoBeanUnmarshaller<AppfogApplication> unmarshaller = new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
-
             service.getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null, null,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, checkIsStoppedLoggedInHandler,
                                                                                          null, eventBus, constant, console,
@@ -294,11 +290,12 @@ public class StartApplicationPresenter {
                                                                            loginPresenter) {
                                         @Override
                                         protected void onSuccess(String result) {
-                                            try {
-                                                AutoBean<AppfogApplication> appfogApplication = autoBeanFactory.appfogApplication();
-                                                AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
-                                                        new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
+                                            DtoClientImpls.AppfogApplicationImpl appfogApplication =
+                                                    DtoClientImpls.AppfogApplicationImpl.make();
+                                            AppFogApplicationUnmarshaller unmarshaller =
+                                                    new AppFogApplicationUnmarshaller(appfogApplication);
 
+                                            try {
                                                 service.getApplicationInfo(resourceProvider.getVfsId(), projectId, name, null,
                                                                            new AppfogAsyncRequestCallback<AppfogApplication>(
                                                                                    unmarshaller, null, null, eventBus, constant, console,
@@ -348,11 +345,10 @@ public class StartApplicationPresenter {
         final String server = project != null ? project.getProperty("appfog-target").getValue().get(0) : null;
         final String appName = (project != null && name == null) ? project.getProperty("appfog-application").getValue().get(0) : name;
         final String projectId = project != null ? project.getId() : null;
+        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
 
         try {
-            AutoBean<AppfogApplication> appfogApplication = autoBeanFactory.appfogApplication();
-            AutoBeanUnmarshaller<AppfogApplication> unmarshaller = new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
-
             service.restartApplication(null, null, appName, server,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, restartLoggedInHandler, null,
                                                                                          eventBus, constant, console, loginPresenter) {

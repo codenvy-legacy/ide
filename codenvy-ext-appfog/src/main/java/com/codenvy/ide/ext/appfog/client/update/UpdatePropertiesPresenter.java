@@ -21,20 +21,23 @@ package com.codenvy.ide.ext.appfog.client.update;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.ext.appfog.client.*;
+import com.codenvy.ide.ext.appfog.client.AppFogExtension;
+import com.codenvy.ide.ext.appfog.client.AppfogAsyncRequestCallback;
+import com.codenvy.ide.ext.appfog.client.AppfogClientService;
+import com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant;
 import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
+import com.codenvy.ide.ext.appfog.client.marshaller.AppFogApplicationUnmarshaller;
 import com.codenvy.ide.ext.appfog.client.marshaller.StringUnmarshaller;
+import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -50,7 +53,6 @@ public class UpdatePropertiesPresenter {
     private ResourceProvider           resourceProvider;
     private ConsolePart                console;
     private AppfogLocalizationConstant constant;
-    private AppfogAutoBeanFactory      autoBeanFactory;
     private AsyncCallback<String>      updatePropertiesCallback;
     private LoginPresenter             loginPresenter;
     private AppfogClientService        service;
@@ -62,19 +64,16 @@ public class UpdatePropertiesPresenter {
      * @param resourceProvider
      * @param console
      * @param constant
-     * @param autoBeanFactory
      * @param loginPresenter
      * @param service
      */
     @Inject
     protected UpdatePropertiesPresenter(EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
-                                        AppfogLocalizationConstant constant, AppfogAutoBeanFactory autoBeanFactory,
-                                        LoginPresenter loginPresenter, AppfogClientService service) {
+                                        AppfogLocalizationConstant constant, LoginPresenter loginPresenter, AppfogClientService service) {
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
         this.console = console;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
     }
@@ -101,11 +100,10 @@ public class UpdatePropertiesPresenter {
     /** Gets old memory value. */
     private void getOldMemoryValue() {
         String projectId = resourceProvider.getActiveProject().getId();
+        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
 
         try {
-            AutoBean<AppfogApplication> appfogApplication = autoBeanFactory.appfogApplication();
-            AutoBeanUnmarshaller<AppfogApplication> unmarshaller = new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
-
             service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, getOldMemoryValueLoggedInHandler,
                                                                                          null, eventBus, constant, console,
@@ -200,11 +198,10 @@ public class UpdatePropertiesPresenter {
     /** Gets old instances value. */
     private void getOldInstancesValue() {
         String projectId = resourceProvider.getActiveProject().getId();
+        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
 
         try {
-            AutoBean<AppfogApplication> appfogApplication = autoBeanFactory.appfogApplication();
-            AutoBeanUnmarshaller<AppfogApplication> unmarshaller = new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
-
             service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, getOldInstancesValueLoggedInHandler,
                                                                                          null, eventBus, constant, console,
@@ -274,11 +271,12 @@ public class UpdatePropertiesPresenter {
                                                                                   eventBus, constant, console, loginPresenter) {
                                         @Override
                                         protected void onSuccess(StringBuilder result) {
-                                            try {
-                                                AutoBean<AppfogApplication> appfogApplication = autoBeanFactory.appfogApplication();
-                                                AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
-                                                        new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
+                                            DtoClientImpls.AppfogApplicationImpl appfogApplication =
+                                                    DtoClientImpls.AppfogApplicationImpl.make();
+                                            AppFogApplicationUnmarshaller unmarshaller =
+                                                    new AppFogApplicationUnmarshaller(appfogApplication);
 
+                                            try {
                                                 service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null,
                                                                            AppFogExtension.DEFAULT_SERVER,
                                                                            new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller,

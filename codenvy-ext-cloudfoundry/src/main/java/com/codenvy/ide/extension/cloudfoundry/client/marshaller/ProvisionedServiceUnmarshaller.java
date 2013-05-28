@@ -24,7 +24,11 @@ import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * Unmarshaller for CloudFoundry provisioned service.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 public class ProvisionedServiceUnmarshaller implements Unmarshallable<ProvisionedService> {
     private DtoClientImpls.ProvisionedServiceImpl service;
 

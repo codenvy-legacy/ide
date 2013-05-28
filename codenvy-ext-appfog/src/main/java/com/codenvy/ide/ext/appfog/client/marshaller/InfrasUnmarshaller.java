@@ -19,7 +19,7 @@
 package com.codenvy.ide.ext.appfog.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.ext.appfog.client.AppfogAutoBeanFactory;
+import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.InfraDetail;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.Unmarshallable;
@@ -27,8 +27,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 /**
  * Unmarshaller for AppFog infras.
@@ -38,17 +36,14 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
  */
 public class InfrasUnmarshaller implements Unmarshallable<JsonArray<InfraDetail>> {
     private JsonArray<InfraDetail> infras;
-    private AppfogAutoBeanFactory  autoBeanFactory;
 
     /**
      * Create unmarshaller.
      *
      * @param infras
-     * @param autoBeanFactory
      */
-    public InfrasUnmarshaller(JsonArray<InfraDetail> infras, AppfogAutoBeanFactory autoBeanFactory) {
+    public InfrasUnmarshaller(JsonArray<InfraDetail> infras) {
         this.infras = infras;
-        this.autoBeanFactory = autoBeanFactory;
     }
 
     /** {@inheritDoc} */
@@ -67,8 +62,9 @@ public class InfrasUnmarshaller implements Unmarshallable<JsonArray<InfraDetail>
             for (int i = 0; i < array.size(); i++) {
                 JSONObject jsonObject = array.get(i).isObject();
                 String value = (jsonObject.isObject() != null) ? jsonObject.isObject().toString() : "";
-                AutoBean<InfraDetail> infraBean = AutoBeanCodex.decode(autoBeanFactory, InfraDetail.class, value);
-                infras.add(infraBean.as());
+
+                DtoClientImpls.InfraDetailImpl infraDetail = DtoClientImpls.InfraDetailImpl.deserialize(value);
+                infras.add(infraDetail);
             }
         } catch (Exception e) {
             throw new UnmarshallerException("Can't parse infras information.", e);

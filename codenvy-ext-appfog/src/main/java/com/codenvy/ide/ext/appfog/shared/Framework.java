@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.ext.appfog.shared;
 
-import java.util.List;
+import com.codenvy.ide.json.JsonArray;
 
 /**
  * Framework info.
@@ -34,17 +34,7 @@ public interface Framework {
      */
     String getName();
 
-    /**
-     * Set the framework name.
-     *
-     * @param name
-     *         framework name
-     */
-    void setName(String name);
-
-    List<Runtime> getRuntimes();
-
-    void setRuntimes(List<Runtime> runtimes);
+    JsonArray<Runtime> getRuntimes();
 
     /**
      * Get framework description.
@@ -54,29 +44,11 @@ public interface Framework {
     String getDescription();
 
     /**
-     * Set framework description.
-     *
-     * @param description
-     *         framework description.
-     */
-    void setDescription(String description);
-
-    /**
      * Get default memory size in megabytes.
      *
      * @return memory size
      */
     int getMemory();
 
-    /**
-     * Set memory size in megabytes.
-     *
-     * @param memory
-     *         memory size in megabytes
-     */
-    void setMemory(int memory);
-
     String getDisplayName();
-
-    void setDisplayName(String displayName);
 }

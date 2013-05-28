@@ -22,18 +22,11 @@ package com.codenvy.ide.ext.appfog.shared;
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: $
  */
 public interface SystemResources {
     int getServices();
 
-    void setServices(int services);
-
     int getApps();
 
-    void setApps(int apps);
-
     int getMemory();
-
-    void setMemory(int memory);
 }

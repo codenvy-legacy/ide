@@ -16,7 +16,10 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.appfog.shared;
+package com.codenvy.ide.ext.appfog.dto;
+
+import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
+import com.codenvy.ide.ext.appfog.shared.Infra;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
@@ -41,7 +44,10 @@ public enum InfraType {
     }
 
     public Infra getInfra() {
-        return new InfraImpl(value, value);
+        DtoClientImpls.InfraImpl infra = DtoClientImpls.InfraImpl.make();
+        infra.setName(value);
+        infra.setProvider(value);
+        return infra;
     }
 
     public static InfraType fromValue(String value) {

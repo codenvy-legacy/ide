@@ -19,7 +19,7 @@
 package com.codenvy.ide.ext.appfog.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.ext.appfog.client.AppfogAutoBeanFactory;
+import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.Unmarshallable;
@@ -27,8 +27,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 /**
  * Unmarshaller for AppFog application list.
@@ -37,17 +35,14 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
  */
 public class ApplicationListUnmarshaller implements Unmarshallable<JsonArray<AppfogApplication>> {
     private JsonArray<AppfogApplication> apps;
-    private AppfogAutoBeanFactory        autoBeanFactory;
 
     /**
      * Create unmarshaller.
      *
      * @param apps
-     * @param autoBeanFactory
      */
-    public ApplicationListUnmarshaller(JsonArray<AppfogApplication> apps, AppfogAutoBeanFactory autoBeanFactory) {
+    public ApplicationListUnmarshaller(JsonArray<AppfogApplication> apps) {
         this.apps = apps;
-        this.autoBeanFactory = autoBeanFactory;
     }
 
     /** {@inheritDoc} */
@@ -68,8 +63,9 @@ public class ApplicationListUnmarshaller implements Unmarshallable<JsonArray<App
                 JSONObject jsonObject = array.get(i).isObject();
                 String value = (jsonObject.isObject() != null) ? jsonObject.isObject().toString() : "";
 
-                AutoBean<AppfogApplication> appInfoBean = AutoBeanCodex.decode(autoBeanFactory, AppfogApplication.class, value);
-                apps.add(appInfoBean.as());
+                DtoClientImpls.AppfogApplicationImpl appInfo = DtoClientImpls.AppfogApplicationImpl.deserialize(value);
+
+                apps.add(appInfo);
             }
         } catch (Exception e) {
             throw new UnmarshallerException("Can't parse applications information.", e);

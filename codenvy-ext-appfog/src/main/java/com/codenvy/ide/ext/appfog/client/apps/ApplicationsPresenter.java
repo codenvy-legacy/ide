@@ -20,7 +20,10 @@ package com.codenvy.ide.ext.appfog.client.apps;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.ext.appfog.client.*;
+import com.codenvy.ide.ext.appfog.client.AppFogExtension;
+import com.codenvy.ide.ext.appfog.client.AppfogAsyncRequestCallback;
+import com.codenvy.ide.ext.appfog.client.AppfogClientService;
+import com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant;
 import com.codenvy.ide.ext.appfog.client.delete.DeleteApplicationPresenter;
 import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
@@ -50,14 +53,12 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
     private EventBus                   eventBus;
     private ConsolePart                console;
     private AppfogLocalizationConstant constant;
-    private AppfogAutoBeanFactory      autoBeanFactory;
     private LoginPresenter             loginPresenter;
     private StartApplicationPresenter  startApplicationPresenter;
     private DeleteApplicationPresenter deleteApplicationPresenter;
     private AppfogClientService        service;
     private JsonArray<String>          servers;
     private String                     currentServer;
-
     /** The callback what execute when some application's information was changed. */
     private AsyncCallback<String> appInfoChangedCallback = new AsyncCallback<String>() {
         @Override
@@ -78,15 +79,13 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
      * @param eventBus
      * @param console
      * @param constant
-     * @param autoBeanFactory
      * @param loginPresenter
      * @param service
      * @param startApplicationPresenter
      * @param deleteApplicationPresenter
      */
     @Inject
-    protected ApplicationsPresenter(ApplicationsView view, EventBus eventBus, ConsolePart console,
-                                    AppfogLocalizationConstant constant, AppfogAutoBeanFactory autoBeanFactory,
+    protected ApplicationsPresenter(ApplicationsView view, EventBus eventBus, ConsolePart console, AppfogLocalizationConstant constant,
                                     LoginPresenter loginPresenter, AppfogClientService service,
                                     StartApplicationPresenter startApplicationPresenter,
                                     DeleteApplicationPresenter deleteApplicationPresenter) {
@@ -95,7 +94,6 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
         this.eventBus = eventBus;
         this.console = console;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
         this.startApplicationPresenter = startApplicationPresenter;
@@ -146,8 +144,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
     /** Gets list of available application for current user. */
     private void getApplicationList() {
         try {
-            ApplicationListUnmarshaller unmarshaller =
-                    new ApplicationListUnmarshaller(JsonCollections.<AppfogApplication>createArray(), autoBeanFactory);
+            ApplicationListUnmarshaller unmarshaller = new ApplicationListUnmarshaller(JsonCollections.<AppfogApplication>createArray());
             LoggedInHandler loggedInHandler = new LoggedInHandler() {
                 @Override
                 public void onLoggedIn() {
