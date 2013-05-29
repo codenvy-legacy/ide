@@ -78,7 +78,6 @@ public class IDEConfigurationService {
     @GET
     @Path("/init")
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"developer"})
     public Map<String, Object> inializationParameters(@Context UriInfo uriInfo, @Context HttpServletRequest request) {
 
         try {

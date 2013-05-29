@@ -20,6 +20,7 @@ package org.exoplatform.ide.git.client;
 
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Window;
 
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.loader.Loader;
@@ -27,7 +28,6 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
@@ -157,6 +157,8 @@ public class GitClientServiceImpl extends GitClientService {
 
     private MessageBus         wsMessageBus;
 
+    private final String wsName;
+
     /**
      * @param eventBus eventBus
      * @param restContext rest context
@@ -164,6 +166,7 @@ public class GitClientServiceImpl extends GitClientService {
      * @param restContext 
      */
     public GitClientServiceImpl(String restConetxt, String wsName, Loader loader, MessageBus wsMessageBus) {
+        this.wsName = wsName;
         restServiceContext = restConetxt + wsName;
         this.loader = loader;
         this.wsMessageBus = wsMessageBus;
@@ -203,7 +206,7 @@ public class GitClientServiceImpl extends GitClientService {
         callback.setStatusHandler(new InitRequestStatusHandler(projectName));
 
         RequestMessage message =
-                                 RequestMessageBuilder.build(RequestBuilder.POST, INIT + params).data(marshaller.marshal())
+                                 RequestMessageBuilder.build(RequestBuilder.POST, wsName + INIT + params).data(marshaller.marshal())
                                                       .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
         wsMessageBus.send(message, callback);
     }
@@ -248,7 +251,7 @@ public class GitClientServiceImpl extends GitClientService {
         callback.setStatusHandler(new CloneRequestStatusHandler(folder.getName(), remoteUri));
 
         RequestMessage message =
-                                 RequestMessageBuilder.build(RequestBuilder.POST, CLONE + params).data(marshaller.marshal())
+                                 RequestMessageBuilder.build(RequestBuilder.POST, wsName + CLONE + params).data(marshaller.marshal())
                                                       .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
                                                       .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).getRequestMessage();
         wsMessageBus.send(message, callback);
@@ -305,7 +308,7 @@ public class GitClientServiceImpl extends GitClientService {
         callback.setStatusHandler(new AddRequestHandler(project.getName()));
 
         RequestMessage message =
-                                 RequestMessageBuilder.build(RequestBuilder.POST, ADD + params).data(marshaller.marshal())
+                                 RequestMessageBuilder.build(RequestBuilder.POST, wsName + ADD + params).data(marshaller.marshal())
                                                       .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
         wsMessageBus.send(message, callback);
     }
@@ -345,7 +348,7 @@ public class GitClientServiceImpl extends GitClientService {
         callback.setStatusHandler(new CommitRequestHandler(project.getName(), message));
 
         RequestMessage requestMessage =
-                                        RequestMessageBuilder.build(RequestBuilder.POST, COMMIT + params).data(marshaller.marshal())
+                                        RequestMessageBuilder.build(RequestBuilder.POST, wsName + COMMIT + params).data(marshaller.marshal())
                                                              .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
         wsMessageBus.send(requestMessage, callback);
     }
@@ -392,7 +395,7 @@ public class GitClientServiceImpl extends GitClientService {
         callback.setStatusHandler(new PushRequestHandler(project.getName(), refSpec));
 
         RequestMessage message =
-                                 RequestMessageBuilder.build(RequestBuilder.POST, PUSH + params).data(marshaller.marshal())
+                                 RequestMessageBuilder.build(RequestBuilder.POST, wsName + PUSH + params).data(marshaller.marshal())
                                                       .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
         wsMessageBus.send(message, callback);
     }
@@ -660,7 +663,7 @@ public class GitClientServiceImpl extends GitClientService {
         callback.setStatusHandler(new FetchRequestHandler(project.getName(), refspec));
 
         RequestMessage message =
-                                 RequestMessageBuilder.build(RequestBuilder.POST, FETCH + params).data(marshaller.marshal())
+                                 RequestMessageBuilder.build(RequestBuilder.POST, wsName + FETCH + params).data(marshaller.marshal())
                                                       .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
         wsMessageBus.send(message, callback);
     }
@@ -699,7 +702,7 @@ public class GitClientServiceImpl extends GitClientService {
         callback.setStatusHandler(new PullRequestHandler(project.getName(), refSpec));
 
         RequestMessage message =
-                                 RequestMessageBuilder.build(RequestBuilder.POST, PULL + params).data(marshaller.marshal())
+                                 RequestMessageBuilder.build(RequestBuilder.POST, wsName + PULL + params).data(marshaller.marshal())
                                                       .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
         wsMessageBus.send(message, callback);
     }

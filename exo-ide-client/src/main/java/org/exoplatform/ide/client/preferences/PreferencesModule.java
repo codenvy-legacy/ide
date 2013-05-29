@@ -32,6 +32,7 @@ import org.exoplatform.ide.client.framework.preference.Preferences;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.hotkeys.CustomizeHotKeysPresenter;
 import org.exoplatform.ide.client.hotkeys.HotKeyManager;
 import org.exoplatform.ide.client.hotkeys.HotKeysPreferenceItem;
@@ -82,7 +83,7 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
     public void onInitializeServices(InitializeServicesEvent event) {
         applicationConfiguration = event.getApplicationConfiguration();
         new VirtualFileSystemFactory(applicationConfiguration.getContext());
-        new RestDiscoveryService(applicationConfiguration.getContext());
+        new RestDiscoveryService(Utils.getRestContext(), Utils.getWorkspaceName());
         new HotKeyManager(controls, applicationSettings);
         new GoogleContactsService();
     }
