@@ -99,58 +99,56 @@ import java.util.List;
  */
 public class GitClientServiceImpl extends GitClientService {
     
-    private static final String WS               = Utils.getWorkspaceName();
-    
-    public static final String ADD               = WS + "/git/add";
+    public static final String ADD               =  "/git/add";
 
-    public static final String BRANCH_LIST       = WS + "/git/branch-list";
+    public static final String BRANCH_LIST       =  "/git/branch-list";
 
-    public static final String BRANCH_CHECKOUT   = WS + "/git/branch-checkout";
+    public static final String BRANCH_CHECKOUT   =  "/git/branch-checkout";
 
-    public static final String BRANCH_CREATE     = WS + "/git/branch-create";
+    public static final String BRANCH_CREATE     =  "/git/branch-create";
 
-    public static final String BRANCH_DELETE     = WS + "/git/branch-delete";
+    public static final String BRANCH_DELETE     =  "/git/branch-delete";
 
-    public static final String BRANCH_RENAME     = WS + "/ide/git/branch-rename";
+    public static final String BRANCH_RENAME     =  "/ide/git/branch-rename";
 
-    public static final String CLONE             = WS + "/git/clone";
+    public static final String CLONE             =  "/git/clone";
 
-    public static final String COMMIT            = WS + "/git/commit";
+    public static final String COMMIT            =  "/git/commit";
 
-    public static final String DIFF              = WS + "/git/diff";
+    public static final String DIFF              =  "/git/diff";
 
-    public static final String FETCH             = WS + "/git/fetch";
+    public static final String FETCH             =  "/git/fetch";
 
-    public static final String INIT              = WS + "/git/init";
+    public static final String INIT              =  "/git/init";
 
-    public static final String LOG               = WS + "/git/log";
+    public static final String LOG               =  "/git/log";
 
-    public static final String MERGE             = WS + "/git/merge";
+    public static final String MERGE             =  "/git/merge";
 
-    public static final String STATUS            = WS + "/git/status";
+    public static final String STATUS            =  "/git/status";
 
-    public static final String RO_URL            = WS + "/git/read-only-url";
+    public static final String RO_URL            =  "/git/read-only-url";
 
-    public static final String PUSH              = WS + "/git/push";
+    public static final String PUSH              =  "/git/push";
 
-    public static final String PULL              = WS + "/git/pull";
+    public static final String PULL              =  "/git/pull";
 
-    public static final String REMOTE_LIST       = WS + "/git/remote-list";
+    public static final String REMOTE_LIST       =  "/git/remote-list";
 
-    public static final String REMOTE_ADD        = WS + "/git/remote-add";
+    public static final String REMOTE_ADD        =  "/git/remote-add";
 
-    public static final String REMOTE_DELETE     = WS + "/git/remote-delete";
+    public static final String REMOTE_DELETE     =  "/git/remote-delete";
 
-    public static final String REMOVE            = WS + "/git/rm";
+    public static final String REMOVE            =  "/git/rm";
 
-    public static final String RESET             = WS + "/git/reset";
+    public static final String RESET             =  "/git/reset";
 
-    public static final String COMMITERS         = WS + "/git/commiters";
+    public static final String COMMITERS         =  "/git/commiters";
 
-    public static final String DELETE_REPOSITORY = WS + "/git/delete-repository";
+    public static final String DELETE_REPOSITORY =  "/git/delete-repository";
 
     /** REST service context. */
-    private String             restServiceContext;
+    private final String             restServiceContext;
 
     /** Loader to be displayed. */
     private Loader             loader;
@@ -165,7 +163,8 @@ public class GitClientServiceImpl extends GitClientService {
      * @param loader loader to show on server request
      * @param restContext 
      */
-    public GitClientServiceImpl(Loader loader, MessageBus wsMessageBus) {
+    public GitClientServiceImpl(String restConetxt, String wsName, Loader loader, MessageBus wsMessageBus) {
+        restServiceContext = restConetxt + wsName;
         this.loader = loader;
         this.wsMessageBus = wsMessageBus;
     }
