@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.outline;
 
+import com.google.collide.client.CollabEditor;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
@@ -251,23 +252,21 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
         }
 
         if (activeEditor instanceof CodeMirror) {
-            CodeMirror codeMirror = (CodeMirror)activeEditor;
-            codeMirror.getTokenList(new EditorTokenListPreparedHandler() {
+            CodeMirror codeMirrorEditor = (CodeMirror)activeEditor;
+            codeMirrorEditor.getTokenList(new EditorTokenListPreparedHandler() {
                 @Override
                 public void onEditorTokenListPrepared(EditorTokenListPreparedEvent event) {
                     tokenListReceived(event);
                 }
             });
+        } else if (activeEditor instanceof CollabEditor) {
+            CollabEditor collabEditor = (CollabEditor)activeEditor;
+            ArrayList<TokenBeenImpl> tokenList = (ArrayList<TokenBeenImpl>)collabEditor.getTokenList();
+            tokenListReceived(tokenList);
         }
     }
 
-    /** @param event */
-    public void tokenListReceived(EditorTokenListPreparedEvent event) {
-        if (event.getTokenList() == null || display == null || !activeEditor.getId().equals(event.getEditorId())) {
-            return;
-        }
-
-        tokens = (List<TokenBeenImpl>)event.getTokenList();
+    public void tokenListReceived(final List<TokenBeenImpl> tokens) {
         display.setValue(tokens);
 
         // TODO Solution for updating tree (flush, refresh doesn't help):
@@ -283,6 +282,16 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
                 }
             });
         }
+    }
+
+    /** @param event */
+    public void tokenListReceived(EditorTokenListPreparedEvent event) {
+        if (event.getTokenList() == null || display == null || !activeEditor.getId().equals(event.getEditorId())) {
+            return;
+        }
+
+        tokens = (List<TokenBeenImpl>)event.getTokenList();
+        tokenListReceived(tokens);
     }
 
     public void onEditorContentChanged(EditorContentChangedEvent event) {

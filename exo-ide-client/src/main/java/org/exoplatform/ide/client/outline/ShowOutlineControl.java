@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client.outline;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -33,9 +32,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.editor.client.api.EditorCapability;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -55,11 +51,6 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
 
     private boolean outlineViewOpened = false;
 
-    private List<String> ignoredMimeTypes = new ArrayList<String>();
-
-    /**
-     *
-     */
     public ShowOutlineControl() {
         super(ID);
         setTitle(TITLE);
@@ -76,12 +67,6 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
         IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
         IDE.addHandler(ViewOpenedEvent.TYPE, this);
-
-        ignoredMimeTypes.add(MimeType.TEXT_HTML);
-        ignoredMimeTypes.add(MimeType.TEXT_CSS);
-        ignoredMimeTypes.add(MimeType.TEXT_JAVASCRIPT);
-        ignoredMimeTypes.add(MimeType.APPLICATION_JAVASCRIPT);
-        ignoredMimeTypes.add(MimeType.APPLICATION_X_JAVASCRIPT);
     }
 
     /** @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client
@@ -94,11 +79,6 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
         }
 
         boolean visible = event.getEditor().isCapable(EditorCapability.OUTLINE);
-
-        // TODO add possibility to configure editor's capabilities
-        if (ignoredMimeTypes.contains(event.getFile().getMimeType())) {
-            visible = false;
-        }
 
         setVisible(visible);
         if (visible) {

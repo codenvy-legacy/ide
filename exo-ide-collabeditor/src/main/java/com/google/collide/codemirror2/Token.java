@@ -14,21 +14,23 @@
 
 package com.google.collide.codemirror2;
 
+
 /**
  * A representation of a single Codemirror2 token.
  * <p/>
- * <p>A token consists of a type (function, keyword, variable, etc), and a value
- * (the piece of code that is classified as a single token of the same type).
+ * <p>
+ * A token consists of a type (function, keyword, variable, etc), and a value (the piece of code that is classified as a single token of the
+ * same type).
  */
 public class Token {
 
-    public static final Token NEWLINE = new Token("", TokenType.NEWLINE, "\n");
+    public static final Token          NEWLINE        = new Token("", TokenType.NEWLINE, "\n");
 
-    public static final String LITERAL_PERIOD = ".";
+    public static final String         LITERAL_PERIOD = ".";
 
-    private final String    mode;
-    private final TokenType type;
-    private final String    value;
+    private final String               mode;
+    private final TokenType            type;
+    private final String               value;
 
     public Token(String mode, TokenType type, String value) {
         this.mode = mode;

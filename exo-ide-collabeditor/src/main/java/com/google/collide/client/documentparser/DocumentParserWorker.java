@@ -18,13 +18,16 @@ import com.codenvy.ide.client.util.logging.Log;
 import com.codenvy.ide.commons.shared.StringUtils;
 import com.codenvy.ide.json.shared.JsonArray;
 import com.codenvy.ide.json.shared.JsonCollections;
-import com.google.collide.codemirror2.*;
+import com.google.collide.codemirror2.Parser;
+import com.google.collide.codemirror2.State;
+import com.google.collide.codemirror2.Stream;
+import com.google.collide.codemirror2.Token;
+import com.google.collide.codemirror2.TokenType;
 import com.google.collide.shared.TaggableLine;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.Position;
 import com.google.collide.shared.document.anchor.Anchor;
 import com.google.collide.shared.document.anchor.AnchorManager;
-
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -25,7 +25,12 @@ import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.commons.util.Log;
-import org.exoplatform.ide.client.framework.editor.event.*;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.client.marking.Markable;
@@ -41,12 +46,12 @@ import java.util.Map;
 
 /**
  * JavaScript code controller which is used to parse file content.
- *
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: JavaScriptCodeController.java Sep 18, 2012 12:14:48 PM azatsarynnyy $
  */
 public class JavaScriptCodeController implements EditorFileContentChangedHandler, EditorFileOpenedHandler,
-                                                 EditorFileClosedHandler {
+                                     EditorFileClosedHandler {
 
     /** Mapping opened files to editors. */
     private Map<String, Markable> editors = new HashMap<String, Markable>();
@@ -60,15 +65,18 @@ public class JavaScriptCodeController implements EditorFileContentChangedHandler
         IDE.addHandler(EditorFileClosedEvent.TYPE, this);
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
-     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     *      .ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+     */
     @Override
     public void onEditorFileContentChanged(final EditorFileContentChangedEvent event) {
         if (event.getFile() == null) {
             return;
         }
-        if (!event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVASCRIPT)
-            && !event.getFile().getMimeType().equals(MimeType.APPLICATION_X_JAVASCRIPT)) {
+        final String mimeType = event.getFile().getMimeType();
+        if (!mimeType.equals(MimeType.APPLICATION_JAVASCRIPT) && !mimeType.equals(MimeType.APPLICATION_X_JAVASCRIPT)
+            && !mimeType.equals(MimeType.TEXT_JAVASCRIPT)) {
             return;
         }
 
@@ -83,16 +91,18 @@ public class JavaScriptCodeController implements EditorFileContentChangedHandler
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client
-     * .framework.editor.event.EditorFileOpenedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client
+     *      .framework.editor.event.EditorFileOpenedEvent)
+     */
     @Override
     public void onEditorFileOpened(final EditorFileOpenedEvent event) {
         if (event.getFile() == null || event.getEditor() == null) {
             return;
         }
-        if (!event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVASCRIPT)
-            && !event.getFile().getMimeType().equals(MimeType.APPLICATION_X_JAVASCRIPT)) {
-            return;
+        final String mimeType = event.getFile().getMimeType();
+        if (!mimeType.equals(MimeType.APPLICATION_JAVASCRIPT) && !mimeType.equals(MimeType.APPLICATION_X_JAVASCRIPT)
+            && !mimeType.equals(MimeType.TEXT_JAVASCRIPT)) {
         }
 
         editors.put(event.getFile().getId(), (Markable)event.getEditor());
@@ -106,8 +116,10 @@ public class JavaScriptCodeController implements EditorFileContentChangedHandler
         timer.schedule(3000);
     }
 
-    /** @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client
-     * .framework.editor.event.EditorFileClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client
+     *      .framework.editor.event.EditorFileClosedEvent)
+     */
     @Override
     public void onEditorFileClosed(EditorFileClosedEvent event) {
         if (event.getFile() != null) {
@@ -117,9 +129,8 @@ public class JavaScriptCodeController implements EditorFileContentChangedHandler
 
     /**
      * Starts parse the active file content.
-     *
-     * @param file
-     *         file to parse
+     * 
+     * @param file file to parse
      */
     private void startParsing(FileModel file) {
         try {
@@ -128,8 +139,8 @@ public class JavaScriptCodeController implements EditorFileContentChangedHandler
         } catch (JavaScriptException e) {
             String description = e.getDescription();
             if (description != null && description.contains("Line ")) {
-                JsoArray<JsError> jsErrors = JsoArray.<JsError>create();
-                jsErrors.add(e.getException().<JsError>cast());
+                JsoArray<JsError> jsErrors = JsoArray.<JsError> create();
+                jsErrors.add(e.getException().<JsError> cast());
                 markErrors(file, jsErrors);
             }
         }
@@ -137,23 +148,20 @@ public class JavaScriptCodeController implements EditorFileContentChangedHandler
 
     /**
      * Perform parse text content and returns {@link JsoArray} that may contains {@link JsError}.
-     *
-     * @param content
-     *         text content
+     * 
+     * @param content text content
      * @return array that contains parsing errors
      */
     private native JsoArray<JsError> doParse(String content)
-   /*-{
-       return $wnd.esprima.parse(content, {tolerant: true}).errors;
-   }-*/;
+    /*-{
+        return $wnd.esprima.parse(content, {tolerant: true}).errors;
+    }-*/;
 
     /**
      * Mark all errors in the editor.
-     *
-     * @param file
-     *         file to mark an errors
-     * @param jsErrors
-     *         {@link JsoArray} that contains parsing errors
+     * 
+     * @param file file to mark an errors
+     * @param jsErrors {@link JsoArray} that contains parsing errors
      */
     private void markErrors(FileModel file, JsoArray<JsError> jsErrors) {
         Markable editor = editors.get(file.getId());

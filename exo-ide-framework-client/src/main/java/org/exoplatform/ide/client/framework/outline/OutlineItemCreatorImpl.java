@@ -43,6 +43,8 @@ import java.util.List;
  */
 
 public abstract class OutlineItemCreatorImpl implements OutlineItemCreator {
+
+    @Override
     public Widget getOutlineItemWidget(Token token) {
         FlowPanel flowPanel = new FlowPanel();
 
