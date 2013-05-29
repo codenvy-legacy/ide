@@ -26,28 +26,27 @@ import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
-import com.codenvy.ide.client.DtoClientImpls;
 import com.codenvy.ide.client.marshaller.UserUnmarshaller;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitExtension;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
-import com.codenvy.ide.ext.jenkins.client.JenkinsAutoBeanFactory;
 import com.codenvy.ide.ext.jenkins.client.JenkinsExtension;
 import com.codenvy.ide.ext.jenkins.client.JenkinsResources;
 import com.codenvy.ide.ext.jenkins.client.JenkinsService;
+import com.codenvy.ide.ext.jenkins.client.marshaller.JobStatusUnmarshaller;
+import com.codenvy.ide.ext.jenkins.client.marshaller.JobStatusUnmarshallerWS;
+import com.codenvy.ide.ext.jenkins.client.marshaller.JobUnmarshaller;
 import com.codenvy.ide.ext.jenkins.client.marshaller.StringContentUnmarshaller;
+import com.codenvy.ide.ext.jenkins.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.jenkins.shared.Job;
 import com.codenvy.ide.ext.jenkins.shared.JobStatus;
-import com.codenvy.ide.ext.jenkins.shared.JobStatusBean;
 import com.codenvy.ide.part.base.BasePresenter;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
-import com.codenvy.ide.websocket.rest.AutoBeanUnmarshallerWS;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
 import com.google.gwt.http.client.RequestException;
@@ -59,7 +58,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -70,23 +68,22 @@ import com.google.web.bindery.event.shared.EventBus;
 @Singleton
 public class BuildApplicationPresenter extends BasePresenter implements BuildApplicationView.ActionDelegate {
     private static final String TITLE = "Building";
-    private BuildApplicationView   view;
-    private ResourceProvider       resourceProvider;
-    private JenkinsAutoBeanFactory autoBeanFactory;
-    private JenkinsService         service;
-    private EventBus               eventBus;
-    private ConsolePart            console;
-    private WorkspaceAgent         workspaceAgent;
-    private MessageBus             messageBus;
-    private UserClientService      userClientService;
-    private JenkinsResources       resources;
-    private String                 jobName;
-    private User                   user;
+    private BuildApplicationView view;
+    private ResourceProvider     resourceProvider;
+    private JenkinsService       service;
+    private EventBus             eventBus;
+    private ConsolePart          console;
+    private WorkspaceAgent       workspaceAgent;
+    private MessageBus           messageBus;
+    private UserClientService    userClientService;
+    private JenkinsResources     resources;
+    private String               jobName;
+    private User                 user;
     /** Delay in millisecond between job status request */
-    private static final int                  delay           = 10000;
-    private              JobStatusBean.Status prevStatus      = null;
-    private              boolean              buildInProgress = false;
-    private              boolean              isViewClosed    = true;
+    private static final int              delay           = 10000;
+    private              JobStatus.Status prevStatus      = null;
+    private              boolean          buildInProgress = false;
+    private              boolean          isViewClosed    = true;
     /** Project for build on Jenkins. */
     private Project                        project;
     private String                         jobStatusChannel;
@@ -102,7 +99,6 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
      *
      * @param view
      * @param resourceProvider
-     * @param autoBeanFactory
      * @param service
      * @param eventBus
      * @param console
@@ -114,16 +110,14 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
      * @param gitConstant
      */
     @Inject
-    protected BuildApplicationPresenter(BuildApplicationView view, ResourceProvider resourceProvider,
-                                        JenkinsAutoBeanFactory autoBeanFactory, JenkinsService service, EventBus eventBus,
-                                        ConsolePart console, WorkspaceAgent workspaceAgent, MessageBus messageBus,
-                                        UserClientService userClientService, JenkinsResources resources,
-                                        GitClientService gitClientService, GitLocalizationConstant gitConstant) {
+    protected BuildApplicationPresenter(BuildApplicationView view, ResourceProvider resourceProvider, JenkinsService service,
+                                        EventBus eventBus, ConsolePart console, WorkspaceAgent workspaceAgent, MessageBus messageBus,
+                                        UserClientService userClientService, JenkinsResources resources, GitClientService gitClientService,
+                                        GitLocalizationConstant gitConstant) {
         this.view = view;
         this.view.setDelegate(this);
         this.view.setTitle(TITLE);
         this.resourceProvider = resourceProvider;
-        this.autoBeanFactory = autoBeanFactory;
         this.service = service;
         this.eventBus = eventBus;
         this.console = console;
@@ -134,14 +128,14 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
         this.gitClientService = gitClientService;
         this.gitConstant = gitConstant;
 
-        AutoBean<JobStatus> autoBean = this.autoBeanFactory.create(JobStatus.class);
-        AutoBeanUnmarshallerWS<JobStatus> unmarshaller = new AutoBeanUnmarshallerWS<JobStatus>(autoBean);
+        DtoClientImpls.JobStatusImpl jobStatus = DtoClientImpls.JobStatusImpl.make();
+        JobStatusUnmarshallerWS unmarshaller = new JobStatusUnmarshallerWS(jobStatus);
 
         this.jobStatusHandler = new SubscriptionHandler<JobStatus>(unmarshaller) {
             @Override
             protected void onMessageReceived(JobStatus buildStatus) {
                 updateJobStatus(buildStatus);
-                if (buildStatus.getStatus() == JobStatusBean.Status.END) {
+                if (buildStatus.getStatus() == JobStatus.Status.END) {
                     onJobFinished(buildStatus);
                 }
             }
@@ -163,16 +157,17 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
         this.refreshJobStatusTimer = new Timer() {
             @Override
             public void run() {
+                DtoClientImpls.JobStatusImpl jobStatus = DtoClientImpls.JobStatusImpl.make();
+                JobStatusUnmarshaller unmarshaller = new JobStatusUnmarshaller(jobStatus);
+
                 try {
-                    AutoBean<JobStatus> jobStatus = BuildApplicationPresenter.this.autoBeanFactory.create(JobStatus.class);
-                    AutoBeanUnmarshaller<JobStatus> unmarshaller = new AutoBeanUnmarshaller<JobStatus>(jobStatus);
                     BuildApplicationPresenter.this.service
                             .jobStatus(BuildApplicationPresenter.this.resourceProvider.getVfsId(), project.getId(), jobName,
                                        new AsyncRequestCallback<JobStatus>(unmarshaller) {
                                            @Override
                                            protected void onSuccess(JobStatus status) {
                                                updateJobStatus(status);
-                                               if (status.getStatus() == JobStatusBean.Status.END) {
+                                               if (status.getStatus() == JobStatus.Status.END) {
                                                    onJobFinished(status);
                                                } else {
                                                    schedule(delay);
@@ -202,17 +197,18 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
      * @param status
      */
     private void updateJobStatus(JobStatus status) {
-        if (status.getStatus() == JobStatusBean.Status.QUEUE && prevStatus != JobStatusBean.Status.QUEUE) {
+        System.out.println(((DtoClientImpls.JobStatusImpl)status).serialize());
+        if (status.getStatus() == JobStatus.Status.QUEUE && prevStatus != JobStatus.Status.QUEUE) {
             setBuildStatusQueue(status);
             return;
         }
 
-        if (status.getStatus() == JobStatusBean.Status.BUILD && prevStatus != JobStatusBean.Status.BUILD) {
+        if (status.getStatus() == JobStatus.Status.BUILD && prevStatus != JobStatus.Status.BUILD) {
             setBuildStatusBuilding(status);
             return;
         }
 
-        if (status.getStatus() == JobStatusBean.Status.END && prevStatus != JobStatusBean.Status.END) {
+        if (status.getStatus() == JobStatus.Status.END && prevStatus != JobStatus.Status.END) {
             setBuildStatusFinished(status);
             return;
         }
@@ -224,8 +220,8 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
      * @param status
      */
     private void setBuildStatusQueue(JobStatus status) {
-        prevStatus = JobStatusBean.Status.QUEUE;
-        showBuildMessage("Status: " + status.getStatus());
+        prevStatus = JobStatus.Status.QUEUE;
+        showBuildMessage("Status: " + status.getStatus().getValue());
     }
 
     /**
@@ -234,8 +230,8 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
      * @param status
      */
     private void setBuildStatusBuilding(JobStatus status) {
-        prevStatus = JobStatusBean.Status.BUILD;
-        showBuildMessage("Status: " + status.getStatus());
+        prevStatus = JobStatus.Status.BUILD;
+        showBuildMessage("Status: " + status.getStatus().getValue());
     }
 
     /**
@@ -245,8 +241,7 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
      */
     private void setBuildStatusFinished(JobStatus status) {
         buildInProgress = false;
-
-        prevStatus = JobStatusBean.Status.END;
+        prevStatus = JobStatus.Status.END;
 
         String message =
                 "Building project <b>" + project.getPath() + "</b> has been finished.\r\nResult: " + status.getLastBuildResult() == null
@@ -308,9 +303,10 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
             this.project = resourceProvider.getActiveProject();
         }
 
+        com.codenvy.ide.client.DtoClientImpls.UserImpl user = com.codenvy.ide.client.DtoClientImpls.UserImpl.make();
+        UserUnmarshaller unmarshaller = new UserUnmarshaller(user);
+
         try {
-            DtoClientImpls.UserImpl user = DtoClientImpls.UserImpl.make();
-            UserUnmarshaller unmarshaller = new UserUnmarshaller(user);
             this.userClientService.getUser(new AsyncRequestCallback<User>(unmarshaller) {
                 @Override
                 protected void onSuccess(User result) {
@@ -411,10 +407,10 @@ public class BuildApplicationPresenter extends BasePresenter implements BuildApp
         String userId = user.getUserId();
         String mail = userId.contains("@") ? userId : userId + "@codenvy.local";
         String uName = userId.split("@")[0];// Jenkins don't allows in job name '@' character
-        try {
-            AutoBean<Job> job = autoBeanFactory.create(Job.class);
-            AutoBeanUnmarshaller<Job> marshaller = new AutoBeanUnmarshaller<Job>(job);
+        DtoClientImpls.JobImpl job = DtoClientImpls.JobImpl.make();
+        JobUnmarshaller marshaller = new JobUnmarshaller(job);
 
+        try {
             service.createJenkinsJob(uName + "-" + getProjectName() + "-" + Random.nextInt(Integer.MAX_VALUE), uName, mail,
                                      resourceProvider.getVfsId(), project.getId(), new AsyncRequestCallback<Job>(marshaller) {
                 @Override
