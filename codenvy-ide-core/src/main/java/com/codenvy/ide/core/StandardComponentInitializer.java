@@ -38,6 +38,7 @@ import com.codenvy.ide.command.ShowNewResourceWizardCommand;
 import com.codenvy.ide.command.ShowPreferenceCommand;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.menu.MainMenuPresenter;
+import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.codenvy.ide.wizard.newfile.NewTextFilePagePresenter;
 import com.codenvy.ide.wizard.newfolder.NewFolderPagePresenter;
@@ -94,6 +95,9 @@ public class StandardComponentInitializer {
     @Inject
     private SaveAction                         saveAction;
 
+    @Inject
+    private ToolbarPresenter toolbarPresenter;
+
     /** Instantiates {@link StandardComponentInitializer} an creates standard content */
     @Inject
     public StandardComponentInitializer() {
@@ -133,7 +137,11 @@ public class StandardComponentInitializer {
         actionManager.registerAction("saveGroup", saveGroup);
         actionManager.registerAction("save", saveAction);
         saveGroup.add(saveAction);
+        toolbarGroup.addSeparator();
+        toolbarGroup.add(saveGroup);
+        toolbarGroup.addSeparator();
 
+        toolbarPresenter.bindMainGroup(toolbarGroup);
         // add items to Toolbar
 //        toolbar.addDropDownItem("General/New", resources.file(), "Create new resources");
 //        toolbar.addItem("General/New/Project", newProjectCommand);

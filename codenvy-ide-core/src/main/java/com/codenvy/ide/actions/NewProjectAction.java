@@ -44,6 +44,7 @@ public class NewProjectAction extends Action {
     @Inject
     public NewProjectAction(WizardAgentImpl wizardAgent, Resources resources, PaaSAgentImpl paasAgent,
                             Provider<NewProjectPagePresenter> firstPage) {
+        super("Project", "Create new project", resources.project());
 
         this.wizardAgent = wizardAgent;
         this.resources = resources;

@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2013 eXo Platform SAS.
+/**
+ * Copyright (C) 2010 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -15,18 +15,29 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ *
  */
-package com.codenvy.ide.api;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.ui.action.DataContext;
+package com.codenvy.ide.toolbar;
+
+
+import com.codenvy.ide.api.ui.action.Action;
 
 /**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * Created by The eXo Platform SAS .
+ *
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  */
-public interface AppContext extends DataContext {
 
-    public void setData(@NotNull String dataId, Object data);
+public interface ActionSelectedHandler {
+
+    /**
+     * Do some actions when menu item will be selected.
+     *
+     * @param action
+     *         selected Action
+     */
+    void onActionSelected(Action action);
 
 }

@@ -16,11 +16,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ui.toolbar;
+package com.codenvy.ide.toolbar;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.ui.menu.Item;
+import com.codenvy.ide.api.ui.action.Action;
+import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.api.ui.action.ActionGroup;
+import com.codenvy.ide.api.ui.action.ActionManager;
+import com.codenvy.ide.api.ui.action.CustomComponentAction;
+import com.codenvy.ide.api.ui.action.Presentation;
+import com.codenvy.ide.api.ui.action.PropertyChangeEvent;
+import com.codenvy.ide.api.ui.action.PropertyChangeListener;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -32,7 +37,6 @@ import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -43,41 +47,55 @@ import com.google.gwt.user.client.ui.Image;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class ButtonItem extends Composite implements ToolbarItem, MouseOverHandler, MouseOutHandler, MouseDownHandler, MouseUpHandler,
-                                                     ClickHandler {
+public class ActionButton extends Composite implements MouseOverHandler, MouseOutHandler, MouseDownHandler, MouseUpHandler,
+                                                       ClickHandler {
 
     protected static final ToolbarResources.Css css = Toolbar.RESOURCES.toolbar();
-    /** Icon for button. */
-    protected ImageResource image;
+    private final Presentation presentation;
+    private final String       place;
     /** Command which will be executed when button was pressed. */
-    protected Command       command;
-    private   String        tooltip;
-    private   FlowPanel     panel;
+    protected     Action       action;
+    private       FlowPanel    panel;
     /** Is enabled. */
     private boolean enabled  = true;
     /** Is button selected. */
     private boolean selected = false;
+    private ActionManager            actionManager;
+    private ActionButtonSynchronizer actionButtonSynchronizer;
 
-
-    public ButtonItem(ImageResource image) {
-        this(image, null);
-    }
-
-    public ButtonItem(ImageResource image, Command command) {
-        this(image, command, null);
-    }
-
-    public ButtonItem(ImageResource image, Command command, String tooltip) {
-        this.image = image;
-        this.command = command;
-        this.tooltip = tooltip;
+    public ActionButton(final Action action, ActionManager actionManager, final Presentation presentation, String place) {
+        this.actionManager = actionManager;
         panel = new FlowPanel();
         initWidget(panel);
         panel.setStyleName(css.iconButtonPanel());
-        renderImage();
+        this.action = action;
+        this.presentation = presentation;
+        this.place = place;
         addDomHandlers();
-        if (tooltip != null) {
-            getElement().setAttribute("title", tooltip);
+        renderImage();
+        setEnabled(presentation.isEnabled());
+        setVisible(presentation.isVisible());
+        if (presentation.getDescription() != null)
+            panel.getElement().setAttribute("title", presentation.getDescription());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        if (actionButtonSynchronizer == null) {
+            actionButtonSynchronizer = new ActionButtonSynchronizer();
+            presentation.addPropertyChangeListener(actionButtonSynchronizer);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void onUnload() {
+        super.onUnload();
+        if (actionButtonSynchronizer != null) {
+            presentation.removePropertyChangeListener(actionButtonSynchronizer);
+            actionButtonSynchronizer = null;
         }
     }
 
@@ -92,6 +110,7 @@ public class ButtonItem extends Composite implements ToolbarItem, MouseOverHandl
     /** Redraw icon. */
     private void renderImage() {
         panel.clear();
+        ImageResource image = presentation.getIcon();
         if (image != null) {
             Image img = new Image(image);
             img.setStyleName(css.iconButtonIcon());
@@ -100,37 +119,6 @@ public class ButtonItem extends Composite implements ToolbarItem, MouseOverHandl
     }
 
     /** {@inheritDoc} */
-    @Override
-    public Command getCommand() {
-        return command;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getHotKey() {
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public ImageResource getImage() {
-        return image;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public JsonArray<Item> getItems() {
-        return JsonCollections.createArray();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
         if (enabled) {
@@ -141,13 +129,6 @@ public class ButtonItem extends Composite implements ToolbarItem, MouseOverHandl
     }
 
     /** {@inheritDoc} */
-    @Override
-    public boolean isSelected() {
-        return selected;
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void setSelected(boolean selected) {
         this.selected = selected;
         if (selected) {
@@ -213,8 +194,39 @@ public class ButtonItem extends Composite implements ToolbarItem, MouseOverHandl
     /** Mouse Click handler. */
     @Override
     public void onClick(ClickEvent event) {
-        if (command != null && enabled) {
-            command.execute();
+        //todo handle popup group
+        ActionEvent e = new ActionEvent(
+                place,
+                presentation,
+                actionManager,
+                0
+
+        );
+        if (action instanceof ActionGroup && !(action instanceof CustomComponentAction) && ((ActionGroup)action).isPopup()) {
+
+        } else {
+            action.actionPerformed(e);
+        }
+    }
+
+    private class ActionButtonSynchronizer implements PropertyChangeListener {
+        protected static final String SELECTED_PROPERTY_NAME = "selected";
+
+        @Override
+        public void onPropertyChange(PropertyChangeEvent e) {
+            String propertyName = e.getPropertyName();
+            if (Presentation.PROP_TEXT.equals(propertyName)) {
+                //TODO
+//                updateToolTipText();
+            } else if (Presentation.PROP_ENABLED.equals(propertyName)) {
+                setEnabled((Boolean)e.getNewValue());
+            } else if (Presentation.PROP_ICON.equals(propertyName)) {
+                renderImage();
+            } else if (Presentation.PROP_VISIBLE.equals(propertyName)) {
+                setVisible((Boolean)e.getNewValue());
+            } else if (SELECTED_PROPERTY_NAME.equals(propertyName)) {
+                setSelected((Boolean)e.getNewValue());
+            }
         }
     }
 }

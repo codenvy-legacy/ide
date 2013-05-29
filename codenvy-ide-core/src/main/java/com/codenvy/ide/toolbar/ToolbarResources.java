@@ -16,26 +16,50 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.api.ui.action;
+package com.codenvy.ide.toolbar;
 
-import com.codenvy.ide.annotations.Nullable;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
 
 /**
- * Allows an action to retrieve information about the context in which it was invoked.
- *
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public interface DataContext {
+public interface ToolbarResources extends ClientBundle {
 
-    /**
-     * Returns the object corresponding to the specified data identifier. Some of the supported
-     * data identifiers are defined in the {@link IdeDataKeys} class.
-     *
-     * @param dataId
-     *         the data identifier for which the value is requested.
-     * @return the value, or null if no value is available in the current context for this identifier.
-     */
-    @Nullable
-    Object getData(String dataId);
+    public interface Css extends CssResource {
+
+        String iconButtonPanel();
+
+        String iconButtonIcon();
+
+        String toolbarPanel();
+
+        String iconButtonPanelDown();
+
+        String iconButtonPanelSelectedOver();
+
+        String iconButtonPanelSelectedDown();
+
+        String toolbarDelimiter();
+
+        String iconButtonPanelSelected();
+
+        String iconButtonPanelOver();
+
+        String disabled();
+
+        String popupButtonPanel();
+
+        String popupButtonPanelDown();
+
+        String popupButtonIcon();
+
+        String popupButtonPanelOver();
+
+        String caret();
+    }
+
+    @Source({"toolbar.css", "com/codenvy/ide/api/ui/style.css"})
+    Css toolbar();
 }

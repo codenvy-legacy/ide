@@ -11,6 +11,7 @@
 .toolbarPanel div {
     margin-top: 1px;
     margin-left: 2px;
+    float: left;
 }
 
 .toolbarDelimiter {

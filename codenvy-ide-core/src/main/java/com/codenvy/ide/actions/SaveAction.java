@@ -23,11 +23,12 @@ import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.api.ui.action.IdeDataKeys;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * Save editor content Action
+ *
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
@@ -49,7 +50,7 @@ public class SaveAction extends Action {
 
     @Override
     public void update(ActionEvent e) {
-        EditorPartPresenter editor = e.getData(IdeDataKeys.EDITOR);
+        EditorPartPresenter editor = editorAgent.getActiveEditor();
         e.getPresentation().setEnabled(editor != null && editor.isDirty());
     }
 

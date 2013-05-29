@@ -16,17 +16,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ui.toolbar;
+package com.codenvy.ide.api.ui.action;
 
-import com.codenvy.ide.ui.menu.Item;
-import com.google.gwt.user.client.ui.IsWidget;
-
+import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Interface for all toolbar components
- *
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public interface ToolbarItem extends Item, IsWidget {
+public interface CustomComponentAction {
+
+    String CUSTOM_COMPONENT_PROPERTY = "customComponent";
+
+    /**
+     * @return custom Widget that represents action in UI.
+     *         You (as a client/implementor) or this interface do not allow to invoke
+     *         this method directly. Only action system can invoke it!
+     *         <br/>
+     *         <br/>
+     *         The component should not be stored in the action instance because it may
+     *         be shown on several toolbars simultaneously. CustomComponentAction.CUSTOM_COMPONENT_PROPERTY
+     *         can be used to retrieve current component from a Presentation in AnAction#update() method.
+     */
+    Widget createCustomComponent(Presentation presentation);
 }

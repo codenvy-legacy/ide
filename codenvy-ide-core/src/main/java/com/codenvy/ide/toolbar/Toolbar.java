@@ -16,12 +16,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ui.toolbar;
+package com.codenvy.ide.toolbar;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Toolbar is visual component, represents IDE toolbar.
@@ -44,49 +45,11 @@ public class Toolbar extends Composite {
         setStyleName(RESOURCES.toolbar().toolbarPanel());
     }
 
-    /**
-     * Add item on toolbar
-     *
-     * @param item
-     *         the item
-     */
-    public void addItem(ToolbarItem item) {
-        item.asWidget().getElement().getStyle().setFloat(Style.Float.LEFT);
-        panel.add(item);
+    public void add(@NotNull Widget widget) {
+        panel.add(widget);
     }
 
-    /**
-     * Insert item at specific position
-     *
-     * @param item
-     *         the item
-     * @param index
-     *         item position
-     */
-    public void insertItem(ToolbarItem item, int index) {
-        item.asWidget().getElement().getStyle().setFloat(Style.Float.LEFT);
-        panel.insert(item, index);
-    }
-
-    /**
-     * Return item index at toolbar
-     *
-     * @param item
-     *         the item
-     * @return item position in toolbar
-     */
-    public int getItemIndex(ToolbarItem item) {
-        return panel.getWidgetIndex(item);
-    }
-
-    /**
-     * Add delimiter, vertical bar separator for item groups
-     *
-     * @return new delimiter
-     */
-    public DelimiterItem addDelimiter() {
-        DelimiterItem delimiter = new DelimiterItem();
-        addItem(delimiter);
-        return delimiter;
+    public void clear() {
+        panel.clear();
     }
 }

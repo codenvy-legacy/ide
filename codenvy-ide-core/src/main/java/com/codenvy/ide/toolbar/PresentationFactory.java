@@ -16,38 +16,39 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide;
+package com.codenvy.ide.toolbar;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
-import com.codenvy.ide.api.AppContext;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.api.ui.action.Action;
+import com.codenvy.ide.api.ui.action.Presentation;
+
+import java.util.HashMap;
 
 /**
- * Default implementation of {@link AppContext}.
- *
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class AppContextImpl implements AppContext {
+public class PresentationFactory {
+    private final HashMap<Action, Presentation> myAction2Presentation;
 
-    private final JsonStringMap<Object> dataId2Data;
-
-    public AppContextImpl() {
-        dataId2Data = JsonCollections.createStringMap();
+    public PresentationFactory() {
+        myAction2Presentation = new HashMap<Action, Presentation>();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void setData(@NotNull String dataId, Object data) {
-        dataId2Data.put(dataId, data);
+    public final Presentation getPresentation(@NotNull Action action) {
+        Presentation presentation = myAction2Presentation.get(action);
+        if (presentation == null) {
+            presentation = action.getTemplatePresentation().clone();
+            myAction2Presentation.put(action, processPresentation(presentation));
+        }
+        return presentation;
     }
 
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public Object getData(String dataId) {
-        return dataId2Data.get(dataId);
+    protected Presentation processPresentation(Presentation presentation) {
+        return presentation;
+    }
+
+    public void reset() {
+        myAction2Presentation.clear();
     }
 }

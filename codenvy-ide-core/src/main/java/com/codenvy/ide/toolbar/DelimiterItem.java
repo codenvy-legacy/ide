@@ -16,12 +16,8 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ui.toolbar;
+package com.codenvy.ide.toolbar;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.ui.menu.Item;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 
@@ -31,56 +27,10 @@ import com.google.gwt.user.client.ui.FlowPanel;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class DelimiterItem extends Composite implements ToolbarItem {
+public class DelimiterItem extends Composite {
     public DelimiterItem() {
         FlowPanel widget = new FlowPanel();
         widget.setStyleName(Toolbar.RESOURCES.toolbar().toolbarDelimiter());
         initWidget(widget);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Command getCommand() {
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getHotKey() {
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public ImageResource getImage() {
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public JsonArray<Item> getItems() {
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean isSelected() {
-        return false;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setEnabled(boolean enabled) {
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setSelected(boolean selected) {
     }
 }

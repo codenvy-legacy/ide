@@ -22,12 +22,12 @@ import java.util.Comparator;
  * When used with DTOs:
  * <p/>
  * On the client it is safe to cast this to a
- * {@link com.google.collide.json.client.JsoArray}.
+ * {@link com.codenvy.ide.json.js.JsoArray}.
  * <p/>
  * Native to JavaScript "sparse" arrays are not supported.
  * <p/>
  * On the server, this is an instance of
- * {@link com.google.collide.json.server.JsonArrayListAdapter} which
+ * {@link com.codenvy.ide.json.java.JsonArrayListAdapter} which
  * is a wrapper around a List.
  */
 public interface JsonArray<T> {

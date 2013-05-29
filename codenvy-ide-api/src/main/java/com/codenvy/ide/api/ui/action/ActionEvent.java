@@ -19,10 +19,8 @@
 package com.codenvy.ide.api.ui.action;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.util.StringUtils;
 
 /**
@@ -39,26 +37,24 @@ public class ActionEvent {
     private final ActionManager myActionManager;
     private final String        myPlace;
     private final Presentation  myPresentation;
-    private final DataContext   myDataContext;
     private final int           myModifiers;
-    private       boolean       myWorksInInjected;
 
     /**
      * @throws IllegalArgumentException
      *         if <code>dataContext</code> is <code>null</code> or
      *         <code>place</code> is <code>null</code> or <code>presentation</code> is <code>null</code>
      */
-    public ActionEvent(@NotNull DataContext dataContext,
-                       @NotNull String place,
+    public ActionEvent(@NotNull String place,
                        @NotNull Presentation presentation,
                        ActionManager actionManager,
                        int modifiers) {
-        myDataContext = dataContext;
         myActionManager = actionManager;
         myPlace = place;
         myPresentation = presentation;
         myModifiers = modifiers;
     }
+
+    private boolean myWorksInInjected;
 
 //    public static ActionEvent createFromInputEvent(Action action, InputEvent event, String place) {
 //        DataContext context =
@@ -84,11 +80,6 @@ public class ActionEvent {
 //        return myInputEvent;
 //    }
 
-    /** @return Project from the context of this event. */
-    public Project getProject() {
-        return getData(IdeDataKeys.PROJECT);
-    }
-
     public static String injectedId(String dataId) {
         synchronized (ourInjectedIds) {
             String injected = ourInjectedIds.get(dataId);
@@ -104,36 +95,36 @@ public class ActionEvent {
         return StringUtils.trimStart(dataId, ourInjectedPrefix);
     }
 
-    /**
-     * Returns the context which allows to retrieve information about the state of IDE related to
-     * the action invocation (active editor, selection and so on).
-     *
-     * @return the data context instance.
-     */
-    public DataContext getDataContext() {
-        if (!myWorksInInjected) {
-            return myDataContext;
-        }
-        return new DataContext() {
-            @Override
-            @Nullable
-            public Object getData(String dataId) {
-                Object injected = myDataContext.getData(injectedId(dataId));
-                if (injected != null) return injected;
-                return myDataContext.getData(dataId);
-            }
-        };
-    }
-
-    public <T> T getData(DataKey<T> key) {
-        return key.getData(getDataContext());
-    }
-
-    public <T> T getRequiredData(DataKey<T> key) {
-        T data = getData(key);
-        assert data != null;
-        return data;
-    }
+//    /**
+//     * Returns the context which allows to retrieve information about the state of IDE related to
+//     * the action invocation (active editor, selection and so on).
+//     *
+//     * @return the data context instance.
+//     */
+//    public DataContext getDataContext() {
+//        if (!myWorksInInjected) {
+//            return myDataContext;
+//        }
+//        return new DataContext() {
+//            @Override
+//            @Nullable
+//            public Object getData(String dataId) {
+//                Object injected = myDataContext.getData(injectedId(dataId));
+//                if (injected != null) return injected;
+//                return myDataContext.getData(dataId);
+//            }
+//        };
+//    }
+//
+//    public <T> T getData(DataKey<T> key) {
+//        return key.getData(getDataContext());
+//    }
+//
+//    public <T> T getRequiredData(DataKey<T> key) {
+//        T data = getData(key);
+//        assert data != null;
+//        return data;
+//    }
 
     /**
      * Returns the identifier of the place in the IDE user interface from where the action is invoked

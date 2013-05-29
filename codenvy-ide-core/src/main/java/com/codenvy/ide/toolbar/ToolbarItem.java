@@ -16,50 +16,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ui.toolbar;
+package com.codenvy.ide.toolbar;
 
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
+import com.codenvy.ide.ui.menu.Item;
+import com.google.gwt.user.client.ui.IsWidget;
+
 
 /**
+ * Interface for all toolbar components
+ *
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public interface ToolbarResources extends ClientBundle {
-
-    public interface Css extends CssResource {
-
-        String iconButtonPanel();
-
-        String iconButtonIcon();
-
-        String toolbarPanel();
-
-        String iconButtonPanelDown();
-
-        String iconButtonPanelSelectedOver();
-
-        String iconButtonPanelSelectedDown();
-
-        String toolbarDelimiter();
-
-        String iconButtonPanelSelected();
-
-        String iconButtonPanelOver();
-
-        String disabled();
-
-        String popupButtonPanel();
-
-        String popupButtonPanelDown();
-
-        String popupButtonIcon();
-
-        String popupButtonPanelOver();
-
-        String caret();
-    }
-
-    @Source({"toolbar.css", "com/codenvy/ide/api/ui/style.css"})
-    Css toolbar();
+public interface ToolbarItem extends Item, IsWidget {
 }

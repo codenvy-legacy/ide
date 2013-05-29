@@ -83,12 +83,10 @@ public abstract class ActionGroup extends Action {
         super.update(e);
     }
 
-//    /**
-//     * @return true if {@link #actionPerformed(ActionEvent)} should be called
-//     */
-//    public boolean canBePerformed(DataContext context) {
-//        return false;
-//    }
+    /** @return true if {@link #actionPerformed(ActionEvent)} should be called */
+    public boolean canBePerformed() {
+        return false;
+    }
 
     /**
      * Returns the type of the group.

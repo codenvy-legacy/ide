@@ -18,14 +18,10 @@
  */
 package com.codenvy.ide.api.ui.action;
 
-import com.codenvy.ide.api.editor.EditorPartPresenter;
-import com.codenvy.ide.resources.model.Project;
-
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class IdeDataKeys {
-    public static final DataKey<Project>             PROJECT = DataKey.create("project");
-    public static final DataKey<EditorPartPresenter> EDITOR  = DataKey.create("editor");
+public interface Toggleable {
+    String SELECTED_PROPERTY = "selected";
 }

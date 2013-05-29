@@ -16,10 +16,8 @@
  */
 package com.codenvy.ide.core.inject;
 
-import com.codenvy.ide.AppContextImpl;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.actions.ActionManagerImpl;
-import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorAgent;
@@ -42,7 +40,6 @@ import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.menu.MainMenuAgent;
-import com.codenvy.ide.api.ui.menu.ToolbarAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
 import com.codenvy.ide.api.ui.wizard.WizardAgent;
 import com.codenvy.ide.api.ui.wizard.newfile.NewGenericFilePageView;
@@ -93,7 +90,6 @@ import com.codenvy.ide.selection.SelectionAgentImpl;
 import com.codenvy.ide.text.DocumentFactory;
 import com.codenvy.ide.text.DocumentFactoryImpl;
 import com.codenvy.ide.texteditor.TextEditorPresenter;
-import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.toolbar.ToolbarView;
 import com.codenvy.ide.toolbar.ToolbarViewImpl;
 import com.codenvy.ide.user.UserClientServiceImpl;
@@ -144,8 +140,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(UserClientService.class).to(UserClientServiceImpl.class).in(Singleton.class);
         bind(PreferencesManager.class).to(PreferencesManagerImpl.class).in(Singleton.class);
         bind(MessageBus.class).to(MessageBusImpl.class).in(Singleton.class);
-        bind(AppContext.class).to(AppContextImpl.class).in(Singleton.class);
-
         apiBindingConfigure();
 
         resourcesAPIconfigure();
@@ -163,7 +157,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(SelectionAgent.class).to(SelectionAgentImpl.class).in(Singleton.class);
         bind(WorkspaceAgent.class).to(WorkspacePresenter.class).in(Singleton.class);
         bind(MainMenuAgent.class).to(MainMenuPresenter.class).in(Singleton.class);
-        bind(ToolbarAgent.class).to(ToolbarPresenter.class).in(Singleton.class);
+//        bind(ToolbarAgent.class).to(ToolbarPresenter.class).in(Singleton.class);
         bind(PreferencesAgent.class).to(PreferencesAgentImpl.class).in(Singleton.class);
         bind(WizardAgent.class).to(WizardAgentImpl.class).in(Singleton.class);
         bind(PaaSAgent.class).to(PaaSAgentImpl.class).in(Singleton.class);

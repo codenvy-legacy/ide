@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.api.ui.action;
 
+import com.codenvy.ide.api.extension.SDK;
+
 /**
  * A manager for actions. Used to register and unregister actions, also
  * contains utility methods to easily fetch action by id and id by action.
@@ -26,6 +28,7 @@ package com.codenvy.ide.api.ui.action;
  * @version $Id:
  * @see Action
  */
+@SDK(title = "ide.api.ui.action")
 public interface ActionManager {
 
     /**

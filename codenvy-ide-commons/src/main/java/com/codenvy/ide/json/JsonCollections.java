@@ -14,11 +14,16 @@
 
 package com.codenvy.ide.json;
 
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.json.java.JsonArrayListAdapter;
 import com.codenvy.ide.json.java.JsonIntegerMapAdapter;
 import com.codenvy.ide.json.java.JsonStringMapAdapter;
 import com.codenvy.ide.json.java.JsonStringSetAdapter;
-import com.codenvy.ide.json.js.*;
+import com.codenvy.ide.json.js.Jso;
+import com.codenvy.ide.json.js.JsoArray;
+import com.codenvy.ide.json.js.JsoIntegerMap;
+import com.codenvy.ide.json.js.JsoStringMap;
+import com.codenvy.ide.json.js.JsoStringSet;
 import com.google.gwt.core.client.GWT;
 
 import java.util.ArrayList;
@@ -154,54 +159,67 @@ public final class JsonCollections {
         }
     }
 
-    //  /**
-    //   * Check if two lists are equal. The lists are equal if they are both the same
-    //   * size, and the items at every index are equal. Returns true if both lists
-    //   * are null.
-    //   *
-    //   * @param <T> the data type of the arrays
-    //   */
-    //  public static <T> boolean equals(JsonArray<T> a, JsonArray<T> b) {
-    //    return equals(a, b, null);
-    //  }
-    //
-    //  /**
-    //   * Check if two lists are equal. The lists are equal if they are both the same
-    //   * size, and the items at every index are equal according to the provided
-    //   * equator. Returns true if both lists are null.
-    //   *
-    //   * @param equivalence if null the {@link Object#equals(Object)} is used to
-    //   *        determine item equality.
-    //   *
-    //   * @param <T> the data type of the arrays
-    //   */
-    //  public static <T> boolean equals(
-    //      JsonArray<T> a, JsonArray<T> b, Equivalence<T> equivalence) {
-    //    if (a == b) {
-    //      // Same list or both null.
-    //      return true;
-    //    } else if (a == null || b == null) {
-    //      // One list is null, the other is not.
-    //      return false;
-    //    } else if (a.size() != b.size()) {
-    //      // Different sizes.
-    //      return false;
-    //    } else {
-    //      // Check the elements in the array.
-    //      for (int i = 0; i < a.size(); i++) {
-    //        T itemA = a.get(i);
-    //        T itemB = b.get(i);
-    //        // if the equator is null we just the equals method and some null checking
-    //        if (equivalence == null && !Objects.equal(itemA, itemB)) {
-    //          return false;
-    //        } else if (equivalence != null && !equivalence.equivalent(itemA, itemB)) {
-    //          return false;
-    //        }
-    //      }
-    //      return true;
-    //    }
-    //  }
-    //
+//      /**
+//       * Check if two lists are equal. The lists are equal if they are both the same
+//       * size, and the items at every index are equal. Returns true if both lists
+//       * are null.
+//       *
+//       * @param <T> the data type of the arrays
+//       */
+//      public static <T> boolean equals(JsonArray<T> a, JsonArray<T> b) {
+//        return equals(a, b, null);
+//      }
+
+    /**
+     * Check if two lists are equal. The lists are equal if they are both the same
+     * size, and the items at every index are equal according to the provided
+     * equator. Returns true if both lists are null.
+     *
+     * @param <T>
+     *         the data type of the arrays
+     */
+    public static <T> boolean equals(
+            JsonArray<T> a, JsonArray<T> b) {
+        if (a == b) {
+            // Same list or both null.
+            return true;
+        } else if (a == null || b == null) {
+            // One list is null, the other is not.
+            return false;
+        } else if (a.size() != b.size()) {
+            // Different sizes.
+            return false;
+        } else {
+            // Check the elements in the array.
+            for (int i = 0; i < a.size(); i++) {
+                T itemA = a.get(i);
+                T itemB = b.get(i);
+                // if the equator is null we just the equals method and some null checking
+                if (!equal(itemA, itemB)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
+    /**
+     * Determines whether two possibly-null objects are equal. Returns:
+     * <p/>
+     * <ul>
+     * <li>{@code true} if {@code a} and {@code b} are both null.
+     * <li>{@code true} if {@code a} and {@code b} are both non-null and they are
+     * equal according to {@link Object#equals(Object)}.
+     * <li>{@code false} in all other situations.
+     * </ul>
+     * <p/>
+     * <p>This assumes that any non-null objects passed to this function conform
+     * to the {@code equals()} contract.
+     */
+    public static boolean equal(@Nullable Object a, @Nullable Object b) {
+        return a == b || (a != null && a.equals(b));
+    }
+
     //  /**
     //   * Check if two maps are equal. The maps are equal if they have exactly the
     //   * same set of keys value pairs.

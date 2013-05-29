@@ -18,10 +18,9 @@
  */
 package com.codenvy.ide.toolbar;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.api.ui.menu.ExtendedCommand;
-import com.codenvy.ide.api.ui.menu.ToggleCommand;
-import com.google.gwt.resources.client.ImageResource;
+import com.codenvy.ide.api.ui.action.ActionGroup;
 
 
 /**
@@ -34,87 +33,9 @@ public interface ToolbarView extends View<ToolbarView.ActionDelegate> {
     public interface ActionDelegate {
     }
 
-    /**
-     * Sets Item by given path visible or invisible.
-     *
-     * @param path
-     *         toolbarItem path
-     * @param visible
-     *         state
-     * @throws IllegalStateException
-     *         throws when item isn't exist
-     */
-    public void setVisible(String path, boolean visible) throws IllegalStateException;
+    void setPlace(@NotNull String place);
 
-    /**
-     * Sets Item by given path enabled or disabled.
-     *
-     * @param path
-     *         toolbarItem path
-     * @param enabled
-     * @throws IllegalStateException
-     *         throws when item isn't exist
-     */
-    public void setEnabled(String path, boolean enabled) throws IllegalStateException;
+    void setActionGroup(@NotNull ActionGroup actionGroup);
 
-    /**
-     * Sets Item by given path selected or unselected.
-     *
-     * @param path
-     * @param selected
-     * @throws IllegalStateException
-     *         throws when item isn't exist
-     */
-    public void setSelected(String path, boolean selected) throws IllegalStateException;
-
-    /**
-     * Adds toolbar item with the following path, command, visible and enabled states.
-     *
-     * @param path
-     * @param command
-     * @param visible
-     * @param enabled
-     * @throws IllegalStateException
-     *         throws when item isn't exist
-     */
-    public void addItem(String path, ExtendedCommand command, boolean visible, boolean enabled)
-            throws IllegalStateException;
-
-    /**
-     * Adds toggle toolbar item with the following path, command with expression, visible, enabled and selected states.
-     *
-     * @param path
-     * @param command
-     * @param visible
-     * @param enabled
-     * @param selected
-     * @throws IllegalStateException
-     *         throws when item isn't exist
-     */
-    public void addToggleItem(String path, ToggleCommand command, boolean visible, boolean enabled, boolean selected)
-            throws IllegalStateException;
-
-    /**
-     * Adds dropdown item with the following path, icon, tooltip, visible and enabled states.
-     *
-     * @param path
-     * @param icon
-     * @param tooltip
-     * @param visible
-     * @param enabled
-     * @throws IllegalStateException
-     *         throws when item isn't exist
-     */
-    public void addDropDownItem(String path, ImageResource icon, String tooltip, boolean visible, boolean enabled)
-            throws IllegalStateException;
-
-    /**
-     * Copy item from MainMenu and add it to Toolbar.
-     *
-     * @param toolbarPath
-     * @param mainMenuPath
-     * @throws IllegalStateException
-     *         throws when item isn't exist
-     */
-    public void copyMainMenuItem(String toolbarPath, String mainMenuPath) throws IllegalStateException;
+    void setAddSeparatorFirst(boolean addSeparatorFirst);
 }

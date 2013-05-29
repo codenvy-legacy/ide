@@ -20,7 +20,7 @@ import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.resources.model.File;
 
 /**
- * Editor Agert manages Editors, it allows to open a new editor with given file,
+ * Editor Agent manages Editors, it allows to open a new editor with given file,
  * retrieve current active editor and find all the opened editors.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
