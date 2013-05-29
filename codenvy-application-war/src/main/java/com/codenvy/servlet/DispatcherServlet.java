@@ -29,8 +29,10 @@ import java.io.IOException;
 
 @SuppressWarnings("serial")
 public class DispatcherServlet extends HttpServlet {
-    private static String staticResourcesPrefix = "/ide";
-    private static String mainPage = staticResourcesPrefix + "/main";
+    private static String ideStaticResourcesPrefix = "/ide";
+    private static String shellStaticResourcesPrefix = "/shell";
+    private static String ssoPrefix = "/sso";
+    private static String mainPage = ideStaticResourcesPrefix + "/main";
 
     public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
         HttpServletRequest request = (HttpServletRequest)req;
@@ -89,7 +91,7 @@ public class DispatcherServlet extends HttpServlet {
         request.setAttribute("project", project);
         request.setAttribute("path", path);
 
-        if (requestPath.startsWith('/' + ws + staticResourcesPrefix)) { // /xxx/ide/....
+        if (requestPath.startsWith('/' + ws + ideStaticResourcesPrefix) || requestPath.startsWith('/' + ws + shellStaticResourcesPrefix) || requestPath.startsWith('/' + ws + ssoPrefix)) { // /xxx/ide/....
             // remove workspace name
             request.getRequestDispatcher(requestPath.substring(ws.length() + 1)).forward(request, res);
         } else {
@@ -99,6 +101,6 @@ public class DispatcherServlet extends HttpServlet {
 
     public static String genStaticResourceUrl(HttpServletRequest request, String name) {
         String contextPath = request.getContextPath();
-        return contextPath + '/' + request.getAttribute("ws") + staticResourcesPrefix + '/' + name;
+        return contextPath + '/' + request.getAttribute("ws") + ideStaticResourcesPrefix + '/' + name;
     }
 }
