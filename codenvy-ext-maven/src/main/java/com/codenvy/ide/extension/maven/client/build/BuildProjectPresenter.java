@@ -25,10 +25,16 @@ import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
-import com.codenvy.ide.extension.maven.client.*;
+import com.codenvy.ide.extension.maven.client.BuilderClientService;
+import com.codenvy.ide.extension.maven.client.BuilderExtension;
+import com.codenvy.ide.extension.maven.client.BuilderLocalizationConstant;
+import com.codenvy.ide.extension.maven.client.BuilderResources;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectHandler;
 import com.codenvy.ide.extension.maven.client.event.ProjectBuiltEvent;
+import com.codenvy.ide.extension.maven.client.marshaller.BuildStatusUnmarshaller;
+import com.codenvy.ide.extension.maven.client.marshaller.BuildStatusUnmarshallerWS;
+import com.codenvy.ide.extension.maven.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.maven.shared.BuildStatus;
 import com.codenvy.ide.extension.maven.shared.BuildStatus.Status;
 import com.codenvy.ide.json.JsonArray;
@@ -37,13 +43,11 @@ import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.ProjectDescription;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.codenvy.ide.rest.RequestStatusHandler;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
-import com.codenvy.ide.websocket.rest.AutoBeanUnmarshallerWS;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
@@ -57,7 +61,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -94,7 +97,6 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
     private       ConsolePart                      console;
     private       BuilderClientService             service;
     private       BuilderLocalizationConstant      constant;
-    private       BuilderAutoBeanFactory           autoBeanFactory;
     private       BuilderResources                 resources;
     private       WorkspaceAgent                   workspaceAgent;
     private       MessageBus                       messageBus;
@@ -110,16 +112,14 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
      * @param console
      * @param service
      * @param constant
-     * @param autoBeanFactory
      * @param resources
      * @param workspaceAgent
      * @param messageBus
      */
     @Inject
     protected BuildProjectPresenter(BuildProjectView view, EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
-                                    BuilderClientService service, BuilderLocalizationConstant constant,
-                                    BuilderAutoBeanFactory autoBeanFactory, BuilderResources resources, WorkspaceAgent workspaceAgent,
-                                    MessageBus messageBus) {
+                                    BuilderClientService service, BuilderLocalizationConstant constant, BuilderResources resources,
+                                    WorkspaceAgent workspaceAgent, MessageBus messageBus) {
         this.view = view;
         this.view.setDelegate(this);
         this.view.setTitle(TITLE);
@@ -129,12 +129,11 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
         this.console = console;
         this.service = service;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.resources = resources;
         this.messageBus = messageBus;
 
-        AutoBean<BuildStatus> autoBean = this.autoBeanFactory.create(BuildStatus.class);
-        AutoBeanUnmarshallerWS<BuildStatus> unmarshaller = new AutoBeanUnmarshallerWS<BuildStatus>(autoBean);
+        DtoClientImpls.BuildStatusImpl buildStatus = DtoClientImpls.BuildStatusImpl.make();
+        BuildStatusUnmarshallerWS unmarshaller = new BuildStatusUnmarshallerWS(buildStatus);
 
         buildStatusHandler = new SubscriptionHandler<BuildStatus>(unmarshaller) {
             @Override
@@ -356,7 +355,7 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
             service.checkArtifactUrl(url, new AsyncRequestCallback<Object>() {
                 @Override
                 protected void onSuccess(Object result) {
-                    BuildStatus buildStatus = autoBeanFactory.buildStatus().as();
+                    DtoClientImpls.BuildStatusImpl buildStatus = DtoClientImpls.BuildStatusImpl.make();
                     buildStatus.setStatus(BuildStatus.Status.SUCCESSFUL);
                     buildStatus.setDownloadUrl(url);
                     eventBus.fireEvent(new ProjectBuiltEvent(buildStatus));
@@ -387,9 +386,10 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
     private Timer refreshBuildStatusTimer = new Timer() {
         @Override
         public void run() {
+            DtoClientImpls.BuildStatusImpl buildStatus = DtoClientImpls.BuildStatusImpl.make();
+            BuildStatusUnmarshaller unmarshaller = new BuildStatusUnmarshaller(buildStatus);
+
             try {
-                AutoBean<BuildStatus> buildStatus = autoBeanFactory.create(BuildStatus.class);
-                AutoBeanUnmarshaller<BuildStatus> unmarshaller = new AutoBeanUnmarshaller<BuildStatus>(buildStatus);
                 service.status(buildID, new AsyncRequestCallback<BuildStatus>(unmarshaller) {
                     @Override
                     protected void onSuccess(BuildStatus response) {
@@ -457,7 +457,7 @@ public class BuildProjectPresenter extends BasePresenter implements BuildProject
 
         StringBuilder message =
                 new StringBuilder("Finished building project <b>").append(project.getPath().substring(1))
-                                                                  .append("</b>.\r\nResult: ").append(buildStatus.getStatus());
+                                                                  .append("</b>.\r\nResult: ").append(buildStatus.getStatus().getValue());
 
         if (buildStatus.getStatus() == Status.SUCCESSFUL) {
             console.print(constant.buildSuccess());

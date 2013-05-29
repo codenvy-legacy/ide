@@ -23,7 +23,6 @@ package com.codenvy.ide.extension.maven.shared;
  * Status of build.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
  */
 public interface BuildStatus {
     public enum Status {
@@ -37,8 +36,7 @@ public interface BuildStatus {
             this.value = value;
         }
 
-        @Override
-        public String toString() {
+        public String getValue() {
             return value;
         }
     }
@@ -66,34 +64,5 @@ public interface BuildStatus {
      */
     String getDownloadUrl();
 
-    /**
-     * Sets the current build job status.
-     *
-     * @param status
-     *         current build job status
-     */
-    void setStatus(Status status);
-
-    void setExitCode(int exitCode);
-
-    /**
-     * Sets the message that describes the specific details about the error.
-     *
-     * @param error
-     *         an error message
-     */
-    void setError(String error);
-
-    /**
-     * Changes the URL to download artifact
-     *
-     * @param downloadUrl
-     *         URL to download artifact
-     */
-    void setDownloadUrl(String downloadUrl);
-
     String getTime();
-
-    void setTime(String time);
-
 }
