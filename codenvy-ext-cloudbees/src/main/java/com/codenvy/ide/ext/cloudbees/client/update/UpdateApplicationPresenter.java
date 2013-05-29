@@ -22,23 +22,22 @@ import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesAsyncRequestCallback;
-import com.codenvy.ide.ext.cloudbees.client.CloudBeesAutoBeanFactory;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesClientService;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesLocalizationConstant;
 import com.codenvy.ide.ext.cloudbees.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.cloudbees.client.login.LoginPresenter;
+import com.codenvy.ide.ext.cloudbees.client.marshaller.ApplicationInfoUnmarshaller;
+import com.codenvy.ide.ext.cloudbees.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
 import com.codenvy.ide.ext.jenkins.client.build.BuildApplicationPresenter;
 import com.codenvy.ide.ext.jenkins.shared.JobStatus;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -55,7 +54,6 @@ public class UpdateApplicationPresenter {
     private ResourceProvider              resourceProvider;
     private ConsolePart                   console;
     private CloudBeesLocalizationConstant constant;
-    private CloudBeesAutoBeanFactory      autoBeanFactory;
     private LoginPresenter                loginPresenter;
     private CloudBeesClientService        service;
     private BuildApplicationPresenter     buildApplicationPresenter;
@@ -72,21 +70,18 @@ public class UpdateApplicationPresenter {
      * @param resourceProvider
      * @param console
      * @param constant
-     * @param autoBeanFactory
      * @param loginPresenter
      * @param service
      * @param buildApplicationPresenter
      */
     @Inject
     protected UpdateApplicationPresenter(EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
-                                         CloudBeesLocalizationConstant constant, CloudBeesAutoBeanFactory autoBeanFactory,
-                                         LoginPresenter loginPresenter, CloudBeesClientService service,
-                                         BuildApplicationPresenter buildApplicationPresenter) {
+                                         CloudBeesLocalizationConstant constant, LoginPresenter loginPresenter,
+                                         CloudBeesClientService service, BuildApplicationPresenter buildApplicationPresenter) {
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
         this.console = console;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
         this.buildApplicationPresenter = buildApplicationPresenter;
@@ -136,16 +131,16 @@ public class UpdateApplicationPresenter {
             projectId = project.getId();
         }
 
-        try {
-            AutoBean<ApplicationInfo> autoBean = autoBeanFactory.applicationInfo();
-            AutoBeanUnmarshaller<ApplicationInfo> unmarshaller = new AutoBeanUnmarshaller<ApplicationInfo>(autoBean);
-            LoggedInHandler loggedInHandler = new LoggedInHandler() {
-                @Override
-                public void onLoggedIn() {
-                    doUpdate();
-                }
-            };
+        DtoClientImpls.ApplicationInfoImpl applicationInfo = DtoClientImpls.ApplicationInfoImpl.make();
+        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(applicationInfo);
+        LoggedInHandler loggedInHandler = new LoggedInHandler() {
+            @Override
+            public void onLoggedIn() {
+                doUpdate();
+            }
+        };
 
+        try {
             service.updateApplication(appId, resourceProvider.getVfsId(), projectId, warUrl, updateMessage,
                                       new CloudBeesAsyncRequestCallback<ApplicationInfo>(unmarshaller, loggedInHandler, null, eventBus,
                                                                                          console, loginPresenter) {
@@ -164,16 +159,16 @@ public class UpdateApplicationPresenter {
     protected void getApplicationInfo() {
         String projectId = project.getId();
 
-        try {
-            AutoBean<ApplicationInfo> autoBean = autoBeanFactory.applicationInfo();
-            AutoBeanUnmarshaller<ApplicationInfo> unmarshaller = new AutoBeanUnmarshaller<ApplicationInfo>(autoBean);
-            LoggedInHandler loggedInHandler = new LoggedInHandler() {
-                @Override
-                public void onLoggedIn() {
-                    getApplicationInfo();
-                }
-            };
+        DtoClientImpls.ApplicationInfoImpl applicationInfo = DtoClientImpls.ApplicationInfoImpl.make();
+        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(applicationInfo);
+        LoggedInHandler loggedInHandler = new LoggedInHandler() {
+            @Override
+            public void onLoggedIn() {
+                getApplicationInfo();
+            }
+        };
 
+        try {
             service.getApplicationInfo(null, resourceProvider.getVfsId(), projectId,
                                        new CloudBeesAsyncRequestCallback<ApplicationInfo>(unmarshaller, loggedInHandler, null, eventBus,
                                                                                           console, loginPresenter) {

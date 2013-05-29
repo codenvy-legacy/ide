@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -20,55 +20,52 @@ package com.codenvy.ide.ext.cloudbees.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.cloudbees.dto.client.DtoClientImpls;
-import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.ext.cloudbees.shared.CloudBeesUser;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONParser;
 
 /**
- * Unmarshaller for applications.
+ * Unmarshaller for CloudBees user.
  *
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: Sep 21, 2011 evgen $
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class ApplicationListUnmarshaller implements Unmarshallable<JsonArray<ApplicationInfo>> {
-    private JsonArray<ApplicationInfo> apps;
+public class CloudBeesUserUnmarshaller implements Unmarshallable<CloudBeesUser> {
+    private DtoClientImpls.CloudBeesUserImpl user;
 
     /**
      * Create unmarshaller.
      *
-     * @param apps
+     * @param user
      */
-    public ApplicationListUnmarshaller(JsonArray<ApplicationInfo> apps) {
-        this.apps = apps;
+    public CloudBeesUserUnmarshaller(DtoClientImpls.CloudBeesUserImpl user) {
+        this.user = user;
     }
 
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
-        if (response.getText() == null || response.getText().isEmpty()) {
+        String text = response.getText();
+
+        if (text == null || text.isEmpty()) {
             return;
         }
 
-        JSONArray value = JSONParser.parseLenient(response.getText()).isArray();
+        DtoClientImpls.CloudBeesUserImpl user = DtoClientImpls.CloudBeesUserImpl.deserialize(text);
 
-        if (value == null) {
-            return;
-        }
-
-        for (int i = 0; i < value.size(); i++) {
-            String payload = value.get(i).isObject().toString();
-
-            DtoClientImpls.ApplicationInfoImpl appInfo = DtoClientImpls.ApplicationInfoImpl.deserialize(payload);
-            apps.add(appInfo);
-        }
+        this.user.setEmail(user.getEmail());
+        this.user.setFirst_name(user.getFirst_name());
+        this.user.setLast_name(user.getLast_name());
+        this.user.setName(user.getName());
+        this.user.setPassword(user.getPassword());
+        this.user.setRole(user.getRole());
+        this.user.setId(user.getId());
+        this.user.setAccounts(user.getAccounts());
+        this.user.setSsh_keys(user.getSsh_keys());
     }
 
     /** {@inheritDoc} */
     @Override
-    public JsonArray<ApplicationInfo> getPayload() {
-        return apps;
+    public CloudBeesUser getPayload() {
+        return user;
     }
 }

@@ -20,17 +20,17 @@ package com.codenvy.ide.ext.cloudbees.client.account;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.ext.cloudbees.client.CloudBeesAutoBeanFactory;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesClientService;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesLocalizationConstant;
+import com.codenvy.ide.ext.cloudbees.client.marshaller.CloudBeesAccountUnmarshaller;
+import com.codenvy.ide.ext.cloudbees.client.marshaller.CloudBeesUserUnmarshaller;
+import com.codenvy.ide.ext.cloudbees.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.cloudbees.shared.CloudBeesAccount;
 import com.codenvy.ide.ext.cloudbees.shared.CloudBeesUser;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -44,7 +44,6 @@ public class CreateAccountPresenter implements CreateAccountView.ActionDelegate 
     private CreateAccountView             view;
     private EventBus                      eventBus;
     private ConsolePart                   console;
-    private CloudBeesAutoBeanFactory      autoBeanFactory;
     private CloudBeesClientService        service;
     private CloudBeesLocalizationConstant constant;
 
@@ -54,18 +53,16 @@ public class CreateAccountPresenter implements CreateAccountView.ActionDelegate 
      * @param view
      * @param eventBus
      * @param console
-     * @param autoBeanFactory
      * @param service
      */
     @Inject
     protected CreateAccountPresenter(CreateAccountView view, EventBus eventBus, ConsolePart console, CloudBeesLocalizationConstant constant,
-                                     CloudBeesAutoBeanFactory autoBeanFactory, CloudBeesClientService service) {
+                                     CloudBeesClientService service) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
         this.console = console;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.service = service;
     }
 
@@ -132,11 +129,12 @@ public class CreateAccountPresenter implements CreateAccountView.ActionDelegate 
 
     /** Create new account. */
     private void createAccount() {
-        CloudBeesAccount account = autoBeanFactory.account().as();
+        DtoClientImpls.CloudBeesAccountImpl account = DtoClientImpls.CloudBeesAccountImpl.make();
         account.setName(view.getAccountName());
         account.setCompany(view.getCompany());
-        AutoBean<CloudBeesAccount> accountBean = autoBeanFactory.account();
-        AutoBeanUnmarshaller<CloudBeesAccount> unmarshaller = new AutoBeanUnmarshaller<CloudBeesAccount>(accountBean);
+
+        DtoClientImpls.CloudBeesAccountImpl cloudBeesAccount = DtoClientImpls.CloudBeesAccountImpl.make();
+        CloudBeesAccountUnmarshaller unmarshaller = new CloudBeesAccountUnmarshaller(cloudBeesAccount);
 
         try {
             service.createAccount(account, new AsyncRequestCallback<CloudBeesAccount>(unmarshaller) {
@@ -166,7 +164,7 @@ public class CreateAccountPresenter implements CreateAccountView.ActionDelegate 
     private void addUserToAccount(CloudBeesAccount account) {
         boolean isExisting = !view.isCreateNewUser();
 
-        CloudBeesUser user = autoBeanFactory.user().as();
+        DtoClientImpls.CloudBeesUserImpl user = DtoClientImpls.CloudBeesUserImpl.make();
         user.setEmail(view.getEmail());
         if (!isExisting) {
             user.setName(view.getUserName());
@@ -176,8 +174,9 @@ public class CreateAccountPresenter implements CreateAccountView.ActionDelegate 
             user.setRole("admin");
         }
 
-        AutoBean<CloudBeesUser> userBean = autoBeanFactory.user();
-        AutoBeanUnmarshaller<CloudBeesUser> unmarshaller = new AutoBeanUnmarshaller<CloudBeesUser>(userBean);
+        DtoClientImpls.CloudBeesUserImpl cloudBeesUser = DtoClientImpls.CloudBeesUserImpl.make();
+        CloudBeesUserUnmarshaller unmarshaller = new CloudBeesUserUnmarshaller(cloudBeesUser);
+
         try {
             service.addUserToAccount(account.getName(), user, isExisting, new AsyncRequestCallback<CloudBeesUser>(unmarshaller) {
                 @Override

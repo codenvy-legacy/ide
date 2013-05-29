@@ -21,7 +21,6 @@ package com.codenvy.ide.ext.cloudbees.client.apps;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesAsyncRequestCallback;
-import com.codenvy.ide.ext.cloudbees.client.CloudBeesAutoBeanFactory;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesClientService;
 import com.codenvy.ide.ext.cloudbees.client.delete.DeleteApplicationPresenter;
 import com.codenvy.ide.ext.cloudbees.client.info.ApplicationInfoPresenter;
@@ -50,7 +49,6 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
     private ApplicationsView           view;
     private EventBus                   eventBus;
     private ConsolePart                console;
-    private CloudBeesAutoBeanFactory   autoBeanFactory;
     private LoginPresenter             loginPresenter;
     private CloudBeesClientService     service;
     private ApplicationInfoPresenter   applicationInfoPresenter;
@@ -62,22 +60,19 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
      * @param view
      * @param eventBus
      * @param console
-     * @param autoBeanFactory
      * @param loginPresenter
      * @param service
      * @param applicationInfoPresenter
      * @param deleteApplicationPresenter
      */
     @Inject
-    protected ApplicationsPresenter(ApplicationsView view, EventBus eventBus, ConsolePart console, CloudBeesAutoBeanFactory autoBeanFactory,
-                                    LoginPresenter loginPresenter, CloudBeesClientService service,
-                                    ApplicationInfoPresenter applicationInfoPresenter,
+    protected ApplicationsPresenter(ApplicationsView view, EventBus eventBus, ConsolePart console, LoginPresenter loginPresenter,
+                                    CloudBeesClientService service, ApplicationInfoPresenter applicationInfoPresenter,
                                     DeleteApplicationPresenter deleteApplicationPresenter) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
         this.console = console;
-        this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
         this.applicationInfoPresenter = applicationInfoPresenter;
@@ -91,16 +86,15 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
 
     /** Gets list of available application for current user. */
     private void getOrUpdateAppList() {
-        try {
-            ApplicationListUnmarshaller unmarshaller =
-                    new ApplicationListUnmarshaller(autoBeanFactory, JsonCollections.<ApplicationInfo>createArray());
-            LoggedInHandler loggedInHandler = new LoggedInHandler() {
-                @Override
-                public void onLoggedIn() {
-                    getOrUpdateAppList();
-                }
-            };
+        ApplicationListUnmarshaller unmarshaller = new ApplicationListUnmarshaller(JsonCollections.<ApplicationInfo>createArray());
+        LoggedInHandler loggedInHandler = new LoggedInHandler() {
+            @Override
+            public void onLoggedIn() {
+                getOrUpdateAppList();
+            }
+        };
 
+        try {
             service.applicationList(
                     new CloudBeesAsyncRequestCallback<JsonArray<ApplicationInfo>>(unmarshaller, loggedInHandler, null, eventBus,
                                                                                   console, loginPresenter) {

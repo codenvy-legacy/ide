@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -20,55 +20,45 @@ package com.codenvy.ide.ext.cloudbees.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.cloudbees.dto.client.DtoClientImpls;
-import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
-import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.ext.cloudbees.shared.CloudBeesAccount;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONParser;
 
 /**
- * Unmarshaller for applications.
+ * Unmarshaller for CloudBees account.
  *
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: Sep 21, 2011 evgen $
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class ApplicationListUnmarshaller implements Unmarshallable<JsonArray<ApplicationInfo>> {
-    private JsonArray<ApplicationInfo> apps;
+public class CloudBeesAccountUnmarshaller implements Unmarshallable<CloudBeesAccount> {
+    private DtoClientImpls.CloudBeesAccountImpl account;
 
     /**
      * Create unmarshaller.
      *
-     * @param apps
+     * @param account
      */
-    public ApplicationListUnmarshaller(JsonArray<ApplicationInfo> apps) {
-        this.apps = apps;
+    public CloudBeesAccountUnmarshaller(DtoClientImpls.CloudBeesAccountImpl account) {
+        this.account = account;
     }
 
     /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
-        if (response.getText() == null || response.getText().isEmpty()) {
+        String text = response.getText();
+
+        if (text == null || text.isEmpty()) {
             return;
         }
 
-        JSONArray value = JSONParser.parseLenient(response.getText()).isArray();
+        DtoClientImpls.CloudBeesAccountImpl account = DtoClientImpls.CloudBeesAccountImpl.deserialize(text);
 
-        if (value == null) {
-            return;
-        }
-
-        for (int i = 0; i < value.size(); i++) {
-            String payload = value.get(i).isObject().toString();
-
-            DtoClientImpls.ApplicationInfoImpl appInfo = DtoClientImpls.ApplicationInfoImpl.deserialize(payload);
-            apps.add(appInfo);
-        }
+        this.account.setName(account.getName());
+        this.account.setCompany(account.getCompany());
     }
 
     /** {@inheritDoc} */
     @Override
-    public JsonArray<ApplicationInfo> getPayload() {
-        return apps;
+    public CloudBeesAccount getPayload() {
+        return account;
     }
 }

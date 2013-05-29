@@ -18,10 +18,10 @@
  */
 package com.codenvy.ide.ext.cloudbees.client;
 
+import com.codenvy.ide.ext.cloudbees.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
 import com.codenvy.ide.ext.cloudbees.shared.CloudBeesAccount;
 import com.codenvy.ide.ext.cloudbees.shared.CloudBeesUser;
-import com.codenvy.ide.ext.cloudbees.shared.Credentials;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.rest.AsyncRequest;
@@ -71,18 +71,24 @@ public class CloudBeesClientServiceImpl implements CloudBeesClientService {
     private Loader                        loader;
     /** WebSocket message bus. */
     private MessageBus                    wsMessageBus;
-    private CloudBeesAutoBeanFactory      autoBeanFactory;
     private EventBus                      eventBus;
     private CloudBeesLocalizationConstant constant;
 
+    /**
+     * Create client service.
+     *
+     * @param restContext
+     * @param loader
+     * @param wsMessageBus
+     * @param eventBus
+     * @param constant
+     */
     @Inject
     protected CloudBeesClientServiceImpl(@Named("restContext") String restContext, Loader loader, MessageBus wsMessageBus,
-                                         CloudBeesAutoBeanFactory autoBeanFactory, EventBus eventBus,
-                                         CloudBeesLocalizationConstant constant) {
+                                         EventBus eventBus, CloudBeesLocalizationConstant constant) {
         this.loader = loader;
         this.restServiceContext = restContext;
         this.wsMessageBus = wsMessageBus;
-        this.autoBeanFactory = autoBeanFactory;
         this.eventBus = eventBus;
         this.constant = constant;
     }
@@ -117,12 +123,12 @@ public class CloudBeesClientServiceImpl implements CloudBeesClientService {
     public void login(String email, String password, AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + LOGIN;
 
-        Credentials credentialsBean = autoBeanFactory.credentials().as();
-        credentialsBean.setEmail(email);
-        credentialsBean.setPassword(password);
-        String credentials = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(credentialsBean)).getPayload();
+        DtoClientImpls.CredentialsImpl credentials = DtoClientImpls.CredentialsImpl.make();
+        credentials.setEmail(email);
+        credentials.setPassword(password);
+        String serialize = credentials.serialize();
 
-        AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(credentials)
+        AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(serialize)
                     .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
     }

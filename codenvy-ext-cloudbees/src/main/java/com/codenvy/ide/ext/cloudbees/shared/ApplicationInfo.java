@@ -28,101 +28,34 @@ public interface ApplicationInfo {
     /** @return the id */
     String getId();
 
-    /**
-     * @param id
-     *         the id to set
-     */
-    void setId(String id);
-
     /** @return the title */
     String getTitle();
-
-    /**
-     * @param title
-     *         the title to set
-     */
-    void setTitle(String title);
 
     /** @return the status */
     String getStatus();
 
-    /**
-     * @param status
-     *         the status to set
-     */
-    void setStatus(String status);
-
     /** @return the url */
     String getUrl();
-
-    /**
-     * @param url
-     *         the url to set
-     */
-    void setUrl(String url);
 
     /** @return the instances */
     @Deprecated
     String getInstances();
 
-    /**
-     * @param instances
-     *         the instances to set
-     */
-    @Deprecated
-    void setInstances(String instances);
-
     /** @return the securityMode */
     String getSecurityMode();
-
-    /**
-     * @param securityMode
-     *         the securityMode to set
-     */
-    void setSecurityMode(String securityMode);
 
     /** @return the maxMemory */
     String getMaxMemory();
 
-    /**
-     * @param maxMemory
-     *         the maxMemory to set
-     */
-    void setMaxMemory(String maxMemory);
-
     /** @return the idleTimeout */
     String getIdleTimeout();
-
-    /**
-     * @param idleTimeout
-     *         the idleTimeout to set
-     */
-    void setIdleTimeout(String idleTimeout);
 
     /** @return the serverPull */
     String getServerPool();
 
-    /**
-     * @param serverPool
-     *         the serverPull to set
-     */
-    void setServerPool(String serverPool);
-
     /** @return the container */
     String getContainer();
 
-    /**
-     * @param container
-     *         the container to set
-     */
-    void setContainer(String container);
-
     /** @return size of the cluster */
     String getClusterSize();
-
-    /**
-     * @param clusterSize
-     *         size of the cluster to set
-     */
-    void setClusterSize(String clusterSize);
 }

@@ -22,22 +22,21 @@ import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesAsyncRequestCallback;
-import com.codenvy.ide.ext.cloudbees.client.CloudBeesAutoBeanFactory;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesClientService;
 import com.codenvy.ide.ext.cloudbees.client.delete.DeleteApplicationPresenter;
 import com.codenvy.ide.ext.cloudbees.client.info.ApplicationInfoPresenter;
 import com.codenvy.ide.ext.cloudbees.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.cloudbees.client.login.LoginPresenter;
+import com.codenvy.ide.ext.cloudbees.client.marshaller.ApplicationInfoUnmarshaller;
 import com.codenvy.ide.ext.cloudbees.client.update.UpdateApplicationPresenter;
+import com.codenvy.ide.ext.cloudbees.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -54,14 +53,13 @@ public class CloudBeesProjectPresenter implements CloudBeesProjectView.ActionDel
     private EventBus                   eventBus;
     private ResourceProvider           resourceProvider;
     private ConsolePart                console;
-    private CloudBeesAutoBeanFactory   autoBeanFactory;
     private DeleteApplicationPresenter deleteAppPresenter;
     private LoginPresenter             loginPresenter;
     private CloudBeesClientService     service;
 
     @Inject
     protected CloudBeesProjectPresenter(CloudBeesProjectView view, ApplicationInfoPresenter applicationInfoPresenter, EventBus eventBus,
-                                        ResourceProvider resourceProvider, ConsolePart console, CloudBeesAutoBeanFactory autoBeanFactory,
+                                        ResourceProvider resourceProvider, ConsolePart console,
                                         DeleteApplicationPresenter deleteAppPresenter, LoginPresenter loginPresenter,
                                         CloudBeesClientService service, UpdateApplicationPresenter updateApplicationPresenter) {
         this.view = view;
@@ -70,7 +68,6 @@ public class CloudBeesProjectPresenter implements CloudBeesProjectView.ActionDel
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
         this.console = console;
-        this.autoBeanFactory = autoBeanFactory;
         this.deleteAppPresenter = deleteAppPresenter;
         this.loginPresenter = loginPresenter;
         this.service = service;
@@ -89,16 +86,16 @@ public class CloudBeesProjectPresenter implements CloudBeesProjectView.ActionDel
      *         project deployed to CloudBees
      */
     private void getApplicationInfo(final Project project) {
-        try {
-            AutoBean<ApplicationInfo> autoBean = autoBeanFactory.applicationInfo();
-            AutoBeanUnmarshaller<ApplicationInfo> unmarshaller = new AutoBeanUnmarshaller<ApplicationInfo>(autoBean);
-            LoggedInHandler loggedInHandler = new LoggedInHandler() {
-                @Override
-                public void onLoggedIn() {
-                    getApplicationInfo(project);
-                }
-            };
+        DtoClientImpls.ApplicationInfoImpl applicationInfo = DtoClientImpls.ApplicationInfoImpl.make();
+        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(applicationInfo);
+        LoggedInHandler loggedInHandler = new LoggedInHandler() {
+            @Override
+            public void onLoggedIn() {
+                getApplicationInfo(project);
+            }
+        };
 
+        try {
             service.getApplicationInfo(null, resourceProvider.getVfsId(), project.getId(),
                                        new CloudBeesAsyncRequestCallback<ApplicationInfo>(unmarshaller, loggedInHandler, null, eventBus,
                                                                                           console, loginPresenter) {
