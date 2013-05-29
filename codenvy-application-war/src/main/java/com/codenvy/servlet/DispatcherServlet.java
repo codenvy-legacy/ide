@@ -19,16 +19,22 @@
 package com.codenvy.servlet;
 
 
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 @SuppressWarnings("serial")
 public class DispatcherServlet extends HttpServlet {
+    
+    private static final Log          LOG = ExoLogger.getLogger(DispatcherServlet.class);
+    
     private static String ideStaticResourcesPrefix = "/ide";
     private static String shellStaticResourcesPrefix = "/shell";
     private static String ssoPrefix = "/sso";
@@ -82,15 +88,16 @@ public class DispatcherServlet extends HttpServlet {
             }
         }
 
-        System.err.printf("request: %s%n", requestPath);
-        System.err.printf("ws     : %s%n", ws);
-        System.err.printf("project: %s%n", project);
-        System.err.printf("path   : %s%n", path);
+        LOG.debug("request: " + requestPath);
+        LOG.debug("ws     : " + ws);
+        LOG.debug("project: " + project);
+        LOG.debug("path   : " + path);
 
         request.setAttribute("ws", ws);
         request.setAttribute("project", project);
         request.setAttribute("path", path);
 
+        
         if (requestPath.startsWith('/' + ws + ideStaticResourcesPrefix) || requestPath.startsWith('/' + ws + shellStaticResourcesPrefix) || requestPath.startsWith('/' + ws + ssoPrefix)) { // /xxx/ide/....
             // remove workspace name
             request.getRequestDispatcher(requestPath.substring(ws.length() + 1)).forward(request, res);
