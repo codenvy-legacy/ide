@@ -29,7 +29,8 @@ public class ExtensionManager
       Provider<com.codenvy.ide.ext.cloudbees.client.CloudBeesExtension> cloudbeesextension,
       Provider<com.codenvy.ide.ext.appfog.client.AppFogExtension> appfogextension,
       Provider<com.codenvy.ide.ext.jenkins.client.JenkinsExtension> jenkinsextension,
-      Provider<com.codenvy.ide.extension.css.CssExtension> cssextension
+      Provider<com.codenvy.ide.extension.css.CssExtension> cssextension,
+      Provider<com.codenvy.ide.ext.gae.client.GAEExtansion> gaeextansion
    )
    {
       this.extensions.put("com.codenvy.ide.ext.java.client.JavaExtension",javaextension);
@@ -43,6 +44,7 @@ public class ExtensionManager
       this.extensions.put("com.codenvy.ide.ext.appfog.client.AppFogExtension",appfogextension);
       this.extensions.put("com.codenvy.ide.ext.jenkins.client.JenkinsExtension",jenkinsextension);
       this.extensions.put("com.codenvy.ide.extension.css.CssExtension",cssextension);
+      this.extensions.put("com.codenvy.ide.ext.gae.client.GAEExtansion",gaeextansion);
    }
 
    /** Returns  the map will all the Extnesion Providers <FullClassFQN, Provider>. */
