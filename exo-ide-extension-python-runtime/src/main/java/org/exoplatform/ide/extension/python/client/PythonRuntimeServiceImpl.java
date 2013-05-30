@@ -37,7 +37,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  */
 public class PythonRuntimeServiceImpl extends PythonRuntimeService {
     
-    private static final String BASE_URL = "/" + Utils.getWorkspaceName() + "/python/runner";
+    private static final String BASE_URL = "/python/runner";
     
     private static final String LOGS = BASE_URL + "/logs";
 
@@ -47,8 +47,8 @@ public class PythonRuntimeServiceImpl extends PythonRuntimeService {
 
     private static final String STOP_APPLICATION = BASE_URL + "/stop";
 
-    public PythonRuntimeServiceImpl(String restContext) {
-        this.restContext = restContext;
+    public PythonRuntimeServiceImpl(String restContext, String wsName) {
+        this.restContext = restContext + wsName;
     }
 
     /**
