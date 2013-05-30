@@ -327,7 +327,6 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
         }
 
         // TODO temporary solution to close Outline for Java files
-        // TODO add possibility to configure editor's capabilities
         if (activeFile != null && ignoredMimeTypes.contains(activeFile.getMimeType())) {
             if (display != null) {
                 IDE.getInstance().closeView(display.asView().getId());

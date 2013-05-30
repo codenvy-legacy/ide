@@ -24,11 +24,12 @@ import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.collide.client.documentparser.ExternalParser;
 import com.google.gwt.core.client.JavaScriptException;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.javascript.client.syntaxvalidator.JsToken;
+
+import static org.exoplatform.gwtframework.commons.rest.MimeType.APPLICATION_JAVASCRIPT;
 
 /**
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
@@ -43,23 +44,11 @@ public class JavaScriptExternalParser implements ExternalParser {
     public JsonArray< ? extends Token> getTokenList(String content) {
         JsonArray<Token> tokensArray = JsonCollections.createArray();
         try {
-            JsonArray<JsToken> tokens = doParse(content);
-            for (JsToken token : tokens.asIterable()) {
-                TokenBeenImpl newToken = null;
-                if ("VariableDeclaration".equals(token.getType())) {
-                    newToken = new TokenBeenImpl(token.getName(), TokenType.VARIABLE, token.getLineNumber(), MimeType.TEXT_JAVASCRIPT);
-                    tokensArray.add(newToken);
-                } else if ("FunctionDeclaration".equals(token.getType())) {
-                    newToken = new TokenBeenImpl(token.getName(), TokenType.FUNCTION, token.getLineNumber(), MimeType.TEXT_JAVASCRIPT);
-                    tokensArray.add(newToken);
-                }
-
-                JsoArray<JsToken> body = token.getBody();
-                if (body != null) {
-                    for (JsToken childToken : body.asIterable()) {
-                        newToken.addSubToken(new TokenBeenImpl(childToken.getName(), TokenType.VARIABLE, childToken.getLineNumber(),
-                                                               MimeType.TEXT_JAVASCRIPT));
-                    }
+            JsonArray<JsToken> jsTokens = doParse(content);
+            for (JsToken jsToken : jsTokens.asIterable()) {
+                TokenBeenImpl token = convertToken(jsToken);
+                if (token != null) {
+                    tokensArray.add(token);
                 }
             }
         } catch (JavaScriptException e) {
@@ -67,6 +56,37 @@ public class JavaScriptExternalParser implements ExternalParser {
         }
 
         return tokensArray;
+    }
+
+    private TokenBeenImpl convertToken(JsToken jsToken) {
+        TokenBeenImpl token = null;
+        if ("VariableDeclaration".equals(jsToken.getType())) {
+            token = new TokenBeenImpl(jsToken.getName(), TokenType.VARIABLE, jsToken.getLineNumber(), APPLICATION_JAVASCRIPT);
+        } else if ("FunctionDeclaration".equals(jsToken.getType())) {
+            token = new TokenBeenImpl(jsToken.getName(), TokenType.FUNCTION, jsToken.getLineNumber(), APPLICATION_JAVASCRIPT);
+
+            JsoArray<JsToken> params = jsToken.getParams();
+            for (JsToken param : params.asIterable()) {
+                TokenBeenImpl parameter = new TokenBeenImpl(param.getName(), TokenType.PARAMETER, param.getLineNumber(),
+                                                            APPLICATION_JAVASCRIPT, param.getName());
+                token.addParameter(parameter);
+            }
+        } else {
+            // unknown token type
+            return null;
+        }
+
+        JsoArray<JsToken> body = jsToken.getBody();
+        if (body != null) {
+            for (JsToken childJsToken : body.asIterable()) {
+                TokenBeenImpl childToken = convertToken(childJsToken);
+                if (childToken != null) {
+                    token.addSubToken(childToken);
+                }
+            }
+        }
+
+        return token;
     }
 
     private native JsoArray<JsToken> doParse(String content)
