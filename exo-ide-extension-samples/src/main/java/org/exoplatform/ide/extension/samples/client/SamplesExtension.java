@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.samples.client.control.DocumentationControl;
 import org.exoplatform.ide.extension.samples.client.control.FeedbackControl;
 import org.exoplatform.ide.extension.samples.client.control.SupportControl;
@@ -71,7 +72,7 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
         new GitHubClientServiceImpl(event.getLoader());
         IDE.fireEvent(new OpenStartPageEvent());
 
-        new InviteClientService(event.getApplicationConfiguration().getContext());
+        new InviteClientService(Utils.getRestContext(), Utils.getWorkspaceName());
     }
 
     /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
