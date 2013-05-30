@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,20 +16,33 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.gae.client.inject;
+package com.codenvy.ide.ext.gae.client.marshaller;
 
-import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.codenvy.ide.ext.gae.client.GAEClientService;
-import com.codenvy.ide.ext.gae.client.GAEClientServiceImpl;
-import com.google.gwt.inject.client.AbstractGinModule;
-import com.google.inject.Singleton;
+import com.codenvy.ide.rest.Unmarshallable;
+import com.google.gwt.http.client.Response;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
-@ExtensionGinModule
-public class GAEGinModule extends AbstractGinModule {
+/**
+ * Deserializer for response's body.
+ *
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: May 24, 2012 12:22:34 PM anya $
+ */
+public class StringUnmarshaller implements Unmarshallable<StringBuilder> {
+    private StringBuilder builder;
+
+    public StringUnmarshaller(StringBuilder builder) {
+        this.builder = builder;
+    }
+
     /** {@inheritDoc} */
     @Override
-    protected void configure() {
-        bind(GAEClientService.class).to(GAEClientServiceImpl.class).in(Singleton.class);
+    public void unmarshal(Response response) {
+        builder.append(response.getText());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public StringBuilder getPayload() {
+        return builder;
     }
 }
