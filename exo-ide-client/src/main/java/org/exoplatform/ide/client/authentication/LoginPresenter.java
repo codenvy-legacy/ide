@@ -150,7 +150,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
                                  + "&redirect_after_login="
                                  + Utils.getAuthorizationPageURL();
 
-                JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500);
+                JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500, null);
                 authWindow.loginWithOAuth();
                 IDE.getInstance().closeView(display.asView().getId());
 
@@ -165,7 +165,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
                                  + "/ide/oauth/authenticate?oauth_provider=github&mode=federated_login"
                                  + "&scope=user&scope=repo&redirect_after_login="
                                  + Utils.getAuthorizationPageURL();
-                JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500);
+                JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500, null);
                 authWindow.loginWithOAuth();
                 IDE.getInstance().closeView(display.asView().getId());
 

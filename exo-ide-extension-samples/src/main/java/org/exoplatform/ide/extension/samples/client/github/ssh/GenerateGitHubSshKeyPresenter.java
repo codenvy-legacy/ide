@@ -34,9 +34,8 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.OAuthLoginFinishedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.OAuthLoginFinishedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
@@ -44,7 +43,6 @@ import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
 import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
 import org.exoplatform.ide.client.framework.util.Utils;
-import org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginEvent;
 import org.exoplatform.ide.extension.ssh.client.JsonpAsyncCallback;
 import org.exoplatform.ide.extension.ssh.client.SshKeyService;
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.GenerateGitHubKeyEvent;
@@ -62,10 +60,10 @@ import java.util.List;
  * @version $Id: $
  */
 public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, ViewClosedHandler,
-                                                      GenerateGitHubKeyHandler, OAuthLoginFinishedHandler {
+                                          GenerateGitHubKeyHandler, JsPopUpOAuthWindow.JsPopUpOAuthWindowCallback {
     private UserInfo userInfo;
 
-    EmptyLoader loader;
+    EmptyLoader      loader;
 
 
     interface Display extends IsView {
@@ -233,7 +231,7 @@ public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, V
             GitHubClientService.getInstance()
                                .getUserToken(user,
                                              new AsyncRequestCallback<StringBuilder>(
-                                                     new StringUnmarshaller(new StringBuilder())) {
+                                                                                     new StringUnmarshaller(new StringBuilder())) {
 
                                                  @Override
                                                  protected void onSuccess(StringBuilder result) {
@@ -257,16 +255,20 @@ public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, V
     }
 
     public void oAuthLoginStart() {
-        IDE.addHandler(OAuthLoginFinishedEvent.TYPE, this);
-        IDE.fireEvent(new OAuthLoginEvent());
+        String authUrl = Utils.getAuthorizationContext()
+                         + "/ide/oauth/authenticate?oauth_provider=github"
+                         + "&scope=user&userId=" + IDE.userId
+                         + "&scope=repo&redirect_after_login="
+                         + Utils.getAuthorizationPageURL();
+        JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500, this);
+        authWindow.loginWithOAuth();
     }
 
     @Override
-    public void onOAuthLoginFinished(OAuthLoginFinishedEvent event) {
-        if (event.getStatus() == 2) {
+    public void oAuthFinished(int authenticationStatus) {
+        if (authenticationStatus == 2) {
             generateGitHubKey();
         }
-        IDE.removeHandler(OAuthLoginFinishedEvent.TYPE, this);
     }
 
     /**
@@ -279,4 +281,5 @@ public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, V
             display = null;
         }
     }
+
 }

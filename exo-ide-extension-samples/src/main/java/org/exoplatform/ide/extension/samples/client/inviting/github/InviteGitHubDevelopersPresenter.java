@@ -91,6 +91,16 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
         String getInviteMessage();
 
         void setInviteButtonEnabled(boolean enabled);
+
+        HasClickHandlers getAddMessageButton();
+
+        void setAddMessageButtonEnabled(boolean enabled);
+
+        void setAddMessageButtonText(String text);
+
+        void setMessageFiledVisibility(boolean visible);
+
+        String getAddMessageButtonText();
     }
 
     private Display               display;
@@ -196,7 +206,6 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
      */
     @Override
     public void onCloneRepositoryComplete(CloneRepositoryCompleteEvent event) {
-        // loadStaticGitHubCollaborators();
         loadGitHubCollaborators(event.getUser(), event.getRepositoryName(), false);
     }
 
@@ -276,6 +285,8 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
 
         display.setDevelopers(collaborators, this);
         display.setInviteButtonEnabled(false);
+        display.setAddMessageButtonEnabled(false);
+        resetMessageEntry();
     }
 
     private boolean hasSelectedUsers() {
@@ -288,9 +299,14 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
         return false;
     }
 
+
     @Override
     public void onGitHubUserSelectionChanged(GitHubUser user, boolean selected) {
         display.setInviteButtonEnabled(hasSelectedUsers());
+        display.setAddMessageButtonEnabled(hasSelectedUsers());
+        if (!hasSelectedUsers()) {
+            resetMessageEntry();
+        }
     }
 
     private void bindDisplay() {
@@ -300,7 +316,12 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
                 IDE.getInstance().closeView(display.asView().getId());
             }
         });
-
+        display.getAddMessageButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                reactMessageEntry();
+            }
+        });
         display.getInviteButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -317,6 +338,10 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
                 }
 
                 display.setInviteButtonEnabled(hasSelectedUsers());
+                display.setAddMessageButtonEnabled(hasSelectedUsers());
+                if (!hasSelectedUsers()) {
+                    resetMessageEntry();
+                }
             }
         });
     }
@@ -337,6 +362,23 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
         if (emailsToSend.size() > 0) {
             invitations = 0;
             sendNextEmail();
+        }
+    }
+
+    private void reactMessageEntry() {
+        if (display.getAddMessageButtonText().equals("Add a message")) {
+            display.setAddMessageButtonText("Discard message");
+            display.setMessageFiledVisibility(true);
+        } else {
+            display.setAddMessageButtonText("Add a message");
+            display.setMessageFiledVisibility(false);
+        }
+    }
+
+    private void resetMessageEntry() {
+        if (display.getAddMessageButtonText().equals("Discard message")) {
+            display.setAddMessageButtonText("Add a message");
+            display.setMessageFiledVisibility(false);
         }
     }
 
@@ -374,7 +416,6 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
         } catch (RequestException e) {
             IDELoader.hide();
             IDE.fireEvent(new ExceptionThrownEvent(e));
-            e.printStackTrace();
         }
     }
 
