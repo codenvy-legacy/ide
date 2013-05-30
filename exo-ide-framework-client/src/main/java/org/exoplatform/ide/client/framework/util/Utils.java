@@ -406,4 +406,16 @@ public class Utils {
         return $wnd.ws;
     }-*/;
 
+    public static native String getWebSocketContext() /*-{
+            function endsWith(str, suffix) {
+            return str.indexOf(suffix, str.length - suffix.length) !== -1;
+          }
+          wsc = $wnd.appConfig.websocketContext;
+          
+          if (endsWith(wsc,'/'))
+           return wsc;
+          else
+           return wsc + '/';
+        }-*/;
+
 }

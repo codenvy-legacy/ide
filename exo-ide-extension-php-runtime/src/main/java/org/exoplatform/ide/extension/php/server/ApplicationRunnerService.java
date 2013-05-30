@@ -30,6 +30,7 @@ import org.exoplatform.services.log.Log;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -52,6 +53,9 @@ public class ApplicationRunnerService {
 
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
+    
+    @PathParam("ws-name")
+    String wsName;
 
     @Path("run")
     @GET
@@ -63,7 +67,7 @@ public class ApplicationRunnerService {
         VirtualFileSystem vfs = vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null;
         ApplicationInstance app = runner.runApplication(vfs, projectId);
         app.setStopURL(uriInfo.getBaseUriBuilder().path(getClass(), "stopApplication")
-                              .queryParam("name", app.getName()).build().toString());
+                              .queryParam("name", app.getName()).build(wsName).toString());
 
         Project project = (Project)vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
         LOG.info("EVENT#application-created# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()

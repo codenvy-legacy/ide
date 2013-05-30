@@ -26,7 +26,8 @@
 
     <script type="text/javascript" language="javascript">
         var appConfig = {
-            "context": "/w/rest/"
+            "context": "/w/rest/",
+            "websocketContext": "/w/websocket/"
         }
         var hiddenFiles = ".*";
         var ws = "<%= request.getAttribute("ws")%>";
