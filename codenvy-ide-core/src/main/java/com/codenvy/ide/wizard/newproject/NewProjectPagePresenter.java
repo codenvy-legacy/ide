@@ -31,7 +31,6 @@ import com.codenvy.ide.wizard.template.TemplatePagePresenter;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 
 /**
@@ -40,29 +39,30 @@ import com.google.inject.Provider;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public class NewProjectPagePresenter extends AbstractWizardPagePresenter implements NewProjectPageView.ActionDelegate {
-    private NewProjectPageView              view;
-    private JsonArray<PaaS>                 paases;
-    private JsonArray<ProjectTypeData>      projectTypes;
-    private ProjectTypeAgentImpl            projectTypeAgent;
-    private PaaSAgentImpl                   paasAgent;
-    private Provider<TemplatePagePresenter> templatePageProvider;
-    private boolean                         hasProjectNameIncorrectSymbol;
-    private boolean                         hasSameProject;
-    private boolean                         hasProjectList;
-    private JsonArray<String>               projectList;
+    private NewProjectPageView         view;
+    private JsonArray<PaaS>            paases;
+    private JsonArray<ProjectTypeData> projectTypes;
+    private ProjectTypeAgentImpl       projectTypeAgent;
+    private PaaSAgentImpl              paasAgent;
+    private TemplatePagePresenter      templatePage;
+    private boolean                    hasProjectNameIncorrectSymbol;
+    private boolean                    hasSameProject;
+    private boolean                    hasProjectList;
+    private JsonArray<String>          projectList;
 
     /**
-     * Create presenter
+     * Create presenter.
      *
      * @param projectTypeAgent
      * @param resources
      * @param view
      * @param paasAgent
+     * @param templatePage
+     * @param resourceProvider
      */
     @Inject
     protected NewProjectPagePresenter(ProjectTypeAgentImpl projectTypeAgent, Resources resources, NewProjectPageView view,
-                                      PaaSAgentImpl paasAgent, Provider<TemplatePagePresenter> templatePageProvider,
-                                      ResourceProvider resourceProvider) {
+                                      PaaSAgentImpl paasAgent, TemplatePagePresenter templatePage, ResourceProvider resourceProvider) {
 
         super("Select a wizard", resources.newResourceIcon());
 
@@ -90,16 +90,15 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
         this.projectTypes = projectTypeAgent.getProjectTypes();
         this.projectTypeAgent.setSelectedProjectType(null);
 
-        this.templatePageProvider = templatePageProvider;
+        this.templatePage = templatePage;
+        this.templatePage.setPrevious(this);
     }
 
     /** {@inheritDoc} */
     @Override
     public WizardPagePresenter flipToNext() {
-        TemplatePagePresenter templatePage = templatePageProvider.get();
-        templatePage.setPrevious(this);
-        templatePage.setUpdateDelegate(delegate);
         templatePage.setProjectName(view.getProjectName());
+        templatePage.setUpdateDelegate(delegate);
 
         return templatePage;
     }
