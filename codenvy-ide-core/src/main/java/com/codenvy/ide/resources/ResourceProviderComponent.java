@@ -143,11 +143,16 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 new AsyncRequestCallback<ProjectModelProviderAdapter>(new ProjectModelUnmarshaller(adapter)) {
                     @Override
                     protected void onSuccess(ProjectModelProviderAdapter result) {
+                        Folder rootFolder = vfsInfo.getRoot();
+
                         Project project = result.getProject();
-                        project.setParent(vfsInfo.getRoot());
+                        project.setParent(rootFolder);
                         project.setProject(project);
                         project.setVFSInfo(vfsInfo);
-                        vfsInfo.getRoot().addChild(project);
+
+                        rootFolder.getChildren().clear();
+                        rootFolder.addChild(project);
+
                         activeProject = project;
 
                         // get project structure
@@ -224,6 +229,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                     protected void onSuccess(ProjectModelProviderAdapter result) {
                         Project project = result.getProject();
                         project.setParent(rootFolder);
+                        rootFolder.getChildren().clear();
                         rootFolder.addChild(project);
                         project.setProject(project);
                         project.setVFSInfo(vfsInfo);
