@@ -50,14 +50,19 @@ public class ApplicationRunnerClientService {
 
     public static final String PROLONG = "/prolong";
 
-    private static String BASE_URL;
+    private static final String BASE_URL = "/java/runner";
 
     private static ApplicationRunnerClientService instance;
 
     private MessageBus wsMessageBus;
 
-    public ApplicationRunnerClientService(MessageBus wsMessageBus, String ws, String restContext) {
-        BASE_URL = restContext + ws  + "/java/runner";
+    private final String wsName;
+
+    private final String restContext;
+
+    public ApplicationRunnerClientService(MessageBus wsMessageBus, String wsName, String restContext) {
+        this.wsName = wsName;
+        this.restContext = restContext;
         this.wsMessageBus = wsMessageBus;
         instance = this;
     }
@@ -68,7 +73,7 @@ public class ApplicationRunnerClientService {
 
     public void runApplication(String project, String war, boolean useJRebel,
                                AsyncRequestCallback<ApplicationInstance> callback) throws RequestException {
-        String requestUrl = BASE_URL + "/run?war=" + war;
+        String requestUrl = restContext + wsName + BASE_URL + "/run?war=" + war;
 
         String data = "";
         if (useJRebel) {
@@ -104,7 +109,7 @@ public class ApplicationRunnerClientService {
 
         callback.setStatusHandler(new RunningAppStatusHandler(project));
         RequestMessage message =
-                RequestMessageBuilder.build(RequestBuilder.POST, BASE_URL + RUN + params)
+                RequestMessageBuilder.build(RequestBuilder.POST, wsName + BASE_URL + RUN + params)
                                      .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data).getRequestMessage();
         wsMessageBus.send(message, callback);
     }

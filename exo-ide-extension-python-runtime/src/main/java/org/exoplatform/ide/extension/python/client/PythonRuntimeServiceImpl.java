@@ -24,10 +24,12 @@ import com.google.gwt.http.client.RequestException;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
-import org.exoplatform.ide.client.framework.util.Utils;
+import org.exoplatform.ide.client.framework.websocket.MessageBus;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 import org.exoplatform.ide.extension.python.shared.ApplicationInstance;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
@@ -37,7 +39,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  */
 public class PythonRuntimeServiceImpl extends PythonRuntimeService {
     
-    private static final String BASE_URL = "/" + Utils.getWorkspaceName() + "/python/runner";
+    private static final String BASE_URL = "/python/runner";
     
     private static final String LOGS = BASE_URL + "/logs";
 
@@ -47,8 +49,14 @@ public class PythonRuntimeServiceImpl extends PythonRuntimeService {
 
     private static final String STOP_APPLICATION = BASE_URL + "/stop";
 
-    public PythonRuntimeServiceImpl(String restContext) {
-        this.restContext = restContext;
+    private final String wsName;
+
+    private final MessageBus wsMessageBus;
+
+    public PythonRuntimeServiceImpl(String restContext, String wsName, MessageBus wsMessageBus) {
+        this.wsName = wsName;
+        this.wsMessageBus = wsMessageBus;
+        this.restContext = restContext + wsName;
     }
 
     /**
@@ -56,17 +64,48 @@ public class PythonRuntimeServiceImpl extends PythonRuntimeService {
      *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
      */
     @Override
-    public void start(String vfsId, ProjectModel project, AsyncRequestCallback<ApplicationInstance> callback)
-            throws RequestException {
+    public void start(String vfsId, ProjectModel project, RequestCallback<ApplicationInstance> callback)
+            throws WebSocketException {
         String requestUrl = restContext + RUN_APPLICATION;
 
         StringBuilder params = new StringBuilder("?");
         params.append("&vfsid=").append(vfsId).append("&projectid=").append(project.getId());
 
-        AsyncRequest.build(RequestBuilder.GET, requestUrl + params.toString(), true)
-                    .requestStatusHandler(new StartApplicationStatusHandler(project.getName()))
-                    .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+//        AsyncRequest.build(RequestBuilder.GET, requestUrl + params.toString(), true)
+//                    .requestStatusHandler(new StartApplicationStatusHandler(project.getName()))
+//                    .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+        RequestMessage message =
+            RequestMessageBuilder.build(RequestBuilder.GET, wsName + RUN_APPLICATION + params).getRequestMessage();
+        wsMessageBus.send(message, callback);
     }
+    
+    
+//    /**
+//     * Run application by sending request over WebSocket.
+//     *
+//     * @param project
+//     * @param war
+//     * @param useJRebel
+//     * @param callback
+//     * @throws WebSocketException
+//     */
+//    public void runApplicationWS(String project, String war, boolean useJRebel,
+//                                 RequestCallback<ApplicationInstance> callback) throws WebSocketException {
+//        String params = "?war=" + war;
+//
+//        String data = "";
+//        if (useJRebel) {
+//            JSONObject jsonObject = new JSONObject();
+//            jsonObject.put("jrebel", new JSONString("true"));
+//            data = jsonObject.toString();
+//        }
+//
+//        callback.setStatusHandler(new RunningAppStatusHandler(project));
+//        RequestMessage message =
+//                RequestMessageBuilder.build(RequestBuilder.POST, wsName + BASE_URL + RUN + params)
+//                                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data).getRequestMessage();
+//        wsMessageBus.send(message, callback);
+//    }
 
     /**
      * @see org.exoplatform.ide.extension.python.client.PythonRuntimeService#stop(java.lang.String,

@@ -40,17 +40,15 @@ import java.util.List;
  */
 public class RefactoringClientServiceImpl extends RefactoringClientService {
 
-    /** Base url. */
-    private final String BASE_URL;
-
-    /** Build project method's path. */
-    private final String RENAME;
-
     /** Loader to be displayed. */
     private Loader loader;
 
     /** WebSocket message bus. */
     private MessageBus wsMessageBus;
+
+    private final String restContext;
+
+    private final String wsName;
 
 
     /**
@@ -62,8 +60,8 @@ public class RefactoringClientServiceImpl extends RefactoringClientService {
      *         {@link MessageBus} to send messages over WebSocket
      */
     public RefactoringClientServiceImpl(String restContext, String wsName, Loader loader, MessageBus wsMessageBus) {
-        BASE_URL = restContext + wsName + "/refactoring/java";
-        RENAME = BASE_URL + "/rename";
+        this.wsName = wsName;
+        this.restContext = restContext + wsName;
         this.loader = loader;
         this.wsMessageBus = wsMessageBus;
     }
@@ -76,13 +74,11 @@ public class RefactoringClientServiceImpl extends RefactoringClientService {
     @Override
     public void renameWS(String vfsId, String projectId, String fqn, int offset, String newName,
                          RequestCallback<List<Action>> callback) throws WebSocketException {
-        final String requesrUrl = RENAME;
         callback.setLoader(loader);
-
         String params =
                 "vfsid=" + vfsId + "&projectid=" + projectId + "&fqn=" + fqn + "&offset=" + offset + "&newName=" + newName;
         RequestMessage message =
-                RequestMessageBuilder.build(RequestBuilder.POST, requesrUrl + "?" + params).getRequestMessage();
+                RequestMessageBuilder.build(RequestBuilder.POST, wsName + "/refactoring/java/rename" + "?" + params).getRequestMessage();
         wsMessageBus.send(message, callback);
     }
 
@@ -96,7 +92,7 @@ public class RefactoringClientServiceImpl extends RefactoringClientService {
                        AsyncRequestCallback<List<Action>> callback) throws RequestException {
         String params =
                 "vfsid=" + vfsId + "&projectid=" + projectId + "&fqn=" + fqn + "&offset=" + offset + "&newName=" + newName;
-        AsyncRequest.build(RequestBuilder.POST, RENAME + "?" + params).loader(loader).send(callback);
+        AsyncRequest.build(RequestBuilder.POST, restContext + wsName + "/refactoring/java/rename" + "?" + params).loader(loader).send(callback);
     }
 
 }

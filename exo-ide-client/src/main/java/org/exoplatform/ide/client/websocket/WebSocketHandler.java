@@ -67,9 +67,9 @@ public class WebSocketHandler implements ApplicationClosedHandler {
     private String getWebSocketServerURL() {
         boolean isSecureConnection = Window.Location.getProtocol().equals("https:");
         if (isSecureConnection)
-            return "wss://" + Window.Location.getHost() + "/w/websocket/" + Utils.getWorkspaceName();
+            return "wss://" + Window.Location.getHost() + Utils.getWebSocketContext() + Utils.getWorkspaceName();
         else
-            return "ws://" + Window.Location.getHost() + "/w/websocket/" + Utils.getWorkspaceName();
+            return "ws://" + Window.Location.getHost()  + Utils.getWebSocketContext() +  Utils.getWorkspaceName();
     }
 
 

@@ -25,6 +25,7 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -44,6 +45,9 @@ public class ApplicationRunnerService {
 
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
+    
+    @PathParam("ws-name")
+    String wsName;
 
     @Path("run")
     @GET
@@ -55,7 +59,7 @@ public class ApplicationRunnerService {
         ApplicationInstance app = runner.runApplication(
                 vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId);
         app.setStopURL(uriInfo.getBaseUriBuilder().path(getClass(), "stopApplication")
-                              .queryParam("name", app.getName()).build().toString());
+                              .queryParam("name", app.getName()).build(wsName).toString());
         return app;
     }
 

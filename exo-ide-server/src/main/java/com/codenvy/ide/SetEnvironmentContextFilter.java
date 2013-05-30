@@ -52,7 +52,7 @@ public class SetEnvironmentContextFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         Map<String, Object> myEnv = new HashMap<String, Object>();
-        myEnv.put(EnvironmentContext.WORKSPACE_NAME, "codenvy");
+        myEnv.put(EnvironmentContext.WORKSPACE_NAME, "dev-monit");
         myEnv.put(EnvironmentContext.WORKSPACE_ID, "dev-monit");
         myEnv.put(EnvironmentContext.GIT_SERVER, "git");
         myEnv.put(EnvironmentContext.TMP_DIR, new File("../temp"));
