@@ -19,6 +19,9 @@
 package com.codenvy.ide.ext.gae.client;
 
 import com.codenvy.ide.api.extension.Extension;
+import com.codenvy.ide.api.paas.PaaSAgent;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -30,8 +33,13 @@ import com.google.inject.Singleton;
 @Singleton
 @Extension(title = "GoogleAppEngine Support.", version = "3.0.0")
 public class GAEExtansion {
+    public static final String ID = "GAE";
 
     @Inject
-    public GAEExtansion() {
+    public GAEExtansion(PaaSAgent paasAgent, GAEResources resources) {
+        // TODO change hard code types
+        JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Java", "Python", "Django", "Servlet/JSP", "War");
+        // TODO wizard page is empty
+        paasAgent.registerPaaS(ID, ID, resources.googleAppEngine48(), requiredProjectTypes, null, null);
     }
 }

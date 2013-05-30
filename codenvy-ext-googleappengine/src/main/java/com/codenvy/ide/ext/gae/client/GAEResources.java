@@ -43,7 +43,7 @@ public interface GAEResources extends ClientBundle {
     @Source("com/codenvy/ide/ext/gae/images/gae_48_Disabled.png")
     ImageResource googleAppEngine48Disabled();
 
-    @Source("com/codenvy/ide/ext/gaeimages/create_app.png")
+    @Source("com/codenvy/ide/ext/gae/images/create_app.png")
     ImageResource createApplicationConrtol();
 
     @Source("com/codenvy/ide/ext/gae/images/create_app_Disabled.png")
