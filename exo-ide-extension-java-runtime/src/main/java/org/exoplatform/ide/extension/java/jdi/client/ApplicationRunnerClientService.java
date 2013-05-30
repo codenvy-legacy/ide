@@ -181,7 +181,7 @@ public class ApplicationRunnerClientService {
     public void prolongExpirationTime(String name, long time, RequestCallback<Object> callback)
             throws WebSocketException {
         StringBuilder params = new StringBuilder("?name=").append(name).append("&time=").append(time);
-        RequestMessage message = RequestMessageBuilder.build(RequestBuilder.GET, BASE_URL + PROLONG + params).getRequestMessage();
+        RequestMessage message = RequestMessageBuilder.build(RequestBuilder.GET, wsName + BASE_URL + PROLONG + params).getRequestMessage();
         wsMessageBus.send(message, callback);
     }
 
@@ -198,7 +198,7 @@ public class ApplicationRunnerClientService {
      */
     public void updateApplication(String name, String war, AsyncRequestCallback<Object> callback)
             throws RequestException {
-        String url = BASE_URL + "/update";
+        String url = restContext + wsName + BASE_URL + "/update";
         StringBuilder params = new StringBuilder("?name=").append(name).append("&war=").append(war);
 
         Loader loader = new GWTLoader();
