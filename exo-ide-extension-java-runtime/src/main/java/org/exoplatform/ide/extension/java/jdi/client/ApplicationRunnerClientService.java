@@ -123,7 +123,7 @@ public class ApplicationRunnerClientService {
             data = jsonObject.toString();
         }
 
-        String requestUrl = BASE_URL + "/debug?war=" + war + "&suspend=false";
+        String requestUrl = restContext + wsName + BASE_URL + "/debug?war=" + war + "&suspend=false";
         AsyncRequest.build(RequestBuilder.POST, requestUrl, true)
                     .requestStatusHandler(new RunningAppStatusHandler(project))
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
@@ -151,13 +151,13 @@ public class ApplicationRunnerClientService {
 
         callback.setStatusHandler(new RunningAppStatusHandler(project));
         RequestMessage message =
-                RequestMessageBuilder.build(RequestBuilder.POST, BASE_URL + DEBUG + param)
+                RequestMessageBuilder.build(RequestBuilder.POST, wsName + BASE_URL + DEBUG + param)
                                      .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data).getRequestMessage();
         wsMessageBus.send(message, callback);
     }
 
     public void getLogs(String name, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
-        String url = BASE_URL + "/logs";
+        String url = restContext + wsName + BASE_URL  + "/logs";
         StringBuilder params = new StringBuilder("?name=");
         params.append(name);
 
