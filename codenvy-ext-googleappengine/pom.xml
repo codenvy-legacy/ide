@@ -71,6 +71,18 @@
         </dependency>
 
         <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-java-sdk</artifactId>
+            <type>zip</type>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-tools-sdk</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>jsr311-api</artifactId>
         </dependency>
@@ -179,6 +191,38 @@
     </profiles>
 
     <build>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>jarjar-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jarjar</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>com.google.api-client:google-api-client:jar:1.9.0-beta</include>
+                                <include>com.google.http-client:google-http-client:jar:1.9.0-beta</include>
+                                <include>com.google.guava:guava:jar:11.0.1</include>
+                                <include>com.google.oauth-client:google-oauth-client:jar:1.9.0-beta</include>
+                            </includes>
+                            <rules>
+                                <rule>
+                                    <pattern>com.google.common.**</pattern>
+                                    <result>org.exoplatform.ide.extension.googleappengine.server.oauth.com.google.common.@1</result>
+                                </rule>
+                                <rule>
+                                    <pattern>com.google.api.client.**</pattern>
+                                    <result>org.exoplatform.ide.extension.googleappengine.server.oauth.com.google.api.client.@1</result>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
         <resources>
             <resource>
                 <directory>src/main/java</directory>
