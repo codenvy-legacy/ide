@@ -20,6 +20,7 @@ package com.codenvy.ide.preferences;
 
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
+import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 
@@ -79,4 +80,11 @@ public interface PreferencesView extends View<PreferencesView.ActionDelegate> {
      *         to disable it
      */
     void setApplyButtonEnabled(boolean isEnabled);
+
+    /**
+     * Sets available preferences.
+     *
+     * @param preferences
+     */
+    void setPreferences(JsonArray<PreferencesPagePresenter> preferences);
 }

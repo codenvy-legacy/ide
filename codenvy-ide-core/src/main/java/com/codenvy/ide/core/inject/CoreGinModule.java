@@ -68,6 +68,8 @@ import com.codenvy.ide.part.projectexplorer.ProjectExplorerView;
 import com.codenvy.ide.part.projectexplorer.ProjectExplorerViewImpl;
 import com.codenvy.ide.preferences.PreferencesAgentImpl;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
+import com.codenvy.ide.preferences.PreferencesView;
+import com.codenvy.ide.preferences.PreferencesViewImpl;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.codenvy.ide.resources.ResourceProviderComponent;
 import com.codenvy.ide.resources.model.GenericModelProvider;
@@ -201,6 +203,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(NewResourcePageView.class).to(NewResourcePageViewImpl.class);
         bind(NewProjectPageView.class).to(NewProjectPageViewImpl.class);
         bind(OpenProjectView.class).to(OpenProjectViewImpl.class);
+        bind(PreferencesView.class).to(PreferencesViewImpl.class).in(Singleton.class);
     }
 
     @Provides
