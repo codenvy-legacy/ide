@@ -33,7 +33,6 @@ import org.exoplatform.ide.editor.javascript.client.syntaxvalidator.JsToken;
 /**
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: JavaScriptExternalParser.java May 29, 2013 12:01:10 PM azatsarynnyy $
- *
  */
 public class JavaScriptExternalParser implements ExternalParser {
 
@@ -44,7 +43,7 @@ public class JavaScriptExternalParser implements ExternalParser {
     public JsonArray< ? extends Token> getTokenList(String content) {
         JsonArray<Token> tokensArray = JsonCollections.createArray();
         try {
-            JsonArray<JsToken> tokens = parse(content);
+            JsonArray<JsToken> tokens = doParse(content);
             for (JsToken token : tokens.asIterable()) {
                 TokenBeenImpl newToken = null;
                 if ("VariableDeclaration".equals(token.getType())) {
@@ -58,7 +57,8 @@ public class JavaScriptExternalParser implements ExternalParser {
                 JsoArray<JsToken> body = token.getBody();
                 if (body != null) {
                     for (JsToken childToken : body.asIterable()) {
-                        newToken.addSubToken(new TokenBeenImpl(childToken.getName(), TokenType.VARIABLE, childToken.getLineNumber(), MimeType.TEXT_JAVASCRIPT));
+                        newToken.addSubToken(new TokenBeenImpl(childToken.getName(), TokenType.VARIABLE, childToken.getLineNumber(),
+                                                               MimeType.TEXT_JAVASCRIPT));
                     }
                 }
             }
@@ -69,7 +69,7 @@ public class JavaScriptExternalParser implements ExternalParser {
         return tokensArray;
     }
 
-    private native JsoArray<JsToken> parse(String content)
+    private native JsoArray<JsToken> doParse(String content)
     /*-{
         return $wnd.esprima.parse(content, {tolerant: true, loc: true}).body;
     }-*/;
