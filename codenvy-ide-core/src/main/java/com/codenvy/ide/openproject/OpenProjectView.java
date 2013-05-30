@@ -19,6 +19,7 @@
 package com.codenvy.ide.openproject;
 
 import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.json.JsonArray;
 
 /**
  * The view of {@link OpenProjectPresenter}.
@@ -28,16 +29,10 @@ import com.codenvy.ide.api.mvp.View;
 public interface OpenProjectView extends View<OpenProjectView.ActionDelegate> {
     /** Needs for delegate some function into ChangePerspective view. */
     public interface ActionDelegate {
-        /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Open button.
-         */
+        /** Performs any actions appropriate in response to the user having pressed the Open button. */
         void onOpenClicked();
 
-        /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Cancel button.
-         */
+        /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
         void onCancelClicked();
 
         /** Returns selected project. */
@@ -48,10 +43,16 @@ public interface OpenProjectView extends View<OpenProjectView.ActionDelegate> {
      * Sets whether Open button is enabled.
      *
      * @param isEnabled
-     *         <code>true</code> to enable the button, <code>false</code>
-     *         to disable it
+     *         <code>true</code> to enable the button, <code>false</code> to disable it
      */
     void setOpenButtonEnabled(boolean isEnabled);
+
+    /**
+     * Sets exists projects.
+     *
+     * @param projects
+     */
+    void setProjects(JsonArray<String> projects);
 
     /** Close dialog. */
     void close();

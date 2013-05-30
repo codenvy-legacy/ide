@@ -52,6 +52,8 @@ import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.menu.MainMenuPresenter;
 import com.codenvy.ide.menu.MainMenuView;
 import com.codenvy.ide.menu.MainMenuViewImpl;
+import com.codenvy.ide.openproject.OpenProjectView;
+import com.codenvy.ide.openproject.OpenProjectViewImpl;
 import com.codenvy.ide.outline.OutlinePartPresenter;
 import com.codenvy.ide.outline.OutlinePartView;
 import com.codenvy.ide.outline.OutlinePartViewImpl;
@@ -198,6 +200,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(TemplatePageView.class).to(TemplatePageViewImpl.class);
         bind(NewResourcePageView.class).to(NewResourcePageViewImpl.class);
         bind(NewProjectPageView.class).to(NewProjectPageViewImpl.class);
+        bind(OpenProjectView.class).to(OpenProjectViewImpl.class);
     }
 
     @Provides

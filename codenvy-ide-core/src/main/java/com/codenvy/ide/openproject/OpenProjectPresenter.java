@@ -18,46 +18,32 @@
  */
 package com.codenvy.ide.openproject;
 
-import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.command.OpenProjectCommand;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * Provides opening project.
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
+@Singleton
 public class OpenProjectPresenter implements OpenProjectView.ActionDelegate {
-    private OpenProjectView view;
-
+    private OpenProjectView  view;
     private ResourceProvider resourceProvider;
-
     private String selectedProject = null;
 
     /**
      * Create OpenProjectPresenter.
      *
-     * @param resourceProvider
-     * @param resources
-     * @param projects
-     */
-    public OpenProjectPresenter(ResourceProvider resourceProvider, Resources resources, JsonArray<String> projects) {
-        this(new OpenProjectViewImpl(projects, resources), resourceProvider);
-    }
-
-    /**
-     * Create OpenProjectPresenter.
-     * <p/>
-     * For Unit Tests.
-     *
      * @param view
      * @param resourceProvider
      */
+    @Inject
     protected OpenProjectPresenter(OpenProjectView view, ResourceProvider resourceProvider) {
         this.view = view;
         this.view.setDelegate(this);
@@ -82,7 +68,7 @@ public class OpenProjectPresenter implements OpenProjectView.ActionDelegate {
 
             @Override
             public void onFailure(Throwable caught) {
-                Log.error(OpenProjectCommand.class, "can't open projects", caught);
+                Log.error(OpenProjectPresenter.class, "Can't open project", caught);
             }
         });
     }
@@ -102,7 +88,18 @@ public class OpenProjectPresenter implements OpenProjectView.ActionDelegate {
     }
 
     /** Show dialog. */
-    public void show() {
-        view.showDialog();
+    public void showDialog() {
+        resourceProvider.listProjects(new AsyncCallback<JsonArray<String>>() {
+            @Override
+            public void onSuccess(JsonArray<String> result) {
+                view.setProjects(result);
+                view.showDialog();
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                Log.error(OpenProjectPresenter.class, "Can not get list of projects", caught);
+            }
+        });
     }
 }
