@@ -36,7 +36,6 @@ import org.exoplatform.ide.client.framework.codenow.CodeNowSpec10;
 import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsEvent;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
-import org.exoplatform.ide.client.framework.discovery.event.IsDiscoverableResultReceivedEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.DirectoryFilter;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
@@ -46,7 +45,6 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceived
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.menu.RefreshMenuEvent;
 import org.exoplatform.ide.client.model.*;
-import org.exoplatform.ide.client.workspace.event.SelectWorkspaceEvent;
 import org.exoplatform.ide.client.workspace.event.SwitchVFSEvent;
 
 import java.util.ArrayList;
@@ -93,13 +91,9 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                             if (result.getUserInfo().getRoles() != null && result.getUserInfo().getRoles().size() > 0) {
                                 controls.initControls(result.getUserInfo().getRoles());
 
-                                String registryURLParameter = applicationConfiguration.getRegistryURL();
-                                if (registryURLParameter == null) {
-                                    throw new Exception(org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES
-                                                                                      .confMissingVariable("registryURL"));
-                                }
+                               
                                 new SettingsServiceImpl(IDE.eventBus(), result.getUserInfo().getName(),
-                                                        IDELoader.get(), applicationConfiguration.getContext());
+                                                        IDELoader.get());
                                 SettingsService.getInstance().restoreFromCookies(applicationSettings);
 
                                 initialOpenedProject = applicationSettings.getValueAsString("opened-project");
@@ -121,7 +115,6 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                 DirectoryFilter.get().setPattern(hiddenFilesParameter);
 
                                 IDE.fireEvent(new ApplicationSettingsReceivedEvent(result.getSettings()));
-                                IDE.fireEvent(new IsDiscoverableResultReceivedEvent(result.isDiscoverable()));
                                 IDE.fireEvent(new UserInfoReceivedEvent(result.getUserInfo()));
                                 checkEntryPoint();
 
@@ -158,17 +151,12 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                     IDE.fireEvent(new SwitchVFSEvent(entryPoint));
                 }
             });
-        } else {
-            promptToSelectEntryPoint();
-        }
+        } 
     }
 
     public void onVfsChanged(VfsChangedEvent event) {
         IDE.removeHandler(VfsChangedEvent.TYPE, this);
-        if (event.getVfsInfo() == null || event.getVfsInfo().getId() == null) {
-            promptToSelectEntryPoint();
-        }
-
+        
         Map<String, List<String>> parameterMap = Location.getParameterMap();
 
         if (parameterMap != null && parameterMap.get(CodeNowSpec10.VERSION_PARAMETER) != null
@@ -179,18 +167,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
         }
     }
 
-    protected void promptToSelectEntryPoint() {
-        // TODO [IDE-307] handle incorrect appConfig["entryPoint"] property value
-        Dialogs.getInstance().showError(org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.confWorkspaceWasNotSetTitle(),
-                                        org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.confWorkspaceWasNotSetText(),
-                                        new BooleanValueReceivedHandler() {
-                                            public void booleanValueReceived(Boolean value) {
-                                                if (value) {
-                                                    IDE.fireEvent(new SelectWorkspaceEvent());
-                                                }
-                                            }
-                                        });
-    }
+  
 
     public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event) {
 

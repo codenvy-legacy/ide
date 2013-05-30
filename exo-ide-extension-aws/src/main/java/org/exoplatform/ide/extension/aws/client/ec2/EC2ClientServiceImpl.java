@@ -26,6 +26,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.aws.shared.ec2.InstanceInfo;
 
 import java.util.List;
@@ -38,7 +39,7 @@ import java.util.List;
  */
 public class EC2ClientServiceImpl extends EC2ClientService {
 
-    private static final String BASE_URL = "/ide/aws/ec2";
+    private static final String BASE_URL = Utils.getWorkspaceName() + "/aws/ec2";
 
     private static final String INSTANCES = BASE_URL + "/instances";
 
@@ -56,9 +57,9 @@ public class EC2ClientServiceImpl extends EC2ClientService {
     /** Loader to be displayed. */
     private Loader loader;
 
-    public EC2ClientServiceImpl(String restContext, Loader loader) {
+    public EC2ClientServiceImpl(Loader loader) {
         this.loader = loader;
-        this.restServiceContext = restContext;
+        this.restServiceContext = Utils.getRestContext();
     }
 
     /** @see org.exoplatform.ide.extension.aws.client.ec2.EC2ClientService#getInstances(org.exoplatform.gwtframework.commons.rest

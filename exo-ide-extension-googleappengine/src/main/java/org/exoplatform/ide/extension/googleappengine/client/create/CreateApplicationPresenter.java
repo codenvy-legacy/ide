@@ -39,6 +39,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.googleappengine.client.GaeTools;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
@@ -89,10 +90,10 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
 
     private static final String GOOGLE_APP_ENGINE_URL = "https://appengine.google.com/start/createapp";
 
-    private final String restContext;
+    private final String restContext = Utils.getRestContext();
 
-    public CreateApplicationPresenter(String restContext) {
-        this.restContext = restContext;
+    public CreateApplicationPresenter() {
+        
 
         IDE.addHandler(CreateApplicationEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -220,7 +221,7 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
         UrlBuilder builder = new UrlBuilder();
         String redirectUrl = builder.setProtocol(Window.Location.getProtocol())//
                 .setHost(Window.Location.getHost())//
-                .setPath(restContext + "/ide/appengine/change-appid/" + vfsId + "/" + projectId).buildString();
+                .setPath(restContext + Utils.getWorkspaceName() + "/appengine/change-appid/" + vfsId + "/" + projectId).buildString();
 
         String url = GOOGLE_APP_ENGINE_URL + "?redirect_url=" + redirectUrl;
 

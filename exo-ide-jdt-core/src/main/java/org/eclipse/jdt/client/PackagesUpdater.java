@@ -40,6 +40,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.project.*;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -152,7 +153,7 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
     /** @param projectId */
     private void updatePackages(final String projectId) {
         String url =
-                JdtExtension.REST_CONTEXT + "/ide/code-assistant/java/get-packages" + "?projectid=" + projectId + "&vfsid="
+                Utils.getRestContext() + Utils.getWorkspaceName() + "/code-assistant/java/get-packages" + "?projectid=" + projectId + "&vfsid="
                 + VirtualFileSystem.getInstance().getInfo().getId();
         try {
             AsyncRequest.build(RequestBuilder.GET, url).send(

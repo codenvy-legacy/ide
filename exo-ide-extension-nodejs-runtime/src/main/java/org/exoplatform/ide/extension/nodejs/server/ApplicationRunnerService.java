@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.nodejs.server;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -43,7 +44,7 @@ import org.exoplatform.services.log.Log;
  * @version $Id: ApplicationRunnerService.java Apr 18, 2013 5:26:11 PM vsvydenko $
  *
  */
-@Path("ide/node/runner")
+@Path("{ws-name}/node/runner")
 public class ApplicationRunnerService {
     private static final Log LOG = ExoLogger.getLogger(ApplicationRunnerService.class);
     
@@ -52,6 +53,9 @@ public class ApplicationRunnerService {
 
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
+    
+    @PathParam("ws-name")
+    String wsName;
 
     @Path("run")
     @GET
@@ -64,7 +68,7 @@ public class ApplicationRunnerService {
         ApplicationInstance app = runner.runApplication(
                 vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId);
         app.setStopURL(uriInfo.getBaseUriBuilder().path(getClass(), "stopApplication")
-                              .queryParam("name", app.getName()).build().toString());
+                              .queryParam("name", app.getName()).build(wsName).toString());
         
         Project project = (Project)vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
         LOG.info("EVENT#application-created# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()

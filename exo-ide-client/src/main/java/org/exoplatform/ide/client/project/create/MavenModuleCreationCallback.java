@@ -92,7 +92,7 @@ public class MavenModuleCreationCallback implements EditorFileOpenedHandler, Edi
         // ask server to add module in pom.xml
         try {
             String url =
-                    Utils.getRestContext() + "/ide/project/addModule" +
+                    Utils.getRestContext() + Utils.getWorkspaceName() + "/project/addModule" +
                     "?vfsId=" + vfs.getId() +
                     "&projectId=" + parent.getId() +
                     "&moduleName=" + module.getName();

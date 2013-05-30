@@ -18,16 +18,18 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client;
 
+import com.google.gwt.core.client.GWT;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebugAppEvent;
@@ -40,7 +42,7 @@ import org.exoplatform.ide.extension.java.jdi.client.events.UpdateVariableValueI
 import org.exoplatform.ide.extension.java.jdi.client.fqn.FqnResolverFactory;
 import org.exoplatform.ide.extension.java.jdi.client.fqn.JavaFqnResolver;
 
-import com.google.gwt.core.client.GWT;
+
 
 /** Entry point classes define <code>onModuleLoad()</code>. */
 public class DebuggerExtension extends Extension implements InitializeServicesHandler {
@@ -71,7 +73,6 @@ public class DebuggerExtension extends Extension implements InitializeServicesHa
         IDE.getInstance().addControl(new StopAppControl());
         IDE.getInstance().addControl(new UpdateAppControl());
         IDE.getInstance().addControl(new ShowBreakpointPropertiesControl());
-        IDE.getInstance().addControl(new RunAppControl(), Docking.TOOLBAR_RIGHT);
         new LogsHandler();
     }
 
@@ -79,8 +80,8 @@ public class DebuggerExtension extends Extension implements InitializeServicesHa
     public void onInitializeServices(InitializeServicesEvent event) {
         FqnResolverFactory resolverFactory = new FqnResolverFactory();
         resolverFactory.addResolver(MimeType.APPLICATION_JAVA, new JavaFqnResolver());
-        new DebuggerClientService(event.getApplicationConfiguration().getContext());
-        new ApplicationRunnerClientService(event.getApplicationConfiguration().getContext(), IDE.messageBus());
+        new DebuggerClientService();
+        new ApplicationRunnerClientService(IDE.messageBus(), Utils.getWorkspaceName(), Utils.getRestContext());
         BreakpointsManager breakpointsManager =
                 new BreakpointsManager(IDE.eventBus(), DebuggerClientService.getInstance(), AUTO_BEAN_FACTORY, resolverFactory);
 

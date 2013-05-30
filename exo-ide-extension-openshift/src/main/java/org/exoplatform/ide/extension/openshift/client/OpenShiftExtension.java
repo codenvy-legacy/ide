@@ -124,7 +124,7 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
      */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        new OpenShiftClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader(), IDE.messageBus());
+        new OpenShiftClientServiceImpl(event.getLoader(), IDE.messageBus());
     }
 
     public static boolean canBeDeployedToOpenShift(ProjectModel project) {

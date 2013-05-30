@@ -19,11 +19,13 @@
 package org.exoplatform.ide.git.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.server.Util;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.git.client.add.AddToIndexPresenter;
 import org.exoplatform.ide.git.client.branch.BranchPresenter;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter;
@@ -115,7 +117,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
      */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        new GitClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader(), IDE.messageBus());
+        new GitClientServiceImpl(Utils.getRestContext(), Utils.getWorkspaceName(), event.getLoader(), IDE.messageBus());
     }
 
 

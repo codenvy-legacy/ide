@@ -81,9 +81,7 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
      * .event.ConfigurationReceivedSuccessfullyEvent) */
     public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event) {
         if (TemplateService.getInstance() == null) {
-            new TemplateServiceImpl(IDELoader.get(), event.getConfiguration().getRegistryURL() + "/"
-                                                     + "exo:applications" + "/" + IDEConfigurationLoader.APPLICATION_NAME,
-                                    event.getConfiguration().getContext());
+            new TemplateServiceImpl(IDELoader.get());
         }
     }
 

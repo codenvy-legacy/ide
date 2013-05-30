@@ -102,8 +102,8 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
      * .client.framework.application.event.InitializeServicesEvent) */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        new GoogleAppEngineClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
-        new CreateApplicationPresenter(event.getApplicationConfiguration().getContext());
+        new GoogleAppEngineClientServiceImpl(event.getLoader());
+        new CreateApplicationPresenter();
         new AccountsHandler();
     }
 

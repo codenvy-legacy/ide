@@ -39,7 +39,7 @@ import java.util.List;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-@Path("/ide/project")
+@Path("{ws-name}/project")
 public class ProjectPrepareService {
     @Inject
     private LocalPathResolver localPathResolver;

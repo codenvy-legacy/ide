@@ -38,7 +38,7 @@ import java.util.List;
 
 public class GoogleContactsService {
     /** Base url. */
-    private static final String BASE_URL = "/ide/googlecontacts";
+    private static final String BASE_URL = Utils.getWorkspaceName() + "/googlecontacts";
 
     /** Get all user's contacts method's path. */
     private static final String ALL = BASE_URL + "/all";
@@ -67,7 +67,7 @@ public class GoogleContactsService {
      */
     public GoogleContactsService() {
         this.loader = IDELoader.get();
-        this.restContext = Utils.getRestContext();
+        this.restContext = restContext;
     }
 
     /** @see org.exoplatform.ide.client.framework.invite.GoogleContactsService#getContacts(org.exoplatform.gwtframework.commons.rest

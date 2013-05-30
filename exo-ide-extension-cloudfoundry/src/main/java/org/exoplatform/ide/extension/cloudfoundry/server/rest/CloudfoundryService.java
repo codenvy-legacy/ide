@@ -44,7 +44,7 @@ import java.util.Map;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/cloudfoundry")
+@Path("{ws-name}/cloudfoundry")
 public class CloudfoundryService {
     private static final Log LOG = ExoLogger.getLogger(CloudfoundryService.class);
 

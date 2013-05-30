@@ -33,7 +33,7 @@ import java.util.Map;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/aws/ec2")
+@Path("{ws-name}/aws/ec2")
 public class EC2Service {
     @Inject
     private EC2 ec2;

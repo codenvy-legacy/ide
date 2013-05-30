@@ -28,6 +28,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
@@ -49,9 +50,12 @@ import java.util.Set;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/ssh-keys")
+@Path("{ws-name}/ssh-keys")
 public class KeyService {
     private final SshKeyStore keyStore;
+    
+    @PathParam("ws-name")
+    private String wsName; 
 
     public KeyService(SshKeyStore keyStore) {
         this.keyStore = keyStore;
@@ -172,10 +176,10 @@ public class KeyService {
                     String getPublicKeyUrl = null;
                     if (publicKeyExists) {
                         getPublicKeyUrl =
-                                          uriInfo.getBaseUriBuilder().path(getClass()).queryParam("host", host).build().toString();
+                                          uriInfo.getBaseUriBuilder().path(getClass()).queryParam("host", host).build(wsName).toString();
                     }
                     String removeKeysUrl =
-                                           uriInfo.getBaseUriBuilder().path(getClass(), "removeKeys").queryParam("host", host).build()
+                                           uriInfo.getBaseUriBuilder().path(getClass(), "removeKeys").queryParam("host", host).build(wsName)
                                                   .toString();
 
                     result.add(new KeyItem(host, getPublicKeyUrl, removeKeysUrl));

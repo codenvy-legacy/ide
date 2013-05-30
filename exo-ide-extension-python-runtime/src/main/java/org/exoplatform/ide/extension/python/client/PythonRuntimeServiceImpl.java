@@ -27,6 +27,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.python.shared.ApplicationInstance;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
@@ -35,16 +36,19 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @version $Id: Jun 20, 2012 3:16:10 PM anya $
  */
 public class PythonRuntimeServiceImpl extends PythonRuntimeService {
-    private static final String LOGS = "/ide/python/runner/logs";
+    
+    private static final String BASE_URL = "/python/runner";
+    
+    private static final String LOGS = BASE_URL + "/logs";
 
     private String restContext;
 
-    private static final String RUN_APPLICATION = "/ide/python/runner/run";
+    private static final String RUN_APPLICATION = BASE_URL + "/run";
 
-    private static final String STOP_APPLICATION = "/ide/python/runner/stop";
+    private static final String STOP_APPLICATION = BASE_URL + "/stop";
 
-    public PythonRuntimeServiceImpl(String restContext) {
-        this.restContext = restContext;
+    public PythonRuntimeServiceImpl(String restContext, String wsName) {
+        this.restContext = restContext + wsName;
     }
 
     /**

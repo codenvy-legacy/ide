@@ -1,0 +1,218 @@
+/**
+ * Copyright (C) 2012 eXo Platform SAS.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+}
+
+body {
+    background-color: #ebebeb;
+    overflow: hidden;
+}
+
+.gwt-TextBox {
+    border-color: #ABADB3 #DBDFE5 #DBDFE5;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.default-cursor {
+    cursor: default;
+}
+
+.gwt-PopupPanelGlass {
+    background-color: #000000;
+    opacity: 0.05;
+}
+
+.gwt-TextBox:FOCUS {
+    border-color: #5678AC #AFC6E2 #C0D7EC;
+}
+
+/*
+Add shadow to dialog boxes and menus
+*/
+.gwt-DialogBox {
+    -moz-box-shadow: 10px 10px 10px 0 #C8C8C8 !important;
+    -webkit-box-shadow: 10px 10px 10px 0 #C8C8C8 !important;
+    box-shadow: 10px 10px 10px 0 #C8C8C8 !important;
+}
+
+.exo-popupMenuMain {
+    -moz-box-shadow: 7px 7px 10px 0 #C8C8C8 !important;
+    -webkit-box-shadow: 7px 7px 10px 0 #C8C8C8 !important;
+    box-shadow: 7px 7px 10px 0 #C8C8C8 !important;
+}
+
+/*
+.imageButtonPanel
+{
+	-moz-box-shadow: 0px 0px 2px 0 #C8C8C8 !important;
+	-webkit-box-shadow: 0px 0px 2px 0 #C8C8C8 !important;
+	box-shadow: 2px 2px 2px 0 #DDDDDD !important;
+}
+*/
+
+.DevTool_contentEditorBorder {
+    border: 1px solid #A7ABB4;
+}
+
+.UploadFile-FileSelect {
+    cursor: hand;
+}
+
+.ide-label {
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-size: 11px;
+    font-weight: normal;
+    font-style: normal;
+}
+
+.ide-table-row-text {
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+}
+
+/*
+CUSTOMIZE TOOLBAR
+*/
+.exo-customizeToolbar-delimiter, .exo-customizeToolbar-spacer, .exo-customizeToolbar-commandGroup {
+    width: 10px;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-size: 11px;
+    font-weight: normal;
+    font-style: normal;
+}
+
+.exo-customizeToolbar-delimiter {
+    color: blue;
+}
+
+.exo-customizeToolbar-spacer {
+    color: red;
+}
+
+.exo-customizeToolbar-commandGroup {
+    color: #333333;
+}
+
+.exo-cutomizeHotKey-label-error {
+    color: #db0000;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.exo-cutomizeHotKey-label-info {
+    color: #0059bc;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+/****************************************************************************************
+ AUTOCOMPLETE FORM
+ 
+ style prefix: exo-auto-
+ ****************************************************************************************/
+.exo-autocomplete-panel {
+    background-color: #FFFFFF;
+    border: #A7ABB4 1px solid;
+}
+
+.exo-autocomplete-edit, .exo-autocomplete-list-item, .exo-autocomplete-list-item-overed, .exo-autocomplete-list-item-selected {
+    background-color: #FFFFFF;
+    font-family: 'Menlo', 'Monaco', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro', monospace;
+    font-size: 10pt;
+    border: 0 none;
+    padding: 0px;
+}
+
+.exo-autocomplete-list-item TBODY TR TD DIV, .exo-autocomplete-list-item-overed TBODY TR TD DIV, .exo-autocomplete-list-item-selected TBODY TR TD DIV {
+    font-family: 'Menlo', 'Monaco', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro', monospace;
+    font-size: 10pt;
+    border: 0 none;
+    padding: 0px;
+}
+
+.exo-autocomplete-edit {
+    height: 20px;
+    border-bottom: #A7ABB4 1px solid;
+}
+
+.exo-autocomplete-list {
+    border: 0 none;
+    background: white;
+}
+
+.exo-autocomplete-list option {
+    cursor: default;
+    font-family: 'Menlo', 'Monaco', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro', monospace;
+    font-size: 10pt;
+    color: #333333;
+}
+
+.exo-autocomplete-list-item, .exo-autocomplete-list-item-selected, .exo-autocomplete-list-item-overed {
+    height: 20px;
+    border-collapse: collapse;
+    cursor: default;
+    outline: none;
+}
+
+.exo-autocomplete-list-item-selected {
+    background-image: url("images/autoComplete/row-selected.png");
+    background-repeat: repeat-x;
+}
+
+.exo-autocomplete-list-item-overed {
+    background-image: url("images/autoComplete/row_over.png");
+    background-repeat: repeat-x;
+}
+
+.exo-autocomplete-description {
+    border: #A7ABB4 1px solid;
+    background-color: #e0e9ee;
+    font-family: 'Menlo', 'Monaco', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro', monospace;
+    font-size: 10pt;
+    overflow: scroll;
+}
+
+.exo-autocomplete-list-variable {
+    background-color: #ecbeae;
+}
+
+.exo-autocomplete-list-function {
+    background-color: #b1d4b4;
+}
+
+.exo-autocomplete-list-keyword {
+    background-color: #FFFFFF;
+}
+
+.exo-autocomplete-list-template {
+    background-color: #efebb1;
+}
+
+.exo-rename-warning-msg {
+    color: #7d7d7d;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-size: 12px;
+}

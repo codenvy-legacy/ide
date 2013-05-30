@@ -36,7 +36,7 @@ import java.util.Set;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-@Path("ide/collaboration/chat")
+@Path("{ws-name}/collaboration/chat")
 public class ChatService {
     @Inject
     private ProjectUsers projectUsers;

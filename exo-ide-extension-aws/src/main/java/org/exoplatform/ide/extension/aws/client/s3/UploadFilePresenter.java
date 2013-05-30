@@ -217,7 +217,7 @@ public class UploadFilePresenter implements ViewClosedHandler {
             mimeType = null;
         }
         String name = display.getFileNameField().getValue();
-        String uploadUrl = Utils.getRestContext() + "/ide/aws/s3/objects/upload/" + s3Bucket;
+        String uploadUrl = Utils.getRestContext() +  Utils.getWorkspaceName() + "/aws/s3/objects/upload/" + s3Bucket;
         display.getUploadForm().setAction(uploadUrl);
         display.setMimeTypeHiddedField(mimeType);
         display.setNameHiddedField(name);

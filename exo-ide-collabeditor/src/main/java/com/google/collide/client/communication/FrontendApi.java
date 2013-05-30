@@ -28,6 +28,7 @@ import com.google.collide.client.status.StatusManager;
 import com.google.collide.dto.*;
 import com.google.collide.dto.shared.JsonFieldConstants;
 
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.FrontendApi.ApiCallback;
 import org.exoplatform.ide.client.framework.websocket.FrontendApi.RequestResponseApi;
 import org.exoplatform.ide.client.framework.websocket.FrontendApi.SendApi;
@@ -106,21 +107,21 @@ public class FrontendApi {
    */
 
     public final RequestResponseApi<ClientToServerDocOp, ServerToClientDocOps> MUTATE_FILE =
-            makeApi("ide/collab_editor/documents/mutate");
+            makeApi(Utils.getWorkspaceName() + "/collab_editor/documents/mutate");
 
     /**
      * Lets a client re-synchronize with the server's version of a file after being offline or missing
      * a doc op broadcast.
      */
     public final RequestResponseApi<RecoverFromMissedDocOps, RecoverFromMissedDocOpsResponse>
-            RECOVER_FROM_MISSED_DOC_OPS = makeApi("ide/collab_editor/documents/recoverMissedDocop");
+            RECOVER_FROM_MISSED_DOC_OPS = makeApi(Utils.getWorkspaceName() + "/collab_editor/documents/recoverMissedDocop");
 
     /** Get the contents of a file and provisions an edit session so that it can be edited. */
     public final RequestResponseApi<GetFileContents, GetFileContentsResponse> GET_FILE_CONTENTS =
-            makeApi("ide/collab_editor/documents/open");
+            makeApi(Utils.getWorkspaceName() + "/collab_editor/documents/open");
 
     public final RequestResponseApi<GetEditSessionCollaborators, GetEditSessionCollaboratorsResponse> GET_FILE_COLLABORATORS =
-            makeApi("ide/collab_editor/documents/collaborators");
+            makeApi(Utils.getWorkspaceName() + "/collab_editor/documents/collaborators");
 
 //  /**
 //   * Get a subdirectory. Just the subtree rooted at that path. No associated meta data.
@@ -138,17 +139,17 @@ public class FrontendApi {
 //  public final SendApi<KeepAlive> KEEP_ALIVE = makeApi("participants/keepAlive");
 
     /** Send a message that user closed file. */
-    public final SendApi<CloseEditor> CLOSE_EDITOR = makeApi("ide/collab_editor/documents/close");
+    public final SendApi<CloseEditor> CLOSE_EDITOR = makeApi(Utils.getWorkspaceName() + "/collab_editor/documents/close");
 
     /** Send a message that user closed file. */
-    public final SendApi<FileOperationNotification> FILE_OPERATION_NOTIFY = makeApi("ide/collab_editor/communication/notify/fileoperation");
+    public final SendApi<FileOperationNotification> FILE_OPERATION_NOTIFY = makeApi(Utils.getWorkspaceName() + "/collab_editor/communication/notify/fileoperation");
 
     public final RequestResponseApi<GetOpenendFilesInWorkspace, GetOpenedFilesInWorkspaceResponse> GET_ALL_FILES =
-            makeApi("ide/collab_editor/documents/all");
+            makeApi(Utils.getWorkspaceName() + "/collab_editor/documents/all");
 
     /** Gets the list of workspace participants. */
     public final RequestResponseApi<GetWorkspaceParticipants, GetWorkspaceParticipantsResponse>
-            GET_WORKSPACE_PARTICIPANTS = makeApi("ide/collab_editor/participants/list");
+            GET_WORKSPACE_PARTICIPANTS = makeApi(Utils.getWorkspaceName() + "/collab_editor/participants/list");
 
 //  /** Requests that we get updated information about a workspace's run targets. */
 //  public final SendApi<UpdateWorkspaceRunTargets> UPDATE_WORKSPACE_RUN_TARGETS =

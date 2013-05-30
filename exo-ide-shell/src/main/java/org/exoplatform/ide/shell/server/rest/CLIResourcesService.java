@@ -39,7 +39,7 @@ import java.util.Set;
  */
 // Never be binded to RESTful framework by using eXoContainer.
 // This service must works as per-request resource.
-@Path("ide/cli")
+@Path("{ws-name}/cli")
 public class CLIResourcesService {
     @javax.inject.Inject
     private ResourceBinder binder;

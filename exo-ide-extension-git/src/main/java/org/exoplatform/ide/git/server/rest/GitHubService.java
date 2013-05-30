@@ -46,7 +46,7 @@ import java.util.Map;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: GithubSamplesService.java Aug 29, 2011 9:59:02 AM vereshchaka $
  */
-@Path("ide/github")
+@Path("{ws-name}/github")
 public class GitHubService {
     @Inject
     OAuthTokenProvider oauthTokenProvider;

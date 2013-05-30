@@ -28,6 +28,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
 import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.login.Credentials;
@@ -41,7 +42,7 @@ import java.util.List;
  */
 public class BeanstalkClientServiceImpl extends BeanstalkClientService {
 
-    private static final String BASE_URL = "/ide/aws/beanstalk";
+    private static final String BASE_URL = Utils.getWorkspaceName() + "/aws/beanstalk";
 
     private static final String LOGIN = BASE_URL + "/login";
 
@@ -95,9 +96,9 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService {
     /** Loader to be displayed. */
     private Loader loader;
 
-    public BeanstalkClientServiceImpl(String restContext, Loader loader) {
+    public BeanstalkClientServiceImpl(Loader loader) {
         this.loader = loader;
-        this.restServiceContext = restContext;
+        this.restServiceContext = Utils.getRestContext();
     }
 
     /**

@@ -52,7 +52,7 @@ import java.util.Map;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/heroku")
+@Path("{ws-name}/heroku")
 public class HerokuService {
     private static final Log LOG = ExoLogger.getLogger(HerokuService.class);
 

@@ -72,7 +72,7 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
      */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        new HerokuClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader(), IDE.messageBus());
+        new HerokuClientServiceImpl(event.getLoader(), IDE.messageBus());
     }
 
     /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
