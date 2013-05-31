@@ -16,10 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.dtogen.server;
+package com.codenvy.ide.dto.server;
 
-import com.codenvy.ide.dtogen.shared.RoutableDto;
-import com.codenvy.ide.dtogen.shared.ServerError;
+import com.codenvy.ide.dto.shared.RoutableDto;
+import com.codenvy.ide.dto.shared.ServerError;
+import com.codenvy.ide.dto.shared.RoutableDto;
+import com.codenvy.ide.dto.shared.ServerError;
 import com.google.gson.*;
 
 /**

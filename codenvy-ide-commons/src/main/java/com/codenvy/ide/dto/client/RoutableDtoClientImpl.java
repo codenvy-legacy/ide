@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.dtogen.client;
+package com.codenvy.ide.dto.client;
 
-import com.codenvy.ide.dtogen.shared.RoutableDto;
+import com.codenvy.ide.dto.shared.RoutableDto;
+import com.codenvy.ide.dto.shared.RoutableDto;
 import com.codenvy.ide.json.js.Jso;
 
 /** Client side base class for all DTO payload implementations. */
@@ -33,7 +34,7 @@ public abstract class RoutableDtoClientImpl extends Jso implements RoutableDto {
 
     /** @return the type of the JsonMessage so the client knows how to route it. */
     public final native int getType() /*-{
-        return this[@com.codenvy.ide.dtogen.client.RoutableDtoClientImpl::TYPE_FIELD] ||
-            @com.codenvy.ide.dtogen.client.RoutableDtoClientImpl::NON_ROUTABLE_TYPE;
+        return this[@com.codenvy.ide.dto.client.RoutableDtoClientImpl::TYPE_FIELD] ||
+            @com.codenvy.ide.dto.client.RoutableDtoClientImpl::NON_ROUTABLE_TYPE;
     }-*/;
 }

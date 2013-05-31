@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.dtogen.server;
+package com.codenvy.ide.dto.server;
 
-import com.codenvy.ide.dtogen.shared.RoutableDto;
+import com.codenvy.ide.dto.shared.RoutableDto;
+import com.codenvy.ide.dto.shared.RoutableDto;
 
 /** Server side base class for all DTO implementations. */
 public abstract class RoutableDtoServerImpl implements RoutableDto {

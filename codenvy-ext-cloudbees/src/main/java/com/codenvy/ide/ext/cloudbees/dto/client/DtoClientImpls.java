@@ -31,7 +31,7 @@ public class DtoClientImpls {
   public static final String CLIENT_SERVER_PROTOCOL_HASH = "7072ac40abbeb62431939d0a6cc5c69e49306f7a";
 
 
-  public static class ApplicationInfoImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo {
+  public static class ApplicationInfoImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo {
     protected ApplicationInfoImpl() {}
 
     @Override
@@ -195,7 +195,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CloudBeesAccountImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.cloudbees.shared.CloudBeesAccount {
+  public static class CloudBeesAccountImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.cloudbees.shared.CloudBeesAccount {
     protected CloudBeesAccountImpl() {}
 
     @Override
@@ -233,7 +233,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CloudBeesSshKeyImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.cloudbees.shared.CloudBeesSshKey {
+  public static class CloudBeesSshKeyImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.cloudbees.shared.CloudBeesSshKey {
     protected CloudBeesSshKeyImpl() {}
 
     @Override
@@ -285,7 +285,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CloudBeesUserImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.cloudbees.shared.CloudBeesUser {
+  public static class CloudBeesUserImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.cloudbees.shared.CloudBeesUser {
     protected CloudBeesUserImpl() {}
 
     @Override
@@ -421,7 +421,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CredentialsImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.cloudbees.shared.Credentials {
+  public static class CredentialsImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.cloudbees.shared.Credentials {
     protected CredentialsImpl() {}
 
     @Override

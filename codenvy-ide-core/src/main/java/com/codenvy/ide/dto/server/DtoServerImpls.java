@@ -21,7 +21,7 @@
 // GENERATED SOURCE. DO NOT EDIT.
 package com.codenvy.ide.dto.server;
 
-import com.codenvy.ide.dtogen.server.JsonSerializable;
+import com.codenvy.ide.dto.server.JsonSerializable;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;

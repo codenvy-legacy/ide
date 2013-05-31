@@ -12,19 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.dtogen.shared;
+package com.codenvy.ide.dto.shared;
 
-/**
- * Tag interface for DTOs that are serialized to compact
- * (non human readable) JSON.
- * <p/>
- * <p>Compact JSON has array as a root element. As a consequence GSON library
- * throws an exception when you try do deserialize JSON containing compact
- * object as a root. Deserialize using {@link com.google.gson.JsonElement} in
- * such cases.
- * <p/>
- * <p>Note: try to eliminate enums and boolean fields in DTO to get better
- * serialized form density.
- */
-public interface CompactJsonDto {
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/** Annotation for associating a routing type with a dto interface. */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface RoutingType {
+    int type();
 }

@@ -173,7 +173,7 @@
                                     <goal>java</goal>
                                 </goals>
                                 <configuration>
-                                    <mainClass>com.codenvy.ide.dtogen.DtoGenerator</mainClass>
+                                    <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
                                     <arguments>
                                         <argument>--dto_jar=${project.build.directory}/${project.build.finalName}-shared.jar</argument>
                                         <argument>--gen_file_name=${server.dto}</argument>
@@ -189,7 +189,7 @@
                                     <goal>java</goal>
                                 </goals>
                                 <configuration>
-                                    <mainClass>com.codenvy.ide.dtogen.DtoGenerator</mainClass>
+                                    <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
                                     <arguments>
                                         <argument>--dto_jar=${project.build.directory}/${project.build.finalName}-shared.jar</argument>
                                         <argument>--gen_file_name=${client.dto}</argument>
@@ -269,7 +269,7 @@
                                     <goal>java</goal>
                                 </goals>
                                 <configuration>
-                                    <mainClass>com.codenvy.ide.dtogen.DtoGenerator</mainClass>
+                                    <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
                                     <arguments>
                                         <argument>--dto_jar=${project.build.directory}/${project.build.finalName}-dto.jar</argument>
                                         <argument>--gen_file_name=${server.dto}</argument>
@@ -285,7 +285,7 @@
                                     <goal>java</goal>
                                 </goals>
                                 <configuration>
-                                    <mainClass>com.codenvy.ide.dtogen.DtoGenerator</mainClass>
+                                    <mainClass>com.codenvy.ide.dto.DtoGenerator</mainClass>
                                     <arguments>
                                         <argument>--dto_jar=${project.build.directory}/${project.build.finalName}-dto.jar</argument>
                                         <argument>--gen_file_name=${client.dto}</argument>

@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.dtogen;
+package com.codenvy.ide.dto;
 
-import com.codenvy.ide.dtogen.shared.ClientToServerDto;
-import com.codenvy.ide.dtogen.shared.RoutableDto;
-import com.codenvy.ide.dtogen.shared.RoutingType;
-import com.codenvy.ide.dtogen.shared.ServerToClientDto;
+import com.codenvy.ide.dto.shared.ClientToServerDto;
+import com.codenvy.ide.dto.shared.RoutableDto;
+import com.codenvy.ide.dto.shared.RoutingType;
+import com.codenvy.ide.dto.shared.ServerToClientDto;
 import com.google.common.base.Preconditions;
 
 import java.util.*;
@@ -31,8 +31,8 @@ import java.util.*;
  * The directionality of the DTOs only affects whether or not we expose methods
  * to construct an instance of the DTO. We need both client and server versions
  * of all DTOs (irrespective of direction), but you aren't allowed to construct
- * a new {@link com.codenvy.ide.dtogen.shared.ServerToClientDto} on the client. And similarly, you aren't
- * allowed to construct a {@link com.codenvy.ide.dtogen.shared.ClientToServerDto} on the server.
+ * a new {@link com.codenvy.ide.dto.shared.ServerToClientDto} on the client. And similarly, you aren't
+ * allowed to construct a {@link com.codenvy.ide.dto.shared.ClientToServerDto} on the server.
  */
 public class DtoTemplate {
     public static class MalformedDtoInterfaceException extends RuntimeException {
@@ -57,7 +57,7 @@ public class DtoTemplate {
 
     /**
      * @return whether or not the specified interface implements
-     *         {@link com.codenvy.ide.dtogen.shared.ClientToServerDto}.
+     *         {@link com.codenvy.ide.dto.shared.ClientToServerDto}.
      */
     static boolean implementsClientToServerDto(Class<?> i) {
         return implementsInterface(i, ClientToServerDto.class);
@@ -65,7 +65,7 @@ public class DtoTemplate {
 
     /**
      * @return whether or not the specified interface implements
-     *         {@link com.codenvy.ide.dtogen.shared.ServerToClientDto}.
+     *         {@link com.codenvy.ide.dto.shared.ServerToClientDto}.
      */
     static boolean implementsServerToClientDto(Class<?> i) {
         return implementsInterface(i, ServerToClientDto.class);
@@ -90,7 +90,7 @@ public class DtoTemplate {
 
     /**
      * @return whether or not the specified interface implements
-     *         {@link com.codenvy.ide.dtogen.shared.RoutableDto}.
+     *         {@link com.codenvy.ide.dto.shared.RoutableDto}.
      */
     private static boolean implementsRoutableDto(Class<?> i) {
         return implementsInterface(i, RoutableDto.class);
@@ -203,7 +203,7 @@ public class DtoTemplate {
         builder.append(packageName);
         builder.append(";\n\n");
         if (isServerType) {
-            builder.append("import com.codenvy.ide.dtogen.server.JsonSerializable;\n");
+            builder.append("import JsonSerializable;\n");
             builder.append("\n");
             builder.append("import com.google.gson.Gson;\n");
             builder.append("import com.google.gson.GsonBuilder;\n");
@@ -246,7 +246,7 @@ public class DtoTemplate {
     }
 
     /**
-     * Extracts the {@link com.codenvy.ide.dtogen.shared.RoutingType} annotation to derive the stable
+     * Extracts the {@link com.codenvy.ide.dto.shared.RoutingType} annotation to derive the stable
      * routing type.
      */
     private int getRoutingId(Class<?> i) {

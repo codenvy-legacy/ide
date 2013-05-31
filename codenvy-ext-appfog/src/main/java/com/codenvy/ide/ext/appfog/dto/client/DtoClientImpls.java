@@ -31,7 +31,7 @@ public class DtoClientImpls {
   public static final String CLIENT_SERVER_PROTOCOL_HASH = "7b85fa888702f0f02b0846c79fc7c37f59da5391";
 
 
-  public static class AppfogApplicationImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.appfog.shared.AppfogApplication {
+  public static class AppfogApplicationImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.AppfogApplication {
     protected AppfogApplicationImpl() {}
 
     @Override
@@ -223,7 +223,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class AppfogApplicationResourcesImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.appfog.shared.AppfogApplicationResources {
+  public static class AppfogApplicationResourcesImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.AppfogApplicationResources {
     protected AppfogApplicationResourcesImpl() {}
 
     @Override
@@ -261,7 +261,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class AppfogApplicationStatisticsImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.appfog.shared.AppfogApplicationStatistics {
+  public static class AppfogApplicationStatisticsImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.AppfogApplicationStatistics {
     protected AppfogApplicationStatisticsImpl() {}
 
     @Override
@@ -439,7 +439,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class AppfogProvisionedServiceImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.appfog.shared.AppfogProvisionedService {
+  public static class AppfogProvisionedServiceImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.AppfogProvisionedService {
     protected AppfogProvisionedServiceImpl() {}
 
     @Override
@@ -519,7 +519,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class AppfogServicesImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.appfog.shared.AppfogServices {
+  public static class AppfogServicesImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.AppfogServices {
     protected AppfogServicesImpl() {}
 
     @Override
@@ -557,7 +557,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class AppfogSystemServiceImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.appfog.shared.AppfogSystemService {
+  public static class AppfogSystemServiceImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.AppfogSystemService {
     protected AppfogSystemServiceImpl() {}
 
     @Override
@@ -637,7 +637,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class ApplicationMetaInfoImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.appfog.shared.ApplicationMetaInfo {
+  public static class ApplicationMetaInfoImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.ApplicationMetaInfo {
     protected ApplicationMetaInfoImpl() {}
 
     @Override
@@ -703,7 +703,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CreateAppfogApplicationRequestImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.appfog.shared.CreateAppfogApplicationRequest {
+  public static class CreateAppfogApplicationRequestImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.CreateAppfogApplicationRequest {
     protected CreateAppfogApplicationRequestImpl() {}
 
     @Override
@@ -867,7 +867,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class FrameworkImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.appfog.shared.Framework {
+  public static class FrameworkImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.Framework {
     protected FrameworkImpl() {}
 
     @Override
@@ -947,7 +947,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class InfraImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.appfog.shared.Infra {
+  public static class InfraImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.Infra {
     protected InfraImpl() {}
 
     @Override
@@ -985,7 +985,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class InfraDetailImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.appfog.shared.InfraDetail {
+  public static class InfraDetailImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.InfraDetail {
     protected InfraDetailImpl() {}
 
     @Override
@@ -1079,7 +1079,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class InstanceImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.appfog.shared.Instance {
+  public static class InstanceImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.Instance {
     protected InstanceImpl() {}
 
     @Override
@@ -1145,7 +1145,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class RuntimeImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.appfog.shared.Runtime {
+  public static class RuntimeImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.Runtime {
     protected RuntimeImpl() {}
 
     @Override
@@ -1197,7 +1197,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class StagingImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.appfog.shared.Staging {
+  public static class StagingImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.Staging {
     protected StagingImpl() {}
 
     @Override
@@ -1235,7 +1235,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class SystemInfoImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.appfog.shared.SystemInfo {
+  public static class SystemInfoImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.SystemInfo {
     protected SystemInfoImpl() {}
 
     @Override
@@ -1357,7 +1357,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class SystemResourcesImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.appfog.shared.SystemResources {
+  public static class SystemResourcesImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.appfog.shared.SystemResources {
     protected SystemResourcesImpl() {}
 
     @Override

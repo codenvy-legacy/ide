@@ -1,7 +1,8 @@
-package com.codenvy.ide.dtogen;
+package com.codenvy.ide.dto;
 
-import com.codenvy.ide.dtogen.shared.CompactJsonDto;
-import com.codenvy.ide.dtogen.shared.SerializationIndex;
+import com.codenvy.ide.dto.shared.SerializationIndex;
+import com.codenvy.ide.dto.shared.CompactJsonDto;
+import com.codenvy.ide.dto.shared.SerializationIndex;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonStringMap;
 import com.google.common.base.Preconditions;
@@ -210,8 +211,8 @@ abstract class DtoImpl {
     /**
      * Returns public methods specified in DTO interface.
      * <p/>
-     * <p>For compact DTO (see {@link com.codenvy.ide.dtogen.shared.CompactJsonDto}) methods are ordered
-     * corresponding to {@link com.codenvy.ide.dtogen.shared.SerializationIndex} annotation.
+     * <p>For compact DTO (see {@link com.codenvy.ide.dto.shared.CompactJsonDto}) methods are ordered
+     * corresponding to {@link com.codenvy.ide.dto.shared.SerializationIndex} annotation.
      * <p/>
      * <p>Gaps in index sequence are filled with {@code null}s.
      */

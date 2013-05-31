@@ -28,10 +28,10 @@ public class DtoClientImpls {
 
   private  DtoClientImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "e63e8cc336ee42771028046a61f904a7d33323f8";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "bb7277d9975e8bd4db7e8f077379a6290871270f";
 
 
-  public static class ApplicationMetaInfoImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.ApplicationMetaInfo {
+  public static class ApplicationMetaInfoImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.ApplicationMetaInfo {
     protected ApplicationMetaInfoImpl() {}
 
     @Override
@@ -97,7 +97,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CloudFoundryApplicationImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication {
+  public static class CloudFoundryApplicationImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication {
     protected CloudFoundryApplicationImpl() {}
 
     @Override
@@ -275,7 +275,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CloudFoundryApplicationResourcesImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplicationResources {
+  public static class CloudFoundryApplicationResourcesImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplicationResources {
     protected CloudFoundryApplicationResourcesImpl() {}
 
     @Override
@@ -313,7 +313,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CloudFoundryServicesImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices {
+  public static class CloudFoundryServicesImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices {
     protected CloudFoundryServicesImpl() {}
 
     @Override
@@ -351,7 +351,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CloudfoundryApplicationStatisticsImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.CloudfoundryApplicationStatistics {
+  public static class CloudfoundryApplicationStatisticsImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.CloudfoundryApplicationStatistics {
     protected CloudfoundryApplicationStatisticsImpl() {}
 
     @Override
@@ -529,7 +529,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CreateApplicationRequestImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.CreateApplicationRequest {
+  public static class CreateApplicationRequestImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.CreateApplicationRequest {
     protected CreateApplicationRequestImpl() {}
 
     @Override
@@ -693,7 +693,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CredentialsImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.Credentials {
+  public static class CredentialsImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.Credentials {
     protected CredentialsImpl() {}
 
     @Override
@@ -745,7 +745,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class FrameworkImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.Framework {
+  public static class FrameworkImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.Framework {
     protected FrameworkImpl() {}
 
     @Override
@@ -825,7 +825,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class InstanceImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.Instance {
+  public static class InstanceImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.Instance {
     protected InstanceImpl() {}
 
     @Override
@@ -891,7 +891,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class ProvisionedServiceImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService {
+  public static class ProvisionedServiceImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService {
     protected ProvisionedServiceImpl() {}
 
     @Override
@@ -957,7 +957,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class RuntimeImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.Runtime {
+  public static class RuntimeImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.Runtime {
     protected RuntimeImpl() {}
 
     @Override
@@ -1009,7 +1009,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class StagingImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.Staging {
+  public static class StagingImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.Staging {
     protected StagingImpl() {}
 
     @Override
@@ -1047,7 +1047,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class SystemInfoImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.SystemInfo {
+  public static class SystemInfoImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.SystemInfo {
     protected SystemInfoImpl() {}
 
     @Override
@@ -1169,7 +1169,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class SystemResourcesImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.SystemResources {
+  public static class SystemResourcesImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.SystemResources {
     protected SystemResourcesImpl() {}
 
     @Override
@@ -1221,7 +1221,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class SystemServiceImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.SystemService {
+  public static class SystemServiceImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.cloudfoundry.shared.SystemService {
     protected SystemServiceImpl() {}
 
     @Override

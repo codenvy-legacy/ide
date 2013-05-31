@@ -31,7 +31,7 @@ public class DtoClientImpls {
   public static final String CLIENT_SERVER_PROTOCOL_HASH = "5bcd6573f4b7af4db3aaa4851ea8a94304b99c9b";
 
 
-  public static class BuildStatusImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.extension.maven.shared.BuildStatus {
+  public static class BuildStatusImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.extension.maven.shared.BuildStatus {
     protected BuildStatusImpl() {}
 
     @Override

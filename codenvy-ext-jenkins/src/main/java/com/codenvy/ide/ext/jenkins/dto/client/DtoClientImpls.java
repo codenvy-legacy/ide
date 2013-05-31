@@ -31,7 +31,7 @@ public class DtoClientImpls {
   public static final String CLIENT_SERVER_PROTOCOL_HASH = "5cf85eb2c8f7381e1458a20a0069a4d706be9198";
 
 
-  public static class JobImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.jenkins.shared.Job {
+  public static class JobImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.jenkins.shared.Job {
     protected JobImpl() {}
 
     @Override
@@ -83,7 +83,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class JobStatusImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.jenkins.shared.JobStatus {
+  public static class JobStatusImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.jenkins.shared.JobStatus {
     protected JobStatusImpl() {}
 
     @Override

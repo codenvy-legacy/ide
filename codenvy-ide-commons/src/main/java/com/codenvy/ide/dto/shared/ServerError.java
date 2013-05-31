@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.dtogen.shared;
+package com.codenvy.ide.dto.shared;
 
 /** Notifies the client of an error on the frontend. */
 public interface ServerError extends ServerToClientDto {

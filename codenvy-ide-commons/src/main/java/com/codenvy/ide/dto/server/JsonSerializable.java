@@ -12,16 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.dtogen.shared;
+package com.codenvy.ide.dto.server;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.google.gson.JsonElement;
 
-/** Annotation for associating a routing type with a dto interface. */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface RoutingType {
-    int type();
+/**
+ * An entity that may serialize itself to JSON.
+ * Now used only for server-side DTOs.
+ */
+public interface JsonSerializable {
+
+    /** Serializes DTO to JSON format. */
+    String toJson();
+
+    JsonElement toJsonElement();
 }

@@ -12,18 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.dtogen.server;
-
-import com.google.gson.JsonElement;
+package com.codenvy.ide.dto.shared;
 
 /**
- * An entity that may serialize itself to JSON.
- * Now used only for server-side DTOs.
+ * Tag interface for DTOs that are serialized to compact
+ * (non human readable) JSON.
+ * <p/>
+ * <p>Compact JSON has array as a root element. As a consequence GSON library
+ * throws an exception when you try do deserialize JSON containing compact
+ * object as a root. Deserialize using {@link com.google.gson.JsonElement} in
+ * such cases.
+ * <p/>
+ * <p>Note: try to eliminate enums and boolean fields in DTO to get better
+ * serialized form density.
  */
-public interface JsonSerializable {
-
-    /** Serializes DTO to JSON format. */
-    String toJson();
-
-    JsonElement toJsonElement();
+public interface CompactJsonDto {
 }

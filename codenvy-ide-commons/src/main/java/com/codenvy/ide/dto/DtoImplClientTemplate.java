@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.dtogen;
+package com.codenvy.ide.dto;
 
-import com.codenvy.ide.dtogen.shared.ClientToServerDto;
-import com.codenvy.ide.dtogen.shared.RoutableDto;
-import com.codenvy.ide.dtogen.shared.SerializationIndex;
-import com.codenvy.ide.dtogen.shared.ServerToClientDto;
+import com.codenvy.ide.dto.shared.ClientToServerDto;
+import com.codenvy.ide.dto.shared.RoutableDto;
+import com.codenvy.ide.dto.shared.SerializationIndex;
+import com.codenvy.ide.dto.shared.ServerToClientDto;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonStringMap;
 import com.google.common.base.Preconditions;
@@ -30,7 +30,7 @@ import java.util.List;
 /** Generates the source code for a generated Client DTO impl. */
 public class DtoImplClientTemplate extends DtoImpl {
 
-    private static final String ROUTABLE_DTO_IMPL = RoutableDto.class.getPackage().getName().replace("dtogen.shared", "dtogen.client") +
+    private static final String ROUTABLE_DTO_IMPL = RoutableDto.class.getPackage().getName().replace("dto.shared", "dto.client") +
                                                     ".RoutableDtoClientImpl";
 
     private static final String JSO_TYPE = "com.codenvy.ide.json.js.Jso";

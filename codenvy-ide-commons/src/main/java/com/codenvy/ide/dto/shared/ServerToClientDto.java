@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.dtogen.shared;
+package com.codenvy.ide.dto.shared;
 
 /**
- * Tag interface for DTOs that are meant to be sent from the client to the
- * server.
+ * Tag interface for DTOs that are meant to be sent from the server to the
+ * client.
  */
-public interface ClientToServerDto extends RoutableDto {
+public interface ServerToClientDto extends RoutableDto {
 }
