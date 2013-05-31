@@ -22,6 +22,7 @@ import com.google.gwt.inject.client.Ginjector;
    com.codenvy.ide.core.inject.CoreGinModule.class ,
    com.codenvy.ide.ext.openshift.client.inject.OpenShiftGinModule.class ,
    com.codenvy.ide.ext.jenkins.client.inject.JenkinsGinModule.class ,
+   com.codenvy.ide.ext.java.jdi.client.inject.JavaRuntimeGinModule.class ,
    com.codenvy.ide.client.inject.IDEClientModule.class 
 })
 public interface IDEInjector extends Ginjector
