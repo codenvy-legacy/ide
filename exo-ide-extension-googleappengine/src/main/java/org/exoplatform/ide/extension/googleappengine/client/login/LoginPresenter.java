@@ -86,9 +86,8 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, JsPopUpO
      */
     @Override
     public void onLogin(LoginEvent event) {
-        String authUrl = Utils.getAuthorizationContext()
-                         + "/" + Utils.getWorkspaceName() 
-                         + "/oauth/authenticate?oauth_provider=google"
+        String authUrl = Utils.getAuthorizationContext()                        
+                         + "/ide/oauth/authenticate?oauth_provider=google"
                          + "&scope=https://www.googleapis.com/auth/appengine.admin"
                          + "&userId=" + IDE.userId + "&redirect_after_login=/w/" + Utils.getWorkspaceName();
                          
