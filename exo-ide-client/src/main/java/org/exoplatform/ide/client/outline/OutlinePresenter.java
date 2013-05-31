@@ -266,19 +266,20 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
         }
     }
 
-    public void tokenListReceived(final List<TokenBeenImpl> tokens) {
-        display.setValue(tokens);
+    private void tokenListReceived(final List<TokenBeenImpl> tokenList) {
+        this.tokens = tokenList;
+        display.setValue(tokenList);
 
         // TODO Solution for updating tree (flush, refresh doesn't help):
-        if (tokens != null && !tokens.isEmpty()) {
-            selectToken(tokens.get(0));
+        if (tokenList != null && !tokenList.isEmpty()) {
+            selectToken(tokenList.get(0));
         }
 
         if (activeEditor != null) {
             Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                 @Override
                 public void execute() {
-                    selectTokenByRow(tokens);
+                    selectTokenByRow(tokenList);
                 }
             });
         }
@@ -289,11 +290,10 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
         if (event.getTokenList() == null || display == null || !activeEditor.getId().equals(event.getEditorId())) {
             return;
         }
-
-        tokens = (List<TokenBeenImpl>)event.getTokenList();
-        tokenListReceived(tokens);
+        tokenListReceived((List<TokenBeenImpl>)event.getTokenList());
     }
 
+    @Override
     public void onEditorContentChanged(EditorContentChangedEvent event) {
         if (display == null || !canShowOutline()) {
             return;
@@ -313,6 +313,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
         return activeEditor.isCapable(EditorCapability.OUTLINE);
     }
 
+    @Override
     public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
         activeFile = event.getFile();
         activeEditor = event.getEditor();
@@ -382,6 +383,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
     /** @see org.exoplatform.gwtframework.editor.event.EditorCursorActivityHandler#onEditorCursorActivity(org.exoplatform.gwtframework
      * .editor.event.EditorCursorActivityEvent) */
+    @Override
     public void onEditorCursorActivity(EditorCursorActivityEvent event) {
         if (display == null) {
             return;
