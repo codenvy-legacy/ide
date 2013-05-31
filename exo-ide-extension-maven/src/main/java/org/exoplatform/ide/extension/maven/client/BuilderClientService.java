@@ -25,7 +25,7 @@ import org.exoplatform.ide.extension.maven.shared.BuildStatus;
 
 /**
  * Client service for Maven builder.
- *
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuilderClientService.java Feb 17, 2012 12:36:01 PM azatsarynnyy $
  */
@@ -36,7 +36,7 @@ public abstract class BuilderClientService {
 
     /**
      * Return the instance of {@link BuilderClientService}.
-     *
+     * 
      * @return maven builder client service
      */
     public static BuilderClientService getInstance() {
@@ -49,86 +49,69 @@ public abstract class BuilderClientService {
 
     /**
      * Start new build.
-     *
-     * @param projectId
-     *         identifier of the project we want to send for build
-     * @param vfsId
-     *         identifier of the virtual file system
-     * @param callback
-     *         callback
+     * 
+     * @param projectId identifier of the project we want to send for build
+     * @param vfsId identifier of the virtual file system
+     * @param callback callback
      * @throws RequestException
      */
     public abstract void build(String projectId, String vfsId, String projectName, String projectType,
-                               AsyncRequestCallback<StringBuilder> callback)
-            throws RequestException;
+                               AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 
     /**
      * Start new build and publish.
-     *
-     * @param projectId
-     *         identifier of project we want to send for build
-     * @param vfsId
-     *         identifier of virtual file system
-     * @param callback
-     *         callback
+     * 
+     * @param projectId identifier of project we want to send for build
+     * @param vfsId identifier of virtual file system
+     * @param callback callback
      * @throws RequestException
      */
     public abstract void buildAndPublish(String projectId, String vfsId, String projectName, String projectType,
-                                         AsyncRequestCallback<StringBuilder> callback)
-            throws RequestException;
+                                         AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 
     /**
      * Cancel previously launched build.
-     *
-     * @param buildid
-     *         ID of build
-     * @param callback
-     *         callback
+     * 
+     * @param buildid ID of build
+     * @param callback callback
+     * @param projectName project name
+     * @param projectType project type
      * @throws RequestException
      */
-    public abstract void cancel(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+    public abstract void cancel(String buildid, String projectName, String projectType, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 
     /**
      * Check current status of previously launched build.
-     *
-     * @param buildid
-     *         identifier of build
-     * @param callback
-     *         callback
+     * 
+     * @param buildid identifier of build
+     * @param callback callback
      * @throws RequestException
      */
-    public abstract void status(String buildid, AsyncRequestCallback<BuildStatus> callback)
-            throws RequestException;
+    public abstract void status(String buildid, AsyncRequestCallback<BuildStatus> callback) throws RequestException;
 
     /**
      * Get build log.
-     *
-     * @param buildid
-     *         identifier of build
-     * @param callback
-     *         callback
+     * 
+     * @param buildid identifier of build
+     * @param callback callback
      * @throws RequestException
      */
     public abstract void log(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 
     /**
      * Get build result.
-     *
-     * @param buildid
-     *         ID of build
-     * @param callback
-     *         callback
+     * 
+     * @param buildid ID of build
+     * @param callback callback
      * @throws RequestException
      */
     public abstract void result(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 
     /**
      * Check is URL for download artifact is valid.
-     *
-     * @param url
-     *         URL for checking
-     * @param callback
-     *         callback
+     * 
+     * @param url URL for checking
+     * @param callback callback
      * @throws RequestException
      */
     public abstract void checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException;

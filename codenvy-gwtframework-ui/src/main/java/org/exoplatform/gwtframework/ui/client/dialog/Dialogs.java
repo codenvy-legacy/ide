@@ -25,18 +25,18 @@ import java.util.Queue;
 
 /**
  * Created by The eXo Platform SAS .
- *
+ * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public abstract class Dialogs {
 
-    private static Dialogs instance;
+    private static Dialogs  instance;
 
     protected Queue<Dialog> dialogs = new LinkedList<Dialog>();
 
-    protected Dialog currentDialog;
+    protected Dialog        currentDialog;
 
     protected Dialogs() {
         instance = this;
@@ -46,9 +46,9 @@ public abstract class Dialogs {
         return instance;
     }
 
-   /*
-    * INFO
-    */
+    /*
+     * INFO
+     */
 
     public void showInfo(String message) {
         showInfo("IDE", message, null);
@@ -59,14 +59,18 @@ public abstract class Dialogs {
     }
 
     public void showInfo(String title, String message, BooleanValueReceivedHandler handler) {
-        Dialog dialog = new Dialog(title, message + "<br>&nbsp;", Dialog.Type.INFO);
+        showInfo(title, message, handler, true);
+    }
+
+    public void showInfo(String title, String message, BooleanValueReceivedHandler handler, boolean modal) {
+        Dialog dialog = new Dialog(title, message + "<br>&nbsp;", Dialog.Type.INFO, modal);
         dialog.setBooleanValueReceivedHandler(handler);
         showDialog(dialog);
     }
 
-   /*
-    * WARNING
-    */
+    /*
+     * WARNING
+     */
 
     public void showError(String message) {
         showError("IDE", message, null);
@@ -77,35 +81,47 @@ public abstract class Dialogs {
     }
 
     public void showError(String title, String message, BooleanValueReceivedHandler handler) {
-        Dialog dialog = new Dialog(title, message + "<br>&nbsp;", Dialog.Type.WARNING);
+        showError(title, message, handler, true);
+    }
+
+    public void showError(String title, String message, BooleanValueReceivedHandler handler, boolean modal) {
+        Dialog dialog = new Dialog(title, message + "<br>&nbsp;", Dialog.Type.WARNING, modal);
         dialog.setBooleanValueReceivedHandler(handler);
         showDialog(dialog);
     }
 
-   /*
-    * BOOLEAN ASKING
-    */
+    /*
+     * BOOLEAN ASKING
+     */
 
     public void ask(String title, String message, BooleanValueReceivedHandler handler) {
-        Dialog dialog = new Dialog(title, message + "<br>&nbsp;", Dialog.Type.ASK);
+        ask(title, message, handler, true);
+    }
+
+    public void ask(String title, String message, BooleanValueReceivedHandler handler, boolean modal) {
+        Dialog dialog = new Dialog(title, message + "<br>&nbsp;", Dialog.Type.ASK, modal);
         dialog.setBooleanValueReceivedHandler(handler);
         showDialog(dialog);
     }
 
-   /*
-    * VALUE ASKING
-    */
+    /*
+     * VALUE ASKING
+     */
 
     public void askForValue(String title, String message, String defaultValue, StringValueReceivedHandler handler) {
-        Dialog dialog = new Dialog(title, message + "<br>&nbsp;", Dialog.Type.ASKVALUE);
+        askForValue(title, message, defaultValue, handler, true);
+    }
+
+    public void askForValue(String title, String message, String defaultValue, StringValueReceivedHandler handler, boolean modal) {
+        Dialog dialog = new Dialog(title, message + "<br>&nbsp;", Dialog.Type.ASKVALUE, modal);
         dialog.setDefaultValue(defaultValue);
         dialog.setStringValueReceivedHandler(handler);
         showDialog(dialog);
     }
 
-   /*
-    * OPEN CUSTOM DIALOG
-    */
+    /*
+     * OPEN CUSTOM DIALOG
+     */
 
     public void showDialog(Dialog dialog) {
         dialogs.add(dialog);
@@ -126,22 +142,28 @@ public abstract class Dialogs {
         currentDialog = dialogs.poll();
 
         if (currentDialog.getType() == Dialog.Type.ASKVALUE) {
-            openAskForValueDialog(currentDialog.getTitle(), currentDialog.getMessage(), currentDialog.getDefaultValue());
+            openAskForValueDialog(currentDialog);
         } else if (currentDialog.getType() == Dialog.Type.ASK) {
-            openAskDialog(currentDialog.getTitle(), currentDialog.getMessage());
+            openAskDialog(currentDialog);
         } else if (currentDialog.getType() == Dialog.Type.WARNING) {
-            openWarningDialog(currentDialog.getTitle(), currentDialog.getMessage());
+            openWarningDialog(currentDialog);
         } else {
-            openInfoDialog(currentDialog.getTitle(), currentDialog.getMessage());
+            openInfoDialog(currentDialog);
         }
     }
 
-    protected abstract void openAskForValueDialog(String title, String message, String defaultValue);
+    /**
+     * protected abstract void openAskForValueDialog(String title, String message, String defaultValue); protected abstract void
+     * openAskDialog(String title, String message); protected abstract void openWarningDialog(String title, String message); protected
+     * abstract void openInfoDialog(String title, String message);
+     */
 
-    protected abstract void openAskDialog(String title, String message);
+    protected abstract void openAskForValueDialog(Dialog dialog);
 
-    protected abstract void openWarningDialog(String title, String message);
+    protected abstract void openAskDialog(Dialog dialog);
 
-    protected abstract void openInfoDialog(String title, String message);
+    protected abstract void openWarningDialog(Dialog dialog);
+
+    protected abstract void openInfoDialog(Dialog dialog);
 
 }

@@ -295,8 +295,7 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
         try {
             GitHubClientService.getInstance()
                                .getUserToken(user,
-                                             new AsyncRequestCallback<StringBuilder>(
-                                                                                     new StringUnmarshaller(new StringBuilder())) {
+                                             new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder())) {
 
                                                  @Override
                                                  protected void onSuccess(StringBuilder result) {

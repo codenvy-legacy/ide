@@ -45,7 +45,7 @@ import org.exoplatform.ide.extension.samples.client.inviting.github.InviteGitHub
 import org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersPresenter;
 import org.exoplatform.ide.extension.samples.client.inviting.manage.ManageInviteControl;
 import org.exoplatform.ide.extension.samples.client.inviting.manage.ManageInvitePresenter;
-import org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginPresenter;
+import org.exoplatform.ide.extension.samples.client.oauth.GithubLoginPresenter;
 import org.exoplatform.ide.extension.samples.client.startpage.OpenStartPageEvent;
 import org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter;
 import org.exoplatform.ide.git.client.GitAutoBeanFactory;
@@ -91,7 +91,7 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
         new StartPagePresenter();
-        new OAuthLoginPresenter();
+        new GithubLoginPresenter();
 
         new ManageInvitePresenter();
         new GenerateGitHubSshKeyPresenter();

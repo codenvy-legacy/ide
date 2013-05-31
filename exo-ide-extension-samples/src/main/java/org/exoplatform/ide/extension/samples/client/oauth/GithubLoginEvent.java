@@ -22,24 +22,24 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to login to GiHub.
- *
+ * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Aug 30, 2012 10:33:01 AM anya $
  */
-public class OAuthLoginEvent extends GwtEvent<OAuthLoginHandler> {
+public class GithubLoginEvent extends GwtEvent<GithubLoginHandler> {
     /** Type used to register the event. */
-    public static final GwtEvent.Type<OAuthLoginHandler> TYPE = new GwtEvent.Type<OAuthLoginHandler>();
+    public static final GwtEvent.Type<GithubLoginHandler> TYPE = new GwtEvent.Type<GithubLoginHandler>();
 
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
     @Override
-    public com.google.gwt.event.shared.GwtEvent.Type<OAuthLoginHandler> getAssociatedType() {
+    public GwtEvent.Type<GithubLoginHandler> getAssociatedType() {
         return TYPE;
     }
 
     /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
     @Override
-    protected void dispatch(OAuthLoginHandler handler) {
-        handler.onOAuthLogin(this);
+    protected void dispatch(GithubLoginHandler handler) {
+        handler.onGithubLogin(this);
     }
 
 }
