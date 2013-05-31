@@ -47,7 +47,7 @@ public class IdeUser {
      */
     public IdeUser(String userId, Collection<String> roles, String clientId) {
         this.userId = userId;
-        this.roles = null;
+        this.roles = roles;
         this.clientId = clientId;
     }
 
