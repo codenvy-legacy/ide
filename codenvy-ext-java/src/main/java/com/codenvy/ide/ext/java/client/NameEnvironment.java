@@ -18,8 +18,7 @@
  */
 package com.codenvy.ide.ext.java.client;
 
-import com.codenvy.ide.ext.java.shared.*;
-
+import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.java.client.core.Flags;
 import com.codenvy.ide.ext.java.client.core.Signature;
 import com.codenvy.ide.ext.java.client.core.compiler.CharOperation;
@@ -30,15 +29,14 @@ import com.codenvy.ide.ext.java.client.internal.compiler.env.AccessRestriction;
 import com.codenvy.ide.ext.java.client.internal.compiler.env.IBinaryMethod;
 import com.codenvy.ide.ext.java.client.internal.compiler.env.INameEnvironment;
 import com.codenvy.ide.ext.java.client.internal.compiler.env.NameEnvironmentAnswer;
-
-import com.codenvy.ide.commons.exception.UnmarshallerException;
+import com.codenvy.ide.ext.java.shared.*;
 import com.codenvy.ide.json.JsonStringSet;
 import com.codenvy.ide.json.JsonStringSet.IterationCallback;
-import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPStatus;
 import com.codenvy.ide.rest.Unmarshallable;
+import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestBuilder;

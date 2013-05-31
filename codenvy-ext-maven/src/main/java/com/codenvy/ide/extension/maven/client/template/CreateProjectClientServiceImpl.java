@@ -20,12 +20,12 @@ package com.codenvy.ide.extension.maven.client.template;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.resources.marshal.JSONSerializer;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
+import com.codenvy.ide.ui.loader.Loader;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
@@ -44,7 +44,6 @@ public class CreateProjectClientServiceImpl implements CreateProjectClientServic
     private static final String CREATE_WAR_PROJECT   = BASE_URL + "/project/war";
     private static final String CREATE_JAVA_PROJECT  = BASE_URL + "/project/java";
     private static final String CREATE_EMPTY_PROJECT = BASE_URL + "/project/empty";
-
     private String           restContext;
     private Loader           loader;
     private ResourceProvider resourceProvider;

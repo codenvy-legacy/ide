@@ -20,13 +20,13 @@ import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.loader.EmptyLoader;
-import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.resources.marshal.*;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.MimeType;
+import com.codenvy.ide.ui.loader.EmptyLoader;
+import com.codenvy.ide.ui.loader.Loader;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
@@ -43,19 +43,13 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 public class Project extends Folder {
     public static final String PROJECT_MIME_TYPE = "text/vnd.ideproject+directory";
-
-    public static final String TYPE = "project";
-
-    private ProjectDescription description;
-
+    public static final String TYPE              = "project";
+    private         ProjectDescription    description;
     /** Properties. */
-    protected JsonArray<Property> properties;
-
-    protected Loader loader;
-
-    protected final EventBus eventBus;
-
-    protected VirtualFileSystemInfo vfsInfo;
+    protected       JsonArray<Property>   properties;
+    protected       Loader                loader;
+    protected final EventBus              eventBus;
+    protected       VirtualFileSystemInfo vfsInfo;
 
     /**
      * Constructor for empty project. Used for serialization only.
