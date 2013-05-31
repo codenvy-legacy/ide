@@ -19,12 +19,12 @@
 package com.codenvy.ide.websocket;
 
 
-import com.codenvy.ide.dtogen.client.RoutableDtoClientImpl;
-import com.codenvy.ide.dtogen.client.ServerErrorImpl;
-import com.codenvy.ide.dtogen.shared.ClientToServerDto;
-import com.codenvy.ide.dtogen.shared.RoutableDto;
-import com.codenvy.ide.dtogen.shared.ServerError;
-import com.codenvy.ide.dtogen.shared.ServerToClientDto;
+import com.codenvy.ide.dto.client.RoutableDtoClientImpl;
+import com.codenvy.ide.dto.client.ServerErrorImpl;
+import com.codenvy.ide.dto.shared.ClientToServerDto;
+import com.codenvy.ide.dto.shared.RoutableDto;
+import com.codenvy.ide.dto.shared.ServerError;
+import com.codenvy.ide.dto.shared.ServerToClientDto;
 import com.codenvy.ide.json.js.Jso;
 import com.codenvy.ide.websocket.events.ReplyHandler;
 

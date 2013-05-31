@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.api.user;
 
-import com.codenvy.ide.dtogen.shared.ServerToClientDto;
+import com.codenvy.ide.dto.shared.ServerToClientDto;
 import com.codenvy.ide.json.JsonStringMap;
 
 /**

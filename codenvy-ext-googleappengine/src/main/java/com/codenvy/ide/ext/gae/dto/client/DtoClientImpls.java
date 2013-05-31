@@ -28,10 +28,10 @@ public class DtoClientImpls {
 
   private  DtoClientImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "72651ba1facc5ec200df2f55d7ab5edaff622345";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "efdcf2efa4e7c3f879ee5a55c98126adc24628f6";
 
 
-  public static class ApplicationInfoImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.gae.shared.ApplicationInfo {
+  public static class ApplicationInfoImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.gae.shared.ApplicationInfo {
     protected ApplicationInfoImpl() {}
 
     @Override
@@ -69,7 +69,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class BackendImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.gae.shared.Backend {
+  public static class BackendImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.gae.shared.Backend {
     protected BackendImpl() {}
 
     @Override
@@ -117,13 +117,22 @@ public class DtoClientImpls {
 
     @Override
     public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.gae.shared.Backend.Option> getOptions() /*-{
+      _tmp = [];
+      this["options"].forEach(function(in1, tmp0) {
         out1 = @com.codenvy.ide.ext.gae.shared.Backend.Option::valueOf(Ljava/lang/String;)(in1);
+        _tmp[tmp0] = out1;
+      });
       return _tmp;
     }-*/;
 
     public final native BackendImpl setOptions(com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.gae.shared.Backend.Option> options) /*-{
       _tmp = options;
+      tmp0 = [];
+      _tmp.forEach(function(in1) {
         out1 = in1.@com.codenvy.ide.ext.gae.shared.Backend.Option::toString()();
+        tmp0.push(out1);
+      });
+      options = tmp0;
       this["options"] = options;
       return this;
     }-*/;
@@ -209,7 +218,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CredentialsImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.gae.shared.Credentials {
+  public static class CredentialsImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.gae.shared.Credentials {
     protected CredentialsImpl() {}
 
     @Override
@@ -247,7 +256,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CronEntryImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.gae.shared.CronEntry {
+  public static class CronEntryImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.gae.shared.CronEntry {
     protected CronEntryImpl() {}
 
     @Override
@@ -327,7 +336,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GaeUserImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.gae.shared.GaeUser {
+  public static class GaeUserImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.gae.shared.GaeUser {
     protected GaeUserImpl() {}
 
     @Override
@@ -379,7 +388,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class ResourceLimitImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.gae.shared.ResourceLimit {
+  public static class ResourceLimitImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.gae.shared.ResourceLimit {
     protected ResourceLimitImpl() {}
 
     @Override
@@ -417,7 +426,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class TokenImpl extends com.codenvy.ide.json.client.Jso implements com.codenvy.ide.ext.gae.shared.Token {
+  public static class TokenImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.gae.shared.Token {
     protected TokenImpl() {}
 
     @Override

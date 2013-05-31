@@ -23,7 +23,8 @@ package com.codenvy.ide.server;
 
 import com.codenvy.ide.api.user.UpdateUserAttributes;
 import com.codenvy.ide.api.user.User;
-import com.codenvy.ide.dtogen.server.JsonSerializable;
+import com.codenvy.ide.dto.server.RoutableDtoServerImpl;
+import com.codenvy.ide.dto.server.JsonSerializable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -45,7 +46,7 @@ public class DtoServerImpls {
 
   public static final String CLIENT_SERVER_PROTOCOL_HASH = "648f8d86f27105b66b0eb5f90b185c9f029001e1";
 
-  public static class UpdateUserAttributesImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl implements UpdateUserAttributes, JsonSerializable {
+  public static class UpdateUserAttributesImpl extends RoutableDtoServerImpl implements UpdateUserAttributes, JsonSerializable {
 
     private UpdateUserAttributesImpl() {
       super(2);
@@ -177,7 +178,7 @@ public class DtoServerImpls {
     }
   }
 
-  public static class UserImpl extends com.codenvy.ide.dtogen.server.RoutableDtoServerImpl implements User, JsonSerializable {
+  public static class UserImpl extends RoutableDtoServerImpl implements User, JsonSerializable {
 
     private UserImpl() {
       super(1);
