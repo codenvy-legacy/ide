@@ -103,7 +103,7 @@ public class JsPopUpOAuthWindow {
             var popup_close_handler = function () {
                 if (!popupWindow || popupWindow.closed) {
                     instance.@org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow::setAuthenticationStatus(I)(1); 
-                    //console.log("closed popup")
+                    console.log("closed popup")
                     popupWindow = null;
                     if (popupCloseHandlerIntervalId) {
                         window.clearInterval(popupCloseHandlerIntervalId);
@@ -116,20 +116,19 @@ public class JsPopUpOAuthWindow {
                     }
 
                     if (href) {
-                        //console.log(href);
+                        console.log(href);
                         var path = popupWindow.location.pathname;
-                        if (path == "/IDE/Application.html" // for local ide bundle
-                            || path == "/IDE/") {
+                        if (path == "/w/" + $wnd.ws) {
                             instance.@org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow::setAuthenticationStatus(I)(2);
                             popupWindow.close();
                             popupWindow = null;
                             if (popupCloseHandlerIntervalId) {
                                 window.clearInterval(popupCloseHandlerIntervalId);
-                                //console.log("stop interval " + popupCloseHandlerIntervalId);
+                                console.log("stop interval " + popupCloseHandlerIntervalId);
                             }
                         } else if (path.match("j_security_check$")) {
                             instance.@org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow::setAuthenticationStatus(I)(1);
-                            //console.log("login failed");
+                            console.log("login failed");
                             if (!errorFlag) {
                                 errorFlag = true;
                                 popupWindow.location.replace(errorPageUrl);

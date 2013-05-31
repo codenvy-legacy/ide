@@ -258,8 +258,7 @@ public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, V
         String authUrl = Utils.getAuthorizationContext()
                          + "/ide/oauth/authenticate?oauth_provider=github"
                          + "&scope=user&userId=" + IDE.userId
-                         + "&scope=repo&redirect_after_login="
-                         + Utils.getAuthorizationPageURL();
+                         + "&scope=repo&redirect_after_login=/w/" + Utils.getWorkspaceName(); 
         JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500, this);
         authWindow.loginWithOAuth();
     }

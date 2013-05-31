@@ -33,8 +33,7 @@
         var ws = "<%= request.getAttribute("ws")%>";
         var project = "<%= request.getAttribute("project")%>";
         var path = "<%= request.getAttribute("path")%>";
-        var authorizationContext = "/w/rest";
-        var authorizationPageURL = "/w/ide/" + ws;
+        var authorizationContext = "/rest";
         var authorizationErrorPageURL = "/w/ide/error_oauth.html";
         var securityCheckURL = "/w/j_security_check";
     </script>
@@ -56,24 +55,6 @@
         </tr>
     </table>
 </div>
-
-<script type="text/javascript">
-    function addMenuAddition(html) {
-        var tr = document.getElementById("ide-menu-additions-rows");
-        var td = document.createElement("td");
-        td.innerHTML = html;
-        tr.appendChild(td);
-    }
-</script>
-
-<!-- LOGOUT, SHELL links -->
-<script type="text/javascript">
-    var htmlShell = "<a id=\"shell-link\" href=\"/shell/Shell.html\" target=\"_blank\">Shell</a>";
-    addMenuAddition(htmlShell);
-
-    var htmlLogout = "<span id=\"logoutButton\" onClick=\"window.location = '/site/logout.jsp';\">Logout</span>";
-    addMenuAddition(htmlLogout);
-</script>
 <script type="text/javascript">
     var uvOptions = {};
     (function () {

@@ -131,7 +131,6 @@ public abstract class AsyncRequestCallback<T> implements RequestCallback {
         }
 
         if (response.getStatusCode() == HTTPStatus.UNAUTHORIZED || response.getHeader("X-Codenvy-Page-Type") != null) {
-            Window.alert(response.getHeader("X-Codenvy-Page-Type"));
             onUnauthorized(response);
             return;
         }

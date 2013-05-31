@@ -252,7 +252,7 @@ public class GitHub {
         String oauthToken =  token != null ? token.getToken() : null;
         if (oauthToken == null || oauthToken.isEmpty())
         {
-            throw new GitHubException(401, "Authentication required.\n", "text/plain");
+            return "";
         }
         return oauthToken;
     }
