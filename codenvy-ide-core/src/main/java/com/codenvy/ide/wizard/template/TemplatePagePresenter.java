@@ -112,10 +112,13 @@ public class TemplatePagePresenter extends AbstractWizardPagePresenter implement
 
     /** {@inheritDoc} */
     public void go(AcceptsOneWidget container) {
+        next = null;
         paasWizardPage = paaSAgent.getSelectedPaaS().getWizardPage();
         String projectType = projectTypeAgent.getSelectedProjectType();
         JsonArray<Template> templates = templateAgent.getTemplatesForProjectType(projectType);
         view.setTemplates(templates);
+
+        delegate.updateControls();
 
         container.setWidget(view);
     }
