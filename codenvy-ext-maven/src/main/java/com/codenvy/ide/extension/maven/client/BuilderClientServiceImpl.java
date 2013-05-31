@@ -19,12 +19,12 @@
 package com.codenvy.ide.extension.maven.client;
 
 import com.codenvy.ide.extension.maven.shared.BuildStatus;
-import com.codenvy.ide.loader.EmptyLoader;
-import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.MimeType;
+import com.codenvy.ide.ui.loader.EmptyLoader;
+import com.codenvy.ide.ui.loader.Loader;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;

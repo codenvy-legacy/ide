@@ -24,12 +24,12 @@ import com.codenvy.ide.core.Component;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.json.*;
 import com.codenvy.ide.json.JsonIntegerMap.IterationCallback;
-import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.resources.marshal.*;
 import com.codenvy.ide.resources.model.*;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
+import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.http.client.RequestBuilder;
@@ -51,32 +51,20 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class ResourceProviderComponent implements ResourceProvider, Component {
-
     /** Used for compatibility with IDE-VFS 1.x */
     private static final String DEPRECATED_PROJECT_TYPE = "deprecated.project.type";
-
     /** Fully qualified URL to root folder of VFS */
-    private final String workspaceURL;
-
-    private Loader loader;
-
-    private final JsonStringMap<ModelProvider> modelProviders;
-
-    private final JsonStringMap<ProjectNature> natures;
-
-    private final JsonIntegerMap<FileType> fileTypes;
-
-    protected VirtualFileSystemInfo vfsInfo;
-
-    protected final ModelProvider genericModelProvider;
-
+    private final   String                       workspaceURL;
+    private         Loader                       loader;
+    private final   JsonStringMap<ModelProvider> modelProviders;
+    private final   JsonStringMap<ProjectNature> natures;
+    private final   JsonIntegerMap<FileType>     fileTypes;
+    protected       VirtualFileSystemInfo        vfsInfo;
+    protected final ModelProvider                genericModelProvider;
     @SuppressWarnings("unused")
     private boolean initialized = false;
-
-    private Project activeProject;
-
+    private       Project  activeProject;
     private final EventBus eventBus;
-
     private final FileType defaulFile;
 
     /**

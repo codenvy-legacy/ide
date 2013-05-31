@@ -18,13 +18,13 @@
  */
 package com.codenvy.ide.user;
 
-import com.codenvy.ide.api.user.UserClientService;
-import com.codenvy.ide.client.DtoClientImpls;
-import com.codenvy.ide.loader.Loader;
-import com.codenvy.ide.rest.AsyncRequest;
-import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.api.user.UpdateUserAttributes;
 import com.codenvy.ide.api.user.User;
+import com.codenvy.ide.api.user.UserClientService;
+import com.codenvy.ide.client.DtoClientImpls;
+import com.codenvy.ide.rest.AsyncRequest;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.ui.loader.Loader;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
@@ -38,14 +38,10 @@ import com.google.inject.name.Named;
  */
 @Singleton
 public class UserClientServiceImpl implements UserClientService {
-    private static final String BASE_URL = "/ide/user";
-
-    private static final String GET_USER = BASE_URL + "/get";
-
+    private static final String BASE_URL               = "/ide/user";
+    private static final String GET_USER               = BASE_URL + "/get";
     private static final String UPDATE_USER_ATTRIBUTES = BASE_URL + "/update";
-
     private String restContext;
-
     private Loader loader;
 
     /**

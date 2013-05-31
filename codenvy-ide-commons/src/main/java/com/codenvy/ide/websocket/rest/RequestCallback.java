@@ -20,11 +20,11 @@ package com.codenvy.ide.websocket.rest;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.loader.EmptyLoader;
 import com.codenvy.ide.rest.AsyncRequestLoader;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.HTTPStatus;
 import com.codenvy.ide.rest.RequestStatusHandler;
+import com.codenvy.ide.ui.loader.EmptyLoader;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.MessageBuilder;
 import com.codenvy.ide.websocket.rest.exceptions.ServerException;

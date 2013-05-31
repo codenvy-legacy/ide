@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.ext.openshift.client;
 
-import com.codenvy.ide.loader.Loader;
+import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.websocket.MessageBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
