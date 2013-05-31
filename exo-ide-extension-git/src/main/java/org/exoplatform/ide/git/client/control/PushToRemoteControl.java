@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.client.control;
 
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.push.PushToRemoteEvent;
@@ -28,6 +29,7 @@ import org.exoplatform.ide.git.client.push.PushToRemoteEvent;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 4, 2011 9:27:56 AM anya $
  */
+@RolesAllowed("developer")
 public class PushToRemoteControl extends GitControl {
     public PushToRemoteControl() {
         super(GitExtension.MESSAGES.pushControlId());

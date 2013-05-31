@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.jenkins.client.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.jenkins.client.JenkinsExtension;
@@ -28,6 +29,7 @@ import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
  */
+@RolesAllowed({"developer"})
 public class BuildControl extends SimpleControl implements IDEControl {
 
     /** @param id */

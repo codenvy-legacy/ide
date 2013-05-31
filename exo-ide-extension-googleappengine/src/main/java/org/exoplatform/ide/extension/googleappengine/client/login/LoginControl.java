@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.googleappengine.client.login;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle;
@@ -30,6 +31,7 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExten
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 14, 2012 11:34:04 AM anya $
  */
+@RolesAllowed("developer")
 public class LoginControl extends SimpleControl implements IDEControl, SetLoggedUserStateHandler {
     private static final String ID = "PaaS/Google App Engine/Login";
 

@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.java.jdi.client;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuEvent;
 import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -32,6 +33,7 @@ import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: ShowBreakpointPropertiesControl.java May 11, 2012 12:44:25 PM azatsarynnyy $
  */
+@RolesAllowed({"developer"})
 public class ShowBreakpointPropertiesControl extends SimpleControl implements IDEControl, ShowContextMenuHandler,
                                                                               DebuggerConnectedHandler, DebuggerDisconnectedHandler {
     /** Control's identifier. */

@@ -41,7 +41,6 @@ import java.util.List;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-@RolesAllowed({"developer"})
 public class ShowOutlineControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
                                                                  ViewClosedHandler, ViewOpenedHandler {
 

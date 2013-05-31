@@ -19,6 +19,7 @@
 package com.codenvy.ide.collaboration.chat.client;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
@@ -30,6 +31,7 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
+@RolesAllowed({"developer"})
 public class ShowChatControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler {
     public static final String ID = "View/Collaboration";
 

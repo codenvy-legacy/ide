@@ -48,6 +48,9 @@ import org.exoplatform.ide.client.model.*;
 import org.exoplatform.ide.client.workspace.event.SwitchVFSEvent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -88,39 +91,39 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                             applicationConfiguration = result.getIdeConfiguration();
                             applicationSettings = result.getSettings();
                             IDE.userId = result.getUserInfo().getName();
-                            if (result.getUserInfo().getRoles() != null && result.getUserInfo().getRoles().size() > 0) {
-                                controls.initControls(result.getUserInfo().getRoles());
 
-                               
-                                new SettingsServiceImpl(IDE.eventBus(), result.getUserInfo().getName(),
-                                                        IDELoader.get());
-                                SettingsService.getInstance().restoreFromCookies(applicationSettings);
+                            //TODO: small hack need because currently user on client must have it least one role
+                            if (result.getUserInfo().getRoles() == null || result.getUserInfo().getRoles().size() == 0) 
+                                result.getUserInfo().setRoles(Arrays.asList("not-in-role"));
+                            
+                            controls.initControls(result.getUserInfo().getRoles());
 
-                                initialOpenedProject = applicationSettings.getValueAsString("opened-project");
-                                initialActiveFile = applicationSettings.getValueAsString("active-file");
+                           
+                            new SettingsServiceImpl(IDE.eventBus(), result.getUserInfo().getName(),
+                                                    IDELoader.get());
+                            SettingsService.getInstance().restoreFromCookies(applicationSettings);
 
-                                initialOpenedFiles = new ArrayList<String>();
-                                List<String> openedFiles = applicationSettings.getValueAsList("opened-files");
-                                if (openedFiles != null) {
-                                    initialOpenedFiles.addAll(openedFiles);
-                                }
+                            initialOpenedProject = applicationSettings.getValueAsString("opened-project");
+                            initialActiveFile = applicationSettings.getValueAsString("active-file");
 
-                                IDE.fireEvent(new ConfigurationReceivedSuccessfullyEvent(applicationConfiguration));
-
-                                String hiddenFilesParameter = applicationConfiguration.getHiddenFiles();
-                                if (hiddenFilesParameter == null) {
-                                    throw new Exception(org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES
-                                                                                      .confMissingVariable("hiddenFiles"));
-                                }
-                                DirectoryFilter.get().setPattern(hiddenFilesParameter);
-
-                                IDE.fireEvent(new ApplicationSettingsReceivedEvent(result.getSettings()));
-                                IDE.fireEvent(new UserInfoReceivedEvent(result.getUserInfo()));
-                                checkEntryPoint();
-
-                            } else {
-                                Dialogs.getInstance().showError(org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.userHasNoRoles());
+                            initialOpenedFiles = new ArrayList<String>();
+                            List<String> openedFiles = applicationSettings.getValueAsList("opened-files");
+                            if (openedFiles != null) {
+                                initialOpenedFiles.addAll(openedFiles);
                             }
+
+                            IDE.fireEvent(new ConfigurationReceivedSuccessfullyEvent(applicationConfiguration));
+
+                            String hiddenFilesParameter = applicationConfiguration.getHiddenFiles();
+                            if (hiddenFilesParameter == null) {
+                                throw new Exception(org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES
+                                                                                  .confMissingVariable("hiddenFiles"));
+                            }
+                            DirectoryFilter.get().setPattern(hiddenFilesParameter);
+
+                            IDE.fireEvent(new ApplicationSettingsReceivedEvent(result.getSettings()));
+                            IDE.fireEvent(new UserInfoReceivedEvent(result.getUserInfo()));
+                            checkEntryPoint();
                         } catch (Exception e) {
                             IDE.fireEvent(new ExceptionThrownEvent(e));
                         }

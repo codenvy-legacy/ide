@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.java.client.datasource;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
@@ -32,6 +33,7 @@ import org.exoplatform.ide.extension.java.client.JavaClientBundle;
  * @version $
  * 
  */
+@RolesAllowed({"developer"})
 public class ConfigureDatasourceControl extends SimpleControl implements IDEControl,
     ProjectOpenedHandler, ProjectClosedHandler {
 

@@ -28,7 +28,6 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Sep 20, 2011 evgen $
  */
-@RolesAllowed({"developer"})
 public class ShowProgressControl extends SimpleControl implements IDEControl {
 
     /**
