@@ -259,6 +259,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
                 if (file != null && file.getPath().equals(message.getPath())) {
                     editor.selectRange(message.getStartLine(), message.getStartChar(), message.getEndLine(),
                                        message.getEndChar());
+                    editor.setFocus();
                 } else {
                     openFile(message.getPath());
                     IDE.eventBus().addHandler(EditorActiveFileChangedEvent.TYPE, new EditorActiveFileChangedHandler() {
