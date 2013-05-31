@@ -273,7 +273,11 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
             @Override
             public void onClick(ClickEvent event) {
                 if (isDeployStep) {
-                    doDeploy((availableProjectTemplates.size() == 1) ? availableProjectTemplates.get(0) : selectedTemplate);
+                    if (selectedTarget != null && !selectedTarget.getPaaSActions().validate()) {
+                        Dialogs.getInstance().showError("Please, fill all required fields.");
+                    } else {
+                        doDeploy((availableProjectTemplates.size() == 1) ? availableProjectTemplates.get(0) : selectedTemplate);
+                    }
                 } else if (isChooseTemplateStep) {
                     createProject(selectedTemplate);
                 } else if (selectedProjectType == null) {
