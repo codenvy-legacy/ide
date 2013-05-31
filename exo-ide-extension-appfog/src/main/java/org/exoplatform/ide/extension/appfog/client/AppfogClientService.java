@@ -28,6 +28,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
@@ -44,7 +45,7 @@ import java.util.List;
  * @version $Id: $
  */
 public class AppfogClientService {
-    private static final String BASE_URL = "/appfog";
+    private static final String BASE_URL = Utils.getWorkspaceName() + "/appfog";
 
     private static final String CREATE = BASE_URL + "/apps/create";
 
@@ -124,7 +125,7 @@ public class AppfogClientService {
     public AppfogClientService(String restContext, String wsName, Loader loader, MessageBus wsMessageBus) {
         this.wsName = wsName;
         this.loader = loader;
-        this.restServiceContext = restContext + wsName;
+        this.restServiceContext = restContext;
         this.wsMessageBus = wsMessageBus;
         instance = this;
     }

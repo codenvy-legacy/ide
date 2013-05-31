@@ -35,7 +35,7 @@ import org.exoplatform.ide.client.framework.util.Utils;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Aug 30, 2012 10:26:25 AM anya $
  */
-public class OAuthLoginPresenter implements OAuthLoginHandler, ViewClosedHandler {
+public class GithubLoginPresenter implements GithubLoginHandler, ViewClosedHandler, JsPopUpOAuthWindow.JsPopUpOAuthWindowCallback {
 
     interface Display extends IsView {
         HasClickHandlers getLoginButton();
@@ -47,8 +47,8 @@ public class OAuthLoginPresenter implements OAuthLoginHandler, ViewClosedHandler
 
     private Display display;
 
-    public OAuthLoginPresenter() {
-        IDE.addHandler(OAuthLoginEvent.TYPE, this);
+    public GithubLoginPresenter() {
+        IDE.addHandler(GithubLoginEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
     }
 
@@ -71,19 +71,20 @@ public class OAuthLoginPresenter implements OAuthLoginHandler, ViewClosedHandler
                                  + "&scope=user&userId=" + IDE.userId
                                  + "&scope=repo&redirect_after_login="
                                  + Utils.getAuthorizationPageURL();
-                JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500, null);
+                JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500,
+                                                                       GithubLoginPresenter.this);
                 authWindow.loginWithOAuth();
-                IDE.getInstance().closeView(display.asView().getId());
+
             }
         });
     }
 
     /**
-     * @see org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginHandler#onOAuthLogin(org.exoplatform.ide.extension.samples
-     *      .client.oauth.OAuthLoginEvent)
+     * @see org.exoplatform.ide.extension.samples.client.oauth.GithubLoginHandler#onGithubLogin(org.exoplatform.ide.extension.samples
+     *      .client.oauth.GithubLoginEvent)
      */
     @Override
-    public void onOAuthLogin(OAuthLoginEvent event) {
+    public void onGithubLogin(GithubLoginEvent event) {
         if (display == null) {
             display = GWT.create(Display.class);
             bindDisplay();
@@ -99,6 +100,13 @@ public class OAuthLoginPresenter implements OAuthLoginHandler, ViewClosedHandler
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
             display = null;
+        }
+    }
+
+    @Override
+    public void oAuthFinished(int authenticationStatus) {
+        if (authenticationStatus == 2) {
+            IDE.fireEvent(new GithubLoginFinishedEvent());
         }
     }
 }

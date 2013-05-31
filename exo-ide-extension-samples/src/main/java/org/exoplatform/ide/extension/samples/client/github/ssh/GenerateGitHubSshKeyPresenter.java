@@ -34,7 +34,6 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -43,6 +42,9 @@ import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
 import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
 import org.exoplatform.ide.client.framework.util.Utils;
+import org.exoplatform.ide.extension.samples.client.oauth.GithubLoginEvent;
+import org.exoplatform.ide.extension.samples.client.oauth.GithubLoginFinishedEvent;
+import org.exoplatform.ide.extension.samples.client.oauth.GithubLoginFinishedHandler;
 import org.exoplatform.ide.extension.ssh.client.JsonpAsyncCallback;
 import org.exoplatform.ide.extension.ssh.client.SshKeyService;
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.GenerateGitHubKeyEvent;
@@ -59,8 +61,8 @@ import java.util.List;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, ViewClosedHandler,
-                                          GenerateGitHubKeyHandler, JsPopUpOAuthWindow.JsPopUpOAuthWindowCallback {
+public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, ViewClosedHandler, GenerateGitHubKeyHandler,
+                                          GithubLoginFinishedHandler {
     private UserInfo userInfo;
 
     EmptyLoader      loader;
@@ -80,6 +82,7 @@ public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, V
         IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
         IDE.addHandler(GenerateGitHubKeyEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(GithubLoginFinishedEvent.TYPE, this);
         loader = new EmptyLoader();
     }
 
@@ -255,20 +258,11 @@ public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, V
     }
 
     public void oAuthLoginStart() {
-        String authUrl = Utils.getAuthorizationContext()
-                         + "/ide/oauth/authenticate?oauth_provider=github"
-                         + "&scope=user&userId=" + IDE.userId
-                         + "&scope=repo&redirect_after_login="
-                         + Utils.getAuthorizationPageURL();
-        JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500, this);
-        authWindow.loginWithOAuth();
+        IDE.fireEvent(new GithubLoginEvent());
     }
 
-    @Override
-    public void oAuthFinished(int authenticationStatus) {
-        if (authenticationStatus == 2) {
-            generateGitHubKey();
-        }
+    public void onGithubLoginFinished(GithubLoginFinishedEvent event) {
+        generateGitHubKey();
     }
 
     /**
