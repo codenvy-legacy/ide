@@ -41,6 +41,7 @@
 
     <script type="text/javascript" language="javascript" src='<%= com.codenvy.servlet.DispatcherServlet.genStaticResourceUrl(request, "ide.nocache.js")%>'></script>
     <link type="text/css" rel="stylesheet" href='<%= com.codenvy.servlet.DispatcherServlet.genStaticResourceUrl(request, "top-menu.css")%>' media="all">
+    <link href='<%= com.codenvy.servlet.DispatcherServlet.genStaticResourceUrl(request, "css/ide.css")%>' media="screen" rel="stylesheet" type="text/css">
 </head>
 
 <body>

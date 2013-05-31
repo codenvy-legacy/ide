@@ -44,7 +44,7 @@ public class PythonRuntimeExtension extends Extension implements InitializeServi
      * .client.framework.application.event.InitializeServicesEvent) */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        new PythonRuntimeServiceImpl(Utils.getRestContext(), Utils.getWorkspaceName());
+        new PythonRuntimeServiceImpl(Utils.getRestContext(), Utils.getWorkspaceName(), IDE.messageBus());
     }
 
     /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */

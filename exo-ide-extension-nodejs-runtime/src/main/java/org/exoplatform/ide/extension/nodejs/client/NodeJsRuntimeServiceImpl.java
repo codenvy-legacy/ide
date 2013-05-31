@@ -24,10 +24,13 @@ import com.google.gwt.http.client.RequestException;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.ide.client.framework.util.Utils;
+import org.exoplatform.ide.client.framework.websocket.MessageBus;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 import org.exoplatform.ide.extension.nodejs.shared.ApplicationInstance;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
@@ -45,12 +48,19 @@ public class NodeJsRuntimeServiceImpl extends NodeJsRuntimeService {
 
     private String restContext;
 
+    private String wsName;
+
+    private MessageBus wsMessageBus;
+
     private static final String RUN_APPLICATION = BASE_URL + "/run";
 
     private static final String STOP_APPLICATION = BASE_URL + "/stop";
 
-    public NodeJsRuntimeServiceImpl() {
-        this.restContext = Utils.getRestContext();
+    public NodeJsRuntimeServiceImpl(String restContext, String wsName, MessageBus wsMessageBus) {
+        this.restContext = restContext;
+        this.wsName = wsName;
+        this.wsMessageBus = wsMessageBus;
+        
     }
 
     /**
@@ -58,16 +68,13 @@ public class NodeJsRuntimeServiceImpl extends NodeJsRuntimeService {
      *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
      */
     @Override
-    public void start(String vfsId, ProjectModel project, AsyncRequestCallback<ApplicationInstance> callback)
-            throws RequestException {
-        String requestUrl = restContext + RUN_APPLICATION;
-
+    public void start(String vfsId, ProjectModel project, RequestCallback<ApplicationInstance> callback)
+            throws WebSocketException {
         StringBuilder params = new StringBuilder("?");
         params.append("&vfsid=").append(vfsId).append("&projectid=").append(project.getId());
-
-        AsyncRequest.build(RequestBuilder.GET, requestUrl + params.toString(), true)
-                    .requestStatusHandler(new StartApplicationStatusHandler(project.getName()))
-                    .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+        RequestMessage message =
+            RequestMessageBuilder.build(RequestBuilder.GET, wsName + RUN_APPLICATION + params).getRequestMessage();
+        wsMessageBus.send(message, callback);
     }
 
     /**
@@ -76,7 +83,7 @@ public class NodeJsRuntimeServiceImpl extends NodeJsRuntimeService {
      */
     @Override
     public void stop(String name, AsyncRequestCallback<Object> callback) throws RequestException {
-        String requestUrl = restContext + STOP_APPLICATION;
+        String requestUrl = restContext + wsName + STOP_APPLICATION;
 
         StringBuilder params = new StringBuilder("?name=");
         params.append(name);
@@ -90,7 +97,7 @@ public class NodeJsRuntimeServiceImpl extends NodeJsRuntimeService {
      */
     @Override
     public void getLogs(String name, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
-        String url = restContext + LOGS;
+        String url = restContext + wsName + LOGS;
         StringBuilder params = new StringBuilder("?name=");
         params.append(name);
 
