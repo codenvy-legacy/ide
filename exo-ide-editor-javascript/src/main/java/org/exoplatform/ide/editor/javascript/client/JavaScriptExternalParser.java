@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.editor.javascript.client;
 
+import com.codenvy.ide.client.util.logging.Log;
 import com.codenvy.ide.json.client.JsoArray;
 import com.codenvy.ide.json.shared.JsonArray;
 import com.codenvy.ide.json.shared.JsonCollections;
@@ -32,6 +33,8 @@ import org.exoplatform.ide.editor.javascript.client.syntaxvalidator.JsToken;
 import static org.exoplatform.gwtframework.commons.rest.MimeType.APPLICATION_JAVASCRIPT;
 
 /**
+ * Parser implementation that used Esprima to extract tokens.
+ * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: JavaScriptExternalParser.java May 29, 2013 12:01:10 PM azatsarynnyy $
  */
@@ -52,7 +55,7 @@ public class JavaScriptExternalParser implements ExternalParser {
                 }
             }
         } catch (JavaScriptException e) {
-            // ignore
+            Log.error(getClass(), e);
         }
 
         return tokensArray;
@@ -62,6 +65,8 @@ public class JavaScriptExternalParser implements ExternalParser {
         TokenBeenImpl token = null;
         if ("VariableDeclaration".equals(jsToken.getType())) {
             token = new TokenBeenImpl(jsToken.getName(), TokenType.VARIABLE, jsToken.getLineNumber(), APPLICATION_JAVASCRIPT);
+        } else if ("Property".equals(jsToken.getType())) {
+            token = new TokenBeenImpl(jsToken.getName(), TokenType.PROPERTY, jsToken.getLineNumber(), APPLICATION_JAVASCRIPT);
         } else if ("FunctionDeclaration".equals(jsToken.getType())) {
             token = new TokenBeenImpl(jsToken.getName(), TokenType.FUNCTION, jsToken.getLineNumber(), APPLICATION_JAVASCRIPT);
 
@@ -76,9 +81,9 @@ public class JavaScriptExternalParser implements ExternalParser {
             return null;
         }
 
-        JsoArray<JsToken> body = jsToken.getBody();
-        if (body != null) {
-            for (JsToken childJsToken : body.asIterable()) {
+        JsoArray<JsToken> subTokens = jsToken.getSubTokens();
+        if (subTokens != null) {
+            for (JsToken childJsToken : subTokens.asIterable()) {
                 TokenBeenImpl childToken = convertToken(childJsToken);
                 if (childToken != null) {
                     token.addSubToken(childToken);

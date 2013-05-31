@@ -54,6 +54,12 @@ final public class JsToken extends JavaScriptObject {
                                       return this.declarations[0].id.name;
                                   } else if (this.type == "Identifier") {
                                       return this.name;
+                                  } else if (this.type == "Property") {
+                                      if (this.key.type == "Identifier") {
+                                          return this.key.name;
+                                      } else if (this.key.type == "Literal") {
+                                          return this.key.raw;
+                                      }
                                   }
                                   }-*/;
 
@@ -67,13 +73,21 @@ final public class JsToken extends JavaScriptObject {
                                      }-*/;
 
     /**
-     * Returns the body of the function. It is an array of nested tokens.
+     * Returns an array of sub-tokens of this token.
      * 
-     * @return array of function's nested tokens
+     * @return array of tokens's sub-tokens
      */
-    public native JsoArray<JsToken> getBody()/*-{
+    public native JsoArray<JsToken> getSubTokens()/*-{
                                              if (this.type == "FunctionDeclaration" && this.body.type == "BlockStatement") {
                                                  return this.body.body;
+                                             } else if (this.type == "VariableDeclaration") {
+                                                 if (this.declarations[0].init.type == "ObjectExpression") {
+                                                     return this.declarations[0].init.properties;
+                                                 } else if (this.declarations[0].init.type == "CallExpression") {
+                                                     if (this.declarations[0].init.callee.type == "FunctionExpression") {
+                                                         return this.declarations[0].init.callee.body.body;
+                                                     }
+                                                 }
                                              }
                                                  return null;
                                              }-*/;
