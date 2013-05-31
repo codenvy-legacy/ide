@@ -21,16 +21,16 @@ package org.exoplatform.ide.extension.samples.client.oauth;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link OAuthLoginEvent} event.
+ * Handler for {@link GithubLoginEvent} event.
  *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Aug 30, 2012 10:33:54 AM anya $
  */
-public interface OAuthLoginHandler extends EventHandler {
+public interface GithubLoginHandler extends EventHandler {
     /**
      * Perform actions,when user tries to login GitHub.
      *
      * @param event
      */
-    void onOAuthLogin(OAuthLoginEvent event);
+    void onGithubLogin(GithubLoginEvent event);
 }

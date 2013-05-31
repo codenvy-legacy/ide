@@ -27,12 +27,14 @@ import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.Project;
-import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.FilterInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Timer;
@@ -41,27 +43,26 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 
-
 /**
  * Client to remote build server.
- *
+ * 
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public class BuilderClient {
-    public static final String BUILD_SERVER_BASE_URL = "exo.ide.builder.build-server-base-url";
+    public static final String                     BUILD_SERVER_BASE_URL     = "exo.ide.builder.build-server-base-url";
 
-    private final Timer checkStatusTimer = new Timer();
+    private final Timer                            checkStatusTimer          = new Timer();
 
-    private final ConcurrentMap<String, TimerTask> checkStatusTasks = new ConcurrentHashMap<String, TimerTask>();
+    private final ConcurrentMap<String, TimerTask> checkStatusTasks          = new ConcurrentHashMap<String, TimerTask>();
 
-    private static final long CHECK_BUILD_STATUS_PERIOD = 2000;
+    private static final long                      CHECK_BUILD_STATUS_PERIOD = 2000;
 
-    private static final String BUILD_STATUS_CHANNEL = "maven:buildStatus:";
+    private static final String                    BUILD_STATUS_CHANNEL      = "maven:buildStatus:";
 
-    private static final Log LOG = ExoLogger.getLogger(BuilderClient.class);
+    private static final Log                       LOG                       = ExoLogger.getLogger(BuilderClient.class);
 
-    private final String baseURL;
+    private final String                           baseURL;
 
     public BuilderClient(InitParams initParams) {
         this(readValueParam(initParams, "build-server-base-url", System.getProperty(BUILD_SERVER_BASE_URL)));
@@ -86,47 +87,34 @@ public class BuilderClient {
 
     /**
      * Send request to start collect list of dependencies. Process may be started immediately or add in queue.
-     *
-     * @param vfs
-     *         virtual file system
-     * @param projectId
-     *         identifier of project we want to send for collect dependencies
+     * 
+     * @param vfs virtual file system
+     * @param projectId identifier of project we want to send for collect dependencies
      * @return ID of build task. It may be used as parameter for method {@link #status(String)} .
-     * @throws IOException
-     *         if any i/o errors occur
-     * @throws BuilderException
-     *         if build request was rejected by remote build server
-     * @throws VirtualFileSystemException
-     *         if any error in VFS
+     * @throws IOException if any i/o errors occur
+     * @throws BuilderException if build request was rejected by remote build server
+     * @throws VirtualFileSystemException if any error in VFS
      */
     public String dependenciesList(VirtualFileSystem vfs, String projectId) throws IOException, BuilderException,
-                                                                                   VirtualFileSystemException {
+                                                                           VirtualFileSystemException {
         URL url = new URL(baseURL + "/builder/maven/dependencies/list");
         return run(url, vfs.exportZip(projectId));
     }
 
     /**
-     * Send request to start collect project dependencies and add them in zip archive. Process may be started
-     * immediately
-     * or add in queue.
-     *
-     * @param vfs
-     *         virtual file system
-     * @param projectId
-     *         identifier of project we want to send for collect dependencies
-     * @param classifier
-     *         classifier to look for, e.g. : sources. May be <code>null</code>.
+     * Send request to start collect project dependencies and add them in zip archive. Process may be started immediately or add in queue.
+     * 
+     * @param vfs virtual file system
+     * @param projectId identifier of project we want to send for collect dependencies
+     * @param classifier classifier to look for, e.g. : sources. May be <code>null</code>.
      * @return ID of build task. It may be used as parameter for method {@link #status(String)} .
-     * @throws IOException
-     *         if any i/o errors occur
-     * @throws BuilderException
-     *         if build request was rejected by remote build server
-     * @throws VirtualFileSystemException
-     *         if any error in VFS
+     * @throws IOException if any i/o errors occur
+     * @throws BuilderException if build request was rejected by remote build server
+     * @throws VirtualFileSystemException if any error in VFS
      */
     public String dependenciesCopy(VirtualFileSystem vfs, String projectId, String classifier) throws IOException,
-                                                                                                      BuilderException,
-                                                                                                      VirtualFileSystemException {
+                                                                                              BuilderException,
+                                                                                              VirtualFileSystemException {
         String url = baseURL + "/builder/maven/dependencies/copy";
         if (!(classifier == null || classifier.isEmpty())) {
             url += "?classifier=" + classifier;
@@ -136,61 +124,49 @@ public class BuilderClient {
 
     /**
      * Send request to start new build at remote build server. Build may be started immediately or add in queue.
-     *
-     * @param vfs
-     *         virtual file system
-     * @param projectId
-     *         identifier of project we want to send for build
+     * 
+     * @param vfs virtual file system
+     * @param projectId identifier of project we want to send for build
      * @return ID of build task. It may be used as parameter for method {@link #status(String)}.
-     * @throws IOException
-     *         if any i/o errors occur
-     * @throws BuilderException
-     *         if build request was rejected by remote build server
-     * @throws VirtualFileSystemException
-     *         if any error in VFS
+     * @throws IOException if any i/o errors occur
+     * @throws BuilderException if build request was rejected by remote build server
+     * @throws VirtualFileSystemException if any error in VFS
      */
     public String build(VirtualFileSystem vfs, String projectId, String projectName, String projectType) throws IOException,
-                                                                                                                BuilderException,
-                                                                                                                VirtualFileSystemException {
+                                                                                                        BuilderException,
+                                                                                                        VirtualFileSystemException {
         URL url = new URL(baseURL + "/builder/maven/build");
         String buildId = run(url, vfs.exportZip(projectId));
-        if (projectId != null) {
-            Project proj = (Project)vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
-            LOG.info("EVENT#project-built# PROJECT#" + proj.getName() + "# TYPE#" + proj.getProjectType() + "#");
-        }
-        startCheckingBuildStatus(buildId);
+        LOG.info("EVENT#build-started# PROJECT#" + projectName + "# TYPE#" + projectType + "#");
+        LOG.info("EVENT#project-built# PROJECT#" + projectName + "# TYPE#" + projectType + "#");
+        startCheckingBuildStatus(buildId, projectName, projectType);
         return buildId;
     }
 
     /**
-     * Send request to start new build and deploy artifact.
-     * Build may be started immediately or add in queue.
-     *
-     * @param vfs
-     *         virtual file system
-     * @param projectId
-     *         identifier of project we want to send for build
+     * Send request to start new build and deploy artifact. Build may be started immediately or add in queue.
+     * 
+     * @param vfs virtual file system
+     * @param projectId identifier of project we want to send for build
      * @return ID of build task. It may be used as parameter for method {@link #status(String)} .
-     * @throws IOException
-     *         if any i/o errors occur
-     * @throws BuilderException
-     *         if build request was rejected by remote build server
-     * @throws VirtualFileSystemException
-     *         if any error in VFS
+     * @throws IOException if any i/o errors occur
+     * @throws BuilderException if build request was rejected by remote build server
+     * @throws VirtualFileSystemException if any error in VFS
      */
     public String deploy(VirtualFileSystem vfs, String projectId, String projectName, String projectType)
-            throws IOException, BuilderException,
-                   VirtualFileSystemException {
+                                                                                                         throws IOException,
+                                                                                                         BuilderException,
+                                                                                                         VirtualFileSystemException {
         URL url = new URL(baseURL + "/builder/maven/deploy");
         String buildId = run(url, vfs.exportZip(projectId));
-        LOG.info("EVENT#project-built# PROJECT#" + projectName + "# TYPE#" + projectType + "#");
+        LOG.info("EVENT#build-started# PROJECT#" + projectName + "# TYPE#" + projectType + "#");
         LOG.info("EVENT#project-deployed# PROJECT#" + projectName + "# TYPE#" + projectType + "# PAAS#LOCAL#");
-        startCheckingBuildStatus(buildId);
+        startCheckingBuildStatus(buildId, projectName, projectType);
         return buildId;
     }
 
     private String run(URL url, ContentStream zippedProject) throws IOException, BuilderException,
-                                                                    VirtualFileSystemException {
+                                                            VirtualFileSystemException {
         HttpURLConnection http = null;
         try {
             http = (HttpURLConnection)url.openConnection();
@@ -232,15 +208,12 @@ public class BuilderClient {
 
     /**
      * Get result of build.
-     *
-     * @param buildID
-     *         ID of build need to check
-     * @return string that contains description of current status of build in JSON format. Do nothing with such string
-     *         just re-send result to client
-     * @throws IOException
-     *         if any i/o errors occur
-     * @throws BuilderException
-     *         any other errors related to build server internal state or parameter of client request
+     * 
+     * @param buildID ID of build need to check
+     * @return string that contains description of current status of build in JSON format. Do nothing with such string just re-send result
+     *         to client
+     * @throws IOException if any i/o errors occur
+     * @throws BuilderException any other errors related to build server internal state or parameter of client request
      */
     public String status(String buildID) throws IOException, BuilderException {
         URL url = new URL(baseURL + "/builder/maven/status/" + buildID);
@@ -269,15 +242,12 @@ public class BuilderClient {
 
     /**
      * Check status of build.
-     *
-     * @param buildID
-     *         ID of build need to check
-     * @return string that contains description of current status of build in JSON format. Do nothing with such string
-     *         just re-send result to client
-     * @throws IOException
-     *         if any i/o errors occur
-     * @throws BuilderException
-     *         any other errors related to build server internal state or parameter of client request
+     * 
+     * @param buildID ID of build need to check
+     * @return string that contains description of current status of build in JSON format. Do nothing with such string just re-send result
+     *         to client
+     * @throws IOException if any i/o errors occur
+     * @throws BuilderException any other errors related to build server internal state or parameter of client request
      */
     public String result(String buildID) throws IOException, BuilderException {
         URL url = new URL(baseURL + "/builder/maven/result/" + buildID);
@@ -306,15 +276,14 @@ public class BuilderClient {
 
     /**
      * Cancel build.
-     *
-     * @param buildID
-     *         ID of build to be canceled
-     * @throws IOException
-     *         if any i/o errors occur
-     * @throws BuilderException
-     *         any other errors related to build server internal state or parameter of client request
+     * 
+     * @param buildID ID of build to be canceled
+     * @param projectName name of project which build will be interrupted
+     * @param projectType type of project which build will be interrupted
+     * @throws IOException if any i/o errors occur
+     * @throws BuilderException any other errors related to build server internal state or parameter of client request
      */
-    public void cancel(String buildID) throws IOException, BuilderException {
+    public void cancel(String buildID, String projectName, String projectType) throws IOException, BuilderException {
         URL url = new URL(baseURL + "/builder/maven/cancel/" + buildID);
         HttpURLConnection http = null;
         try {
@@ -324,6 +293,8 @@ public class BuilderClient {
             int responseCode = http.getResponseCode();
             if (responseCode != 204) {
                 fail(http);
+            } else {
+                LOG.info("EVENT#build-interrupted# PROJECT#" + projectName + "# TYPE#" + projectType + "#");
             }
 
         } finally {
@@ -335,14 +306,11 @@ public class BuilderClient {
 
     /**
      * Read log of build.
-     *
-     * @param buildID
-     *         ID of build
+     * 
+     * @param buildID ID of build
      * @return stream that contains build log
-     * @throws IOException
-     *         if any i/o errors occur
-     * @throws BuilderException
-     *         any other errors related to build server internal state or parameter of client request
+     * @throws IOException if any i/o errors occur
+     * @throws BuilderException any other errors related to build server internal state or parameter of client request
      */
     public InputStream log(String buildID) throws IOException, BuilderException {
         // Download build output.
@@ -375,15 +343,12 @@ public class BuilderClient {
     }
 
     /**
-     * Check is URL for download artifact is valid. Artifact may be removed by timeout but GWT client not able to check
-     * it because to cross-domain restriction for ajax requests.
-     *
-     * @param url
-     *         URL for checking
-     * @throws IOException
-     *         if any i/o errors occur
-     * @throws BuilderException
-     *         URL is not valid or any other errors related to build server internal state
+     * Check is URL for download artifact is valid. Artifact may be removed by timeout but GWT client not able to check it because to
+     * cross-domain restriction for ajax requests.
+     * 
+     * @param url URL for checking
+     * @throws IOException if any i/o errors occur
+     * @throws BuilderException URL is not valid or any other errors related to build server internal state
      */
     public void checkDownloadURL(String url) throws IOException, BuilderException {
         URL checkURL = new URL(url);
@@ -405,13 +370,10 @@ public class BuilderClient {
     }
 
     /**
-     * Add authentication info to the request. By default do nothing. May be reimplemented for particular authentication
-     * scheme.
-     *
-     * @param http
-     *         HTTP connection to add authentication info, e.g. Basic authentication headers.
-     * @throws IOException
-     *         if any i/o errors occur
+     * Add authentication info to the request. By default do nothing. May be reimplemented for particular authentication scheme.
+     * 
+     * @param http HTTP connection to add authentication info, e.g. Basic authentication headers.
+     * @throws IOException if any i/o errors occur
      */
     protected void authenticate(HttpURLConnection http) throws IOException {
     }
@@ -457,13 +419,12 @@ public class BuilderClient {
     }
 
     /**
-     * Periodically checks status of the previously launched job and sends
-     * the status to WebSocket connection when job status will be changed.
-     *
-     * @param buildId
-     *         identifier of the build job to check status
+     * Periodically checks status of the previously launched job and sends the status to WebSocket connection when job status will be
+     * changed.
+     * 
+     * @param buildId identifier of the build job to check status
      */
-    private void startCheckingBuildStatus(final String buildId) {
+    private void startCheckingBuildStatus(final String buildId, final String projectName, final String projectType) {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
@@ -472,6 +433,7 @@ public class BuilderClient {
                     if (!status.contains("\"status\":\"IN_PROGRESS\"")) {
                         checkStatusTasks.remove(buildId);
                         cancel();
+                        LOG.info("EVENT#build-finished# PROJECT#" + projectName + "# TYPE#" + projectType + "#");
                         publishWebSocketMessage(status, BUILD_STATUS_CHANNEL + buildId, null);
                     }
                 } catch (Exception e) {
@@ -487,13 +449,10 @@ public class BuilderClient {
 
     /**
      * Publishes the message over WebSocket connection.
-     *
-     * @param data
-     *         the data to be sent to the client
-     * @param channelID
-     *         channel identifier
-     * @param e
-     *         exception which has occurred or <code>null</code> if no exception
+     * 
+     * @param data the data to be sent to the client
+     * @param channelID channel identifier
+     * @param e exception which has occurred or <code>null</code> if no exception
      */
     private static void publishWebSocketMessage(Object data, String channelID, Exception e) {
         ChannelBroadcastMessage message = new ChannelBroadcastMessage();
@@ -521,7 +480,7 @@ public class BuilderClient {
     /** Stream that automatically close HTTP connection when all data ends. */
     private static class HttpStream extends FilterInputStream {
         private final HttpURLConnection http;
-        private       boolean           closed;
+        private boolean                 closed;
 
         private HttpStream(HttpURLConnection http) throws IOException {
             super(http.getInputStream());

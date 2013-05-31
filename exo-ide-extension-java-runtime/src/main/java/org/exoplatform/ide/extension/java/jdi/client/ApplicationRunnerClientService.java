@@ -38,27 +38,23 @@ import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
 public class ApplicationRunnerClientService {
-    
-    public static final String RUN = "/run";
 
-    public static final String DEBUG = "/debug";
-
-    public static final String PROLONG = "/prolong";
-
-    private static final String BASE_URL = "/java/runner";
-
+    public static final String                    RUN      = "/run";
+    public static final String                    DEBUG    = "/debug";
+    public static final String                    PROLONG  = "/prolong";
+    private static final String                   BASE_URL = "/java/runner";
     private static ApplicationRunnerClientService instance;
 
-    private MessageBus wsMessageBus;
+    private MessageBus                            wsMessageBus;
 
-    private final String wsName;
+    private final String                          wsName;
 
-    private final String restContext;
+    private final String                          restContext;
 
     public ApplicationRunnerClientService(MessageBus wsMessageBus, String wsName, String restContext) {
         this.wsName = wsName;
@@ -79,6 +75,7 @@ public class ApplicationRunnerClientService {
         if (useJRebel) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("jrebel", new JSONString("true"));
+            jsonObject.put("projectName", new JSONString(project));
             data = jsonObject.toString();
         }
 
@@ -89,7 +86,7 @@ public class ApplicationRunnerClientService {
 
     /**
      * Run application by sending request over WebSocket.
-     *
+     * 
      * @param project
      * @param war
      * @param useJRebel
@@ -104,13 +101,15 @@ public class ApplicationRunnerClientService {
         if (useJRebel) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("jrebel", new JSONString("true"));
+            jsonObject.put("projectName", new JSONString(project));
             data = jsonObject.toString();
         }
 
         callback.setStatusHandler(new RunningAppStatusHandler(project));
         RequestMessage message =
-                RequestMessageBuilder.build(RequestBuilder.POST, wsName + BASE_URL + RUN + params)
-                                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data).getRequestMessage();
+                                 RequestMessageBuilder.build(RequestBuilder.POST, wsName + BASE_URL + RUN + params)
+                                                      .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data)
+                                                      .getRequestMessage();
         wsMessageBus.send(message, callback);
     }
 
@@ -120,6 +119,7 @@ public class ApplicationRunnerClientService {
         if (useJRebel) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("jrebel", new JSONString("true"));
+            jsonObject.put("projectName", new JSONString(project));
             data = jsonObject.toString();
         }
 
@@ -131,7 +131,7 @@ public class ApplicationRunnerClientService {
 
     /**
      * Run application in debug mode by sending request over WebSocket.
-     *
+     * 
      * @param project
      * @param war
      * @param useJRebel
@@ -146,13 +146,15 @@ public class ApplicationRunnerClientService {
         if (useJRebel) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("jrebel", new JSONString("true"));
+            jsonObject.put("projectName", new JSONString(project));
             data = jsonObject.toString();
         }
 
         callback.setStatusHandler(new RunningAppStatusHandler(project));
         RequestMessage message =
-                RequestMessageBuilder.build(RequestBuilder.POST, wsName + BASE_URL + DEBUG + param)
-                                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data).getRequestMessage();
+                                 RequestMessageBuilder.build(RequestBuilder.POST, BASE_URL + DEBUG + param)
+                                                      .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data)
+                                                      .getRequestMessage();
         wsMessageBus.send(message, callback);
     }
 
@@ -169,17 +171,13 @@ public class ApplicationRunnerClientService {
 
     /**
      * Prolong expiration time of the application.
-     *
-     * @param name
-     *         application name
-     * @param time
-     *         time on which need to prolong expiration time of the application
-     * @param callback
-     *         {@link RESTfulRequestCallback}
+     * 
+     * @param name application name
+     * @param time time on which need to prolong expiration time of the application
+     * @param callback {@link RESTfulRequestCallback}
      * @throws WebSocketException
      */
-    public void prolongExpirationTime(String name, long time, RequestCallback<Object> callback)
-            throws WebSocketException {
+    public void prolongExpirationTime(String name, long time, RequestCallback<Object> callback) throws WebSocketException {
         StringBuilder params = new StringBuilder("?name=").append(name).append("&time=").append(time);
         RequestMessage message = RequestMessageBuilder.build(RequestBuilder.GET, wsName + BASE_URL + PROLONG + params).getRequestMessage();
         wsMessageBus.send(message, callback);
@@ -187,18 +185,14 @@ public class ApplicationRunnerClientService {
 
     /**
      * Update already deployed Java web application.
-     *
-     * @param name
-     *         application name
-     * @param war
-     *         location of .war file. It may be local or remote location. File from this location will be used for update.
-     * @param callback
-     *         {@link AsyncRequestCallback}
+     * 
+     * @param name application name
+     * @param war location of .war file. It may be local or remote location. File from this location will be used for update.
+     * @param callback {@link AsyncRequestCallback}
      * @throws RequestException
      */
-    public void updateApplication(String name, String war, AsyncRequestCallback<Object> callback)
-            throws RequestException {
-        String url = restContext + wsName + BASE_URL + "/update";
+    public void updateApplication(String name, String war, AsyncRequestCallback<Object> callback) throws RequestException {
+        String url = BASE_URL + "/update";
         StringBuilder params = new StringBuilder("?name=").append(name).append("&war=").append(war);
 
         Loader loader = new GWTLoader();

@@ -39,7 +39,6 @@ public class ProjectModel extends FolderModel implements Project {
         super();
     }
 
-    @SuppressWarnings("rawtypes")
     public ProjectModel(String name, FolderModel parent, String projectType, List<Property> properties) {
         this(null, null, name, PROJECT_MIME_TYPE, parent.createPath(name), parent.getId(), new Date().getTime(),
              properties, new HashMap<String, Link>(), projectType);
@@ -47,11 +46,10 @@ public class ProjectModel extends FolderModel implements Project {
     }
 
     public ProjectModel(ProjectModel project) {
-        this(project.getVfsId(), project.getId(), project.getName(), PROJECT_MIME_TYPE, project.getPath(), project.getParentId(), project
-                .getCreationDate(), project.getProperties(), project.getLinks(), project.getProjectType());
+        this(project.getVfsId(), project.getId(), project.getName(), PROJECT_MIME_TYPE, project.getPath(), project.getParentId(),
+             project.getCreationDate(), project.getProperties(), project.getLinks(), project.getProjectType());
     }
 
-    @SuppressWarnings("rawtypes")
     public ProjectModel(String vfsId, String id, String name, String mimeType, String path, String parentId, long creationDate,
                         List<Property> properties, Map<String, Link> links, String projectType) {
         super(vfsId, id, name, ItemType.PROJECT, mimeType, path, parentId, creationDate, properties, links);
@@ -63,7 +61,6 @@ public class ProjectModel extends FolderModel implements Project {
         init(itemObject);
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     public void init(JSONObject itemObject) {
         super.init(itemObject);
         projectType = (itemObject.get("projectType") != null) ? itemObject.get("projectType").isString().stringValue() : null;

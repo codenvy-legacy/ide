@@ -34,14 +34,14 @@ import javax.ws.rs.core.UriInfo;
 
 /**
  * Provide access to {@link ApplicationRunner} through HTTP.
- *
+ * 
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 @Path("{ws-name}/python/runner")
 public class ApplicationRunnerService {
     @Inject
-    private ApplicationRunner runner;
+    private ApplicationRunner         runner;
 
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
@@ -55,9 +55,10 @@ public class ApplicationRunnerService {
     public ApplicationInstance runApplication(@QueryParam("vfsid") String vfsId,
                                               @QueryParam("projectid") String projectId,
                                               @Context UriInfo uriInfo)
-            throws ApplicationRunnerException, VirtualFileSystemException {
-        ApplicationInstance app = runner.runApplication(
-                vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId);
+                                                                       throws ApplicationRunnerException, VirtualFileSystemException {
+        ApplicationInstance app =
+                                  runner.runApplication(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
+                                                        projectId);
         app.setStopURL(uriInfo.getBaseUriBuilder().path(getClass(), "stopApplication")
                               .queryParam("name", app.getName()).build(wsName).toString());
         return app;

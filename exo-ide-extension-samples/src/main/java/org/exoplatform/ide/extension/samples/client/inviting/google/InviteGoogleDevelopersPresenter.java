@@ -34,6 +34,7 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.invite.GoogleContact;
@@ -177,16 +178,30 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
     }
 
     public void oAuthLoginStart() {
-        String authUrl = Utils.getAuthorizationContext()
-                         + "/ide/oauth/authenticate?oauth_provider=google&mode=federated_login"
-                         + "&scope=https://www.google.com/m8/feeds"
-                         + "&userId=" + IDE.userId
-                         + "&redirect_after_login=/w/" + Utils.getWorkspaceName();
-        JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500,
-                                                               InviteGoogleDevelopersPresenter.this);
-        authWindow.loginWithOAuth();
-    }
+        String message = "Would you like to find contacts in your Google contact list? <br> "
+                         + "You will be redirected to Google authorization page.";
+        String title = "You have to be logged in Google account!";
 
+        BooleanValueReceivedHandler handler = new BooleanValueReceivedHandler() {
+            @Override
+            public void booleanValueReceived(Boolean aBoolean) {
+                if (aBoolean != null && aBoolean) {
+                    String authUrl = Utils.getAuthorizationContext()
+                                     + "/ide/oauth/authenticate?oauth_provider=google&mode=federated_login"
+                                     + "&scope=https://www.google.com/m8/feeds"
+                                     + "&userId=" + IDE.userId
+                                     + "&redirect_after_login="
+                                     + Utils.getAuthorizationPageURL();
+                    JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500,
+                                                                           InviteGoogleDevelopersPresenter.this);
+                    authWindow.loginWithOAuth();
+                } else {
+                    loadContactsFailed();
+                }
+            }
+        };
+        Dialogs.getInstance().ask(title, message, handler);
+    }
 
     @Override
     public void oAuthFinished(int authenticationStatus) {
@@ -205,7 +220,8 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
                                                   @Override
                                                   protected void onSuccess(List<GoogleContact> result) {
                                                       googleContactsReceived(result);
-
+                                                      contactsLoaded = true;
+                                                      reactGmailContacts();
                                                   }
 
                                                   @Override
@@ -421,12 +437,11 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
 
     private void reactGmailContacts() {
         if (display.getLoadGmailContactsButtonText().equals("Show gmail contacts")) {
-            display.setLoadGmailContactsButtonText("Hide gmail contacts");
             if (!contactsLoaded) {
                 isAuthenticate();
-                contactsLoaded = true;
             } else {
                 display.setDevelopersListVisible(true);
+                display.setLoadGmailContactsButtonText("Hide gmail contacts");
             }
         } else if (display.getLoadGmailContactsButtonText().equals("Hide gmail contacts")) {
             display.setLoadGmailContactsButtonText("Show gmail contacts");

@@ -183,6 +183,9 @@ public interface GitLocalizationConstant extends Messages {
     @Key("messages.reset_files_successfully")
     String resetFilesSuccessfully();
 
+    @Key("messages.nothing_to_reset")
+    String nothingToReset();
+
     @Key("messages.reset_successfully")
     String resetSuccessfully();
 
