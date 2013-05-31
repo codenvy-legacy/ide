@@ -32,7 +32,15 @@ import com.google.collide.client.document.DocumentManager;
 import com.google.collide.client.document.DocumentManager.LifecycleListener;
 import com.google.collide.client.document.DocumentMetadata;
 import com.google.collide.client.editor.Editor;
-import com.google.collide.dto.*;
+import com.google.collide.dto.DocumentSelection;
+import com.google.collide.dto.FileCollaboratorGone;
+import com.google.collide.dto.FileContents;
+import com.google.collide.dto.GetOpenedFilesInWorkspaceResponse;
+import com.google.collide.dto.NewFileCollaborator;
+import com.google.collide.dto.ParticipantUserDetails;
+import com.google.collide.dto.RoutingTypes;
+import com.google.collide.dto.UserDetails;
+import com.google.collide.dto.UserLogInDto;
 import com.google.collide.dto.client.DtoClientImpls.GetOpenendFilesInWorkspaceImpl;
 import com.google.collide.shared.document.Document;
 
@@ -267,16 +275,15 @@ public class CollaborationManager {
         if (participants == null)
             return;
 
-        ParticipantUserDetails toRemove = null;
+        JsonArray<ParticipantUserDetails> toRemove = JsonCollections.createArray();
         for (ParticipantUserDetails p : participants.asIterable()) {
             if (p.getParticipant().getId().equals(message.getParticipant().getParticipant().getId())) {
-                toRemove = p;
-                break;
+                toRemove.add(p);
             }
         }
 
-        if (toRemove != null) {
-            participants.remove(toRemove);
+        for (ParticipantUserDetails p : toRemove.asIterable()) {
+            participants.remove(p);
         }
 
         if (participants.isEmpty()) {

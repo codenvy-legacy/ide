@@ -66,46 +66,14 @@ public class PythonRuntimeServiceImpl extends PythonRuntimeService {
     @Override
     public void start(String vfsId, ProjectModel project, RequestCallback<ApplicationInstance> callback)
             throws WebSocketException {
-        String requestUrl = restContext + RUN_APPLICATION;
-
         StringBuilder params = new StringBuilder("?");
         params.append("&vfsid=").append(vfsId).append("&projectid=").append(project.getId());
-
-//        AsyncRequest.build(RequestBuilder.GET, requestUrl + params.toString(), true)
-//                    .requestStatusHandler(new StartApplicationStatusHandler(project.getName()))
-//                    .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
         RequestMessage message =
             RequestMessageBuilder.build(RequestBuilder.GET, wsName + RUN_APPLICATION + params).getRequestMessage();
         wsMessageBus.send(message, callback);
     }
     
     
-//    /**
-//     * Run application by sending request over WebSocket.
-//     *
-//     * @param project
-//     * @param war
-//     * @param useJRebel
-//     * @param callback
-//     * @throws WebSocketException
-//     */
-//    public void runApplicationWS(String project, String war, boolean useJRebel,
-//                                 RequestCallback<ApplicationInstance> callback) throws WebSocketException {
-//        String params = "?war=" + war;
-//
-//        String data = "";
-//        if (useJRebel) {
-//            JSONObject jsonObject = new JSONObject();
-//            jsonObject.put("jrebel", new JSONString("true"));
-//            data = jsonObject.toString();
-//        }
-//
-//        callback.setStatusHandler(new RunningAppStatusHandler(project));
-//        RequestMessage message =
-//                RequestMessageBuilder.build(RequestBuilder.POST, wsName + BASE_URL + RUN + params)
-//                                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data).getRequestMessage();
-//        wsMessageBus.send(message, callback);
-//    }
 
     /**
      * @see org.exoplatform.ide.extension.python.client.PythonRuntimeService#stop(java.lang.String,

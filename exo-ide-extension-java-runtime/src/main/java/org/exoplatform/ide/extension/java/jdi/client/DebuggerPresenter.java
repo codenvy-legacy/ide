@@ -806,25 +806,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                                                                             new RequestCallback<ApplicationInstance>(unmarshaller) {
                                                                                 @Override
                                                                                 protected void onSuccess(ApplicationInstance result) {
-                                                                                    // Need this temporary fix because with using
-                                                                                    // websocket we get stopURL like:
-                                                                                    // ide/java/runner/stop?name=app-zcuz5b5wawcn5u23
-                                                                                    // but it must be like:
-                                                                                    // http://127.0.0.1:8080/IDE/rest/private/ide/java/runner/stop?name=app-8gkiomg9q4qrhkxz
-                                                                                    if (!result.getStopURL()
-                                                                                               .matches(
-                                                                                                        "http[s]?://.+/IDE/rest/private/.*/stop\\?name=.+")) {
-                                                                                        String fixedStopURL =
-                                                                                                              Window.Location.getProtocol()
-                                                                                                                  + "//" +
-                                                                                                                  Window.Location.getHost()
-                                                                                                                  +
-                                                                                                                  Utils.getRestContext()
-                                                                                                                  + "/"
-                                                                                                                  + result.getStopURL();
-                                                                                        result.setStopURL(fixedStopURL);
-                                                                                    }
-
+                                                                                    String fixedStopURL =  Utils.getRestContext() + result.getStopURL();
+                                                                                    result.setStopURL(fixedStopURL);
                                                                                     onDebugStarted(result);
                                                                                 }
 
@@ -882,24 +865,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                                                                           new RequestCallback<ApplicationInstance>(unmarshaller) {
                                                                               @Override
                                                                               protected void onSuccess(ApplicationInstance result) {
-                                                                                  // Need this temporary fix because with using websocket we
-                                                                                  // get stopURL like:
-                                                                                  // ide/java/runner/stop?name=app-zcuz5b5wawcn5u23
-                                                                                  // but it must be like:
-                                                                                  // http://127.0.0.1:8080/IDE/rest/private/ide/java/runner/stop?name=app-8gkiomg9q4qrhkxz
-                                                                                  if (!result.getStopURL()
-                                                                                             .matches(
-                                                                                                      "http[s]?://.+/IDE/rest/private/.*/stop\\?name=.+")) {
-                                                                                      String fixedStopURL =
-                                                                                                            Window.Location.getProtocol()
-                                                                                                                + "//" +
-                                                                                                                Window.Location.getHost() +
-                                                                                                                Utils.getRestContext()
-                                                                                                                + "/"
-                                                                                                                + result.getStopURL();
-                                                                                      result.setStopURL(fixedStopURL);
-                                                                                  }
-
+                                                                                  String fixedStopURL =  Utils.getRestContext() + result.getStopURL();
+                                                                                  result.setStopURL(fixedStopURL);
                                                                                   onApplicationStarted(result);
                                                                               }
 

@@ -36,6 +36,9 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.extension.nodejs.client.NodeJsRuntimeExtension;
 import org.exoplatform.ide.extension.nodejs.client.NodeJsRuntimeService;
 import org.exoplatform.ide.extension.nodejs.client.run.event.ApplicationStartedEvent;
@@ -122,14 +125,14 @@ public class RunApplicationManager implements RunApplicationHandler, StopApplica
     private void runApplication() {
         AutoBean<ApplicationInstance> autoBean =
                 NodeJsRuntimeExtension.AUTO_BEAN_FACTORY.create(ApplicationInstance.class);
-        AutoBeanUnmarshaller<ApplicationInstance> unmarshaller = new AutoBeanUnmarshaller<ApplicationInstance>(autoBean);
+        AutoBeanUnmarshallerWS<ApplicationInstance> unmarshaller = new AutoBeanUnmarshallerWS<ApplicationInstance>(autoBean);
 
         try {
             IDE.fireEvent(new OutputEvent(NodeJsRuntimeExtension.NODEJS_LOCALIZATION.startingProjectMessage(currentProject
                                                                                                                     .getName()),
                                           Type.INFO));
             NodeJsRuntimeService.getInstance().start(currentVfs.getId(), currentProject,
-                                                     new AsyncRequestCallback<ApplicationInstance>(unmarshaller) {
+                                                     new RequestCallback<ApplicationInstance>(unmarshaller) {
                                                          @Override
                                                          protected void onSuccess(ApplicationInstance result) {
                                                              runApplication = result;
@@ -155,7 +158,7 @@ public class RunApplicationManager implements RunApplicationHandler, StopApplica
                                                                      + message, OutputMessage.Type.ERROR));
                                                          }
                                                      });
-        } catch (RequestException e) {
+        } catch (WebSocketException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
     }
