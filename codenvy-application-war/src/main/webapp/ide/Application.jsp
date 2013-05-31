@@ -46,7 +46,6 @@
 <body>
 
 <script type="text/javascript" language="javascript" src='<%= com.codenvy.servlet.DispatcherServlet.genStaticResourceUrl(request, "browserNotSupported.js")%>'></script>
-<script type="text/javascript" language="javascript" src='<%= com.codenvy.servlet.DispatcherServlet.genStaticResourceUrl(request, "cloud_menu.js")%>'></script>
 
 <div id="ide-menu-additions" align="right" class="ideMenuAdditions">
     <table cellspacing="0" cellpadding="0" border="0"
@@ -55,6 +54,10 @@
         </tr>
     </table>
 </div>
+
+<script type="text/javascript" language="javascript" src='<%= com.codenvy.servlet.DispatcherServlet.genStaticResourceUrl(request, "cloud_menu.js")%>'></script>
+
+
 <script type="text/javascript">
     var uvOptions = {};
     (function () {
