@@ -35,12 +35,13 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Configuration service for shell.
- *
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: ShellConfigurationService.java Mar 6, 2012 4:46:36 PM azatsarynnyy $
  */
@@ -64,6 +65,7 @@ public class ShellConfigurationService {
                     LOG.info("Getting user identity: " + identity.getUserId());
                 result.put("user", user);
                 result.put("userSettings", "{}");
+                LOG.info("EVENT#shell-launched#");
             }
             result.put("vfsId", vfsId);
             result.put("vfsBaseUrl", uriInfo.getBaseUriBuilder().path(VirtualFileSystemFactory.class).path("v2").build().toString());

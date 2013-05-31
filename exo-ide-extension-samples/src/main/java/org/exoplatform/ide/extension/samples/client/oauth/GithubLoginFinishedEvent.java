@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,34 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.maven.client.event;
+package org.exoplatform.ide.extension.samples.client.oauth;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
- * @version $Id: $
+ * Event occurs, when user tries to login to GiHub.
+ * 
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: Aug 30, 2012 10:33:01 AM anya $
  */
-public class BuildProjectStopEvent extends GwtEvent<BuildProjectStopHandler> {
-
-    /** Type used to register this event. */
-    public static final GwtEvent.Type<BuildProjectStopHandler> TYPE = new Type<BuildProjectStopHandler>();
-
-    /**
-     *
-     */
-    public BuildProjectStopEvent() {
-    }
+public class GithubLoginFinishedEvent extends GwtEvent<GithubLoginFinishedHandler> {
+    /** Type used to register the event. */
+    public static final GwtEvent.Type<GithubLoginFinishedHandler> TYPE = new GwtEvent.Type<GithubLoginFinishedHandler>();
 
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
     @Override
-    public GwtEvent.Type<BuildProjectStopHandler> getAssociatedType() {
+    public GwtEvent.Type<GithubLoginFinishedHandler> getAssociatedType() {
         return TYPE;
     }
 
     /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
     @Override
-    protected void dispatch(BuildProjectStopHandler handler) {
-        handler.onBuildProjectStopEvent(this);
+    protected void dispatch(GithubLoginFinishedHandler handler) {
+        handler.onGithubLoginFinished(this);
     }
+
 }
