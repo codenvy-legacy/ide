@@ -21,19 +21,21 @@ package com.codenvy.ide.extension.cloudfoundry.client.url;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.*;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
+import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryApplicationUnmarshaller;
+import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -52,7 +54,6 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
     private EventBus                            eventBus;
     private ConsolePart                         console;
     private CloudFoundryLocalizationConstant    constant;
-    private CloudFoundryAutoBeanFactory         autoBeanFactory;
     private AsyncCallback<String>               unmapUrlCallback;
     private LoginPresenter                      loginPresenter;
     private CloudFoundryClientService           service;
@@ -67,21 +68,19 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
      * @param eventBus
      * @param console
      * @param constant
-     * @param autoBeanFactory
      * @param loginPresenter
      * @param service
      */
     @Inject
-    protected UnmapUrlPresenter(UnmapUrlView view, ResourceProvider resourceProvider, EventBus eventBus,
-                                ConsolePart console, CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
-                                LoginPresenter loginPresenter, CloudFoundryClientService service) {
+    protected UnmapUrlPresenter(UnmapUrlView view, ResourceProvider resourceProvider, EventBus eventBus, ConsolePart console,
+                                CloudFoundryLocalizationConstant constant, LoginPresenter loginPresenter,
+                                CloudFoundryClientService service) {
         this.view = view;
         this.view.setDelegate(this);
         this.resourceProvider = resourceProvider;
         this.eventBus = eventBus;
         this.console = console;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
     }
@@ -143,12 +142,10 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
     /** Gets registered urls. */
     private void getAppRegisteredUrls() {
         String projectId = resourceProvider.getActiveProject().getId();
+        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
+        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
 
         try {
-            AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
-            AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-                    new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
-
             service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, null, null, eventBus,
                                                                                                      console, constant, loginPresenter,
@@ -156,8 +153,7 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
                                            @Override
                                            protected void onSuccess(CloudFoundryApplication result) {
                                                isBindingChanged = false;
-
-                                               registeredUrls = JsonCollections.createArray(result.getUris());
+                                               registeredUrls = result.getUris();
 
                                                view.setEnableMapUrlButton(false);
                                                view.setRegisteredUrls(registeredUrls);

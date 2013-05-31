@@ -22,17 +22,15 @@ import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesAsyncRequestCallback;
-import com.codenvy.ide.ext.cloudbees.client.CloudBeesAutoBeanFactory;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesClientService;
-import com.codenvy.ide.ext.cloudbees.client.CloudBeesLocalizationConstant;
 import com.codenvy.ide.ext.cloudbees.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.cloudbees.client.login.LoginPresenter;
+import com.codenvy.ide.ext.cloudbees.client.marshaller.ApplicationInfoUnmarshaller;
+import com.codenvy.ide.ext.cloudbees.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -43,14 +41,12 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDelegate {
-    private ApplicationInfoView           view;
-    private EventBus                      eventBus;
-    private ResourceProvider              resourceProvider;
-    private ConsolePart                   console;
-    private CloudBeesLocalizationConstant constant;
-    private CloudBeesAutoBeanFactory      autoBeanFactory;
-    private LoginPresenter                loginPresenter;
-    private CloudBeesClientService        service;
+    private ApplicationInfoView    view;
+    private EventBus               eventBus;
+    private ResourceProvider       resourceProvider;
+    private ConsolePart            console;
+    private LoginPresenter         loginPresenter;
+    private CloudBeesClientService service;
 
     /**
      * Create presenter.
@@ -59,22 +55,17 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
      * @param eventBus
      * @param resourceProvider
      * @param console
-     * @param constant
-     * @param autoBeanFactory
      * @param loginPresenter
      * @param service
      */
     @Inject
     protected ApplicationInfoPresenter(ApplicationInfoView view, EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
-                                       CloudBeesLocalizationConstant constant, CloudBeesAutoBeanFactory autoBeanFactory,
                                        LoginPresenter loginPresenter, CloudBeesClientService service) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
         this.console = console;
-        this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
     }
@@ -101,16 +92,16 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
      * @param projectId
      */
     private void showApplicationInfo(final String projectId) {
-        try {
-            AutoBean<ApplicationInfo> autoBean = autoBeanFactory.applicationInfo();
-            AutoBeanUnmarshaller<ApplicationInfo> unmarshaller = new AutoBeanUnmarshaller<ApplicationInfo>(autoBean);
-            LoggedInHandler loggedInHandler = new LoggedInHandler() {
-                @Override
-                public void onLoggedIn() {
-                    showApplicationInfo(projectId);
-                }
-            };
+        DtoClientImpls.ApplicationInfoImpl applicationInfo = DtoClientImpls.ApplicationInfoImpl.make();
+        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(applicationInfo);
+        LoggedInHandler loggedInHandler = new LoggedInHandler() {
+            @Override
+            public void onLoggedIn() {
+                showApplicationInfo(projectId);
+            }
+        };
 
+        try {
             service.getApplicationInfo(null, resourceProvider.getVfsId(), projectId,
                                        new CloudBeesAsyncRequestCallback<ApplicationInfo>(unmarshaller, loggedInHandler, null, eventBus,
                                                                                           console, loginPresenter) {

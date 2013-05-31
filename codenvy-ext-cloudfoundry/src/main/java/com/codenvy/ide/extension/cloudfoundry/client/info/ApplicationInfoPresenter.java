@@ -21,15 +21,18 @@ package com.codenvy.ide.extension.cloudfoundry.client.info;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.*;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
+import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryApplicationUnmarshaller;
+import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -45,7 +48,6 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
     private ResourceProvider                    resourceProvider;
     private ConsolePart                         console;
     private CloudFoundryLocalizationConstant    constant;
-    private CloudFoundryAutoBeanFactory         autoBeanFactory;
     private LoginPresenter                      loginPresenter;
     private CloudFoundryClientService           service;
     private CloudFoundryExtension.PAAS_PROVIDER paasProvider;
@@ -58,22 +60,19 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
      * @param resourceProvider
      * @param console
      * @param constant
-     * @param autoBeanFactory
      * @param loginPresenter
      * @param service
      */
     @Inject
     protected ApplicationInfoPresenter(ApplicationInfoView view, EventBus eventBus, ResourceProvider resourceProvider,
                                        ConsolePart console, CloudFoundryLocalizationConstant constant,
-                                       CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter,
-                                       CloudFoundryClientService service) {
+                                       LoginPresenter loginPresenter, CloudFoundryClientService service) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
         this.console = console;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
     }
@@ -97,10 +96,8 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
     private void showApplicationInfo(final String projectId, CloudFoundryExtension.PAAS_PROVIDER paasProvider) {
         try {
             this.paasProvider = paasProvider;
-
-            AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
-            AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-                    new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+            DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
+            CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
             LoggedInHandler loggedInHandler = new LoggedInHandler() {
                 @Override
                 public void onLoggedIn() {

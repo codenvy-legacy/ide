@@ -22,17 +22,16 @@ import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.appfog.client.AppfogAsyncRequestCallback;
-import com.codenvy.ide.ext.appfog.client.AppfogAutoBeanFactory;
 import com.codenvy.ide.ext.appfog.client.AppfogClientService;
 import com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant;
 import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
+import com.codenvy.ide.ext.appfog.client.marshaller.AppFogApplicationUnmarshaller;
+import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -49,7 +48,6 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
     /** The name of application. */
     private String                     applicationName;
     private AppfogLocalizationConstant constant;
-    private AppfogAutoBeanFactory      autoBeanFactory;
     private LoginPresenter             loginPresenter;
     private AppfogClientService        service;
 
@@ -62,22 +60,19 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
      * @param console
      * @param applicationName
      * @param constant
-     * @param autoBeanFactory
      * @param loginPresenter
      * @param service
      */
     @Inject
     protected RenameApplicationPresenter(RenameApplicationView view, EventBus eventBus, ResourceProvider resourceProvider,
                                          ConsolePart console, String applicationName, AppfogLocalizationConstant constant,
-                                         AppfogAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter,
-                                         AppfogClientService service) {
+                                         LoginPresenter loginPresenter, AppfogClientService service) {
         this.view = view;
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
         this.console = console;
         this.applicationName = applicationName;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
     }
@@ -152,11 +147,10 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
     /** Get the application's information. */
     private void getApplicationInfo() {
         String projectId = resourceProvider.getActiveProject().getId();
+        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
 
         try {
-            AutoBean<AppfogApplication> appfogApplication = autoBeanFactory.appfogApplication();
-            AutoBeanUnmarshaller<AppfogApplication> unmarshaller = new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
-
             service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, appInfoLoggedInHandler, null,
                                                                                          eventBus, constant, console, loginPresenter) {

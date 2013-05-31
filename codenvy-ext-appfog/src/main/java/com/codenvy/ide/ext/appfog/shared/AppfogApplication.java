@@ -18,64 +18,35 @@
  */
 package com.codenvy.ide.ext.appfog.shared;
 
-import java.util.List;
+import com.codenvy.ide.json.JsonArray;
 
-/**
- * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
- * @version $Id: $
- */
+/** @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a> */
 public interface AppfogApplication {
     String getName();
 
-    void setName(String name);
-
-    List<String> getUris();
-
-    void setUris(List<String> uris);
+    JsonArray<String> getUris();
 
     int getInstances();
 
-    void setInstances(int instances);
-
     int getRunningInstances();
-
-    void setRunningInstances(int runningInstances);
 
     String getState();
 
-    void setState(String state);
-
-    List<String> getServices();
-
-    void setServices(List<String> services);
+    JsonArray<String> getServices();
 
     String getVersion();
 
-    void setVersion(String version);
-
-    List<String> getEnv();
-
-    void setEnv(List<String> env);
+    JsonArray<String> getEnv();
 
     AppfogApplicationResources getResources();
 
-    void setResources(AppfogApplicationResources resources);
-
     Staging getStaging();
-
-    void setStaging(Staging staging);
 
     // Switch debug mode.
     String getDebug();
-
-    void setDebug(String debug);
     // ------------------
 
     ApplicationMetaInfo getMeta();
 
-    void setMeta(ApplicationMetaInfo mi);
-
     Infra getInfra();
-
-    void setInfra(Infra infra);
 }

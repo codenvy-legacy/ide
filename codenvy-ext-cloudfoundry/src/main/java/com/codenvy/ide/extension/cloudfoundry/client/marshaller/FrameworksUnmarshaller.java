@@ -19,7 +19,7 @@
 package com.codenvy.ide.extension.cloudfoundry.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
+import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.Framework;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.Unmarshallable;
@@ -27,8 +27,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 /**
  * Unmarshaller for frameworks list.
@@ -39,17 +37,13 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 public class FrameworksUnmarshaller implements Unmarshallable<JsonArray<Framework>> {
     private JsonArray<Framework> frameworks;
 
-    private CloudFoundryAutoBeanFactory autoBeanFactory;
-
     /**
      * Create unmarshaller.
      *
      * @param frameworks
-     * @param autoBeanFactory
      */
-    public FrameworksUnmarshaller(JsonArray<Framework> frameworks, CloudFoundryAutoBeanFactory autoBeanFactory) {
+    public FrameworksUnmarshaller(JsonArray<Framework> frameworks) {
         this.frameworks = frameworks;
-        this.autoBeanFactory = autoBeanFactory;
     }
 
     /** {@inheritDoc} */
@@ -70,8 +64,8 @@ public class FrameworksUnmarshaller implements Unmarshallable<JsonArray<Framewor
                 JSONObject jsonObject = array.get(i).isObject();
                 String value = (jsonObject.isObject() != null) ? jsonObject.isObject().toString() : "";
 
-                AutoBean<Framework> framework = AutoBeanCodex.decode(autoBeanFactory, Framework.class, value);
-                frameworks.add(framework.as());
+                DtoClientImpls.FrameworkImpl framework = DtoClientImpls.FrameworkImpl.deserialize(value);
+                frameworks.add(framework);
             }
         } catch (Exception e) {
             throw new UnmarshallerException("Can't parse applications information.", e);

@@ -18,16 +18,11 @@
  */
 package com.codenvy.ide.ext.appfog.shared;
 
-/**
- * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
- * @version $Id: $
- */
+import com.codenvy.ide.json.JsonArray;
+
+/** @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a> */
 public interface AppfogServices {
-    AppfogSystemService[] getAppfogSystemService();
+    JsonArray<AppfogSystemService> getAppfogSystemService();
 
-    void setAppfogSystemService(AppfogSystemService[] system);
-
-    AppfogProvisionedService[] getAppfogProvisionedService();
-
-    void setAppfogProvisionedService(AppfogProvisionedService[] provisioned);
+    JsonArray<AppfogProvisionedService> getAppfogProvisionedService();
 }

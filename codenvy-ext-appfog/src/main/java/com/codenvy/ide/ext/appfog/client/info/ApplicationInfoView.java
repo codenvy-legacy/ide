@@ -19,8 +19,7 @@
 package com.codenvy.ide.ext.appfog.client.info;
 
 import com.codenvy.ide.api.mvp.View;
-
-import java.util.List;
+import com.codenvy.ide.json.JsonArray;
 
 /**
  * The view of {@link ApplicationInfoPresenter}.
@@ -96,7 +95,7 @@ public interface ApplicationInfoView extends View<ApplicationInfoView.ActionDele
      * @param applications
      *         application's uris
      */
-    void setApplicationUris(List<String> applications);
+    void setApplicationUris(JsonArray<String> applications);
 
     /**
      * Sets application's services.
@@ -104,7 +103,7 @@ public interface ApplicationInfoView extends View<ApplicationInfoView.ActionDele
      * @param services
      *         application's services
      */
-    void setApplicationServices(List<String> services);
+    void setApplicationServices(JsonArray<String> services);
 
     /**
      * Sets application's environments.
@@ -112,7 +111,7 @@ public interface ApplicationInfoView extends View<ApplicationInfoView.ActionDele
      * @param environments
      *         application's enviroments.
      */
-    void setApplicationEnvironments(List<String> environments);
+    void setApplicationEnvironments(JsonArray<String> environments);
 
     /** Show dialog. */
     void showDialog();

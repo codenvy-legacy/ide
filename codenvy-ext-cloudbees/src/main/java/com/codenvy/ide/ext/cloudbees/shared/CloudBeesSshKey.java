@@ -22,13 +22,7 @@ package com.codenvy.ide.ext.cloudbees.shared;
 public interface CloudBeesSshKey {
     String getName();
 
-    void setName(String name);
-
     String getContent();
 
-    void setContent(String content);
-
     String getFingerprint();
-
-    void setFingerprint(String fingerprint);
 }

@@ -21,18 +21,21 @@ package com.codenvy.ide.extension.cloudfoundry.client.update;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.*;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
+import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryApplicationUnmarshaller;
+import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -49,7 +52,6 @@ public class UpdatePropertiesPresenter {
     private ResourceProvider                    resourceProvider;
     private ConsolePart                         console;
     private CloudFoundryLocalizationConstant    constant;
-    private CloudFoundryAutoBeanFactory         autoBeanFactory;
     private AsyncCallback<String>               updatePropertiesCallback;
     private LoginPresenter                      loginPresenter;
     private CloudFoundryClientService           service;
@@ -62,19 +64,17 @@ public class UpdatePropertiesPresenter {
      * @param resourceProvider
      * @param console
      * @param constant
-     * @param autoBeanFactory
      * @param loginPresenter
      * @param service
      */
     @Inject
     protected UpdatePropertiesPresenter(EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
-                                        CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
-                                        LoginPresenter loginPresenter, CloudFoundryClientService service) {
+                                        CloudFoundryLocalizationConstant constant, LoginPresenter loginPresenter,
+                                        CloudFoundryClientService service) {
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
         this.console = console;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
     }
@@ -103,11 +103,10 @@ public class UpdatePropertiesPresenter {
     /** Gets old memory value. */
     private void getOldMemoryValue() {
         String projectId = resourceProvider.getActiveProject().getId();
-        try {
-            AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
-            AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-                    new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
+        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
 
+        try {
             service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
                                                                                                      getOldMemoryValueLoggedInHandler, null,
@@ -201,12 +200,10 @@ public class UpdatePropertiesPresenter {
     /** Gets old instances value. */
     private void getOldInstancesValue() {
         String projectId = resourceProvider.getActiveProject().getId();
+        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
+        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
 
         try {
-            AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
-            AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-                    new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
-
             service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
                                                                                                      getOldInstancesValueLoggedInHandler,
@@ -263,7 +260,6 @@ public class UpdatePropertiesPresenter {
      */
     private void updateInstances(final String instancesExpression) {
         final String projectId = resourceProvider.getActiveProject().getId();
-
         String encodedExp = URL.encodePathSegment(instancesExpression);
 
         try {
@@ -273,10 +269,10 @@ public class UpdatePropertiesPresenter {
                                         @Override
                                         protected void onSuccess(String result) {
                                             try {
-                                                AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-                                                        autoBeanFactory.cloudFoundryApplication();
-                                                AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-                                                        new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+                                                DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication =
+                                                        DtoClientImpls.CloudFoundryApplicationImpl.make();
+                                                CloudFoundryApplicationUnmarshaller unmarshaller =
+                                                        new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
 
                                                 service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
                                                                            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(

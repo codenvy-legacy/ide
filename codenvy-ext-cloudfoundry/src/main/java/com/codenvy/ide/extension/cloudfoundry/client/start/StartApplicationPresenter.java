@@ -21,17 +21,21 @@ package com.codenvy.ide.extension.cloudfoundry.client.start;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.*;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
+import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryApplicationUnmarshaller;
+import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -46,7 +50,6 @@ public class StartApplicationPresenter {
     private ResourceProvider                    resourceProvider;
     private ConsolePart                         console;
     private CloudFoundryLocalizationConstant    constant;
-    private CloudFoundryAutoBeanFactory         autoBeanFactory;
     private AsyncCallback<String>               appInfoChangedCallback;
     private LoginPresenter                      loginPresenter;
     private CloudFoundryClientService           service;
@@ -59,19 +62,17 @@ public class StartApplicationPresenter {
      * @param resourceProvider
      * @param console
      * @param constant
-     * @param autoBeanFactory
      * @param loginPresenter
      * @param service
      */
     @Inject
     protected StartApplicationPresenter(EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
-                                        CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
-                                        LoginPresenter loginPresenter, CloudFoundryClientService service) {
+                                        CloudFoundryLocalizationConstant constant, LoginPresenter loginPresenter,
+                                        CloudFoundryClientService service) {
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
         this.console = console;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
     }
@@ -137,11 +138,10 @@ public class StartApplicationPresenter {
     /** Gets information about active project and check its state. */
     private void checkIsStarted() {
         Project project = resourceProvider.getActiveProject();
+        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
+        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
 
         try {
-            AutoBean<CloudFoundryApplication> CloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
-            AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-                    new AutoBeanUnmarshaller<CloudFoundryApplication>(CloudFoundryApplication);
             service.getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null, null,
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
                                                                                                      checkIsStartedLoggedInHandler,
@@ -174,12 +174,10 @@ public class StartApplicationPresenter {
     private void startApplication(String name, String server, final AsyncCallback<String> callback) {
         final String projectId =
                 resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId() : null;
+        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
+        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
 
         try {
-            AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
-            AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-                    new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
-
             service.startApplication(resourceProvider.getVfsId(), projectId, name, server, paasProvider,
                                      new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, startLoggedInHandler, null,
                                                                                                    eventBus, console, constant,
@@ -218,7 +216,9 @@ public class StartApplicationPresenter {
      */
     private String getAppUrisAsString(CloudFoundryApplication application) {
         String appUris = "";
-        for (String uri : application.getUris()) {
+        JsonArray<String> uris = application.getUris();
+        for (int i = 0; i < uris.size(); i++) {
+            String uri = uris.get(i);
             if (!uri.startsWith("http")) {
                 uri = "http://" + uri;
             }
@@ -251,12 +251,10 @@ public class StartApplicationPresenter {
     /** Gets information about active project and check its state. */
     private void checkIsStopped() {
         Project project = resourceProvider.getActiveProject();
+        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
+        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
 
         try {
-            AutoBean<CloudFoundryApplication> CloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
-            AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-                    new AutoBeanUnmarshaller<CloudFoundryApplication>(CloudFoundryApplication);
-
             service.getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null, null,
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
                                                                                                      checkIsStoppedLoggedInHandler,
@@ -294,13 +292,12 @@ public class StartApplicationPresenter {
                                                                                  constant, loginPresenter, paasProvider) {
                                         @Override
                                         protected void onSuccess(String result) {
-                                            try {
-                                                AutoBean<CloudFoundryApplication> CloudFoundryApplication =
-                                                        autoBeanFactory.cloudFoundryApplication();
-                                                AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-                                                        new AutoBeanUnmarshaller<CloudFoundryApplication>(
-                                                                CloudFoundryApplication);
+                                            DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication =
+                                                    DtoClientImpls.CloudFoundryApplicationImpl.make();
+                                            CloudFoundryApplicationUnmarshaller unmarshaller =
+                                                    new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
 
+                                            try {
                                                 service.getApplicationInfo(resourceProvider.getVfsId(), projectId, name, null,
                                                                            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
                                                                                    unmarshaller, null, null, eventBus, console, constant,
@@ -348,12 +345,10 @@ public class StartApplicationPresenter {
     private void restartApplication(String name, String server, final AsyncCallback<String> callback) {
         final String projectId =
                 resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId() : null;
+        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
+        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
 
         try {
-            AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
-            AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-                    new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
-
             service.restartApplication(resourceProvider.getVfsId(), projectId, name, server, paasProvider,
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, restartLoggedInHandler,
                                                                                                      null, eventBus, console, constant,

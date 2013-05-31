@@ -22,20 +22,19 @@ import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesAsyncRequestCallback;
-import com.codenvy.ide.ext.cloudbees.client.CloudBeesAutoBeanFactory;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesClientService;
 import com.codenvy.ide.ext.cloudbees.client.CloudBeesLocalizationConstant;
 import com.codenvy.ide.ext.cloudbees.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.cloudbees.client.login.LoginPresenter;
+import com.codenvy.ide.ext.cloudbees.client.marshaller.ApplicationInfoUnmarshaller;
+import com.codenvy.ide.ext.cloudbees.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -52,7 +51,6 @@ public class DeleteApplicationPresenter {
     private EventBus                      eventBus;
     private ConsolePart                   console;
     private CloudBeesLocalizationConstant constant;
-    private CloudBeesAutoBeanFactory      autoBeanFactory;
     private LoginPresenter                loginPresenter;
     private AsyncCallback<String>         appDeleteCallback;
     private CloudBeesClientService        service;
@@ -64,19 +62,17 @@ public class DeleteApplicationPresenter {
      * @param eventBus
      * @param console
      * @param constant
-     * @param autoBeanFactory
      * @param loginPresenter
      * @param service
      */
     @Inject
     protected DeleteApplicationPresenter(ResourceProvider resourceProvider, EventBus eventBus, ConsolePart console,
-                                         CloudBeesLocalizationConstant constant, CloudBeesAutoBeanFactory autoBeanFactory,
-                                         LoginPresenter loginPresenter, CloudBeesClientService service) {
+                                         CloudBeesLocalizationConstant constant, LoginPresenter loginPresenter,
+                                         CloudBeesClientService service) {
         this.resourceProvider = resourceProvider;
         this.eventBus = eventBus;
         this.console = console;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
     }
@@ -105,16 +101,16 @@ public class DeleteApplicationPresenter {
         if (project != null) {
             String projectId = project.getId();
 
-            try {
-                AutoBean<ApplicationInfo> autoBean = autoBeanFactory.applicationInfo();
-                AutoBeanUnmarshaller<ApplicationInfo> unmarshaller = new AutoBeanUnmarshaller<ApplicationInfo>(autoBean);
-                LoggedInHandler loggedInHandler = new LoggedInHandler() {
-                    @Override
-                    public void onLoggedIn() {
-                        getApplicationInfo();
-                    }
-                };
+            DtoClientImpls.ApplicationInfoImpl applicationInfo = DtoClientImpls.ApplicationInfoImpl.make();
+            ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(applicationInfo);
+            LoggedInHandler loggedInHandler = new LoggedInHandler() {
+                @Override
+                public void onLoggedIn() {
+                    getApplicationInfo();
+                }
+            };
 
+            try {
                 service.getApplicationInfo(null, resourceProvider.getVfsId(), projectId,
                                            new CloudBeesAsyncRequestCallback<ApplicationInfo>(unmarshaller, loggedInHandler, null, eventBus,
                                                                                               console, loginPresenter) {

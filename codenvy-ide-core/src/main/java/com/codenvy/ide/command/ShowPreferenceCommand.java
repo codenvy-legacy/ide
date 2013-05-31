@@ -21,7 +21,6 @@ package com.codenvy.ide.command;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.expressions.Expression;
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
-import com.codenvy.ide.preferences.PreferencesAgentImpl;
 import com.codenvy.ide.preferences.PreferencesPresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
@@ -35,27 +34,25 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ShowPreferenceCommand implements ExtendedCommand {
-    private final Resources resources;
-
-    private final PreferencesAgentImpl agent;
+    private final Resources            resources;
+    private final PreferencesPresenter presenter;
 
     /**
      * Create command.
      *
      * @param resources
-     * @param agent
+     * @param presenter
      */
     @Inject
-    public ShowPreferenceCommand(Resources resources, PreferencesAgentImpl agent) {
+    public ShowPreferenceCommand(Resources resources, PreferencesPresenter presenter) {
         this.resources = resources;
-        this.agent = agent;
+        this.presenter = presenter;
     }
 
     /** {@inheritDoc} */
     @Override
     public void execute() {
-        PreferencesPresenter dialog = new PreferencesPresenter(resources, agent);
-        dialog.showPreferences();
+        presenter.showPreferences();
     }
 
     /** {@inheritDoc} */

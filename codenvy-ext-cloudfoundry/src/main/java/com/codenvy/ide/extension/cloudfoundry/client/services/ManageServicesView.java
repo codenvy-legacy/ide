@@ -20,8 +20,7 @@ package com.codenvy.ide.extension.cloudfoundry.client.services;
 
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
-
-import java.util.List;
+import com.codenvy.ide.json.JsonArray;
 
 /**
  * The view of {@link ManageServicesPresenter}.
@@ -79,14 +78,14 @@ public interface ManageServicesView extends View<ManageServicesView.ActionDelega
      *
      * @param services
      */
-    void setProvisionedServices(List<ProvisionedService> services);
+    void setProvisionedServices(JsonArray<ProvisionedService> services);
 
     /**
      * Sets bounded services.
      *
      * @param services
      */
-    void setBoundedServices(List<String> services);
+    void setBoundedServices(JsonArray<String> services);
 
     /** Show dialog. */
     void showDialog();

@@ -25,8 +25,11 @@ import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.appfog.client.*;
 import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
+import com.codenvy.ide.ext.appfog.client.marshaller.AppFogApplicationUnmarshaller;
+import com.codenvy.ide.ext.appfog.client.marshaller.AppFogApplicationUnmarshallerWS;
 import com.codenvy.ide.ext.appfog.client.marshaller.FrameworksUnmarshaller;
 import com.codenvy.ide.ext.appfog.client.marshaller.InfrasUnmarshaller;
+import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
 import com.codenvy.ide.ext.appfog.shared.Framework;
 import com.codenvy.ide.ext.appfog.shared.InfraDetail;
@@ -37,15 +40,12 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
-import com.codenvy.ide.websocket.rest.AutoBeanUnmarshallerWS;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
@@ -105,7 +105,6 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     private EventBus                   eventBus;
     private ConsolePart                console;
     private AppfogLocalizationConstant constant;
-    private AppfogAutoBeanFactory      autoBeanFactory;
     private LoginPresenter             loginPresenter;
     private AppfogClientService        service;
     private InfraDetail                currentInfra;
@@ -118,24 +117,21 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
      * @param eventBus
      * @param console
      * @param constant
-     * @param autoBeanFactory
      * @param loginPresenter
      * @param service
      */
     @Inject
     protected CreateApplicationPresenter(CreateApplicationView view, ResourceProvider resourceProvider, EventBus eventBus,
-                                         ConsolePart console, AppfogLocalizationConstant constant, AppfogAutoBeanFactory autoBeanFactory,
-                                         LoginPresenter loginPresenter, AppfogClientService service) {
+                                         ConsolePart console, AppfogLocalizationConstant constant, LoginPresenter loginPresenter,
+                                         AppfogClientService service) {
         this.frameworks = JsonCollections.createArray();
         this.infras = JsonCollections.createArray();
-
         this.resourceProvider = resourceProvider;
         this.view = view;
         this.view.setDelegate(this);
         this.console = console;
         this.eventBus = eventBus;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
     }
@@ -276,12 +272,11 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                 createApplication(appData);
             }
         };
-
         final Project project = resourceProvider.getActiveProject();
+        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
+        AppFogApplicationUnmarshallerWS unmarshaller = new AppFogApplicationUnmarshallerWS(appfogApplication);
 
         try {
-            AutoBean<AppfogApplication> appfogApplication = autoBeanFactory.appfogApplication();
-            AutoBeanUnmarshallerWS<AppfogApplication> unmarshaller = new AutoBeanUnmarshallerWS<AppfogApplication>(appfogApplication);
             service.createWS(appData.server, appData.name, appData.type, appData.url, appData.instances, appData.memory, appData.nostart,
                              resourceProvider.getVfsId(), project.getId(), warUrl, appData.infra,
                              new AppfogRESTfulRequestCallback<AppfogApplication>(unmarshaller, loggedInHandler, null, appData.server,
@@ -324,10 +319,10 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
      *         handler that should be called after success login
      */
     private void createApplicationREST(final AppData appData, final Project project, LoggedInHandler loggedInHandler) {
-        try {
-            final AutoBean<AppfogApplication> appfogApplication = autoBeanFactory.appfogApplication();
-            AutoBeanUnmarshaller<AppfogApplication> unmarshaller = new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
+        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
 
+        try {
             service.create(appData.server, appData.name, appData.type, appData.url, appData.instances, appData.memory, appData.nostart,
                            resourceProvider.getVfsId(), project.getId(), warUrl, appData.infra,
                            new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, loggedInHandler, null, appData.server, eventBus,
@@ -394,7 +389,9 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
      */
     private String getAppUrlsAsString(AppfogApplication application) {
         String appUris = "";
-        for (String uri : application.getUris()) {
+        JsonArray<String> uris = application.getUris();
+        for (int i = 0; i < uris.size(); i++) {
+            String uri = uris.get(i);
             if (!uri.startsWith("http")) {
                 uri = "http://" + uri;
             }
@@ -478,10 +475,9 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                 getFrameworks(server);
             }
         };
+        FrameworksUnmarshaller unmarshaller = new FrameworksUnmarshaller(JsonCollections.<Framework>createArray());
 
         try {
-            FrameworksUnmarshaller unmarshaller = new FrameworksUnmarshaller(JsonCollections.<Framework>createArray(), autoBeanFactory);
-
             service.getFrameworks(server,
                                   new AppfogAsyncRequestCallback<JsonArray<Framework>>(unmarshaller, getFrameworksLoggedInHandler, null,
                                                                                        eventBus, constant, console, loginPresenter) {
@@ -621,13 +617,12 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                 getInfras(server);
             }
         };
+        InfrasUnmarshaller unmarshaller = new InfrasUnmarshaller(JsonCollections.<InfraDetail>createArray());
 
         try {
-            InfrasUnmarshaller unmarshaller = new InfrasUnmarshaller(JsonCollections.<InfraDetail>createArray(), autoBeanFactory);
-
             service.infras(server, null, null,
-                           new AppfogAsyncRequestCallback<JsonArray<InfraDetail>>(unmarshaller, getInfrasHandler, null, server,
-                                                                                  eventBus, constant, console, loginPresenter) {
+                           new AppfogAsyncRequestCallback<JsonArray<InfraDetail>>(unmarshaller, getInfrasHandler, null, server, eventBus,
+                                                                                  constant, console, loginPresenter) {
                                @Override
                                protected void onSuccess(JsonArray<InfraDetail> result) {
                                    if (result.isEmpty()) {

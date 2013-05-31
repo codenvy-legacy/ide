@@ -18,16 +18,9 @@
  */
 package com.codenvy.ide.ext.appfog.shared;
 
-/**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: $
- */
+/** @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a> */
 public interface Staging {
     String getModel();
 
-    void setModel(String model);
-
     String getStack();
-
-    void setStack(String stack);
 }

@@ -23,29 +23,28 @@ import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.appfog.client.AppfogAsyncRequestCallback;
-import com.codenvy.ide.ext.appfog.client.AppfogAutoBeanFactory;
 import com.codenvy.ide.ext.appfog.client.AppfogClientService;
 import com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant;
 import com.codenvy.ide.ext.appfog.client.delete.DeleteApplicationPresenter;
 import com.codenvy.ide.ext.appfog.client.info.ApplicationInfoPresenter;
 import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
+import com.codenvy.ide.ext.appfog.client.marshaller.AppFogApplicationUnmarshaller;
 import com.codenvy.ide.ext.appfog.client.marshaller.StringUnmarshaller;
 import com.codenvy.ide.ext.appfog.client.services.ManageServicesPresenter;
 import com.codenvy.ide.ext.appfog.client.start.StartApplicationPresenter;
 import com.codenvy.ide.ext.appfog.client.update.UpdateApplicationPresenter;
 import com.codenvy.ide.ext.appfog.client.update.UpdatePropertiesPresenter;
 import com.codenvy.ide.ext.appfog.client.url.UnmapUrlPresenter;
+import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -65,13 +64,11 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
     private ConsolePart                console;
     private AppfogApplication          application;
     private AppfogLocalizationConstant constant;
-    private AppfogAutoBeanFactory      autoBeanFactory;
     private StartApplicationPresenter  startAppPresenter;
     private DeleteApplicationPresenter deleteAppPresenter;
     private LoginPresenter             loginPresenter;
     private AppfogClientService        service;
     private ApplicationInfoPresenter   applicationInfoPresenter;
-
     /** The callback what execute when some application's information was changed. */
     private AsyncCallback<String> appInfoChangedCallback = new AsyncCallback<String>() {
         @Override
@@ -96,7 +93,6 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
      * @param resourceProvider
      * @param console
      * @param constant
-     * @param autoBeanFactory
      * @param startAppPresenter
      * @param deleteAppPresenter
      * @param loginPresenter
@@ -109,11 +105,10 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
      */
     @Inject
     protected AppFogProjectPresenter(AppFogProjectView view, EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
-                                     AppfogLocalizationConstant constant, AppfogAutoBeanFactory autoBeanFactory,
-                                     StartApplicationPresenter startAppPresenter, DeleteApplicationPresenter deleteAppPresenter,
-                                     LoginPresenter loginPresenter, AppfogClientService service,
-                                     ApplicationInfoPresenter applicationInfoPresenter, ManageServicesPresenter manageServicesPresenter,
-                                     UpdatePropertiesPresenter updateProperyPresenter,
+                                     AppfogLocalizationConstant constant, StartApplicationPresenter startAppPresenter,
+                                     DeleteApplicationPresenter deleteAppPresenter, LoginPresenter loginPresenter,
+                                     AppfogClientService service, ApplicationInfoPresenter applicationInfoPresenter,
+                                     ManageServicesPresenter manageServicesPresenter, UpdatePropertiesPresenter updateProperyPresenter,
                                      UpdateApplicationPresenter updateApplicationPresenter, UnmapUrlPresenter unmapUrlPresenter) {
         this.view = view;
         this.view.setDelegate(this);
@@ -121,7 +116,6 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
         this.resourceProvider = resourceProvider;
         this.console = console;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.startAppPresenter = startAppPresenter;
         this.deleteAppPresenter = deleteAppPresenter;
         this.loginPresenter = loginPresenter;
@@ -257,16 +251,16 @@ public class AppFogProjectPresenter implements AppFogProjectView.ActionDelegate 
      * @param project
      */
     protected void getApplicationInfo(final Project project) {
-        try {
-            AutoBean<AppfogApplication> appfogApplication = autoBeanFactory.appfogApplication();
-            AutoBeanUnmarshaller<AppfogApplication> unmarshaller = new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
-            LoggedInHandler loggedInHandler = new LoggedInHandler() {
-                @Override
-                public void onLoggedIn() {
-                    getApplicationInfo(project);
-                }
-            };
+        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
+        LoggedInHandler loggedInHandler = new LoggedInHandler() {
+            @Override
+            public void onLoggedIn() {
+                getApplicationInfo(project);
+            }
+        };
 
+        try {
             service.getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null, null,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, loggedInHandler, null, eventBus,
                                                                                          constant, console, loginPresenter) {

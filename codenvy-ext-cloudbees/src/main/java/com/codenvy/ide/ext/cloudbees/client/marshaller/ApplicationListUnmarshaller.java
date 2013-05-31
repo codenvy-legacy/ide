@@ -19,15 +19,13 @@
 package com.codenvy.ide.ext.cloudbees.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.ext.cloudbees.client.CloudBeesAutoBeanFactory;
+import com.codenvy.ide.ext.cloudbees.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 /**
  * Unmarshaller for applications.
@@ -37,16 +35,13 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
  */
 public class ApplicationListUnmarshaller implements Unmarshallable<JsonArray<ApplicationInfo>> {
     private JsonArray<ApplicationInfo> apps;
-    private CloudBeesAutoBeanFactory   autoBeanFactory;
 
     /**
      * Create unmarshaller.
      *
-     * @param autoBeanFactory
      * @param apps
      */
-    public ApplicationListUnmarshaller(CloudBeesAutoBeanFactory autoBeanFactory, JsonArray<ApplicationInfo> apps) {
-        this.autoBeanFactory = autoBeanFactory;
+    public ApplicationListUnmarshaller(JsonArray<ApplicationInfo> apps) {
         this.apps = apps;
     }
 
@@ -66,8 +61,8 @@ public class ApplicationListUnmarshaller implements Unmarshallable<JsonArray<App
         for (int i = 0; i < value.size(); i++) {
             String payload = value.get(i).isObject().toString();
 
-            AutoBean<ApplicationInfo> appInfoBean = AutoBeanCodex.decode(autoBeanFactory, ApplicationInfo.class, payload);
-            apps.add(appInfoBean.as());
+            DtoClientImpls.ApplicationInfoImpl appInfo = DtoClientImpls.ApplicationInfoImpl.deserialize(payload);
+            apps.add(appInfo);
         }
     }
 

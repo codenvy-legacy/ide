@@ -18,56 +18,31 @@
  */
 package com.codenvy.ide.ext.appfog.shared;
 
-/**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
- */
+import com.codenvy.ide.json.JsonArray;
+
+/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
 public interface AppfogApplicationStatistics {
     String getName();
 
-    void setName(String name);
-
     String getState();
-
-    void setState(String state);
 
     String getHost();
 
-    void setHost(String host);
-
     int getPort();
 
-    void setPort(int port);
-
-    String[] getUris();
-
-    void setUris(String[] uris);
+    JsonArray<String> getUris();
 
     String getUptime();
 
-    void setUptime(String uptime);
-
     int getCpuCores();
-
-    void setCpuCores(int cores);
 
     double getCpu();
 
-    void setCpu(double cpu);
-
     int getMem();
-
-    void setMem(int mem);
 
     int getDisk();
 
-    void setDisk(int disk);
-
     int getMemLimit();
 
-    void setMemLimit(int memLimit);
-
     int getDiskLimit();
-
-    void setDiskLimit(int diskLimit);
 }

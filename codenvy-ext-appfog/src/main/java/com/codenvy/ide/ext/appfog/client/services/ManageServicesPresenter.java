@@ -20,26 +20,28 @@ package com.codenvy.ide.ext.appfog.client.services;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.ext.appfog.client.*;
+import com.codenvy.ide.ext.appfog.client.AppFogExtension;
+import com.codenvy.ide.ext.appfog.client.AppfogAsyncRequestCallback;
+import com.codenvy.ide.ext.appfog.client.AppfogClientService;
+import com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant;
 import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
+import com.codenvy.ide.ext.appfog.client.marshaller.AppFogApplicationUnmarshaller;
 import com.codenvy.ide.ext.appfog.client.marshaller.AppfogServicesUnmarshaller;
+import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
 import com.codenvy.ide.ext.appfog.shared.AppfogProvisionedService;
 import com.codenvy.ide.ext.appfog.shared.AppfogServices;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Presenter for managing Appfog services.
@@ -59,7 +61,6 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
     private EventBus                   eventBus;
     private ConsolePart                console;
     private AppfogLocalizationConstant constant;
-    private AppfogAutoBeanFactory      autoBeanFactory;
     private LoginPresenter             loginPresenter;
     private AppfogClientService        service;
     /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
@@ -102,21 +103,19 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
      * @param eventBus
      * @param console
      * @param constant
-     * @param autoBeanFactory
      * @param loginPresenter
      * @param service
      * @param createServicePresenter
      */
     @Inject
     protected ManageServicesPresenter(ManageServicesView view, EventBus eventBus, ConsolePart console, AppfogLocalizationConstant constant,
-                                      AppfogAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter, AppfogClientService service,
+                                      LoginPresenter loginPresenter, AppfogClientService service,
                                       CreateServicePresenter createServicePresenter) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
         this.console = console;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
         this.createServicePresenter = createServicePresenter;
@@ -281,8 +280,9 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
 
     /** Gets the list of services and put them to field. */
     private void getApplicationInfo() {
-        AutoBean<AppfogApplication> appfogApplication = autoBeanFactory.appfogApplication();
-        AutoBeanUnmarshaller<AppfogApplication> unmarshaller = new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
+        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
+
         try {
             service.getApplicationInfo(null, null, application.getName(), AppFogExtension.DEFAULT_SERVER,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, getApplicationInfoLoggedInHandler,
@@ -303,13 +303,16 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
 
     /** Get the list of Appfog services (system and provisioned). */
     private void getServices() {
+        AppfogServicesUnmarshaller unmarshaller = new AppfogServicesUnmarshaller();
+
         try {
-            AppfogServicesUnmarshaller unmarshaller = new AppfogServicesUnmarshaller(autoBeanFactory);
             service.services(AppFogExtension.DEFAULT_SERVER, new AsyncRequestCallback<AppfogServices>(unmarshaller) {
                 @Override
                 protected void onSuccess(AppfogServices result) {
-                    List<AppfogProvisionedService> filteredServices = new ArrayList<AppfogProvisionedService>();
-                    for (AppfogProvisionedService service : result.getAppfogProvisionedService()) {
+                    JsonArray<AppfogProvisionedService> filteredServices = JsonCollections.createArray();
+                    JsonArray<AppfogProvisionedService> appfogProvisionedService = result.getAppfogProvisionedService();
+                    for (int i = 0; i < appfogProvisionedService.size(); i++) {
+                        AppfogProvisionedService service = appfogProvisionedService.get(i);
                         if (service.getInfra().getName().equals(application.getInfra().getName())) {
                             filteredServices.add(service);
                         }

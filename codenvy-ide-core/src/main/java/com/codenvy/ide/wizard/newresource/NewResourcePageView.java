@@ -19,6 +19,7 @@
 package com.codenvy.ide.wizard.newresource;
 
 import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.json.JsonArray;
 
 /**
  * Interface of new resource view.
@@ -35,4 +36,11 @@ public interface NewResourcePageView extends View<NewResourcePageView.ActionDele
          */
         void selectedFileType(NewResourceWizardData newFileWizard);
     }
+
+    /**
+     * Sets available resource wizards.
+     *
+     * @param resourceWizards
+     */
+    void setResourceWizard(JsonArray<NewResourceWizardData> resourceWizards);
 }

@@ -22,9 +22,5 @@ package com.codenvy.ide.ext.cloudbees.shared;
 public interface CloudBeesAccount {
     String getName();
 
-    void setName(String name);
-
     String getCompany();
-
-    void setCompany(String company);
 }

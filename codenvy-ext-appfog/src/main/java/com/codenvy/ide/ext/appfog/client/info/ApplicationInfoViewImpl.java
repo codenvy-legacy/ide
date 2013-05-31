@@ -20,6 +20,7 @@ package com.codenvy.ide.ext.appfog.client.info;
 
 import com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant;
 import com.codenvy.ide.ext.appfog.client.AppfogResources;
+import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -34,7 +35,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * The implementation of {@link ApplicationInfoView}.
@@ -176,7 +177,7 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
 
     /** {@inheritDoc} */
     @Override
-    public void setApplicationUris(List<String> applications) {
+    public void setApplicationUris(JsonArray<String> applications) {
         setItemsIntoCellTable(applications, urisTable);
     }
 
@@ -186,19 +187,25 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
      * @param items
      * @param table
      */
-    private void setItemsIntoCellTable(List<String> items, CellTable<String> table) {
-        table.setRowData(items);
+    private void setItemsIntoCellTable(JsonArray<String> items, CellTable<String> table) {
+        ArrayList<String> list = new ArrayList<String>();
+        for (int i = 0; i < items.size(); i++) {
+            String item = items.get(i);
+            list.add(item);
+        }
+
+        table.setRowData(list);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setApplicationServices(List<String> services) {
+    public void setApplicationServices(JsonArray<String> services) {
         setItemsIntoCellTable(services, servicesTable);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setApplicationEnvironments(List<String> environments) {
+    public void setApplicationEnvironments(JsonArray<String> environments) {
         setItemsIntoCellTable(environments, environmentsTable);
     }
 

@@ -20,6 +20,7 @@ package com.codenvy.ide.wizard.template;
 
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.template.Template;
+import com.codenvy.ide.json.JsonArray;
 
 /**
  * The view of {@link TemplatePagePresenter}.
@@ -36,4 +37,11 @@ public interface TemplatePageView extends View<TemplatePageView.ActionDelegate> 
          */
         void onTemplateSelected(Template template);
     }
+
+    /**
+     * Sets available templates.
+     *
+     * @param templates
+     */
+    void setTemplates(JsonArray<Template> templates);
 }

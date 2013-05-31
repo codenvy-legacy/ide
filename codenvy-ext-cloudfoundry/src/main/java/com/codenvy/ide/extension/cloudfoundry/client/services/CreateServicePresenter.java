@@ -20,21 +20,25 @@ package com.codenvy.ide.extension.cloudfoundry.client.services;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.*;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryServicesUnmarshaller;
+import com.codenvy.ide.extension.cloudfoundry.client.marshaller.ProvisionedServiceUnmarshaller;
+import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices;
 import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
 import com.codenvy.ide.extension.cloudfoundry.shared.SystemService;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.LinkedHashMap;
@@ -51,7 +55,6 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate 
     private EventBus                            eventBus;
     private ConsolePart                         console;
     private CloudFoundryLocalizationConstant    constant;
-    private CloudFoundryAutoBeanFactory         autoBeanFactory;
     private AsyncCallback<ProvisionedService>   createServiceCallback;
     private LoginPresenter                      loginPresenter;
     private CloudFoundryClientService           service;
@@ -71,20 +74,18 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate 
      * @param eventBus
      * @param console
      * @param constant
-     * @param autoBeanFactory
      * @param loginPresenter
      * @param service
      */
     @Inject
     protected CreateServicePresenter(CreateServiceView view, EventBus eventBus, ConsolePart console,
-                                     CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
-                                     LoginPresenter loginPresenter, CloudFoundryClientService service) {
+                                     CloudFoundryLocalizationConstant constant, LoginPresenter loginPresenter,
+                                     CloudFoundryClientService service) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
         this.console = console;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
     }
@@ -99,11 +100,10 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate 
     private void doCreate() {
         String name = view.getName();
         String type = view.getSystemServices();
-        try {
-            AutoBean<ProvisionedService> provisionedService = autoBeanFactory.provisionedService();
-            AutoBeanUnmarshaller<ProvisionedService> unmarshaller =
-                    new AutoBeanUnmarshaller<ProvisionedService>(provisionedService);
+        DtoClientImpls.ProvisionedServiceImpl provisionedService = DtoClientImpls.ProvisionedServiceImpl.make();
+        ProvisionedServiceUnmarshaller unmarshaller = new ProvisionedServiceUnmarshaller(provisionedService);
 
+        try {
             service.createService(null, type, name, null, null, null,
                                   new CloudFoundryAsyncRequestCallback<ProvisionedService>(unmarshaller, createServiceLoggedInHandler, null,
                                                                                            eventBus, console, constant, loginPresenter,
@@ -140,13 +140,16 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate 
 
     /** Get the list of CloudFoundry services (provisioned and system). */
     private void getServices() {
+        CloudFoundryServicesUnmarshaller unmarshaller = new CloudFoundryServicesUnmarshaller();
+
         try {
-            CloudFoundryServicesUnmarshaller unmarshaller = new CloudFoundryServicesUnmarshaller(autoBeanFactory);
             service.services(null, paasProvider, new AsyncRequestCallback<CloudFoundryServices>(unmarshaller) {
                 @Override
                 protected void onSuccess(CloudFoundryServices result) {
                     LinkedHashMap<String, String> values = new LinkedHashMap<String, String>();
-                    for (SystemService service : result.getSystem()) {
+                    JsonArray<SystemService> systems = result.getSystem();
+                    for (int i = 0; i < systems.size(); i++) {
+                        SystemService service = systems.get(i);
                         values.put(service.getVendor(), service.getDescription());
                     }
                     view.setServices(values);

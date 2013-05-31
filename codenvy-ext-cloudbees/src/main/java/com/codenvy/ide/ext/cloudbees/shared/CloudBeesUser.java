@@ -18,43 +18,25 @@
  */
 package com.codenvy.ide.ext.cloudbees.shared;
 
-import java.util.List;
+import com.codenvy.ide.json.JsonArray;
 
 /** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
 public interface CloudBeesUser {
     String getEmail();
 
-    void setEmail(String email);
-
     String getFirst_name();
-
-    void setFirst_name(String name);
 
     String getLast_name();
 
-    void setLast_name(String name);
-
     String getName();
-
-    void setName(String name);
 
     String getPassword();
 
-    void setPassword(String password);
-
     String getRole();
-
-    void setRole(String role);
 
     String getId();
 
-    void setId(String id);
+    JsonArray<CloudBeesAccount> getAccounts();
 
-    List<CloudBeesAccount> getAccounts();
-
-    void setAccounts(List<CloudBeesAccount> accounts);
-
-    List<CloudBeesSshKey> getSsh_keys();
-
-    void setSsh_keys(List<CloudBeesSshKey> keys);
+    JsonArray<CloudBeesSshKey> getSsh_keys();
 }

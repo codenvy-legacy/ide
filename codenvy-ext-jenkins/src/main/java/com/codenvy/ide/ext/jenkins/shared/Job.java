@@ -30,43 +30,19 @@ public interface Job {
      *
      * @return name of the job.
      */
-    public String getName();
-
-    /**
-     * Set the job name.
-     *
-     * @param name
-     *         name of the job.
-     */
-    public void setName(String name);
+    String getName();
 
     /**
      * Get the url of the build job.
      *
      * @return url of the build job.
      */
-    public String getBuildUrl();
-
-    /**
-     * Set the url for build job.
-     *
-     * @param buildUrl
-     *         of the build job.
-     */
-    public void setBuildUrl(String buildUrl);
+    String getBuildUrl();
 
     /**
      * Get the url for check status of the build job.
      *
      * @return url for check status of the build job.
      */
-    public String getStatusUrl();
-
-    /**
-     * Set the url for check status of the build job.
-     *
-     * @param statusUrl
-     *         url for check status of the build job.
-     */
-    public void setStatusUrl(String statusUrl);
+    String getStatusUrl();
 }

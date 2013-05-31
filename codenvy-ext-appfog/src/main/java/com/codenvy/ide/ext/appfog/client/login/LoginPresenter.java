@@ -21,16 +21,19 @@ package com.codenvy.ide.ext.appfog.client.login;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
-import com.codenvy.ide.ext.appfog.client.*;
+import com.codenvy.ide.ext.appfog.client.AppFogExtension;
+import com.codenvy.ide.ext.appfog.client.AppfogAsyncRequestCallback;
+import com.codenvy.ide.ext.appfog.client.AppfogClientService;
+import com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant;
+import com.codenvy.ide.ext.appfog.client.marshaller.SystemInfoUnmarshaller;
+import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.SystemInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.codenvy.ide.rest.HTTPStatus;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -45,7 +48,6 @@ public class LoginPresenter implements LoginView.ActionDelegate {
     private String                     target;
     private LoggedInHandler            loggedIn;
     private LoginCanceledHandler       loginCanceled;
-    private AppfogAutoBeanFactory      autoBeanFactory;
     private AppfogClientService        service;
     private EventBus                   eventBus;
     private AppfogLocalizationConstant constant;
@@ -57,17 +59,15 @@ public class LoginPresenter implements LoginView.ActionDelegate {
      * @param view
      * @param eventBus
      * @param console
-     * @param autoBeanFactory
      * @param service
      * @param constant
      */
     @Inject
-    protected LoginPresenter(LoginView view, EventBus eventBus, ConsolePart console, AppfogAutoBeanFactory autoBeanFactory,
-                             AppfogClientService service, AppfogLocalizationConstant constant) {
+    protected LoginPresenter(LoginView view, EventBus eventBus, ConsolePart console, AppfogClientService service,
+                             AppfogLocalizationConstant constant) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
-        this.autoBeanFactory = autoBeanFactory;
         this.service = service;
         this.constant = constant;
         this.console = console;
@@ -105,9 +105,10 @@ public class LoginPresenter implements LoginView.ActionDelegate {
 
     /** Get AppFog system information to fill the login field, if user is logged in. */
     protected void getSystemInformation() {
+        DtoClientImpls.SystemInfoImpl systemInfo = DtoClientImpls.SystemInfoImpl.make();
+        SystemInfoUnmarshaller unmarshaller = new SystemInfoUnmarshaller(systemInfo);
+
         try {
-            AutoBean<SystemInfo> systemInfo = autoBeanFactory.systemInfo();
-            AutoBeanUnmarshaller<SystemInfo> unmarshaller = new AutoBeanUnmarshaller<SystemInfo>(systemInfo);
             service.getSystemInfo(AppFogExtension.DEFAULT_SERVER,
                                   new AppfogAsyncRequestCallback<SystemInfo>(unmarshaller, loggedIn, loginCanceled, eventBus, constant,
                                                                              console, this) {

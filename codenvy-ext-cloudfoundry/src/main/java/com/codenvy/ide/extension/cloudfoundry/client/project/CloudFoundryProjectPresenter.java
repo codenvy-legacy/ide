@@ -22,27 +22,30 @@ import com.codenvy.ide.api.event.RefreshBrowserEvent;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.*;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.delete.DeleteApplicationPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
+import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryApplicationUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.StringUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.client.services.ManageServicesPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.start.StartApplicationPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.update.UpdateApplicationPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.update.UpdatePropertiesPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter;
+import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -64,7 +67,6 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
     private ConsolePart                         console;
     private CloudFoundryApplication             application;
     private CloudFoundryLocalizationConstant    constant;
-    private CloudFoundryAutoBeanFactory         autoBeanFactory;
     private StartApplicationPresenter           startAppPresenter;
     private DeleteApplicationPresenter          deleteAppPresenter;
     private LoginPresenter                      loginPresenter;
@@ -100,7 +102,6 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
      * @param resourceProvider
      * @param console
      * @param constant
-     * @param autoBeanFactory
      * @param startAppPresenter
      * @param deleteAppPresenter
      * @param loginPresenter
@@ -112,9 +113,9 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
                                            ManageServicesPresenter manageServicesPresenter,
                                            UpdateApplicationPresenter updateApplicationPresenter, EventBus eventBus,
                                            ResourceProvider resourceProvider, ConsolePart console,
-                                           CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
-                                           StartApplicationPresenter startAppPresenter, DeleteApplicationPresenter deleteAppPresenter,
-                                           LoginPresenter loginPresenter, CloudFoundryClientService service) {
+                                           CloudFoundryLocalizationConstant constant, StartApplicationPresenter startAppPresenter,
+                                           DeleteApplicationPresenter deleteAppPresenter, LoginPresenter loginPresenter,
+                                           CloudFoundryClientService service) {
         this.view = view;
         this.view.setDelegate(this);
         this.applicationInfoPresenter = applicationInfoPresenter;
@@ -126,7 +127,6 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
         this.manageServicesPresenter = manageServicesPresenter;
         this.updateApplicationPresenter = updateApplicationPresenter;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.startAppPresenter = startAppPresenter;
         this.deleteAppPresenter = deleteAppPresenter;
         this.loginPresenter = loginPresenter;
@@ -195,17 +195,16 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
      * @param project
      */
     protected void getApplicationInfo(final Project project) {
-        try {
-            AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
-            AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-                    new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
-            LoggedInHandler loggedInHandler = new LoggedInHandler() {
-                @Override
-                public void onLoggedIn() {
-                    getApplicationInfo(project);
-                }
-            };
+        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
+        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
+        LoggedInHandler loggedInHandler = new LoggedInHandler() {
+            @Override
+            public void onLoggedIn() {
+                getApplicationInfo(project);
+            }
+        };
 
+        try {
             service.getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null, null,
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
                                                                                                      eventBus, console, constant,

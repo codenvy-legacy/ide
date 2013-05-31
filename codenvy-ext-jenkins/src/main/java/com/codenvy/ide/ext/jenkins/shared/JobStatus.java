@@ -25,63 +25,47 @@ package com.codenvy.ide.ext.jenkins.shared;
  * @version $Id: JobStatus.java Mar 15, 2012 4:04:15 PM azatsarynnyy $
  */
 public interface JobStatus {
+    public enum Status {
+        QUEUE("In queue..."), //
+        BUILD("Building..."), //
+        END("End."); //
+
+        private final String value;
+
+        private Status(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
     /**
      * Get the name of the build job.
      *
      * @return name of the build job.
      */
-    public String getName();
-
-    /**
-     * Set the job name.
-     *
-     * @param name
-     *         name.
-     */
-    public void setName(String name);
+    String getName();
 
     /**
      * Get the current status of the build job.
      *
      * @return status of the build job.
      */
-    public JobStatusBean.Status getStatus();
-
-    /**
-     * Set the current status of the build job.
-     *
-     * @param status
-     *         status of the build job.
-     */
-    public void setStatus(JobStatusBean.Status status);
+    Status getStatus();
 
     /**
      * Get result of the last build job.
      *
      * @return result of the last build job.
      */
-    public String getLastBuildResult();
-
-    /**
-     * Set result of the last build job.
-     *
-     * @param lastBuildResult
-     *         result of the last build job.
-     */
-    public void setLastBuildResult(String lastBuildResult);
+    String getLastBuildResult();
 
     /**
      * Get the URL to download artifact.
      *
      * @return URL to download artifact.
      */
-    public String getArtifactUrl();
-
-    /**
-     * Set the URL to download artifact.
-     *
-     * @param artifactUrl
-     *         URL to download artifact.
-     */
-    public void setArtifactUrl(String artifactUrl);
+    String getArtifactUrl();
 }

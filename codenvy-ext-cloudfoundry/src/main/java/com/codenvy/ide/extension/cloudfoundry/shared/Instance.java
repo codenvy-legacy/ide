@@ -18,24 +18,13 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.shared;
 
-/**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
- */
+/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
 public interface Instance {
     String getConsoleHost();
 
-    void setConsoleHost(String host);
-
     int getConsolePort();
-
-    void setConsolePort(int port);
 
     String getDebugHost();
 
-    void setDebugHost(String host);
-
     int getDebugPort();
-
-    void setDebugPort(int port);
 }

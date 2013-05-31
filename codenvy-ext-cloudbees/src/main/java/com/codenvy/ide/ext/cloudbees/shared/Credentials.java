@@ -33,24 +33,9 @@ public interface Credentials {
     String getEmail();
 
     /**
-     * Set the e-mail.
-     *
-     * @param email
-     */
-    void setEmail(String email);
-
-    /**
      * Returns the password.
      *
      * @return password.
      */
     String getPassword();
-
-    /**
-     * Set the password.
-     *
-     * @param password
-     *         password.
-     */
-    void setPassword(String password);
 }

@@ -30,23 +30,23 @@ import com.codenvy.ide.ext.cloudbees.client.*;
 import com.codenvy.ide.ext.cloudbees.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.cloudbees.client.login.LoginCanceledHandler;
 import com.codenvy.ide.ext.cloudbees.client.login.LoginPresenter;
+import com.codenvy.ide.ext.cloudbees.client.marshaller.ApplicationInfoUnmarshaller;
+import com.codenvy.ide.ext.cloudbees.client.marshaller.ApplicationInfoUnmarshallerWS;
 import com.codenvy.ide.ext.cloudbees.client.marshaller.DomainsUnmarshaller;
+import com.codenvy.ide.ext.cloudbees.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.cloudbees.shared.ApplicationInfo;
 import com.codenvy.ide.ext.jenkins.client.build.BuildApplicationPresenter;
 import com.codenvy.ide.ext.jenkins.shared.JobStatus;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
-import com.codenvy.ide.websocket.rest.AutoBeanUnmarshallerWS;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -61,7 +61,6 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
     private ResourceProvider              resourcesProvider;
     private ConsolePart                   console;
     private CloudBeesLocalizationConstant constant;
-    private CloudBeesAutoBeanFactory      autoBeanFactory;
     private LoginPresenter                loginPresenter;
     private CloudBeesClientService        service;
     private TemplateAgent                 templateAgent;
@@ -83,7 +82,6 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
      * @param resourcesProvider
      * @param console
      * @param constant
-     * @param autoBeanFactory
      * @param loginPresenter
      * @param service
      * @param templateAgent
@@ -92,9 +90,9 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
      */
     @Inject
     protected CloudBeesPagePresenter(CloudBeesPageView view, EventBus eventBus, ResourceProvider resourcesProvider, ConsolePart console,
-                                     CloudBeesLocalizationConstant constant, CloudBeesAutoBeanFactory autoBeanFactory,
-                                     LoginPresenter loginPresenter, CloudBeesClientService service, TemplateAgent templateAgent,
-                                     CloudBeesResources resources, BuildApplicationPresenter buildApplicationPresenter) {
+                                     CloudBeesLocalizationConstant constant, LoginPresenter loginPresenter, CloudBeesClientService service,
+                                     TemplateAgent templateAgent, CloudBeesResources resources,
+                                     BuildApplicationPresenter buildApplicationPresenter) {
         super("Deploy project to CloudBees", resources.cloudBees48());
 
         this.view = view;
@@ -103,7 +101,6 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
         this.resourcesProvider = resourcesProvider;
         this.console = console;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
         this.templateAgent = templateAgent;
@@ -243,12 +240,10 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
         // TODO Need to create some special service after this class
         // This class still doesn't have analog.
         //        JobManager.get().showJobSeparated();
-        AutoBean<ApplicationInfo> autoBean = autoBeanFactory.applicationInfo();
+        DtoClientImpls.ApplicationInfoImpl applicationInfo = DtoClientImpls.ApplicationInfoImpl.make();
+        ApplicationInfoUnmarshallerWS unmarshaller = new ApplicationInfoUnmarshallerWS(applicationInfo);
 
         try {
-            AutoBeanUnmarshallerWS<ApplicationInfo> unmarshaller =
-                    new AutoBeanUnmarshallerWS<ApplicationInfo>(autoBean);
-
             service.initializeApplicationWS(domain + "/" + name, resourcesProvider.getVfsId(), project.getId(), warUrl, null,
                                             new CloudBeesRESTfulRequestCallback<ApplicationInfo>(unmarshaller, loggedInHandler, null,
                                                                                                  eventBus, console, loginPresenter) {
@@ -281,10 +276,10 @@ public class CloudBeesPagePresenter extends AbstractWizardPagePresenter implemen
 
     /** Create application on Cloud Bees by sending request over HTTP. */
     private void createApplicationREST(LoggedInHandler loggedInHandler) {
-        try {
-            AutoBean<ApplicationInfo> autoBean = autoBeanFactory.applicationInfo();
-            AutoBeanUnmarshaller<ApplicationInfo> unmarshaller = new AutoBeanUnmarshaller<ApplicationInfo>(autoBean);
+        DtoClientImpls.ApplicationInfoImpl applicationInfo = DtoClientImpls.ApplicationInfoImpl.make();
+        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(applicationInfo);
 
+        try {
             service.initializeApplication(domain + "/" + name, resourcesProvider.getVfsId(), project.getId(), warUrl, null,
                                           new CloudBeesAsyncRequestCallback<ApplicationInfo>(unmarshaller, loggedInHandler, null, eventBus,
                                                                                              console, loginPresenter) {

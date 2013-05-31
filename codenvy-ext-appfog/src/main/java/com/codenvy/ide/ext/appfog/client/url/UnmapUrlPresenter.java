@@ -22,22 +22,20 @@ import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.appfog.client.AppfogAsyncRequestCallback;
-import com.codenvy.ide.ext.appfog.client.AppfogAutoBeanFactory;
 import com.codenvy.ide.ext.appfog.client.AppfogClientService;
 import com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant;
 import com.codenvy.ide.ext.appfog.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.appfog.client.login.LoginPresenter;
+import com.codenvy.ide.ext.appfog.client.marshaller.AppFogApplicationUnmarshaller;
+import com.codenvy.ide.ext.appfog.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.appfog.shared.AppfogApplication;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -55,7 +53,6 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
     private EventBus                   eventBus;
     private ConsolePart                console;
     private AppfogLocalizationConstant constant;
-    private AppfogAutoBeanFactory      autoBeanFactory;
     private AsyncCallback<String>      unmapUrlCallback;
     private LoginPresenter             loginPresenter;
     private AppfogClientService        service;
@@ -69,21 +66,18 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
      * @param eventBus
      * @param console
      * @param constant
-     * @param autoBeanFactory
      * @param loginPresenter
      * @param service
      */
     @Inject
     protected UnmapUrlPresenter(UnmapUrlView view, ResourceProvider resourceProvider, EventBus eventBus, ConsolePart console,
-                                AppfogLocalizationConstant constant, AppfogAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter,
-                                AppfogClientService service) {
+                                AppfogLocalizationConstant constant, LoginPresenter loginPresenter, AppfogClientService service) {
         this.view = view;
         this.view.setDelegate(this);
         this.resourceProvider = resourceProvider;
         this.eventBus = eventBus;
         this.console = console;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
     }
@@ -237,19 +231,17 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
     /** Gets registered urls. */
     private void getAppRegisteredUrls() {
         String projectId = resourceProvider.getActiveProject().getId();
+        DtoClientImpls.AppfogApplicationImpl appfogApplication = DtoClientImpls.AppfogApplicationImpl.make();
+        AppFogApplicationUnmarshaller unmarshaller = new AppFogApplicationUnmarshaller(appfogApplication);
 
         try {
-            AutoBean<AppfogApplication> appfogApplication = autoBeanFactory.appfogApplication();
-            AutoBeanUnmarshaller<AppfogApplication> unmarshaller = new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
-
             service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
                                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, null, null, eventBus, constant,
                                                                                          console, loginPresenter) {
                                            @Override
                                            protected void onSuccess(AppfogApplication result) {
                                                isBindingChanged = false;
-
-                                               registeredUrls = JsonCollections.createArray(result.getUris());
+                                               registeredUrls = result.getUris();
 
                                                view.setEnableMapUrlButton(false);
                                                view.setRegisteredUrls(registeredUrls);

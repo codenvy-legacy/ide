@@ -21,6 +21,7 @@ package com.codenvy.ide.ext.appfog.client.services;
 import com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant;
 import com.codenvy.ide.ext.appfog.client.AppfogResources;
 import com.codenvy.ide.ext.appfog.shared.AppfogProvisionedService;
+import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.TextCell;
@@ -38,7 +39,7 @@ import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * The implementation of {@link ManageServicesView}.
@@ -182,14 +183,26 @@ public class ManageServicesViewImpl extends DialogBox implements ManageServicesV
 
     /** {@inheritDoc} */
     @Override
-    public void setProvisionedServices(List<AppfogProvisionedService> services) {
-        this.services.setRowData(services);
+    public void setProvisionedServices(JsonArray<AppfogProvisionedService> services) {
+        ArrayList<AppfogProvisionedService> list = new ArrayList<AppfogProvisionedService>();
+        for (int i = 0; i < services.size(); i++) {
+            AppfogProvisionedService service = services.get(i);
+            list.add(service);
+        }
+
+        this.services.setRowData(list);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setBoundedServices(List<String> services) {
-        this.boundedServices.setRowData(services);
+    public void setBoundedServices(JsonArray<String> services) {
+        ArrayList<String> list = new ArrayList<String>();
+        for (int i = 0; i < services.size(); i++) {
+            String service = services.get(i);
+            list.add(service);
+        }
+
+        this.boundedServices.setRowData(list);
     }
 
     /** {@inheritDoc} */

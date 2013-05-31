@@ -20,25 +20,26 @@ package com.codenvy.ide.extension.cloudfoundry.client.services;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.*;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
+import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryApplicationUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryServicesUnmarshaller;
+import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices;
 import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
-
-import java.util.Arrays;
 
 /**
  * Presenter for managing CloudFondry services.
@@ -59,7 +60,6 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
     private EventBus                            eventBus;
     private ConsolePart                         console;
     private CloudFoundryLocalizationConstant    constant;
-    private CloudFoundryAutoBeanFactory         autoBeanFactory;
     private LoginPresenter                      loginPresenter;
     private CloudFoundryClientService           service;
     private CloudFoundryExtension.PAAS_PROVIDER paasProvider;
@@ -100,22 +100,19 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
      * @param console
      * @param createServicePresenter
      * @param constant
-     * @param autoBeanFactory
      * @param loginPresenter
      * @param service
      */
     @Inject
     protected ManageServicesPresenter(ManageServicesView view, EventBus eventBus, ConsolePart console,
                                       CreateServicePresenter createServicePresenter, CloudFoundryLocalizationConstant constant,
-                                      CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter,
-                                      CloudFoundryClientService service) {
+                                      LoginPresenter loginPresenter, CloudFoundryClientService service) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
         this.console = console;
         this.createServicePresenter = createServicePresenter;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
     }
@@ -248,9 +245,9 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
 
     /** Gets the list of services and put them to field. */
     private void getApplicationInfo() {
-        AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
-        AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-                new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
+        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
+
         try {
             this.service.getApplicationInfo(null, null, application.getName(), null,
                                             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
@@ -272,12 +269,13 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
 
     /** Get the list of CloudFoundry services (system and provisioned). */
     private void getServices() {
+        CloudFoundryServicesUnmarshaller unmarshaller = new CloudFoundryServicesUnmarshaller();
+
         try {
-            CloudFoundryServicesUnmarshaller unmarshaller = new CloudFoundryServicesUnmarshaller(autoBeanFactory);
             this.service.services(null, paasProvider, new AsyncRequestCallback<CloudFoundryServices>(unmarshaller) {
                 @Override
                 protected void onSuccess(CloudFoundryServices result) {
-                    view.setProvisionedServices(Arrays.asList(result.getProvisioned()));
+                    view.setProvisionedServices(result.getProvisioned());
                     view.setEnableDeleteButton(false);
                 }
 

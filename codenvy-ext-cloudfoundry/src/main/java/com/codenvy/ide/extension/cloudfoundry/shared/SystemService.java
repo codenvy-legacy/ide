@@ -22,17 +22,9 @@ package com.codenvy.ide.extension.cloudfoundry.shared;
 public interface SystemService {
     String getVendor();
 
-    void setVendor(String vendor);
-
     String getType();
-
-    void setType(String type);
 
     String getVersion();
 
-    void setVersion(String version);
-
     String getDescription();
-
-    void setDescription(String description);
 }
