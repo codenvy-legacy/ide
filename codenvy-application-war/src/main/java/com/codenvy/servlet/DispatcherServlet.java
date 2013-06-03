@@ -39,6 +39,7 @@ public class DispatcherServlet extends HttpServlet {
     private static String shellStaticResourcesPrefix = "/shell";
     private static String ssoPrefix = "/sso";
     private static String mainPage = ideStaticResourcesPrefix + "/main";
+    private static String shellMainPage = shellStaticResourcesPrefix + "/main";
 
     public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
         HttpServletRequest request = (HttpServletRequest)req;
@@ -109,5 +110,10 @@ public class DispatcherServlet extends HttpServlet {
     public static String genStaticResourceUrl(HttpServletRequest request, String name) {
         String contextPath = request.getContextPath();
         return contextPath + '/' + request.getAttribute("ws") + ideStaticResourcesPrefix + '/' + name;
+    }
+    
+    public static String genStaticResourceShellUrl(HttpServletRequest request, String name) {
+        String contextPath = request.getContextPath();
+        return contextPath + '/' + request.getAttribute("ws") + shellStaticResourcesPrefix + '/' + name;
     }
 }
