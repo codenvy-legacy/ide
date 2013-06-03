@@ -268,7 +268,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler {
                                                                     return;
                                                                 } else if (HTTPStatus.FORBIDDEN == serverException.getHTTPStatus()
                                                                            && serverException.getMessage() != null
-                                                                           && serverException.getMessage().contains("Invalid password")) {
+                                                                           && serverException.getMessage().contains("Invalid Password")) {
                                                                     display.getErrorLabelField()
                                                                            .setValue(lb.loginViewErrorInvalidUserOrPassword());
                                                                     return;

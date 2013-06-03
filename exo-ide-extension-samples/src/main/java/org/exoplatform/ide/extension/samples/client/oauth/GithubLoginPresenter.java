@@ -72,7 +72,7 @@ public class GithubLoginPresenter implements GithubLoginHandler, ViewClosedHandl
                 JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500,
                                                                        GithubLoginPresenter.this);
                 authWindow.loginWithOAuth();
-
+                IDE.getInstance().closeView(display.asView().getId());
             }
         });
     }
