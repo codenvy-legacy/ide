@@ -271,7 +271,7 @@ public class CreateProjectService {
         InputStream indexIS = new ByteArrayInputStream(indexContent.getBytes());
         vfs.createFile(webappId, "index.jsp", MediaType.TEXT_PLAIN_TYPE, indexIS);
 
-        Folder webInf = vfs.createFolder(webappId, "WEB-IBF");
+        Folder webInf = vfs.createFolder(webappId, "WEB-INF");
         String webInfId = webInf.getId();
 
         String webContent = "<!DOCTYPE web-app PUBLIC\n" +
