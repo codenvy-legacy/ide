@@ -19,7 +19,10 @@
 package com.codenvy.ide.ext.java.jdi.client.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
+import com.codenvy.ide.ext.java.jdi.client.run.ApplicationRunnerClientService;
+import com.codenvy.ide.ext.java.jdi.client.run.ApplicationRunnerClientServiceImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
+import com.google.inject.Singleton;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 @ExtensionGinModule
@@ -27,6 +30,6 @@ public class JavaRuntimeGinModule extends AbstractGinModule {
     /** {@inheritDoc} */
     @Override
     protected void configure() {
-
+        bind(ApplicationRunnerClientService.class).to(ApplicationRunnerClientServiceImpl.class).in(Singleton.class);
     }
 }

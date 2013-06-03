@@ -48,8 +48,7 @@ public class GAEClientServiceImpl implements GAEClientService {
     private String restServiceContext;
     /** Loader to be displayed. */
     private Loader loader;
-    // TODO check workspace name
-    private final static String WS                  = "dev-monit";
+    private final static String WS                  = "/ide";
     private final        String AUTH_URL            = WS + "/oauth/authenticate";
     private final        String LOGOUT              = WS + "/oauth/invalidate";
     private final        String APP_ENGINE          = WS + "/appengine/";
