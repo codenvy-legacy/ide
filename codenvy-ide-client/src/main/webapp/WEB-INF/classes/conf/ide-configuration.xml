@@ -67,33 +67,13 @@
             </value-param>
         </init-params>
     </component>
+
+    <component>
+        <key>org.exoplatform.ide.extension.java.jdi.server.ApplicationRunner</key>
+        <type>org.exoplatform.ide.extension.java.jdi.server.CloudfoundryApplicationRunner</type>
+    </component>
+
     <!-- End Java -->
-
-    <!--
-    ***************************************************************************************
-    **************************** Builder System Supporting ********************************
-    ***************************************************************************************
-    -->
-
-    <!--component>
-       <type>org.exoplatform.ide.extension.jenkins.server.rest.JenkinsApplication</type>
-    </component-->
-
-    <component>
-        <type>org.exoplatform.ide.extension.maven.server.BuilderApplication</type>
-    </component>
-
-    <component>
-        <type>org.exoplatform.ide.extension.maven.server.BuilderClient</type>
-        <init-params>
-            <value-param>
-                <name>build-server-base-url</name>
-                <value>http://localhost:8080/builder</value>
-            </value-param>
-        </init-params>
-    </component>
-
-    <!-- CloudFoundry -->
 
     <component>
         <type>org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryPool</type>
@@ -114,7 +94,5 @@
             </object-param>
         </init-params>
     </component>
-
-    <!-- End CloudFoundry -->
 
 </configuration>

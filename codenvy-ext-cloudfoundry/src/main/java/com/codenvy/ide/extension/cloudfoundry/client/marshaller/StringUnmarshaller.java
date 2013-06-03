@@ -22,19 +22,18 @@ import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 
-
 /**
  * Unmarshaller for String object.
  *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  */
 public class StringUnmarshaller implements Unmarshallable<StringBuilder> {
-    protected StringBuilder builder;
+    private StringBuilder builder;
 
     /**
      * Create unmarshaller.
      *
-     * @param callback
+     * @param builder
      */
     public StringUnmarshaller(StringBuilder builder) {
         super();

@@ -29,23 +29,14 @@ import com.codenvy.ide.json.JsonArray;
 public interface LoginView extends View<LoginView.ActionDelegate> {
     /** Needs for delegate some function into Login view. */
     public interface ActionDelegate {
-        /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the LogIn button.
-         */
-        public void onLogInClicked();
+        /** Performs any actions appropriate in response to the user having pressed the LogIn button. */
+        void onLogInClicked();
 
-        /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Cancel button.
-         */
-        public void onCancelClicked();
+        /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
+        void onCancelClicked();
 
-        /**
-         * Performs any actions appropriate in response to the user
-         * having changed something.
-         */
-        public void onValueChanged();
+        /** Performs any actions appropriate in response to the user having changed something. */
+        void onValueChanged();
     }
 
     /**
@@ -53,49 +44,49 @@ public interface LoginView extends View<LoginView.ActionDelegate> {
      *
      * @return email.
      */
-    public String getEmail();
+    String getEmail();
 
     /**
      * Sets email.
      *
      * @param email
      */
-    public void setEmail(String email);
+    void setEmail(String email);
 
     /**
      * Returns password.
      *
      * @return password
      */
-    public String getPassword();
+    String getPassword();
 
     /**
      * Sets password.
      *
      * @param password
      */
-    public void setPassword(String password);
+    void setPassword(String password);
 
     /**
      * Returns server.
      *
      * @return server
      */
-    public String getServer();
+    String getServer();
 
     /**
      * Sets server.
      *
      * @param server
      */
-    public void setServer(String server);
+    void setServer(String server);
 
     /**
      * Sets error message.
      *
      * @param message
      */
-    public void setError(String message);
+    void setError(String message);
 
     /**
      * Change the enable state of the login button.

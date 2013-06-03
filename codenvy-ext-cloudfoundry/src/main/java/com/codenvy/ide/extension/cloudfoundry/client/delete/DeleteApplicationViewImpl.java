@@ -25,7 +25,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -36,40 +39,40 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class DeleteApplicationViewImpl extends DialogBox implements DeleteApplicationView {
-    private static DeleteApplicationViewImplUiBinder uiBinder = GWT.create(DeleteApplicationViewImplUiBinder.class);
-
-    @UiField
-    Button btnCancel;
-
-    @UiField
-    Button btnDelete;
-
-    @UiField
-    CheckBox deleteServicesField;
-
-    @UiField
-    Label askLabel;
-
     interface DeleteApplicationViewImplUiBinder extends UiBinder<Widget, DeleteApplicationViewImpl> {
     }
 
-    private ActionDelegate delegate;
+    private static DeleteApplicationViewImplUiBinder uiBinder = GWT.create(DeleteApplicationViewImplUiBinder.class);
+
+    @UiField
+    com.codenvy.ide.ui.Button btnCancel;
+    @UiField
+    com.codenvy.ide.ui.Button btnDelete;
+    @UiField
+    CheckBox                  deleteServicesField;
+    @UiField
+    Label                     askLabel;
+    @UiField(provided = true)
+    final   CloudFoundryResources            res;
+    @UiField(provided = true)
+    final   CloudFoundryLocalizationConstant locale;
+    private ActionDelegate                   delegate;
 
     /**
      * Create view.
      *
-     * @param constants
+     * @param constant
      * @param resources
      */
     @Inject
-    protected DeleteApplicationViewImpl(CloudFoundryLocalizationConstant constants, CloudFoundryResources resources) {
+    protected DeleteApplicationViewImpl(CloudFoundryLocalizationConstant constant, CloudFoundryResources resources) {
+        this.res = resources;
+        this.locale = constant;
+
         Widget widget = uiBinder.createAndBindUi(this);
 
         this.setText("Delete application from CloudFoundry");
         this.setWidget(widget);
-
-        btnCancel.setHTML(new Image(resources.cancelButton()) + " " + constants.cancelButton());
-        btnDelete.setHTML(new Image(resources.okButton()) + " " + constants.deleteButton());
     }
 
     /** {@inheritDoc} */
@@ -94,12 +97,6 @@ public class DeleteApplicationViewImpl extends DialogBox implements DeleteApplic
     @Override
     public void setAskMessage(String message) {
         askLabel.setText(message);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setAskDeleteServices(String text) {
-        deleteServicesField.setText(text);
     }
 
     /** {@inheritDoc} */

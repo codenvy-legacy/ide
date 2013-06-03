@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.login;
 
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
 import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.core.client.GWT;
@@ -37,39 +38,28 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class LoginViewImpl extends DialogBox implements LoginView {
+    interface LoginViewImplUiBinder extends UiBinder<Widget, LoginViewImpl> {
+    }
+
     private static LoginViewImplUiBinder uiBinder = GWT.create(LoginViewImplUiBinder.class);
 
     @UiField
-    TextBox email;
-
+    TextBox                   email;
     @UiField
-    PasswordTextBox password;
-
+    PasswordTextBox           password;
     @UiField
-    Button btnLogIn;
-
+    com.codenvy.ide.ui.Button btnLogin;
     @UiField
-    Button btnCancel;
-
+    com.codenvy.ide.ui.Button btnCancel;
     @UiField
-    Label errorText;
-
+    Label                     errorText;
     @UiField
-    ListBox server;
-
-    @UiField
-    Label serverLabel;
-
-    @UiField
-    Label emailLabel;
-
-    @UiField
-    Label passwordLabel;
-
-    private ActionDelegate delegate;
-
-    interface LoginViewImplUiBinder extends UiBinder<Widget, LoginViewImpl> {
-    }
+    ListBox                   target;
+    @UiField(provided = true)
+    final   CloudFoundryResources            res;
+    @UiField(provided = true)
+    final   CloudFoundryLocalizationConstant locale;
+    private ActionDelegate                   delegate;
 
     /**
      * Create view.
@@ -77,22 +67,14 @@ public class LoginViewImpl extends DialogBox implements LoginView {
      * @param resources
      */
     @Inject
-    protected LoginViewImpl(CloudFoundryResources resources) {
+    protected LoginViewImpl(CloudFoundryResources resources, CloudFoundryLocalizationConstant constant) {
+        this.res = resources;
+        this.locale = constant;
+
         Widget widget = uiBinder.createAndBindUi(this);
 
         this.setText("Login to CloudFoundry");
         this.setWidget(widget);
-
-        // adds styles to graphic components
-        this.addStyleName(resources.cloudFoundryCss().login());
-        serverLabel.addStyleName(resources.cloudFoundryCss().loginFont());
-        emailLabel.addStyleName(resources.cloudFoundryCss().loginFont());
-        passwordLabel.addStyleName(resources.cloudFoundryCss().loginFont());
-        errorText.addStyleName(resources.cloudFoundryCss().loginErrorFont());
-
-        // adds text with icon into button
-        btnLogIn.setHTML(new Image(resources.okButton()) + " Log In");
-        btnCancel.setHTML(new Image(resources.cancelButton()) + " Cancel");
     }
 
     /** {@inheritDoc} */
@@ -128,20 +110,20 @@ public class LoginViewImpl extends DialogBox implements LoginView {
     /** {@inheritDoc} */
     @Override
     public String getServer() {
-        int serverIndex = server.getSelectedIndex();
-        return serverIndex != -1 ? server.getItemText(serverIndex) : "";
+        int serverIndex = target.getSelectedIndex();
+        return serverIndex != -1 ? target.getItemText(serverIndex) : "";
     }
 
     /** {@inheritDoc} */
     @Override
     public void setServer(String server) {
-        int count = this.server.getItemCount();
+        int count = this.target.getItemCount();
         boolean isItemFound = false;
 
         // Looks up entered server into available list of servers
         int i = 0;
         while (i < count && !isItemFound) {
-            String item = this.server.getItemText(i);
+            String item = this.target.getItemText(i);
             isItemFound = item.equals(server);
 
             i++;
@@ -149,7 +131,7 @@ public class LoginViewImpl extends DialogBox implements LoginView {
 
         // If item was found then it will be shown otherwise do nothing
         if (isItemFound) {
-            this.server.setSelectedIndex(i - 1);
+            this.target.setSelectedIndex(i - 1);
         }
     }
 
@@ -162,7 +144,7 @@ public class LoginViewImpl extends DialogBox implements LoginView {
     /** {@inheritDoc} */
     @Override
     public void enableLoginButton(boolean enabled) {
-        btnLogIn.setEnabled(enabled);
+        btnLogin.setEnabled(enabled);
     }
 
     /** {@inheritDoc} */
@@ -174,9 +156,9 @@ public class LoginViewImpl extends DialogBox implements LoginView {
     /** {@inheritDoc} */
     @Override
     public void setServerValues(JsonArray<String> servers) {
-        server.clear();
+        target.clear();
         for (int i = 0; i < servers.size(); i++) {
-            server.addItem(servers.get(i));
+            target.addItem(servers.get(i));
         }
     }
 
@@ -193,7 +175,7 @@ public class LoginViewImpl extends DialogBox implements LoginView {
         this.show();
     }
 
-    @UiHandler("btnLogIn")
+    @UiHandler("btnLogin")
     void onBtnLogInClick(ClickEvent event) {
         delegate.onLogInClicked();
     }

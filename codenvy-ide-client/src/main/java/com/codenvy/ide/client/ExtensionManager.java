@@ -20,19 +20,33 @@ public class ExtensionManager
    @Inject
    public ExtensionManager(
       Provider<com.codenvy.ide.ext.java.client.JavaExtension> javaextension,
+      Provider<com.codenvy.ide.ext.openshift.client.OpenShiftExtension> openshiftextension,
+      Provider<com.codenvy.ide.ext.appfog.client.AppFogExtension> appfogextension,
+      Provider<com.codenvy.ide.ext.cloudbees.client.CloudBeesExtension> cloudbeesextension,
       Provider<com.codenvy.ide.extension.demo.DemoExtension> demoextension,
       Provider<com.codenvy.ide.extension.maven.client.BuilderExtension> builderextension,
       Provider<com.codenvy.ide.extension.tasks.TasksExtension> tasksextension,
+      Provider<com.codenvy.ide.ext.git.client.GitExtension> gitextension,
       Provider<com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension> cloudfoundryextension,
-      Provider<com.codenvy.ide.extension.css.CssExtension> cssextension
+      Provider<com.codenvy.ide.ext.java.jdi.client.JavaRuntimeExtension> javaruntimeextension,
+      Provider<com.codenvy.ide.ext.jenkins.client.JenkinsExtension> jenkinsextension,
+      Provider<com.codenvy.ide.extension.css.CssExtension> cssextension,
+      Provider<com.codenvy.ide.ext.gae.client.GAEExtansion> gaeextansion
    )
    {
       this.extensions.put("com.codenvy.ide.ext.java.client.JavaExtension",javaextension);
+      this.extensions.put("com.codenvy.ide.ext.openshift.client.OpenShiftExtension",openshiftextension);
+      this.extensions.put("com.codenvy.ide.ext.appfog.client.AppFogExtension",appfogextension);
+      this.extensions.put("com.codenvy.ide.ext.cloudbees.client.CloudBeesExtension",cloudbeesextension);
       this.extensions.put("com.codenvy.ide.extension.demo.DemoExtension",demoextension);
       this.extensions.put("com.codenvy.ide.extension.maven.client.BuilderExtension",builderextension);
       this.extensions.put("com.codenvy.ide.extension.tasks.TasksExtension",tasksextension);
+      this.extensions.put("com.codenvy.ide.ext.git.client.GitExtension",gitextension);
       this.extensions.put("com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension",cloudfoundryextension);
+      this.extensions.put("com.codenvy.ide.ext.java.jdi.client.JavaRuntimeExtension",javaruntimeextension);
+      this.extensions.put("com.codenvy.ide.ext.jenkins.client.JenkinsExtension",jenkinsextension);
       this.extensions.put("com.codenvy.ide.extension.css.CssExtension",cssextension);
+      this.extensions.put("com.codenvy.ide.ext.gae.client.GAEExtansion",gaeextansion);
    }
 
    /** Returns  the map will all the Extnesion Providers <FullClassFQN, Provider>. */

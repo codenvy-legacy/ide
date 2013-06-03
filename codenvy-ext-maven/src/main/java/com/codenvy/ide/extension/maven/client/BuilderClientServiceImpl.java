@@ -19,12 +19,12 @@
 package com.codenvy.ide.extension.maven.client;
 
 import com.codenvy.ide.extension.maven.shared.BuildStatus;
-import com.codenvy.ide.loader.EmptyLoader;
-import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.MimeType;
+import com.codenvy.ide.ui.loader.EmptyLoader;
+import com.codenvy.ide.ui.loader.Loader;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
@@ -39,31 +39,22 @@ import com.google.inject.name.Named;
  */
 @Singleton
 public class BuilderClientServiceImpl implements BuilderClientService {
-
     /** Base url. */
     private static final String BASE_URL = "/ide/maven";
-
     /** Build project method's path. */
-    private static final String BUILD = BASE_URL + "/build";
-
+    private static final String BUILD    = BASE_URL + "/build";
     /** Build project method's path. */
-    private static final String DEPLOY = BASE_URL + "/deploy";
-
+    private static final String DEPLOY   = BASE_URL + "/deploy";
     /** Cancel building project method's path. */
-    private static final String CANCEL = BASE_URL + "/cancel";
-
+    private static final String CANCEL   = BASE_URL + "/cancel";
     /** Get status of build method's path. */
-    private static final String STATUS = BASE_URL + "/status";
-
+    private static final String STATUS   = BASE_URL + "/status";
     /** Get result of build method's path. */
-    private static final String RESULT = BASE_URL + "/result";
-
+    private static final String RESULT   = BASE_URL + "/result";
     /** Get build log method's path. */
-    private static final String LOG = BASE_URL + "/log";
-
+    private static final String LOG      = BASE_URL + "/log";
     /** REST-service context. */
     private String restServiceContext;
-
     /** Loader to be displayed. */
     private Loader loader;
 

@@ -25,7 +25,6 @@ import elemental.html.TableElement;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.list.SimpleList.View;
 import com.codenvy.ide.util.dom.Elements;
@@ -35,7 +34,6 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -47,19 +45,18 @@ import com.google.inject.Inject;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public class TemplatePageViewImpl extends Composite implements TemplatePageView {
+    interface TemplateViewUiBinder extends UiBinder<Widget, TemplatePageViewImpl> {
+    }
+
     private static TemplateViewUiBinder uiBinder = GWT.create(TemplateViewUiBinder.class);
 
     @UiField
     ScrollPanel templates;
-
-    @UiField
-    Label label;
-
-    private ActionDelegate delegate;
-
+    @UiField(provided = true)
+    Resources   res;
+    private ActionDelegate       delegate;
     private SimpleList<Template> list;
-
-    private SimpleList.ListItemRenderer<Template> listItemRenderer = new SimpleList.ListItemRenderer<Template>() {
+    private SimpleList.ListItemRenderer<Template>  listItemRenderer = new SimpleList.ListItemRenderer<Template>() {
         @Override
         public void render(Element itemElement, Template itemData) {
             TableCellElement label = Elements.createTDElement();
@@ -88,8 +85,7 @@ public class TemplatePageViewImpl extends Composite implements TemplatePageView 
             return Elements.createTRElement();
         }
     };
-
-    private SimpleList.ListEventDelegate<Template> listDelegate = new SimpleList.ListEventDelegate<Template>() {
+    private SimpleList.ListEventDelegate<Template> listDelegate     = new SimpleList.ListEventDelegate<Template>() {
         public void onListItemClicked(Element itemElement, Template itemData) {
             list.getSelectionModel().setSelectedItem(itemData);
             delegate.onTemplateSelected(itemData);
@@ -99,36 +95,31 @@ public class TemplatePageViewImpl extends Composite implements TemplatePageView 
         }
     };
 
-    interface TemplateViewUiBinder extends UiBinder<Widget, TemplatePageViewImpl> {
-    }
-
     /**
      * Create view.
      *
      * @param resources
-     * @param templateAgent
-     * @param projectTypeAgent
      */
     @Inject
-    protected TemplatePageViewImpl(Resources resources, TemplateAgentImpl templateAgent, ProjectTypeAgent projectTypeAgent) {
+    protected TemplatePageViewImpl(Resources resources) {
+        this.res = resources;
+
         initWidget(uiBinder.createAndBindUi(this));
 
         TableElement tableElement = Elements.createTableElement();
         tableElement.setAttribute("style", "width: 100%");
         list = SimpleList.create((View)tableElement, resources.defaultSimpleListCss(), listItemRenderer, listDelegate);
-
-        this.label.addStyleName(resources.coreCss().mainText());
-        this.templates.setStyleName(resources.coreCss().simpleListContainer());
         this.templates.add(list);
-
-        String projectType = projectTypeAgent.getSelectedProjectType();
-        JsonArray<Template> templates = templateAgent.getTemplatesForProjectType(projectType);
-
-        list.render(templates);
     }
 
     /** {@inheritDoc} */
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setTemplates(JsonArray<Template> templates) {
+        list.render(templates);
     }
 }

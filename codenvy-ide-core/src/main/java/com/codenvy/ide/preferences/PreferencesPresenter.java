@@ -18,9 +18,10 @@
  */
 package com.codenvy.ide.preferences;
 
-import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
 import com.codenvy.ide.json.JsonArray;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 
 /**
@@ -32,25 +33,12 @@ import com.codenvy.ide.json.JsonArray;
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class PreferencesPresenter implements PreferencesView.ActionDelegate,
-                                             PreferencesPagePresenter.DirtyStateListener {
-    private PreferencesPagePresenter currentPage;
-
-    private PreferencesView view;
-
+@Singleton
+public class PreferencesPresenter implements PreferencesView.ActionDelegate, PreferencesPagePresenter.DirtyStateListener {
+    private PreferencesView                     view;
+    private PreferencesPagePresenter            currentPage;
     private JsonArray<PreferencesPagePresenter> preferences;
-
-    private boolean hasDirtyPage;
-
-    /**
-     * Create presenter.
-     *
-     * @param resources
-     * @param agent
-     */
-    public PreferencesPresenter(Resources resources, PreferencesAgentImpl agent) {
-        this(new PreferencesViewImpl(resources, agent.getPreferences()), agent);
-    }
+    private boolean                             hasDirtyPage;
 
     /**
      * Create presenter.
@@ -60,10 +48,12 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate,
      * @param view
      * @param agent
      */
+    @Inject
     protected PreferencesPresenter(PreferencesView view, PreferencesAgentImpl agent) {
         this.view = view;
-        view.setDelegate(this);
+        this.view.setDelegate(this);
         preferences = agent.getPreferences();
+        this.view.setPreferences(preferences);
     }
 
     /** {@inheritDoc} */

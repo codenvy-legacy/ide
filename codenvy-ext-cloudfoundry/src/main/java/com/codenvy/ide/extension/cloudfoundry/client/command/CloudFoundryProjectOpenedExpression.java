@@ -32,7 +32,6 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class CloudFoundryProjectOpenedExpression extends AbstractExpression implements ProjectConstraintExpression {
-
     /**
      * Create expression.
      *

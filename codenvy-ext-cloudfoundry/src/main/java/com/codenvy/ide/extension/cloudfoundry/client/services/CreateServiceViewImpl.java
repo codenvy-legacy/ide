@@ -25,7 +25,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -41,33 +44,24 @@ import java.util.Set;
  */
 @Singleton
 public class CreateServiceViewImpl extends DialogBox implements CreateServiceView {
-    private static CreateServiceViewImplUiBinder uiBinder = GWT.create(CreateServiceViewImplUiBinder.class);
-
-    @UiField
-    ListBox servicesField;
-
-    @UiField
-    TextBox nameField;
-
-    @UiField
-    Button btnCreate;
-
-    @UiField
-    Button btnCancel;
-
-    @UiField
-    Label serviceTypeLabel;
-
-    @UiField
-    Label nameLabel;
-
-    @UiField
-    Label optionalLabel;
-
     interface CreateServiceViewImplUiBinder extends UiBinder<Widget, CreateServiceViewImpl> {
     }
 
-    private ActionDelegate delegate;
+    private static CreateServiceViewImplUiBinder uiBinder = GWT.create(CreateServiceViewImplUiBinder.class);
+
+    @UiField
+    ListBox                   servicesField;
+    @UiField
+    TextBox                   nameField;
+    @UiField
+    com.codenvy.ide.ui.Button btnCreate;
+    @UiField
+    com.codenvy.ide.ui.Button btnCancel;
+    @UiField(provided = true)
+    final   CloudFoundryResources            res;
+    @UiField(provided = true)
+    final   CloudFoundryLocalizationConstant locale;
+    private ActionDelegate                   delegate;
 
     /**
      * Create view.
@@ -77,20 +71,13 @@ public class CreateServiceViewImpl extends DialogBox implements CreateServiceVie
      */
     @Inject
     protected CreateServiceViewImpl(CloudFoundryResources resources, CloudFoundryLocalizationConstant constant) {
+        this.res = resources;
+        this.locale = constant;
+
         Widget widget = uiBinder.createAndBindUi(this);
 
         this.setWidget(widget);
         this.setText("Create service");
-
-        // adds styles to graphic components
-        this.addStyleName(resources.cloudFoundryCss().createService());
-        serviceTypeLabel.addStyleName(resources.cloudFoundryCss().serviceLabel());
-        nameLabel.addStyleName(resources.cloudFoundryCss().serviceLabel());
-        optionalLabel.addStyleName(resources.cloudFoundryCss().serviceLabel());
-
-        // adds text with icon into button
-        btnCreate.setHTML(new Image(resources.okButton()) + " " + constant.createButton());
-        btnCancel.setHTML(new Image(resources.cancelButton()) + " " + constant.cancelButton());
     }
 
     /** {@inheritDoc} */

@@ -21,17 +21,20 @@ package com.codenvy.ide.extension.cloudfoundry.client.delete;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.*;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
+import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryApplicationUnmarshaller;
+import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -51,7 +54,6 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
     private EventBus                            eventBus;
     private ConsolePart                         console;
     private CloudFoundryLocalizationConstant    constant;
-    private CloudFoundryAutoBeanFactory         autoBeanFactory;
     private LoginPresenter                      loginPresenter;
     private AsyncCallback<String>               appDeleteCallback;
     private CloudFoundryClientService           service;
@@ -65,22 +67,19 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
      * @param eventBus
      * @param console
      * @param constant
-     * @param autoBeanFactory
      * @param loginPresenter
      * @param service
      */
     @Inject
     protected DeleteApplicationPresenter(DeleteApplicationView view, ResourceProvider resourceProvider, EventBus eventBus,
                                          ConsolePart console, CloudFoundryLocalizationConstant constant,
-                                         CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter,
-                                         CloudFoundryClientService service) {
+                                         LoginPresenter loginPresenter, CloudFoundryClientService service) {
         this.view = view;
         this.view.setDelegate(this);
         this.resourceProvider = resourceProvider;
         this.eventBus = eventBus;
         this.console = console;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
     }
@@ -95,8 +94,6 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
     @Override
     public void onDeleteClicked() {
         deleteApplication(appDeleteCallback);
-
-        view.close();
     }
 
     /**
@@ -133,12 +130,10 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
     /** Get application's name and put it to the field. */
     private void getApplicationInfo() {
         String projectId = resourceProvider.getActiveProject().getId();
+        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
+        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
 
         try {
-            AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
-            AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-                    new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
-
             service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, appInfoLoggedInHandler,
                                                                                                      null, eventBus, console, constant,
@@ -202,7 +197,6 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
                                                       public void onSuccess(Project project) {
                                                           view.close();
                                                           console.print(constant.applicationDeletedMsg(appName));
-                                                          appDeleteCallback.onSuccess(appName);
 
                                                           callback.onSuccess(result);
                                                       }
@@ -212,6 +206,11 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
                                                           callback.onFailure(caught);
                                                       }
                                                   });
+                                              } else {
+                                                  view.close();
+                                                  console.print(constant.applicationDeletedMsg(appName));
+
+                                                  callback.onSuccess(result);
                                               }
                                           }
                                       });
@@ -227,9 +226,8 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
      * @param appName
      *         application name which need to delete
      */
-    public void showDialog(String appName) {
+    private void showDialog(String appName) {
         view.setAskMessage(constant.deleteApplicationQuestion(appName));
-        view.setAskDeleteServices(constant.deleteApplicationAskDeleteServices());
         view.setDeleteServices(false);
 
         view.showDialog();

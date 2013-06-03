@@ -28,52 +28,43 @@ import com.codenvy.ide.api.mvp.View;
 public interface RenameApplicationView extends View<RenameApplicationView.ActionDelegate> {
     /** Needs for delegate some function into RenameApplication view. */
     public interface ActionDelegate {
-        /**
-         * Performs any actions appropriate in response to the user
-         * having changed application name.
-         */
-        public void onNameChanged();
+        /** Performs any actions appropriate in response to the user having changed application name. */
+        void onNameChanged();
 
-        /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Rename button.
-         */
-        public void onRenameClicked();
+        /** Performs any actions appropriate in response to the user having pressed the Rename button. */
+        void onRenameClicked();
 
-        /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Cancel button.
-         */
-        public void onCancelClicked();
+        /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
+        void onCancelClicked();
     }
 
     /** Select value in rename field. */
-    public void selectValueInRenameField();
+    void selectValueInRenameField();
 
     /**
      * Change the enable state of the rename button.
      *
      * @param isEnabled
      */
-    public void setEnableRenameButton(boolean isEnabled);
+    void setEnableRenameButton(boolean isEnabled);
 
     /**
      * Returns application's name.
      *
      * @return
      */
-    public String getName();
+    String getName();
 
     /**
      * Sets application's name.
      *
      * @param name
      */
-    public void setName(String name);
+    void setName(String name);
 
     /** Show dialog. */
-    public void showDialog();
+    void showDialog();
 
     /** Close dialog. */
-    public void close();
+    void close();
 }

@@ -22,22 +22,21 @@ import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import com.codenvy.ide.extension.cloudfoundry.client.marshaller.SystemInfoUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
+import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.SystemInfo;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.codenvy.ide.rest.HTTPStatus;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -56,7 +55,6 @@ public class LoginPresenter implements LoginView.ActionDelegate {
     private LoginCanceledHandler                loginCanceled;
     private EventBus                            eventBus;
     private CloudFoundryLocalizationConstant    constant;
-    private CloudFoundryAutoBeanFactory         autoBeanFactory;
     private CloudFoundryClientService           service;
     private CloudFoundryExtension.PAAS_PROVIDER paasProvider;
 
@@ -67,18 +65,16 @@ public class LoginPresenter implements LoginView.ActionDelegate {
      * @param eventBus
      * @param console
      * @param constant
-     * @param autoBeanFactory
      * @param service
      */
     @Inject
     protected LoginPresenter(LoginView view, EventBus eventBus, ConsolePart console, CloudFoundryLocalizationConstant constant,
-                             CloudFoundryAutoBeanFactory autoBeanFactory, CloudFoundryClientService service) {
+                             CloudFoundryClientService service) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
         this.console = console;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.service = service;
     }
 
@@ -204,9 +200,9 @@ public class LoginPresenter implements LoginView.ActionDelegate {
 
     /** Get Cloud Foundry system information to fill the login field, if user is logged in. */
     protected void getSystemInformation() {
+        DtoClientImpls.SystemInfoImpl systemInfo = DtoClientImpls.SystemInfoImpl.make();
+        SystemInfoUnmarshaller unmarshaller = new SystemInfoUnmarshaller(systemInfo);
         try {
-            AutoBean<SystemInfo> systemInfo = autoBeanFactory.systemInfo();
-            AutoBeanUnmarshaller<SystemInfo> unmarshaller = new AutoBeanUnmarshaller<SystemInfo>(systemInfo);
             service.getSystemInfo(server, paasProvider, new AsyncRequestCallback<SystemInfo>(unmarshaller) {
                 @Override
                 protected void onSuccess(SystemInfo result) {
@@ -231,8 +227,8 @@ public class LoginPresenter implements LoginView.ActionDelegate {
 
     /** Get the list of server and put them to field. */
     private void getServers() {
+        TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(JsonCollections.<String>createArray());
         try {
-            TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(JsonCollections.<String>createArray());
             service.getTargets(paasProvider, new AsyncRequestCallback<JsonArray<String>>(unmarshaller) {
                 @Override
                 protected void onSuccess(JsonArray<String> result) {

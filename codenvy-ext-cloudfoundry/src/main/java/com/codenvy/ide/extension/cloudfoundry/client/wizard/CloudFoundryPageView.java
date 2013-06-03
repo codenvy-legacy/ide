@@ -29,23 +29,14 @@ import com.codenvy.ide.json.JsonArray;
 public interface CloudFoundryPageView extends View<CloudFoundryPageView.ActionDelegate> {
     /** Needs for delegate some function into CloudFoundryPage view. */
     public interface ActionDelegate {
-        /**
-         * Performs any actions appropriate in response to the user
-         * having changed application name.
-         */
-        public void onNameChanged();
+        /** Performs any actions appropriate in response to the user having changed application name. */
+        void onNameChanged();
 
-        /**
-         * Performs any actions appropriate in response to the user
-         * having changed url.
-         */
-        public void onUrlChanged();
+        /** Performs any actions appropriate in response to the user having changed url. */
+        void onUrlChanged();
 
-        /**
-         * Performs any actions appropriate in response to the user
-         * having changed server.
-         */
-        public void onServerChanged();
+        /** Performs any actions appropriate in response to the user having changed server. */
+        void onServerChanged();
     }
 
     /**
@@ -53,42 +44,42 @@ public interface CloudFoundryPageView extends View<CloudFoundryPageView.ActionDe
      *
      * @return application's name
      */
-    public String getName();
+    String getName();
 
     /**
      * Sets application's name.
      *
      * @param name
      */
-    public void setName(String name);
+    void setName(String name);
 
     /**
      * Returns application's url.
      *
      * @return url
      */
-    public String getUrl();
+    String getUrl();
 
     /**
      * Sets application's url.
      *
      * @param url
      */
-    public void setUrl(String url);
+    void setUrl(String url);
 
     /**
      * Returns server.
      *
      * @return server
      */
-    public String getServer();
+    String getServer();
 
     /**
      * Sets server.
      *
      * @param server
      */
-    public void setServer(String server);
+    void setServer(String server);
 
     /**
      * Set the list of servers.

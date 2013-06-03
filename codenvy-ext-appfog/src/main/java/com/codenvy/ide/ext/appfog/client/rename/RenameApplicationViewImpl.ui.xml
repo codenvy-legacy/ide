@@ -1,0 +1,34 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:c='urn:import:com.codenvy.ide.ui'>
+    <ui:with field='locale' type='com.codenvy.ide.ext.appfog.client.AppfogLocalizationConstant'/>
+    <ui:with field='res' type='com.codenvy.ide.ext.appfog.client.AppfogResources'/>
+    <ui:style>
+        .alignRight {
+            float: right;
+        }
+
+        .emptyBorder {
+            margin: 6px;
+        }
+
+        .space {
+            margin-right: 5px;
+        }
+    </ui:style>
+    <g:DockLayoutPanel unit="PX" width="410px" height="160px" addStyleNames="{style.emptyBorder}">
+        <g:south size="26.0">
+            <g:FlowPanel>
+                <c:Button addStyleNames="{style.alignRight}" size="SMALL" type="DANGER" ui:field="btnCancel"/>
+                <c:Button addStyleNames="{style.alignRight} {style.space}" size="SMALL" type="SUCCESS" ui:field="btnRename"/>
+            </g:FlowPanel>
+        </g:south>
+        <g:center>
+            <g:FlowPanel>
+                <g:Label text="{locale.renameApplicationViewNameField}" width="100%" height="18px"/>
+                <g:TextBox width="100%" height="22px" ui:field="nameField"/>
+            </g:FlowPanel>
+        </g:center>
+    </g:DockLayoutPanel>
+</ui:UiBinder>

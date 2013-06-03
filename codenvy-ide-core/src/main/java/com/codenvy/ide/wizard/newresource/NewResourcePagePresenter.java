@@ -21,6 +21,8 @@ package com.codenvy.ide.wizard.newresource;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.codenvy.ide.wizard.newresource.NewResourcePageView.ActionDelegate;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -44,10 +46,12 @@ public class NewResourcePagePresenter extends AbstractWizardPagePresenter implem
      * @param view
      */
     @Inject
-    protected NewResourcePagePresenter(Resources resources, NewResourcePageView view) {
+    protected NewResourcePagePresenter(Resources resources, NewResourcePageView view, WizardAgentImpl wizardAgent) {
         super("Create a new resource", resources.newResourceIcon());
         this.view = view;
         this.view.setDelegate(this);
+        JsonArray<NewResourceWizardData> resourceWizards = wizardAgent.getNewResourceWizards();
+        this.view.setResourceWizard(resourceWizards);
     }
 
     /** {@inheritDoc} */

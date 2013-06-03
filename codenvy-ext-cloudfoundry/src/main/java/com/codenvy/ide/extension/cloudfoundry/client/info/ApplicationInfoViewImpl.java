@@ -20,6 +20,7 @@ package com.codenvy.ide.extension.cloudfoundry.client.info;
 
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
+import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -28,11 +29,13 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * The implementation of {@link ApplicationInfoView}.
@@ -41,69 +44,52 @@ import java.util.List;
  */
 @Singleton
 public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInfoView {
-    private static ApplicationInfoViewImplUiBinder uiBinder = GWT.create(ApplicationInfoViewImplUiBinder.class);
-
-    @UiField
-    Button btnOk;
-
-    @UiField(provided = true)
-    CellTable<String> urisTable = new CellTable<String>();
-
-    @UiField(provided = true)
-    CellTable<String> environmentsTable = new CellTable<String>();
-
-    @UiField(provided = true)
-    CellTable<String> servicesTable = new CellTable<String>();
-
-    @UiField
-    Label name;
-
-    @UiField
-    Label state;
-
-    @UiField
-    Label instances;
-
-    @UiField
-    Label version;
-
-    @UiField
-    Label resourceDisk;
-
-    @UiField
-    Label memory;
-
-    @UiField
-    Label model;
-
-    @UiField
-    Label stack;
-
-    @UiField
-    DockLayoutPanel statePanel;
-
-    @UiField
-    DockLayoutPanel versionPanel;
-
-    @UiField
-    DockLayoutPanel memoryPanel;
-
-    @UiField
-    DockLayoutPanel stackPanel;
-
     interface ApplicationInfoViewImplUiBinder extends UiBinder<Widget, ApplicationInfoViewImpl> {
     }
 
+    private static ApplicationInfoViewImplUiBinder uiBinder = GWT.create(ApplicationInfoViewImplUiBinder.class);
+
+    @UiField
+    com.codenvy.ide.ui.Button btnOk;
+    @UiField
+    Label                     name;
+    @UiField
+    Label                     state;
+    @UiField
+    Label                     instances;
+    @UiField
+    Label                     version;
+    @UiField
+    Label                     resourceDisk;
+    @UiField
+    Label                     memory;
+    @UiField
+    Label                     model;
+    @UiField
+    Label                     stack;
+    @UiField(provided = true)
+    CellTable<String> urisTable         = new CellTable<String>();
+    @UiField(provided = true)
+    CellTable<String> environmentsTable = new CellTable<String>();
+    @UiField(provided = true)
+    CellTable<String> servicesTable     = new CellTable<String>();
+    @UiField(provided = true)
+    final   CloudFoundryResources              res;
+    @UiField(provided = true)
+    final   CloudFoundryLocalizationConstant   locale;
     private ApplicationInfoView.ActionDelegate delegate;
 
     /**
      * Create view.
      *
-     * @param constants
+     * @param constant
      * @param resources
      */
     @Inject
-    protected ApplicationInfoViewImpl(CloudFoundryLocalizationConstant constants, CloudFoundryResources resources) {
+    protected ApplicationInfoViewImpl(CloudFoundryLocalizationConstant constant, CloudFoundryResources resources) {
+        this.res = resources;
+        this.locale = constant;
+
         createCellTable(urisTable, "URIs");
         createCellTable(servicesTable, "Services");
         createCellTable(environmentsTable, "Environments");
@@ -112,16 +98,6 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
 
         this.setText("Application Info");
         this.setWidget(widget);
-
-        // adds styles to graphic components
-        this.addStyleName(resources.cloudFoundryCss().appInfo());
-        statePanel.addStyleName(resources.cloudFoundryCss().event());
-        versionPanel.addStyleName(resources.cloudFoundryCss().event());
-        memoryPanel.addStyleName(resources.cloudFoundryCss().event());
-        stackPanel.addStyleName(resources.cloudFoundryCss().event());
-
-        // adds text with icon into button
-        btnOk.setHTML(new Image(resources.okButton()) + " " + constants.okButton());
     }
 
     /**
@@ -201,7 +177,7 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
 
     /** {@inheritDoc} */
     @Override
-    public void setApplicationUris(List<String> applications) {
+    public void setApplicationUris(JsonArray<String> applications) {
         setItemsIntoCellTable(applications, urisTable);
     }
 
@@ -211,19 +187,25 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
      * @param items
      * @param table
      */
-    private void setItemsIntoCellTable(List<String> items, CellTable<String> table) {
-        table.setRowData(items);
+    private void setItemsIntoCellTable(JsonArray<String> items, CellTable<String> table) {
+        ArrayList<String> list = new ArrayList<String>();
+        for (int i = 0; i < items.size(); i++) {
+            String item = items.get(i);
+            list.add(item);
+        }
+
+        table.setRowData(list);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setApplicationServices(List<String> services) {
+    public void setApplicationServices(JsonArray<String> services) {
         setItemsIntoCellTable(services, servicesTable);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setApplicationEnvironments(List<String> environments) {
+    public void setApplicationEnvironments(JsonArray<String> environments) {
         setItemsIntoCellTable(environments, environmentsTable);
     }
 

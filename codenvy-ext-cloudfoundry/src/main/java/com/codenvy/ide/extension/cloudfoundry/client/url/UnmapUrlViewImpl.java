@@ -33,7 +33,9 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -47,38 +49,35 @@ import java.util.List;
  */
 @Singleton
 public class UnmapUrlViewImpl extends DialogBox implements UnmapUrlView {
-    private static UnmapUrlViewImplUiBinder uiBinder = GWT.create(UnmapUrlViewImplUiBinder.class);
-
-    @UiField(provided = true)
-    CellTable<String> urlsTable = new CellTable<String>();
-
-    @UiField
-    Button btnClose;
-
-    @UiField
-    Button btnMap;
-
-    @UiField
-    TextBox mapUrl;
-
     interface UnmapUrlViewImplUiBinder extends UiBinder<Widget, UnmapUrlViewImpl> {
     }
 
-    private UnmapUrlView.ActionDelegate delegate;
+    private static UnmapUrlViewImplUiBinder uiBinder = GWT.create(UnmapUrlViewImplUiBinder.class);
 
-    private CloudFoundryLocalizationConstant constant;
+    @UiField
+    com.codenvy.ide.ui.Button btnClose;
+    @UiField
+    com.codenvy.ide.ui.Button btnMap;
+    @UiField
+    TextBox                   mapUrl;
+    @UiField(provided = true)
+    CellTable<String> urlsTable = new CellTable<String>();
+    @UiField(provided = true)
+    final   CloudFoundryResources            res;
+    @UiField(provided = true)
+    final   CloudFoundryLocalizationConstant locale;
+    private UnmapUrlView.ActionDelegate      delegate;
 
     /**
      * Create view.
      *
-     * @param constatns
      * @param resources
      * @param constant
      */
     @Inject
-    protected UnmapUrlViewImpl(CloudFoundryLocalizationConstant constatns, CloudFoundryResources resources,
-                               CloudFoundryLocalizationConstant constant) {
-        this.constant = constant;
+    protected UnmapUrlViewImpl(CloudFoundryResources resources, CloudFoundryLocalizationConstant constant) {
+        this.res = resources;
+        this.locale = constant;
 
         createUrlsTable();
 
@@ -86,10 +85,6 @@ public class UnmapUrlViewImpl extends DialogBox implements UnmapUrlView {
 
         this.setText("Application URLs");
         this.setWidget(widget);
-
-        // adds text with icon into button
-        btnMap.setHTML(new Image(resources.addButton()) + " " + constatns.mapButton());
-        btnClose.setHTML(new Image(resources.cancelButton()) + " " + constatns.closeButton());
     }
 
     /** Creates urls table. */
@@ -97,7 +92,7 @@ public class UnmapUrlViewImpl extends DialogBox implements UnmapUrlView {
         Column<String, String> buttonColumn = new Column<String, String>(new ButtonCell()) {
             @Override
             public String getValue(String object) {
-                return constant.unmapButton();
+                return locale.unmapButton();
             }
         };
 
@@ -124,9 +119,9 @@ public class UnmapUrlViewImpl extends DialogBox implements UnmapUrlView {
         };
 
         // Adds headers and size of column
-        urlsTable.addColumn(valueColumn, constant.applicationUnmapUrlGridUrlField());
+        urlsTable.addColumn(valueColumn, locale.applicationUnmapUrlGridUrlField());
         urlsTable.setColumnWidth(valueColumn, "75%");
-        urlsTable.addColumn(buttonColumn, constant.unmapUrlListGridColumnTitle());
+        urlsTable.addColumn(buttonColumn, locale.unmapUrlListGridColumnTitle());
         urlsTable.setColumnWidth(buttonColumn, "25%");
 
         // don't show loading indicator

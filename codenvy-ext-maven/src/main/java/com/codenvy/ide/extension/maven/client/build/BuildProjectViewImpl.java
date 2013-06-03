@@ -19,6 +19,8 @@
 package com.codenvy.ide.extension.maven.client.build;
 
 import com.codenvy.ide.extension.maven.client.BuilderResources;
+import com.codenvy.ide.part.PartStackUIResources;
+import com.codenvy.ide.part.base.BaseView;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -35,32 +37,30 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class BuildProjectViewImpl extends Composite implements BuildProjectView {
+public class BuildProjectViewImpl extends BaseView<BuildProjectView.ActionDelegate> implements BuildProjectView {
     private static BuildProjectViewImplUiBinder uiBinder = GWT.create(BuildProjectViewImplUiBinder.class);
 
     interface BuildProjectViewImplUiBinder extends UiBinder<Widget, BuildProjectViewImpl> {
     }
 
     @UiField
-    Button btnClearOutput;
-
+    Button    btnClearOutput;
     @UiField
     FlowPanel output;
-
     private ActionDelegate delegate;
-
     private int animationCharIndex = 1;
-
     private Label progress;
 
     /**
      * Create view.
      *
      * @param resources
+     * @param partStackUIResources
      */
     @Inject
-    protected BuildProjectViewImpl(BuilderResources resources) {
-        initWidget(uiBinder.createAndBindUi(this));
+    protected BuildProjectViewImpl(BuilderResources resources, PartStackUIResources partStackUIResources) {
+        super(partStackUIResources);
+        container.add(uiBinder.createAndBindUi(this));
 
         btnClearOutput.setHTML(new Image(resources.clearOutput()).toString());
     }

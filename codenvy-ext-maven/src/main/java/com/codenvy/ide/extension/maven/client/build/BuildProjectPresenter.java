@@ -20,29 +20,34 @@ package com.codenvy.ide.extension.maven.client.build;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.workspace.AbstractPartPresenter;
+import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
-import com.codenvy.ide.extension.maven.client.*;
+import com.codenvy.ide.extension.maven.client.BuilderClientService;
+import com.codenvy.ide.extension.maven.client.BuilderExtension;
+import com.codenvy.ide.extension.maven.client.BuilderLocalizationConstant;
+import com.codenvy.ide.extension.maven.client.BuilderResources;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectHandler;
 import com.codenvy.ide.extension.maven.client.event.ProjectBuiltEvent;
+import com.codenvy.ide.extension.maven.client.marshaller.BuildStatusUnmarshaller;
+import com.codenvy.ide.extension.maven.client.marshaller.BuildStatusUnmarshallerWS;
+import com.codenvy.ide.extension.maven.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.maven.shared.BuildStatus;
 import com.codenvy.ide.extension.maven.shared.BuildStatus.Status;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.part.base.BasePresenter;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.ProjectDescription;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.codenvy.ide.rest.RequestStatusHandler;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
-import com.codenvy.ide.websocket.rest.AutoBeanUnmarshallerWS;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
@@ -56,68 +61,45 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
- * Presenter for created builder view. The view must be pointed in Views.gwt.xml.
+ * Presenter for build project with maven.
  *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuildProjectPresenter.java Feb 17, 2012 5:39:10 PM azatsarynnyy $
  */
 @Singleton
-public class BuildProjectPresenter extends AbstractPartPresenter implements BuildProjectHandler, BuildProjectView.ActionDelegate {
-    private final static String LAST_SUCCESS_BUILD = "lastSuccessBuild";
-
+public class BuildProjectPresenter extends BasePresenter implements BuildProjectHandler, BuildProjectView.ActionDelegate {
+    private final static String LAST_SUCCESS_BUILD    = "lastSuccessBuild";
     private final static String ARTIFACT_DOWNLOAD_URL = "artifactDownloadUrl";
-
+    private final static String TITLE                 = "Output";
     private BuildProjectView view;
-
     /** Identifier of project we want to send for build. */
-    private String projectId = null;
-
+    private              String  projectId         = null;
     /** The builds identifier. */
-    private String buildID = null;
-
+    private              String  buildID           = null;
     /** Delay in millisecond between requests for build job status. */
-    private static final int delay = 3000;
-
+    private static final int     delay             = 3000;
     /** Status of previously build. */
-    private Status previousStatus = null;
-
+    private              Status  previousStatus    = null;
     /** Build of another project is performed. */
-    private boolean isBuildInProgress = false;
-
+    private              boolean isBuildInProgress = false;
     /** View closed flag. */
-    private boolean isViewClosed = true;
-
-    private boolean publishAfterBuild = false;
-
+    private              boolean isViewClosed      = true;
+    private              boolean publishAfterBuild = false;
     /** Project for build. */
-    private Project project;
-
-    protected RequestStatusHandler statusHandler;
-
-    private String buildStatusChannel;
-
-    private EventBus eventBus;
-
-    private ResourceProvider resourceProvider;
-
-    private ConsolePart console;
-
-    private BuilderClientService service;
-
-    private BuilderLocalizationConstant constant;
-
-    private BuilderAutoBeanFactory autoBeanFactory;
-
-    private BuilderResources resources;
-
-    private WorkspaceAgent workspaceAgent;
-
-    private MessageBus messageBus;
-
+    private       Project                          project;
+    private       RequestStatusHandler             statusHandler;
+    private       String                           buildStatusChannel;
+    private       EventBus                         eventBus;
+    private       ResourceProvider                 resourceProvider;
+    private       ConsolePart                      console;
+    private       BuilderClientService             service;
+    private       BuilderLocalizationConstant      constant;
+    private       BuilderResources                 resources;
+    private       WorkspaceAgent                   workspaceAgent;
+    private       MessageBus                       messageBus;
     /** Handler for processing Maven build status which is received over WebSocket connection. */
     private final SubscriptionHandler<BuildStatus> buildStatusHandler;
 
@@ -130,30 +112,30 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
      * @param console
      * @param service
      * @param constant
-     * @param autoBeanFactory
      * @param resources
      * @param workspaceAgent
      * @param messageBus
      */
     @Inject
     protected BuildProjectPresenter(BuildProjectView view, EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
-                                    BuilderClientService service, BuilderLocalizationConstant constant,
-                                    BuilderAutoBeanFactory autoBeanFactory, BuilderResources resources, WorkspaceAgent workspaceAgent,
-                                    MessageBus messageBus) {
+                                    BuilderClientService service, BuilderLocalizationConstant constant, BuilderResources resources,
+                                    WorkspaceAgent workspaceAgent, MessageBus messageBus) {
         this.view = view;
-        this.workspaceAgent = workspaceAgent;
         this.view.setDelegate(this);
+        this.view.setTitle(TITLE);
+        this.workspaceAgent = workspaceAgent;
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
         this.console = console;
         this.service = service;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.resources = resources;
         this.messageBus = messageBus;
 
-        buildStatusHandler = new SubscriptionHandler<BuildStatus>(
-                new AutoBeanUnmarshallerWS<BuildStatus>(this.autoBeanFactory.create(BuildStatus.class))) {
+        DtoClientImpls.BuildStatusImpl buildStatus = DtoClientImpls.BuildStatusImpl.make();
+        BuildStatusUnmarshallerWS unmarshaller = new BuildStatusUnmarshallerWS(buildStatus);
+
+        buildStatusHandler = new SubscriptionHandler<BuildStatus>(unmarshaller) {
             @Override
             protected void onMessageReceived(BuildStatus buildStatus) {
                 updateBuildStatus(buildStatus);
@@ -203,9 +185,9 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
     private void doBuild() {
         projectId = project.getId();
         statusHandler.requestInProgress(projectId);
+        StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
 
         try {
-            StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
             service.build(projectId, resourceProvider.getVfsId(), project.getName(),
                           (String)project.getPropertyValue(ProjectDescription.PROPERTY_PRIMARY_NATURE),
                           new AsyncRequestCallback<StringBuilder>(unmarshaller) {
@@ -373,7 +355,7 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
             service.checkArtifactUrl(url, new AsyncRequestCallback<Object>() {
                 @Override
                 protected void onSuccess(Object result) {
-                    BuildStatus buildStatus = autoBeanFactory.buildStatus().as();
+                    DtoClientImpls.BuildStatusImpl buildStatus = DtoClientImpls.BuildStatusImpl.make();
                     buildStatus.setStatus(BuildStatus.Status.SUCCESSFUL);
                     buildStatus.setDownloadUrl(url);
                     eventBus.fireEvent(new ProjectBuiltEvent(buildStatus));
@@ -404,9 +386,10 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
     private Timer refreshBuildStatusTimer = new Timer() {
         @Override
         public void run() {
+            DtoClientImpls.BuildStatusImpl buildStatus = DtoClientImpls.BuildStatusImpl.make();
+            BuildStatusUnmarshaller unmarshaller = new BuildStatusUnmarshaller(buildStatus);
+
             try {
-                AutoBean<BuildStatus> buildStatus = autoBeanFactory.create(BuildStatus.class);
-                AutoBeanUnmarshaller<BuildStatus> unmarshaller = new AutoBeanUnmarshaller<BuildStatus>(buildStatus);
                 service.status(buildID, new AsyncRequestCallback<BuildStatus>(unmarshaller) {
                     @Override
                     protected void onSuccess(BuildStatus response) {
@@ -474,7 +457,7 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
 
         StringBuilder message =
                 new StringBuilder("Finished building project <b>").append(project.getPath().substring(1))
-                                                                  .append("</b>.\r\nResult: ").append(buildStatus.getStatus());
+                                                                  .append("</b>.\r\nResult: ").append(buildStatus.getStatus().getValue());
 
         if (buildStatus.getStatus() == Status.SUCCESSFUL) {
             console.print(constant.buildSuccess());
@@ -559,7 +542,7 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
         });
     }
 
-    /** Checks if project is uder watching. */
+    /** Checks if project is under watching. */
     private void checkIfProjectIsUnderWatching() {
         project.refreshProperties(new AsyncCallback<Project>() {
             @Override
@@ -571,7 +554,6 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
                         return;
                     }
                 }
-                startWatchingProjectChanges();
             }
 
             @Override
@@ -581,45 +563,20 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
     }
 
     /**
-     *
-     */
-    private void startWatchingProjectChanges() {
-        // TODO IDEX-62
-        // We don't have vfs module. Need to create or use some analog method
-        //      try
-        //      {
-        //         VirtualFileSystem.getInstance().startWatchUpdates(project.getId(), new AsyncRequestCallback<Object>()
-        //         {
-        //
-        //            @Override
-        //            protected void onSuccess(Object result)
-        //            {
-        //            }
-        //
-        //            @Override
-        //            protected void onFailure(Throwable exception)
-        //            {
-        //
-        //            }
-        //         });
-        //      }
-        //      catch (RequestException e)
-        //      {
-        //         e.printStackTrace();
-        //      }
-    }
-
-    /**
      * Output the message and activate view if necessary.
      *
      * @param message
      *         message for output
      */
     private void showBuildMessage(String message) {
-
         if (isViewClosed) {
             workspaceAgent.openPart(this, PartStackType.INFORMATION);
             isViewClosed = false;
+        }
+
+        PartPresenter activePart = partStack.getActivePart();
+        if (activePart == null || !activePart.equals(this)) {
+            partStack.setActivePart(this);
         }
 
         view.setClearOutputButtonEnabled(true);
@@ -668,7 +625,7 @@ public class BuildProjectPresenter extends AbstractPartPresenter implements Buil
     /** {@inheritDoc} */
     @Override
     public String getTitle() {
-        return "Output";
+        return TITLE;
     }
 
     /** {@inheritDoc} */

@@ -40,7 +40,6 @@ import com.google.inject.Singleton;
 @Singleton
 @Extension(title = "Cloud Foundry Support.", version = "3.0.0")
 public class CloudFoundryExtension {
-
     /** Defined CloudFoundry PaaS providers. */
     public static enum PAAS_PROVIDER {
         CLOUD_FOUNDRY("cloudfoundry"),

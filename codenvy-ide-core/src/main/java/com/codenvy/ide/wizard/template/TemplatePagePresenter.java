@@ -23,8 +23,10 @@ import com.codenvy.ide.api.template.CreateProjectProvider;
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.util.loging.Log;
+import com.codenvy.ide.wizard.newproject.ProjectTypeAgentImpl;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -36,13 +38,14 @@ import com.google.inject.Inject;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public class TemplatePagePresenter extends AbstractWizardPagePresenter implements TemplatePageView.ActionDelegate {
-    private TemplatePageView    view;
-    private WizardPagePresenter next;
-    private WizardPagePresenter paasWizardPage;
-    private PaaSAgent           paaSAgent;
-    private Template            selectedTemplate;
-    private String              projectName;
-    private TemplateAgentImpl   templateAgent;
+    private TemplatePageView     view;
+    private WizardPagePresenter  next;
+    private WizardPagePresenter  paasWizardPage;
+    private PaaSAgent            paaSAgent;
+    private Template             selectedTemplate;
+    private String               projectName;
+    private TemplateAgentImpl    templateAgent;
+    private ProjectTypeAgentImpl projectTypeAgent;
 
     /**
      * Create presenter.
@@ -51,16 +54,18 @@ public class TemplatePagePresenter extends AbstractWizardPagePresenter implement
      * @param view
      * @param paaSAgent
      * @param templateAgent
+     * @param projectTypeAgent
      */
     @Inject
     protected TemplatePagePresenter(TemplateWizardResources resources, TemplatePageView view, PaaSAgent paaSAgent,
-                                    TemplateAgentImpl templateAgent) {
+                                    TemplateAgentImpl templateAgent, ProjectTypeAgentImpl projectTypeAgent) {
         super("Choose project template", resources.templateIcon());
 
         this.view = view;
         this.view.setDelegate(this);
         this.paaSAgent = paaSAgent;
         this.templateAgent = templateAgent;
+        this.projectTypeAgent = projectTypeAgent;
     }
 
     /**
@@ -107,9 +112,15 @@ public class TemplatePagePresenter extends AbstractWizardPagePresenter implement
 
     /** {@inheritDoc} */
     public void go(AcceptsOneWidget container) {
-        container.setWidget(view);
-
+        next = null;
         paasWizardPage = paaSAgent.getSelectedPaaS().getWizardPage();
+        String projectType = projectTypeAgent.getSelectedProjectType();
+        JsonArray<Template> templates = templateAgent.getTemplatesForProjectType(projectType);
+        view.setTemplates(templates);
+
+        delegate.updateControls();
+
+        container.setWidget(view);
     }
 
     /** {@inheritDoc} */

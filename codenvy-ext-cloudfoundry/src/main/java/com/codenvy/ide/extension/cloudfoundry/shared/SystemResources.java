@@ -18,20 +18,11 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.shared;
 
-/**
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: $
- */
+/** @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a> */
 public interface SystemResources {
     int getServices();
 
-    void setServices(int services);
-
     int getApps();
 
-    void setApps(int apps);
-
     int getMemory();
-
-    void setMemory(int memory);
 }

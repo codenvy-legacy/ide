@@ -56,11 +56,11 @@ import com.codenvy.ide.core.editor.ResourceDocumentProvider;
 import com.codenvy.ide.core.expressions.ExpressionManagerImpl;
 import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.keybinding.KeyBindingManager;
-import com.codenvy.ide.loader.EmptyLoader;
-import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.menu.MainMenuPresenter;
 import com.codenvy.ide.menu.MainMenuView;
 import com.codenvy.ide.menu.MainMenuViewImpl;
+import com.codenvy.ide.openproject.OpenProjectView;
+import com.codenvy.ide.openproject.OpenProjectViewImpl;
 import com.codenvy.ide.outline.OutlinePartPresenter;
 import com.codenvy.ide.outline.OutlinePartView;
 import com.codenvy.ide.outline.OutlinePartViewImpl;
@@ -80,6 +80,8 @@ import com.codenvy.ide.part.projectexplorer.ProjectExplorerView;
 import com.codenvy.ide.part.projectexplorer.ProjectExplorerViewImpl;
 import com.codenvy.ide.preferences.PreferencesAgentImpl;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
+import com.codenvy.ide.preferences.PreferencesView;
+import com.codenvy.ide.preferences.PreferencesViewImpl;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.codenvy.ide.resources.ResourceProviderComponent;
 import com.codenvy.ide.resources.model.GenericModelProvider;
@@ -92,6 +94,8 @@ import com.codenvy.ide.text.DocumentFactoryImpl;
 import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.codenvy.ide.toolbar.ToolbarView;
 import com.codenvy.ide.toolbar.ToolbarViewImpl;
+import com.codenvy.ide.ui.loader.IdeLoader;
+import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.user.UserClientServiceImpl;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.codenvy.ide.websocket.MessageBus;
@@ -131,7 +135,7 @@ public class CoreGinModule extends AbstractGinModule {
     protected void configure() {
         // generic bindings
         bind(EventBus.class).to(SimpleEventBus.class).in(Singleton.class);
-        bind(Loader.class).to(EmptyLoader.class).in(Singleton.class);
+        bind(Loader.class).to(IdeLoader.class).in(Singleton.class);
         bind(Resources.class).in(Singleton.class);
         bind(ExtensionRegistry.class).in(Singleton.class);
         bind(StandardComponentInitializer.class).in(Singleton.class);
@@ -215,6 +219,8 @@ public class CoreGinModule extends AbstractGinModule {
         bind(TemplatePageView.class).to(TemplatePageViewImpl.class);
         bind(NewResourcePageView.class).to(NewResourcePageViewImpl.class);
         bind(NewProjectPageView.class).to(NewProjectPageViewImpl.class);
+        bind(OpenProjectView.class).to(OpenProjectViewImpl.class);
+        bind(PreferencesView.class).to(PreferencesViewImpl.class).in(Singleton.class);
     }
 
     @Provides

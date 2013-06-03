@@ -24,6 +24,7 @@ package com.codenvy.ide.client;
 
 import com.codenvy.ide.api.user.UpdateUserAttributes;
 import com.codenvy.ide.api.user.User;
+import com.codenvy.ide.dto.client.RoutableDtoClientImpl;
 
 @SuppressWarnings({"unchecked", "cast"})
 public class DtoClientImpls {
@@ -33,7 +34,7 @@ public class DtoClientImpls {
   public static final String CLIENT_SERVER_PROTOCOL_HASH = "648f8d86f27105b66b0eb5f90b185c9f029001e1";
 
 
-  public static class UpdateUserAttributesImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl implements UpdateUserAttributes {
+  public static class UpdateUserAttributesImpl extends RoutableDtoClientImpl implements UpdateUserAttributes {
     protected UpdateUserAttributesImpl() {}
 
     @Override
@@ -57,7 +58,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class UserImpl extends com.codenvy.ide.dtogen.client.RoutableDtoClientImpl implements User {
+  public static class UserImpl extends RoutableDtoClientImpl implements User {
     protected UserImpl() {}
 
     @Override

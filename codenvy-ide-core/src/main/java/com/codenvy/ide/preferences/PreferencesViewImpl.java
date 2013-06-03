@@ -36,6 +36,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 
 /**
@@ -46,31 +48,29 @@ import com.google.gwt.user.client.ui.*;
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
+@Singleton
 public class PreferencesViewImpl extends DialogBox implements PreferencesView {
+    interface PreferenceViewImplUiBinder extends UiBinder<Widget, PreferencesViewImpl> {
+    }
+
     private static PreferenceViewImplUiBinder uiBinder = GWT.create(PreferenceViewImplUiBinder.class);
 
     @UiField
-    Button btnClose;
-
+    com.codenvy.ide.ui.Button btnClose;
     @UiField
-    Button btnOk;
-
+    com.codenvy.ide.ui.Button btnOk;
     @UiField
-    Button btnApply;
-
+    com.codenvy.ide.ui.Button btnApply;
     @UiField
-    ScrollPanel preferences;
-
+    ScrollPanel               preferences;
     @UiField
-    SimplePanel contentPanel;
-
-    private ActionDelegate delegate;
-
-    private PreferencesPagePresenter firstPage;
-
+    SimplePanel               contentPanel;
+    @UiField(provided = true)
+    Resources                 res;
+    private ActionDelegate                       delegate;
+    private PreferencesPagePresenter             firstPage;
     private SimpleList<PreferencesPagePresenter> list;
-
-    private SimpleList.ListItemRenderer<PreferencesPagePresenter> listItemRenderer =
+    private SimpleList.ListItemRenderer<PreferencesPagePresenter>  listItemRenderer =
             new SimpleList.ListItemRenderer<PreferencesPagePresenter>() {
                 @Override
                 public void render(Element itemElement, PreferencesPagePresenter itemData) {
@@ -100,8 +100,7 @@ public class PreferencesViewImpl extends DialogBox implements PreferencesView {
                     return Elements.createTRElement();
                 }
             };
-
-    private SimpleList.ListEventDelegate<PreferencesPagePresenter> listDelegate =
+    private SimpleList.ListEventDelegate<PreferencesPagePresenter> listDelegate     =
             new SimpleList.ListEventDelegate<PreferencesPagePresenter>() {
                 public void onListItemClicked(Element itemElement, PreferencesPagePresenter itemData) {
                     list.getSelectionModel().setSelectedItem(itemData);
@@ -112,35 +111,25 @@ public class PreferencesViewImpl extends DialogBox implements PreferencesView {
                 }
             };
 
-    interface PreferenceViewImplUiBinder extends UiBinder<Widget, PreferencesViewImpl> {
-    }
-
     /**
      * Create view.
      *
      * @param resources
-     * @param preferences
      */
-    public PreferencesViewImpl(Resources resources, JsonArray<PreferencesPagePresenter> preferences) {
+    @Inject
+    protected PreferencesViewImpl(Resources resources) {
+        this.res = resources;
+
         Widget widget = uiBinder.createAndBindUi(this);
 
         this.setText("Preferences");
-        //adds widget into DialogBox
         this.setWidget(widget);
 
         //create list of preferences
         TableElement tableElement = Elements.createTableElement();
         tableElement.setAttribute("style", "width: 100%");
-        list = SimpleList.create((View)tableElement, resources.defaultSimpleListCss(), listItemRenderer, listDelegate);
-
-        this.preferences.setStyleName(resources.coreCss().simpleListContainer());
+        list = SimpleList.create((View)tableElement, res.defaultSimpleListCss(), listItemRenderer, listDelegate);
         this.preferences.add(list);
-
-        list.render(preferences);
-
-        if (preferences.size() > 0) {
-            firstPage = preferences.get(0);
-        }
     }
 
     /** {@inheritDoc} */
@@ -194,5 +183,15 @@ public class PreferencesViewImpl extends DialogBox implements PreferencesView {
     @Override
     public void setApplyButtonEnabled(boolean isEnabled) {
         btnApply.setEnabled(isEnabled);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setPreferences(JsonArray<PreferencesPagePresenter> preferences) {
+        list.render(preferences);
+
+        if (preferences.size() > 0) {
+            firstPage = preferences.get(0);
+        }
     }
 }

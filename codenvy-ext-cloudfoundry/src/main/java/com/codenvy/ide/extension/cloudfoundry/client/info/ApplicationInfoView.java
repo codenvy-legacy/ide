@@ -19,8 +19,7 @@
 package com.codenvy.ide.extension.cloudfoundry.client.info;
 
 import com.codenvy.ide.api.mvp.View;
-
-import java.util.List;
+import com.codenvy.ide.json.JsonArray;
 
 /**
  * The view of {@link ApplicationInfoPresenter}.
@@ -30,11 +29,8 @@ import java.util.List;
 public interface ApplicationInfoView extends View<ApplicationInfoView.ActionDelegate> {
     /** Needs for delegate some function into CreateApplication view. */
     public interface ActionDelegate {
-        /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Ok button.
-         */
-        public void onOKClicked();
+        /** Performs any actions appropriate in response to the user having pressed the Ok button. */
+        void onOKClicked();
     }
 
     /**
@@ -42,56 +38,56 @@ public interface ApplicationInfoView extends View<ApplicationInfoView.ActionDele
      *
      * @param name
      */
-    public void setName(String name);
+    void setName(String name);
 
     /**
      * Sets application's state.
      *
      * @param state
      */
-    public void setState(String state);
+    void setState(String state);
 
     /**
      * Sets application's instances.
      *
      * @param instances
      */
-    public void setInstances(String instances);
+    void setInstances(String instances);
 
     /**
      * Sets application's version.
      *
      * @param version
      */
-    public void setVersion(String version);
+    void setVersion(String version);
 
     /**
      * Sets application's disk.
      *
      * @param disk
      */
-    public void setDisk(String disk);
+    void setDisk(String disk);
 
     /**
      * Sets application's memory.
      *
      * @param memory
      */
-    public void setMemory(String memory);
+    void setMemory(String memory);
 
     /**
      * Sets application's stack.
      *
      * @param stack
      */
-    public void setStack(String stack);
+    void setStack(String stack);
 
     /**
      * Sets application's model.
      *
      * @param model
      */
-    public void setModel(String model);
+    void setModel(String model);
 
     /**
      * Sets application's uris.
@@ -99,7 +95,7 @@ public interface ApplicationInfoView extends View<ApplicationInfoView.ActionDele
      * @param applications
      *         application's uris
      */
-    public void setApplicationUris(List<String> applications);
+    void setApplicationUris(JsonArray<String> applications);
 
     /**
      * Sets application's services.
@@ -107,7 +103,7 @@ public interface ApplicationInfoView extends View<ApplicationInfoView.ActionDele
      * @param services
      *         application's services
      */
-    public void setApplicationServices(List<String> services);
+    void setApplicationServices(JsonArray<String> services);
 
     /**
      * Sets application's environments.
@@ -115,11 +111,11 @@ public interface ApplicationInfoView extends View<ApplicationInfoView.ActionDele
      * @param environments
      *         application's enviroments.
      */
-    public void setApplicationEnvironments(List<String> environments);
+    void setApplicationEnvironments(JsonArray<String> environments);
 
     /** Show dialog. */
-    public void showDialog();
+    void showDialog();
 
     /** Close dialog. */
-    public void close();
+    void close();
 }

@@ -20,7 +20,10 @@ package com.codenvy.ide.extension.cloudfoundry.client.apps;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.*;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.delete.DeleteApplicationPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
@@ -53,7 +56,6 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
     private EventBus                            eventBus;
     private ConsolePart                         console;
     private CloudFoundryLocalizationConstant    constant;
-    private CloudFoundryAutoBeanFactory         autoBeanFactory;
     private StartApplicationPresenter           startAppPresenter;
     private DeleteApplicationPresenter          deleteAppPresenter;
     private LoginPresenter                      loginPresenter;
@@ -83,20 +85,18 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
      * @param deleteAppPresenter
      * @param loginPresenter
      * @param constant
-     * @param autoBeanFactory
      * @param service
      */
     @Inject
     protected ApplicationsPresenter(ApplicationsView view, EventBus eventBus, ConsolePart console,
                                     StartApplicationPresenter startAppPresenter, DeleteApplicationPresenter deleteAppPresenter,
                                     LoginPresenter loginPresenter, CloudFoundryLocalizationConstant constant,
-                                    CloudFoundryAutoBeanFactory autoBeanFactory, CloudFoundryClientService service) {
+                                    CloudFoundryClientService service) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
         this.console = console;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.startAppPresenter = startAppPresenter;
         this.deleteAppPresenter = deleteAppPresenter;
         this.loginPresenter = loginPresenter;
@@ -119,8 +119,8 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
     /** Gets list of available application for current user. */
     private void getApplicationList() {
         try {
-            ApplicationListUnmarshaller unmarshaller = new ApplicationListUnmarshaller(
-                    JsonCollections.<CloudFoundryApplication>createArray(), autoBeanFactory);
+            ApplicationListUnmarshaller unmarshaller =
+                    new ApplicationListUnmarshaller(JsonCollections.<CloudFoundryApplication>createArray());
             LoggedInHandler loggedInHandler = new LoggedInHandler() {
                 @Override
                 public void
@@ -136,7 +136,6 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
                                                                                                                 console, constant,
                                                                                                                 loginPresenter,
                                                                                                                 paasProvider) {
-
                                            @Override
                                            protected void onSuccess(JsonArray<CloudFoundryApplication> result) {
                                                view.setApplications(result);
@@ -145,6 +144,10 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
                                                // update the list of servers, if was enter value, that doesn't present in list
                                                if (!servers.contains(currentServer)) {
                                                    getServers();
+                                               }
+
+                                               if (!view.isShown()) {
+                                                   view.showDialog();
                                                }
                                            }
                                        });
@@ -184,10 +187,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
         checkLogginedToServer();
     }
 
-    /**
-     * Gets target from CloudFoundry server. If this works well then we will know
-     * we have connect to CloudFoundry server.
-     */
+    /** Gets target from CloudFoundry server. If this works well then we will know we have connect to CloudFoundry server. */
     private void checkLogginedToServer() {
         try {
             TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(JsonCollections.<String>createArray());
@@ -221,10 +221,6 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
         // fill the list of applications
         currentServer = servers.get(0);
         getApplicationList();
-
-        if (!view.isShown()) {
-            view.showDialog();
-        }
     }
 
     /** {@inheritDoc} */

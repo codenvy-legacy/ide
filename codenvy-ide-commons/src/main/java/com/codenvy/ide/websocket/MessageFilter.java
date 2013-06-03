@@ -14,7 +14,7 @@
 
 package com.codenvy.ide.websocket;
 
-import com.codenvy.ide.dtogen.shared.ServerToClientDto;
+import com.codenvy.ide.dto.shared.ServerToClientDto;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonIntegerMap;
 

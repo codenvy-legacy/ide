@@ -18,16 +18,11 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.shared;
 
-/**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
- */
+import com.codenvy.ide.json.JsonArray;
+
+/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
 public interface CloudFoundryServices {
-    SystemService[] getSystem();
+    JsonArray<SystemService> getSystem();
 
-    void setSystem(SystemService[] system);
-
-    ProvisionedService[] getProvisioned();
-
-    void setProvisioned(ProvisionedService[] provisioned);
+    JsonArray<ProvisionedService> getProvisioned();
 }

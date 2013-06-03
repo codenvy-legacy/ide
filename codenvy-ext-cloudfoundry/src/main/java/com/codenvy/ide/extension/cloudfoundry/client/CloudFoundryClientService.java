@@ -41,8 +41,8 @@ public interface CloudFoundryClientService {
      * @param callback
      *         - callback, that client has to implement to receive response
      */
-    public void getFrameworks(String server, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
-                              AsyncRequestCallback<JsonArray<Framework>> callback) throws RequestException;
+    void getFrameworks(String server, CloudFoundryExtension.PAAS_PROVIDER paasProvider, AsyncRequestCallback<JsonArray<Framework>> callback)
+            throws RequestException;
 
     /**
      * Create application on CloudFoundry.
@@ -73,9 +73,9 @@ public interface CloudFoundryClientService {
      * @param callback
      *         callback, that client has to implement to receive response
      */
-    public void create(String server, String name, String type, String url, int instances, int memory, boolean nostart, String vfsId,
-                       String projectId, String war, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
-                       CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback) throws RequestException;
+    void create(String server, String name, String type, String url, int instances, int memory, boolean nostart, String vfsId,
+                String projectId, String war, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
+                CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback) throws RequestException;
 
     /**
      * Create application on CloudFoundry. Sends request over WebSocket.
@@ -106,9 +106,9 @@ public interface CloudFoundryClientService {
      * @param callback
      *         callback, that client has to implement to receive response
      */
-    public void createWS(String server, String name, String type, String url, int instances, int memory, boolean nostart, String vfsId,
-                         String projectId, String war, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
-                         CloudFoundryRESTfulRequestCallback<CloudFoundryApplication> callback) throws WebSocketException;
+    void createWS(String server, String name, String type, String url, int instances, int memory, boolean nostart, String vfsId,
+                  String projectId, String war, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
+                  CloudFoundryRESTfulRequestCallback<CloudFoundryApplication> callback) throws WebSocketException;
 
     /**
      * Log in CloudFoundry account.
@@ -124,8 +124,8 @@ public interface CloudFoundryClientService {
      * @param callback
      *         callback, that client has to implement to receive response
      */
-    public void login(String server, String email, String password, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
-                      AsyncRequestCallback<String> callback) throws RequestException;
+    void login(String server, String email, String password, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
+               AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Log out CloudFoundry account.
@@ -137,7 +137,7 @@ public interface CloudFoundryClientService {
      * @param callback
      *         callback, that client has to implement to receive response
      */
-    public void logout(String server, CloudFoundryExtension.PAAS_PROVIDER paasProvider, AsyncRequestCallback<String> callback)
+    void logout(String server, CloudFoundryExtension.PAAS_PROVIDER paasProvider, AsyncRequestCallback<String> callback)
             throws RequestException;
 
     /**
@@ -154,8 +154,8 @@ public interface CloudFoundryClientService {
      * @param callback
      *         callback, that client has to implement
      */
-    public void getApplicationInfo(String vfsId, String projectId, String appId, String server,
-                                   CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback) throws RequestException;
+    void getApplicationInfo(String vfsId, String projectId, String appId, String server,
+                            CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback) throws RequestException;
 
     /**
      * Delete application from CloudFoundry.
@@ -175,9 +175,8 @@ public interface CloudFoundryClientService {
      * @param callback
      *         - callback, that client has to implement
      */
-    public void deleteApplication(String vfsId, String projectId, String appId, String server,
-                                  CloudFoundryExtension.PAAS_PROVIDER paasProvider, boolean deleteServices,
-                                  CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
+    void deleteApplication(String vfsId, String projectId, String appId, String server, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
+                           boolean deleteServices, CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Start application.
@@ -195,9 +194,8 @@ public interface CloudFoundryClientService {
      * @param callback
      *         callback, that client has to implement to receive response from server.
      */
-    public void startApplication(String vfsId, String projectId, String name, String server,
-                                 CloudFoundryExtension.PAAS_PROVIDER paasProvider,
-                                 CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback) throws RequestException;
+    void startApplication(String vfsId, String projectId, String name, String server, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
+                          CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback) throws RequestException;
 
     /**
      * Stop application.
@@ -215,9 +213,8 @@ public interface CloudFoundryClientService {
      * @param callback
      *         callback, that client has to implement to receive response from server.
      */
-    public void stopApplication(String vfsId, String projectId, String name, String server,
-                                CloudFoundryExtension.PAAS_PROVIDER paasProvider,
-                                CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
+    void stopApplication(String vfsId, String projectId, String name, String server, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
+                         CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Restart application.
@@ -235,9 +232,8 @@ public interface CloudFoundryClientService {
      * @param callback
      *         callback, that client has to implement to receive response from server.
      */
-    public void restartApplication(String vfsId, String projectId, String name, String server,
-                                   CloudFoundryExtension.PAAS_PROVIDER paasProvider,
-                                   CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback) throws RequestException;
+    void restartApplication(String vfsId, String projectId, String name, String server, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
+                            CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback) throws RequestException;
 
     /**
      * Update existing application.
@@ -255,11 +251,28 @@ public interface CloudFoundryClientService {
      * @param callback
      *         callback, that client has to implement to handle response from server
      */
-    public void updateApplication(String vfsId, String projectId, String name, String server, String war,
-                                  CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
+    void updateApplication(String vfsId, String projectId, String name, String server, String war,
+                           CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
 
-    public void renameApplication(String vfsId, String projectId, String name, String server, String newName,
-                                  CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
+    /**
+     * Rename existing application.
+     *
+     * @param vfsId
+     *         current virtual file system id
+     * @param projectId
+     *         id of the project with the source code or compiled and packed java web application
+     * @param name
+     *         application's name
+     * @param server
+     *         location of AppFog instance, where application is located
+     * @param newName
+     *         new application's name
+     * @param callback
+     *         callback, that client has to implement to handle response from server
+     * @throws RequestException
+     */
+    void renameApplication(String vfsId, String projectId, String name, String server, String newName,
+                           CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Map new URL of the application.
@@ -277,8 +290,8 @@ public interface CloudFoundryClientService {
      * @param callback
      *         callback, that client has to implement to handle response from server.
      */
-    public void mapUrl(String vfsId, String projectId, String name, String server, String url,
-                       CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
+    void mapUrl(String vfsId, String projectId, String name, String server, String url, CloudFoundryAsyncRequestCallback<String> callback)
+            throws RequestException;
 
     /**
      * Unmap URL from the application.
@@ -296,8 +309,8 @@ public interface CloudFoundryClientService {
      * @param callback
      *         callback, that client has to implement to handle response from server
      */
-    public void unmapUrl(String vfsId, String projectId, String name, String server, String url,
-                         CloudFoundryAsyncRequestCallback<Object> callback) throws RequestException;
+    void unmapUrl(String vfsId, String projectId, String name, String server, String url, CloudFoundryAsyncRequestCallback<Object> callback)
+            throws RequestException;
 
     /**
      * Update the memory size.
@@ -315,8 +328,8 @@ public interface CloudFoundryClientService {
      * @param callback
      *         callback, that client has to implement to handle response from server
      */
-    public void updateMemory(String vfsId, String projectId, String name, String server, int mem,
-                             CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
+    void updateMemory(String vfsId, String projectId, String name, String server, int mem,
+                      CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Update the number of instances for the application.
@@ -334,8 +347,8 @@ public interface CloudFoundryClientService {
      * @param callback
      *         callback, that client has to implement to handle response from server
      */
-    public void updateInstances(String vfsId, String projectId, String name, String server, String expression,
-                                CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
+    void updateInstances(String vfsId, String projectId, String name, String server, String expression,
+                         CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Validate action before building project.
@@ -364,10 +377,9 @@ public interface CloudFoundryClientService {
      * @param callback
      *         callback, that client has to implement to handle response from server.
      */
-    public void validateAction(String action, String server, String appName, String framework, String url, String vfsId, String projectId,
-                               CloudFoundryExtension.PAAS_PROVIDER paasProvider, int instances, int memory, boolean nostart,
-                               CloudFoundryAsyncRequestCallback<String> callback)
-            throws RequestException;
+    void validateAction(String action, String server, String appName, String framework, String url, String vfsId, String projectId,
+                        CloudFoundryExtension.PAAS_PROVIDER paasProvider, int instances, int memory, boolean nostart,
+                        CloudFoundryAsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Get list of deployed applications.
@@ -379,9 +391,8 @@ public interface CloudFoundryClientService {
      * @param callback
      *         callback, that client has to implement to handle response from server.
      */
-    public void getApplicationList(String server, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
-                                   CloudFoundryAsyncRequestCallback<JsonArray<CloudFoundryApplication>> callback)
-            throws RequestException;
+    void getApplicationList(String server, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
+                            CloudFoundryAsyncRequestCallback<JsonArray<CloudFoundryApplication>> callback) throws RequestException;
 
     /**
      * Get Cloud Foundry system information.
@@ -393,7 +404,7 @@ public interface CloudFoundryClientService {
      * @param callback
      *         callback, that client has to implement to handle response from server
      */
-    public void getSystemInfo(String server, CloudFoundryExtension.PAAS_PROVIDER paasProvider, AsyncRequestCallback<SystemInfo> callback)
+    void getSystemInfo(String server, CloudFoundryExtension.PAAS_PROVIDER paasProvider, AsyncRequestCallback<SystemInfo> callback)
             throws RequestException;
 
     /**
@@ -404,27 +415,31 @@ public interface CloudFoundryClientService {
      * @param callback
      *         callback, that client has to implement to handle response from server
      */
-    public void getTargets(CloudFoundryExtension.PAAS_PROVIDER paasProvider, AsyncRequestCallback<JsonArray<String>> callback)
+    void getTargets(CloudFoundryExtension.PAAS_PROVIDER paasProvider, AsyncRequestCallback<JsonArray<String>> callback)
             throws RequestException;
 
     /**
+     * Get target.
+     *
      * @param paasProvider
      *         CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param callback
      *         callback, that client has to implement to handle response from server
      */
-    public void getTarget(CloudFoundryExtension.PAAS_PROVIDER paasProvider, AsyncRequestCallback<StringBuilder> callback)
-            throws RequestException;
+    void getTarget(CloudFoundryExtension.PAAS_PROVIDER paasProvider, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 
     /**
      * Getting logs for CloudFoundry Application
      *
      * @param vfsId
+     *         current virtual file system id
      * @param projectId
+     *         id of the project with the source code or compiled and packed java web application
      * @param callback
+     *         callback, that client has to implement to handle response from server
      * @throws RequestException
      */
-    public void getLogs(String vfsId, String projectId, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+    void getLogs(String vfsId, String projectId, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 
     /**
      * Get the list of services available and provisioned.
@@ -436,14 +451,14 @@ public interface CloudFoundryClientService {
      * @param callback
      * @throws RequestException
      */
-    public void services(String server, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
-                         AsyncRequestCallback<CloudFoundryServices> callback) throws RequestException;
+    void services(String server, CloudFoundryExtension.PAAS_PROVIDER paasProvider, AsyncRequestCallback<CloudFoundryServices> callback)
+            throws RequestException;
 
     /**
      * Create new provisioned service.
      *
      * @param server
-     *         server's name
+     *         location of CloudFoundry instance
      * @param type
      *         service's type
      * @param name
@@ -453,35 +468,35 @@ public interface CloudFoundryClientService {
      * @param vfsId
      *         virtual file system id
      * @param projectId
-     *         project's id
+     *         id of the project with the source code or compiled and packed java web application
      * @param callback
-     *         callback
+     *         callback, that client has to implement to handle response from server
      * @throws RequestException
      */
-    public void createService(String server, String type, String name, String application, String vfsId,
-                              String projectId, CloudFoundryAsyncRequestCallback<ProvisionedService> callback) throws RequestException;
+    void createService(String server, String type, String name, String application, String vfsId, String projectId,
+                       CloudFoundryAsyncRequestCallback<ProvisionedService> callback) throws RequestException;
 
     /**
      * Delete provisioned service.
      *
      * @param server
-     *         server's name
+     *         location of CloudFoundry instance
      * @param name
      *         service's name
      * @param paasProvider
      *         CloudFoundry provider like CloudFoundry, Tier3 Web Fabric, etc.
      * @param callback
-     *         callback
+     *         callback, that client has to implement to handle response from server
      * @throws RequestException
      */
-    public void deleteService(String server, String name, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
-                              CloudFoundryAsyncRequestCallback<Object> callback) throws RequestException;
+    void deleteService(String server, String name, CloudFoundryExtension.PAAS_PROVIDER paasProvider,
+                       CloudFoundryAsyncRequestCallback<Object> callback) throws RequestException;
 
     /**
      * Bind service to application.
      *
      * @param server
-     *         server's name
+     *         location of CloudFoundry instance
      * @param name
      *         service's name
      * @param application
@@ -489,19 +504,19 @@ public interface CloudFoundryClientService {
      * @param vfsId
      *         virtual file system id
      * @param projectId
-     *         project's id
+     *         id of the project with the source code or compiled and packed java web application
      * @param callback
-     *         callback
+     *         callback, that client has to implement to handle response from server
      * @throws RequestException
      */
-    public void bindService(String server, String name, String application, String vfsId, String projectId,
-                            CloudFoundryAsyncRequestCallback<Object> callback) throws RequestException;
+    void bindService(String server, String name, String application, String vfsId, String projectId,
+                     CloudFoundryAsyncRequestCallback<Object> callback) throws RequestException;
 
     /**
      * Unbind service from application.
      *
      * @param server
-     *         server's name
+     *         location of CloudFoundry instance
      * @param name
      *         service's name
      * @param application
@@ -509,11 +524,11 @@ public interface CloudFoundryClientService {
      * @param vfsId
      *         virtual file system id
      * @param projectId
-     *         project's id
+     *         id of the project with the source code or compiled and packed java web application
      * @param callback
-     *         callback
+     *         callback, that client has to implement to handle response from server
      * @throws RequestException
      */
-    public void unbindService(String server, String name, String application, String vfsId, String projectId,
-                              CloudFoundryAsyncRequestCallback<Object> callback) throws RequestException;
+    void unbindService(String server, String name, String application, String vfsId, String projectId,
+                       CloudFoundryAsyncRequestCallback<Object> callback) throws RequestException;
 }

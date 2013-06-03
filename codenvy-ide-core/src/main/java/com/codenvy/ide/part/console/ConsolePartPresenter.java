@@ -17,6 +17,7 @@
 package com.codenvy.ide.part.console;
 
 import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.part.base.BasePresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -32,14 +33,13 @@ import com.google.inject.Singleton;
 @Singleton
 public class ConsolePartPresenter extends BasePresenter implements ConsolePartView.ActionDelegate, ConsolePart {
     private static final String TITLE = "Console";
-
     private ConsolePartView view;
 
     /** Construct empty Part */
     @Inject
     public ConsolePartPresenter(ConsolePartView view) {
         this.view = view;
-        view.setTitle(TITLE);
+        this.view.setTitle(TITLE);
         this.view.setDelegate(this);
     }
 
@@ -71,5 +71,9 @@ public class ConsolePartPresenter extends BasePresenter implements ConsolePartVi
     @Override
     public void print(String message) {
         view.print(message);
+        PartPresenter activePart = partStack.getActivePart();
+        if (activePart == null || !activePart.equals(this)) {
+            partStack.setActivePart(this);
+        }
     }
 }

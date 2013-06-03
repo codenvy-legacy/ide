@@ -33,7 +33,9 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -100,26 +102,25 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView 
         }
     }
 
-    private static ApplicationsViewImplUiBinder uiBinder = GWT.create(ApplicationsViewImplUiBinder.class);
-
-    @UiField
-    Button btnClose;
-
-    @UiField
-    Button btnShow;
-
-    @UiField(provided = true)
-    CellTable<CloudFoundryApplication> appsTable = new CellTable<CloudFoundryApplication>();
-
-    @UiField
-    ListBox server;
-
     interface ApplicationsViewImplUiBinder extends UiBinder<Widget, ApplicationsViewImpl> {
     }
 
-    private ActionDelegate delegate;
+    private static ApplicationsViewImplUiBinder uiBinder = GWT.create(ApplicationsViewImplUiBinder.class);
 
-    private boolean isShown;
+    @UiField
+    com.codenvy.ide.ui.Button btnClose;
+    @UiField
+    com.codenvy.ide.ui.Button btnShow;
+    @UiField
+    ListBox                   target;
+    @UiField(provided = true)
+    CellTable<CloudFoundryApplication> appsTable = new CellTable<CloudFoundryApplication>();
+    @UiField(provided = true)
+    final   CloudFoundryResources            res;
+    @UiField(provided = true)
+    final   CloudFoundryLocalizationConstant locale;
+    private ActionDelegate                   delegate;
+    private boolean                          isShown;
 
     /**
      * Create view.
@@ -129,15 +130,15 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView 
      */
     @Inject
     protected ApplicationsViewImpl(CloudFoundryResources resources, CloudFoundryLocalizationConstant constant) {
+        this.res = resources;
+        this.locale = constant;
+
         createAppsTable();
 
         Widget widget = uiBinder.createAndBindUi(this);
 
         this.setText("Applications");
         this.setWidget(widget);
-
-        btnShow.setHTML(new Image(resources.okButton()) + " " + constant.showButton());
-        btnClose.setHTML(new Image(resources.cancelButton()) + " " + constant.closeButton());
     }
 
     /** Creates table what contains list of available applications. */
@@ -168,7 +169,13 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView 
                 new Column<CloudFoundryApplication, List<String>>(new ListLink()) {
                     @Override
                     public List<String> getValue(CloudFoundryApplication object) {
-                        return object.getUris();
+                        ArrayList<String> list = new ArrayList<String>();
+                        JsonArray<String> uris = object.getUris();
+                        for (int i = 0; i < uris.size(); i++) {
+                            String s = uris.get(i);
+                            list.add(s);
+                        }
+                        return list;
                     }
                 };
 
@@ -177,7 +184,9 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView 
                     @Override
                     public String getValue(CloudFoundryApplication object) {
                         StringBuilder b = new StringBuilder();
-                        for (String s : object.getServices()) {
+                        JsonArray<String> services = object.getServices();
+                        for (int i = 0; i < services.size(); i++) {
+                            String s = services.get(i);
                             b.append(s).append(";");
                         }
                         return b.toString();
@@ -296,20 +305,20 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView 
     /** {@inheritDoc} */
     @Override
     public String getServer() {
-        int serverIndex = server.getSelectedIndex();
-        return serverIndex != -1 ? server.getItemText(serverIndex) : "";
+        int serverIndex = target.getSelectedIndex();
+        return serverIndex != -1 ? target.getItemText(serverIndex) : "";
     }
 
     /** {@inheritDoc} */
     @Override
     public void setServer(String server) {
-        int count = this.server.getItemCount();
+        int count = this.target.getItemCount();
         boolean isItemFound = false;
 
         // Looks up entered server into available list of servers
         int i = 0;
         while (i < count && !isItemFound) {
-            String item = this.server.getItemText(i);
+            String item = this.target.getItemText(i);
             isItemFound = item.equals(server);
 
             i++;
@@ -317,16 +326,16 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView 
 
         // If item was found then it will be shown otherwise do nothing
         if (isItemFound) {
-            this.server.setSelectedIndex(i - 1);
+            this.target.setSelectedIndex(i - 1);
         }
     }
 
     /** {@inheritDoc} */
     @Override
     public void setServers(JsonArray<String> servers) {
-        server.clear();
+        target.clear();
         for (int i = 0; i < servers.size(); i++) {
-            server.addItem(servers.get(i));
+            target.addItem(servers.get(i));
         }
     }
 

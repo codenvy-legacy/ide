@@ -32,11 +32,11 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 
 /**
@@ -45,23 +45,24 @@ import com.google.gwt.user.client.ui.Widget;
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
+@Singleton
 public class OpenProjectViewImpl extends DialogBox implements OpenProjectView {
+    interface OpenProjectViewImplUiBinder extends UiBinder<Widget, OpenProjectViewImpl> {
+    }
+
     private static OpenProjectViewImplUiBinder uiBinder = GWT.create(OpenProjectViewImplUiBinder.class);
 
     @UiField
     com.codenvy.ide.ui.Button btnCancel;
-
     @UiField
     com.codenvy.ide.ui.Button btnOpen;
-
     @UiField
-    ScrollPanel listPanel;
-
-    private ActionDelegate delegate;
-
+    ScrollPanel               listPanel;
+    @UiField(provided = true)
+    Resources                 res;
+    private ActionDelegate     delegate;
     private SimpleList<String> list;
-
-    private SimpleList.ListItemRenderer<String> listItemRenderer = new SimpleList.ListItemRenderer<String>() {
+    private SimpleList.ListItemRenderer<String>  listItemRenderer = new SimpleList.ListItemRenderer<String>() {
         @Override
         public void render(Element itemElement, String itemData) {
             TableCellElement label = Elements.createTDElement();
@@ -74,8 +75,7 @@ public class OpenProjectViewImpl extends DialogBox implements OpenProjectView {
             return Elements.createTRElement();
         }
     };
-
-    private SimpleList.ListEventDelegate<String> listDelegate = new SimpleList.ListEventDelegate<String>() {
+    private SimpleList.ListEventDelegate<String> listDelegate     = new SimpleList.ListEventDelegate<String>() {
         public void onListItemClicked(Element itemElement, String itemData) {
             list.getSelectionModel().setSelectedItem(itemData);
             delegate.selectedProject(itemData);
@@ -85,29 +85,24 @@ public class OpenProjectViewImpl extends DialogBox implements OpenProjectView {
         }
     };
 
-    interface OpenProjectViewImplUiBinder extends UiBinder<Widget, OpenProjectViewImpl> {
-    }
-
     /**
      * Create view.
      *
-     * @param projects
      * @param resources
      */
-    public OpenProjectViewImpl(JsonArray<String> projects, Resources resources) {
+    @Inject
+    protected OpenProjectViewImpl(Resources resources) {
+        this.res = resources;
+
         Widget widget = uiBinder.createAndBindUi(this);
 
         TableElement tableElement = Elements.createTableElement();
         tableElement.setAttribute("style", "width: 100%");
-        list = SimpleList.create((View)tableElement, resources.defaultSimpleListCss(), listItemRenderer, listDelegate);
-
-        this.listPanel.setStyleName(resources.coreCss().simpleListContainer());
+        list = SimpleList.create((View)tableElement, res.defaultSimpleListCss(), listItemRenderer, listDelegate);
         this.listPanel.add(list);
 
         this.setText("Open Project");
         this.setWidget(widget);
-
-        list.render(projects);
     }
 
     /** {@inheritDoc} */
@@ -120,6 +115,12 @@ public class OpenProjectViewImpl extends DialogBox implements OpenProjectView {
     @Override
     public void setOpenButtonEnabled(boolean isEnabled) {
         btnOpen.setEnabled(isEnabled);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setProjects(JsonArray<String> projects) {
+        list.render(projects);
     }
 
     /** {@inheritDoc} */

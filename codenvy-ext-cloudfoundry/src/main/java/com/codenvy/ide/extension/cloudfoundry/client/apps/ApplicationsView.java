@@ -30,53 +30,43 @@ import com.codenvy.ide.json.JsonArray;
 public interface ApplicationsView extends View<ApplicationsView.ActionDelegate> {
     /** Needs for delegate some function into Applications view. */
     public interface ActionDelegate {
-        /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Close button.
-         */
-        public void onCloseClicked();
+        /** Performs any actions appropriate in response to the user having pressed the Close button. */
+        void onCloseClicked();
+
+        /** Performs any actions appropriate in response to the user having pressed the Show button. */
+        void onShowClicked();
 
         /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Show button.
-         */
-        public void onShowClicked();
-
-        /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Start button.
+         * Performs any actions appropriate in response to the user having pressed the Start button.
          *
          * @param app
          *         current application what need to start.
          */
-        public void onStartClicked(CloudFoundryApplication app);
+        void onStartClicked(CloudFoundryApplication app);
 
         /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Stop button.
+         * Performs any actions appropriate in response to the user having pressed the Stop button.
          *
          * @param app
          *         current application what need to stop.
          */
-        public void onStopClicked(CloudFoundryApplication app);
+        void onStopClicked(CloudFoundryApplication app);
 
         /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Restart button.
+         * Performs any actions appropriate in response to the user having pressed the Restart button.
          *
          * @param app
          *         current application what need to restart.
          */
-        public void onRestartClicked(CloudFoundryApplication app);
+        void onRestartClicked(CloudFoundryApplication app);
 
         /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Delete button.
+         * Performs any actions appropriate in response to the user having pressed the Delete button.
          *
          * @param app
          *         current application what need to delete.
          */
-        public void onDeleteClicked(CloudFoundryApplication app);
+        void onDeleteClicked(CloudFoundryApplication app);
     }
 
     /**
@@ -85,28 +75,28 @@ public interface ApplicationsView extends View<ApplicationsView.ActionDelegate> 
      * @param apps
      *         list of available applications.
      */
-    public void setApplications(JsonArray<CloudFoundryApplication> apps);
+    void setApplications(JsonArray<CloudFoundryApplication> apps);
 
     /**
      * Returns selected server's name.
      *
      * @return
      */
-    public String getServer();
+    String getServer();
 
     /**
      * Select new server's name.
      *
      * @param server
      */
-    public void setServer(String server);
+    void setServer(String server);
 
     /**
      * Sets list of server names.
      *
      * @param servers
      */
-    public void setServers(JsonArray<String> servers);
+    void setServers(JsonArray<String> servers);
 
     /**
      * Returns whether the view is shown.
@@ -114,11 +104,11 @@ public interface ApplicationsView extends View<ApplicationsView.ActionDelegate> 
      * @return <code>true</code> if the view is shown, and
      *         <code>false</code> otherwise
      */
-    public boolean isShown();
+    boolean isShown();
 
     /** Close dialog. */
-    public void close();
+    void close();
 
     /** Show dialog. */
-    public void showDialog();
+    void showDialog();
 }

@@ -25,8 +25,11 @@ import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.*;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
+import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryApplicationUnmarshaller;
+import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryApplicationUnmarshallerWS;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.FrameworksUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
+import com.codenvy.ide.extension.cloudfoundry.dto.client.DtoClientImpls;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.extension.cloudfoundry.shared.Framework;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
@@ -37,15 +40,12 @@ import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
-import com.codenvy.ide.websocket.MessageBus;
+import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.WebSocketException;
-import com.codenvy.ide.websocket.rest.AutoBeanUnmarshallerWS;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
@@ -101,10 +101,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     private EventBus                            eventBus;
     private ConsolePart                         console;
     private CloudFoundryLocalizationConstant    constant;
-    private CloudFoundryAutoBeanFactory         autoBeanFactory;
     private LoginPresenter                      loginPresenter;
     private CloudFoundryClientService           service;
-    private MessageBus                          messageBus;
     private CloudFoundryExtension.PAAS_PROVIDER paasProvider;
 
     /**
@@ -115,14 +113,12 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
      * @param eventBus
      * @param console
      * @param constant
-     * @param autoBeanFactory
      * @param loginPresenter
      * @param service
      */
     @Inject
     protected CreateApplicationPresenter(ResourceProvider resourceProvider, CreateApplicationView view, EventBus eventBus,
-                                         ConsolePart console, CloudFoundryLocalizationConstant constant,
-                                         CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter,
+                                         ConsolePart console, CloudFoundryLocalizationConstant constant, LoginPresenter loginPresenter,
                                          CloudFoundryClientService service) {
         this.frameworks = JsonCollections.createArray();
 
@@ -132,7 +128,6 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         this.console = console;
         this.eventBus = eventBus;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
     }
@@ -288,32 +283,30 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                 createApplication(appData);
             }
         };
-
         final Project project = resourceProvider.getActiveProject();
-
-        AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
-        AutoBeanUnmarshallerWS<CloudFoundryApplication> unmarshaller =
-                new AutoBeanUnmarshallerWS<CloudFoundryApplication>(cloudFoundryApplication);
+        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
+        CloudFoundryApplicationUnmarshallerWS unmarshaller = new CloudFoundryApplicationUnmarshallerWS(cloudFoundryApplication);
 
         try {
-            service.createWS(appData.server,
-                             appData.name,
-                             appData.type,
-                             appData.url,
-                             appData.instances,
-                             appData.memory,
-                             appData.nostart,
-                             resourceProvider.getVfsId(),
-                             project.getId(),
-                             warUrl,
-                             paasProvider,
+            service.createWS(appData.server, appData.name, appData.type, appData.url, appData.instances, appData.memory, appData.nostart,
+                             resourceProvider.getVfsId(), project.getId(), warUrl, paasProvider,
                              new CloudFoundryRESTfulRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
                                                                                              appData.server, eventBus, console, constant,
                                                                                              loginPresenter, paasProvider) {
                                  @Override
-                                 protected void onSuccess(CloudFoundryApplication result) {
-                                     onAppCreatedSuccess(result);
-                                     eventBus.fireEvent(new RefreshBrowserEvent(project));
+                                 protected void onSuccess(final CloudFoundryApplication cloudFoundryApp) {
+                                     project.refreshProperties(new AsyncCallback<Project>() {
+                                         @Override
+                                         public void onSuccess(Project result) {
+                                             onAppCreatedSuccess(cloudFoundryApp);
+                                             eventBus.fireEvent(new RefreshBrowserEvent(project));
+                                         }
+
+                                         @Override
+                                         public void onFailure(Throwable caught) {
+                                             Log.error(CreateApplicationPresenter.class, "Can not refresh properties", caught);
+                                         }
+                                     });
                                  }
 
                                  @Override
@@ -338,9 +331,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
      *         handler that should be called after success login
      */
     private void createApplicationREST(final AppData appData, final Project project, LoggedInHandler loggedInHandler) {
-        AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
-        AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-                new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+        DtoClientImpls.CloudFoundryApplicationImpl cloudFoundryApplication = DtoClientImpls.CloudFoundryApplicationImpl.make();
+        CloudFoundryApplicationUnmarshaller unmarshaller = new CloudFoundryApplicationUnmarshaller(cloudFoundryApplication);
 
         try {
             service.create(appData.server, appData.name, appData.type, appData.url, appData.instances, appData.memory, appData.nostart,
@@ -359,6 +351,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
                                        @Override
                                        public void onFailure(Throwable caught) {
+                                           Log.error(CreateApplicationPresenter.class, "Can not refresh properties", caught);
                                        }
                                    });
                                }
@@ -409,7 +402,9 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
      */
     private String getAppUrlsAsString(CloudFoundryApplication application) {
         String appUris = "";
-        for (String uri : application.getUris()) {
+        JsonArray<String> uris = application.getUris();
+        for (int i = 0; i < uris.size(); i++) {
+            String uri = uris.get(i);
             if (!uri.startsWith("http")) {
                 uri = "http://" + uri;
             }
@@ -476,9 +471,9 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                 getFrameworks(server);
             }
         };
+        FrameworksUnmarshaller unmarshaller = new FrameworksUnmarshaller(JsonCollections.<Framework>createArray());
 
         try {
-            FrameworksUnmarshaller unmarshaller = new FrameworksUnmarshaller(JsonCollections.<Framework>createArray(), autoBeanFactory);
             service.getFrameworks(server, paasProvider,
                                   new CloudFoundryAsyncRequestCallback<JsonArray<Framework>>(unmarshaller, loggedInHandler, null, eventBus,
                                                                                              console, constant, loginPresenter,
@@ -587,8 +582,9 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
     /** Get the list of server and put them to select field. */
     private void getServers() {
+        TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(JsonCollections.<String>createArray());
+
         try {
-            TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(JsonCollections.<String>createArray());
             service.getTargets(paasProvider,
                                new AsyncRequestCallback<JsonArray<String>>(unmarshaller) {
                                    @Override
