@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.outline;
 
+import com.google.collide.client.CollabEditor;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
@@ -251,11 +252,34 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
         }
 
         if (activeEditor instanceof CodeMirror) {
-            CodeMirror codeMirror = (CodeMirror)activeEditor;
-            codeMirror.getTokenList(new EditorTokenListPreparedHandler() {
+            CodeMirror codeMirrorEditor = (CodeMirror)activeEditor;
+            codeMirrorEditor.getTokenList(new EditorTokenListPreparedHandler() {
                 @Override
                 public void onEditorTokenListPrepared(EditorTokenListPreparedEvent event) {
                     tokenListReceived(event);
+                }
+            });
+        } else if (activeEditor instanceof CollabEditor) {
+            CollabEditor collabEditor = (CollabEditor)activeEditor;
+            ArrayList<TokenBeenImpl> tokenList = (ArrayList<TokenBeenImpl>)collabEditor.getTokenList();
+            tokenListReceived(tokenList);
+        }
+    }
+
+    private void tokenListReceived(final List<TokenBeenImpl> tokenList) {
+        this.tokens = tokenList;
+        display.setValue(tokenList);
+
+        // TODO Solution for updating tree (flush, refresh doesn't help):
+        if (tokenList != null && !tokenList.isEmpty()) {
+            selectToken(tokenList.get(0));
+        }
+
+        if (activeEditor != null) {
+            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    selectTokenByRow(tokenList);
                 }
             });
         }
@@ -266,25 +290,10 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
         if (event.getTokenList() == null || display == null || !activeEditor.getId().equals(event.getEditorId())) {
             return;
         }
-
-        tokens = (List<TokenBeenImpl>)event.getTokenList();
-        display.setValue(tokens);
-
-        // TODO Solution for updating tree (flush, refresh doesn't help):
-        if (tokens != null && !tokens.isEmpty()) {
-            selectToken(tokens.get(0));
-        }
-
-        if (activeEditor != null) {
-            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                @Override
-                public void execute() {
-                    selectTokenByRow(tokens);
-                }
-            });
-        }
+        tokenListReceived((List<TokenBeenImpl>)event.getTokenList());
     }
 
+    @Override
     public void onEditorContentChanged(EditorContentChangedEvent event) {
         if (display == null || !canShowOutline()) {
             return;
@@ -304,6 +313,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
         return activeEditor.isCapable(EditorCapability.OUTLINE);
     }
 
+    @Override
     public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
         activeFile = event.getFile();
         activeEditor = event.getEditor();
@@ -318,7 +328,6 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
         }
 
         // TODO temporary solution to close Outline for Java files
-        // TODO add possibility to configure editor's capabilities
         if (activeFile != null && ignoredMimeTypes.contains(activeFile.getMimeType())) {
             if (display != null) {
                 IDE.getInstance().closeView(display.asView().getId());
@@ -374,6 +383,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
     /** @see org.exoplatform.gwtframework.editor.event.EditorCursorActivityHandler#onEditorCursorActivity(org.exoplatform.gwtframework
      * .editor.event.EditorCursorActivityEvent) */
+    @Override
     public void onEditorCursorActivity(EditorCursorActivityEvent event) {
         if (display == null) {
             return;

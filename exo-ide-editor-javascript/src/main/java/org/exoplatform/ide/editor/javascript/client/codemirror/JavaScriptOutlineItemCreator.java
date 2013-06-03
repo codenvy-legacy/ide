@@ -66,4 +66,5 @@ public class JavaScriptOutlineItemCreator extends OutlineItemCreatorImpl {
 
         return label;
     }
+
 }
