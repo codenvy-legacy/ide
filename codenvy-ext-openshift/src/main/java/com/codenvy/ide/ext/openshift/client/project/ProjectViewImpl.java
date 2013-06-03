@@ -83,7 +83,7 @@ public class ProjectViewImpl extends DialogBox implements ProjectView {
 
         Widget widget = uiBinder.createAndBindUi(this);
 
-        this.setTitle("title");
+        this.setText(constant.projectViewTitle());
         this.setWidget(widget);
     }
 

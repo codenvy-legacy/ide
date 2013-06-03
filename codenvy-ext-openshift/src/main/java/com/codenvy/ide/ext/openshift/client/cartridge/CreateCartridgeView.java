@@ -19,6 +19,7 @@
 package com.codenvy.ide.ext.openshift.client.cartridge;
 
 import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.json.JsonArray;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public interface CreateCartridgeView extends View<CreateCartridgeView.ActionDele
 
     public String getCartridgeName();
 
-    public void setCartridgesList(List<String> cartridgesList);
+    public void setCartridgesList(JsonArray<String> cartridgesList);
 
     public boolean isShown();
 

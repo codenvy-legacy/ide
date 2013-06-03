@@ -19,9 +19,15 @@
 package com.codenvy.ide.ext.openshift.client.info;
 
 import com.codenvy.ide.ext.openshift.client.OpenShiftLocalizationConstant;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.ui.Button;
+import com.google.gwt.cell.client.AbstractSafeHtmlCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.text.shared.SafeHtmlRenderer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -34,6 +40,7 @@ import com.google.gwt.view.client.NoSelectionModel;
 import com.google.gwt.view.client.SelectionModel;
 import com.google.inject.Inject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,8 +54,8 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
 
     private static ApplicationInfoViewImplUiBinder uiBinder = GWT.create(ApplicationInfoViewImplUiBinder.class);
 
-    @UiField
-    CellTable<ApplicationProperty> properties;
+    @UiField(provided = true)
+    CellTable<ApplicationProperty> properties = new CellTable<ApplicationProperty>();
 
     @UiField
     Button btnClose;
@@ -66,14 +73,40 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
 
         Widget widget = uiBinder.createAndBindUi(this);
 
-        this.setTitle(constant.applicationInfoViewTitle());
+        this.setText(constant.applicationInfoViewTitle());
         this.setWidget(widget);
 
         initPropertiesTable();
     }
 
+    private class ListLink extends AbstractSafeHtmlCell<String> {
+        /** Create Link list. */
+        public ListLink() {
+            super(new SafeHtmlListRenderer());
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        protected void render(com.google.gwt.cell.client.Cell.Context context, SafeHtml data, SafeHtmlBuilder sb) {
+            sb.append(data);
+        }
+    }
+
+    private class SafeHtmlListRenderer implements SafeHtmlRenderer<String> {
+        /** {@inheritDoc} */
+        @Override
+        public SafeHtml render(String object) {
+            return new SafeHtmlBuilder().appendHtmlConstant(object).toSafeHtml();
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void render(String object, SafeHtmlBuilder builder) {
+            builder.appendHtmlConstant(object);
+        }
+    }
+
     private void initPropertiesTable() {
-        properties = new CellTable<ApplicationProperty>();
         properties.setWidth("100%", true);
         properties.setAutoHeaderRefreshDisabled(true);
         properties.setAutoFooterRefreshDisabled(true);
@@ -89,20 +122,26 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
             }
         };
 
-        Column<ApplicationProperty, String> propertyValueColumn = new TextColumn<ApplicationProperty>() {
+        Column<ApplicationProperty, String> propertyValueColumn = new Column<ApplicationProperty, String>(new ListLink()) {
             @Override
             public String getValue(ApplicationProperty object) {
                 return object.getPropertyValue();
             }
         };
 
+        properties.setColumnWidth(propertyKeyColumn, 100, Style.Unit.PX);
+
         properties.addColumn(propertyKeyColumn, constant.applicationInfoViewPropertyNameColumn());
         properties.addColumn(propertyValueColumn, constant.applicationInfoViewPropertyValueColumn());
     }
 
     @Override
-    public void setApplicationProperties(List<ApplicationProperty> properties) {
-        this.properties.setRowData(properties);
+    public void setApplicationProperties(JsonArray<ApplicationProperty> properties) {
+        List<ApplicationProperty> list = new ArrayList<ApplicationProperty>(properties.size());
+        for (int i = 0; i < properties.size(); i++) {
+            list.add(properties.get(i));
+        }
+        this.properties.setRowData(list);
     }
 
     @Override

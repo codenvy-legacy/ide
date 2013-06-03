@@ -30,12 +30,12 @@ public interface Credentials {
      */
     public String getRhlogin();
 
-    /**
-     * Set the RedHat login.
-     *
-     * @param email
-     */
-    public void setRhlogin(String email);
+//    /**
+//     * Set the RedHat login.
+//     *
+//     * @param email
+//     */
+//    public void setRhlogin(String email);
 
     /**
      * Returns the password.
@@ -44,11 +44,11 @@ public interface Credentials {
      */
     public String getPassword();
 
-    /**
-     * Set the password.
-     *
-     * @param password
-     *         password.
-     */
-    public void setPassword(String password);
+//    /**
+//     * Set the password.
+//     *
+//     * @param password
+//     *         password.
+//     */
+//    public void setPassword(String password);
 }

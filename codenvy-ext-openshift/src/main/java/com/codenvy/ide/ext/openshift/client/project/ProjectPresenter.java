@@ -22,18 +22,17 @@ import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.openshift.client.OpenShiftAsyncRequestCallback;
-import com.codenvy.ide.ext.openshift.client.OpenShiftAutoBeanFactory;
 import com.codenvy.ide.ext.openshift.client.OpenShiftClientServiceImpl;
 import com.codenvy.ide.ext.openshift.client.OpenShiftLocalizationConstant;
 import com.codenvy.ide.ext.openshift.client.info.ApplicationInfoPresenter;
 import com.codenvy.ide.ext.openshift.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.openshift.client.login.LoginPresenter;
+import com.codenvy.ide.ext.openshift.client.marshaller.ApplicationInfoUnmarshaller;
+import com.codenvy.ide.ext.openshift.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.openshift.shared.AppInfo;
 import com.codenvy.ide.resources.marshal.StringUnmarshaller;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -48,14 +47,13 @@ public class ProjectPresenter implements ProjectView.ActionDelegate {
     private OpenShiftLocalizationConstant constant;
     private LoginPresenter                loginPresenter;
     private ResourceProvider              resourceProvider;
-    private OpenShiftAutoBeanFactory      autoBeanFactory;
     private ApplicationInfoPresenter      applicationInfoPresenter;
     private AppInfo                       application;
 
     @Inject
     protected ProjectPresenter(ProjectView view, EventBus eventBus, ConsolePart console, OpenShiftClientServiceImpl service,
                                OpenShiftLocalizationConstant constant, LoginPresenter loginPresenter, ResourceProvider resourceProvider,
-                               OpenShiftAutoBeanFactory autoBeanFactory, ApplicationInfoPresenter applicationInfoPresenter) {
+                               ApplicationInfoPresenter applicationInfoPresenter) {
         this.view = view;
         this.eventBus = eventBus;
         this.console = console;
@@ -63,7 +61,6 @@ public class ProjectPresenter implements ProjectView.ActionDelegate {
         this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.resourceProvider = resourceProvider;
-        this.autoBeanFactory = autoBeanFactory;
         this.applicationInfoPresenter = applicationInfoPresenter;
 
         this.view.setDelegate(this);
@@ -86,8 +83,8 @@ public class ProjectPresenter implements ProjectView.ActionDelegate {
         final String projectId = resourceProvider.getActiveProject().getId();
         final String vfsId = resourceProvider.getVfsId();
 
-        AutoBean<AppInfo> appInfo = autoBeanFactory.appInfo();
-        AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(appInfo);
+        DtoClientImpls.AppInfoImpl appInfo = DtoClientImpls.AppInfoImpl.make();
+        ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(appInfo);
 
         try {
             service.getApplicationInfo(null, vfsId, projectId,
@@ -229,7 +226,7 @@ public class ProjectPresenter implements ProjectView.ActionDelegate {
             }
         };
 
-        final String projectId = resourceProvider.getActiveProject().getId();
+        final String projectId = resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId() : null;
         final String vfsId = resourceProvider.getVfsId();
 
         try {
@@ -238,7 +235,7 @@ public class ProjectPresenter implements ProjectView.ActionDelegate {
                                                                                  loginPresenter) {
                                            @Override
                                            protected void onSuccess(String result) {
-                                                String msg = "Application deleted";
+                                               String msg = "Application deleted";
                                                console.print(msg);
                                            }
                                        });

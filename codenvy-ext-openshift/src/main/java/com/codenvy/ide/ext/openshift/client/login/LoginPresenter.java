@@ -20,82 +20,65 @@ package com.codenvy.ide.ext.openshift.client.login;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.ext.openshift.client.OpenShiftAsyncRequestCallback;
-import com.codenvy.ide.ext.openshift.client.OpenShiftAutoBeanFactory;
 import com.codenvy.ide.ext.openshift.client.OpenShiftClientServiceImpl;
 import com.codenvy.ide.ext.openshift.client.OpenShiftLocalizationConstant;
-import com.codenvy.ide.ext.openshift.shared.RHUserInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
-import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
+@Singleton
 public class LoginPresenter implements LoginView.ActionDelegate {
     private LoginView                     view;
     private EventBus                      eventBus;
     private ConsolePart                   console;
-    private OpenShiftAutoBeanFactory      autoBeanFactory;
     private OpenShiftClientServiceImpl    service;
     private OpenShiftLocalizationConstant constant;
     private LoggedInHandler               loggedIn;
     private LoginCanceledHandler          loginCanceled;
+    private AsyncCallback<Boolean>        callback;
 
 
     @Inject
-    protected LoginPresenter(LoginView view, EventBus eventBus, ConsolePart console, OpenShiftAutoBeanFactory autoBeanFactory,
-                             OpenShiftClientServiceImpl service, OpenShiftLocalizationConstant constant) {
+    protected LoginPresenter(LoginView view, EventBus eventBus, ConsolePart console, OpenShiftClientServiceImpl service,
+                             OpenShiftLocalizationConstant constant) {
         this.view = view;
         this.eventBus = eventBus;
         this.console = console;
-        this.autoBeanFactory = autoBeanFactory;
         this.service = service;
         this.constant = constant;
 
         this.view.setDelegate(this);
     }
 
-    public void showDialog() {
-        showDialog(null, null);
+    public void showDialog(AsyncCallback<Boolean> callback) {
+        this.callback = callback;
+
+        showDialog();
     }
 
-    public void showDialog(LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled) {
-        this.loggedIn = loggedIn;
-        this.loginCanceled = loginCanceled;
-
+    public void showDialog() {
         if (!view.isShown()) {
             view.setEnableLoginButton(false);
             view.focusEmailField();
             view.setPassword("");
             view.setError("");
 
-            getSystemInformation();
-
             view.showDialog();
         }
     }
 
-    private void getSystemInformation() {
-        try {
-            AutoBean<RHUserInfo> userInfo = autoBeanFactory.rhUserInfo();
-            AutoBeanUnmarshaller<RHUserInfo> unmarshaller = new AutoBeanUnmarshaller<RHUserInfo>(userInfo);
-            service.getUserInfo(false, new OpenShiftAsyncRequestCallback<RHUserInfo>(unmarshaller, loggedIn, loginCanceled, eventBus,
-                                                                                     console, constant, this) {
-                @Override
-                protected void onSuccess(RHUserInfo result) {
-                    view.setEmail(result.getRhlogin());
-                }
-            });
+    public void showDialog(LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled) {
+        this.loggedIn = loggedIn;
+        this.loginCanceled = loginCanceled;
 
-        } catch (RequestException e) {
-            console.print(e.getMessage());
-            eventBus.fireEvent(new ExceptionThrownEvent(e));
-        }
+        showDialog();
     }
 
     @Override
@@ -107,9 +90,13 @@ public class LoginPresenter implements LoginView.ActionDelegate {
             service.login(email, password, new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
-                    console.print("Login success");
+                    console.print(constant.loginViewSuccessfullyLogined());
                     if (loggedIn != null) {
                         loggedIn.onLoggedIn();
+                    }
+
+                    if (callback != null) {
+                        callback.onSuccess(true);
                     }
                     view.close();
                 }
@@ -118,6 +105,11 @@ public class LoginPresenter implements LoginView.ActionDelegate {
                 protected void onFailure(Throwable exception) {
                     console.print(exception.getMessage());
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                    view.setError(constant.loginViewErrorInvalidUserOrPassword());
+
+                    if (callback != null) {
+                        callback.onSuccess(false);
+                    }
                 }
             });
         } catch (RequestException e) {

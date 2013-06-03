@@ -18,8 +18,8 @@
  */
 package com.codenvy.ide.ext.openshift.client;
 
+import com.codenvy.ide.ext.openshift.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.openshift.shared.AppInfo;
-import com.codenvy.ide.ext.openshift.shared.Credentials;
 import com.codenvy.ide.ext.openshift.shared.RHUserInfo;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -36,8 +36,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.List;
@@ -74,29 +72,26 @@ public class OpenShiftClientServiceImpl implements OpenShiftClientService {
     private MessageBus                    wsMessageBus;
     private EventBus                      eventBus;
     private OpenShiftLocalizationConstant constant;
-    private OpenShiftAutoBeanFactory      autoBeanFactory;
 
     @Inject
     protected OpenShiftClientServiceImpl(@Named("restContext") String restServiceContext, Loader loader, MessageBus wsMessageBus,
-                                         EventBus eventBus, OpenShiftLocalizationConstant constant,
-                                         OpenShiftAutoBeanFactory autoBeanFactory) {
+                                         EventBus eventBus, OpenShiftLocalizationConstant constant) {
         this.restServiceContext = restServiceContext;
         this.loader = loader;
         this.wsMessageBus = wsMessageBus;
         this.eventBus = eventBus;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
     }
 
     public void login(String login, String password, AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + LOGIN;
 
-        Credentials credentialsBean = autoBeanFactory.credentials().as();
-        credentialsBean.setRhlogin(login);
-        credentialsBean.setPassword(password);
-        String credentials = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(credentialsBean)).getPayload();
+        DtoClientImpls.CredentialsImpl credentials = DtoClientImpls.CredentialsImpl.make();
+        credentials.setRhlogin(login);
+        credentials.setPassword(password);
+        String serialize = credentials.serialize();
 
-        AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(credentials)
+        AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(serialize)
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 
@@ -117,8 +112,10 @@ public class OpenShiftClientServiceImpl implements OpenShiftClientService {
                                   AsyncRequestCallback<AppInfo> callback) throws RequestException {
         String url = restServiceContext + CREATE_APPLICATION;
 
+
+
         String params = "?name=" + name + "&type=" + type + "&vfsid=" + vfsId + "&projectid=" + projectId + "&scale=" + scale;
-        AsyncRequest.build(RequestBuilder.POST, url + params, true)
+        AsyncRequest.build(RequestBuilder.POST, url + params, true).loader(loader)
                     .requestStatusHandler(new CreateApplicationRequestStatusHandler(name, eventBus, constant))
                     .send(callback);
     }

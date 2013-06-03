@@ -38,11 +38,11 @@
             margin-bottom: 5px;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="500px" height="310px" addStyleNames="{style.emptyBorder}">
+    <g:DockLayoutPanel unit="PX" width="500px" height="170px" addStyleNames="{style.emptyBorder}">
         <g:south size="26.0">
             <g:FlowPanel>
                 <c:Button addStyleNames="{style.right}" text="{constant.applicationInfoViewCloseButton}" size="SMALL" type="DANGER"
-                          ui:field="btnClose"/>
+                          ui:field="btnClose" title="{constant.projectViewTitlePropertiesApp}"/>
             </g:FlowPanel>
         </g:south>
         <g:north size="30.0">
@@ -52,7 +52,7 @@
                 </g:west>
                 <g:east size="18.0">
                     <c:Button width="18px" height="16px" addStyleNames="{style.space} {style.withoutPadding}"
-                              title="properties" ui:field="btnShowProperties"/>
+                              title="properties" ui:field="btnShowProperties" icon="{res.showProperties}"/>
                 </g:east>
                 <g:center>
                     <g:TextBox height="16px" addStyleNames="{style.space}" ui:field="appName"
@@ -93,12 +93,12 @@
                                  width="70px" ui:field="appHealth"/>
                         <c:Button width="18px" height="16px" title="start"
                                   addStyleNames="{style.left} {style.space} {style.withoutPadding}"
-                                  ui:field="btnStart"/>
+                                  ui:field="btnStart" icon="{res.startApp}"/>
                         <c:Button width="18px" height="16px" title="stop"
                                   addStyleNames="{style.left} {style.space} {style.withoutPadding}"
-                                  ui:field="btnStop"/>
+                                  ui:field="btnStop" icon="{res.stopApp}"/>
                         <c:Button width="18px" height="16px" title="restart"
-                                  addStyleNames="{style.left} {style.withoutPadding}" ui:field="btnRestart"/>
+                                  addStyleNames="{style.left} {style.withoutPadding}" ui:field="btnRestart" icon="{res.restartApp}"/>
                     </g:FlowPanel>
                 </g:center>
             </g:DockLayoutPanel>

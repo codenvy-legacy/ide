@@ -22,8 +22,6 @@ import com.codenvy.ide.api.expressions.Expression;
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 import com.codenvy.ide.ext.openshift.client.OpenShiftResources;
 import com.codenvy.ide.ext.openshift.client.domain.CreateDomainPresenter;
-import com.codenvy.ide.ext.openshift.client.login.LoggedInHandler;
-import com.codenvy.ide.ext.openshift.client.login.LoginCanceledHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -45,7 +43,7 @@ public class ChangeDomainCommand implements ExtendedCommand {
 
     @Override
     public void execute() {
-        presenter.showDialog();
+        presenter.showDialog(null);
     }
 
     @Override

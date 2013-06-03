@@ -20,7 +20,6 @@ package com.codenvy.ide.ext.openshift.client.wizard;
 
 import com.codenvy.ide.ext.openshift.client.OpenShiftResources;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.ui.list.SimpleList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;

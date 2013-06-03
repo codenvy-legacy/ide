@@ -68,7 +68,7 @@ public class CreateDomainViewImpl extends DialogBox implements CreateDomainView 
 
         Widget widget = uiBinder.createAndBindUi(this);
 
-        this.setTitle(constant.changeDomainViewTitle());
+        this.setText(constant.changeDomainViewTitle());
         this.setWidget(widget);
     }
 

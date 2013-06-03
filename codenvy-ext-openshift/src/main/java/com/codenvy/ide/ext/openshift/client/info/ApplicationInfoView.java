@@ -19,6 +19,7 @@
 package com.codenvy.ide.ext.openshift.client.info;
 
 import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.json.JsonArray;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public interface ApplicationInfoView extends View<ApplicationInfoView.ActionDele
         public void onCloseClicked();
     }
 
-    public void setApplicationProperties(List<ApplicationProperty> properties);
+    public void setApplicationProperties(JsonArray<ApplicationProperty> properties);
 
     public boolean isShown();
 
