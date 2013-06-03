@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.nodejs.client.run;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -46,6 +47,7 @@ import org.exoplatform.ide.vfs.shared.Item;
  * @author <a href="mailto:vsvydenko@codenvy.com">Valeriy Svydenko</a>
  * @version $Id: RunApplicationControl.java Apr 18, 2013 4:36:23 PM vsvydenko $
  */
+@RolesAllowed("developer")
 public class RunApplicationControl extends SimpleControl implements IDEControl,
                                                         ProjectClosedHandler, ProjectOpenedHandler, ApplicationStartedHandler,
                                                         ApplicationStoppedHandler, ItemsSelectedHandler {

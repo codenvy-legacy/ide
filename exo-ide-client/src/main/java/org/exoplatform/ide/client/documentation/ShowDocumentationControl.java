@@ -28,7 +28,6 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: ShowDocumentationControl Jan 21, 2011 11:10:08 AM evgen $
  */
-@RolesAllowed({"developer"})
 public class ShowDocumentationControl extends SimpleControl implements IDEControl {
 
     public static final String ID = "View/Show \\ Hide Documentation";

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.appfog.client.control;
 
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
@@ -36,6 +37,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
+@RolesAllowed("developer")
 public class CreateApplicationControl extends AbstractAppfogControl implements ProjectOpenedHandler, PropertiesChangedHandler,
                                                                    ProjectClosedHandler {
 

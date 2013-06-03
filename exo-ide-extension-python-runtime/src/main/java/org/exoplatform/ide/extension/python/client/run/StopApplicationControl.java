@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.python.client.run;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -34,6 +35,7 @@ import org.exoplatform.ide.extension.python.client.run.event.*;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 20, 2012 2:58:43 PM anya $
  */
+@RolesAllowed("developer")
 public class StopApplicationControl extends SimpleControl implements IDEControl, ProjectClosedHandler,
                                                                      ProjectOpenedHandler, ApplicationStartedHandler,
                                                                      ApplicationStoppedHandler {

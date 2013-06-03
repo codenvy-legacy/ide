@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.googleappengine.client.project;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -38,6 +39,7 @@ import org.exoplatform.ide.vfs.shared.Item;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 22, 2012 5:15:05 PM anya $
  */
+@RolesAllowed("developer")
 public class AppEngineProjectControl extends SimpleControl implements IDEControl,
             ProjectOpenedHandler, ProjectClosedHandler, ItemsSelectedHandler {
     

@@ -32,7 +32,6 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  */
-@RolesAllowed({"developer"})
 public class CloseEditorControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
                                                                  VfsChangedHandler {
 

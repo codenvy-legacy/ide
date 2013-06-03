@@ -37,7 +37,6 @@ import org.exoplatform.ide.editor.client.api.EditorCapability;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-@RolesAllowed({"developer"})
 public class ShowOutlineControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
                                                                  ViewClosedHandler, ViewOpenedHandler {
 

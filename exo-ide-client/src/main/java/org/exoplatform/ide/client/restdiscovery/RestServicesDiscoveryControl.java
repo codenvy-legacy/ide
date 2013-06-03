@@ -30,7 +30,6 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 21, 2010 5:50:35 PM evgen $
  */
-@RolesAllowed({"developer"})
 public class RestServicesDiscoveryControl extends SimpleControl implements IDEControl {
     public static final String ID = "Help/REST Services Discovery";
 

@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.java.jdi.client;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -35,6 +36,7 @@ import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
+@RolesAllowed("developer")
 public class DebugAppControl extends SimpleControl implements IDEControl,
                                                   // ProjectClosedHandler, ProjectOpenedHandler,
                                                   AppStartedHandler, AppStoppedHandler, ItemsSelectedHandler {
