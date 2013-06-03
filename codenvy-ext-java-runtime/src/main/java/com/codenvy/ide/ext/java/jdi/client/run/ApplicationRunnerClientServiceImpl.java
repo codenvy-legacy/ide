@@ -36,7 +36,6 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -58,16 +57,15 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
     /**
      * Create client service.
      *
-     * @param restContext
      * @param wsMessageBus
      * @param eventBus
      * @param constant
      * @param loader
      */
     @Inject
-    protected ApplicationRunnerClientServiceImpl(@Named("restContext") String restContext, MessageBus wsMessageBus, EventBus eventBus,
-                                                 JavaRuntimeLocalizationConstant constant, Loader loader) {
-        BASE_URL = restContext + "dev-monit" + "/java/runner";
+    protected ApplicationRunnerClientServiceImpl(MessageBus wsMessageBus, EventBus eventBus, JavaRuntimeLocalizationConstant constant,
+                                                 Loader loader) {
+        BASE_URL = "/ide" + "/java/runner";
         this.wsMessageBus = wsMessageBus;
         this.eventBus = eventBus;
         this.constant = constant;
@@ -159,18 +157,17 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
     @Override
     public void getLogs(String name, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
         String url = BASE_URL + "/logs";
-        StringBuilder params = new StringBuilder("?name=");
-        params.append(name);
+        String params = "?name=" + name;
 
         loader.setMessage("Retrieving logs.... ");
 
-        AsyncRequest.build(RequestBuilder.GET, url + params.toString()).loader(loader).send(callback);
+        AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
     public void prolongExpirationTime(String name, long time, RequestCallback<Object> callback) throws WebSocketException {
-        StringBuilder params = new StringBuilder("?name=").append(name).append("&time=").append(time);
+        String params = "?name=" + name + "&time=" + time;
 
         MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, BASE_URL + PROLONG + params);
         Message message = builder.build();
@@ -182,10 +179,10 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
     @Override
     public void updateApplication(String name, String war, AsyncRequestCallback<Object> callback) throws RequestException {
         String url = BASE_URL + "/update";
-        StringBuilder params = new StringBuilder("?name=").append(name).append("&war=").append(war);
+        String params = "?name=" + name + "&war=" + war;
 
         loader.setMessage("Updating application...");
 
-        AsyncRequest.build(RequestBuilder.GET, url + params.toString()).loader(loader).send(callback);
+        AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader).send(callback);
     }
 }
