@@ -21,8 +21,6 @@ package com.codenvy.ide.ext.openshift.client.command;
 import com.codenvy.ide.api.expressions.Expression;
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 import com.codenvy.ide.ext.openshift.client.OpenShiftResources;
-import com.codenvy.ide.ext.openshift.client.login.LoggedInHandler;
-import com.codenvy.ide.ext.openshift.client.login.LoginCanceledHandler;
 import com.codenvy.ide.ext.openshift.client.login.LoginPresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
@@ -50,7 +48,7 @@ public class ShowLoginCommand implements ExtendedCommand {
 
     @Override
     public ImageResource getIcon() {
-        return null;
+        return resources.switchAccount();
     }
 
     @Override

@@ -19,6 +19,7 @@
 package com.codenvy.ide.ext.openshift.client.cartridge;
 
 import com.codenvy.ide.ext.openshift.client.OpenShiftLocalizationConstant;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.ui.Button;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -30,8 +31,6 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import java.util.List;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
@@ -77,11 +76,11 @@ public class CreateCartridgeViewImpl extends DialogBox implements CreateCartridg
     }
 
     @Override
-    public void setCartridgesList(List<String> cartridgesList) {
+    public void setCartridgesList(JsonArray<String> cartridgesList) {
         cartridges.clear();
 
-        for (String cartridge : cartridgesList) {
-            cartridges.addItem(cartridge);
+        for (int i = 0; i < cartridgesList.size(); i++) {
+            cartridges.addItem(cartridgesList.get(i));
         }
     }
 

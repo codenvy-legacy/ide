@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.ext.openshift.shared;
 
-import java.util.List;
+import com.codenvy.ide.json.JsonArray;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
@@ -32,13 +32,13 @@ public interface AppInfo {
      */
     String getName();
 
-    /**
-     * Set the application name.
-     *
-     * @param name
-     *         application name.
-     */
-    void setName(String name);
+//    /**
+//     * Set the application name.
+//     *
+//     * @param name
+//     *         application name.
+//     */
+//    void setName(String name);
 
     /**
      * Return the application type.
@@ -47,13 +47,13 @@ public interface AppInfo {
      */
     String getType();
 
-    /**
-     * Set type of the application.
-     *
-     * @param type
-     *         application type.
-     */
-    void setType(String type);
+//    /**
+//     * Set type of the application.
+//     *
+//     * @param type
+//     *         application type.
+//     */
+//    void setType(String type);
 
     /**
      * Get url of the application Git-repository.
@@ -62,13 +62,13 @@ public interface AppInfo {
      */
     String getGitUrl();
 
-    /**
-     * Set the url of the application Git-repository.
-     *
-     * @param gitUrl
-     *         url of the application Git-repository.
-     */
-    void setGitUrl(String gitUrl);
+//    /**
+//     * Set the url of the application Git-repository.
+//     *
+//     * @param gitUrl
+//     *         url of the application Git-repository.
+//     */
+//    void setGitUrl(String gitUrl);
 
     /**
      * Return the public url of the application.
@@ -77,13 +77,13 @@ public interface AppInfo {
      */
     String getPublicUrl();
 
-    /**
-     * Set the public url for application.
-     *
-     * @param publicUrl
-     *         public url of the application.
-     */
-    void setPublicUrl(String publicUrl);
+//    /**
+//     * Set the public url for application.
+//     *
+//     * @param publicUrl
+//     *         public url of the application.
+//     */
+//    void setPublicUrl(String publicUrl);
 
     /**
      * Return time when application was created.
@@ -95,29 +95,29 @@ public interface AppInfo {
      */
     double getCreationTime();
 
-    /**
-     * Set the time when application was created.
-     * <p/>
-     * Time returned as double-value because the Java long type cannot be represented in JavaScript as a numeric type.
-     * http://code.google.com/intl/ru/webtoolkit/doc/latest/DevGuideCodingBasicsCompatibility.html
-     *
-     * @param creationTime
-     *         time of creation the application.
-     */
-    void setCreationTime(double creationTime);
+//    /**
+//     * Set the time when application was created.
+//     * <p/>
+//     * Time returned as double-value because the Java long type cannot be represented in JavaScript as a numeric type.
+//     * http://code.google.com/intl/ru/webtoolkit/doc/latest/DevGuideCodingBasicsCompatibility.html
+//     *
+//     * @param creationTime
+//     *         time of creation the application.
+//     */
+//    void setCreationTime(double creationTime);
 
     /**
      * Get list of embeddable cartridges added to application.
      *
      * @return list of embeddable cartridges added to application.
      */
-    List<OpenShiftEmbeddableCartridge> getEmbeddedCartridges();
+    JsonArray<OpenShiftEmbeddableCartridge> getEmbeddedCartridges();
 
-    /**
-     * Set list of embeddable cartridges added to application.
-     *
-     * @param embeddedCartridges
-     *         list of embeddable cartridges added to application.
-     */
-    void setEmbeddedCartridges(List<OpenShiftEmbeddableCartridge> embeddedCartridges);
+//    /**
+//     * Set list of embeddable cartridges added to application.
+//     *
+//     * @param embeddedCartridges
+//     *         list of embeddable cartridges added to application.
+//     */
+//    void setEmbeddedCartridges(List<OpenShiftEmbeddableCartridge> embeddedCartridges);
 }

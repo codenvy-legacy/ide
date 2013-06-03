@@ -39,7 +39,7 @@ public class OpenShiftProjectOpenedExpression extends AbstractExpression impleme
 
     @Override
     public boolean onProjectChanged(Project project) {
-        value = project.getPropertyValue("openshift-application") != null;
+        value = project.getPropertyValue("openshift-express-application") != null;
         return value;
     }
 }

@@ -22,8 +22,7 @@ import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.ext.openshift.client.info.ApplicationProperty;
 import com.codenvy.ide.ext.openshift.shared.AppInfo;
 import com.codenvy.ide.ext.openshift.shared.OpenShiftEmbeddableCartridge;
-
-import java.util.List;
+import com.codenvy.ide.json.JsonArray;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
@@ -43,8 +42,6 @@ public interface ApplicationListView extends View<ApplicationListView.ActionDele
 
         public void onApplicationDeleteClicked(AppInfo application);
 
-//        public void onApplicationSelectClicked(AppInfo application);
-
         public void onCartridgeStartClicked(OpenShiftEmbeddableCartridge cartridge);
 
         public void onCartridgeStopClicked(OpenShiftEmbeddableCartridge cartridge);
@@ -56,13 +53,13 @@ public interface ApplicationListView extends View<ApplicationListView.ActionDele
         public void onCartridgeDeleteClicked(OpenShiftEmbeddableCartridge cartridge);
     }
 
-    public void setApplications(List<AppInfo> applications);
+    public void setApplications(JsonArray<AppInfo> applications);
 
     public AppInfo getSelectedApplication();
 
-    public void setCartridges(List<OpenShiftEmbeddableCartridge> cartridges);
+    public void setCartridges(JsonArray<OpenShiftEmbeddableCartridge> cartridges);
 
-    public void setApplicationInfo(List<ApplicationProperty> properties);
+    public void setApplicationInfo(JsonArray<ApplicationProperty> properties);
 
     public void setUserLogin(String userLogin);
 

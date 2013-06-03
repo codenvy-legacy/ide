@@ -21,7 +21,7 @@
             margin-right: 5px;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="380px" height="180px" addStyleNames="{res.openShiftCSS.login} {style.emptyBorder}">
+    <g:DockLayoutPanel unit="PX" width="380px" height="90px" addStyleNames="{res.openShiftCSS.login} {style.emptyBorder}">
         <g:south size="26.0">
             <g:FlowPanel>
                 <c:Button addStyleNames="{style.alignBtn}" text="{constant.createCartridgeViewCancelButton}" width="50px" size="SMALL"

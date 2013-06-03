@@ -19,7 +19,6 @@
 package com.codenvy.ide.ext.openshift.client.wizard;
 
 import com.codenvy.ide.ext.git.client.GitClientService;
-import com.codenvy.ide.ext.git.client.GitExtension;
 import com.codenvy.ide.ext.git.client.marshaller.BranchListUnmarshaller;
 import com.codenvy.ide.ext.git.client.marshaller.RemoteListUnmarshaller;
 import com.codenvy.ide.ext.git.shared.Branch;
@@ -28,15 +27,11 @@ import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.js.JsoArray;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.VirtualFileSystemInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>

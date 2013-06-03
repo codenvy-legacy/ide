@@ -59,4 +59,54 @@ public interface OpenShiftResources extends ClientBundle {
 
     @Source("com/codenvy/ide/ext/openshift/images/openshift_48_Disabled.png")
     ImageResource openShift48Disabled();
+
+    /*
+     * Controls
+     */
+    @Source("com/codenvy/ide/ext/openshift/images/switchAccount.png")
+    ImageResource switchAccount();
+
+    @Source("com/codenvy/ide/ext/openshift/images/switchAccount_Disabled.png")
+    ImageResource switchAccoundDisabled();
+
+    @Source("com/codenvy/ide/ext/openshift/images/apps-list.png")
+    ImageResource showApplications();
+
+    @Source("com/codenvy/ide/ext/openshift/images/apps-list_Disabled.png")
+    ImageResource showApplicationsDisabled();
+
+    @Source("com/codenvy/ide/ext/openshift/images/domain-edit.png")
+    ImageResource domainEdit();
+
+    @Source("com/codenvy/ide/ext/openshift/images/domain-edit_Disabled.png")
+    ImageResource domainEditDisabled();
+
+    @Source("com/codenvy/ide/ext/openshift/images/update-ssh.png")
+    ImageResource updateSshPublicKey();
+
+    @Source("com/codenvy/ide/ext/openshift/images/update-ssh_Disabled.png")
+    ImageResource updateSshPublicKeyDisabled();
+
+    @Source("com/codenvy/ide/ext/openshift/images/properties.png")
+    ImageResource showProperties();
+
+    @Source("com/codenvy/ide/ext/openshift/images/start.png")
+    ImageResource startApp();
+
+    @Source("com/codenvy/ide/ext/openshift/images/start_Disabled.png")
+    ImageResource startAppDisabled();
+
+    @Source("com/codenvy/ide/ext/openshift/images/stop.png")
+    ImageResource stopApp();
+
+    @Source("com/codenvy/ide/ext/openshift/images/stop_Disabled.png")
+    ImageResource stopAppDisabled();
+
+    @Source("com/codenvy/ide/ext/openshift/images/restart.png")
+    ImageResource restartApp();
+
+    @Source("com/codenvy/ide/ext/openshift/images/restart_Disabled.png")
+    ImageResource restartAppDisabled();
+
+
 }

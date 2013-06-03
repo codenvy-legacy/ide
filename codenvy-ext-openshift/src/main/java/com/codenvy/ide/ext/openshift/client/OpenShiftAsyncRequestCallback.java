@@ -65,7 +65,7 @@ public abstract class OpenShiftAsyncRequestCallback<T> extends AsyncRequestCallb
             }
         }
 
-        eventBus.fireEvent(new ExceptionThrownEvent(exception));
         console.print(exception.getMessage());
+        eventBus.fireEvent(new ExceptionThrownEvent(exception));
     }
 }

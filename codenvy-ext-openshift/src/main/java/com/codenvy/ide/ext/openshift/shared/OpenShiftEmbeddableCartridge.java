@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.ext.openshift.shared;
 
-import java.util.Map;
+import com.codenvy.ide.json.JsonStringMap;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
@@ -27,18 +27,18 @@ import java.util.Map;
 public interface OpenShiftEmbeddableCartridge {
     String getName();
 
-    void setName(String name);
+//    void setName(String name);
 
     String getUrl();
 
-    void setUrl(String url);
+//    void setUrl(String url);
 
     /** Contains info which should be displayed to the user. It contains important info, e.g. url, username, password for database. */
     String getCreationLog();
 
-    void setCreationLog(String creationLog);
+//    void setCreationLog(String creationLog);
 
-    Map<String, String> getProperties();
+    JsonStringMap<String> getProperties();
 
-    void setProperties(Map<String, String> properties);
+//    void setProperties(Map<String, String> properties);
 }

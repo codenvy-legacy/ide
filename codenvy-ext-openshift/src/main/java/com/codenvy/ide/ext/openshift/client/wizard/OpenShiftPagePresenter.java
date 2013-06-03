@@ -31,22 +31,23 @@ import com.codenvy.ide.ext.openshift.client.*;
 import com.codenvy.ide.ext.openshift.client.key.UpdateKeyPresenter;
 import com.codenvy.ide.ext.openshift.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.openshift.client.login.LoginPresenter;
+import com.codenvy.ide.ext.openshift.client.marshaller.ApplicationInfoUnmarshaller;
+import com.codenvy.ide.ext.openshift.client.marshaller.ApplicationInfoUnmarshallerWS;
 import com.codenvy.ide.ext.openshift.client.marshaller.ListUnmarshaller;
+import com.codenvy.ide.ext.openshift.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.openshift.shared.AppInfo;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.part.projectexplorer.ProjectExplorerPartPresenter;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
+import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.websocket.WebSocketException;
-import com.codenvy.ide.websocket.rest.AutoBeanUnmarshallerWS;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.ArrayList;
@@ -58,31 +59,29 @@ import java.util.List;
  */
 @Singleton
 public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implements OpenShiftPageView.ActionDelegate {
-    private OpenShiftPageView                view;
-    private EventBus                         eventBus;
-    private ConsolePart                      console;
-    private ResourceProvider                 resourceProvider;
-    private OpenShiftLocalizationConstant    constant;
-    private OpenShiftAutoBeanFactory         autoBeanFactory;
-    private LoginPresenter                   loginPresenter;
-    private OpenShiftClientService           service;
-    private TemplateAgent                    templateAgent;
-    private CreateProjectProvider            createProjectProvider;
-    private OpenShiftResources               resources;
-    private UpdateKeyPresenter               updateKeyPresenter;
-    private GitClientService                 gitService;
-    private ProjectExplorerPartPresenter     projectExplorer;
-    private OpenShiftPagePresenter           instance;
-    private boolean                          isLogged;
-    private Project                          project;
-    private String                           projectName;
+    private OpenShiftPageView             view;
+    private EventBus                      eventBus;
+    private ConsolePart                   console;
+    private ResourceProvider              resourceProvider;
+    private OpenShiftLocalizationConstant constant;
+    private LoginPresenter                loginPresenter;
+    private OpenShiftClientService        service;
+    private TemplateAgent                 templateAgent;
+    private CreateProjectProvider         createProjectProvider;
+    private UpdateKeyPresenter            updateKeyPresenter;
+    private GitClientService              gitService;
+    private ProjectExplorerPartPresenter  projectExplorer;
+    private OpenShiftPagePresenter        instance;
+    private boolean                       isLogged;
+    private Project                       project;
+    private String                        projectName;
 
     @Inject
     protected OpenShiftPagePresenter(OpenShiftPageView view, EventBus eventBus, ConsolePart console, ResourceProvider resourceProvider,
-                                     OpenShiftLocalizationConstant constant, OpenShiftAutoBeanFactory autoBeanFactory,
-                                     LoginPresenter loginPresenter, OpenShiftClientService service, TemplateAgent templateAgent,
-                                     OpenShiftResources resources, UpdateKeyPresenter updateKeyPresenter, GitClientService gitService,
-                                     ProjectExplorerPartPresenter projectExplorer, CreateProjectProvider createProjectProvider) {
+                                     OpenShiftLocalizationConstant constant, LoginPresenter loginPresenter, OpenShiftClientService service,
+                                     TemplateAgent templateAgent, OpenShiftResources resources, UpdateKeyPresenter updateKeyPresenter,
+                                     GitClientService gitService, ProjectExplorerPartPresenter projectExplorer,
+                                     CreateProjectProvider createProjectProvider) {
         super("Deploy project to OpenShift", resources.openShift48());
 
         this.view = view;
@@ -90,11 +89,9 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
         this.console = console;
         this.resourceProvider = resourceProvider;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.service = service;
         this.templateAgent = templateAgent;
-        this.resources = resources;
         this.updateKeyPresenter = updateKeyPresenter;
         this.gitService = gitService;
         this.projectExplorer = projectExplorer;
@@ -222,8 +219,8 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
         };
 
         try {
-            AutoBean<AppInfo> application = autoBeanFactory.appInfo();
-            AutoBeanUnmarshallerWS<AppInfo> unmarshaller = new AutoBeanUnmarshallerWS<AppInfo>(application);
+            DtoClientImpls.AppInfoImpl appInfo = DtoClientImpls.AppInfoImpl.make();
+            ApplicationInfoUnmarshallerWS unmarshaller = new ApplicationInfoUnmarshallerWS(appInfo);
 
             service.createApplicationWS(projectName, resourceProvider.getVfsId(), project.getId(), view.getApplicationType(),
                                         view.getScalingValue(),
@@ -258,8 +255,8 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
         };
 
         try {
-            AutoBean<AppInfo> application = autoBeanFactory.appInfo();
-            AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(application);
+            DtoClientImpls.AppInfoImpl appInfo = DtoClientImpls.AppInfoImpl.make();
+            ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(appInfo);
 
             service.createApplication(projectName, resourceProvider.getVfsId(), project.getId(), view.getApplicationType(),
                                       view.getScalingValue(),
@@ -270,6 +267,12 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
                                           @Override
                                           protected void onSuccess(AppInfo result) {
                                               updatePublicKey(result);
+                                          }
+
+                                          @Override
+                                          protected void onFailure(Throwable exception) {
+                                              super.onFailure(exception);
+                                              //TODO cleanup project if creation of application on OpenShift is failed.
                                           }
                                       });
         } catch (RequestException e) {
@@ -312,7 +315,7 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
                         String msg;
                         if (result) {
                             msg = constant.applicationCreatedSuccessfully(application.getName(), application.getPublicUrl());
-                            refreshProjectTree();
+                            setProperties();
                         } else {
                             msg = constant.applicationSourcePullingFailed();
                         }
@@ -321,16 +324,28 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
                 });
     }
 
-    private void refreshProjectTree() {
-        project.refreshTree(new AsyncCallback<Project>() {
+    private void setProperties() {
+        project.getProperties().add(new Property("openshift-express-application", projectName));
+        project.flushProjectProperties(new AsyncCallback<Project>() {
             @Override
             public void onFailure(Throwable caught) {
-                console.print("refresh failed");
             }
 
             @Override
             public void onSuccess(Project result) {
-                console.print("refresh successful");
+                refreshProjectFiles(result);
+            }
+        });
+    }
+
+    private void refreshProjectFiles(Project project) {
+        project.refreshTree(new AsyncCallback<Project>() {
+            @Override
+            public void onFailure(Throwable caught) {
+            }
+
+            @Override
+            public void onSuccess(Project result) {
                 projectExplorer.setContent(result.getParent());
             }
         });

@@ -48,7 +48,7 @@ public class UpdateSshPublicKeyCommand implements ExtendedCommand {
 
     @Override
     public ImageResource getIcon() {
-        return null;
+        return resources.updateSshPublicKey();
     }
 
     @Override

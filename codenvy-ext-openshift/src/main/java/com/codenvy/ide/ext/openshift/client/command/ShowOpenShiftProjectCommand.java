@@ -21,9 +21,6 @@ package com.codenvy.ide.ext.openshift.client.command;
 import com.codenvy.ide.api.expressions.Expression;
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 import com.codenvy.ide.ext.openshift.client.OpenShiftResources;
-import com.codenvy.ide.ext.openshift.client.login.LoggedInHandler;
-import com.codenvy.ide.ext.openshift.client.login.LoginCanceledHandler;
-import com.codenvy.ide.ext.openshift.client.login.LoginPresenter;
 import com.codenvy.ide.ext.openshift.client.project.ProjectPresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
@@ -33,13 +30,16 @@ import com.google.inject.Inject;
  * @version $Id: $
  */
 public class ShowOpenShiftProjectCommand implements ExtendedCommand {
-    private final ProjectPresenter     projectPresenter;
-    private final OpenShiftResources   resources;
+    private final ProjectPresenter                 projectPresenter;
+    private final OpenShiftResources               resources;
+    private final OpenShiftProjectOpenedExpression expression;
 
     @Inject
-    public ShowOpenShiftProjectCommand(ProjectPresenter projectPresenter, OpenShiftResources resources) {
+    public ShowOpenShiftProjectCommand(ProjectPresenter projectPresenter, OpenShiftResources resources,
+                                       OpenShiftProjectOpenedExpression expression) {
         this.projectPresenter = projectPresenter;
         this.resources = resources;
+        this.expression = expression;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class ShowOpenShiftProjectCommand implements ExtendedCommand {
 
     @Override
     public ImageResource getIcon() {
-        return null;
+        return resources.openShift();
     }
 
     @Override
@@ -59,7 +59,7 @@ public class ShowOpenShiftProjectCommand implements ExtendedCommand {
 
     @Override
     public Expression inContext() {
-        return null;
+        return expression;
     }
 
     @Override

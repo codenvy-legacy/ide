@@ -22,26 +22,31 @@ import com.codenvy.ide.ext.openshift.client.OpenShiftLocalizationConstant;
 import com.codenvy.ide.ext.openshift.client.info.ApplicationProperty;
 import com.codenvy.ide.ext.openshift.shared.AppInfo;
 import com.codenvy.ide.ext.openshift.shared.OpenShiftEmbeddableCartridge;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.ui.Button;
+import com.google.gwt.cell.client.AbstractSafeHtmlCell;
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.i18n.client.HasDirection;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.text.shared.SafeHtmlRenderer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.NoSelectionModel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SelectionModel;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.inject.Inject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,14 +60,14 @@ public class ApplicationListViewImpl extends DialogBox implements ApplicationLis
 
     private static ApplicationListViewImplUiBinder uiBinder = GWT.create(ApplicationListViewImplUiBinder.class);
 
-    @UiField
-    CellTable<AppInfo> applicationList;
+    @UiField(provided = true)
+    CellTable<AppInfo> applicationList = new CellTable<AppInfo>();
 
-    @UiField
-    CellTable<ApplicationProperty> applicationProperties;
+    @UiField(provided = true)
+    CellTable<ApplicationProperty> applicationProperties = new CellTable<ApplicationProperty>();
 
-    @UiField
-    CellTable<OpenShiftEmbeddableCartridge> applicationCartridges;
+    @UiField(provided = true)
+    CellTable<OpenShiftEmbeddableCartridge> applicationCartridges = new CellTable<OpenShiftEmbeddableCartridge>();
 
     @UiField
     TextBox userLoginField;
@@ -95,21 +100,50 @@ public class ApplicationListViewImpl extends DialogBox implements ApplicationLis
     protected ApplicationListViewImpl(OpenShiftLocalizationConstant constant) {
         this.constant = constant;
 
-        Widget widget = uiBinder.createAndBindUi(this);
-
-        this.setTitle(constant.applicationListViewTitle());
-        this.setWidget(widget);
-
         initApplicationListTable();
         initApplicationPropertiesTable();
         initCartridgesTable();
+
+        Widget widget = uiBinder.createAndBindUi(this);
+
+        this.setText(constant.applicationListViewTitle());
+        this.setWidget(widget);
+    }
+
+    private class ListLink extends AbstractSafeHtmlCell<String> {
+        /** Create Link list. */
+        public ListLink() {
+            super(new SafeHtmlListRenderer());
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        protected void render(com.google.gwt.cell.client.Cell.Context context, SafeHtml data, SafeHtmlBuilder sb) {
+            sb.append(data);
+        }
+    }
+
+    private class SafeHtmlListRenderer implements SafeHtmlRenderer<String> {
+        /** {@inheritDoc} */
+        @Override
+        public SafeHtml render(String object) {
+            return new SafeHtmlBuilder().appendHtmlConstant(object).toSafeHtml();
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void render(String object, SafeHtmlBuilder builder) {
+            builder.appendHtmlConstant(object);
+        }
     }
 
     private void initApplicationListTable() {
-        applicationList = new CellTable<AppInfo>();
         applicationList.setWidth("100%", true);
         applicationList.setAutoHeaderRefreshDisabled(true);
         applicationList.setAutoFooterRefreshDisabled(true);
+
+        HTMLPanel panel = new HTMLPanel("No applications.");
+        applicationList.setEmptyTableWidget(panel);
 
         final SelectionModel<AppInfo> selectionModel = new SingleSelectionModel<AppInfo>();
 
@@ -129,19 +163,13 @@ public class ApplicationListViewImpl extends DialogBox implements ApplicationLis
             }
         };
 
+        appDeleteColumn.setHorizontalAlignment(HasHorizontalAlignment.HorizontalAlignmentConstant.startOf(HasDirection.Direction.RTL));
         this.applicationList.getSelectionModel().addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
             @Override
             public void onSelectionChange(SelectionChangeEvent event) {
                 selectedApplication = ((SingleSelectionModel<AppInfo>)selectionModel).getSelectedObject();
             }
         });
-
-//        appNameColumn.setFieldUpdater(new FieldUpdater<AppInfo, String>() {
-//            @Override
-//            public void update(int index, AppInfo object, String value) {
-//                delegate.onApplicationSelectClicked(object);
-//            }
-//        });
 
         appDeleteColumn.setFieldUpdater(new FieldUpdater<AppInfo, String>() {
             @Override
@@ -155,10 +183,12 @@ public class ApplicationListViewImpl extends DialogBox implements ApplicationLis
     }
 
     private void initApplicationPropertiesTable() {
-        applicationProperties = new CellTable<ApplicationProperty>();
         applicationProperties.setWidth("100%", true);
         applicationProperties.setAutoHeaderRefreshDisabled(true);
         applicationProperties.setAutoFooterRefreshDisabled(true);
+
+        HTMLPanel panel = new HTMLPanel("No properties.");
+        applicationProperties.setEmptyTableWidget(panel);
 
         final SelectionModel<ApplicationProperty> selectionModel = new NoSelectionModel<ApplicationProperty>();
 
@@ -171,24 +201,28 @@ public class ApplicationListViewImpl extends DialogBox implements ApplicationLis
             }
         };
 
-        Column<ApplicationProperty, String> propertyValueColumn = new TextColumn<ApplicationProperty>() {
+        Column<ApplicationProperty, String> propertyValueColumn = new Column<ApplicationProperty, String>(new ListLink()) {
             @Override
             public String getValue(ApplicationProperty object) {
                 return object.getPropertyValue();
             }
         };
 
+        applicationProperties.setColumnWidth(propertyKeyColumn, "100px");
+
         applicationProperties.addColumn(propertyKeyColumn, "Property");
         applicationProperties.addColumn(propertyValueColumn, "Value");
     }
 
     private void initCartridgesTable() {
-        applicationCartridges = new CellTable<OpenShiftEmbeddableCartridge>();
         applicationCartridges.setWidth("100%", true);
         applicationCartridges.setAutoHeaderRefreshDisabled(true);
         applicationCartridges.setAutoFooterRefreshDisabled(true);
 
-        final SelectionModel<OpenShiftEmbeddableCartridge> selectionModel = new SingleSelectionModel<OpenShiftEmbeddableCartridge>();
+        HTMLPanel panel = new HTMLPanel("No cartridges.");
+        applicationCartridges.setEmptyTableWidget(panel);
+
+        final SelectionModel<OpenShiftEmbeddableCartridge> selectionModel = new NoSelectionModel<OpenShiftEmbeddableCartridge>();
 
         applicationCartridges.setSelectionModel(selectionModel);
 
@@ -283,19 +317,31 @@ public class ApplicationListViewImpl extends DialogBox implements ApplicationLis
     }
 
     @Override
-    public void setApplications(List<AppInfo> applications) {
-        this.applicationList.setRowData(applications);
+    public void setApplications(JsonArray<AppInfo> applications) {
+        List<AppInfo> list = new ArrayList<AppInfo>();
+        for (int i = 0; i < applications.size(); i++) {
+            list.add(applications.get(i));
+        }
+        this.applicationList.setRowData(list);
         this.applicationList.getSelectionModel().setSelected(applications.get(0), true);
     }
 
     @Override
-    public void setCartridges(List<OpenShiftEmbeddableCartridge> cartridges) {
-        this.applicationCartridges.setRowData(cartridges);
+    public void setCartridges(JsonArray<OpenShiftEmbeddableCartridge> cartridges) {
+        List<OpenShiftEmbeddableCartridge> list = new ArrayList<OpenShiftEmbeddableCartridge>();
+        for (int i = 0; i < cartridges.size(); i++) {
+            list.add(cartridges.get(i));
+        }
+        this.applicationCartridges.setRowData(list);
     }
 
     @Override
-    public void setApplicationInfo(List<ApplicationProperty> properties) {
-        this.applicationProperties.setRowData(properties);
+    public void setApplicationInfo(JsonArray<ApplicationProperty> properties) {
+        List<ApplicationProperty> list = new ArrayList<ApplicationProperty>();
+        for (int i = 0; i < properties.size(); i++) {
+            list.add(properties.get(i));
+        }
+        this.applicationProperties.setRowData(list);
     }
 
     @Override
@@ -321,6 +367,7 @@ public class ApplicationListViewImpl extends DialogBox implements ApplicationLis
 
     @Override
     public void showDialog() {
+        this.selectedApplication = null;
         this.isShown = true;
         this.center();
         this.show();
@@ -328,7 +375,7 @@ public class ApplicationListViewImpl extends DialogBox implements ApplicationLis
 
     @Override
     public AppInfo getSelectedApplication() {
-        return selectedApplication;
+        return applicationList.getKeyboardSelectedRow() != -1 ? selectedApplication : null;
     }
 
     @Override

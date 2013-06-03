@@ -146,6 +146,12 @@ public interface OpenShiftLocalizationConstant extends Messages {
     @Key("changeDomainViewSuccessfullyChanged")
     public String changeDomainViewSuccessfullyChanged();
 
+    @Key("changeDomainViewFailedChanged")
+    public String changeDomainViewFailedChanged();
+
+    @Key("changeDomainViewIncorrectDomainName")
+    public String changeDomainViewIncorrectDomainName();
+
     /*
      * LoginView.
      */
@@ -163,6 +169,12 @@ public interface OpenShiftLocalizationConstant extends Messages {
 
     @Key("loginView.button.cancel")
     public String loginViewButtonCancel();
+
+    @Key("loginViewErrorInvalidUserOrPassword")
+    public String loginViewErrorInvalidUserOrPassword();
+
+    @Key("loginViewSuccessfullyLogined")
+    public String loginViewSuccessfullyLogined();
 
     /*
      * Messages
@@ -196,5 +208,14 @@ public interface OpenShiftLocalizationConstant extends Messages {
 
     @Key("applicationSourcePullingFailed")
     public String applicationSourcePullingFailed();
+
+    /*
+     * Project
+     */
+    @Key("projectViewTitle")
+    public String projectViewTitle();
+
+    @Key("projectViewTitlePropertiesApp")
+    public String projectViewTitlePropertiesApp();
 
 }
