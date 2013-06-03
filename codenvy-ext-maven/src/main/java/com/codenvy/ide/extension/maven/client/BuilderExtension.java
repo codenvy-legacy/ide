@@ -20,14 +20,16 @@ package com.codenvy.ide.extension.maven.client;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.template.TemplateAgent;
-import com.codenvy.ide.extension.maven.client.build.BuildProjectPresenter;
-import com.codenvy.ide.extension.maven.client.template.CreateWarProjectPresenter;
-import com.codenvy.ide.extension.maven.client.template.wizard.javaproject.CreateJavaProjectPagePresenter;
-import com.codenvy.ide.extension.maven.client.template.wizard.javaproject.CreateJavaProjectPresenter;
 import com.codenvy.ide.ext.java.client.JavaClientBundle;
 import com.codenvy.ide.ext.java.client.JavaExtension;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
+import com.codenvy.ide.extension.maven.client.build.BuildProjectPresenter;
+import com.codenvy.ide.extension.maven.client.template.CreateSpringProjectPresenter;
+import com.codenvy.ide.extension.maven.client.template.CreateWarProjectPresenter;
+import com.codenvy.ide.extension.maven.client.template.wizard.javaproject.CreateJavaProjectPagePresenter;
+import com.codenvy.ide.extension.maven.client.template.wizard.javaproject.CreateJavaProjectPresenter;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -42,21 +44,35 @@ import com.google.inject.Singleton;
 @Extension(title = "Maven Support.", version = "3.0.0")
 public class BuilderExtension {
     /** Channel for the messages containing status of the Maven build job. */
-    public static final String BUILD_STATUS_CHANNEL = "maven:buildStatus:";
+    public static final String BUILD_STATUS_CHANNEL            = "maven:buildStatus:";
+    public static final String SPRING_APPLICATION_PROJECT_TYPE = "Spring";
 
     /**
      * Create extension.
      *
      * @param buildProjectPresenter
+     * @param templateAgent
+     * @param createProjectPresenter
+     * @param createJavaProjectPresenter
+     * @param createJavaProjectWizardPage
+     * @param createSpringProjectPresenter
+     * @param projectTypeAgent
      */
     @Inject
     public BuilderExtension(BuildProjectPresenter buildProjectPresenter, TemplateAgent templateAgent,
                             CreateWarProjectPresenter createProjectPresenter, CreateJavaProjectPresenter createJavaProjectPresenter,
-                            Provider<CreateJavaProjectPagePresenter> createJavaProjectWizardPage) {
+                            Provider<CreateJavaProjectPagePresenter> createJavaProjectWizardPage,
+                            CreateSpringProjectPresenter createSpringProjectPresenter, ProjectTypeAgent projectTypeAgent) {
         templateAgent.registerTemplate("War project", null, JsonCollections.createArray(JavaExtension.JAVA_WEB_APPLICATION_PROJECT_TYPE),
                                        createProjectPresenter, null);
         templateAgent.registerTemplate("Java project", JavaClientBundle.INSTANCE.javaProject(),
                                        JsonCollections.createArray(JavaProject.PRIMARY_NATURE),
                                        createJavaProjectPresenter, createJavaProjectWizardPage);
+        templateAgent.registerTemplate("Spring project", JavaClientBundle.INSTANCE.javaProject(),
+                                       JsonCollections.createArray(SPRING_APPLICATION_PROJECT_TYPE),
+                                       createSpringProjectPresenter, null);
+
+        projectTypeAgent
+                .registerProjectType(SPRING_APPLICATION_PROJECT_TYPE, "Spring application", JavaClientBundle.INSTANCE.newJavaProject());
     }
 }

@@ -41,6 +41,17 @@ public interface CreateProjectClientService {
             throws RequestException;
 
     /**
+     * Create spring project.
+     *
+     * @param projectName
+     * @param properties
+     * @param callback
+     * @throws RequestException
+     */
+    void createSpringProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback)
+            throws RequestException;
+
+    /**
      * Creates java project.
      *
      * @param projectName

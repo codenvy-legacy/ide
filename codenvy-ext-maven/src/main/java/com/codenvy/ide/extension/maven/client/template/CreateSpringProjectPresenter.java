@@ -39,7 +39,7 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class CreateWarProjectPresenter implements CreateProjectProvider {
+public class CreateSpringProjectPresenter implements CreateProjectProvider {
     private String                     projectName;
     private CreateProjectClientService service;
     private ResourceProvider           resourceProvider;
@@ -51,7 +51,7 @@ public class CreateWarProjectPresenter implements CreateProjectProvider {
      * @param resourceProvider
      */
     @Inject
-    protected CreateWarProjectPresenter(CreateProjectClientService service, ResourceProvider resourceProvider) {
+    protected CreateSpringProjectPresenter(CreateProjectClientService service, ResourceProvider resourceProvider) {
         this.service = service;
         this.resourceProvider = resourceProvider;
     }
@@ -74,9 +74,9 @@ public class CreateWarProjectPresenter implements CreateProjectProvider {
         JsonArray<Property> properties =
                 JsonCollections.createArray(new Property(ProjectDescription.PROPERTY_PRIMARY_NATURE, JavaProject.PRIMARY_NATURE),
                                             new Property(JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS,
-                                                         JsonCollections.createArray("src/main/java", "src/main/resources")));
+                                                         JsonCollections.createArray("src/main/java")));
         try {
-            service.createWarProject(projectName, properties, new AsyncRequestCallback<Void>() {
+            service.createSpringProject(projectName, properties, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     resourceProvider.getProject(projectName, new AsyncCallback<Project>() {

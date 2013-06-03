@@ -86,19 +86,11 @@ public class CreateProjectService {
                 vfs.createProject(vfs.getInfo().getRoot().getId(), name, "deprecated.project.type", properties);
         String projectId = project.getId();
 
-        String projectContent = "[{\"name\":\"vfs:mimeType\",\"value\":[\"text/vnd.ideproject+directory\"]}," +
-                                "{\"name\":\"vfs:projectType\",\"value\":[\"Servlet/JSP\"]},{\"name\":\"exoide:projectDescription\"," +
-                                "\"value\":[\"Java Web project.\"]}, {\"name\":\"exoide:target\",\"value\":[\"CloudBees\", " +
-                                "\"CloudFoundry\", \"AWS\", \"AppFog\"]}]";
-        InputStream projectIS = new ByteArrayInputStream(projectContent.getBytes());
-        vfs.createFile(projectId, ".project", MediaType.TEXT_PLAIN_TYPE, projectIS);
-
-
         String host = uriInfo.getAbsolutePath().getHost();
-        String groupId = null;
+        String groupId;
         if (host.contains(".")) {
             String[] split = host.split("\\.");
-            StringBuffer result = new StringBuffer();
+            StringBuilder result = new StringBuilder();
             int j = split.length - 1;
             while (j > 0) {
                 result.append(split[j--]).append(".");
@@ -201,6 +193,182 @@ public class CreateProjectService {
         vfs.createFile(webInf.getId(), "web.xml", MediaType.TEXT_XML_TYPE, webIS);
     }
 
+    @Path("project/spring")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public void createSpringProject(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name, List<Property> properties,
+                                    @Context UriInfo uriInfo) throws VirtualFileSystemException {
+        VirtualFileSystem vfs = registry.getProvider(vfsId).newInstance(null, eventListenerList);
+        Project project =
+                vfs.createProject(vfs.getInfo().getRoot().getId(), name, "deprecated.project.type", properties);
+        String projectId = project.getId();
+
+        String host = uriInfo.getAbsolutePath().getHost();
+        String groupId;
+        if (host.contains(".")) {
+            String[] split = host.split("\\.");
+            StringBuilder result = new StringBuilder();
+            int j = split.length - 1;
+            while (j > 0) {
+                result.append(split[j--]).append(".");
+            }
+            result.append(split[0]);
+            groupId = result.toString();
+        } else {
+            groupId = host;
+        }
+
+        String pomContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                            "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" +
+                            " xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd\">\n" +
+                            "   <modelVersion>4.0.0</modelVersion>\n" +
+                            "<groupId>" + groupId + "</groupId>\n" +
+                            "<artifactId>" + name + "</artifactId>\n" +
+                            "   <packaging>war</packaging>\n" +
+                            "   <version>1.0-SNAPSHOT</version>\n" +
+                            "   <name>SpringDemo</name>\n" +
+                            "   <properties>\n" +
+                            "      <maven.compiler.source>1.6</maven.compiler.source>\n" +
+                            "      <maven.compiler.target>1.6</maven.compiler.target>\n" +
+                            "   </properties>\n" +
+                            "   <dependencies>\n" +
+                            "      <dependency>\n" +
+                            "         <groupId>javax.servlet</groupId>\n" +
+                            "         <artifactId>servlet-api</artifactId>\n" +
+                            "         <version>2.5</version>\n" +
+                            "         <scope>provided</scope>\n" +
+                            "      </dependency>\n" +
+                            "      <dependency>\n" +
+                            "         <groupId>org.springframework</groupId>\n" +
+                            "         <artifactId>spring-webmvc</artifactId>\n" +
+                            "         <version>3.0.5.RELEASE</version>\n" +
+                            "      </dependency>\n" +
+                            "      <dependency>\n" +
+                            "         <groupId>junit</groupId>\n" +
+                            "         <artifactId>junit</artifactId>\n" +
+                            "         <version>3.8.1</version>\n" +
+                            "         <scope>test</scope>\n" +
+                            "      </dependency>\n" +
+                            "   </dependencies>\n" +
+                            "   <build>\n" +
+                            "      <finalName>greeting</finalName>\n" +
+                            "   </build>\n" +
+                            "</project>";
+        InputStream pomIS = new ByteArrayInputStream(pomContent.getBytes());
+        vfs.createFile(projectId, "pom.xml", MediaType.TEXT_XML_TYPE, pomIS);
+
+        Folder src = vfs.createFolder(projectId, "src");
+        Folder main = vfs.createFolder(src.getId(), "main");
+        String mainId = main.getId();
+
+        Folder java = vfs.createFolder(mainId, "java");
+        Folder webapp = vfs.createFolder(mainId, "webapp");
+
+        String webappId = webapp.getId();
+        String indexContent = "<%\n" +
+                              "   response.sendRedirect(\"spring/hello\");\n" +
+                              "%>";
+        InputStream indexIS = new ByteArrayInputStream(indexContent.getBytes());
+        vfs.createFile(webappId, "index.jsp", MediaType.TEXT_PLAIN_TYPE, indexIS);
+
+        Folder webInf = vfs.createFolder(webappId, "WEB-IBF");
+        String webInfId = webInf.getId();
+
+        String webContent = "<!DOCTYPE web-app PUBLIC\n" +
+                            " \"-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN\"\n" +
+                            " \"http://java.sun.com/dtd/web-app_2_3.dtd\" >\n" +
+                            "\n" +
+                            "<web-app>\n" +
+                            "   <display-name>Spring Web Application</display-name>\n" +
+                            "   <servlet>\n" +
+                            "      <servlet-name>spring</servlet-name>\n" +
+                            "      <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>\n" +
+                            "      <load-on-startup>1</load-on-startup>\n" +
+                            "   </servlet>\n" +
+                            "   <servlet-mapping>\n" +
+                            "      <servlet-name>spring</servlet-name>\n" +
+                            "      <url-pattern>/spring/*</url-pattern>\n" +
+                            "   </servlet-mapping>\n" +
+                            "</web-app>";
+        InputStream webContentIS = new ByteArrayInputStream(webContent.getBytes());
+        vfs.createFile(webInfId, "web.xml", MediaType.TEXT_XML_TYPE, webContentIS);
+
+        String springServletContent = "<?xml version='1.0' encoding='utf-8'?>\n" +
+                                      "<beans xmlns=\"http://www.springframework.org/schema/beans\" xmlns:xsi=\"http://www.w3" +
+                                      ".org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.springframework.org/schema/beans " +
+                                      "http://www.springframework.org/schema/beans/spring-beans-3.0.xsd\">\n" +
+                                      "   <bean name=\"/hello\" class=\"helloworld.GreetingController\"></bean>\n" +
+                                      "   <bean id=\"viewResolver\" class=\"org.springframework.web.servlet.view" +
+                                      ".InternalResourceViewResolver\">\n" +
+                                      "      <property name=\"prefix\" value=\"/WEB-INF/jsp/\" />\n" +
+                                      "      <property name=\"suffix\" value=\".jsp\" />\n" +
+                                      "   </bean>\n" +
+                                      "</beans>";
+        InputStream springServletContentIS = new ByteArrayInputStream(springServletContent.getBytes());
+        vfs.createFile(webInfId, "spring-servlet.xml", MediaType.TEXT_XML_TYPE, springServletContentIS);
+
+        Folder jsp = vfs.createFolder(webInfId, "jsp");
+
+        String helloViewContent = "<html>\n" +
+                                  "  <body bgcolor=\"white\">\n" +
+                                  "    <div style=\"font-size: 150%; color: #850F0F\">\n" +
+                                  "      <span>Enter your name: </span><br />\n" +
+                                  "      <form method=\"post\" action=\"hello\">\n" +
+                                  "        <input type=text size=\"15\" name=\"user\" >\n" +
+                                  "        <input type=submit name=\"submit\" value=\"Ok\">\n" +
+                                  "      </form>\n" +
+                                  "    </div>\n" +
+                                  "    <div>\n" +
+                                  "      <%\n" +
+                                  "          {\n" +
+                                  "            java.lang.String answer = (java.lang.String)request.getAttribute(\"greeting\");   \n" +
+                                  "      %>\n" +
+                                  "      <span><%=answer%></span>\n" +
+                                  "      <%\n" +
+                                  "          }\n" +
+                                  "      %>\n" +
+                                  "    </div>\n" +
+                                  "  </body>\n" +
+                                  "</html>";
+        InputStream helloViewContentIS = new ByteArrayInputStream(helloViewContent.getBytes());
+        vfs.createFile(jsp.getId(), "hello_view.jsp", MediaType.TEXT_PLAIN_TYPE, helloViewContentIS);
+
+        Folder helloworld = vfs.createFolder(java.getId(), "helloworld");
+
+        String controllerContent = "package helloworld;\n" +
+                                   "\n" +
+                                   "import org.springframework.web.servlet.ModelAndView;\n" +
+                                   "import org.springframework.web.servlet.mvc.Controller;\n" +
+                                   "\n" +
+                                   "import java.util.HashMap;\n" +
+                                   "import java.util.Map;\n" +
+                                   "\n" +
+                                   "import javax.servlet.http.HttpServletRequest;\n" +
+                                   "import javax.servlet.http.HttpServletResponse;\n" +
+                                   "\n" +
+                                   "public class GreetingController implements Controller\n" +
+                                   "{\n" +
+                                   "\n" +
+                                   "   @Override\n" +
+                                   "   public ModelAndView handleRequest(HttpServletRequest request, " +
+                                   "HttpServletResponse response) throws Exception\n" +
+                                   "   {\n" +
+                                   "      String userName = request.getParameter(\"user\");\n" +
+                                   "      String result = \"\";\n" +
+                                   "      if (userName != null)\n" +
+                                   "      {\n" +
+                                   "        result = \"Hello, \" + userName + \"!\";\n" +
+                                   "      }\n" +
+                                   "\n" +
+                                   "      ModelAndView view = new ModelAndView(\"hello_view\");\n" +
+                                   "      view.addObject(\"greeting\", result);\n" +
+                                   "      return view;\n" +
+                                   "   }\n" +
+                                   "}";
+        InputStream controllerContentIS = new ByteArrayInputStream(controllerContent.getBytes());
+        vfs.createFile(helloworld.getId(), "GreetingController.java", MediaType.TEXT_PLAIN_TYPE, controllerContentIS);
+    }
+
     @Path("project/empty")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -215,5 +383,4 @@ public class CreateProjectService {
         InputStream readMeIS = new ByteArrayInputStream(readMeContent.getBytes());
         vfs.createFile(projectId, "Readme.txt", MediaType.TEXT_PLAIN_TYPE, readMeIS);
     }
-
 }
