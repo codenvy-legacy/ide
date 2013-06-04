@@ -25,8 +25,11 @@
     <title>IDE</title>
 
     <script type="text/javascript" language="javascript">
+        var appConfig = {
+            "context": "/w/rest/",
+            "websocketContext": "/w/websocket/"
+        }
         var ws = "<%= request.getAttribute("ws")%>";
-        var configurationURL = "/w/rest/" + ws + "/shell/configuration/init";
     </script>
 
     <script type="text/javascript" language="javascript" src='<%= com.codenvy.servlet.DispatcherServlet.genStaticResourceShellUrl(request, "Shell.nocache.js")%>'></script>

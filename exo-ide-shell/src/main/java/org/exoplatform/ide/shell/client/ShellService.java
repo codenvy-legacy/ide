@@ -24,6 +24,7 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
+import com.google.gwt.user.client.Window;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
@@ -53,11 +54,8 @@ import java.util.Set;
 public class ShellService {
     private static ShellService service;
 
-    /** REST context. */
-    private final String REST_CONTEXT = "rest/private";
-
     /** Path to the list of the resources. */
-    private final String RESOURCES_PATH = "ide/cli/resources";
+    private final String RESOURCES_PATH = "/cli/resources";
 
     /** @return {@link ShellService} shell service */
     public static ShellService getService() {
@@ -75,7 +73,7 @@ public class ShellService {
      * @throws RequestException
      */
     public void getCommands(AsyncRequestCallback<Set<CLIResource>> callback) throws RequestException {
-        String url = REST_CONTEXT + "/" + RESOURCES_PATH;
+        String url = getRestContext() + getWorkspaceName() + RESOURCES_PATH;
 
         AsyncRequest.build(RequestBuilder.GET, url).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
     }
@@ -88,7 +86,8 @@ public class ShellService {
      * @param callback
      * @throws RequestException
      */
-    public void loadConfiguration(String url, AsyncRequestCallback<ShellConfiguration> callback) throws RequestException {
+    public void loadConfiguration(AsyncRequestCallback<ShellConfiguration> callback) throws RequestException {
+        String url = getRestContext() + getWorkspaceName() + "/shell/configuration/init";
         AsyncRequest.build(RequestBuilder.GET, url).send(callback);
     }
 
@@ -131,7 +130,7 @@ public class ShellService {
                 command.execute(commandLine);
             } else {
                 String url =
-                        (resource.getPath().startsWith("/")) ? REST_CONTEXT + resource.getPath() : REST_CONTEXT + "/"
+                        (resource.getPath().startsWith("/")) ? getRestContext() + getWorkspaceName() + resource.getPath() : getRestContext() + getWorkspaceName() + "/"
                                                                                                    + resource.getPath();
                 AsyncRequest asyncRequest = createAsyncRequest(resource.getMethod(), url, false);
                 if (canParseOptions(resource, cmd, asyncRequest)) {
@@ -200,7 +199,7 @@ public class ShellService {
      * @throws RequestException
      */
     public void login(String command, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
-        String url = REST_CONTEXT + "/ide/crash/command";
+        String url = getRestContext() + getWorkspaceName() + "/crash/command";
 
         Login loginBean = CloudShell.AUTO_BEAN_FACTORY.login().as();
         loginBean.setCmd(command);
@@ -639,4 +638,21 @@ public class ShellService {
         }
         return (optStr.endsWith("/")) ? optStr.substring(0, optStr.length() - 1) : optStr;
     }
+    
+    
+    public static native String getRestContext() /*-{
+    function endsWith(str, suffix) {
+      return str.indexOf(suffix, str.length - suffix.length) !== -1;
+    }
+    rc = $wnd.appConfig.context;
+    
+    if (endsWith(rc,'/'))
+     return rc;
+    else
+     return rc + '/';  
+}-*/;
+    
+    public static native String getWorkspaceName() /*-{
+    return $wnd.ws;
+}-*/;
 }

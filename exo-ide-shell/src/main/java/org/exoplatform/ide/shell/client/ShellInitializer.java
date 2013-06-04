@@ -20,6 +20,7 @@ package org.exoplatform.ide.shell.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
@@ -40,6 +41,7 @@ import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -88,8 +90,7 @@ public class ShellInitializer {
         try {
             AutoBean<ShellConfiguration> autoBean = CloudShell.AUTO_BEAN_FACTORY.shellConfiguration();
             AutoBeanUnmarshaller<ShellConfiguration> unmarshaller = new AutoBeanUnmarshaller<ShellConfiguration>(autoBean);
-            ShellService.getService().loadConfiguration(getConfigurationURL(),
-                                                        new AsyncRequestCallback<ShellConfiguration>(unmarshaller) {
+            ShellService.getService().loadConfiguration(new AsyncRequestCallback<ShellConfiguration>(unmarshaller) {
 
                                                             @Override
                                                             protected void onSuccess(ShellConfiguration result) {
@@ -165,6 +166,8 @@ public class ShellInitializer {
                     new AsyncRequestCallback<Set<CLIResource>>(new CLIResourceUnmarshaller(new HashSet<CLIResource>())) {
                         @Override
                         protected void onSuccess(Set<CLIResource> result) {
+                            
+                            Window.alert(Arrays.toString(result.toArray()));
                             // TODO think how to add async parameter to all resources.
                             CLIResourceParameter asyncParameter = new CLIResourceParameter();
                             asyncParameter.setName("async");

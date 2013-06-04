@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.shell.client;
 
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -34,7 +35,7 @@ import java.util.Set;
 
 /**
  * Unmarshaller for set of {@link CLIResource}.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Aug 4, 2011 4:34:11 PM anya $
  */
@@ -43,8 +44,7 @@ public class CLIResourceUnmarshaller implements Unmarshallable<Set<CLIResource>>
     private Set<CLIResource> resources;
 
     /**
-     * @param resources
-     *         resources
+     * @param resources resources
      */
     public CLIResourceUnmarshaller(Set<CLIResource> resources) {
         this.resources = resources;
@@ -57,6 +57,7 @@ public class CLIResourceUnmarshaller implements Unmarshallable<Set<CLIResource>>
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         try {
+            Log.info(getClass(), response.getText());
             JSONArray array = JSONParser.parseStrict(response.getText()).isArray();
             if (array == null || array.size() <= 0) {
                 return;
@@ -65,35 +66,44 @@ public class CLIResourceUnmarshaller implements Unmarshallable<Set<CLIResource>>
             for (int i = 0; i < array.size(); i++) {
                 CLIResource cliResource = new CLIResource();
                 JSONObject jsonRes = array.get(i).isObject();
+                Log.info(getClass(), jsonRes.get(COMMAND));
                 cliResource.setCommand(getStringSet(jsonRes.get(COMMAND).isArray()));
+                Log.info(getClass(), jsonRes.get(PATH));
                 cliResource.setPath(jsonRes.get(PATH).isString().stringValue());
+                Log.info(getClass(), jsonRes.get(METHOD));
                 cliResource.setMethod(jsonRes.get(METHOD).isString().stringValue());
 
                 if (jsonRes.get(DESCRIPTION) != null && jsonRes.get(DESCRIPTION).isString() != null) {
+                    Log.info(getClass(), jsonRes.get(DESCRIPTION));
                     cliResource.setDescription(jsonRes.get(DESCRIPTION).isString().stringValue());
                 }
 
                 if (jsonRes.containsKey(CONSUMES)) {
+                    Log.info(getClass(), jsonRes.get(CONSUMES));
                     cliResource.setConsumes(getStringSet(jsonRes.get(CONSUMES).isArray()));
                 }
                 if (jsonRes.containsKey(PRODUCES)) {
+                    Log.info(getClass(), jsonRes.get(PRODUCES));
                     cliResource.setProduces(getStringSet(jsonRes.get(PRODUCES).isArray()));
                 }
                 if (jsonRes.containsKey(PARAMS)) {
+                    Log.info(getClass(), jsonRes.get(PARAMS));
                     cliResource.setParams(getParams(jsonRes.get(PARAMS).isArray()));
                 }
+                Log.info(getClass(), "BEFORE ADD");
                 resources.add(cliResource);
+                Log.info(getClass(), "FINISH");
             }
         } catch (Exception e) {
+            Log.error(getClass(), e);
             throw new UnmarshallerException(CloudShell.messages.commandsUnmarshallerError());
         }
     }
 
     /**
      * Get the set of {@link String} from {@link JSONArray}
-     *
-     * @param array
-     *         JSON array
+     * 
+     * @param array JSON array
      * @return {@link Set}
      */
     private Set<String> getStringSet(JSONArray array) {
@@ -110,9 +120,8 @@ public class CLIResourceUnmarshaller implements Unmarshallable<Set<CLIResource>>
 
     /**
      * Get the {@link Set} of {@link CLIResourceParameter} from JSON representation.
-     *
-     * @param array
-     *         JSON array of resource's parameters
+     * 
+     * @param array JSON array of resource's parameters
      * @return {@link Set}
      */
     private Set<CLIResourceParameter> getParams(JSONArray array) {
@@ -124,13 +133,27 @@ public class CLIResourceUnmarshaller implements Unmarshallable<Set<CLIResource>>
         for (int i = 0; i < array.size(); i++) {
             CLIResourceParameter parameter = new CLIResourceParameter();
             JSONObject jsonParam = array.get(i).isObject();
-            parameter.setName(jsonParam.get(NAME).isString().stringValue());
+            if (jsonParam.containsKey(NAME) && jsonParam.get(NAME).isNull() == null)
+            {
+                Log.info(getClass(), "NAME", jsonParam.get(NAME));
+                parameter.setName(jsonParam.get(NAME).isString().stringValue());
+            }
+            else {
+                return set;
+            }
+            Log.info(getClass(), "MANDATORY", jsonParam.get(MANDATORY));
             parameter.setMandatory(jsonParam.get(MANDATORY).isBoolean().booleanValue());
             if (jsonParam.containsKey(OPTIONS)) {
+                Log.info(getClass(), "OPTIONS", jsonParam.get(OPTIONS));
                 parameter.setOptions(getStringSet(jsonParam.get(OPTIONS).isArray()));
             }
-            parameter.setHasArg(jsonParam.get(HAS_ARG).isBoolean().booleanValue());
-            parameter.setType(Type.valueOf(jsonParam.get(TYPE).isString().stringValue()));
+            Log.info(getClass(), "HAS_ARG", jsonParam.get(HAS_ARG));
+            if (jsonParam.containsKey(HAS_ARG))
+                parameter.setHasArg(jsonParam.get(HAS_ARG).isBoolean().booleanValue());
+
+            Log.info(getClass(), "TYPE", jsonParam.get(TYPE));
+            if (jsonParam.containsKey(TYPE) && jsonParam.get(TYPE) != null)
+                parameter.setType(Type.valueOf(jsonParam.get(TYPE).isString().stringValue()));
             set.add(parameter);
         }
         return set;
