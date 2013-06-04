@@ -19,9 +19,12 @@
 package com.codenvy.ide.ext.openshift.client.login;
 
 /**
+ * Handler to execute, when login to OpenShift was canceled.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public interface LoginCanceledHandler {
+    /** Performs some actions when logged canceled. */
     void onLoginCanceled();
 }

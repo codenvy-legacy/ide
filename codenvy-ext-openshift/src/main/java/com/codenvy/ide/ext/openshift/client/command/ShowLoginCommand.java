@@ -27,6 +27,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * Command for "PaaS/OpenShift/Switch Account..." action.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -35,32 +37,43 @@ public class ShowLoginCommand implements ExtendedCommand {
     private final LoginPresenter       presenter;
     private final OpenShiftResources   resources;
 
+    /**
+     * Create command.
+     *
+     * @param presenter
+     * @param resources
+     */
     @Inject
     public ShowLoginCommand(LoginPresenter presenter, OpenShiftResources resources) {
         this.presenter = presenter;
         this.resources = resources;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void execute() {
         presenter.showDialog();
     }
 
+    /** {@inheritDoc} */
     @Override
     public ImageResource getIcon() {
         return resources.switchAccount();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getToolTip() {
         return "Login on openshift.com";
     }
 
+    /** {@inheritDoc} */
     @Override
     public Expression inContext() {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Expression canExecute() {
         return null;

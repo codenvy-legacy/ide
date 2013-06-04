@@ -25,16 +25,24 @@ import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 
 /**
+ * Unmarshaller for user information.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class UserInfoUnmarshaller implements Unmarshallable<RHUserInfo> {
     private DtoClientImpls.RHUserInfoImpl userInfo;
 
+    /**
+     * Create unmarshaller.
+     *
+     * @param userInfo
+     */
     public UserInfoUnmarshaller(DtoClientImpls.RHUserInfoImpl userInfo) {
         this.userInfo = userInfo;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         String text = response.getText();
@@ -52,6 +60,7 @@ public class UserInfoUnmarshaller implements Unmarshallable<RHUserInfo> {
         this.userInfo.setApps(userInfo.getApps());
     }
 
+    /** {@inheritDoc} */
     @Override
     public RHUserInfo getPayload() {
         return userInfo;

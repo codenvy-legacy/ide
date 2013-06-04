@@ -36,6 +36,8 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Project preview window.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -50,6 +52,18 @@ public class ProjectPresenter implements ProjectView.ActionDelegate {
     private ApplicationInfoPresenter      applicationInfoPresenter;
     private AppInfo                       application;
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param eventBus
+     * @param console
+     * @param service
+     * @param constant
+     * @param loginPresenter
+     * @param resourceProvider
+     * @param applicationInfoPresenter
+     */
     @Inject
     protected ProjectPresenter(ProjectView view, EventBus eventBus, ConsolePart console, OpenShiftClientServiceImpl service,
                                OpenShiftLocalizationConstant constant, LoginPresenter loginPresenter, ResourceProvider resourceProvider,
@@ -66,12 +80,14 @@ public class ProjectPresenter implements ProjectView.ActionDelegate {
         this.view.setDelegate(this);
     }
 
+    /** Show main window. */
     public void showDialog() {
         if (!view.isShown()) {
             getApplicationInfo();
         }
     }
 
+    /** Get application info and after that check health status. */
     private void getApplicationInfo() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
@@ -103,6 +119,7 @@ public class ProjectPresenter implements ProjectView.ActionDelegate {
         }
     }
 
+    /** Get application status for specified application. */
     private void getApplicationHealth() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
@@ -128,12 +145,14 @@ public class ProjectPresenter implements ProjectView.ActionDelegate {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCloseClicked() {
         application = null;
         view.close();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onStartApplicationClicked(final AppInfo application) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -160,6 +179,7 @@ public class ProjectPresenter implements ProjectView.ActionDelegate {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onStopApplicationClicked(final AppInfo application) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -186,6 +206,7 @@ public class ProjectPresenter implements ProjectView.ActionDelegate {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onRestartApplicationClicked(final AppInfo application) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -212,11 +233,13 @@ public class ProjectPresenter implements ProjectView.ActionDelegate {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onShowApplicationPropertiesClicked(AppInfo application) {
         applicationInfoPresenter.showDialog(application);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onDeleteApplicationDeleted(final AppInfo application) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {

@@ -54,6 +54,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Wizard page for creating project on OpenShift.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -76,6 +78,23 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
     private Project                       project;
     private String                        projectName;
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param eventBus
+     * @param console
+     * @param resourceProvider
+     * @param constant
+     * @param loginPresenter
+     * @param service
+     * @param templateAgent
+     * @param resources
+     * @param updateKeyPresenter
+     * @param gitService
+     * @param projectExplorer
+     * @param createProjectProvider
+     */
     @Inject
     protected OpenShiftPagePresenter(OpenShiftPageView view, EventBus eventBus, ConsolePart console, ResourceProvider resourceProvider,
                                      OpenShiftLocalizationConstant constant, LoginPresenter loginPresenter, OpenShiftClientService service,
@@ -99,31 +118,37 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
         this.createProjectProvider = createProjectProvider;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onApplicationNameChanged() {
         projectName = view.getName();
     }
 
+    /** {@inheritDoc} */
     @Override
     public WizardPagePresenter flipToNext() {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean canFinish() {
         return validate();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean hasNext() {
         return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isCompleted() {
         return validate();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getNotice() {
         if (!isLogged) {
@@ -135,6 +160,7 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
         Provider<OpenShiftPagePresenter> wizardInstance = new Provider<OpenShiftPagePresenter>() {
@@ -156,11 +182,13 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
         container.setWidget(view);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void doFinish() {
         createEmptyProject();
     }
 
+    /** Get application types supported by OpenShift. */
     private void getApplicationTypes() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
@@ -187,10 +215,16 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
         }
     }
 
+    /**
+     * Validate filling application name field.
+     *
+     * @return true - if user entered application name and hi is loggined in, otherwise false
+     */
     private boolean validate() {
         return !isLogged || view.getName() != null && !view.getName().isEmpty();
     }
 
+    /** Create empty project, without any files. */
     private void createEmptyProject() {
         createProjectProvider.create(new AsyncCallback<Project>() {
             @Override
@@ -210,6 +244,7 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
         });
     }
 
+    /** Create application on OpenShift and after that start to update public key. */
     private void createApplication() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
@@ -246,6 +281,7 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
         }
     }
 
+    /** Create application on OpenShift over Rest and after that start to update public key. */
     private void createApplicationRest() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
@@ -281,6 +317,12 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
         }
     }
 
+    /**
+     * Update public ssh key. After successfully update of a key starts pulling source code from OpenShift over git.
+     *
+     * @param application
+     *         information about newly created application
+     */
     private void updatePublicKey(final AppInfo application) {
         updateKeyPresenter.updatePublicKey(new AsyncCallback<Boolean>() {
             @Override
@@ -301,6 +343,12 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
         });
     }
 
+    /**
+     * Starts pulling source files over git.
+     *
+     * @param application
+     *         information about newly created application
+     */
     private void pullSources(final AppInfo application) {
         new PullApplicationSourceHandler()
                 .pullApplicationSources(resourceProvider.getVfsId(), project, gitService, new AsyncCallback<Boolean>() {
@@ -324,6 +372,7 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
                 });
     }
 
+    /** Set properties that will be identified current project as OpenShift project to allow user to show OpenShift menu in Project/PaaS. */
     private void setProperties() {
         project.getProperties().add(new Property("openshift-express-application", projectName));
         project.flushProjectProperties(new AsyncCallback<Project>() {
@@ -338,6 +387,12 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
         });
     }
 
+    /**
+     * Refresh updated project and set contents into the project explorer.
+     *
+     * @param project
+     *         project to be updated
+     */
     private void refreshProjectFiles(Project project) {
         project.refreshTree(new AsyncCallback<Project>() {
             @Override

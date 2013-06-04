@@ -24,21 +24,36 @@ import com.codenvy.ide.json.JsonArray;
 import java.util.List;
 
 /**
+ * The view of {@link ApplicationInfoPresenter}.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public interface ApplicationInfoView extends View<ApplicationInfoView.ActionDelegate> {
-    /** Needs for delegate some function into Login view. */
+    /** Needs for delegate some function into Application info view. */
     public interface ActionDelegate {
-        /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
+        /** Performs any actions appropriate in response to the user having pressed the Close button. */
         public void onCloseClicked();
     }
 
+    /**
+     * Set application properties.
+     *
+     * @param properties
+     *         json array with selected properties.
+     */
     public void setApplicationProperties(JsonArray<ApplicationProperty> properties);
 
+    /**
+     * Is current windows showed.
+     *
+     * @return true - if window showed, otherwise - false
+     */
     public boolean isShown();
 
+    /** Close current window. */
     public void close();
 
+    /** Show window. */
     public void showDialog();
 }

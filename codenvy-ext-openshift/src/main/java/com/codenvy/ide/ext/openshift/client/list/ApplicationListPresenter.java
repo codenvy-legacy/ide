@@ -44,6 +44,8 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Application list window.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -59,6 +61,20 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
     private CreateCartridgePresenter      createCartridgePresenter;
     private ApplicationInfoPresenter      applicationInfoPresenter;
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param eventBus
+     * @param console
+     * @param service
+     * @param constant
+     * @param loginPresenter
+     * @param resourceProvider
+     * @param createDomainPresenter
+     * @param createCartridgePresenter
+     * @param applicationInfoPresenter
+     */
     @Inject
     protected ApplicationListPresenter(ApplicationListView view, EventBus eventBus, ConsolePart console, OpenShiftClientServiceImpl service,
                                        OpenShiftLocalizationConstant constant, LoginPresenter loginPresenter,
@@ -79,17 +95,20 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
         this.view.setDelegate(this);
     }
 
+    /** Show application list window. */
     public void showDialog() {
         if (!view.isShown()) {
             getApplications();
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCloseClicked() {
         view.close();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onChangeDomainNameClicked() {
         createDomainPresenter.showDialog(new AsyncCallback<Boolean>() {
@@ -107,6 +126,7 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
         });
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onChangeAccountClicked() {
         loginPresenter.showDialog(new AsyncCallback<Boolean>() {
@@ -124,6 +144,7 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
         });
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCreateCartridgeClicked() {
         createCartridgePresenter.showDialog(view.getSelectedApplication(), new AsyncCallback<Boolean>() {
@@ -141,6 +162,7 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
         });
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onApplicationDeleteClicked(final AppInfo application) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -174,6 +196,7 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCartridgeStartClicked(final OpenShiftEmbeddableCartridge cartridge) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -199,6 +222,7 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCartridgeStopClicked(final OpenShiftEmbeddableCartridge cartridge) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -223,6 +247,7 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCartridgeRestartClicked(final OpenShiftEmbeddableCartridge cartridge) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -248,6 +273,7 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCartridgeReloadClicked(final OpenShiftEmbeddableCartridge cartridge) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -273,6 +299,7 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCartridgeDeleteClicked(final OpenShiftEmbeddableCartridge cartridge) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -299,6 +326,7 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
         }
     }
 
+    /** Get application list and fetch cartridges and properties from each app. */
     private void getApplications() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override

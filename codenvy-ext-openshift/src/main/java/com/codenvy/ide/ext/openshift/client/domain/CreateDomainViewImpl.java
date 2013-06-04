@@ -33,6 +33,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 /**
+ * The implementation of {@link CreateDomainView}.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -62,6 +64,11 @@ public class CreateDomainViewImpl extends DialogBox implements CreateDomainView 
 
     private boolean isShown;
 
+    /**
+     * Create view.
+     *
+     * @param constant
+     */
     @Inject
     protected CreateDomainViewImpl(OpenShiftLocalizationConstant constant) {
         this.constant = constant;
@@ -72,42 +79,50 @@ public class CreateDomainViewImpl extends DialogBox implements CreateDomainView 
         this.setWidget(widget);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getDomain() {
         return domain.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDomain(String domain) {
         this.domain.setText(domain);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setError(String message) {
         errorLabel.setText(message);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setEnableChangeDomainButton(boolean isEnable) {
         btnChange.setEnabled(isEnable);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void focusDomainField() {
         domain.setFocus(true);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isShown() {
         return isShown;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() {
         this.isShown = false;
         this.hide();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showDialog() {
         this.isShown = true;
@@ -115,21 +130,37 @@ public class CreateDomainViewImpl extends DialogBox implements CreateDomainView 
         this.show();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
     }
 
+    /**
+     * Handler for Domain change button.
+     *
+     * @param event
+     */
     @UiHandler("btnChange")
     public void onBtnChangeClick(ClickEvent event) {
         delegate.onDomainChangeClicked();
     }
 
+    /**
+     * Handler for Cancel button.
+     *
+     * @param event
+     */
     @UiHandler("btnCancel")
     public void onBtnCancelClick(ClickEvent event) {
         delegate.onCancelClicked();
     }
 
+    /**
+     * Handler for domain field changed value.
+     *
+     * @param event
+     */
     @UiHandler("domain")
     public void onDomainKeyUp(KeyUpEvent event) {
         delegate.onValueChanged();

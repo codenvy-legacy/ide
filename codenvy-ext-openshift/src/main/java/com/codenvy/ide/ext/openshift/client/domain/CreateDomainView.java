@@ -22,13 +22,15 @@ package com.codenvy.ide.ext.openshift.client.domain;
 import com.codenvy.ide.api.mvp.View;
 
 /**
+ * The view of {@link CreateDomainPresenter}.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public interface CreateDomainView extends View<CreateDomainView.ActionDelegate> {
-    /** Needs for delegate some function into Login view. */
+    /** Needs for delegate some function into Create Domain view. */
     public interface ActionDelegate {
-        /** Performs any actions appropriate in response to the user having pressed the Login button. */
+        /** Performs any actions appropriate in response to the user having pressed the Chane Domain button. */
         public void onDomainChangeClicked();
 
         /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
@@ -38,19 +40,50 @@ public interface CreateDomainView extends View<CreateDomainView.ActionDelegate> 
         public void onValueChanged();
     }
 
+    /**
+     * Get current domain name given by user.
+     *
+     * @return domain name
+     */
     public String getDomain();
 
+    /**
+     * Set domain name.
+     *
+     * @param domain
+     *         domain name
+     */
     public void setDomain(String domain);
 
+    /**
+     * Set error message if fails to inform user.
+     *
+     * @param message
+     *         message contains error
+     */
     public void setError(String message);
 
+    /**
+     * Enable or disable change domain name button if user filled correctly value.
+     *
+     * @param isEnable
+     *         true - if input data is correct, otherwise false
+     */
     public void setEnableChangeDomainButton(boolean isEnable);
 
+    /** Focus to the domain name field. */
     public void focusDomainField();
 
+    /**
+     * Is current windows showed.
+     *
+     * @return true - if window showed, otherwise - false
+     */
     public boolean isShown();
 
+    /** Close current window. */
     public void close();
 
+    /** Show window. */
     public void showDialog();
 }
