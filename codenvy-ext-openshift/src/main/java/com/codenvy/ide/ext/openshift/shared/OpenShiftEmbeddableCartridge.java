@@ -25,20 +25,31 @@ import com.codenvy.ide.json.JsonStringMap;
  * @version $Id: $
  */
 public interface OpenShiftEmbeddableCartridge {
+    /**
+     * Get information about cartridge name.
+     *
+     * @return cartridge name
+     */
     String getName();
 
-//    void setName(String name);
-
+    /**
+     * Get url to control cartridge.
+     *
+     * @return url link
+     */
     String getUrl();
 
-//    void setUrl(String url);
-
-    /** Contains info which should be displayed to the user. It contains important info, e.g. url, username, password for database. */
+    /**
+     * Contains info which should be displayed to the user. It contains important info, e.g. url, username, password for database.
+     *
+     * @return information about failed creation cartridge.
+     */
     String getCreationLog();
 
-//    void setCreationLog(String creationLog);
-
+    /**
+     * Get information about cartridge properties such as login, password, url etc.
+     *
+     * @return json array with properties
+     */
     JsonStringMap<String> getProperties();
-
-//    void setProperties(Map<String, String> properties);
 }

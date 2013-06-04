@@ -41,6 +41,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import java.util.List;
 
 /**
+ * The implementation of {@link OpenShiftClientService}.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -73,6 +75,15 @@ public class OpenShiftClientServiceImpl implements OpenShiftClientService {
     private EventBus                      eventBus;
     private OpenShiftLocalizationConstant constant;
 
+    /**
+     * Create implementation for service.
+     *
+     * @param restServiceContext
+     * @param loader
+     * @param wsMessageBus
+     * @param eventBus
+     * @param constant
+     */
     @Inject
     protected OpenShiftClientServiceImpl(@Named("restContext") String restServiceContext, Loader loader, MessageBus wsMessageBus,
                                          EventBus eventBus, OpenShiftLocalizationConstant constant) {
@@ -83,6 +94,8 @@ public class OpenShiftClientServiceImpl implements OpenShiftClientService {
         this.constant = constant;
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void login(String login, String password, AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + LOGIN;
 
@@ -95,6 +108,8 @@ public class OpenShiftClientServiceImpl implements OpenShiftClientService {
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void getUserInfo(boolean appsInfo, AsyncRequestCallback<RHUserInfo> callback) throws RequestException {
         String url = restServiceContext + USER_INFO;
 
@@ -102,16 +117,19 @@ public class OpenShiftClientServiceImpl implements OpenShiftClientService {
         AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader).send(callback);
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void createDomain(String name, boolean alter, AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + CREATE_DOMAIN;
         String params = "?namespace=" + name + "&" + "alter=" + alter;
         AsyncRequest.build(RequestBuilder.POST, url + params).loader(loader).send(callback);
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void createApplication(String name, String vfsId, String projectId, String type, boolean scale,
                                   AsyncRequestCallback<AppInfo> callback) throws RequestException {
         String url = restServiceContext + CREATE_APPLICATION;
-
 
 
         String params = "?name=" + name + "&type=" + type + "&vfsid=" + vfsId + "&projectid=" + projectId + "&scale=" + scale;
@@ -120,6 +138,8 @@ public class OpenShiftClientServiceImpl implements OpenShiftClientService {
                     .send(callback);
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void createApplicationWS(String name, String vfsId, String projectId, String type, boolean scale,
                                     RequestCallback<AppInfo> callback) throws WebSocketException {
         String params = "?name=" + name + "&type=" + type + "&vfsid=" + vfsId + "&projectid=" + projectId + "&scale=" + scale;
@@ -132,6 +152,8 @@ public class OpenShiftClientServiceImpl implements OpenShiftClientService {
         wsMessageBus.send(message, callback);
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void destroyApplication(String name, String vfsId, String projectId, AsyncRequestCallback<String> callback)
             throws RequestException {
         String url = restServiceContext + DESTROY_APPLICATION;
@@ -140,6 +162,8 @@ public class OpenShiftClientServiceImpl implements OpenShiftClientService {
         AsyncRequest.build(RequestBuilder.POST, url + params).loader(loader).send(callback);
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void getApplicationInfo(String applicationName, String vfsId, String projectId,
                                    AsyncRequestCallback<AppInfo> callback) throws RequestException {
         String url = restServiceContext + APPLICATION_INFO;
@@ -150,6 +174,8 @@ public class OpenShiftClientServiceImpl implements OpenShiftClientService {
         AsyncRequest.build(RequestBuilder.GET, url + "?" + params).loader(loader).send(callback);
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void getApplicationTypes(AsyncRequestCallback<List<String>> callback) throws RequestException {
         String url = restServiceContext + APPLICATION_TYPES;
 
@@ -157,72 +183,96 @@ public class OpenShiftClientServiceImpl implements OpenShiftClientService {
                     .send(callback);
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void startApplication(String appName, AsyncRequestCallback<Void> callback) throws RequestException {
         String url = restServiceContext + APPLICATION_START;
 
         AsyncRequest.build(RequestBuilder.POST, url + "?name=" + appName).loader(loader).send(callback);
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void stopApplication(String appName, AsyncRequestCallback<Void> callback) throws RequestException {
         String url = restServiceContext + APPLICATION_STOP;
 
         AsyncRequest.build(RequestBuilder.POST, url + "?name=" + appName).loader(loader).send(callback);
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void restartApplication(String appName, AsyncRequestCallback<Void> callback) throws RequestException {
         String url = restServiceContext + APPLICATION_RESTART;
 
         AsyncRequest.build(RequestBuilder.POST, url + "?name=" + appName).loader(loader).send(callback);
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void getApplicationHealth(String appName, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
         String url = restServiceContext + APPLICATION_HEALTH;
 
         AsyncRequest.build(RequestBuilder.GET, url + "?name=" + appName).loader(loader).send(callback);
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void getCartridges(AsyncRequestCallback<List<String>> callback) throws RequestException {
         String url = restServiceContext + CARTRIDGES;
 
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void addCartridge(String appName, String cartridgeName, AsyncRequestCallback<Void> callback) throws RequestException {
         String url = restServiceContext + ADD_CARTRIDGE;
 
         AsyncRequest.build(RequestBuilder.POST, url + "?name=" + appName + "&cartridge=" + cartridgeName).loader(loader).send(callback);
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void deleteCartridge(String appName, String cartridgeName, AsyncRequestCallback<Void> callback) throws RequestException {
         String url = restServiceContext + DELETE_CARTRIDGE;
 
         AsyncRequest.build(RequestBuilder.POST, url + "?name=" + appName + "&cartridge=" + cartridgeName).loader(loader).send(callback);
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void startCartridge(String appName, String cartridgeName, AsyncRequestCallback<Void> callback) throws RequestException {
         String url = restServiceContext + START_CARTRIDGE;
 
         AsyncRequest.build(RequestBuilder.POST, url + "?name=" + appName + "&cartridge=" + cartridgeName).loader(loader).send(callback);
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void stopCartridge(String appName, String cartridgeName, AsyncRequestCallback<Void> callback) throws RequestException {
         String url = restServiceContext + STOP_CARTRIDGE;
 
         AsyncRequest.build(RequestBuilder.POST, url + "?name=" + appName + "&cartridge=" + cartridgeName).loader(loader).send(callback);
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void restartCartridge(String appName, String cartridgeName, AsyncRequestCallback<Void> callback) throws RequestException {
         String url = restServiceContext + RESTART_CARTRIDGE;
 
         AsyncRequest.build(RequestBuilder.POST, url + "?name=" + appName + "&cartridge=" + cartridgeName).loader(loader).send(callback);
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void reloadCartridge(String appName, String cartridgeName, AsyncRequestCallback<Void> callback) throws RequestException {
         String url = restServiceContext + RELOAD_CARTRIDGE;
 
         AsyncRequest.build(RequestBuilder.POST, url + "?name=" + appName + "&cartridge=" + cartridgeName).loader(loader).send(callback);
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void destroyAllApplications(boolean alsoNamespace, String vfsId, String projectId, AsyncRequestCallback<Void> callback)
             throws RequestException {
         String url = restServiceContext + DESTROY_APPS_AND_NAMESPACE;

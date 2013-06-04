@@ -25,10 +25,6 @@ import com.google.gwt.i18n.client.Messages;
  * @version $Id: $
  */
 public interface OpenShiftLocalizationConstant extends Messages {
-   /*
-    * Buttons.
-    */
-
     /*
      * Cartridges
      */
@@ -217,5 +213,17 @@ public interface OpenShiftLocalizationConstant extends Messages {
 
     @Key("projectViewTitlePropertiesApp")
     public String projectViewTitlePropertiesApp();
+
+    /*
+     * Creating
+     */
+    @Key("creatingApplicationStarted")
+    public String creatingApplicationStarted(String appName);
+
+    @Key("creatingApplicationFailed")
+    public String creatingApplicationFailed(String appName);
+
+    @Key("creatingApplicationFinished")
+    public String creatingApplicationFinished(String appName);
 
 }

@@ -20,8 +20,6 @@ package com.codenvy.ide.ext.openshift.shared;
 
 import com.codenvy.ide.json.JsonArray;
 
-import java.util.List;
-
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
@@ -34,28 +32,12 @@ public interface RHUserInfo {
      */
     public String getRhcDomain();
 
-//    /**
-//     * Set the domain name of RedHat cloud.
-//     *
-//     * @param rhcDomain
-//     *         RedHat cloud domain name.
-//     */
-//    public void setRhcDomain(String rhcDomain);
-
     /**
      * Get the user id.
      *
      * @return use id.
      */
     public String getUuid();
-
-//    /**
-//     * Set the user id.
-//     *
-//     * @param uuid
-//     *         user id.
-//     */
-//    public void setUuid(String uuid);
 
     /**
      * Get the login name of user.
@@ -64,14 +46,6 @@ public interface RHUserInfo {
      */
     public String getRhlogin();
 
-//    /**
-//     * Set the login name of user.
-//     *
-//     * @param rhlogin
-//     *         login name of user.
-//     */
-//    public void setRhlogin(String rhlogin);
-
     /**
      * Get the namespace.
      *
@@ -79,26 +53,10 @@ public interface RHUserInfo {
      */
     public String getNamespace();
 
-//    /**
-//     * Set the namespace.
-//     *
-//     * @param namespace
-//     *         namespace.
-//     */
-//    public void setNamespace(String namespace);
-
     /**
      * Return the list of the user's applications.
      *
      * @return list of the applications.
      */
     public JsonArray<AppInfo> getApps();
-
-//    /**
-//     * Set the list of the user's applications.
-//     *
-//     * @param apps
-//     *         list of the applications.
-//     */
-//    public void setApps(List<AppInfo> apps);
 }
