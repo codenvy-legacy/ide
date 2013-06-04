@@ -260,7 +260,7 @@ public class OpenShiftPagePresenter extends AbstractWizardPagePresenter implemen
             service.createApplicationWS(projectName, resourceProvider.getVfsId(), project.getId(), view.getApplicationType(),
                                         view.getScalingValue(),
                                         new OpenShiftWSRequestCallback<AppInfo>(unmarshaller, loggedInHandler, null, eventBus, console,
-                                                                                constant, loginPresenter) {
+                                                                                loginPresenter) {
 
 
                                             @Override
