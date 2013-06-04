@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.shell.client;
 
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -34,7 +35,7 @@ import java.util.Set;
 
 /**
  * Unmarshaller for set of {@link CLIResource}.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Aug 4, 2011 4:34:11 PM anya $
  */
@@ -43,8 +44,7 @@ public class CLIResourceUnmarshaller implements Unmarshallable<Set<CLIResource>>
     private Set<CLIResource> resources;
 
     /**
-     * @param resources
-     *         resources
+     * @param resources resources
      */
     public CLIResourceUnmarshaller(Set<CLIResource> resources) {
         this.resources = resources;
@@ -68,32 +68,26 @@ public class CLIResourceUnmarshaller implements Unmarshallable<Set<CLIResource>>
                 cliResource.setCommand(getStringSet(jsonRes.get(COMMAND).isArray()));
                 cliResource.setPath(jsonRes.get(PATH).isString().stringValue());
                 cliResource.setMethod(jsonRes.get(METHOD).isString().stringValue());
-
-                if (jsonRes.get(DESCRIPTION) != null && jsonRes.get(DESCRIPTION).isString() != null) {
+                if (jsonRes.get(DESCRIPTION) != null && jsonRes.get(DESCRIPTION).isString() != null)
                     cliResource.setDescription(jsonRes.get(DESCRIPTION).isString().stringValue());
-                }
-
-                if (jsonRes.containsKey(CONSUMES)) {
+                if (jsonRes.containsKey(CONSUMES) && jsonRes.get(CONSUMES).isArray() != null)
                     cliResource.setConsumes(getStringSet(jsonRes.get(CONSUMES).isArray()));
-                }
-                if (jsonRes.containsKey(PRODUCES)) {
+                if (jsonRes.containsKey(PRODUCES) && jsonRes.get(PRODUCES).isArray() != null)
                     cliResource.setProduces(getStringSet(jsonRes.get(PRODUCES).isArray()));
-                }
-                if (jsonRes.containsKey(PARAMS)) {
+                if (jsonRes.containsKey(PARAMS) && jsonRes.get(PARAMS).isArray() != null)
                     cliResource.setParams(getParams(jsonRes.get(PARAMS).isArray()));
-                }
                 resources.add(cliResource);
             }
         } catch (Exception e) {
+            Log.error(getClass(), e);
             throw new UnmarshallerException(CloudShell.messages.commandsUnmarshallerError());
         }
     }
 
     /**
      * Get the set of {@link String} from {@link JSONArray}
-     *
-     * @param array
-     *         JSON array
+     * 
+     * @param array JSON array
      * @return {@link Set}
      */
     private Set<String> getStringSet(JSONArray array) {
@@ -110,9 +104,8 @@ public class CLIResourceUnmarshaller implements Unmarshallable<Set<CLIResource>>
 
     /**
      * Get the {@link Set} of {@link CLIResourceParameter} from JSON representation.
-     *
-     * @param array
-     *         JSON array of resource's parameters
+     * 
+     * @param array JSON array of resource's parameters
      * @return {@link Set}
      */
     private Set<CLIResourceParameter> getParams(JSONArray array) {
@@ -124,13 +117,18 @@ public class CLIResourceUnmarshaller implements Unmarshallable<Set<CLIResource>>
         for (int i = 0; i < array.size(); i++) {
             CLIResourceParameter parameter = new CLIResourceParameter();
             JSONObject jsonParam = array.get(i).isObject();
-            parameter.setName(jsonParam.get(NAME).isString().stringValue());
-            parameter.setMandatory(jsonParam.get(MANDATORY).isBoolean().booleanValue());
-            if (jsonParam.containsKey(OPTIONS)) {
+            if (jsonParam.containsKey(NAME) && jsonParam.get(NAME).isString() != null)
+                parameter.setName(jsonParam.get(NAME).isString().stringValue());
+            if (jsonParam.containsKey(MANDATORY) && jsonParam.get(MANDATORY).isBoolean() != null)
+               parameter.setMandatory(jsonParam.get(MANDATORY).isBoolean().booleanValue());
+            if (jsonParam.containsKey(OPTIONS) && jsonParam.get(OPTIONS).isArray() != null)
                 parameter.setOptions(getStringSet(jsonParam.get(OPTIONS).isArray()));
-            }
-            parameter.setHasArg(jsonParam.get(HAS_ARG).isBoolean().booleanValue());
-            parameter.setType(Type.valueOf(jsonParam.get(TYPE).isString().stringValue()));
+            
+            if (jsonParam.containsKey(HAS_ARG) && jsonParam.get(HAS_ARG).isBoolean() != null)
+                parameter.setHasArg(jsonParam.get(HAS_ARG).isBoolean().booleanValue());
+
+            if (jsonParam.containsKey(TYPE) && jsonParam.get(TYPE).isString() != null)
+                parameter.setType(Type.valueOf(jsonParam.get(TYPE).isString().stringValue()));
             set.add(parameter);
         }
         return set;

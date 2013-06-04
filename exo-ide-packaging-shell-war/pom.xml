@@ -17,6 +17,21 @@
             <artifactId>gwt-user</artifactId>
             <scope>provided</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>12.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava-gwt</artifactId>
+            <version>12.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+       
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-shell</artifactId>
@@ -187,6 +202,10 @@
                     <webResources>
                         <resource>
                             <directory>src/main/resources</directory>
+                            <targetPath>.</targetPath>
+                        </resource>
+                        <resource>
+                            <directory>src/main/webapp</directory>
                             <targetPath>.</targetPath>
                         </resource>
                     </webResources>

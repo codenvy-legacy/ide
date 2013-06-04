@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.shell.shared;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class CLIResource {
@@ -49,6 +50,29 @@ public class CLIResource {
     public CLIResource(Set<String> command, String path, String method, Set<String> consumes, Set<String> produces,
                        Set<CLIResourceParameter> params) {
         this(command, path, method, consumes, produces, params, null);
+    }
+    
+    
+    /**
+     * Copy constructor
+     * @param resource
+     */
+    public static CLIResource newInstance(CLIResource resource)
+    {
+        HashSet<CLIResourceParameter> parameters = new HashSet<CLIResourceParameter>();
+        if (resource.getParams() != null) 
+        {
+            Set<CLIResourceParameter> tmpParams = resource.getParams();
+            for (CLIResourceParameter cliResourceParameter : tmpParams) {
+                parameters.add(new CLIResourceParameter(cliResourceParameter));
+            }
+        }
+        return new CLIResource(resource.getCommand() != null ? new HashSet<String>(resource.getCommand()) : new HashSet<String>(),// 
+                        resource.getPath(), resource.getMethod(), //
+                        resource.getConsumes() != null ? new HashSet<String>(resource.getConsumes()) : new HashSet<String>(),// 
+                        resource.getProduces() != null ? new HashSet<String>(resource.getProduces()) : new HashSet<String>(),//
+                        parameters,//
+                        resource.getDescription());
     }
 
     public CLIResource() {

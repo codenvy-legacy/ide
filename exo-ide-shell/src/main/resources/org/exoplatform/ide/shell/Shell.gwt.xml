@@ -31,10 +31,12 @@
     <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
     <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
+    <inherits name="com.google.common.base.Base"/>
     <!-- Other module inherits                                      -->
     <inherits name='org.exoplatform.ide.shell.Views'/>
     <!-- Initialise Virtual File System -->
     <inherits name="org.exoplatform.ide.vfs.VFS"/>
+    <inherits name="com.codenvy.ide.client.util.Util"/>
 
     <!-- Specify the app entry point class.                         -->
     <entry-point class='org.exoplatform.ide.shell.client.CloudShell'/>

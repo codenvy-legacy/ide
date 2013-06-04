@@ -82,6 +82,11 @@
    </servlet>
 
    <servlet>
+       <servlet-name>shell</servlet-name>
+       <jsp-file>/shell/shell.jsp</jsp-file>
+   </servlet>
+
+   <servlet>
       <servlet-name>EverrestServlet</servlet-name>
       <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
    </servlet>
@@ -104,6 +109,16 @@
    <servlet-mapping>
       <servlet-name>default</servlet-name>
       <url-pattern>/ide/*</url-pattern>
+   </servlet-mapping>
+   
+    <servlet-mapping>
+      <servlet-name>shell</servlet-name>
+      <url-pattern>/shell/main</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>default</servlet-name>
+      <url-pattern>/shell/*</url-pattern>
    </servlet-mapping>
 
    <servlet-mapping>

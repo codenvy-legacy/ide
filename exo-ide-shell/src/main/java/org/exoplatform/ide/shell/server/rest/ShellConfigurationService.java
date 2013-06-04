@@ -30,6 +30,7 @@ import org.exoplatform.services.security.Identity;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
@@ -48,6 +49,9 @@ import java.util.Map;
 @Path("{ws-name}/shell/configuration")
 public class ShellConfigurationService {
     private static Log LOG = ExoLogger.getLogger(ShellConfigurationService.class);
+    
+    @PathParam("ws-name")
+    String wsName;
 
     @GET
     @Path("/init")
@@ -68,7 +72,7 @@ public class ShellConfigurationService {
                 LOG.info("EVENT#shell-launched#");
             }
             result.put("vfsId", vfsId);
-            result.put("vfsBaseUrl", uriInfo.getBaseUriBuilder().path(VirtualFileSystemFactory.class).path("v2").build().toString());
+            result.put("vfsBaseUrl", uriInfo.getBaseUriBuilder().path(VirtualFileSystemFactory.class).path("v2").build(wsName).toString());
             return result;
         } catch (Exception e) {
             throw new WebApplicationException(e);
