@@ -35,7 +35,7 @@ import com.google.collide.codemirror2.SyntaxType;
  */
 public class JavaScriptAutocompleter extends LanguageSpecificAutocompleter {
 
-    JavaScriptExplicitAutocompleter autocompleter = new JavaScriptExplicitAutocompleter();
+    private static final JavaScriptExplicitAutocompleter autocompleter = new JavaScriptExplicitAutocompleter();
 
     /** @param mode */
     public JavaScriptAutocompleter() {
