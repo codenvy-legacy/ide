@@ -34,7 +34,9 @@ import static com.codenvy.ide.commons.server.FileUtils.ANY_FILTER;
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
+ * @deprecated  use com.codenvy.commons.lang.ZipUtils
  */
+@Deprecated
 public class ZipUtils {
     public static void zipDir(String zipRootPath, File dir, File zip, FilenameFilter filter) throws IOException {
         if (!dir.isDirectory()) {

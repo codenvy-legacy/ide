@@ -21,7 +21,11 @@ package com.codenvy.ide.commons;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
 
-/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+/**
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @deprecated Use com.codenvy.commons.lang.NamedThreadFactory.
+ */
+@Deprecated
 public class NamedThreadFactory implements ThreadFactory {
     private static final AtomicLong threadPoolNumGen = new AtomicLong();
 
