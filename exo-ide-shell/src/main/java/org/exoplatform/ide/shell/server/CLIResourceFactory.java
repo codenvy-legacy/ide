@@ -18,24 +18,44 @@
  */
 package org.exoplatform.ide.shell.server;
 
+import com.codenvy.commons.env.EnvironmentContext;
+
 import org.everrest.core.ComponentLifecycleScope;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.everrest.core.impl.resource.AbstractResourceDescriptorImpl;
 import org.everrest.core.method.MethodParameter;
-import org.everrest.core.resource.*;
+import org.everrest.core.resource.AbstractResourceDescriptor;
+import org.everrest.core.resource.ResourceMethodDescriptor;
+import org.everrest.core.resource.ResourceMethodMap;
+import org.everrest.core.resource.SubResourceLocatorDescriptor;
+import org.everrest.core.resource.SubResourceLocatorMap;
+import org.everrest.core.resource.SubResourceMethodDescriptor;
+import org.everrest.core.resource.SubResourceMethodMap;
 import org.exoplatform.ide.shell.shared.CLIResource;
 import org.exoplatform.ide.shell.shared.CLIResourceParameter;
 
-import javax.ws.rs.*;
+import javax.ws.rs.CookieParam;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.MatrixParam;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.net.URL;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -62,7 +82,7 @@ public class CLIResourceFactory {
                     CLIResource cli = sub.get(method);
                     if (cli != null) {
                         CLIResource copy = CLIResource.newInstance(cli);
-                        copy.setPath(copy.getPath().replace("{ws-name}", "dev-monit"));
+                        copy.setPath(copy.getPath().replace("{ws-name}", EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString()));
                         return copy;
                     }
                 }

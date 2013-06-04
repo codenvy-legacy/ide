@@ -166,8 +166,6 @@ public class ShellInitializer {
                     new AsyncRequestCallback<Set<CLIResource>>(new CLIResourceUnmarshaller(new HashSet<CLIResource>())) {
                         @Override
                         protected void onSuccess(Set<CLIResource> result) {
-                            
-                            Window.alert(Arrays.toString(result.toArray()));
                             // TODO think how to add async parameter to all resources.
                             CLIResourceParameter asyncParameter = new CLIResourceParameter();
                             asyncParameter.setName("async");

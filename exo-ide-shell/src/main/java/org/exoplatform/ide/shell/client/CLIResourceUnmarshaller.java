@@ -57,7 +57,6 @@ public class CLIResourceUnmarshaller implements Unmarshallable<Set<CLIResource>>
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         try {
-            Log.info(getClass(), response.getText());
             JSONArray array = JSONParser.parseStrict(response.getText()).isArray();
             if (array == null || array.size() <= 0) {
                 return;
@@ -66,33 +65,18 @@ public class CLIResourceUnmarshaller implements Unmarshallable<Set<CLIResource>>
             for (int i = 0; i < array.size(); i++) {
                 CLIResource cliResource = new CLIResource();
                 JSONObject jsonRes = array.get(i).isObject();
-                Log.info(getClass(), jsonRes.get(COMMAND));
                 cliResource.setCommand(getStringSet(jsonRes.get(COMMAND).isArray()));
-                Log.info(getClass(), jsonRes.get(PATH));
                 cliResource.setPath(jsonRes.get(PATH).isString().stringValue());
-                Log.info(getClass(), jsonRes.get(METHOD));
                 cliResource.setMethod(jsonRes.get(METHOD).isString().stringValue());
-
-                if (jsonRes.get(DESCRIPTION) != null && jsonRes.get(DESCRIPTION).isString() != null) {
-                    Log.info(getClass(), jsonRes.get(DESCRIPTION));
+                if (jsonRes.get(DESCRIPTION) != null && jsonRes.get(DESCRIPTION).isString() != null)
                     cliResource.setDescription(jsonRes.get(DESCRIPTION).isString().stringValue());
-                }
-
-                if (jsonRes.containsKey(CONSUMES)) {
-                    Log.info(getClass(), jsonRes.get(CONSUMES));
+                if (jsonRes.containsKey(CONSUMES) && jsonRes.get(CONSUMES).isArray() != null)
                     cliResource.setConsumes(getStringSet(jsonRes.get(CONSUMES).isArray()));
-                }
-                if (jsonRes.containsKey(PRODUCES)) {
-                    Log.info(getClass(), jsonRes.get(PRODUCES));
+                if (jsonRes.containsKey(PRODUCES) && jsonRes.get(PRODUCES).isArray() != null)
                     cliResource.setProduces(getStringSet(jsonRes.get(PRODUCES).isArray()));
-                }
-                if (jsonRes.containsKey(PARAMS)) {
-                    Log.info(getClass(), jsonRes.get(PARAMS));
+                if (jsonRes.containsKey(PARAMS) && jsonRes.get(PARAMS).isArray() != null)
                     cliResource.setParams(getParams(jsonRes.get(PARAMS).isArray()));
-                }
-                Log.info(getClass(), "BEFORE ADD");
                 resources.add(cliResource);
-                Log.info(getClass(), "FINISH");
             }
         } catch (Exception e) {
             Log.error(getClass(), e);
@@ -133,26 +117,17 @@ public class CLIResourceUnmarshaller implements Unmarshallable<Set<CLIResource>>
         for (int i = 0; i < array.size(); i++) {
             CLIResourceParameter parameter = new CLIResourceParameter();
             JSONObject jsonParam = array.get(i).isObject();
-            if (jsonParam.containsKey(NAME) && jsonParam.get(NAME).isNull() == null)
-            {
-                Log.info(getClass(), "NAME", jsonParam.get(NAME));
+            if (jsonParam.containsKey(NAME) && jsonParam.get(NAME).isString() != null)
                 parameter.setName(jsonParam.get(NAME).isString().stringValue());
-            }
-            else {
-                return set;
-            }
-            Log.info(getClass(), "MANDATORY", jsonParam.get(MANDATORY));
-            parameter.setMandatory(jsonParam.get(MANDATORY).isBoolean().booleanValue());
-            if (jsonParam.containsKey(OPTIONS)) {
-                Log.info(getClass(), "OPTIONS", jsonParam.get(OPTIONS));
+            if (jsonParam.containsKey(MANDATORY) && jsonParam.get(MANDATORY).isBoolean() != null)
+               parameter.setMandatory(jsonParam.get(MANDATORY).isBoolean().booleanValue());
+            if (jsonParam.containsKey(OPTIONS) && jsonParam.get(OPTIONS).isArray() != null)
                 parameter.setOptions(getStringSet(jsonParam.get(OPTIONS).isArray()));
-            }
-            Log.info(getClass(), "HAS_ARG", jsonParam.get(HAS_ARG));
-            if (jsonParam.containsKey(HAS_ARG))
+            
+            if (jsonParam.containsKey(HAS_ARG) && jsonParam.get(HAS_ARG).isBoolean() != null)
                 parameter.setHasArg(jsonParam.get(HAS_ARG).isBoolean().booleanValue());
 
-            Log.info(getClass(), "TYPE", jsonParam.get(TYPE));
-            if (jsonParam.containsKey(TYPE) && jsonParam.get(TYPE) != null)
+            if (jsonParam.containsKey(TYPE) && jsonParam.get(TYPE).isString() != null)
                 parameter.setType(Type.valueOf(jsonParam.get(TYPE).isString().stringValue()));
             set.add(parameter);
         }

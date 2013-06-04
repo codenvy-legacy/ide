@@ -129,9 +129,7 @@ public class ShellService {
                 CommandLine commandLine = parser.parse(command.getOptions(), arguments);
                 command.execute(commandLine);
             } else {
-                String url =
-                        (resource.getPath().startsWith("/")) ? getRestContext() + getWorkspaceName() + resource.getPath() : getRestContext() + getWorkspaceName() + "/"
-                                                                                                   + resource.getPath();
+                String url =  (resource.getPath().startsWith("/")) ? getRestContext() + resource.getPath().substring(1) : getRestContext() + resource.getPath();
                 AsyncRequest asyncRequest = createAsyncRequest(resource.getMethod(), url, false);
                 if (canParseOptions(resource, cmd, asyncRequest)) {
                     CommandLine commandLine = CLIResourceUtil.parseCommandLine(cmd, resource.getParams());
