@@ -83,8 +83,10 @@ public class AddBlockCommentControl extends SimpleControl implements IDEControl,
 
     private void updateEnableState(Editor editor) {
         if (editor == null) {
+            setEnabled(false);
             return;
         }
+        
         SelectionRange selectionRange = editor.getSelectionRange();
         if (selectionRange == null) {
             setEnabled(false);
