@@ -149,7 +149,6 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor {
         }
 
         FindTagResult findTagResult = findTag(tokens, inTag, column);
-
         if (!findTagResult.inTag || findTagResult.inToken == null) {
             // Ooops =(
             return null;

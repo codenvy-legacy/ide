@@ -19,6 +19,7 @@
 package org.exoplatform.ide.editor.html.client.contentassist;
 
 import com.codenvy.ide.client.util.logging.Log;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -157,7 +158,8 @@ public class HtmlProposal implements CompletionProposal {
     @Override
     public String getDisplayString() {
         if (isClosingTagProposal) {
-            return '/' + proposal + ELEMENT_SEPARATOR_CLOSE;
+            final String displayString = ELEMENT_SEPARATOR_OPEN_FINISHTAG + proposal + ELEMENT_SEPARATOR_CLOSE + " (close tag)";
+            return SafeHtmlUtils.fromString(displayString).asString();
         }
         return proposal;
     }
