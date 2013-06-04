@@ -33,7 +33,9 @@ import java.util.List;
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
+ * @deprecated Use  com.codenvy.commons.lang.IoUtil
  */
+@Deprecated
 public class FileUtils {
     public static final FilenameFilter ANY_FILTER = new FilenameFilter() {
         @Override
