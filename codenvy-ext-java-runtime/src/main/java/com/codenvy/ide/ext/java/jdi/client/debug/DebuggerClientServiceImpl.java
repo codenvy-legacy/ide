@@ -30,6 +30,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 
 /**
  * The implementation of {@link DebuggerClientService}.
@@ -44,11 +45,12 @@ public class DebuggerClientServiceImpl implements DebuggerClientService {
     /**
      * Create client service.
      *
+     * @param restContext
      * @param loader
      */
     @Inject
-    protected DebuggerClientServiceImpl(Loader loader) {
-        BASE_URL = "/ide" + "/java/debug";
+    protected DebuggerClientServiceImpl(@Named("restContext") String restContext, Loader loader) {
+        BASE_URL = restContext + "/ide" + "/java/debug";
         this.loader = loader;
     }
 
