@@ -31,29 +31,40 @@ import com.codenvy.ide.websocket.rest.Unmarshallable;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Asynchronous OpenShift request. The {@link #onFailure(Throwable)} method contains the check for user not authorized exception, in this
+ * case - showDialog method calls on {@link LoginPresenter}.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public abstract class OpenShiftWSRequestCallback<T> extends RequestCallback<T> {
-    private LoggedInHandler               loggedIn;
-    private LoginCanceledHandler          loginCanceled;
-    private EventBus                      eventBus;
-    private ConsolePart                   console;
-    private OpenShiftLocalizationConstant constant;
-    private LoginPresenter                loginPresenter;
+    private LoggedInHandler      loggedIn;
+    private LoginCanceledHandler loginCanceled;
+    private EventBus             eventBus;
+    private ConsolePart          console;
+    private LoginPresenter       loginPresenter;
 
+    /**
+     * Create callback.
+     *
+     * @param unmarshaller
+     * @param loggedIn
+     * @param loginCanceled
+     * @param eventBus
+     * @param console
+     * @param loginPresenter
+     */
     public OpenShiftWSRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled,
-                                      EventBus eventBus, ConsolePart console, OpenShiftLocalizationConstant constant,
-                                      LoginPresenter loginPresenter) {
+                                      EventBus eventBus, ConsolePart console, LoginPresenter loginPresenter) {
         super(unmarshaller);
         this.loggedIn = loggedIn;
         this.loginCanceled = loginCanceled;
         this.eventBus = eventBus;
         this.console = console;
-        this.constant = constant;
         this.loginPresenter = loginPresenter;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void onFailure(Throwable exception) {
         if (exception instanceof ServerException) {

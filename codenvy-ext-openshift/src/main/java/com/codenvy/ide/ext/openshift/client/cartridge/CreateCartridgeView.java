@@ -24,26 +24,46 @@ import com.codenvy.ide.json.JsonArray;
 import java.util.List;
 
 /**
+ * The view of {@link CreateCartridgePresenter}.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public interface CreateCartridgeView extends View<CreateCartridgeView.ActionDelegate> {
-    /** Needs for delegate some function into Login view. */
+    /** Needs for delegate some function into Create cartridge view. */
     public interface ActionDelegate {
-        /** Performs any actions appropriate in response to the user having pressed the Login button. */
+        /** Performs any actions appropriate in response to the user having pressed the Create cartridge button. */
         public void onCreateCartridgeClicked();
 
         /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
         public void onCancelClicked();
     }
 
+    /**
+     * Getting cartridge name from window.
+     *
+     * @return cartridge name
+     */
     public String getCartridgeName();
 
+    /**
+     * Set list of cartridges into list box in window.
+     *
+     * @param cartridgesList
+     *         array of all available cartridges
+     */
     public void setCartridgesList(JsonArray<String> cartridgesList);
 
+    /**
+     * is view opened.
+     *
+     * @return true if window is opened otherwise false
+     */
     public boolean isShown();
 
+    /** Close current window */
     public void close();
 
+    /** Open window */
     public void showDialog();
 }

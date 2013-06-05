@@ -26,6 +26,8 @@ import com.google.gwt.json.client.JSONParser;
 import java.util.List;
 
 /**
+ * Unmarshaller for Lists.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -33,10 +35,16 @@ public class ListUnmarshaller implements Unmarshallable<List<String>> {
 
     protected List<String> list;
 
+    /**
+     * Create unmarshaller.
+     *
+     * @param list
+     */
     public ListUnmarshaller(List<String> list) {
         this.list = list;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) {
         if (response.getText().length() == 0) {
@@ -48,6 +56,7 @@ public class ListUnmarshaller implements Unmarshallable<List<String>> {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<String> getPayload() {
         return list;

@@ -22,22 +22,52 @@ import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.json.JsonArray;
 
 /**
+ * The view of {@link OpenShiftPageView}.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public interface OpenShiftPageView extends View<OpenShiftPageView.ActionDelegate> {
-    /** Needs for delegate some function into AppFog view. */
+    /** Needs for delegate some function into OpenShift view. */
     public interface ActionDelegate {
+        /** Perform any actions on application name field changed value. */
         public void onApplicationNameChanged();
     }
 
+    /**
+     * Get application name to be created on OpenShift.
+     *
+     * @return application name
+     */
     public String getName();
 
+    /**
+     * Set application name.
+     *
+     * @param applicationName
+     *         application name
+     */
     public void setName(String applicationName);
 
+    /**
+     * Indicate that user wants to use autoscaling after creating application.
+     *
+     * @return true - if use autoscaling, otherwise false
+     */
     public boolean getScalingValue();
 
+    /**
+     * Get application type which will be created on OpenShift.
+     *
+     * @return one of possibles application types that support by OpenShift
+     */
     public String getApplicationType();
 
+    /**
+     * Set application types that supports by OpenShift.
+     *
+     * @param applicationTypes
+     *         json array of application types
+     */
     public void setApplicationTypes(JsonArray<String> applicationTypes);
 }

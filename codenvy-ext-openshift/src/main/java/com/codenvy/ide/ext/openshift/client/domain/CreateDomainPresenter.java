@@ -37,6 +37,8 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Create or update domain name.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -50,6 +52,17 @@ public class CreateDomainPresenter implements CreateDomainView.ActionDelegate {
     private ResourceProvider              resourceProvider;
     private AsyncCallback<Boolean>        callback;
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param eventBus
+     * @param console
+     * @param service
+     * @param constant
+     * @param loginPresenter
+     * @param resourceProvider
+     */
     @Inject
     protected CreateDomainPresenter(CreateDomainView view, EventBus eventBus, ConsolePart console, OpenShiftClientServiceImpl service,
                                     OpenShiftLocalizationConstant constant, LoginPresenter loginPresenter,
@@ -65,6 +78,12 @@ public class CreateDomainPresenter implements CreateDomainView.ActionDelegate {
         this.view.setDelegate(this);
     }
 
+    /**
+     * Shows dialog.
+     *
+     * @param callback
+     *         callback that will be called after domain changed
+     */
     public void showDialog(AsyncCallback<Boolean> callback) {
         this.callback = callback;
 
@@ -77,16 +96,19 @@ public class CreateDomainPresenter implements CreateDomainView.ActionDelegate {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onDomainChangeClicked() {
         getUserInfo();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCancelClicked() {
         view.close();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onValueChanged() {
         updateComponent();
@@ -98,9 +120,7 @@ public class CreateDomainPresenter implements CreateDomainView.ActionDelegate {
     }
 
     /**
-     * Check whether necessary fields are fullfilled.
-     * <p/>
-     * TODO add checking for special chars that are not permitted to use in domain name
+     * Check whether necessary fields are correctly filled.
      *
      * @return if <code>true</code> all necessary fields are filled correctly
      */
@@ -114,6 +134,10 @@ public class CreateDomainPresenter implements CreateDomainView.ActionDelegate {
         return true;
     }
 
+    /**
+     * Get current user info for stored credentials, check if user has namespace and existed apps and asked for delete them, other wise
+     * called another methods to start creating domain.
+     */
     protected void getUserInfo() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
@@ -149,6 +173,7 @@ public class CreateDomainPresenter implements CreateDomainView.ActionDelegate {
         }
     }
 
+    /** Ask user to remove his applications. */
     private void askForRemoveApps() {
         boolean delete = Window.confirm(constant.changeDomainViewDeleteAppsMessage());
 
@@ -157,6 +182,7 @@ public class CreateDomainPresenter implements CreateDomainView.ActionDelegate {
         }
     }
 
+    /** Remove user's application and called method to create new domain. */
     private void removeAllAppsAndDomain() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
@@ -182,6 +208,7 @@ public class CreateDomainPresenter implements CreateDomainView.ActionDelegate {
         }
     }
 
+    /** Create new domain. */
     protected void createDomain() {
         final String domainName = view.getDomain();
 

@@ -44,6 +44,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * The implementation of {@link ApplicationInfoView}.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -67,6 +69,12 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
 
     private boolean isShown;
 
+    /**
+     * Create view.
+     *
+     * @param constant
+     *         locale constants
+     */
     @Inject
     protected ApplicationInfoViewImpl(OpenShiftLocalizationConstant constant) {
         this.constant = constant;
@@ -79,9 +87,10 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
         initPropertiesTable();
     }
 
-    private class ListLink extends AbstractSafeHtmlCell<String> {
-        /** Create Link list. */
-        public ListLink() {
+    /** Simple cell which can display html code. */
+    private class SimpleHtmlCell extends AbstractSafeHtmlCell<String> {
+        /** Create simple cell which can contain html code. */
+        public SimpleHtmlCell() {
             super(new SafeHtmlListRenderer());
         }
 
@@ -92,6 +101,7 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
         }
     }
 
+    /** Renderer for {@link SimpleHtmlCell}. */
     private class SafeHtmlListRenderer implements SafeHtmlRenderer<String> {
         /** {@inheritDoc} */
         @Override
@@ -106,6 +116,7 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
         }
     }
 
+    /** Initialize properties table. */
     private void initPropertiesTable() {
         properties.setWidth("100%", true);
         properties.setAutoHeaderRefreshDisabled(true);
@@ -122,7 +133,7 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
             }
         };
 
-        Column<ApplicationProperty, String> propertyValueColumn = new Column<ApplicationProperty, String>(new ListLink()) {
+        Column<ApplicationProperty, String> propertyValueColumn = new Column<ApplicationProperty, String>(new SimpleHtmlCell()) {
             @Override
             public String getValue(ApplicationProperty object) {
                 return object.getPropertyValue();
@@ -135,6 +146,7 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
         properties.addColumn(propertyValueColumn, constant.applicationInfoViewPropertyValueColumn());
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setApplicationProperties(JsonArray<ApplicationProperty> properties) {
         List<ApplicationProperty> list = new ArrayList<ApplicationProperty>(properties.size());
@@ -144,17 +156,20 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
         this.properties.setRowData(list);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isShown() {
         return isShown;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() {
         this.isShown = false;
         this.hide();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showDialog() {
         this.isShown = true;
@@ -162,11 +177,17 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
         this.show();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
     }
 
+    /**
+     * Handler for close button.
+     *
+     * @param event
+     */
     @UiHandler("btnClose")
     public void onCloseButtonClick(ClickEvent event) {
         delegate.onCloseClicked();

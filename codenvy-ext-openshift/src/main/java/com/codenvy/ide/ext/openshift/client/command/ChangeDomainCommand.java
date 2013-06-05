@@ -27,6 +27,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * Command for "PaaS/OpenShift/Change Domain..." action.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -35,32 +37,43 @@ public class ChangeDomainCommand implements ExtendedCommand {
     private final CreateDomainPresenter presenter;
     private final OpenShiftResources    resources;
 
+    /**
+     * Create command.
+     *
+     * @param presenter
+     * @param resources
+     */
     @Inject
     public ChangeDomainCommand(CreateDomainPresenter presenter, OpenShiftResources resources) {
         this.presenter = presenter;
         this.resources = resources;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void execute() {
         presenter.showDialog(null);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ImageResource getIcon() {
         return resources.domainEdit();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getToolTip() {
         return "Change domain name on openshift.com";
     }
 
+    /** {@inheritDoc} */
     @Override
     public Expression inContext() {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Expression canExecute() {
         return null;

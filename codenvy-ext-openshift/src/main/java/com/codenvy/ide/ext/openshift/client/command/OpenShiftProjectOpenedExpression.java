@@ -26,17 +26,25 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * Detects opening OpenShift project.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 @Singleton
 public class OpenShiftProjectOpenedExpression extends AbstractExpression implements ProjectConstraintExpression {
 
+    /**
+     * Create expression.
+     *
+     * @param expressionManager
+     */
     @Inject
     public OpenShiftProjectOpenedExpression(ExpressionManager expressionManager) {
         super(expressionManager, false);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean onProjectChanged(Project project) {
         value = project.getPropertyValue("openshift-express-application") != null;

@@ -18,10 +18,14 @@
  */
 package com.codenvy.ide.ext.openshift.client;
 
+import com.codenvy.ide.job.Job;
+import com.codenvy.ide.job.JobChangeEvent;
 import com.codenvy.ide.rest.RequestStatusHandler;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * The class helps to work with status of application.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -30,6 +34,13 @@ public class CreateApplicationRequestStatusHandler implements RequestStatusHandl
     private EventBus eventBus;
     private OpenShiftLocalizationConstant constant;
 
+    /**
+     * Create application request status handler.
+     *
+     * @param applicationName
+     * @param eventBus
+     * @param constant
+     */
     public CreateApplicationRequestStatusHandler(String applicationName, EventBus eventBus,
                                                  OpenShiftLocalizationConstant constant) {
         this.applicationName = applicationName;
@@ -37,18 +48,27 @@ public class CreateApplicationRequestStatusHandler implements RequestStatusHandl
         this.constant = constant;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void requestInProgress(String id) {
-        //TODO
+        Job job = new Job(id, Job.JobStatus.STARTED);
+        job.setStartMessage(constant.creatingApplicationStarted(applicationName));
+        eventBus.fireEvent(new JobChangeEvent(job));
     }
 
+    /** {@inheritDoc} */
     @Override
     public void requestFinished(String id) {
-        //TODO
+        Job job = new Job(id, Job.JobStatus.FINISHED);
+        job.setFinishMessage(constant.creatingApplicationFinished(applicationName));
+        eventBus.fireEvent(new JobChangeEvent(job));
     }
 
+    /** {@inheritDoc} */
     @Override
     public void requestError(String id, Throwable exception) {
-        //TODO
+        Job job = new Job(id, Job.JobStatus.ERROR);
+        job.setError(exception);
+        eventBus.fireEvent(new JobChangeEvent(job));
     }
 }

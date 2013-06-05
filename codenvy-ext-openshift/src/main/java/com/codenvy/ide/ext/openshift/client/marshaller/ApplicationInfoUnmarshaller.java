@@ -25,16 +25,24 @@ import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 
 /**
+ * Unmarshaller for application info.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class ApplicationInfoUnmarshaller implements Unmarshallable<AppInfo> {
     private DtoClientImpls.AppInfoImpl appInfo;
 
+    /**
+     * Create unmarshaller.
+     *
+     * @param appInfo
+     */
     public ApplicationInfoUnmarshaller(DtoClientImpls.AppInfoImpl appInfo) {
         this.appInfo = appInfo;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(Response response) throws UnmarshallerException {
         String text = response.getText();
@@ -53,6 +61,7 @@ public class ApplicationInfoUnmarshaller implements Unmarshallable<AppInfo> {
         this.appInfo.setEmbeddedCartridges(application.getEmbeddedCartridges());
     }
 
+    /** {@inheritDoc} */
     @Override
     public AppInfo getPayload() {
         return appInfo;

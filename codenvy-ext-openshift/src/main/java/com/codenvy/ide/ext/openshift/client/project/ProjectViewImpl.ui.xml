@@ -38,7 +38,7 @@
             margin-bottom: 5px;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="500px" height="170px" addStyleNames="{style.emptyBorder}">
+    <g:DockLayoutPanel unit="PX" width="500px" height="180px" addStyleNames="{style.emptyBorder}">
         <g:south size="26.0">
             <g:FlowPanel>
                 <c:Button addStyleNames="{style.right}" text="{constant.applicationInfoViewCloseButton}" size="SMALL" type="DANGER"
@@ -99,6 +99,19 @@
                                   ui:field="btnStop" icon="{res.stopApp}"/>
                         <c:Button width="18px" height="16px" title="restart"
                                   addStyleNames="{style.left} {style.withoutPadding}" ui:field="btnRestart" icon="{res.restartApp}"/>
+                    </g:FlowPanel>
+                </g:center>
+            </g:DockLayoutPanel>
+        </g:north>
+        <g:north size="30.0">
+            <g:DockLayoutPanel unit="PX" width="100%" addStyleNames="{style.spacing}">
+                <g:west size="100.0">
+                    <g:Label text="Action" addStyleNames="{style.labelH}"/>
+                </g:west>
+                <g:center>
+                    <g:FlowPanel>
+                        <c:Button width="70px" height="22px" title="Delete application from OpenShift"
+                                  addStyleNames="{style.left} {style.withoutPadding}" ui:field="btnDelete" text="Delete"/>
                     </g:FlowPanel>
                 </g:center>
             </g:DockLayoutPanel>

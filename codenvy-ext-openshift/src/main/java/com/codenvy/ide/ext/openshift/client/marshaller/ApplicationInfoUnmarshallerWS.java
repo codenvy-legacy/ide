@@ -25,16 +25,24 @@ import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.rest.Unmarshallable;
 
 /**
+ * Unmarshaller for application info for websockets.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class ApplicationInfoUnmarshallerWS implements Unmarshallable<AppInfo> {
     private DtoClientImpls.AppInfoImpl appInfo;
 
+    /**
+     * Create unmarshaller.
+     *
+     * @param appInfo
+     */
     public ApplicationInfoUnmarshallerWS(DtoClientImpls.AppInfoImpl appInfo) {
         this.appInfo = appInfo;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(Message response) throws UnmarshallerException {
         String text = response.getBody();
@@ -53,6 +61,7 @@ public class ApplicationInfoUnmarshallerWS implements Unmarshallable<AppInfo> {
         this.appInfo.setEmbeddedCartridges(application.getEmbeddedCartridges());
     }
 
+    /** {@inheritDoc} */
     @Override
     public AppInfo getPayload() {
         return appInfo;

@@ -31,6 +31,8 @@ import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 
 /**
+ * The implementation for {@link ProjectView}.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -68,6 +70,9 @@ public class ProjectViewImpl extends DialogBox implements ProjectView {
     @UiField
     Button btnClose;
 
+    @UiField
+    Button btnDelete;
+
     @UiField(provided = true)
     final OpenShiftLocalizationConstant constant;
 
@@ -77,6 +82,12 @@ public class ProjectViewImpl extends DialogBox implements ProjectView {
 
     private AppInfo application;
 
+    /**
+     * Create view.
+     *
+     * @param constant
+     *         locale constants
+     */
     @Inject
     protected ProjectViewImpl(OpenShiftLocalizationConstant constant) {
         this.constant = constant;
@@ -87,22 +98,26 @@ public class ProjectViewImpl extends DialogBox implements ProjectView {
         this.setWidget(widget);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isShown() {
         return isShown;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() {
         application = null;
         this.hide();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showDialog(AppInfo application) {
         this.isShown = true;
@@ -116,6 +131,7 @@ public class ProjectViewImpl extends DialogBox implements ProjectView {
         this.show();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setApplicationHealth(String health) {
         appHealth.setText(health);
@@ -131,28 +147,58 @@ public class ProjectViewImpl extends DialogBox implements ProjectView {
         }
     }
 
+    /**
+     * Handler for Restart application button.
+     *
+     * @param event
+     */
     @UiHandler("btnRestart")
     public void onRestartButtonClicked(ClickEvent event) {
         delegate.onRestartApplicationClicked(application);
     }
 
+    /**
+     * Handler for Start application button.
+     *
+     * @param event
+     */
     @UiHandler("btnStart")
     public void onStartButtonClicked(ClickEvent event) {
         delegate.onStartApplicationClicked(application);
     }
 
+    /**
+     * Handler for Stop application button.
+     *
+     * @param event
+     */
     @UiHandler("btnStop")
     public void onStopButtonClicked(ClickEvent event) {
         delegate.onStopApplicationClicked(application);
     }
 
+    /**
+     * Handler for Show application properties button.
+     *
+     * @param event
+     */
     @UiHandler("btnShowProperties")
     public void onShowApplicationPropertiesClicked(ClickEvent event) {
         delegate.onShowApplicationPropertiesClicked(application);
     }
 
+    /**
+     * Handler for Close button.
+     *
+     * @param event
+     */
     @UiHandler("btnClose")
     public void onCloseButtonClicked(ClickEvent event) {
         delegate.onCloseClicked();
+    }
+
+    @UiHandler("btnDelete")
+    public void onDeleteApplicationClicked(ClickEvent event) {
+        delegate.onDeleteApplicationDeleted(application);
     }
 }

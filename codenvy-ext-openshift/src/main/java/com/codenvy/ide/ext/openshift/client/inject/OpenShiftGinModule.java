@@ -40,17 +40,14 @@ import com.codenvy.ide.extension.maven.client.template.CreateEmptyProjectPresent
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
-/**
- * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
- * @version $Id: $
- */
+/** @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a> */
 @ExtensionGinModule
 public class OpenShiftGinModule extends AbstractGinModule {
+    /** {@inheritDoc} */
     @Override
     protected void configure() {
         bind(OpenShiftClientService.class).to(OpenShiftClientServiceImpl.class).in(Singleton.class);
 
-        // Views
         bind(LoginView.class).to(LoginViewImpl.class).in(Singleton.class);
         bind(CreateCartridgeView.class).to(CreateCartridgeViewImpl.class).in(Singleton.class);
         bind(CreateDomainView.class).to(CreateDomainViewImpl.class).in(Singleton.class);

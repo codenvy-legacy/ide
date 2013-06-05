@@ -36,6 +36,8 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Handler which execute update public ssh key for OpenShift account.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -48,6 +50,15 @@ public class UpdateKeyPresenter {
     private OpenShiftClientServiceImpl    service;
     private AsyncCallback<Boolean>        publicKeyUpdateCallback;
 
+    /**
+     * Create handler.
+     *
+     * @param eventBus
+     * @param console
+     * @param constant
+     * @param loginPresenter
+     * @param service
+     */
     @Inject
     protected UpdateKeyPresenter(EventBus eventBus, ConsolePart console, OpenShiftLocalizationConstant constant,
                                  LoginPresenter loginPresenter, OpenShiftClientServiceImpl service) {
@@ -58,7 +69,7 @@ public class UpdateKeyPresenter {
         this.service = service;
     }
 
-    /** If user is not logged in to AppFog, this handler will be called, after user logged in. */
+    /** If user is not logged in to OpenShift, this handler will be called, after user logged in. */
     private LoggedInHandler updatePublicKeyLoginHandler = new LoggedInHandler() {
         @Override
         public void onLoggedIn() {
@@ -66,6 +77,12 @@ public class UpdateKeyPresenter {
         }
     };
 
+    /**
+     * Perform to update ssh public key for current loggined account.
+     *
+     * @param callback
+     *         callback which will be executed if update is successful or fails
+     */
     public void updatePublicKey(AsyncCallback<Boolean> callback) {
         this.publicKeyUpdateCallback = callback;
 
@@ -94,6 +111,12 @@ public class UpdateKeyPresenter {
         }
     }
 
+    /**
+     * Perform update in domain public ssh key.
+     *
+     * @param nameSpace
+     *         domain name in which key should be updated
+     */
     private void updateDomainWithNewKey(String nameSpace) {
         try {
             service.createDomain(nameSpace, true,

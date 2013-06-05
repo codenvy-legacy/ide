@@ -39,6 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Presenter to control creating cartridges for the application on OpenShift.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -65,6 +67,14 @@ public class CreateCartridgePresenter implements CreateCartridgeView.ActionDeleg
         this.view.setDelegate(this);
     }
 
+    /**
+     * Show dialog for change domain name.
+     *
+     * @param application
+     *         instance of application that contain name for which cartridge will be created.
+     * @param callback
+     *         callback
+     */
     public void showDialog(AppInfo application, AsyncCallback<Boolean> callback) {
         this.application = application;
         this.callback = callback;
@@ -74,6 +84,7 @@ public class CreateCartridgePresenter implements CreateCartridgeView.ActionDeleg
         }
     }
 
+    /** Get cartridges list from server and setting them into client's list box. */
     private void setCartridges() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
@@ -111,6 +122,7 @@ public class CreateCartridgePresenter implements CreateCartridgeView.ActionDeleg
         }
     }
 
+    /** Handler for creating cartridge click. */
     @Override
     public void onCreateCartridgeClicked() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -153,8 +165,9 @@ public class CreateCartridgePresenter implements CreateCartridgeView.ActionDeleg
         }
     }
 
+    /** Handler for cancel click. Perform close window. */
     @Override
     public void onCancelClicked() {
-
+        view.close();
     }
 }

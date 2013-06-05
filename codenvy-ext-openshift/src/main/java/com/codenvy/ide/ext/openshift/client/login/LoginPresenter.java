@@ -30,6 +30,8 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Presenter to control user login form.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -44,7 +46,15 @@ public class LoginPresenter implements LoginView.ActionDelegate {
     private LoginCanceledHandler          loginCanceled;
     private AsyncCallback<Boolean>        callback;
 
-
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param eventBus
+     * @param console
+     * @param service
+     * @param constant
+     */
     @Inject
     protected LoginPresenter(LoginView view, EventBus eventBus, ConsolePart console, OpenShiftClientServiceImpl service,
                              OpenShiftLocalizationConstant constant) {
@@ -57,12 +67,19 @@ public class LoginPresenter implements LoginView.ActionDelegate {
         this.view.setDelegate(this);
     }
 
+    /**
+     * Show login form with callback support.
+     *
+     * @param callback
+     *         callback which will be called after login success or fail.
+     */
     public void showDialog(AsyncCallback<Boolean> callback) {
         this.callback = callback;
 
         showDialog();
     }
 
+    /** Show login form. */
     public void showDialog() {
         if (!view.isShown()) {
             view.setEnableLoginButton(false);
@@ -74,6 +91,14 @@ public class LoginPresenter implements LoginView.ActionDelegate {
         }
     }
 
+    /**
+     * Show login form with controlling handlers.
+     *
+     * @param loggedIn
+     *         handler which will be executed when login is successful
+     * @param loginCanceled
+     *         handler which will be executed when login is fails
+     */
     public void showDialog(LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled) {
         this.loggedIn = loggedIn;
         this.loginCanceled = loginCanceled;
@@ -81,6 +106,7 @@ public class LoginPresenter implements LoginView.ActionDelegate {
         showDialog();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onLoginClicked() {
         final String email = view.getEmail();
@@ -118,6 +144,7 @@ public class LoginPresenter implements LoginView.ActionDelegate {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCancelClicked() {
         if (loginCanceled != null) {
@@ -127,20 +154,22 @@ public class LoginPresenter implements LoginView.ActionDelegate {
         view.close();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onValueChanged() {
         updateComponent();
     }
 
+    /** {@inheritDoc} */
     /** Updates component on the view. */
     private void updateComponent() {
         view.setEnableLoginButton(isFieldsFullFilled());
     }
 
     /**
-     * Check whether necessary fields are fullfilled.
+     * Check whether necessary fields are full filled.
      *
-     * @return if <code>true</code> all necessary fields are fullfilled
+     * @return if true all necessary fields are full filled
      */
     private boolean isFieldsFullFilled() {
         return (view.getEmail() != null && !view.getEmail().isEmpty() && view.getPassword() != null && !view.getPassword().isEmpty());
