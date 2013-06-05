@@ -70,6 +70,9 @@ public class ProjectViewImpl extends DialogBox implements ProjectView {
     @UiField
     Button btnClose;
 
+    @UiField
+    Button btnDelete;
+
     @UiField(provided = true)
     final OpenShiftLocalizationConstant constant;
 
@@ -192,5 +195,10 @@ public class ProjectViewImpl extends DialogBox implements ProjectView {
     @UiHandler("btnClose")
     public void onCloseButtonClicked(ClickEvent event) {
         delegate.onCloseClicked();
+    }
+
+    @UiHandler("btnDelete")
+    public void onDeleteApplicationClicked(ClickEvent event) {
+        delegate.onDeleteApplicationDeleted(application);
     }
 }

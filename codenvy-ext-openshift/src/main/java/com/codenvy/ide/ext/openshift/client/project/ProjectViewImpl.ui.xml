@@ -103,5 +103,18 @@
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>
+        <g:north size="30.0">
+            <g:DockLayoutPanel unit="PX" width="100%" addStyleNames="{style.spacing}">
+                <g:west size="100.0">
+                    <g:Label text="Action" addStyleNames="{style.labelH}"/>
+                </g:west>
+                <g:center>
+                    <g:FlowPanel>
+                        <c:Button width="18px" height="16px" title="restart"
+                                  addStyleNames="{style.left} {style.withoutPadding}" ui:field="btnDelete" text="Delete"/>
+                    </g:FlowPanel>
+                </g:center>
+            </g:DockLayoutPanel>
+        </g:north>
     </g:DockLayoutPanel>
 </ui:UiBinder>
