@@ -21,8 +21,6 @@ package com.codenvy.ide.toolbar;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionGroup;
 import com.codenvy.ide.api.ui.action.ActionManager;
-import com.codenvy.ide.ui.menu.CloseMenuHandler;
-import com.codenvy.ide.ui.menu.MenuLockLayer;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;

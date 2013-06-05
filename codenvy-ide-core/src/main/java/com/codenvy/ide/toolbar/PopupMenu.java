@@ -29,7 +29,6 @@ import com.codenvy.ide.api.ui.action.Separator;
 import com.codenvy.ide.api.ui.action.ToggleAction;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.ui.menu.MenuLockLayer;
 import com.codenvy.ide.util.input.KeyMapUtil;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
@@ -263,9 +262,10 @@ public class PopupMenu extends Composite {
 
                 work++;
 
-                if (menuItem instanceof ActionGroup && (((ActionGroup)menuItem).canBePerformed() &&
-                                                        !Utils.hasVisibleChildren((ActionGroup)menuItem, presentationFactory, actionManager,
-                                                                                  place))) {
+                if (menuItem instanceof ActionGroup && !(((ActionGroup)menuItem).canBePerformed() &&
+                                                         !Utils.hasVisibleChildren((ActionGroup)menuItem, presentationFactory,
+                                                                                   actionManager,
+                                                                                   place))) {
                     Image image = new Image(POPUP_RESOURCES.subMenu());
                     image.setStyleName(POPUP_RESOURCES.popup().popupMenuSubMenuImage());
                     table.setWidget(i, work, image);
@@ -399,9 +399,9 @@ public class PopupMenu extends Composite {
         int itemIndex = Integer.parseInt(DOM.getElementAttribute(tr, "item-index"));
         Action menuItem = list.get(itemIndex);
         openSubPopupTimer.cancel();
-        if (menuItem instanceof ActionGroup && (((ActionGroup)menuItem).canBePerformed() &&
-                                                !Utils.hasVisibleChildren((ActionGroup)menuItem, presentationFactory, actionManager,
-                                                                          place))) {
+        if (menuItem instanceof ActionGroup && !(((ActionGroup)menuItem).canBePerformed() &&
+                                                 !Utils.hasVisibleChildren((ActionGroup)menuItem, presentationFactory, actionManager,
+                                                                           place))) {
             openSubPopupTimer.schedule(300);
         } else {
             closeSubPopupTimer.cancel();

@@ -27,7 +27,7 @@ import com.codenvy.ide.util.browser.UserAgent;
  */
 public class KeyMapUtil {
     public static String getShortcutText(CharCodeWithModifiers shortcut) {
-        String s = "";
+        String s = null;
         String acceleratorText = getKeystrokeText(shortcut);
         if (!acceleratorText.isEmpty()) {
             s = acceleratorText;

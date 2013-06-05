@@ -18,29 +18,30 @@
  */
 package com.codenvy.ide.menu;
 
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
+import com.codenvy.ide.api.ui.action.Presentation;
+import com.codenvy.ide.toolbar.PresentationFactory;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public interface MenuResources extends ClientBundle {
-    public interface Css extends CssResource {
+public class MenuItemPresentationFactory extends PresentationFactory {
+    public static final String HIDE_ICON = "HIDE_ICON";
+    private final boolean myForceHide;
 
-        String menuBar();
-
-        String menuBarTable();
-
-        String menuBarItem();
-
-        String menuBarItemSelected();
-
-        String menuBarItemDisabled();
-
-        String menuBarItemOver();
+    public MenuItemPresentationFactory() {
+        this(false);
     }
 
-    @Source({"menu.css", "com/codenvy/ide/api/ui/style.css"})
-    Css menuCss();
+    public MenuItemPresentationFactory(boolean forceHide) {
+        myForceHide = forceHide;
+    }
+
+    protected Presentation processPresentation(Presentation presentation) {
+//        if (!UISettings.getInstance().SHOW_ICONS_IN_MENUS || myForceHide) {
+//            presentation.setIcon(null);
+//            presentation.putClientProperty(HIDE_ICON, Boolean.TRUE);
+//        }
+        return presentation;
+    }
 }

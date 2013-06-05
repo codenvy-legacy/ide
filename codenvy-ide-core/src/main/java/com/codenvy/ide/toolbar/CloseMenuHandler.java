@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2013 eXo Platform SAS.
+/**
+ * Copyright (C) 2010 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -15,32 +15,21 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ *
  */
-package com.codenvy.ide.menu;
 
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
+package com.codenvy.ide.toolbar;
 
 /**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * Created by The eXo Platform SAS .
+ *
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  */
-public interface MenuResources extends ClientBundle {
-    public interface Css extends CssResource {
 
-        String menuBar();
+public interface CloseMenuHandler {
 
-        String menuBarTable();
+    /** Implement closing of all opened popups when user will click outside of all of them */
+    void onCloseMenu();
 
-        String menuBarItem();
-
-        String menuBarItemSelected();
-
-        String menuBarItemDisabled();
-
-        String menuBarItemOver();
-    }
-
-    @Source({"menu.css", "com/codenvy/ide/api/ui/style.css"})
-    Css menuCss();
 }

@@ -39,7 +39,6 @@ import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
-import com.codenvy.ide.api.ui.menu.MainMenuAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
 import com.codenvy.ide.api.ui.wizard.WizardAgent;
 import com.codenvy.ide.api.ui.wizard.newfile.NewGenericFilePageView;
@@ -56,7 +55,6 @@ import com.codenvy.ide.core.editor.ResourceDocumentProvider;
 import com.codenvy.ide.core.expressions.ExpressionManagerImpl;
 import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.keybinding.KeyBindingManager;
-import com.codenvy.ide.menu.MainMenuPresenter;
 import com.codenvy.ide.menu.MainMenuView;
 import com.codenvy.ide.menu.MainMenuViewImpl;
 import com.codenvy.ide.openproject.OpenProjectView;
@@ -160,15 +158,12 @@ public class CoreGinModule extends AbstractGinModule {
         bind(ExpressionManager.class).to(ExpressionManagerImpl.class).in(Singleton.class);
         bind(SelectionAgent.class).to(SelectionAgentImpl.class).in(Singleton.class);
         bind(WorkspaceAgent.class).to(WorkspacePresenter.class).in(Singleton.class);
-        bind(MainMenuAgent.class).to(MainMenuPresenter.class).in(Singleton.class);
-//        bind(ToolbarAgent.class).to(ToolbarPresenter.class).in(Singleton.class);
         bind(PreferencesAgent.class).to(PreferencesAgentImpl.class).in(Singleton.class);
         bind(WizardAgent.class).to(WizardAgentImpl.class).in(Singleton.class);
         bind(PaaSAgent.class).to(PaaSAgentImpl.class).in(Singleton.class);
         bind(TemplateAgent.class).to(TemplateAgentImpl.class).in(Singleton.class);
         bind(ProjectTypeAgent.class).to(ProjectTypeAgentImpl.class).in(Singleton.class);
         // UI Model
-//        bind(PartStack.class).to(PartStackPresenter.class);
         bind(EditorPartStack.class).to(EditorPartStackPresenter.class).in(Singleton.class);
         // Parts
         bind(ConsolePart.class).to(ConsolePartPresenter.class).in(Singleton.class);

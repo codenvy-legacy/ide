@@ -20,7 +20,6 @@ package com.codenvy.ide.ext.appfog.client;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.paas.PaaSAgent;
-import com.codenvy.ide.api.ui.menu.MainMenuAgent;
 import com.codenvy.ide.ext.appfog.client.command.ShowAppFogProjectCommand;
 import com.codenvy.ide.ext.appfog.client.command.ShowApplicationsCommand;
 import com.codenvy.ide.ext.appfog.client.command.ShowCreateApplicationCommand;
@@ -56,7 +55,7 @@ public class AppFogExtension {
      * @param wizardPage
      */
     @Inject
-    public AppFogExtension(PaaSAgent paasAgent, AppfogResources resources, MainMenuAgent menu,
+    public AppFogExtension(PaaSAgent paasAgent, AppfogResources resources,
                            ShowCreateApplicationCommand createApplicationCommand, ShowLoginCommand loginCommand,
                            ShowApplicationsCommand showApplicationsCommand, ShowAppFogProjectCommand showAppFogProjectCommand,
                            Provider<AppFogPagePresenter> wizardPage) {
@@ -66,9 +65,9 @@ public class AppFogExtension {
         JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "Rails", "Spring", "War", "Python", "PHP");
         paasAgent.registerPaaS(ID, ID, resources.appfog48(), requiredProjectTypes, wizardPage, null);
 
-        menu.addMenuItem("PaaS/AppFog/Create Application...", createApplicationCommand);
-        menu.addMenuItem("PaaS/AppFog/Applications...", showApplicationsCommand);
-        menu.addMenuItem("PaaS/AppFog/Switch Account...", loginCommand);
-        menu.addMenuItem("Project/Paas/AppFog", showAppFogProjectCommand);
+//        menu.addMenuItem("PaaS/AppFog/Create Application...", createApplicationCommand);
+//        menu.addMenuItem("PaaS/AppFog/Applications...", showApplicationsCommand);
+//        menu.addMenuItem("PaaS/AppFog/Switch Account...", loginCommand);
+//        menu.addMenuItem("Project/Paas/AppFog", showAppFogProjectCommand);
     }
 }

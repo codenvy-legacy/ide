@@ -16,31 +16,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.menu;
+package com.codenvy.ide.actions;
 
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
+import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.ui.action.Action;
+import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.preferences.PreferencesPresenter;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public interface MenuResources extends ClientBundle {
-    public interface Css extends CssResource {
+@Singleton
+public class ShowPreferencesAction extends Action {
 
-        String menuBar();
+    private final PreferencesPresenter presenter;
 
-        String menuBarTable();
-
-        String menuBarItem();
-
-        String menuBarItemSelected();
-
-        String menuBarItemDisabled();
-
-        String menuBarItemOver();
+    @Inject
+    public ShowPreferencesAction(Resources resources, PreferencesPresenter presenter) {
+        //TODO change icon
+        super("Preferences", "Preferences", resources.file());
+        this.presenter = presenter;
     }
 
-    @Source({"menu.css", "com/codenvy/ide/api/ui/style.css"})
-    Css menuCss();
+    /** {@inheritDoc} */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        presenter.showPreferences();
+    }
 }

@@ -17,14 +17,10 @@
 package com.codenvy.ide.extension.demo;
 
 import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.expressions.Expression;
 import com.codenvy.ide.api.expressions.ProjectOpenedExpression;
 import com.codenvy.ide.api.extension.Extension;
-import com.codenvy.ide.api.ui.menu.ExtendedCommand;
-import com.codenvy.ide.api.ui.menu.MainMenuAgent;
+import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -39,37 +35,37 @@ public class DemoExtension {
 
     @Inject
     public DemoExtension(final WorkspaceAgent workspace,
-                         MainMenuAgent menu,
+                         ActionManager actionManager,
                          EditorAgent editorAgent, final ProjectOpenedExpression projectOpenedExpression,
                          CreateDemoCommand createDemoCommand) {
         // CREATE DYNAMIC MENU CONTENT
-        menu.addMenuItem("File/Create Demo Content", createDemoCommand);
-        menu.addMenuItem("Project/Some Project Operation", new ExtendedCommand() {
-            @Override
-            public Expression inContext() {
-                return projectOpenedExpression;
-            }
-
-            @Override
-            public ImageResource getIcon() {
-                return null;
-            }
-
-            @Override
-            public void execute() {
-                Window
-                        .alert("This is test item. The item changes enable/disable state when something happend(project was opened).");
-            }
-
-            @Override
-            public Expression canExecute() {
-                return null;
-            }
-
-            @Override
-            public String getToolTip() {
-                return null;
-            }
-        });
+//        menu.addMenuItem("File/Create Demo Content", createDemoCommand);
+//        menu.addMenuItem("Project/Some Project Operation", new ExtendedCommand() {
+//            @Override
+//            public Expression inContext() {
+//                return projectOpenedExpression;
+//            }
+//
+//            @Override
+//            public ImageResource getIcon() {
+//                return null;
+//            }
+//
+//            @Override
+//            public void execute() {
+//                Window
+//                        .alert("This is test item. The item changes enable/disable state when something happend(project was opened).");
+//            }
+//
+//            @Override
+//            public Expression canExecute() {
+//                return null;
+//            }
+//
+//            @Override
+//            public String getToolTip() {
+//                return null;
+//            }
+//        });
     }
 }

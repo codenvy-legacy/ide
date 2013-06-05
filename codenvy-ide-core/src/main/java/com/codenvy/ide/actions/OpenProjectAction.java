@@ -16,31 +16,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.menu;
+package com.codenvy.ide.actions;
 
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
+import com.codenvy.ide.api.ui.action.Action;
+import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.openproject.OpenProjectPresenter;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public interface MenuResources extends ClientBundle {
-    public interface Css extends CssResource {
+@Singleton
+public class OpenProjectAction extends Action {
 
-        String menuBar();
+    private OpenProjectPresenter presenter;
 
-        String menuBarTable();
-
-        String menuBarItem();
-
-        String menuBarItemSelected();
-
-        String menuBarItemDisabled();
-
-        String menuBarItemOver();
+    @Inject
+    public OpenProjectAction(OpenProjectPresenter presenter) {
+        super("Open Project", "Open project", null);
+        this.presenter = presenter;
     }
 
-    @Source({"menu.css", "com/codenvy/ide/api/ui/style.css"})
-    Css menuCss();
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        presenter.showDialog();
+    }
+
+    @Override
+    public void update(ActionEvent e) {
+        super.update(e);
+    }
 }

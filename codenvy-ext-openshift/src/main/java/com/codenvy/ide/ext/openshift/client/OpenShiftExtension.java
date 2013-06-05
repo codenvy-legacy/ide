@@ -21,8 +21,11 @@ package com.codenvy.ide.ext.openshift.client;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.template.TemplateAgent;
-import com.codenvy.ide.api.ui.menu.MainMenuAgent;
-import com.codenvy.ide.ext.openshift.client.command.*;
+import com.codenvy.ide.ext.openshift.client.command.ChangeDomainCommand;
+import com.codenvy.ide.ext.openshift.client.command.ShowApplicationsCommand;
+import com.codenvy.ide.ext.openshift.client.command.ShowLoginCommand;
+import com.codenvy.ide.ext.openshift.client.command.ShowOpenShiftProjectCommand;
+import com.codenvy.ide.ext.openshift.client.command.UpdateSshPublicKeyCommand;
 import com.codenvy.ide.ext.openshift.client.wizard.OpenShiftPagePresenter;
 import com.codenvy.ide.extension.maven.client.template.CreateEmptyProjectPresenter;
 import com.codenvy.ide.json.JsonArray;
@@ -41,7 +44,7 @@ public class OpenShiftExtension {
     private static final String ID = "OpenShift";
 
     @Inject
-    public OpenShiftExtension(PaaSAgent paasAgent, OpenShiftResources resources, MainMenuAgent menu,
+    public OpenShiftExtension(PaaSAgent paasAgent, OpenShiftResources resources,
                               Provider<OpenShiftPagePresenter> wizardPage, ShowApplicationsCommand showApplicationsCommand,
                               ShowLoginCommand showLoginCommand, ChangeDomainCommand changeDomainCommand,
                               UpdateSshPublicKeyCommand updateSshPublicKeyCommand,
@@ -54,11 +57,11 @@ public class OpenShiftExtension {
 //        templateAgent.registerTemplate("OpenShift foobar", null, JsonCollections.createArray("War"), createProjectProvider, wizardPage);
         paasAgent.registerPaaS(ID, ID, resources.openShift48(), requiredProjectTypes, wizardPage, null);
 
-        menu.addMenuItem("PaaS/OpenShift/Change Domain...", changeDomainCommand);
-        menu.addMenuItem("PaaS/OpenShift/Switch Account...", showLoginCommand);
-        menu.addMenuItem("PaaS/OpenShift/Applications...", showApplicationsCommand);
-        menu.addMenuItem("PaaS/OpenShift/Update Public SSH Key...", updateSshPublicKeyCommand);
-
-        menu.addMenuItem("Project/Paas/OpenShift", showOpenShiftProjectCommand);
+//        menu.addMenuItem("PaaS/OpenShift/Change Domain...", changeDomainCommand);
+//        menu.addMenuItem("PaaS/OpenShift/Switch Account...", showLoginCommand);
+//        menu.addMenuItem("PaaS/OpenShift/Applications...", showApplicationsCommand);
+//        menu.addMenuItem("PaaS/OpenShift/Update Public SSH Key...", updateSshPublicKeyCommand);
+//
+//        menu.addMenuItem("Project/Paas/OpenShift", showOpenShiftProjectCommand);
     }
 }

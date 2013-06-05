@@ -19,8 +19,13 @@
 package com.codenvy.ide.core;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.actions.NewFolderAction;
 import com.codenvy.ide.actions.NewProjectAction;
+import com.codenvy.ide.actions.NewResourceAction;
+import com.codenvy.ide.actions.OpenProjectAction;
 import com.codenvy.ide.actions.SaveAction;
+import com.codenvy.ide.actions.SaveAllAction;
+import com.codenvy.ide.actions.ShowPreferencesAction;
 import com.codenvy.ide.api.expressions.ExpressionManager;
 import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
@@ -28,16 +33,12 @@ import com.codenvy.ide.api.ui.action.Constraints;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
-import com.codenvy.ide.api.ui.keybinding.KeyBuilder;
 import com.codenvy.ide.command.OpenProjectCommand;
-import com.codenvy.ide.command.SaveAllCommand;
-import com.codenvy.ide.command.SaveCommand;
 import com.codenvy.ide.command.ShowNewFolderWizardCommand;
 import com.codenvy.ide.command.ShowNewProjectWizardCommand;
 import com.codenvy.ide.command.ShowNewResourceWizardCommand;
 import com.codenvy.ide.command.ShowPreferenceCommand;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.menu.MainMenuPresenter;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.codenvy.ide.wizard.newfile.NewTextFilePagePresenter;
@@ -56,12 +57,6 @@ import com.google.web.bindery.event.shared.EventBus;
 @Singleton
 public class StandardComponentInitializer {
 
-    @Inject
-    private MainMenuPresenter                  menu;
-    @Inject
-    private SaveCommand                        saveCommand;
-    @Inject
-    private SaveAllCommand                     saveAllCommand;
     @Inject
     private ShowNewResourceWizardCommand       newFileCommand;
     @Inject
@@ -96,6 +91,21 @@ public class StandardComponentInitializer {
     private SaveAction                         saveAction;
 
     @Inject
+    private SaveAllAction saveAllAction;
+
+    @Inject
+    private NewFolderAction newFolderAction;
+
+    @Inject
+    private NewResourceAction newFileAction;
+
+    @Inject
+    private OpenProjectAction openProjectAction;
+
+    @Inject
+    private ShowPreferencesAction showPreferencesAction;
+
+    @Inject
     private ToolbarPresenter toolbarPresenter;
 
     /** Instantiates {@link StandardComponentInitializer} an creates standard content */
@@ -108,21 +118,25 @@ public class StandardComponentInitializer {
         wizard.registerNewResourceWizard("General", "Folder", resources.folder(), newFolderProvider);
         wizard.registerNewResourceWizard("General", "Text file", resources.file(), newTextFileProvider);
 
-        menu.addMenuItem("File/New/Project", newProjectCommand);
-        menu.addMenuItem("File/New/Folder", newFolderCommand);
-        menu.addMenuItem("File/New/Other", newFileCommand);
+        DefaultActionGroup mainMenu = new DefaultActionGroup(actionManager);
+        actionManager.registerAction(IdeActions.GROUP_MAIN_MENU, mainMenu);
+        DefaultActionGroup fileGroup = new DefaultActionGroup("File", true, actionManager);
+        actionManager.registerAction("fileGroup", fileGroup);
+        mainMenu.add(fileGroup);
 
-        menu.addMenuItem("File/Open Project", openProjectCommand);
+        DefaultActionGroup window = new DefaultActionGroup("Window", true, actionManager);
+        actionManager.registerAction("windowGroup", window);
+        mainMenu.add(window);
 
-        menu.addMenuItem("File/Save", saveCommand);
-        menu.addMenuItem("File/Save All", saveAllCommand);
+        actionManager.registerAction("showPreferences", showPreferencesAction);
+        window.add(showPreferencesAction);
 
-        menu.addMenuItem("Window/Preferences", showPreferencesCommand);
 
-        keyBinding.getGlobal().addKeyBinding(new KeyBuilder().action().charCode('s').build(), saveCommand);
-        keyBinding.getGlobal().addKeyBinding(new KeyBuilder().action().charCode('S').build(), saveAllCommand);
+//        keyBinding.getGlobal().addKeyBinding(new KeyBuilder().action().charCode('s').build(), saveCommand);
+//        keyBinding.getGlobal().addKeyBinding(new KeyBuilder().action().charCode('S').build(), saveAllCommand);
 
         actionManager.registerAction("newProject", newProjectAction);
+        actionManager.registerAction("openProject", openProjectAction);
         DefaultActionGroup toolbarGroup = new DefaultActionGroup(actionManager);
         toolbarGroup.addSeparator();
         actionManager.registerAction(IdeActions.GROUP_MAIN_TOOLBAR, toolbarGroup);
@@ -132,33 +146,26 @@ public class StandardComponentInitializer {
         newGroup.addAction(newProjectAction, Constraints.FIRST);
         toolbarGroup.add(newGroup);
         toolbarGroup.addSeparator();
+        fileGroup.add(newGroup);
+        fileGroup.add(openProjectAction);
+        actionManager.registerAction("newFolder", newFolderAction);
+        actionManager.registerAction("newResource", newFileAction);
+        newGroup.add(newFileAction);
+        newGroup.add(newFolderAction);
 
         DefaultActionGroup saveGroup = new DefaultActionGroup(actionManager);
         actionManager.registerAction("saveGroup", saveGroup);
         actionManager.registerAction("save", saveAction);
+        actionManager.registerAction("saveAll", saveAllAction);
+        saveGroup.addSeparator();
         saveGroup.add(saveAction);
+        saveGroup.add(saveAllAction);
         toolbarGroup.addSeparator();
         toolbarGroup.add(saveGroup);
         toolbarGroup.addSeparator();
+        fileGroup.add(saveGroup);
 
         toolbarPresenter.bindMainGroup(toolbarGroup);
-        // add items to Toolbar
-//        toolbar.addDropDownItem("General/New", resources.file(), "Create new resources");
-//        toolbar.addItem("General/New/Project", newProjectCommand);
-//        toolbar.addItem("General/New/File", newFileCommand);
-//        toolbar.addItem("General/New/Folder", newFolderCommand);
-//
-//        toolbar.addItem("General/Save", saveCommand);
-//        toolbar.addItem("General/Save All", saveAllCommand);
-
-//        // TODO test toggle items
-//        ToggleItemExpression toggleState = new ToggleItemExpression(expressionManager, true);
-//        ToggleItemCommand command = new ToggleItemCommand(resources, eventBus, null, null, toggleState);
-//        menu.addMenuItem("File/Checked item", command);
-//        toolbar.addToggleItem("Test/Checked item", command);
-//        toolbar.addDropDownItem("Test/New", resources.file(), "Test item");
-//        toolbar.addToggleItem("Test/New/Checked item", command);
-
         paasAgent.registerPaaS("None", "None", null, JsonCollections.<String>createArray("", "java", "War"), null, null);
     }
 }

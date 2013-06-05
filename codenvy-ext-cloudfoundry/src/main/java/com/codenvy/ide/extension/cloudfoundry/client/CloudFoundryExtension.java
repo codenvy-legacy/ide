@@ -20,7 +20,6 @@ package com.codenvy.ide.extension.cloudfoundry.client;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.paas.PaaSAgent;
-import com.codenvy.ide.api.ui.menu.MainMenuAgent;
 import com.codenvy.ide.extension.cloudfoundry.client.command.ShowApplicationsCommand;
 import com.codenvy.ide.extension.cloudfoundry.client.command.ShowCloudFoundryProjectCommand;
 import com.codenvy.ide.extension.cloudfoundry.client.command.ShowCreateApplicationCommand;
@@ -81,7 +80,7 @@ public class CloudFoundryExtension {
      * @param wizardPage
      */
     @Inject
-    public CloudFoundryExtension(PaaSAgent paasAgent, CloudFoundryResources resources, MainMenuAgent menu,
+    public CloudFoundryExtension(PaaSAgent paasAgent, CloudFoundryResources resources,
                                  ShowCreateApplicationCommand createApplicationCommand, ShowLoginCommand loginCommand,
                                  ShowApplicationsCommand showApplicationsCommand,
                                  ShowCloudFoundryProjectCommand showCloudFoundryProjectCommand,
@@ -92,10 +91,10 @@ public class CloudFoundryExtension {
         // TODO change hard code types
         JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "Rails", "Spring", "War");
         paasAgent.registerPaaS(ID, ID, resources.cloudFoundry48(), requiredProjectTypes, wizardPage, null);
-
-        menu.addMenuItem("PaaS/CloudFoudry/Create Application...", createApplicationCommand);
-        menu.addMenuItem("PaaS/CloudFoudry/Applications...", showApplicationsCommand);
-        menu.addMenuItem("PaaS/CloudFoudry/Switch Account...", loginCommand);
-        menu.addMenuItem("Project/Paas/CloudFoudry", showCloudFoundryProjectCommand);
+//
+//        menu.addMenuItem("PaaS/CloudFoudry/Create Application...", createApplicationCommand);
+//        menu.addMenuItem("PaaS/CloudFoudry/Applications...", showApplicationsCommand);
+//        menu.addMenuItem("PaaS/CloudFoudry/Switch Account...", loginCommand);
+//        menu.addMenuItem("Project/Paas/CloudFoudry", showCloudFoundryProjectCommand);
     }
 }
