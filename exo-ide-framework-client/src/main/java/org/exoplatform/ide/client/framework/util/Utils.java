@@ -405,6 +405,10 @@ public class Utils {
     public static native String getWorkspaceName() /*-{
         return $wnd.ws;
     }-*/;
+    
+    public static native String getProjectToOpen() /*-{
+        return $wnd.project;
+     }-*/;
 
     public static native String getWebSocketContext() /*-{
             function endsWith(str, suffix) {
