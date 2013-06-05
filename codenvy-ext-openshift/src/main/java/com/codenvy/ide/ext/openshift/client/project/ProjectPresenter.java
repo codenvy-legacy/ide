@@ -260,6 +260,7 @@ public class ProjectPresenter implements ProjectView.ActionDelegate {
                                            protected void onSuccess(String result) {
                                                String msg = "Application deleted";
                                                console.print(msg);
+                                               view.close();
                                            }
                                        });
         } catch (RequestException e) {
