@@ -28,4 +28,14 @@ public interface IdeActions {
     String GROUP_EDITOR_POPUP = "EditorPopupMenu";
     String GROUP_OTHER_MENU   = "OtherMenu";
     String GROUP_EDITOR       = "EditorActions";
+
+    String GROUP_FILE = "FileGroup";
+
+    String GROUP_WINDOW = "WindowGroup";
+
+    String GROUP_PROJECT = "ProjectGroup";
+
+    String GROUP_PROJECT_PAAS = "ProjectPaaSGroup";
+
+    String GROUP_PAAS = "PaaSGroup";
 }

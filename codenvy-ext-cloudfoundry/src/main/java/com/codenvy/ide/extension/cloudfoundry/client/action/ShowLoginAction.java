@@ -16,36 +16,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.extension.cloudfoundry.client.command;
+package com.codenvy.ide.extension.cloudfoundry.client.action;
 
-import com.codenvy.ide.api.expressions.AbstractExpression;
-import com.codenvy.ide.api.expressions.ExpressionManager;
-import com.codenvy.ide.api.expressions.ProjectConstraintExpression;
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.api.ui.action.Action;
+import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
+import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Detects opening CloudFoundry project.
- *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
+ * @version $Id:
  */
 @Singleton
-public class CloudFoundryProjectOpenedExpression extends AbstractExpression implements ProjectConstraintExpression {
-    /**
-     * Create expression.
-     *
-     * @param expressionManager
-     */
+public class ShowLoginAction extends Action {
+
+    private LoginPresenter presenter;
+
     @Inject
-    public CloudFoundryProjectOpenedExpression(ExpressionManager expressionManager) {
-        super(expressionManager, false);
+    public ShowLoginAction(LoginPresenter presenter, CloudFoundryResources resources) {
+        super("Switch Account...", "Login on cloudfoundry.com", resources.switchAccount());
+        this.presenter = presenter;
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean onProjectChanged(Project project) {
-        value = project.getProperty("cloudfoundry-application") != null;
-        return value;
+    public void actionPerformed(ActionEvent e) {
+        presenter.showDialog(CloudFoundryExtension.PAAS_PROVIDER.CLOUD_FOUNDRY);
     }
 }

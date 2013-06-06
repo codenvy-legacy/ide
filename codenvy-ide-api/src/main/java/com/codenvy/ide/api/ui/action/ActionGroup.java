@@ -73,7 +73,7 @@ public abstract class ActionGroup extends Action {
         super(text, description, icon);
     }
 
-    /** This method can be called in popup menus if {@link #canBePerformed(DataContext)} is true */
+    /** This method can be called in popup menus if {@link #canBePerformed()} is true */
     @Override
     public void actionPerformed(ActionEvent e) {
     }

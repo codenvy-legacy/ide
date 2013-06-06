@@ -33,11 +33,6 @@ import com.codenvy.ide.api.ui.action.Constraints;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
-import com.codenvy.ide.command.OpenProjectCommand;
-import com.codenvy.ide.command.ShowNewFolderWizardCommand;
-import com.codenvy.ide.command.ShowNewProjectWizardCommand;
-import com.codenvy.ide.command.ShowNewResourceWizardCommand;
-import com.codenvy.ide.command.ShowPreferenceCommand;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.wizard.WizardAgentImpl;
@@ -58,37 +53,37 @@ import com.google.web.bindery.event.shared.EventBus;
 public class StandardComponentInitializer {
 
     @Inject
-    private ShowNewResourceWizardCommand       newFileCommand;
+    private WizardAgentImpl wizard;
+
     @Inject
-    private ShowNewFolderWizardCommand         newFolderCommand;
-    @Inject
-    private ShowNewProjectWizardCommand        newProjectCommand;
-    @Inject
-    private WizardAgentImpl                    wizard;
-    @Inject
-    private Provider<NewFolderPagePresenter>   newFolderProvider;
+    private Provider<NewFolderPagePresenter> newFolderProvider;
+
     @Inject
     private Provider<NewTextFilePagePresenter> newTextFileProvider;
+
     @Inject
-    private Resources                          resources;
+    private Resources resources;
+
     @Inject
-    private KeyBindingAgent                    keyBinding;
+    private KeyBindingAgent keyBinding;
+
     @Inject
-    private ShowPreferenceCommand              showPreferencesCommand;
+    private ExpressionManager expressionManager;
+
     @Inject
-    private OpenProjectCommand                 openProjectCommand;
+    private EventBus eventBus;
+
     @Inject
-    private ExpressionManager                  expressionManager;
+    private PaaSAgent paasAgent;
+
     @Inject
-    private EventBus                           eventBus;
+    private ActionManager actionManager;
+
     @Inject
-    private PaaSAgent                          paasAgent;
+    private NewProjectAction newProjectAction;
+
     @Inject
-    private ActionManager                      actionManager;
-    @Inject
-    private NewProjectAction                   newProjectAction;
-    @Inject
-    private SaveAction                         saveAction;
+    private SaveAction saveAction;
 
     @Inject
     private SaveAllAction saveAllAction;
@@ -118,19 +113,11 @@ public class StandardComponentInitializer {
         wizard.registerNewResourceWizard("General", "Folder", resources.folder(), newFolderProvider);
         wizard.registerNewResourceWizard("General", "Text file", resources.file(), newTextFileProvider);
 
-        DefaultActionGroup mainMenu = new DefaultActionGroup(actionManager);
-        actionManager.registerAction(IdeActions.GROUP_MAIN_MENU, mainMenu);
-        DefaultActionGroup fileGroup = new DefaultActionGroup("File", true, actionManager);
-        actionManager.registerAction("fileGroup", fileGroup);
-        mainMenu.add(fileGroup);
 
-        DefaultActionGroup window = new DefaultActionGroup("Window", true, actionManager);
-        actionManager.registerAction("windowGroup", window);
-        mainMenu.add(window);
-
+        DefaultActionGroup window = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_WINDOW);
         actionManager.registerAction("showPreferences", showPreferencesAction);
         window.add(showPreferencesAction);
-
+        DefaultActionGroup fileGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_FILE);
 
 //        keyBinding.getGlobal().addKeyBinding(new KeyBuilder().action().charCode('s').build(), saveCommand);
 //        keyBinding.getGlobal().addKeyBinding(new KeyBuilder().action().charCode('S').build(), saveAllCommand);

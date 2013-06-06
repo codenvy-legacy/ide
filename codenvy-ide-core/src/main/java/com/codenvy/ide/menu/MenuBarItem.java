@@ -41,6 +41,10 @@ import com.google.gwt.user.client.Element;
  */
 public class MenuBarItem implements ActionSelectedHandler, UpdateItemEnablingCallback {
 
+    private final ActionGroup         group;
+    private final ActionManager       actionManager;
+    private final PresentationFactory presentationFactory;
+    private final String              place;
     /**
      * Working variable:
      * is need to store hovered or normal state.
@@ -51,12 +55,8 @@ public class MenuBarItem implements ActionSelectedHandler, UpdateItemEnablingCal
      * is need to store pressed state.
      */
     boolean pressed = false;
-    private final ActionGroup         group;
-    private final ActionManager       actionManager;
-    private final PresentationFactory presentationFactory;
-    private final String              place;
     /** Visual element which is table cell. */
-    private       Element             element;
+    private Element element;
     /** Enabled or disabled state */
     private boolean enabled         = true;
     private boolean hasVisibleItems = true;
@@ -70,12 +70,10 @@ public class MenuBarItem implements ActionSelectedHandler, UpdateItemEnablingCal
      * is needs to store opened Popup menu.
      */
     private PopupMenu             popupMenu;
-    /** Selected state. */
-    private boolean               selected;
+
     /** Title of Menu Bar Item */
-    private String                title;
-    /** Visibility state. */
-    private boolean               visible;
+    private String title;
+
 
     public MenuBarItem(ActionGroup group, ActionManager actionManager, PresentationFactory presentationFactory, String place,
                        Element element, ActionSelectedHandler handler,
@@ -88,31 +86,17 @@ public class MenuBarItem implements ActionSelectedHandler, UpdateItemEnablingCal
         this.actionSelectedHandler = handler;
         this.css = css;
         Presentation presentation = presentationFactory.getPresentation(group);
+        title = presentation.getText();
         element.setInnerText(presentation.getText());
+//        setEnabled(Utils.hasVisibleChildren(group, presentationFactory, actionManager, place));
+
+
     }
 
     /** Close opened Popup Menu. */
     public void closePopupMenu() {
         popupMenu.closePopup();
     }
-
-//    private boolean hasVisibleItems(JsonStringMap<Item> items) {
-//        JsonArray<String> keys = items.getKeys();
-//        for (String key : keys.asIterable()) {
-//            Item item = items.get(key);
-//            if (item.getTitle() == null) {
-//                continue;
-//            }
-//
-//            if (item.isVisible()) {
-//                return true;
-//            }
-//
-//        }
-//
-//
-//        return false;
-//    }
 
     /** {@inheritDoc} */
     public boolean isEnabled() {
@@ -124,12 +108,6 @@ public class MenuBarItem implements ActionSelectedHandler, UpdateItemEnablingCal
         this.enabled = enabled;
         updateEnabledState();
     }
-
-//    /** {@inheritDoc} */
-//    public void onMenuItemSelected(Item Item) {
-//        setNormalState();
-//        actionSelectedHandler.onActionSelected(Item);
-//    }
 
     /** Mouse Down handler */
     public boolean onMouseDown() {
@@ -170,7 +148,6 @@ public class MenuBarItem implements ActionSelectedHandler, UpdateItemEnablingCal
 
     /** {@inheritDoc} */
     public void onUpdateItemEnabling() {
-//        hasVisibleItems = hasVisibleItems(children);
         updateEnabledState();
     }
 

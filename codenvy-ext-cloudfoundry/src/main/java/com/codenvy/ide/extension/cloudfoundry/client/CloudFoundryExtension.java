@@ -20,10 +20,13 @@ package com.codenvy.ide.extension.cloudfoundry.client;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.paas.PaaSAgent;
-import com.codenvy.ide.extension.cloudfoundry.client.command.ShowApplicationsCommand;
-import com.codenvy.ide.extension.cloudfoundry.client.command.ShowCloudFoundryProjectCommand;
-import com.codenvy.ide.extension.cloudfoundry.client.command.ShowCreateApplicationCommand;
-import com.codenvy.ide.extension.cloudfoundry.client.command.ShowLoginCommand;
+import com.codenvy.ide.api.ui.action.ActionManager;
+import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.api.ui.action.IdeActions;
+import com.codenvy.ide.extension.cloudfoundry.client.action.CreateApplicationAction;
+import com.codenvy.ide.extension.cloudfoundry.client.action.ShowApplicationsActions;
+import com.codenvy.ide.extension.cloudfoundry.client.action.ShowCloudFoundryProjectAction;
+import com.codenvy.ide.extension.cloudfoundry.client.action.ShowLoginAction;
 import com.codenvy.ide.extension.cloudfoundry.client.wizard.CloudFoundryPagePresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
@@ -72,18 +75,14 @@ public class CloudFoundryExtension {
      *
      * @param paasAgent
      * @param resources
-     * @param menu
-     * @param createApplicationCommand
-     * @param loginCommand
-     * @param showApplicationsCommand
-     * @param showCloudFoundryProjectCommand
      * @param wizardPage
      */
     @Inject
-    public CloudFoundryExtension(PaaSAgent paasAgent, CloudFoundryResources resources,
-                                 ShowCreateApplicationCommand createApplicationCommand, ShowLoginCommand loginCommand,
-                                 ShowApplicationsCommand showApplicationsCommand,
-                                 ShowCloudFoundryProjectCommand showCloudFoundryProjectCommand,
+    public CloudFoundryExtension(PaaSAgent paasAgent, CloudFoundryResources resources, ActionManager actionManager,
+                                 ShowCloudFoundryProjectAction showCloudFoundryProjectAction,
+                                 CreateApplicationAction createApplicationAction,
+                                 ShowApplicationsActions showApplicationsActions,
+                                 ShowLoginAction showLoginAction,
                                  Provider<CloudFoundryPagePresenter> wizardPage) {
 
         resources.cloudFoundryCss().ensureInjected();
@@ -91,10 +90,21 @@ public class CloudFoundryExtension {
         // TODO change hard code types
         JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "Rails", "Spring", "War");
         paasAgent.registerPaaS(ID, ID, resources.cloudFoundry48(), requiredProjectTypes, wizardPage, null);
-//
-//        menu.addMenuItem("PaaS/CloudFoudry/Create Application...", createApplicationCommand);
-//        menu.addMenuItem("PaaS/CloudFoudry/Applications...", showApplicationsCommand);
-//        menu.addMenuItem("PaaS/CloudFoudry/Switch Account...", loginCommand);
-//        menu.addMenuItem("Project/Paas/CloudFoudry", showCloudFoundryProjectCommand);
+        DefaultActionGroup projectPaas = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_PROJECT_PAAS);
+        actionManager.registerAction("showCloudfoundryProject", showCloudFoundryProjectAction);
+        projectPaas.add(showCloudFoundryProjectAction);
+        DefaultActionGroup paas = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_PAAS);
+        DefaultActionGroup cloudfoundry = new DefaultActionGroup("CloudFoudry", true, actionManager);
+        actionManager.registerAction("cloudfoundryGroup", cloudfoundry);
+        paas.add(cloudfoundry);
+
+
+        actionManager.registerAction("createCloudfoundry", createApplicationAction);
+        actionManager.registerAction("showCloudfoundryApplications", showApplicationsActions);
+        actionManager.registerAction("showCloudfoundryLogin", showLoginAction);
+
+        cloudfoundry.add(createApplicationAction);
+        cloudfoundry.add(showApplicationsActions);
+        cloudfoundry.add(showLoginAction);
     }
 }

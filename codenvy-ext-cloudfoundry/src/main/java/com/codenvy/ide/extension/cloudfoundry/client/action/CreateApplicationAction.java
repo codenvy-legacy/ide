@@ -16,66 +16,44 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.extension.cloudfoundry.client.command;
+package com.codenvy.ide.extension.cloudfoundry.client.action;
 
-import com.codenvy.ide.api.expressions.Expression;
-import com.codenvy.ide.api.ui.menu.ExtendedCommand;
+import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.ui.action.Action;
+import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
-import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
-import com.google.gwt.resources.client.ImageResource;
+import com.codenvy.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Command for "PaaS/CloudFoudry/Switch Account" action.
- *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
+ * @version $Id:
  */
 @Singleton
-public class ShowLoginCommand implements ExtendedCommand {
-    private final LoginPresenter        presenter;
-    private final CloudFoundryResources resources;
+public class CreateApplicationAction extends Action {
 
-    /**
-     * Create command.
-     *
-     * @param presenter
-     * @param resources
-     */
+    private final CreateApplicationPresenter presenter;
+    private final ResourceProvider           resourceProvider;
+
     @Inject
-    public ShowLoginCommand(LoginPresenter presenter, CloudFoundryResources resources) {
+    public CreateApplicationAction(CreateApplicationPresenter presenter, CloudFoundryResources resources,
+                                   ResourceProvider resourceProvider) {
+        super("Create Application...", "Create new application on cloudfoundry.com", resources.createApp());
         this.presenter = presenter;
-        this.resources = resources;
+        this.resourceProvider = resourceProvider;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void execute() {
+    public void actionPerformed(ActionEvent e) {
         presenter.showDialog(CloudFoundryExtension.PAAS_PROVIDER.CLOUD_FOUNDRY);
     }
 
     /** {@inheritDoc} */
     @Override
-    public ImageResource getIcon() {
-        return resources.switchAccount();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getToolTip() {
-        return "Login on cloudfoundry.com";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Expression inContext() {
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Expression canExecute() {
-        return null;
+    public void update(ActionEvent e) {
+        e.getPresentation().setVisible(resourceProvider.getActiveProject() != null);
     }
 }
