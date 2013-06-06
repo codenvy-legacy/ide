@@ -99,7 +99,7 @@ public class EverrestInitializer implements Startable {
         if (config.isAsynchronousSupported()) {
             everrest.getSingletons().add(new CodenvyAsynchronousJobPool(config));
             everrest.getSingletons().add(new AsynchronousProcessListWriter());
-            everrest.getClasses().add(AsynchronousJobService.class);
+            everrest.getClasses().add(CodenvyAsynchronousJobService.class);
         }
         if (config.isCheckSecurity()) {
             everrest.getSingletons().add(new SecurityConstraint());
