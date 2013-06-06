@@ -19,7 +19,10 @@
 package com.codenvy.ide.ext.java.jdi.client;
 
 import com.codenvy.ide.api.extension.Extension;
-import com.codenvy.ide.ext.java.jdi.client.command.RunCommand;
+import com.codenvy.ide.api.ui.action.ActionManager;
+import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.api.ui.action.IdeActions;
+import com.codenvy.ide.ext.java.jdi.client.actions.RunAction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -41,7 +44,9 @@ public class JavaRuntimeExtension {
     public static final String APPLICATION_STOP_CHANNEL = "runner:application-stopped:";
 
     @Inject
-    public JavaRuntimeExtension(RunCommand runCommand) {
-//        mainMenuAgent.addMenuItem("Run/Run Application", runCommand);
+    public JavaRuntimeExtension(ActionManager actionManager, RunAction action) {
+        actionManager.registerAction("runJavaProject", action);
+        DefaultActionGroup run = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_RUN);
+        run.add(action);
     }
 }

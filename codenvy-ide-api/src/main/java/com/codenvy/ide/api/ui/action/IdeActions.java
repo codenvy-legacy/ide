@@ -38,4 +38,6 @@ public interface IdeActions {
     String GROUP_PROJECT_PAAS = "ProjectPaaSGroup";
 
     String GROUP_PAAS = "PaaSGroup";
+
+    String GROUP_RUN = "RunGroup";
 }

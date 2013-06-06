@@ -133,6 +133,11 @@ public class ActionManagerImpl implements ActionManager {
         DefaultActionGroup projectPaas = new DefaultActionGroup("Paas", true, this);
         registerAction(IdeActions.GROUP_PROJECT_PAAS, projectPaas);
         project.add(projectPaas);
+
+        DefaultActionGroup runGroup = new DefaultActionGroup("Run", true, this);
+        registerAction(IdeActions.GROUP_RUN, runGroup);
+        Constraints afterProject = new Constraints(Anchor.AFTER, IdeActions.GROUP_PROJECT);
+        mainMenu.add(runGroup, afterProject);
     }
 
     public static boolean checkRelativeToAction(final String relativeToActionId,

@@ -76,7 +76,7 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
         @Override
         public void run() {
             updateMenuActions();
-//            schedule(2000);
+            schedule(2000);
         }
     };
 
