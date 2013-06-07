@@ -16,38 +16,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.openshift.client.command;
+package com.codenvy.ide.ext.openshift.client.actions;
 
-import com.codenvy.ide.api.expressions.AbstractExpression;
-import com.codenvy.ide.api.expressions.ExpressionManager;
-import com.codenvy.ide.api.expressions.ProjectConstraintExpression;
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.api.ui.action.Action;
+import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.ext.openshift.client.OpenShiftResources;
+import com.codenvy.ide.ext.openshift.client.domain.CreateDomainPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Detects opening OpenShift project.
+ * Command for "PaaS/OpenShift/Change Domain..." action.
  *
- * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
- * @version $Id: $
+ * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
+ * @version $Id:
  */
 @Singleton
-public class OpenShiftProjectOpenedExpression extends AbstractExpression implements ProjectConstraintExpression {
+public class ChangeDomainAction extends Action {
 
-    /**
-     * Create expression.
-     *
-     * @param expressionManager
-     */
+    private CreateDomainPresenter presenter;
+
     @Inject
-    public OpenShiftProjectOpenedExpression(ExpressionManager expressionManager) {
-        super(expressionManager, false);
+    public ChangeDomainAction(CreateDomainPresenter presenter, OpenShiftResources resources) {
+        super("Change Domain...", "Change domain name on openshift.com", resources.domainEdit());
+        this.presenter = presenter;
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean onProjectChanged(Project project) {
-        value = project.getPropertyValue("openshift-express-application") != null;
-        return value;
+    public void actionPerformed(ActionEvent e) {
+        presenter.showDialog(null);
     }
 }
