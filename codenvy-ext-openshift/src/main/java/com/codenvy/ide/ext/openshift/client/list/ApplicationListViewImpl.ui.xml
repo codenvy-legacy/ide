@@ -21,33 +21,48 @@
         .space {
             margin-right: 5px;
         }
+
+        .labelPos {
+            top: 5px !important;
+        }
+
+        .grid {
+            margin: 10px;
+        }
+
+        .cartridgesGrid {
+            overflow-y: scroll !important;
+            overflow-x: hidden !important;
+        }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="380px" height="180px" addStyleNames="{res.openShiftCSS.login} {style.emptyBorder}">
-        <g:north size="26.0">
+    <g:DockLayoutPanel unit="PX" width="800px" height="470px" addStyleNames="{res.openShiftCSS.login} {style.emptyBorder}">
+        <g:north size="60.0">
             <g:DockLayoutPanel unit="PX" width="100%" height="100%" styleName="{style.spacing}">
                 <g:north size="26.0">
                     <g:DockLayoutPanel unit="PX" width="100%" height="100%">
-                        <g:west size="100.0">
-                            <g:Label text="{constant.applicationListViewLoginLabel}" width="100.0"/>
+                        <g:west size="60.0">
+                            <g:Label text="{constant.applicationListViewLoginLabel}" width="60.0" styleName="{style.labelPos}"/>
                         </g:west>
                         <g:center>
-                            <g:TextBox height="16px" ui:field="userLoginField" width="100%" readOnly="true"/>
+                            <g:TextBox height="16px" ui:field="userLoginField" width="600px" readOnly="true"/>
                         </g:center>
-                        <g:east size="100.0">
-                            <c:Button width="50px" text="{constant.applicationListViewLoginButton}" size="SMALL" ui:field="btnChangeAccount"/>
+                        <g:east size="120.0">
+                            <c:Button width="100px" text="{constant.applicationListViewLoginButton}" size="SMALL"
+                                      ui:field="btnChangeAccount"/>
                         </g:east>
                     </g:DockLayoutPanel>
                 </g:north>
                 <g:south size="26.0">
                     <g:DockLayoutPanel unit="PX" width="100%" height="100%">
-                        <g:west size="100.0">
-                            <g:Label text="{constant.applicationListViewDomainLabel}" width="100.0" />
+                        <g:west size="60.0">
+                            <g:Label text="{constant.applicationListViewDomainLabel}" width="60.0" styleName="{style.labelPos}"/>
                         </g:west>
                         <g:center>
-                            <g:TextBox height="16px" ui:field="userDomainFiled" width="100%" readOnly="true"/>
+                            <g:TextBox height="16px" ui:field="userDomainFiled" width="600px" readOnly="true"/>
                         </g:center>
-                        <g:east size="100.0">
-                            <c:Button width="50px" text="{constant.applicationListViewDomainButton}" size="SMALL" ui:field="btnChangeDomain"/>
+                        <g:east size="120.0">
+                            <c:Button width="100px" text="{constant.applicationListViewDomainButton}" size="SMALL"
+                                      ui:field="btnChangeDomain"/>
                         </g:east>
                     </g:DockLayoutPanel>
                 </g:south>
@@ -55,16 +70,18 @@
         </g:north>
         <g:center>
             <g:DockLayoutPanel unit="PX" width="100%" height="100%">
-                <g:west size="150.0">
-                    <l:CellTable ui:field="applicationList"/>
+                <g:west size="200.0">
+                    <l:CellTable ui:field="applicationList" width="100%" styleName="{style.grid}"/>
                 </g:west>
                 <g:center>
                     <g:DockLayoutPanel unit="PX" width="100%" height="100%">
-                        <g:north size="150.0">
-                            <l:CellTable ui:field="applicationProperties"/>
+                        <g:north size="180.0">
+                            <l:CellTable ui:field="applicationProperties" width="100%" styleName="{style.grid}"/>
                         </g:north>
                         <g:center>
-                            <l:CellTable ui:field="applicationCartridges"/>
+                            <g:ScrollPanel styleName="{style.cartridgesGrid}" horizontalScrollPosition="26">
+                                <l:CellTable ui:field="applicationCartridges" styleName="{style.grid}"/>
+                            </g:ScrollPanel>
                         </g:center>
                     </g:DockLayoutPanel>
                 </g:center>

@@ -21,14 +21,14 @@ package com.codenvy.ide.ext.openshift.client.command;
 import com.codenvy.ide.api.expressions.Expression;
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 import com.codenvy.ide.ext.openshift.client.OpenShiftResources;
-import com.codenvy.ide.ext.openshift.client.login.LoggedInHandler;
-import com.codenvy.ide.ext.openshift.client.login.LoginCanceledHandler;
 import com.codenvy.ide.ext.openshift.client.login.LoginPresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * Command for "PaaS/OpenShift/Switch Account..." action.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -37,32 +37,43 @@ public class ShowLoginCommand implements ExtendedCommand {
     private final LoginPresenter       presenter;
     private final OpenShiftResources   resources;
 
+    /**
+     * Create command.
+     *
+     * @param presenter
+     * @param resources
+     */
     @Inject
     public ShowLoginCommand(LoginPresenter presenter, OpenShiftResources resources) {
         this.presenter = presenter;
         this.resources = resources;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void execute() {
         presenter.showDialog();
     }
 
+    /** {@inheritDoc} */
     @Override
     public ImageResource getIcon() {
-        return null;
+        return resources.switchAccount();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getToolTip() {
         return "Login on openshift.com";
     }
 
+    /** {@inheritDoc} */
     @Override
     public Expression inContext() {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Expression canExecute() {
         return null;

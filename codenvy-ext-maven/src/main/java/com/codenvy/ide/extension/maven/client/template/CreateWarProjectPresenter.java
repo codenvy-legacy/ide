@@ -72,9 +72,9 @@ public class CreateWarProjectPresenter implements CreateProjectProvider {
     @Override
     public void create(final AsyncCallback<Project> callback) {
         JsonArray<Property> properties =
-                JsonCollections.<Property>createArray(new Property(ProjectDescription.PROPERTY_PRIMARY_NATURE, JavaProject.PRIMARY_NATURE),
-                                                      new Property(JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS,
-                                                                   JsonCollections.createArray("src/main/java", "src/main/resources")));
+                JsonCollections.createArray(new Property(ProjectDescription.PROPERTY_PRIMARY_NATURE, JavaProject.PRIMARY_NATURE),
+                                            new Property(JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS,
+                                                         JsonCollections.createArray("src/main/java", "src/main/resources")));
         try {
             service.createWarProject(projectName, properties, new AsyncRequestCallback<Void>() {
                 @Override

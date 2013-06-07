@@ -19,6 +19,8 @@
 package com.codenvy.ide.ext.openshift.client.info;
 
 /**
+ * Wrapper for property which contain property name and value.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -27,15 +29,33 @@ public class ApplicationProperty {
 
     private String propertyValue;
 
+    /**
+     * Construct property.
+     *
+     * @param propertyName
+     *         property name
+     * @param propertyValue
+     *         property value
+     */
     public ApplicationProperty(String propertyName, String propertyValue) {
         this.propertyName = propertyName;
         this.propertyValue = propertyValue;
     }
 
+    /**
+     * Get property name.
+     *
+     * @return String representation for property name.
+     */
     public String getPropertyName() {
         return propertyName;
     }
 
+    /**
+     * Get property value.
+     *
+     * @return String representation for property value.
+     */
     public String getPropertyValue() {
         return propertyValue;
     }

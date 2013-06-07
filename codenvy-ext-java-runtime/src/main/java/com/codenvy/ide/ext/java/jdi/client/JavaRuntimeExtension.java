@@ -48,5 +48,6 @@ public class JavaRuntimeExtension {
         actionManager.registerAction("runJavaProject", action);
         DefaultActionGroup run = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_RUN);
         run.add(action);
+        mainMenuAgent.addMenuItem("Run/Debug Application", debugCommand);
     }
 }

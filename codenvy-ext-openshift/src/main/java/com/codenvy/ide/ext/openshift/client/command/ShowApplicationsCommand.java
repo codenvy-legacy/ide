@@ -22,13 +22,13 @@ import com.codenvy.ide.api.expressions.Expression;
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 import com.codenvy.ide.ext.openshift.client.OpenShiftResources;
 import com.codenvy.ide.ext.openshift.client.list.ApplicationListPresenter;
-import com.codenvy.ide.ext.openshift.client.login.LoggedInHandler;
-import com.codenvy.ide.ext.openshift.client.login.LoginCanceledHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * Command for "PaaS/OpenShift/Applications..." action.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -37,32 +37,43 @@ public class ShowApplicationsCommand implements ExtendedCommand {
     private final ApplicationListPresenter presenter;
     private final OpenShiftResources       resources;
 
+    /**
+     * Create command.
+     *
+     * @param presenter
+     * @param resources
+     */
     @Inject
     public ShowApplicationsCommand(ApplicationListPresenter presenter, OpenShiftResources resources) {
         this.presenter = presenter;
         this.resources = resources;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void execute() {
         presenter.showDialog();
     }
 
+    /** {@inheritDoc} */
     @Override
     public ImageResource getIcon() {
-        return null;
+        return resources.showApplications();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getToolTip() {
         return "Shows registered applications on openshift.com";
     }
 
+    /** {@inheritDoc} */
     @Override
     public Expression inContext() {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Expression canExecute() {
         return null;

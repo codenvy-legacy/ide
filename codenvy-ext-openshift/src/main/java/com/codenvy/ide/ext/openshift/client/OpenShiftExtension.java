@@ -35,6 +35,8 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
+ * Extension add OpenShift support to the IDE Application.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -43,18 +45,29 @@ import com.google.inject.Singleton;
 public class OpenShiftExtension {
     private static final String ID = "OpenShift";
 
+    /**
+     * Create OpenShift extension.
+     *
+     * @param paasAgent
+     * @param resources
+     * @param menu
+     * @param wizardPage
+     * @param showApplicationsCommand
+     * @param showLoginCommand
+     * @param changeDomainCommand
+     * @param updateSshPublicKeyCommand
+     * @param showOpenShiftProjectCommand
+     */
     @Inject
     public OpenShiftExtension(PaaSAgent paasAgent, OpenShiftResources resources,
                               Provider<OpenShiftPagePresenter> wizardPage, ShowApplicationsCommand showApplicationsCommand,
                               ShowLoginCommand showLoginCommand, ChangeDomainCommand changeDomainCommand,
                               UpdateSshPublicKeyCommand updateSshPublicKeyCommand,
-                              ShowOpenShiftProjectCommand showOpenShiftProjectCommand, TemplateAgent templateAgent,
-                              CreateEmptyProjectPresenter createProjectProvider) {
+                              ShowOpenShiftProjectCommand showOpenShiftProjectCommand) {
         resources.openShiftCSS().ensureInjected();
 
         JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "nodejs", "War", "Python", "PHP", "Rails");
 
-//        templateAgent.registerTemplate("OpenShift foobar", null, JsonCollections.createArray("War"), createProjectProvider, wizardPage);
         paasAgent.registerPaaS(ID, ID, resources.openShift48(), requiredProjectTypes, wizardPage, null);
 
 //        menu.addMenuItem("PaaS/OpenShift/Change Domain...", changeDomainCommand);

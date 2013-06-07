@@ -31,6 +31,8 @@ import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 
 /**
+ * The implementation for {@link LoginView}.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -66,6 +68,14 @@ public class LoginViewImpl extends DialogBox implements LoginView {
 
     private boolean isShown;
 
+    /**
+     * Create view.
+     *
+     * @param resources
+     *         image resources
+     * @param locale
+     *         locale constants
+     */
     @Inject
     protected LoginViewImpl(OpenShiftResources resources, OpenShiftLocalizationConstant locale) {
         this.resources = resources;
@@ -77,52 +87,62 @@ public class LoginViewImpl extends DialogBox implements LoginView {
         this.setWidget(widget);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getEmail() {
         return email.getValue();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setEmail(String email) {
         this.email.setText(email);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getPassword() {
         return password.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setPassword(String password) {
         this.password.setText(password);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setError(String message) {
         this.errorLabel.setText(message);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setEnableLoginButton(boolean isEnable) {
         btnLogin.setEnabled(isEnable);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void focusEmailField() {
         email.setFocus(true);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isShown() {
         return isShown;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() {
         this.isShown = false;
         this.hide();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showDialog() {
         this.isShown = true;
@@ -130,26 +150,47 @@ public class LoginViewImpl extends DialogBox implements LoginView {
         this.show();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
     }
 
+    /**
+     * handler for Login button.
+     *
+     * @param event
+     */
     @UiHandler("btnLogin")
     public void onBtnLoginClick(ClickEvent event) {
         delegate.onLoginClicked();
     }
 
+    /**
+     * Handler for Cancel button.
+     *
+     * @param event
+     */
     @UiHandler("btnCancel")
     public void onBtnCancelClick(ClickEvent event) {
         delegate.onCancelClicked();
     }
 
+    /**
+     * Handler for changing email field value.
+     *
+     * @param event
+     */
     @UiHandler("email")
     public void onEmailKeyUp(KeyUpEvent event) {
         delegate.onValueChanged();
     }
 
+    /**
+     * Handler for changing password field value.
+     *
+     * @param event
+     */
     @UiHandler("password")
     public void onPasswordKeyUp(KeyUpEvent event) {
         delegate.onValueChanged();

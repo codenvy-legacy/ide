@@ -22,17 +22,17 @@
             margin-right: 5px;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="380px" height="180px" addStyleNames="{res.openShiftCSS.login} {style.emptyBorder}">
+    <g:DockLayoutPanel unit="PX" width="500px" height="220px" addStyleNames="{res.openShiftCSS.login} {style.emptyBorder}">
         <g:south size="26.0">
             <g:FlowPanel>
                 <c:Button addStyleNames="{style.alignBtn} {style.space}" width="50px" text="{constant.applicationInfoViewCloseButton}"
-                          size="SMALL" type="SUCCESS" ui:field="btnClose"/>
+                          size="SMALL" type="DANGER" ui:field="btnClose"/>
             </g:FlowPanel>
         </g:south>
-        <g:north size="26.0">
+        <g:north size="180.0">
             <g:DockLayoutPanel unit="PX" width="100%" height="100%" styleName="{style.spacing}">
                 <g:center>
-                    <l:CellTable ui:field="properties" />
+                    <l:CellTable ui:field="properties" width="100%" />
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>

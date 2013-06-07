@@ -31,6 +31,9 @@ import com.codenvy.ide.rest.Unmarshallable;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Asynchronous OpenShift request. The {@link #onFailure(Throwable)} method contains the check for user not authorized exception, in this
+ * case - showDialog method calls on {@link LoginPresenter}.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -42,6 +45,17 @@ public abstract class OpenShiftAsyncRequestCallback<T> extends AsyncRequestCallb
     private OpenShiftLocalizationConstant constant;
     private LoginPresenter                loginPresenter;
 
+    /**
+     * Create callback.
+     *
+     * @param unmarshaller
+     * @param loggedIn
+     * @param loginCanceled
+     * @param eventBus
+     * @param console
+     * @param constant
+     * @param loginPresenter
+     */
     public OpenShiftAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled,
                                          EventBus eventBus, ConsolePart console, OpenShiftLocalizationConstant constant,
                                          LoginPresenter loginPresenter) {
@@ -54,6 +68,7 @@ public abstract class OpenShiftAsyncRequestCallback<T> extends AsyncRequestCallb
         this.loginPresenter = loginPresenter;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void onFailure(Throwable exception) {
         if (exception instanceof ServerException) {
@@ -65,7 +80,7 @@ public abstract class OpenShiftAsyncRequestCallback<T> extends AsyncRequestCallb
             }
         }
 
-        eventBus.fireEvent(new ExceptionThrownEvent(exception));
         console.print(exception.getMessage());
+        eventBus.fireEvent(new ExceptionThrownEvent(exception));
     }
 }

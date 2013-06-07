@@ -22,7 +22,6 @@ import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.openshift.client.OpenShiftAsyncRequestCallback;
-import com.codenvy.ide.ext.openshift.client.OpenShiftAutoBeanFactory;
 import com.codenvy.ide.ext.openshift.client.OpenShiftClientServiceImpl;
 import com.codenvy.ide.ext.openshift.client.OpenShiftLocalizationConstant;
 import com.codenvy.ide.ext.openshift.client.cartridge.CreateCartridgePresenter;
@@ -30,21 +29,23 @@ import com.codenvy.ide.ext.openshift.client.domain.CreateDomainPresenter;
 import com.codenvy.ide.ext.openshift.client.info.ApplicationInfoPresenter;
 import com.codenvy.ide.ext.openshift.client.info.ApplicationProperty;
 import com.codenvy.ide.ext.openshift.client.login.LoggedInHandler;
-import com.codenvy.ide.ext.openshift.client.login.LoginCanceledHandler;
 import com.codenvy.ide.ext.openshift.client.login.LoginPresenter;
+import com.codenvy.ide.ext.openshift.client.marshaller.UserInfoUnmarshaller;
+import com.codenvy.ide.ext.openshift.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.openshift.shared.AppInfo;
 import com.codenvy.ide.ext.openshift.shared.OpenShiftEmbeddableCartridge;
 import com.codenvy.ide.ext.openshift.shared.RHUserInfo;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
-import java.util.List;
-
 /**
+ * Application list window.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -54,26 +55,37 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
     private ConsolePart                   console;
     private OpenShiftClientServiceImpl    service;
     private OpenShiftLocalizationConstant constant;
-    private OpenShiftAutoBeanFactory      autoBeanFactory;
     private LoginPresenter                loginPresenter;
     private ResourceProvider              resourceProvider;
     private CreateDomainPresenter         createDomainPresenter;
     private CreateCartridgePresenter      createCartridgePresenter;
     private ApplicationInfoPresenter      applicationInfoPresenter;
-//    private AppInfo                       selectedApplication;
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param eventBus
+     * @param console
+     * @param service
+     * @param constant
+     * @param loginPresenter
+     * @param resourceProvider
+     * @param createDomainPresenter
+     * @param createCartridgePresenter
+     * @param applicationInfoPresenter
+     */
     @Inject
     protected ApplicationListPresenter(ApplicationListView view, EventBus eventBus, ConsolePart console, OpenShiftClientServiceImpl service,
-                                       OpenShiftLocalizationConstant constant, OpenShiftAutoBeanFactory autoBeanFactory,
-                                       LoginPresenter loginPresenter, ResourceProvider resourceProvider,
-                                       CreateDomainPresenter createDomainPresenter, CreateCartridgePresenter createCartridgePresenter,
+                                       OpenShiftLocalizationConstant constant, LoginPresenter loginPresenter,
+                                       ResourceProvider resourceProvider, CreateDomainPresenter createDomainPresenter,
+                                       CreateCartridgePresenter createCartridgePresenter,
                                        ApplicationInfoPresenter applicationInfoPresenter) {
         this.view = view;
         this.eventBus = eventBus;
         this.console = console;
         this.service = service;
         this.constant = constant;
-        this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
         this.resourceProvider = resourceProvider;
         this.createDomainPresenter = createDomainPresenter;
@@ -83,34 +95,74 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
         this.view.setDelegate(this);
     }
 
+    /** Show application list window. */
     public void showDialog() {
         if (!view.isShown()) {
             getApplications();
-
-            view.showDialog();
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCloseClicked() {
         view.close();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onChangeDomainNameClicked() {
-        createDomainPresenter.showDialog();
+        createDomainPresenter.showDialog(new AsyncCallback<Boolean>() {
+            @Override
+            public void onFailure(Throwable caught) {
+
+            }
+
+            @Override
+            public void onSuccess(Boolean result) {
+                if (result) {
+                    getApplications();
+                }
+            }
+        });
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onChangeAccountClicked() {
-        loginPresenter.showDialog();
+        loginPresenter.showDialog(new AsyncCallback<Boolean>() {
+            @Override
+            public void onFailure(Throwable caught) {
+
+            }
+
+            @Override
+            public void onSuccess(Boolean result) {
+                if (result) {
+                    getApplications();
+                }
+            }
+        });
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCreateCartridgeClicked() {
-        createCartridgePresenter.showDialog(view.getSelectedApplication());
+        createCartridgePresenter.showDialog(view.getSelectedApplication(), new AsyncCallback<Boolean>() {
+            @Override
+            public void onFailure(Throwable caught) {
+
+            }
+
+            @Override
+            public void onSuccess(Boolean result) {
+                if (result) {
+                    getApplications();
+                }
+            }
+        });
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onApplicationDeleteClicked(final AppInfo application) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -120,12 +172,10 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
             }
         };
 
-        final String projectId = resourceProvider.getActiveProject().getId();
+        final String projectId = resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId() : null;
         final String vfsId = resourceProvider.getVfsId();
 
-        boolean delete = Window.confirm(constant.deleteApplicationPrompt(application.getName()));
-
-        if (!delete) {
+        if (projectId != null && !Window.confirm(constant.deleteApplicationPrompt(application.getName()))) {
             return;
         }
 
@@ -137,6 +187,7 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
                                            protected void onSuccess(String result) {
                                                String msg = constant.deleteApplicationSuccessfullyDeleted(application.getName());
                                                console.print(msg);
+                                               getApplications();
                                            }
                                        });
         } catch (RequestException e) {
@@ -145,6 +196,7 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCartridgeStartClicked(final OpenShiftEmbeddableCartridge cartridge) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -170,6 +222,7 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCartridgeStopClicked(final OpenShiftEmbeddableCartridge cartridge) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -194,6 +247,7 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCartridgeRestartClicked(final OpenShiftEmbeddableCartridge cartridge) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -219,6 +273,7 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCartridgeReloadClicked(final OpenShiftEmbeddableCartridge cartridge) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -244,6 +299,7 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCartridgeDeleteClicked(final OpenShiftEmbeddableCartridge cartridge) {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
@@ -261,6 +317,7 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
                                         protected void onSuccess(Void result) {
                                             String msg = constant.cartridgeSuccessfullyDeleted(cartridge.getName());
                                             console.print(msg);
+                                            getApplications();
                                         }
                                     });
         } catch (RequestException e) {
@@ -269,6 +326,7 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
         }
     }
 
+    /** Get application list and fetch cartridges and properties from each app. */
     private void getApplications() {
         LoggedInHandler loggedInHandler = new LoggedInHandler() {
             @Override
@@ -278,21 +336,27 @@ public class ApplicationListPresenter implements ApplicationListView.ActionDeleg
         };
 
         try {
-            AutoBean<RHUserInfo> rhUserInfo = autoBeanFactory.rhUserInfo();
-            AutoBeanUnmarshaller<RHUserInfo> unmarshaller = new AutoBeanUnmarshaller<RHUserInfo>(rhUserInfo);
+            DtoClientImpls.RHUserInfoImpl userInfo = DtoClientImpls.RHUserInfoImpl.make();
+            UserInfoUnmarshaller unmarshaller = new UserInfoUnmarshaller(userInfo);
 
             service.getUserInfo(true,
                                 new OpenShiftAsyncRequestCallback<RHUserInfo>(unmarshaller, loggedInHandler, null, eventBus, console,
                                                                               constant, loginPresenter) {
                                     @Override
                                     protected void onSuccess(RHUserInfo result) {
+                                        view.showDialog();
+
+                                        view.setApplicationInfo(JsonCollections.<ApplicationProperty>createArray());
+                                        view.setCartridges(JsonCollections.<OpenShiftEmbeddableCartridge>createArray());
+
                                         view.setUserLogin(result.getRhlogin());
-                                        view.setUserDomain(result.getRhcDomain());
+                                        view.setUserDomain(result.getNamespace());
                                         view.setApplications(result.getApps());
 
                                         if (result.getApps().size() > 0) {
                                             AppInfo app = result.getApps().get(0);
-                                            List<ApplicationProperty> properties = applicationInfoPresenter.getApplicationProperties(app);
+                                            JsonArray<ApplicationProperty> properties =
+                                                    applicationInfoPresenter.getApplicationProperties(app);
 
                                             view.setApplicationInfo(properties);
                                             view.setCartridges(app.getEmbeddedCartridges());

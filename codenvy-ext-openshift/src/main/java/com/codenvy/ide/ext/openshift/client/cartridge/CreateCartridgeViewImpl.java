@@ -19,6 +19,7 @@
 package com.codenvy.ide.ext.openshift.client.cartridge;
 
 import com.codenvy.ide.ext.openshift.client.OpenShiftLocalizationConstant;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.ui.Button;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -31,9 +32,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import java.util.List;
-
 /**
+ * The implementation of {@link CreateCartridgeView}.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -61,6 +62,12 @@ public class CreateCartridgeViewImpl extends DialogBox implements CreateCartridg
 
     private boolean isShown;
 
+    /**
+     * Create view.
+     *
+     * @param constant
+     *         localized constants
+     */
     @Inject
     protected CreateCartridgeViewImpl(OpenShiftLocalizationConstant constant) {
         this.constant = constant;
@@ -71,31 +78,36 @@ public class CreateCartridgeViewImpl extends DialogBox implements CreateCartridg
         this.setWidget(widget);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getCartridgeName() {
         return cartridges.getValue(cartridges.getSelectedIndex());
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void setCartridgesList(List<String> cartridgesList) {
+    public void setCartridgesList(JsonArray<String> cartridgesList) {
         cartridges.clear();
 
-        for (String cartridge : cartridgesList) {
-            cartridges.addItem(cartridge);
+        for (int i = 0; i < cartridgesList.size(); i++) {
+            cartridges.addItem(cartridgesList.get(i));
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isShown() {
         return isShown;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void close() {
         this.isShown = false;
         this.hide();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showDialog() {
         this.isShown = true;
@@ -103,16 +115,19 @@ public class CreateCartridgeViewImpl extends DialogBox implements CreateCartridg
         this.show();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
     }
 
+    /** {@inheritDoc} */
     @UiHandler("btnCreate")
     public void onCreateButtonClick(ClickEvent event) {
         delegate.onCreateCartridgeClicked();
     }
 
+    /** {@inheritDoc} */
     @UiHandler("btnCancel")
     public void onCancelButtonClick(ClickEvent event) {
         delegate.onCancelClicked();

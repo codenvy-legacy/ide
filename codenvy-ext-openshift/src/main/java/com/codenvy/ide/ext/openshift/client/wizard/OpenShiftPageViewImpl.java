@@ -20,7 +20,6 @@ package com.codenvy.ide.ext.openshift.client.wizard;
 
 import com.codenvy.ide.ext.openshift.client.OpenShiftResources;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.ui.list.SimpleList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -29,6 +28,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * The implementation for {@link OpenShiftPageView}.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -54,6 +55,12 @@ public class OpenShiftPageViewImpl extends Composite implements OpenShiftPageVie
 
     private ActionDelegate delegate;
 
+    /**
+     * Create view.
+     *
+     * @param resources
+     *         image resources
+     */
     @Inject
     protected OpenShiftPageViewImpl(OpenShiftResources resources) {
         this.resources = resources;
@@ -61,26 +68,31 @@ public class OpenShiftPageViewImpl extends Composite implements OpenShiftPageVie
         initWidget(uiBinder.createAndBindUi(this));
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getName() {
         return applicationName.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setName(String applicationName) {
         this.applicationName.setText(applicationName);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean getScalingValue() {
         return useAutoScaling.getValue();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getApplicationType() {
         return applicationType.getValue(applicationType.getSelectedIndex());
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setApplicationTypes(JsonArray<String> applicationTypes) {
         for (int i = 0; i < applicationTypes.size(); i++) {
@@ -88,6 +100,7 @@ public class OpenShiftPageViewImpl extends Composite implements OpenShiftPageVie
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;

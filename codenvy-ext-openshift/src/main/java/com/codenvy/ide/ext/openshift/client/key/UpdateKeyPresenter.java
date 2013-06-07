@@ -19,53 +19,57 @@
 package com.codenvy.ide.ext.openshift.client.key;
 
 import com.codenvy.ide.api.parts.ConsolePart;
-import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.openshift.client.OpenShiftAsyncRequestCallback;
-import com.codenvy.ide.ext.openshift.client.OpenShiftAutoBeanFactory;
 import com.codenvy.ide.ext.openshift.client.OpenShiftClientServiceImpl;
 import com.codenvy.ide.ext.openshift.client.OpenShiftLocalizationConstant;
 import com.codenvy.ide.ext.openshift.client.login.LoggedInHandler;
 import com.codenvy.ide.ext.openshift.client.login.LoginPresenter;
+import com.codenvy.ide.ext.openshift.client.marshaller.UserInfoUnmarshaller;
+import com.codenvy.ide.ext.openshift.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.openshift.shared.RHUserInfo;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Handler which execute update public ssh key for OpenShift account.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 @Singleton
 public class UpdateKeyPresenter {
     private EventBus                      eventBus;
-    private ResourceProvider              resourceProvider;
     private ConsolePart                   console;
     private OpenShiftLocalizationConstant constant;
     private LoginPresenter                loginPresenter;
     private OpenShiftClientServiceImpl    service;
-    private OpenShiftAutoBeanFactory      autoBeanFactory;
     private AsyncCallback<Boolean>        publicKeyUpdateCallback;
 
+    /**
+     * Create handler.
+     *
+     * @param eventBus
+     * @param console
+     * @param constant
+     * @param loginPresenter
+     * @param service
+     */
     @Inject
-    protected UpdateKeyPresenter(EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
-                                 OpenShiftLocalizationConstant constant, LoginPresenter loginPresenter, OpenShiftClientServiceImpl service,
-                                 OpenShiftAutoBeanFactory autoBeanFactory) {
+    protected UpdateKeyPresenter(EventBus eventBus, ConsolePart console, OpenShiftLocalizationConstant constant,
+                                 LoginPresenter loginPresenter, OpenShiftClientServiceImpl service) {
         this.eventBus = eventBus;
-        this.resourceProvider = resourceProvider;
         this.console = console;
         this.constant = constant;
         this.loginPresenter = loginPresenter;
         this.service = service;
-        this.autoBeanFactory = autoBeanFactory;
     }
 
-    /** If user is not logged in to AppFog, this handler will be called, after user logged in. */
+    /** If user is not logged in to OpenShift, this handler will be called, after user logged in. */
     private LoggedInHandler updatePublicKeyLoginHandler = new LoggedInHandler() {
         @Override
         public void onLoggedIn() {
@@ -73,12 +77,18 @@ public class UpdateKeyPresenter {
         }
     };
 
+    /**
+     * Perform to update ssh public key for current loggined account.
+     *
+     * @param callback
+     *         callback which will be executed if update is successful or fails
+     */
     public void updatePublicKey(AsyncCallback<Boolean> callback) {
         this.publicKeyUpdateCallback = callback;
 
         try {
-            AutoBean<RHUserInfo> rhUserInfo = autoBeanFactory.rhUserInfo();
-            AutoBeanUnmarshaller<RHUserInfo> unmarshaller = new AutoBeanUnmarshaller<RHUserInfo>(rhUserInfo);
+            DtoClientImpls.RHUserInfoImpl userInfo = DtoClientImpls.RHUserInfoImpl.make();
+            UserInfoUnmarshaller unmarshaller = new UserInfoUnmarshaller(userInfo);
 
             service.getUserInfo(false,
                                 new OpenShiftAsyncRequestCallback<RHUserInfo>(unmarshaller, updatePublicKeyLoginHandler, null, eventBus,
@@ -101,6 +111,12 @@ public class UpdateKeyPresenter {
         }
     }
 
+    /**
+     * Perform update in domain public ssh key.
+     *
+     * @param nameSpace
+     *         domain name in which key should be updated
+     */
     private void updateDomainWithNewKey(String nameSpace) {
         try {
             service.createDomain(nameSpace, true,

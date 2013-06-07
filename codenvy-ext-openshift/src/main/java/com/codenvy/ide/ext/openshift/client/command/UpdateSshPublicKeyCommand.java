@@ -27,6 +27,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * Command for "PaaS/OpenShift/Update Public Key..." action.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -35,32 +37,43 @@ public class UpdateSshPublicKeyCommand implements ExtendedCommand {
     private final UpdateKeyPresenter presenter;
     private final OpenShiftResources resources;
 
+    /**
+     * Create command.
+     *
+     * @param presenter
+     * @param resources
+     */
     @Inject
     public UpdateSshPublicKeyCommand(UpdateKeyPresenter presenter, OpenShiftResources resources) {
         this.presenter = presenter;
         this.resources = resources;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void execute() {
         presenter.updatePublicKey(null);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ImageResource getIcon() {
-        return null;
+        return resources.updateSshPublicKey();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getToolTip() {
         return "Update SSH public key on openshift.com";
     }
 
+    /** {@inheritDoc} */
     @Override
     public Expression inContext() {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Expression canExecute() {
         return null;

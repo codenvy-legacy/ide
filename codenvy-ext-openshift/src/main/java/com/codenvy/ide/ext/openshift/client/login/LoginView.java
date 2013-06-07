@@ -21,6 +21,8 @@ package com.codenvy.ide.ext.openshift.client.login;
 import com.codenvy.ide.api.mvp.View;
 
 /**
+ * The view for {@link LoginPresenter}.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -37,23 +39,65 @@ public interface LoginView extends View<LoginView.ActionDelegate> {
         public void onValueChanged();
     }
 
+    /**
+     * Get email entered by user.
+     *
+     * @return String representation of email field
+     */
     public String getEmail();
 
+    /**
+     * Set email which is stored in storage to show user who is loggined in current moment.
+     *
+     * @param email
+     *         email value
+     */
     public void setEmail(String email);
 
+    /**
+     * Get password value entered by user.
+     *
+     * @return String representation of password field
+     */
     public String getPassword();
 
+    /**
+     * Set password field value.
+     *
+     * @param password
+     *         password
+     */
     public void setPassword(String password);
 
+    /**
+     * Set error message if login was failed.
+     *
+     * @param message
+     *         error message
+     */
     public void setError(String message);
 
+    /**
+     * Enable or disable login button if input field are correctly filled.
+     *
+     * @param isEnable
+     *         true if login and password field are correctly filled
+     */
     public void setEnableLoginButton(boolean isEnable);
 
+    /** Focus to email field. */
     public void focusEmailField();
 
+    /**
+     * Is current windows showed.
+     *
+     * @return true - if window showed, otherwise - false
+     */
     public boolean isShown();
 
+    /** Close current window. */
     public void close();
 
+    /** Show window. */
     public void showDialog();
 }

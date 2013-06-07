@@ -25,8 +25,12 @@
         .space {
             margin-right: 5px;
         }
+
+        .labelPos {
+            top: 5px !important;
+        }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="380px" height="180px" addStyleNames="{res.openShiftCSS.login} {style.emptyBorder}">
+    <g:DockLayoutPanel unit="PX" width="380px" height="80px" addStyleNames="{res.openShiftCSS.login} {style.emptyBorder}">
         <g:south size="26.0">
             <g:FlowPanel>
                 <c:Button addStyleNames="{style.alignBtn}" text="{constant.changeDomainViewCancelButton}" width="50px" size="SMALL"
@@ -37,11 +41,11 @@
         </g:south>
         <g:north size="26.0">
             <g:DockLayoutPanel unit="PX" width="100%" height="100%" styleName="{style.spacing}">
-                <g:west size="100.0">
-                    <g:Label text="{constant.changeDomainViewField}" addStyleNames="{res.openShiftCSS.loginFont}"/>
+                <g:west size="120.0">
+                    <g:Label text="{constant.changeDomainViewField}" addStyleNames="{res.openShiftCSS.loginFont} {style.labelPos}"/>
                 </g:west>
                 <g:center>
-                    <g:TextBox width="270px" ui:field="domain"/>
+                    <g:TextBox width="250px" ui:field="domain"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>

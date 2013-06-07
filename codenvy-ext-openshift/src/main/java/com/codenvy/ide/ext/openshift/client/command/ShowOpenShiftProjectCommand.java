@@ -21,47 +21,61 @@ package com.codenvy.ide.ext.openshift.client.command;
 import com.codenvy.ide.api.expressions.Expression;
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 import com.codenvy.ide.ext.openshift.client.OpenShiftResources;
-import com.codenvy.ide.ext.openshift.client.login.LoggedInHandler;
-import com.codenvy.ide.ext.openshift.client.login.LoginCanceledHandler;
-import com.codenvy.ide.ext.openshift.client.login.LoginPresenter;
 import com.codenvy.ide.ext.openshift.client.project.ProjectPresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 
 /**
+ * Command for "Project/PaaS/OpenShift" action.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class ShowOpenShiftProjectCommand implements ExtendedCommand {
-    private final ProjectPresenter     projectPresenter;
-    private final OpenShiftResources   resources;
+    private final ProjectPresenter                 projectPresenter;
+    private final OpenShiftResources               resources;
+    private final OpenShiftProjectOpenedExpression expression;
 
+    /**
+     * Create command.
+     *
+     * @param projectPresenter
+     * @param resources
+     * @param expression
+     */
     @Inject
-    public ShowOpenShiftProjectCommand(ProjectPresenter projectPresenter, OpenShiftResources resources) {
+    public ShowOpenShiftProjectCommand(ProjectPresenter projectPresenter, OpenShiftResources resources,
+                                       OpenShiftProjectOpenedExpression expression) {
         this.projectPresenter = projectPresenter;
         this.resources = resources;
+        this.expression = expression;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void execute() {
         projectPresenter.showDialog();
     }
 
+    /** {@inheritDoc} */
     @Override
     public ImageResource getIcon() {
-        return null;
+        return resources.openShift();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getToolTip() {
         return "Shows OpenShift project properties";
     }
 
+    /** {@inheritDoc} */
     @Override
     public Expression inContext() {
-        return null;
+        return expression;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Expression canExecute() {
         return null;

@@ -20,14 +20,16 @@ package com.codenvy.ide.ext.openshift.client.info;
 
 import com.codenvy.ide.ext.openshift.client.OpenShiftLocalizationConstant;
 import com.codenvy.ide.ext.openshift.shared.AppInfo;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.inject.Inject;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
+ * Show application properties.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -35,6 +37,12 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
     private ApplicationInfoView           view;
     private OpenShiftLocalizationConstant constant;
 
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param constant
+     */
     @Inject
     protected ApplicationInfoPresenter(ApplicationInfoView view, OpenShiftLocalizationConstant constant) {
         this.view = view;
@@ -43,15 +51,30 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
         this.view.setDelegate(this);
     }
 
+    /**
+     * Show dialog.
+     *
+     * @param application
+     *         object of application to view properties
+     */
     public void showDialog(AppInfo application) {
         if (!view.isShown()) {
-            List<ApplicationProperty> properties = getApplicationProperties(application);
+            JsonArray<ApplicationProperty> properties = getApplicationProperties(application);
             view.setApplicationProperties(properties);
+
+            view.showDialog();
         }
     }
 
-    public List<ApplicationProperty> getApplicationProperties(AppInfo application) {
-        List<ApplicationProperty> properties = new ArrayList<ApplicationProperty>();
+    /**
+     * Get all necessary properties from current application.
+     *
+     * @param application
+     *         object of application fom which properties getted
+     * @return json array with properties value
+     */
+    public JsonArray<ApplicationProperty> getApplicationProperties(AppInfo application) {
+        JsonArray<ApplicationProperty> properties = JsonCollections.createArray();
         properties.add(new ApplicationProperty(constant.applicationInfoViewNameField(), application.getName()));
         properties.add(new ApplicationProperty(constant.applicationInfoViewTypeField(), application.getType()));
         properties.add(new ApplicationProperty(constant.applicationInfoViewPublicUrlField(), "<a href =\"" + application.getPublicUrl() +
@@ -68,6 +91,7 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
         return properties;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCloseClicked() {
         view.close();

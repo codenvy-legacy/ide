@@ -19,7 +19,6 @@
 package com.codenvy.ide.ext.openshift.client.wizard;
 
 import com.codenvy.ide.ext.git.client.GitClientService;
-import com.codenvy.ide.ext.git.client.GitExtension;
 import com.codenvy.ide.ext.git.client.marshaller.BranchListUnmarshaller;
 import com.codenvy.ide.ext.git.client.marshaller.RemoteListUnmarshaller;
 import com.codenvy.ide.ext.git.shared.Branch;
@@ -28,17 +27,15 @@ import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.js.JsoArray;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.VirtualFileSystemInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
+ * Handler which is executed after creating application on OpenShift to pull sources into local empty project.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -58,6 +55,14 @@ public class PullApplicationSourceHandler {
 
     private GitClientService gitService;
 
+    /**
+     * Create handler.
+     *
+     * @param vfsId
+     * @param project
+     * @param gitService
+     * @param callback
+     */
     public void pullApplicationSources(String vfsId, Project project, GitClientService gitService,
                                        AsyncCallback<Boolean> callback) {
         this.project = project;
@@ -68,21 +73,40 @@ public class PullApplicationSourceHandler {
         getRemotes(project.getId());
     }
 
+    /**
+     * Callback method that called when remotes are received.
+     *
+     * @param remotes
+     *         list of remotes
+     */
     public void onRemotesReceived(JsonArray<Remote> remotes) {
         this.remotes = remotes;
         getBranches(project.getId(), BranchListRequest.LIST_REMOTE);
     }
 
+    /**
+     * Sets list of local branches.
+     *
+     * @param branches
+     *         list of branches
+     */
     protected void setLocalBranches(JsonArray<Branch> branches) {
         localBranches = branches;
         getBranches(project.getId(), BranchListRequest.LIST_LOCAL);
     }
 
+    /**
+     * Sets list of remote branches.
+     *
+     * @param branches
+     *         list of branches
+     */
     protected void setRemoteBranches(JsonArray<Branch> branches) {
         remoteBranches = branches;
         pullSources();
     }
 
+    /** Start pulling sources over websockets. */
     private void pullSources() {
         String remoteName = remotes.get(0).getName();
         final String remoteUrl = remotes.get(0).getUrl();
@@ -110,6 +134,16 @@ public class PullApplicationSourceHandler {
         }
     }
 
+    /**
+     * Starts pulling sources over Rest.
+     *
+     * @param refs
+     *         remotes list
+     * @param remoteName
+     *         remotes name
+     * @param remoteUrl
+     *         remotes url
+     */
     private void pullSourcesREST(String refs, String remoteName, final String remoteUrl) {
         try {
             gitService.pull(vfsId, project, refs, remoteName, new AsyncRequestCallback<String>() {
@@ -128,10 +162,7 @@ public class PullApplicationSourceHandler {
         }
     }
 
-    /**
-     * Performs action when pull of Git-repository is successfully completed.
-     *
-     */
+    /** Performs action when pull of Git-repository is successfully completed. */
     private void onPullSuccess() {
         if (callback != null) {
             callback.onSuccess(true);
@@ -139,6 +170,7 @@ public class PullApplicationSourceHandler {
         }
     }
 
+    /** Performs action when pull of Git-repository is failed to complete. */
     private void handleError(Throwable e) {
         if (callback != null) {
             callback.onSuccess(false);
@@ -146,6 +178,14 @@ public class PullApplicationSourceHandler {
         }
     }
 
+    /**
+     * Get list of branches based on local repository.
+     *
+     * @param projectId
+     *         id of project from which branches will be gotten
+     * @param remoteMode
+     *         remote mode
+     */
     public void getBranches(String projectId, final String remoteMode) {
         try {
             gitService.branchList(vfsId, projectId, remoteMode,
@@ -165,14 +205,20 @@ public class PullApplicationSourceHandler {
 
                                       @Override
                                       protected void onFailure(Throwable exception) {
-
+                                          handleError(exception);
                                       }
                                   });
         } catch (RequestException e) {
-
+            handleError(e);
         }
     }
 
+    /**
+     * Get remotes based on local repository.
+     *
+     * @param projectId
+     *         id of project from which remotes will be gotten
+     */
     public void getRemotes(String projectId) {
         try {
             gitService.remoteList(vfsId, projectId, null, true,
@@ -189,10 +235,11 @@ public class PullApplicationSourceHandler {
 
                                       @Override
                                       protected void onFailure(Throwable exception) {
+                                          handleError(exception);
                                       }
                                   });
         } catch (RequestException e) {
-
+            handleError(e);
         }
     }
 
