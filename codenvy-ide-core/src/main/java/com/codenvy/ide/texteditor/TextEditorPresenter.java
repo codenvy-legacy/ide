@@ -31,6 +31,7 @@ import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.api.TextListener;
 import com.codenvy.ide.texteditor.api.outline.OutlineModel;
 import com.codenvy.ide.texteditor.api.outline.OutlinePresenter;
+import com.codenvy.ide.texteditor.gutter.breakpoint.BreakpointGutterManager;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.HTML;
@@ -53,15 +54,18 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter {
             }
         }
     };
-    protected TextEditorViewImpl  editor;
-    private   Resources           resources;
-    private   UserActivityManager userActivityManager;
-    private   OutlineImpl         outline;
+    protected TextEditorViewImpl      editor;
+    private   Resources               resources;
+    private   UserActivityManager     userActivityManager;
+    private   OutlineImpl             outline;
+    private   BreakpointGutterManager breakpointGutterManager;
 
     @Inject
-    public TextEditorPresenter(Resources resources, UserActivityManager userActivityManager) {
+    public TextEditorPresenter(Resources resources, UserActivityManager userActivityManager,
+                               BreakpointGutterManager breakpointGutterManager) {
         this.resources = resources;
         this.userActivityManager = userActivityManager;
+        this.breakpointGutterManager = breakpointGutterManager;
     }
 
     /** {@inheritDoc} */
@@ -116,9 +120,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter {
         }
         OutlineModel outlineModel = configuration.getOutline(editor);
         if (outlineModel != null) {
-            if (outline == null) {
-                outline = new OutlineImpl(resources, outlineModel, editor, this);
-            }
+            outline = new OutlineImpl(resources, outlineModel, editor, this);
             return outline;
         } else {
             return null;
@@ -147,7 +149,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter {
     @Override
     public void initialize(TextEditorConfiguration configuration, DocumentProvider documentProvider) {
         super.initialize(configuration, documentProvider);
-        editor = new TextEditorViewImpl(resources, userActivityManager);
+        editor = new TextEditorViewImpl(resources, userActivityManager, breakpointGutterManager);
         editor.getTextListenerRegistrar().add(textListener);
     }
 }

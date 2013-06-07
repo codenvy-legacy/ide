@@ -21,7 +21,7 @@ package com.codenvy.ide.ext.java.jdi.client.debug;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.commons.shared.ListenerRegistrar.Remover;
-import com.codenvy.ide.ext.java.client.editor.Breakpoint;
+import com.codenvy.ide.texteditor.gutter.breakpoint.Breakpoint;
 import com.codenvy.ide.ext.java.jdi.client.fqn.FqnResolverFactory;
 import com.codenvy.ide.ext.java.jdi.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.java.jdi.shared.BreakPoint;

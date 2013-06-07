@@ -21,6 +21,7 @@ import com.codenvy.ide.texteditor.Buffer;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.ViewportModel;
 import com.codenvy.ide.texteditor.gutter.Gutter;
+import com.codenvy.ide.texteditor.gutter.breakpoint.BreakpointGutterManager;
 import com.codenvy.ide.texteditor.renderer.ChangeTracker.ChangeType;
 import com.codenvy.ide.texteditor.selection.SelectionModel;
 import com.codenvy.ide.util.ListenerManager;
@@ -38,10 +39,10 @@ public class Renderer {
 
     public static Renderer create(DocumentModel document, ViewportModel viewport, Buffer buffer, Gutter leftGutter,
                                   SelectionModel selection, com.codenvy.ide.texteditor.api.FocusManager focusManager,
-                                  TextEditorViewImpl editor, Resources res,
-                                  RenderTimeExecutor renderTimeExecutor) {
+                                  TextEditorViewImpl editor, Resources res, RenderTimeExecutor renderTimeExecutor,
+                                  BreakpointGutterManager breakpointGutterManager) {
         return new Renderer(document, viewport, buffer, leftGutter, selection, focusManager, editor, res,
-                            renderTimeExecutor);
+                            renderTimeExecutor, breakpointGutterManager);
     }
 
     /** Listener that is notified when the rendering is finished. */
@@ -85,8 +86,7 @@ public class Renderer {
 
     private Renderer(DocumentModel document, ViewportModel viewport, Buffer buffer, Gutter leftGutter,
                      SelectionModel selection, com.codenvy.ide.texteditor.api.FocusManager focusManager, TextEditorViewImpl editor,
-                     Resources res,
-                     RenderTimeExecutor renderTimeExecutor) {
+                     Resources res, RenderTimeExecutor renderTimeExecutor, BreakpointGutterManager breakpointGutterManager) {
         this.viewport = viewport;
         this.renderTimeExecutor = renderTimeExecutor;
         this.completionListenerManager = ListenerManager.create();
@@ -94,7 +94,7 @@ public class Renderer {
         this.changeTracker = new ChangeTracker(this, buffer, document, viewport, selection, focusManager);
         this.viewportRenderer =
                 new ViewportRenderer(document, buffer, viewport, editor.getView(), lineLifecycleListenerManager);
-        this.lineNumberRenderer = new LineNumberRenderer(buffer, res, leftGutter, viewport, selection, editor);
+        this.lineNumberRenderer = new LineNumberRenderer(buffer, res, leftGutter, viewport, selection, editor, breakpointGutterManager);
 
     }
 

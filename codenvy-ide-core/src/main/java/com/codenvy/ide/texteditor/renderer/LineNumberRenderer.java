@@ -25,10 +25,13 @@ import com.codenvy.ide.texteditor.Buffer;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.ViewportModel;
 import com.codenvy.ide.texteditor.gutter.Gutter;
+import com.codenvy.ide.texteditor.gutter.breakpoint.BreakpointGutterManager;
 import com.codenvy.ide.texteditor.selection.SelectionModel;
 import com.codenvy.ide.util.ListenerRegistrar;
 import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.Image;
 
 
 /** A renderer for the line numbers in the left gutter. */
@@ -59,9 +62,13 @@ public class LineNumberRenderer {
 
     private final Css css;
 
+    private Resources resources;
+
     private int activeLineNumber = NONE;
 
     private int renderedActiveLineNumber = NONE;
+
+    private BreakpointGutterManager breakpointGutterManager;
 
     private final JsonArray<ListenerRegistrar.Remover> listenerRemovers = JsonCollections.createArray();
 
@@ -123,18 +130,31 @@ public class LineNumberRenderer {
     public interface Resources extends ClientBundle {
         @Source({"com/codenvy/ide/common/constants.css", "LineNumberRenderer.css", "com/codenvy/ide/api/ui/style.css"})
         Css lineNumberRendererCss();
+
+        @Source("com/codenvy/ide/texteditor/breakpoint.png")
+        ImageResource breakpoint();
     }
 
-    LineNumberRenderer(Buffer buffer, Resources res, Gutter leftGutter, ViewportModel viewport,
-                       SelectionModel selection, TextEditorViewImpl editor) {
+    LineNumberRenderer(Buffer buffer, Resources res, Gutter leftGutter, ViewportModel viewport, SelectionModel selection,
+                       TextEditorViewImpl editor, BreakpointGutterManager breakpointGutterManager) {
         this.buffer = buffer;
         this.leftGutter = leftGutter;
         this.editor = editor;
         this.lineNumberToElementCache = JsoIntegerMap.create();
         this.viewport = viewport;
+        this.breakpointGutterManager = breakpointGutterManager;
+        this.resources = res;
         this.css = res.lineNumberRendererCss();
         listenerRemovers.add(selection.getCursorListenerRegistrar().add(cursorListener));
         listenerRemovers.add(editor.getReadOnlyListenerRegistrar().add(readonlyListener));
+        this.leftGutter.getClickListenerRegistrar().add(new Gutter.ClickListener() {
+            @Override
+            public void onClick(int y) {
+                int lineNumber = LineNumberRenderer.this.buffer.convertYToLineNumber(y, true);
+                LineNumberRenderer.this.breakpointGutterManager.changeBreakPoint(lineNumber);
+                fillOrUpdateLines(lineNumber, lineNumber);
+            }
+        });
     }
 
     void renderImpl(int updateBeginLineNumber) {
@@ -206,27 +226,35 @@ public class LineNumberRenderer {
         for (int i = beginLineNumber; i <= endLineNumber; i++) {
             Element lineElement = lineNumberToElementCache.get(i);
             if (lineElement != null) {
-                updateElementPosition(lineElement, i);
-            } else {
-                Element element = createElement(i);
-                lineNumberToElementCache.put(i, element);
-                leftGutter.addUnmanagedElement(element);
+                lineNumberToElementCache.erase(i);
+                leftGutter.removeUnmanagedElement(lineElement);
             }
+
+            Element element = createElement(i);
+            lineNumberToElementCache.put(i, element);
+            leftGutter.addUnmanagedElement(element);
         }
     }
 
-    private void updateElementPosition(Element lineNumberElement, int lineNumber) {
-        lineNumberElement.getStyle().setTop(buffer.calculateLineTop(lineNumber), CSSStyleDeclaration.Unit.PX);
-    }
-
     private Element createElement(int lineNumber) {
-        Element element = Elements.createDivElement(css.lineNumber());
-        // Line 0 will be rendered as Line 1
-        element.setTextContent(String.valueOf(lineNumber + 1));
-        element.getStyle().setTop(buffer.calculateLineTop(lineNumber), CSSStyleDeclaration.Unit.PX);
-        if (lineNumber == activeLineNumber) {
-            element.addClassName(css.activeLineNumber());
-            renderedActiveLineNumber = activeLineNumber;
+        Element element;
+        if (!breakpointGutterManager.isBreakPointExist(lineNumber)) {
+            element = Elements.createDivElement(css.lineNumber());
+            // Line 0 will be rendered as Line 1
+            element.setTextContent(String.valueOf(lineNumber + 1));
+            element.getStyle().setTop(buffer.calculateLineTop(lineNumber), CSSStyleDeclaration.Unit.PX);
+            if (lineNumber == activeLineNumber) {
+                element.addClassName(css.activeLineNumber());
+                renderedActiveLineNumber = activeLineNumber;
+            }
+        } else {
+            Image i = new Image(resources.breakpoint());
+            element = (Element)i.getElement();
+            element.getStyle().setHeight(buffer.getEditorLineHeight() + CSSStyleDeclaration.Unit.PX);
+            element.getStyle().setPosition("absolute");
+            element.getStyle().setTop(buffer.convertLineNumberToY(lineNumber), CSSStyleDeclaration.Unit.PX);
+            element.getStyle().setLeft(7, CSSStyleDeclaration.Unit.PX);
+            element.setId("breakpoit-toggle-" + (lineNumber + 1));
         }
         return element;
     }

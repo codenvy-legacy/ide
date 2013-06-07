@@ -22,25 +22,12 @@ import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.json.JsonStringMap.IterationCallback;
 import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.mvp.UiComponent;
-import com.codenvy.ide.text.BadLocationException;
-import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.DocumentCommand;
-import com.codenvy.ide.text.DocumentImpl;
-import com.codenvy.ide.text.TextUtilities;
+import com.codenvy.ide.text.*;
 import com.codenvy.ide.text.annotation.AnnotationModel;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.text.store.TextStoreMutator;
-import com.codenvy.ide.texteditor.api.AutoEditStrategy;
-import com.codenvy.ide.texteditor.api.BeforeTextListener;
-import com.codenvy.ide.texteditor.api.KeyListener;
-import com.codenvy.ide.texteditor.api.NativeKeyUpListener;
-import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
-import com.codenvy.ide.texteditor.api.TextEditorOperations;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
-import com.codenvy.ide.texteditor.api.TextInputListener;
-import com.codenvy.ide.texteditor.api.TextListener;
-import com.codenvy.ide.texteditor.api.UndoManager;
+import com.codenvy.ide.texteditor.api.*;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.texteditor.api.parser.Parser;
 import com.codenvy.ide.texteditor.api.quickassist.QuickAssistAssistant;
@@ -51,23 +38,13 @@ import com.codenvy.ide.texteditor.codeassistant.QuickAssistAssistantImpl;
 import com.codenvy.ide.texteditor.documentparser.DocumentParser;
 import com.codenvy.ide.texteditor.gutter.Gutter;
 import com.codenvy.ide.texteditor.gutter.LeftGutterManager;
-import com.codenvy.ide.texteditor.input.ActionExecutor;
-import com.codenvy.ide.texteditor.input.CommonActions;
-import com.codenvy.ide.texteditor.input.InputController;
-import com.codenvy.ide.texteditor.input.InputScheme;
-import com.codenvy.ide.texteditor.input.RootActionExecutor;
+import com.codenvy.ide.texteditor.gutter.breakpoint.BreakpointGutterManager;
+import com.codenvy.ide.texteditor.input.*;
 import com.codenvy.ide.texteditor.linedimensions.LineDimensionsCalculator;
 import com.codenvy.ide.texteditor.linedimensions.LineDimensionsUtils;
 import com.codenvy.ide.texteditor.parenmatch.ParenMatchHighlighter;
-import com.codenvy.ide.texteditor.renderer.AnnotationRenderer;
-import com.codenvy.ide.texteditor.renderer.CurrentLineHighlighter;
-import com.codenvy.ide.texteditor.renderer.LineRenderer;
-import com.codenvy.ide.texteditor.renderer.RenderTimeExecutor;
-import com.codenvy.ide.texteditor.renderer.Renderer;
-import com.codenvy.ide.texteditor.selection.CursorView;
-import com.codenvy.ide.texteditor.selection.LocalCursorController;
-import com.codenvy.ide.texteditor.selection.SelectionLineRenderer;
-import com.codenvy.ide.texteditor.selection.SelectionManager;
+import com.codenvy.ide.texteditor.renderer.*;
+import com.codenvy.ide.texteditor.selection.*;
 import com.codenvy.ide.texteditor.selection.SelectionModel;
 import com.codenvy.ide.texteditor.syntaxhighlighter.SyntaxHighlighter;
 import com.codenvy.ide.util.CssUtils;
@@ -137,12 +114,15 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
     private       CodeAssistantImpl                          codeAssistant;
     private       VerticalRuler                              verticalRuler;
     private       QuickAssistAssistant                       quickAssistAssistant;
+    private       BreakpointGutterManager                    breakpointGutterManager;
     private       JsonStringMap<JsonArray<AutoEditStrategy>> autoEditStrategies;
     private       String                                     documentPartitioning;
 
-    public TextEditorViewImpl(com.codenvy.ide.Resources resources, UserActivityManager userActivityManager) {
+    public TextEditorViewImpl(com.codenvy.ide.Resources resources, UserActivityManager userActivityManager,
+                              BreakpointGutterManager breakpointGutterManager) {
         this.resources = resources;
         this.userActivityManager = userActivityManager;
+        this.breakpointGutterManager = breakpointGutterManager;
         editorFontDimensionsCalculator = FontDimensionsCalculator.get(resources.workspaceEditorCss().editorFont());
         renderTimeExecutor = new RenderTimeExecutor();
         LineDimensionsCalculator lineDimensions = LineDimensionsCalculator.create(editorFontDimensionsCalculator);
@@ -396,7 +376,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         viewport = ViewportModel.create(textStore, selection, buffer);
         input.handleDocumentChanged(textStore, selection, viewport);
         renderer = Renderer.create(textStore, viewport, buffer, getLeftGutter(), selection, focusManager, this, resources,
-                                   renderTimeExecutor);
+                                   renderTimeExecutor, breakpointGutterManager);
         if (editorUndoManager != null) {
             editorUndoManager.connect(this);
         }
