@@ -16,13 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.extension.cloudfoundry.client.action;
+package com.codenvy.ide.ext.appfog.client.actions;
 
+import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
-import com.codenvy.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter;
+import com.codenvy.ide.ext.appfog.client.AppfogResources;
+import com.codenvy.ide.ext.appfog.client.project.AppFogProjectPresenter;
+import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -31,20 +32,27 @@ import com.google.inject.Singleton;
  * @version $Id:
  */
 @Singleton
-public class ShowApplicationsActions extends Action {
+public class ShowProjectAction extends Action {
 
-
-    private ApplicationsPresenter presenter;
+    private final AppFogProjectPresenter presenter;
+    private final ResourceProvider       resourceProvider;
 
     @Inject
-    public ShowApplicationsActions(ApplicationsPresenter presenter, CloudFoundryResources resources) {
-        super("Applications...", "Shows registered applications on cloudfoundry.com", resources.appsList());
+    public ShowProjectAction(AppFogProjectPresenter presenter, AppfogResources resources, ResourceProvider resourceProvider) {
+        super("AppFog", "Shows AppFog project properties", resources.appfog());
         this.presenter = presenter;
+        this.resourceProvider = resourceProvider;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        presenter.showDialog(CloudFoundryExtension.PAAS_PROVIDER.CLOUD_FOUNDRY);
+        presenter.showDialog();
+    }
+
+    @Override
+    public void update(ActionEvent e) {
+        Project activeProject = resourceProvider.getActiveProject();
+        e.getPresentation().setVisible(activeProject != null && activeProject.getProperty("appfog-application") != null);
     }
 }

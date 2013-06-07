@@ -16,36 +16,33 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.appfog.client.command;
+package com.codenvy.ide.ext.appfog.client.actions;
 
-import com.codenvy.ide.api.expressions.AbstractExpression;
-import com.codenvy.ide.api.expressions.ExpressionManager;
-import com.codenvy.ide.api.expressions.ProjectConstraintExpression;
-import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.api.ui.action.Action;
+import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.ext.appfog.client.AppfogResources;
+import com.codenvy.ide.ext.appfog.client.apps.ApplicationsPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Detects opening AppFog project.
- *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
+ * @version $Id:
  */
 @Singleton
-public class AppFogProjectOpenedExpression extends AbstractExpression implements ProjectConstraintExpression {
-    /**
-     * Create expression.
-     *
-     * @param expressionManager
-     */
+public class ShowApplicationsAction extends Action {
+
+    private ApplicationsPresenter presenter;
+
     @Inject
-    public AppFogProjectOpenedExpression(ExpressionManager expressionManager) {
-        super(expressionManager, false);
+    public ShowApplicationsAction(ApplicationsPresenter presenter, AppfogResources resources) {
+        super("Applications...", "Shows registered applications on appfog.com", resources.appsList());
+        this.presenter = presenter;
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean onProjectChanged(Project project) {
-        value = project.getProperty("appfog-application") != null;
-        return value;
+    public void actionPerformed(ActionEvent e) {
+        presenter.showDialog();
     }
 }

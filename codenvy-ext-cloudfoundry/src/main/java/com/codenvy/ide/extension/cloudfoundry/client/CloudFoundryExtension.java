@@ -24,7 +24,7 @@ import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
 import com.codenvy.ide.extension.cloudfoundry.client.action.CreateApplicationAction;
-import com.codenvy.ide.extension.cloudfoundry.client.action.ShowApplicationsActions;
+import com.codenvy.ide.extension.cloudfoundry.client.action.ShowApplicationsAction;
 import com.codenvy.ide.extension.cloudfoundry.client.action.ShowCloudFoundryProjectAction;
 import com.codenvy.ide.extension.cloudfoundry.client.action.ShowLoginAction;
 import com.codenvy.ide.extension.cloudfoundry.client.wizard.CloudFoundryPagePresenter;
@@ -81,7 +81,7 @@ public class CloudFoundryExtension {
     public CloudFoundryExtension(PaaSAgent paasAgent, CloudFoundryResources resources, ActionManager actionManager,
                                  ShowCloudFoundryProjectAction showCloudFoundryProjectAction,
                                  CreateApplicationAction createApplicationAction,
-                                 ShowApplicationsActions showApplicationsActions,
+                                 ShowApplicationsAction showApplicationsAction,
                                  ShowLoginAction showLoginAction,
                                  Provider<CloudFoundryPagePresenter> wizardPage) {
 
@@ -100,11 +100,11 @@ public class CloudFoundryExtension {
 
 
         actionManager.registerAction("createCloudfoundry", createApplicationAction);
-        actionManager.registerAction("showCloudfoundryApplications", showApplicationsActions);
+        actionManager.registerAction("showCloudfoundryApplications", showApplicationsAction);
         actionManager.registerAction("showCloudfoundryLogin", showLoginAction);
 
         cloudfoundry.add(createApplicationAction);
-        cloudfoundry.add(showApplicationsActions);
+        cloudfoundry.add(showApplicationsAction);
         cloudfoundry.add(showLoginAction);
     }
 }
