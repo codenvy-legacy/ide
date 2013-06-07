@@ -18,9 +18,39 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.actions;
 
+import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.ui.action.Action;
+import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
+import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerPresenter;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class DebugAction {
+@Singleton
+public class DebugAction extends Action {
+
+    private DebuggerPresenter presenter;
+    private ResourceProvider  resourceProvider;
+
+    @Inject
+    public DebugAction(DebuggerPresenter presenter, JavaRuntimeResources resources, ResourceProvider resourceProvider) {
+        super("Debug Application", "Runs application", resources.debugApp());
+        this.presenter = presenter;
+        this.resourceProvider = resourceProvider;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        presenter.debugApplication();
+    }
+
+    @Override
+    public void update(ActionEvent e) {
+        e.getPresentation().setVisible(resourceProvider.getActiveProject() != null);
+    }
 }

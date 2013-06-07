@@ -20,14 +20,12 @@ package com.codenvy.ide.ext.openshift.client;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.paas.PaaSAgent;
-import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.ext.openshift.client.command.ChangeDomainCommand;
 import com.codenvy.ide.ext.openshift.client.command.ShowApplicationsCommand;
 import com.codenvy.ide.ext.openshift.client.command.ShowLoginCommand;
 import com.codenvy.ide.ext.openshift.client.command.ShowOpenShiftProjectCommand;
 import com.codenvy.ide.ext.openshift.client.command.UpdateSshPublicKeyCommand;
 import com.codenvy.ide.ext.openshift.client.wizard.OpenShiftPagePresenter;
-import com.codenvy.ide.extension.maven.client.template.CreateEmptyProjectPresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.google.inject.Inject;

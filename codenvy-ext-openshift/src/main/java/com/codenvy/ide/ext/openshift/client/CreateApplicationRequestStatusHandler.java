@@ -30,8 +30,8 @@ import com.google.web.bindery.event.shared.EventBus;
  * @version $Id: $
  */
 public class CreateApplicationRequestStatusHandler implements RequestStatusHandler {
-    private String applicationName;
-    private EventBus eventBus;
+    private String                        applicationName;
+    private EventBus                      eventBus;
     private OpenShiftLocalizationConstant constant;
 
     /**

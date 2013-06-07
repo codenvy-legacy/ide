@@ -21,8 +21,6 @@ package com.codenvy.ide.ext.openshift.client.cartridge;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.json.JsonArray;
 
-import java.util.List;
-
 /**
  * The view of {@link CreateCartridgePresenter}.
  *

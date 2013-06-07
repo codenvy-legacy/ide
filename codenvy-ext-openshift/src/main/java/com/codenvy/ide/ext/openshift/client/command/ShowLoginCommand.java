@@ -34,8 +34,8 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ShowLoginCommand implements ExtendedCommand {
-    private final LoginPresenter       presenter;
-    private final OpenShiftResources   resources;
+    private final LoginPresenter     presenter;
+    private final OpenShiftResources resources;
 
     /**
      * Create command.
