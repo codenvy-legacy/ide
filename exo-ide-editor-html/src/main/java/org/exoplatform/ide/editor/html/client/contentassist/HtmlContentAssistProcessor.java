@@ -199,7 +199,7 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor {
 
             if (endTagProposal != null) {
                 proposalArray[0] = new HtmlProposal(endTagProposal.getName(), CompletionType.ELEMENT,
-                                                    "", offset - endTagProposal.getName().length(), htmlAttributes, true);
+                                                    "", offset - 1, htmlAttributes, true);
             }
 
             getCompletionProposalArray(proposals, proposalArray, CompletionType.ATTRIBUTE, value, offset, endTagProposal != null ? 1 : 0);

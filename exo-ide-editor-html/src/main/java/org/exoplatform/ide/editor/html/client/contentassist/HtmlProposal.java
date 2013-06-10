@@ -81,6 +81,7 @@ public class HtmlProposal implements CompletionProposal {
      * @param prefix
      * @param offset
      * @param htmlAttributes
+     * @param isCloseTagProposal is this a proposal to close closeable tag
      */
     public HtmlProposal(String proposal, CompletionType type, String prefix, int offset,
                         HtmlTagsAndAttributes htmlAttributes, boolean isCloseTagProposal) {
@@ -158,7 +159,7 @@ public class HtmlProposal implements CompletionProposal {
     @Override
     public String getDisplayString() {
         if (isClosingTagProposal) {
-            final String displayString = ELEMENT_SEPARATOR_OPEN_FINISHTAG + proposal + ELEMENT_SEPARATOR_CLOSE + " (close tag)";
+            String displayString = ELEMENT_SEPARATOR_OPEN_FINISHTAG + proposal + ELEMENT_SEPARATOR_CLOSE + " (close tag)";
             return SafeHtmlUtils.fromString(displayString).asString();
         }
         return proposal;
