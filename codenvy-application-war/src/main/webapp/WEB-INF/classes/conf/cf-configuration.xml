@@ -62,6 +62,10 @@
                 <name>org.everrest.http.method.override</name>
                 <value>true</value>
             </value-param>
+            <value-param>
+                <name>org.everrest.core.impl.method.MethodInvokerDecoratorFactory</name>
+                <value>com.codenvy.ide.everrest.CodenvyAsyncMethodInvokerDecoratorFactory</value>
+            </value-param>
         </init-params>
     </component>
     <component>

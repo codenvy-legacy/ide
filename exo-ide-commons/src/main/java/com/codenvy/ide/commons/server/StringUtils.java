@@ -26,7 +26,9 @@ import java.io.StringWriter;
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: StringUtils.java Oct 16, 2012 vetal $
+ * @deprecated Use  com.codenvy.commons.lang.IoUtil
  */
+@Deprecated
 public class StringUtils {
 
     /**

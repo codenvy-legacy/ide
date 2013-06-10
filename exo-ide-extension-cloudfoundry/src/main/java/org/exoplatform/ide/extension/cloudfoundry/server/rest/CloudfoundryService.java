@@ -69,7 +69,7 @@ public class CloudfoundryService {
     public void login(Map<String, String> credentials, @QueryParam("paasprovider") @DefaultValue("cloudfoundry") String paasProvider)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, IOException {
         if (credentials == null)
-            throw new IllegalArgumentException("You must set your target, email & paasword");
+            throw new IllegalArgumentException("You must set your target, email & password");
         cloudfoundry.login(credentials.get("server"), credentials.get("email"), credentials.get("password"), paasProvider);
     }
 

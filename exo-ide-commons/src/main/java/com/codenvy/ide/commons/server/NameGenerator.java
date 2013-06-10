@@ -23,7 +23,9 @@ import java.util.Random;
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
+ * @deprecated Use  com.codenvy.commons.lang.NameGenerator
  */
+@Deprecated
 public class NameGenerator {
     private static final Random RANDOM = new Random();
     private static final char[] CHARS  = new char[36];
