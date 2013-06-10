@@ -54,7 +54,7 @@ public interface ActionManager {
     public String getId(Action action);
 
     /**
-     * Registers the specified action with the specified id. Note that IDEA's keymaps
+     * Registers the specified action with the specified id. Note that IDE keymaps
      * processing deals only with registered actions.
      *
      * @param actionId

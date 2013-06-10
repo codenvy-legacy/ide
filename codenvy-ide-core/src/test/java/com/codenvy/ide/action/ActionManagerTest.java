@@ -31,7 +31,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -52,14 +51,6 @@ public class ActionManagerTest {
     }
 
     @Test
-    public void shouldRegister() {
-        DefaultActionGroup defaultActionGroup = new DefaultActionGroup(actionManager);
-        actionManager.registerAction(IdeActions.GROUP_MAIN_MENU, defaultActionGroup);
-        Action action = actionManager.getAction(IdeActions.GROUP_MAIN_MENU);
-        assertEquals(defaultActionGroup, action);
-    }
-
-    @Test
     public void shouldUnregister() {
         DefaultActionGroup defaultActionGroup = new DefaultActionGroup(actionManager);
         actionManager.registerAction(IdeActions.GROUP_MAIN_MENU, defaultActionGroup);
@@ -74,14 +65,6 @@ public class ActionManagerTest {
         actionManager.registerAction(IdeActions.GROUP_MAIN_MENU, defaultActionGroup);
         boolean isGroup = actionManager.isGroup(IdeActions.GROUP_MAIN_MENU);
         assertTrue(isGroup);
-    }
-
-    @Test
-    public void shouldProvideId() {
-        DefaultActionGroup defaultActionGroup = new DefaultActionGroup(actionManager);
-        actionManager.registerAction(IdeActions.GROUP_MAIN_MENU, defaultActionGroup);
-        String id = actionManager.getId(defaultActionGroup);
-        assertEquals(IdeActions.GROUP_MAIN_MENU, id);
     }
 
 }
