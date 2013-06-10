@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.debug;
 
-import com.codenvy.ide.ext.java.client.editor.Breakpoint;
+import com.codenvy.ide.texteditor.gutter.breakpoint.Breakpoint;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

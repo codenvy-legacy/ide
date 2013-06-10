@@ -377,6 +377,7 @@ public class Project extends Folder {
             // content already present
             if (file.getContent() != null) {
                 callback.onSuccess(file);
+                return;
             }
 
             // create internal wrapping Request Callback with proper Unmarshaller

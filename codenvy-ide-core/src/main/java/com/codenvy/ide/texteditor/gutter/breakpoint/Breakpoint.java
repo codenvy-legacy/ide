@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.java.client.editor;
+package com.codenvy.ide.texteditor.gutter.breakpoint;
 
 /** @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a> */
 public class Breakpoint {
