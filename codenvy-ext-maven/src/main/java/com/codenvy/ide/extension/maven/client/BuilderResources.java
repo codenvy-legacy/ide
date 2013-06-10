@@ -29,12 +29,6 @@ public interface BuilderResources extends ClientBundle {
     @Source("com/codenvy/ide/extension/maven/images/controls/build.png")
     ImageResource build();
 
-    @Source("com/codenvy/ide/extension/maven/images/controls/build_Disabled.png")
-    ImageResource buildDisabled();
-
     @Source("com/codenvy/ide/extension/maven/images/controls/clearOutput.png")
     ImageResource clearOutput();
-
-    @Source("com/codenvy/ide/extension/maven/images/controls/clearOutput_Disabled.png")
-    ImageResource clearOutputDisabled();
 }
