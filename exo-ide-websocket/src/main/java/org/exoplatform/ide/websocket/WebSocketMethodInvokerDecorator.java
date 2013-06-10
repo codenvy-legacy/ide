@@ -18,12 +18,24 @@
  */
 package org.exoplatform.ide.websocket;
 
+import com.codenvy.commons.env.EnvironmentContext;
+import com.codenvy.ide.everrest.CodenvyAsynchronousJobService;
+
 import org.everrest.core.ApplicationContext;
+import org.everrest.core.impl.async.AsynchronousJob;
+import org.everrest.core.impl.async.AsynchronousJobRejectedException;
+import org.everrest.core.impl.async.AsynchronousMethodInvoker;
+import org.everrest.core.impl.method.DefaultMethodInvoker;
 import org.everrest.core.impl.method.MethodInvokerDecorator;
 import org.everrest.core.method.MethodInvoker;
 import org.everrest.core.resource.GenericMethodResource;
 import org.everrest.websockets.WSConnection;
 import org.exoplatform.services.security.ConversationState;
+
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 
 /**
  * Intended to prepare environment to invoke resource method when request received through web socket connection.
@@ -53,7 +65,20 @@ public class WebSocketMethodInvokerDecorator extends MethodInvokerDecorator {
                             ExoIdeWebSocketServlet.ENVIRONMENT_SESSION_ATTRIBUTE_NAME)
                                                                  );
             try {
-                return super.invokeMethod(resource, genericMethodResource, context);
+                Object[] parameters = DefaultMethodInvoker.makeMethodParameters(genericMethodResource, context);
+                final AsynchronousJob job = ((AsynchronousMethodInvoker)decoratedInvoker).runAsyncJob(resource, genericMethodResource, parameters); 
+                final String internalJobUri =
+                        UriBuilder.fromPath("/").path(EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString()).path(CodenvyAsynchronousJobService.class, "get").build(job.getJobId()).toString();
+                job.getContext().put("internal-uri", internalJobUri);
+                final String externalJobUri = context.getBaseUriBuilder().path(internalJobUri).build().toString();
+
+                return Response.status(Response.Status.ACCEPTED)
+                               .header(HttpHeaders.LOCATION, externalJobUri)
+                               .entity(externalJobUri)
+                               .type(MediaType.TEXT_PLAIN).build();
+//                return super.invokeMethod(resource, genericMethodResource, context);
+            } catch (AsynchronousJobRejectedException e) {
+                return Response.serverError().entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
             } finally {
                 ConversationState.setCurrent(null);
                 com.codenvy.commons.env.EnvironmentContext.reset();

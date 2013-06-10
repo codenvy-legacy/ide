@@ -19,6 +19,7 @@
 package org.exoplatform.ide.websocket;
 
 import com.codenvy.commons.env.EnvironmentContext;
+import com.codenvy.ide.everrest.CodenvyAsynchronousJobPool;
 
 import org.apache.catalina.websocket.StreamInbound;
 import org.everrest.core.DependencySupplier;
@@ -93,7 +94,7 @@ public class ExoIdeWebSocketServlet extends EverrestWebSocketServlet {
     protected AsynchronousJobPool getAsynchronousJobPool() {
         ProviderBinder providers = ProviderBinder.getInstance();
         if (providers != null) {
-            ContextResolver<AsynchronousJobPool> asyncJobsResolver = providers.getContextResolver(AsynchronousJobPool.class, null);
+            ContextResolver<CodenvyAsynchronousJobPool> asyncJobsResolver = providers.getContextResolver(CodenvyAsynchronousJobPool.class, null);
             if (asyncJobsResolver != null) {
                 return asyncJobsResolver.getContext(null);
             }
