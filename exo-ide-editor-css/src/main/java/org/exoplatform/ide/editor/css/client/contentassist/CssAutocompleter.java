@@ -79,8 +79,7 @@ public class CssAutocompleter extends LanguageSpecificAutocompleter {
     }
 
     @Override
-    public void attach(DocumentParser parser/* , AutocompleteController controller, PathUtil filePath */) {
-        // super.attach(parser, controller, filePath);
+    public void attach(DocumentParser parser) {
         super.attach(parser);
         completionQuery = null;
     }

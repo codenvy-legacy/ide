@@ -29,7 +29,6 @@ import com.google.collide.shared.document.anchor.ReadOnlyAnchor;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.regexp.shared.RegExp;
 
-
 /** Implementation that adds JavaScript-specific cases. */
 class JavaScriptExplicitAutocompleter extends ExplicitAutocompleter {
 
