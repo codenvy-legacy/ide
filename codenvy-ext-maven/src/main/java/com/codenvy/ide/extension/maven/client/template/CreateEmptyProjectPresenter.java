@@ -20,17 +20,18 @@ package com.codenvy.ide.extension.maven.client.template;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.CreateProjectProvider;
-import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.ProjectDescription;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
+import static com.codenvy.ide.json.JsonCollections.createArray;
+import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 
 /**
  * The implementation of {@link CreateProjectProvider}. Provides create empty
@@ -60,8 +61,7 @@ public class CreateEmptyProjectPresenter implements CreateProjectProvider {
     /** {@inheritDoc} */
     @Override
     public void create(final AsyncCallback<Project> callback) {
-        JsonArray<Property> properties = JsonCollections.<Property>createArray(new Property(ProjectDescription.PROPERTY_PRIMARY_NATURE,
-                                                                                            JavaProject.PRIMARY_NATURE));
+        JsonArray<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE));
         try {
             service.createEmptyProject(projectName, properties, new AsyncRequestCallback<Void>() {
                 @Override

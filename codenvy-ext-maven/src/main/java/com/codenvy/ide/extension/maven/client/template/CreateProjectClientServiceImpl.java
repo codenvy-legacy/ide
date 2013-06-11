@@ -20,18 +20,18 @@ package com.codenvy.ide.extension.maven.client.template;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.resources.marshal.JSONSerializer;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.ui.loader.Loader;
-import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.URL;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+
+import static com.codenvy.ide.resources.marshal.JSONSerializer.PROPERTY_SERIALIZER;
+import static com.codenvy.ide.rest.HTTPHeader.CONTENT_TYPE;
+import static com.google.gwt.http.client.RequestBuilder.POST;
 
 /**
  * The implementation of {@link CreateProjectClientService}.
@@ -69,14 +69,14 @@ public class CreateProjectClientServiceImpl implements CreateProjectClientServic
             throws RequestException {
         String requestUrl = restContext + CREATE_WAR_PROJECT;
 
-        String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName;
+        String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootId=" + resourceProvider.getRootId();
         String url = requestUrl + param;
 
         loader.setMessage("Creating new project...");
 
-        AsyncRequest.build(RequestBuilder.POST, url)
-                    .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(properties).toString())
-                    .header(HTTPHeader.CONTENT_TYPE, "application/json").loader(loader).send(callback);
+        AsyncRequest.build(POST, url)
+                    .data(PROPERTY_SERIALIZER.fromCollection(properties).toString())
+                    .header(CONTENT_TYPE, "application/json").loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
@@ -85,30 +85,29 @@ public class CreateProjectClientServiceImpl implements CreateProjectClientServic
             throws RequestException {
         String requestUrl = restContext + CREATE_SPRING_PROJECT;
 
-        String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName;
+        String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootId=" + resourceProvider.getRootId();
         String url = requestUrl + param;
 
         loader.setMessage("Creating new project...");
 
-        AsyncRequest.build(RequestBuilder.POST, url)
-                    .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(properties).toString())
-                    .header(HTTPHeader.CONTENT_TYPE, "application/json").loader(loader).send(callback);
+        AsyncRequest.build(POST, url)
+                    .data(PROPERTY_SERIALIZER.fromCollection(properties).toString())
+                    .header(CONTENT_TYPE, "application/json").loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void createJavaProject(String projectName, String sourceFolder, JsonArray<Property> properties,
-                                  AsyncRequestCallback<Void> callback) throws RequestException {
+    public void createJavaProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback)
+            throws RequestException {
         String requestUrl = restContext + CREATE_JAVA_PROJECT;
-        String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&source=" + sourceFolder;
+        String param = "?vfsid=" + resourceProvider.getVfsId() + "&name=" + projectName + "&rootId=" + resourceProvider.getRootId();
         String url = requestUrl + param;
-        url = URL.encode(url);
 
         loader.setMessage("Creating new project...");
 
-        AsyncRequest.build(RequestBuilder.POST, url)
-                    .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(properties).toString())
-                    .header(HTTPHeader.CONTENT_TYPE, "application/json").loader(loader).send(callback);
+        AsyncRequest.build(POST, url)
+                    .data(PROPERTY_SERIALIZER.fromCollection(properties).toString())
+                    .header(CONTENT_TYPE, "application/json").loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */
@@ -122,8 +121,8 @@ public class CreateProjectClientServiceImpl implements CreateProjectClientServic
 
         loader.setMessage("Creating project...");
 
-        AsyncRequest.build(RequestBuilder.POST, url)
-                    .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(properties).toString())
-                    .header(HTTPHeader.CONTENT_TYPE, "application/json").loader(loader).send(callback);
+        AsyncRequest.build(POST, url)
+                    .data(PROPERTY_SERIALIZER.fromCollection(properties).toString())
+                    .header(CONTENT_TYPE, "application/json").loader(loader).send(callback);
     }
 }

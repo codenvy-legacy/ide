@@ -25,8 +25,6 @@ import com.codenvy.ide.extension.maven.client.build.BuildProjectView;
 import com.codenvy.ide.extension.maven.client.build.BuildProjectViewImpl;
 import com.codenvy.ide.extension.maven.client.template.CreateProjectClientService;
 import com.codenvy.ide.extension.maven.client.template.CreateProjectClientServiceImpl;
-import com.codenvy.ide.extension.maven.client.template.wizard.javaproject.CreateJavaProjectPageView;
-import com.codenvy.ide.extension.maven.client.template.wizard.javaproject.CreateJavaProjectPageViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
@@ -40,6 +38,5 @@ public class MavenGinModule extends AbstractGinModule {
         bind(CreateProjectClientService.class).to(CreateProjectClientServiceImpl.class).in(Singleton.class);
 
         bind(BuildProjectView.class).to(BuildProjectViewImpl.class).in(Singleton.class);
-        bind(CreateJavaProjectPageView.class).to(CreateJavaProjectPageViewImpl.class);
     }
 }

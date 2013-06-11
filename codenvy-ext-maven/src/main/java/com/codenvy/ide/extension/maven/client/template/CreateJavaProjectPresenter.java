@@ -16,23 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.extension.maven.client.template.wizard.javaproject;
+package com.codenvy.ide.extension.maven.client.template;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.CreateProjectProvider;
-import com.codenvy.ide.extension.maven.client.template.CreateProjectClientService;
-import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
-import com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.ProjectDescription;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import static com.codenvy.ide.ext.java.client.projectmodel.JavaProject.PRIMARY_NATURE;
+import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS;
+import static com.codenvy.ide.json.JsonCollections.createArray;
+import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 
 /**
  * The implementation of {@link CreateProjectProvider}. Provides create java application.
@@ -42,7 +42,6 @@ import com.google.inject.Singleton;
 @Singleton
 public class CreateJavaProjectPresenter implements CreateProjectProvider {
     private String                     projectName;
-    private String                     sourceFolder;
     private CreateProjectClientService service;
     private ResourceProvider           resourceProvider;
 
@@ -56,10 +55,6 @@ public class CreateJavaProjectPresenter implements CreateProjectProvider {
     protected CreateJavaProjectPresenter(CreateProjectClientService service, ResourceProvider resourceProvider) {
         this.service = service;
         this.resourceProvider = resourceProvider;
-    }
-
-    public void setSourceFolder(String sourceFolder) {
-        this.sourceFolder = sourceFolder;
     }
 
     /** {@inheritDoc} */
@@ -77,12 +72,11 @@ public class CreateJavaProjectPresenter implements CreateProjectProvider {
     /** {@inheritDoc} */
     @Override
     public void create(final AsyncCallback<Project> callback) {
-        JsonArray<Property> properties =
-                JsonCollections.<Property>createArray(new Property(ProjectDescription.PROPERTY_PRIMARY_NATURE, JavaProject.PRIMARY_NATURE),
-                                                      new Property(JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS,
-                                                                   JsonCollections.createArray(sourceFolder)));
+        JsonArray<Property> properties = createArray(new Property(PROPERTY_PRIMARY_NATURE, PRIMARY_NATURE),
+                                                     new Property(PROPERTY_SOURCE_FOLDERS,
+                                                                  createArray("src/main/java", "src/test/java")));
         try {
-            service.createJavaProject(projectName, sourceFolder, properties, new AsyncRequestCallback<Void>() {
+            service.createJavaProject(projectName, properties, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     resourceProvider.getProject(projectName, new AsyncCallback<Project>() {

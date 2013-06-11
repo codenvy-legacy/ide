@@ -16,10 +16,9 @@
  */
 package com.codenvy.ide.ext.java.client.projectmodel;
 
+import com.codenvy.ide.api.event.ResourceChangedEvent;
 import com.codenvy.ide.ext.java.client.core.JavaConventions;
 import com.codenvy.ide.ext.java.client.core.JavaCore;
-
-import com.codenvy.ide.api.event.ResourceChangedEvent;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.*;
@@ -206,7 +205,7 @@ public class JavaProject extends Project {
             url = URL.decode(url).replace("[name]", name);
             url = URL.encode(url);
             loader.setMessage("Creating new compilation unit...");
-            AsyncRequest.build(RequestBuilder.POST, url).data(content).header(HTTPHeader.CONTENT_TYPE, mimeType)
+            AsyncRequest.build(RequestBuilder.POST, url).data(content).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JAVA)
                         .loader(loader).send(internalCallback);
         } catch (Exception e) {
             callback.onFailure(e);

@@ -55,13 +55,11 @@ public interface CreateProjectClientService {
      * Creates java project.
      *
      * @param projectName
-     * @param sourceFolder
      * @param properties
      * @param callback
      * @throws RequestException
      */
-    void createJavaProject(String projectName, String sourceFolder, JsonArray<Property> properties,
-                           AsyncRequestCallback<Void> callback) throws RequestException;
+    void createJavaProject(String projectName, JsonArray<Property> properties, AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
      * Creates empty project.
