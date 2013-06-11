@@ -18,18 +18,12 @@
  */
 package org.exoplatform.ide.websocket;
 
-import com.codenvy.commons.env.EnvironmentContext;
-import com.codenvy.ide.everrest.CodenvyAsynchronousJobService;
-
 import org.everrest.core.ApplicationContext;
-import org.everrest.core.impl.async.AsynchronousJob;
 import org.everrest.core.impl.method.MethodInvokerDecorator;
 import org.everrest.core.method.MethodInvoker;
 import org.everrest.core.resource.GenericMethodResource;
 import org.everrest.websockets.WSConnection;
 import org.exoplatform.services.security.ConversationState;
-
-import javax.ws.rs.core.UriBuilder;
 
 /**
  * Intended to prepare environment to invoke resource method when request received through web socket connection.
@@ -50,23 +44,13 @@ public class WebSocketMethodInvokerDecorator extends MethodInvokerDecorator {
     public Object invokeMethod(Object resource, GenericMethodResource genericMethodResource, ApplicationContext context) {
         WSConnection wsConnection = (WSConnection)org.everrest.core.impl.EnvironmentContext.getCurrent().get(WSConnection.class);
         if (wsConnection != null && ConversationState.getCurrent() == null) {
-            ConversationState.setCurrent(
-                    (ConversationState)wsConnection.getHttpSession().getAttribute(
-                            ExoIdeWebSocketServlet.CONVERSATION_STATE_SESSION_ATTRIBUTE_NAME)
-                                        );
+            ConversationState.setCurrent((ConversationState)wsConnection.getHttpSession().getAttribute(
+                    ExoIdeWebSocketServlet.CONVERSATION_STATE_SESSION_ATTRIBUTE_NAME));
             com.codenvy.commons.env.EnvironmentContext.setCurrent(
                     (com.codenvy.commons.env.EnvironmentContext)wsConnection.getHttpSession().getAttribute(
-                            ExoIdeWebSocketServlet.ENVIRONMENT_SESSION_ATTRIBUTE_NAME)
-                                                                 );
+                            ExoIdeWebSocketServlet.ENVIRONMENT_SESSION_ATTRIBUTE_NAME));
             try {
-                final AsynchronousJob job = (AsynchronousJob)super.invokeMethod(resource, genericMethodResource, context);
-                final String internalJobUri =
-                        UriBuilder.fromPath("/")
-                                  .path(CodenvyAsynchronousJobService.class, "get")
-                                  .build(EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME), job.getJobId())
-                                  .toString();
-                job.getContext().put("internal-uri", internalJobUri);
-                return job;
+                return super.invokeMethod(resource, genericMethodResource, context);
             } finally {
                 ConversationState.setCurrent(null);
                 com.codenvy.commons.env.EnvironmentContext.reset();
