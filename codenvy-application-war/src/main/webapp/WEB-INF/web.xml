@@ -81,10 +81,10 @@
        <jsp-file>/ide/Application.jsp</jsp-file>
    </servlet>
 
-   <servlet>
+   <!--servlet>
        <servlet-name>shell</servlet-name>
        <jsp-file>/shell/shell.jsp</jsp-file>
-   </servlet>
+   </servlet-->
 
    <servlet>
       <servlet-name>EverrestServlet</servlet-name>
@@ -98,7 +98,7 @@
    
    <servlet>
       <servlet-name>DispatcherServlet</servlet-name>
-      <servlet-class>com.codenvy.servlet.DispatcherServlet</servlet-class>
+      <servlet-class>com.codenvy.commons.servlet.DispatcherServlet</servlet-class>
    </servlet>
 
    <servlet-mapping>
@@ -111,10 +111,10 @@
       <url-pattern>/ide/*</url-pattern>
    </servlet-mapping>
    
-    <servlet-mapping>
+    <!--servlet-mapping>
       <servlet-name>shell</servlet-name>
       <url-pattern>/shell/main</url-pattern>
-   </servlet-mapping>
+   </servlet-mapping-->
 
    <servlet-mapping>
       <servlet-name>default</servlet-name>

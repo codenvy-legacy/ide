@@ -67,8 +67,8 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
                                                  public boolean matches(HttpServletRequest request, HttpServletResponse response) {
                                                      final String workspace = (String)request.getAttribute("ws");
                                                      final String requestPath = request.getPathInfo();
-                                                     return requestPath.startsWith("/w/" + workspace + "/ide") ||
-                                                            requestPath.startsWith("/w/" + workspace + "/shell");
+                                                     return requestPath.startsWith("/" + workspace + "/ide") ||
+                                                            requestPath.startsWith("/" + workspace + "/shell");
                                                  }
                                              })
                                              .execute(new Action() {
