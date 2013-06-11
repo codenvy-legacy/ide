@@ -17,7 +17,6 @@
 package com.codenvy.ide.extension.demo;
 
 import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.expressions.ProjectOpenedExpression;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
@@ -36,8 +35,7 @@ public class DemoExtension {
     @Inject
     public DemoExtension(final WorkspaceAgent workspace,
                          ActionManager actionManager,
-                         EditorAgent editorAgent, final ProjectOpenedExpression projectOpenedExpression,
-                         CreateDemoCommand createDemoCommand) {
+                         EditorAgent editorAgent) {
         // CREATE DYNAMIC MENU CONTENT
 //        menu.addMenuItem("File/Create Demo Content", createDemoCommand);
 //        menu.addMenuItem("Project/Some Project Operation", new ExtendedCommand() {
