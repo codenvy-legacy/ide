@@ -19,32 +19,25 @@
 package com.codenvy.ide.everrest;
 
 import com.codenvy.commons.env.EnvironmentContext;
-import com.google.gdata.data.ExtensionDescription.Default;
 
 import org.everrest.core.ApplicationContext;
 import org.everrest.core.impl.async.AsynchronousJob;
-import org.everrest.core.impl.async.AsynchronousJobRejectedException;
-import org.everrest.core.impl.async.AsynchronousJobService;
-import org.everrest.core.impl.async.AsynchronousMethodInvoker;
-import org.everrest.core.impl.method.DefaultMethodInvoker;
 import org.everrest.core.impl.method.MethodInvokerDecorator;
 import org.everrest.core.method.MethodInvoker;
 import org.everrest.core.resource.GenericMethodResource;
 
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
 /**
  * Rewrite original location by adding workspace name.
- * 
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public class CodenvyAsyncMethodInvokerDecorator extends MethodInvokerDecorator {
     /**
-     * @param decoratedInvoker decorated MethodInvoker
+     * @param decoratedInvoker
+     *         decorated MethodInvoker
      */
     public CodenvyAsyncMethodInvokerDecorator(MethodInvoker decoratedInvoker) {
         super(decoratedInvoker);
@@ -52,22 +45,14 @@ public class CodenvyAsyncMethodInvokerDecorator extends MethodInvokerDecorator {
 
     @Override
     public Object invokeMethod(Object resource, GenericMethodResource methodResource, ApplicationContext context) {
-        if (context.isAsynchronous())  {
-            try {
-                Object[] parameters = DefaultMethodInvoker.makeMethodParameters(methodResource, context);
-                final AsynchronousJob job = ((AsynchronousMethodInvoker)decoratedInvoker).runAsyncJob(resource, methodResource, parameters); 
-                final String internalJobUri =
-                        UriBuilder.fromPath("/").path(EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString()).path(CodenvyAsynchronousJobService.class, "get").build(job.getJobId()).toString();
-                job.getContext().put("internal-uri", internalJobUri);
-                final String externalJobUri = context.getBaseUriBuilder().path(internalJobUri).build().toString();
-
-                return Response.status(Response.Status.ACCEPTED)
-                               .header(HttpHeaders.LOCATION, externalJobUri)
-                               .entity(externalJobUri)
-                               .type(MediaType.TEXT_PLAIN).build();
-            } catch (AsynchronousJobRejectedException e) {
-                return Response.serverError().entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
-            }
+        if (context.isAsynchronous()) {
+            final AsynchronousJob job = (AsynchronousJob)super.invokeMethod(resource, methodResource, context);
+            final String internalJobUri =
+                    UriBuilder.fromPath("/").path(CodenvyAsynchronousJobService.class, "get")
+                              .build(EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME), job.getJobId())
+                              .toString();
+            job.getContext().put("internal-uri", internalJobUri);
+            return job;
         }
         return super.invokeMethod(resource, methodResource, context);
     }
