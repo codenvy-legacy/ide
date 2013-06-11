@@ -18,8 +18,8 @@
  */
 package com.codenvy.ide.keybinding;
 
+import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.keybinding.Scheme;
-import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonIntegerMap;
@@ -37,7 +37,7 @@ public class SchemeImpl implements Scheme {
 
     private String description;
 
-    private JsonIntegerMap<JsonArray<ExtendedCommand>> handlers;
+    private JsonIntegerMap<JsonArray<Action>> handlers;
 
 
     public SchemeImpl(String id, String description) {
@@ -58,16 +58,19 @@ public class SchemeImpl implements Scheme {
         return description;
     }
 
-    /** {@inheritDoc} */
     @Override
-    public void addKeyBinding(CharCodeWithModifiers keyBinging, ExtendedCommand command) {
-        int digest = keyBinging.getKeyDigest();
-        if (!handlers.hasKey(digest)) {
-            handlers.put(digest, JsonCollections.<ExtendedCommand>createArray());
-        }
-        handlers.get(digest).add(command);
+    public void addAction(Action action) {
     }
 
+    /** {@inheritDoc} */
+//
+//    public void addKeyBinding(CharCodeWithModifiers keyBinging, Action command) {
+//        int digest = keyBinging.getKeyDigest();
+//        if (!handlers.hasKey(digest)) {
+//            handlers.put(digest, JsonCollections.<Action>createArray());
+//        }
+//        handlers.get(digest).add(command);
+//    }
     public boolean handleKeyEvent(SignalEvent event) {
         int digest = CharCodeWithModifiers.computeKeyDigest(event);
         if (handlers.hasKey(digest)) {
@@ -78,18 +81,19 @@ public class SchemeImpl implements Scheme {
         }
     }
 
-    private void executeCommand(JsonArray<ExtendedCommand> commands) {
-        for (ExtendedCommand command : commands.asIterable()) {
-            // check command context
-            if (command.inContext() != null && !command.inContext().getValue()) {
-                continue;
-            }
-
-            if (command.canExecute() != null && !command.canExecute().getValue()) {
-                continue;
-            }
-            // TODO handle if we have more than one enabled command
-            command.execute();
-        }
+    private void executeCommand(JsonArray<Action> commands) {
+        //TODO
+//        for (ExtendedCommand command : commands.asIterable()) {
+//            // check command context
+//            if (command.inContext() != null && !command.inContext().getValue()) {
+//                continue;
+//            }
+//
+//            if (command.canExecute() != null && !command.canExecute().getValue()) {
+//                continue;
+//            }
+//            // TODO handle if we have more than one enabled command
+//            command.execute();
+//        }
     }
 }

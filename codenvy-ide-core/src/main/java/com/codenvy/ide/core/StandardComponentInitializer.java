@@ -26,7 +26,6 @@ import com.codenvy.ide.actions.OpenProjectAction;
 import com.codenvy.ide.actions.SaveAction;
 import com.codenvy.ide.actions.SaveAllAction;
 import com.codenvy.ide.actions.ShowPreferencesAction;
-import com.codenvy.ide.api.expressions.ExpressionManager;
 import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.Constraints;
@@ -66,9 +65,6 @@ public class StandardComponentInitializer {
 
     @Inject
     private KeyBindingAgent keyBinding;
-
-    @Inject
-    private ExpressionManager expressionManager;
 
     @Inject
     private EventBus eventBus;

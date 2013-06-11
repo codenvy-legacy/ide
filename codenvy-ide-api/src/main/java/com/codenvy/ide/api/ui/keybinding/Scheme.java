@@ -18,8 +18,7 @@
  */
 package com.codenvy.ide.api.ui.keybinding;
 
-import com.codenvy.ide.api.ui.menu.ExtendedCommand;
-import com.codenvy.ide.util.input.CharCodeWithModifiers;
+import com.codenvy.ide.api.ui.action.Action;
 
 
 /**
@@ -47,11 +46,9 @@ public interface Scheme {
     /**
      * Add key binding for command.
      *
-     * @param keyBinging
-     *         the key sequence.
-     * @param command
+     * @param action
      *         the command which keys bind.
      */
-    void addKeyBinding(CharCodeWithModifiers keyBinging, ExtendedCommand command);
+    void addAction(Action action);
 
 }

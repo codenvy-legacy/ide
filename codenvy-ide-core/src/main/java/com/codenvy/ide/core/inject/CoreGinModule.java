@@ -23,7 +23,6 @@ import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.editor.EditorRegistry;
-import com.codenvy.ide.api.expressions.ExpressionManager;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.parts.ConsolePart;
@@ -52,7 +51,6 @@ import com.codenvy.ide.core.editor.DefaultEditorProvider;
 import com.codenvy.ide.core.editor.EditorAgentImpl;
 import com.codenvy.ide.core.editor.EditorRegistryImpl;
 import com.codenvy.ide.core.editor.ResourceDocumentProvider;
-import com.codenvy.ide.core.expressions.ExpressionManagerImpl;
 import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.keybinding.KeyBindingManager;
 import com.codenvy.ide.menu.MainMenuView;
@@ -155,7 +153,6 @@ public class CoreGinModule extends AbstractGinModule {
     private void apiBindingConfigure() {
         // Agents
         bind(KeyBindingAgent.class).to(KeyBindingManager.class).in(Singleton.class);
-        bind(ExpressionManager.class).to(ExpressionManagerImpl.class).in(Singleton.class);
         bind(SelectionAgent.class).to(SelectionAgentImpl.class).in(Singleton.class);
         bind(WorkspaceAgent.class).to(WorkspacePresenter.class).in(Singleton.class);
         bind(PreferencesAgent.class).to(PreferencesAgentImpl.class).in(Singleton.class);
