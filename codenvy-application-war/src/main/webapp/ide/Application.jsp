@@ -38,14 +38,14 @@
         var securityCheckURL = "/w/j_security_check";
     </script>
 
-    <script type="text/javascript" language="javascript" src='<%= com.codenvy.servlet.DispatcherServlet.genStaticResourceUrl(request, "ide.nocache.js")%>'></script>
-    <link type="text/css" rel="stylesheet" href='<%= com.codenvy.servlet.DispatcherServlet.genStaticResourceUrl(request, "top-menu.css")%>' media="all">
-    <link href='<%= com.codenvy.servlet.DispatcherServlet.genStaticResourceUrl(request, "css/ide.css")%>' media="screen" rel="stylesheet" type="text/css">
+    <script type="text/javascript" language="javascript" src='<%= com.codenvy.commons.servlet.DispatcherServlet.genIdeStaticResourceUrl(request, "ide.nocache.js")%>'></script>
+    <link type="text/css" rel="stylesheet" href='<%= com.codenvy.commons.servlet.DispatcherServlet.genIdeStaticResourceUrl(request, "top-menu.css")%>' media="all">
+    <link href='<%= com.codenvy.commons.servlet.DispatcherServlet.genIdeStaticResourceUrl(request, "css/ide.css")%>' media="screen" rel="stylesheet" type="text/css">
 </head>
 
 <body>
 
-<script type="text/javascript" language="javascript" src='<%= com.codenvy.servlet.DispatcherServlet.genStaticResourceUrl(request, "browserNotSupported.js")%>'></script>
+<script type="text/javascript" language="javascript" src='<%= com.codenvy.commons.servlet.DispatcherServlet.genIdeStaticResourceUrl(request, "browserNotSupported.js")%>'></script>
 
 <div id="ide-menu-additions" align="right" class="ideMenuAdditions">
     <table cellspacing="0" cellpadding="0" border="0"
@@ -55,7 +55,7 @@
     </table>
 </div>
 
-<script type="text/javascript" language="javascript" src='<%= com.codenvy.servlet.DispatcherServlet.genStaticResourceUrl(request, "cloud_menu.js")%>'></script>
+<script type="text/javascript" language="javascript" src='<%= com.codenvy.commons.servlet.DispatcherServlet.genIdeStaticResourceUrl(request, "cloud_menu.js")%>'></script>
 
 
 <script type="text/javascript">

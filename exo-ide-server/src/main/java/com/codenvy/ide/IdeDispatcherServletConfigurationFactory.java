@@ -18,6 +18,11 @@
  */
 package com.codenvy.ide;
 
+import com.codenvy.commons.servlet.Action;
+import com.codenvy.commons.servlet.Condition;
+import com.codenvy.commons.servlet.DispatcherServletConfiguration;
+import com.codenvy.commons.servlet.DispatcherServletConfigurationFactory;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -62,8 +67,8 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
                                                  public boolean matches(HttpServletRequest request, HttpServletResponse response) {
                                                      final String workspace = (String)request.getAttribute("ws");
                                                      final String requestPath = request.getPathInfo();
-                                                     return requestPath.startsWith('/' + workspace + "/_ide") ||
-                                                            requestPath.startsWith('/' + workspace + "/_shell");
+                                                     return requestPath.startsWith("/w/" + workspace + "/ide") ||
+                                                            requestPath.startsWith("/w/" + workspace + "/shell");
                                                  }
                                              })
                                              .execute(new Action() {
@@ -119,7 +124,7 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
                                                      request.setAttribute("project", project);
                                                      request.setAttribute("path", filePath);
 
-                                                     final String myPath = "/_ide/main";
+                                                     final String myPath = "/ide/main";
                                                      //System.out.printf("\t\t\t(2) %s => %s%n", requestPath, myPath);
                                                      request.getRequestDispatcher(myPath).forward(request, response);
                                                  }
