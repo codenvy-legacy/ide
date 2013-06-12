@@ -312,7 +312,7 @@
                                  dest="${project.build.directory}/packager-conf/war/ide">
                               </unwar>
                               <move todir="${project.build.directory}/packager-conf/war/ide/">
-                                 <fileset dir="${project.build.directory}/packager-conf/war/ide/ide/"/>
+                                 <fileset dir="${project.build.directory}/packager-conf/war/ide/app/"/>
                               </move>
                               <copy file="${project.basedir}/src/main/resources/devmode/web.xml" tofile="${project.build.directory}/packager-conf/war/ide/WEB-INF/web.xml" overwrite="true"/>
                               <copy file="${project.basedir}/src/main/resources/devmode/DevMode.html" tofile="${project.build.directory}/packager-conf/war/ide/DevMode.html" overwrite="true"/>

@@ -368,7 +368,7 @@
 	                                    <exclude name="**/index.html" />
 	                                </patternset>
                                 </unwar>
-                                <copy todir="${project.build.directory}/${project.artifactId}-${project.version}/app">
+                                <copy todir="${project.build.directory}/${project.artifactId}-${project.version}/_app">
                                     <fileset dir="${project.build.directory}/unwar/shell"/>
                                 </copy>
                             </tasks>

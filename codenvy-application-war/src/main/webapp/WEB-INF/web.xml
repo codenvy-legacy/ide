@@ -78,12 +78,12 @@
 
    <servlet>
        <servlet-name>main</servlet-name>
-       <jsp-file>/app/Application.jsp</jsp-file>
+       <jsp-file>/_app/Application.jsp</jsp-file>
    </servlet>
 
    <servlet>
        <servlet-name>shell</servlet-name>
-       <jsp-file>/app/shell.jsp</jsp-file>
+       <jsp-file>/_app/shell.jsp</jsp-file>
    </servlet>
 
    <servlet>
@@ -103,17 +103,17 @@
 
    <servlet-mapping>
       <servlet-name>main</servlet-name>
-      <url-pattern>/app/main</url-pattern>
+      <url-pattern>/_app/main</url-pattern>
    </servlet-mapping>
 
    <servlet-mapping>
       <servlet-name>default</servlet-name>
-      <url-pattern>/app/*</url-pattern>
+      <url-pattern>/_app/*</url-pattern>
    </servlet-mapping>
    
     <servlet-mapping>
       <servlet-name>shell</servlet-name>
-      <url-pattern>/app/shell</url-pattern>
+      <url-pattern>/_app/shell</url-pattern>
    </servlet-mapping>
 
    <servlet-mapping>

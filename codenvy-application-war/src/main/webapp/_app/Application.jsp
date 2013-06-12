@@ -26,7 +26,7 @@
 
      <%!
       public String genIdeStaticResourceUrl(HttpServletRequest request, String name) {
-        return request.getContextPath() + "/" + request.getAttribute("ws") + "/app/" + name;
+        return request.getContextPath() + "/" + request.getAttribute("ws") + "/_app/" + name;
       }
      %>
 
@@ -45,7 +45,7 @@
     </script>
 
     <link rel="shortcut icon" href='<%= genIdeStaticResourceUrl(request, "favicon.ico")%>'/>
-    <script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "app.nocache.js")%>'></script>
+    <script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "_app.nocache.js")%>'></script>
     <link type="text/css" rel="stylesheet" href='<%= genIdeStaticResourceUrl(request, "top-menu.css")%>' media="all"/>
     <link href='<%= genIdeStaticResourceUrl(request, "css/ide.css")%>' media="screen" rel="stylesheet" type="text/css"/>
 </head>

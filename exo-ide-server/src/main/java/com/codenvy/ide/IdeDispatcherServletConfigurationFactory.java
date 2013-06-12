@@ -67,7 +67,7 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
                                                  public boolean matches(HttpServletRequest request, HttpServletResponse response) {
                                                      final String workspace = (String)request.getAttribute("ws");
                                                      final String requestPath = request.getPathInfo();
-                                                     return requestPath.startsWith("/" + workspace + "/app");
+                                                     return requestPath.startsWith("/" + workspace + "/_app");
                                                            
                                                  }
                                              })
@@ -124,7 +124,7 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
                                                      request.setAttribute("project", project);
                                                      request.setAttribute("path", filePath);
 
-                                                     final String myPath = "/app/main";
+                                                     final String myPath = "/_app/main";
                                                      //System.out.printf("\t\t\t(2) %s => %s%n", requestPath, myPath);
                                                      request.getRequestDispatcher(myPath).forward(request, response);
                                                  }
