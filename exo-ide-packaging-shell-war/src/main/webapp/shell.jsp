@@ -32,7 +32,7 @@
         var ws = "<%= request.getAttribute("ws")%>";
     </script>
 
-    <script type="text/javascript" language="javascript" src='<%= com.codenvy.servlet.DispatcherServlet.genStaticResourceShellUrl(request, "Shell.nocache.js")%>'></script>
+    <script type="text/javascript" language="javascript" src='<%= com.codenvy.commons.servlet.DispatcherServlet.genShellStaticResourceUrl(request, "Shell.nocache.js")%>'></script>
 </head>
 
 <body>

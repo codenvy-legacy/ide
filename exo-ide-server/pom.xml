@@ -30,6 +30,10 @@
             <groupId>com.codenvy.commons</groupId>
             <artifactId>codenvy-commons-mail-client</artifactId>
         </dependency>
+         <dependency>
+            <groupId>com.codenvy.commons</groupId>
+            <artifactId>codenvy-commons-servlet</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.exoplatform.kernel</groupId>
             <artifactId>exo.kernel.container</artifactId>
