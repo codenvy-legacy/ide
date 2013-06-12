@@ -1,6 +1,6 @@
 <!--
 
-    Copyright (C) 2010 eXo Platform SAS.
+    Copyright (C) 2012 eXo Platform SAS.
 
     This is free software; you can redistribute it and/or modify it
     under the terms of the GNU Lesser General Public License as
@@ -18,18 +18,26 @@
     02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
 -->
-<module rename-to="_app">
-   
-   <inherits name="com.google.gwt.i18n.I18N"/>
-   <inherits name='com.google.gwt.user.User' />
-   <inherits name='com.google.web.bindery.autobean.AutoBean'/>
-   
-	<inherits name='org.exoplatform.ide.IDECore' />
-   <inherits name="org.exoplatform.ide.IDEExtensions" />
-   
-
-   <!-- Specify the app entry point class. -->
-   <entry-point class='org.exoplatform.ide.client.IDEShell' />
-   <source path="client" excludes="IDEGadget.java" />
-
-</module>
+<!DOCTYPE html>
+<html>
+  <head>
+  	<style type="text/css">
+      .gc-bubbleDefault{display:none !important;}
+    </style>
+    <link rel="canonical" href="http://codenvy.com/" />
+  </head>
+  <body>
+    <g:plusone  href="http://wwww.codenvy.com" size="medium" expandTo="left, bottom"></g:plusone>
+    <script type="text/javascript">
+      window.___gcfg = {
+        lang: 'en-US',
+        parsetags: 'onload'
+      };
+      (function() {
+        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+        po.src = 'https://apis.google.com/js/plusone.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+      })();
+    </script>
+  </body>
+</html>

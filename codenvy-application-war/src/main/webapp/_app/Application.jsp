@@ -26,27 +26,28 @@
 
      <%!
       public String genIdeStaticResourceUrl(HttpServletRequest request, String name) {
-        return request.getContextPath() + "/" + request.getAttribute("ws") + "/ide/" + name;
+        return request.getContextPath() + "/" + request.getAttribute("ws") + "/_app/" + name;
       }
      %>
 
     <script type="text/javascript" language="javascript">
         var appConfig = {
-            "context": "/w/rest/",
-            "websocketContext": "/w/websocket/"
+            "context": "/ide/rest/",
+            "websocketContext": "/ide/websocket/"
         }
         var hiddenFiles = ".*";
         var ws = "<%= request.getAttribute("ws")%>";
         var project = "<%= request.getAttribute("project")%>";
         var path = "<%= request.getAttribute("path")%>";
         var authorizationContext = "/rest";
-        var authorizationErrorPageURL = "/w/ide/error_oauth.html";
-        var securityCheckURL = "/w/j_security_check";
+        var authorizationErrorPageURL = "/ide/ide/error_oauth.html";
+        var securityCheckURL = "/ide/j_security_check";
     </script>
 
-    <script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "ide.nocache.js")%>'></script>
-    <link type="text/css" rel="stylesheet" href='<%= genIdeStaticResourceUrl(request, "top-menu.css")%>' media="all">
-    <link href='<%= genIdeStaticResourceUrl(request, "css/ide.css")%>' media="screen" rel="stylesheet" type="text/css">
+    <link rel="shortcut icon" href='<%= genIdeStaticResourceUrl(request, "favicon.ico")%>'/>
+    <script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "_app.nocache.js")%>'></script>
+    <link type="text/css" rel="stylesheet" href='<%= genIdeStaticResourceUrl(request, "top-menu.css")%>' media="all"/>
+    <link href='<%= genIdeStaticResourceUrl(request, "css/ide.css")%>' media="screen" rel="stylesheet" type="text/css"/>
 </head>
 
 <body>
