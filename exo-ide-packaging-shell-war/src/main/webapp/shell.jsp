@@ -38,6 +38,7 @@
         var ws = "<%= request.getAttribute("ws")%>";
     </script>
 
+    <link rel="shortcut icon" href='<%= genShellStaticResourceUrl(request, "favicon.ico")%>'/>
     <script type="text/javascript" language="javascript" src='<%= genShellStaticResourceUrl(request, "Shell.nocache.js")%>'></script>
 </head>
 

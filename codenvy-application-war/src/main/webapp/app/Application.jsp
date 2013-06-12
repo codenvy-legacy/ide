@@ -44,9 +44,10 @@
         var securityCheckURL = "/ide/j_security_check";
     </script>
 
+    <link rel="shortcut icon" href='<%= genIdeStaticResourceUrl(request, "favicon.ico")%>'/>
     <script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "app.nocache.js")%>'></script>
-    <link type="text/css" rel="stylesheet" href='<%= genIdeStaticResourceUrl(request, "top-menu.css")%>' media="all">
-    <link href='<%= genIdeStaticResourceUrl(request, "css/ide.css")%>' media="screen" rel="stylesheet" type="text/css">
+    <link type="text/css" rel="stylesheet" href='<%= genIdeStaticResourceUrl(request, "top-menu.css")%>' media="all"/>
+    <link href='<%= genIdeStaticResourceUrl(request, "css/ide.css")%>' media="screen" rel="stylesheet" type="text/css"/>
 </head>
 
 <body>

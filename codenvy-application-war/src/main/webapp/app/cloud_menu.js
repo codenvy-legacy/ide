@@ -5,7 +5,7 @@ function addMenuAddition(html) {
     tr.appendChild(td);
 }
 
- var htmlShell = "<a id=\"shell-link\" href=/w/" + ws + "/shell/main target=\"_blank\">Shell</a>";
+ var htmlShell = "<a id=\"shell-link\" href=/ide/" + ws + "/app/shell target=\"_blank\">Shell</a>";
  addMenuAddition(htmlShell);
 
  var htmlLogout = "<span id=\"logoutButton\" onClick=\"window.location = '/site/logout.jsp';\">Logout</span>";
