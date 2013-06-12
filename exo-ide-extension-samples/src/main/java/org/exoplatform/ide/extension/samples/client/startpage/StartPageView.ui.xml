@@ -88,7 +88,7 @@
 			height: 480px;
 			background: none;
 			border: none;
-			top: 28px;
+			top: 20px;
 			right: 0px;
 			overflow: hidden;
 		}
@@ -124,7 +124,8 @@
 			</div>
 			<div class="{style.floatLeft}">
 				<g:Label text="{locale.aboutIde}" styleName="{resource.css.welcomeHeaderText}"></g:Label>
-				<iframe class="{style.googleOnePanel}" src="/IDE/googleone.html"
+				<g:Frame ui:field="googleFrame"  styleName="{style.googleOnePanel}" ></g:Frame>
+				<iframe class="{style.googleOnePanel}" src="/ide/app/googleone.html"
 					frameborder="0" marginheight="0px" marginwidth="0px;" scrolling="no"
 					style="overflow:hidden;" allowtransparency="true"></iframe>
 				<g:Frame ui:field="fbFrame"  styleName="{style.fbLikePanel}" ></g:Frame>

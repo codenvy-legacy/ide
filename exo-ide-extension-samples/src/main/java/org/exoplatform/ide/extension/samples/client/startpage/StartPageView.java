@@ -68,6 +68,9 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
     
     @UiField
     Frame fbFrame;
+    
+    @UiField
+    Frame googleFrame;
 
     @UiField
     Image logo;
@@ -75,7 +78,8 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
     public StartPageView() {
         super(ID, "editor", TITLE, new Image(SamplesClientBundle.INSTANCE.welcome()));
         add(uiBinder.createAndBindUi(this));
-        fbFrame.setUrl(UriUtils.fromString("/w/" + Utils.getWorkspaceName() +"/ide/fblike.html"));
+        fbFrame.setUrl(UriUtils.fromString("/ide/" + Utils.getWorkspaceName() +"/_app/fblike.html"));
+        googleFrame.setUrl(UriUtils.fromString("/ide/" + Utils.getWorkspaceName() +"/_app/googleone.html"));
     }
 
     /** @see org.exoplatform.ide.client.StartPagePresenter.WelcomePresenter.Display#getCloneLink() */
