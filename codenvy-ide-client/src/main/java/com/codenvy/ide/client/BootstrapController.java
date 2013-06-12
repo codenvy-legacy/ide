@@ -33,6 +33,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 /**
  * Performs initial application startup
@@ -52,7 +53,7 @@ public class BootstrapController {
      * @param userService
      */
     @Inject
-    public BootstrapController(final ComponentRegistry componentRegistry, final WorkspacePresenter workspacePeresenter,
+    public BootstrapController(final ComponentRegistry componentRegistry, final Provider<WorkspacePresenter> workspaceProvider,
                                StyleInjector styleInjector, final ExtensionInitializer extensionInitializer,
                                final ExtensionsPage extensionsPage, final PreferencesManagerImpl preferencesManager,
                                UserClientService userService) {
@@ -76,10 +77,11 @@ public class BootstrapController {
                             // Start UI
                             SimplePanel mainPanel = new SimplePanel();
                             RootLayoutPanel.get().add(mainPanel);
+                            WorkspacePresenter workspacePresenter = workspaceProvider.get();
                             // Display IDE
-                            workspacePeresenter.go(mainPanel);
+                            workspacePresenter.go(mainPanel);
                             // TODO FOR DEMO
-                            workspacePeresenter.openPart(extensionsPage, PartStackType.EDITING);
+                            workspacePresenter.openPart(extensionsPage, PartStackType.EDITING);
                         }
 
                         @Override

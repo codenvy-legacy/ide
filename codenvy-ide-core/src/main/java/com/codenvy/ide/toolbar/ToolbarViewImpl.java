@@ -18,18 +18,19 @@
  */
 package com.codenvy.ide.toolbar;
 
-import com.codenvy.ide.api.ui.menu.ExtendedCommand;
-import com.codenvy.ide.api.ui.menu.ToggleCommand;
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.api.ui.action.Action;
+import com.codenvy.ide.api.ui.action.ActionGroup;
+import com.codenvy.ide.api.ui.action.ActionManager;
+import com.codenvy.ide.api.ui.action.CustomComponentAction;
+import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.api.ui.action.Presentation;
+import com.codenvy.ide.api.ui.action.Separator;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.menu.MenuPath;
-import com.codenvy.ide.ui.toolbar.ButtonItem;
-import com.codenvy.ide.ui.toolbar.PopupItem;
-import com.codenvy.ide.ui.toolbar.Toolbar;
-import com.codenvy.ide.ui.toolbar.ToolbarItem;
-import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -42,24 +43,34 @@ import com.google.inject.Singleton;
 @Singleton
 public class ToolbarViewImpl extends Composite implements ToolbarView {
 
-
-    private final JsonStringMap<ToolbarItem>            menuItems;
-    private final JsonStringMap<JsonArray<ToolbarItem>> groupItems;
-    private final JsonStringMap<ToolbarItem>            groupsSeparator;
-    Toolbar menu;
-    private int countGroupsItems = 0;
+    public static final int DELAY_MILLIS = 1000;
+    Toolbar toolbar;
+    private       String              place;
+    private       ActionGroup         actionGroup;
+    private       ActionManager       actionManager;
+    private       JsonArray<Action>   newVisibleActions;
+    private       JsonArray<Action>   visibleActions;
+    private       PresentationFactory presentationFactory;
+    private       boolean             addSeparatorFirst;
+    private final DefaultActionGroup  secondaryActions;
+    private final Timer timer = new Timer() {
+        @Override
+        public void run() {
+            updateActions();
+            schedule(DELAY_MILLIS);
+        }
+    };
 
     /** Create view with given instance of resources. */
     @Inject
-    public ToolbarViewImpl() {
-        menu = new Toolbar();
-        initWidget(menu);
-
-//        this.addStyleName(resources.menuCSS().toolbarHorizontal());
-
-        this.menuItems = JsonCollections.createStringMap();
-        this.groupItems = JsonCollections.createStringMap();
-        this.groupsSeparator = JsonCollections.createStringMap();
+    public ToolbarViewImpl(ActionManager actionManager) {
+        this.actionManager = actionManager;
+        toolbar = new Toolbar();
+        initWidget(toolbar);
+        newVisibleActions = JsonCollections.createArray();
+        visibleActions = JsonCollections.createArray();
+        presentationFactory = new PresentationFactory();
+        secondaryActions = new DefaultActionGroup(actionManager);
     }
 
     /** {@inheritDoc} */
@@ -69,168 +80,83 @@ public class ToolbarViewImpl extends Composite implements ToolbarView {
         // there are no events for now
     }
 
-    /** {@inheritDoc} */
     @Override
-    public void setVisible(String path, boolean visible) {
-        // find item and change its state
-        if (menuItems.containsKey(path)) {
-            menuItems.get(path).setVisible(visible);
-        }
-
-        if (groupItems.containsKey(path)) {
-            groupsSeparator.get(path).setVisible(visible);
-
-            JsonArray<ToolbarItem> items = groupItems.get(path);
-            for (int i = 0; i < items.size(); i++) {
-                items.get(i).setVisible(visible);
-            }
-        }
+    public void setPlace(@NotNull String place) {
+        this.place = place;
     }
 
-    /** {@inheritDoc} */
     @Override
-    public void setEnabled(String path, boolean enabled) {
-        // find item and change its state
-        if (menuItems.containsKey(path)) {
-            menuItems.get(path).setEnabled(enabled);
-        }
+    public void setActionGroup(@NotNull ActionGroup actionGroup) {
+        this.actionGroup = actionGroup;
+        updateActions();
+        timer.schedule(DELAY_MILLIS);
+    }
 
-        if (groupItems.containsKey(path)) {
-            JsonArray<ToolbarItem> items = groupItems.get(path);
-            for (int i = 0; i < items.size(); i++) {
-                items.get(i).setEnabled(enabled);
-            }
+    private void updateActions() {
+        newVisibleActions.clear();
+        Utils.expandActionGroup(actionGroup, newVisibleActions, presentationFactory, place, actionManager, false);
+        if (!JsonCollections.equals(newVisibleActions, visibleActions)) {
+            final JsonArray<Action> temp = visibleActions;
+            visibleActions = newVisibleActions;
+            newVisibleActions = temp;
+            removeAll();
+            secondaryActions.removeAll();
+            fillToolbar(visibleActions, true);
         }
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void setSelected(String path, boolean selected) throws IllegalStateException {
-        if (menuItems.containsKey(path)) {
-            menuItems.get(path).setSelected(selected);
+    private void fillToolbar(JsonArray<Action> actions, boolean layoutSecondaries) {
+        if (addSeparatorFirst) {
+            toolbar.add(new DelimiterItem());
         }
-    }
+        for (int i = 0; i < actions.size(); i++) {
+            final Action action = actions.get(i);
+//            if (action instanceof Separator && isNavBar()) {
+//                continue;
+//            }
 
-    /** {@inheritDoc} */
-    @Override
-    public void addItem(String path, ExtendedCommand command, boolean visible, boolean enabled)
-            throws IllegalStateException {
-        addToolbarItem(path, command.getIcon(), command.getToolTip(), command, visible, enabled);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void addToggleItem(String path, ToggleCommand command, boolean visible, boolean enabled, boolean selected)
-            throws IllegalStateException {
-        ToolbarItem menuItem = addToolbarItem(path, command.getIcon(), command.getToolTip(), command, visible, enabled);
-        menuItem.setSelected(selected);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void addDropDownItem(String path, ImageResource icon, String tooltip, boolean visible, boolean enabled)
-            throws IllegalStateException {
-        addToolbarItem(path, icon, tooltip, null, visible, enabled);
-    }
-
-    /**
-     * Create toolbar item.
-     *
-     * @param path
-     * @param icon
-     * @param tooltip
-     * @param command
-     * @param visible
-     * @param enabled
-     * @return new item
-     * @throws IllegalStateException
-     */
-    private ToolbarItem addToolbarItem(String path, ImageResource icon, String tooltip, ExtendedCommand command,
-                                       boolean visible, boolean enabled) throws IllegalStateException {
-        MenuPath menuPath = new MenuPath(path);
-        int depth = menuPath.getSize() - 1;
-
-        ToolbarItem menuItem;
-        if (depth == 0) {
-            // if path has only one name
-            throw new IllegalStateException("Group or item with entered name is not exist");
-        } else if (depth == 1) {
-            // in order to create item into the group
-            String groupName = menuPath.getParentPath(depth);
-            ToolbarItem groupSeparator = groupsSeparator.get(groupName);
-            if (groupSeparator == null) {
-                // if group isn't exist then creates it
-                ToolbarItem newSeparator = menu.addDelimiter();
-                newSeparator.setVisible(visible);
-                JsonArray<ToolbarItem> items = JsonCollections.createArray();
-
-                groupsSeparator.put(groupName, newSeparator);
-                groupItems.put(groupName, items);
-
-                // it is the first item into the group
-                if (command != null) {
-                    menuItem = new ButtonItem(icon, command,
-                                              tooltip); // new Item(menuPath, null, tooltip, command, ConteinerType.TOOLBAR, resources);
-                } else {
-                    menuItem =
-                            new PopupItem(icon); //new Item(menuPath, icon, tooltip, createSubMenuBar(), ConteinerType.TOOLBAR, resources);
+            if (layoutSecondaries) {
+                if (!actionGroup.isPrimary(action)) {
+                    secondaryActions.add(action);
+                    continue;
                 }
+            }
 
-                menu.addItem(menuItem);
-                items.add(menuItem);
+            if (action instanceof Separator) {
+                if (i > 0 && i < actions.size() - 1) {
+                    toolbar.add(new DelimiterItem());
+                }
+            } else if (action instanceof CustomComponentAction) {
+                Presentation presentation = presentationFactory.getPresentation(action);
+                Widget customComponent = ((CustomComponentAction)action).createCustomComponent(presentation);
+//                presentation.putClientProperty(CustomComponentAction.CUSTOM_COMPONENT_PROPERTY, customComponent);
+                toolbar.add(customComponent);
+            } else if (action instanceof ActionGroup && !(action instanceof CustomComponentAction) && ((ActionGroup)action).isPopup()) {
+                ActionPopupButton button = new ActionPopupButton((ActionGroup)action, actionManager, presentationFactory, place);
+                toolbar.add(button);
             } else {
-                // when the group has items needs to insert item after last
-                // because could be situation when other group was created after the current group
-                String parentName = menuPath.getParentPath(depth);
-                JsonArray<ToolbarItem> items = groupItems.get(parentName);
-
-                ToolbarItem previousItem = items.get(items.size() - 1);
-                if (command != null) {
-                    menuItem = new ButtonItem(icon, command,
-                                              tooltip); //new Item(menuPath, null, tooltip, command, ConteinerType.TOOLBAR, resources);
-                } else {
-                    menuItem =
-                            new PopupItem(icon); //new Item(menuPath, icon, tooltip, createSubMenuBar(), ConteinerType.TOOLBAR, resources);
-                }
-
-                // insert after last item into current group
-                int previousItemIndex = menu.getItemIndex(previousItem);
-                if (previousItemIndex < countGroupsItems) {
-                    menu.insertItem(menuItem, previousItemIndex + 1);
-                } else {
-                    menu.addItem(menuItem);
-                }
-
-                items.add(menuItem);
-            }
-
-            countGroupsItems++;
-        } else {
-            // in order to create item into the dropdown item/popup menu
-            ToolbarItem parentItem = menuItems.get(menuPath.getParentPath(depth));
-            if (parentItem == null) {
-                throw new IllegalStateException("Parent item is not exist");
-            }
-
-            menuItem = new PopupItem.PopupRowItem(menuPath.getPathElementAt(depth), icon, command, null, tooltip);
-            if (parentItem instanceof PopupItem) {
-                PopupItem item = (PopupItem)parentItem;
-                item.addItem((PopupItem.PopupRowItem)menuItem);
-//            parentItem.getSubMenu().addItem(menuItem);
+                final ActionButton button = createToolbarButton(action);
+                toolbar.add(button);
             }
         }
 
-        menuItem.setVisible(visible);
-        menuItem.setEnabled(enabled);
-
-        menuItems.put(path, menuItem);
-
-        return menuItem;
+//        if (secondaryActions.getChildrenCount() > 0) {
+//            secondaryActionsButton = new ActionButton(secondaryActions, presentationFactory.getPresentation(secondaryActions), place);
+//            secondaryActionsButton.setNoIconsInPopup(true);
+//            add(mySecondaryActionsButton);
+//        }
     }
 
-    /** {@inheritDoc} */
+    private ActionButton createToolbarButton(Action action) {
+        return new ActionButton(action, actionManager, presentationFactory.getPresentation(action), place);
+    }
+
+    private void removeAll() {
+        toolbar.clear();
+    }
+
     @Override
-    public void copyMainMenuItem(String toolbarPath, String mainMenuPath) {
-        // TODO Auto-generated method stub
+    public void setAddSeparatorFirst(boolean addSeparatorFirst) {
+        this.addSeparatorFirst = addSeparatorFirst;
     }
 }

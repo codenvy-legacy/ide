@@ -20,11 +20,13 @@ package com.codenvy.ide.ext.appfog.client;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.paas.PaaSAgent;
-import com.codenvy.ide.api.ui.menu.MainMenuAgent;
-import com.codenvy.ide.ext.appfog.client.command.ShowAppFogProjectCommand;
-import com.codenvy.ide.ext.appfog.client.command.ShowApplicationsCommand;
-import com.codenvy.ide.ext.appfog.client.command.ShowCreateApplicationCommand;
-import com.codenvy.ide.ext.appfog.client.command.ShowLoginCommand;
+import com.codenvy.ide.api.ui.action.ActionManager;
+import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.api.ui.action.IdeActions;
+import com.codenvy.ide.ext.appfog.client.actions.CreateApplicationAction;
+import com.codenvy.ide.ext.appfog.client.actions.ShowApplicationsAction;
+import com.codenvy.ide.ext.appfog.client.actions.ShowProjectAction;
+import com.codenvy.ide.ext.appfog.client.actions.SwitchAccountAction;
 import com.codenvy.ide.ext.appfog.client.wizard.AppFogPagePresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
@@ -48,17 +50,15 @@ public class AppFogExtension {
      *
      * @param paasAgent
      * @param resources
-     * @param menu
-     * @param createApplicationCommand
-     * @param loginCommand
-     * @param showApplicationsCommand
-     * @param showAppFogProjectCommand
      * @param wizardPage
      */
     @Inject
-    public AppFogExtension(PaaSAgent paasAgent, AppfogResources resources, MainMenuAgent menu,
-                           ShowCreateApplicationCommand createApplicationCommand, ShowLoginCommand loginCommand,
-                           ShowApplicationsCommand showApplicationsCommand, ShowAppFogProjectCommand showAppFogProjectCommand,
+    public AppFogExtension(PaaSAgent paasAgent, AppfogResources resources,
+                           ActionManager actionManager,
+                           CreateApplicationAction createApplicationAction,
+                           ShowApplicationsAction showApplicationsAction,
+                           SwitchAccountAction switchAccountAction,
+                           ShowProjectAction showProjectAction,
                            Provider<AppFogPagePresenter> wizardPage) {
         resources.appFogCSS().ensureInjected();
 
@@ -66,9 +66,21 @@ public class AppFogExtension {
         JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "Rails", "Spring", "War", "Python", "PHP");
         paasAgent.registerPaaS(ID, ID, resources.appfog48(), requiredProjectTypes, wizardPage, null);
 
-        menu.addMenuItem("PaaS/AppFog/Create Application...", createApplicationCommand);
-        menu.addMenuItem("PaaS/AppFog/Applications...", showApplicationsCommand);
-        menu.addMenuItem("PaaS/AppFog/Switch Account...", loginCommand);
-        menu.addMenuItem("Project/Paas/AppFog", showAppFogProjectCommand);
+        actionManager.registerAction("appFogCreateApplication", createApplicationAction);
+        actionManager.registerAction("appFogShowApplications", showApplicationsAction);
+        actionManager.registerAction("appFogSwitchAccount", switchAccountAction);
+        actionManager.registerAction("appFogShowProject", showApplicationsAction);
+
+        DefaultActionGroup paas = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_PAAS);
+        DefaultActionGroup appFog = new DefaultActionGroup("AppFog", true, actionManager);
+        actionManager.registerAction("AppFog", appFog);
+        paas.add(appFog);
+
+        appFog.add(createApplicationAction);
+        appFog.add(showApplicationsAction);
+        appFog.add(switchAccountAction);
+
+        DefaultActionGroup projectPaas = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_PROJECT_PAAS);
+        projectPaas.add(showProjectAction);
     }
 }

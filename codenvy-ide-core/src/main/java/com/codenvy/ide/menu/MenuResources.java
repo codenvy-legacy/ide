@@ -20,42 +20,27 @@ package com.codenvy.ide.menu;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
-import com.google.gwt.resources.client.DataResource;
-import com.google.gwt.resources.client.ImageResource;
 
 /**
- * Resources of menu.
- *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
+ * @version $Id:
  */
 public interface MenuResources extends ClientBundle {
-    public interface ToolbarCSS extends CssResource {
-        String checkedItem();
+    public interface Css extends CssResource {
 
-        String uncheckedItem();
+        String menuBar();
 
-        String menuHorizontal();
+        String menuBarTable();
 
-        String menuVertical();
+        String menuBarItem();
 
-        String itemIcon();
+        String menuBarItemSelected();
 
-        String itemTitle();
+        String menuBarItemDisabled();
 
-        String hotKey();
-
-        String itemContainer();
-
-        String toolbarHorizontal();
+        String menuBarItemOver();
     }
 
-    @Source({"com/codenvy/ide/menu/Menu.css", "com/codenvy/ide/common/constants.css", "com/codenvy/ide/api/ui/style.css"})
-    ToolbarCSS menuCSS();
-
-    @Source("toolbar-background.png")
-    @ImageResource.ImageOptions(repeatStyle = ImageResource.RepeatStyle.Horizontal)
-    ImageResource toolbarBackground();
-
-    @Source("com/codenvy/ide/menu/check.png")
-    DataResource checkIcon();
+    @Source({"menu.css", "com/codenvy/ide/api/ui/style.css"})
+    Css menuCss();
 }

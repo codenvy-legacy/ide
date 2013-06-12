@@ -1,0 +1,124 @@
+.toolbarPanel {
+    width: 100%;
+    /*background: url(images/component/toolbar/toolbar_Background.png) repeat-x;*/
+    height: 28px;
+    cursor: default;
+    background-color: tabsPanelBackground;
+    border-top: 1px solid tabBorder;
+    border-bottom: 1px solid tabBorder;
+}
+
+.toolbarPanel div {
+    margin-top: 1px;
+    margin-left: 2px;
+    float: left;
+}
+
+.toolbarDelimiter {
+    width: 1px;
+    height: 24px;
+    /*background: url(images/component/toolbar/delimiter.png);*/
+    border-left: 1px solid tabBorder;
+}
+
+.iconButtonPanel,
+.iconButtonPanelOver,
+.iconButtonPanelDown,
+.iconButtonPanelSelected,
+.iconButtonPanelSelectedOver,
+.iconButtonPanelSelectedDown {
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+    /*background: url(IDE/button-background.png);*/
+}
+
+.iconButtonPanel {
+    /*background-position: 0px 0px;*/
+    border: 1px solid transparent;
+}
+
+.iconButtonPanelOver {
+    border-radius: 2px;
+    border: 1px solid tabBorder;
+    /*background-position: 0px -24px;*/
+}
+
+.iconButtonPanelDown {
+    /*background-position: 0px -48px;*/
+    border-radius: 4px;
+    border: 1px solid tabBorder;
+    background-color: hoverBackgroundColor;
+}
+
+.iconButtonPanelSelected {
+    border-radius: 4px;
+    border: 1px solid tabBorder;
+    background-color: hoverBackgroundColor;
+}
+
+.iconButtonPanelSelectedOver {
+    border-radius: 4px;
+    border: 1px solid tabBorder;
+    background-color: hoverBackgroundColor;
+}
+
+.iconButtonPanelSelectedDown {
+    border-radius: 4px;
+    border: 1px solid tabBorder;
+    background-color: hoverBackgroundColor;
+}
+
+.iconButtonIcon {
+    width: 16px;
+    height: 16px;
+    margin: 4px;
+}
+
+.disabled {
+    opacity: 0.6;
+}
+
+.popupButtonPanel,
+.popupButtonPanelOver,
+.popupButtonPanelDown {
+    height: 24px;
+    width: 30px;
+    overflow: hidden;
+    border: 1px solid transparent;
+}
+
+.popupButtonPanel {
+    background-position: 0px 0px;
+}
+
+.popupButtonPanelOver {
+    border-radius: 2px;
+    border: 1px solid tabBorder;
+}
+
+.popupButtonPanelDown {
+    border-radius: 4px;
+    border: 1px solid tabBorder;
+    background-color: hoverBackgroundColor;
+}
+
+.popupButtonIcon {
+    width: 16px;
+    height: 16px;
+    margin-top: 4px;
+    margin-left: 4px;
+}
+
+.caret {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-top: 4px solid #000000;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+    content: "";
+    position: absolute;
+    top: 50%;
+}
+

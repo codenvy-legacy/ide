@@ -20,12 +20,8 @@ package com.codenvy.ide.ext.java.jdi.client;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.ui.menu.MainMenuAgent;
-import com.codenvy.ide.debug.DebuggerManager;
 import com.codenvy.ide.ext.java.jdi.client.command.DebugCommand;
 import com.codenvy.ide.ext.java.jdi.client.command.RunCommand;
-import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerPresenter;
-import com.codenvy.ide.ext.java.jdi.client.fqn.FqnResolverFactory;
-import com.codenvy.ide.ext.java.jdi.client.fqn.JavaFqnResolver;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -50,11 +46,12 @@ public class JavaRuntimeExtension {
     public static final String APPLICATION_STOP_CHANNEL = "runner:application-stopped:";
 
     @Inject
-    public JavaRuntimeExtension(MainMenuAgent mainMenuAgent, RunCommand runCommand, DebugCommand debugCommand,
-                                DebuggerManager debuggerManager, DebuggerPresenter debuggerPresenter,
-                                FqnResolverFactory resolverFactory, JavaFqnResolver javaFqnResolver) {
-        mainMenuAgent.addMenuItem("Run/Run Application", runCommand);
-        mainMenuAgent.addMenuItem("Run/Debug Application", debugCommand);
+    public JavaRuntimeExtension(ActionManager actionManager, RunAction action, DebugAction debugAction) {
+        actionManager.registerAction("runJavaProject", action);
+        actionManager.registerAction("debugJavaProject", debugAction);
+        DefaultActionGroup run = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_RUN);
+        run.add(action);
+        run.add(debugAction);
 
         debuggerManager.registeredDebugger(SPRING_APPLICATION_PROJECT_TYPE, debuggerPresenter);
 

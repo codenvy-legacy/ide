@@ -19,7 +19,15 @@
 package com.codenvy.ide.ext.java.jdi.client.debug;
 
 import com.codenvy.ide.ext.java.jdi.dto.client.DtoClientImpls;
-import com.codenvy.ide.ext.java.jdi.shared.*;
+import com.codenvy.ide.ext.java.jdi.shared.ApplicationInstance;
+import com.codenvy.ide.ext.java.jdi.shared.BreakPoint;
+import com.codenvy.ide.ext.java.jdi.shared.BreakPointList;
+import com.codenvy.ide.ext.java.jdi.shared.DebuggerEventList;
+import com.codenvy.ide.ext.java.jdi.shared.DebuggerInfo;
+import com.codenvy.ide.ext.java.jdi.shared.StackFrameDump;
+import com.codenvy.ide.ext.java.jdi.shared.UpdateVariableRequest;
+import com.codenvy.ide.ext.java.jdi.shared.Value;
+import com.codenvy.ide.ext.java.jdi.shared.Variable;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.ui.loader.EmptyLoader;

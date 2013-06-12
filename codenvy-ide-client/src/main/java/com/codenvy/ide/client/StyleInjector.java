@@ -49,7 +49,6 @@ public class StyleInjector {
         resources.workspaceNavigationFileTreeNodeRendererCss().ensureInjected();
         resources.partStackCss().ensureInjected();
         resources.parenMatchHighlighterCss().ensureInjected();
-        resources.menuCSS().ensureInjected();
         resources.dialogBox().ensureInjected();
     }
 }

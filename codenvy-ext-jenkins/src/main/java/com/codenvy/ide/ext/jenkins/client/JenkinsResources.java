@@ -23,8 +23,6 @@ import com.google.gwt.resources.client.ImageResource;
 
 /** @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a> */
 public interface JenkinsResources extends ClientBundle {
-    @Source("com/codenvy/ide/ext/jenkins/images/build_Disabled.png")
-    ImageResource build_Disabled();
 
     @Source("com/codenvy/ide/ext/jenkins/images/build.png")
     ImageResource build();

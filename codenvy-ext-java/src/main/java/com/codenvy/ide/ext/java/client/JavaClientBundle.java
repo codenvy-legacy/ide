@@ -108,14 +108,8 @@ public interface JavaClientBundle extends ClientBundle {
     @Source("com/codenvy/ide/ext/java/client/images/java.png")
     ImageResource java();
 
-    @Source("com/codenvy/ide/ext/java/client/images/java-disabled.png")
-    ImageResource javaDisabled();
-
     @Source("com/codenvy/ide/ext/java/client/images/newJavaclass_wiz.gif")
     ImageResource newClassWizz();
-
-    @Source("com/codenvy/ide/ext/java/client/images/newJavaclass_wiz_Disabled.gif")
-    ImageResource newClassWizzDisabled();
 
     @Source("com/codenvy/ide/ext/java/client/images/outline.png")
     ImageResource outline();

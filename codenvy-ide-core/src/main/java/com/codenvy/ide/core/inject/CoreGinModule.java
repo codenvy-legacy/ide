@@ -17,20 +17,27 @@
 package com.codenvy.ide.core.inject;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.editor.*;
-import com.codenvy.ide.api.expressions.ExpressionManager;
+import com.codenvy.ide.actions.ActionManagerImpl;
+import com.codenvy.ide.api.editor.CodenvyTextEditor;
+import com.codenvy.ide.api.editor.DocumentProvider;
+import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.editor.EditorProvider;
+import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.paas.PaaSAgent;
-import com.codenvy.ide.api.parts.*;
+import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.parts.OutlinePart;
+import com.codenvy.ide.api.parts.ProjectExplorerPart;
+import com.codenvy.ide.api.parts.SearchPart;
+import com.codenvy.ide.api.parts.WelcomePart;
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.template.TemplateAgent;
+import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
-import com.codenvy.ide.api.ui.menu.MainMenuAgent;
-import com.codenvy.ide.api.ui.menu.ToolbarAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
 import com.codenvy.ide.api.ui.wizard.WizardAgent;
 import com.codenvy.ide.api.ui.wizard.newfile.NewGenericFilePageView;
@@ -44,10 +51,8 @@ import com.codenvy.ide.core.editor.DefaultEditorProvider;
 import com.codenvy.ide.core.editor.EditorAgentImpl;
 import com.codenvy.ide.core.editor.EditorRegistryImpl;
 import com.codenvy.ide.core.editor.ResourceDocumentProvider;
-import com.codenvy.ide.core.expressions.ExpressionManagerImpl;
 import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.keybinding.KeyBindingManager;
-import com.codenvy.ide.menu.MainMenuPresenter;
 import com.codenvy.ide.menu.MainMenuView;
 import com.codenvy.ide.menu.MainMenuViewImpl;
 import com.codenvy.ide.openproject.OpenProjectView;
@@ -56,8 +61,13 @@ import com.codenvy.ide.outline.OutlinePartPresenter;
 import com.codenvy.ide.outline.OutlinePartView;
 import com.codenvy.ide.outline.OutlinePartViewImpl;
 import com.codenvy.ide.paas.PaaSAgentImpl;
-import com.codenvy.ide.part.*;
+import com.codenvy.ide.part.EditorPartStackPresenter;
+import com.codenvy.ide.part.EditorPartStackView;
+import com.codenvy.ide.part.FocusManager;
+import com.codenvy.ide.part.PartStackPresenter;
 import com.codenvy.ide.part.PartStackPresenter.PartStackEventHandler;
+import com.codenvy.ide.part.PartStackUIResources;
+import com.codenvy.ide.part.PartStackViewImpl;
 import com.codenvy.ide.part.console.ConsolePartPresenter;
 import com.codenvy.ide.part.console.ConsolePartView;
 import com.codenvy.ide.part.console.ConsolePartViewImpl;
@@ -78,7 +88,6 @@ import com.codenvy.ide.selection.SelectionAgentImpl;
 import com.codenvy.ide.text.DocumentFactory;
 import com.codenvy.ide.text.DocumentFactoryImpl;
 import com.codenvy.ide.texteditor.TextEditorPresenter;
-import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.toolbar.ToolbarView;
 import com.codenvy.ide.toolbar.ToolbarViewImpl;
 import com.codenvy.ide.ui.loader.IdeLoader;
@@ -98,7 +107,11 @@ import com.codenvy.ide.wizard.newresource.NewResourcePageViewImpl;
 import com.codenvy.ide.wizard.template.TemplateAgentImpl;
 import com.codenvy.ide.wizard.template.TemplatePageView;
 import com.codenvy.ide.wizard.template.TemplatePageViewImpl;
-import com.codenvy.ide.workspace.*;
+import com.codenvy.ide.workspace.PartStackPresenterFactory;
+import com.codenvy.ide.workspace.PartStackViewFactory;
+import com.codenvy.ide.workspace.WorkspacePresenter;
+import com.codenvy.ide.workspace.WorkspaceView;
+import com.codenvy.ide.workspace.WorkspaceViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.gwt.user.client.Window;
@@ -127,7 +140,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(UserClientService.class).to(UserClientServiceImpl.class).in(Singleton.class);
         bind(PreferencesManager.class).to(PreferencesManagerImpl.class).in(Singleton.class);
         bind(MessageBus.class).to(MessageBusImpl.class).in(Singleton.class);
-
         apiBindingConfigure();
 
         resourcesAPIconfigure();
@@ -141,18 +153,14 @@ public class CoreGinModule extends AbstractGinModule {
     private void apiBindingConfigure() {
         // Agents
         bind(KeyBindingAgent.class).to(KeyBindingManager.class).in(Singleton.class);
-        bind(ExpressionManager.class).to(ExpressionManagerImpl.class).in(Singleton.class);
         bind(SelectionAgent.class).to(SelectionAgentImpl.class).in(Singleton.class);
         bind(WorkspaceAgent.class).to(WorkspacePresenter.class).in(Singleton.class);
-        bind(MainMenuAgent.class).to(MainMenuPresenter.class).in(Singleton.class);
-        bind(ToolbarAgent.class).to(ToolbarPresenter.class).in(Singleton.class);
         bind(PreferencesAgent.class).to(PreferencesAgentImpl.class).in(Singleton.class);
         bind(WizardAgent.class).to(WizardAgentImpl.class).in(Singleton.class);
         bind(PaaSAgent.class).to(PaaSAgentImpl.class).in(Singleton.class);
         bind(TemplateAgent.class).to(TemplateAgentImpl.class).in(Singleton.class);
         bind(ProjectTypeAgent.class).to(ProjectTypeAgentImpl.class).in(Singleton.class);
         // UI Model
-//        bind(PartStack.class).to(PartStackPresenter.class);
         bind(EditorPartStack.class).to(EditorPartStackPresenter.class).in(Singleton.class);
         // Parts
         bind(ConsolePart.class).to(ConsolePartPresenter.class).in(Singleton.class);
@@ -160,6 +168,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(OutlinePart.class).to(OutlinePartPresenter.class).in(Singleton.class);
         bind(SearchPart.class).to(SearchPartPresenter.class).in(Singleton.class);
         bind(ProjectExplorerPart.class).to(ProjectExplorerPartPresenter.class).in(Singleton.class);
+        bind(ActionManager.class).to(ActionManagerImpl.class).in(Singleton.class);
 
     }
 

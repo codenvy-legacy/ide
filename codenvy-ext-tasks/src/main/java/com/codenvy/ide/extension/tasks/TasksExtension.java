@@ -17,15 +17,16 @@
 package com.codenvy.ide.extension.tasks;
 
 import com.codenvy.ide.api.extension.Extension;
-import com.codenvy.ide.api.ui.menu.MainMenuAgent;
-import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
-import com.codenvy.ide.extension.tasks.part.TasksPartPresenter;
+import com.codenvy.ide.api.ui.action.ActionManager;
+import com.codenvy.ide.api.ui.action.Constraints;
+import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.api.ui.action.IdeActions;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 
 /**
- * Extension used to demonstrate the IDE 2.0 SDK fetures
+ * Extension used to demonstrate the IDE 3.0 SDK fetures
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
@@ -34,8 +35,15 @@ import com.google.inject.Singleton;
 public class TasksExtension {
 
     @Inject
-    public TasksExtension(MainMenuAgent menu, final WorkspaceAgent agent, final TasksPartPresenter tasksPartPresenter,
-                          final OpenTasksViewCommand openTasksViewCommand) {
-        menu.addMenuItem("Tasks/Show Tasks View", openTasksViewCommand);
+    public TasksExtension(ActionManager actionManager,
+                          final OpenTasksAction openTasksAction) {
+
+        DefaultActionGroup main = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_MAIN_MENU);
+        DefaultActionGroup tasks = new DefaultActionGroup("Tasks", true, actionManager);
+        actionManager.registerAction("tasksGroup", tasks);
+        actionManager.registerAction("openTasks", openTasksAction);
+
+        main.add(tasks, Constraints.LAST);
+        tasks.add(openTasksAction);
     }
 }

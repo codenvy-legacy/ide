@@ -92,6 +92,7 @@ public class MenuBarItem implements MenuItem, ItemSelectedHandler, UpdateItemEna
         this.itemSelectedHandler = callback;
     }
 
+
     /** {@inheritDoc} */
     public MenuItem addItem(String title) {
         return addItem(null, title, null);

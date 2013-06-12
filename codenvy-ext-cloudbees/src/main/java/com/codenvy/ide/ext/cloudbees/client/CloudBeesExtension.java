@@ -20,8 +20,14 @@ package com.codenvy.ide.ext.cloudbees.client;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.paas.PaaSAgent;
-import com.codenvy.ide.api.ui.menu.MainMenuAgent;
-import com.codenvy.ide.ext.cloudbees.client.command.*;
+import com.codenvy.ide.api.ui.action.ActionManager;
+import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.api.ui.action.IdeActions;
+import com.codenvy.ide.ext.cloudbees.client.actions.CreateAccountAction;
+import com.codenvy.ide.ext.cloudbees.client.actions.CreateApplicationAction;
+import com.codenvy.ide.ext.cloudbees.client.actions.ShowApplicationsAction;
+import com.codenvy.ide.ext.cloudbees.client.actions.ShowCloudBeesProjectAction;
+import com.codenvy.ide.ext.cloudbees.client.actions.SwitchAccountAction;
 import com.codenvy.ide.ext.cloudbees.client.wizard.CloudBeesPagePresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
@@ -40,20 +46,37 @@ public class CloudBeesExtension {
     private static final String ID = "CloudBees";
 
     @Inject
-    public CloudBeesExtension(PaaSAgent paasAgent, CloudBeesResources resources, MainMenuAgent menu,
-                              ShowLoginCommand loginCommand, ShowCreateApplicationCommand createApplicationCommand,
-                              ShowApplicationsCommand applicationsCommand, ShowCreateAccountCommand createAccountCommand,
-                              ShowCloudBeesProjectCommand showCloudBeesProjectCommand, Provider<CloudBeesPagePresenter> wizardPage) {
+    public CloudBeesExtension(PaaSAgent paasAgent, CloudBeesResources resources,
+                              ActionManager actionManager,
+                              ShowCloudBeesProjectAction showCloudBeesProjectAction,
+                              ShowApplicationsAction showApplicationsAction,
+                              CreateApplicationAction createApplicationAction,
+                              SwitchAccountAction switchAccountAction,
+                              CreateAccountAction createAccountAction,
+                              Provider<CloudBeesPagePresenter> wizardPage) {
         resources.cloudBeesCSS().ensureInjected();
 
         // TODO change hard code types
         JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "War");
         paasAgent.registerPaaS(ID, ID, resources.cloudBees48(), requiredProjectTypes, wizardPage, null);
 
-        menu.addMenuItem("PaaS/CloudBees/Create Application...", createApplicationCommand);
-        menu.addMenuItem("PaaS/CloudBees/Applications...", applicationsCommand);
-        menu.addMenuItem("PaaS/CloudBees/Switch Account...", loginCommand);
-        menu.addMenuItem("PaaS/CloudBees/Create Account...", createAccountCommand);
-        menu.addMenuItem("Project/Paas/CloudBes", showCloudBeesProjectCommand);
+        actionManager.registerAction("cloudBeesShowProject", showCloudBeesProjectAction);
+        actionManager.registerAction("showCloudBeesApplications", showApplicationsAction);
+        actionManager.registerAction("createCloudBeesApplication", createApplicationAction);
+        actionManager.registerAction("switchCloudBeesAccount", switchAccountAction);
+        actionManager.registerAction("createCloudBeesAccount", createAccountAction);
+
+        DefaultActionGroup projectPaas = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_PROJECT_PAAS);
+        projectPaas.add(showCloudBeesProjectAction);
+
+        DefaultActionGroup cloudBees = new DefaultActionGroup("CloudBees", true, actionManager);
+        actionManager.registerAction("cloudBeesPaas", cloudBees);
+        DefaultActionGroup paas = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_PAAS);
+        paas.add(cloudBees);
+
+        cloudBees.add(createApplicationAction);
+        cloudBees.add(showApplicationsAction);
+        cloudBees.add(switchAccountAction);
+        cloudBees.add(createAccountAction);
     }
 }
