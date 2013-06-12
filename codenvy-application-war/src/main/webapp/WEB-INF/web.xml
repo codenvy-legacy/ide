@@ -26,7 +26,7 @@
          version="3.0"
          metadata-complete="true">
 
-    <display-name>api</display-name>
+    <display-name>Codenvy IDE</display-name>
     
     <context-param>
       <param-name>everrest.exoplatform.standalone.config</param-name>
@@ -78,13 +78,13 @@
 
    <servlet>
        <servlet-name>main</servlet-name>
-       <jsp-file>/ide/Application.jsp</jsp-file>
+       <jsp-file>/app/Application.jsp</jsp-file>
    </servlet>
 
-   <!--servlet>
+   <servlet>
        <servlet-name>shell</servlet-name>
-       <jsp-file>/shell/shell.jsp</jsp-file>
-   </servlet-->
+       <jsp-file>/app/shell.jsp</jsp-file>
+   </servlet>
 
    <servlet>
       <servlet-name>EverrestServlet</servlet-name>
@@ -103,22 +103,17 @@
 
    <servlet-mapping>
       <servlet-name>main</servlet-name>
-      <url-pattern>/ide/main</url-pattern>
+      <url-pattern>/app/main</url-pattern>
    </servlet-mapping>
 
    <servlet-mapping>
       <servlet-name>default</servlet-name>
-      <url-pattern>/ide/*</url-pattern>
+      <url-pattern>/app/*</url-pattern>
    </servlet-mapping>
    
-    <!--servlet-mapping>
+    <servlet-mapping>
       <servlet-name>shell</servlet-name>
-      <url-pattern>/shell/main</url-pattern>
-   </servlet-mapping-->
-
-   <servlet-mapping>
-      <servlet-name>default</servlet-name>
-      <url-pattern>/shell/*</url-pattern>
+      <url-pattern>/app/shell</url-pattern>
    </servlet-mapping>
 
    <servlet-mapping>
@@ -137,7 +132,7 @@
 
     <security-constraint>
         <web-resource-collection>
-            <web-resource-name>api</web-resource-name>
+            <web-resource-name>app</web-resource-name>
             <url-pattern>/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>

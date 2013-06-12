@@ -356,7 +356,7 @@
 
                     <execution>
                         <id>unwar-ide</id>
-                        <phase>process-resources</phase>
+                        <phase>prepare-package</phase>
                         <configuration>
                             <tasks>
                                <!--  <unjar src="${project.build.directory}/dependency/exo-ide-client-${project.version}.jar"
@@ -368,7 +368,7 @@
 	                                    <exclude name="**/index.html" />
 	                                </patternset>
                                 </unwar>
-                                <copy todir="${project.build.directory}/${project.artifactId}-${project.version}/shell">
+                                <copy todir="${project.build.directory}/${project.artifactId}-${project.version}/app">
                                     <fileset dir="${project.build.directory}/unwar/shell"/>
                                 </copy>
                             </tasks>
@@ -394,23 +394,6 @@
                             </tasks>
                         </configuration>
                     </execution>
-
-                   <!--  <execution>
-                        <id>move-compile-resources</id>
-                        <phase>prepare-package</phase>
-                        <configuration>
-                            <tasks>
-                                <move todir="${project.build.directory}/${project.artifactId}-${project.version}">
-                                    <fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/IDE"/>
-                                </move>
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution> -->
-
-
                 </executions>
             </plugin>
 
@@ -426,11 +409,6 @@
                         </goals>
                         <configuration>
                             <artifactItems>
-                               <!--  <artifactItem>
-                                    <groupId>org.exoplatform.ide</groupId>
-                                    <artifactId>exo-ide-client</artifactId>
-                                    <type>jar</type>
-                                </artifactItem> -->
                                 <artifactItem>
                                     <groupId>org.exoplatform.ide</groupId>
                                     <artifactId>exo-ide-packaging-shell-war</artifactId>
