@@ -125,9 +125,6 @@
 			<div class="{style.floatLeft}">
 				<g:Label text="{locale.aboutIde}" styleName="{resource.css.welcomeHeaderText}"></g:Label>
 				<g:Frame ui:field="googleFrame"  styleName="{style.googleOnePanel}" ></g:Frame>
-				<iframe class="{style.googleOnePanel}" src="/ide/app/googleone.html"
-					frameborder="0" marginheight="0px" marginwidth="0px;" scrolling="no"
-					style="overflow:hidden;" allowtransparency="true"></iframe>
 				<g:Frame ui:field="fbFrame"  styleName="{style.fbLikePanel}" ></g:Frame>
 			</div>
 		</div>
