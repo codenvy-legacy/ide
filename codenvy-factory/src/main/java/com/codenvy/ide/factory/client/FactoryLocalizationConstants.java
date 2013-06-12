@@ -27,6 +27,16 @@ import com.google.gwt.i18n.client.Messages;
  * @version $Id: FactoryLocalizationConstants.java Jun 11, 2013 12:02:56 PM azatsarynnyy $
  */
 public interface FactoryLocalizationConstants extends Messages {
+
+    /*
+     * Buttons
+     */
+    @Key("button.ok")
+    String buttonOk();
+
+    @Key("button.continue")
+    String buttonContinue();
+
     /*
      * Controls
      */
@@ -48,11 +58,17 @@ public interface FactoryLocalizationConstants extends Messages {
     @Key("factoryURL.view.title")
     String factoryURLViewTitle();
 
-    @Key("factoryURL.field.url")
-    String factoryURLFieldURL();
+    @Key("factoryURL.field.websitesURL.id")
+    String factoryURLFieldWebsitesURLId();
 
-    @Key("factoryURL.button.ok")
-    String factoryURLButtonOk();
+    @Key("factoryURL.field.gitHubURL.id")
+    String factoryURLFieldGitHubURLId();
+
+    @Key("factoryURL.field.directSharingURL.id")
+    String factoryURLFieldDirectSharingURLId();
+
+    @Key("factoryURL.button.ok.id")
+    String factoryURLButtonOkId();
 
     /*
      * CommitChangesView
@@ -63,13 +79,19 @@ public interface FactoryLocalizationConstants extends Messages {
     @Key("commitChanges.view.title")
     String commitChangesViewTitle();
 
-    @Key("commitChanges.field.description")
-    String commitChangesFieldDescription();
+    @Key("commitChanges.descriptionText")
+    String commitChangesDescriptionText();
 
-    @Key("commitChanges.button.ok")
+    @Key("commitChanges.field.description.id")
+    String commitChangesFieldDescriptionId();
+
+    @Key("commitChanges.field.description.title")
+    String commitChangesFieldDescriptionTitle();
+
+    @Key("commitChanges.button.ok.id")
     String commitChangesButtonOk();
 
-    @Key("commitChanges.button.continue")
+    @Key("commitChanges.button.continue.id")
     String commitChangesButtonContinue();
 
 }

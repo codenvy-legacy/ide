@@ -21,14 +21,24 @@ package com.codenvy.ide.factory.client;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
+import org.exoplatform.ide.git.shared.Status;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * Handle action when user tries to share opened project with Factory URL.
@@ -36,32 +46,58 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: FactoryURLHandler.java Jun 11, 2013 5:50:55 PM azatsarynnyy $
  */
-public class FactoryURLHandler implements ShareWithFactoryUrlHandler {
+public class FactoryURLHandler implements ShareWithFactoryUrlHandler, VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler {
+
+    /** Current virtual file system. */
+    private VirtualFileSystemInfo vfs;
+
+    /** Current project. */
+    private ProjectModel          openedProject;
+
+    public FactoryURLHandler() {
+        IDE.addHandler(ShareWithFactoryUrlEvent.TYPE, this);
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
+    }
 
     /**
      * @see com.codenvy.ide.factory.client.ShareWithFactoryUrlHandler#onShare(com.codenvy.ide.factory.client.ShareWithFactoryUrlEvent)
      */
     @Override
     public void onShare(ShareWithFactoryUrlEvent event) {
-        if (isGitRepoInitialized()) {
-            initializeRepository();
-        } else if (isAllChangesAreCommitted()) {
-            commitChanges();
-        } else {
-            IDE.fireEvent(new GetCodeNowButtonEvent());
+        checkGitRepoStatus(openedProject, false);
+    }
+
+    private void checkGitRepoStatus(final ProjectModel project, boolean forced) {
+        try {
+            GitClientService.getInstance()
+                            .status(vfs.getId(),
+                                    project.getId(),
+                                    new AsyncRequestCallback<Status>(
+                                                                     new AutoBeanUnmarshaller<Status>(
+                                                                                                      GitExtension.AUTO_BEAN_FACTORY.status())) {
+                                        @Override
+                                        protected void onSuccess(Status result) {
+                                            checkUncommittedChanges(result);
+                                        }
+
+                                        @Override
+                                        protected void onFailure(Throwable exception) {
+                                            initializeRepository(project);
+                                        }
+                                    });
+        } catch (RequestException ignored) {
+            IDE.fireEvent(new OutputEvent("Checking repository status failed.", Type.ERROR));
         }
     }
 
-    private boolean isAllChangesAreCommitted() {
-        // TODO
-        return false;
+    private void checkUncommittedChanges(Status status) {
+        // TODO commit only if uncommitted changes are exist
+        // if (status.get) {
+        IDE.fireEvent(new CommitChangesEvent());
+        // }
     }
-
-    private boolean isGitRepoInitialized() {
-        // TODO
-        return false;
-    }
-
 
     /** Initialize of the Git-repository by sending request over WebSocket or HTTP. */
     private void initializeRepository(final ProjectModel project) {
@@ -70,16 +106,16 @@ public class FactoryURLHandler implements ShareWithFactoryUrlHandler {
                                                   new RequestCallback<String>() {
                                                       @Override
                                                       protected void onSuccess(String result) {
-                                                          onInitSuccess();
+                                                          onInitializingSuccess(project);
                                                       }
 
                                                       @Override
                                                       protected void onFailure(Throwable exception) {
-                                                          handleError(exception);
+                                                          handleGitInitializingError(exception);
                                                       }
                                                   });
         } catch (WebSocketException e) {
-            initRepositoryREST(project);
+            initializeRepositoryREST(project);
         }
     }
 
@@ -90,29 +126,52 @@ public class FactoryURLHandler implements ShareWithFactoryUrlHandler {
                                                 new AsyncRequestCallback<String>() {
                                                     @Override
                                                     protected void onSuccess(String result) {
-                                                        onInitSuccess();
+                                                        onInitializingSuccess(project);
                                                     }
 
                                                     @Override
                                                     protected void onFailure(Throwable exception) {
-                                                        handleError(exception);
+                                                        handleGitInitializingError(exception);
                                                     }
                                                 });
         } catch (RequestException e) {
-            handleError(e);
+            handleGitInitializingError(e);
         }
     }
 
-
-    private void commitChanges() {
-        IDE.fireEvent(new CommitChangesEvent());
+    private void onInitializingSuccess(ProjectModel project) {
+        IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
+        IDE.fireEvent(new RefreshBrowserEvent(project));
+        IDE.fireEvent(new OpenGetCodeNowButtonViewEvent());
     }
 
-
-    private void handleError(Throwable e) {
-        String errorMessage =
-                (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES.initFailed();
+    private void handleGitInitializingError(Throwable e) {
+        String errorMessage = (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES.initFailed();
         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+    }
+
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
+     */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        vfs = event.getVfsInfo();
+    }
+
+    /**
+     * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
+     */
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        openedProject = event.getProject();
+    }
+
+    /**
+     * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+     */
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        openedProject = null;
     }
 
 }

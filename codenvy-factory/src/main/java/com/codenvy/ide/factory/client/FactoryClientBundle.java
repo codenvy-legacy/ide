@@ -31,9 +31,15 @@ import com.google.gwt.resources.client.ImageResource;
 public interface FactoryClientBundle extends ClientBundle {
     FactoryClientBundle INSTANCE = GWT.<FactoryClientBundle> create(FactoryClientBundle.class);
 
-    @Source("com/codenvy/ide/factory/images/build.png")
+    @Source("com/codenvy/ide/factory/images/buttons/ok.png")
+    ImageResource ok();
+
+    @Source("com/codenvy/ide/factory/images/buttons/ok_Disabled.png")
+    ImageResource okDisabled();
+
+    @Source("com/codenvy/ide/factory/images/controls/share.png")
     ImageResource share();
 
-    @Source("com/codenvy/ide/factory/images/build_Disabled.png")
+    @Source("com/codenvy/ide/factory/images/controls/share_Disabled.png")
     ImageResource shareDisabled();
 }

@@ -22,8 +22,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -35,15 +35,30 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: GetCodeNowButtonPresenter.java Jun 11, 2013 12:17:04 PM azatsarynnyy $
  */
-public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewClosedHandler {
+public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandler, ViewClosedHandler {
 
     public interface Display extends IsView {
+
         /**
-         * Returns 'Factory URL' field.
+         * Returns 'on Websites' field.
          * 
-         * @return 'Factory URL' field
+         * @return 'on Websites' field
          */
-        TextFieldItem getFactoryURLField();
+        HasValue<String> getWebsitesURLField();
+
+        /**
+         * Returns 'on GitHub' field.
+         * 
+         * @return 'on GitHub' field
+         */
+        HasValue<String> getGitHubURLField();
+
+        /**
+         * Returns 'Direct Sharing' field.
+         * 
+         * @return 'Direct Sharing' field
+         */
+        HasValue<String> getDirectSharingURLField();
 
         /**
          * Returns the 'Ok' button.
@@ -52,18 +67,21 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
          */
         HasClickHandlers getOkButton();
 
-        /** Give focus to the 'Factory URL' field. */
-        void focusURLField();
+        /** Select all text in the 'on Websites' field. */
+        void selectWebsitesURLField();
 
-        /** Select all text in the 'Factory URL' field. */
-        void selectURLField();
+        /** Select all text in the 'on GitHub' field. */
+        void selectGitHubURLField();
+
+        /** Select all text in the 'Direct Sharing' field. */
+        void selectDirectSharingURLField();
     }
 
     /** Display. */
     private Display display;
 
     public GetCodeNowButtonPresenter() {
-        IDE.addHandler(GetCodeNowButtonEvent.TYPE, this);
+        IDE.addHandler(OpenGetCodeNowButtonViewEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
     }
 
@@ -83,16 +101,15 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
             bindDisplay();
         }
 
-        display.getFactoryURLField().setValue("https://www.anonymous.codenvy.com");
-        display.selectURLField();
-        display.focusURLField();
+        display.getDirectSharingURLField().setValue("https://www.codenvy.com/factory?vcs=git&pname=test");
+        display.selectDirectSharingURLField();
     }
 
     /**
      * @see com.codenvy.ide.factory.client.ShareWithFactoryUrlHandler#onCreateFactoryURL(com.codenvy.ide.factory.client.ShareWithFactoryUrlEvent)
      */
     @Override
-    public void onGetCodeNowButton(GetCodeNowButtonEvent event) {
+    public void onGetCodeNowButton(OpenGetCodeNowButtonViewEvent event) {
         openView();
     }
 

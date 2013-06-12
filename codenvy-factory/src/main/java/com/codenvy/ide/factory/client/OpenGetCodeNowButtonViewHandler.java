@@ -18,29 +18,19 @@
  */
 package com.codenvy.ide.factory.client;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Event occurs, when user tries to get a CodeNow button.
+ * Handler for {@link OpenGetCodeNowButtonViewEvent} event.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: GetCodeNowButtonEvent.java Jun 11, 2013 11:27:15 AM azatsarynnyy $
+ * @version $Id: OpenGetCodeNowButtonViewHandler.java Jun 11, 2013 11:26:11 AM azatsarynnyy $
  */
-public class GetCodeNowButtonEvent extends GwtEvent<GetCodeNowButtonHandler> {
-
-    /** Type used to register this event. */
-    public static final Type<GetCodeNowButtonHandler> TYPE = new Type<GetCodeNowButtonHandler>();
-
-    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
-    @Override
-    public Type<GetCodeNowButtonHandler> getAssociatedType() {
-        return TYPE;
-    }
-
-    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
-    @Override
-    protected void dispatch(GetCodeNowButtonHandler handler) {
-        handler.onGetCodeNowButton(this);
-    }
-
+public interface OpenGetCodeNowButtonViewHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to get a CodeNow button.
+     * 
+     * @param event {@link ShareWithFactoryUrlEvent}
+     */
+    void onGetCodeNowButton(OpenGetCodeNowButtonViewEvent event);
 }

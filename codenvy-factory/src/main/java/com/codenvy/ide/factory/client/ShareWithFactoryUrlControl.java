@@ -52,6 +52,7 @@ public class ShareWithFactoryUrlControl extends SimpleControl implements IDECont
         setImages(FactoryClientBundle.INSTANCE.share(), FactoryClientBundle.INSTANCE.shareDisabled());
         setEvent(new ShareWithFactoryUrlEvent());
         setVisible(true);
+        setEnabled(false);
     }
 
     /**
@@ -85,7 +86,9 @@ public class ShareWithFactoryUrlControl extends SimpleControl implements IDECont
      */
     @Override
     public void onVfsChanged(VfsChangedEvent event) {
-        setEnabled(event.getVfsInfo() != null);
+        if (event.getVfsInfo() == null) {
+            setEnabled(false);
+        }
     }
 
 }

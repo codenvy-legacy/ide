@@ -253,6 +253,11 @@
 			<artifactId>exo-ide-editor-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+
+      <dependency>
+			<groupId>org.exoplatform.ide</groupId>
+			<artifactId>codenvy-factory</artifactId>
+		</dependency>
    </dependencies>
 
    <build>

@@ -20,10 +20,9 @@
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
-             xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
-        >
-    <ui:with field='resource' type='org.exoplatform.ide.git.client.GitClientBundle'/>
-    <ui:with field="locale" type="org.exoplatform.ide.git.client.GitLocalizationConstant"></ui:with>
+             xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+    <ui:with field="resource" type="com.codenvy.ide.factory.client.FactoryClientBundle"/>
+    <ui:with field="locale" type="com.codenvy.ide.factory.client.FactoryLocalizationConstants"></ui:with>
     <ui:style>
         .center {
             display: block;
@@ -41,7 +40,19 @@
             font-family: Verdana, Bitstream Vera Sans, sans-serif;
         }
 
+        .textArea {
+            font-size: 14px;
+        }
+
         .spacing {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .labelTitle {
+            font-size: 11px;
+            font-family: Verdana, Bitstream Vera Sans, sans-serif;
+            font-weight: bold;
             margin-top: 10px;
             margin-bottom: 10px;
         }
@@ -50,27 +61,28 @@
     <f:Border margin="15" borderColor="transparent">
         <f:layer>
             <g:DockLayoutPanel unit="PX">
-                <g:north size="20">
+                <g:north size="40">
                     <g:FlowPanel addStyleNames="{style.floatLeft}">
-                        <g:CheckBox ui:field="allField" HTML="{locale.commitAllFieldTitle}" width="100%"/>
-                        <g:CheckBox visible="false" ui:field="amendField" HTML="{locale.commitAmendFieldTitle}" width="100%"/>
+                        <g:Label text="{locale.commitChangesDescriptionText}" addStyleNames="{style.labelTitle}" width="100%"></g:Label>
+                        <!-- <g:CheckBox ui:field="allField" HTML="{locale.commitAllFieldTitle}" width="100%"/>
+                        <g:CheckBox visible="false" ui:field="amendField" HTML="{locale.commitAmendFieldTitle}" width="100%"/> -->
                     </g:FlowPanel>
                 </g:north>
                 <g:center>
                     <g:FlowPanel width="100%" height="55%" addStyleNames="{style.spacing}">
-                        <g:Label text="{locale.commitMessageFieldTitle}" addStyleNames="{style.label}" width="100%"></g:Label>
-                        <f:TextAreaInput ui:field="messageField" width="100%" height="100%"></f:TextAreaInput>
+                        <g:Label text="{locale.commitChangesFieldDescriptionTitle}" addStyleNames="{style.label}" width="100%"></g:Label>
+                        <f:TextAreaInput ui:field="descriptionField" width="100%" height="100%" addStyleNames="{style.textArea}"></f:TextAreaInput>
                     </g:FlowPanel>
                 </g:center>
             </g:DockLayoutPanel>
         </f:layer>
         <f:layer height="22px" bottom="0">
-            <g:FlowPanel width="200px" styleName="{style.center}">
-                <f:ImageButton ui:field="commitButton" width="90" height="22" text="{locale.buttonCommit}" imageResource="{resource.ok}"
+            <g:FlowPanel width="250px" styleName="{style.center}">
+                <f:ImageButton ui:field="okButton" width="90" height="22" text="{locale.buttonOk}" imageResource="{resource.ok}"
                                disabledImageResource="{resource.okDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
                 <g:FlowPanel width="5px" height="22px" styleName="{style.floatLeft}"></g:FlowPanel>
-                <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.buttonCancel}" imageResource="{resource.cancel}"
-                               disabledImageResource="{resource.cancelDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
+                <f:ImageButton ui:field="continueButton" width="190" height="22" text="{locale.buttonContinue}" imageResource="{resource.ok}"
+                               disabledImageResource="{resource.okDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
             </g:FlowPanel>
         </f:layer>
 

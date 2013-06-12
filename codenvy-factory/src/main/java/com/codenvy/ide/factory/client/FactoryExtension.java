@@ -51,7 +51,7 @@ public class FactoryExtension extends Extension implements InitializeServicesHan
     @Override
     public void initialize() {
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
-        IDE.addHandler(ShareWithFactoryUrlEvent.TYPE, new FactoryURLHandler());
+        new FactoryURLHandler();
 
         IDE.getInstance().addControl(new ShareWithFactoryUrlControl());
 

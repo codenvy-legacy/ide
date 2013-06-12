@@ -828,6 +828,7 @@
       <module>exo-ide-client</module>
       <module>exo-ide-shell</module>
       <module>exo-ide-websocket</module>
+      <module>codenvy-factory</module>
 
       <module>exo-ide-git-server</module>
       <module>exo-ide-packaging-shell-war</module>
@@ -839,7 +840,5 @@
       <!--module>exo-ide-packaging-maven-builder</module-->
       <!--module>exo-ide-packaging-codeassistant-server</module-->
       <module>exo-ide-jrebel-remote</module>
-
-      <module>codenvy-factory</module>
    </modules>
 </project>
