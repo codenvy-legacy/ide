@@ -238,7 +238,7 @@ public class EditSessions implements Startable {
 
     private void cleanUpEditSession(FileEditSession editSession) {
         editSessions.remove(editSession.getFileEditSessionKey());
-        InternalListener internalListener = listenersByEditSessionsId.get(editSession.getFileEditSessionKey());
+        InternalListener internalListener = listenersByEditSessionsId.remove(editSession.getFileEditSessionKey());
         if (internalListener != null) {
             listenerList.removeEventListener(internalListener.myFilter, internalListener);
         }
