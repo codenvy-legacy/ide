@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server.rest;
 
-import org.exoplatform.ide.commons.ParsingResponseException;
+import com.codenvy.ide.commons.server.ParsingResponseException;
+
 import org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry;
 import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryException;
 import org.exoplatform.ide.extension.cloudfoundry.server.DebugMode;
@@ -43,7 +44,7 @@ import java.util.Map;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/cloudfoundry")
+@Path("{ws-name}/cloudfoundry")
 public class CloudfoundryService {
     private static final Log LOG = ExoLogger.getLogger(CloudfoundryService.class);
 
@@ -65,14 +66,16 @@ public class CloudfoundryService {
     @Path("login")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void login(Map<String, String> credentials, @QueryParam("paasprovider") String paasProvider)
+    public void login(Map<String, String> credentials, @QueryParam("paasprovider") @DefaultValue("cloudfoundry") String paasProvider)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, IOException {
+        if (credentials == null)
+            throw new IllegalArgumentException("You must set your target, email & password");
         cloudfoundry.login(credentials.get("server"), credentials.get("email"), credentials.get("password"), paasProvider);
     }
 
     @Path("logout")
     @POST
-    public void logout(@QueryParam("server") String server, @QueryParam("paasprovider") String paasProvider)
+    public void logout(@QueryParam("server") String server, @QueryParam("paasprovider") @DefaultValue("cloudfoundry") String paasProvider)
             throws CredentialStoreException {
         cloudfoundry.logout(server, paasProvider);
     }
@@ -80,7 +83,7 @@ public class CloudfoundryService {
     @Path("info/system")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public SystemInfo systemInfo(@QueryParam("server") String server, @QueryParam("paasprovider") String paasProvider)
+    public SystemInfo systemInfo(@QueryParam("server") String server, @QueryParam("paasprovider") @DefaultValue("cloudfoundry") String paasProvider)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, IOException {
         return cloudfoundry.systemInfo(server, paasProvider);
     }
@@ -88,7 +91,7 @@ public class CloudfoundryService {
     @Path("info/frameworks")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Collection<Framework> frameworks(@QueryParam("server") String server, @QueryParam("paasprovider") String paasProvider)
+    public Collection<Framework> frameworks(@QueryParam("server") String server, @QueryParam("paasprovider") @DefaultValue("cloudfoundry") String paasProvider)
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, IOException {
         return cloudfoundry.systemInfo(server, paasProvider).getFrameworks().values();
     }
@@ -151,7 +154,7 @@ public class CloudfoundryService {
         if (projectId != null) {
             Project proj = (Project)vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
             String paasName;
-            if (paasProvider.equalsIgnoreCase("tier3webfabric")) {
+            if (paasProvider != null && paasProvider.equalsIgnoreCase("tier3webfabric")) {
                 paasName = "Tier3 Web Fabric";
             } else {
                 paasName = "CloudFoundry";
@@ -171,7 +174,7 @@ public class CloudfoundryService {
             @QueryParam("debug") String debug,
             @QueryParam("vfsid") String vfsId, //
             @QueryParam("projectid") String projectId, //
-            @QueryParam("paasprovider") String paasProvider //
+            @QueryParam("paasprovider") @DefaultValue("cloudfoundry") String paasProvider //
                                                    )
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         DebugMode debugMode = null;
@@ -190,7 +193,7 @@ public class CloudfoundryService {
             @QueryParam("name") String app, //
             @QueryParam("vfsid") String vfsId, //
             @QueryParam("projectid") String projectId, //
-            @QueryParam("paasprovider") String paasProvider //
+            @QueryParam("paasprovider") @DefaultValue("cloudfoundry") String paasProvider //
                                )
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         cloudfoundry.stopApplication(server, app,
@@ -206,7 +209,7 @@ public class CloudfoundryService {
             @QueryParam("debug") String debug,
             @QueryParam("vfsid") String vfsId, //
             @QueryParam("projectid") String projectId, //
-            @QueryParam("paasprovider") String paasProvider //
+            @QueryParam("paasprovider") @DefaultValue("cloudfoundry") String paasProvider //
                                                      )
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         DebugMode debugMode = null;
@@ -367,7 +370,7 @@ public class CloudfoundryService {
             @QueryParam("name") String app, //
             @QueryParam("vfsid") String vfsId, //
             @QueryParam("projectid") String projectId, //
-            @QueryParam("paasprovider") String paasProvider, //
+            @QueryParam("paasprovider") @DefaultValue("cloudfoundry") String paasProvider, //
             @QueryParam("delete-services") boolean deleteServices //
                                  )
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
@@ -427,7 +430,7 @@ public class CloudfoundryService {
     public void deleteService(
             @QueryParam("server") String server, //
             @PathParam("name") String name, //
-            @QueryParam("paasprovider") String paasProvider
+            @QueryParam("paasprovider") @DefaultValue("cloudfoundry") String paasProvider
                              ) throws CloudfoundryException, ParsingResponseException, CredentialStoreException, IOException {
         cloudfoundry.deleteService(server, name, paasProvider);
     }
@@ -473,7 +476,7 @@ public class CloudfoundryService {
             @QueryParam("nostart") boolean nostart, //
             @QueryParam("vfsid") String vfsId, //
             @QueryParam("projectid") String projectId, //
-            @QueryParam("paasprovider") String paasProvider
+            @QueryParam("paasprovider") @DefaultValue("cloudfoundry") String paasProvider
                               )
             throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException {
         cloudfoundry.validateAction(server, action, app, framework, url, instances, memory, nostart, vfsId != null
@@ -484,7 +487,7 @@ public class CloudfoundryService {
 
     @Path("target")
     @POST
-    public void target(@QueryParam("target") String target, @QueryParam("paasprovider") String paasProvider)
+    public void target(@QueryParam("target") String target, @QueryParam("paasprovider") @DefaultValue("cloudfoundry") String paasProvider)
             throws CredentialStoreException {
         cloudfoundry.setTarget(target, paasProvider);
     }
@@ -492,14 +495,14 @@ public class CloudfoundryService {
     @Path("target")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public String target(@QueryParam("paasprovider") String paasProvider) throws CredentialStoreException {
+    public String target(@QueryParam("paasprovider") @DefaultValue("cloudfoundry") String paasProvider) throws CredentialStoreException {
         return cloudfoundry.getTarget(paasProvider);
     }
 
     @Path("target/all")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Collection<String> targets(@QueryParam("paasprovider") String paasProvider)
+    public Collection<String> targets(@QueryParam("paasprovider") @DefaultValue("cloudfoundry") String paasProvider)
             throws CredentialStoreException {
         return cloudfoundry.getTargets(paasProvider);
     }

@@ -14,7 +14,7 @@
 
 package com.google.collide.client.code.autocomplete;
 
-import org.exoplatform.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonArray;
 
 
 /**

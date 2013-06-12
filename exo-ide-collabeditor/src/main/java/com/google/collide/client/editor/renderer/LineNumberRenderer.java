@@ -18,6 +18,10 @@ import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 
 import com.codenvy.ide.client.util.Elements;
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
+import com.codenvy.ide.json.client.JsIntegerMap;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.collide.client.common.ThemeConstants;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
@@ -27,10 +31,6 @@ import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.shared.document.LineInfo;
 import com.google.gwt.resources.client.ClientBundle;
 
-import org.exoplatform.ide.json.client.JsIntegerMap;
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 /** A renderer for the line numbers in the left gutter. */
 public class LineNumberRenderer {

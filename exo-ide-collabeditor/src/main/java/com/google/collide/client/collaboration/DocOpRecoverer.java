@@ -17,6 +17,10 @@ package com.google.collide.client.collaboration;
 import elemental.util.Timer;
 
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.commons.shared.ErrorCallback;
+import com.codenvy.ide.dtogen.shared.ServerError.FailureReason;
+import com.codenvy.ide.json.client.JsoArray;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.collaboration.cc.RevisionProvider;
 import com.google.collide.dto.RecoverFromMissedDocOps;
@@ -28,10 +32,6 @@ import com.google.collide.dto.client.DtoClientImpls.ServerToClientDocOpImpl;
 
 import org.exoplatform.ide.client.framework.websocket.FrontendApi.ApiCallback;
 import org.exoplatform.ide.client.framework.websocket.FrontendApi.RequestResponseApi;
-import org.exoplatform.ide.dtogen.shared.ServerError.FailureReason;
-import org.exoplatform.ide.json.client.JsoArray;
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.shared.util.ErrorCallback;
 
 /**
  * A class that performs the XHR to recover missed doc ops and funnels the results into the right

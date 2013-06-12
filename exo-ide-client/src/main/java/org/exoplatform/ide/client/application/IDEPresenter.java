@@ -98,7 +98,7 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
                     e.printStackTrace();
                 }
             }
-        }.schedule(500);
+        }.schedule(1000);
     }
 
     public void openView(View view) {

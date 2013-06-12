@@ -25,7 +25,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-import static org.exoplatform.ide.commons.FileUtils.deleteRecursive;
+import static com.codenvy.ide.commons.server.FileUtils.deleteRecursive;
+
+
 
 /**
  * Wrapper for com.google.appengine.tools.admin.Application to make possible cleanup temporary files.

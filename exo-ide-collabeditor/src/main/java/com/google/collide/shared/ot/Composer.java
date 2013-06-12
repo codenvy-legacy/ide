@@ -14,13 +14,13 @@
 
 package com.google.collide.shared.ot;
 
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.dto.DocOp;
 import com.google.collide.dto.DocOpComponent;
 import com.google.collide.dto.shared.DocOpFactory;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 
-import org.exoplatform.ide.json.shared.JsonArray;
 
 import java.util.Iterator;
 

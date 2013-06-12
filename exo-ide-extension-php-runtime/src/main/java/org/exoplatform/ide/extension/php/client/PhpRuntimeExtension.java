@@ -24,6 +24,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.php.client.logs.LogsHandler;
 import org.exoplatform.ide.extension.php.client.run.RunApplicationManager;
 
@@ -32,19 +33,20 @@ import org.exoplatform.ide.extension.php.client.run.RunApplicationManager;
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: PhpRuntimeExtension.java Apr 17, 2013 4:06:19 PM azatsarynnyy $
- *
  */
 public class PhpRuntimeExtension extends Extension implements InitializeServicesHandler {
-    public static final PhpExtensionAutoBeanFactory AUTO_BEAN_FACTORY = GWT
-            .create(PhpExtensionAutoBeanFactory.class);
+    public static final PhpExtensionAutoBeanFactory      AUTO_BEAN_FACTORY = GWT
+                                                                                .create(PhpExtensionAutoBeanFactory.class);
 
-    public static final PhpExtensionLocalizationConstant PHP_LOCALIZATION = GWT.create(PhpExtensionLocalizationConstant.class);
+    public static final PhpExtensionLocalizationConstant PHP_LOCALIZATION  = GWT.create(PhpExtensionLocalizationConstant.class);
 
-    /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
-     * .client.framework.application.event.InitializeServicesEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
+     *      .client.framework.application.event.InitializeServicesEvent)
+     */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        new PhpRuntimeServiceImpl(event.getApplicationConfiguration().getContext());
+        new PhpRuntimeServiceImpl(Utils.getRestContext(), Utils.getWorkspaceName(), IDE.messageBus());
     }
 
     /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */

@@ -19,9 +19,9 @@
 package org.exoplatform.ide.vfs.impl.fs;
 
 import com.codenvy.commons.env.EnvironmentContext;
-import com.codenvy.ide.commons.NamedThreadFactory;
+import com.codenvy.commons.lang.NamedThreadFactory;
+import com.codenvy.ide.commons.server.FileUtils;
 
-import org.exoplatform.ide.commons.FileUtils;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.BufferedReader;

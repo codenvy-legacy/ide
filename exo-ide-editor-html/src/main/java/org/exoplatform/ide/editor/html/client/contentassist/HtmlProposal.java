@@ -19,6 +19,7 @@
 package org.exoplatform.ide.editor.html.client.contentassist;
 
 import com.codenvy.ide.client.util.logging.Log;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -33,63 +34,68 @@ import org.exoplatform.ide.editor.shared.text.edits.ReplaceEdit;
 
 /**
  * Completion proposal for HTML.
- *
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: HtmlProposal.java Feb 7, 2013 11:51:45 AM azatsarynnyy $
  */
 public class HtmlProposal implements CompletionProposal {
 
-    private static final String ELEMENT_SEPARATOR_CLOSE = ">";
+    private static final String   ELEMENT_SEPARATOR_CLOSE          = ">";
 
-    private static final String ELEMENT_SELF_CLOSE = " />";
+    private static final String   ELEMENT_SELF_CLOSE               = " />";
 
-    private static final String ELEMENT_SEPARATOR_OPEN_FINISHTAG = "</";
+    private static final String   ELEMENT_SEPARATOR_OPEN_FINISHTAG = "</";
 
-    private static final String ATTRIBUTE_SEPARATOR_OPEN = "=\"";
+    private static final String   ATTRIBUTE_SEPARATOR_OPEN         = "=\"";
 
-    private static final String ATTRIBUTE_SEPARATOR_CLOSE = "\"";
+    private static final String   ATTRIBUTE_SEPARATOR_CLOSE        = "\"";
 
     /** Proposal text label. */
-    private String proposal;
+    private String                proposal;
 
     /** HTML type of autocompletion. */
-    private CompletionType type;
+    private CompletionType        type;
 
     /** Triggering string. */
-    private String prefix;
+    private String                prefix;
 
     /** Text offset. */
-    private final int offset;
+    private final int             offset;
 
     /** Number of chars, relative to beginning of replacement to move cursor right. */
-    private int jumpLength;
+    private int                   jumpLength;
 
     /** Holds map of HTML tags with corresponding attributes. */
     private HtmlTagsAndAttributes htmlAttributes;
 
     /**
+     * Is this a proposal to close closeable tag.
+     */
+    private final boolean         isClosingTagProposal;
+
+    /**
      * Constructs new {@link HtmlProposal} instance with the given proposal, prefix and offset.
-     *
-     * @param proposal
-     *         proposal text label
-     * @param type
-     *         type of autocompletion
+     * 
+     * @param proposal proposal text label
+     * @param type type of autocompletion
      * @param prefix
      * @param offset
      * @param htmlAttributes
+     * @param isCloseTagProposal is this a proposal to close closeable tag
      */
     public HtmlProposal(String proposal, CompletionType type, String prefix, int offset,
-                        HtmlTagsAndAttributes htmlAttributes) {
-        super();
+                        HtmlTagsAndAttributes htmlAttributes, boolean isCloseTagProposal) {
         this.proposal = proposal;
         this.type = type;
         this.prefix = prefix;
         this.offset = offset;
         this.htmlAttributes = htmlAttributes;
+        this.isClosingTagProposal = isCloseTagProposal;
     }
 
-    /** @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#apply(org.exoplatform.ide.editor.shared.text
-     * .IDocument) */
+    /**
+     * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#apply(org.exoplatform.ide.editor.shared.text .IDocument)
+     */
     @Override
     public void apply(IDocument document) {
         ReplaceEdit replaceEdit = new ReplaceEdit(offset - prefix.length(), prefix.length(), computeProposalLabel());
@@ -104,7 +110,7 @@ public class HtmlProposal implements CompletionProposal {
 
     /**
      * Compute string to insert depending on what type of HTML autocompletion.
-     *
+     * 
      * @return result proposal label to insert
      */
     private String computeProposalLabel() {
@@ -114,9 +120,17 @@ public class HtmlProposal implements CompletionProposal {
                     jumpLength = proposal.length();
                     return proposal + ELEMENT_SELF_CLOSE;
                 }
-                jumpLength = proposal.length() + ELEMENT_SEPARATOR_CLOSE.length();
-                return proposal + ELEMENT_SEPARATOR_CLOSE + ELEMENT_SEPARATOR_OPEN_FINISHTAG + proposal
-                       + ELEMENT_SEPARATOR_CLOSE;
+
+                String label;
+                if (isClosingTagProposal) {
+                    jumpLength = ELEMENT_SEPARATOR_CLOSE.length() + ELEMENT_SEPARATOR_OPEN_FINISHTAG.length() + proposal.length()
+                                 + ELEMENT_SEPARATOR_CLOSE.length();
+                    label = ELEMENT_SEPARATOR_CLOSE + ELEMENT_SEPARATOR_OPEN_FINISHTAG + proposal + ELEMENT_SEPARATOR_CLOSE;
+                } else {
+                    jumpLength = proposal.length() + ELEMENT_SEPARATOR_CLOSE.length();
+                    label = proposal + ELEMENT_SEPARATOR_CLOSE + ELEMENT_SEPARATOR_OPEN_FINISHTAG + proposal + ELEMENT_SEPARATOR_CLOSE;
+                }
+                return label;
             case ATTRIBUTE:
                 jumpLength = proposal.length() + ATTRIBUTE_SEPARATOR_OPEN.length();
                 return proposal + ATTRIBUTE_SEPARATOR_OPEN + ATTRIBUTE_SEPARATOR_CLOSE;
@@ -126,8 +140,10 @@ public class HtmlProposal implements CompletionProposal {
         }
     }
 
-    /** @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getSelection(org.exoplatform.ide.editor.shared.text
-     * .IDocument) */
+    /**
+     * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getSelection(org.exoplatform.ide.editor.shared.text
+     *      .IDocument)
+     */
     @Override
     public Point getSelection(IDocument document) {
         return new Point(offset + jumpLength - prefix.length(), 0);
@@ -142,6 +158,10 @@ public class HtmlProposal implements CompletionProposal {
     /** @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getDisplayString() */
     @Override
     public String getDisplayString() {
+        if (isClosingTagProposal) {
+            String displayString = ELEMENT_SEPARATOR_OPEN_FINISHTAG + proposal + ELEMENT_SEPARATOR_CLOSE + " (close tag)";
+            return SafeHtmlUtils.fromString(displayString).asString();
+        }
         return proposal;
     }
 
@@ -186,8 +206,7 @@ public class HtmlProposal implements CompletionProposal {
 
     /**
      * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#isValidFor(org.exoplatform.ide.editor.shared.text
-     * .IDocument,
-     *      int)
+     *      .IDocument, int)
      */
     @Override
     public boolean isValidFor(IDocument document, int offset) {

@@ -14,7 +14,7 @@
 
 package com.google.collide.shared.document.anchor;
 
-import org.exoplatform.ide.shared.util.SortedList;
+import com.codenvy.ide.commons.shared.SortedList;
 
 /** List for line anchors with specific optimizations for line anchors. */
 public class LineAnchorList extends SortedList<Anchor> {

@@ -14,10 +14,10 @@
 
 package com.codenvy.ide.client.util;
 
+import com.codenvy.ide.commons.shared.StringUtils;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 
-import org.exoplatform.ide.shared.util.StringUtils;
 
 /** Utility methods relating to the browser. */
 public abstract class BrowserUtils {

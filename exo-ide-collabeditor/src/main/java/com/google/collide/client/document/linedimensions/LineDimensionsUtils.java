@@ -14,13 +14,13 @@
 
 package com.google.collide.client.document.linedimensions;
 
+import com.codenvy.ide.commons.shared.RegExpUtils;
+import com.codenvy.ide.commons.shared.SharedLogUtils;
+import com.codenvy.ide.commons.shared.StringUtils;
+import com.codenvy.ide.commons.shared.UnicodeUtils;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.TextChange;
 
-import org.exoplatform.ide.shared.util.RegExpUtils;
-import org.exoplatform.ide.shared.util.SharedLogUtils;
-import org.exoplatform.ide.shared.util.StringUtils;
-import org.exoplatform.ide.shared.util.UnicodeUtils;
 
 /** Various utility functions used by the {@link LineDimensionsCalculator}. */
 public class LineDimensionsUtils {

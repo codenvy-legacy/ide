@@ -16,6 +16,8 @@ package com.google.collide.client.editor.renderer;
 
 
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.commons.shared.ListenerManager;
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
 import com.google.collide.client.Resources;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
@@ -27,8 +29,6 @@ import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
 
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 import java.util.EnumSet;
 

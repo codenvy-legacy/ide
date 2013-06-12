@@ -23,6 +23,10 @@ import elemental.html.SpanElement;
 
 import com.codenvy.ide.client.util.Elements;
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.commons.shared.SortedList;
+import com.codenvy.ide.commons.shared.StringUtils;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.collide.client.Resources;
 import com.google.collide.client.document.linedimensions.LineDimensionsUtils;
 import com.google.collide.client.editor.Buffer;
@@ -33,10 +37,6 @@ import com.google.common.base.Preconditions;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Image;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.shared.util.SortedList;
-import org.exoplatform.ide.shared.util.StringUtils;
 
 /**
  * A class to maintain the list of {@link LineRenderer LineRenderers} and render

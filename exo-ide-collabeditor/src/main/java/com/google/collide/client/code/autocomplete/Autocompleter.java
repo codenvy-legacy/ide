@@ -18,6 +18,8 @@ import com.codenvy.ide.client.util.ScheduledCommandExecutor;
 import com.codenvy.ide.client.util.SignalEvent.KeySignalType;
 import com.codenvy.ide.client.util.UserAgent;
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.json.shared.JsonCollections;
+import com.codenvy.ide.json.shared.JsonStringMap;
 import com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter.ExplicitAction;
 import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.Editor;
@@ -32,8 +34,6 @@ import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistant;
 import org.exoplatform.ide.editor.client.api.contentassist.Point;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /**
  * Class to implement all the autocompletion support that is not specific to a
@@ -72,6 +72,7 @@ public class Autocompleter implements ContentAssistant {
     private LanguageSpecificAutocompleter autocompleters;
 
     public JsonStringMap<ContentAssistProcessor> processors = JsonCollections.createMap();
+    private boolean defferedAction;
 
     //  /**
     //   * Proxy that distributes notifications to all code analyzers.
@@ -283,6 +284,7 @@ public class Autocompleter implements ContentAssistant {
         if (popup.isShowing() && popup.consumeKeySignal(trigger)) {
             return true;
         }
+        defferedAction = false;
         String contentType;
         try {
             contentType = exoEditor.getDocument().getContentType(getOffset(exoEditor.getDocument()));
@@ -308,6 +310,7 @@ public class Autocompleter implements ContentAssistant {
 
             case DEFERRED_COMPLETE:
                 boxTrigger = trigger;
+                defferedAction = true;
                 scheduleRequestAutocomplete();
                 return false;
 
@@ -451,7 +454,8 @@ public class Autocompleter implements ContentAssistant {
         int offset = getOffset(document);
         CompletionProposal[] proposals = contentAssistProcessor.computeCompletionProposals(exoEditor, offset);
         if (proposals != null && proposals.length > 0) {
-            if (proposals.length == 1 && !popup.isShowing() && proposals[0].isAutoInsertable()) {
+
+            if (!defferedAction && proposals.length == 1 && !popup.isShowing() && proposals[0].isAutoInsertable()) {
                 onSelectCommand.scheduleAutocompletion(proposals[0]);
                 return;
             }

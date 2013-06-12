@@ -21,15 +21,17 @@ package org.exoplatform.ide.vfs.impl.fs;
 import com.codenvy.ide.commons.cache.Cache;
 import com.codenvy.ide.commons.cache.LoadingValueSLRUCache;
 import com.codenvy.ide.commons.cache.SynchronizedCache;
+import com.codenvy.ide.commons.server.FileUtils;
+import com.codenvy.ide.commons.server.NameGenerator;
 
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonGenerator;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonWriter;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
-import org.exoplatform.ide.commons.FileUtils;
-import org.exoplatform.ide.commons.NameGenerator;
 import org.exoplatform.ide.vfs.server.ContentStream;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemUser;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemUserContext;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
@@ -41,6 +43,8 @@ import org.exoplatform.ide.vfs.server.util.DeleteOnCloseFileInputStream;
 import org.exoplatform.ide.vfs.server.util.NotClosableInputStream;
 import org.exoplatform.ide.vfs.server.util.ZipContent;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.Principal;
+import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
@@ -48,8 +52,6 @@ import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.security.ConversationState;
-import org.exoplatform.services.security.Identity;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -229,8 +231,6 @@ public class MountPoint {
         }
     }
 
-    private static final Identity ANONYMOUS = new Identity(VirtualFileSystemInfo.ANONYMOUS_PRINCIPAL);
-
     private final java.io.File     ioRoot;
     private final SearcherProvider searcherProvider;
 
@@ -250,6 +250,8 @@ public class MountPoint {
     /* ----- File metadata. ----- */
     private final FileMetadataSerializer               metadataSerializer;
     private final Cache<Path, Map<String, String[]>>[] metadataCache;
+
+    private final VirtualFileSystemUserContext userContext;
 
     /**
      * @param ioRoot
@@ -277,6 +279,7 @@ public class MountPoint {
             lockTokensCache[i] = new SynchronizedCache(new LockTokensCache());
             metadataCache[i] = new SynchronizedCache(new FileMetadataCache());
         }
+        userContext = VirtualFileSystemUserContext.newInstance();
     }
 
     public VirtualFile getRoot() {
@@ -1155,11 +1158,11 @@ public class MountPoint {
    /* ============ ACCESS CONTROL  ============ */
 
 
-    List<AccessControlEntry> getACL(VirtualFile virtualFile) throws VirtualFileSystemException {
+    AccessControlList getACL(VirtualFile virtualFile) throws VirtualFileSystemException {
         // Do not check permission here. We already check 'read' permission when get VirtualFile.
         final FileLockFactory.FileLock lock = fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
         try {
-            return aclCache[virtualFile.getInternalPath().hashCode() & MASK].get(virtualFile.getInternalPath()).getEntries();
+            return new AccessControlList(aclCache[virtualFile.getInternalPath().hashCode() & MASK].get(virtualFile.getInternalPath()));
         } finally {
             lock.release();
         }
@@ -1224,26 +1227,27 @@ public class MountPoint {
 
     // under lock
     private boolean hasPermission(VirtualFile virtualFile, BasicPermissions p, boolean checkParent) throws VirtualFileSystemException {
-        final ConversationState cs = ConversationState.getCurrent();
-        final Identity user = cs != null ? cs.getIdentity() : ANONYMOUS;
+        final VirtualFileSystemUser user = userContext.getVirtualFileSystemUser();
         Path path = virtualFile.getInternalPath();
         while (path != null) {
             final AccessControlList accessControlList = aclCache[path.hashCode() & MASK].get(path);
             if (!accessControlList.isEmpty()) {
-                Set<BasicPermissions> userPermissions = accessControlList.getPermissions(user.getUserId());
+                Set<BasicPermissions> userPermissions =
+                        accessControlList.getPermissions(new PrincipalImpl(user.getUserId(), Principal.Type.USER));
                 if (userPermissions != null) {
                     return userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL);
                 }
-                Collection<String> roles = user.getRoles();
-                if (!roles.isEmpty()) {
-                    for (String role : roles) {
-                        userPermissions = accessControlList.getPermissions("role:" + role);
+                Collection<String> groups = user.getGroups();
+                if (!groups.isEmpty()) {
+                    for (String group : groups) {
+                        userPermissions = accessControlList.getPermissions(new PrincipalImpl(group, Principal.Type.GROUP));
                         if (userPermissions != null) {
                             return userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL);
                         }
                     }
                 }
-                userPermissions = accessControlList.getPermissions(VirtualFileSystemInfo.ANY_PRINCIPAL);
+                userPermissions = accessControlList.getPermissions(
+                        new PrincipalImpl(VirtualFileSystemInfo.ANY_PRINCIPAL, Principal.Type.USER));
                 return userPermissions != null && (userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL));
             }
             if (checkParent) {
@@ -1433,9 +1437,8 @@ public class MountPoint {
 
    /* ============ HELPERS  ============ */
 
-    String getCurrentUserId() {
-        final ConversationState cs = ConversationState.getCurrent();
-        return cs != null ? cs.getIdentity().getUserId() : ANONYMOUS.getUserId();
+    VirtualFileSystemUser getCurrentVirtualFileSystemUser() {
+        return userContext.getVirtualFileSystemUser();
     }
 
 

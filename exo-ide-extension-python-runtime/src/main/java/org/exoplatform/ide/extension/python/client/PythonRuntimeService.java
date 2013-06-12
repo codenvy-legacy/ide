@@ -21,6 +21,8 @@ package org.exoplatform.ide.extension.python.client;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.extension.python.shared.ApplicationInstance;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
@@ -53,8 +55,8 @@ public abstract class PythonRuntimeService {
      *         callback
      * @throws RequestException
      */
-    public abstract void start(String vfsId, ProjectModel project, AsyncRequestCallback<ApplicationInstance> callback)
-            throws RequestException;
+    public abstract void start(String vfsId, ProjectModel project, RequestCallback<ApplicationInstance> callback)
+            throws WebSocketException;
 
     /**
      * Stop running Python application.

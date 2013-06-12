@@ -32,7 +32,6 @@ import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.URLHandlerFactorySetup;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemApplication;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
-import org.exoplatform.ide.vfs.server.VirtualFileSystemUserContext;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFile;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFileSystemContext;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFolder;
@@ -69,7 +68,7 @@ public abstract class MemoryFileSystemTest extends TestCase {
 
     protected static final String MY_WORKSPACE_ID       = "my-ws";
     protected final        String BASE_URI              = "http://localhost/service";
-    protected final        String SERVICE_URI           = BASE_URI + "/ide/vfs/v2/";
+    protected final        String SERVICE_URI           = BASE_URI + "/my-ws/vfs/v2/";
     protected final        String DEFAULT_CONTENT       = "__TEST__";
     protected final        byte[] DEFAULT_CONTENT_BYTES = DEFAULT_CONTENT.getBytes();
 
@@ -112,6 +111,7 @@ public abstract class MemoryFileSystemTest extends TestCase {
         ConversationState.setCurrent(user);
         EnvironmentContext env = EnvironmentContext.getCurrent();
         env.setVariable(EnvironmentContext.WORKSPACE_ID, MY_WORKSPACE_ID);
+        env.setVariable(EnvironmentContext.WORKSPACE_NAME, MY_WORKSPACE_ID);
     }
 
     /** @see junit.framework.TestCase#tearDown() */

@@ -44,23 +44,21 @@ import java.util.List;
 
 /**
  * Client for Google Contacts Service.
- *
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: GoogleContactsClient.java Aug 27, 2012 11:36:45 AM azatsarynnyy $
  */
 public class GoogleContactsClient {
     /** Service for access to the Google Contacts data API. */
-    private ContactsService service;
+    private ContactsService          service;
 
     private final OAuthTokenProvider oAuthTokenProvider;
 
     /**
      * Constructs new {@link GoogleContactsClient} instance.
-     *
+     * 
      * @param oAuthTokenProvider
-     * @throws IOException
-     *         OAuth provider with Google account
-     *         if any i/o errors occur
+     * @throws IOException OAuth provider with Google account if any i/o errors occur
      */
     public GoogleContactsClient(OAuthTokenProvider oAuthTokenProvider) throws IOException {
         this.oAuthTokenProvider = oAuthTokenProvider;
@@ -69,14 +67,11 @@ public class GoogleContactsClient {
 
     /**
      * Returns contact photo as string encoded in Base64.
-     *
-     * @param contact
-     *         Google Contact for getting photo
+     * 
+     * @param contact Google Contact for getting photo
      * @return contact photo in binary format
-     * @throws IOException
-     *         if any i/o errors occur
-     * @throws ServiceException
-     *         if any error in Google Contacts Service
+     * @throws IOException if any i/o errors occur
+     * @throws ServiceException if any error in Google Contacts Service
      */
     public String getContactPhotoAsBase64(ContactEntry contact) throws IOException, ServiceException {
         byte[] photo = getPhoto(contact);
@@ -88,12 +83,10 @@ public class GoogleContactsClient {
 
     /**
      * Returns all user's contacts from Google Contacts Service.
-     *
+     * 
      * @return all user's contacts from Google Contacts Service
-     * @throws IOException
-     *         if any i/o errors occur
-     * @throws ServiceException
-     *         if any error in Google Contacts Service
+     * @throws IOException if any i/o errors occur
+     * @throws ServiceException if any error in Google Contacts Service
      */
     public List<ContactEntry> getAllContacts() throws IOException, ServiceException {
         Credential credentials = new Credential(BearerToken.authorizationHeaderAccessMethod());
@@ -115,7 +108,7 @@ public class GoogleContactsClient {
 
     /**
      * Returns identifier of the user which is logged in.
-     *
+     * 
      * @return user identifier
      */
     private String getUserId() {
@@ -124,14 +117,11 @@ public class GoogleContactsClient {
 
     /**
      * Returns contact photo in binary format.
-     *
-     * @param contactEntry
-     *         Google Contact for getting photo
+     * 
+     * @param contactEntry Google Contact for getting photo
      * @return contact photo in binary format
-     * @throws IOException
-     *         if any i/o errors occur
-     * @throws ServiceException
-     *         if any error in Google Contacts Service
+     * @throws IOException if any i/o errors occur
+     * @throws ServiceException if any error in Google Contacts Service
      */
     private byte[] getPhoto(ContactEntry contactEntry) {
         Link photoLink = contactEntry.getContactPhotoLink();

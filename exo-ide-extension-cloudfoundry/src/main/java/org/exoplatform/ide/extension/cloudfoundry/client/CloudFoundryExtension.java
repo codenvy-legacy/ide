@@ -55,7 +55,7 @@ import java.util.List;
 
 /**
  * CloudFoundry extension for IDE.
- *
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudFoundryExtension.java Jul 7, 2011 5:00:41 PM vereshchaka $
  */
@@ -70,8 +70,7 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
         private String label;
 
         /**
-         * @param label
-         *         provider's label
+         * @param label provider's label
          */
         private PAAS_PROVIDER(String label) {
             this.label = label;
@@ -84,23 +83,25 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
     }
 
     /** The generator of an {@link AutoBean}. */
-    public static final CloudFoundryAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(CloudFoundryAutoBeanFactory.class);
+    public static final CloudFoundryAutoBeanFactory      AUTO_BEAN_FACTORY     = GWT.create(CloudFoundryAutoBeanFactory.class);
 
     public static final CloudFoundryLocalizationConstant LOCALIZATION_CONSTANT = GWT
-            .create(CloudFoundryLocalizationConstant.class);
+                                                                                    .create(CloudFoundryLocalizationConstant.class);
 
     /** Default CloudFoundry server. */
-    public static final String DEFAULT_CF_SERVER = "http://api.cloudfoundry.com";
+    public static final String                           DEFAULT_CF_SERVER     = "http://api.cloudfoundry.com";
 
-    private static final String CF_ID = "CloudFoundry";
+    public static final String                           CF_ID                 = "CloudFoundry";
 
-    private static final String WF_ID = "Tier3WF";
+    public static final String                           WF_ID                 = "Tier3WF";
 
-    /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
-     * .client.framework.application.event.InitializeServicesEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
+     *      .client.framework.application.event.InitializeServicesEvent)
+     */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        new CloudFoundryClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader(), IDE.messageBus());
+        new CloudFoundryClientServiceImpl(event.getLoader(), IDE.messageBus());
     }
 
     /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
@@ -115,14 +116,15 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
                                                               ProjectType.WAR),
                                                 new DeployApplicationPresenter()));
 
-        IDE.getInstance().registerPaaS(new PaaS(WF_ID, "Tier3 Web Fabric",
-                                                new Image(CloudFoundryClientBundle.INSTANCE.tier3WebFabric48()),
-                                                new Image(CloudFoundryClientBundle.INSTANCE.tier3WebFabric48Disabled()),
-                                                Arrays.asList(ProjectType.JSP,
-                                                              ProjectType.RUBY_ON_RAILS,
-                                                              ProjectType.SPRING,
-                                                              ProjectType.WAR),
-                                                new org.exoplatform.ide.extension.cloudfoundry.client.deployTier3WebFabric.DeployApplicationPresenter()));
+        IDE.getInstance()
+           .registerPaaS(new PaaS(WF_ID, "Tier3 Web Fabric",
+                                  new Image(CloudFoundryClientBundle.INSTANCE.tier3WebFabric48()),
+                                  new Image(CloudFoundryClientBundle.INSTANCE.tier3WebFabric48Disabled()),
+                                  Arrays.asList(ProjectType.JSP,
+                                                ProjectType.RUBY_ON_RAILS,
+                                                ProjectType.SPRING,
+                                                ProjectType.WAR),
+                                  new org.exoplatform.ide.extension.cloudfoundry.client.deployTier3WebFabric.DeployApplicationPresenter()));
 
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
 

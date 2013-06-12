@@ -22,6 +22,8 @@ import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.LockToken;
+import org.exoplatform.ide.vfs.shared.Principal;
+import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -56,9 +58,9 @@ public class LockTest extends LocalFileSystemTest {
 
         createLock(lockedFilePath, lockToken);
 
-        Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(2);
-        permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
-        permissions.put("admin", EnumSet.of(BasicPermissions.READ));
+        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<Principal, Set<BasicPermissions>>(2);
+        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.ALL));
+        permissions.put(new PrincipalImpl("admin", Principal.Type.USER), EnumSet.of(BasicPermissions.READ));
         writePermissions(protectedFilePath, permissions);
 
         fileId = pathToId(filePath);

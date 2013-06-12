@@ -30,8 +30,15 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.util.Utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Extends {@link SettingsService}
@@ -64,15 +71,15 @@ public class SettingsServiceImpl extends SettingsService {
 
     private ApplicationSettings applicationSettings = new ApplicationSettings();
 
-    public SettingsServiceImpl(HandlerManager eventBus, String userName, Loader loader, String restContext) {
+    public SettingsServiceImpl(HandlerManager eventBus, String userName, Loader loader) {
         this.eventBus = eventBus;
         this.loader = loader;
         this.userName = userName;
-        this.restContext = restContext;
+        this.restContext = Utils.getRestContext();
     }
 
     private String getURL() {
-        return restContext + "/ide/configuration";
+        return restContext + Utils.getWorkspaceName() + "/configuration";
     }
 
     /** @see org.exoplatform.ide.client.model.settings.SettingsService#saveSettingsToCookies(org.exoplatform.ide.client.framework.settings
@@ -185,10 +192,9 @@ public class SettingsServiceImpl extends SettingsService {
         List<String> cookies = new ArrayList<String>();
 
         String prefix = COOKIE_PREFIX + userName + USER_NAME_DELIMITER;
-
+        
         for (String name : Cookies.getCookieNames()) {
             if (name.startsWith(prefix)) {
-
                 cookies.add(name.substring(prefix.length()));
             }
         }

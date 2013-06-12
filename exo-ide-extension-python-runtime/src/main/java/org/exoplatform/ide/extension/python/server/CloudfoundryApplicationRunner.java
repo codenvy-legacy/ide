@@ -18,8 +18,9 @@
  */
 package org.exoplatform.ide.extension.python.server;
 
+import com.codenvy.ide.commons.server.ParsingResponseException;
+
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry;
 import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryException;
 import org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryPool;
@@ -44,11 +45,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
-import static org.exoplatform.ide.commons.FileUtils.createTempDirectory;
-import static org.exoplatform.ide.commons.FileUtils.deleteRecursive;
-import static org.exoplatform.ide.commons.NameGenerator.generate;
-import static org.exoplatform.ide.commons.ZipUtils.unzip;
+import static com.codenvy.ide.commons.server.ContainerUtils.readValueParam;
+import static com.codenvy.ide.commons.server.FileUtils.createTempDirectory;
+import static com.codenvy.ide.commons.server.FileUtils.deleteRecursive;
+import static com.codenvy.ide.commons.server.NameGenerator.generate;
+import static com.codenvy.ide.commons.server.ZipUtils.unzip;
+
 
 /**
  * ApplicationRunner for deploy Python applications at Cloud Foundry PaaS.
@@ -127,14 +129,14 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             final Cloudfoundry cloudfoundry = cfServers.next();
             final String name = generate("app-", 16);
             try {
-                return doRunApplication(cloudfoundry, name, path, type);
+                return doRunApplication(cloudfoundry, name, path, type, project.getName());
             } catch (ApplicationRunnerException e) {
                 Throwable cause = e.getCause();
                 if (cause instanceof CloudfoundryException) {
                     if (200 == ((CloudfoundryException)cause).getExitCode()) {
                         // Login and try again.
                         login(cloudfoundry);
-                        return doRunApplication(cloudfoundry, name, path, type);
+                        return doRunApplication(cloudfoundry, name, path, type, project.getName());
                     }
                 }
                 throw e;
@@ -151,14 +153,17 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
     private ApplicationInstance doRunApplication(Cloudfoundry cloudfoundry,
                                                  String name,
                                                  java.io.File appDir,
-                                                 APPLICATION_TYPE type) throws ApplicationRunnerException {
+                                                 APPLICATION_TYPE type,
+                                                 String projectName) throws ApplicationRunnerException {
         try {
             final String target = cloudfoundry.getTarget();
             final CloudFoundryApplication cfApp = createApplication(cloudfoundry, target, name, appDir, type);
             final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
 
-            applications.put(name, new Application(name, target, expired));
+            applications.put(name, new Application(name, target, expired, projectName));
             LOG.debug("Start application {} at CF server {}", name, target);
+            LOG.info("EVENT#run-started# PROJECT#" + projectName + "# TYPE#Python#");
+            LOG.info("EVENT#project-deployed# PROJECT#" + projectName + "# TYPE#Python# PAAS#LOCAL#");
             return new ApplicationInstanceImpl(name, cfApp.getUris().get(0), null, applicationLifetime);
         } catch (Exception e) {
 
@@ -254,8 +259,9 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             String target = cloudfoundry.getTarget();
             cloudfoundry.stopApplication(target, name, null, null, "cloudfoundry");
             cloudfoundry.deleteApplication(target, name, null, null, "cloudfoundry", true);
-            applications.remove(name);
             LOG.debug("Stop application {}.", name);
+            LOG.info("EVENT#run-finished# PROJECT#" + applications.get(name).projectName + "# TYPE#Python#");
+            applications.remove(name);
         } catch (Exception e) {
             throw new ApplicationRunnerException(e.getMessage(), e);
         }
@@ -329,12 +335,14 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
     private static class Application {
         final String name;
         final String server;
+        final String projectName;
         final long   expirationTime;
 
-        Application(String name, String server, long expirationTime) {
+        Application(String name, String server, long expirationTime, String projectName) {
             this.name = name;
             this.server = server;
             this.expirationTime = expirationTime;
+            this.projectName = projectName;
         }
 
         boolean isExpired() {

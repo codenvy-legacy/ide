@@ -17,6 +17,7 @@ package com.google.collide.client.editor.input;
 import com.codenvy.ide.client.util.JsoIntMap;
 import com.codenvy.ide.client.util.SignalEvent;
 import com.codenvy.ide.client.util.UserAgent;
+import com.codenvy.ide.commons.shared.SortedList;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.Spacer;
 import com.google.collide.client.editor.selection.SelectionModel;
@@ -26,7 +27,6 @@ import com.google.collide.client.util.input.KeyCodeMap;
 import com.google.collide.client.util.input.ModifierKeys;
 import com.google.collide.shared.document.LineInfo;
 
-import org.exoplatform.ide.shared.util.SortedList;
 
 import java.util.Random;
 

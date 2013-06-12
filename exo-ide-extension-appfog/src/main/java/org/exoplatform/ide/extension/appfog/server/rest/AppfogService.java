@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.extension.appfog.server.rest;
 
-import org.exoplatform.ide.commons.ParsingResponseException;
+import com.codenvy.ide.commons.server.ParsingResponseException;
+
 import org.exoplatform.ide.extension.appfog.server.Appfog;
 import org.exoplatform.ide.extension.appfog.server.AppfogException;
 import org.exoplatform.ide.extension.appfog.server.DebugMode;
@@ -43,7 +44,7 @@ import java.util.Map;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-@Path("ide/appfog")
+@Path("{ws-name}/appfog")
 public class AppfogService {
     private static final Log LOG = ExoLogger.getLogger(AppfogService.class);
 

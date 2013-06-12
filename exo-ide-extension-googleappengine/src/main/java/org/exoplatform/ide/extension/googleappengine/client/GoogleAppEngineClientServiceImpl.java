@@ -26,6 +26,10 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.util.Utils;
+import org.exoplatform.ide.client.framework.websocket.MessageBus;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 import org.exoplatform.ide.extension.googleappengine.client.backends.UpdateBackendStatusHandler;
 import org.exoplatform.ide.extension.googleappengine.client.backends.UpdateBackendsStatusHandler;
 import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployRequestStatusHandler;
@@ -45,17 +49,15 @@ import java.util.List;
  * @version $Id: May 15, 2012 5:23:28 PM anya $
  */
 public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientService {
-    /** REST service context. */
-    private String restServiceContext;
 
     /** Loader to be displayed. */
     private Loader loader;
-
+    
     private final String AUTH_URL = "/ide/oauth/authenticate";
 
-    private final String LOGOUT = "/ide/oauth/invalidate";
+    private final String LOGOUT =  "/ide/oauth/invalidate";
 
-    private final String APP_ENGINE = "/ide/appengine/";
+    private final String APP_ENGINE = "/appengine/";
 
     private final String USER = APP_ENGINE + "user";
 
@@ -99,15 +101,24 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
 
     private final String SET_APP_ID = APP_ENGINE + "change-appid";
 
+    private final MessageBus wsMessageBus;
+
+    private final String restContext;
+
+    private final String wsName;
+
     /**
-     * @param restServiceContext
+     * @param restService
      *         REST service context
      * @param loader
      *         loader to be displayed on request
      */
-    public GoogleAppEngineClientServiceImpl(String restServiceContext, Loader loader) {
-        this.restServiceContext = restServiceContext;
+    public GoogleAppEngineClientServiceImpl(String restContext, String wsName, Loader loader,  MessageBus wsMessageBus) {
+        this.restContext = restContext + wsName;
+        this.wsName = wsName;
         this.loader = loader;
+        this.wsMessageBus = wsMessageBus;
+       
     }
 
     /**
@@ -117,7 +128,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
     @Override
     public void configureBackend(String vfsId, String projectId, String backendName,
                                  GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException {
-        String url = restServiceContext + BACKEND_CONFIGURE;
+        String url = restContext + BACKEND_CONFIGURE;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId).append("&backend_name=")
@@ -133,7 +144,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
     @Override
     public void cronInfo(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<List<CronEntry>> callback)
             throws RequestException {
-        String url = restServiceContext + CRON_INFO;
+        String url = restContext + CRON_INFO;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
@@ -149,7 +160,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
     @Override
     public void deleteBackend(String vfsId, String projectId, String backendName,
                               GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException {
-        String url = restServiceContext + BACKEND_DELETE;
+        String url = restContext + BACKEND_DELETE;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId).append("&backend_name=")
@@ -166,7 +177,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
     @Override
     public void getResourceLimits(String vfsId, String projectId,
                                   GoogleAppEngineAsyncRequestCallback<List<ResourceLimit>> callback) throws RequestException {
-        String url = restServiceContext + RESOURCE_LIMITS;
+        String url = restContext + RESOURCE_LIMITS;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
@@ -182,7 +193,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
     @Override
     public void listBackends(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<List<Backend>> callback)
             throws RequestException {
-        String url = restServiceContext + BACKENDS_LIST;
+        String url = restContext + BACKENDS_LIST;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
@@ -198,7 +209,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
     @Override
     public void requestLogs(String vfsId, String projectId, int numDays, String logSeverity,
                             GoogleAppEngineAsyncRequestCallback<StringBuilder> callback) throws RequestException {
-        String url = restServiceContext + LOGS;
+        String url = restContext + LOGS;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId).append("&num_days=")
@@ -220,12 +231,12 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
     @Override
     public void rollback(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<Object> callback)
             throws RequestException {
-        String url = restServiceContext + ROLLBACK;
+        String url = restContext + ROLLBACK;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
 
-        AsyncRequest.build(RequestBuilder.GET, url + params, true).loader(loader).send(callback);
+        AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader).send(callback);
     }
 
     /**
@@ -235,7 +246,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
     @Override
     public void rollbackBackend(String vfsId, String projectId, String backendName,
                                 GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException {
-        String url = restServiceContext + BACKEND_ROLLBACK;
+        String url = restContext + BACKEND_ROLLBACK;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId).append("&backend_name=")
@@ -251,7 +262,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
     @Override
     public void rollbackAllBackends(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<Object> callback)
             throws RequestException {
-        String url = restServiceContext + BACKENDS_ROLLBACK;
+        String url = restContext + BACKENDS_ROLLBACK;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
@@ -266,7 +277,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
     @Override
     public void setBackendState(String vfsId, String projectId, String backendName, String backendState,
                                 GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException {
-        String url = restServiceContext + BACKEND_SET_STATE;
+        String url = restContext + BACKEND_SET_STATE;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId).append("&backend_name=")
@@ -281,8 +292,8 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
      */
     @Override
     public void update(String vfsId, ProjectModel project, String bin,
-                       GoogleAppEngineAsyncRequestCallback<ApplicationInfo> callback) throws RequestException {
-        String url = restServiceContext + UPDATE;
+                       GoogleAppEngineWsRequestCallback<ApplicationInfo> callback) throws RequestException {
+        String url = wsName + UPDATE;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(project.getId());
@@ -290,8 +301,10 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
             params.append("&bin=").append(bin);
         }
 
-        AsyncRequest.build(RequestBuilder.GET, url + params, true).delay(2000)
-                    .requestStatusHandler(new DeployRequestStatusHandler(project.getName())).send(callback);
+        callback.setStatusHandler(new DeployRequestStatusHandler(project.getName()));
+        RequestMessage message = RequestMessageBuilder.build(RequestBuilder.GET, url + params)
+                                                      .getRequestMessage();
+        wsMessageBus.send(message, callback);
     }
 
     /**
@@ -299,15 +312,18 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
      *      String, GoogleAppEngineAsyncRequestCallback)
      */
     @Override
-    public void updateAllBackends(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<Object> callback)
+    public void updateAllBackends(String vfsId, String projectId, GoogleAppEngineWsRequestCallback<Object> callback)
             throws RequestException {
-        String url = restServiceContext + BACKENDS_UPDATE_ALL;
+        String url = wsName + BACKENDS_UPDATE_ALL;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
+        
+        callback.setStatusHandler(new UpdateBackendsStatusHandler());
+        RequestMessage message = RequestMessageBuilder.build(RequestBuilder.GET, url + params)
+                                                      .getRequestMessage();
+        wsMessageBus.send(message, callback);
 
-        AsyncRequest.build(RequestBuilder.GET, url + params, true).delay(2000)
-                    .requestStatusHandler(new UpdateBackendsStatusHandler()).send(callback);
     }
 
     /**
@@ -316,15 +332,19 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
      */
     @Override
     public void updateBackend(String vfsId, String projectId, String backendName,
-                              GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException {
-        String url = restServiceContext + BACKEND_UPDATE;
+                              GoogleAppEngineWsRequestCallback<Object> callback) throws RequestException {
+        String url = wsName + BACKEND_UPDATE;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId).append("&backend_name=")
               .append(backendName);
+        
+        callback.setStatusHandler(new UpdateBackendStatusHandler(backendName));
+        RequestMessage message = RequestMessageBuilder.build(RequestBuilder.GET, url + params)
+                                                      .getRequestMessage();
+        wsMessageBus.send(message, callback);
 
-        AsyncRequest.build(RequestBuilder.GET, url + params, true).delay(2000)
-                    .requestStatusHandler(new UpdateBackendStatusHandler(backendName)).send(callback);
+        
     }
 
     /**
@@ -334,7 +354,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
     @Override
     public void updateCron(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<Object> callback)
             throws RequestException {
-        String url = restServiceContext + CRON_UPDATE;
+        String url = restContext + CRON_UPDATE;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
@@ -349,7 +369,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
     @Override
     public void updateDos(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<Object> callback)
             throws RequestException {
-        String url = restServiceContext + DOS_UPDATE;
+        String url = restContext + DOS_UPDATE;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
@@ -364,7 +384,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
     @Override
     public void updateIndexes(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<Object> callback)
             throws RequestException {
-        String url = restServiceContext + INDEXES_UPDATE;
+        String url = restContext + INDEXES_UPDATE;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
@@ -379,7 +399,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
     @Override
     public void updatePagespeed(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<Object> callback)
             throws RequestException {
-        String url = restServiceContext + PAGE_SPEED_UPDATE;
+        String url = restContext + PAGE_SPEED_UPDATE;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
@@ -394,7 +414,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
     @Override
     public void updateQueues(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<Object> callback)
             throws RequestException {
-        String url = restServiceContext + QUEUES_UPDATE;
+        String url = restContext + QUEUES_UPDATE;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
@@ -409,7 +429,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
     @Override
     public void vacuumIndexes(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<Object> callback)
             throws RequestException {
-        String url = restServiceContext + VACUUM_INDEXES;
+        String url = restContext + VACUUM_INDEXES;
 
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
@@ -420,14 +440,14 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
     /** @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#getAuthUrl() */
     @Override
     public String getAuthUrl() {
-        return restServiceContext + AUTH_URL +
-               "?oauth_provider=google&scope=https://www.googleapis.com/auth/appengine.admin&redirect_after_login=/IDE/success_oauth.html";
+        return Utils.getRestContext() + AUTH_URL +
+               "?oauth_provider=google&scope=https://www.googleapis.com/auth/appengine.admin&redirect_after_login=/success_oauth.html";
     }
 
     /** @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#logout(AsyncRequestCallback) */
     @Override
     public void logout(AsyncRequestCallback<Object> callback) throws RequestException {
-        String url = restServiceContext + LOGOUT + "?oauth_provider=google";
+        String url = Utils.getRestContext() + LOGOUT + "?oauth_provider=google";
 
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
     }
@@ -440,7 +460,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
     @Override
     public void setApplicationId(String vfsId, String projectId, String appId,
                                  GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException {
-        String url = restServiceContext + SET_APP_ID + "/" + vfsId + "/" + projectId;
+        String url = restContext + SET_APP_ID + "/" + vfsId + "/" + projectId;
 
         StringBuilder params = new StringBuilder("?");
         params.append("app_id=").append("s~").append(appId);
@@ -451,7 +471,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
     /** @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#getLoggedUser(GoogleAppEngineAsyncRequestCallback) */
     @Override
     public void getLoggedUser(GoogleAppEngineAsyncRequestCallback<GaeUser> callback) throws RequestException {
-        String url = restServiceContext + USER;
+        String url = restContext + USER;
 
         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
     }

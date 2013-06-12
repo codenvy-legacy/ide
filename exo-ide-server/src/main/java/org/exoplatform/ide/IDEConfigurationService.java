@@ -38,6 +38,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
@@ -57,12 +58,13 @@ import java.util.Map;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: May 23, 2011 evgen $
  */
-@Path("/ide/configuration")
+@Path("{ws-name}/configuration")
 public class IDEConfigurationService {
 
     private static Log LOG = ExoLogger.getLogger(IDEConfigurationService.class);
 
-    
+    @PathParam("ws-name")
+    private String wsName;
     /**
      * periodic request to prevent session expiration
      * TODO: need find better solutions
@@ -76,7 +78,6 @@ public class IDEConfigurationService {
     @GET
     @Path("/init")
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"developer"})
     public Map<String, Object> inializationParameters(@Context UriInfo uriInfo, @Context HttpServletRequest request) {
 
         try {
@@ -92,7 +93,7 @@ public class IDEConfigurationService {
                 result.put("userSettings", userSettings);
             }
             result.put("vfsId", vfsId);
-            result.put("vfsBaseUrl", uriInfo.getBaseUriBuilder().path(VirtualFileSystemFactory.class).path("v2").build().toString());
+            result.put("vfsBaseUrl", uriInfo.getBaseUriBuilder().path(VirtualFileSystemFactory.class).path("v2").build(wsName).toString());
             return result;
         } catch (Exception e) {
             throw new WebApplicationException(e);
@@ -101,7 +102,6 @@ public class IDEConfigurationService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"developer"})
     public String getConfiguration() {
         try {
             String conf = readSettings();

@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.samples.client.control.DocumentationControl;
 import org.exoplatform.ide.extension.samples.client.control.FeedbackControl;
 import org.exoplatform.ide.extension.samples.client.control.SupportControl;
@@ -44,7 +45,7 @@ import org.exoplatform.ide.extension.samples.client.inviting.github.InviteGitHub
 import org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersPresenter;
 import org.exoplatform.ide.extension.samples.client.inviting.manage.ManageInviteControl;
 import org.exoplatform.ide.extension.samples.client.inviting.manage.ManageInvitePresenter;
-import org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginPresenter;
+import org.exoplatform.ide.extension.samples.client.oauth.GithubLoginPresenter;
 import org.exoplatform.ide.extension.samples.client.startpage.OpenStartPageEvent;
 import org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter;
 import org.exoplatform.ide.git.client.GitAutoBeanFactory;
@@ -68,10 +69,10 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
      * .client.framework.application.event.InitializeServicesEvent) */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        new GitHubClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
+        new GitHubClientServiceImpl(event.getLoader());
         IDE.fireEvent(new OpenStartPageEvent());
 
-        new InviteClientService(event.getApplicationConfiguration().getContext());
+        new InviteClientService(Utils.getRestContext(), Utils.getWorkspaceName());
     }
 
     /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
@@ -90,7 +91,7 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
         new StartPagePresenter();
-        new OAuthLoginPresenter();
+        new GithubLoginPresenter();
 
         new ManageInvitePresenter();
         new GenerateGitHubSshKeyPresenter();

@@ -39,16 +39,16 @@ public class RestDiscoveryService {
     private static RestDiscoveryService instance;
 
     /** Context of the REST services. */
-    private String restServiceContext;
+    private final String restServiceContext;
 
     /** @return {@link RestDiscoveryService} */
     public static RestDiscoveryService getInstance() {
         return instance;
     }
 
-    public RestDiscoveryService(String restServiceContext) {
+    public RestDiscoveryService(String restServiceContext, String wsName) {
         instance = this;
-        this.restServiceContext = restServiceContext;
+        this.restServiceContext = restServiceContext + wsName;
     }
 
     /**

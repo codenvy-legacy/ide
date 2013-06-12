@@ -260,7 +260,7 @@
                                         <g:west size="85">
                                             <g:Image resource="{resource.jrebel}" styleName="{style.marginTop3}"></g:Image>
                                         </g:west>
-                                        <g:east size="565">
+                                        <g:east size="665">
                                             <g:FlowPanel>
                                                 <g:CheckBox ui:field="useJRebelPluginField" height="22px"
                                                             addStyleNames="{style.floatLeft}"></g:CheckBox>
@@ -278,53 +278,6 @@
                                             <f:Label value="{templateLocale.zeroturnaround}" height="26px"
                                                      addStyleNames="{style.marginLeft4} {style.zeroturnaroundText}"></f:Label>
                                         </g:north>
-                                        <g:west size="300">
-                                            <g:DockLayoutPanel>
-                                                <g:west size="100">
-                                                    <g:FlowPanel>
-                                                        <f:Label value="First name:" height="24px" text=""></f:Label>
-                                                        <f:Label value="Phone number:" height="24px" text=""
-                                                                 addStyleNames="{style.panelMarginTop}"></f:Label>
-                                                    </g:FlowPanel>
-                                                </g:west>
-                                                <g:center>
-                                                    <g:FlowPanel>
-                                                        <f:TextInput ui:field="jRebelProfileFirstName" width="100%" height="20px"
-                                                                     enabled="true"></f:TextInput>
-                                                        <f:TextInput ui:field="jRebelProfilePhone" width="100%" height="20px"
-                                                                     enabled="true"
-                                                                     addStyleNames="{style.panelMarginTop}"></f:TextInput>
-                                                    </g:FlowPanel>
-                                                </g:center>
-                                            </g:DockLayoutPanel>
-                                        </g:west>
-                                        <g:east size="300">
-                                            <g:DockLayoutPanel addStyleNames="{style.marginRight10}">
-                                                <g:center>
-                                                    <g:DockLayoutPanel>
-                                                        <g:west size="100">
-                                                            <g:FlowPanel>
-                                                                <f:Label value="Last name:" height="24px" text=""></f:Label>
-                                                            </g:FlowPanel>
-                                                        </g:west>
-                                                        <g:center>
-                                                            <g:FlowPanel>
-                                                                <f:TextInput ui:field="jRebelProfileLastName" width="100%" height="20px"
-                                                                             enabled="true"></f:TextInput>
-                                                            </g:FlowPanel>
-                                                        </g:center>
-                                                    </g:DockLayoutPanel>
-                                                </g:center>
-                                                <g:south size="25">
-                                                    <g:DockLayoutPanel>
-                                                        <g:center>
-                                                            <f:Label ui:field="jRebelErrorMessageLabel"
-                                                                     addStyleNames="{style.errorMessage}"></f:Label>
-                                                        </g:center>
-                                                    </g:DockLayoutPanel>
-                                                </g:south>
-                                            </g:DockLayoutPanel>
-                                        </g:east>
                                     </g:DockLayoutPanel>
                                 </g:south>
                             </g:DockLayoutPanel>

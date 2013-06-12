@@ -44,8 +44,8 @@ public class InviteClientService {
 
     private String restServiceContext;
 
-    public InviteClientService(String restServiceContext) {
-        this.restServiceContext = restServiceContext;
+    public InviteClientService(String restServiceContext, String wsName) {
+        this.restServiceContext = restServiceContext + wsName;
         instance = this;
     }
 

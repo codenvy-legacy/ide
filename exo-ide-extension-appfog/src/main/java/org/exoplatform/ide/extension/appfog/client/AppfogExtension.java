@@ -30,6 +30,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.project.ProjectProperties;
 import org.exoplatform.ide.client.framework.project.ProjectType;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.appfog.client.apps.ApplicationsPresenter;
 import org.exoplatform.ide.extension.appfog.client.control.AppfogControlGroup;
 import org.exoplatform.ide.extension.appfog.client.control.ApplicationsControl;
@@ -72,7 +73,7 @@ public class AppfogExtension extends Extension implements InitializeServicesHand
 
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        new AppfogClientService(event.getApplicationConfiguration().getContext(), event.getLoader(), IDE.messageBus());
+        new AppfogClientService(Utils.getRestContext(), Utils.getWorkspaceName(), event.getLoader(), IDE.messageBus());
     }
 
     @Override

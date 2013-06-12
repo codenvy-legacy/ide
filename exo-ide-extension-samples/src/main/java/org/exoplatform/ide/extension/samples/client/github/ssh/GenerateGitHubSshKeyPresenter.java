@@ -27,6 +27,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
@@ -34,8 +35,6 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.OAuthLoginFinishedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.OAuthLoginFinishedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
@@ -43,7 +42,9 @@ import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
 import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
 import org.exoplatform.ide.client.framework.util.Utils;
-import org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginEvent;
+import org.exoplatform.ide.extension.samples.client.oauth.GithubLoginEvent;
+import org.exoplatform.ide.extension.samples.client.oauth.GithubLoginFinishedEvent;
+import org.exoplatform.ide.extension.samples.client.oauth.GithubLoginFinishedHandler;
 import org.exoplatform.ide.extension.ssh.client.JsonpAsyncCallback;
 import org.exoplatform.ide.extension.ssh.client.SshKeyService;
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.GenerateGitHubKeyEvent;
@@ -60,8 +61,8 @@ import java.util.List;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, ViewClosedHandler,
-                                          GenerateGitHubKeyHandler, OAuthLoginFinishedHandler {
+public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, ViewClosedHandler, GenerateGitHubKeyHandler,
+                                          GithubLoginFinishedHandler {
     private UserInfo userInfo;
 
     EmptyLoader      loader;
@@ -81,6 +82,7 @@ public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, V
         IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
         IDE.addHandler(GenerateGitHubKeyEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(GithubLoginFinishedEvent.TYPE, this);
         loader = new EmptyLoader();
     }
 
@@ -136,8 +138,7 @@ public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, V
                     if (!githubKeyExists) {
                         getLoader().hide();
                         openView();
-                    }
-                    else {
+                    } else {
                         getLoader().hide();
                         IDE.fireEvent(new GitHubKeyGeneratedEvent());
                     }
@@ -169,15 +170,63 @@ public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, V
                 @Override
                 protected void onFailure(Throwable exception) {
                     loader.hide();
+                    getFailedKey();
                 }
             };
 
-            String url = Utils.getRestContext() + "/ide/github/ssh/generate";
+            String url = Utils.getRestContext() + Utils.getWorkspaceName() + "/github/ssh/generate";
             AsyncRequest.build(RequestBuilder.POST, url).loader(new EmptyLoader()).send(callback);
         } catch (RequestException e) {
             loader.hide();
             Dialogs.getInstance().showError("Upload key to github failed.");
         }
+    }
+
+    /**
+     * Need to remove failed uploaded keys from local storage if they can't be uploaded to github
+     */
+    private void getFailedKey() {
+        SshKeyService.get().getAllKeys(new JsonpAsyncCallback<JavaScriptObject>() {
+
+            @Override
+            public void onSuccess(JavaScriptObject result) {
+                getLoader().hide();
+                try {
+                    List<KeyItem> keys = SshKeysUnmarshaller.unmarshal(result);
+                    for (KeyItem key : keys) {
+                        if (key.getHost().equals("github.com")) {
+                            removeFailedKey(key);
+                            return;
+                        }
+                    }
+                    IDE.fireEvent(new RefreshKeysEvent());
+                } catch (UnmarshallerException e) {
+                    IDE.fireEvent(new ExceptionThrownEvent(e));
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable exception) {
+                getLoader().hide();
+                IDE.fireEvent(new RefreshKeysEvent());
+                IDE.fireEvent(new ExceptionThrownEvent(exception));
+            }
+        });
+    }
+
+    private void removeFailedKey(KeyItem key) {
+        SshKeyService.get().deleteKey(key, new JsonpAsyncCallback<Void>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                IDE.fireEvent(new RefreshKeysEvent());
+            }
+
+            @Override
+            public void onSuccess(Void result) {
+                Dialogs.getInstance().showError("Failed to delete invalid ssh key.");
+                IDE.fireEvent(new RefreshKeysEvent());
+            }
+        });
     }
 
     private void getToken(String user) {
@@ -209,16 +258,11 @@ public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, V
     }
 
     public void oAuthLoginStart() {
-        IDE.addHandler(OAuthLoginFinishedEvent.TYPE, this);
-        IDE.fireEvent(new OAuthLoginEvent());
+        IDE.fireEvent(new GithubLoginEvent());
     }
 
-    @Override
-    public void onOAuthLoginFinished(OAuthLoginFinishedEvent event) {
-        if (event.getStatus() == 2) {
-            generateGitHubKey();
-        }
-        IDE.removeHandler(OAuthLoginFinishedEvent.TYPE, this);
+    public void onGithubLoginFinished(GithubLoginFinishedEvent event) {
+        generateGitHubKey();
     }
 
     /**
@@ -231,4 +275,5 @@ public class GenerateGitHubSshKeyPresenter implements UserInfoReceivedHandler, V
             display = null;
         }
     }
+
 }

@@ -14,13 +14,13 @@
 
 package com.google.collide.shared.document.util;
 
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.Position;
 import com.google.collide.shared.document.util.LineUtils.LineVisitor;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
 
 import static com.google.collide.shared.document.util.LineUtils.getPositionBackwards;
 import static com.google.collide.shared.document.util.LineUtils.getPositionForward;

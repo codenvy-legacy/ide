@@ -15,6 +15,10 @@
 package com.google.collide.client.code;
 
 import com.codenvy.ide.client.util.QueryCallbacks.SimpleCallback;
+import com.codenvy.ide.dtogen.shared.ServerError;
+import com.codenvy.ide.json.client.JsoArray;
+import com.codenvy.ide.json.client.JsoStringMap;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.codenvy.ide.users.UsersModel;
 import com.google.collide.client.communication.FrontendApi;
 import com.google.collide.dto.GetEditSessionCollaboratorsResponse;
@@ -24,10 +28,6 @@ import com.google.collide.dto.client.DtoClientImpls;
 
 import org.exoplatform.ide.client.framework.websocket.FrontendApi.ApiCallback;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter;
-import org.exoplatform.ide.dtogen.shared.ServerError;
-import org.exoplatform.ide.json.client.JsoArray;
-import org.exoplatform.ide.json.client.JsoStringMap;
-import org.exoplatform.ide.json.shared.JsonArray;
 
 /** Model for the participants in the current workspace. */
 // TODO: Pass the initial list of participants from the workspace bootstrap response

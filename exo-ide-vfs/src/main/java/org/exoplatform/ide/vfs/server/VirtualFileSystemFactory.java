@@ -42,7 +42,7 @@ import java.util.List;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/vfs")
+@Path("{ws-name}/vfs")
 public class VirtualFileSystemFactory {
     @Inject
     private VirtualFileSystemRegistry registry;

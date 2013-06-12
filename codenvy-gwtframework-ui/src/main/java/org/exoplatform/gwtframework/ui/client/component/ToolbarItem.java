@@ -34,23 +34,13 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class ToolbarItem extends FlowPanel {
 
-    /** Styles for HTML elemnts of toolbar component. */
-    protected interface Style {
-
-        static final String ITEM_LEFT = "exoToolbarElementLeft";
-
-        static final String ITEM_RIGHT = "exoToolbarElementRight";
-
-        static final String DELIMITER = "exoToolbarDelimiter";
-
-    }
-
+    private static Toolbar.Style STYLE       = Toolbar.RESOURCES.css();
     /**
      * Docking of the item in the toolbar.
      * <code>false</code> - element is left side,
      * <code>true<code> - element is right side.
      */
-    private boolean rightDocked = false;
+    private        boolean       rightDocked = false;
 
     /** Is this element is toolbar delimiter. */
     private boolean delimiter = false;
@@ -126,7 +116,7 @@ public class ToolbarItem extends FlowPanel {
      */
     public void setRightDocked(boolean rightDocked) {
         this.rightDocked = rightDocked;
-        setStyleName(rightDocked ? Style.ITEM_RIGHT : Style.ITEM_LEFT);
+        setStyleName(rightDocked ? STYLE.exoToolbarElementRight() : STYLE.exoToolbarElementLeft());
     }
 
     /**
@@ -148,7 +138,7 @@ public class ToolbarItem extends FlowPanel {
 
         clear();
         widget = new FlowPanel();
-        widget.setStyleName(Style.DELIMITER);
+        widget.setStyleName(STYLE.exoToolbarDelimiter());
         add(widget);
         delimiter = true;
     }

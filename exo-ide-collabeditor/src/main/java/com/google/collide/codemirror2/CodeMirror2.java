@@ -57,15 +57,15 @@ public class CodeMirror2 {
         return $wnd.CodeMirror.getMode(conf, mime);
     }-*/;
 
-    /** Mode constant: JavaScript. */
+    /** Mode (programming language) constant: JavaScript. */
     public static final String JAVASCRIPT = "javascript";
 
-    /** Mode constant: HTML. */
+    /** Mode (programming language) constant: HTML. */
     public static final String HTML = "html";
 
-    /** Mode constant: CSS. */
+    /** Mode (programming language) constant: CSS. */
     public static final String CSS = "css";
 
-    /** Mode constant: PHP. */
+    /** Mode (programming language) constant: PHP. */
     public static final String PHP = "php";
 }

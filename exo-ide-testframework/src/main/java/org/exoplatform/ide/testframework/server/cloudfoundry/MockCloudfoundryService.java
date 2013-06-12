@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.testframework.server.cloudfoundry;
 
-import org.exoplatform.ide.commons.ParsingResponseException;
+import com.codenvy.ide.commons.server.ParsingResponseException;
+
 import org.exoplatform.ide.testframework.server.FSLocation;
 import org.exoplatform.ide.testframework.server.cloudfoundry.bean.*;
 
@@ -35,7 +36,7 @@ import java.util.*;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/cloudfoundry")
+@Path("{ws-name}/cloudfoundry")
 public class MockCloudfoundryService {
 
     private static List<Framework> frameworkList;

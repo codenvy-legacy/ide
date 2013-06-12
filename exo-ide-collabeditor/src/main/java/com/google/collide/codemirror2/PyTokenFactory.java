@@ -14,10 +14,11 @@
 
 package com.google.collide.codemirror2;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.json.shared.JsonStringSet;
-import org.exoplatform.ide.shared.util.StringUtils;
+import com.codenvy.ide.commons.shared.StringUtils;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
+import com.codenvy.ide.json.shared.JsonStringSet;
+
 
 import static com.google.collide.codemirror2.Token.LITERAL_PERIOD;
 

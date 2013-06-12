@@ -22,6 +22,8 @@ import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.ide.vfs.shared.ExitCodes;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Principal;
+import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
@@ -74,9 +76,9 @@ public class CopyTest extends LocalFileSystemTest {
         writeProperties(projectPath, projectProperties);
         writeProperties(destinationProjectPath, projectProperties);
 
-        Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(2);
-        permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
-        permissions.put("admin", EnumSet.of(BasicPermissions.READ));
+        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<Principal, Set<BasicPermissions>>(2);
+        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.ALL));
+        permissions.put(new PrincipalImpl("admin", Principal.Type.USER), EnumSet.of(BasicPermissions.READ));
         writePermissions(protectedDestinationPath, permissions);
 
         fileId = pathToId(filePath);

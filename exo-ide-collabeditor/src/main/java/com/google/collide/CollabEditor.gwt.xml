@@ -47,9 +47,9 @@
     <inherits name='com.google.collide.Views'/>
     <entry-point class="com.google.collide.client.CollabEditorExtension"/>
     <inherits name="com.codenvy.ide.client.scheduler.Scheduler"/>
-    <inherits name="org.exoplatform.ide.dtogen.DtoGen"/>
-    <inherits name="org.exoplatform.ide.json.Json"/>
-    <inherits name="org.exoplatform.ide.shared.Util"/>
+    <inherits name="com.codenvy.ide.dtogen.DtoGen"/>
+    <inherits name="com.codenvy.ide.json.Json"/>
+    <inherits name="com.codenvy.ide.commons.Commons"/>
 
     <!-- This provides deferred binding for the client windowing system.
  This can be used to make labels for "native" accelerators, etc. -->
@@ -89,8 +89,6 @@
         <when-property-is name="webide.clientOs" value="macintosh"/>
     </replace-with>
 
-    <replace-with class="com.codenvy.ide.client.util.logging.LogConfig.Enabled">
-        <when-type-is class="com.codenvy.ide.client.util.logging.LogConfig"/>
-    </replace-with>
+
 
 </module>

@@ -16,6 +16,9 @@ package com.google.collide.client.editor.renderer;
 
 import com.codenvy.ide.client.util.ScheduledCommandExecutor;
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.commons.shared.ListenerRegistrar.Remover;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.FocusManager;
 import com.google.collide.client.editor.Spacer;
@@ -28,9 +31,6 @@ import com.google.collide.shared.document.util.LineUtils;
 import com.google.collide.shared.document.util.LineUtils.LineVisitor;
 import com.google.collide.shared.document.util.PositionUtils;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.shared.util.ListenerRegistrar.Remover;
 
 import java.util.EnumSet;
 

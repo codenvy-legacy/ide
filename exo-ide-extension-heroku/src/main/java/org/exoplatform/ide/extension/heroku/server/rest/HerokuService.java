@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.extension.heroku.server.rest;
 
-import org.exoplatform.ide.commons.ParsingResponseException;
+import com.codenvy.ide.commons.server.ParsingResponseException;
+
 import org.exoplatform.ide.extension.heroku.server.Heroku;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
@@ -51,7 +52,7 @@ import java.util.Map;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/heroku")
+@Path("{ws-name}/heroku")
 public class HerokuService {
     private static final Log LOG = ExoLogger.getLogger(HerokuService.class);
 

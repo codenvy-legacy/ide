@@ -227,7 +227,7 @@ public class OutlineView extends ViewImpl implements org.exoplatform.ide.client.
                 }
             }
         }
-
+        
         cellTreeScrollBarFix();
     }
 

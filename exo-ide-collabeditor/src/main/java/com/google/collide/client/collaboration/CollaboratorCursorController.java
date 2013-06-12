@@ -14,6 +14,9 @@
 
 package com.google.collide.client.collaboration;
 
+import com.codenvy.ide.json.shared.JsonCollections;
+import com.codenvy.ide.json.shared.JsonStringMap;
+import com.codenvy.ide.json.shared.JsonStringMap.IterationCallback;
 import com.google.collide.client.AppContext;
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.code.Participant;
@@ -30,9 +33,6 @@ import com.google.collide.shared.document.anchor.Anchor;
 import com.google.collide.shared.document.anchor.Anchor.RemovalStrategy;
 import com.google.collide.shared.document.anchor.AnchorType;
 
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.json.shared.JsonStringMap;
-import org.exoplatform.ide.json.shared.JsonStringMap.IterationCallback;
 
 import javax.annotation.Nullable;
 

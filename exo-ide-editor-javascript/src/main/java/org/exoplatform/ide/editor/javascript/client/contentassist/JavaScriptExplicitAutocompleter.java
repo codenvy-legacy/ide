@@ -15,6 +15,8 @@
 package org.exoplatform.ide.editor.javascript.client.contentassist;
 
 import com.codenvy.ide.client.util.SignalEvent.KeySignalType;
+import com.codenvy.ide.commons.shared.StringUtils;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.client.code.autocomplete.DefaultAutocompleteResult;
 import com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter.ExplicitAction;
 import com.google.collide.client.code.autocomplete.SignalEventEssence;
@@ -27,13 +29,10 @@ import com.google.collide.shared.document.anchor.ReadOnlyAnchor;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.regexp.shared.RegExp;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.shared.util.StringUtils;
-
 /** Implementation that adds JavaScript-specific cases. */
 class JavaScriptExplicitAutocompleter extends ExplicitAutocompleter {
 
-    private RegExp regExp = RegExp.compile("/(\\*)+\n$", "g");
+    private RegExp regExp         = RegExp.compile("/(\\*)+\n$", "g");
 
     private RegExp commentEndMach = RegExp.compile("(\\*)+[^/]");
 
@@ -64,6 +63,17 @@ class JavaScriptExplicitAutocompleter extends ExplicitAutocompleter {
                 return new ExplicitAction(new DefaultAutocompleteResult(text.toString(), "", spaces.length() + 3));
             }
         }
+
+        // 'auto-complete as you type' feature
+        final char signalChar = signal.getChar();
+        if (signalChar != '{' && signalChar != ';' && signalChar != ' ' && signalChar != '(' && signalChar != ')' && signalChar != '\''
+            && signalChar != '"' && signalChar != '\t') {
+            if (!popupIsShown && signalChar != 0 && KeyCodes.KEY_ENTER != signalChar) {
+                return ExplicitAction.DEFERRED_COMPLETE;
+            }
+            return ExplicitAction.DEFAULT;
+        }
+
         return super.getExplicitAction(selectionModel, signal, popupIsShown, parser);
     }
 
@@ -95,9 +105,9 @@ class JavaScriptExplicitAutocompleter extends ExplicitAutocompleter {
     /**
      * Checks trigger to be plain "Enter" key press.
      * <p/>
-     * <p>"Shift-Enter" also works to avoid "sticky-shift" issue:
-     * when someone quickly types "Shift-[" (-> "{") and then
-     * press "Enter" while "Shift" is not depressed.
+     * <p>
+     * "Shift-Enter" also works to avoid "sticky-shift" issue: when someone quickly types "Shift-[" (-> "{") and then press "Enter" while
+     * "Shift" is not depressed.
      */
     private static boolean checkEnterTrigger(SignalEventEssence trigger) {
         return KeySignalType.INPUT == trigger.type && KeyCodes.KEY_ENTER == trigger.keyCode && !trigger.altKey

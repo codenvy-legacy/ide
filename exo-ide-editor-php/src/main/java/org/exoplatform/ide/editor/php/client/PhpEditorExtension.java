@@ -66,26 +66,26 @@ public class PhpEditorExtension extends Extension implements InitializeServicesH
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
         IDE.getInstance().getFileTypeRegistry().addFileType(new FileType(MimeType.APPLICATION_PHP, "php", Images.INSTANCE.php()),
-                                                            new EditorCreator() {
-                                                                @Override
-                                                                public Editor createEditor() {
-                                                                    return new PhpEditor(MimeType.APPLICATION_PHP);
-                                                                }
-                                                            });
+                    new EditorCreator() {
+                        @Override
+                        public Editor createEditor() {
+                            return new PhpEditor(MimeType.APPLICATION_PHP);
+                        }
+                    });
         IDE.getInstance().getFileTypeRegistry().addFileType(new FileType(MimeType.APPLICATION_X_PHP, "php", Images.INSTANCE.php()),
-                                                            new EditorCreator() {
-                                                                @Override
-                                                                public Editor createEditor() {
-                                                                    return new PhpEditor(MimeType.APPLICATION_X_PHP);
-                                                                }
-                                                            });
+                    new EditorCreator() {
+                        @Override
+                        public Editor createEditor() {
+                            return new PhpEditor(MimeType.APPLICATION_X_PHP);
+                        }
+                    });
         IDE.getInstance().getFileTypeRegistry().addFileType(new FileType(MimeType.APPLICATION_X_HTTPD_PHP, "php", Images.INSTANCE.php()),
-                                                            new EditorCreator() {
-                                                                @Override
-                                                                public Editor createEditor() {
-                                                                    return new PhpEditor(MimeType.APPLICATION_X_HTTPD_PHP);
-                                                                }
-                                                            });
+                    new EditorCreator() {
+                        @Override
+                        public Editor createEditor() {
+                            return new PhpEditor(MimeType.APPLICATION_X_HTTPD_PHP);
+                        }
+                    });
 
         // PhpOutlineItemCreator phpOutlineItemCreator = new PhpOutlineItemCreator();
         // IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_PHP, phpOutlineItemCreator);

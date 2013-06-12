@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.maven.client.control;
 
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.extension.maven.client.BuilderClientBundle;
 import org.exoplatform.ide.extension.maven.client.BuilderExtension;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
@@ -27,6 +28,7 @@ import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: BuildAndPublishProjectControl.java Oct 18, 2012 vetal $
  */
+@RolesAllowed("developer")
 public class BuildAndPublishProjectControl extends BuildProjectControlAbstract
 
 {

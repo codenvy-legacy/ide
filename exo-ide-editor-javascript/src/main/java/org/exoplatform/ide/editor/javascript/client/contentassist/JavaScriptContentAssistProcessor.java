@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.editor.javascript.client.contentassist;
 
+import com.codenvy.ide.json.client.JsoArray;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
+
 import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor;
@@ -25,9 +29,6 @@ import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.editor.shared.text.IRegion;
-import org.exoplatform.ide.json.client.JsoArray;
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -60,7 +61,7 @@ public class JavaScriptContentAssistProcessor implements ContentAssistProcessor 
     @Override
     public CompletionProposal[] computeCompletionProposals(Editor viewer, int offset) {
         Context c = Context.create();
-        String prefix = computatePrefix(viewer.getDocument(), offset);
+        String prefix = computePrefix(viewer.getDocument(), offset);
         c.setPrefix(prefix);
         JsonArray<CompletionProposal> prop = JsonCollections.createArray();
 
@@ -93,7 +94,7 @@ public class JavaScriptContentAssistProcessor implements ContentAssistProcessor 
      * @param offset
      * @return
      */
-    private String computatePrefix(IDocument document, int offset) {
+    private String computePrefix(IDocument document, int offset) {
         isTextToCompleteBeforeDot = false;
         try {
             IRegion lineInfo = document.getLineInformationOfOffset(offset);

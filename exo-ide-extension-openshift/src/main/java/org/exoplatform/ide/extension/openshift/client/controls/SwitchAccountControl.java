@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.openshift.client.controls;
 
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle;
@@ -30,6 +31,7 @@ import org.exoplatform.ide.extension.openshift.client.login.SwitchAccountEvent;
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: SwitchAccountControl.java Feb 7, 2012 2:11:44 PM azatsarynnyy $
  */
+@RolesAllowed("developer")
 public class SwitchAccountControl extends AbstractOpenShiftControl {
 
     public SwitchAccountControl() {

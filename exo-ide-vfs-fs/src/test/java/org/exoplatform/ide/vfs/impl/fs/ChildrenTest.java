@@ -24,6 +24,8 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemImpl;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Principal;
+import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 
@@ -66,8 +68,8 @@ public class ChildrenTest extends LocalFileSystemTest {
         String filePath = createFile(testRootPath, "ChildrenTest_File", DEFAULT_CONTENT_BYTES);
 
         String protectedFolderPath = createDirectory(testRootPath, "ChildrenTest_ProtectedFolder");
-        Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(1);
-        permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
+        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<Principal, Set<BasicPermissions>>(1);
+        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.ALL));
         writePermissions(protectedFolderPath, permissions);
 
         fileId = pathToId(filePath);
@@ -133,8 +135,8 @@ public class ChildrenTest extends LocalFileSystemTest {
         // Have permission for read folder but have not permission to read one of its child.
         String protectedItemName = childrenNames.iterator().next();
         String protectedItemPath = folderPath + '/' + protectedItemName;
-        Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(1);
-        permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
+        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<Principal, Set<BasicPermissions>>(1);
+        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.ALL));
         writePermissions(protectedItemPath, permissions);
         childrenNames.remove(protectedItemName); // this should not appears in result
 
@@ -217,9 +219,9 @@ public class ChildrenTest extends LocalFileSystemTest {
     }
 
     public void testGetChildrenPropertyFilter() throws Exception {
-        Iterator<Map.Entry<String, String[]>> iter = properties.entrySet().iterator();
-        Map.Entry<String, String[]> e1 = iter.next();
-        Map.Entry<String, String[]> e2 = iter.next();
+        Iterator<Map.Entry<String, String[]>> iterator = properties.entrySet().iterator();
+        Map.Entry<String, String[]> e1 = iterator.next();
+        Map.Entry<String, String[]> e2 = iterator.next();
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         // Get children and apply filter for properties.
         String requestPath = SERVICE_URI + "children/" + folderId + '?' + "propertyFilter=" + e1.getKey();

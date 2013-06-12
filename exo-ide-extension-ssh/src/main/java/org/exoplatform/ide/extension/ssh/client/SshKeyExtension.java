@@ -26,6 +26,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.preference.Preferences;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerPresenter;
 import org.exoplatform.ide.extension.ssh.client.keymanager.SshPreferenceItem;
 import org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter;
@@ -56,8 +57,7 @@ public class SshKeyExtension extends Extension implements InitializeServicesHand
      * .client.framework.application.event.InitializeServicesEvent) */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        new SshKeyService(event.getApplicationConfiguration().getContext(), event.getApplicationConfiguration()
-                                                                                 .getHttpsPort(), event.getLoader());
+        new SshKeyService(Utils.getRestContext(), event.getLoader());
     }
 
     /** @see org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowPublicSshKeyHandler#onShowPublicSshKey(org.exoplatform.ide

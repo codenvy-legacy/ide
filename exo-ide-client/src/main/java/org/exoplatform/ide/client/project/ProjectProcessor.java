@@ -60,8 +60,8 @@ import java.util.List;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  */
-public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler, AllFilesClosedHandler, 
-        RefreshBrowserHandler, ItemsSelectedHandler, FolderChangedHandler, FileSavedHandler {
+public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler, AllFilesClosedHandler,
+                             RefreshBrowserHandler, ItemsSelectedHandler, FolderChangedHandler, FileSavedHandler {
 
     private IDEProject openedProject;
 
@@ -97,7 +97,7 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
             @Override
             public void onSuccess(Folder result) {
                 IDELoader.hide();
-                //openedProject.dump();
+                // openedProject.dump();
                 IDE.fireEvent(new ProjectOpenedEvent(openedProject));
 
                 new Timer() {
@@ -118,16 +118,16 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
 
     private List<FolderModel> foldersToBeRefreshed = new ArrayList<FolderModel>();
 
-    private List<FolderModel> refreshedFolders = new ArrayList<FolderModel>();
+    private List<FolderModel> refreshedFolders     = new ArrayList<FolderModel>();
 
-    private Item itemToBeSelectedAfterRefreshing;
+    private Item              itemToBeSelectedAfterRefreshing;
 
     @Override
     public void onRefreshBrowser(RefreshBrowserEvent event) {
         if (openedProject == null) {
             return;
         }
-        
+
         foldersToBeRefreshed.clear();
         for (Folder f : event.getFolders()) {
             foldersToBeRefreshed.add((FolderModel)f);
@@ -158,7 +158,7 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
                 openedProject.getResource(item.getPath());
                 return item;
             } catch (Exception e) {
-                //e.printStackTrace();
+                // e.printStackTrace();
                 if (item instanceof FolderModel) {
                     item = ((FolderModel)item).getParent();
                 } else if (item instanceof FileModel) {
@@ -211,13 +211,13 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
             public void onFailure(Throwable caught) {
                 IDELoader.hide();
                 caught.printStackTrace();
-                //IDE.fireEvent(new ExceptionThrownEvent(caught));
+                // IDE.fireEvent(new ExceptionThrownEvent(caught));
             }
         });
     }
-    
+
     HandlerRegistration allFilesClosedHandler;
-    
+
     @Override
     public void onCloseProject(CloseProjectEvent event) {
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
@@ -225,7 +225,7 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
             public void execute() {
                 if (allFilesClosedHandler == null)
                 {
-                    allFilesClosedHandler = IDE.addHandler(AllFilesClosedEvent.TYPE, ProjectProcessor.this);                    
+                    allFilesClosedHandler = IDE.addHandler(AllFilesClosedEvent.TYPE, ProjectProcessor.this);
                 }
 
                 Scheduler.get().scheduleDeferred(new ScheduledCommand() {
@@ -245,7 +245,7 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
             allFilesClosedHandler.removeHandler();
             allFilesClosedHandler = null;
         }
-        
+
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
             public void execute() {

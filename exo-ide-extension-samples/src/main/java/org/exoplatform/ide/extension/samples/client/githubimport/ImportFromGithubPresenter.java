@@ -69,8 +69,6 @@ import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.shared.Property;
-import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
@@ -297,8 +295,7 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
         try {
             GitHubClientService.getInstance()
                                .getUserToken(user,
-                                             new AsyncRequestCallback<StringBuilder>(
-                                                                                     new StringUnmarshaller(new StringBuilder())) {
+                                             new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder())) {
 
                                                  @Override
                                                  protected void onSuccess(StringBuilder result) {
@@ -429,8 +426,7 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
      * @param folder {@link FolderModel} in which repository was cloned
      */
     private void onRepositoryCloned(final RepoInfo gitRepositoryInfo, final FolderModel folder) {
-        IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(gitRepositoryInfo.getRemoteUri()),
-                                      OutputMessage.Type.GIT));
+        IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(gitRepositoryInfo.getRemoteUri()), OutputMessage.Type.GIT));
         IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId(), null));
 
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {

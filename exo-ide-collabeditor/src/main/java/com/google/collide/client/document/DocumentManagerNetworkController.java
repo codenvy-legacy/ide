@@ -16,6 +16,10 @@ package com.google.collide.client.document;
 
 import com.codenvy.ide.client.util.PathUtil;
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.dtogen.shared.ServerError.FailureReason;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
+import com.codenvy.ide.json.shared.JsonStringMap;
 import com.google.collide.client.AppContext;
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.document.DocumentManager.GetDocumentCallback;
@@ -28,10 +32,6 @@ import com.google.collide.dto.client.DtoClientImpls.GetFileContentsImpl;
 import com.google.common.base.Preconditions;
 
 import org.exoplatform.ide.client.framework.websocket.FrontendApi.ApiCallback;
-import org.exoplatform.ide.dtogen.shared.ServerError.FailureReason;
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /**
  * Controller responsible for loading documents (and uneditable files) from the

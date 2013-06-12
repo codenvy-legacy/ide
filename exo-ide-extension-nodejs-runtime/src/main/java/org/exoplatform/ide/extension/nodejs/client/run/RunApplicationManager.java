@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.extension.nodejs.client.run;
 
-import com.google.gwt.http.client.RequestException;
-import com.google.web.bindery.autobean.shared.AutoBean;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -29,6 +26,7 @@ import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
@@ -38,6 +36,9 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.extension.nodejs.client.NodeJsRuntimeExtension;
 import org.exoplatform.ide.extension.nodejs.client.NodeJsRuntimeService;
 import org.exoplatform.ide.extension.nodejs.client.run.event.ApplicationStartedEvent;
@@ -49,6 +50,9 @@ import org.exoplatform.ide.extension.nodejs.client.run.event.StopApplicationHand
 import org.exoplatform.ide.extension.nodejs.shared.ApplicationInstance;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+
+import com.google.gwt.http.client.RequestException;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 /**
  * Manager for running/stopping Node.js application.
@@ -68,8 +72,8 @@ public class RunApplicationManager implements RunApplicationHandler, StopApplica
     private ApplicationInstance runApplication;
 
     public RunApplicationManager() {
-        IDE.getInstance().addControl(new RunApplicationControl());
         IDE.getInstance().addControl(new StopApplicationControl());
+        IDE.getInstance().addControl(new RunApplicationControl(), Docking.TOOLBAR_RIGHT);
 
         IDE.addHandler(RunApplicationEvent.TYPE, this);
         IDE.addHandler(StopApplicationEvent.TYPE, this);
@@ -121,14 +125,14 @@ public class RunApplicationManager implements RunApplicationHandler, StopApplica
     private void runApplication() {
         AutoBean<ApplicationInstance> autoBean =
                 NodeJsRuntimeExtension.AUTO_BEAN_FACTORY.create(ApplicationInstance.class);
-        AutoBeanUnmarshaller<ApplicationInstance> unmarshaller = new AutoBeanUnmarshaller<ApplicationInstance>(autoBean);
+        AutoBeanUnmarshallerWS<ApplicationInstance> unmarshaller = new AutoBeanUnmarshallerWS<ApplicationInstance>(autoBean);
 
         try {
             IDE.fireEvent(new OutputEvent(NodeJsRuntimeExtension.NODEJS_LOCALIZATION.startingProjectMessage(currentProject
                                                                                                                     .getName()),
                                           Type.INFO));
             NodeJsRuntimeService.getInstance().start(currentVfs.getId(), currentProject,
-                                                     new AsyncRequestCallback<ApplicationInstance>(unmarshaller) {
+                                                     new RequestCallback<ApplicationInstance>(unmarshaller) {
                                                          @Override
                                                          protected void onSuccess(ApplicationInstance result) {
                                                              runApplication = result;
@@ -154,7 +158,7 @@ public class RunApplicationManager implements RunApplicationHandler, StopApplica
                                                                      + message, OutputMessage.Type.ERROR));
                                                          }
                                                      });
-        } catch (RequestException e) {
+        } catch (WebSocketException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
     }

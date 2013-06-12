@@ -28,12 +28,9 @@ import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
@@ -65,12 +62,6 @@ public class MemoryFolder extends MemoryItem {
         List<MemoryItem> copy;
         synchronized (children) {
             copy = new ArrayList<MemoryItem>(children.values());
-        }
-        for (Iterator<MemoryItem> iterator = copy.iterator(); iterator.hasNext(); ) {
-            MemoryItem child = iterator.next();
-            if (!child.hasPermissions(BasicPermissions.READ, false)) {
-                iterator.remove();
-            }
         }
         return copy;
     }

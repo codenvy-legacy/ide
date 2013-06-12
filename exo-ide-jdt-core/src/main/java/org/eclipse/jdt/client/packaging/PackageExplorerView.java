@@ -49,7 +49,7 @@ import java.util.Map;
  */
 public class PackageExplorerView extends ViewImpl implements PackageExplorerDisplay {
 
-    private static final String ID = "idePackageExplorerView";
+    private static final String                ID       = "idePackageExplorerView";
 
     private static PackageExplorerViewUiBinder uiBinder = GWT.create(PackageExplorerViewUiBinder.class);
 
@@ -59,13 +59,13 @@ public class PackageExplorerView extends ViewImpl implements PackageExplorerDisp
     private static final String TITLE = "Package Explorer";
 
     @UiField
-    IconButton linkWithEditorButton;
+    IconButton                  linkWithEditorButton;
 
     @UiField
-    PackageExplorerItemTree treeGrid;
+    PackageExplorerItemTree     treeGrid;
 
     @UiField
-    HTMLPanel projectNotOpenedPanel;
+    HTMLPanel                   projectNotOpenedPanel;
 
     /**
      * Creates new instance of {@link PackageExplorerView}

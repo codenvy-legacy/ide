@@ -29,22 +29,11 @@ import com.google.gwt.core.client.GWT;
 
 public class IDEConfiguration {
 
-    private String registryURL;
-
-    @Deprecated
-    private String defaultEntryPoint;
-
     private String context;
 
     private String loopbackServiceContext;
 
-    private String publicContext;
-
     private String gadgetURL = GWT.getModuleBaseURL();
-
-    private String gadgetServer;
-
-    private int httpsPort = 0;
 
     private String vfsId;
 
@@ -55,27 +44,6 @@ public class IDEConfiguration {
     public IDEConfiguration() {
     }
 
-    public IDEConfiguration(String registryURL) {
-        this.registryURL = registryURL;
-    }
-
-    public String getRegistryURL() {
-        return registryURL;
-    }
-
-    public void setRegistryURL(String registryURL) {
-        this.registryURL = registryURL;
-    }
-
-    @Deprecated
-    public String getDefaultEntryPoint() {
-        return defaultEntryPoint;
-    }
-
-    @Deprecated
-    public void setDefaultEntryPoint(String defaultEntryPoint) {
-        this.defaultEntryPoint = defaultEntryPoint;
-    }
 
     public String getContext() {
         return context;
@@ -93,14 +61,6 @@ public class IDEConfiguration {
         this.loopbackServiceContext = loopbackServiceContext;
     }
 
-    public String getPublicContext() {
-        return publicContext;
-    }
-
-    public void setPublicContext(String publicContext) {
-        this.publicContext = publicContext;
-    }
-
     public String getGadgetURL() {
         return gadgetURL;
     }
@@ -109,23 +69,7 @@ public class IDEConfiguration {
         this.gadgetURL = gadgetURL;
     }
 
-    public String getGadgetServer() {
-        return gadgetServer;
-    }
-
-    public void setGadgetServer(String gadgetServer) {
-        this.gadgetServer = gadgetServer;
-    }
-
-    public int getHttpsPort() {
-        return httpsPort;
-    }
-
-    public void setHttpsPort(int httpsPort) {
-        this.httpsPort = httpsPort;
-    }
-
-    public String getVfsBaseUrl() {
+       public String getVfsBaseUrl() {
         return vfsBaseUrl;
     }
 

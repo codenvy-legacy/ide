@@ -18,8 +18,9 @@
  */
 package org.exoplatform.ide.project;
 
-import org.exoplatform.ide.commons.PomUtils;
-import org.exoplatform.ide.commons.ProjectType;
+import com.codenvy.ide.commons.server.PomUtils;
+import com.codenvy.ide.commons.shared.ProjectType;
+
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
@@ -43,6 +44,8 @@ public class ProjectPrepare {
     private final Pattern SPRING_FRAMEWORK_PATTERN = Pattern.compile("spring");
 
     private VirtualFileSystem vfs;
+
+    private boolean multiModuleProject = false;
 
     public ProjectPrepare(VirtualFileSystem vfs) {
         this.vfs = vfs;
@@ -68,9 +71,15 @@ public class ProjectPrepare {
         }
     }
 
-    private boolean isMavenProject(ItemNode sourceFolderNode) {
+    private boolean isMavenProject(ItemNode sourceFolderNode)
+            throws VirtualFileSystemException, ParserConfigurationException, SAXException, XPathExpressionException, IOException {
         for (ItemNode nestedNode : sourceFolderNode.getChildren()) {
             if ("pom.xml".equals(nestedNode.getItem().getName())) {
+                ContentStream parentPom = vfs.getContent(nestedNode.getItem().getId());
+                PomUtils.Pom pom = PomUtils.parse(parentPom.getStream());
+                if (pom.getModules().size() > 0) {
+                    multiModuleProject = true;
+                }
                 return true;
             }
         }
@@ -130,7 +139,10 @@ public class ProjectPrepare {
                 props.addAll(itemToUpdate.getProperties());
                 props.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
                 props.add(new PropertyImpl("vfs:projectType", type.toString()));
-                props.add(new PropertyImpl("Maven Module", "true"));
+
+                if (multiModuleProject) {
+                    props.add(new PropertyImpl("Maven Module", "true"));
+                }
 
                 vfs.updateItem(itemToUpdate.getId(), props, null);
             }

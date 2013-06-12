@@ -18,13 +18,14 @@
  */
 package org.exoplatform.ide.template;
 
+import com.codenvy.ide.commons.server.ParsingResponseException;
+import com.codenvy.ide.commons.server.StringUtils;
+
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.everrest.core.impl.provider.json.*;
 import org.exoplatform.ide.FileTemplate;
 import org.exoplatform.ide.ProjectTemplate;
-import org.exoplatform.ide.commons.ParsingResponseException;
-import org.exoplatform.ide.commons.StringUtils;
 import org.exoplatform.ide.vfs.server.RequestContext;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -58,7 +59,7 @@ import java.util.regex.Pattern;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: TemplatesRestService.java Apr 4, 2011 3:21:46 PM vereshchaka $
  */
-@Path("/ide/templates")
+@Path("{ws-name}/templates")
 public class TemplatesRestService {
 
     private static final Pattern PATTERN_GROUP_ID = Pattern.compile(".*<groupId>groupId</groupId>.*");

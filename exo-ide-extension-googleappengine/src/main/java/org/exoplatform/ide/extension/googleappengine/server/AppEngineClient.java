@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.googleappengine.server;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.commons.security.oauth.OAuthTokenProvider;
 import com.codenvy.commons.security.shared.Token;
 import com.google.appengine.tools.admin.*;
@@ -41,9 +42,11 @@ import java.io.*;
 import java.net.URL;
 import java.util.*;
 
-import static org.exoplatform.ide.commons.FileUtils.createTempDirectory;
-import static org.exoplatform.ide.commons.FileUtils.downloadFile;
-import static org.exoplatform.ide.commons.ZipUtils.unzip;
+import static com.codenvy.ide.commons.server.FileUtils.createTempDirectory;
+import static com.codenvy.ide.commons.server.FileUtils.downloadFile;
+import static com.codenvy.ide.commons.server.ZipUtils.unzip;
+
+
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
@@ -290,7 +293,7 @@ public class AppEngineClient {
 
     private IdeAppAdmin createApplicationAdmin(VirtualFileSystem vfs, String projectId,
                                                String userId) throws IOException, VirtualFileSystemException {
-        return createApplicationAdmin(createApplication(vfs, projectId), userId);
+        return createApplicationAdmin(createApplication(vfs, projectId, userId), userId);
     }
 
     private IdeAppAdmin createApplicationAdmin(GenericApplication application,
@@ -308,7 +311,7 @@ public class AppEngineClient {
     }
 
     private GenericApplication createApplication(VirtualFileSystem vfs,
-                                                 String projectId) throws VirtualFileSystemException, IOException {
+                                                 String projectId, String userId) throws VirtualFileSystemException, IOException {
         Project project = (Project)vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
         ProjectType type = getApplicationType(vfs, project);
         switch (type) {
@@ -321,7 +324,9 @@ public class AppEngineClient {
                     writeProjectProperty(vfs, projectId, "gae-application", app.getAppId());
                     writeProjectProperty(vfs, projectId, "gae-target", app.getServer());
                 }
-                LOG.info("EVENT#application-created# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
+                LOG.info("EVENT#application-created# WS#"
+                         + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString() + "# USER#" + userId
+                         + "# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
                          + "# PAAS#GAE#");
                 return app;
             }
@@ -337,8 +342,10 @@ public class AppEngineClient {
                     writeProjectProperty(vfs, projectId, "gae-application", app.getAppId());
                     writeProjectProperty(vfs, projectId, "gae-target", app.getServer());
                 }
-                LOG.info("EVENT#application-created# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
-                         + "# PAAS#GAE#");
+                LOG.info("EVENT#application-created# WS#"
+                    + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString() + "# USER#" + userId
+                    + "# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
+                    + "# PAAS#GAE#");
                 return app;
             }
             default:

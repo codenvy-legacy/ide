@@ -254,6 +254,7 @@ public class RenameFolderPresenter extends ItemsOperationPresenter implements
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onRenameItem(RenameItemEvent event) {
         if (selectedItems == null || selectedItems.isEmpty()) {
@@ -268,7 +269,7 @@ public class RenameFolderPresenter extends ItemsOperationPresenter implements
                     if (path.startsWith(i.getPath())) {
                         new ResourceLockedPresenter(
                                 new SafeHtmlBuilder().appendHtmlConstant("Can't rename folder <b>").appendEscaped(
-                                        i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, path, false,
+                                        i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, path, i,
                                 i.getPath(), Operation.RENAME);
                         return;
                     }
@@ -292,8 +293,8 @@ public class RenameFolderPresenter extends ItemsOperationPresenter implements
         IDE.getInstance().closeView(display.asView().getId());
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent) */
+
+    /** {@inheritDoc} */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
@@ -301,18 +302,20 @@ public class RenameFolderPresenter extends ItemsOperationPresenter implements
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
-     * .framework.navigation.event.ItemsSelectedEvent) */
+
+    /** {@inheritDoc} */
     @Override
     public void onItemsSelected(ItemsSelectedEvent event) {
         selectedItems = event.getSelectedItems();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
         openedProject = event.getProject();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onProjectClosed(ProjectClosedEvent event) {
         openedProject = null;

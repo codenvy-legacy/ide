@@ -21,10 +21,10 @@ import elemental.html.Element;
 import com.codenvy.ide.client.util.Elements;
 import com.codenvy.ide.client.util.SignalEvent;
 import com.codenvy.ide.client.util.SignalEventUtils;
+import com.codenvy.ide.json.client.JsIntegerMap;
 import com.google.collide.client.util.input.CharCodeWithModifiers;
 import com.google.common.base.Preconditions;
 
-import org.exoplatform.ide.json.client.JsIntegerMap;
 
 /**
  * Provides a mean for registering global hot key bindings, particularly

@@ -18,6 +18,8 @@
  */
 package org.eclipse.jdt.client;
 
+import com.codenvy.ide.json.shared.JsonStringSet;
+import com.codenvy.ide.json.shared.JsonStringSet.IterationCallback;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -46,11 +48,10 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.codeassistant.jvm.shared.*;
 import org.exoplatform.ide.editor.java.client.JavaEditorExtension;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
-import org.exoplatform.ide.json.shared.JsonStringSet;
-import org.exoplatform.ide.json.shared.JsonStringSet.IterationCallback;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
 import java.util.HashSet;
@@ -335,7 +336,7 @@ public class NameEnvironment implements INameEnvironment {
             }
         }
         String url =
-                JdtExtension.REST_CONTEXT + "/ide/code-assistant/java/classes-by-prefix" + "?prefix=" + new String(simpleName)
+                Utils.getRestContext() + Utils.getWorkspaceName() + "/code-assistant/java/classes-by-prefix" + "?prefix=" + new String(simpleName)
                 + "&projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
         try {
             List<JSONObject> typesByNamePrefix =
@@ -459,12 +460,12 @@ public class NameEnvironment implements INameEnvironment {
                 typeSearch = "fqn";
             }
             url =
-                    JdtExtension.REST_CONTEXT + "/ide/code-assistant/java/find-by-prefix/" + new String(qualifiedName)
+                    Utils.getRestContext() + Utils.getWorkspaceName() + "/code-assistant/java/find-by-prefix/" + new String(qualifiedName)
                     + "?where=" + typeSearch + "&projectid=" + projectId + "&vfsid="
                     + VirtualFileSystem.getInstance().getInfo().getId();
         } else
             url =
-                    JdtExtension.REST_CONTEXT + "/ide/code-assistant/java/find-by-type/" + searchType + "?prefix="
+                    Utils.getRestContext() + Utils.getWorkspaceName() + "/code-assistant/java/find-by-type/" + searchType + "?prefix="
                     + new String(qualifiedName) + "&projectid=" + projectId + "&vfsid="
                     + VirtualFileSystem.getInstance().getInfo().getId();
         try {

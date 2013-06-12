@@ -1,0 +1,28 @@
+@sprite .exoToolbarPanel {
+    gwt-image: 'background';
+    width: 100%;
+    height: 32px;
+    cursor: default;
+}
+
+.exoToolbarElementLeft,
+.exoToolbarElementRight {
+    height: 24px;
+    padding-top: 4px;
+}
+
+.exoToolbarElementLeft {
+    float: left;
+    padding-left: 4px;
+}
+
+.exoToolbarElementRight {
+    float: right;
+    padding-right: 4px;
+}
+
+@sprite .exoToolbarDelimiter {
+    width: 1px;
+    height: 24px;
+    gwt-image: 'delimiter';
+}

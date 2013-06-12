@@ -32,7 +32,7 @@ import java.util.List;
  * @version $
  */
 
-@Path("ide/git-repo")
+@Path("{ws-name}/git-repo")
 public class MockGitRepoService {
 
     private static MockGitRepoService instance;

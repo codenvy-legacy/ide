@@ -19,6 +19,9 @@
 package com.google.collide.client;
 
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.commons.shared.StringUtils;
+import com.codenvy.ide.commons.shared.TextUtils;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.client.code.EditableContentArea;
 import com.google.collide.client.code.EditorBundle;
 import com.google.collide.client.code.errorrenderer.EditorErrorListener;
@@ -26,6 +29,7 @@ import com.google.collide.client.code.popup.EditorPopupController.PopupRenderer;
 import com.google.collide.client.code.popup.EditorPopupController.Remover;
 import com.google.collide.client.document.DocumentMetadata;
 import com.google.collide.client.documentparser.DocumentParser;
+import com.google.collide.client.documentparser.ExternalParser;
 import com.google.collide.client.editor.Buffer.ContextMenuListener;
 import com.google.collide.client.editor.EditorDocumentMutator;
 import com.google.collide.client.editor.FocusManager.FocusListener;
@@ -36,8 +40,13 @@ import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.client.editor.selection.SelectionModel.CursorListener;
 import com.google.collide.client.hover.HoverPresenter;
 import com.google.collide.client.ui.menu.PositionController.VerticalAlign;
-import com.google.collide.shared.document.*;
+import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Document.TextListener;
+import com.google.collide.shared.document.Line;
+import com.google.collide.shared.document.LineFinder;
+import com.google.collide.shared.document.LineInfo;
+import com.google.collide.shared.document.Position;
+import com.google.collide.shared.document.TextChange;
 import com.google.collide.shared.document.util.LineUtils;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -46,18 +55,36 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.client.api.EditorCapability;
 import org.exoplatform.ide.editor.client.api.SelectionRange;
 import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistant;
-import org.exoplatform.ide.editor.client.api.event.*;
-import org.exoplatform.ide.editor.client.marking.*;
+import org.exoplatform.ide.editor.client.api.event.EditorContentChangedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorContentChangedHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorContextMenuEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorContextMenuHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorCursorActivityEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorCursorActivityHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorInitializedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorInitializedHandler;
+import org.exoplatform.ide.editor.client.api.event.SearchCompleteCallback;
+import org.exoplatform.ide.editor.client.marking.EditorLineNumberContextMenuEvent;
+import org.exoplatform.ide.editor.client.marking.EditorLineNumberContextMenuHandler;
+import org.exoplatform.ide.editor.client.marking.EditorLineNumberDoubleClickHandler;
+import org.exoplatform.ide.editor.client.marking.Markable;
+import org.exoplatform.ide.editor.client.marking.Marker;
+import org.exoplatform.ide.editor.client.marking.ProblemClickHandler;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.editor.shared.text.IRegion;
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.shared.util.StringUtils;
-import org.exoplatform.ide.shared.util.TextUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -89,13 +116,15 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
 
     private boolean caseSensitive;
 
+    protected ExternalParser extParser;
+
     /** Listener that updates an appropriate IDocument instance. */
     final class TextListenerImpl implements TextListener {
         private boolean ignoreTextChanges;
 
         /**
          * @see com.google.collide.shared.document.Document.TextListener#onTextChange(com.google.collide.shared.document.Document,
-         *      org.exoplatform.ide.json.shared.JsonArray)
+         *      com.codenvy.ide.json.shared.JsonArray)
          */
         @Override
         public void onTextChange(Document document, JsonArray<TextChange> textChanges) {
@@ -806,5 +835,19 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
 
     public com.google.collide.client.editor.Editor getEditor() {
         return editor;
+    }
+
+    /**
+     * Returns the token list for the document opened in this editor.
+     * 
+     * @return {@link Token} list
+     */
+    public List<? extends Token> getTokenList() {
+        JsonArray< ? extends Token> tokenList = extParser.getTokenList(getText());
+        ArrayList<Token> list = new ArrayList<Token>(tokenList.size());
+        for (Token token : tokenList.asIterable()) {
+            list.add(token);
+        }
+        return list;
     }
 }

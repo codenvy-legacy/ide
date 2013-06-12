@@ -21,6 +21,8 @@ package org.exoplatform.ide.vfs.impl.fs;
 import junit.framework.TestCase;
 
 import com.codenvy.commons.env.EnvironmentContext;
+import com.codenvy.ide.commons.server.FileUtils;
+import com.codenvy.ide.commons.server.NameGenerator;
 
 import org.apache.commons.codec.binary.Base64;
 import org.everrest.core.RequestHandler;
@@ -37,8 +39,6 @@ import org.everrest.core.impl.ResourceBinderImpl;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.everrest.core.tools.DependencySupplierImpl;
 import org.everrest.core.tools.ResourceLauncher;
-import org.exoplatform.ide.commons.FileUtils;
-import org.exoplatform.ide.commons.NameGenerator;
 import org.exoplatform.ide.vfs.server.URLHandlerFactorySetup;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemApplication;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -48,13 +48,13 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
+import org.exoplatform.ide.vfs.shared.Principal;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
-import org.exoplatform.services.security.MembershipEntry;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
@@ -72,7 +72,6 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -114,7 +113,7 @@ public abstract class LocalFileSystemTest extends TestCase {
     };
 
     protected final String BASE_URI              = "http://localhost/service";
-    protected final String SERVICE_URI           = BASE_URI + "/ide/vfs/v2/";
+    protected final String SERVICE_URI           = BASE_URI + "/my-ws/vfs/v2/";
     protected final String DEFAULT_CONTENT       = "__TEST__";
     protected final byte[] DEFAULT_CONTENT_BYTES = DEFAULT_CONTENT.getBytes();
 
@@ -168,6 +167,7 @@ public abstract class LocalFileSystemTest extends TestCase {
         EnvironmentContext env = EnvironmentContext.getCurrent();
         env.setVariable(EnvironmentContext.VFS_ROOT_DIR, root);
         env.setVariable(EnvironmentContext.WORKSPACE_ID, MY_WORKSPACE_ID);
+        env.setVariable(EnvironmentContext.WORKSPACE_NAME, MY_WORKSPACE_ID);
     }
 
     // Directory "fs-root" in "target" folder of maven project.
@@ -434,7 +434,7 @@ public abstract class LocalFileSystemTest extends TestCase {
         validateProperties(vfsPath, expectedProperties, false);
     }
 
-    protected java.io.File writePermissions(String vfsPath, Map<String, Set<BasicPermissions>> permissions) throws IOException {
+    protected java.io.File writePermissions(String vfsPath, Map<Principal, Set<BasicPermissions>> permissions) throws IOException {
         java.io.File file = getIoFile(vfsPath);
         java.io.File aclDir = new java.io.File(file.getParentFile(), MountPoint.ACL_DIR);
         if (!(aclDir.exists() || aclDir.mkdirs())) {
@@ -457,7 +457,7 @@ public abstract class LocalFileSystemTest extends TestCase {
         return aclFile;
     }
 
-    protected Map<String, Set<BasicPermissions>> readPermissions(String vfsPath) throws Exception {
+    protected Map<Principal, Set<BasicPermissions>> readPermissions(String vfsPath) throws Exception {
         java.io.File file = getIoFile(vfsPath);
         java.io.File aclDir = new java.io.File(file.getParentFile(), MountPoint.ACL_DIR);
         java.io.File aclFile = new java.io.File(aclDir, file.getName() + MountPoint.ACL_FILE_SUFFIX);
@@ -468,7 +468,7 @@ public abstract class LocalFileSystemTest extends TestCase {
             return null;
         }
         DataInputStream dis = new DataInputStream(new BufferedInputStream(fIn));
-        Map<String, Set<BasicPermissions>> accessList = AccessControlList.read(dis).getPermissionMap();
+        Map<Principal, Set<BasicPermissions>> accessList = AccessControlList.read(dis).getPermissionMap();
         dis.close();
         return accessList;
     }

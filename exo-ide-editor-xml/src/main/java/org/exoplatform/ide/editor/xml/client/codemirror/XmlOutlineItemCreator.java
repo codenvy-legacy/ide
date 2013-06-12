@@ -48,4 +48,5 @@ public class XmlOutlineItemCreator extends OutlineItemCreatorImpl {
     public String getTokenDisplayTitle(TokenBeenImpl token) {
         return token.getName();
     }
+
 }

@@ -18,10 +18,22 @@
  */
 package org.exoplatform.ide.client.dialogs;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Float;
+import com.google.gwt.dom.client.Style.TextAlign;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.WhiteSpace;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -32,8 +44,8 @@ import org.exoplatform.gwtframework.ui.client.api.BooleanCallback;
 import org.exoplatform.gwtframework.ui.client.api.ValueCallback;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
-import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialog;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -41,7 +53,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 
 /**
  * Created by The eXo Platform SAS .
- *
+ * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -69,66 +81,84 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler {
     }
 
     private BooleanCallback booleanCallback = new BooleanCallback() {
-        public void execute(Boolean value) {
-            if (currentDialog.getBooleanValueReceivedHandler() != null) {
-                try {
-                    currentDialog.getBooleanValueReceivedHandler().booleanValueReceived(value);
-                } catch (Throwable exc) {
-                }
-            }
+                                                public void execute(Boolean value) {
+                                                    if (currentDialog.getBooleanValueReceivedHandler() != null) {
+                                                        try {
+                                                            currentDialog.getBooleanValueReceivedHandler().booleanValueReceived(value);
+                                                        } catch (Throwable exc) {
+                                                        }
+                                                    }
 
-            showQueueDialog();
-        }
-    };
+                                                    showQueueDialog();
+                                                }
+                                            };
 
-    private ValueCallback valueCallback = new ValueCallback() {
-        public void execute(String value) {
-            if (currentDialog.getStringValueReceivedHandler() != null) {
-                try {
-                    currentDialog.getStringValueReceivedHandler().stringValueReceived(value);
-                } catch (Throwable exc) {
-                }
-            }
+    private ValueCallback   valueCallback   = new ValueCallback() {
+                                                public void execute(String value) {
+                                                    if (currentDialog.getStringValueReceivedHandler() != null) {
+                                                        try {
+                                                            currentDialog.getStringValueReceivedHandler().stringValueReceived(value);
+                                                        } catch (Throwable exc) {
+                                                        }
+                                                    }
 
-            showQueueDialog();
-        }
-    };
-
-    /**
-     * @param name
-     * @param title
-     *         title near input field
-     * @param width
-     *         width
-     * @param value
-     *         value by default
-     * @return {@link TextField}
-     */
-    public static TextField createTextField(String name, String title, int width, String value) {
-        TextField textField = new TextField(name, title);
-        textField.setTitleOrientation(TitleOrientation.TOP);
-        textField.setHeight(22);
-        textField.setWidth(width);
-        textField.setValue(value);
-        textField.getElement().getStyle().setMarginLeft(-5.0, Style.Unit.PX);
-        return textField;
-    }
+                                                    showQueueDialog();
+                                                }
+                                            };
 
     /*
      * VALUE ASKING
      */
     @Override
-    protected void openAskForValueDialog(String title, String message, String defaultValue) {
-        final TextField textField = createTextField("valueField", message, 350, defaultValue);
-        final IDEDialogsView view = new IDEDialogsView("codenvyAskForValueModalView", title, 400, 160, textField);
+    protected void openAskForValueDialog(Dialog dialog) {
+        FlowPanel panel = new FlowPanel();
+        panel.getElement().getStyle().setMarginLeft(-5, Unit.PX);
 
+        final Element nobr = Document.get().createElement("nobr");
+        panel.getElement().appendChild(nobr);
+
+        final Element span = Document.get().createSpanElement();
+        span.getStyle().setFloat(Float.LEFT);
+        span.getStyle().setProperty("fontFamily", "Verdana,Bitstream Vera Sans,sans-serif");
+        span.getStyle().setFontSize(11, Unit.PX);
+        span.getStyle().setHeight(14, Unit.PX);
+        span.getStyle().setMarginBottom(6, Unit.PX);
+        span.getStyle().setMarginLeft(4, Unit.PX);
+        span.getStyle().setTextAlign(TextAlign.LEFT);
+        span.getStyle().setWhiteSpace(WhiteSpace.NOWRAP);
+        span.getStyle().setWidth(350, Unit.PX);
+        span.setInnerHTML(dialog.getMessage());
+        nobr.appendChild(span);
+
+        final TextInput textInput = new TextInput();
+        textInput.setName("valueField");
+        textInput.setHeight("22px");
+        textInput.setWidth("350px");
+        textInput.setValue(dialog.getDefaultValue());
+        textInput.getElement().getStyle().setMarginLeft(-5.0, Style.Unit.PX);
+
+        panel.add(textInput);
+
+        final IDEDialogsView view =
+                                    new IDEDialogsView("codenvyAskForValueModalView", dialog.getTitle(), 400, 160, panel, dialog.getModal());
         ImageButton okButton = createButton("Ok", null);
         view.getButtonsLayout().add(okButton);
         okButton.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 dialogClosedHandler = null;
                 IDE.getInstance().closeView(view.getId());
-                valueCallback.execute(textField.getValue());
+                valueCallback.execute(textInput.getValue());
+            }
+        });
+
+        textInput.addKeyUpHandler(new KeyUpHandler() {
+            @Override
+            public void onKeyUp(KeyUpEvent event) {
+                if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+                    dialogClosedHandler = null;
+                    IDE.getInstance().closeView(view.getId());
+                    valueCallback.execute(textInput.getValue());
+                }
             }
         });
 
@@ -151,15 +181,19 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler {
         };
 
         IDE.getInstance().openView(view);
+
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                textInput.focus();
+            }
+        });
     }
 
-    ;
-
     @Override
-    protected void openAskDialog(String title, String message) {
-        HorizontalPanel content = createImageWithTextLayout(WindowResource.INSTANCE.askDialog(), message);
-        final IDEDialogsView view = new IDEDialogsView("ideAskModalView", title, 430, 150, content);
-
+    protected void openAskDialog(Dialog dialog) {
+        HorizontalPanel content = createImageWithTextLayout(WindowResource.INSTANCE.askDialog(), dialog.getMessage());
+        final IDEDialogsView view = new IDEDialogsView("ideAskModalView", dialog.getTitle(), 430, 150, content, dialog.getModal());
         ImageButton yesButton = createButton("Yes", null);
         view.getButtonsLayout().add(yesButton);
         yesButton.addClickHandler(new ClickHandler() {
@@ -193,12 +227,10 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler {
         IDE.getInstance().openView(view);
     }
 
-    ;
-
     @Override
-    protected void openWarningDialog(String title, String message) {
-        HorizontalPanel content = createImageWithTextLayout(WindowResource.INSTANCE.warnDialog(), message);
-        final IDEDialogsView view = new IDEDialogsView("ideWarningModalView", title, 450, 250, content);
+    protected void openWarningDialog(Dialog dialog) {
+        HorizontalPanel content = createImageWithTextLayout(WindowResource.INSTANCE.warnDialog(), dialog.getMessage());
+        final IDEDialogsView view = new IDEDialogsView("ideWarningModalView", dialog.getTitle(), 450, 250, content, dialog.getModal());
 
         ImageButton okButton = createButton("Ok", null);
         view.getButtonsLayout().add(okButton);
@@ -221,12 +253,10 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler {
         IDE.getInstance().openView(view);
     }
 
-    ;
-
     @Override
-    protected void openInfoDialog(String title, String message) {
-        HorizontalPanel content = createImageWithTextLayout(WindowResource.INSTANCE.sayDialog(), message);
-        final IDEDialogsView view = new IDEDialogsView("ideInformationModalView", title, 400, 130, content);
+    protected void openInfoDialog(Dialog dialog) {
+        HorizontalPanel content = createImageWithTextLayout(WindowResource.INSTANCE.sayDialog(), dialog.getMessage());
+        final IDEDialogsView view = new IDEDialogsView("ideInformationModalView", dialog.getTitle(), 400, 130, content);
 
         ImageButton okButton = createButton("Ok", null);
         view.getButtonsLayout().add(okButton);
@@ -249,15 +279,11 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler {
         IDE.getInstance().openView(view);
     }
 
-    ;
-
     /**
      * Create button.
-     *
-     * @param title
-     *         button's title
-     * @param icon
-     *         button's image
+     * 
+     * @param title button's title
+     * @param icon button's image
      * @return {@link IButton}
      */
     public ImageButton createButton(String title, ImageResource icon) {
@@ -284,11 +310,9 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler {
 
     /**
      * Creates layout with pointed image and text near it.
-     *
-     * @param icon
-     *         image to display
-     * @param text
-     *         text to display
+     * 
+     * @param icon image to display
+     * @param text text to display
      * @return {@link HorizontalPanel}
      */
     public static HorizontalPanel createImageWithTextLayout(ImageResource icon, String text) {

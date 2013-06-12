@@ -15,6 +15,11 @@
 package com.google.collide.client.communication;
 
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.commons.shared.ListenerManager;
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
+import com.codenvy.ide.dtogen.client.RoutableDtoClientImpl;
+import com.codenvy.ide.dtogen.shared.ServerToClientDto;
+import com.codenvy.ide.json.client.Jso;
 import com.google.collide.client.AppContext;
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.status.StatusManager;
@@ -27,11 +32,6 @@ import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.events.*;
-import org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl;
-import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
-import org.exoplatform.ide.json.client.Jso;
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,45 +105,7 @@ public class PushChannel {
     private final ConnectionOpenedHandler openedHandler = new ConnectionOpenedHandler() {
         @Override
         public void onConnectionOpened() {
-            // Lazily initialize the messageHandler and register to handle messages.
-            if (messageHandler == null) {
-                messageHandler = new MessageHandler() {
-                    @Override
-                    public void onMessage(String message) {
-                        ServerToClientDto dto = (ServerToClientDto)Jso.deserialize(message).<RoutableDtoClientImpl>cast();
-                        messageFilter.dispatchMessage(dto);
-                    }
-                };
-                try {
-                    eventBus.subscribe("collab_editor." + BootstrapSession.getBootstrapSession().getActiveClientId(),
-                                       messageHandler);
-                } catch (WebSocketException e) {
-                    Log.error(PushChannel.class, e);
-                }
-            }
-
-            // Notify listeners who handle reconnections.
-            if (hasReceivedOnDisconnected) {
-                disconnectedTooLongTimer.cancel();
-
-                listenerManager.dispatch(new ListenerManager.Dispatcher<Listener>() {
-                    @Override
-                    public void dispatch(Listener listener) {
-                        listener.onReconnectedSuccessfully();
-                    }
-                });
-                hasReceivedOnDisconnected = false;
-            }
-
-            // Drain any messages that came in while the channel was not open.
-            try {
-                for (QueuedMessage msg : queuedMessages) {
-                    eventBus.send(msg.address, msg.msg, msg.replyHandler);
-                }
-            } catch (WebSocketException e) {
-                Log.error(PushChannel.class, e);
-            }
-            queuedMessages.clear();
+            initialize();
         }
     };
 
@@ -166,6 +128,7 @@ public class PushChannel {
     }
 
     private void init() {
+        initialize();
         eventBus.setOnOpenHandler(openedHandler);
         eventBus.setOnCloseHandler(closedHandler);
     }
@@ -194,5 +157,50 @@ public class PushChannel {
 
     public ListenerRegistrar<Listener> getListenerRegistrar() {
         return listenerManager;
+    }
+
+    /**
+     * 
+     */
+    private void initialize() {
+        // Lazily initialize the messageHandler and register to handle messages.
+        if (messageHandler == null) {
+            messageHandler = new MessageHandler() {
+                @Override
+                public void onMessage(String message) {
+                    ServerToClientDto dto = (ServerToClientDto)Jso.deserialize(message).<RoutableDtoClientImpl>cast();
+                    messageFilter.dispatchMessage(dto);
+                }
+            };
+            try {
+                eventBus.subscribe("collab_editor." + BootstrapSession.getBootstrapSession().getActiveClientId(),
+                                   messageHandler);
+            } catch (WebSocketException e) {
+                Log.error(PushChannel.class, e);
+            }
+        }
+
+        // Notify listeners who handle reconnections.
+        if (hasReceivedOnDisconnected) {
+            disconnectedTooLongTimer.cancel();
+
+            listenerManager.dispatch(new ListenerManager.Dispatcher<Listener>() {
+                @Override
+                public void dispatch(Listener listener) {
+                    listener.onReconnectedSuccessfully();
+                }
+            });
+            hasReceivedOnDisconnected = false;
+        }
+
+        // Drain any messages that came in while the channel was not open.
+        try {
+            for (QueuedMessage msg : queuedMessages) {
+                eventBus.send(msg.address, msg.msg, msg.replyHandler);
+            }
+        } catch (WebSocketException e) {
+            Log.error(PushChannel.class, e);
+        }
+        queuedMessages.clear();
     }
 }

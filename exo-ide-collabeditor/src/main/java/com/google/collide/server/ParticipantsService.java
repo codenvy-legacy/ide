@@ -37,7 +37,7 @@ import javax.ws.rs.core.SecurityContext;
 import java.security.Principal;
 import java.util.Set;
 
-@Path("ide/collab_editor/participants")
+@Path("{ws-name}/collab_editor/participants")
 public class ParticipantsService {
     @Inject
     private Participants participants;

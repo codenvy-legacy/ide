@@ -20,6 +20,8 @@ package org.exoplatform.ide.vfs.impl.fs;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
+import org.exoplatform.ide.vfs.shared.Principal;
+import org.exoplatform.ide.vfs.shared.PrincipalImpl;
 
 import javax.ws.rs.core.HttpHeaders;
 import java.util.*;
@@ -53,8 +55,8 @@ public class ContentTest extends LocalFileSystemTest {
 
         createLock(lockedFilePath, lockToken);
 
-        Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(1);
-        permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
+        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<Principal, Set<BasicPermissions>>(1);
+        permissions.put(new PrincipalImpl("andrew", Principal.Type.USER), EnumSet.of(BasicPermissions.ALL));
         writePermissions(protectedFilePath, permissions);
 
         fileId = pathToId(filePath);
@@ -143,8 +145,8 @@ public class ContentTest extends LocalFileSystemTest {
     public void testUpdateContentNoPermissions() throws Exception {
         // Restore 'read' permission for 'admin'.
         // All requests in test use this principal by default.
-        Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(1);
-        permissions.put("admin", EnumSet.of(BasicPermissions.READ));
+        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<Principal, Set<BasicPermissions>>(1);
+        permissions.put(new PrincipalImpl("admin", Principal.Type.USER), EnumSet.of(BasicPermissions.READ));
         writePermissions(protectedFilePath, permissions);
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         String requestPath = SERVICE_URI + "content/" + protectedFileId;

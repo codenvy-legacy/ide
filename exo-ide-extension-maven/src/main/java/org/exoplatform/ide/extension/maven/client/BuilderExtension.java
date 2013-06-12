@@ -50,7 +50,7 @@ public class BuilderExtension extends Extension implements InitializeServicesHan
      */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        new BuilderClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
+        new BuilderClientServiceImpl(event.getLoader());
     }
 
     /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */

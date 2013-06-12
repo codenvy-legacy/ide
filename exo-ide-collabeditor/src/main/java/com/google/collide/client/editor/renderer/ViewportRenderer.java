@@ -18,6 +18,9 @@ import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 
 import com.codenvy.ide.client.util.Elements;
+import com.codenvy.ide.commons.shared.ListenerManager;
+import com.codenvy.ide.commons.shared.ListenerManager.Dispatcher;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.client.Resources;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
@@ -37,9 +40,6 @@ import com.google.collide.shared.document.anchor.AnchorType;
 import com.google.collide.shared.document.util.LineUtils;
 import com.google.gwt.user.client.Timer;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
 
 import java.util.EnumSet;
 

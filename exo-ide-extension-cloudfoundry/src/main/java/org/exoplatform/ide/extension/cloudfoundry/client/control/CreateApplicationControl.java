@@ -18,15 +18,19 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.api.PropertiesChangedEvent;
+import org.exoplatform.ide.client.framework.project.api.PropertiesChangedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.PAAS_PROVIDER;
 import org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationEvent;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.canBeDeployedToCF;
 import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension.canBeDeployedToWF;
@@ -39,8 +43,9 @@ import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExte
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CreateApplicationControl.java Jul 7, 2011 5:32:27 PM vereshchaka $
  */
+@RolesAllowed("developer")
 public class CreateApplicationControl extends AbstractCloudFoundryControl implements ProjectOpenedHandler,
-                                                                         ProjectClosedHandler {
+                                                                         ProjectClosedHandler, PropertiesChangedHandler {
 
     private static final String CF_ID  = CloudFoundryExtension.LOCALIZATION_CONSTANT.createAppControlId();
 
@@ -66,6 +71,7 @@ public class CreateApplicationControl extends AbstractCloudFoundryControl implem
     public void initialize() {
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        IDE.addHandler(PropertiesChangedEvent.TYPE, this);
         setVisible(true);
     }
 
@@ -88,4 +94,13 @@ public class CreateApplicationControl extends AbstractCloudFoundryControl implem
                    && ((paasProvider == CLOUD_FOUNDRY && canBeDeployedToCF(event.getProject())) || (paasProvider == WEB_FABRIC && canBeDeployedToWF(event.getProject()))));
     }
 
+    @Override
+    public void onPropertiesChanged(PropertiesChangedEvent event) {
+        ProjectModel project = event.getProject();
+        while (project.getProject() != null) {
+            project = project.getProject();
+        }
+        setEnabled((paasProvider == CLOUD_FOUNDRY && canBeDeployedToCF(project))
+                   || (paasProvider == WEB_FABRIC && canBeDeployedToWF(project)));
+    }
 }

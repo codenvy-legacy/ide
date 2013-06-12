@@ -29,7 +29,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-@Path("ide/collab_editor/documents")
+@Path("{ws-name}/collab_editor/documents")
 public class EditSessionsService {
     @Inject
     private EditSessions editSessions;

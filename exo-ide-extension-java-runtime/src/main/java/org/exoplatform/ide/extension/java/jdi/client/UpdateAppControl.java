@@ -19,12 +19,23 @@
 package org.exoplatform.ide.extension.java.jdi.client;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.*;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
-import org.exoplatform.ide.extension.java.jdi.client.events.*;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerActivityEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerActivityHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.UpdateAppEvent;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Property;
 
@@ -32,15 +43,16 @@ import java.util.List;
 
 /**
  * Control for updating deployed application using JRebel.
- *
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: UpdateAppControl.java Oct 30, 2012 2:53:32 PM azatsarynnyy $
  */
+@RolesAllowed("developer")
 public class UpdateAppControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
-                                                               AppStartedHandler, AppStoppedHandler, DebuggerActivityHandler {
-    public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.updateAppControlId();
+                                                   AppStartedHandler, AppStoppedHandler, DebuggerActivityHandler {
+    public static final String  ID     = DebuggerExtension.LOCALIZATION_CONSTANT.updateAppControlId();
 
-    private static final String TITLE = DebuggerExtension.LOCALIZATION_CONSTANT.updateAppControlTitle();
+    private static final String TITLE  = DebuggerExtension.LOCALIZATION_CONSTANT.updateAppControlTitle();
 
     private static final String PROMPT = DebuggerExtension.LOCALIZATION_CONSTANT.updateAppControlPrompt();
 
@@ -50,7 +62,7 @@ public class UpdateAppControl extends SimpleControl implements IDEControl, Proje
         super(ID);
         setTitle(TITLE);
         setPrompt(PROMPT);
-        setImages(DebuggerClientBundle.INSTANCE.runApp(), DebuggerClientBundle.INSTANCE.runAppDisabled());
+        setImages(DebuggerClientBundle.INSTANCE.updateApp(), DebuggerClientBundle.INSTANCE.updateAppDisabled());
         setEvent(new UpdateAppEvent());
         setGroupName(GroupNames.RUNDEBUG);
     }
@@ -68,16 +80,20 @@ public class UpdateAppControl extends SimpleControl implements IDEControl, Proje
         IDE.addHandler(DebuggerActivityEvent.TYPE, this);
     }
 
-    /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
-     * .project.ProjectClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+     *      .project.ProjectClosedEvent)
+     */
     @Override
     public void onProjectClosed(ProjectClosedEvent event) {
         setVisible(false);
         setEnabled(false);
     }
 
-    /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
-     * .project.ProjectOpenedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
+     *      .project.ProjectOpenedEvent)
+     */
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
         updateState(event.getProject());
@@ -87,11 +103,12 @@ public class UpdateAppControl extends SimpleControl implements IDEControl, Proje
     /** @param project */
     private void updateState(ProjectModel project) {
         String projectType = project.getProjectType();
-        boolean isJavaProject =
-                ProjectResolver.SPRING.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
-                || ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
-                || ProjectType.WAR.value().equals(projectType) || ProjectType.JSP.value().equals(projectType) ||
-                ProjectType.AWS.value().equals(projectType);
+        boolean isJavaProject = ProjectResolver.SPRING.equals(projectType)
+                                || ProjectResolver.SERVLET_JSP.equals(projectType)
+                                || ProjectResolver.APP_ENGINE_JAVA.equals(projectType)
+                                || ProjectType.JAVA.value().equals(projectType)
+                                || ProjectType.WAR.value().equals(projectType)
+                                || ProjectType.JSP.value().equals(projectType);
 
         boolean useJRebel = isUseJRebel(project);
 
@@ -112,7 +129,7 @@ public class UpdateAppControl extends SimpleControl implements IDEControl, Proje
 
     /**
      * Read projects property 'jrebel'.
-     *
+     * 
      * @return <code>true</code> if need to use JRebel
      */
     private boolean isUseJRebel(ProjectModel project) {
@@ -130,7 +147,7 @@ public class UpdateAppControl extends SimpleControl implements IDEControl, Proje
 
     /**
      * Set update button enable if in current state debugger is not stopped on breakpoint.
-     *
+     * 
      * @param event
      */
     @Override

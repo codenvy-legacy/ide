@@ -36,6 +36,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.upload.FileSelectedEvent;
 import org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.ssh.client.SshKeyExtension;
 import org.exoplatform.ide.extension.ssh.client.keymanager.ui.UploadSshKeyView;
 
@@ -96,14 +97,13 @@ public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHan
     private HandlerRegistration viewClosedHandler;
 
     /** IDE REST Context URL */
-    private String restContext;
+    private String restContext = Utils.getRestContext();
 
     /**
      * @param restContext
      *         part of URL to IDE REST Context
      */
-    public UploadSshKeyPresenter(String restContext) {
-        this.restContext = restContext;
+    public UploadSshKeyPresenter() {
         IDE.addHandler(ViewClosedEvent.TYPE, this);
         display = GWT.create(Display.class);
 
@@ -156,7 +156,7 @@ public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHan
         }
 
         display.getFormPanel().setEncoding(FormPanel.ENCODING_MULTIPART);
-        display.getFormPanel().setAction(restContext + "/ide/ssh-keys/add?host=" + host);
+        display.getFormPanel().setAction(restContext + "/" + Utils.getWorkspaceName() + "/ssh-keys/add?host=" + host);
         display.getFormPanel().submit();
     }
 

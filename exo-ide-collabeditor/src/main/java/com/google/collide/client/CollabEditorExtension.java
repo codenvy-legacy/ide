@@ -40,6 +40,7 @@ import com.google.gwt.user.client.DOM;
 
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.events.ConnectionOpenedHandler;
 import org.exoplatform.ide.client.framework.websocket.events.ReplyHandler;
 
@@ -201,7 +202,7 @@ public class CollabEditorExtension extends Extension implements ConnectionOpened
             return;
         }
         init();
-        IDE.messageBus().send("ide/collab_editor/participants/add", "{}", new ReplyHandler() {
+        IDE.messageBus().send(Utils.getWorkspaceName() + "/collab_editor/participants/add", "{}", new ReplyHandler() {
             @Override
             public void onReply(String message) {
                 JSONObject object = JSONParser.parseLenient(message).isObject();

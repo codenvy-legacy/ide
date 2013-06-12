@@ -15,6 +15,10 @@
 package com.google.collide.client.editor;
 
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.commons.shared.SortedList;
+import com.codenvy.ide.commons.shared.ListenerRegistrar.Remover;
+import com.codenvy.ide.commons.shared.SortedList.OneWayIntComparator;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
@@ -23,10 +27,6 @@ import com.google.collide.shared.document.anchor.Anchor.RemovalStrategy;
 import com.google.collide.shared.document.anchor.AnchorManager;
 import com.google.collide.shared.document.anchor.AnchorType;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.shared.util.ListenerRegistrar.Remover;
-import org.exoplatform.ide.shared.util.SortedList;
-import org.exoplatform.ide.shared.util.SortedList.OneWayIntComparator;
 
 /**
  * This class takes care of mapping between the different coordinates used by

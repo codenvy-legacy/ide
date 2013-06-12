@@ -37,7 +37,7 @@ import java.util.Map;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: MockCloudbeesService.java Aug 16, 2011 12:07:10 PM vereshchaka $
  */
-@Path("ide/cloudbees")
+@Path("{ws-name}/cloudbees")
 public class MockCloudbeesService {
 
     public static final List<String> domains = new ArrayList<String>();

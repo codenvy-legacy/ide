@@ -14,7 +14,7 @@
 
 package com.google.collide.codemirror2;
 
-import org.exoplatform.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonArray;
 
 /** Token factory that do not use information from {@link State}. */
 class BasicTokenFactory implements TokenFactory<State> {

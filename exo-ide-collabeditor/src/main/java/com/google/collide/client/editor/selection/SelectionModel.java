@@ -17,6 +17,8 @@ package com.google.collide.client.editor.selection;
 import elemental.events.MouseEvent;
 
 import com.codenvy.ide.client.util.UserAgent;
+import com.codenvy.ide.commons.shared.*;
+import com.codenvy.ide.commons.shared.ListenerManager.Dispatcher;
 import com.google.collide.client.document.linedimensions.LineDimensionsCalculator.RoundingStrategy;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.ViewportModel;
@@ -30,8 +32,6 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.regexp.shared.RegExp;
 
-import org.exoplatform.ide.shared.util.*;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
 
 import static com.google.collide.shared.document.util.LineUtils.getLastCursorColumn;
 import static com.google.collide.shared.document.util.LineUtils.rubberbandColumn;

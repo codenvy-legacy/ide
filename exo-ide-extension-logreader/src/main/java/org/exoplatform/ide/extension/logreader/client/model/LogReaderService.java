@@ -48,9 +48,9 @@ public class LogReaderService {
      * @param restContext
      * @param loader
      */
-    public LogReaderService(String restContext, Loader loader) {
+    public LogReaderService(String restContext, String wsName, Loader loader) {
         super();
-        this.restContext = restContext;
+        this.restContext = restContext + wsName;
         this.loader = loader;
         instance = this;
     }

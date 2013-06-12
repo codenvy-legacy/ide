@@ -37,7 +37,7 @@ import java.util.Map;
  * @author <a href="vzhukovskii@exoplatform.com">Vladyslav Zhukovskii</a>
  * @version $Id: JRebelProfilerService.java 34027 19.12.12 17:02Z vzhukovskii $
  */
-@Path("ide/jrebel")
+@Path("{ws-name}/jrebel")
 public class JRebelConsumerService {
     @Inject
     UserManager userManager;
@@ -51,10 +51,6 @@ public class JRebelConsumerService {
         String userId = ConversationState.getCurrent().getIdentity().getUserId();
         try {
             User user = userManager.getUserByAlias(userId);
-            if (user.getProfile().getAttribute("firstName") != null && user.getProfile().getAttribute("lastName") != null
-                && user.getProfile().getAttribute("phone") != null) {
-                return; //no need to send already filled profile to ZTA
-            }
             user.getProfile().setAttributes(values);
             userManager.updateUser(user);
 

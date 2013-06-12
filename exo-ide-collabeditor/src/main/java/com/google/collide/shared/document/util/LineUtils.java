@@ -14,11 +14,11 @@
 
 package com.google.collide.shared.document.util;
 
+import com.codenvy.ide.commons.shared.TextUtils;
 import com.google.collide.shared.document.*;
 import com.google.collide.shared.document.anchor.Anchor;
 import com.google.common.base.Preconditions;
 
-import org.exoplatform.ide.shared.util.TextUtils;
 
 /** Utility methods for line manipulations. */
 public final class LineUtils {

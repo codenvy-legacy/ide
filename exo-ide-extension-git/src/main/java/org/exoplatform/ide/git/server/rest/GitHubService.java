@@ -19,8 +19,8 @@
 package org.exoplatform.ide.git.server.rest;
 
 import com.codenvy.commons.security.oauth.OAuthTokenProvider;
+import com.codenvy.ide.commons.server.ParsingResponseException;
 
-import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.ssh.server.SshKeyStoreException;
 import org.exoplatform.ide.git.server.github.GitHub;
 import org.exoplatform.ide.git.server.github.GitHubException;
@@ -46,7 +46,7 @@ import java.util.Map;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: GithubSamplesService.java Aug 29, 2011 9:59:02 AM vereshchaka $
  */
-@Path("ide/github")
+@Path("{ws-name}/github")
 public class GitHubService {
     @Inject
     OAuthTokenProvider oauthTokenProvider;

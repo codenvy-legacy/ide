@@ -277,7 +277,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
         if (collaborationManager.isFileOpened(fileToRename.getPath())) {
             new ResourceLockedPresenter(
                     new SafeHtmlBuilder().appendHtmlConstant("Can't perform refactoring.").toSafeHtml(), collaborationManager,
-                    fileToRename.getPath(), true, fileToRename.getPath(),
+                    fileToRename.getPath(), fileToRename, fileToRename.getPath(),
                     Operation.REFACTORING);
             return;
         }

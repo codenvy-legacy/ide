@@ -20,7 +20,6 @@ package org.exoplatform.ide.vfs.client.model;
 
 import com.google.gwt.json.client.JSONObject;
 
-import org.exoplatform.ide.vfs.client.JSONDeserializer;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.Project;
@@ -40,22 +39,20 @@ public class ProjectModel extends FolderModel implements Project {
         super();
     }
 
-    @SuppressWarnings("rawtypes")
     public ProjectModel(String name, FolderModel parent, String projectType, List<Property> properties) {
-        this(null, name, PROJECT_MIME_TYPE, parent.createPath(name), parent.getId(), new Date().getTime(),
+        this(null, null, name, PROJECT_MIME_TYPE, parent.createPath(name), parent.getId(), new Date().getTime(),
              properties, new HashMap<String, Link>(), projectType);
         this.parent = parent;
     }
 
     public ProjectModel(ProjectModel project) {
-        this(project.getId(), project.getName(), PROJECT_MIME_TYPE, project.getPath(), project.getParentId(), project
-                .getCreationDate(), project.getProperties(), project.getLinks(), project.getProjectType());
+        this(project.getVfsId(), project.getId(), project.getName(), PROJECT_MIME_TYPE, project.getPath(), project.getParentId(),
+             project.getCreationDate(), project.getProperties(), project.getLinks(), project.getProjectType());
     }
 
-    @SuppressWarnings("rawtypes")
-    public ProjectModel(String id, String name, String mimeType, String path, String parentId, long creationDate,
+    public ProjectModel(String vfsId, String id, String name, String mimeType, String path, String parentId, long creationDate,
                         List<Property> properties, Map<String, Link> links, String projectType) {
-        super(id, name, ItemType.PROJECT, mimeType, path, parentId, creationDate, properties, links);
+        super(vfsId, id, name, ItemType.PROJECT, mimeType, path, parentId, creationDate, properties, links);
         this.projectType = projectType;
     }
 
@@ -64,24 +61,9 @@ public class ProjectModel extends FolderModel implements Project {
         init(itemObject);
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     public void init(JSONObject itemObject) {
         super.init(itemObject);
-
-        id = itemObject.get("id").isString().stringValue();
-        name = itemObject.get("name").isString().stringValue();
-        mimeType = itemObject.get("mimeType").isString().stringValue();
-        path = itemObject.get("path").isString().stringValue();
-        parentId = itemObject.get("parentId").isString().stringValue();
-        try {
-            creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        properties = (List)JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
-        links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
-        projectType =
-                (itemObject.get("projectType") != null) ? itemObject.get("projectType").isString().stringValue() : null;
+        projectType = (itemObject.get("projectType") != null) ? itemObject.get("projectType").isString().stringValue() : null;
         this.persisted = true;
     }
 

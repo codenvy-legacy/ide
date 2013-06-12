@@ -26,6 +26,10 @@ import com.codenvy.ide.client.util.Elements;
 import com.codenvy.ide.client.util.SignalEvent;
 import com.codenvy.ide.client.util.SignalEventUtils;
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.commons.shared.ListenerManager;
+import com.codenvy.ide.commons.shared.ListenerRegistrar;
+import com.codenvy.ide.commons.shared.TextUtils;
+import com.codenvy.ide.commons.shared.ListenerManager.Dispatcher;
 import com.google.collide.client.document.linedimensions.LineDimensionsUtils;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.Editor.KeyListener;
@@ -42,10 +46,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
-import org.exoplatform.ide.shared.util.TextUtils;
 
 /**
  * Controller for taking input from the user. This manages an offscreen textarea

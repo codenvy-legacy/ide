@@ -14,6 +14,16 @@
 
 package com.google.collide.client.collaboration;
 
+import com.codenvy.ide.commons.shared.ListenerManager;
+import com.codenvy.ide.commons.shared.ListenerManager.Dispatcher;
+import com.codenvy.ide.commons.shared.ListenerRegistrar.RemoverManager;
+import com.codenvy.ide.dtogen.shared.ServerError.FailureReason;
+import com.codenvy.ide.json.client.JsIntegerMap;
+import com.codenvy.ide.json.client.Jso;
+import com.codenvy.ide.json.shared.JsonArray;
+import com.codenvy.ide.json.shared.JsonCollections;
+import com.codenvy.ide.json.shared.JsonIntegerMap;
+import com.codenvy.ide.json.shared.JsonStringMap;
 import com.codenvy.ide.users.UsersModel;
 import com.google.collide.client.AppContext;
 import com.google.collide.client.code.ParticipantModel;
@@ -22,23 +32,21 @@ import com.google.collide.client.document.DocumentManager;
 import com.google.collide.client.document.DocumentManager.LifecycleListener;
 import com.google.collide.client.document.DocumentMetadata;
 import com.google.collide.client.editor.Editor;
-import com.google.collide.dto.*;
+import com.google.collide.dto.DocumentSelection;
+import com.google.collide.dto.FileCollaboratorGone;
+import com.google.collide.dto.FileContents;
+import com.google.collide.dto.GetOpenedFilesInWorkspaceResponse;
+import com.google.collide.dto.NewFileCollaborator;
+import com.google.collide.dto.ParticipantUserDetails;
+import com.google.collide.dto.RoutingTypes;
+import com.google.collide.dto.UserDetails;
+import com.google.collide.dto.UserLogInDto;
 import com.google.collide.dto.client.DtoClientImpls.GetOpenendFilesInWorkspaceImpl;
 import com.google.collide.shared.document.Document;
 
 import org.exoplatform.ide.client.framework.websocket.FrontendApi.ApiCallback;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter.MessageRecipient;
-import org.exoplatform.ide.dtogen.shared.ServerError.FailureReason;
-import org.exoplatform.ide.json.client.JsIntegerMap;
-import org.exoplatform.ide.json.client.Jso;
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.json.shared.JsonIntegerMap;
-import org.exoplatform.ide.json.shared.JsonStringMap;
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
-import org.exoplatform.ide.shared.util.ListenerRegistrar.RemoverManager;
 
 /**
  * A manager for real-time collaboration.
@@ -267,16 +275,15 @@ public class CollaborationManager {
         if (participants == null)
             return;
 
-        ParticipantUserDetails toRemove = null;
+        JsonArray<ParticipantUserDetails> toRemove = JsonCollections.createArray();
         for (ParticipantUserDetails p : participants.asIterable()) {
             if (p.getParticipant().getId().equals(message.getParticipant().getParticipant().getId())) {
-                toRemove = p;
-                break;
+                toRemove.add(p);
             }
         }
 
-        if (toRemove != null) {
-            participants.remove(toRemove);
+        for (ParticipantUserDetails p : toRemove.asIterable()) {
+            participants.remove(p);
         }
 
         if (participants.isEmpty()) {

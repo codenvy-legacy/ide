@@ -20,7 +20,9 @@ package com.codenvy.ide.collaboration.watcher.client;
 
 import com.codenvy.ide.collaboration.dto.ProjectClosedDto;
 import com.codenvy.ide.collaboration.dto.ProjectOpenedDto;
+import com.codenvy.ide.collaboration.dto.ProjectOperationNotification;
 
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.FrontendApi;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 
@@ -31,10 +33,12 @@ import org.exoplatform.ide.client.framework.websocket.MessageBus;
 public class CollaborationApi extends FrontendApi {
 
     /** Send a message that user closed file. */
-    public final SendApi<ProjectOpenedDto> PROJECT_OPEN = makeApi("ide/vfs/watch/project/opened");
+    public final SendApi<ProjectOpenedDto> PROJECT_OPEN = makeApi(Utils.getWorkspaceName() + "/vfs/watch/project/opened");
 
     /** Send a message that user closed file. */
-    public final SendApi<ProjectClosedDto> PROJECT_CLOSED = makeApi("ide/vfs/watch/project/closed");
+    public final SendApi<ProjectClosedDto> PROJECT_CLOSED = makeApi(Utils.getWorkspaceName() + "/vfs/watch/project/closed");
+
+    public final SendApi<ProjectOperationNotification> PROJECT_NOTOFICATION = makeApi("ide/collaboration/notification/project");
 
 
     public CollaborationApi(MessageBus messageBus) {

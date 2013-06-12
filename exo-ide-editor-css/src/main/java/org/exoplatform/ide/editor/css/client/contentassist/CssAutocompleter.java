@@ -14,12 +14,9 @@
 
 package org.exoplatform.ide.editor.css.client.contentassist;
 
-import static com.google.collide.client.code.autocomplete.AutocompleteResult.PopupAction.CLOSE;
-import static com.google.collide.client.code.autocomplete.AutocompleteResult.PopupAction.OPEN;
-import static com.google.collide.codemirror2.TokenType.NULL;
-
 import com.codenvy.ide.client.util.Preconditions;
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.json.shared.JsonArray;
 import com.google.collide.client.code.autocomplete.AbstractTrie;
 import com.google.collide.client.code.autocomplete.AutocompleteProposal;
 import com.google.collide.client.code.autocomplete.AutocompleteProposals;
@@ -39,7 +36,10 @@ import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.Position;
 import com.google.gwt.event.dom.client.KeyCodes;
 
-import org.exoplatform.ide.json.shared.JsonArray;
+import static com.google.collide.client.code.autocomplete.AutocompleteResult.PopupAction.CLOSE;
+import static com.google.collide.client.code.autocomplete.AutocompleteResult.PopupAction.OPEN;
+import static com.google.collide.codemirror2.TokenType.NULL;
+
 
 /**
  * Autocompleter for CSS. Currently, this only supports CSS2.
@@ -79,8 +79,7 @@ public class CssAutocompleter extends LanguageSpecificAutocompleter {
     }
 
     @Override
-    public void attach(DocumentParser parser/* , AutocompleteController controller, PathUtil filePath */) {
-        // super.attach(parser, controller, filePath);
+    public void attach(DocumentParser parser) {
         super.attach(parser);
         completionQuery = null;
     }
@@ -276,11 +275,17 @@ public class CssAutocompleter extends LanguageSpecificAutocompleter {
         DocumentParser parser = getParser();
 
         // 1) Check we are not in block already.
-        ParseResult<CssState> parseResult = parser.getState(
-                                                            CssState.class, selectionModel.getCursorPosition(), " ");
+        ParseResult<CssState> parseResult = null;
+        try {
+            parseResult = parser.getState(CssState.class, selectionModel.getCursorPosition(), " ");
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+
         if (parseResult == null) {
             return ExplicitAction.DEFAULT;
         }
+        
         JsonArray<Token> tokens = parseResult.getTokens();
         Preconditions.checkNotNull(tokens, "");
         Preconditions.checkState(tokens.size() > 0, "");

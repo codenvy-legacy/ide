@@ -20,10 +20,14 @@
 
 package org.exoplatform.gwtframework.ui.client.component;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -48,22 +52,36 @@ import java.util.List;
 public class IconButton extends Composite implements HasClickHandlers {
 
     /** Styles for component. */
-    private interface Style {
+    interface Style extends CssResource {
+        String exoIconButtonPanelDown();
 
-        static final String BUTTON_PANEL = "exoIconButtonPanel";
+        String exoIconButtonPanelSelectedOver();
 
-        static final String BUTTON_PANEL_OVER = "exoIconButtonPanelOver";
+        String exoIconButtonPanelSelectedDown();
 
-        static final String BUTTON_PANEL_DOWN = "exoIconButtonPanelDown";
+        String exoIconButtonIcon();
 
-        static final String BUTTON_PANEL_SELECTED = "exoIconButtonPanelSelected";
+        String exoIconButtonPanelOver();
 
-        static final String BUTTON_PANEL_SELECTED_OVER = "exoIconButtonPanelSelectedOver";
+        String exoIconButtonPanelSelected();
 
-        static final String BUTTON_PANEL_SELECTED_DOWN = "exoIconButtonPanelSelectedDown";
+        String exoIconButtonPanel();
 
-        static final String BUTTON_ICON = "exoIconButtonIcon";
+    }
 
+    interface Resorces extends ClientBundle {
+
+        @Source("org/exoplatform/gwtframework/ui/client/component/icon-button/icon-button.css")
+        Style css();
+
+        @Source("org/exoplatform/gwtframework/ui/client/component/icon-button/button-background.png")
+        ImageResource buttonBackground();
+    }
+
+    private static final Resorces RESORCES = GWT.create(Resorces.class);
+
+    static {
+        RESORCES.css().ensureInjected();
     }
 
     /** Button's panel. */
@@ -109,7 +127,7 @@ public class IconButton extends Composite implements HasClickHandlers {
     public IconButton() {
         buttonPanel = new ButtonPanel();
         initWidget(buttonPanel);
-        buttonPanel.setStyleName(Style.BUTTON_PANEL);
+        buttonPanel.setStyleName(RESORCES.css().exoIconButtonPanel());
         setEnabled(true);
     }
 
@@ -182,7 +200,7 @@ public class IconButton extends Composite implements HasClickHandlers {
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-        buttonPanel.setStyleName(Style.BUTTON_PANEL);
+        buttonPanel.setStyleName(RESORCES.css().exoIconButtonPanel());
         DOM.setElementAttribute(buttonPanel.getElement(), "enabled", "" + enabled);
         renderIcon();
     }
@@ -253,9 +271,9 @@ public class IconButton extends Composite implements HasClickHandlers {
     public void setSelected(boolean selected) {
         this.selected = selected;
         if (selected) {
-            buttonPanel.setStyleName(Style.BUTTON_PANEL_SELECTED);
+            buttonPanel.setStyleName(RESORCES.css().exoIconButtonPanelSelected());
         } else {
-            buttonPanel.setStyleName(Style.BUTTON_PANEL);
+            buttonPanel.setStyleName(RESORCES.css().exoIconButtonPanel());
         }
     }
 
@@ -282,7 +300,7 @@ public class IconButton extends Composite implements HasClickHandlers {
         Element imageElement = DOM.getChild(e, 0);
         //NOT Work in IE !!!
         //DOM.setElementAttribute(imageElement, "class", Style.BUTTON_ICON);
-        imageElement.setClassName(Style.BUTTON_ICON);
+        imageElement.setClassName(RESORCES.css().exoIconButtonIcon());
     }
 
     /**
@@ -300,36 +318,36 @@ public class IconButton extends Composite implements HasClickHandlers {
     /** Mouse Over handler. */
     private void onMouseOver() {
         if (selected) {
-            buttonPanel.setStyleName(Style.BUTTON_PANEL_SELECTED_OVER);
+            buttonPanel.setStyleName(RESORCES.css().exoIconButtonPanelSelectedOver());
         } else {
-            buttonPanel.setStyleName(Style.BUTTON_PANEL_OVER);
+            buttonPanel.setStyleName(RESORCES.css().exoIconButtonPanelOver());
         }
     }
 
     /** Mouse Out handler. */
     private void onMouseOut() {
         if (selected) {
-            buttonPanel.setStyleName(Style.BUTTON_PANEL_SELECTED);
+            buttonPanel.setStyleName(RESORCES.css().exoIconButtonPanelSelected());
         } else {
-            buttonPanel.setStyleName(Style.BUTTON_PANEL);
+            buttonPanel.setStyleName(RESORCES.css().exoIconButtonPanel());
         }
     }
 
     /** Mouse Down handler. */
     private void onMouseDown() {
         if (selected) {
-            buttonPanel.setStyleName(Style.BUTTON_PANEL_SELECTED_DOWN);
+            buttonPanel.setStyleName(RESORCES.css().exoIconButtonPanelSelectedDown());
         } else {
-            buttonPanel.setStyleName(Style.BUTTON_PANEL_DOWN);
+            buttonPanel.setStyleName(RESORCES.css().exoIconButtonPanelDown());
         }
     }
 
     /** Mouse Up handler. */
     private void onMouseUp() {
         if (selected) {
-            buttonPanel.setStyleName(Style.BUTTON_PANEL_SELECTED_OVER);
+            buttonPanel.setStyleName(RESORCES.css().exoIconButtonPanelSelectedOver());
         } else {
-            buttonPanel.setStyleName(Style.BUTTON_PANEL_OVER);
+            buttonPanel.setStyleName(RESORCES.css().exoIconButtonPanelOver());
         }
     }
 

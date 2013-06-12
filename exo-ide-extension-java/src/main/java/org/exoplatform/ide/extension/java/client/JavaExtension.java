@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.java.client;
 
 import org.exoplatform.ide.client.framework.module.Extension;
+import org.exoplatform.ide.extension.java.client.datasource.ConfigureDatasourcePresenter;
 
 /**
  * Java extension for IDE.
@@ -30,8 +31,7 @@ public class JavaExtension extends Extension {
 
     @Override
     public void initialize() {
-
+        new ConfigureDatasourcePresenter();
     }
-
 
 }

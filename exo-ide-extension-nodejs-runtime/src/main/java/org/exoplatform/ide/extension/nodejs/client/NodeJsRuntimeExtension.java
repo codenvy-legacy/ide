@@ -24,6 +24,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.nodejs.client.logs.LogsHandler;
 import org.exoplatform.ide.extension.nodejs.client.run.RunApplicationManager;
 
@@ -44,7 +45,7 @@ public class NodeJsRuntimeExtension extends Extension implements InitializeServi
      * .client.framework.application.event.InitializeServicesEvent) */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        new NodeJsRuntimeServiceImpl(event.getApplicationConfiguration().getContext());
+        new NodeJsRuntimeServiceImpl(Utils.getRestContext(), Utils.getWorkspaceName(), IDE.messageBus());
     }
 
     /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */

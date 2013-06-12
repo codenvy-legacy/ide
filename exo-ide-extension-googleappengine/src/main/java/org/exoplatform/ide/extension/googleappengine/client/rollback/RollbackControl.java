@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.googleappengine.client.rollback;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
@@ -31,6 +32,7 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExten
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 21, 2012 11:36:05 AM anya $
  */
+@RolesAllowed({"developer"})
 public class RollbackControl extends SimpleControl implements IDEControl, 
             ProjectOpenedHandler, ProjectClosedHandler {
     
