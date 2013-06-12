@@ -20,10 +20,17 @@ package com.codenvy.ide.ext.java.jdi.client;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.ui.menu.MainMenuAgent;
+import com.codenvy.ide.debug.DebuggerManager;
 import com.codenvy.ide.ext.java.jdi.client.command.DebugCommand;
 import com.codenvy.ide.ext.java.jdi.client.command.RunCommand;
+import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerPresenter;
+import com.codenvy.ide.ext.java.jdi.client.fqn.FqnResolverFactory;
+import com.codenvy.ide.ext.java.jdi.client.fqn.JavaFqnResolver;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import static com.codenvy.ide.extension.maven.client.BuilderExtension.SPRING_APPLICATION_PROJECT_TYPE;
+import static com.codenvy.ide.rest.MimeType.APPLICATION_JAVA;
 
 /**
  * Extension add Java Runtime support to the IDE Application.
@@ -43,8 +50,14 @@ public class JavaRuntimeExtension {
     public static final String APPLICATION_STOP_CHANNEL = "runner:application-stopped:";
 
     @Inject
-    public JavaRuntimeExtension(MainMenuAgent mainMenuAgent, RunCommand runCommand, DebugCommand debugCommand) {
+    public JavaRuntimeExtension(MainMenuAgent mainMenuAgent, RunCommand runCommand, DebugCommand debugCommand,
+                                DebuggerManager debuggerManager, DebuggerPresenter debuggerPresenter,
+                                FqnResolverFactory resolverFactory, JavaFqnResolver javaFqnResolver) {
         mainMenuAgent.addMenuItem("Run/Run Application", runCommand);
         mainMenuAgent.addMenuItem("Run/Debug Application", debugCommand);
+
+        debuggerManager.registeredDebugger(SPRING_APPLICATION_PROJECT_TYPE, debuggerPresenter);
+
+        resolverFactory.addResolver(APPLICATION_JAVA, javaFqnResolver);
     }
 }

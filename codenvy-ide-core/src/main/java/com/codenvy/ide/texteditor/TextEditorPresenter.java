@@ -31,7 +31,7 @@ import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.api.TextListener;
 import com.codenvy.ide.texteditor.api.outline.OutlineModel;
 import com.codenvy.ide.texteditor.api.outline.OutlinePresenter;
-import com.codenvy.ide.texteditor.gutter.breakpoint.BreakpointGutterManager;
+import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.HTML;

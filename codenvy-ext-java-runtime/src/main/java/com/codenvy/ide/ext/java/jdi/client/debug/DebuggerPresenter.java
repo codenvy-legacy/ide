@@ -24,9 +24,13 @@ import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
+import com.codenvy.ide.debug.Breakpoint;
+import com.codenvy.ide.debug.BreakpointGutterManager;
+import com.codenvy.ide.debug.Debugger;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeExtension;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
+import com.codenvy.ide.ext.java.jdi.client.fqn.FqnResolverFactory;
 import com.codenvy.ide.ext.java.jdi.client.marshaller.*;
 import com.codenvy.ide.ext.java.jdi.client.run.ApplicationRunnerClientService;
 import com.codenvy.ide.ext.java.jdi.dto.client.DtoClientImpls;
@@ -37,6 +41,7 @@ import com.codenvy.ide.extension.maven.client.event.ProjectBuiltHandler;
 import com.codenvy.ide.extension.maven.shared.BuildStatus;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.part.base.BasePresenter;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
@@ -68,7 +73,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  */
 @Singleton
-public class DebuggerPresenter extends BasePresenter implements DebuggerView.ActionDelegate, ProjectBuiltHandler {
+public class DebuggerPresenter extends BasePresenter implements DebuggerView.ActionDelegate, ProjectBuiltHandler, Debugger {
     private static final String TITLE                    = "Debug";
     /** Default time (in milliseconds) to prolong application expiration time. */
     private static       long   DEFAULT_PROLONG_TIME     = 10 * 60 * 1000; // 10 minutes
@@ -101,15 +106,17 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private File                                   activeFile;
     private ApplicationInstance                    runningApp;
     private MessageBus                             messageBus;
-    private BreakpointsManager                     breakpointsManager;
+    private BreakpointGutterManager                gutterManager;
     private WorkspaceAgent                         workspaceAgent;
     private ResourceProvider                       resourceProvider;
     private ApplicationRunnerClientService         applicationRunnerClientService;
+    private FqnResolverFactory                     resolverFactory;
     private Variable                               selectedVariable;
     private CurrentEditorBreakPoint                currentBreakPoint;
     private boolean                                updateApp;
     private String                                 restContext;
     private HandlerRegistration                    projectBuildHandler;
+    private JsonStringMap<File>                    fileWithBreakPoints;
     /** Handler for processing events which is received from debugger over WebSocket connection. */
     private SubscriptionHandler<DebuggerEventList> debuggerEventsHandler;
     /** Handler for processing received application name which will be stopped soon. */
@@ -168,16 +175,17 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      * @param messageBus
      * @param constant
      * @param resourceProvider
-     * @param breakpointsManager
      * @param workspaceAgent
      * @param applicationRunnerClientService
      * @param restContext
+     * @param gutterManager
      */
     @Inject
     protected DebuggerPresenter(DebuggerView view, JavaRuntimeResources resources, DebuggerClientService service, EventBus eventBus,
                                 ConsolePart console, MessageBus messageBus, JavaRuntimeLocalizationConstant constant,
-                                ResourceProvider resourceProvider, BreakpointsManager breakpointsManager, WorkspaceAgent workspaceAgent,
-                                ApplicationRunnerClientService applicationRunnerClientService, @Named("restContext") String restContext) {
+                                ResourceProvider resourceProvider, WorkspaceAgent workspaceAgent,
+                                ApplicationRunnerClientService applicationRunnerClientService, @Named("restContext") String restContext,
+                                BreakpointGutterManager gutterManager, FqnResolverFactory resolverFactory) {
         this.view = view;
         this.view.setDelegate(this);
         this.view.setTitle(TITLE);
@@ -188,10 +196,12 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         this.messageBus = messageBus;
         this.constant = constant;
         this.resourceProvider = resourceProvider;
-        this.breakpointsManager = breakpointsManager;
         this.workspaceAgent = workspaceAgent;
         this.applicationRunnerClientService = applicationRunnerClientService;
         this.restContext = restContext;
+        this.gutterManager = gutterManager;
+        this.resolverFactory = resolverFactory;
+        this.fileWithBreakPoints = JsonCollections.createStringMap();
         this.expireSoonAppsHandler = new SubscriptionHandler<Object>() {
             @Override
             public void onMessageReceived(Object result) {
@@ -250,7 +260,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                         if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus() && serverException.getMessage() != null
                             && serverException.getMessage().contains("not found")) {
                             DebuggerPresenter.this.console.print(DebuggerPresenter.this.constant.debuggerDisconnected());
-                            DebuggerPresenter.this.breakpointsManager.debuggerDisconnected();
+                            debuggerDisconnected();
                             appStopped(runningApp.getName());
 
                             return;
@@ -275,7 +285,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 closeDialog();
                 if (runningApp != null) {
                     DebuggerPresenter.this.console.print(DebuggerPresenter.this.constant.debuggerDisconnected());
-                    DebuggerPresenter.this.breakpointsManager.debuggerDisconnected();
+                    debuggerDisconnected();
                     appStopped(runningApp.getName());
                 }
             }
@@ -328,7 +338,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
             }
 
             if (filePath != null && filePath.equalsIgnoreCase(activeFile.getPath())) {
-                breakpointsManager.markCurrentBreakPoint(currentBreakPoint);
+                // TODO
+                // breakpointsManager.markCurrentBreakPoint(currentBreakPoint);
             }
         }
     }
@@ -441,8 +452,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
             service.deleteAllBreakPoint(debuggerInfo.getId(), new AsyncRequestCallback<String>() {
                 @Override
                 protected void onSuccess(String result) {
-                    breakpointsManager.breakPointsUpdated(JsonCollections.<JsonArray<EditorBreakPoint>>createStringMap());
-                    view.setBreakPoints(JsonCollections.<BreakPoint>createArray());
+                    gutterManager.removeAllBreakPoints();
+                    view.setBreakPoints(JsonCollections.<Breakpoint>createArray());
                 }
 
                 @Override
@@ -469,7 +480,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                     protected void onSuccess(String result) {
                         enableButtons(false);
                         debuggerInfo = null;
-                        breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
+                        // TODO
+                        // breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
                         currentBreakPoint = null;
                         closeDialog();
                         doStopApp();
@@ -644,7 +656,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
 
     private void resetStates() {
         view.setVariables(JsonCollections.<Variable>createArray());
-        breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
+        // TODO
+        // breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
         currentBreakPoint = null;
     }
 
@@ -669,6 +682,9 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
+        view.setBreakPoints(JsonCollections.<Breakpoint>createArray());
+        view.setVariables(JsonCollections.<Variable>createArray());
+
         container.setWidget(view);
     }
 
@@ -959,12 +975,95 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
             partStack.setActivePart(this);
         }
 
-        breakpointsManager.debuggerConnected(debuggerInfo);
+        debuggerConnected(debuggerInfo);
         startCheckingEvents();
     }
 
     private void closeDialog() {
         workspaceAgent.hidePart(this);
         workspaceAgent.removePart(this);
+    }
+
+    public void updateBreakPoint() {
+        JsonArray<Breakpoint> breakPoints = gutterManager.getBreakPoints();
+        view.setBreakPoints(breakPoints);
+    }
+
+    public void debuggerConnected(DebuggerInfo debuggerInfo) {
+        this.debuggerInfo = debuggerInfo;
+    }
+
+    public void debuggerDisconnected() {
+        debuggerInfo = null;
+        gutterManager.removeAllBreakPoints();
+    }
+
+    public File getFileWithBreakPoints(String fqn) {
+        return fileWithBreakPoints.get(fqn);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void addBreakPoint(final File file, final int lineNumber, final AsyncCallback<Breakpoint> callback) throws RequestException {
+        if (debuggerInfo != null) {
+            DtoClientImpls.LocationImpl location = DtoClientImpls.LocationImpl.make();
+            location.setLineNumber(lineNumber + 1);
+            location.setClassName(resolverFactory.getResolver(file.getMimeType()).resolveFqn(file));
+
+            final DtoClientImpls.BreakPointImpl point = DtoClientImpls.BreakPointImpl.make();
+            point.setLocation(location);
+            point.setIsEnabled(true);
+
+            try {
+                service.addBreakPoint(debuggerInfo.getId(), point, new AsyncRequestCallback<BreakPoint>() {
+                    @Override
+                    protected void onSuccess(BreakPoint result) {
+                        String fqn = resolverFactory.getResolver(file.getMimeType()).resolveFqn(file);
+                        fileWithBreakPoints.put(fqn, file);
+                        Breakpoint breakpoint = new Breakpoint(Breakpoint.Type.BREAKPOINT, lineNumber, fqn);
+                        callback.onSuccess(breakpoint);
+                        updateBreakPoint();
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        callback.onFailure(exception);
+                    }
+                });
+            } catch (RequestException e) {
+                Log.error(DebuggerPresenter.class, e);
+            }
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void deleteBreakPoint(File file, int lineNumber, final AsyncCallback<Void> callback) throws RequestException {
+        if (debuggerInfo != null) {
+            DtoClientImpls.LocationImpl location = DtoClientImpls.LocationImpl.make();
+            location.setLineNumber(lineNumber);
+            location.setClassName(resolverFactory.getResolver(file.getMimeType()).resolveFqn(file));
+
+            final DtoClientImpls.BreakPointImpl point = DtoClientImpls.BreakPointImpl.make();
+            point.setLocation(location);
+            point.setIsEnabled(true);
+
+            try {
+                service.deleteBreakPoint(debuggerInfo.getId(), point, new AsyncRequestCallback<BreakPoint>() {
+                    @Override
+                    protected void onSuccess(BreakPoint result) {
+                        callback.onSuccess(null);
+                        updateBreakPoint();
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        callback.onFailure(exception);
+                    }
+                });
+            } catch (RequestException e) {
+                Log.error(DebuggerPresenter.class, e);
+            }
+        }
     }
 }

@@ -20,11 +20,13 @@ package com.codenvy.ide.ext.java.jdi.client.fqn;
 
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
+import com.google.inject.Singleton;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 5:05:01 PM Mar 28, 2012 evgen $
  */
+@Singleton
 public class JavaFqnResolver implements FqnResolver {
     /** Default Maven 'sourceDirectory' value */
     private static final String DEFAULT_SOURCE_FOLDER = "src/main/java";

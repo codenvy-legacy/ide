@@ -21,7 +21,7 @@ import com.codenvy.ide.texteditor.Buffer;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.ViewportModel;
 import com.codenvy.ide.texteditor.gutter.Gutter;
-import com.codenvy.ide.texteditor.gutter.breakpoint.BreakpointGutterManager;
+import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.texteditor.renderer.ChangeTracker.ChangeType;
 import com.codenvy.ide.texteditor.selection.SelectionModel;
 import com.codenvy.ide.util.ListenerManager;

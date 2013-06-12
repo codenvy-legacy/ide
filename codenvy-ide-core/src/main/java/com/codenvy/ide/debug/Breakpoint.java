@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.texteditor.gutter.breakpoint;
+package com.codenvy.ide.debug;
 
 /** @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a> */
 public class Breakpoint {
@@ -27,13 +27,14 @@ public class Breakpoint {
     protected int    lineNumber;
     private   Type   type;
     private   String message;
+    private   String path;
 
     /**
      * @param type
      * @param lineNumber
      */
-    public Breakpoint(Type type, int lineNumber) {
-        this(type, lineNumber, null);
+    public Breakpoint(Type type, int lineNumber, String path) {
+        this(type, lineNumber, path, null);
     }
 
     /**
@@ -41,10 +42,11 @@ public class Breakpoint {
      * @param lineNumber
      * @param message
      */
-    public Breakpoint(Type type, int lineNumber, String message) {
+    public Breakpoint(Type type, int lineNumber, String path, String message) {
         super();
         this.type = type;
         this.lineNumber = lineNumber;
+        this.path = path;
         this.message = message;
     }
 
@@ -61,5 +63,10 @@ public class Breakpoint {
     /** @return the message */
     public String getMessage() {
         return message;
+    }
+
+    /** @return file path */
+    public String getPath() {
+        return path;
     }
 }
