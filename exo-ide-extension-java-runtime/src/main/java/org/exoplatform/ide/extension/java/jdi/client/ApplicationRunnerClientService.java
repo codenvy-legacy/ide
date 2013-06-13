@@ -72,12 +72,13 @@ public class ApplicationRunnerClientService {
         String requestUrl = restContext + wsName + BASE_URL + "/run?war=" + war;
 
         String data = "";
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("projectName", new JSONString(project));
         if (useJRebel) {
-            JSONObject jsonObject = new JSONObject();
             jsonObject.put("jrebel", new JSONString("true"));
-            jsonObject.put("projectName", new JSONString(project));
-            data = jsonObject.toString();
         }
+        data = jsonObject.toString();
+
 
         AsyncRequest.build(RequestBuilder.POST, requestUrl, true)
                     .requestStatusHandler(new RunningAppStatusHandler(project))
@@ -98,12 +99,12 @@ public class ApplicationRunnerClientService {
         String params = "?war=" + war;
 
         String data = "";
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("projectName", new JSONString(project));
         if (useJRebel) {
-            JSONObject jsonObject = new JSONObject();
             jsonObject.put("jrebel", new JSONString("true"));
-            jsonObject.put("projectName", new JSONString(project));
-            data = jsonObject.toString();
         }
+        data = jsonObject.toString();
 
         callback.setStatusHandler(new RunningAppStatusHandler(project));
         RequestMessage message =
