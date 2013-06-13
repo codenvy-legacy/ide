@@ -208,11 +208,6 @@
                 <artifactId>codenvy-ext-git</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.codenvy.ide</groupId>
-                <artifactId>codenvy-ext-tasks</artifactId>
-                <version>${project.version}</version>
-            </dependency>
 
             <!-- OTHER -->
             <!--dependency>
@@ -493,7 +488,6 @@
         <module>codenvy-ide-core</module>
         <module>codenvy-ext-demo</module>
         <module>codenvy-ext-css</module>
-        <module>codenvy-ext-tasks</module>
         <module>codenvy-ext-java</module>
         <module>codenvy-ext-java-runtime</module>
         <module>codenvy-ext-cloudfoundry</module>

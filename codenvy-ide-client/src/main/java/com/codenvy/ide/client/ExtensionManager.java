@@ -1,10 +1,10 @@
 package com.codenvy.ide.client;
 
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.json.JsonCollections;
 
 /** THIS CLASS WILL BE OVERRIDEN BY MAVEN BUILD. DON'T EDIT CLASS, IT WILL HAVE NO EFFECT. */
 @Singleton
@@ -21,7 +21,6 @@ public class ExtensionManager {
             Provider<com.codenvy.ide.extension.demo.DemoExtension> demoextension,
             Provider<com.codenvy.ide.extension.maven.client.BuilderExtension> builderextension,
             Provider<com.codenvy.ide.ext.openshift.client.OpenShiftExtension> openshiftextension,
-            Provider<com.codenvy.ide.extension.tasks.TasksExtension> tasksextension,
             Provider<com.codenvy.ide.ext.git.client.GitExtension> gitextension,
             Provider<com.codenvy.ide.ext.cloudbees.client.CloudBeesExtension> cloudbeesextension,
             Provider<com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension> cloudfoundryextension,
@@ -35,7 +34,6 @@ public class ExtensionManager {
         this.extensions.put("com.codenvy.ide.extension.demo.DemoExtension", demoextension);
         this.extensions.put("com.codenvy.ide.extension.maven.client.BuilderExtension", builderextension);
         this.extensions.put("com.codenvy.ide.ext.openshift.client.OpenShiftExtension", openshiftextension);
-        this.extensions.put("com.codenvy.ide.extension.tasks.TasksExtension", tasksextension);
         this.extensions.put("com.codenvy.ide.ext.git.client.GitExtension", gitextension);
         this.extensions.put("com.codenvy.ide.ext.cloudbees.client.CloudBeesExtension", cloudbeesextension);
         this.extensions.put("com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension", cloudfoundryextension);

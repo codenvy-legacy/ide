@@ -29,7 +29,6 @@
     <inherits name='com.codenvy.ide.ext.jenkins.Jenkins'/>
     <inherits name='com.codenvy.ide.extension.maven.Maven'/>
     <inherits name='com.codenvy.ide.ext.git.Git'/>
-    <inherits name='com.codenvy.ide.extension.tasks.Tasks'/>
 
     <stylesheet src="IDE.css"/>
 
