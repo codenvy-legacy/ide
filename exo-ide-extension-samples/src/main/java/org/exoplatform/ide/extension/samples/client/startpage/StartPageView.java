@@ -80,6 +80,7 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
         add(uiBinder.createAndBindUi(this));
         fbFrame.setUrl(UriUtils.fromString("/ide/" + Utils.getWorkspaceName() +"/_app/fblike.html"));
         googleFrame.setUrl(UriUtils.fromString("/ide/" + Utils.getWorkspaceName() +"/_app/googleone.html"));
+        googleFrame.getElement().setAttribute("scrolling", "no");
     }
 
     /** @see org.exoplatform.ide.client.StartPagePresenter.WelcomePresenter.Display#getCloneLink() */
