@@ -26,7 +26,6 @@ import com.codenvy.ide.api.ui.action.Anchor;
 import com.codenvy.ide.api.ui.action.Constraints;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
-import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 
@@ -48,12 +47,10 @@ public class ActionManagerImpl implements ActionManager {
     private final       Map<String, Set<String>> myPlugin2Id = new HashMap<String, Set<String>>();
     private final       Map<String, Integer>     myId2Index  = new HashMap<String, Integer>();
     private final       Map<Object, String>      myAction2Id = new HashMap<Object, String>();
-    private final KeyBindingAgent myKeymapManager;
-    private       int             myRegisteredActionsCount;
+    private int myRegisteredActionsCount;
 
     @Inject
-    public ActionManagerImpl(KeyBindingAgent keymapManager) {
-        myKeymapManager = keymapManager;
+    public ActionManagerImpl() {
         registerDefaultActionGroups();
     }
 

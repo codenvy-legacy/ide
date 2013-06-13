@@ -27,6 +27,7 @@ import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.Presentation;
 import com.codenvy.ide.api.ui.action.Separator;
 import com.codenvy.ide.api.ui.action.ToggleAction;
+import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.util.input.KeyMapUtil;
@@ -92,6 +93,7 @@ public class PopupMenu extends Composite {
     /** Working variable. Special table uses for handling mouse events. */
     private       PopupMenuTable        table;
     private       PresentationFactory   presentationFactory;
+    private       KeyBindingAgent       keyBindingAgent;
     /**
      * Prefix to be appended to the ID for each menu item.
      * This is debug feature.
@@ -125,12 +127,13 @@ public class PopupMenu extends Composite {
      *         - callback, uses for notifying parent menu when menu item is selected.
      */
     public PopupMenu(ActionGroup actionGroup, ActionManager actionManager, String place, PresentationFactory presentationFactory,
-                     MenuLockLayer lockLayer, ActionSelectedHandler actionSelectedHandler,
+                     MenuLockLayer lockLayer, ActionSelectedHandler actionSelectedHandler, KeyBindingAgent keyBindingAgent,
                      String itemIdPrefix) {
         this.actionGroup = actionGroup;
         this.actionManager = actionManager;
         this.place = place;
         this.presentationFactory = presentationFactory;
+        this.keyBindingAgent = keyBindingAgent;
         this.itemIdPrefix = itemIdPrefix;
 
         list = JsonCollections.createArray();
@@ -245,8 +248,7 @@ public class PopupMenu extends Composite {
                                                                                : POPUP_RESOURCES.popup().popupMenuTitleFieldDisabled());
 
                 work++;
-
-                String hotKey = KeyMapUtil.getShortcutText(menuItem.getShortcut());
+                String hotKey = KeyMapUtil.getShortcutText(keyBindingAgent.getKeyBinding(actionManager.getId(menuItem)));
                 if (hotKey == null) {
                     hotKey = "&nbsp;";
                 } else {
@@ -451,7 +453,8 @@ public class PopupMenu extends Composite {
             idPrefix += "/" + presentationFactory.getPresentation(menuItem).getText();
         }
         openedSubPopup =
-                new PopupMenu((ActionGroup)menuItem, actionManager, place, presentationFactory, lockLayer, actionSelectedHandler, idPrefix);
+                new PopupMenu((ActionGroup)menuItem, actionManager, place, presentationFactory, lockLayer, actionSelectedHandler,
+                              keyBindingAgent, idPrefix);
 
         final int HORIZONTAL_OFFSET = 3;
         final int VERTICAL_OFFSET = 1;

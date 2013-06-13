@@ -21,6 +21,7 @@ package com.codenvy.ide.toolbar;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionGroup;
 import com.codenvy.ide.api.ui.action.ActionManager;
+import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -38,6 +39,7 @@ public class ActionPopupButton extends Composite implements CloseMenuHandler, Ac
     private static final ToolbarResources.Css css = Toolbar.RESOURCES.toolbar();
     private final ActionGroup         action;
     private final ActionManager       actionManager;
+    private       KeyBindingAgent     keyBindingAgent;
     private       PresentationFactory presentationFactory;
     private final String              place;
 
@@ -51,10 +53,12 @@ public class ActionPopupButton extends Composite implements CloseMenuHandler, Ac
     private PopupMenu     popupMenu;
 
     /** Create Popup Menu Button with specified icons for enabled and disabled states. */
-    public ActionPopupButton(final ActionGroup action, ActionManager actionManager, final PresentationFactory presentationFactory,
+    public ActionPopupButton(final ActionGroup action, ActionManager actionManager, KeyBindingAgent keyBindingAgent,
+                             final PresentationFactory presentationFactory,
                              String place) {
         this.action = action;
         this.actionManager = actionManager;
+        this.keyBindingAgent = keyBindingAgent;
         this.presentationFactory = presentationFactory;
         this.place = place;
 
@@ -145,7 +149,7 @@ public class ActionPopupButton extends Composite implements CloseMenuHandler, Ac
     public void openPopupMenu() {
         lockLayer = new MenuLockLayer(this);
 
-        popupMenu = new PopupMenu(action, actionManager, place, presentationFactory, lockLayer, this, "toolbar");
+        popupMenu = new PopupMenu(action, actionManager, place, presentationFactory, lockLayer, this, keyBindingAgent, "toolbar");
         lockLayer.add(popupMenu);
 
         int left = getAbsoluteLeft();

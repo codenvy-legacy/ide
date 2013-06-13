@@ -20,8 +20,6 @@ package com.codenvy.ide.api.ui.action;
 
 
 import com.codenvy.ide.util.StringUtils;
-import com.codenvy.ide.util.input.CharCodeWithModifiers;
-import com.codenvy.ide.util.input.KeyMapUtil;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
@@ -38,9 +36,8 @@ import com.google.gwt.resources.client.ImageResource;
  * @version $Id:
  */
 public abstract class Action {
-    private Presentation          myTemplatePresentation;
-    private CharCodeWithModifiers myShortcut;
-    private boolean               myEnabledInModalContext;
+    private Presentation myTemplatePresentation;
+    private boolean      myEnabledInModalContext;
 
     /** Creates a new action with its text, description and icon set to <code>null</code>. */
     public Action() {
@@ -89,14 +86,6 @@ public abstract class Action {
         presentation.setIcon(icon);
     }
 
-    /**
-     * Returns the shortcut set associated with this action.
-     *
-     * @return shortcut set associated with this action
-     */
-    public final CharCodeWithModifiers getShortcut() {
-        return myShortcut;
-    }
 
     /**
      * Copies template presentation and shortcuts set from <code>sourceAction</code>.
@@ -110,11 +99,6 @@ public abstract class Action {
         presentation.setIcon(sourcePresentation.getIcon());
         presentation.setText(sourcePresentation.getTextWithMnemonic());
         presentation.setDescription(sourcePresentation.getDescription());
-        copyShortcutFrom(sourceAction);
-    }
-
-    public final void copyShortcutFrom(Action sourceAction) {
-        myShortcut = sourceAction.myShortcut;
     }
 
 
@@ -187,16 +171,13 @@ public abstract class Action {
      */
     public abstract void actionPerformed(ActionEvent e);
 
-    protected void setShortcut(CharCodeWithModifiers shortcutSet) {
-        myShortcut = shortcutSet;
-    }
-
     public static String createTooltipText(String s, Action action) {
         String toolTipText = s == null ? "" : s;
         while (StringUtils.endsWithChar(toolTipText, '.')) {
             toolTipText = toolTipText.substring(0, toolTipText.length() - 1);
         }
-        String shortcutsText = KeyMapUtil.getShortcutText(action.getShortcut());
+        //TODO add shortcuts to tooltip text
+        String shortcutsText = ""; //KeyMapUtil.getShortcutText(action.getShortcut());
         if (!shortcutsText.isEmpty()) {
             toolTipText += " (" + shortcutsText + ")";
         }

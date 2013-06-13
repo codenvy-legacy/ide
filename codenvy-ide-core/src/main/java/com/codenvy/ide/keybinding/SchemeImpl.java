@@ -18,13 +18,14 @@
  */
 package com.codenvy.ide.keybinding;
 
-import com.codenvy.ide.api.ui.action.Action;
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.ui.keybinding.Scheme;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonIntegerMap;
+import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.util.input.CharCodeWithModifiers;
-import com.codenvy.ide.util.input.SignalEvent;
 
 
 /**
@@ -37,13 +38,16 @@ public class SchemeImpl implements Scheme {
 
     private String description;
 
-    private JsonIntegerMap<JsonArray<Action>> handlers;
+    private JsonIntegerMap<JsonArray<String>> handlers;
+
+    private JsonStringMap<CharCodeWithModifiers> actionId2CharCode;
 
 
     public SchemeImpl(String id, String description) {
         this.id = id;
         this.description = description;
         handlers = JsonCollections.createIntegerMap();
+        actionId2CharCode = JsonCollections.createStringMap();
     }
 
     /** {@inheritDoc} */
@@ -58,42 +62,31 @@ public class SchemeImpl implements Scheme {
         return description;
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void addAction(Action action) {
+    public void addKey(@NotNull CharCodeWithModifiers key, @NotNull String actionId) {
+        int digest = key.getKeyDigest();
+        if (!handlers.hasKey(digest)) {
+            handlers.put(digest, JsonCollections.<String>createArray());
+        }
+        handlers.get(digest).add(actionId);
+        actionId2CharCode.put(actionId, key);
     }
 
     /** {@inheritDoc} */
-//
-//    public void addKeyBinding(CharCodeWithModifiers keyBinging, Action command) {
-//        int digest = keyBinging.getKeyDigest();
-//        if (!handlers.hasKey(digest)) {
-//            handlers.put(digest, JsonCollections.<Action>createArray());
-//        }
-//        handlers.get(digest).add(command);
-//    }
-    public boolean handleKeyEvent(SignalEvent event) {
-        int digest = CharCodeWithModifiers.computeKeyDigest(event);
+    @NotNull
+    @Override
+    public JsonArray<String> getActionIds(int digest) {
         if (handlers.hasKey(digest)) {
-            executeCommand(handlers.get(digest));
-            return true;
-        } else {
-            return false;
+            return handlers.get(digest);
         }
+        return JsonCollections.createArray();
     }
 
-    private void executeCommand(JsonArray<Action> commands) {
-        //TODO
-//        for (ExtendedCommand command : commands.asIterable()) {
-//            // check command context
-//            if (command.inContext() != null && !command.inContext().getValue()) {
-//                continue;
-//            }
-//
-//            if (command.canExecute() != null && !command.canExecute().getValue()) {
-//                continue;
-//            }
-//            // TODO handle if we have more than one enabled command
-//            command.execute();
-//        }
+    /** {@inheritDoc} */
+    @Nullable
+    @Override
+    public CharCodeWithModifiers getKeyBinding(@NotNull String actionId) {
+        return actionId2CharCode.get(actionId);
     }
 }

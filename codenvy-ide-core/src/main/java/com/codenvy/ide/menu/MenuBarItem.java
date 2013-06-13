@@ -24,6 +24,7 @@ import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionGroup;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.Presentation;
+import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.toolbar.ActionSelectedHandler;
 import com.codenvy.ide.toolbar.MenuLockLayer;
 import com.codenvy.ide.toolbar.PopupMenu;
@@ -64,6 +65,7 @@ public class MenuBarItem implements ActionSelectedHandler, UpdateItemEnablingCal
      *
      */
     private ActionSelectedHandler actionSelectedHandler;
+    private KeyBindingAgent       keyBindingAgent;
     private MenuResources.Css     css;
     /**
      * Working variable:
@@ -76,7 +78,7 @@ public class MenuBarItem implements ActionSelectedHandler, UpdateItemEnablingCal
 
 
     public MenuBarItem(ActionGroup group, ActionManager actionManager, PresentationFactory presentationFactory, String place,
-                       Element element, ActionSelectedHandler handler,
+                       Element element, ActionSelectedHandler handler, KeyBindingAgent keyBindingAgent,
                        MenuResources.Css css) {
         this.group = group;
         this.actionManager = actionManager;
@@ -84,6 +86,7 @@ public class MenuBarItem implements ActionSelectedHandler, UpdateItemEnablingCal
         this.place = place;
         this.element = element;
         this.actionSelectedHandler = handler;
+        this.keyBindingAgent = keyBindingAgent;
         this.css = css;
         Presentation presentation = presentationFactory.getPresentation(group);
         title = presentation.getText();
@@ -160,7 +163,8 @@ public class MenuBarItem implements ActionSelectedHandler, UpdateItemEnablingCal
     public void openPopupMenu(MenuLockLayer menuLockLayer) {
         int x = element.getAbsoluteLeft();
         int y = 0;
-        popupMenu = new PopupMenu(group, actionManager, place, presentationFactory, menuLockLayer, this, "topmenu/" + title);
+        popupMenu =
+                new PopupMenu(group, actionManager, place, presentationFactory, menuLockLayer, this, keyBindingAgent, "topmenu/" + title);
         menuLockLayer.add(popupMenu, x, y);
     }
 

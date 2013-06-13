@@ -23,6 +23,7 @@ import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.ActionPlaces;
 import com.codenvy.ide.api.ui.action.IdeActions;
 import com.codenvy.ide.api.ui.action.Presentation;
+import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.toolbar.ActionSelectedHandler;
@@ -60,6 +61,7 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
     private       JsonArray<Action>           newVisibleActions;
     private       JsonArray<Action>           visibleActions;
     private       ActionManager               actionManager;
+    private       KeyBindingAgent             keyBindingAgent;
     /** Panel, which contains top menu. */
     private       AbsolutePanel               absolutePanel;
     /** Lock layer for displaying popup menus. */
@@ -82,8 +84,9 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
 
     /** Create new {@link MainMenuViewImpl} */
     @Inject
-    public MainMenuViewImpl(ActionManager actionManager) {
+    public MainMenuViewImpl(ActionManager actionManager, KeyBindingAgent keyBindingAgent) {
         this.actionManager = actionManager;
+        this.keyBindingAgent = keyBindingAgent;
         absolutePanel = new AbsolutePanel();
         initWidget(absolutePanel);
         absolutePanel.setStyleName(resources.menuCss().menuBar());
@@ -171,7 +174,8 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
     private MenuBarItem add(String place, ActionGroup group, MenuItemPresentationFactory presentationFactory) {
         table.setText(0, menuBarItems.size(), presentationFactory.getPresentation(group).getText());
         Element element = table.getCellFormatter().getElement(0, menuBarItems.size());
-        MenuBarItem item = new MenuBarItem(group, actionManager, presentationFactory, place, element, this, resources.menuCss());
+        MenuBarItem item =
+                new MenuBarItem(group, actionManager, presentationFactory, place, element, this, keyBindingAgent, resources.menuCss());
 
         item.onMouseOut();
         menuBarItems.put(element, item);

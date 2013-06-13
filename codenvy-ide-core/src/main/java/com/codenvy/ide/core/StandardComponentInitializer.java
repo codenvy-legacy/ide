@@ -32,6 +32,7 @@ import com.codenvy.ide.api.ui.action.Constraints;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
+import com.codenvy.ide.api.ui.keybinding.KeyBuilder;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.wizard.WizardAgentImpl;
@@ -115,8 +116,8 @@ public class StandardComponentInitializer {
         window.add(showPreferencesAction);
         DefaultActionGroup fileGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_FILE);
 
-//        keyBinding.getGlobal().addKeyBinding(new KeyBuilder().action().charCode('s').build(), saveCommand);
-//        keyBinding.getGlobal().addKeyBinding(new KeyBuilder().action().charCode('S').build(), saveAllCommand);
+        keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('s').build(), "save");
+        keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('S').build(), "saveAll");
 
         actionManager.registerAction("newProject", newProjectAction);
         actionManager.registerAction("openProject", openProjectAction);

@@ -19,6 +19,7 @@
 package com.codenvy.ide.util.input;
 
 
+import com.codenvy.ide.util.StringUtils;
 import com.codenvy.ide.util.browser.UserAgent;
 
 /**
@@ -39,12 +40,15 @@ public class KeyMapUtil {
         if (accelerator == null) return "";
         String acceleratorText = "";
         int modifiers = accelerator.getModifiers();
+        final int code = accelerator.getCharCode();
+        String keyText = String.valueOf((char)accelerator.getCharCode());
+        if (StringUtils.isUpperCase((char)accelerator.getCharCode())) {
+            modifiers |= ModifierKeys.SHIFT;
+        }
+        keyText = keyText.toUpperCase();
         if (modifiers > 0) {
             acceleratorText = getModifiersText(modifiers);
         }
-
-        final int code = accelerator.getCharCode();
-        String keyText = String.valueOf((char)accelerator.getCharCode());
 
 
         acceleratorText += keyText;

@@ -26,6 +26,7 @@ import com.codenvy.ide.api.ui.action.CustomComponentAction;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.Presentation;
 import com.codenvy.ide.api.ui.action.Separator;
+import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.google.gwt.user.client.Timer;
@@ -48,6 +49,7 @@ public class ToolbarViewImpl extends Composite implements ToolbarView {
     private       String              place;
     private       ActionGroup         actionGroup;
     private       ActionManager       actionManager;
+    private       KeyBindingAgent     keyBindingAgent;
     private       JsonArray<Action>   newVisibleActions;
     private       JsonArray<Action>   visibleActions;
     private       PresentationFactory presentationFactory;
@@ -63,8 +65,9 @@ public class ToolbarViewImpl extends Composite implements ToolbarView {
 
     /** Create view with given instance of resources. */
     @Inject
-    public ToolbarViewImpl(ActionManager actionManager) {
+    public ToolbarViewImpl(ActionManager actionManager, KeyBindingAgent keyBindingAgent) {
         this.actionManager = actionManager;
+        this.keyBindingAgent = keyBindingAgent;
         toolbar = new Toolbar();
         initWidget(toolbar);
         newVisibleActions = JsonCollections.createArray();
@@ -132,7 +135,8 @@ public class ToolbarViewImpl extends Composite implements ToolbarView {
 //                presentation.putClientProperty(CustomComponentAction.CUSTOM_COMPONENT_PROPERTY, customComponent);
                 toolbar.add(customComponent);
             } else if (action instanceof ActionGroup && !(action instanceof CustomComponentAction) && ((ActionGroup)action).isPopup()) {
-                ActionPopupButton button = new ActionPopupButton((ActionGroup)action, actionManager, presentationFactory, place);
+                ActionPopupButton button =
+                        new ActionPopupButton((ActionGroup)action, actionManager, keyBindingAgent, presentationFactory, place);
                 toolbar.add(button);
             } else {
                 final ActionButton button = createToolbarButton(action);

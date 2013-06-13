@@ -29,63 +29,13 @@ public class StringUtils {
      * Map [N] -> string of N spaces. Used by {@link #getSpaces} to cache strings
      * of spaces.
      */
-    private static final JsonIntegerMap<String> cachedSpaces = JsonCollections.createIntegerMap();
-
-    /**
-     * Interface that defines string utility methods used by shared code but have
-     * differing client and server implementations.
-     */
-    public interface Implementation {
-        JsonArray<String> split(String string, String separator);
-    }
-
-    private static class PureJavaImplementation implements Implementation {
-        @Override
-        public JsonArray<String> split(String string, String separator) {
-            JsonArray<String> result = JsonCollections.createArray();
-
-            int sepLength = separator.length();
-            if (sepLength == 0) {
-                for (int i = 0, n = string.length(); i < n; i++) {
-                    result.add(string.substring(i, i + 1));
-                }
-                return result;
-            }
-
-            int position = 0;
-            while (true) {
-                int index = string.indexOf(separator, position);
-                if (index == -1) {
-                    result.add(string.substring(position));
-                    return result;
-                }
-                result.add(string.substring(position, index));
-                position = index + sepLength;
-            }
-        }
-    }
-
-    private static class NativeImplementation implements Implementation {
-        @Override
-        public JsonArray<String> split(String string, String separator) {
-            return nativeSplit(string, separator).<JsoArray<String>>cast();
-        }
-
-        // call to native JS Split
-        public static native JsArrayString nativeSplit(String s, String separator) /*-{
-            return s.split(separator);
-        }-*/;
-
-    }
-
-    ;
-
+    private static final JsonIntegerMap<String> cachedSpaces   = JsonCollections.createIntegerMap();
     /**
      * By default, this is a pure java implementation, but can be set to a more
      * optimized version by the client
      */
-    private static Implementation implementation = GWT.isClient() || !GWT.isScript() ?
-                                                   new PureJavaImplementation() : new NativeImplementation();
+    private static       Implementation         implementation = GWT.isClient() || !GWT.isScript() ?
+                                                                 new PureJavaImplementation() : new NativeImplementation();
 
     /** Sets the implementation for methods */
     public static void setImplementation(Implementation implementation) {
@@ -107,6 +57,8 @@ public class StringUtils {
         }
         return result;
     }
+
+    ;
 
     public static int countNumberOfOccurrences(String s, String pattern) {
         int count = 0;
@@ -487,5 +439,61 @@ public class StringUtils {
             String str, int begin, int end) {
         return str.substring(unicodePreservingIndex(str, begin),
                              unicodePreservingIndex(str, end));
+    }
+
+    /**
+     * Indicates whether {@code c} is one of the twenty-six uppercase ASCII alphabetic characters
+     * between {@code 'A'} and {@code 'Z'} inclusive. All others (including non-ASCII characters)
+     * return {@code false}.
+     */
+    public static boolean isUpperCase(char c) {
+        return (c >= 'A') && (c <= 'Z');
+    }
+
+    /**
+     * Interface that defines string utility methods used by shared code but have
+     * differing client and server implementations.
+     */
+    public interface Implementation {
+        JsonArray<String> split(String string, String separator);
+    }
+
+    private static class PureJavaImplementation implements Implementation {
+        @Override
+        public JsonArray<String> split(String string, String separator) {
+            JsonArray<String> result = JsonCollections.createArray();
+
+            int sepLength = separator.length();
+            if (sepLength == 0) {
+                for (int i = 0, n = string.length(); i < n; i++) {
+                    result.add(string.substring(i, i + 1));
+                }
+                return result;
+            }
+
+            int position = 0;
+            while (true) {
+                int index = string.indexOf(separator, position);
+                if (index == -1) {
+                    result.add(string.substring(position));
+                    return result;
+                }
+                result.add(string.substring(position, index));
+                position = index + sepLength;
+            }
+        }
+    }
+
+    private static class NativeImplementation implements Implementation {
+        // call to native JS Split
+        public static native JsArrayString nativeSplit(String s, String separator) /*-{
+            return s.split(separator);
+        }-*/;
+
+        @Override
+        public JsonArray<String> split(String string, String separator) {
+            return nativeSplit(string, separator).<JsoArray<String>>cast();
+        }
+
     }
 }

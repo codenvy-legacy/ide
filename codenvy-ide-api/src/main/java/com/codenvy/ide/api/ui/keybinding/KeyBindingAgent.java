@@ -18,7 +18,10 @@
  */
 package com.codenvy.ide.api.ui.keybinding;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.extension.SDK;
+import com.codenvy.ide.util.input.CharCodeWithModifiers;
 
 /**
  * Public interface of the key binding management.
@@ -46,6 +49,20 @@ public interface KeyBindingAgent {
      * @return the Eclipse scheme.
      */
     Scheme getEclipse();
+
+    /**
+     * Currently active scheme.
+     *
+     * @return the scheme
+     */
+    Scheme getActive();
+
+    /**
+     * @return keyboard shortcut for the action with the specified <code>actionId</code>
+     *         or an null if the action doesn't have any keyboard shortcut.
+     */
+    @Nullable
+    CharCodeWithModifiers getKeyBinding(@NotNull String actionId);
 
 
 }

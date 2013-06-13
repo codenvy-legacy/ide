@@ -18,7 +18,10 @@
  */
 package com.codenvy.ide.api.ui.keybinding;
 
-import com.codenvy.ide.api.ui.action.Action;
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.util.input.CharCodeWithModifiers;
 
 
 /**
@@ -44,11 +47,26 @@ public interface Scheme {
     String getDescription();
 
     /**
-     * Add key binding for command.
+     * Add key binding for action.
      *
-     * @param action
-     *         the command which keys bind.
+     * @param key
+     *         the hot key which bind.
+     * @param actionId
+     *         the action id which keys bind.
      */
-    void addAction(Action action);
+    void addKey(@NotNull CharCodeWithModifiers key, @NotNull String actionId);
 
+    /**
+     * @return all actions that have the specified key. If there are no
+     *         such actions then the method returns an empty array.
+     */
+    @NotNull
+    JsonArray<String> getActionIds(int digest);
+
+    /**
+     * @return keyboard shortcut for the action with the specified <code>actionId</code>
+     *         or an null if the action doesn't have any keyboard shortcut.
+     */
+    @Nullable
+    CharCodeWithModifiers getKeyBinding(@NotNull String actionId);
 }
