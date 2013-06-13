@@ -19,7 +19,7 @@
 package com.codenvy.ide.ext.java.jdi.client.debug;
 
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.ext.java.jdi.shared.BreakPoint;
+import com.codenvy.ide.debug.Breakpoint;
 import com.codenvy.ide.ext.java.jdi.shared.Variable;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.part.base.BaseActionDelegate;
@@ -76,7 +76,7 @@ public interface DebuggerView extends View<DebuggerView.ActionDelegate> {
      *
      * @param breakPoints
      */
-    void setBreakPoints(JsonArray<BreakPoint> breakPoints);
+    void setBreakPoints(JsonArray<Breakpoint> breakPoints);
 
     /**
      * Sets java virtual machine name and version.

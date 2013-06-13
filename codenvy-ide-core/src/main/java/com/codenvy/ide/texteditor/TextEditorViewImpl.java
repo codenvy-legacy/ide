@@ -38,7 +38,7 @@ import com.codenvy.ide.texteditor.codeassistant.QuickAssistAssistantImpl;
 import com.codenvy.ide.texteditor.documentparser.DocumentParser;
 import com.codenvy.ide.texteditor.gutter.Gutter;
 import com.codenvy.ide.texteditor.gutter.LeftGutterManager;
-import com.codenvy.ide.texteditor.gutter.breakpoint.BreakpointGutterManager;
+import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.texteditor.input.*;
 import com.codenvy.ide.texteditor.linedimensions.LineDimensionsCalculator;
 import com.codenvy.ide.texteditor.linedimensions.LineDimensionsUtils;

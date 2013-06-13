@@ -69,7 +69,7 @@ public class AppFogExtension {
         actionManager.registerAction("appFogCreateApplication", createApplicationAction);
         actionManager.registerAction("appFogShowApplications", showApplicationsAction);
         actionManager.registerAction("appFogSwitchAccount", switchAccountAction);
-        actionManager.registerAction("appFogShowProject", showApplicationsAction);
+        actionManager.registerAction("appFogShowProject", showProjectAction);
 
         DefaultActionGroup paas = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_PAAS);
         DefaultActionGroup appFog = new DefaultActionGroup("AppFog", true, actionManager);

@@ -25,108 +25,62 @@ import com.google.gwt.resources.client.ImageResource;
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: $
  */
 public interface JavaRuntimeResources extends ClientBundle {
-    @Source("com/codenvy/ide/ext/java/jdi/images/resume.png")
+    @Source("resume.png")
     ImageResource resumeButton();
 
-    @Source("com/codenvy/ide/ext/java/jdi/images/resume_Disabled.png")
-    ImageResource resumeButtonDisabled();
-
-    @Source("com/codenvy/ide/ext/java/jdi/images/disconnect.png")
+    @Source("disconnect.png")
     ImageResource disconnectButton();
 
-    @Source("com/codenvy/ide/ext/java/jdi/images/disconnect_Disabled.png")
-    ImageResource disconnectButtonDisabled();
-
-    @Source("com/codenvy/ide/ext/java/jdi/images/cancel.png")
+    @Source("cancel.png")
     ImageResource cancelButton();
 
-    @Source("com/codenvy/ide/ext/java/jdi/images/cancel_Disabled.png")
-    ImageResource cancelButtonDisabled();
-
-    @Source("com/codenvy/ide/ext/java/jdi/images/ok.png")
+    @Source("ok.png")
     ImageResource okButton();
 
-    @Source("com/codenvy/ide/ext/java/jdi/images/ok_Disabled.png")
-    ImageResource okButtonDisabled();
-
-    @Source("com/codenvy/ide/ext/java/jdi/images/stepinto.png")
+    @Source("stepinto.png")
     ImageResource stepIntoButton();
 
-    @Source("com/codenvy/ide/ext/java/jdi/images/stepinto_Disabled.png")
-    ImageResource stepIntoButtonDisabled();
-
-    @Source("com/codenvy/ide/ext/java/jdi/images/stepover.png")
+    @Source("stepover.png")
     ImageResource stepOverButton();
 
-    @Source("com/codenvy/ide/ext/java/jdi/images/stepover_Disabled.png")
-    ImageResource stepOverButtonDisabled();
-
-    @Source("com/codenvy/ide/ext/java/jdi/images/stepreturn.png")
+    @Source("stepreturn.png")
     ImageResource stepReturnButton();
 
-    @Source("com/codenvy/ide/ext/java/jdi/images/stepreturn_Disabled.png")
-    ImageResource stepReturnButtonDisabled();
-
-    @Source("com/codenvy/ide/ext/java/jdi/images/debugApp.png")
+    @Source("debugApp.png")
     ImageResource debugApp();
 
-    @Source("com/codenvy/ide/ext/java/jdi/images/debugApp_Disabled.png")
-    ImageResource debugAppDisabled();
-
-    @Source("com/codenvy/ide/ext/java/jdi/images/stopApp.png")
+    @Source("stopApp.png")
     ImageResource stopApp();
 
-    @Source("com/codenvy/ide/ext/java/jdi/images/stopApp_Disabled.png")
-    ImageResource stopAppDisabled();
-
-    @Source("com/codenvy/ide/ext/java/jdi/images/runApp.png")
+    @Source("runApp.png")
     ImageResource runApp();
 
-    @Source("com/codenvy/ide/ext/java/jdi/images/runApp_Disabled.png")
-    ImageResource runAppDisabled();
-
-    @Source("com/codenvy/ide/ext/java/jdi/images/updateApp.png")
+    @Source("updateApp.png")
     ImageResource updateApp();
 
-    @Source("com/codenvy/ide/ext/java/jdi/images/updateApp_Disabled.png")
-    ImageResource updateAppDisabled();
-
-    @Source("com/codenvy/ide/ext/java/jdi/images/logs.png")
+    @Source("logs.png")
     ImageResource logs();
 
-    @Source("com/codenvy/ide/ext/java/jdi/images/logs_Disabled.png")
-    ImageResource logsDisabled();
-
-    @Source("com/codenvy/ide/ext/java/jdi/images/variable.png")
+    @Source("variable.png")
     ImageResource variable();
 
-    @Source("com/codenvy/ide/ext/java/jdi/images/variable_Disabled.png")
-    ImageResource variableDisabled();
-
-    @Source("com/codenvy/ide/ext/java/jdi/images/evaluate.png")
+    @Source("evaluate.png")
     ImageResource evaluate();
 
-    @Source("com/codenvy/ide/ext/java/jdi/images/evaluate_Disabled.png")
-    ImageResource evaluateDisabled();
-
-    @Source("com/codenvy/ide/ext/java/jdi/images/breakpoint.png")
+    @Source("breakpoint.png")
     ImageResource breakpoint();
 
-    @Source("com/codenvy/ide/ext/java/jdi/images/breakpoint_properties.png")
+    @Source("breakpoint_properties.png")
     ImageResource breakpointProperties();
 
-    @Source("com/codenvy/ide/ext/java/jdi/images/breakpoint_properties_Disabled.png")
-    ImageResource breakpointPropertiesDisabled();
-
-    @Source("com/codenvy/ide/ext/java/jdi/images/remove_all_breakpoints.gif")
+    @Source("remove_all_breakpoints.gif")
     ImageResource removeAllBreakpointsButton();
 
-    @Source("com/codenvy/ide/ext/java/jdi/images/breakpoints.png")
+    @Source("breakpoints.png")
     ImageResource breakPointsIcon();
 
-    @Source("com/codenvy/ide/ext/java/jdi/images/ajax-loader.gif")
+    @Source("ajax-loader.gif")
     ImageResource loader();
 }

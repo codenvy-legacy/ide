@@ -73,7 +73,7 @@ public class OpenShiftExtension {
         actionManager.registerAction("openShiftSwitchAccount", switchAccountAction);
         actionManager.registerAction("openShiftShowApplications", showApplicationsAction);
         actionManager.registerAction("openShiftUpdatePublicKey", updatePublicKeyAction);
-        actionManager.registerAction("opeShoftShowProject", showProjectAction);
+        actionManager.registerAction("openShiftShowProject", showProjectAction);
 
         DefaultActionGroup paas = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_PAAS);
         DefaultActionGroup openShift = new DefaultActionGroup("OpenShift", true, actionManager);

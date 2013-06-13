@@ -17,6 +17,7 @@ package com.codenvy.ide.texteditor.renderer;
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 
+import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.js.JsoIntegerMap;
@@ -25,7 +26,6 @@ import com.codenvy.ide.texteditor.Buffer;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.ViewportModel;
 import com.codenvy.ide.texteditor.gutter.Gutter;
-import com.codenvy.ide.texteditor.gutter.breakpoint.BreakpointGutterManager;
 import com.codenvy.ide.texteditor.selection.SelectionModel;
 import com.codenvy.ide.util.ListenerRegistrar;
 import com.codenvy.ide.util.dom.Elements;
@@ -143,6 +143,7 @@ public class LineNumberRenderer {
         this.lineNumberToElementCache = JsoIntegerMap.create();
         this.viewport = viewport;
         this.breakpointGutterManager = breakpointGutterManager;
+        this.breakpointGutterManager.setRenderer(this);
         this.resources = res;
         this.css = res.lineNumberRendererCss();
         listenerRemovers.add(selection.getCursorListenerRegistrar().add(cursorListener));
@@ -150,9 +151,8 @@ public class LineNumberRenderer {
         this.leftGutter.getClickListenerRegistrar().add(new Gutter.ClickListener() {
             @Override
             public void onClick(int y) {
-                int lineNumber = LineNumberRenderer.this.buffer.convertYToLineNumber(y, true);
+                final int lineNumber = LineNumberRenderer.this.buffer.convertYToLineNumber(y, true);
                 LineNumberRenderer.this.breakpointGutterManager.changeBreakPoint(lineNumber);
-                fillOrUpdateLines(lineNumber, lineNumber);
             }
         });
     }
@@ -222,7 +222,7 @@ public class LineNumberRenderer {
         renderImpl(lineNumber);
     }
 
-    private void fillOrUpdateLines(int beginLineNumber, int endLineNumber) {
+    public void fillOrUpdateLines(int beginLineNumber, int endLineNumber) {
         for (int i = beginLineNumber; i <= endLineNumber; i++) {
             Element lineElement = lineNumberToElementCache.get(i);
             if (lineElement != null) {

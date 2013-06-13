@@ -16,26 +16,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.extension.maven.client.template.wizard.javaproject;
+package com.codenvy.ide.debug;
 
-import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.resources.model.File;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
- * The view of {@link CreateJavaProjectPagePresenter}.
+ * The general class which provides to manage breakpoints on server.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public interface CreateJavaProjectPageView extends View<CreateJavaProjectPageView.ActionDelegate> {
-    /** Action delegate for new Java project wizard */
-    public interface ActionDelegate {
-        /** Checks whether source folder is complete or not and updates navigation buttons. */
-        void checkSourceFolederInput();
-    }
+public interface Debugger {
+    /**
+     * Adds new breakpoint on server.
+     *
+     * @param file
+     * @param lineNumber
+     * @param callback
+     * @throws RequestException
+     */
+    void addBreakPoint(File file, int lineNumber, AsyncCallback<Breakpoint> callback) throws RequestException;
 
     /**
-     * Get Source folder name
+     * Deletes breakpoint on server.
      *
-     * @return the source folder name
+     * @param file
+     * @param lineNumber
+     * @param callback
+     * @throws RequestException
      */
-    String getSourceFolder();
+    void deleteBreakPoint(File file, int lineNumber, AsyncCallback<Void> callback) throws RequestException;
 }

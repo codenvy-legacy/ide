@@ -23,9 +23,9 @@ import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.debug.Breakpoint;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
-import com.codenvy.ide.ext.java.jdi.shared.BreakPoint;
 import com.codenvy.ide.ext.java.jdi.shared.Variable;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.part.PartStackUIResources;
@@ -58,7 +58,7 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
 
     private static DebuggerViewImplUiBinder ourUiBinder = GWT.create(DebuggerViewImplUiBinder.class);
 
-    private SimpleList<BreakPoint> breakPoints;
+    private SimpleList<Breakpoint> breakPoints;
     private SimpleList<Variable>   variables;
     @UiField
     Button                          btnResume;
@@ -102,23 +102,23 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
 
         TableElement breakPointsElement = Elements.createTableElement();
         breakPointsElement.setAttribute("style", "width: 100%");
-        SimpleList.ListEventDelegate<BreakPoint> listBreakPointsDelegate = new SimpleList.ListEventDelegate<BreakPoint>() {
-            public void onListItemClicked(Element itemElement, BreakPoint itemData) {
+        SimpleList.ListEventDelegate<Breakpoint> listBreakPointsDelegate = new SimpleList.ListEventDelegate<Breakpoint>() {
+            public void onListItemClicked(Element itemElement, Breakpoint itemData) {
                 breakPoints.getSelectionModel().setSelectedItem(itemData);
             }
 
-            public void onListItemDoubleClicked(Element listItemBase, BreakPoint itemData) {
+            public void onListItemDoubleClicked(Element listItemBase, Breakpoint itemData) {
             }
         };
-        SimpleList.ListItemRenderer<BreakPoint> listBreakPointsRenderer = new SimpleList.ListItemRenderer<BreakPoint>() {
+        SimpleList.ListItemRenderer<Breakpoint> listBreakPointsRenderer = new SimpleList.ListItemRenderer<Breakpoint>() {
             @Override
-            public void render(Element itemElement, BreakPoint itemData) {
+            public void render(Element itemElement, Breakpoint itemData) {
                 TableCellElement label = Elements.createTDElement();
 
                 SafeHtmlBuilder sb = new SafeHtmlBuilder();
                 // Add icon
                 sb.appendHtmlConstant("<table><tr><td>");
-                ImageResource icon = res.breakPointsIcon();
+                ImageResource icon = res.breakpoint();
                 if (icon != null) {
                     sb.appendHtmlConstant("<img src=\"" + icon.getSafeUri().asString() + "\">");
                 }
@@ -126,8 +126,7 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
 
                 // Add title
                 sb.appendHtmlConstant("<td>");
-                // TODO check
-                sb.appendEscaped(itemData.getLocation().toString());
+                sb.appendEscaped(itemData.getPath() + " - [line: " + String.valueOf(itemData.getLineNumber() + 1) + "]");
                 sb.appendHtmlConstant("</td></tr></table>");
 
                 label.setInnerHTML(sb.toSafeHtml().asString());
@@ -172,7 +171,7 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
 
                 // Add title
                 sb.appendHtmlConstant("<td>");
-                sb.appendEscaped(itemData.getName());
+                sb.appendEscaped(itemData.getName() + ": " + itemData.getValue());
                 sb.appendHtmlConstant("</td></tr></table>");
 
                 label.setInnerHTML(sb.toSafeHtml().asString());
@@ -199,7 +198,7 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
 
     /** {@inheritDoc} */
     @Override
-    public void setBreakPoints(JsonArray<BreakPoint> breakPoints) {
+    public void setBreakPoints(JsonArray<Breakpoint> breakPoints) {
         this.breakPoints.render(breakPoints);
     }
 
