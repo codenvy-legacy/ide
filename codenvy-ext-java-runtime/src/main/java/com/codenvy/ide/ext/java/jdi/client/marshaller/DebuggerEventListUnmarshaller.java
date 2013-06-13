@@ -22,7 +22,6 @@ import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.java.jdi.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.java.jdi.shared.DebuggerEvent;
 import com.codenvy.ide.ext.java.jdi.shared.DebuggerEventList;
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
@@ -52,21 +51,7 @@ public class DebuggerEventListUnmarshaller implements Unmarshallable<DebuggerEve
         if (list == null) {
             return;
         }
-
-        JsonArray<DebuggerEvent> listEvents = list.getEvents();
-        for (int i = 0; i < listEvents.size(); i++) {
-            DebuggerEvent event = listEvents.get(i);
-            int type = event.getType();
-            if (type == DebuggerEvent.BREAKPOINT) {
-                DtoClientImpls.DebuggerEventImpl debuggerEvent = DtoClientImpls.DebuggerEventImpl.make();
-                debuggerEvent.setType(type);
-                events.getEvents().add(debuggerEvent);
-            } else if (type == DebuggerEvent.STEP) {
-                DtoClientImpls.StepEventImpl stepEvent = DtoClientImpls.StepEventImpl.make();
-                stepEvent.setType(type);
-                events.getEvents().add(stepEvent);
-            }
-        }
+        this.events.setEvents(events.getEvents());
     }
 
     /** {@inheritDoc} */

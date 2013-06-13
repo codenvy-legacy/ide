@@ -171,7 +171,7 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
 
                 // Add title
                 sb.appendHtmlConstant("<td>");
-                sb.appendEscaped(itemData.getName());
+                sb.appendEscaped(itemData.getName() + ": " + itemData.getValue());
                 sb.appendHtmlConstant("</td></tr></table>");
 
                 label.setInnerHTML(sb.toSafeHtml().asString());

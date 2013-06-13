@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.debug;
 
+import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
@@ -30,26 +31,11 @@ import com.codenvy.ide.debug.Debugger;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeExtension;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
-import com.codenvy.ide.ext.java.jdi.client.marshaller.ApplicationInstanceUnmarshaller;
-import com.codenvy.ide.ext.java.jdi.client.marshaller.ApplicationInstanceUnmarshallerWS;
-import com.codenvy.ide.ext.java.jdi.client.marshaller.DebuggerEventListUnmarshaller;
-import com.codenvy.ide.ext.java.jdi.client.marshaller.DebuggerEventListUnmarshallerWS;
-import com.codenvy.ide.ext.java.jdi.client.marshaller.DebuggerInfoUnmarshaller;
-import com.codenvy.ide.ext.java.jdi.client.marshaller.StackFrameDumpUnmarshaller;
 import com.codenvy.ide.ext.java.jdi.client.fqn.FqnResolverFactory;
 import com.codenvy.ide.ext.java.jdi.client.marshaller.*;
 import com.codenvy.ide.ext.java.jdi.client.run.ApplicationRunnerClientService;
 import com.codenvy.ide.ext.java.jdi.dto.client.DtoClientImpls;
-import com.codenvy.ide.ext.java.jdi.shared.ApplicationInstance;
-import com.codenvy.ide.ext.java.jdi.shared.BreakPoint;
-import com.codenvy.ide.ext.java.jdi.shared.BreakPointEvent;
-import com.codenvy.ide.ext.java.jdi.shared.DebuggerEvent;
-import com.codenvy.ide.ext.java.jdi.shared.DebuggerEventList;
-import com.codenvy.ide.ext.java.jdi.shared.DebuggerInfo;
-import com.codenvy.ide.ext.java.jdi.shared.Location;
-import com.codenvy.ide.ext.java.jdi.shared.StackFrameDump;
-import com.codenvy.ide.ext.java.jdi.shared.StepEvent;
-import com.codenvy.ide.ext.java.jdi.shared.Variable;
+import com.codenvy.ide.ext.java.jdi.shared.*;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
 import com.codenvy.ide.extension.maven.client.event.ProjectBuiltEvent;
 import com.codenvy.ide.extension.maven.client.event.ProjectBuiltHandler;
@@ -81,6 +67,10 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+
+import static com.codenvy.ide.ext.java.client.projectmodel.JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS;
+import static com.codenvy.ide.ext.java.jdi.shared.DebuggerEvent.BREAKPOINT;
+import static com.codenvy.ide.ext.java.jdi.shared.DebuggerEvent.STEP;
 
 /**
  * The presenter provides debug java application.
@@ -118,7 +108,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private JavaRuntimeLocalizationConstant        constant;
     private DebuggerInfo                           debuggerInfo;
     private Project                                project;
-    private File                                   activeFile;
     private ApplicationInstance                    runningApp;
     private MessageBus                             messageBus;
     private BreakpointGutterManager                gutterManager;
@@ -126,6 +115,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private ResourceProvider                       resourceProvider;
     private ApplicationRunnerClientService         applicationRunnerClientService;
     private FqnResolverFactory                     resolverFactory;
+    private EditorAgent                            editorAgent;
     private Variable                               selectedVariable;
     private CurrentEditorBreakPoint                currentBreakPoint;
     private boolean                                updateApp;
@@ -138,6 +128,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private SubscriptionHandler<Object>            expireSoonAppsHandler;
     /** Handler for processing debugger disconnected event. */
     private SubscriptionHandler<Object>            debuggerDisconnectedHandler;
+    private JsonArray<Variable>                    variables;
     /** A timer for checking events */
     private Timer checkEventsTimer = new Timer() {
         @Override
@@ -194,13 +185,15 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      * @param applicationRunnerClientService
      * @param restContext
      * @param gutterManager
+     * @param resolverFactory
+     * @param editorAgent
      */
     @Inject
     protected DebuggerPresenter(DebuggerView view, JavaRuntimeResources resources, DebuggerClientService service, EventBus eventBus,
                                 ConsolePart console, MessageBus messageBus, JavaRuntimeLocalizationConstant constant,
                                 ResourceProvider resourceProvider, WorkspaceAgent workspaceAgent,
                                 ApplicationRunnerClientService applicationRunnerClientService, @Named("restContext") String restContext,
-                                BreakpointGutterManager gutterManager, FqnResolverFactory resolverFactory) {
+                                BreakpointGutterManager gutterManager, FqnResolverFactory resolverFactory, EditorAgent editorAgent) {
         this.view = view;
         this.view.setDelegate(this);
         this.view.setTitle(TITLE);
@@ -217,6 +210,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         this.gutterManager = gutterManager;
         this.resolverFactory = resolverFactory;
         this.fileWithBreakPoints = JsonCollections.createStringMap();
+        this.variables = JsonCollections.createArray();
+        this.editorAgent = editorAgent;
         this.expireSoonAppsHandler = new SubscriptionHandler<Object>() {
             @Override
             public void onMessageReceived(Object result) {
@@ -324,14 +319,15 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      */
     private void onEventListReceived(DebuggerEventList eventList) {
         String filePath = null;
-        // TODO
+
         System.out.println("DebuggerPresenter.onEventListReceived()" + eventList.getEvents().size());
-        if (eventList != null && eventList.getEvents().size() > 0) {
+        if (eventList.getEvents().size() > 0) {
             Location location;
+            File activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
             JsonArray<DebuggerEvent> events = eventList.getEvents();
             for (int i = 0; i < events.size(); i++) {
                 DebuggerEvent event = events.get(i);
-                if (event instanceof StepEvent) {
+                if (event.getType() == STEP) {
                     StepEvent stepEvent = (StepEvent)event;
                     location = stepEvent.getLocation();
                     filePath = resolveFilePath(location);
@@ -339,7 +335,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                         openFile(location);
                     }
                     currentBreakPoint = new CurrentEditorBreakPoint(location.getLineNumber(), "BreakPoint", filePath);
-                } else if (event instanceof BreakPointEvent) {
+                } else if (event.getType() == BREAKPOINT) {
                     BreakPointEvent breakPointEvent = (BreakPointEvent)event;
                     location = breakPointEvent.getBreakPoint().getLocation();
                     filePath = resolveFilePath(location);
@@ -361,7 +357,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
 
     private String resolveFilePath(final Location location) {
         String sourcePath =
-                project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder") : "src/main/java";
+                project.hasProperty(PROPERTY_SOURCE_FOLDERS) ? (String)project.getPropertyValue(PROPERTY_SOURCE_FOLDERS)
+                                                             : "src/main/java";
         return project.getPath() + "/" + sourcePath + "/" + location.getClassName().replace(".", "/") + ".java";
     }
 
@@ -413,6 +410,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                     JsonArray<Variable> variables = JsonCollections.createArray();
                     variables.addAll(result.getFields());
                     variables.addAll(result.getLocalVariables());
+
+                    DebuggerPresenter.this.variables = variables;
                     view.setVariables(variables);
                 }
 
@@ -670,8 +669,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     }
 
     private void resetStates() {
-        view.setVariables(JsonCollections.<Variable>createArray());
-        // TODO
+        variables.clear();
+        view.setVariables(variables);
         // breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
         currentBreakPoint = null;
     }
@@ -697,8 +696,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
-        view.setBreakPoints(JsonCollections.<Breakpoint>createArray());
-        view.setVariables(JsonCollections.<Variable>createArray());
+        view.setBreakPoints(gutterManager.getBreakPoints());
+        view.setVariables(variables);
 
         container.setWidget(view);
     }
@@ -995,6 +994,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     }
 
     private void closeDialog() {
+        variables.clear();
         workspaceAgent.hidePart(this);
         workspaceAgent.removePart(this);
     }
