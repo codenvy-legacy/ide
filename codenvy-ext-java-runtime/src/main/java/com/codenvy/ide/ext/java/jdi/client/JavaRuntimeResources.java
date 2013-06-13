@@ -83,4 +83,7 @@ public interface JavaRuntimeResources extends ClientBundle {
 
     @Source("ajax-loader.gif")
     ImageResource loader();
+
+    @Source("local.png")
+    ImageResource local();
 }

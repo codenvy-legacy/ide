@@ -25,6 +25,7 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.resources.model.File;
+import com.codenvy.ide.texteditor.renderer.DebugLineRenderer;
 import com.codenvy.ide.texteditor.renderer.LineNumberRenderer;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.http.client.RequestException;
@@ -44,6 +45,8 @@ public class BreakpointGutterManager {
     private DebuggerManager                      debuggerManager;
     private ConsolePart                          console;
     private LineNumberRenderer                   renderer;
+    private DebugLineRenderer                    debugLineRenderer;
+    private Breakpoint                           markedBreakPoint;
 
     /**
      * Create manager.
@@ -65,8 +68,17 @@ public class BreakpointGutterManager {
      *
      * @param renderer
      */
-    public void setRenderer(LineNumberRenderer renderer) {
+    public void setBreakPointRenderer(LineNumberRenderer renderer) {
         this.renderer = renderer;
+    }
+
+    /**
+     * Set render for place where debug step are shown.
+     *
+     * @param debugLineRenderer
+     */
+    public void setDebugLineRenderer(DebugLineRenderer debugLineRenderer) {
+        this.debugLineRenderer = debugLineRenderer;
     }
 
     /**
@@ -196,5 +208,54 @@ public class BreakpointGutterManager {
         });
 
         return points;
+    }
+
+    /**
+     * Mark current line.
+     *
+     * @param lineNumber
+     *         line which need to mark
+     */
+    public void markCurrentBreakPoint(int lineNumber) {
+        int oldLIneNumber = 0;
+        if (markedBreakPoint != null) {
+            oldLIneNumber = markedBreakPoint.getLineNumber();
+        }
+
+        File activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
+        markedBreakPoint = new Breakpoint(Breakpoint.Type.BREAKPOINT, lineNumber, activeFile.getPath());
+
+        renderer.fillOrUpdateLines(oldLIneNumber, oldLIneNumber);
+        renderer.fillOrUpdateLines(lineNumber, lineNumber);
+        debugLineRenderer.updateLine(lineNumber);
+    }
+
+    /** Unmark current line. */
+    public void unmarkCurrentBreakPoint() {
+        int oldLIneNumber = 0;
+        if (markedBreakPoint != null) {
+            oldLIneNumber = markedBreakPoint.getLineNumber();
+        }
+        markedBreakPoint = null;
+
+        renderer.fillOrUpdateLines(oldLIneNumber, oldLIneNumber);
+        debugLineRenderer.updateLine(-1);
+    }
+
+    /**
+     * Check whether current line is marked.
+     *
+     * @param lineNumber
+     *         line which need to check
+     * @return <code>true</code> if the line is marked, and <code>false</code> otherwise
+     */
+    public boolean isMarkedLine(int lineNumber) {
+        if (markedBreakPoint != null) {
+            File activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
+            boolean isFileWithMarkBreakPoint = activeFile.getPath().equals(markedBreakPoint.getPath());
+            boolean isCurrentLine = lineNumber == markedBreakPoint.getLineNumber();
+            return isFileWithMarkBreakPoint && isCurrentLine;
+        }
+        return false;
     }
 }

@@ -163,7 +163,7 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
                 SafeHtmlBuilder sb = new SafeHtmlBuilder();
                 // Add icon
                 sb.appendHtmlConstant("<table><tr><td>");
-                ImageResource icon = res.variable();
+                ImageResource icon = res.local();
                 if (icon != null) {
                     sb.appendHtmlConstant("<img src=\"" + icon.getSafeUri().asString() + "\">");
                 }
