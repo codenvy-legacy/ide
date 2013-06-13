@@ -24,10 +24,32 @@
     <ui:with field="resource" type="com.codenvy.ide.factory.client.FactoryClientBundle"/>
     <ui:with field="locale" type="com.codenvy.ide.factory.client.FactoryLocalizationConstants"></ui:with>
     <ui:style>
+		.a {
+			cursor: pointer;
+			border: none;
+			/* Disable the button-style */
+			background-color: transparent;
+			font-family: Verdana, Arial, sans-serif;
+			font-size: 18px;
+			font-weight: bold;
+			color: #5E5E5E;
+			text-decoration: none;
+			text-align: left;
+			margin-top: 2px;
+		}
+
+		.a:visited {
+			color: #5E5E5E;
+		}
+
+		.a:hover {
+			color: #5E5E5E;
+			text-decoration: underline;
+		}
+
         .center {
             display: block;
             margin-left: auto;
-            margin-right: auto;
         }
 
         .floatLeft {
@@ -53,23 +75,33 @@
             font-size: 11px;
             font-family: Verdana, Bitstream Vera Sans, sans-serif;
             font-weight: bold;
-            margin-top: 10px;
             margin-bottom: 10px;
+        }
+
+        .link {
+            font-size: 11px;
+            font-family: Verdana, Bitstream Vera Sans, sans-serif;
+            overflow-x: hidden;
+            white-space: nowrap;
+        }
+
+        .link:hover {
+            text-decoration: underline;
+            cursor: pointer;
         }
     </ui:style>
 
     <f:Border margin="15" borderColor="transparent">
         <f:layer>
             <g:DockLayoutPanel unit="PX">
-                <g:north size="40">
+                <g:north size="75">
                     <g:FlowPanel addStyleNames="{style.floatLeft}">
                         <g:Label text="{locale.commitChangesDescriptionText}" addStyleNames="{style.labelTitle}" width="100%"></g:Label>
-                        <!-- <g:CheckBox ui:field="allField" HTML="{locale.commitAllFieldTitle}" width="100%"/>
-                        <g:CheckBox visible="false" ui:field="amendField" HTML="{locale.commitAmendFieldTitle}" width="100%"/> -->
+                        <g:CheckBox ui:field="allField" HTML="{locale.commitChangesFieldAllTitle}" width="100%"/>
                     </g:FlowPanel>
                 </g:north>
                 <g:center>
-                    <g:FlowPanel width="100%" height="55%" addStyleNames="{style.spacing}">
+                    <g:FlowPanel width="100%" height="50%" addStyleNames="{style.spacing}">
                         <g:Label text="{locale.commitChangesFieldDescriptionTitle}" addStyleNames="{style.label}" width="100%"></g:Label>
                         <f:TextAreaInput ui:field="descriptionField" width="100%" height="100%" addStyleNames="{style.textArea}"></f:TextAreaInput>
                     </g:FlowPanel>
@@ -77,14 +109,13 @@
             </g:DockLayoutPanel>
         </f:layer>
         <f:layer height="22px" bottom="0">
-            <g:FlowPanel width="250px" styleName="{style.center}">
+            <g:FlowPanel width="300px" styleName="{style.center}">
                 <f:ImageButton ui:field="okButton" width="90" height="22" text="{locale.buttonOk}" imageResource="{resource.ok}"
                                disabledImageResource="{resource.okDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
-                <g:FlowPanel width="5px" height="22px" styleName="{style.floatLeft}"></g:FlowPanel>
-                <f:ImageButton ui:field="continueButton" width="190" height="22" text="{locale.buttonContinue}" imageResource="{resource.ok}"
-                               disabledImageResource="{resource.okDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
+                <g:FlowPanel width="10px" height="22px" styleName="{style.floatLeft}"></g:FlowPanel>
+                <g:Anchor ui:field="continueButton" width="auto" height="22" text="{locale.buttonContinue}" styleName="{style.a}"
+                               addStyleNames="{style.floatLeft} {style.link}"></g:Anchor>
             </g:FlowPanel>
         </f:layer>
-
     </f:Border>
 </ui:UiBinder>

@@ -20,6 +20,8 @@ package com.codenvy.ide.factory.client;
 
 import com.codenvy.ide.factory.client.GetCodeNowButtonPresenter.Display;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -45,9 +47,9 @@ public class GetCodeNowButtonView extends ViewImpl implements Display {
 
     private static final String           TITLE                       = LOCALIZATION_CONSTANTS.factoryURLViewTitle();
 
-    private static final int              HEIGHT                      = 500;
+    private static final int              HEIGHT                      = 400;
 
-    private static final int              WIDTH                       = 830;
+    private static final int              WIDTH                       = 875;
 
     private static final String           WEBSITES_URL_FIELD_ID       = LOCALIZATION_CONSTANTS.factoryURLFieldWebsitesURLId();
 
@@ -83,6 +85,25 @@ public class GetCodeNowButtonView extends ViewImpl implements Display {
         gitHubURLField.setName(GITHUB_URL_FIELD_ID);
         directSharingURLField.setName(DIRECT_SHARING_URL_FIELD_ID);
         okButton.setId(OK_BUTTON_ID);
+
+        websitesURLField.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                websitesURLField.selectAll();
+            }
+        });
+        gitHubURLField.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                gitHubURLField.selectAll();
+            }
+        });
+        directSharingURLField.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                directSharingURLField.selectAll();
+            }
+        });
     }
 
     /**
@@ -115,30 +136,6 @@ public class GetCodeNowButtonView extends ViewImpl implements Display {
     @Override
     public HasClickHandlers getOkButton() {
         return okButton;
-    }
-
-    /**
-     * @see com.codenvy.ide.factory.client.GetCodeNowButtonPresenter.Display#selectWebsitesURLField()
-     */
-    @Override
-    public void selectWebsitesURLField() {
-        websitesURLField.selectAll();
-    }
-
-    /**
-     * @see com.codenvy.ide.factory.client.GetCodeNowButtonPresenter.Display#selectGitHubURLField()
-     */
-    @Override
-    public void selectGitHubURLField() {
-        gitHubURLField.selectAll();
-    }
-
-    /**
-     * @see com.codenvy.ide.factory.client.GetCodeNowButtonPresenter.Display#selectDirectSharingURLField()
-     */
-    @Override
-    public void selectDirectSharingURLField() {
-        directSharingURLField.selectAll();
     }
 
 }

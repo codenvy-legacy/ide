@@ -23,6 +23,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -51,6 +53,8 @@ public class CommitChangesView extends ViewImpl implements Display {
 
     private static final String              DESCRIPTION_FIELD_ID = LOCALIZATION_CONSTANTS.commitChangesFieldDescriptionId();
 
+    private static final String              ALL_FIELD_ID         = LOCALIZATION_CONSTANTS.commitChangesFieldAllId();
+
     private static final String              OK_BUTTON_ID         = LOCALIZATION_CONSTANTS.commitChangesButtonContinue();
 
     private static final String              CONTINUE_BUTTON_ID   = LOCALIZATION_CONSTANTS.commitChangesButtonContinue();
@@ -61,13 +65,16 @@ public class CommitChangesView extends ViewImpl implements Display {
     }
 
     @UiField
+    CheckBox      allField;
+
+    @UiField
     TextAreaInput descriptionField;
 
     @UiField
     ImageButton   okButton;
 
     @UiField
-    ImageButton   continueButton;
+    Anchor        continueButton;
 
     public CommitChangesView() {
         super(ID, ViewType.MODAL, TITLE, null, WIDTH, HEIGHT, false);
@@ -75,8 +82,17 @@ public class CommitChangesView extends ViewImpl implements Display {
         add(uiBinder.createAndBindUi(this));
 
         descriptionField.getElement().setId(DESCRIPTION_FIELD_ID);
+        allField.getElement().setId(ALL_FIELD_ID);
         okButton.setId(OK_BUTTON_ID);
-        continueButton.setId(CONTINUE_BUTTON_ID);
+        continueButton.getElement().setId(CONTINUE_BUTTON_ID);
+    }
+
+    /**
+     * @see com.codenvy.ide.factory.client.CommitChangesPresenter.Display#getAllField()
+     */
+    @Override
+    public HasValue<Boolean> getAllField() {
+        return allField;
     }
 
     /**

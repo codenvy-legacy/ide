@@ -40,8 +40,10 @@ import org.exoplatform.ide.git.shared.Status;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
+import static com.codenvy.ide.factory.client.FactoryExtension.LOCALIZATION_CONSTANTS;
+
 /**
- * Handle action when user tries to share opened project with Factory URL.
+ * Handler to process action when user tries to share opened project with Factory URL.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: FactoryURLHandler.java Jun 11, 2013 5:50:55 PM azatsarynnyy $
@@ -66,10 +68,10 @@ public class FactoryURLHandler implements ShareWithFactoryUrlHandler, VfsChanged
      */
     @Override
     public void onShare(ShareWithFactoryUrlEvent event) {
-        checkGitRepoStatus(openedProject, false);
+        checkGitRepoStatus(openedProject);
     }
 
-    private void checkGitRepoStatus(final ProjectModel project, boolean forced) {
+    private void checkGitRepoStatus(final ProjectModel project) {
         try {
             GitClientService.getInstance()
                             .status(vfs.getId(),
@@ -87,16 +89,17 @@ public class FactoryURLHandler implements ShareWithFactoryUrlHandler, VfsChanged
                                             initializeRepository(project);
                                         }
                                     });
-        } catch (RequestException ignored) {
-            IDE.fireEvent(new OutputEvent("Checking repository status failed.", Type.ERROR));
+        } catch (RequestException e) {
+            IDE.fireEvent(new OutputEvent(LOCALIZATION_CONSTANTS.checkRepoStatusFailed(), Type.ERROR));
         }
     }
 
     private void checkUncommittedChanges(Status status) {
-        // TODO commit only if uncommitted changes are exist
-        // if (status.get) {
-        IDE.fireEvent(new CommitChangesEvent());
-        // }
+        if (status.isClean()) {
+            IDE.fireEvent(new OpenGetCodeNowButtonViewEvent());
+        } else {
+            IDE.fireEvent(new CommitChangesEvent());
+        }
     }
 
     /** Initialize of the Git-repository by sending request over WebSocket or HTTP. */

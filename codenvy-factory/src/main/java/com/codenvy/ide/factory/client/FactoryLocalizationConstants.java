@@ -38,6 +38,12 @@ public interface FactoryLocalizationConstants extends Messages {
     String buttonContinue();
 
     /*
+     * Messages
+     */
+    @Key("messages.checkRepoStatusFailed")
+    String checkRepoStatusFailed();
+
+    /*
      * Controls
      */
     @Key("control.shareWithFactoryURL.id")
@@ -81,6 +87,12 @@ public interface FactoryLocalizationConstants extends Messages {
 
     @Key("commitChanges.descriptionText")
     String commitChangesDescriptionText();
+
+    @Key("commitChanges.field.all.id")
+    String commitChangesFieldAllId();
+
+    @Key("commitChanges.field.all.title")
+    String commitChangesFieldAllTitle();
 
     @Key("commitChanges.field.description.id")
     String commitChangesFieldDescriptionId();

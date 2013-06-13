@@ -42,4 +42,7 @@ public interface FactoryClientBundle extends ClientBundle {
 
     @Source("com/codenvy/ide/factory/images/controls/share_Disabled.png")
     ImageResource shareDisabled();
+
+    @Source("com/codenvy/ide/factory/images/GitHub-Mark-32px.png")
+    ImageResource gitHub();
 }

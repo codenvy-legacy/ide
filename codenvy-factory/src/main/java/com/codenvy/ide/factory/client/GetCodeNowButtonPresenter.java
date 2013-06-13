@@ -22,12 +22,37 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
+import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.git.client.GitExtension;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+
+import static org.exoplatform.ide.client.framework.codenow.CodenvyFactorySpec10.ACTION_PARAMETER;
+import static org.exoplatform.ide.client.framework.codenow.CodenvyFactorySpec10.COMMIT_ID;
+import static org.exoplatform.ide.client.framework.codenow.CodenvyFactorySpec10.CURRENT_VERSION;
+import static org.exoplatform.ide.client.framework.codenow.CodenvyFactorySpec10.DEFAULT_ACTION;
+import static org.exoplatform.ide.client.framework.codenow.CodenvyFactorySpec10.PROJECT_NAME;
+import static org.exoplatform.ide.client.framework.codenow.CodenvyFactorySpec10.VCS;
+import static org.exoplatform.ide.client.framework.codenow.CodenvyFactorySpec10.VCS_URL;
+import static org.exoplatform.ide.client.framework.codenow.CodenvyFactorySpec10.VERSION_PARAMETER;
+import static org.exoplatform.ide.client.framework.codenow.CodenvyFactorySpec10.WORKSPACE_NAME;
 
 /**
  * Presenter to generate a CodeNow button.
@@ -35,7 +60,8 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: GetCodeNowButtonPresenter.java Jun 11, 2013 12:17:04 PM azatsarynnyy $
  */
-public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandler, ViewClosedHandler {
+public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandler, ViewClosedHandler, VfsChangedHandler,
+                                      ProjectOpenedHandler, ProjectClosedHandler {
 
     public interface Display extends IsView {
 
@@ -66,23 +92,23 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
          * @return 'Ok' button
          */
         HasClickHandlers getOkButton();
-
-        /** Select all text in the 'on Websites' field. */
-        void selectWebsitesURLField();
-
-        /** Select all text in the 'on GitHub' field. */
-        void selectGitHubURLField();
-
-        /** Select all text in the 'Direct Sharing' field. */
-        void selectDirectSharingURLField();
     }
 
+    /** Current virtual file system. */
+    private VirtualFileSystemInfo vfs;
+
+    /** Current project. */
+    private ProjectModel          openedProject;
+
     /** Display. */
-    private Display display;
+    private Display               display;
 
     public GetCodeNowButtonPresenter() {
         IDE.addHandler(OpenGetCodeNowButtonViewEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
     }
 
     public void bindDisplay() {
@@ -101,8 +127,7 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
             bindDisplay();
         }
 
-        display.getDirectSharingURLField().setValue("https://www.codenvy.com/factory?vcs=git&pname=test");
-        display.selectDirectSharingURLField();
+        getRepoUrl(openedProject);
     }
 
     /**
@@ -122,6 +147,74 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
         if (event.getView() instanceof Display) {
             display = null;
         }
+    }
+
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
+     */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        vfs = event.getVfsInfo();
+    }
+
+    /**
+     * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
+     */
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        openedProject = event.getProject();
+    }
+
+    /**
+     * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+     */
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        openedProject = null;
+    }
+
+    private void getRepoUrl(final ProjectModel project) {
+        try {
+            GitClientService.getInstance()
+                            .getGitReadOnlyUrl(vfs.getId(),
+                                               project.getId(),
+                                               new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder())) {
+                                                   @Override
+                                                   protected void onSuccess(StringBuilder result) {
+                                                       generateFactoryURL(result.toString(), project);
+                                                   }
+
+                                                   @Override
+                                                   protected void onFailure(Throwable exception) {
+                                                       String errorMessage =
+                                                                             (exception.getMessage() != null && exception.getMessage()
+                                                                                                                         .length() > 0)
+                                                                                 ? exception.getMessage()
+                                                                                 : GitExtension.MESSAGES.initFailed();
+                                                       IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+                                                   }
+                                               });
+        } catch (RequestException e) {
+            String errorMessage =
+                                  (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage()
+                                      : GitExtension.MESSAGES.initFailed();
+            IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+        }
+    }
+
+    private void generateFactoryURL(String vcsURL, ProjectModel project) {
+        final String url = "https://www.codenvy.com/factory?" + //
+                           VERSION_PARAMETER + "=" + CURRENT_VERSION + "&" + //
+                           PROJECT_NAME + "=" + project.getName() + "&" + //
+                           WORKSPACE_NAME + "=workspace_name&" + // TODO
+                           VCS + "=git&" + //
+                           VCS_URL + "=" + vcsURL + "&" + //
+                           COMMIT_ID + "=id_commit&" + // TODO
+                           ACTION_PARAMETER + "=" + DEFAULT_ACTION;
+
+        display.getWebsitesURLField().setValue(url);
+        display.getGitHubURLField().setValue(url);
+        display.getDirectSharingURLField().setValue(url);
     }
 
 }

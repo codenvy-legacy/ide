@@ -32,7 +32,7 @@ import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
-import org.exoplatform.ide.client.framework.codenow.CodeNowSpec10;
+import org.exoplatform.ide.client.framework.codenow.CodenvyFactorySpec10;
 import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsEvent;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
@@ -212,8 +212,8 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
         }
         else {
             Map<String, List<String>> parameterMap = Location.getParameterMap();
-            if (parameterMap != null && parameterMap.get(CodeNowSpec10.VERSION_PARAMETER) != null
-                && parameterMap.get(CodeNowSpec10.VERSION_PARAMETER).get(0).equals(CodeNowSpec10.CURRENT_VERSION)) {
+            if (parameterMap != null && parameterMap.get(CodenvyFactorySpec10.VERSION_PARAMETER) != null
+                && parameterMap.get(CodenvyFactorySpec10.VERSION_PARAMETER).get(0).equals(CodenvyFactorySpec10.CURRENT_VERSION)) {
                 IDE.fireEvent(new StartWithInitParamsEvent(parameterMap));
             } else {
                 new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject, initialOpenedFiles, initialActiveFile);

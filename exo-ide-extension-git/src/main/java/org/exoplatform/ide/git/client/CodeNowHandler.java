@@ -25,7 +25,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
-import org.exoplatform.ide.client.framework.codenow.CodeNowSpec10;
+import org.exoplatform.ide.client.framework.codenow.CodenvyFactorySpec10;
 import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsEvent;
 import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -74,22 +74,22 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
     @Override
     public void onStartWithInitParams(StartWithInitParamsEvent event) {
         if (isValidParam(event.getParameterMap())) {
-            String giturl = event.getParameterMap().get(CodeNowSpec10.VCS_URL).get(0);
+            String giturl = event.getParameterMap().get(CodenvyFactorySpec10.VCS_URL).get(0);
 
             String prjName = null;
 
-            if (event.getParameterMap().get(CodeNowSpec10.PROJECT_NAME) != null
-                && !event.getParameterMap().get(CodeNowSpec10.PROJECT_NAME).isEmpty()) {
-                prjName = event.getParameterMap().get(CodeNowSpec10.PROJECT_NAME).get(0);
+            if (event.getParameterMap().get(CodenvyFactorySpec10.PROJECT_NAME) != null
+                && !event.getParameterMap().get(CodenvyFactorySpec10.PROJECT_NAME).isEmpty()) {
+                prjName = event.getParameterMap().get(CodenvyFactorySpec10.PROJECT_NAME).get(0);
             } else {
                 prjName = giturl.substring(giturl.lastIndexOf('/') + 1, giturl.lastIndexOf(".git"));
             }
 
             String prjType = null;
 
-            if (event.getParameterMap().get(CodeNowSpec10.PROJECT_TYPE) != null
-                && !event.getParameterMap().get(CodeNowSpec10.PROJECT_TYPE).isEmpty()) {
-                prjType = event.getParameterMap().get(CodeNowSpec10.PROJECT_TYPE).get(0);
+            if (event.getParameterMap().get(CodenvyFactorySpec10.PROJECT_TYPE) != null
+                && !event.getParameterMap().get(CodenvyFactorySpec10.PROJECT_TYPE).isEmpty()) {
+                prjType = event.getParameterMap().get(CodenvyFactorySpec10.PROJECT_TYPE).get(0);
             } else {
                 prjType = giturl.substring(giturl.lastIndexOf('/') + 1, giturl.lastIndexOf(".git"));
             }
@@ -105,17 +105,17 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
         if (initParam == null || initParam.isEmpty()) {
             return false;
         }
-        if (!initParam.containsKey(CodeNowSpec10.VERSION_PARAMETER)
-            || initParam.get(CodeNowSpec10.VERSION_PARAMETER).size() != 1
-            || !initParam.get(CodeNowSpec10.VERSION_PARAMETER).get(0).equals(CodeNowSpec10.CURRENT_VERSION)) {
+        if (!initParam.containsKey(CodenvyFactorySpec10.VERSION_PARAMETER)
+            || initParam.get(CodenvyFactorySpec10.VERSION_PARAMETER).size() != 1
+            || !initParam.get(CodenvyFactorySpec10.VERSION_PARAMETER).get(0).equals(CodenvyFactorySpec10.CURRENT_VERSION)) {
             return false;
         }
-        if (!initParam.containsKey(CodeNowSpec10.VCS) || initParam.get(CodeNowSpec10.VCS).isEmpty()
-            || !initParam.get(CodeNowSpec10.VCS).get(0).equalsIgnoreCase(CodeNowSpec10.DEFAULT_VCS)) {
+        if (!initParam.containsKey(CodenvyFactorySpec10.VCS) || initParam.get(CodenvyFactorySpec10.VCS).isEmpty()
+            || !initParam.get(CodenvyFactorySpec10.VCS).get(0).equalsIgnoreCase(CodenvyFactorySpec10.DEFAULT_VCS)) {
             return false;
         }
-        if (!initParam.containsKey(CodeNowSpec10.VCS_URL) || initParam.get(CodeNowSpec10.VCS_URL) == null
-            || initParam.get(CodeNowSpec10.VCS_URL).isEmpty()) {
+        if (!initParam.containsKey(CodenvyFactorySpec10.VCS_URL) || initParam.get(CodenvyFactorySpec10.VCS_URL) == null
+            || initParam.get(CodenvyFactorySpec10.VCS_URL).isEmpty()) {
             return false;
         }
         return true;
