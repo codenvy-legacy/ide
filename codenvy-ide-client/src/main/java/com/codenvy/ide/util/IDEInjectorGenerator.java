@@ -16,11 +16,14 @@
  */
 package com.codenvy.ide.util;
 
+import com.codenvy.ide.api.extension.ExtensionGinModule;
+
 import org.apache.commons.io.FileUtils;
+import org.reflections.Reflections;
+import org.reflections.scanners.TypeAnnotationsScanner;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -41,7 +44,7 @@ public class IDEInjectorGenerator {
      * File content will be overriden.
      */
     protected static final String IDE_INJECTOR_PATH =
-            "codenvy-ide-client/src/main/java/com/codenvy/ide/client/inject/IDEInjector.java";
+            "WEB-INF/classes/com/codenvy/ide/client/inject/IDEInjector.java";
 
     /** Set containing all the FQNs of GinModules */
     public static final Set<String> extensionsFqn = new HashSet<String>();
@@ -157,29 +160,36 @@ public class IDEInjectorGenerator {
      */
     @SuppressWarnings("unchecked")
     public static void findGinModules(File rootFolder) throws IOException {
-        // list all Java Files
-        String[] extensions = {"java"};
-        Collection<File> listFiles = FileUtils.listFiles(rootFolder, extensions, true);
-        for (File file : listFiles) {
-            String fileContent = FileUtils.readFileToString(file);
-            // check file has annotation ExtensionGinModule
-            if (fileContent.contains(GIN_MODULE_ANNOTATION)) {
-                // read package name and class name
-                String className = file.getName().split("\\.")[0];
-                String packageName = GeneratorUtils.getClassFQN(file.getAbsolutePath(), fileContent);
-                // exclude "com.codenvy.ide.util"
-                if (!packageName.startsWith(GeneratorUtils.COM_CODENVY_IDE_UTIL)) {
-                    String fullFqn = packageName + "." + className;
-                    if (!extensionsFqn.contains(fullFqn)) {
-                        extensionsFqn.add(fullFqn);
-                        System.out.println(String.format("New Gin Module Found: %s.%s", packageName, className));
-                    }
-                } else {
-                    // skip this class, cause it is an utility, not the actual extension.
-                    //                  System.out.println(String.format("Skipping class %s.%s as it is utility, not the extension",
-                    //                     packageName, className));
-                }
-            }
+//        // list all Java Files
+//        String[] extensions = {"java"};
+//        Collection<File> listFiles = FileUtils.listFiles(rootFolder, extensions, true);
+//        for (File file : listFiles) {
+//            String fileContent = FileUtils.readFileToString(file);
+//            // check file has annotation ExtensionGinModule
+//            if (fileContent.contains(GIN_MODULE_ANNOTATION)) {
+//                // read package name and class name
+//                String className = file.getName().split("\\.")[0];
+//                String packageName = GeneratorUtils.getClassFQN(file.getAbsolutePath(), fileContent);
+//                // exclude "com.codenvy.ide.util"
+//                if (!packageName.startsWith(GeneratorUtils.COM_CODENVY_IDE_UTIL)) {
+//                    String fullFqn = packageName + "." + className;
+//                    if (!extensionsFqn.contains(fullFqn)) {
+//                        extensionsFqn.add(fullFqn);
+//                        System.out.println(String.format("New Gin Module Found: %s.%s", packageName, className));
+//                    }
+//                } else {
+//                    // skip this class, cause it is an utility, not the actual extension.
+//                    //                  System.out.println(String.format("Skipping class %s.%s as it is utility, not the extension",
+//                    //                     packageName, className));
+//                }
+//            }
+//        }
+//        System.out.println(String.format("Found: %d Gin Modules", extensionsFqn.size()));
+        Reflections reflection = new Reflections(new TypeAnnotationsScanner());
+        Set<Class<?>> classes = reflection.getTypesAnnotatedWith(ExtensionGinModule.class);
+        for (Class clazz : classes) {
+            extensionsFqn.add(clazz.getCanonicalName());
+            System.out.println(String.format("New Gin Module Found: %s", clazz.getCanonicalName()));
         }
         System.out.println(String.format("Found: %d Gin Modules", extensionsFqn.size()));
     }
