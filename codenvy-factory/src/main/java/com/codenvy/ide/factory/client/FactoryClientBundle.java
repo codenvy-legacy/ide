@@ -45,4 +45,10 @@ public interface FactoryClientBundle extends ClientBundle {
 
     @Source("com/codenvy/ide/factory/images/GitHub-Mark-32px.png")
     ImageResource gitHub();
+
+    @Source("com/codenvy/ide/factory/images/link.png")
+    ImageResource link();
+
+    @Source("com/codenvy/ide/factory/images/world.png")
+    ImageResource world();
 }
