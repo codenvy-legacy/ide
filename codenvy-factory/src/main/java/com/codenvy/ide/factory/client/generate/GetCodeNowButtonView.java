@@ -26,6 +26,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
@@ -47,7 +48,7 @@ public class GetCodeNowButtonView extends ViewImpl implements Display {
 
     private static final String           TITLE                       = LOCALIZATION_CONSTANTS.factoryURLViewTitle();
 
-    private static final int              HEIGHT                      = 400;
+    private static final int              HEIGHT                      = 450;
 
     private static final int              WIDTH                       = 875;
 
@@ -72,6 +73,18 @@ public class GetCodeNowButtonView extends ViewImpl implements Display {
 
     @UiField
     TextAreaInput directSharingURLField;
+
+    @UiField
+    Image         shareFacebookButton;
+
+    @UiField
+    Image         shareGooglePlusButton;
+
+    @UiField
+    Image         shareTwitterButton;
+
+    @UiField
+    Image         shareEmailButton;
 
     @UiField
     ImageButton   okButton;
@@ -128,6 +141,38 @@ public class GetCodeNowButtonView extends ViewImpl implements Display {
     @Override
     public HasValue<String> getDirectSharingURLField() {
         return directSharingURLField;
+    }
+
+    /**
+     * @see com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter.Display#getShareFacebookButton()
+     */
+    @Override
+    public HasClickHandlers getShareFacebookButton() {
+        return shareFacebookButton;
+    }
+
+    /**
+     * @see com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter.Display#getShareGooglePlusButton()
+     */
+    @Override
+    public HasClickHandlers getShareGooglePlusButton() {
+        return shareGooglePlusButton;
+    }
+
+    /**
+     * @see com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter.Display#getShareTwitterButton()
+     */
+    @Override
+    public HasClickHandlers getShareTwitterButton() {
+        return shareTwitterButton;
+    }
+
+    /**
+     * @see com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter.Display#getShareEmailButton()
+     */
+    @Override
+    public HasClickHandlers getShareEmailButton() {
+        return shareEmailButton;
     }
 
     /**

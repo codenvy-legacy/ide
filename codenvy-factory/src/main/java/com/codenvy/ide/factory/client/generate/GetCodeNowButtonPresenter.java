@@ -23,6 +23,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -54,7 +55,6 @@ import static com.codenvy.ide.factory.client.FactorySpec10.VCS;
 import static com.codenvy.ide.factory.client.FactorySpec10.VCS_URL;
 import static com.codenvy.ide.factory.client.FactorySpec10.VERSION_PARAMETER;
 import static com.codenvy.ide.factory.client.FactorySpec10.WORKSPACE_NAME;
-
 
 
 /**
@@ -90,6 +90,34 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
         HasValue<String> getDirectSharingURLField();
 
         /**
+         * Returns button to share factory URL on Facebook.
+         * 
+         * @return share to Facebook button
+         */
+        HasClickHandlers getShareFacebookButton();
+
+        /**
+         * Returns button to share factory URL on Google+.
+         * 
+         * @return share to Google+ button
+         */
+        HasClickHandlers getShareGooglePlusButton();
+
+        /**
+         * Returns button to share factory URL on Twitter.
+         * 
+         * @return share to Twitter button
+         */
+        HasClickHandlers getShareTwitterButton();
+
+        /**
+         * Returns button to share factory URL by e-mail.
+         * 
+         * @return share by e-mail button
+         */
+        HasClickHandlers getShareEmailButton();
+
+        /**
          * Returns the 'Ok' button.
          * 
          * @return 'Ok' button
@@ -106,6 +134,11 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
     /** Display. */
     private Display               display;
 
+    /**
+     * A Factory URL.
+     */
+    private String                factoryURL;
+
     public GetCodeNowButtonPresenter() {
         IDE.addHandler(OpenGetCodeNowButtonViewEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -115,6 +148,36 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
     }
 
     public void bindDisplay() {
+        display.getShareFacebookButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                Window.open("https://www.facebook.com/sharer/sharer.php?u=" + factoryURL, "", "width=626,height=436");
+            }
+        });
+
+        display.getShareGooglePlusButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                Window.open("https://plus.google.com/share?url=" + factoryURL, "",
+                            "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600");
+            }
+        });
+
+        display.getShareTwitterButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                // TODO
+            }
+        });
+
+        display.getShareEmailButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                Window.open("mailto:?subject=Codenvy Factory URL&body=" + factoryURL, "",
+                            "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=200,width=200");
+            }
+        });
+
         display.getOkButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -130,7 +193,9 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
             bindDisplay();
         }
 
-        getRepoUrl(openedProject);
+        display.getWebsitesURLField().setValue(getFactoryURLForWebsites());
+        display.getGitHubURLField().setValue(factoryURL); // TODO
+        display.getDirectSharingURLField().setValue(factoryURL);
     }
 
     /**
@@ -138,7 +203,7 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
      */
     @Override
     public void onGetCodeNowButton(OpenGetCodeNowButtonViewEvent event) {
-        openView();
+        getRepoUrlAndOpenView(openedProject);
     }
 
     /**
@@ -176,7 +241,7 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
         openedProject = null;
     }
 
-    private void getRepoUrl(final ProjectModel project) {
+    private void getRepoUrlAndOpenView(final ProjectModel project) {
         try {
             GitClientService.getInstance()
                             .getGitReadOnlyUrl(vfs.getId(),
@@ -206,18 +271,19 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
     }
 
     private void generateFactoryURL(String vcsURL, ProjectModel project) {
-        final String url = "https://www.codenvy.com/factory?" + //
-                           VERSION_PARAMETER + "=" + CURRENT_VERSION + "&" + //
-                           PROJECT_NAME + "=" + project.getName() + "&" + //
-                           WORKSPACE_NAME + "=" + Utils.getWorkspaceName() + "&" + //
-                           VCS + "=git&" + //
-                           VCS_URL + "=" + vcsURL + "&" + //
-                           COMMIT_ID + "=id_commit&" + // TODO
-                           ACTION_PARAMETER + "=" + DEFAULT_ACTION;
+        factoryURL = "https://www.codenvy.com/factory?" + //
+                     VERSION_PARAMETER + "=" + CURRENT_VERSION + "&" + //
+                     PROJECT_NAME + "=" + project.getName() + "&" + //
+                     WORKSPACE_NAME + "=" + Utils.getWorkspaceName() + "&" + //
+                     VCS + "=git&" + //
+                     VCS_URL + "=" + vcsURL + "&" + //
+                     COMMIT_ID + "=id_commit&" + // TODO
+                     ACTION_PARAMETER + "=" + DEFAULT_ACTION;
+        openView();
+    }
 
-        display.getWebsitesURLField().setValue(url);
-        display.getGitHubURLField().setValue(url);
-        display.getDirectSharingURLField().setValue(url);
+    private String getFactoryURLForWebsites() {
+        return "<iframe src=codenow.html></iframe>";
     }
 
 }
