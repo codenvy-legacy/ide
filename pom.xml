@@ -36,13 +36,10 @@
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.6</maven.compiler.target>
         <org.slf4j.version>1.6.2</org.slf4j.version>
-        <chromattic.version>1.1.0-beta6</chromattic.version>
         <apache.commons-compress.version>1.0</apache.commons-compress.version>
         <commons-fileupload.version>1.2.1</commons-fileupload.version>
         <commons-io.version>1.3.2</commons-io.version>
-        <javax.jcr.version>1.0</javax.jcr.version>
         <javax.annotation.version>1.0</javax.annotation.version>
-        <groovy.version>1.7.6</groovy.version>
         <javax.ws.version>1.0</javax.ws.version>
         <javax.ws.rs.version>1.0</javax.ws.rs.version>
         <version.failsafe.plugin>2.6</version.failsafe.plugin>
@@ -55,8 +52,7 @@
         <version.enforcer.plugin>1.0.1</version.enforcer.plugin>
         <appengine.version>1.6.5</appengine.version>
         <ch.qos.logback.version>0.9.29</ch.qos.logback.version>
-        <crash.version>1.0.0-beta21</crash.version>
-        <com.codenvy.organization.version>0.3-SNAPSHOT</com.codenvy.organization.version>
+        <com.codenvy.organization.version>0.4</com.codenvy.organization.version>
         <maven.build.timestamp.format>dd.MM.yy HH:mm</maven.build.timestamp.format>
         <buildNumber>${maven.build.timestamp}</buildNumber>
     </properties>
@@ -81,21 +77,6 @@
                 <version>${org.exoplatform.core.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.exoplatform.core</groupId>
-                <artifactId>exo.core.component.script.groovy</artifactId>
-                <version>${org.exoplatform.core.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.exoplatform.core</groupId>
-                <artifactId>exo.core.component.document</artifactId>
-                <version>${org.exoplatform.core.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.exoplatform.core</groupId>
-                <artifactId>exo.core.component.organization.api</artifactId>
-                <version>${org.exoplatform.core.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.codenvy.organization</groupId>
                 <artifactId>codenvy-organization-api-java-client</artifactId>
                 <version>${com.codenvy.organization.version}</version>
@@ -104,11 +85,6 @@
                 <groupId>com.codenvy.organization</groupId>
                 <artifactId>codenvy-organization-api</artifactId>
                 <version>${com.codenvy.organization.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.exoplatform.core</groupId>
-                <artifactId>exo.core.component.organization.api</artifactId>
-                <version>${org.exoplatform.core.version}</version>
             </dependency>
 
             <!-- IDE -->
@@ -319,11 +295,6 @@
                 <version>0.44</version>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.groovy</groupId>
-                <artifactId>groovy-all</artifactId>
-                <version>${groovy.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>commons-fileupload</groupId>
                 <artifactId>commons-fileupload</artifactId>
                 <version>${commons-fileupload.version}</version>
@@ -367,11 +338,6 @@
                 <groupId>org.exoplatform.ws</groupId>
                 <artifactId>exo.ws.frameworks.json</artifactId>
                 <version>${org.exoplatform.ws.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.exoplatform.jcr</groupId>
-                <artifactId>jcr.packaging.module</artifactId>
-                <version>${org.exoplatform.jcr.version}</version>
             </dependency>
 
             <dependency>
