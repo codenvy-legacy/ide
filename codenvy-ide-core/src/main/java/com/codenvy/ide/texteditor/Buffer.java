@@ -97,6 +97,8 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
         String columnMarkerLine();
 
         String currentLine();
+
+        String debugLine();
     }
 
     /**

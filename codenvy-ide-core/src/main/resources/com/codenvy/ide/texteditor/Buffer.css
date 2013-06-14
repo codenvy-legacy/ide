@@ -95,6 +95,12 @@
         z-index: -1;
     }
 
+    .debugLine {
+        background-color: #FFC8C8;
+        position: absolute;
+        z-index: -1;
+    }
+
     .spacer {
 
     }

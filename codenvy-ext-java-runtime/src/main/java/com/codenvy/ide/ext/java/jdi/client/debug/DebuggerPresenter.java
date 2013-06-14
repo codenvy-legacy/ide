@@ -117,7 +117,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private FqnResolverFactory                     resolverFactory;
     private EditorAgent                            editorAgent;
     private Variable                               selectedVariable;
-    private CurrentEditorBreakPoint                currentBreakPoint;
     private boolean                                updateApp;
     private String                                 restContext;
     private HandlerRegistration                    projectBuildHandler;
@@ -321,6 +320,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         String filePath = null;
 
         System.out.println("DebuggerPresenter.onEventListReceived()" + eventList.getEvents().size());
+        int currentLineNumber = 0;
         if (eventList.getEvents().size() > 0) {
             Location location;
             File activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
@@ -334,7 +334,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                     if (!filePath.equalsIgnoreCase(activeFile.getPath())) {
                         openFile(location);
                     }
-                    currentBreakPoint = new CurrentEditorBreakPoint(location.getLineNumber(), "BreakPoint", filePath);
+                    currentLineNumber = location.getLineNumber();
                 } else if (event.getType() == BREAKPOINT) {
                     BreakPointEvent breakPointEvent = (BreakPointEvent)event;
                     location = breakPointEvent.getBreakPoint().getLocation();
@@ -342,15 +342,14 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                     if (!filePath.equalsIgnoreCase(activeFile.getPath())) {
                         openFile(location);
                     }
-                    currentBreakPoint = new CurrentEditorBreakPoint(location.getLineNumber(), "BreakPoint", filePath);
+                    currentLineNumber = location.getLineNumber();
                 }
                 doGetDump();
                 enableButtons(true);
             }
 
             if (filePath != null && filePath.equalsIgnoreCase(activeFile.getPath())) {
-                // TODO
-                // breakpointsManager.markCurrentBreakPoint(currentBreakPoint);
+                gutterManager.markCurrentBreakPoint(currentLineNumber - 1);
             }
         }
     }
@@ -494,9 +493,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                     protected void onSuccess(String result) {
                         enableButtons(false);
                         debuggerInfo = null;
-                        // TODO
-                        // breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
-                        currentBreakPoint = null;
+                        gutterManager.unmarkCurrentBreakPoint();
                         closeDialog();
                         doStopApp();
                     }
@@ -671,8 +668,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private void resetStates() {
         variables.clear();
         view.setVariables(variables);
-        // breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
-        currentBreakPoint = null;
+        gutterManager.unmarkCurrentBreakPoint();
     }
 
     /** {@inheritDoc} */
@@ -861,7 +857,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                + constant.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
         console.print(msg);
         connectDebugger(app);
-        // TODO Change button visible...
         runningApp = app;
 
         try {

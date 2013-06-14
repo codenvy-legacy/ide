@@ -16,6 +16,7 @@ package com.codenvy.ide.texteditor;
 
 import elemental.html.Element;
 
+import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
@@ -38,7 +39,6 @@ import com.codenvy.ide.texteditor.codeassistant.QuickAssistAssistantImpl;
 import com.codenvy.ide.texteditor.documentparser.DocumentParser;
 import com.codenvy.ide.texteditor.gutter.Gutter;
 import com.codenvy.ide.texteditor.gutter.LeftGutterManager;
-import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.texteditor.input.*;
 import com.codenvy.ide.texteditor.linedimensions.LineDimensionsCalculator;
 import com.codenvy.ide.texteditor.linedimensions.LineDimensionsUtils;
@@ -403,6 +403,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
                                      getRenderer(), getSelection());
         createSyntaxHighligter(parser);
         new CurrentLineHighlighter(buffer, selection, resources);
+        breakpointGutterManager.setDebugLineRenderer(new DebugLineRenderer(buffer, resources));
         textInputListenerManager.dispatch(new Dispatcher<TextInputListener>() {
 
             @Override
