@@ -227,7 +227,7 @@ public class BreakpointGutterManager {
 
         renderer.fillOrUpdateLines(oldLIneNumber, oldLIneNumber);
         renderer.fillOrUpdateLines(lineNumber, lineNumber);
-        debugLineRenderer.updateLine(lineNumber);
+        debugLineRenderer.showLine(lineNumber);
     }
 
     /** Unmark current line. */
@@ -239,7 +239,7 @@ public class BreakpointGutterManager {
         markedBreakPoint = null;
 
         renderer.fillOrUpdateLines(oldLIneNumber, oldLIneNumber);
-        debugLineRenderer.updateLine(-1);
+        debugLineRenderer.disableLine();
     }
 
     /**
