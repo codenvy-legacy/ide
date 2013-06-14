@@ -16,17 +16,20 @@
  */
 package com.codenvy.ide.util;
 
+import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.client.ExtensionManager;
 
 import org.apache.commons.io.FileUtils;
+import org.reflections.Reflections;
+import org.reflections.scanners.TypeAnnotationsScanner;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -47,7 +50,7 @@ public class ExtensionManagerGenerator {
      * File content will be overriden.
      */
     protected static final String EXT_MANAGER_PATH =
-            "codenvy-ide-client/src/main/java/com/codenvy/ide/client/ExtensionManager.java";
+            "WEB-INF/classes/com/codenvy/ide/client/ExtensionManager.java";
 
     /** Map containing <FullFQN, ClassName> */
     protected static final Map<String, String> extensionsFqn = new HashMap<String, String>();
@@ -75,7 +78,7 @@ public class ExtensionManagerGenerator {
             System.out.println(String.format("Searching for Extensions in %s", rootFolder.getAbsolutePath()));
             System.out.println(" ------------------------------------------------------------------------ ");
             // find all Extension FQNs
-            findExtensions(rootFolder);
+            findExtensions();
             generateExtensionManager(rootFolder);
         } catch (IOException e) {
             System.err.println(e.getMessage());
@@ -201,36 +204,42 @@ public class ExtensionManagerGenerator {
      * @throws IOException
      */
     @SuppressWarnings("unchecked")
-    public static void findExtensions(File rootFolder) throws IOException {
+    public static void findExtensions() throws IOException {
 
-        // list all Java Files
-        String[] extensions = {"java"};
-        Collection<File> listFiles = FileUtils.listFiles(rootFolder, extensions, true);
-        for (File file : listFiles) {
-            // check file has annotation @Extension
-            String fileContent = FileUtils.readFileToString(file);
-
-            // quick filter is "@Extension" text exists, later, need to check with regexp
-            if (fileContent.contains(EXT_ANNOTATION)) {
-                // for sure file contains Extension annotation, not just "@Extension" in the javadocs or whatever
-                if (EXT_PATTERN.matcher(fileContent).matches()) {
-                    // read package name and class name
-                    String className = file.getName().split("\\.")[0];
-                    String packageName = GeneratorUtils.getClassFQN(file.getAbsolutePath(), fileContent);
-                    if (!packageName.startsWith(GeneratorUtils.COM_CODENVY_IDE_UTIL)) {
-
-                        String fullFqn = packageName + "." + className;
-                        if (!extensionsFqn.containsKey(fullFqn)) {
-                            extensionsFqn.put(fullFqn, className);
-                            System.out.println(String.format("New Extension Found: %s.%s", packageName, className));
-                        }
-                    } else {
-                        // skip this class, cause it is an utility, not the actual extension.
-                        //                  System.out.println(String.format("Skipping class %s.%s as it is utility, not the extension",
-                        //                     packageName, className));
-                    }
-                }
-            }
+//        // list all Java Files
+//        String[] extensions = {"java"};
+//        Collection<File> listFiles = FileUtils.listFiles(rootFolder, extensions, true);
+//        for (File file : listFiles) {
+//            // check file has annotation @Extension
+//            String fileContent = FileUtils.readFileToString(file);
+//
+//            // quick filter is "@Extension" text exists, later, need to check with regexp
+//            if (fileContent.contains(EXT_ANNOTATION)) {
+//                // for sure file contains Extension annotation, not just "@Extension" in the javadocs or whatever
+//                if (EXT_PATTERN.matcher(fileContent).matches()) {
+//                    // read package name and class name
+//                    String className = file.getName().split("\\.")[0];
+//                    String packageName = GeneratorUtils.getClassFQN(file.getAbsolutePath(), fileContent);
+//                    if (!packageName.startsWith(GeneratorUtils.COM_CODENVY_IDE_UTIL)) {
+//
+//                        String fullFqn = packageName + "." + className;
+//                        if (!extensionsFqn.containsKey(fullFqn)) {
+//                            extensionsFqn.put(fullFqn, className);
+//                            System.out.println(String.format("New Extension Found: %s.%s", packageName, className));
+//                        }
+//                    } else {
+//                        // skip this class, cause it is an utility, not the actual extension.
+//                        //                  System.out.println(String.format("Skipping class %s.%s as it is utility, not the extension",
+//                        //                     packageName, className));
+//                    }
+//                }
+//            }
+//        }
+        Reflections reflection = new Reflections(new TypeAnnotationsScanner());
+        Set<Class<?>> classes = reflection.getTypesAnnotatedWith(Extension.class);
+        for (Class clazz : classes) {
+            extensionsFqn.put(clazz.getCanonicalName(), clazz.getSimpleName());
+            System.out.println(String.format("New Extension Found: %s", clazz.getCanonicalName()));
         }
         System.out.println(String.format("Found: %d extensions", extensionsFqn.size()));
     }

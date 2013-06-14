@@ -191,11 +191,6 @@
             <version>${ch.qos.logback.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.crsh</groupId>
-            <artifactId>crsh.shell.core</artifactId>
-            <version>${crash.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-gadget</artifactId>
             <version>${org.exoplatform.ide.version}</version>
