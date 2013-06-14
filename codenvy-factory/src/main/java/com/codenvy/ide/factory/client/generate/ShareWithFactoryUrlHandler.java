@@ -16,21 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.factory.client;
+package com.codenvy.ide.factory.client.generate;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link CommitChangesEvent} event.
+ * Handler for {@link ShareWithFactoryUrlEvent} event.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: CommitChangesHandler.java Jun 11, 2013 11:26:11 AM azatsarynnyy $
+ * @version $Id: ShareWithFactoryUrlHandler.java Jun 11, 2013 11:26:11 AM azatsarynnyy $
  */
-public interface CommitChangesHandler extends EventHandler {
+public interface ShareWithFactoryUrlHandler extends EventHandler {
     /**
-     * Perform actions, when user tries to share an opened project and he has an uncommitted changes.
+     * Perform actions, when user tries to share opened project with Factory URL.
      * 
-     * @param event {@link CommitChangesEvent}
+     * @param event {@link ShareWithFactoryUrlEvent}
      */
-    void onCommitChanges(CommitChangesEvent event);
+    void onShare(ShareWithFactoryUrlEvent event);
 }

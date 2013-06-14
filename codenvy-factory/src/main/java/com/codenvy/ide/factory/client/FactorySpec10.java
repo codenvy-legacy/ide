@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.codenow;
+package com.codenvy.ide.factory.client;
 
 /**
  * Describe parameters for Codenvy Factory feature. Version of specification Codenvy Factory 1.0
@@ -24,7 +24,7 @@ package org.exoplatform.ide.client.framework.codenow;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: CodenvyFactorySpec10.java Nov 30, 2012 vetal $
  */
-public class CodenvyFactorySpec10 {
+public class FactorySpec10 {
 
     /** Mandatory parameter. Version for Codenvy Factory API. */
     public final static String VERSION_PARAMETER = "v";

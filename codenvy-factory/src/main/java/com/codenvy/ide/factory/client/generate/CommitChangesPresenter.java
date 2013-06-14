@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.factory.client;
+package com.codenvy.ide.factory.client.generate;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -147,7 +147,7 @@ public class CommitChangesPresenter implements CommitChangesHandler, ViewClosedH
     }
 
     /**
-     * @see com.codenvy.ide.factory.client.CommitChangesHandler#onCommitChanges(com.codenvy.ide.factory.client.CommitChangesEvent)
+     * @see com.codenvy.ide.factory.client.generate.CommitChangesHandler#onCommitChanges(com.codenvy.ide.factory.client.generate.CommitChangesEvent)
      */
     @Override
     public void onCommitChanges(CommitChangesEvent event) {

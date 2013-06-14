@@ -16,9 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.factory.client;
+package com.codenvy.ide.factory.client.generate;
 
-import com.codenvy.ide.factory.client.GetCodeNowButtonPresenter.Display;
+import com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter.Display;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -107,7 +107,7 @@ public class GetCodeNowButtonView extends ViewImpl implements Display {
     }
 
     /**
-     * @see com.codenvy.ide.factory.client.GetCodeNowButtonPresenter.Display#getWebsitesURLField()
+     * @see com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter.Display#getWebsitesURLField()
      */
     @Override
     public HasValue<String> getWebsitesURLField() {
@@ -115,7 +115,7 @@ public class GetCodeNowButtonView extends ViewImpl implements Display {
     }
 
     /**
-     * @see com.codenvy.ide.factory.client.GetCodeNowButtonPresenter.Display#getGitHubURLField()
+     * @see com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter.Display#getGitHubURLField()
      */
     @Override
     public HasValue<String> getGitHubURLField() {
@@ -123,7 +123,7 @@ public class GetCodeNowButtonView extends ViewImpl implements Display {
     }
 
     /**
-     * @see com.codenvy.ide.factory.client.GetCodeNowButtonPresenter.Display#getDirectSharingURLField()
+     * @see com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter.Display#getDirectSharingURLField()
      */
     @Override
     public HasValue<String> getDirectSharingURLField() {
@@ -131,7 +131,7 @@ public class GetCodeNowButtonView extends ViewImpl implements Display {
     }
 
     /**
-     * @see com.codenvy.ide.factory.client.GetCodeNowButtonPresenter.Display#getOkButton()
+     * @see com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter.Display#getOkButton()
      */
     @Override
     public HasClickHandlers getOkButton() {

@@ -19,6 +19,8 @@
 package org.exoplatform.ide.client.application;
 
 import com.codenvy.ide.client.util.logging.Log;
+import com.codenvy.ide.factory.client.FactorySpec10;
+import com.codenvy.ide.factory.client.receive.StartWithInitParamsEvent;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.http.client.RequestException;
@@ -32,11 +34,8 @@ import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
-import org.exoplatform.ide.client.framework.codenow.CodenvyFactorySpec10;
-import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsEvent;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
-import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.DirectoryFilter;
 import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
@@ -56,7 +55,6 @@ import org.exoplatform.ide.client.model.SettingsServiceImpl;
 import org.exoplatform.ide.client.workspace.event.SwitchVFSEvent;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
@@ -212,8 +210,8 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
         }
         else {
             Map<String, List<String>> parameterMap = Location.getParameterMap();
-            if (parameterMap != null && parameterMap.get(CodenvyFactorySpec10.VERSION_PARAMETER) != null
-                && parameterMap.get(CodenvyFactorySpec10.VERSION_PARAMETER).get(0).equals(CodenvyFactorySpec10.CURRENT_VERSION)) {
+            if (parameterMap != null && parameterMap.get(FactorySpec10.VERSION_PARAMETER) != null
+                && parameterMap.get(FactorySpec10.VERSION_PARAMETER).get(0).equals(FactorySpec10.CURRENT_VERSION)) {
                 IDE.fireEvent(new StartWithInitParamsEvent(parameterMap));
             } else {
                 new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject, initialOpenedFiles, initialActiveFile);

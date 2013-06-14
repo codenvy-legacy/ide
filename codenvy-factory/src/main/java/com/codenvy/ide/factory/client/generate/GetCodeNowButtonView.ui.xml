@@ -39,7 +39,7 @@
         }
 
         .labelTitle {
-            font-size: 13px;
+            font-size: 14px;
             font-family: Verdana, Bitstream Vera Sans, sans-serif;
             font-weight: bold;
             border-bottom: 1px solid #DBDFE5;
@@ -66,6 +66,7 @@
             width: 32px;
             height: 32px;
             margin-right: 10px;
+            margin-bottom: 5px;
         }
     </ui:style>
 

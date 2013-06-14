@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.factory.client;
+package com.codenvy.ide.factory.client.generate;
 
 import com.google.gwt.http.client.RequestException;
 
@@ -64,7 +64,7 @@ public class FactoryURLHandler implements ShareWithFactoryUrlHandler, VfsChanged
     }
 
     /**
-     * @see com.codenvy.ide.factory.client.ShareWithFactoryUrlHandler#onShare(com.codenvy.ide.factory.client.ShareWithFactoryUrlEvent)
+     * @see com.codenvy.ide.factory.client.generate.ShareWithFactoryUrlHandler#onShare(com.codenvy.ide.factory.client.generate.ShareWithFactoryUrlEvent)
      */
     @Override
     public void onShare(ShareWithFactoryUrlEvent event) {

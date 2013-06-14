@@ -64,6 +64,7 @@
 
         .textArea {
             font-size: 14px;
+            resize: none;
         }
 
         .spacing {

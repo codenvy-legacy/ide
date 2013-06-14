@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.factory.client;
+package com.codenvy.ide.factory.client.generate;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -39,20 +39,23 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import static org.exoplatform.ide.client.framework.codenow.CodenvyFactorySpec10.ACTION_PARAMETER;
-import static org.exoplatform.ide.client.framework.codenow.CodenvyFactorySpec10.COMMIT_ID;
-import static org.exoplatform.ide.client.framework.codenow.CodenvyFactorySpec10.CURRENT_VERSION;
-import static org.exoplatform.ide.client.framework.codenow.CodenvyFactorySpec10.DEFAULT_ACTION;
-import static org.exoplatform.ide.client.framework.codenow.CodenvyFactorySpec10.PROJECT_NAME;
-import static org.exoplatform.ide.client.framework.codenow.CodenvyFactorySpec10.VCS;
-import static org.exoplatform.ide.client.framework.codenow.CodenvyFactorySpec10.VCS_URL;
-import static org.exoplatform.ide.client.framework.codenow.CodenvyFactorySpec10.VERSION_PARAMETER;
-import static org.exoplatform.ide.client.framework.codenow.CodenvyFactorySpec10.WORKSPACE_NAME;
+import static com.codenvy.ide.factory.client.FactorySpec10.ACTION_PARAMETER;
+import static com.codenvy.ide.factory.client.FactorySpec10.COMMIT_ID;
+import static com.codenvy.ide.factory.client.FactorySpec10.CURRENT_VERSION;
+import static com.codenvy.ide.factory.client.FactorySpec10.DEFAULT_ACTION;
+import static com.codenvy.ide.factory.client.FactorySpec10.PROJECT_NAME;
+import static com.codenvy.ide.factory.client.FactorySpec10.VCS;
+import static com.codenvy.ide.factory.client.FactorySpec10.VCS_URL;
+import static com.codenvy.ide.factory.client.FactorySpec10.VERSION_PARAMETER;
+import static com.codenvy.ide.factory.client.FactorySpec10.WORKSPACE_NAME;
+
+
 
 /**
  * Presenter to generate a CodeNow button.
@@ -131,7 +134,7 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
     }
 
     /**
-     * @see com.codenvy.ide.factory.client.ShareWithFactoryUrlHandler#onCreateFactoryURL(com.codenvy.ide.factory.client.ShareWithFactoryUrlEvent)
+     * @see com.codenvy.ide.factory.client.generate.ShareWithFactoryUrlHandler#onCreateFactoryURL(com.codenvy.ide.factory.client.ShareWithFactoryUrlEvent)
      */
     @Override
     public void onGetCodeNowButton(OpenGetCodeNowButtonViewEvent event) {
@@ -206,7 +209,7 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
         final String url = "https://www.codenvy.com/factory?" + //
                            VERSION_PARAMETER + "=" + CURRENT_VERSION + "&" + //
                            PROJECT_NAME + "=" + project.getName() + "&" + //
-                           WORKSPACE_NAME + "=workspace_name&" + // TODO
+                           WORKSPACE_NAME + "=" + Utils.getWorkspaceName() + "&" + //
                            VCS + "=git&" + //
                            VCS_URL + "=" + vcsURL + "&" + //
                            COMMIT_ID + "=id_commit&" + // TODO

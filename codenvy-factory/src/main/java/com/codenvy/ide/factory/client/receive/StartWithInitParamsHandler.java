@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,21 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.factory.client;
+
+package com.codenvy.ide.factory.client.receive;
 
 import com.google.gwt.event.shared.EventHandler;
 
+
 /**
- * Handler for {@link ShareWithFactoryUrlEvent} event.
- * 
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ShareWithFactoryUrlHandler.java Jun 11, 2013 11:26:11 AM azatsarynnyy $
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @version $Id: StartWithInitParamsHandler.java Nov 21, 2012 vetal $
  */
-public interface ShareWithFactoryUrlHandler extends EventHandler {
-    /**
-     * Perform actions, when user tries to share opened project with Factory URL.
-     * 
-     * @param event {@link ShareWithFactoryUrlEvent}
-     */
-    void onShare(ShareWithFactoryUrlEvent event);
+public interface StartWithInitParamsHandler extends EventHandler {
+
+    void onStartWithInitParams(StartWithInitParamsEvent event);
+
 }

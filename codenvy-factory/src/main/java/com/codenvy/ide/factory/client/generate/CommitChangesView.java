@@ -16,9 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.factory.client;
+package com.codenvy.ide.factory.client.generate;
 
-import com.codenvy.ide.factory.client.CommitChangesPresenter.Display;
+import com.codenvy.ide.factory.client.generate.CommitChangesPresenter.Display;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -88,7 +88,7 @@ public class CommitChangesView extends ViewImpl implements Display {
     }
 
     /**
-     * @see com.codenvy.ide.factory.client.CommitChangesPresenter.Display#getAllField()
+     * @see com.codenvy.ide.factory.client.generate.CommitChangesPresenter.Display#getAllField()
      */
     @Override
     public HasValue<Boolean> getAllField() {
@@ -96,7 +96,7 @@ public class CommitChangesView extends ViewImpl implements Display {
     }
 
     /**
-     * @see com.codenvy.ide.factory.client.CommitChangesPresenter.Display#getDescriptionField()
+     * @see com.codenvy.ide.factory.client.generate.CommitChangesPresenter.Display#getDescriptionField()
      */
     @Override
     public HasValue<String> getDescriptionField() {
@@ -104,7 +104,7 @@ public class CommitChangesView extends ViewImpl implements Display {
     }
 
     /**
-     * @see com.codenvy.ide.factory.client.CommitChangesPresenter.Display#setPlaceholderText(java.lang.String)
+     * @see com.codenvy.ide.factory.client.generate.CommitChangesPresenter.Display#setPlaceholderText(java.lang.String)
      */
     @Override
     public void setPlaceholderText(String text) {
@@ -112,7 +112,7 @@ public class CommitChangesView extends ViewImpl implements Display {
     }
 
     /**
-     * @see com.codenvy.ide.factory.client.CommitChangesPresenter.Display#getOkButton()
+     * @see com.codenvy.ide.factory.client.generate.CommitChangesPresenter.Display#getOkButton()
      */
     @Override
     public HasClickHandlers getOkButton() {
@@ -120,7 +120,7 @@ public class CommitChangesView extends ViewImpl implements Display {
     }
 
     /**
-     * @see com.codenvy.ide.factory.client.CommitChangesPresenter.Display#getContinueButton()
+     * @see com.codenvy.ide.factory.client.generate.CommitChangesPresenter.Display#getContinueButton()
      */
     @Override
     public HasClickHandlers getContinueButton() {
@@ -128,7 +128,7 @@ public class CommitChangesView extends ViewImpl implements Display {
     }
 
     /**
-     * @see com.codenvy.ide.factory.client.CommitChangesPresenter.Display#focusDescriptionField()
+     * @see com.codenvy.ide.factory.client.generate.CommitChangesPresenter.Display#focusDescriptionField()
      */
     @Override
     public void focusDescriptionField() {
@@ -136,7 +136,7 @@ public class CommitChangesView extends ViewImpl implements Display {
     }
 
     /**
-     * @see com.codenvy.ide.factory.client.CommitChangesPresenter.Display#selectDescriptionField()
+     * @see com.codenvy.ide.factory.client.generate.CommitChangesPresenter.Display#selectDescriptionField()
      */
     @Override
     public void selectDescriptionField() {

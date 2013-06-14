@@ -16,21 +16,31 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.factory.client;
+package com.codenvy.ide.factory.client.generate;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Handler for {@link OpenGetCodeNowButtonViewEvent} event.
+ * Event occurs, when user tries to share opened project with Factory URL.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: OpenGetCodeNowButtonViewHandler.java Jun 11, 2013 11:26:11 AM azatsarynnyy $
+ * @version $Id: ShareWithFactoryUrlEvent.java Jun 11, 2013 11:27:15 AM azatsarynnyy $
  */
-public interface OpenGetCodeNowButtonViewHandler extends EventHandler {
-    /**
-     * Perform actions, when user tries to get a CodeNow button.
-     * 
-     * @param event {@link ShareWithFactoryUrlEvent}
-     */
-    void onGetCodeNowButton(OpenGetCodeNowButtonViewEvent event);
+public class ShareWithFactoryUrlEvent extends GwtEvent<ShareWithFactoryUrlHandler> {
+
+    /** Type used to register this event. */
+    public static final Type<ShareWithFactoryUrlHandler> TYPE = new Type<ShareWithFactoryUrlHandler>();
+
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public Type<ShareWithFactoryUrlHandler> getAssociatedType() {
+        return TYPE;
+    }
+
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ShareWithFactoryUrlHandler handler) {
+        handler.onShare(this);
+    }
+
 }

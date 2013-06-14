@@ -18,6 +18,11 @@
  */
 package com.codenvy.ide.factory.client;
 
+import com.codenvy.ide.factory.client.generate.CommitChangesPresenter;
+import com.codenvy.ide.factory.client.generate.FactoryURLHandler;
+import com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter;
+import com.codenvy.ide.factory.client.generate.ShareWithFactoryUrlControl;
+import com.codenvy.ide.factory.client.receive.CodeNowHandler;
 import com.google.gwt.core.client.GWT;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
@@ -54,6 +59,7 @@ public class FactoryExtension extends Extension implements InitializeServicesHan
         IDE.getInstance().addControl(new ShareWithFactoryUrlControl());
 
         new FactoryURLHandler();
+        new CodeNowHandler();
         new GetCodeNowButtonPresenter();
         new CommitChangesPresenter();
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,18 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
-package org.exoplatform.ide.client.framework.codenow;
+package com.codenvy.ide.factory.client.generate;
 
 import com.google.gwt.event.shared.EventHandler;
 
-
 /**
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: StartWithInitParamsHandler.java Nov 21, 2012 vetal $
+ * Handler for {@link CommitChangesEvent} event.
+ * 
+ * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
+ * @version $Id: CommitChangesHandler.java Jun 11, 2013 11:26:11 AM azatsarynnyy $
  */
-public interface StartWithInitParamsHandler extends EventHandler {
-
-    void onStartWithInitParams(StartWithInitParamsEvent event);
-
+public interface CommitChangesHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to share an opened project and he has an uncommitted changes.
+     * 
+     * @param event {@link CommitChangesEvent}
+     */
+    void onCommitChanges(CommitChangesEvent event);
 }
