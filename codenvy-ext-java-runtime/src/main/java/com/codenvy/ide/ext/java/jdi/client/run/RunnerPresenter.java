@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.run;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeExtension;
@@ -141,7 +142,7 @@ public class RunnerPresenter implements ProjectBuiltHandler {
      * @param warUrl
      *         location of .war file
      */
-    private void runApplication(String warUrl) {
+    private void runApplication(@NotNull String warUrl) {
         DtoClientImpls.ApplicationInstanceImpl applicationInstance = DtoClientImpls.ApplicationInstanceImpl.make();
         ApplicationInstanceUnmarshallerWS unmarshaller = new ApplicationInstanceUnmarshallerWS(applicationInstance);
 
@@ -179,7 +180,7 @@ public class RunnerPresenter implements ProjectBuiltHandler {
      * @param warUrl
      *         location of .war file
      */
-    private void runApplicationREST(String warUrl) {
+    private void runApplicationREST(@NotNull String warUrl) {
         DtoClientImpls.ApplicationInstanceImpl applicationInstance = DtoClientImpls.ApplicationInstanceImpl.make();
         ApplicationInstanceUnmarshaller unmarshaller = new ApplicationInstanceUnmarshaller(applicationInstance);
 
@@ -196,7 +197,7 @@ public class RunnerPresenter implements ProjectBuiltHandler {
                 }
             });
         } catch (RequestException e) {
-            onApplicationStartFailure(null);
+            onApplicationStartFailure(e);
         }
     }
 
@@ -224,7 +225,7 @@ public class RunnerPresenter implements ProjectBuiltHandler {
      * @param app
      *         {@link ApplicationInstance} which is started
      */
-    private void onApplicationStarted(ApplicationInstance app) {
+    private void onApplicationStarted(@NotNull ApplicationInstance app) {
         String msg = constant.applicationStarted(app.getName());
         msg += "<br>" + constant.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
         console.print(msg);
@@ -245,7 +246,7 @@ public class RunnerPresenter implements ProjectBuiltHandler {
      *         {@link ApplicationInstance} application
      * @return application URLs
      */
-    private String getAppUrlsAsString(ApplicationInstance application) {
+    private String getAppUrlsAsString(@NotNull ApplicationInstance application) {
         String appUris = "";
         UrlBuilder builder = new UrlBuilder();
         String uri = builder.setProtocol("http").setHost(application.getHost()).buildString();

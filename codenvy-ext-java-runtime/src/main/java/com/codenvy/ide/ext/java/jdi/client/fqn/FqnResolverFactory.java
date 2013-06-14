@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.fqn;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
 import com.google.inject.Inject;
@@ -36,15 +38,16 @@ public class FqnResolverFactory {
         this.resolvers = JsonCollections.createStringMap();
     }
 
-    public void addResolver(String mimeType, FqnResolver resolver) {
+    public void addResolver(@NotNull String mimeType, @NotNull FqnResolver resolver) {
         resolvers.put(mimeType, resolver);
     }
 
-    public FqnResolver getResolver(String mimeType) {
+    @Nullable
+    public FqnResolver getResolver(@NotNull String mimeType) {
         return resolvers.get(mimeType);
     }
 
-    public boolean isResolverExist(String mimeType) {
+    public boolean isResolverExist(@NotNull String mimeType) {
         return resolvers.containsKey(mimeType);
     }
 }

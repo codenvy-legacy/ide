@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.run;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.java.jdi.shared.ApplicationInstance;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.WebSocketException;
@@ -39,8 +40,8 @@ public interface ApplicationRunnerClientService {
      * @param callback
      * @throws RequestException
      */
-    void runApplication(String project, String war, boolean useJRebel, AsyncRequestCallback<ApplicationInstance> callback)
-            throws RequestException;
+    void runApplication(@NotNull String project, @NotNull String war, boolean useJRebel,
+                        @NotNull AsyncRequestCallback<ApplicationInstance> callback) throws RequestException;
 
     /**
      * Run application by sending request over WebSocket.
@@ -51,8 +52,8 @@ public interface ApplicationRunnerClientService {
      * @param callback
      * @throws WebSocketException
      */
-    void runApplicationWS(String project, String war, boolean useJRebel, RequestCallback<ApplicationInstance> callback)
-            throws WebSocketException;
+    void runApplicationWS(@NotNull String project, @NotNull String war, boolean useJRebel,
+                          @NotNull RequestCallback<ApplicationInstance> callback) throws WebSocketException;
 
     /**
      * Run application in debug mode by sending request over Rest.
@@ -63,8 +64,8 @@ public interface ApplicationRunnerClientService {
      * @param callback
      * @throws RequestException
      */
-    void debugApplication(String project, String war, boolean useJRebel, AsyncRequestCallback<ApplicationInstance> callback)
-            throws RequestException;
+    void debugApplication(@NotNull String project, @NotNull String war, boolean useJRebel,
+                          @NotNull AsyncRequestCallback<ApplicationInstance> callback) throws RequestException;
 
     /**
      * Run application in debug mode by sending request over WebSocket.
@@ -75,8 +76,8 @@ public interface ApplicationRunnerClientService {
      * @param callback
      * @throws WebSocketException
      */
-    void debugApplicationWS(String project, String war, boolean useJRebel, RequestCallback<ApplicationInstance> callback)
-            throws WebSocketException;
+    void debugApplicationWS(@NotNull String project, @NotNull String war, boolean useJRebel,
+                            @NotNull RequestCallback<ApplicationInstance> callback) throws WebSocketException;
 
     /**
      * Gets logs.
@@ -85,7 +86,7 @@ public interface ApplicationRunnerClientService {
      * @param callback
      * @throws RequestException
      */
-    void getLogs(String name, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+    void getLogs(@NotNull String name, @NotNull AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 
     /**
      * Prolong expiration time of the application.
@@ -98,7 +99,7 @@ public interface ApplicationRunnerClientService {
      *         {@link RequestCallback}
      * @throws WebSocketException
      */
-    void prolongExpirationTime(String name, long time, RequestCallback<Object> callback) throws WebSocketException;
+    void prolongExpirationTime(@NotNull String name, long time, @NotNull RequestCallback<Object> callback) throws WebSocketException;
 
     /**
      * Update already deployed Java web application.
@@ -111,5 +112,6 @@ public interface ApplicationRunnerClientService {
      *         {@link AsyncRequestCallback}
      * @throws RequestException
      */
-    void updateApplication(String name, String war, AsyncRequestCallback<Object> callback) throws RequestException;
+    void updateApplication(@NotNull String name, @NotNull String war, @NotNull AsyncRequestCallback<Object> callback)
+            throws RequestException;
 }
