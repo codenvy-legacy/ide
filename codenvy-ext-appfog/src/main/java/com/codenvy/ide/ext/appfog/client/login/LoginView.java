@@ -91,6 +91,7 @@ public interface LoginView extends View<LoginView.ActionDelegate> {
      * Change the enable state of the login button.
      *
      * @param enabled
+     *         <code>true</code> to enable the button, <code>false</code> to disable it
      */
     void setEnableLoginButton(boolean enabled);
 

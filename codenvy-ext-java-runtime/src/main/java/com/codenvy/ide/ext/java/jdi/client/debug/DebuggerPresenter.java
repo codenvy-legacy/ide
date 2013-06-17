@@ -34,6 +34,7 @@ import com.codenvy.ide.debug.Debugger;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeExtension;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
+import com.codenvy.ide.ext.java.jdi.client.debug.expression.EvaluateExpressionPresenter;
 import com.codenvy.ide.ext.java.jdi.client.debug.relaunch.ReLaunchDebuggerPresenter;
 import com.codenvy.ide.ext.java.jdi.client.fqn.FqnResolverFactory;
 import com.codenvy.ide.ext.java.jdi.client.marshaller.*;
@@ -125,6 +126,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private String                                 restContext;
     private HandlerRegistration                    projectBuildHandler;
     private ReLaunchDebuggerPresenter              reLaunchDebuggerPresenter;
+    private EvaluateExpressionPresenter            evaluateExpressionPresenter;
     private JsonStringMap<File>                    fileWithBreakPoints;
     /** Handler for processing events which is received from debugger over WebSocket connection. */
     private SubscriptionHandler<DebuggerEventList> debuggerEventsHandler;
@@ -194,6 +196,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      * @param resolverFactory
      * @param editorAgent
      * @param reLaunchDebuggerPresenter
+     * @param evaluateExpressionPresenter
      */
     @Inject
     protected DebuggerPresenter(DebuggerView view, JavaRuntimeResources resources, DebuggerClientService service, EventBus eventBus,
@@ -201,7 +204,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                                 ResourceProvider resourceProvider, WorkspaceAgent workspaceAgent,
                                 ApplicationRunnerClientService applicationRunnerClientService, @Named("restContext") String restContext,
                                 BreakpointGutterManager gutterManager, FqnResolverFactory resolverFactory, EditorAgent editorAgent,
-                                ReLaunchDebuggerPresenter reLaunchDebuggerPresenter) {
+                                ReLaunchDebuggerPresenter reLaunchDebuggerPresenter,
+                                EvaluateExpressionPresenter evaluateExpressionPresenter) {
         this.view = view;
         this.view.setDelegate(this);
         this.view.setTitle(TITLE);
@@ -221,6 +225,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         this.variables = JsonCollections.createArray();
         this.editorAgent = editorAgent;
         this.reLaunchDebuggerPresenter = reLaunchDebuggerPresenter;
+        this.evaluateExpressionPresenter = evaluateExpressionPresenter;
         this.expireSoonAppsHandler = new SubscriptionHandler<Object>() {
             @Override
             public void onMessageReceived(Object result) {
@@ -299,9 +304,10 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 } catch (WebSocketException e) {
                     // nothing to do
                 }
-                // TODO close
-                // display.closeExpirationDialog();
+
+                DebuggerPresenter.this.evaluateExpressionPresenter.closeDialog();
                 closeDialog();
+
                 if (runningApp != null) {
                     DebuggerPresenter.this.console.print(DebuggerPresenter.this.constant.debuggerDisconnected());
                     debuggerDisconnected();
@@ -688,8 +694,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     /** {@inheritDoc} */
     @Override
     public void onEvaluateExpressionButtonClicked() {
-        // TODO
-        // IDE.fireEvent(new EvaluateExpressionEvent(debuggerInfo));
+        evaluateExpressionPresenter.showDialog(debuggerInfo);
     }
 
     /** {@inheritDoc} */

@@ -16,35 +16,43 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.java.jdi.client.debug.relaunch;
+package com.codenvy.ide.ext.java.jdi.client.debug.expression;
 
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
 import com.codenvy.ide.ui.Button;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * The implementation of {@link ReLaunchDebuggerView}.
+ * The implementation of {@link EvaluateExpressionView}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class ReLaunchDebuggerViewImpl extends DialogBox implements ReLaunchDebuggerView {
-    interface ReLaunchDebuggerViewImplUiBinder extends UiBinder<Widget, ReLaunchDebuggerViewImpl> {
+public class EvaluateExpressionViewImpl extends DialogBox implements EvaluateExpressionView {
+    interface EvaluateExpressionViewImplUiBinder extends UiBinder<Widget, EvaluateExpressionViewImpl> {
     }
 
-    private static ReLaunchDebuggerViewImplUiBinder ourUiBinder = GWT.create(ReLaunchDebuggerViewImplUiBinder.class);
+    private static EvaluateExpressionViewImplUiBinder ourUiBinder = GWT.create(EvaluateExpressionViewImplUiBinder.class);
 
     @UiField
+    Button                          btnEvaluate;
+    @UiField
     Button                          btnCancel;
+    @UiField
+    TextArea                        expression;
+    @UiField
+    TextArea                        result;
     @UiField(provided = true)
     JavaRuntimeLocalizationConstant locale;
     @UiField(provided = true)
@@ -58,20 +66,44 @@ public class ReLaunchDebuggerViewImpl extends DialogBox implements ReLaunchDebug
      * @param locale
      */
     @Inject
-    protected ReLaunchDebuggerViewImpl(JavaRuntimeResources resources, JavaRuntimeLocalizationConstant locale) {
+    protected EvaluateExpressionViewImpl(JavaRuntimeResources resources, JavaRuntimeLocalizationConstant locale) {
         this.locale = locale;
         this.res = resources;
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 
-        this.setText(this.locale.debug());
+        this.setText(this.locale.evaluateExpressionViewTitle());
         this.setWidget(widget);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setDelegate(ActionDelegate delegate) {
-        this.delegate = delegate;
+    public String getExpression() {
+        return expression.getText();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setExpression(String expression) {
+        this.expression.setText(expression);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setResult(String value) {
+        this.result.setText(value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setEnableEvaluateButton(boolean enabled) {
+        btnEvaluate.setEnabled(enabled);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void focusInExpressionField() {
+        expression.setFocus(true);
     }
 
     /** {@inheritDoc} */
@@ -87,8 +119,24 @@ public class ReLaunchDebuggerViewImpl extends DialogBox implements ReLaunchDebug
         this.show();
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void setDelegate(ActionDelegate delegate) {
+        this.delegate = delegate;
+    }
+
+    @UiHandler("btnEvaluate")
+    public void onEvaluateClicked(ClickEvent event) {
+        delegate.onEvaluateClicked();
+    }
+
     @UiHandler("btnCancel")
     public void onCancelClicked(ClickEvent event) {
         delegate.onCancelClicked();
+    }
+
+    @UiHandler("expression")
+    public void handleKeyUp(KeyUpEvent event) {
+        delegate.onValueExpressionChanged();
     }
 }

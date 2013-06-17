@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.fqn;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.resources.model.File;
 
 /**
@@ -25,5 +26,6 @@ import com.codenvy.ide.resources.model.File;
  * @version $Id:  4:58:00 PM Mar 28, 2012 evgen $
  */
 public interface FqnResolver {
-    String resolveFqn(File file);
+    @NotNull
+    String resolveFqn(@NotNull File file);
 }

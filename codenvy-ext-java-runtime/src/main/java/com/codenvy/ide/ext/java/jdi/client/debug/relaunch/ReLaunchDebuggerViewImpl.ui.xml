@@ -22,7 +22,7 @@
         </g:south>
         <g:center>
             <g:FlowPanel>
-                <g:Label text="{locale.debug}"/>
+                <g:Label text="{locale.notStartedYet}"/>
             </g:FlowPanel>
         </g:center>
     </g:DockLayoutPanel>
