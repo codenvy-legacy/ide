@@ -18,6 +18,7 @@
         <!-- GWT needs at least java 1.5 -->
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <generated.sources.directory>${project.build.directory}/generated-sources/gen</generated.sources.directory>
     </properties>
 
     <dependencies>
@@ -169,27 +170,27 @@
                 <executions>
                     <execution>
                         <id>extManager-client</id>
-                        <phase>compile</phase>
+                        <phase>generate-sources</phase>
                         <goals>
                             <goal>java</goal>
                         </goals>
                         <configuration>
-                            <mainClass>com.codenvy.ide.util.ExtensionManagerGenerator</mainClass>
+                            <mainClass>com.codenvy.util.ExtensionManagerGenerator</mainClass>
                             <arguments>
-                                <argument>--rootDir=${webappDirectory}</argument>
+                                <argument>--rootDir=${generated.sources.directory}</argument>
                             </arguments>
                         </configuration>
                     </execution>
                     <execution>
                         <id>IDEInjector-client</id>
-                        <phase>compile</phase>
+                        <phase>generate-sources</phase>
                         <goals>
                             <goal>java</goal>
                         </goals>
                         <configuration>
-                            <mainClass>com.codenvy.ide.util.IDEInjectorGenerator</mainClass>
+                            <mainClass>com.codenvy.util.IDEInjectorGenerator</mainClass>
                             <arguments>
-                                <argument>--rootDir=${webappDirectory}</argument>
+                                <argument>--rootDir=${generated.sources.directory}</argument>
                             </arguments>
                         </configuration>
                     </execution>
@@ -237,6 +238,25 @@
                     <source>1.6</source>
                     <target>1.6</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${generated.sources.directory}</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

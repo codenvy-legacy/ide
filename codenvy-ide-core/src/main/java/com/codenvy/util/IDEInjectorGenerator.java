@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package com.codenvy.ide.util;
+package com.codenvy.util;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 
@@ -44,10 +44,11 @@ public class IDEInjectorGenerator {
      * File content will be overriden.
      */
     protected static final String IDE_INJECTOR_PATH =
-            "WEB-INF/classes/com/codenvy/ide/client/inject/IDEInjector.java";
+            "com/codenvy/ide/client/inject/IDEInjector.java";
 
     /** Set containing all the FQNs of GinModules */
     public static final Set<String> extensionsFqn = new HashSet<String>();
+    public static final String      CLIENT_MODULE = "com.codenvy.ide.client.inject.IDEClientModule";
 
     /**
      * Entry point. --rootDir is the optional parameter.
@@ -90,10 +91,10 @@ public class IDEInjectorGenerator {
      */
     public static void generateExtensionManager(File rootFolder) throws IOException {
         File extManager = new File(rootFolder, IDE_INJECTOR_PATH);
-        if (!extManager.exists()) {
-            throw new IOException(String.format("File \"%s\" not found. Utility seems to be started in wrong folder",
-                                                IDE_INJECTOR_PATH));
-        }
+//        if (!extManager.exists()) {
+//            throw new IOException(String.format("File \"%s\" not found. Utility seems to be started in wrong folder",
+//                                                IDE_INJECTOR_PATH));
+//        }
 
         StringBuilder builder = new StringBuilder();
         // declare packagename
@@ -191,6 +192,8 @@ public class IDEInjectorGenerator {
             extensionsFqn.add(clazz.getCanonicalName());
             System.out.println(String.format("New Gin Module Found: %s", clazz.getCanonicalName()));
         }
+        extensionsFqn.add(CLIENT_MODULE);
+        System.out.println(String.format("New Gin Module Found: %s", CLIENT_MODULE));
         System.out.println(String.format("Found: %d Gin Modules", extensionsFqn.size()));
     }
 
