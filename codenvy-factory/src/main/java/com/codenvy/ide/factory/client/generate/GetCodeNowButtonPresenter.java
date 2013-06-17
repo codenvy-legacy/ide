@@ -23,6 +23,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasValue;
 
@@ -43,6 +44,8 @@ import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
+import org.exoplatform.ide.git.client.marshaller.LogResponse;
+import org.exoplatform.ide.git.client.marshaller.LogResponseUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
@@ -148,17 +151,18 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
     }
 
     public void bindDisplay() {
+        final String factoryURLEscaped = SafeHtmlUtils.fromString(factoryURL).asString();
         display.getShareFacebookButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                Window.open("https://www.facebook.com/sharer/sharer.php?u=" + factoryURL, "", "width=626,height=436");
+                Window.open("https://www.facebook.com/sharer/sharer.php?u=" + factoryURLEscaped, "", "width=626,height=436");
             }
         });
 
         display.getShareGooglePlusButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                Window.open("https://plus.google.com/share?url=" + factoryURL, "",
+                Window.open("https://plus.google.com/share?url=" + factoryURLEscaped, "",
                             "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600");
             }
         });
@@ -166,14 +170,15 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
         display.getShareTwitterButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                // TODO
+                Window.open("https://twitter.com/share?url=" + factoryURLEscaped, "",
+                            "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600");
             }
         });
 
         display.getShareEmailButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                Window.open("mailto:?subject=Codenvy Factory URL&body=" + factoryURL, "",
+                Window.open("mailto:?subject=Codenvy Factory URL&body=" + factoryURLEscaped, "",
                             "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=200,width=200");
             }
         });
@@ -203,7 +208,7 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
      */
     @Override
     public void onGetCodeNowButton(OpenGetCodeNowButtonViewEvent event) {
-        getRepoUrlAndOpenView(openedProject);
+        getLatestCommitId(openedProject);
     }
 
     /**
@@ -241,7 +246,35 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
         openedProject = null;
     }
 
-    private void getRepoUrlAndOpenView(final ProjectModel project) {
+    private void getLatestCommitId(final ProjectModel project) {
+        try {
+            GitClientService.getInstance()
+                            .log(vfs.getId(), project.getId(), false,
+                                 new AsyncRequestCallback<LogResponse>(new LogResponseUnmarshaller(new LogResponse(), false)) {
+                                     @Override
+                                     protected void onSuccess(LogResponse result) {
+                                         String latestCommitId = null;
+                                         if (result.getCommits().size() > 0) {
+                                             latestCommitId = result.getCommits().get(0).getId();
+                                         }
+                                         getRepoUrlAndOpenView(project, latestCommitId);
+                                     }
+
+                                     @Override
+                                     protected void onFailure(Throwable exception) {
+                                         String errorMessage =
+                                                               (exception.getMessage() != null) ? exception.getMessage()
+                                                                   : GitExtension.MESSAGES.logFailed();
+                                         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+                                     }
+                                 });
+        } catch (RequestException e) {
+            String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.logFailed();
+            IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+        }
+    }
+
+    private void getRepoUrlAndOpenView(final ProjectModel project, final String latestCommitId) {
         try {
             GitClientService.getInstance()
                             .getGitReadOnlyUrl(vfs.getId(),
@@ -249,7 +282,7 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
                                                new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder())) {
                                                    @Override
                                                    protected void onSuccess(StringBuilder result) {
-                                                       generateFactoryURL(result.toString(), project);
+                                                       generateFactoryURL(result.toString(), project, latestCommitId);
                                                    }
 
                                                    @Override
@@ -270,14 +303,14 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
         }
     }
 
-    private void generateFactoryURL(String vcsURL, ProjectModel project) {
+    private void generateFactoryURL(String vcsURL, ProjectModel project, String latestCommitId) {
         factoryURL = "https://www.codenvy.com/factory?" + //
                      VERSION_PARAMETER + "=" + CURRENT_VERSION + "&" + //
                      PROJECT_NAME + "=" + project.getName() + "&" + //
                      WORKSPACE_NAME + "=" + Utils.getWorkspaceName() + "&" + //
                      VCS + "=git&" + //
                      VCS_URL + "=" + vcsURL + "&" + //
-                     COMMIT_ID + "=id_commit&" + // TODO
+                     COMMIT_ID + "=" + latestCommitId + "&" + //
                      ACTION_PARAMETER + "=" + DEFAULT_ACTION;
         openView();
     }

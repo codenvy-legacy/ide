@@ -42,14 +42,20 @@
             font-size: 14px;
             font-family: Verdana, Bitstream Vera Sans, sans-serif;
             font-weight: bold;
-            border-bottom: 1px solid #DBDFE5;
             margin-top: 10px;
             margin-bottom: 10px;
+        }
+
+        .borderBottom {
+            border-bottom: 1px solid #DBDFE5;
         }
 
         .textArea {
             font-size: 13px;
             resize: none;
+            overflow: hidden;
+            color: #666;
+            padding: 5px;
         }
 
         .textAreaLabel {
@@ -82,43 +88,45 @@
     <f:Border margin="15" borderColor="transparent">
         <f:layer>
             <g:FlowPanel styleName="{style.padding}">
-                <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle}" text="Customize"></g:Label>
+                <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom}" text="Customize"></g:Label>
 
-                <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle}" text="Embed"></g:Label>
-                <g:FlowPanel width="100%" height="55%">
+                <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom}" text="Embed"></g:Label>
+                <g:FlowPanel width="100%" height="180px">
                     <g:FlowPanel addStyleNames="{style.floatLeft} {style.marginLeft}">
                         <g:Image resource="{resource.world}" styleName="{style.image}"></g:Image>
                         <g:Label addStyleNames="{style.textAreaLabel}" text="on Websites"></g:Label>
-                        <f:TextAreaInput ui:field="websitesURLField" width="250px" height="130px" addStyleNames="{style.floatLeft} {style.textArea}">
+                        <f:TextAreaInput ui:field="websitesURLField" width="250px" height="150px" addStyleNames="{style.floatLeft} {style.textArea}">
                         </f:TextAreaInput>
 	                </g:FlowPanel>
 
                     <g:FlowPanel addStyleNames="{style.floatLeft} {style.marginLeft}">
                         <g:Image resource="{resource.gitHub}" styleName="{style.image}"></g:Image>
                         <g:Label addStyleNames="{style.textAreaLabel}" text="on GitHub"></g:Label>
-                        <f:TextAreaInput ui:field="gitHubURLField" width="250px" height="130px" addStyleNames="{style.floatLeft} {style.textArea}">
+                        <f:TextAreaInput ui:field="gitHubURLField" width="250px" height="150px" addStyleNames="{style.floatLeft} {style.textArea}">
                         </f:TextAreaInput>
                     </g:FlowPanel>
 
                     <g:FlowPanel addStyleNames="{style.floatLeft} {style.marginLeft}">
                         <g:Image resource="{resource.link}" styleName="{style.image}"></g:Image>
                         <g:Label addStyleNames="{style.textAreaLabel}" text="Direct Sharing"></g:Label>
-                        <f:TextAreaInput ui:field="directSharingURLField" width="250px" height="130px" addStyleNames="{style.floatLeft} {style.textArea}">
+                        <f:TextAreaInput ui:field="directSharingURLField" width="250px" height="150px" addStyleNames="{style.floatLeft} {style.textArea}">
                         </f:TextAreaInput>
                     </g:FlowPanel>
                 </g:FlowPanel>
 
-                <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle}" text="Share it to your friends"></g:Label>
-                <g:FlowPanel width="100%" height="45%">
-                    <g:Image ui:field="shareFacebookButton" resource="{resource.link}" styleName="{style.shareButton}"></g:Image>
+                <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom}" text="Share it to your friends"></g:Label>
+                <g:FlowPanel width="168px" height="40px" styleName="{style.center}">
+                    <g:Image ui:field="shareFacebookButton" resource="{resource.facebook}" styleName="{style.shareButton}"></g:Image>
                     <g:Image ui:field="shareGooglePlusButton" url="https://www.gstatic.com/images/icons/gplus-32.png" styleName="{style.shareButton}"></g:Image>
-                    <g:Image ui:field="shareTwitterButton" resource="{resource.link}" styleName="{style.shareButton}"></g:Image>
-                    <g:Image ui:field="shareEmailButton" resource="{resource.link}" styleName="{style.shareButton}"></g:Image>
+                    <g:Image ui:field="shareTwitterButton" resource="{resource.twitter}" styleName="{style.shareButton}"></g:Image>
+                    <g:Image ui:field="shareEmailButton" resource="{resource.mail}" styleName="{style.shareButton}"></g:Image>
                 </g:FlowPanel>
+
+                <g:Label width="100%" height="5px" addStyleNames="{style.borderBottom}"></g:Label>
             </g:FlowPanel>
         </f:layer>
         <f:layer height="22px" bottom="0">
-            <g:FlowPanel width="90px" styleName="{style.center}">
+            <g:FlowPanel width="90px" addStyleNames="{style.center}">
                 <f:ImageButton ui:field="okButton" width="90" height="22" text="{locale.buttonOk}" imageResource="{resource.ok}"
                                disabledImageResource="{resource.okDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
             </g:FlowPanel>
