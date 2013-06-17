@@ -34,6 +34,7 @@ import com.codenvy.ide.debug.Debugger;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeExtension;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
+import com.codenvy.ide.ext.java.jdi.client.debug.changevalue.ChangeValuePresenter;
 import com.codenvy.ide.ext.java.jdi.client.debug.expression.EvaluateExpressionPresenter;
 import com.codenvy.ide.ext.java.jdi.client.debug.relaunch.ReLaunchDebuggerPresenter;
 import com.codenvy.ide.ext.java.jdi.client.fqn.FqnResolverFactory;
@@ -127,6 +128,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private HandlerRegistration                    projectBuildHandler;
     private ReLaunchDebuggerPresenter              reLaunchDebuggerPresenter;
     private EvaluateExpressionPresenter            evaluateExpressionPresenter;
+    private ChangeValuePresenter                   changeValuePresenter;
     private JsonStringMap<File>                    fileWithBreakPoints;
     /** Handler for processing events which is received from debugger over WebSocket connection. */
     private SubscriptionHandler<DebuggerEventList> debuggerEventsHandler;
@@ -197,6 +199,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      * @param editorAgent
      * @param reLaunchDebuggerPresenter
      * @param evaluateExpressionPresenter
+     * @param changeValuePresenter
      */
     @Inject
     protected DebuggerPresenter(DebuggerView view, JavaRuntimeResources resources, DebuggerClientService service, EventBus eventBus,
@@ -205,7 +208,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                                 ApplicationRunnerClientService applicationRunnerClientService, @Named("restContext") String restContext,
                                 BreakpointGutterManager gutterManager, FqnResolverFactory resolverFactory, EditorAgent editorAgent,
                                 ReLaunchDebuggerPresenter reLaunchDebuggerPresenter,
-                                EvaluateExpressionPresenter evaluateExpressionPresenter) {
+                                EvaluateExpressionPresenter evaluateExpressionPresenter, ChangeValuePresenter changeValuePresenter) {
         this.view = view;
         this.view.setDelegate(this);
         this.view.setTitle(TITLE);
@@ -226,6 +229,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         this.editorAgent = editorAgent;
         this.reLaunchDebuggerPresenter = reLaunchDebuggerPresenter;
         this.evaluateExpressionPresenter = evaluateExpressionPresenter;
+        this.changeValuePresenter = changeValuePresenter;
         this.expireSoonAppsHandler = new SubscriptionHandler<Object>() {
             @Override
             public void onMessageReceived(Object result) {
@@ -687,8 +691,22 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     /** {@inheritDoc} */
     @Override
     public void onChangeValueButtonClicked() {
-        // TODO
-        // IDE.fireEvent(new ChangeValueEvent(debuggerInfo, display.getSelectedVariable()));
+        if (selectedVariable == null) {
+            return;
+        }
+
+        changeValuePresenter.showDialog(debuggerInfo, selectedVariable, new AsyncCallback<String>() {
+            @Override
+            public void onSuccess(String s) {
+                ((DtoClientImpls.VariableImpl)selectedVariable).setValue(s);
+                view.setVariables(variables);
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                Log.error(DebuggerPresenter.class, throwable);
+            }
+        });
     }
 
     /** {@inheritDoc} */
@@ -701,11 +719,20 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     @Override
     public void onSelectedVariable(Variable variable) {
         selectedVariable = variable;
+        updateChangeValueButton();
     }
 
+    /** Update enable state for change value button. */
+    private void updateChangeValueButton() {
+        view.setEnableChangeValueButtonEnable(selectedVariable != null);
+    }
+
+    /** Reset states. */
     private void resetStates() {
         variables.clear();
         view.setVariables(variables);
+        selectedVariable = null;
+        updateChangeValueButton();
         gutterManager.unmarkCurrentBreakPoint();
     }
 
@@ -1096,6 +1123,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private void showDialog(@NotNull DebuggerInfo debuggerInfo) {
         String vmName = debuggerInfo.getVmName() + " " + debuggerInfo.getVmVersion();
         view.setVMName(vmName);
+        selectedVariable = null;
+        updateChangeValueButton();
 
         workspaceAgent.openPart(this, PartStackType.INFORMATION);
         PartPresenter activePart = partStack.getActivePart();

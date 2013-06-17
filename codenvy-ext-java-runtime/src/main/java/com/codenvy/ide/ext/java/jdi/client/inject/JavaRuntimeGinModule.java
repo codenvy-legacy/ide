@@ -23,6 +23,8 @@ import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerClientService;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerClientServiceImpl;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerView;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerViewImpl;
+import com.codenvy.ide.ext.java.jdi.client.debug.changevalue.ChangeValueView;
+import com.codenvy.ide.ext.java.jdi.client.debug.changevalue.ChangeValueViewImpl;
 import com.codenvy.ide.ext.java.jdi.client.debug.expression.EvaluateExpressionView;
 import com.codenvy.ide.ext.java.jdi.client.debug.expression.EvaluateExpressionViewImpl;
 import com.codenvy.ide.ext.java.jdi.client.debug.relaunch.ReLaunchDebuggerView;
@@ -43,5 +45,6 @@ public class JavaRuntimeGinModule extends AbstractGinModule {
         bind(DebuggerView.class).to(DebuggerViewImpl.class).in(Singleton.class);
         bind(ReLaunchDebuggerView.class).to(ReLaunchDebuggerViewImpl.class).in(Singleton.class);
         bind(EvaluateExpressionView.class).to(EvaluateExpressionViewImpl.class).in(Singleton.class);
+        bind(ChangeValueView.class).to(ChangeValueViewImpl.class).in(Singleton.class);
     }
 }
