@@ -37,6 +37,7 @@ import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
 import com.codenvy.ide.ext.java.jdi.client.debug.changevalue.ChangeValuePresenter;
 import com.codenvy.ide.ext.java.jdi.client.debug.expression.EvaluateExpressionPresenter;
 import com.codenvy.ide.ext.java.jdi.client.debug.relaunch.ReLaunchDebuggerPresenter;
+import com.codenvy.ide.ext.java.jdi.client.fqn.FqnResolver;
 import com.codenvy.ide.ext.java.jdi.client.fqn.FqnResolverFactory;
 import com.codenvy.ide.ext.java.jdi.client.marshaller.*;
 import com.codenvy.ide.ext.java.jdi.client.run.ApplicationRunnerClientService;
@@ -87,23 +88,21 @@ import static com.codenvy.ide.ext.java.jdi.shared.DebuggerEvent.STEP;
 public class DebuggerPresenter extends BasePresenter implements DebuggerView.ActionDelegate, ProjectBuiltHandler, Debugger {
     private static final String TITLE                    = "Debug";
     /** Default time (in milliseconds) to prolong application expiration time. */
-    private static       long   DEFAULT_PROLONG_TIME     = 10 * 60 * 1000; // 10 minutes
+    private static final long   DEFAULT_PROLONG_TIME     = 10 * 60 * 1000; // 10 minutes
     /** Name of 'JRebel' project property. */
     private static final String JREBEL                   = "jrebel";
     /** Name of 'JRebel update' project property. */
-    private final        String JREBEL_COUNT             = "jrebelCount";
+    private static final String JREBEL_COUNT             = "jrebelCount";
     /** Max number of JRebel updating. */
-    private final        byte   MAX_NUMBER_JREBEL_UPDATE = 10;
+    private static final byte   MAX_NUMBER_JREBEL_UPDATE = 10;
     /** Value of 'JRebel update' project property if user data  forward to ZeroTurnaround. */
-    private final        byte   JREBEL_UPDATED           = 0;
+    private static final byte   JREBEL_UPDATED           = 0;
     /** Channel identifier to receive events from debugger over WebSocket. */
     private String                                 debuggerEventsChannel;
     /** Channel identifier to receive event when debugger will disconnected. */
     private String                                 debuggerDisconnectedChannel;
     /** Channel identifier to receive events when application expiration time will left. */
     private String                                 expireSoonAppChannel;
-    /** Channel identifier to receive events when application stop. */
-    private String                                 applicationStoppedChannel;
     /** Used to check if events from debugger receiving over WebSocket or over HTTP. */
     private boolean                                isCheckEventsTimerRunned;
     private DebuggerView                           view;
@@ -136,8 +135,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private SubscriptionHandler<Object>            expireSoonAppsHandler;
     /** Handler for processing debugger disconnected event. */
     private SubscriptionHandler<Object>            debuggerDisconnectedHandler;
-    /** Handler for processing debugger disconnected event. */
-    private SubscriptionHandler<Object>            applicationStoppedHandler;
     private JsonArray<Variable>                    variables;
     /** A timer for checking events */
     private Timer checkEventsTimer = new Timer() {
@@ -240,17 +237,13 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 } catch (WebSocketException e) {
                     // nothing to do
                 }
-// TODO
-//                display.showExpirationDialog(new BooleanValueReceivedHandler() {
-//                    @Override
-//                    public void booleanValueReceived(Boolean value) {
-//                        if (value) {
-//                            prolongExpirationTime();
-//                        } else {
-//                            doDisconnectDebugger();
-//                        }
-//                    }
-//                });
+
+                boolean isProlonged = Window.confirm(DebuggerPresenter.this.constant.prolongExpirationTimeQuestion());
+                if (isProlonged) {
+                    prolongExpirationTime();
+                } else {
+                    doDisconnectDebugger();
+                }
             }
 
             @Override
@@ -328,32 +321,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 }
             }
         };
-
-        this.applicationStoppedHandler = new SubscriptionHandler<Object>() {
-            @Override
-            protected void onMessageReceived(Object result) {
-                try {
-                    DebuggerPresenter.this.messageBus.unsubscribe(applicationStoppedChannel, this);
-                } catch (WebSocketException e) {
-                    // nothing to do
-                }
-
-                closeDialog();
-
-                if (runningApp != null) {
-                    appStopped(runningApp.getName());
-                }
-            }
-
-            @Override
-            protected void onErrorReceived(Throwable exception) {
-                try {
-                    DebuggerPresenter.this.messageBus.unsubscribe(applicationStoppedChannel, this);
-                } catch (WebSocketException e) {
-                    // nothing to do
-                }
-            }
-        };
     }
 
     /**
@@ -410,7 +377,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      * Create file path from location.
      *
      * @param location
-     * @return
+     *         location of class
+     * @return file path
      */
     @NotNull
     private String resolveFilePath(@NotNull Location location) {
@@ -459,9 +427,10 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     }
 
     /**
-     * Set enable buttons.
+     * Change the enable state of buttons.
      *
      * @param isEnable
+     *         <code>true</code> to enable the button, <code>false</code> to disable it
      */
     private void enableButtons(boolean isEnable) {
         view.setEnableResumeButton(isEnable);
@@ -469,6 +438,33 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         view.setEnableStepOverButton(isEnable);
         view.setEnableStepReturnButton(isEnable);
         view.setEnableEvaluateExpressionButtonEnable(isEnable);
+    }
+
+    /** Prolong expiration time of the application which is currently runned. */
+    private void prolongExpirationTime() {
+        try {
+            applicationRunnerClientService.prolongExpirationTime(runningApp.getName(), DEFAULT_PROLONG_TIME, new RequestCallback<Object>() {
+                @Override
+                protected void onSuccess(Object result) {
+                    try {
+                        messageBus.subscribe(expireSoonAppChannel, expireSoonAppsHandler);
+                    } catch (WebSocketException e) {
+                        // nothing to do
+                    }
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    if (exception.getMessage() == null) {
+                        Window.alert(constant.prolongExpirationTimeFailed());
+                    } else {
+                        Window.alert(exception.getMessage());
+                    }
+                }
+            });
+        } catch (WebSocketException e) {
+            Window.alert(constant.prolongExpirationTimeFailed());
+        }
     }
 
     /** {@inheritDoc} */
@@ -588,6 +584,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      * Show message about stopped some application.
      *
      * @param appName
+     *         application name
      */
     private void appStopped(String appName) {
         String msg = constant.applicationStoped(appName);
@@ -873,7 +870,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      * Creates application's url in HTML format.
      *
      * @param application
-     * @return
+     *         current application
+     * @return url
      */
     private String getAppUrlsAsString(ApplicationInstance application) {
         String appUris = "";
@@ -926,6 +924,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      * Perform some action when debug is started.
      *
      * @param app
+     *         current application
      */
     private void onDebugStarted(@NotNull ApplicationInstance app) {
         String msg = constant.applicationStarted(app.getName());
@@ -947,6 +946,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      * Connect to debugger.
      *
      * @param debugApplicationInstance
+     *         current application
      */
     private void connectDebugger(@NotNull final ApplicationInstance debugApplicationInstance) {
         DtoClientImpls.DebuggerInfoImpl debuggerInfo = DtoClientImpls.DebuggerInfoImpl.make();
@@ -976,17 +976,14 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      * Reconnect debugger.
      *
      * @param debugApplicationInstance
+     *         current application
      */
     private void reconnectDebugger(@NotNull ApplicationInstance debugApplicationInstance) {
         reLaunchDebuggerPresenter.showDialog(debugApplicationInstance, new AsyncCallback<DebuggerInfo>() {
             @Override
             public void onSuccess(DebuggerInfo debuggerInfo) {
-                if (debuggerInfo != null) {
-                    DebuggerPresenter.this.debuggerInfo = debuggerInfo;
-                    showDialog(debuggerInfo);
-                } else {
-                    onStopApp();
-                }
+                DebuggerPresenter.this.debuggerInfo = debuggerInfo;
+                showDialog(debuggerInfo);
             }
 
             @Override
@@ -994,16 +991,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 Log.error(DebuggerPresenter.class, throwable);
             }
         });
-    }
-
-    /** Stop application. */
-    private void onStopApp() {
-        doDisconnectDebugger();
-        try {
-            messageBus.unsubscribe(expireSoonAppChannel, applicationStoppedHandler);
-        } catch (WebSocketException e) {
-            e.printStackTrace();
-        }
     }
 
     /** Disconnect debugger. */
@@ -1067,10 +1054,11 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      * Show message about fail application start.
      *
      * @param exception
+     *         problem which happened
      */
-    private void onApplicationStartFailure(Throwable exception) {
+    private void onApplicationStartFailure(@NotNull Throwable exception) {
         String msg = constant.startApplicationFailed();
-        if (exception != null && exception.getMessage() != null) {
+        if (exception.getMessage() != null) {
             msg += " : " + exception.getMessage();
         }
         console.print(msg);
@@ -1105,6 +1093,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
 
     /** Updates application. */
     public void updateApplication() {
+        // TODO this method will be used for JRebel
         project = resourceProvider.getActiveProject();
         updateApp = true;
         onRemoveAllBreakpointsButtonClicked();
@@ -1119,12 +1108,14 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      * Show dialog.
      *
      * @param debuggerInfo
+     *         information about current debugger
      */
     private void showDialog(@NotNull DebuggerInfo debuggerInfo) {
         String vmName = debuggerInfo.getVmName() + " " + debuggerInfo.getVmVersion();
         view.setVMName(vmName);
         selectedVariable = null;
         updateChangeValueButton();
+        enableButtons(false);
 
         workspaceAgent.openPart(this, PartStackType.INFORMATION);
         PartPresenter activePart = partStack.getActivePart();
@@ -1179,7 +1170,12 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         if (debuggerInfo != null) {
             DtoClientImpls.LocationImpl location = DtoClientImpls.LocationImpl.make();
             location.setLineNumber(lineNumber + 1);
-            location.setClassName(resolverFactory.getResolver(file.getMimeType()).resolveFqn(file));
+            final FqnResolver resolver = resolverFactory.getResolver(file.getMimeType());
+            if (resolver != null) {
+                location.setClassName(resolver.resolveFqn(file));
+            } else {
+                Log.warn(DebuggerPresenter.class, "FqnResolver is not found");
+            }
 
             final DtoClientImpls.BreakPointImpl point = DtoClientImpls.BreakPointImpl.make();
             point.setLocation(location);
@@ -1189,10 +1185,12 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 service.addBreakPoint(debuggerInfo.getId(), point, new AsyncRequestCallback<BreakPoint>() {
                     @Override
                     protected void onSuccess(BreakPoint result) {
-                        String fqn = resolverFactory.getResolver(file.getMimeType()).resolveFqn(file);
-                        fileWithBreakPoints.put(fqn, file);
-                        Breakpoint breakpoint = new Breakpoint(Breakpoint.Type.BREAKPOINT, lineNumber, fqn);
-                        callback.onSuccess(breakpoint);
+                        if (resolver != null) {
+                            String fqn = resolver.resolveFqn(file);
+                            fileWithBreakPoints.put(fqn, file);
+                            Breakpoint breakpoint = new Breakpoint(Breakpoint.Type.BREAKPOINT, lineNumber, fqn);
+                            callback.onSuccess(breakpoint);
+                        }
                         updateBreakPoint();
                     }
 
@@ -1213,7 +1211,12 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         if (debuggerInfo != null) {
             DtoClientImpls.LocationImpl location = DtoClientImpls.LocationImpl.make();
             location.setLineNumber(lineNumber);
-            location.setClassName(resolverFactory.getResolver(file.getMimeType()).resolveFqn(file));
+            FqnResolver resolver = resolverFactory.getResolver(file.getMimeType());
+            if (resolver != null) {
+                location.setClassName(resolver.resolveFqn(file));
+            } else {
+                Log.warn(DebuggerPresenter.class, "FqnResolver is not found");
+            }
 
             final DtoClientImpls.BreakPointImpl point = DtoClientImpls.BreakPointImpl.make();
             point.setLocation(location);

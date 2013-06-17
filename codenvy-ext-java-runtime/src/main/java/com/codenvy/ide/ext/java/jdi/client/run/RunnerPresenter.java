@@ -68,7 +68,6 @@ public class RunnerPresenter implements ProjectBuiltHandler {
     private JavaRuntimeLocalizationConstant constant;
     private ConsolePart                     console;
     private MessageBus                      messageBus;
-    private ApplicationInstance             runningApp;
     /** Handler for processing debugger disconnected event. */
     private SubscriptionHandler<Object>     applicationStoppedHandler;
 
@@ -230,9 +229,8 @@ public class RunnerPresenter implements ProjectBuiltHandler {
         msg += "<br>" + constant.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
         console.print(msg);
 
-        runningApp = app;
         try {
-            applicationStoppedChannel = JavaRuntimeExtension.APPLICATION_STOP_CHANNEL + runningApp.getName();
+            applicationStoppedChannel = JavaRuntimeExtension.APPLICATION_STOP_CHANNEL + app.getName();
             messageBus.subscribe(applicationStoppedChannel, applicationStoppedHandler);
         } catch (WebSocketException e) {
             // nothing to do
@@ -258,6 +256,7 @@ public class RunnerPresenter implements ProjectBuiltHandler {
      * Performs action when application failed to start.
      *
      * @param exception
+     *         problem which happened
      */
     private void onApplicationStartFailure(Throwable exception) {
         String msg = constant.startApplicationFailed();

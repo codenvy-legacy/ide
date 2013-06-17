@@ -171,7 +171,7 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
             throws WebSocketException {
         String params = "?name=" + name + "&time=" + time;
 
-        MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, BASE_URL + PROLONG + params);
+        MessageBuilder builder = new MessageBuilder(RequestBuilder.GET, BASE_URL + PROLONG + params);
         Message message = builder.build();
 
         wsMessageBus.send(message, callback);

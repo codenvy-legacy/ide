@@ -37,7 +37,7 @@
                         <g:Label ui:field="changeValueLabel" addStyleNames="{style.alignLeft}"/>
                     </g:north>
                     <g:center>
-                        <g:TextArea ui:field="value"/>
+                        <g:TextArea ui:field="value" width="415px" height="125px"/>
                     </g:center>
                 </g:DockLayoutPanel>
             </g:FlowPanel>
