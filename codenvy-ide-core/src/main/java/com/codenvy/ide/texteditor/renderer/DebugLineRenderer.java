@@ -43,12 +43,19 @@ public class DebugLineRenderer {
         this.buffer = buffer;
         lineHighlighter = Elements.createDivElement(res.workspaceEditorBufferCss().line());
         lineHighlighter.addClassName(res.workspaceEditorBufferCss().debugLine());
-        lineHighlighter.getStyle().setTop(buffer.calculateLineTop(-1), "PX");
-        buffer.addUnmanagedElement(lineHighlighter);
+        lineHighlighter.getStyle().setTop(buffer.calculateLineTop(-1), "px");
     }
 
     /** Update debug line. */
-    public void updateLine(int lineNumber) {
-        lineHighlighter.getStyle().setTop(buffer.calculateLineTop(lineNumber), "PX");
+    public void showLine(int lineNumber) {
+        if (!buffer.hasLineElement(lineHighlighter)) {
+            buffer.addUnmanagedElement(lineHighlighter);
+        }
+        lineHighlighter.getStyle().setTop(buffer.calculateLineTop(lineNumber), "px");
+    }
+
+    /** Update debug line. */
+    public void disableLine() {
+        buffer.removeUnmanagedElement(lineHighlighter);
     }
 }

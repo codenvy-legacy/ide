@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.fqn;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Singleton;
@@ -32,8 +33,9 @@ public class JavaFqnResolver implements FqnResolver {
     private static final String DEFAULT_SOURCE_FOLDER = "src/main/java";
 
     /** {@inheritDoc} */
+    @NotNull
     @Override
-    public String resolveFqn(File file) {
+    public String resolveFqn(@NotNull File file) {
         Project project = file.getProject();
         String sourcePath = project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder") : DEFAULT_SOURCE_FOLDER;
 

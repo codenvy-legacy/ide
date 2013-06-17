@@ -18,7 +18,10 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.debug;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
@@ -31,6 +34,7 @@ import com.codenvy.ide.debug.Debugger;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeExtension;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
+import com.codenvy.ide.ext.java.jdi.client.debug.relaunch.ReLaunchDebuggerPresenter;
 import com.codenvy.ide.ext.java.jdi.client.fqn.FqnResolverFactory;
 import com.codenvy.ide.ext.java.jdi.client.marshaller.*;
 import com.codenvy.ide.ext.java.jdi.client.run.ApplicationRunnerClientService;
@@ -120,6 +124,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private boolean                                updateApp;
     private String                                 restContext;
     private HandlerRegistration                    projectBuildHandler;
+    private ReLaunchDebuggerPresenter              reLaunchDebuggerPresenter;
     private JsonStringMap<File>                    fileWithBreakPoints;
     /** Handler for processing events which is received from debugger over WebSocket connection. */
     private SubscriptionHandler<DebuggerEventList> debuggerEventsHandler;
@@ -127,6 +132,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private SubscriptionHandler<Object>            expireSoonAppsHandler;
     /** Handler for processing debugger disconnected event. */
     private SubscriptionHandler<Object>            debuggerDisconnectedHandler;
+    /** Handler for processing debugger disconnected event. */
+    private SubscriptionHandler<Object>            applicationStoppedHandler;
     private JsonArray<Variable>                    variables;
     /** A timer for checking events */
     private Timer checkEventsTimer = new Timer() {
@@ -186,13 +193,15 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      * @param gutterManager
      * @param resolverFactory
      * @param editorAgent
+     * @param reLaunchDebuggerPresenter
      */
     @Inject
     protected DebuggerPresenter(DebuggerView view, JavaRuntimeResources resources, DebuggerClientService service, EventBus eventBus,
                                 ConsolePart console, MessageBus messageBus, JavaRuntimeLocalizationConstant constant,
                                 ResourceProvider resourceProvider, WorkspaceAgent workspaceAgent,
                                 ApplicationRunnerClientService applicationRunnerClientService, @Named("restContext") String restContext,
-                                BreakpointGutterManager gutterManager, FqnResolverFactory resolverFactory, EditorAgent editorAgent) {
+                                BreakpointGutterManager gutterManager, FqnResolverFactory resolverFactory, EditorAgent editorAgent,
+                                ReLaunchDebuggerPresenter reLaunchDebuggerPresenter) {
         this.view = view;
         this.view.setDelegate(this);
         this.view.setTitle(TITLE);
@@ -211,6 +220,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         this.fileWithBreakPoints = JsonCollections.createStringMap();
         this.variables = JsonCollections.createArray();
         this.editorAgent = editorAgent;
+        this.reLaunchDebuggerPresenter = reLaunchDebuggerPresenter;
         this.expireSoonAppsHandler = new SubscriptionHandler<Object>() {
             @Override
             public void onMessageReceived(Object result) {
@@ -308,6 +318,32 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 }
             }
         };
+
+        this.applicationStoppedHandler = new SubscriptionHandler<Object>() {
+            @Override
+            protected void onMessageReceived(Object result) {
+                try {
+                    DebuggerPresenter.this.messageBus.unsubscribe(applicationStoppedChannel, this);
+                } catch (WebSocketException e) {
+                    // nothing to do
+                }
+
+                closeDialog();
+
+                if (runningApp != null) {
+                    appStopped(runningApp.getName());
+                }
+            }
+
+            @Override
+            protected void onErrorReceived(Throwable exception) {
+                try {
+                    DebuggerPresenter.this.messageBus.unsubscribe(applicationStoppedChannel, this);
+                } catch (WebSocketException e) {
+                    // nothing to do
+                }
+            }
+        };
     }
 
     /**
@@ -316,14 +352,20 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      * @param eventList
      *         debugger event list
      */
-    private void onEventListReceived(DebuggerEventList eventList) {
+    private void onEventListReceived(@NotNull DebuggerEventList eventList) {
         String filePath = null;
 
         System.out.println("DebuggerPresenter.onEventListReceived()" + eventList.getEvents().size());
         int currentLineNumber = 0;
         if (eventList.getEvents().size() > 0) {
             Location location;
-            File activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
+            File activeFile = null;
+
+            EditorPartPresenter activeEditor = editorAgent.getActiveEditor();
+            if (activeEditor != null) {
+                activeFile = activeEditor.getEditorInput().getFile();
+            }
+
             JsonArray<DebuggerEvent> events = eventList.getEvents();
             for (int i = 0; i < events.size(); i++) {
                 DebuggerEvent event = events.get(i);
@@ -331,7 +373,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                     StepEvent stepEvent = (StepEvent)event;
                     location = stepEvent.getLocation();
                     filePath = resolveFilePath(location);
-                    if (!filePath.equalsIgnoreCase(activeFile.getPath())) {
+                    if (activeFile == null || !filePath.equalsIgnoreCase(activeFile.getPath())) {
                         openFile(location);
                     }
                     currentLineNumber = location.getLineNumber();
@@ -339,8 +381,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                     BreakPointEvent breakPointEvent = (BreakPointEvent)event;
                     location = breakPointEvent.getBreakPoint().getLocation();
                     filePath = resolveFilePath(location);
-                    if (!filePath.equalsIgnoreCase(activeFile.getPath())) {
-                        openFile(location);
+                    if (activeFile == null || !filePath.equalsIgnoreCase(activeFile.getPath())) {
+                        activeFile = openFile(location);
                     }
                     currentLineNumber = location.getLineNumber();
                 }
@@ -348,56 +390,36 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 enableButtons(true);
             }
 
-            if (filePath != null && filePath.equalsIgnoreCase(activeFile.getPath())) {
+            if (activeFile != null && filePath != null && filePath.equalsIgnoreCase(activeFile.getPath())) {
                 gutterManager.markCurrentBreakPoint(currentLineNumber - 1);
             }
         }
     }
 
-    private String resolveFilePath(final Location location) {
+    /**
+     * Create file path from location.
+     *
+     * @param location
+     * @return
+     */
+    @NotNull
+    private String resolveFilePath(@NotNull Location location) {
         String sourcePath =
                 project.hasProperty(PROPERTY_SOURCE_FOLDERS) ? (String)project.getPropertyValue(PROPERTY_SOURCE_FOLDERS)
                                                              : "src/main/java";
         return project.getPath() + "/" + sourcePath + "/" + location.getClassName().replace(".", "/") + ".java";
     }
 
-    private void openFile(final Location location) {
-        // TODO
-//        FileModel fileModel = breakpointsManager.getFileWithBreakPoints().get(location.getClassName());
-//        if (fileModel == null) {
-//            String path = resolveFilePath(location);
-//            try {
-//                VirtualFileSystem.getInstance()
-//                                 .getItemByPath(path,
-//                                                new AsyncRequestCallback<ItemWrapper>(
-//                                                        new ItemUnmarshaller(new ItemWrapper(new FileModel()))) {
-//
-//                                                    @Override
-//                                                    protected void onSuccess(ItemWrapper result) {
-//// TODO
-////                                                        IDE.eventBus()
-////                                                           .fireEvent(
-////                                                                   new OpenFileEvent((FileModel)result.getItem(),
-////                                                                                     new CursorPosition(
-////                                                                                             location.getLineNumber())));
-//                                                    }
-//
-//                                                    @Override
-//                                                    protected void onFailure(Throwable exception) {
-//                                                        Window.alert("Can't load source of the " + location.getClassName() + " class.");
-//                                                    }
-//                                                });
-//            } catch (RequestException e) {
-//                eventBus.fireEvent(new ExceptionThrownEvent(e));
-//                console.print(e.getMessage());
-//            }
-//
-//        } else {
-//            // TODO
-////            IDE.eventBus().fireEvent(new OpenFileEvent(fileModel, new CursorPosition(location.getLineNumber())));
-//        }
+    @Nullable
+    private File openFile(@NotNull Location location) {
+        File file = getFileWithBreakPoints(location.getClassName());
+        if (file != null) {
+            editorAgent.openEditor(file);
+        }
+        return file;
     }
 
+    /** Get dump. */
     private void doGetDump() {
         DtoClientImpls.StackFrameDumpImpl stackFrameDump = DtoClientImpls.StackFrameDumpImpl.make();
         StackFrameDumpUnmarshaller unmarshaller = new StackFrameDumpUnmarshaller(stackFrameDump);
@@ -426,6 +448,11 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         }
     }
 
+    /**
+     * Set enable buttons.
+     *
+     * @param isEnable
+     */
     private void enableButtons(boolean isEnable) {
         view.setEnableResumeButton(isEnable);
         view.setEnableStepIntoButton(isEnable);
@@ -514,6 +541,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         }
     }
 
+    /** Stop application. */
     private void doStopApp() {
         if (runningApp != null) {
             try {
@@ -546,6 +574,11 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         }
     }
 
+    /**
+     * Show message about stopped some application.
+     *
+     * @param appName
+     */
     private void appStopped(String appName) {
         String msg = constant.applicationStoped(appName);
         console.print(msg);
@@ -735,7 +768,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      * @param project
      *         {@link Project}
      */
-    private boolean writeJRebelCountProperty(final Project project) {
+    private boolean writeJRebelCountProperty(@NotNull final Project project) {
         if (project.getPropertyValue(JREBEL_COUNT) == null) {
             project.getProperties().add(new Property(JREBEL_COUNT, Integer.toString(1)));
         } else {
@@ -745,7 +778,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
             } else if (countJRebel < MAX_NUMBER_JREBEL_UPDATE) {
                 countJRebel++;
             } else {
-                // TODO
+                // TODO need to port JRebel support
                 // IDE.fireEvent(new JRebelUserInfoEvent());
                 return false;
             }
@@ -780,7 +813,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      * @param warUrl
      *         URL to download project WAR
      */
-    private void updateApplication(String warUrl) {
+    private void updateApplication(@NotNull String warUrl) {
         if (runningApp != null) {
             try {
                 applicationRunnerClientService.updateApplication(runningApp.getName(), warUrl, new AsyncRequestCallback<Object>() {
@@ -804,6 +837,12 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         }
     }
 
+    /**
+     * Creates application's url in HTML format.
+     *
+     * @param application
+     * @return
+     */
     private String getAppUrlsAsString(ApplicationInstance application) {
         String appUris = "";
         UrlBuilder builder = new UrlBuilder();
@@ -818,7 +857,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      * @param warUrl
      *         location of .war file
      */
-    private void debugApplication(String warUrl) {
+    private void debugApplication(@NotNull String warUrl) {
         DtoClientImpls.ApplicationInstanceImpl applicationInstance = DtoClientImpls.ApplicationInstanceImpl.make();
         ApplicationInstanceUnmarshallerWS unmarshaller = new ApplicationInstanceUnmarshallerWS(applicationInstance);
 
@@ -851,7 +890,12 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         }
     }
 
-    private void onDebugStarted(ApplicationInstance app) {
+    /**
+     * Perform some action when debug is started.
+     *
+     * @param app
+     */
+    private void onDebugStarted(@NotNull ApplicationInstance app) {
         String msg = constant.applicationStarted(app.getName());
         msg += "<br>"
                + constant.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
@@ -867,7 +911,12 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         }
     }
 
-    private void connectDebugger(final ApplicationInstance debugApplicationInstance) {
+    /**
+     * Connect to debugger.
+     *
+     * @param debugApplicationInstance
+     */
+    private void connectDebugger(@NotNull final ApplicationInstance debugApplicationInstance) {
         DtoClientImpls.DebuggerInfoImpl debuggerInfo = DtoClientImpls.DebuggerInfoImpl.make();
         DebuggerInfoUnmarshaller unmarshaller = new DebuggerInfoUnmarshaller(debuggerInfo);
 
@@ -891,12 +940,67 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         }
     }
 
-    public void reconnectDebugger(ApplicationInstance debugApplicationInstance) {
-        // TODO
-        // ReLaunchDebuggerPresenter runDebuggerPresenter = new ReLaunchDebuggerPresenter(debugApplicationInstance);
-        // TODO open view
-        // IDE.getInstance().openView(view.asView());
-        // showDialog();
+    /**
+     * Reconnect debugger.
+     *
+     * @param debugApplicationInstance
+     */
+    private void reconnectDebugger(@NotNull ApplicationInstance debugApplicationInstance) {
+        reLaunchDebuggerPresenter.showDialog(debugApplicationInstance, new AsyncCallback<DebuggerInfo>() {
+            @Override
+            public void onSuccess(DebuggerInfo debuggerInfo) {
+                if (debuggerInfo != null) {
+                    DebuggerPresenter.this.debuggerInfo = debuggerInfo;
+                    showDialog(debuggerInfo);
+                } else {
+                    onStopApp();
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                Log.error(DebuggerPresenter.class, throwable);
+            }
+        });
+    }
+
+    /** Stop application. */
+    private void onStopApp() {
+        doDisconnectDebugger();
+        try {
+            messageBus.unsubscribe(expireSoonAppChannel, applicationStoppedHandler);
+        } catch (WebSocketException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /** Disconnect debugger. */
+    private void doDisconnectDebugger() {
+        if (debuggerInfo != null) {
+            stopCheckingEvents();
+            try {
+                service.disconnect(debuggerInfo.getId(), new AsyncRequestCallback<String>() {
+                    @Override
+                    protected void onSuccess(String result) {
+                        enableButtons(false);
+                        debuggerInfo = null;
+                        gutterManager.unmarkCurrentBreakPoint();
+                        closeDialog();
+                        doStopApp();
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        console.print(exception.getMessage());
+                    }
+                });
+
+            } catch (RequestException e) {
+                console.print(e.getMessage());
+            }
+        } else {
+            doStopApp();
+        }
     }
 
     /**
@@ -905,7 +1009,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      * @param warUrl
      *         location of .war file
      */
-    private void debugApplicationREST(String warUrl) {
+    private void debugApplicationREST(@NotNull String warUrl) {
         DtoClientImpls.ApplicationInstanceImpl applicationInstance = DtoClientImpls.ApplicationInstanceImpl.make();
         ApplicationInstanceUnmarshaller unmarshaller = new ApplicationInstanceUnmarshaller(applicationInstance);
 
@@ -923,10 +1027,15 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                                                                 }
                                                             });
         } catch (RequestException e) {
-            onApplicationStartFailure(null);
+            onApplicationStartFailure(e);
         }
     }
 
+    /**
+     * Show message about fail application start.
+     *
+     * @param exception
+     */
     private void onApplicationStartFailure(Throwable exception) {
         String msg = constant.startApplicationFailed();
         if (exception != null && exception.getMessage() != null) {
@@ -974,7 +1083,12 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         eventBus.fireEvent(new BuildProjectEvent(project));
     }
 
-    private void showDialog(DebuggerInfo debuggerInfo) {
+    /**
+     * Show dialog.
+     *
+     * @param debuggerInfo
+     */
+    private void showDialog(@NotNull DebuggerInfo debuggerInfo) {
         String vmName = debuggerInfo.getVmName() + " " + debuggerInfo.getVmVersion();
         view.setVMName(vmName);
 
@@ -988,33 +1102,46 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         startCheckingEvents();
     }
 
+    /** Close dialog. */
     private void closeDialog() {
         variables.clear();
         workspaceAgent.hidePart(this);
         workspaceAgent.removePart(this);
     }
 
+    /** Update breakpoints. */
     public void updateBreakPoint() {
         JsonArray<Breakpoint> breakPoints = gutterManager.getBreakPoints();
         view.setBreakPoints(breakPoints);
     }
 
-    public void debuggerConnected(DebuggerInfo debuggerInfo) {
+    /** Perform some action when debugger is connected. */
+    public void debuggerConnected(@NotNull DebuggerInfo debuggerInfo) {
         this.debuggerInfo = debuggerInfo;
     }
 
+    /** Perform some action when debugger is disconnected. */
     public void debuggerDisconnected() {
         debuggerInfo = null;
         gutterManager.removeAllBreakPoints();
     }
 
-    public File getFileWithBreakPoints(String fqn) {
+    /**
+     * Return file with current fqn.
+     *
+     * @param fqn
+     *         file fqn
+     * @return {@link File}
+     */
+    @Nullable
+    public File getFileWithBreakPoints(@NotNull String fqn) {
         return fileWithBreakPoints.get(fqn);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void addBreakPoint(final File file, final int lineNumber, final AsyncCallback<Breakpoint> callback) throws RequestException {
+    public void addBreakPoint(@NotNull final File file, final int lineNumber, final AsyncCallback<Breakpoint> callback)
+            throws RequestException {
         if (debuggerInfo != null) {
             DtoClientImpls.LocationImpl location = DtoClientImpls.LocationImpl.make();
             location.setLineNumber(lineNumber + 1);
@@ -1048,7 +1175,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
 
     /** {@inheritDoc} */
     @Override
-    public void deleteBreakPoint(File file, int lineNumber, final AsyncCallback<Void> callback) throws RequestException {
+    public void deleteBreakPoint(@NotNull File file, int lineNumber, final AsyncCallback<Void> callback) throws RequestException {
         if (debuggerInfo != null) {
             DtoClientImpls.LocationImpl location = DtoClientImpls.LocationImpl.make();
             location.setLineNumber(lineNumber);

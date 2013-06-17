@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.run;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.shared.ApplicationInstance;
 import com.codenvy.ide.rest.AsyncRequest;
@@ -74,8 +75,8 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
 
     /** {@inheritDoc} */
     @Override
-    public void runApplication(String project, String war, boolean useJRebel, AsyncRequestCallback<ApplicationInstance> callback)
-            throws RequestException {
+    public void runApplication(@NotNull String project, @NotNull String war, boolean useJRebel,
+                               @NotNull AsyncRequestCallback<ApplicationInstance> callback) throws RequestException {
         String requestUrl = BASE_URL + "/run?war=" + war;
 
         String data = "";
@@ -92,8 +93,8 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
 
     /** {@inheritDoc} */
     @Override
-    public void runApplicationWS(String project, String war, boolean useJRebel, RequestCallback<ApplicationInstance> callback)
-            throws WebSocketException {
+    public void runApplicationWS(@NotNull String project, @NotNull String war, boolean useJRebel,
+                                 @NotNull RequestCallback<ApplicationInstance> callback) throws WebSocketException {
         String params = "?war=" + war;
 
         String data = "";
@@ -115,8 +116,8 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
 
     /** {@inheritDoc} */
     @Override
-    public void debugApplication(String project, String war, boolean useJRebel, AsyncRequestCallback<ApplicationInstance> callback)
-            throws RequestException {
+    public void debugApplication(@NotNull String project, @NotNull String war, boolean useJRebel,
+                                 @NotNull AsyncRequestCallback<ApplicationInstance> callback) throws RequestException {
         String data = "";
         if (useJRebel) {
             JSONObject jsonObject = new JSONObject();
@@ -132,8 +133,8 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
 
     /** {@inheritDoc} */
     @Override
-    public void debugApplicationWS(String project, String war, boolean useJRebel, RequestCallback<ApplicationInstance> callback)
-            throws WebSocketException {
+    public void debugApplicationWS(@NotNull String project, @NotNull String war, boolean useJRebel,
+                                   @NotNull RequestCallback<ApplicationInstance> callback) throws WebSocketException {
         String param = "?war=" + war + "&suspend=false";
 
         String data = "";
@@ -155,7 +156,7 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
 
     /** {@inheritDoc} */
     @Override
-    public void getLogs(String name, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
+    public void getLogs(@NotNull String name, @NotNull AsyncRequestCallback<StringBuilder> callback) throws RequestException {
         String url = BASE_URL + "/logs";
         String params = "?name=" + name;
 
@@ -166,7 +167,8 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
 
     /** {@inheritDoc} */
     @Override
-    public void prolongExpirationTime(String name, long time, RequestCallback<Object> callback) throws WebSocketException {
+    public void prolongExpirationTime(@NotNull String name, long time, @NotNull RequestCallback<Object> callback)
+            throws WebSocketException {
         String params = "?name=" + name + "&time=" + time;
 
         MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, BASE_URL + PROLONG + params);
@@ -177,7 +179,8 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
 
     /** {@inheritDoc} */
     @Override
-    public void updateApplication(String name, String war, AsyncRequestCallback<Object> callback) throws RequestException {
+    public void updateApplication(@NotNull String name, @NotNull String war, @NotNull AsyncRequestCallback<Object> callback)
+            throws RequestException {
         String url = BASE_URL + "/update";
         String params = "?name=" + name + "&war=" + war;
 

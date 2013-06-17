@@ -18,15 +18,8 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.debug;
 
-import com.codenvy.ide.ext.java.jdi.shared.ApplicationInstance;
-import com.codenvy.ide.ext.java.jdi.shared.BreakPoint;
-import com.codenvy.ide.ext.java.jdi.shared.BreakPointList;
-import com.codenvy.ide.ext.java.jdi.shared.DebuggerEventList;
-import com.codenvy.ide.ext.java.jdi.shared.DebuggerInfo;
-import com.codenvy.ide.ext.java.jdi.shared.StackFrameDump;
-import com.codenvy.ide.ext.java.jdi.shared.UpdateVariableRequest;
-import com.codenvy.ide.ext.java.jdi.shared.Value;
-import com.codenvy.ide.ext.java.jdi.shared.Variable;
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.ext.java.jdi.shared.*;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 
@@ -44,7 +37,7 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void connect(String host, int port, AsyncRequestCallback<DebuggerInfo> callback) throws RequestException;
+    void connect(@NotNull String host, int port, @NotNull AsyncRequestCallback<DebuggerInfo> callback) throws RequestException;
 
     /**
      * Disconnects to application.
@@ -53,7 +46,7 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void disconnect(String id, AsyncRequestCallback<String> callback) throws RequestException;
+    void disconnect(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Adds breakpoint.
@@ -63,7 +56,8 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void addBreakPoint(String id, BreakPoint breakPoint, AsyncRequestCallback<BreakPoint> callback) throws RequestException;
+    void addBreakPoint(@NotNull String id, @NotNull BreakPoint breakPoint, @NotNull AsyncRequestCallback<BreakPoint> callback)
+            throws RequestException;
 
     /**
      * Deletes breakpoint.
@@ -73,7 +67,8 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void deleteBreakPoint(String id, BreakPoint breakPoint, AsyncRequestCallback<BreakPoint> callback) throws RequestException;
+    void deleteBreakPoint(@NotNull String id, @NotNull BreakPoint breakPoint, @NotNull AsyncRequestCallback<BreakPoint> callback)
+            throws RequestException;
 
     /**
      * Returns list of breakpoints.
@@ -82,7 +77,7 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void getBreakPoints(String id, AsyncRequestCallback<BreakPointList> callback) throws RequestException;
+    void getBreakPoints(@NotNull String id, @NotNull AsyncRequestCallback<BreakPointList> callback) throws RequestException;
 
     /**
      * Checks event.
@@ -91,7 +86,7 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void checkEvents(String id, AsyncRequestCallback<DebuggerEventList> callback) throws RequestException;
+    void checkEvents(@NotNull String id, @NotNull AsyncRequestCallback<DebuggerEventList> callback) throws RequestException;
 
     /**
      * Creates dump.
@@ -100,7 +95,7 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void dump(String id, AsyncRequestCallback<StackFrameDump> callback) throws RequestException;
+    void dump(@NotNull String id, @NotNull AsyncRequestCallback<StackFrameDump> callback) throws RequestException;
 
     /**
      * Resume process.
@@ -109,7 +104,7 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void resume(String id, AsyncRequestCallback<String> callback) throws RequestException;
+    void resume(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Returns value of field.
@@ -119,7 +114,7 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void getValue(String id, Variable var, AsyncRequestCallback<Value> callback) throws RequestException;
+    void getValue(@NotNull String id, @NotNull Variable var, @NotNull AsyncRequestCallback<Value> callback) throws RequestException;
 
     /**
      * Sets field's value.
@@ -129,7 +124,8 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void setValue(String id, UpdateVariableRequest request, AsyncRequestCallback<String> callback) throws RequestException;
+    void setValue(@NotNull String id, @NotNull UpdateVariableRequest request, @NotNull AsyncRequestCallback<String> callback)
+            throws RequestException;
 
     /**
      * Do step into.
@@ -138,7 +134,7 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void stepInto(String id, AsyncRequestCallback<String> callback) throws RequestException;
+    void stepInto(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Do step over.
@@ -147,7 +143,7 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void stepOver(String id, AsyncRequestCallback<String> callback) throws RequestException;
+    void stepOver(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Do step return.
@@ -156,7 +152,7 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void stepReturn(String id, AsyncRequestCallback<String> callback) throws RequestException;
+    void stepReturn(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Stops application.
@@ -165,7 +161,7 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void stopApplication(ApplicationInstance runningApp, AsyncRequestCallback<String> callback) throws RequestException;
+    void stopApplication(@NotNull ApplicationInstance runningApp, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Remove all breakpoint.
@@ -174,7 +170,7 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void deleteAllBreakPoint(String id, AsyncRequestCallback<String> callback) throws RequestException;
+    void deleteAllBreakPoint(@NotNull String id, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Evaluate expression.
@@ -184,5 +180,6 @@ public interface DebuggerClientService {
      * @param callback
      * @throws RequestException
      */
-    void evaluateExpression(String id, String expression, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+    void evaluateExpression(@NotNull String id, @NotNull String expression, @NotNull AsyncRequestCallback<StringBuilder> callback)
+            throws RequestException;
 }
