@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.debug;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.debug.Breakpoint;
 import com.codenvy.ide.ext.java.jdi.shared.Variable;
@@ -61,7 +62,7 @@ public interface DebuggerView extends View<DebuggerView.ActionDelegate> {
          *
          * @param variable
          */
-        void onSelectedVariable(Variable variable);
+        void onSelectedVariable(@NotNull Variable variable);
     }
 
     /**
@@ -69,21 +70,21 @@ public interface DebuggerView extends View<DebuggerView.ActionDelegate> {
      *
      * @param variables
      */
-    void setVariables(JsonArray<Variable> variables);
+    void setVariables(@NotNull JsonArray<Variable> variables);
 
     /**
      * Sets breakpoints.
      *
      * @param breakPoints
      */
-    void setBreakPoints(JsonArray<Breakpoint> breakPoints);
+    void setBreakPoints(@NotNull JsonArray<Breakpoint> breakPoints);
 
     /**
      * Sets java virtual machine name and version.
      *
      * @param name
      */
-    void setVMName(String name);
+    void setVMName(@NotNull String name);
 
     /**
      * Sets whether Resume button is enabled.
@@ -154,5 +155,5 @@ public interface DebuggerView extends View<DebuggerView.ActionDelegate> {
      *
      * @param title
      */
-    void setTitle(String title);
+    void setTitle(@NotNull String title);
 }

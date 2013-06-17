@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.marshaller;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.java.jdi.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.java.jdi.shared.DebuggerEvent;
@@ -40,7 +41,7 @@ public class DebuggerEventListUnmarshallerWS implements Unmarshallable<DebuggerE
      *
      * @param events
      */
-    public DebuggerEventListUnmarshallerWS(DtoClientImpls.DebuggerEventListImpl events) {
+    public DebuggerEventListUnmarshallerWS(@NotNull DtoClientImpls.DebuggerEventListImpl events) {
         this.events = events;
         this.events.setEvents(JsonCollections.<DebuggerEvent>createArray());
     }

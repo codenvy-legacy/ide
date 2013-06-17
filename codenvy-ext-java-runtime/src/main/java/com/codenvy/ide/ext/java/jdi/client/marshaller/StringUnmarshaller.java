@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.marshaller;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 
@@ -30,8 +31,12 @@ import com.google.gwt.http.client.Response;
 public class StringUnmarshaller implements Unmarshallable<StringBuilder> {
     private StringBuilder builder;
 
-    /** @param builder */
-    public StringUnmarshaller(StringBuilder builder) {
+    /**
+     * Create unmarshaller.
+     *
+     * @param builder
+     */
+    public StringUnmarshaller(@NotNull StringBuilder builder) {
         this.builder = builder;
     }
 

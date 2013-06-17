@@ -33,6 +33,7 @@ import com.google.inject.Singleton;
 public class FqnResolverFactory {
     private JsonStringMap<FqnResolver> resolvers;
 
+    /** Create factory. */
     @Inject
     protected FqnResolverFactory() {
         this.resolvers = JsonCollections.createStringMap();

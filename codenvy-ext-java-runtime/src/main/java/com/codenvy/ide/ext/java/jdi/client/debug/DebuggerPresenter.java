@@ -714,7 +714,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
 
     /** {@inheritDoc} */
     @Override
-    public void onSelectedVariable(Variable variable) {
+    public void onSelectedVariable(@NotNull Variable variable) {
         selectedVariable = variable;
         updateChangeValueButton();
     }

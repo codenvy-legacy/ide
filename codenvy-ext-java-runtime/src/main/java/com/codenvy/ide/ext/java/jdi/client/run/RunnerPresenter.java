@@ -244,6 +244,7 @@ public class RunnerPresenter implements ProjectBuiltHandler {
      *         {@link ApplicationInstance} application
      * @return application URLs
      */
+    @NotNull
     private String getAppUrlsAsString(@NotNull ApplicationInstance application) {
         String appUris = "";
         UrlBuilder builder = new UrlBuilder();

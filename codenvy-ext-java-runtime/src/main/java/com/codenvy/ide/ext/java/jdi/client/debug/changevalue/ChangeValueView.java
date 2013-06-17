@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.debug.changevalue;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 
 /**
@@ -39,6 +40,7 @@ public interface ChangeValueView extends View<ChangeValueView.ActionDelegate> {
     }
 
     /** @return changed value */
+    @NotNull
     String getValue();
 
     /**
@@ -47,7 +49,7 @@ public interface ChangeValueView extends View<ChangeValueView.ActionDelegate> {
      * @param value
      *         new value
      */
-    void setValue(String value);
+    void setValue(@NotNull String value);
 
     /**
      * Change the enable state of the evaluate button.
@@ -69,7 +71,7 @@ public interface ChangeValueView extends View<ChangeValueView.ActionDelegate> {
      * @param title
      *         new title for value field
      */
-    void setValueTitle(String title);
+    void setValueTitle(@NotNull String title);
 
     /** Close dialog. */
     void close();

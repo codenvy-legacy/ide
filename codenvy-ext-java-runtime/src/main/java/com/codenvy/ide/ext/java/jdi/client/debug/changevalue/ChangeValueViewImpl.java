@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.debug.changevalue;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
 import com.codenvy.ide.ui.Button;
@@ -78,6 +79,7 @@ public class ChangeValueViewImpl extends DialogBox implements ChangeValueView {
     }
 
     /** {@inheritDoc} */
+    @NotNull
     @Override
     public String getValue() {
         return value.getText();
@@ -85,7 +87,7 @@ public class ChangeValueViewImpl extends DialogBox implements ChangeValueView {
 
     /** {@inheritDoc} */
     @Override
-    public void setValue(String value) {
+    public void setValue(@NotNull String value) {
         this.value.setText(value);
     }
 
@@ -109,7 +111,7 @@ public class ChangeValueViewImpl extends DialogBox implements ChangeValueView {
 
     /** {@inheritDoc} */
     @Override
-    public void setValueTitle(String title) {
+    public void setValueTitle(@NotNull String title) {
         changeValueLabel.setText(title);
     }
 

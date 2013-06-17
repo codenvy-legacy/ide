@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.marshaller;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.java.jdi.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.java.jdi.shared.StackFrameDump;
@@ -37,7 +38,7 @@ public class StackFrameDumpUnmarshaller implements Unmarshallable<StackFrameDump
      *
      * @param stackFrameDump
      */
-    public StackFrameDumpUnmarshaller(DtoClientImpls.StackFrameDumpImpl stackFrameDump) {
+    public StackFrameDumpUnmarshaller(@NotNull DtoClientImpls.StackFrameDumpImpl stackFrameDump) {
         this.stackFrameDump = stackFrameDump;
     }
 

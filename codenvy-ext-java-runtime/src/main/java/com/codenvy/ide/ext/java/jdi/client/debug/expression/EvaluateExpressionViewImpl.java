@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.debug.expression;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
 import com.codenvy.ide.ui.Button;
@@ -77,6 +78,7 @@ public class EvaluateExpressionViewImpl extends DialogBox implements EvaluateExp
     }
 
     /** {@inheritDoc} */
+    @NotNull
     @Override
     public String getExpression() {
         return expression.getText();
@@ -84,13 +86,13 @@ public class EvaluateExpressionViewImpl extends DialogBox implements EvaluateExp
 
     /** {@inheritDoc} */
     @Override
-    public void setExpression(String expression) {
+    public void setExpression(@NotNull String expression) {
         this.expression.setText(expression);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setResult(String value) {
+    public void setResult(@NotNull String value) {
         this.result.setText(value);
     }
 

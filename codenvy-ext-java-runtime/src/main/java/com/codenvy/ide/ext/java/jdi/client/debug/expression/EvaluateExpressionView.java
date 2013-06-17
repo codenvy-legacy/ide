@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.debug.expression;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 
 /**
@@ -43,6 +44,7 @@ public interface EvaluateExpressionView extends View<EvaluateExpressionView.Acti
      *
      * @return {@link String}
      */
+    @NotNull
     String getExpression();
 
     /**
@@ -50,7 +52,7 @@ public interface EvaluateExpressionView extends View<EvaluateExpressionView.Acti
      *
      * @param expression
      */
-    void setExpression(String expression);
+    void setExpression(@NotNull String expression);
 
     /**
      * Set result field value.
@@ -58,7 +60,7 @@ public interface EvaluateExpressionView extends View<EvaluateExpressionView.Acti
      * @param value
      *         result field value
      */
-    void setResult(String value);
+    void setResult(@NotNull String value);
 
     /**
      * Change the enable state of the evaluate button.

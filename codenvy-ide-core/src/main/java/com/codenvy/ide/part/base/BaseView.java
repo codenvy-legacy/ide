@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.part.base;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.part.PartStackUIResources;
 import com.google.gwt.dom.client.Style;
@@ -69,7 +70,7 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
      * Set title for this part view.
      * @param title
      */
-    public void setTitle(String title) {
+    public void setTitle(@NotNull String title) {
         Label l = new Label(title, false);
         l.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
         l.getElement().getStyle().setLineHeight(20, Style.Unit.PX);

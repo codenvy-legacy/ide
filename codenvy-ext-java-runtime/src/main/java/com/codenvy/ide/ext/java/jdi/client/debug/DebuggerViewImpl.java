@@ -23,6 +23,7 @@ import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.debug.Breakpoint;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
@@ -89,6 +90,14 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
     @UiField(provided = true)
     Resources                       coreRes;
 
+    /**
+     * Create view.
+     *
+     * @param partStackUIResources
+     * @param resources
+     * @param locale
+     * @param coreRes
+     */
     @Inject
     protected DebuggerViewImpl(PartStackUIResources partStackUIResources, JavaRuntimeResources resources,
                                JavaRuntimeLocalizationConstant locale, Resources coreRes) {
@@ -191,20 +200,20 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
 
     /** {@inheritDoc} */
     @Override
-    public void setVariables(JsonArray<Variable> variables) {
+    public void setVariables(@NotNull JsonArray<Variable> variables) {
         // TODO change to tree
         this.variables.render(variables);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setBreakPoints(JsonArray<Breakpoint> breakPoints) {
+    public void setBreakPoints(@NotNull JsonArray<Breakpoint> breakPoints) {
         this.breakPoints.render(breakPoints);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setVMName(String name) {
+    public void setVMName(@NotNull String name) {
         vmName.setText(name);
     }
 

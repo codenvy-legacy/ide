@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.marshaller;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.java.jdi.dto.client.DtoClientImpls;
 import com.codenvy.ide.ext.java.jdi.shared.ApplicationInstance;
@@ -37,7 +38,7 @@ public class ApplicationInstanceUnmarshaller implements Unmarshallable<Applicati
      *
      * @param applicationInstance
      */
-    public ApplicationInstanceUnmarshaller(DtoClientImpls.ApplicationInstanceImpl applicationInstance) {
+    public ApplicationInstanceUnmarshaller(@NotNull DtoClientImpls.ApplicationInstanceImpl applicationInstance) {
         this.applicationInstance = applicationInstance;
     }
 

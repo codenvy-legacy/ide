@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.run;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.job.Job;
 import com.codenvy.ide.job.JobChangeEvent;
@@ -38,7 +39,8 @@ public class RunningAppStatusHandler extends RequestStatusHandlerBase {
      * @param projectName
      * @param eventBus
      */
-    public RunningAppStatusHandler(String projectName, EventBus eventBus, JavaRuntimeLocalizationConstant constant) {
+    public RunningAppStatusHandler(@NotNull String projectName, @NotNull EventBus eventBus,
+                                   @NotNull JavaRuntimeLocalizationConstant constant) {
         super(projectName, eventBus);
         this.constant = constant;
     }
