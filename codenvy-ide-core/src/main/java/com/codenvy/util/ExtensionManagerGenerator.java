@@ -14,10 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package com.codenvy.ide.util;
+package com.codenvy.util;
 
 import com.codenvy.ide.api.extension.Extension;
-import com.codenvy.ide.client.ExtensionManager;
 
 import org.apache.commons.io.FileUtils;
 import org.reflections.Reflections;
@@ -33,7 +32,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
- * Generates {@link ExtensionManager} class source
+ * Generates {ExtensionManager} class source
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
@@ -50,7 +49,7 @@ public class ExtensionManagerGenerator {
      * File content will be overriden.
      */
     protected static final String EXT_MANAGER_PATH =
-            "WEB-INF/classes/com/codenvy/ide/client/ExtensionManager.java";
+            "com/codenvy/ide/client/ExtensionManager.java";
 
     /** Map containing <FullFQN, ClassName> */
     protected static final Map<String, String> extensionsFqn = new HashMap<String, String>();
@@ -94,10 +93,10 @@ public class ExtensionManagerGenerator {
      */
     public static void generateExtensionManager(File rootFolder) throws IOException {
         File extManager = new File(rootFolder, EXT_MANAGER_PATH);
-        if (!extManager.exists()) {
-            throw new IOException(String.format("File \"%s\" not found. Utility seems to be started in wrong folder",
-                                                EXT_MANAGER_PATH));
-        }
+//        if (!extManager.exists()) {
+//            throw new IOException(String.format("File \"%s\" not found. Utility seems to be started in wrong folder",
+//                                                EXT_MANAGER_PATH));
+//        }
 
         StringBuilder builder = new StringBuilder();
         builder.append("package " + "com.codenvy.ide.client;\n\n");
