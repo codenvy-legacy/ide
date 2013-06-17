@@ -38,7 +38,7 @@ public class RunAction extends Action {
 
     @Inject
     public RunAction(RunnerPresenter presenter, JavaRuntimeResources resources, ResourceProvider resourceProvider) {
-        super("Run Application", "Runs application", resources.runApp());
+        super("Run Application", "Run Application", resources.runApp());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
     }

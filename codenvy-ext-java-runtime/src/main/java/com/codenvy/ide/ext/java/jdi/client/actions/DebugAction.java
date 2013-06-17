@@ -38,7 +38,7 @@ public class DebugAction extends Action {
 
     @Inject
     public DebugAction(DebuggerPresenter presenter, JavaRuntimeResources resources, ResourceProvider resourceProvider) {
-        super("Debug Application", "Runs application", resources.debugApp());
+        super("Debug Application", "Debug Application", resources.debugApp());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
     }

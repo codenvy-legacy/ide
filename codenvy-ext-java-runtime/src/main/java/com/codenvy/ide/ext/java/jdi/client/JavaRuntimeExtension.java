@@ -30,6 +30,7 @@ import com.codenvy.ide.ext.java.jdi.client.fqn.JavaFqnResolver;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_TOOLBAR;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN;
 import static com.codenvy.ide.extension.maven.client.BuilderExtension.SPRING_APPLICATION_PROJECT_TYPE;
 import static com.codenvy.ide.rest.MimeType.APPLICATION_JAVA;
@@ -59,6 +60,13 @@ public class JavaRuntimeExtension {
         DefaultActionGroup run = (DefaultActionGroup)actionManager.getAction(GROUP_RUN);
         run.add(action);
         run.add(debugAction);
+
+        DefaultActionGroup mainToolbarGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_TOOLBAR);
+        DefaultActionGroup runGroup = new DefaultActionGroup(GROUP_RUN, false, actionManager);
+        actionManager.registerAction(GROUP_RUN, runGroup);
+        runGroup.add(action);
+        runGroup.add(debugAction);
+        mainToolbarGroup.add(runGroup);
 
         debuggerManager.registeredDebugger(SPRING_APPLICATION_PROJECT_TYPE, debuggerPresenter);
 
