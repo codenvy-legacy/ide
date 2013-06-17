@@ -100,6 +100,23 @@
       <servlet-name>DispatcherServlet</servlet-name>
       <servlet-class>com.codenvy.commons.servlet.DispatcherServlet</servlet-class>
    </servlet>
+   
+   <servlet>
+        <servlet-name>GitServlet</servlet-name>
+        <servlet-class>org.eclipse.jgit.http.server.GitServlet</servlet-class>
+        <init-param>
+            <param-name>base-path</param-name>
+            <param-value>${org.exoplatform.ide.server.fs-root-path}/</param-value>
+        </init-param>
+        <init-param>
+            <param-name>export-all</param-name>
+            <param-value>1</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GitServlet</servlet-name>
+        <url-pattern>/_git/*</url-pattern>
+    </servlet-mapping>
 
    <servlet-mapping>
       <servlet-name>main</servlet-name>
@@ -133,7 +150,7 @@
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>app</web-resource-name>
-            <url-pattern>/*</url-pattern>
+            <url-pattern>/rest/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>developer</role-name>
