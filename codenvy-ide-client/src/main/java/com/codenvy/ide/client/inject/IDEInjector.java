@@ -12,8 +12,18 @@ import com.google.gwt.inject.client.Ginjector;
  * on compile time.
  */
 @GinModules({
+                    com.codenvy.ide.ext.java.client.inject.JavaGinModule.class,
+                    com.codenvy.ide.ext.cloudbees.client.inject.CloudBeesGinModule.class,
+                    com.codenvy.ide.ext.gae.client.inject.GAEGinModule.class,
+                    com.codenvy.ide.ext.git.client.inject.GitGinModule.class,
+                    com.codenvy.ide.extension.cloudfoundry.client.inject.CloudFoundryGinModule.class,
+                    com.codenvy.ide.ext.appfog.client.inject.AppFogGinModule.class,
+                    com.codenvy.ide.extension.maven.client.inject.MavenGinModule.class,
+                    com.codenvy.ide.ext.openshift.client.inject.OpenShiftGinModule.class,
                     com.codenvy.ide.core.inject.CoreGinModule.class,
-                    com.codenvy.ide.client.inject.IDEClientModule.class
+                    com.codenvy.ide.client.inject.IDEClientModule.class,
+                    com.codenvy.ide.ext.java.jdi.client.inject.JavaRuntimeGinModule.class,
+                    com.codenvy.ide.ext.jenkins.client.inject.JenkinsGinModule.class
             })
 public interface IDEInjector extends Ginjector {
 
