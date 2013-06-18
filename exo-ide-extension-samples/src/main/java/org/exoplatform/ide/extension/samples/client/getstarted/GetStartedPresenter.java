@@ -50,6 +50,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
+import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
@@ -189,7 +190,7 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
             }
         });
 
-        display.getProjectName().addValueChangeHandler(new ValueChangeHandler<String>() {
+        /*display.getProjectName().addValueChangeHandler(new ValueChangeHandler<String>() {
             @Override
             public void onValueChange(ValueChangeEvent<String> event) {
                 if (!event.getValue().matches("[a-zA-Z0-9]{1,100}")) {
@@ -198,7 +199,7 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
                     display.setErrorVisible(false);
                 }
             }
-        });
+        });*/
     }
 
     @Override
@@ -243,6 +244,12 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
     }
 
     private void showChooseTechnologyStep() {
+        if (!isNameValid()) {
+            Dialogs.getInstance()
+                   .showInfo(SamplesExtension.LOCALIZATION_CONSTANT.noIncorrectProjectNameTitle(),
+                             SamplesExtension.LOCALIZATION_CONSTANT.noIncorrectProjectNameMessage());
+            return;
+        }
         display.showChooseTechnologyStep();
         display.setCurrentStepPagination("2/3");
 
@@ -266,6 +273,10 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         setPaaSButtonsHandlers();
 
         display.setNextButtonEnable(false);
+    }
+    
+    private boolean isNameValid() {
+        return display.getProjectName().getValue().matches("[^[-.a-zA-Z0-9]][-._a-zA-Z0-9]{1,100}");
     }
 
     private void createAndDeploy() {
