@@ -23,7 +23,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasValue;
 
@@ -58,7 +57,7 @@ import static com.codenvy.ide.factory.client.FactorySpec10.VCS;
 import static com.codenvy.ide.factory.client.FactorySpec10.VCS_URL;
 import static com.codenvy.ide.factory.client.FactorySpec10.VERSION_PARAMETER;
 import static com.codenvy.ide.factory.client.FactorySpec10.WORKSPACE_NAME;
-
+import static com.google.gwt.http.client.URL.encodeQueryString;
 
 /**
  * Presenter to generate a CodeNow button.
@@ -151,11 +150,15 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
     }
 
     public void bindDisplay() {
-        final String factoryURLEscaped = SafeHtmlUtils.fromString(factoryURL).asString();
+        final String factoryURLEscaped = encodeQueryString(factoryURL);
+
         display.getShareFacebookButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                Window.open("https://www.facebook.com/sharer/sharer.php?u=" + factoryURLEscaped, "", "width=626,height=436");
+                Window.open("https://www.facebook.com/sharer/sharer.php?s=100&p[url]="
+                            + factoryURLEscaped
+                            + "&p[images][0]=https://codenvy.com/images/logoCodenvy.png&p[title]=See my project&p[summary]=Summary info",
+                            "", "width=626,height=436");
             }
         });
 

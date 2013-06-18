@@ -42,7 +42,7 @@
             font-size: 14px;
             font-family: Verdana, Bitstream Vera Sans, sans-serif;
             font-weight: bold;
-            margin-top: 10px;
+            margin-top: 20px;
             margin-bottom: 10px;
         }
 
@@ -56,6 +56,10 @@
             overflow: hidden;
             color: #666;
             padding: 5px;
+            border: 1px solid #aaa !important;
+            box-shadow: 0 0 4px rgba(82,168,236,.75);
+            border-radius: 4px;
+            outline: none;
         }
 
         .textAreaLabel {
@@ -83,12 +87,20 @@
             margin-bottom: 5px;
             cursor: pointer;
         }
+
+        .googleOnePanel {
+			width: 250px;
+			height: 32px;
+			border: none;
+			overflow: hidden;
+		}
     </ui:style>
 
     <f:Border margin="15" borderColor="transparent">
         <f:layer>
             <g:FlowPanel styleName="{style.padding}">
                 <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom}" text="Customize"></g:Label>
+                <g:Label width="100%" height="20px" text="TODO"></g:Label>
 
                 <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom}" text="Embed"></g:Label>
                 <g:FlowPanel width="100%" height="180px">
