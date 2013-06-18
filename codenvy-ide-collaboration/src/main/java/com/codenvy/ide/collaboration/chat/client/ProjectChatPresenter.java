@@ -195,9 +195,9 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
         this.userId = userId;
         control = chatControl;
         this.collabExtension = collabExtension;
-        ide.eventBus().addHandler(ViewClosedEvent.TYPE, this);
-        ide.eventBus().addHandler(ShowHideChatEvent.TYPE, this);
-        ide.eventBus().addHandler(SendCodePointEvent.TYPE, this);
+        IDE.eventBus().addHandler(ViewClosedEvent.TYPE, this);
+        IDE.eventBus().addHandler(ShowHideChatEvent.TYPE, this);
+        IDE.eventBus().addHandler(SendCodePointEvent.TYPE, this);
         IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
         messageFilter.registerMessageRecipient(RoutingTypes.CHAT_MESSAGE, new MessageRecipient<ChatMessage>() {
             @Override

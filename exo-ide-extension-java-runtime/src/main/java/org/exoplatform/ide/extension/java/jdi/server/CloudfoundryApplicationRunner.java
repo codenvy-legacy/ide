@@ -63,15 +63,15 @@ import java.util.regex.Pattern;
 
 import static com.codenvy.commons.json.JsonHelper.toJson;
 import static com.codenvy.ide.commons.server.ContainerUtils.readValueParam;
-import static com.codenvy.ide.commons.server.FileUtils.countFileHash;
-import static com.codenvy.ide.commons.server.FileUtils.createTempDirectory;
-import static com.codenvy.ide.commons.server.FileUtils.deleteRecursive;
-import static com.codenvy.ide.commons.server.FileUtils.downloadFile;
-import static com.codenvy.ide.commons.server.FileUtils.list;
-import static com.codenvy.ide.commons.server.NameGenerator.generate;
-import static com.codenvy.ide.commons.server.ZipUtils.listEntries;
-import static com.codenvy.ide.commons.server.ZipUtils.unzip;
-import static com.codenvy.ide.commons.server.ZipUtils.zipDir;
+import static com.codenvy.commons.lang.IoUtil.countFileHash;
+import static com.codenvy.commons.lang.IoUtil.createTempDirectory;
+import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
+import static com.codenvy.commons.lang.IoUtil.downloadFile;
+import static com.codenvy.commons.lang.IoUtil.list;
+import static com.codenvy.commons.lang.NameGenerator.generate;
+import static com.codenvy.commons.lang.ZipUtils.listEntries;
+import static com.codenvy.commons.lang.ZipUtils.unzip;
+import static com.codenvy.commons.lang.ZipUtils.zipDir;
 
 /**
  * ApplicationRunner for deploy Java applications at Cloud Foundry PaaS.
