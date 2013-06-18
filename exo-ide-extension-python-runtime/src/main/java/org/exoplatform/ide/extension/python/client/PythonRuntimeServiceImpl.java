@@ -86,7 +86,7 @@ public class PythonRuntimeServiceImpl extends PythonRuntimeService {
         StringBuilder params = new StringBuilder("?name=");
         params.append(name);
 
-        AsyncRequest.build(RequestBuilder.GET, requestUrl + params.toString(), true)
+        AsyncRequest.build(RequestBuilder.GET, requestUrl + params.toString())
                     .requestStatusHandler(new StopApplicationStatusHandler(name)).send(callback);
     }
 
