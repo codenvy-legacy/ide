@@ -232,14 +232,13 @@ public class BreakpointGutterManager {
 
     /** Unmark current line. */
     public void unmarkCurrentBreakPoint() {
-        int oldLIneNumber = 0;
         if (markedBreakPoint != null) {
-            oldLIneNumber = markedBreakPoint.getLineNumber();
-        }
-        markedBreakPoint = null;
+            int oldLIneNumber = markedBreakPoint.getLineNumber();
+            markedBreakPoint = null;
 
-        renderer.fillOrUpdateLines(oldLIneNumber, oldLIneNumber);
-        debugLineRenderer.disableLine();
+            renderer.fillOrUpdateLines(oldLIneNumber, oldLIneNumber);
+            debugLineRenderer.disableLine();
+        }
     }
 
     /**

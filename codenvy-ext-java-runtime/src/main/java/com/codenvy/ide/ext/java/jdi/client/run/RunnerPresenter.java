@@ -21,6 +21,7 @@ package com.codenvy.ide.ext.java.jdi.client.run;
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeExtension;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.marshaller.ApplicationInstanceUnmarshaller;
@@ -35,10 +36,12 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.HTTPStatus;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
+import com.codenvy.ide.websocket.rest.exceptions.ServerException;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Window;
@@ -64,6 +67,7 @@ public class RunnerPresenter implements ProjectBuiltHandler {
     private EventBus                        eventBus;
     private HandlerRegistration             projectBuildHandler;
     private Project                         project;
+    private ApplicationInstance             runningApp;
     private ResourceProvider                resourceProvider;
     private JavaRuntimeLocalizationConstant constant;
     private ConsolePart                     console;
@@ -225,6 +229,7 @@ public class RunnerPresenter implements ProjectBuiltHandler {
      *         {@link ApplicationInstance} which is started
      */
     private void onApplicationStarted(@NotNull ApplicationInstance app) {
+        runningApp = app;
         String msg = constant.applicationStarted(app.getName());
         msg += "<br>" + constant.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
         console.print(msg);
@@ -265,5 +270,64 @@ public class RunnerPresenter implements ProjectBuiltHandler {
             msg += " : " + exception.getMessage();
         }
         console.print(msg);
+    }
+
+    /**
+     * Check whether application is run.
+     *
+     * @return <code>true</code> if the application is run, and <code>false</code> otherwise
+     */
+    public boolean isAppRunning() {
+        return runningApp != null;
+    }
+
+    /** @return running application */
+    public ApplicationInstance getRunningApp() {
+        return runningApp;
+    }
+
+    /** Stop application. */
+    public void doStopApp() {
+        if (runningApp != null) {
+            try {
+                service.stopApplication(runningApp, new AsyncRequestCallback<String>() {
+                    @Override
+                    protected void onSuccess(String result) {
+                        if (runningApp != null) {
+                            appStopped(runningApp.getName());
+                        }
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        String message = exception.getMessage() != null ? exception.getMessage() : constant.stopApplicationFailed();
+                        console.print(message);
+
+                        if (exception instanceof ServerException) {
+                            ServerException serverException = (ServerException)exception;
+                            if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus() && serverException.getMessage() != null &&
+                                serverException.getMessage().contains("not found") && runningApp != null) {
+                                appStopped(runningApp.getName());
+                            }
+                        }
+                    }
+                });
+            } catch (RequestException e) {
+                eventBus.fireEvent(new ExceptionThrownEvent(e));
+                console.print(e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Show message about stopped some application.
+     *
+     * @param appName
+     *         application name
+     */
+    private void appStopped(@NotNull String appName) {
+        String msg = constant.applicationStoped(appName);
+        console.print(msg);
+        runningApp = null;
     }
 }

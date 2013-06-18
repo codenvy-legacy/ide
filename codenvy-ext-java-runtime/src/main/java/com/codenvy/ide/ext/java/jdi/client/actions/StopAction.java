@@ -18,40 +18,45 @@
  */
 package com.codenvy.ide.ext.java.jdi.client.actions;
 
-import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerPresenter;
+import com.codenvy.ide.ext.java.jdi.client.run.RunnerPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * The action for stopping application.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class DebugAction extends Action {
-
-    private DebuggerPresenter presenter;
-    private ResourceProvider  resourceProvider;
+public class StopAction extends Action {
+    private DebuggerPresenter debugger;
+    private RunnerPresenter   runner;
 
     @Inject
-    public DebugAction(DebuggerPresenter presenter, JavaRuntimeResources resources, ResourceProvider resourceProvider) {
-        super("Debug Application", "Debug Application", resources.debugApp());
-        this.presenter = presenter;
-        this.resourceProvider = resourceProvider;
+    public StopAction(JavaRuntimeResources resources, DebuggerPresenter debugger, RunnerPresenter runner) {
+        super("Stop Application", "Stop Application", resources.stopApp());
+        this.debugger = debugger;
+        this.runner = runner;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        presenter.debugApplication();
+        if (debugger.isAppRunning()) {
+            debugger.doStopApp();
+        } else if (runner.isAppRunning()) {
+            runner.doStopApp();
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        e.getPresentation().setVisible(resourceProvider.getActiveProject() != null);
+        boolean isApplicationStarted = debugger.isAppRunning() || runner.isAppRunning();
+        e.getPresentation().setEnabled(isApplicationStarted);
     }
 }

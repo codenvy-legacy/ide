@@ -308,7 +308,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 if (runningApp != null) {
                     DebuggerPresenter.this.console.print(DebuggerPresenter.this.constant.debuggerDisconnected());
                     debuggerDisconnected();
-                    appStopped(runningApp.getName());
                 }
             }
 
@@ -467,6 +466,20 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         }
     }
 
+    /**
+     * Check whether application is run.
+     *
+     * @return <code>true</code> if the application is run, and <code>false</code> otherwise
+     */
+    public boolean isAppRunning() {
+        return runningApp != null;
+    }
+
+    /** @return running application */
+    public ApplicationInstance getRunningApp() {
+        return runningApp;
+    }
+
     /** {@inheritDoc} */
     @Override
     public void onResumeButtonClicked() {
@@ -548,7 +561,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     }
 
     /** Stop application. */
-    private void doStopApp() {
+    public void doStopApp() {
         if (runningApp != null) {
             try {
                 service.stopApplication(runningApp, new AsyncRequestCallback<String>() {
@@ -586,7 +599,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      * @param appName
      *         application name
      */
-    private void appStopped(String appName) {
+    private void appStopped(@NotNull String appName) {
         String msg = constant.applicationStoped(appName);
         console.print(msg);
         runningApp = null;

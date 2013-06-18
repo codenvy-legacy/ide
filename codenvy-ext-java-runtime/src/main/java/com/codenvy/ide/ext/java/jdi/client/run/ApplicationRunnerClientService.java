@@ -114,4 +114,13 @@ public interface ApplicationRunnerClientService {
      */
     void updateApplication(@NotNull String name, @NotNull String war, @NotNull AsyncRequestCallback<Object> callback)
             throws RequestException;
+
+    /**
+     * Stops application.
+     *
+     * @param runningApp
+     * @param callback
+     * @throws RequestException
+     */
+    void stopApplication(@NotNull ApplicationInstance runningApp, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 }

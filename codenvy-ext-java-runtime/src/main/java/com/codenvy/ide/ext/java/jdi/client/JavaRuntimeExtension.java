@@ -23,7 +23,9 @@ import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.debug.DebuggerManager;
 import com.codenvy.ide.ext.java.jdi.client.actions.DebugAction;
+import com.codenvy.ide.ext.java.jdi.client.actions.LogsAction;
 import com.codenvy.ide.ext.java.jdi.client.actions.RunAction;
+import com.codenvy.ide.ext.java.jdi.client.actions.StopAction;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerPresenter;
 import com.codenvy.ide.ext.java.jdi.client.fqn.FqnResolverFactory;
 import com.codenvy.ide.ext.java.jdi.client.fqn.JavaFqnResolver;
@@ -54,12 +56,17 @@ public class JavaRuntimeExtension {
 
     @Inject
     public JavaRuntimeExtension(ActionManager actionManager, RunAction action, DebugAction debugAction, DebuggerManager debuggerManager,
-                                DebuggerPresenter debuggerPresenter, FqnResolverFactory resolverFactory, JavaFqnResolver javaFqnResolver) {
+                                DebuggerPresenter debuggerPresenter, FqnResolverFactory resolverFactory, JavaFqnResolver javaFqnResolver,
+                                StopAction stopAction, LogsAction logsAction) {
         actionManager.registerAction("runJavaProject", action);
         actionManager.registerAction("debugJavaProject", debugAction);
+        actionManager.registerAction("stopJavaProject", stopAction);
+        actionManager.registerAction("logsJavaProject", logsAction);
         DefaultActionGroup run = (DefaultActionGroup)actionManager.getAction(GROUP_RUN);
         run.add(action);
         run.add(debugAction);
+        run.add(stopAction);
+        run.add(logsAction);
 
         DefaultActionGroup mainToolbarGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_TOOLBAR);
         DefaultActionGroup runGroup = new DefaultActionGroup(GROUP_RUN, false, actionManager);

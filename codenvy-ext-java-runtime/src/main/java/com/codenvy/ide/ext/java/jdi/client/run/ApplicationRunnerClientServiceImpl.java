@@ -37,7 +37,10 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
+
+import static com.google.gwt.http.client.RequestBuilder.GET;
 
 /**
  * The implementation of {@link ApplicationRunnerClientService}.
@@ -54,6 +57,7 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
     private       EventBus                        eventBus;
     private       JavaRuntimeLocalizationConstant constant;
     private       Loader                          loader;
+    private       String                          restContext;
 
     /**
      * Create client service.
@@ -62,15 +66,17 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
      * @param eventBus
      * @param constant
      * @param loader
+     * @param restContext
      */
     @Inject
     protected ApplicationRunnerClientServiceImpl(MessageBus wsMessageBus, EventBus eventBus, JavaRuntimeLocalizationConstant constant,
-                                                 Loader loader) {
+                                                 Loader loader, @Named("restContext") String restContext) {
         BASE_URL = "/ide" + "/java/runner";
         this.wsMessageBus = wsMessageBus;
         this.eventBus = eventBus;
         this.constant = constant;
         this.loader = loader;
+        this.restContext = restContext;
     }
 
     /** {@inheritDoc} */
@@ -157,7 +163,7 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
     /** {@inheritDoc} */
     @Override
     public void getLogs(@NotNull String name, @NotNull AsyncRequestCallback<StringBuilder> callback) throws RequestException {
-        String url = BASE_URL + "/logs";
+        String url = restContext + BASE_URL + "/logs";
         String params = "?name=" + name;
 
         loader.setMessage("Retrieving logs.... ");
@@ -187,5 +193,12 @@ public class ApplicationRunnerClientServiceImpl implements ApplicationRunnerClie
         loader.setMessage("Updating application...");
 
         AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader).send(callback);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void stopApplication(@NotNull ApplicationInstance runningApp, @NotNull AsyncRequestCallback<String> callback)
+            throws RequestException {
+        AsyncRequest.build(GET, runningApp.getStopURL()).loader(loader).send(callback);
     }
 }
