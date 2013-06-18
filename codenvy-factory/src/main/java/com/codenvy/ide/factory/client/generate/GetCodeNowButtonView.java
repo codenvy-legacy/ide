@@ -48,7 +48,7 @@ public class GetCodeNowButtonView extends ViewImpl implements Display {
 
     private static final String           TITLE                       = LOCALIZATION_CONSTANTS.factoryURLViewTitle();
 
-    private static final int              HEIGHT                      = 520;
+    private static final int              HEIGHT                      = 570;
 
     private static final int              WIDTH                       = 875;
 

@@ -141,6 +141,13 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
      */
     private String                factoryURL;
 
+    /**
+     * Text to display at begin of posted message.
+     */
+    private String                socialPostTitle     = "See my project on Codenvy";
+
+    private String                facebookSummaryInfo = "Summary info";
+
     public GetCodeNowButtonPresenter() {
         IDE.addHandler(OpenGetCodeNowButtonViewEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -157,7 +164,8 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
             public void onClick(ClickEvent event) {
                 Window.open("https://www.facebook.com/sharer/sharer.php?s=100&p[url]="
                             + factoryURLEscaped
-                            + "&p[images][0]=https://codenvy.com/images/logoCodenvy.png&p[title]=See my project&p[summary]=Summary info",
+                            + "&p[images][0]=https://codenvy.com/images/logoCodenvy.png&p[title]=" + socialPostTitle
+                            + "&p[summary]=" + facebookSummaryInfo,
                             "", "width=626,height=436");
             }
         });
@@ -173,7 +181,7 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
         display.getShareTwitterButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                Window.open("https://twitter.com/share?url=" + factoryURLEscaped, "",
+                Window.open("https://twitter.com/share?url=" + factoryURLEscaped + "&text=" + socialPostTitle, "",
                             "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600");
             }
         });
@@ -202,7 +210,7 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
         }
 
         display.getWebsitesURLField().setValue(getFactoryURLForWebsites());
-        display.getGitHubURLField().setValue(factoryURL); // TODO
+        display.getGitHubURLField().setValue(factoryURL);
         display.getDirectSharingURLField().setValue(factoryURL);
     }
 
@@ -312,7 +320,7 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
                      PROJECT_NAME + "=" + project.getName() + "&" + //
                      WORKSPACE_NAME + "=" + Utils.getWorkspaceName() + "&" + //
                      VCS + "=git&" + //
-                     VCS_URL + "=" + vcsURL + "&" + //
+                     VCS_URL + "=" + encodeQueryString(vcsURL) + "&" + //
                      COMMIT_ID + "=" + latestCommitId + "&" + //
                      ACTION_PARAMETER + "=" + DEFAULT_ACTION;
         openView();

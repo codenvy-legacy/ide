@@ -59,7 +59,7 @@
 
         .textArea {
             width: 220px;
-            height: 150px;
+            height: 200px;
             font-size: 13px;
             resize: none;
             overflow: hidden;
@@ -97,10 +97,11 @@
         <f:layer>
             <g:FlowPanel styleName="{style.padding}">
                 <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom}" text="Customize"></g:Label>
+
                 <g:Label width="100%" height="20px" text="TODO"></g:Label>
 
                 <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom}" text="Embed"></g:Label>
-                <g:FlowPanel width="100%" height="210px">
+                <g:FlowPanel width="100%" height="260px">
                     <g:FlowPanel addStyleNames="{style.floatLeft} {style.snippetPanel}">
                         <g:Image resource="{resource.world}" styleName="{style.image}"></g:Image>
                         <g:Label addStyleNames="{style.textAreaLabel}" text="on Websites"></g:Label>
