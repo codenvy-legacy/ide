@@ -22,7 +22,11 @@ package org.exoplatform.gwtframework.ui.client.dialog;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Panel;
 
 import org.exoplatform.gwtframework.ui.client.WindowResource;
 import org.exoplatform.gwtframework.ui.client.api.BooleanCallback;
@@ -35,7 +39,7 @@ import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
 
 /**
  * Created by The eXo Platform SAS .
- *
+ * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -60,41 +64,38 @@ public class GWTDialogs extends Dialogs {
     }
 
     private BooleanCallback booleanCallback = new BooleanCallback() {
-        public void execute(Boolean value) {
-            if (currentDialog.getBooleanValueReceivedHandler() != null) {
-                try {
-                    currentDialog.getBooleanValueReceivedHandler().booleanValueReceived(value);
-                } catch (Throwable exc) {
-                    exc.printStackTrace();
-                }
-            }
+                                                public void execute(Boolean value) {
+                                                    if (currentDialog.getBooleanValueReceivedHandler() != null) {
+                                                        try {
+                                                            currentDialog.getBooleanValueReceivedHandler().booleanValueReceived(value);
+                                                        } catch (Throwable exc) {
+                                                            exc.printStackTrace();
+                                                        }
+                                                    }
 
-            showQueueDialog();
-        }
-    };
+                                                    showQueueDialog();
+                                                }
+                                            };
 
-    private ValueCallback valueCallback = new ValueCallback() {
-        public void execute(String value) {
-            if (currentDialog.getStringValueReceivedHandler() != null) {
-                try {
-                    currentDialog.getStringValueReceivedHandler().stringValueReceived(value);
-                } catch (Throwable exc) {
-                    exc.printStackTrace();
-                }
-            }
+    private ValueCallback   valueCallback   = new ValueCallback() {
+                                                public void execute(String value) {
+                                                    if (currentDialog.getStringValueReceivedHandler() != null) {
+                                                        try {
+                                                            currentDialog.getStringValueReceivedHandler().stringValueReceived(value);
+                                                        } catch (Throwable exc) {
+                                                            exc.printStackTrace();
+                                                        }
+                                                    }
 
-            showQueueDialog();
-        }
-    };
+                                                    showQueueDialog();
+                                                }
+                                            };
 
     /**
      * @param name
-     * @param title
-     *         title near input field
-     * @param width
-     *         width
-     * @param value
-     *         value by default
+     * @param title title near input field
+     * @param width width
+     * @param value value by default
      * @return {@link TextField}
      */
     public static TextField createTextField(String name, String title, int width, String value) {
@@ -110,9 +111,10 @@ public class GWTDialogs extends Dialogs {
      * VALUE ASKING
      */
     @Override
-    protected void openAskForValueDialog(String title, String message, String defaultValue) {
-        final TextField textField = createTextField("valueField", message, 350, defaultValue);
-        final GWTDialogsWindow dialogWindow = new GWTDialogsWindow("exoAskForValueDialog", title, 400, 160, textField);
+    protected void openAskForValueDialog(Dialog dialog) {
+        final TextField textField = createTextField("valueField", dialog.getMessage(), 350, dialog.getDefaultValue());
+        final GWTDialogsWindow dialogWindow = new GWTDialogsWindow("exoAskForValueDialog", dialog.getTitle(), 400, 160, textField);
+        dialogWindow.setModal(dialog.getModal());
         ImageButton okButton = createButton("Ok", null);
         ImageButton cancelButton = createButton("Cancel", null);
         dialogWindow.getButtonsLayout().add(okButton);
@@ -152,9 +154,10 @@ public class GWTDialogs extends Dialogs {
     ;
 
     @Override
-    protected void openAskDialog(String title, String message) {
-        HorizontalPanel content = createImageWithTextLayout(WindowResource.INSTANCE.askDialog(), message);
-        final GWTDialogsWindow dialogWindow = new GWTDialogsWindow("exoAskDialog", title, 400, 130, content);
+    protected void openAskDialog(Dialog dialog) {
+        HorizontalPanel content = createImageWithTextLayout(WindowResource.INSTANCE.askDialog(), dialog.getMessage());
+        final GWTDialogsWindow dialogWindow = new GWTDialogsWindow("exoAskDialog", dialog.getTitle(), 400, 130, content);
+        dialogWindow.setModal(dialog.getModal());
         ImageButton yesButton = createButton("Yes", null);
         ImageButton noButton = createButton("No", null);
         dialogWindow.getButtonsLayout().add(yesButton);
@@ -194,9 +197,10 @@ public class GWTDialogs extends Dialogs {
     ;
 
     @Override
-    protected void openWarningDialog(String title, String message) {
-        HorizontalPanel content = createImageWithTextLayout(WindowResource.INSTANCE.warnDialog(), message);
-        final GWTDialogsWindow dialogWindow = new GWTDialogsWindow("exoWarningDialog", title, 400, 130, content);
+    protected void openWarningDialog(Dialog dialog) {
+        HorizontalPanel content = createImageWithTextLayout(WindowResource.INSTANCE.warnDialog(), dialog.getMessage());
+        final GWTDialogsWindow dialogWindow = new GWTDialogsWindow("exoWarningDialog", dialog.getTitle(), 400, 130, content);
+        dialogWindow.setModal(dialog.getModal());
         ImageButton okButton = createButton("Ok", null);
         dialogWindow.getButtonsLayout().add(okButton);
 
@@ -225,9 +229,10 @@ public class GWTDialogs extends Dialogs {
     ;
 
     @Override
-    protected void openInfoDialog(String title, String message) {
-        HorizontalPanel content = createImageWithTextLayout(WindowResource.INSTANCE.sayDialog(), message);
-        final GWTDialogsWindow dialogWindow = new GWTDialogsWindow("exoInfoDialog", title, 400, 130, content);
+    protected void openInfoDialog(Dialog dialog) {
+        HorizontalPanel content = createImageWithTextLayout(WindowResource.INSTANCE.sayDialog(), dialog.getMessage());
+        final GWTDialogsWindow dialogWindow = new GWTDialogsWindow("exoInfoDialog", dialog.getTitle(), 400, 130, content);
+        dialogWindow.setModal(dialog.getModal());
         ImageButton okButton = createButton("Ok", null);
         dialogWindow.getButtonsLayout().add(okButton);
 
@@ -256,11 +261,9 @@ public class GWTDialogs extends Dialogs {
 
     /**
      * Create button.
-     *
-     * @param title
-     *         button's title
-     * @param icon
-     *         button's image
+     * 
+     * @param title button's title
+     * @param icon button's image
      * @return {@link IButton}
      */
     public ImageButton createButton(String title, ImageResource icon) {
@@ -287,11 +290,9 @@ public class GWTDialogs extends Dialogs {
 
     /**
      * Creates layout with pointed image and text near it.
-     *
-     * @param icon
-     *         image to display
-     * @param text
-     *         text to display
+     * 
+     * @param icon image to display
+     * @param text text to display
      * @return {@link HorizontalPanel}
      */
     public static HorizontalPanel createImageWithTextLayout(ImageResource icon, String text) {
@@ -301,14 +302,14 @@ public class GWTDialogs extends Dialogs {
         hPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
         hPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 
-        //Add image
+        // Add image
         Image image = new Image(icon);
         image.setWidth(32 + "px");
         image.setHeight(32 + "px");
         hPanel.add(image);
         hPanel.setCellWidth(image, "42px");
 
-        //Add text:
+        // Add text:
         Label label = new Label();
         label.getElement().setInnerHTML(text);
         hPanel.add(label);

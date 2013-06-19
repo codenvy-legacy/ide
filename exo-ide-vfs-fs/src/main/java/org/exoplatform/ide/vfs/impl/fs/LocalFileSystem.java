@@ -604,7 +604,10 @@ public class LocalFileSystem implements VirtualFileSystem {
             //TODO need to organize both ProjectType enums from server and client side to use one shared ProjectType
             if (projectType != null && ("Servlet/JSP".equals(projectType) || "Spring".equals(projectType))) {
                 String jRebelUsage = updated.hasProperty("jrebel") ? updated.getPropertyValue("jrebel") : "false";
-                LOG.info("EVENT#jrebel-usage# PROJECT#" + updated.getName() + "# TYPE#" + projectType + "# JREBEL#" + jRebelUsage + "#");
+                VirtualFileSystemUser user = mountPoint.getCurrentVirtualFileSystemUser();
+                LOG.info("EVENT#jrebel-usage# WS#"
+                         + EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_NAME).toString() + "# USER#"
+                         + user.getUserId() + "# PROJECT#" + updated.getName() + "# TYPE#" + projectType + "# JREBEL#" + jRebelUsage + "#");
             }
         }
         return updated;

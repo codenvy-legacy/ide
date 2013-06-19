@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
@@ -42,6 +43,7 @@ import static org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExte
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CreateApplicationControl.java Jul 7, 2011 5:32:27 PM vereshchaka $
  */
+@RolesAllowed("developer")
 public class CreateApplicationControl extends AbstractCloudFoundryControl implements ProjectOpenedHandler,
                                                                          ProjectClosedHandler, PropertiesChangedHandler {
 

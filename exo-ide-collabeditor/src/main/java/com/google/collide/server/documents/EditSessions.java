@@ -14,7 +14,7 @@
 
 package com.google.collide.server.documents;
 
-import com.codenvy.ide.commons.server.StringUtils;
+import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.ide.dtogen.server.ServerErrorImpl;
 import com.codenvy.ide.dtogen.shared.ServerError;
 import com.codenvy.ide.json.server.JsonArrayListAdapter;
@@ -238,7 +238,7 @@ public class EditSessions implements Startable {
 
     private void cleanUpEditSession(FileEditSession editSession) {
         editSessions.remove(editSession.getFileEditSessionKey());
-        InternalListener internalListener = listenersByEditSessionsId.get(editSession.getFileEditSessionKey());
+        InternalListener internalListener = listenersByEditSessionsId.remove(editSession.getFileEditSessionKey());
         if (internalListener != null) {
             listenerList.removeEventListener(internalListener.myFilter, internalListener);
         }
@@ -269,7 +269,7 @@ public class EditSessions implements Startable {
         try {
             ContentStream content = vfs.getContent(resourceId);
             input = content.getStream();
-            return StringUtils.toString(input);
+            return IoUtil.readStream(input);
         } finally {
             if (input != null) {
                 try {

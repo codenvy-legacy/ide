@@ -88,11 +88,9 @@ public class OAuthLoginView extends ViewImpl {
             @Override
             public void onClick(ClickEvent event) {
                 String authUrl = Utils.getAuthorizationContext()
-                                 + "/" + Utils.getWorkspaceName() 
-                                 + "/oauth/authenticate?oauth_provider=google"
+                                 + "/ide/oauth/authenticate?oauth_provider=google"
                                  + "&scope=https://www.googleapis.com/auth/appengine.admin"
-                                 + "&userId=" + IDE.userId + "&redirect_after_login="
-                                 + Utils.getAuthorizationPageURL();
+                                 + "&userId=" + IDE.userId + "&redirect_after_login=/w/" + Utils.getWorkspaceName();
                 JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 450, 500, null);
                 authWindow.loginWithOAuth();
                 IDE.getInstance().closeView(ID);

@@ -21,8 +21,8 @@ package org.exoplatform.ide.vfs.impl.fs;
 import junit.framework.TestCase;
 
 import com.codenvy.commons.env.EnvironmentContext;
-import com.codenvy.ide.commons.server.FileUtils;
-import com.codenvy.ide.commons.server.NameGenerator;
+import static com.codenvy.commons.lang.IoUtil.*;
+import static com.codenvy.commons.lang.NameGenerator.*;
 
 import org.apache.commons.codec.binary.Base64;
 import org.everrest.core.RequestHandler;
@@ -188,7 +188,7 @@ public abstract class LocalFileSystemTest extends TestCase {
         //assertTrue("Unable unmount local filesystem. ", provider.umount(testFsIoRoot));
         virtualFileSystemRegistry.unregisterProvider(MY_WORKSPACE_ID);
         assertFalse("Unable unmount local filesystem. ", provider.isMounted());
-        if (!FileUtils.deleteRecursive(root)) {
+        if (!deleteRecursive(root)) {
             fail("Unable clean test content. ");
         }
         super.tearDown();
@@ -249,7 +249,7 @@ public abstract class LocalFileSystemTest extends TestCase {
         }
         int num = 0;
         for (int i = 0; i < numberItemsEachLevel; i++, num++) {
-            String newName = NameGenerator.generate(null, 8);
+            String newName = generate(null, 8);
             String newPath = parent + '/' + newName;
             java.io.File f = getIoFile(newPath);
 

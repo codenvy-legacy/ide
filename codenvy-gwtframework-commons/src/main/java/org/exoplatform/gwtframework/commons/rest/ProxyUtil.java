@@ -55,7 +55,7 @@ public class ProxyUtil {
             return url;
         }
 
-        return proxyServiceContext + "?url=" + URL.encodeComponent(url);
+        return proxyServiceContext + "?url=" + URL.encodeQueryString(url);
     }
 
 }

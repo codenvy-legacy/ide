@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.aws.client.s3;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.aws.client.AWSClientBundle;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
@@ -28,6 +29,7 @@ import org.exoplatform.ide.extension.aws.client.s3.events.ShowS3ManagerEvent;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: S3ManagerControl.java Sep 19, 2012 vetal $
  */
+@RolesAllowed("developer")
 public class S3ManagerControl extends SimpleControl implements IDEControl
 
 {

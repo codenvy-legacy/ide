@@ -61,8 +61,7 @@ public class OutlineTreeViewModel implements TreeViewModel {
         }
 
         protected Widget createItemWidget(Token token) {
-            OutlineItemCreator outlineItemCreator =
-                    IDE.getInstance().getOutlineItemCreator(((TokenBeenImpl)token).getMimeType());
+            OutlineItemCreator outlineItemCreator = IDE.getInstance().getOutlineItemCreator(((TokenBeenImpl)token).getMimeType());
             if (outlineItemCreator != null) {
                 return outlineItemCreator.getOutlineItemWidget(token);
             } else {
@@ -73,12 +72,11 @@ public class OutlineTreeViewModel implements TreeViewModel {
                 return flowPanel;
             }
         }
-
     }
 
     private SingleSelectionModel<Object> selectionModel;
 
-    private ListDataProvider<Object> dataProvider = new ListDataProvider<Object>();
+    private ListDataProvider<Object>     dataProvider = new ListDataProvider<Object>();
 
     public OutlineTreeViewModel(SingleSelectionModel<Object> selectionModel) {
         this.selectionModel = selectionModel;

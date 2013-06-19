@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
@@ -29,6 +30,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudFoundryControl.java Jul 8, 2011 3:25:33 PM vereshchaka $
  */
+@RolesAllowed({"developer"})
 public class CloudFoundryControlGroup extends SimpleControl implements IDEControl {
 
     private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.cloudFoundryControlId();

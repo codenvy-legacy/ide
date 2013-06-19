@@ -24,10 +24,7 @@ import com.google.gwt.http.client.RequestException;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
-import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
@@ -74,7 +71,7 @@ public class PhpRuntimeServiceImpl extends PhpRuntimeService {
     public void start(String vfsId, ProjectModel project, RequestCallback<ApplicationInstance> callback)
             throws WebSocketException {
         StringBuilder params = new StringBuilder("?");
-        params.append("&vfsid=").append(vfsId).append("&projectid=").append(project.getId());
+        params.append("vfsid=").append(vfsId).append("&projectid=").append(project.getId());
         RequestMessage message =
             RequestMessageBuilder.build(RequestBuilder.GET, wsName + RUN_APPLICATION + params).getRequestMessage();
         wsMessageBus.send(message, callback);
@@ -91,7 +88,7 @@ public class PhpRuntimeServiceImpl extends PhpRuntimeService {
         StringBuilder params = new StringBuilder("?name=");
         params.append(name);
 
-        AsyncRequest.build(RequestBuilder.GET, requestUrl + params.toString(), true)
+        AsyncRequest.build(RequestBuilder.GET, requestUrl + params.toString())
                     .requestStatusHandler(new StopApplicationStatusHandler(name)).send(callback);
     }
 

@@ -26,7 +26,7 @@
          version="3.0"
          metadata-complete="true">
 
-    <display-name>api</display-name>
+    <display-name>Codenvy IDE</display-name>
     
     <context-param>
       <param-name>everrest.exoplatform.standalone.config</param-name>
@@ -78,7 +78,12 @@
 
    <servlet>
        <servlet-name>main</servlet-name>
-       <jsp-file>/ide/Application.jsp</jsp-file>
+       <jsp-file>/_app/Application.jsp</jsp-file>
+   </servlet>
+
+   <servlet>
+       <servlet-name>shell</servlet-name>
+       <jsp-file>/_app/shell.jsp</jsp-file>
    </servlet>
 
    <servlet>
@@ -93,17 +98,39 @@
    
    <servlet>
       <servlet-name>DispatcherServlet</servlet-name>
-      <servlet-class>com.codenvy.servlet.DispatcherServlet</servlet-class>
+      <servlet-class>com.codenvy.commons.servlet.DispatcherServlet</servlet-class>
    </servlet>
+   
+   <servlet>
+        <servlet-name>GitServlet</servlet-name>
+        <servlet-class>org.eclipse.jgit.http.server.GitServlet</servlet-class>
+        <init-param>
+            <param-name>base-path</param-name>
+            <param-value>${org.exoplatform.ide.server.fs-root-path}/</param-value>
+        </init-param>
+        <init-param>
+            <param-name>export-all</param-name>
+            <param-value>1</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GitServlet</servlet-name>
+        <url-pattern>/_git/*</url-pattern>
+    </servlet-mapping>
 
    <servlet-mapping>
       <servlet-name>main</servlet-name>
-      <url-pattern>/ide/main</url-pattern>
+      <url-pattern>/_app/main</url-pattern>
    </servlet-mapping>
 
    <servlet-mapping>
       <servlet-name>default</servlet-name>
-      <url-pattern>/ide/*</url-pattern>
+      <url-pattern>/_app/*</url-pattern>
+   </servlet-mapping>
+   
+    <servlet-mapping>
+      <servlet-name>shell</servlet-name>
+      <url-pattern>/_app/shell</url-pattern>
    </servlet-mapping>
 
    <servlet-mapping>
@@ -122,8 +149,8 @@
 
     <security-constraint>
         <web-resource-collection>
-            <web-resource-name>api</web-resource-name>
-            <url-pattern>/*</url-pattern>
+            <web-resource-name>app</web-resource-name>
+            <url-pattern>/rest/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>developer</role-name>

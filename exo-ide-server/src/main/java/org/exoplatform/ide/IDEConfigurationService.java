@@ -102,7 +102,6 @@ public class IDEConfigurationService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"developer"})
     public String getConfiguration() {
         try {
             String conf = readSettings();

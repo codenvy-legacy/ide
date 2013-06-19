@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.heroku.client.control;
 
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
@@ -36,6 +37,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 26, 2011 2:27:45 PM anya $
  */
+@RolesAllowed("developer")
 public class CreateApplicationControl extends AbstractHerokuControl implements ProjectOpenedHandler, ProjectClosedHandler,
                                                                    PropertiesChangedHandler {
 

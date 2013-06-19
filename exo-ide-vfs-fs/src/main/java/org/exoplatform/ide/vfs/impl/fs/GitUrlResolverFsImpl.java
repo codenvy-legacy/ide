@@ -55,13 +55,13 @@ public class GitUrlResolverFsImpl implements GitUrlResolver {
                 throw new GitUrlResolveException("Can't resolve Git Url. Item path may not be null or empty");
             }
             final EnvironmentContext context = EnvironmentContext.getCurrent();
-            String gitServer = (String)context.getVariable(EnvironmentContext.GIT_SERVER);
-            if (gitServer == null) {
-                throw new GitUrlResolveException("Can't resolve Git Url. Git server path may not be null.");
-            }
-            if (gitServer.endsWith("/")) {
-                gitServer = gitServer.substring(0, gitServer.length() - 1);
-            }
+//            String gitServer = (String)context.getVariable(EnvironmentContext.GIT_SERVER);
+//            if (gitServer == null) {
+//                throw new GitUrlResolveException("Can't resolve Git Url. Git server path may not be null.");
+//            }
+//            if (gitServer.endsWith("/")) {
+//                gitServer = gitServer.substring(0, gitServer.length() - 1);
+//            }
 
             final String rootPath = ((File)context.getVariable(EnvironmentContext.VFS_ROOT_DIR)).getAbsolutePath();
             String path = mountStrategy.getMountPath().getAbsolutePath();
@@ -78,7 +78,7 @@ public class GitUrlResolverFsImpl implements GitUrlResolver {
             if (port != 80 && port != 443 && port != -1) {
                 result.append(':').append(port);
             }
-            result.append('/').append(gitServer).append(path).append(item.getPath());
+            result.append('/').append("ide/").append(context.getVariable(EnvironmentContext.WORKSPACE_NAME).toString()).append("/_git/").append(path).append(item.getPath());
 
             return result.toString();
         } catch (VirtualFileSystemException e) {

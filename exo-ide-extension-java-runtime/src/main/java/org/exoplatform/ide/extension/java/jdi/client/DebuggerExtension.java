@@ -23,6 +23,7 @@ import com.google.gwt.core.client.GWT;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -69,7 +70,7 @@ public class DebuggerExtension extends Extension implements InitializeServicesHa
     public void initialize() {
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
         IDE.getInstance().addControl(new DebugAppControl());
-        IDE.getInstance().addControl(new RunAppControl());
+        IDE.getInstance().addControl(new RunAppControl(), Docking.TOOLBAR_RIGHT);
         IDE.getInstance().addControl(new StopAppControl());
         IDE.getInstance().addControl(new UpdateAppControl());
         IDE.getInstance().addControl(new ShowBreakpointPropertiesControl());

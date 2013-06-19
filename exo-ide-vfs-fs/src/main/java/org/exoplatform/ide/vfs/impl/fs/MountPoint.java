@@ -18,11 +18,10 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
+import com.codenvy.commons.lang.NameGenerator;
 import com.codenvy.ide.commons.cache.Cache;
 import com.codenvy.ide.commons.cache.LoadingValueSLRUCache;
 import com.codenvy.ide.commons.cache.SynchronizedCache;
-import com.codenvy.ide.commons.server.FileUtils;
-import com.codenvy.ide.commons.server.NameGenerator;
 
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonGenerator;
@@ -50,6 +49,7 @@ import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -77,7 +77,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import static org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
+import static com.codenvy.commons.lang.IoUtil.GIT_FILTER;
+import static com.codenvy.commons.lang.IoUtil.nioCopy;
+import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
@@ -128,7 +130,7 @@ public class MountPoint {
     };
 
     /** Hide .vfs and .git directories. */
-    private static final java.io.FilenameFilter SERVICE_GIT_DIR_FILTER = new OrFileNameFilter(SERVICE_DIR_FILTER, FileUtils.GIT_FILTER);
+    private static final java.io.FilenameFilter SERVICE_GIT_DIR_FILTER = new OrFileNameFilter(SERVICE_DIR_FILTER, GIT_FILTER);
 
     private static class OrFileNameFilter implements java.io.FilenameFilter {
         private final java.io.FilenameFilter[] filters;
@@ -517,13 +519,13 @@ public class MountPoint {
             // fail to copy metadata or ACL client may not try to copy again
             // because copy destination already exists.
             if (sourceMetadataFile.exists()) {
-                FileUtils.nioCopy(sourceMetadataFile, destinationMetadataFile, null);
+                nioCopy(sourceMetadataFile, destinationMetadataFile, null);
             }
             if (sourceAclFile.exists()) {
-                FileUtils.nioCopy(sourceAclFile, destinationAclFile, null);
+                nioCopy(sourceAclFile, destinationAclFile, null);
             }
 
-            FileUtils.nioCopy(source.getIoFile(), destination.getIoFile(), null);
+            nioCopy(source.getIoFile(), destination.getIoFile(), null);
 
             if (searcherProvider != null) {
                 try {
@@ -668,7 +670,7 @@ public class MountPoint {
 
                 // Otherwise copy this file to be able release the file lock before leave this method.
                 final java.io.File f = java.io.File.createTempFile("spool_file", null);
-                FileUtils.nioCopy(ioFile, f, null);
+                nioCopy(ioFile, f, null);
                 return new ContentStream(virtualFile.getName(), new DeleteOnCloseFileInputStream(f),
                                          virtualFile.getMediaType(), fLength, new Date(ioFile.lastModified()));
             } catch (IOException e) {
@@ -790,7 +792,7 @@ public class MountPoint {
         clearMetadataCache();
 
         final String path = virtualFile.getPath();
-        if (!FileUtils.deleteRecursive(virtualFile.getIoFile())) {
+        if (!deleteRecursive(virtualFile.getIoFile())) {
             LOG.error("Unable delete file {}", virtualFile.getIoFile());
             throw new VirtualFileSystemException(String.format("Unable delete item '%s'. ", virtualFile.getPath()));
         }

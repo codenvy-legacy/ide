@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.java.jdi.client;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -26,6 +27,7 @@ import org.exoplatform.ide.client.framework.project.*;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.java.jdi.client.events.*;
 
+@RolesAllowed("developer")
 public class ShowLogsControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
                                                               AppStartedHandler, AppStoppedHandler {
     private static final String ID = "Run/Java Logs";

@@ -50,7 +50,7 @@ public class Wrapper extends Composite implements RequiresResize {
 
     interface Style extends CssResource {
 
-        String contentCellHighlited();
+        String contentCellHighlighted();
 
     }
 
@@ -66,9 +66,7 @@ public class Wrapper extends Composite implements RequiresResize {
     @UiField
     TableCellElement contentCell;
 
-    private boolean highlited = false;
-
-    private int padding = DEFAULT_PADDING;
+    private boolean highlighted = false;
 
     public Wrapper() {
         this(DEFAULT_PADDING);
@@ -87,24 +85,23 @@ public class Wrapper extends Composite implements RequiresResize {
     }
 
     public void setPadding(int padding) {
-        this.padding = padding;
         contentCell.getStyle().setProperty("borderWidth", padding + "px");
     }
 
-    public boolean isHighlited() {
-        return highlited;
+    public boolean isHighlighted() {
+        return highlighted;
     }
 
-    public void setHighlited(boolean highlited) {
-        if (this.highlited != highlited) {
-            if (highlited) {
-                contentCell.addClassName(style.contentCellHighlited());
+    public void setHighlighted(boolean highlighted) {
+        if (this.highlighted != highlighted) {
+            if (highlighted) {
+                contentCell.addClassName(style.contentCellHighlighted());
             } else {
-                contentCell.removeClassName(style.contentCellHighlited());
+                contentCell.removeClassName(style.contentCellHighlighted());
             }
         }
 
-        this.highlited = highlited;
+        this.highlighted = highlighted;
     }
 
     @Override
@@ -115,38 +112,6 @@ public class Wrapper extends Composite implements RequiresResize {
 
     @Override
     public void onResize() {
-//      int w = getOffsetWidth();
-//      int h = getOffsetHeight();
-//      resize(w, h);
     }
-
-//   @Override
-//   public void resize(int width, int height)
-//   {
-//      int contentCellWidth = width - padding - padding;
-//      if (contentCellWidth < 0)
-//      {
-//         contentCellWidth = 0;
-//      }
-//
-//      int contentCellHeight = height - padding - padding;
-//      if (contentCellHeight < 0)
-//      {
-//         contentCellHeight = 0;
-//      }
-//
-//      contentPanel.setPixelSize(contentCellWidth, contentCellHeight);
-//
-//      Widget w = contentPanel.getWidget();
-//      if (w == null)
-//      {
-//         return;
-//      }
-//
-//      if (w instanceof RequiresResize)
-//      {
-//         ((RequiresResize)w).onResize();
-//      }
-//   }
 
 }

@@ -357,8 +357,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
 
     private native JavaScriptObject initCodeMirror(String id, String width, String height, boolean readOnly, int cs, boolean tr,
                                                    boolean lineNumbers, String styleURLs, String parserNames, String jsDirectory,
-                                                   String modeTab)
-   /*-{
+                                                   String modeTab) /*-{
        var instance = this;
        var frame = instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::frameElement;
 
@@ -429,7 +428,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
        });
 
        return editor;
-   }-*/;
+    }-*/;
 
     /** Called by CodeMirror after it's instance has been initialized. */
     private void onInitialized() {
@@ -444,8 +443,6 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
             needValidateCode = true;
             codeValidateTimer.scheduleRepeating(2000);
         }
-
-//      showLineNumbers(showLineNumbers);
 
         fireEvent(new EditorInitializedEvent(this));
 
@@ -512,14 +509,13 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
     }
 
     /** set codemirror iframe transparency for the IE */
-    private native void fixCodeMirrorIframeTransparencyInIE()
-   /*-{
+    private native void fixCodeMirrorIframeTransparencyInIE() /*-{
        var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
        if (editor !== null && editor.frame !== null
            && editor.frame.allowTransparency !== true) {
            editor.frame.allowTransparency = true;
        }
-   }-*/;
+    }-*/;
 
     /**
      * returns line position number of vertical scroll bar in the body with text in the CodeMirror iframe
@@ -527,8 +523,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
      * @param currentLine
      *         if equals 0 or null, then will get current line position
      */
-    public native int getCursorOffsetY(int currentLine)
-   /*-{
+    public native int getCursorOffsetY(int currentLine) /*-{
        var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
        if (editor == null)
            return;
@@ -558,7 +553,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
        cursorOffsetY = (currentLine - 1) * @org.exoplatform.ide.editor.codemirror.CodeMirror::LINE_HEIGHT;
        cursorOffsetY -= verticalScrollBarPosition;
        return cursorOffsetY;
-   }-*/;
+    }-*/;
 
     private boolean handleKeyPressing(boolean isCtrl, boolean isAlt, boolean isShift, int keyCode) {
         if ((isCtrl || (BrowserResolver.isMacOs() && isAlt)) && keyCode == ' ') {
@@ -573,8 +568,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
     /**
      *
      */
-    private native void addKeyPressedListener()
-   /*-{
+    private native void addKeyPressedListener() /*-{
        var instance = this;
        var editor = instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
 
@@ -597,11 +591,10 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
 
                return false;
            });
-   }-*/;
+    }-*/;
 
     /** Handle autocompletion. */
-    public native void onAutocomplete()
-   /*-{
+    public native void onAutocomplete() /*-{
        var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
        if (editor == null) {
            return;
@@ -616,10 +609,9 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
        }
 
        this.@org.exoplatform.ide.editor.codemirror.CodeMirror::callAutocompleteHandler(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)(lineContent, currentNode);
-   }-*/;
+    }-*/;
 
     private void callAutocompleteHandler(String lineContent, JavaScriptObject currentNode) {
-
         int cursorRow = cursorPositionRow;
 
         // calculate cursorOffsetY
@@ -677,8 +669,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
     /**
      *
      */
-    private native void addHighlighterListeners()
-   /*-{
+    private native void addHighlighterListeners() /*-{
        var instance = this;
        var editor = instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
 
@@ -705,7 +696,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
                    }
            }
        }
-   }-*/;
+    }-*/;
 
     /** @return mimeType of current line content */
     private String getCurrentLineMimeType() {
@@ -747,8 +738,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
     }
 
     /** Set listeners of focus received. */
-    private native void addFocusReceivedListeners()
-   /*-{
+    private native void addFocusReceivedListeners() /*-{
        var instance = this;
        var editor = instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
 
@@ -770,7 +760,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
                    }
            }
        }
-   }-*/;
+    }-*/;
 
     private void fireEditorFocusReceivedEvent() {
         fireEvent(new EditorFocusReceivedEvent(this));
@@ -856,8 +846,6 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
 
     }
 
-    ;
-
     private void onLineNumberClick(int lineNumber) {
         clickHandler.setLineNumber(lineNumber);
         clickHandler.schedule(300);
@@ -871,12 +859,11 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
 
     /** @see org.exoplatform.ide.editor.client.api.Editor#getText() */
     @Override
-    public native String getText()
-   /*-{
+    public native String getText() /*-{
        var instance = this;
        var editor = instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
        return editor.getCode();
-   }-*/;
+    }-*/;
 
     /** @see org.exoplatform.ide.editor.client.api.Editor#setText(java.lang.String) */
     @Override
@@ -889,8 +876,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
         setText(editorObject, text);
     }
 
-    private native void setText(JavaScriptObject editor, String text)
-   /*-{
+    private native void setText(JavaScriptObject editor, String text) /*-{
        if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)) {
            return;
        }
@@ -902,7 +888,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
        }
        editor.setCode(text);
        editor.focus();
-   }-*/;
+    }-*/;
 
     /** @see org.exoplatform.ide.editor.client.api.Editor#isCapable(org.exoplatform.ide.editor.client.api.EditorCapability) */
     @Override
@@ -936,12 +922,11 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
         formatSource(getText(), editorObject);
     }
 
-    private native void formatSource(String text, JavaScriptObject editor)
-   /*-{
+    private native void formatSource(String text, JavaScriptObject editor) /*-{
        if (text != ' ') {
            editor.reindent();
        }
-   }-*/;
+    }-*/;
 
     /** @see org.exoplatform.ide.editor.client.api.Editor#showLineNumbers(boolean) */
     public void showLineNumbers(boolean showLineNumbers) {
@@ -958,14 +943,11 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
         }
     }
 
-    ;
-
     /** @param showLineNumbers */
-    private native void showLineNumbersNative(boolean showLineNumbers)
-   /*-{
+    private native void showLineNumbersNative(boolean showLineNumbers) /*-{
        var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
        editor.setLineNumbers(showLineNumbers);
-   }-*/;
+    }-*/;
 
     /** @see org.exoplatform.ide.editor.client.api.Editor#setFocus() */
     @Override
@@ -978,14 +960,12 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
         }
     }
 
-    private native void setFocus(JavaScriptObject editor)
-   /*-{
+    private native void setFocus(JavaScriptObject editor) /*-{
        if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)) {
            return;
        }
-
        editor.focus();
-   }-*/;
+    }-*/;
 
     /** @see org.exoplatform.ide.editor.client.api.Editor#setCursorPosition(int, int) */
     @Override
@@ -999,36 +979,39 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
         fireEvent(new EditorCursorActivityEvent(this, cursorRow, cursorCol));
     }
 
-    private native void goToPosition(JavaScriptObject editor, int row, int column)
-   /*-{
-       if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)
-           || typeof editor.win.select == 'undefined') {
+    private native void goToPosition(JavaScriptObject editor, int row, int column) /*-{
+       try {
+           if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)
+               || typeof editor.win.select == 'undefined') {
+               return;
+           }
+    
+           if (column && !isNaN(Number(column)) && row && !isNaN(Number(row))) {
+               if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::canGoToLine(I)(row)) {
+                   editor.selectLines(editor.nthLine(row), column - 1);
+                   this.@org.exoplatform.ide.editor.codemirror.CodeMirror::highlightLine(I)(row);
+                   this.@org.exoplatform.ide.editor.codemirror.CodeMirror::fireEditorCursorActivityEvent(Ljava/lang/String;II)(this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getId()(), row, column);
+               }
+           }
+       
+       } catch (e) {
+           //this.@org.exoplatform.ide.editor.codemirror.CodeMirror::trace(Ljava/lang/String;)(e.message);
            return;
        }
+    }-*/;
 
-       if (column && !isNaN(Number(column)) && row && !isNaN(Number(row))) {
-           if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::canGoToLine(I)(row)) {
-               editor.selectLines(editor.nthLine(row), column - 1);
-               this.@org.exoplatform.ide.editor.codemirror.CodeMirror::highlightLine(I)(row);
-               this.@org.exoplatform.ide.editor.codemirror.CodeMirror::fireEditorCursorActivityEvent(Ljava/lang/String;II)(this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getId()(), row, column);
-           }
-       }
-   }-*/;
-
-    public native boolean canGoToLine(int lineNumber)
-   /*-{
+    public native boolean canGoToLine(int lineNumber) /*-{
        var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
        if (editor == null) {
            return false;
        }
 
        return editor.nthLine(lineNumber) !== false;
-   }-*/;
+    }-*/;
 
     /** @see org.exoplatform.ide.editor.client.api.Editor#deleteCurrentLine() */
     @Override
-    public native void deleteCurrentLine()
-   /*-{
+    public native void deleteCurrentLine() /*-{
        var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
        if (editor == null) {
            return;
@@ -1048,11 +1031,10 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
 
        currentLineNumber = editor.lineNumber(currentLine);
        this.@org.exoplatform.ide.editor.codemirror.CodeMirror::setCursorPosition(II)(currentLineNumber, 1);
-   }-*/;
+    }-*/;
 
     /** Correct clear the last line of content that the line break is being remained */
-    private native void clearLastLine()
-   /*-{
+    private native void clearLastLine() /*-{
        var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
        if (editor == null) {
            return;
@@ -1066,7 +1048,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
        else {
            editor.setLineContent(lastLineHandler, "\n");
        }
-   }-*/;
+    }-*/;
 
     /** @see org.exoplatform.ide.editor.client.api.Editor#hasUndoChanges() */
     @Override
@@ -1074,14 +1056,13 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
         return hasUndoChanges(editorObject);
     }
 
-    private native boolean hasUndoChanges(JavaScriptObject editor)
-   /*-{
+    private native boolean hasUndoChanges(JavaScriptObject editor) /*-{
        if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)) {
            return false;
        }
 
        return editor.historySize().undo > 0;
-   }-*/;
+    }-*/;
 
     /** @see org.exoplatform.ide.editor.client.api.Editor#undo() */
     @Override
@@ -1089,10 +1070,9 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
         undo(editorObject);
     }
 
-    private native void undo(JavaScriptObject editor)
-   /*-{
+    private native void undo(JavaScriptObject editor) /*-{
        editor.undo();
-   }-*/;
+    }-*/;
 
     /** @see org.exoplatform.ide.editor.client.api.Editor#hasRedoChanges() */
     @Override
@@ -1100,21 +1080,19 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
         return hasRedoChanges(editorObject);
     }
 
-    private native boolean hasRedoChanges(JavaScriptObject editor)
-   /*-{
+    private native boolean hasRedoChanges(JavaScriptObject editor) /*-{
        if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)) {
            return false;
        }
 
        return editor.historySize().redo > 0;
-   }-*/;
+    }-*/;
 
     /** @see org.exoplatform.ide.editor.client.api.Editor#redo() */
-    public native void redo()
-   /*-{
+    public native void redo() /*-{
        var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
        editor.redo();
-   }-*/;
+    }-*/;
 
     /** @see org.exoplatform.ide.editor.client.api.Editor#isReadOnly() */
     @Override
@@ -1128,8 +1106,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
     }
 
     /** @see org.exoplatform.ide.editor.client.api.Editor#getCursorRow() */
-    public native int getNativeCursorRow()
-   /*-{
+    public native int getNativeCursorRow() /*-{
        var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
        if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)
            || typeof editor.win.select == 'undefined')
@@ -1148,12 +1125,11 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
                var cursor = editor.cursorPosition(true);
                return editor.lineNumber(cursor.line) || 1;
        }
-   }-*/;
+    }-*/;
 
     /** @see org.exoplatform.ide.editor.client.api.Editor#getCursorColumn() */
     @Override
-    public native int getCursorColumn()
-   /*-{
+    public native int getCursorColumn() /*-{
        var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
        if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)
            || typeof editor.win.select == 'undefined')
@@ -1171,15 +1147,14 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
                var cursor = editor.cursorPosition(true);
                return (cursor.character + 1) || 1;
        }
-   }-*/;
+    }-*/;
 
     /**
      * @param cursor
      *         object - the argument of native codemirror cursorActivity event
      * @return editor.lineNumber(cursor) - 1
      */
-    private native int getCursorActivityRow(JavaScriptObject cursor, int cursorCol)
-   /*-{
+    private native int getCursorActivityRow(JavaScriptObject cursor, int cursorCol) /*-{
        var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
        if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)
            || typeof editor.win.select == 'undefined' || !cursor) {
@@ -1194,7 +1169,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
        }
 
        return editor.lineNumber(cursor) - 1;
-   }-*/;
+    }-*/;
 
     /** @see org.exoplatform.ide.editor.client.api.Editor#getTokenList() */
     public List<? extends Token> getTokenList() {
@@ -1242,8 +1217,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
 
     /** @see org.exoplatform.ide.editor.client.api.Editor#replaceTextAtCurrentLine(java.lang.String, int) */
     @Override
-    public native void replaceTextAtCurrentLine(String line, int cursorPosition)
-   /*-{
+    public native void replaceTextAtCurrentLine(String line, int cursorPosition) /*-{
        var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
        if (editor != null && line) {
            var currentLine = editor.cursorPosition(true).line;
@@ -1252,21 +1226,20 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
            // set cursor at the cursor position
            editor.selectLines(currentLine, cursorPosition);
        }
-   }-*/;
+    }-*/;
 
     /**
      * @param newText
      * @param lineNumber
      *         started from 1
      */
-    private native void insertIntoLine(String newText, int lineNumber)
-   /*-{
+    private native void insertIntoLine(String newText, int lineNumber) /*-{
        var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
        if (editor != null && newText) {
            var handler = editor.nthLine(lineNumber);
            editor.insertIntoLine(handler, 0, newText);
        }
-   }-*/;
+    }-*/;
 
     private FlowPanel getLineHighlighter() {
         FlowPanel highlighter = new FlowPanel();
@@ -1289,11 +1262,10 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
         }
     }
 
-    private native String getLineContent(JavaScriptObject editor, int lineNumber)
-   /*-{
+    private native String getLineContent(JavaScriptObject editor, int lineNumber) /*-{
        var handler = editor.nthLine(lineNumber);
        return editor.lineContent(handler);
-   }-*/;
+    }-*/;
 
     /** @see org.exoplatform.ide.editor.client.api.Editor#getLineText(int) */
     @Override
@@ -1307,11 +1279,10 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
      * @param editor
      * @return
      */
-    private native boolean checkGenericCodeMirrorObject(JavaScriptObject editor)
-   /*-{
+    private native boolean checkGenericCodeMirrorObject(JavaScriptObject editor) /*-{
        return (editor != null) && (typeof editor != 'undefined')
            && (typeof editor.editor != 'undefined');
-   }-*/;
+    }-*/;
 
 
     /*********************************************************************************
@@ -1460,16 +1431,17 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
     }
 
     /** Removes style from mark element ( is line number element ) */
-    private native void unmarkNative(int lineNumber)
-   /*-{
-       var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
-       editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1]
-           .removeAttribute("class");
-       editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1]
-           .removeAttribute("title");
-       editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].onmouseover = null;
-       editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].onmouseout = null;
-   }-*/;
+    private native void unmarkNative(int lineNumber) /*-{
+        try {
+            var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
+            editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].removeAttribute("class");
+            editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].removeAttribute("title");
+            editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].onmouseover = null;
+            editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].onmouseout = null;
+        } catch (e) {
+            //this.@org.exoplatform.ide.editor.codemirror.CodeMirror::trace(Ljava/lang/String;)(e.message);
+        } 
+    }-*/;
 
     /** @see org.exoplatform.ide.editor.problem.Markable#addProblemClickHandler(org.exoplatform.ide.editor.problem.ProblemClickHandler) */
     @Override
@@ -1547,24 +1519,26 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
      * @param errorSummary
      * @param markStyle
      */
-    public native void markProblemmeLine(int lineNumber, String errorSummary, String markStyle)
-   /*-{
-       var instance = this;
-       var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
-
-       var over = function (jso) {
-           instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::markerMouseOver(Lcom/google/gwt/core/client/JavaScriptObject;)(jso);
-       };
-
-       var out = function (jso) {
-           instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::markerMouseOut(Lcom/google/gwt/core/client/JavaScriptObject;)(jso);
-       };
-
-       editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].setAttribute("class", markStyle);
-       editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].setAttribute("title", errorSummary);
-       editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].onmouseover = over;
-       editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].onmouseout = out;
-   }-*/;
+    public native void markProblemmeLine(int lineNumber, String errorSummary, String markStyle) /*-{
+       try {
+           var instance = this;
+           var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
+    
+           var over = function (jso) {
+               instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::markerMouseOver(Lcom/google/gwt/core/client/JavaScriptObject;)(jso);
+           };
+    
+           var out = function (jso) {
+               instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::markerMouseOut(Lcom/google/gwt/core/client/JavaScriptObject;)(jso);
+           };
+    
+           editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].setAttribute("class", markStyle);
+           editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].setAttribute("title", errorSummary);
+           editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].onmouseover = over;
+           editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].onmouseout = out;
+       } catch (e) {
+       }
+    }-*/;
 
     /**
      * Clear error mark from lineNumbers field
@@ -1572,16 +1546,16 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
      * @param lineNumber
      *         starting from 1
      */
-    public native void clearErrorMark(int lineNumber)
-   /*-{
-       var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
-       if (editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1]) {
-           editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1]
-               .removeAttribute('class');
-           editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1]
-               .removeAttribute('title');
-       }
-   }-*/;
+    public native void clearErrorMark(int lineNumber) /*-{
+        try {
+            var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
+                if (editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1]) {
+                    editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].removeAttribute('class');
+                    editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].removeAttribute('title');
+                }
+        } catch (e) {
+        }        
+    }-*/;
 
     @Override
     public IDocument getDocument() {
@@ -1595,15 +1569,13 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
     }
 
     @Override
-    public native void setLineText(int line, String text)
-   /*-{
+    public native void setLineText(int line, String text) /*-{
        var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
        var handle = editor.nthLine(line);
        editor.setLineContent(handle, text);
-   }-*/;
+    }-*/;
 
-    private native void deleteLine(JavaScriptObject editor, int line)
-   /*-{
+    private native void deleteLine(JavaScriptObject editor, int line) /*-{
        var lineHandler = editor.nthLine(line);
 
        if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser != @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE
@@ -1613,7 +1585,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
        } else {
            editor.removeLine(lineHandler);
        }
-   }-*/;
+    }-*/;
 
     /** @see org.exoplatform.ide.editor.shared.text.IDocumentListener#documentAboutToBeChanged(org.exoplatform.ide.editor.shared.text
      * .DocumentEvent) */
@@ -1648,22 +1620,25 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
         }
     }
 
-    public native SelectionRange getSelectionRange()
-   /*-{
-       var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
-       if (editor == null) {
+    public native SelectionRange getSelectionRange() /*-{
+       try {
+           var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
+           if (editor == null) {
+               return null;
+           }
+    
+           var start = editor.cursorPosition(true);
+           var startLine = editor.lineNumber(start.line);
+           var end = editor.cursorPosition(false);
+           var endLine = editor.lineNumber(end.line);
+           return @org.exoplatform.ide.editor.client.api.SelectionRange::new(IIII)(startLine, start.character, endLine, end.character);
+       } catch (e) {
+           //this.@org.exoplatform.ide.editor.codemirror.CodeMirror::trace(Ljava/lang/String;)(e.message);
            return null;
        }
+    }-*/;
 
-       var start = editor.cursorPosition(true);
-       var startLine = editor.lineNumber(start.line);
-       var end = editor.cursorPosition(false);
-       var endLine = editor.lineNumber(end.line);
-       return @org.exoplatform.ide.editor.client.api.SelectionRange::new(IIII)(startLine, start.character, endLine, end.character);
-   }-*/;
-
-    private native void addContextMenuListener()
-   /*-{
+    private native void addContextMenuListener() /*-{
        var instance = this;
        var frame = instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::frameElement;
 
@@ -1690,7 +1665,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
                    }
            }
        }
-   }-*/;
+    }-*/;
 
     private void onContextMenu(NativeEvent event) {
         event.stopPropagation();
@@ -1705,8 +1680,6 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
     public void selectAll() {
         executeCommand("selectAll");
     }
-
-    ;
 
     /** @see org.exoplatform.ide.editor.client.api.Editor#cut() */
     @Override
@@ -1762,8 +1735,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
         throw new UnsupportedOperationException();
     }
 
-    private native void executeCommand(String command)
-   /*-{
+    private native void executeCommand(String command) /*-{
        var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
        var frame = editor.frame;
        if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser == @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE) {
@@ -1772,19 +1744,17 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
        else {
            frame.contentDocument.execCommand(command, false, null);
        }
-   }-*/;
+    }-*/;
 
     /** @see org.exoplatform.ide.editor.client.api.Editor#getNumberOfLines() */
     @Override
-    public native int getNumberOfLines()
-   /*-{
+    public native int getNumberOfLines() /*-{
        var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
        return editor.lineNumber(editor.lastLine());
-   }-*/;
+    }-*/;
 
     @Override
-    public native void selectRange(int startLine, int startOffset, int endLine, int endOffset)
-   /*-{
+    public native void selectRange(int startLine, int startOffset, int endLine, int endOffset) /*-{
        try {
            var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
            var startHandle = editor.nthLine(startLine);
@@ -1794,7 +1764,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
        catch (e) {
            this.@org.exoplatform.ide.editor.codemirror.CodeMirror::trace(Ljava/lang/String;)(e.message);
        }
-   }-*/;
+    }-*/;
 
     private void trace(String message) {
         System.out.println("CodeMirror: " + message);
@@ -1897,8 +1867,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
         });
     }
 
-    private native boolean searchNative(String query, boolean caseSensitive)
-   /*-{
+    private native boolean searchNative(String query, boolean caseSensitive) /*-{
        var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
        if (editor == null) {
            return;
@@ -1911,18 +1880,17 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
        }
 
        return found;
-   }-*/;
+    }-*/;
 
     /** @see org.exoplatform.ide.editor.client.api.Editor#replaceMatch(java.lang.String) */
     @Override
-    public native void replaceMatch(String replacement)
-   /*-{
+    public native void replaceMatch(String replacement) /*-{
        var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
        if (editor == null) {
            return;
        }
 
        editor.replaceSelection(replacement);
-   }-*/;
+    }-*/;
 
 }

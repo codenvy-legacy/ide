@@ -45,11 +45,13 @@ import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.extension.googleappengine.client.GaeTools;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
+import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineWsRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationEvent;
 import org.exoplatform.ide.extension.googleappengine.client.login.OAuthLoginView;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
@@ -159,14 +161,14 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
     public void deployApplication(final ProjectModel project) {
         try {
             AutoBean<ApplicationInfo> applicationInfo = GoogleAppEngineExtension.AUTO_BEAN_FACTORY.applicationInfo();
-            AutoBeanUnmarshaller<ApplicationInfo> unmarshaller =
-                    new AutoBeanUnmarshaller<ApplicationInfo>(applicationInfo);
+            AutoBeanUnmarshallerWS<ApplicationInfo> unmarshaller =
+                    new AutoBeanUnmarshallerWS<ApplicationInfo>(applicationInfo);
 
             IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.deployApplicationMessage(project
                                                                                                                      .getName()),
                                           Type.INFO));
             GoogleAppEngineClientService.getInstance().update(currentVfs.getId(), project, applicationUrl,
-                                                              new GoogleAppEngineAsyncRequestCallback<ApplicationInfo>(unmarshaller) {
+                                                              new GoogleAppEngineWsRequestCallback<ApplicationInfo>(unmarshaller) {
 
                                                                   @Override
                                                                   protected void onSuccess(ApplicationInfo result) {

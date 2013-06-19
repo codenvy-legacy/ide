@@ -26,7 +26,6 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-@RolesAllowed({"developer"})
 public class GetStartedControl extends SimpleControl implements IDEControl {
 
     private static final String ID = "Help/Get Started";

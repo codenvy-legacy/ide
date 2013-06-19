@@ -20,6 +20,7 @@ package org.eclipse.jdt.client;
 
 import org.eclipse.jdt.client.event.CleanProjectEvent;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
@@ -31,6 +32,7 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 9:57:22 AM Mar 5, 2012 evgen $
  */
+@RolesAllowed({"developer"})
 public class CleanProjectControl extends SimpleControl implements IDEControl, 
             ProjectOpenedHandler, ProjectClosedHandler {
 

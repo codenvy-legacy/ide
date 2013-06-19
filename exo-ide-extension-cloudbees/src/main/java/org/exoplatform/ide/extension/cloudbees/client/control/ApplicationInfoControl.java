@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.cloudbees.client.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -43,6 +44,7 @@ import java.util.List;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: InitializeApplicationControl.java Jun 23, 2011 12:00:53 PM vereshchaka $
  */
+@RolesAllowed("developer")
 public class ApplicationInfoControl extends SimpleControl implements IDEControl, VfsChangedHandler,
                                                                      ItemsSelectedHandler, ViewVisibilityChangedHandler {
 

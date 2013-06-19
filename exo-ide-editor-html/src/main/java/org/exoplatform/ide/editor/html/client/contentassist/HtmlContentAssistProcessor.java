@@ -43,9 +43,8 @@ import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcesso
 import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
 
 /**
- * A content assist processor proposes completions and
- * computes context information for HTML content.
- *
+ * A content assist processor proposes completions and computes context information for HTML content.
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: HtmlContentAssistProcessor.java Feb 7, 2013 11:46:45 AM azatsarynnyy $
  */
@@ -54,40 +53,38 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor {
     /** Bean that holds {@link #findTag} results. */
     private static class FindTagResult {
         /** Index of last start-of-TAG token before cursor; -1 => not in this line. */
-        int startTagIndex = -1;
+        int     startTagIndex = -1;
 
         /** Index of last end-of-TAG token before cursor; -1 => not in this line. */
-        int endTagIndex = -1;
+        int     endTagIndex   = -1;
 
         /** Token that "covers" the cursor; left token if cursor touches 2 tokens. */
-        Token inToken;
+        Token   inToken;
 
         /** Number of characters between "inToken" start and the cursor position. */
-        int cut;
+        int     cut;
 
         /** Indicates that cursor is located inside tag. */
         boolean inTag;
     }
 
-    private static final HtmlTagsAndAttributes htmlAttributes = HtmlTagsAndAttributes.getInstance();
+    private static final HtmlTagsAndAttributes htmlAttributes       = HtmlTagsAndAttributes.getInstance();
 
-    private static char[] activationCharacters = new char[]{'<'};
+    private static char[]                      activationCharacters = new char[]{'<'};
 
-    static final AnchorType MODE_ANCHOR_TYPE = AnchorType.create(HtmlAutocompleter.class, "mode");
+    static final AnchorType                    MODE_ANCHOR_TYPE     = AnchorType.create(HtmlAutocompleter.class, "mode");
 
     /** A {@link ContentAssistProcessor} for CSS. */
-    private ContentAssistProcessor cssProcessor;
+    private ContentAssistProcessor             cssProcessor;
 
     /** A {@link ContentAssistProcessor} for JavaScript. */
-    private ContentAssistProcessor jsProcessor;
+    private ContentAssistProcessor             jsProcessor;
 
     /**
      * Constructs new {@link HtmlContentAssistProcessor} instance.
-     *
-     * @param cssProcessor
-     *         {@link ContentAssistProcessor}
-     * @param jsProcessor
-     *         {@link ContentAssistProcessor}
+     * 
+     * @param cssProcessor {@link ContentAssistProcessor}
+     * @param jsProcessor {@link ContentAssistProcessor}
      */
     public HtmlContentAssistProcessor(ContentAssistProcessor cssProcessor,
                                       ContentAssistProcessor jsProcessor) {
@@ -97,8 +94,7 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor {
 
     /**
      * @see org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor#computeCompletionProposals(org.exoplatform.ide
-     * .editor.client.api.Editor,
-     *      int)
+     *      .editor.client.api.Editor, int)
      */
     @Override
     public CompletionProposal[] computeCompletionProposals(Editor editor, int offset) {
@@ -143,19 +139,22 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor {
         if (column == 0) {
             // On first column we either add attribute or do nothing.
             if (inTag) {
-                JsonArray<AutocompleteProposal> proposals =
-                        htmlAttributes.searchAttributes(tag.getTagName(), tag.getAttributes(), "");
-                return getCompletionProposalArray(proposals, CompletionType.ATTRIBUTE, "", offset);
+                JsonArray<AutocompleteProposal> proposals = htmlAttributes.searchAttributes(tag.getTagName(), tag.getAttributes(), "");
+
+                CompletionProposal[] proposalArray = new CompletionProposal[proposals.size()];
+                getCompletionProposalArray(proposals, proposalArray, CompletionType.ATTRIBUTE, "", offset, 0);
+                return proposalArray;
             }
             return null;
         }
 
         FindTagResult findTagResult = findTag(tokens, inTag, column);
-
         if (!findTagResult.inTag || findTagResult.inToken == null) {
             // Ooops =(
             return null;
         }
+
+        AutocompleteProposal endTagProposal = null;
 
         // If not unfinished tag at the beginning of line surrounds cursor...
         if (findTagResult.startTagIndex >= 0) {
@@ -165,6 +164,10 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor {
                 if (tag == null) {
                     // Ooops =(
                     return null;
+                }
+
+                if (!htmlAttributes.isSelfClosedTag(tag.getTagName())) {
+                    endTagProposal = new AutocompleteProposal(tag.getTagName());
                 }
             } else {
                 // Or new (temporary) object constructed.
@@ -178,34 +181,44 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor {
         if (TokenType.TAG == type) {
             value = value.substring(1).trim();
             JsonArray<AutocompleteProposal> searchTags = htmlAttributes.searchTags(value.toLowerCase());
-            return getCompletionProposalArray(searchTags, CompletionType.ELEMENT, value, offset);
+
+            CompletionProposal[] proposalArray = new CompletionProposal[searchTags.size()];
+            getCompletionProposalArray(searchTags, proposalArray, CompletionType.ELEMENT, value, offset, 0);
+            return proposalArray;
         }
+
         if (TokenType.WHITESPACE == type || TokenType.ATTRIBUTE == type) {
             value = (TokenType.ATTRIBUTE == type) ? value : "";
-            JsonArray<AutocompleteProposal> proposals =
-                    htmlAttributes.searchAttributes(tag.getTagName(), tag.getAttributes(), value);
-            //         dirtyScope = tag;
-            //         dirtyScope.setDelegate(dirtyScopeDelegate);
-            //         if (tag.isDirty())
-            //         {
-            //            return AutocompleteProposals.PARSING;
-            //         }
-            return getCompletionProposalArray(proposals, CompletionType.ATTRIBUTE, value, offset);
+            JsonArray<AutocompleteProposal> proposals = htmlAttributes.searchAttributes(tag.getTagName(), tag.getAttributes(), value);
+
+            if (!value.isEmpty()) {
+                endTagProposal = null;
+            }
+
+            CompletionProposal[] proposalArray = new CompletionProposal[proposals.size() + (endTagProposal != null ? 1 : 0)];
+
+            if (endTagProposal != null) {
+                proposalArray[0] = new HtmlProposal(endTagProposal.getName(), CompletionType.ELEMENT,
+                                                    "", offset - 1, htmlAttributes, true);
+            }
+
+            getCompletionProposalArray(proposals, proposalArray, CompletionType.ATTRIBUTE, value, offset, endTagProposal != null ? 1 : 0);
+
+            return proposalArray;
         }
 
         return null;
     }
 
-    private CompletionProposal[] getCompletionProposalArray(JsonArray<AutocompleteProposal> proposals,
-                                                            CompletionType completionType,
-                                                            String prefix,
-                                                            int offset) {
-        CompletionProposal[] proposalArray = new CompletionProposal[proposals.size()];
-        for (int i = 0; i < proposals.size(); i++) {
-            AutocompleteProposal proposal = proposals.get(i);
-            proposalArray[i] = new HtmlProposal(proposal.getName(), completionType, prefix, offset, htmlAttributes);
+    private void getCompletionProposalArray(JsonArray<AutocompleteProposal> sourceArray,
+                                            CompletionProposal[] destArray,
+                                            CompletionType completionType,
+                                            String prefix,
+                                            int offset, int startIndex) {
+        for (int i = 0; i < sourceArray.size(); i++) {
+            AutocompleteProposal proposal = sourceArray.get(i);
+            destArray[i + startIndex] = new HtmlProposal(proposal.getName(), completionType, prefix, offset, htmlAttributes, false);
         }
-        return proposalArray;
     }
 
     void putModeAnchors(TaggableLine currentLine, JsonArray<Pair<Integer, String>> modes) {
@@ -227,7 +240,7 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor {
         }
         for (Pair<Integer, String> pair : modes.asIterable()) {
             Anchor anchor =
-                    anchorManager.createAnchor(MODE_ANCHOR_TYPE, line, AnchorManager.IGNORE_LINE_NUMBER, pair.first);
+                            anchorManager.createAnchor(MODE_ANCHOR_TYPE, line, AnchorManager.IGNORE_LINE_NUMBER, pair.first);
             anchor.setRemovalStrategy(Anchor.RemovalStrategy.SHIFT);
             anchor.setValue(pair.second);
         }
@@ -236,7 +249,8 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor {
     /**
      * Builds {@link HtmlTagWithAttributes} from {@link FindTagResult} and tokens.
      * <p/>
-     * <p>Scanning is similar to scanning in {@link XmlCodeAnalyzer}.
+     * <p>
+     * Scanning is similar to scanning in {@link XmlCodeAnalyzer}.
      */
     private static HtmlTagWithAttributes buildTag(FindTagResult findTagResult, JsonArray<Token> tokens) {
         int index = findTagResult.startTagIndex;
@@ -318,8 +332,7 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor {
 
     /**
      * @see org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor#computeContextInformation(org.exoplatform.ide
-     * .editor.client.api.Editor,
-     *      int)
+     *      .editor.client.api.Editor, int)
      */
     @Override
     public ContextInformation[] computeContextInformation(Editor viewer, int offset) {

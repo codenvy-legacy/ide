@@ -37,12 +37,23 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.picocontainer.Startable;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -50,33 +61,37 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.codenvy.ide.commons.server.ContainerUtils.readValueParam;
-import static com.codenvy.ide.commons.server.FileUtils.*;
-import static com.codenvy.ide.commons.server.NameGenerator.generate;
-import static com.codenvy.ide.commons.server.ZipUtils.*;
-
-
 import static com.codenvy.commons.json.JsonHelper.toJson;
+import static com.codenvy.ide.commons.server.ContainerUtils.readValueParam;
+import static com.codenvy.commons.lang.IoUtil.countFileHash;
+import static com.codenvy.commons.lang.IoUtil.createTempDirectory;
+import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
+import static com.codenvy.commons.lang.IoUtil.downloadFile;
+import static com.codenvy.commons.lang.IoUtil.list;
+import static com.codenvy.commons.lang.NameGenerator.generate;
+import static com.codenvy.commons.lang.ZipUtils.listEntries;
+import static com.codenvy.commons.lang.ZipUtils.unzip;
+import static com.codenvy.commons.lang.ZipUtils.zipDir;
 
 /**
  * ApplicationRunner for deploy Java applications at Cloud Foundry PaaS.
- *
+ * 
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public class CloudfoundryApplicationRunner implements ApplicationRunner, Startable {
     /** Default application lifetime (in minutes). After this time application may be stopped automatically. */
-    private static final int DEFAULT_APPLICATION_LIFETIME = 10;
+    private static final int               DEFAULT_APPLICATION_LIFETIME   = 10;
 
     /** Expiration time (in milliseconds) which is left to notify user about this. */
-    private static final long EXPIRATION_TIME_LEFT_TO_NOTIFY = 2 * 60 * 1000;
+    private static final long              EXPIRATION_TIME_LEFT_TO_NOTIFY = 2 * 60 * 1000;
 
-    private static final Log LOG = ExoLogger.getLogger(CloudfoundryApplicationRunner.class);
+    private static final Log               LOG                            = ExoLogger.getLogger(CloudfoundryApplicationRunner.class);
 
-    private final int  applicationLifetime;
-    private final long applicationLifetimeMillis;
+    private final int                      applicationLifetime;
+    private final long                     applicationLifetimeMillis;
 
-    private final CloudfoundryPool cfServers;
+    private final CloudfoundryPool         cfServers;
 
     private final Map<String, Application> applications;
     private final ScheduledExecutorService applicationTerminator;
@@ -116,7 +131,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
     @Override
     public ApplicationInstance debugApplication(URL war, boolean suspend, Map<String, String> params)
-            throws ApplicationRunnerException {
+                                                                                                     throws ApplicationRunnerException {
         return startApplication(cfServers.next(), generate("app-", 16), war,
                                 suspend ? new DebugMode("suspend") : new DebugMode(), params);
     }
@@ -184,8 +199,10 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             final CloudFoundryApplication cfApp = createApplication(cloudfoundry, target, name, path, type, null, params);
             final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
 
-            applications.put(name, new Application(name, target, expired));
+            applications.put(name, new Application(name, target, expired, params.get("projectName"), 0));
             LOG.debug("Start application {} at CF server {}", name, target);
+            LOG.info("EVENT#run-started# PROJECT#" + params.get("projectName") + "# TYPE#War#");
+            LOG.info("EVENT#project-deployed# PROJECT#" + params.get("projectName") + "# TYPE#War# PAAS#LOCAL#");
             return new ApplicationInstanceImpl(name, cfApp.getUris().get(0), null, applicationLifetime);
         } catch (Exception e) {
             String logs = safeGetLogs(cloudfoundry, name);
@@ -218,8 +235,10 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                 throw new ApplicationRunnerException("Unable run application in debug mode. ");
             }
 
-            applications.put(name, new Application(name, target, expired));
+            applications.put(name, new Application(name, target, expired, params.get("projectName"), 1));
             LOG.debug("Start application {} under debug at CF server {}", name, target);
+            LOG.info("EVENT#debug-started# PROJECT#" + params.get("projectName") + "# TYPE#War#");
+            LOG.info("EVENT#project-deployed# PROJECT#" + params.get("projectName") + "# TYPE#War# PAAS#LOCAL#");
             return new ApplicationInstanceImpl(name, cfApp.getUris().get(0), null, applicationLifetime,
                                                instances[0].getDebugHost(), instances[0].getDebugPort());
         } catch (Exception e) {
@@ -272,9 +291,8 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
     }
 
     /**
-     * Get applications logs and hide any errors. This method is used for getting logs of failed application to help
-     * user
-     * understand what is going wrong.
+     * Get applications logs and hide any errors. This method is used for getting logs of failed application to help user understand what is
+     * going wrong.
      */
     private String safeGetLogs(Cloudfoundry cloudfoundry, String name) {
         try {
@@ -314,11 +332,17 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
     private void doStopApplication(Cloudfoundry cloudfoundry, String name) throws ApplicationRunnerException {
         try {
             String target = cloudfoundry.getTarget();
+            Application app = applications.get(name);
             cloudfoundry.stopApplication(target, name, null, null, "cloudfoundry");
             cloudfoundry.deleteApplication(target, name, null, null, "cloudfoundry", true);
-            applications.remove(name);
             publishWebSocketMessage(null, "runner:application-stopped:" + name);
             LOG.debug("Stop application {}.", name);
+            if (app.type == 0) {
+                LOG.info("EVENT#run-finished# PROJECT#" + app.projectName + "# TYPE#War#");
+            } else if (app.type == 1) {
+                LOG.info("EVENT#debug-finished# PROJECT#" + app.projectName + "# TYPE#War#");
+            }
+            applications.remove(name);
         } catch (Exception e) {
             throw new ApplicationRunnerException(e.getMessage(), e);
         }
@@ -348,7 +372,11 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                                                       APPLICATION_TYPE type,
                                                       DebugMode debug,
                                                       Map<String, String> params)
-            throws CloudfoundryException, IOException, ParsingResponseException, VirtualFileSystemException, CredentialStoreException {
+                                                                                 throws CloudfoundryException,
+                                                                                 IOException,
+                                                                                 ParsingResponseException,
+                                                                                 VirtualFileSystemException,
+                                                                                 CredentialStoreException {
         if (APPLICATION_TYPE.JAVA_WEB_APP_ENGINE == type) {
             return cloudfoundry.createApplication(target, name, "java_gae", null, 1, 256, false, "java", null, debug, null,
                                                   null, path.toURI().toURL(), null, params);
@@ -368,8 +396,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
     }
 
     /**
-     * Pattern to get CF server name. Normally target URL of CF server is http://api.server.com and we need to get
-     * server.com.
+     * Pattern to get CF server name. Normally target URL of CF server is http://api.server.com and we need to get server.com.
      */
     private static final Pattern serverNameGetter = Pattern.compile("(http(s)?://)?([^\\.]+)(.*)");
 
@@ -387,8 +414,8 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
                     Matcher m = serverNameGetter.matcher(application.server);
                     m.matches();
-                    final URL url = new URL(application.server.substring(
-                            0, m.start(3)) + name + application.server.substring(m.end(3)) + "/update_jrebel");
+                    final URL url = new URL(application.server.substring(0, m.start(3)) + name + application.server.substring(m.end(3))
+                                            + "/update_jrebel");
 
                     // Get md5 hashes for remote files
                     Map<String, String> remoteClassesHashes = new HashMap<String, String>();
@@ -405,9 +432,9 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                     // 3. Other files. NOTE: Always skip maven files from META-INF/maven
                     java.io.File classesDir = new java.io.File(appDir, "WEB-INF/classes");
                     List<java.io.File> classes =
-                            classesDir.exists() ? list(classesDir, null) : Collections.<java.io.File>emptyList();
+                                                 classesDir.exists() ? list(classesDir, null) : Collections.<java.io.File> emptyList();
                     java.io.File libDir = new java.io.File(appDir, "WEB-INF/lib");
-                    List<java.io.File> libs = libDir.exists() ? list(libDir, null) : Collections.<java.io.File>emptyList();
+                    List<java.io.File> libs = libDir.exists() ? list(libDir, null) : Collections.<java.io.File> emptyList();
                     List<java.io.File> web = list(appDir, new FilenameFilter() {
                         @Override
                         public boolean accept(File dir, String name) {
@@ -600,12 +627,17 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
     private static class Application {
         final String name;
         final String server;
-        long expirationTime;
+        final String projectName;
+        long         expirationTime;
+        // 0 - normal run, 1- debug mode
+        final int    type;
 
-        Application(String name, String server, long expirationTime) {
+        Application(String name, String server, long expirationTime, String projectName, int type) {
             this.name = name;
             this.server = server;
             this.expirationTime = expirationTime;
+            this.projectName = projectName;
+            this.type = type;
         }
 
         boolean isExpired() {
@@ -619,11 +651,9 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
     /**
      * Publish the message over WebSocket connection.
-     *
-     * @param data
-     *         the data to be sent to the client
-     * @param channelID
-     *         channel identifier
+     * 
+     * @param data the data to be sent to the client
+     * @param channelID channel identifier
      */
     private static void publishWebSocketMessage(Object data, String channelID) {
         ChannelBroadcastMessage message = new ChannelBroadcastMessage();

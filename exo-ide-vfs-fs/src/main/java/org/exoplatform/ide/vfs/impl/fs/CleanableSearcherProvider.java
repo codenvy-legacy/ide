@@ -19,8 +19,7 @@
 package org.exoplatform.ide.vfs.impl.fs;
 
 import com.codenvy.commons.env.EnvironmentContext;
-import com.codenvy.ide.commons.NamedThreadFactory;
-import com.codenvy.ide.commons.server.FileUtils;
+import com.codenvy.commons.lang.NamedThreadFactory;
 
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
@@ -36,6 +35,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import static com.codenvy.commons.lang.IoUtil.createTempDirectory;
+import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
 
 /**
  * Implementation of SearcherProvider which run Searcher initialization update tasks in ExecutorService.
@@ -76,7 +78,7 @@ public class CleanableSearcherProvider implements SearcherProvider {
             final java.io.File myIndexDir;
             CleanableSearcher newSearcher;
             try {
-                myIndexDir = FileUtils.createTempDirectory(indexRootDir, workspaceId);
+                myIndexDir = createTempDirectory(indexRootDir, workspaceId);
                 newSearcher = new CleanableSearcher(this, myIndexDir, getIndexedMediaTypes());
             } catch (IOException e) {
                 throw new VirtualFileSystemException("Unable create searcher. " + e.getMessage(), e);
@@ -93,7 +95,7 @@ public class CleanableSearcherProvider implements SearcherProvider {
     void close(CleanableSearcher searcher) {
         instances.values().remove(searcher);
         searcher.doClose();
-        FileUtils.deleteRecursive(searcher.getIndexDir());
+        deleteRecursive(searcher.getIndexDir());
     }
 
     private Set<String> getIndexedMediaTypes() throws VirtualFileSystemException {

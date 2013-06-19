@@ -20,7 +20,7 @@
             border-style: solid;
         }
 
-        .contentCellHighlited {
+        .contentCellHighlighted {
             border-color: #B6CCE8;
         }
 

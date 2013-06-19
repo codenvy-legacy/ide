@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.edit.control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -31,6 +32,7 @@ import org.exoplatform.ide.editor.ckeditor.CKEditor;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  */
+@RolesAllowed({"developer"})
 public class MoveLineDownControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler {
 
     public static final String ID = "Edit/Move Line Down";

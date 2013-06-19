@@ -704,7 +704,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
     @Override
     public void onBuildProjectStopEvent(BuildProjectStopEvent event) {
         try {
-            BuilderClientService.getInstance().cancel(buildID, new AsyncRequestCallback<StringBuilder>() {
+            BuilderClientService.getInstance().cancel(buildID, project.getName(), project.getProjectType(), new AsyncRequestCallback<StringBuilder>() {
                 @Override
                 protected void onSuccess(StringBuilder result) {
                     //nothing to do

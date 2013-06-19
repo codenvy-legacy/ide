@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.HTML;
 
 import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
 import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.maven.client.BuilderClientBundle;
@@ -31,6 +32,7 @@ import org.exoplatform.ide.extension.maven.client.event.*;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
+@RolesAllowed("developer")
 public class BuildProjectStopControl extends StatusTextControl implements IDEControl,
                                                                           BuildProjectHandler,
                                                                           ProjectBuiltHandler {
