@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,7 +37,6 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static com.codenvy.commons.lang.IoUtil.createTempDirectory;
 import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
 
 /**
@@ -78,7 +78,7 @@ public class CleanableSearcherProvider implements SearcherProvider {
             final java.io.File myIndexDir;
             CleanableSearcher newSearcher;
             try {
-                myIndexDir = createTempDirectory(indexRootDir, workspaceId);
+                myIndexDir = Files.createTempDirectory(indexRootDir.toPath(), workspaceId).toFile();
                 newSearcher = new CleanableSearcher(this, myIndexDir, getIndexedMediaTypes());
             } catch (IOException e) {
                 throw new VirtualFileSystemException("Unable create searcher. " + e.getMessage(), e);
