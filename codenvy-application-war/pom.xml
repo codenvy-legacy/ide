@@ -309,6 +309,19 @@
            <artifactId>javax.servlet-api</artifactId>
            <scope>provided</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit.http.server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -454,8 +467,7 @@
                         <configuration>
                             <packagingExcludes>**/classes/org/**,**/classes/gadget/**,
                                 **/classes/default/**,**/classes/ide/**,
-                                **/Commons.css,
-                                **/hosted.html,**/applicationInitializer.js,**/init_preload_gadget.js,
+                                **/applicationInitializer.js,**/init_preload_gadget.js,
                                 **/IDEShell.html,**/IDEGadget.html,**/ShowCase.html,**/preload.html,
                                 **/preloadIDE.js,
                                 **/lib/exo-ide-client*,

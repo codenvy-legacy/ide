@@ -18,6 +18,7 @@
  */
 package com.codenvy.eclipse.resources;
 
+import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.eclipse.core.internal.utils.Policy;
 import com.codenvy.eclipse.core.resources.IFile;
 import com.codenvy.eclipse.core.resources.IFileState;
@@ -29,8 +30,6 @@ import com.codenvy.eclipse.core.runtime.IStatus;
 import com.codenvy.eclipse.core.runtime.Status;
 import com.codenvy.eclipse.core.runtime.content.IContentDescription;
 import com.codenvy.eclipse.core.runtime.jobs.ISchedulingRule;
-import com.codenvy.ide.commons.server.StringUtils;
-
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -80,8 +79,8 @@ public class FileResource extends ItemResource implements IFile {
         }
 
         try {
-            String existingContent = StringUtils.toString(getContents());
-            String contentToAppend = StringUtils.toString(content);
+            String existingContent = IoUtil.readStream(getContents());
+            String contentToAppend = IoUtil.readStream(content);
             InputStream newContentStream = new ByteArrayInputStream((existingContent + contentToAppend).getBytes());
             setContents(newContentStream, true, true, monitor);
         } catch (IOException e) {

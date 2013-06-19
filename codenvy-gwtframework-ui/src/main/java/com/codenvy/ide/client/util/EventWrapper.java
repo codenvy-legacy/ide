@@ -356,10 +356,6 @@ public class EventWrapper {
         return DOM.eventGetMouseWheelVelocityY(event);
     }
 
-    /** @return True if this was an auto-repeat event */
-    public boolean getRepeat() {
-        return DOM.eventGetRepeat(event);
-    }
 
     /** @return The mouse x-position on the user's display */
     public int getScreenX() {

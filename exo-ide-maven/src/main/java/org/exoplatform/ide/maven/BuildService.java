@@ -31,10 +31,10 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
 
-import static com.codenvy.ide.commons.server.FileUtils.createTempDirectory;
-import static com.codenvy.ide.commons.server.FileUtils.deleteRecursive;
-import static com.codenvy.ide.commons.server.ZipUtils.unzip;
-import static com.codenvy.ide.commons.server.ZipUtils.zipDir;
+import static com.codenvy.commons.lang.IoUtil.createTempDirectory;
+import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
+import static com.codenvy.commons.lang.ZipUtils.unzip;
+import static com.codenvy.commons.lang.ZipUtils.zipDir;
 
 
 

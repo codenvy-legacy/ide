@@ -23,6 +23,7 @@ package com.codenvy.ide.client.util;
  * suspected of generating them. NOTE: Once we'll have stack traces for these
  * NPEs in all browsers the use of this exception should cease.
  */
+@SuppressWarnings("serial")
 public class ClientDebugException extends RuntimeException {
 
     /**

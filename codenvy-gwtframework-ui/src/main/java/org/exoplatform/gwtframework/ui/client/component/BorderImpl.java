@@ -46,8 +46,6 @@ public class BorderImpl extends Border {
     /** The table body element. */
     private Element tbody;
 
-    private Border marginBorder;
-
     /**
      * Create a new row. The row will contain three cells.
      *
@@ -103,28 +101,6 @@ public class BorderImpl extends Border {
         updateBorder();
     }
 
-//   /**
-//    * Set margin.
-//    * Actually this is creation new Border inside Border.
-//    * 
-//    * @param margin margin
-//    */
-//   @Override
-//   public void setMargin(int margin)
-//   {
-//      setBorderSize(margin);
-//      if (marginBorder != null)
-//      {
-//         return;
-//      }
-//
-//      marginBorder = new BorderImpl();
-//      marginBorder.setBorderColor(borderColor);
-//      setBorderColor("transparent");
-//
-//      marginBorder.setWidget(getWidget());
-//      setWidget(marginBorder);
-//   }
 
     /**
      * Get a specific Element from the panel.
@@ -141,14 +117,6 @@ public class BorderImpl extends Border {
         return DOM.getFirstChild(td);
     }
 
-//   /**
-//    * @see com.google.gwt.user.client.ui.SimplePanel#getContainerElement()
-//    */
-//   @Override
-//   protected Element getContainerElement()
-//   {
-//      return containerElem;
-//   }
 
     /**
      * Sets new border's size
@@ -214,56 +182,5 @@ public class BorderImpl extends Border {
     /** @see org.exoplatform.gwtframework.ui.client.component.Border#setMargin(int) */
     @Override
     public void setMargin(int margin) {
-        // TODO Auto-generated method stub
-
     }
-
-//   /**
-//    * Resize this component
-//    * 
-//    * @see org.exoplatform.gwtframework.ui.client.Resizeable#resize(int, int)
-//    */
-//   @Override
-//   public void resize(int width, int height)
-//   {
-//      width = width < 0 ? 0 : width;
-//      height = height < 0 ? 0 : height;
-//      setSize(width + "px", height + "px");
-//
-//      int innerWidth = width - borderSize - borderSize;
-//      int innerHeight = height - borderSize - borderSize;
-//      innerWidth = innerWidth < 0 ? 0 : innerWidth;
-//      innerHeight = innerHeight < 0 ? 0 : innerHeight;
-//
-//      containerElem.getStyle().setWidth(innerWidth, Unit.PX);
-//      containerElem.getStyle().setHeight(innerHeight, Unit.PX);
-//
-//      Widget widget = getWidget();
-//      if (widget == null)
-//      {
-//         return;
-//      }
-//
-//      widget.setSize(innerWidth + "px", innerHeight + "px");
-//
-//      if (widget instanceof Resizeable)
-//      {
-//         Resizeable resizeable = (Resizeable)widget;
-//         resizeable.resize(innerWidth, innerHeight);
-//      }
-//      else if (widget instanceof RequiresResize)
-//      {
-//         ((RequiresResize)widget).onResize();
-//         return;
-//      }
-//   }
-
-//   @Override
-//   public void onResize()
-//   {
-//      int width = getOffsetWidth();
-//      int height = getOffsetHeight();
-//      resize(width, height);
-//   }
-
 }

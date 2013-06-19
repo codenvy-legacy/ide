@@ -71,14 +71,12 @@ public class ApplicationRunnerClientService {
                                AsyncRequestCallback<ApplicationInstance> callback) throws RequestException {
         String requestUrl = restContext + wsName + BASE_URL + "/run?war=" + war;
 
-        String data = "";
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("projectName", new JSONString(project));
         if (useJRebel) {
             jsonObject.put("jrebel", new JSONString("true"));
         }
-        data = jsonObject.toString();
-
+        String data = jsonObject.toString();
 
         AsyncRequest.build(RequestBuilder.POST, requestUrl, true)
                     .requestStatusHandler(new RunningAppStatusHandler(project))
@@ -98,13 +96,13 @@ public class ApplicationRunnerClientService {
                                  RequestCallback<ApplicationInstance> callback) throws WebSocketException {
         String params = "?war=" + war;
 
-        String data = "";
+        
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("projectName", new JSONString(project));
         if (useJRebel) {
             jsonObject.put("jrebel", new JSONString("true"));
         }
-        data = jsonObject.toString();
+        String data = jsonObject.toString();
 
         callback.setStatusHandler(new RunningAppStatusHandler(project));
         RequestMessage message =
@@ -116,13 +114,13 @@ public class ApplicationRunnerClientService {
 
     public void debugApplication(String project, String war, boolean useJRebel,
                                  AsyncRequestCallback<ApplicationInstance> callback) throws RequestException {
-        String data = "";
+        
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("projectName", new JSONString(project));
         if (useJRebel) {
-            JSONObject jsonObject = new JSONObject();
             jsonObject.put("jrebel", new JSONString("true"));
-            jsonObject.put("projectName", new JSONString(project));
-            data = jsonObject.toString();
         }
+        String data = jsonObject.toString();
 
         String requestUrl = restContext + wsName + BASE_URL + "/debug?war=" + war + "&suspend=false";
         AsyncRequest.build(RequestBuilder.POST, requestUrl, true)
@@ -143,17 +141,16 @@ public class ApplicationRunnerClientService {
                                    RequestCallback<ApplicationInstance> callback) throws WebSocketException {
         String param = "?war=" + war + "&suspend=false";
 
-        String data = "";
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("projectName", new JSONString(project));
         if (useJRebel) {
-            JSONObject jsonObject = new JSONObject();
             jsonObject.put("jrebel", new JSONString("true"));
-            jsonObject.put("projectName", new JSONString(project));
-            data = jsonObject.toString();
         }
+        String data = jsonObject.toString();
 
         callback.setStatusHandler(new RunningAppStatusHandler(project));
         RequestMessage message =
-                                 RequestMessageBuilder.build(RequestBuilder.POST, BASE_URL + DEBUG + param)
+                                 RequestMessageBuilder.build(RequestBuilder.POST, wsName +  BASE_URL + DEBUG + param)
                                                       .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data)
                                                       .getRequestMessage();
         wsMessageBus.send(message, callback);

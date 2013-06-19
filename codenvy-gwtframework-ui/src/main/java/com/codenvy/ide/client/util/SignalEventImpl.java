@@ -336,7 +336,7 @@ public class SignalEventImpl implements SignalEvent {
 
     /** @return The target element of the event */
     public Element getTarget() {
-        return asEvent().getTarget();
+        return asEvent().getEventTarget().cast();
     }
 
     /**

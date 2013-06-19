@@ -26,7 +26,7 @@
     
     <%!
       public String genShellStaticResourceUrl(HttpServletRequest request, String name) {
-        return request.getContextPath() + "/" + request.getAttribute("ws") + "/app/" + name;
+        return request.getContextPath() + "/" + request.getAttribute("ws") + "/_app/" + name;
       }
      %>
 
