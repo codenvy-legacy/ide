@@ -22,8 +22,12 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -70,6 +74,29 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
 
     public interface Display extends IsView {
 
+        HasValue<Boolean> getShowCounterField();
+
+        /**
+         * Get 'Vertical' radio field.
+         * 
+         * @return {@link HasValue}
+         */
+        HasValue<Boolean> getVerticalStyleField();
+
+        /**
+         * Get 'Horizontal' radio field.
+         * 
+         * @return {@link HasValue}
+         */
+        HasValue<Boolean> getHorizontalStyleField();
+
+        /**
+         * Preview area is displayed to let the user see the style of configured CodeNow button.
+         * 
+         * @return frame to preview the CodeNow button
+         */
+        Frame getPreviewFrame();
+
         /**
          * Returns 'on Websites' field.
          * 
@@ -78,9 +105,9 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
         HasValue<String> getWebsitesURLField();
 
         /**
-         * Returns 'on GitHub' field.
+         * Returns 'on GitHub Pages' field.
          * 
-         * @return 'on GitHub' field
+         * @return 'on GitHub Pages' field
          */
         HasValue<String> getGitHubURLField();
 
@@ -136,16 +163,19 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
     /** Display. */
     private Display               display;
 
-    /**
-     * A Factory URL.
-     */
+    /** A snippet to embed the 'CodeNow' button on web-pages. */
+    private String                webSitesSnippet;
+
+    /** A snippet to embed the 'CodeNow' button on GitHub Pages. */
+    private String                gitHubPagesSnippet;
+
+    /** A Factory URL itself. */
     private String                factoryURL;
 
-    /**
-     * Text to display at begin of posted message.
-     */
+    /** A title to display in a special area in the top of Facebook's post. */
     private String                socialPostTitle     = "See my project on Codenvy";
 
+    /** A summary info to display in a special area in the bottom of Facebook's post. */
     private String                facebookSummaryInfo = "Summary info";
 
     public GetCodeNowButtonPresenter() {
@@ -158,6 +188,21 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
 
     public void bindDisplay() {
         final String factoryURLEscaped = encodeQueryString(factoryURL);
+
+        display.getShowCounterField().addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Boolean> event) {
+                if (event.getValue() == null) {
+                    return;
+                } else if (event.getValue() == true) {
+                    display.getPreviewFrame().setUrl(UriUtils.fromString("/ide/" + Utils.getWorkspaceName()
+                                                                         + "/_app/codenow.html?counter=true"));
+                } else {
+                    display.getPreviewFrame().setUrl(UriUtils.fromString("/ide/" + Utils.getWorkspaceName()
+                                                                         + "/_app/codenow.html"));
+                }
+            }
+        });
 
         display.getShareFacebookButton().addClickHandler(new ClickHandler() {
             @Override
@@ -190,7 +235,7 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
             @Override
             public void onClick(ClickEvent event) {
                 Window.open("mailto:?subject=Codenvy Factory URL&body=" + factoryURLEscaped, "",
-                            "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=200,width=200");
+                            "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=100,width=200");
             }
         });
 
@@ -209,8 +254,12 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
             bindDisplay();
         }
 
-        display.getWebsitesURLField().setValue(getFactoryURLForWebsites());
-        display.getGitHubURLField().setValue(factoryURL);
+        display.getShowCounterField().setValue(true);
+        display.getPreviewFrame().setUrl(UriUtils.fromString("/ide/" + Utils.getWorkspaceName()
+                                                             + "/_app/codenow.html?count=true"));
+        display.getHorizontalStyleField().setValue(true);
+        display.getWebsitesURLField().setValue(webSitesSnippet);
+        display.getGitHubURLField().setValue(gitHubPagesSnippet);
         display.getDirectSharingURLField().setValue(factoryURL);
     }
 
@@ -293,7 +342,7 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
                                                new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder())) {
                                                    @Override
                                                    protected void onSuccess(StringBuilder result) {
-                                                       generateFactoryURL(result.toString(), project, latestCommitId);
+                                                       generateSnippets(result.toString(), project, latestCommitId);
                                                    }
 
                                                    @Override
@@ -314,7 +363,7 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
         }
     }
 
-    private void generateFactoryURL(String vcsURL, ProjectModel project, String latestCommitId) {
+    private void generateSnippets(String vcsURL, ProjectModel project, String latestCommitId) {
         factoryURL = "https://www.codenvy.com/factory?" + //
                      VERSION_PARAMETER + "=" + CURRENT_VERSION + "&" + //
                      PROJECT_NAME + "=" + project.getName() + "&" + //
@@ -323,11 +372,20 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
                      VCS_URL + "=" + encodeQueryString(vcsURL) + "&" + //
                      COMMIT_ID + "=" + latestCommitId + "&" + //
                      ACTION_PARAMETER + "=" + DEFAULT_ACTION;
-        openView();
-    }
 
-    private String getFactoryURLForWebsites() {
-        return "<iframe src=codenow.html></iframe>";
+        webSitesSnippet = "<iframe src=codenow.html?" + //
+                          VERSION_PARAMETER + "=" + CURRENT_VERSION + "&" + //
+                          PROJECT_NAME + "=" + project.getName() + "&" + //
+                          WORKSPACE_NAME + "=" + Utils.getWorkspaceName() + "&" + //
+                          VCS + "=git&" + //
+                          VCS_URL + "=" + encodeQueryString(vcsURL) + "&" + //
+                          COMMIT_ID + "=" + latestCommitId + "&" + //
+                          ACTION_PARAMETER + "=" + DEFAULT_ACTION + //
+                          "></iframe>";
+
+        gitHubPagesSnippet = "[![alt](https://codenvy.com/images/favicon.ico)](" + factoryURL + ")";
+
+        openView();
     }
 
 }

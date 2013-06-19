@@ -55,6 +55,9 @@ public interface FactoryClientBundle extends ClientBundle {
     @Source("com/codenvy/ide/factory/images/buttons/facebook.png")
     ImageResource facebook();
 
+    @Source("com/codenvy/ide/factory/images/buttons/gplus.png")
+    ImageResource gplus();
+
     @Source("com/codenvy/ide/factory/images/buttons/twitter.png")
     ImageResource twitter();
 

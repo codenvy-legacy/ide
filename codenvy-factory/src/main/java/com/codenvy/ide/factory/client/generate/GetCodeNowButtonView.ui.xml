@@ -38,6 +38,29 @@
             float: left;
         }
 
+        .clearLeft {
+            clear: left;
+        }
+
+        .checkbox {
+            margin-bottom: 10px;
+            font-size: 12px;
+        }
+
+        .radioButton {
+			margin-bottom: 3px;
+			font-size: 11px;
+			font-family: Verdana, Bitstream Vera Sans, sans-serif;
+			float: left;
+		}
+
+        .label {
+            font-size: 12px;
+            font-family: Verdana, Bitstream Vera Sans, sans-serif;
+            margin-top: 2px;
+            margin-bottom: 10px;
+        }
+
         .labelTitle {
             font-size: 14px;
             font-family: Verdana, Bitstream Vera Sans, sans-serif;
@@ -52,21 +75,21 @@
 
         .snippetPanel {
 			margin: 0px 7px 0px 7px;
-			box-shadow: 0 0 5px rgba(82, 168, 236, 0.75);
+			box-shadow: 0 0 7px rgba(82, 168, 236, 0.75);
 			border-radius: 4px;
 			padding: 10px 15px 10px 15px;
 		}
 
         .textArea {
             width: 220px;
-            height: 200px;
-            font-size: 13px;
+            height: 165px;
+            font-size: 12px;
             resize: none;
             overflow: hidden;
             color: #666;
             padding: 5px;
             border: 1px solid #aaa !important;
-            box-shadow: 0 0 4px rgba(82,168,236,.75);
+            box-shadow: 0 0 5px rgba(82,168,236,.75);
             border-radius: 4px;
             outline: none;
         }
@@ -91,17 +114,44 @@
             margin: 5px 10px 5px 10px;
             cursor: pointer;
         }
+
+        .codeNowPreviewFrame {
+<!-- 			position: absolute; -->
+			width: 100px;
+			height: 50px;
+<!-- 			background: none; -->
+                border: none;
+<!-- 			top: 20px; -->
+<!-- 			right: 0px; -->
+<!-- 			overflow: hidden; -->
+		}
     </ui:style>
 
     <f:Border margin="15" borderColor="transparent">
         <f:layer>
             <g:FlowPanel styleName="{style.padding}">
+
+                <!-- Customize area -->
                 <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom}" text="Customize"></g:Label>
+                <g:FlowPanel width="100%" height="10%">
+                    <g:FlowPanel width="70%" addStyleNames="{style.floatLeft}">
+<!--                         <g:Label width="320px" addStyleNames="{style.label} {style.floatLeft}" text="{locale.factoryURLFieldShowCounterTitle}"></g:Label> -->
+                        <g:CheckBox ui:field="showCounter" addStyleNames="{style.checkbox} {style.floatLeft}" HTML="{locale.factoryURLFieldShowCounterTitle}"></g:CheckBox>
 
-                <g:Label width="100%" height="20px" text="TODO"></g:Label>
+                        <g:Label width="140px" addStyleNames="{style.label} {style.floatLeft} {style.clearLeft}" text="{locale.factoryURLFieldPositionTitle}"></g:Label>
+           	            <g:RadioButton height="22px" width="80px" ui:field="verticalStyleField" text="{locale.factoryURLFieldVerticalModeTitle}"
+           	                           name="factoryURL.field.position" addStyleNames="{style.radioButton}"></g:RadioButton>
+           	            <g:RadioButton height="22px" width="80px" ui:field="horizontalStyleField" text="{locale.factoryURLFieldHorizontalModeTitle}"
+           	                           name="factoryURL.field.position" addStyleNames="{style.radioButton}"></g:RadioButton>
+                    </g:FlowPanel>
+                    <g:FlowPanel addStyleNames="{style.floatLeft}">
+                        <g:Frame ui:field="previewFrame" styleName="{style.codeNowPreviewFrame}"></g:Frame>
+                    </g:FlowPanel>
+                </g:FlowPanel>
 
+                <!-- Embed area -->
                 <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom}" text="Embed"></g:Label>
-                <g:FlowPanel width="100%" height="260px">
+                <g:FlowPanel width="100%" height="45%">
                     <g:FlowPanel addStyleNames="{style.floatLeft} {style.snippetPanel}">
                         <g:Image resource="{resource.world}" styleName="{style.image}"></g:Image>
                         <g:Label addStyleNames="{style.textAreaLabel}" text="on Websites"></g:Label>
@@ -111,7 +161,7 @@
 
                     <g:FlowPanel addStyleNames="{style.floatLeft} {style.snippetPanel}">
                         <g:Image resource="{resource.gitHub}" styleName="{style.image}"></g:Image>
-                        <g:Label addStyleNames="{style.textAreaLabel}" text="on GitHub"></g:Label>
+                        <g:Label addStyleNames="{style.textAreaLabel}" text="on GitHub Pages"></g:Label>
                         <f:TextAreaInput ui:field="gitHubURLField" addStyleNames="{style.floatLeft} {style.textArea}">
                         </f:TextAreaInput>
                     </g:FlowPanel>
@@ -124,10 +174,11 @@
                     </g:FlowPanel>
                 </g:FlowPanel>
 
+                <!-- Share buttons area -->
                 <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom}" text="Share it to your friends"></g:Label>
-                <g:FlowPanel width="208px" height="45px" styleName="{style.center}">
+                <g:FlowPanel width="208px" height="8%" styleName="{style.center}">
                     <g:Image ui:field="shareFacebookButton" resource="{resource.facebook}" styleName="{style.shareButton}"></g:Image>
-                    <g:Image ui:field="shareGooglePlusButton" url="https://www.gstatic.com/images/icons/gplus-32.png" styleName="{style.shareButton}"></g:Image>
+                    <g:Image ui:field="shareGooglePlusButton" resource="{resource.gplus}" styleName="{style.shareButton}"></g:Image>
                     <g:Image ui:field="shareTwitterButton" resource="{resource.twitter}" styleName="{style.shareButton}"></g:Image>
                     <g:Image ui:field="shareEmailButton" resource="{resource.mail}" styleName="{style.shareButton}"></g:Image>
                 </g:FlowPanel>

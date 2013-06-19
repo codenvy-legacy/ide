@@ -64,6 +64,18 @@ public interface FactoryLocalizationConstants extends Messages {
     @Key("factoryURL.view.title")
     String factoryURLViewTitle();
 
+    @Key("factoryURL.field.showCounter.title")
+    String factoryURLFieldShowCounterTitle();
+
+    @Key("factoryURL.field.position.title")
+    String factoryURLFieldPositionTitle();
+
+    @Key("factoryURL.field.verticalMode.title")
+    String factoryURLFieldVerticalModeTitle();
+
+    @Key("factoryURL.field.horizontalMode.title")
+    String factoryURLFieldHorizontalModeTitle();
+
     @Key("factoryURL.field.websitesURL.id")
     String factoryURLFieldWebsitesURLId();
 

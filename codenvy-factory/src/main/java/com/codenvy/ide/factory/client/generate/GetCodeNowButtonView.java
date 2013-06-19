@@ -25,8 +25,11 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
@@ -64,6 +67,21 @@ public class GetCodeNowButtonView extends ViewImpl implements Display {
 
     interface FactoryURLViewUiBinder extends UiBinder<Widget, GetCodeNowButtonView> {
     }
+
+    @UiField
+    CheckBox      showCounter;
+
+    /** Vertical style radio button. */
+    @UiField
+    RadioButton   verticalStyleField;
+
+    /** Horizontal style radio button. */
+    @UiField
+    RadioButton   horizontalStyleField;
+
+    /** Preview area is displayed to let the user see the style of configured CodeNow button. */
+    @UiField
+    Frame         previewFrame;
 
     @UiField
     TextAreaInput websitesURLField;
@@ -117,6 +135,38 @@ public class GetCodeNowButtonView extends ViewImpl implements Display {
                 directSharingURLField.selectAll();
             }
         });
+    }
+
+    /**
+     * @see com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter.Display#getShowCounterField()
+     */
+    @Override
+    public HasValue<Boolean> getShowCounterField() {
+        return showCounter;
+    }
+
+    /**
+     * @see com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter.Display#getVerticalStyleField()
+     */
+    @Override
+    public HasValue<Boolean> getVerticalStyleField() {
+        return verticalStyleField;
+    }
+
+    /**
+     * @see com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter.Display#getHorizontalStyleField()
+     */
+    @Override
+    public HasValue<Boolean> getHorizontalStyleField() {
+        return horizontalStyleField;
+    }
+
+    /**
+     * @see com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter.Display#getPreviewFrame()
+     */
+    @Override
+    public Frame getPreviewFrame() {
+        return previewFrame;
     }
 
     /**
