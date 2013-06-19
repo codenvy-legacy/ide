@@ -71,6 +71,8 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasValue;
@@ -245,7 +247,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
                     if (selectedProjectType == null) {
                         Dialogs.getInstance().showInfo(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noTechnologyTitle(),
                                                        org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noTechnologyMessage());
-                    } else if (!(display.getNameField().getValue().matches("[^[-.a-zA-Z0-9]][-._a-zA-Z0-9]{1,100}"))) {
+                    } else if (!isNameValid()) {
                         Dialogs.getInstance()
                                .showInfo(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noIncorrectProjectNameTitle(),
                                          org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noIncorrectProjectNameMessage());
@@ -319,6 +321,11 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
                           event.getClientY() + 10);
             }
         });
+    }
+    
+    private boolean isNameValid() {
+        RegExp regExp = RegExp.compile("(^[-.a-zA-Z0-9])([-._a-zA-Z0-9])*$");
+        return regExp.test(display.getNameField().getValue());
     }
 
     private void showPopup(String message, int left, int top) {

@@ -25,6 +25,8 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
 
@@ -276,7 +278,8 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
     }
     
     private boolean isNameValid() {
-        return display.getProjectName().getValue().matches("[^[-.a-zA-Z0-9]][-._a-zA-Z0-9]{1,100}");
+        RegExp regExp = RegExp.compile("(^[-.a-zA-Z0-9])([-._a-zA-Z0-9])*$");
+        return regExp.test(display.getProjectName().getValue());
     }
 
     private void createAndDeploy() {

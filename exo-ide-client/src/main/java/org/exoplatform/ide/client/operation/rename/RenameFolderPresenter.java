@@ -129,7 +129,7 @@ public class RenameFolderPresenter extends ItemsOperationPresenter implements
 
         display.getRenameButton().addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
-                if (!display.getNameField().getValue().matches("[^[-.a-zA-Z0-9]][-._a-zA-Z0-9]{1,100}")) {
+                if (!display.getNameField().getValue().matches("(^[-.a-zA-Z0-9])([-._a-zA-Z0-9])*$")) {
                     Dialogs.getInstance()
                            .showInfo(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noIncorrectProjectNameTitle(),
                                      org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noIncorrectProjectNameMessage());
