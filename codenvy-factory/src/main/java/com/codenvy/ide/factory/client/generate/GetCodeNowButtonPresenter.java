@@ -196,7 +196,7 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
                     return;
                 } else if (event.getValue() == true) {
                     display.getPreviewFrame().setUrl(UriUtils.fromString("/ide/" + Utils.getWorkspaceName()
-                                                                         + "/_app/codenow.html?counter=true"));
+                                                                         + "/_app/codenow.html?count=true"));
                 } else {
                     display.getPreviewFrame().setUrl(UriUtils.fromString("/ide/" + Utils.getWorkspaceName()
                                                                          + "/_app/codenow.html"));
