@@ -18,9 +18,15 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server;
 
-import com.codenvy.ide.commons.server.ZipUtils;
+import com.codenvy.commons.lang.ZipUtils;
 
-import org.exoplatform.ide.extension.cloudfoundry.shared.*;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplicationStatistics;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryServices;
+import org.exoplatform.ide.extension.cloudfoundry.shared.Instance;
+import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
+import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
+import org.exoplatform.ide.extension.cloudfoundry.shared.SystemService;
 import org.exoplatform.ide.security.paas.Credential;
 import org.exoplatform.ide.security.paas.DummyCredentialStore;
 import org.exoplatform.services.security.ConversationState;
@@ -30,16 +36,28 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import static com.codenvy.ide.commons.server.NameGenerator.generate;
-
-
-import static org.junit.Assert.*;
+import static com.codenvy.commons.lang.NameGenerator.generate;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>

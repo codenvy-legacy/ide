@@ -21,7 +21,6 @@
 package org.exoplatform.gwtframework.ui.client.command.ui;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Command;
 
 import org.exoplatform.gwtframework.ui.client.command.ControlStateListener;
 import org.exoplatform.gwtframework.ui.client.command.PopupMenuControl;
@@ -100,7 +99,7 @@ public class PopupMenuButtonControl extends PopupMenuButton implements ControlSt
             }
 
             MenuItem menuItem = addItem(icon, command.getTitle());
-            Command c = new MenuItemControl(eventBus, menuItem, command);
+            new MenuItemControl(eventBus, menuItem, command);
         }
     }
 

@@ -45,11 +45,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static com.codenvy.commons.lang.IoUtil.createTempDirectory;
+import static com.codenvy.commons.lang.NameGenerator.generate;
+import static com.codenvy.commons.lang.ZipUtils.unzip;
 import static com.codenvy.ide.commons.server.ContainerUtils.readValueParam;
-import static com.codenvy.ide.commons.server.FileUtils.createTempDirectory;
-import static com.codenvy.ide.commons.server.FileUtils.deleteRecursive;
-import static com.codenvy.ide.commons.server.NameGenerator.generate;
-import static com.codenvy.ide.commons.server.ZipUtils.unzip;
+import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
 
 /**
  * ApplicationRunner for deploy Node.js applications at Cloud Foundry.

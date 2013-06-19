@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.security.openid;
 
-import com.codenvy.ide.commons.server.NameGenerator;
+import com.codenvy.commons.lang.NameGenerator;
 
 import org.exoplatform.ide.security.login.FederatedLoginList;
 import org.exoplatform.ide.security.openid.extensions.UIExtension;

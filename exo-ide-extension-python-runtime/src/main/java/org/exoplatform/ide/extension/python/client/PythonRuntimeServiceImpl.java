@@ -67,7 +67,7 @@ public class PythonRuntimeServiceImpl extends PythonRuntimeService {
     public void start(String vfsId, ProjectModel project, RequestCallback<ApplicationInstance> callback)
             throws WebSocketException {
         StringBuilder params = new StringBuilder("?");
-        params.append("&vfsid=").append(vfsId).append("&projectid=").append(project.getId());
+        params.append("vfsid=").append(vfsId).append("&projectid=").append(project.getId());
         RequestMessage message =
             RequestMessageBuilder.build(RequestBuilder.GET, wsName + RUN_APPLICATION + params).getRequestMessage();
         wsMessageBus.send(message, callback);
@@ -86,7 +86,7 @@ public class PythonRuntimeServiceImpl extends PythonRuntimeService {
         StringBuilder params = new StringBuilder("?name=");
         params.append(name);
 
-        AsyncRequest.build(RequestBuilder.GET, requestUrl + params.toString(), true)
+        AsyncRequest.build(RequestBuilder.GET, requestUrl + params.toString())
                     .requestStatusHandler(new StopApplicationStatusHandler(name)).send(callback);
     }
 
