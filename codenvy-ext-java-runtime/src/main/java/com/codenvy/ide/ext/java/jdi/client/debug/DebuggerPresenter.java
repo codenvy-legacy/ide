@@ -556,6 +556,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 console.print(e.getMessage());
             }
         } else {
+            enableButtons(false);
+            gutterManager.unmarkCurrentBreakPoint();
             doStopApp();
         }
     }
@@ -1061,6 +1063,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 console.print(e.getMessage());
             }
         } else {
+            enableButtons(false);
+            gutterManager.unmarkCurrentBreakPoint();
             doStopApp();
         }
     }
