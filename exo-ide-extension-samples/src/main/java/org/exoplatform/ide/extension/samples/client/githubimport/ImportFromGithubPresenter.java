@@ -184,7 +184,19 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
             @Override
             public void onClick(ClickEvent event) {
                 if (data != null && !display.getProjectNameField().getValue().isEmpty()) {
-                    createFolder();
+                    if (!display.getProjectNameField().getValue().matches("(^[-.a-zA-Z0-9])([-._a-zA-Z0-9])*$")) {
+                        if (display.getProjectNameField().getValue().startsWith("_")) {
+                            Dialogs.getInstance()
+                                   .showInfo(GitExtension.MESSAGES.noIncorrectProjectNameTitle(),
+                                             GitExtension.MESSAGES.projectNameStartWith_Message());
+                        } else {
+                            Dialogs.getInstance()
+                                   .showInfo(GitExtension.MESSAGES.noIncorrectProjectNameTitle(),
+                                             GitExtension.MESSAGES.noIncorrectProjectNameMessage());
+                        }
+                    } else {
+                        createFolder();
+                    }
                 }
             }
         });

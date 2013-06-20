@@ -714,4 +714,15 @@ public interface GitLocalizationConstant extends Messages {
     @Key("control.ro.url.prompt")
     String projectReadOnlyGitUrlPrompt();
 
+    /*
+     * CloneRepositoryView
+     */
+    @Key("noIncorrectProjectNameMessage")
+    String noIncorrectProjectNameMessage();
+
+    @Key("noIncorrectProjectNameTitle")
+    String noIncorrectProjectNameTitle();
+    
+    @Key("projectNameStartWith_Message")
+    String projectNameStartWith_Message();
 }
