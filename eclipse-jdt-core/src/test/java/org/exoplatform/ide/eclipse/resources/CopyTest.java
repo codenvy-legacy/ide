@@ -30,10 +30,17 @@ import com.codenvy.eclipse.core.runtime.IPath;
 import com.codenvy.eclipse.core.runtime.NullProgressMonitor;
 import com.codenvy.eclipse.core.runtime.Path;
 
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
+import org.exoplatform.services.security.MembershipEntry;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Tests copying resources.
@@ -81,6 +88,7 @@ public class CopyTest extends ResourcesBaseTest {
 
         nonExistingFileForCopy = (IFile)ws.newResource(projectForCopy.getFullPath().append("file_not_exist"),
                                                        IResource.FILE);
+        ConversationState.setCurrent(new ConversationState(new Identity("ide", new ArrayList<MembershipEntry>(0), Arrays.asList("developer"))));
     }
 
     @Test(expected = CoreException.class)
