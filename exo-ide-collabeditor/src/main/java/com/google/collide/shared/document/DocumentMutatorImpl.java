@@ -102,7 +102,7 @@ class DocumentMutatorImpl implements DocumentMutator {
 
             if (numberOfDeletedLines > 0) {
                 document.commitLineCountChange(-numberOfDeletedLines);
-                document.dispatchLineRemoved(firstLineNumber + 1, removedLines);
+                document.dispatchLineRemoved(firstLineNumber== 0? firstLineNumber : firstLineNumber + 1, removedLines);
             }
         }
 
@@ -166,9 +166,7 @@ class DocumentMutatorImpl implements DocumentMutator {
     }
 
     @Override
-    public TextChange deleteText(Line line, int lineNumber, int column, int deleteCount) {
-
-        if (deleteCount == 0) {
+    public TextChange deleteText(Line line, int lineNumber, int column, int deleteCount) {        if (deleteCount == 0) {
             // Delete 0 is a NOOP.
             return TextChange.createDeletion(line, lineNumber, column, "");
         }
