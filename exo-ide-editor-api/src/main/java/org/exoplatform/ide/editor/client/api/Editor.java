@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 
 import org.exoplatform.ide.editor.client.api.event.*;
 import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * This is abstract Editor for Codenvy<br>
@@ -58,13 +59,9 @@ public interface Editor extends IsWidget {
     /** @return content of editor */
     String getText();
 
-    /**
-     * replace current content of editor by text parameter
-     *
-     * @param text
-     *         - new editor content
-     */
     void setText(String text);
+
+    void setFile(FileModel file);
 
     /** @return content of editor */
     IDocument getDocument();

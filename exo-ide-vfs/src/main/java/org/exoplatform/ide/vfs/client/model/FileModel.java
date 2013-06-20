@@ -99,6 +99,7 @@ public class FileModel extends FileImpl implements ItemContext {
         length = (long)itemObject.get("length").isNumber().doubleValue();
         lastModificationDate = (long)itemObject.get("lastModificationDate").isNumber().doubleValue();
         locked = itemObject.get("locked").isBoolean().booleanValue();
+        permissions = JSONDeserializer.STRING_DESERIALIZER.toSet(itemObject.get("permissions"));
         this.persisted = true;
         this.contentChanged = false;
         fixMimeType();

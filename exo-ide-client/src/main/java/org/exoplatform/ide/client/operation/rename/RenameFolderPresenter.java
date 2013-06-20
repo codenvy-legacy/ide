@@ -38,6 +38,7 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
@@ -128,7 +129,20 @@ public class RenameFolderPresenter extends ItemsOperationPresenter implements
 
         display.getRenameButton().addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
-                renameFolder();
+                if (!display.getNameField().getValue().matches("(^[-.a-zA-Z0-9])([-._a-zA-Z0-9])*$")) {
+                    if (display.getNameField().getValue().startsWith("_")) {
+                        Dialogs.getInstance()
+                               .showInfo(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noIncorrectProjectNameTitle(),
+                                         org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.projectNameStartWith_Message());
+                    } else {
+                        Dialogs.getInstance()
+                               .showInfo(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noIncorrectProjectNameTitle(),
+                                         org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noIncorrectProjectNameMessage());
+                    }
+                }
+                else {
+                    renameFolder();
+                }
             }
         });
 

@@ -18,21 +18,17 @@
  */
 package org.exoplatform.ide.client.editor;
 
-import com.codenvy.ide.client.util.PathUtil;
-import com.codenvy.ide.client.util.logging.Log;
-import com.google.collide.client.CollabEditor;
-import com.google.collide.client.CollabEditorExtension;
-import com.google.collide.client.document.DocumentManager;
-import com.google.collide.dto.FileContents;
-import com.google.collide.shared.document.Document;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.ToggleButton;
 
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -43,7 +39,6 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.util.ImageUtil;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.editor.client.api.Editor;
-import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.ArrayList;
@@ -57,35 +52,26 @@ import java.util.Map;
  */
 public class EditorView extends ViewImpl implements ViewActivatedHandler {
 
-    private static int editorIndex = 0;
-
     private static final String EDITOR_SWITCHER_BACKGROUND = Images.Editor.EDITOR_SWITCHER_BACKGROUND;
-
-    private List<Editor> openedEditors = new ArrayList<Editor>();
-
-    private List<ToggleButton> buttons = new ArrayList<ToggleButton>();
-
-    private int currentEditorIndex;
-
-    private LayoutPanel editorArea;
-
-    private Map<Editor, EditorEventHandler> editorEventHandlers = new HashMap<Editor, EditorEventHandler>();
-
-    private FileModel file;
-
+    private static final String FILE_IS_READ_ONLY          =
+            org.exoplatform.ide.client.IDE.EDITOR_CONSTANT.editorControllerFileIsReadOnly();
+    private static final int    BUTTON_HEIGHT              = 22;
+    private static       int    editorIndex                = 0;
     int lastEditorHeight = 0;
-
-    private static final String FILE_IS_READ_ONLY = org.exoplatform.ide.client.IDE.EDITOR_CONSTANT.editorControllerFileIsReadOnly();
-
-    private static final int BUTTON_HEIGHT = 22;
+    private List<Editor>       openedEditors = new ArrayList<Editor>();
+    private List<ToggleButton> buttons       = new ArrayList<ToggleButton>();
+    private int         currentEditorIndex;
+    private LayoutPanel editorArea;
+    private Map<Editor, EditorEventHandler> editorEventHandlers = new HashMap<Editor, EditorEventHandler>();
+    private FileModel file;
+    private boolean fileReadOnly;
 
     /**
-     * @param title
-     * @param supportedEditors
      */
     public EditorView(FileModel file, boolean isFileReadOnly, Editor[] editors, int currentEditorIndex) {
         super("editor-" + editorIndex++, "editor", getFileTitle(file, isFileReadOnly),
               new Image(ImageUtil.getIcon(file.getMimeType())));
+        fileReadOnly = isFileReadOnly;
         setCanShowContextMenu(true);
 
         this.file = file;
@@ -93,43 +79,43 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler {
 
         IDE.addHandler(ViewActivatedEvent.TYPE, this);
 
-        if (editors.length == 1) {
-            addEditor(editors[0]);
+        if (editors.length == 1 || isFileReadOnly) {
+            Editor editor = editors[0];
+            editor.setReadOnly(isFileReadOnly);
+            addEditor(editor);
         } else {
             addEditors(editors);
             switchToEditor(0);
-            getEditor().setText(file.getContent());
+            getEditor().setFile(file);
+            getEditor().setReadOnly(fileReadOnly);
         }
+    }
+
+    private static String getFileTitle(FileModel file, boolean isReadOnly) {
+        boolean fileChanged = file.isContentChanged();
+
+        String fileName = Utils.unescape(fileChanged ? file.getName() + "&nbsp;*" : file.getName());
+
+        String mainHint = file.getName();
+
+        String readonlyImage = (isReadOnly) ?
+                               "<img id=\"fileReadonly\"  style=\"margin-left:-4px; margin-bottom: -4px;\" border=\"0\" suppress=\"true\"" +
+                               " src=\"" +
+                               Images.Editor.READONLY_FILE + "\" />" : "";
+
+        mainHint = (isReadOnly) ? FILE_IS_READ_ONLY : mainHint;
+        String title = "<span title=\"" + mainHint + "\">" + readonlyImage + "&nbsp;" + fileName + "&nbsp;</span>";
+
+        return title;
     }
 
     private void addEditor(final Editor editor) {
         editor.asWidget().setHeight("100%");
-        if (editor instanceof CollabEditor) {
-            PathUtil pathUtil = new PathUtil(file.getPath());
-            pathUtil.setWorkspaceId(VirtualFileSystem.getInstance().getInfo().getId());
-            CollabEditorExtension.get().getManager().getDocument(pathUtil, new DocumentManager.GetDocumentCallback() {
-                @Override
-                public void onDocumentReceived(Document document) {
-                    ((CollabEditor)editor).setDocument(document);
-                    add(editor);
-                }
 
-                @Override
-                public void onUneditableFileContentsReceived(FileContents contents) {
-                    //TODO
-                    Log.error(EditorView.class, "UnEditable File received " + contents.getPath());
-                }
+        editor.setFile(file);
+        add(editor);
 
-                @Override
-                public void onFileNotFoundReceived() {
-                    Log.error(EditorView.class, "File not found " + file.getPath());
-                }
-            });
-        } else {
-            editor.setText(file.getContent());
-            add(editor);
-        }
-        
+
         editorEventHandlers.put(editor, new EditorEventHandler(editor));
         openedEditors.add(editor);
     }
@@ -211,11 +197,17 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler {
                     return;
                 }
 
-                String newFileContent = getEditor().getText();
+                final String newFileContent = getEditor().getText();
 
                 switchToEditor(editorIndex);
-
-                getEditor().setText(newFileContent);
+                getEditor().getDocument().set("");
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        getEditor().getDocument().set(newFileContent);
+                    }
+                });
+                getEditor().setReadOnly(fileReadOnly);
 
             }
         });
@@ -247,24 +239,6 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler {
         super.setTitle(getFileTitle(file, isFileReadOnly));
     }
 
-    private static String getFileTitle(FileModel file, boolean isReadOnly) {
-        boolean fileChanged = file.isContentChanged();
-
-        String fileName = Utils.unescape(fileChanged ? file.getName() + "&nbsp;*" : file.getName());
-
-        String mainHint = file.getName();
-
-        String readonlyImage = (isReadOnly) ?
-                               "<img id=\"fileReadonly\"  style=\"margin-left:-4px; margin-bottom: -4px;\" border=\"0\" suppress=\"true\"" +
-                               " src=\"" +
-                               Images.Editor.READONLY_FILE + "\" />" : "";
-
-        mainHint = (isReadOnly) ? FILE_IS_READ_ONLY : mainHint;
-        String title = "<span title=\"" + mainHint + "\">" + readonlyImage + "&nbsp;" + fileName + "&nbsp;</span>";
-
-        return title;
-    }
-
     @Override
     public void onViewActivated(ViewActivatedEvent event) {
         if (!event.getView().getId().equals(getId())) {
@@ -273,7 +247,7 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler {
 
         final Editor currentEditor = getEditor();
         currentEditor.setFocus();
-        
+
 //        new Timer() {
 //            @Override
 //            public void run() {
