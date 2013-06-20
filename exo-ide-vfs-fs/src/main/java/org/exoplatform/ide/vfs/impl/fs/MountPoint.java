@@ -67,6 +67,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -1159,12 +1160,20 @@ public class MountPoint {
 
    /* ============ ACCESS CONTROL  ============ */
 
+    // Temporary default ACL until will have client side for real manage
+    private static final Map<Principal, Set<BasicPermissions>> dummy_acl = new HashMap<Principal, Set<BasicPermissions>>();
+    static {
+        dummy_acl.put(new PrincipalImpl("workspace/developer", Principal.Type.GROUP), EnumSet.of(BasicPermissions.ALL));
+        dummy_acl.put(new PrincipalImpl(VirtualFileSystemInfo.ANY_PRINCIPAL, Principal.Type.USER), EnumSet.of(BasicPermissions.READ));
+    }
 
     AccessControlList getACL(VirtualFile virtualFile) throws VirtualFileSystemException {
         // Do not check permission here. We already check 'read' permission when get VirtualFile.
         final FileLockFactory.FileLock lock = fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
         try {
-            return new AccessControlList(aclCache[virtualFile.getInternalPath().hashCode() & MASK].get(virtualFile.getInternalPath()));
+            final AccessControlList acl =
+                    new AccessControlList(aclCache[virtualFile.getInternalPath().hashCode() & MASK].get(virtualFile.getInternalPath()));
+            return acl.isEmpty() ? new AccessControlList(dummy_acl) : acl;
         } finally {
             lock.release();
         }
