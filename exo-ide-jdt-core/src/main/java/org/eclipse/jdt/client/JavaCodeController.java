@@ -18,6 +18,7 @@
  */
 package org.eclipse.jdt.client;
 
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.http.client.RequestBuilder;
@@ -162,6 +163,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
 
             @Override
             public void onSuccess() {
+                Log.debug(getClass(), "startParse");
                 CompilationUnit unit = parseFile(file);
                 if (unit == null) {
                     return;
@@ -331,6 +333,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
      * .ide.client.framework.editor.event.EditorFileContentChangedEvent) */
     @Override
     public void onEditorFileContentChanged(EditorFileContentChangedEvent event) {
+        Log.debug(getClass(), "onEditorFileContentChanged");
         if (activeFile == null)
             return;
         needReparse.remove(event.getFile().getId());
