@@ -66,8 +66,8 @@
     }
 
     .gh-ico {
-        width: 32px;
-        height: 22px;
+        width: 31px;
+        height: 15px;
         margin-top: -1px;
         margin-right: 4px;
         vertical-align: middle;
@@ -131,7 +131,7 @@
     }
 
     .github-btn-large .gh-ico {
-        width: 22px;
+        width: 21px;
         height: 23px;
         background-position: 0 -20px
     }
@@ -167,7 +167,7 @@
 <span class=github-btn id=github-btn>
     <a class=gh-btn id=gh-btn href="#" target=_blank>
         <span class=gh-ico></span>
-        <span class=gh-text id=gh-text></span>
+        <span class=gh-text id=gh-text>CodeNow</span>
     </a>
     <a class=gh-count id=gh-count href="#" target=_blank></a>
 </span>
@@ -185,11 +185,11 @@
     }();
 
     var user = params.user,
-            repo = params.repo,
+//            repo = params.repo,
             type = params.type,
 
             // show counter
-            count = params.count,
+            isShowCounter = params.counter,
 
             size = params.size,
             head = document.getElementsByTagName("head")[0],
@@ -213,7 +213,7 @@
 
     function callback(response) {
         counter.innerHTML = addCommas(response.data.public_repos)
-        if (count == "true") {
+        if (isShowCounter == "true") {
             counter.style.display = "block"
         }
     }
@@ -243,7 +243,7 @@
         mainButton.className += " github-btn-large"
     }
 
-    if (count == "true") {
+    if (isShowCounter == "true") {
         jsonp("https://api.github.com/users/azatsarynnyy")
     }
     ;

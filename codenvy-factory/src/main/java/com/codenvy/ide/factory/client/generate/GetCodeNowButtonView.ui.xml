@@ -28,6 +28,10 @@
             padding: 15px;
         }
 
+        .displayNone {
+            display: none;
+        }
+
         .center {
             display: block;
             margin-left: auto;
@@ -40,6 +44,10 @@
 
         .clearLeft {
             clear: left;
+        }
+
+        .marginTop {
+            margin-top: 15px;
         }
 
         .checkbox {
@@ -65,7 +73,7 @@
             font-size: 14px;
             font-family: Verdana, Bitstream Vera Sans, sans-serif;
             font-weight: bold;
-            margin-top: 20px;
+            margin-top: 10px;
             margin-bottom: 10px;
         }
 
@@ -115,15 +123,10 @@
             cursor: pointer;
         }
 
-        .codeNowPreviewFrame {
-<!-- 			position: absolute; -->
-			width: 100px;
+        .previewFrame {
+			width: 140px;
 			height: 50px;
-<!-- 			background: none; -->
-                border: none;
-<!-- 			top: 20px; -->
-<!-- 			right: 0px; -->
-<!-- 			overflow: hidden; -->
+            border: none;
 		}
     </ui:style>
 
@@ -132,8 +135,8 @@
             <g:FlowPanel styleName="{style.padding}">
 
                 <!-- Customize area -->
-                <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom}" text="Customize"></g:Label>
-                <g:FlowPanel width="100%" height="10%">
+                <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom} {style.displayNone}" text="Customize"></g:Label>
+                <g:FlowPanel width="100%" height="10%" addStyleNames="{style.displayNone}">
                     <g:FlowPanel width="70%" addStyleNames="{style.floatLeft}">
 <!--                         <g:Label width="320px" addStyleNames="{style.label} {style.floatLeft}" text="{locale.factoryURLFieldShowCounterTitle}"></g:Label> -->
                         <g:CheckBox ui:field="showCounter" addStyleNames="{style.checkbox} {style.floatLeft}" HTML="{locale.factoryURLFieldShowCounterTitle}"></g:CheckBox>
@@ -144,14 +147,14 @@
            	            <g:RadioButton height="22px" width="80px" ui:field="horizontalStyleField" text="{locale.factoryURLFieldHorizontalModeTitle}"
            	                           name="factoryURL.field.position" addStyleNames="{style.radioButton}"></g:RadioButton>
                     </g:FlowPanel>
-                    <g:FlowPanel addStyleNames="{style.floatLeft}">
-                        <g:Frame ui:field="previewFrame" styleName="{style.codeNowPreviewFrame}"></g:Frame>
+                    <g:FlowPanel addStyleNames="{style.floatLeft} {style.marginTop}">
+                        <g:Frame ui:field="previewFrame" styleName="{style.previewFrame}"></g:Frame>
                     </g:FlowPanel>
                 </g:FlowPanel>
 
                 <!-- Embed area -->
                 <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom}" text="Embed"></g:Label>
-                <g:FlowPanel width="100%" height="45%">
+                <g:FlowPanel width="100%" height="60%">
                     <g:FlowPanel addStyleNames="{style.floatLeft} {style.snippetPanel}">
                         <g:Image resource="{resource.world}" styleName="{style.image}"></g:Image>
                         <g:Label addStyleNames="{style.textAreaLabel}" text="on Websites"></g:Label>
@@ -176,7 +179,7 @@
 
                 <!-- Share buttons area -->
                 <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle} {style.borderBottom}" text="Share it to your friends"></g:Label>
-                <g:FlowPanel width="208px" height="8%" styleName="{style.center}">
+                <g:FlowPanel width="208px" height="10%" styleName="{style.center}">
                     <g:Image ui:field="shareFacebookButton" resource="{resource.facebook}" styleName="{style.shareButton}"></g:Image>
                     <g:Image ui:field="shareGooglePlusButton" resource="{resource.gplus}" styleName="{style.shareButton}"></g:Image>
                     <g:Image ui:field="shareTwitterButton" resource="{resource.twitter}" styleName="{style.shareButton}"></g:Image>

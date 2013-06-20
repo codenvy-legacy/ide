@@ -164,7 +164,7 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
     private Display               display;
 
     /** A snippet to embed the 'CodeNow' button on web-pages. */
-    private String                webSitesSnippet;
+    private String                websitesSnippet;
 
     /** A snippet to embed the 'CodeNow' button on GitHub Pages. */
     private String                gitHubPagesSnippet;
@@ -173,10 +173,19 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
     private String                factoryURL;
 
     /** A title to display in a special area in the top of Facebook's post. */
-    private String                socialPostTitle     = "See my project on Codenvy";
+    private String                socialPostTitle     = "Check out my Codenvy project";
 
     /** A summary info to display in a special area in the bottom of Facebook's post. */
-    private String                facebookSummaryInfo = "Summary info";
+    private String                facebookSummaryInfo = "Check out my Codenvy project";
+
+    private String                latestCommitId;
+
+    private String                vcsURL;
+
+    /**
+     * URL to CodeNow button.
+     */
+    private static final String   CODE_NOW_BUTTON_URL = "/ide/" + Utils.getWorkspaceName() + "/_app/codenow.html";
 
     public GetCodeNowButtonPresenter() {
         IDE.addHandler(OpenGetCodeNowButtonViewEvent.TYPE, this);
@@ -192,14 +201,36 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
         display.getShowCounterField().addValueChangeHandler(new ValueChangeHandler<Boolean>() {
             @Override
             public void onValueChange(ValueChangeEvent<Boolean> event) {
-                if (event.getValue() == null) {
-                    return;
-                } else if (event.getValue() == true) {
-                    display.getPreviewFrame().setUrl(UriUtils.fromString("/ide/" + Utils.getWorkspaceName()
-                                                                         + "/_app/codenow.html?count=true"));
-                } else {
-                    display.getPreviewFrame().setUrl(UriUtils.fromString("/ide/" + Utils.getWorkspaceName()
-                                                                         + "/_app/codenow.html"));
+                if (event.getValue() == true) {
+                    display.getPreviewFrame().setUrl(UriUtils.fromString(CODE_NOW_BUTTON_URL + "?counter=true"));
+
+                    updateWebsitesSnippet(true, display.getVerticalStyleField().getValue());
+                    display.getWebsitesURLField().setValue(websitesSnippet);
+                } else if (event.getValue() == false) {
+                    display.getPreviewFrame().setUrl(UriUtils.fromString(CODE_NOW_BUTTON_URL));
+
+                    updateWebsitesSnippet(false, display.getVerticalStyleField().getValue());
+                    display.getWebsitesURLField().setValue(websitesSnippet);
+                }
+            }
+        });
+
+        display.getVerticalStyleField().addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Boolean> event) {
+                if (event.getValue() == true) {
+                    updateWebsitesSnippet(display.getShowCounterField().getValue(), true);
+                    display.getWebsitesURLField().setValue(websitesSnippet);
+                }
+            }
+        });
+
+        display.getHorizontalStyleField().addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Boolean> event) {
+                if (event.getValue() == true) {
+                    updateWebsitesSnippet(display.getShowCounterField().getValue(), false);
+                    display.getWebsitesURLField().setValue(websitesSnippet);
                 }
             }
         });
@@ -255,10 +286,9 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
         }
 
         display.getShowCounterField().setValue(true);
-        display.getPreviewFrame().setUrl(UriUtils.fromString("/ide/" + Utils.getWorkspaceName()
-                                                             + "/_app/codenow.html?count=true"));
+        display.getPreviewFrame().setUrl(UriUtils.fromString(CODE_NOW_BUTTON_URL + "?counter=false"));
         display.getHorizontalStyleField().setValue(true);
-        display.getWebsitesURLField().setValue(webSitesSnippet);
+        display.getWebsitesURLField().setValue(websitesSnippet);
         display.getGitHubURLField().setValue(gitHubPagesSnippet);
         display.getDirectSharingURLField().setValue(factoryURL);
     }
@@ -268,7 +298,7 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
      */
     @Override
     public void onGetCodeNowButton(OpenGetCodeNowButtonViewEvent event) {
-        getLatestCommitId(openedProject);
+        getLatestCommitId();
     }
 
     /**
@@ -306,18 +336,17 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
         openedProject = null;
     }
 
-    private void getLatestCommitId(final ProjectModel project) {
+    private void getLatestCommitId() {
         try {
             GitClientService.getInstance()
-                            .log(vfs.getId(), project.getId(), false,
+                            .log(vfs.getId(), openedProject.getId(), false,
                                  new AsyncRequestCallback<LogResponse>(new LogResponseUnmarshaller(new LogResponse(), false)) {
                                      @Override
                                      protected void onSuccess(LogResponse result) {
-                                         String latestCommitId = null;
                                          if (result.getCommits().size() > 0) {
                                              latestCommitId = result.getCommits().get(0).getId();
                                          }
-                                         getRepoUrlAndOpenView(project, latestCommitId);
+                                         getRepoUrlAndOpenView();
                                      }
 
                                      @Override
@@ -334,15 +363,16 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
         }
     }
 
-    private void getRepoUrlAndOpenView(final ProjectModel project, final String latestCommitId) {
+    private void getRepoUrlAndOpenView() {
         try {
             GitClientService.getInstance()
                             .getGitReadOnlyUrl(vfs.getId(),
-                                               project.getId(),
+                                               openedProject.getId(),
                                                new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder())) {
                                                    @Override
                                                    protected void onSuccess(StringBuilder result) {
-                                                       generateSnippets(result.toString(), project, latestCommitId);
+                                                       vcsURL = result.toString();
+                                                       generateSnippets();
                                                    }
 
                                                    @Override
@@ -363,29 +393,35 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
         }
     }
 
-    private void generateSnippets(String vcsURL, ProjectModel project, String latestCommitId) {
+    private void generateSnippets() {
         factoryURL = "https://www.codenvy.com/factory?" + //
                      VERSION_PARAMETER + "=" + CURRENT_VERSION + "&" + //
-                     PROJECT_NAME + "=" + project.getName() + "&" + //
+                     PROJECT_NAME + "=" + openedProject.getName() + "&" + //
                      WORKSPACE_NAME + "=" + Utils.getWorkspaceName() + "&" + //
                      VCS + "=git&" + //
                      VCS_URL + "=" + encodeQueryString(vcsURL) + "&" + //
                      COMMIT_ID + "=" + latestCommitId + "&" + //
                      ACTION_PARAMETER + "=" + DEFAULT_ACTION;
+        updateWebsitesSnippet(true, false);
+        gitHubPagesSnippet = "[![alt](https://codenvy.com/images/favicon.ico)](" + factoryURL + ")";
+        openView();
+    }
 
-        webSitesSnippet = "<iframe src=codenow.html?" + //
+    private void updateWebsitesSnippet(boolean isShowCounter, boolean isVerticalStyle) {
+        final String showCounterParameter = "&counter=\"true\"";
+        final String verticalSTyleParameter = "&style=\"vertical\"";
+
+        websitesSnippet = "<iframe width=\"140\" height=\"30\" frameborder=\"0\" src=http://www.codenvy.com/codenow.html?" + //
                           VERSION_PARAMETER + "=" + CURRENT_VERSION + "&" + //
-                          PROJECT_NAME + "=" + project.getName() + "&" + //
+                          PROJECT_NAME + "=" + openedProject.getName() + "&" + //
                           WORKSPACE_NAME + "=" + Utils.getWorkspaceName() + "&" + //
                           VCS + "=git&" + //
                           VCS_URL + "=" + encodeQueryString(vcsURL) + "&" + //
                           COMMIT_ID + "=" + latestCommitId + "&" + //
                           ACTION_PARAMETER + "=" + DEFAULT_ACTION + //
+//                          (isShowCounter ? showCounterParameter : "") + //
+                          (isVerticalStyle ? verticalSTyleParameter : "") + //
                           "></iframe>";
-
-        gitHubPagesSnippet = "[![alt](https://codenvy.com/images/favicon.ico)](" + factoryURL + ")";
-
-        openView();
     }
 
 }
