@@ -163,7 +163,6 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
 
             @Override
             public void onSuccess() {
-                Log.debug(getClass(), "startParse");
                 CompilationUnit unit = parseFile(file);
                 if (unit == null) {
                     return;
@@ -333,7 +332,6 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
      * .ide.client.framework.editor.event.EditorFileContentChangedEvent) */
     @Override
     public void onEditorFileContentChanged(EditorFileContentChangedEvent event) {
-        Log.debug(getClass(), "onEditorFileContentChanged");
         if (activeFile == null)
             return;
         needReparse.remove(event.getFile().getId());
