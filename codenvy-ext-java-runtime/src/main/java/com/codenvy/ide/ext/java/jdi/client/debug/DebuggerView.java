@@ -57,18 +57,23 @@ public interface DebuggerView extends View<DebuggerView.ActionDelegate> {
         /** Performs any actions appropriate in response to the user having pressed the Evaluate expression button. */
         void onEvaluateExpressionButtonClicked();
 
+        /** Performs any actions appropriate in response to the user having pressed the expand tree button. */
+        void onExpandTreeClicked();
+
         /**
-         * Returns selected variable.
+         * Return selected variable.
          *
-         * @param variable
+         * @param selectedVariable
+         *         variable what is selected
          */
-        void onSelectedVariable(@NotNull Variable variable);
+        void onSelectedTreeElementClicked(@NotNull Variable selectedVariable);
     }
 
     /**
      * Sets variables.
      *
      * @param variables
+     *         available variables
      */
     void setVariables(@NotNull JsonArray<Variable> variables);
 
@@ -76,6 +81,7 @@ public interface DebuggerView extends View<DebuggerView.ActionDelegate> {
      * Sets breakpoints.
      *
      * @param breakPoints
+     *         available breakpoints
      */
     void setBreakPoints(@NotNull JsonArray<Breakpoint> breakPoints);
 
@@ -83,6 +89,7 @@ public interface DebuggerView extends View<DebuggerView.ActionDelegate> {
      * Sets java virtual machine name and version.
      *
      * @param name
+     *         virtual machine name
      */
     void setVMName(@NotNull String name);
 
@@ -154,6 +161,18 @@ public interface DebuggerView extends View<DebuggerView.ActionDelegate> {
      * Sets title.
      *
      * @param title
+     *         title of view
      */
     void setTitle(@NotNull String title);
+
+    /** Update contents for selected variable. */
+    void updateSelectedVariable();
+
+    /**
+     * Add elements into selected variable.
+     *
+     * @param variables
+     *         variable what need to add into
+     */
+    void setVariablesIntoSelectedVariable(@NotNull JsonArray<Variable> variables);
 }

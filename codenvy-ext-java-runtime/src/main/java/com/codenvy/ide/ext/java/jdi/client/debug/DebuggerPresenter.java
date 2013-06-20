@@ -727,8 +727,38 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
 
     /** {@inheritDoc} */
     @Override
-    public void onSelectedVariable(@NotNull Variable variable) {
-        selectedVariable = variable;
+    public void onExpandTreeClicked() {
+        JsonArray<Variable> rootVariables = selectedVariable.getVariables();
+        if (rootVariables == null) {
+            DtoClientImpls.ValueImpl value = DtoClientImpls.ValueImpl.make();
+            ValueUnmarshaller unmarshaller = new ValueUnmarshaller(value);
+
+            try {
+                service.getValue(debuggerInfo.getId(), selectedVariable, new AsyncRequestCallback<Value>(unmarshaller) {
+                    @Override
+                    protected void onSuccess(Value result) {
+                        JsonArray<Variable> variables = result.getVariables();
+                        view.setVariablesIntoSelectedVariable(variables);
+                        view.updateSelectedVariable();
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                        console.print(exception.getMessage());
+                    }
+                });
+            } catch (RequestException e) {
+                eventBus.fireEvent(new ExceptionThrownEvent(e));
+                console.print(e.getMessage());
+            }
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSelectedTreeElementClicked(@NotNull Variable selectedVariable) {
+        this.selectedVariable = selectedVariable;
         updateChangeValueButton();
     }
 

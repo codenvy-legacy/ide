@@ -122,7 +122,7 @@ public class DebuggerClientServiceImpl implements DebuggerClientService {
         DtoClientImpls.VariablePathImpl jso = (DtoClientImpls.VariablePathImpl)var.getVariablePath();
         String json = DtoClientImpls.VariablePathImpl.serialize(jso);
         AsyncRequest.build(POST, BASE_URL + "/value/get/" + id).data(json)
-                    .header("Content-Type", "application/json").loader(new EmptyLoader()).send(callback);
+                    .header("Content-Type", "application/json").loader(loader).send(callback);
     }
 
     /** {@inheritDoc} */

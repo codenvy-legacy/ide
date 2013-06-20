@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.ext.java.jdi.shared;
 
+import com.codenvy.ide.json.JsonArray;
+
 /** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
 public interface Variable {
     String getName();
@@ -28,5 +30,7 @@ public interface Variable {
 
     VariablePath getVariablePath();
 
-    boolean isPrimitive();
+    boolean primitive();
+
+    JsonArray<Variable> getVariables();
 }

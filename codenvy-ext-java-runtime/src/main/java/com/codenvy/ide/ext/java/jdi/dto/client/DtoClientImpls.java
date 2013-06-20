@@ -28,11 +28,67 @@ public class DtoClientImpls {
 
   private  DtoClientImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "01520ee393fac5d69dda7f25e8cc441024cfb50f";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "595e9329164805b966cc5707df1b015d52e57f6a";
 
 
   public static class ApplicationInstanceImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.java.jdi.shared.ApplicationInstance {
     protected ApplicationInstanceImpl() {}
+
+    @Override
+    public final native int getLifetime() /*-{
+      return this["lifetime"];
+    }-*/;
+
+    public final native ApplicationInstanceImpl setLifetime(int lifetime) /*-{
+      this["lifetime"] = lifetime;
+      return this;
+    }-*/;
+
+    public final native boolean hasLifetime() /*-{
+      return this.hasOwnProperty("lifetime");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getStopURL() /*-{
+      return this["stopURL"];
+    }-*/;
+
+    public final native ApplicationInstanceImpl setStopURL(java.lang.String stopURL) /*-{
+      this["stopURL"] = stopURL;
+      return this;
+    }-*/;
+
+    public final native boolean hasStopURL() /*-{
+      return this.hasOwnProperty("stopURL");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getDebugHost() /*-{
+      return this["debugHost"];
+    }-*/;
+
+    public final native ApplicationInstanceImpl setDebugHost(java.lang.String debugHost) /*-{
+      this["debugHost"] = debugHost;
+      return this;
+    }-*/;
+
+    public final native boolean hasDebugHost() /*-{
+      return this.hasOwnProperty("debugHost");
+    }-*/;
+
+    @Override
+    public final native int getDebugPort() /*-{
+      return this["debugPort"];
+    }-*/;
+
+    public final native ApplicationInstanceImpl setDebugPort(int debugPort) /*-{
+      this["debugPort"] = debugPort;
+      return this;
+    }-*/;
+
+    public final native boolean hasDebugPort() /*-{
+      return this.hasOwnProperty("debugPort");
+    }-*/;
 
     @Override
     public final native java.lang.String getName() /*-{
@@ -74,62 +130,6 @@ public class DtoClientImpls {
 
     public final native boolean hasPort() /*-{
       return this.hasOwnProperty("port");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getStopURL() /*-{
-      return this["stopURL"];
-    }-*/;
-
-    public final native ApplicationInstanceImpl setStopURL(java.lang.String stopURL) /*-{
-      this["stopURL"] = stopURL;
-      return this;
-    }-*/;
-
-    public final native boolean hasStopURL() /*-{
-      return this.hasOwnProperty("stopURL");
-    }-*/;
-
-    @Override
-    public final native int getLifetime() /*-{
-      return this["lifetime"];
-    }-*/;
-
-    public final native ApplicationInstanceImpl setLifetime(int lifetime) /*-{
-      this["lifetime"] = lifetime;
-      return this;
-    }-*/;
-
-    public final native boolean hasLifetime() /*-{
-      return this.hasOwnProperty("lifetime");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getDebugHost() /*-{
-      return this["debugHost"];
-    }-*/;
-
-    public final native ApplicationInstanceImpl setDebugHost(java.lang.String debugHost) /*-{
-      this["debugHost"] = debugHost;
-      return this;
-    }-*/;
-
-    public final native boolean hasDebugHost() /*-{
-      return this.hasOwnProperty("debugHost");
-    }-*/;
-
-    @Override
-    public final native int getDebugPort() /*-{
-      return this["debugPort"];
-    }-*/;
-
-    public final native ApplicationInstanceImpl setDebugPort(int debugPort) /*-{
-      this["debugPort"] = debugPort;
-      return this;
-    }-*/;
-
-    public final native boolean hasDebugPort() /*-{
-      return this.hasOwnProperty("debugPort");
     }-*/;
 
     public static native ApplicationInstanceImpl make() /*-{
@@ -315,6 +315,34 @@ public class DtoClientImpls {
     protected DebuggerInfoImpl() {}
 
     @Override
+    public final native java.lang.String getVmVersion() /*-{
+      return this["vmVersion"];
+    }-*/;
+
+    public final native DebuggerInfoImpl setVmVersion(java.lang.String vmVersion) /*-{
+      this["vmVersion"] = vmVersion;
+      return this;
+    }-*/;
+
+    public final native boolean hasVmVersion() /*-{
+      return this.hasOwnProperty("vmVersion");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getVmName() /*-{
+      return this["vmName"];
+    }-*/;
+
+    public final native DebuggerInfoImpl setVmName(java.lang.String vmName) /*-{
+      this["vmName"] = vmName;
+      return this;
+    }-*/;
+
+    public final native boolean hasVmName() /*-{
+      return this.hasOwnProperty("vmName");
+    }-*/;
+
+    @Override
     public final native java.lang.String getId() /*-{
       return this["id"];
     }-*/;
@@ -354,34 +382,6 @@ public class DtoClientImpls {
 
     public final native boolean hasPort() /*-{
       return this.hasOwnProperty("port");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getVmName() /*-{
-      return this["vmName"];
-    }-*/;
-
-    public final native DebuggerInfoImpl setVmName(java.lang.String vmName) /*-{
-      this["vmName"] = vmName;
-      return this;
-    }-*/;
-
-    public final native boolean hasVmName() /*-{
-      return this.hasOwnProperty("vmName");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getVmVersion() /*-{
-      return this["vmVersion"];
-    }-*/;
-
-    public final native DebuggerInfoImpl setVmVersion(java.lang.String vmVersion) /*-{
-      this["vmVersion"] = vmVersion;
-      return this;
-    }-*/;
-
-    public final native boolean hasVmVersion() /*-{
-      return this.hasOwnProperty("vmVersion");
     }-*/;
 
     public static native DebuggerInfoImpl make() /*-{
@@ -499,20 +499,6 @@ public class DtoClientImpls {
     protected StackFrameDumpImpl() {}
 
     @Override
-    public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.java.jdi.shared.Field> getFields() /*-{
-      return this["fields"];
-    }-*/;
-
-    public final native StackFrameDumpImpl setFields(com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.java.jdi.shared.Field> fields) /*-{
-      this["fields"] = fields;
-      return this;
-    }-*/;
-
-    public final native boolean hasFields() /*-{
-      return this.hasOwnProperty("fields");
-    }-*/;
-
-    @Override
     public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.java.jdi.shared.Variable> getLocalVariables() /*-{
       return this["localVariables"];
     }-*/;
@@ -524,6 +510,20 @@ public class DtoClientImpls {
 
     public final native boolean hasLocalVariables() /*-{
       return this.hasOwnProperty("localVariables");
+    }-*/;
+
+    @Override
+    public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.java.jdi.shared.Field> getFields() /*-{
+      return this["fields"];
+    }-*/;
+
+    public final native StackFrameDumpImpl setFields(com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.java.jdi.shared.Field> fields) /*-{
+      this["fields"] = fields;
+      return this;
+    }-*/;
+
+    public final native boolean hasFields() /*-{
+      return this.hasOwnProperty("fields");
     }-*/;
 
     public static native StackFrameDumpImpl make() /*-{
@@ -561,20 +561,6 @@ public class DtoClientImpls {
     protected UpdateVariableRequestImpl() {}
 
     @Override
-    public final native java.lang.String getExpression() /*-{
-      return this["expression"];
-    }-*/;
-
-    public final native UpdateVariableRequestImpl setExpression(java.lang.String expression) /*-{
-      this["expression"] = expression;
-      return this;
-    }-*/;
-
-    public final native boolean hasExpression() /*-{
-      return this.hasOwnProperty("expression");
-    }-*/;
-
-    @Override
     public final native com.codenvy.ide.ext.java.jdi.shared.VariablePath getVariablePath() /*-{
       return this["variablePath"];
     }-*/;
@@ -588,6 +574,20 @@ public class DtoClientImpls {
       return this.hasOwnProperty("variablePath");
     }-*/;
 
+    @Override
+    public final native java.lang.String getExpression() /*-{
+      return this["expression"];
+    }-*/;
+
+    public final native UpdateVariableRequestImpl setExpression(java.lang.String expression) /*-{
+      this["expression"] = expression;
+      return this;
+    }-*/;
+
+    public final native boolean hasExpression() /*-{
+      return this.hasOwnProperty("expression");
+    }-*/;
+
     public static native UpdateVariableRequestImpl make() /*-{
       return {
 
@@ -597,20 +597,6 @@ public class DtoClientImpls {
 
   public static class ValueImpl extends com.codenvy.ide.json.js.Jso implements com.codenvy.ide.ext.java.jdi.shared.Value {
     protected ValueImpl() {}
-
-    @Override
-    public final native java.lang.String getValue() /*-{
-      return this["value"];
-    }-*/;
-
-    public final native ValueImpl setValue(java.lang.String value) /*-{
-      this["value"] = value;
-      return this;
-    }-*/;
-
-    public final native boolean hasValue() /*-{
-      return this.hasOwnProperty("value");
-    }-*/;
 
     @Override
     public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.java.jdi.shared.Variable> getVariables() /*-{
@@ -626,6 +612,20 @@ public class DtoClientImpls {
       return this.hasOwnProperty("variables");
     }-*/;
 
+    @Override
+    public final native java.lang.String getValue() /*-{
+      return this["value"];
+    }-*/;
+
+    public final native ValueImpl setValue(java.lang.String value) /*-{
+      this["value"] = value;
+      return this;
+    }-*/;
+
+    public final native boolean hasValue() /*-{
+      return this.hasOwnProperty("value");
+    }-*/;
+
     public static native ValueImpl make() /*-{
       return {
 
@@ -637,17 +637,31 @@ public class DtoClientImpls {
     protected VariableImpl() {}
 
     @Override
-    public final native boolean isPrimitive() /*-{
-      return this["isPrimitive"];
+    public final native com.codenvy.ide.ext.java.jdi.shared.VariablePath getVariablePath() /*-{
+      return this["variablePath"];
     }-*/;
 
-    public final native VariableImpl setIsPrimitive(boolean isPrimitive) /*-{
-      this["isPrimitive"] = isPrimitive;
+    public final native VariableImpl setVariablePath(com.codenvy.ide.ext.java.jdi.shared.VariablePath variablePath) /*-{
+      this["variablePath"] = variablePath;
       return this;
     }-*/;
 
-    public final native boolean hasIsPrimitive() /*-{
-      return this.hasOwnProperty("isPrimitive");
+    public final native boolean hasVariablePath() /*-{
+      return this.hasOwnProperty("variablePath");
+    }-*/;
+
+    @Override
+    public final native com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.java.jdi.shared.Variable> getVariables() /*-{
+      return this["variables"];
+    }-*/;
+
+    public final native VariableImpl setVariables(com.codenvy.ide.json.JsonArray<com.codenvy.ide.ext.java.jdi.shared.Variable> variables) /*-{
+      this["variables"] = variables;
+      return this;
+    }-*/;
+
+    public final native boolean hasVariables() /*-{
+      return this.hasOwnProperty("variables");
     }-*/;
 
     @Override
@@ -693,17 +707,17 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.codenvy.ide.ext.java.jdi.shared.VariablePath getVariablePath() /*-{
-      return this["variablePath"];
+    public final native boolean primitive() /*-{
+      return this["primitive"];
     }-*/;
 
-    public final native VariableImpl setVariablePath(com.codenvy.ide.ext.java.jdi.shared.VariablePath variablePath) /*-{
-      this["variablePath"] = variablePath;
+    public final native VariableImpl setPrimitive(boolean primitive) /*-{
+      this["primitive"] = primitive;
       return this;
     }-*/;
 
-    public final native boolean hasVariablePath() /*-{
-      return this.hasOwnProperty("variablePath");
+    public final native boolean hasPrimitive() /*-{
+      return this.hasOwnProperty("primitive");
     }-*/;
 
     public static native VariableImpl make() /*-{
