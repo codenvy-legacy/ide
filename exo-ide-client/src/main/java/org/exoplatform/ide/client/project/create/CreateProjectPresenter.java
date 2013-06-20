@@ -248,9 +248,15 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
                         Dialogs.getInstance().showInfo(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noTechnologyTitle(),
                                                        org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noTechnologyMessage());
                     } else if (!isNameValid()) {
-                        Dialogs.getInstance()
-                               .showInfo(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noIncorrectProjectNameTitle(),
-                                         org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noIncorrectProjectNameMessage());
+                        if (display.getNameField().getValue().startsWith("_")) {
+                            Dialogs.getInstance()
+                                   .showInfo(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noIncorrectProjectNameTitle(),
+                                             org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.projectNameStartWith_Message());
+                        } else {
+                            Dialogs.getInstance()
+                                   .showInfo(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noIncorrectProjectNameTitle(),
+                                             org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noIncorrectProjectNameMessage());
+                        }
                     } else {
                         if (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING) {
                             display.setJRebelStoredFormVisible(true);

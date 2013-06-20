@@ -148,6 +148,9 @@ public interface IdeTemplateLocalizationConstant extends Messages {
     
     @Key("noIncorrectProjectNameTitle")
     String noIncorrectProjectNameTitle();
+    
+    @Key("projectNameStartWith_Message")
+    String projectNameStartWith_Message();
 
     /*
      * CreateProjectTemplateForm

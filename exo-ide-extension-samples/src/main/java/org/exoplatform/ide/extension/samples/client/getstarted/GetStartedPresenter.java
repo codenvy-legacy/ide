@@ -247,9 +247,15 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
 
     private void showChooseTechnologyStep() {
         if (!isNameValid()) {
-            Dialogs.getInstance()
-                   .showInfo(SamplesExtension.LOCALIZATION_CONSTANT.noIncorrectProjectNameTitle(),
-                             SamplesExtension.LOCALIZATION_CONSTANT.noIncorrectProjectNameMessage());
+            if (display.getProjectName().getValue().startsWith("_")) {
+                Dialogs.getInstance()
+                       .showInfo(SamplesExtension.LOCALIZATION_CONSTANT.noIncorrectProjectNameTitle(),
+                                 SamplesExtension.LOCALIZATION_CONSTANT.projectNameStartWith_Message());
+            } else {
+                Dialogs.getInstance()
+                       .showInfo(SamplesExtension.LOCALIZATION_CONSTANT.noIncorrectProjectNameTitle(),
+                                 SamplesExtension.LOCALIZATION_CONSTANT.noIncorrectProjectNameMessage());
+            }
             return;
         }
         display.showChooseTechnologyStep();
