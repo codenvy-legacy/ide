@@ -24,7 +24,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -53,6 +53,6 @@ public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate
     /** {@inheritDoc} */
     @Override
     public void print(String message) {
-        consoleArea.add(new Label(message));
+        consoleArea.add(new HTML(message));
     }
 }

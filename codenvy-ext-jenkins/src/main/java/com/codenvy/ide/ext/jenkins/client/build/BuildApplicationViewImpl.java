@@ -25,6 +25,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -64,10 +65,10 @@ public class BuildApplicationViewImpl extends BaseView<BuildApplicationView.Acti
     public void showMessageInOutput(String text) {
         if (progress != null) {
             output.remove(progress);
-            output.add(new Label(text));
+            output.add(new HTML(text));
             output.add(progress);
         } else {
-            output.add(new Label(text));
+            output.add(new HTML(text));
         }
     }
 

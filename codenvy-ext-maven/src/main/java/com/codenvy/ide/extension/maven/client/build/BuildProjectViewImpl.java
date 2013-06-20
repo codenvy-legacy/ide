@@ -74,7 +74,7 @@ public class BuildProjectViewImpl extends BaseView<BuildProjectView.ActionDelega
     /** {@inheritDoc} */
     @Override
     public void showMessageInOutput(String text) {
-        output.add(new Label(text));
+        output.add(new HTML(text));
     }
 
     @Override
