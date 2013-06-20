@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.conversationstate;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Created by The eXo Platform SAS.
@@ -88,5 +90,21 @@ public class IdeUser {
      */
     public void setClientId(String clientId) {
         this.clientId = clientId;
+    }
+    
+    
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("\"user\":{\"userId\":\"").append(userId).append("\",\"clientId\":\"").append(clientId).append("\",\"roles\":[");
+        int i = 0;
+        int rMax = roles.size();
+        for (String r : roles) {
+            i++;
+            builder.append(r);
+            if (i != rMax)
+              builder.append(", ");
+        }
+        return builder.append("]}").toString();
     }
 }
