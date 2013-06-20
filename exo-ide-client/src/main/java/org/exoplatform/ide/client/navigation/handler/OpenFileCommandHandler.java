@@ -41,6 +41,7 @@ import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.editor.event.*;
 import org.exoplatform.ide.client.framework.event.CursorPosition;
@@ -110,8 +111,9 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
                                                             protected void onSuccess(ItemWrapper result) {
 
                                                                 FileModel file = (FileModel)result.getItem();
-                                                                if(MAX_FILE_CONTENT_LENGHT < file.getLength()){
-                                                                    Dialogs.getInstance().showError("File opening failed. Size limit reached.");
+                                                                if (MAX_FILE_CONTENT_LENGHT < file.getLength()) {
+                                                                    Dialogs.getInstance()
+                                                                           .showError("File opening failed. Size limit reached.");
                                                                     return;
                                                                 }
                                                                 openFile(file);
