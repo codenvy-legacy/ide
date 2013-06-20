@@ -178,6 +178,8 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
     /** A summary info to display in a special area in the bottom of Facebook's post. */
     private String                facebookSummaryInfo = "Check out my Codenvy project";
 
+    private String                eMailSubject = "Check out my Codenvy project";
+
     private String                latestCommitId;
 
     private String                vcsURL;
@@ -267,6 +269,21 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
             public void onClick(ClickEvent event) {
                 Window.open("mailto:?subject=Codenvy Factory URL&body=" + factoryURLEscaped, "",
                             "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=100,width=200");
+//                String from = "";
+//                String to = "";
+//                String replyTo = "";
+//                String subject = eMailSubject;
+//                String mimeType = "text/html; charset=utf-8";
+//                String template = "";
+//                try {
+//                    new MailSenderClient().sendMail(from, to, replyTo, subject, mimeType, template );
+//                } catch (IOException e) {
+//                    // TODO Auto-generated catch block
+//                    e.printStackTrace();
+//                } catch (MessagingException e) {
+//                    // TODO Auto-generated catch block
+//                    e.printStackTrace();
+//                }
             }
         });
 
@@ -286,7 +303,7 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
         }
 
         display.getShowCounterField().setValue(true);
-        display.getPreviewFrame().setUrl(UriUtils.fromString(CODE_NOW_BUTTON_URL + "?counter=false"));
+        display.getPreviewFrame().setUrl(UriUtils.fromString(CODE_NOW_BUTTON_URL + "?counter=true"));
         display.getHorizontalStyleField().setValue(true);
         display.getWebsitesURLField().setValue(websitesSnippet);
         display.getGitHubURLField().setValue(gitHubPagesSnippet);

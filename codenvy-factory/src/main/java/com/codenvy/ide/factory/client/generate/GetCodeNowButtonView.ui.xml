@@ -24,12 +24,12 @@
     <ui:with field='resource' type='com.codenvy.ide.factory.client.FactoryClientBundle'/>
     <ui:with field='locale' type='com.codenvy.ide.factory.client.FactoryLocalizationConstants'/>
     <ui:style>
-        .padding {
-            padding: 15px;
-        }
-
         .displayNone {
             display: none;
+        }
+
+        .padding {
+            padding: 15px;
         }
 
         .center {
