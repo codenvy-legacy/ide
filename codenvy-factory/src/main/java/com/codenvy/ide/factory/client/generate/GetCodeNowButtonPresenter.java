@@ -188,6 +188,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
     /** URL of image which will be used as link for CodeNow button for GitHub Pages. */
     private static final String   CODE_NOW_BUTTON_FOR_GITHUB_IMAGE_URL = "/ide/" + Utils.getWorkspaceName() + "/_app/codenow_gh.png";
 
+    /** Base URL for Codenvy Factory. */
     private static final String   BASE_FACTORY_URL                     = "https://www.codenvy.com/factory";
 
     public GetCodeNowButtonPresenter() {
@@ -207,12 +208,12 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
                 if (event.getValue() == true) {
                     display.getPreviewFrame().setUrl(UriUtils.fromString(CODE_NOW_BUTTON_URL + "?counter=true"));
 
-                    updateWebsitesSnippet(true, display.getVerticalStyleField().getValue());
+                    generateSnippetForWebsites(true, display.getVerticalStyleField().getValue());
                     display.getWebsitesURLField().setValue(websitesSnippet);
                 } else if (event.getValue() == false) {
                     display.getPreviewFrame().setUrl(UriUtils.fromString(CODE_NOW_BUTTON_URL));
 
-                    updateWebsitesSnippet(false, display.getVerticalStyleField().getValue());
+                    generateSnippetForWebsites(false, display.getVerticalStyleField().getValue());
                     display.getWebsitesURLField().setValue(websitesSnippet);
                 }
             }
@@ -222,7 +223,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
             @Override
             public void onValueChange(ValueChangeEvent<Boolean> event) {
                 if (event.getValue() == true) {
-                    updateWebsitesSnippet(display.getShowCounterField().getValue(), true);
+                    generateSnippetForWebsites(display.getShowCounterField().getValue(), true);
                     display.getWebsitesURLField().setValue(websitesSnippet);
                 }
             }
@@ -232,7 +233,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
             @Override
             public void onValueChange(ValueChangeEvent<Boolean> event) {
                 if (event.getValue() == true) {
-                    updateWebsitesSnippet(display.getShowCounterField().getValue(), false);
+                    generateSnippetForWebsites(display.getShowCounterField().getValue(), false);
                     display.getWebsitesURLField().setValue(websitesSnippet);
                 }
             }
@@ -302,7 +303,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
      */
     @Override
     public void onGetCodeNowButton(GetCodeNowButtonEvent event) {
-        getLatestCommitId();
+        getLatestCommitIdAndOpenView();
     }
 
     /**
@@ -340,7 +341,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
         openedProject = null;
     }
 
-    private void getLatestCommitId() {
+    private void getLatestCommitIdAndOpenView() {
         try {
             GitClientService.getInstance()
                             .log(vfs.getId(), openedProject.getId(), false,
@@ -376,7 +377,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
                                                    @Override
                                                    protected void onSuccess(StringBuilder result) {
                                                        vcsURL = result.toString();
-                                                       generateSnippets();
+                                                       generateSnippetsAndOpenView();
                                                    }
 
                                                    @Override
@@ -397,7 +398,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
         }
     }
 
-    private void generateSnippets() {
+    private void generateSnippetsAndOpenView() {
         factoryURL = BASE_FACTORY_URL + "?" + //
                      VERSION_PARAMETER + "=" + CURRENT_VERSION + "&" + //
                      PROJECT_NAME + "=" + openedProject.getName() + "&" + //
@@ -406,12 +407,12 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
                      VCS_URL + "=" + encodeQueryString(vcsURL) + "&" + //
                      COMMIT_ID + "=" + latestCommitId + "&" + //
                      ACTION_PARAMETER + "=" + DEFAULT_ACTION;
-        updateWebsitesSnippet(true, false);
+        generateSnippetForWebsites(true, false);
         gitHubPagesSnippet = "[![alt](" + CODE_NOW_BUTTON_FOR_GITHUB_IMAGE_URL + ")](" + factoryURL + ")";
         openView();
     }
 
-    private void updateWebsitesSnippet(boolean isShowCounter, boolean isVerticalStyle) {
+    private void generateSnippetForWebsites(boolean isShowCounter, boolean isVerticalStyle) {
         final String showCounterParameter = "&counter=true";
         final String verticalSTyleParameter = "&style=vertical";
 

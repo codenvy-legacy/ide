@@ -9,16 +9,16 @@
         overflow: hidden
     }
 
-    .github-btn {
+    .button-counter {
         height: 20px;
         overflow: hidden
     }
 
-    .gh-btn, .gh-count, .gh-ico {
+    .button, .counter, .image {
         float: left
     }
 
-    .gh-btn, .gh-count {
+    .button, .counter {
         padding: 2px 5px 2px 4px;
         color: #555;
         text-decoration: none;
@@ -28,7 +28,7 @@
         border-radius: 3px
     }
 
-    .gh-btn {
+    .button {
         background-color: #e6e6e6;
         background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fafafa), to(#eaeaea));
         background-image: -webkit-linear-gradient(#fafafa, #eaeaea);
@@ -41,7 +41,7 @@
         border-bottom-color: #bcbcbc
     }
 
-    .gh-btn:hover, .gh-btn:focus, .gh-btn:active {
+    .button:hover, .button:focus, .button:active {
         color: #fff;
         text-decoration: none;
         text-shadow: 0 -1px 0 rgba(0, 0, 0, .25);
@@ -49,7 +49,7 @@
         background-color: #3072b3
     }
 
-    .gh-btn:hover, .gh-btn:focus {
+    .button:hover, .button:focus {
         background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#599bdc), to(#3072b3));
         background-image: -webkit-linear-gradient(#599bdc, #3072b3);
         background-image: -moz-linear-gradient(top, #599bdc, #3072b3);
@@ -58,29 +58,25 @@
         background-image: linear-gradient(#599bdc, #3072b3)
     }
 
-    .gh-btn:active {
+    .button:active {
         background-image: none;
         -webkit-box-shadow: inset 0 2px 5px rgba(0, 0, 0, .10);
         -moz-box-shadow: inset 0 2px 5px rgba(0, 0, 0, .10);
         box-shadow: inset 0 2px 5px rgba(0, 0, 0, .10)
     }
 
-    .gh-ico {
+    .image {
         width: 31px;
         height: 15px;
         margin-top: -1px;
-        margin-right: 4px;
+        margin-right: 3px;
         vertical-align: middle;
         background-image: url(codenow.png);
         background-repeat: no-repeat;
         background-position: 0 0
     }
 
-    .gh-btn:hover .gh-ico, .gh-btn:focus .gh-ico, .gh-btn:active .gh-ico {
-        background-position: -25px 0
-    }
-
-    .gh-count {
+    .counter {
         position: relative;
         display: none;
         margin-left: 4px;
@@ -88,11 +84,7 @@
         border: 1px solid #d4d4d4
     }
 
-    .gh-count:hover, .gh-count:focus {
-        color: #4183c4
-    }
-
-    .gh-count:before, .gh-count:after {
+    .counter:before, .counter:after {
         content: ' ';
         position: absolute;
         display: inline-block;
@@ -102,7 +94,7 @@
         border-style: solid
     }
 
-    .gh-count:before {
+    .counter:before {
         top: 50%;
         left: -3px;
         margin-top: -4px;
@@ -110,7 +102,7 @@
         border-right-color: #fafafa
     }
 
-    .gh-count:after {
+    .counter:after {
         top: 50%;
         left: -4px;
         z-index: -1;
@@ -118,58 +110,14 @@
         border-width: 5px 5px 5px 0;
         border-right-color: #d4d4d4
     }
-
-    .github-btn-large {
-        height: 30px
-    }
-
-    .github-btn-large .gh-btn, .github-btn-large .gh-count {
-        padding: 3px 10px 3px 8px;
-        font-size: 16px;
-        line-height: 22px;
-        border-radius: 4px
-    }
-
-    .github-btn-large .gh-ico {
-        width: 21px;
-        height: 23px;
-        background-position: 0 -20px
-    }
-
-    .github-btn-large .gh-btn:hover .gh-ico, .github-btn-large .gh-btn:focus .gh-ico, .github-btn-large .gh-btn:active .gh-ico {
-        background-position: -25px -20px
-    }
-
-    .github-btn-large .gh-count {
-        margin-left: 6px
-    }
-
-    .github-btn-large .gh-count:before {
-        left: -5px;
-        margin-top: -6px;
-        border-width: 6px 6px 6px 0
-    }
-
-    .github-btn-large .gh-count:after {
-        left: -6px;
-        margin-top: -7px;
-        border-width: 7px 7px 7px 0
-    }
-
-    @media (-moz-min-device-pixel-ratio:2),(-o-min-device-pixel-ratio:2/1),(-webkit-min-device-pixel-ratio:2),(min-device-pixel-ratio:2) {
-        .gh-ico {
-            background-image: url(codenow.png);
-            background-size: 50px 45px
-        }
-    }
 </style>
 
-<span class=github-btn id=github-btn>
-    <a class=gh-btn id=gh-btn href="#" target=_blank>
-        <span class=gh-ico></span>
-        <span class=gh-text id=gh-text>CodeNow</span>
+<span class=button-counter id=button-counter>
+    <a class=button id=button href="#" target=_blank>
+        <span class=image></span>
+        <span class=label id=label>CodeNow</span>
     </a>
-    <a class=gh-count id=gh-count href="#" target=_blank></a>
+    <a class=counter id=counter></a>
 </span>
 
 <script type="text/javascript">
@@ -184,21 +132,16 @@
         return d
     }();
 
-    var user = params.user,
-            head = document.getElementsByTagName("head")[0],
-            button = document.getElementById("gh-btn"),
-            mainButton = document.getElementById("github-btn"),
-            text = document.getElementById("gh-text"),
-            counter = document.getElementById("gh-count"),
-
-    //            repo = params.repo,
-            type = params.type,
-            size = params.size,
+    var head = document.getElementsByTagName("head")[0],
+            button = document.getElementById("button"),
+            mainButton = document.getElementById("button-counter"),
+            text = document.getElementById("label"),
+            counter = document.getElementById("counter"),
 
             isShowCounter = params.counter,
             style = params.style,
 
-    // Factory URL parameters
+    // Factory URL parameters:
             version = params.v,
             pname = params.pname,
             wname = params.wname,
@@ -231,29 +174,6 @@
             "&vcsurl=" + vcsurl +
             "&commitid=" + commitid +
             "&action=" + action;
-
-    //    if (type == "watch") {
-    //        mainButton.className += " github-watchers";
-    //        text.innerHTML = "Star";
-    //        counter.href = "https://github.com/" + user + "/" + repo + "/stargazers"
-    //    } else {
-    //        if (type == "fork") {
-    //            mainButton.className += " github-forks";
-    //            text.innerHTML = "Fork";
-    //            counter.href = "https://github.com/" + user + "/" + repo + "/network"
-    //        } else {
-    //            if (type == "follow") {
-    //                mainButton.className += " github-me";
-    //                text.innerHTML = "Follow @" + user;
-    //                button.href = "https://github.com/" + user;
-    //                counter.href = "https://github.com/" + user + "/followers"
-    //            }
-    //        }
-    //    }
-
-    if (size == "large") {
-        mainButton.className += " github-btn-large"
-    }
 
     if (isShowCounter == "true") {
         jsonp("https://api.github.com/users/azatsarynnyy")
