@@ -141,7 +141,7 @@ public class CommitChangesPresenter implements CommitChangesHandler, ViewClosedH
             @Override
             public void onClick(ClickEvent event) {
                 IDE.getInstance().closeView(display.asView().getId());
-                IDE.fireEvent(new OpenGetCodeNowButtonViewEvent());
+                IDE.fireEvent(new GetCodeNowButtonEvent());
             }
         });
     }

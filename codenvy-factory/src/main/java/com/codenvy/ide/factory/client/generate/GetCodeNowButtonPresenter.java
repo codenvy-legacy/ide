@@ -69,7 +69,7 @@ import static com.google.gwt.http.client.URL.encodeQueryString;
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: GetCodeNowButtonPresenter.java Jun 11, 2013 12:17:04 PM azatsarynnyy $
  */
-public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandler, ViewClosedHandler, VfsChangedHandler,
+public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewClosedHandler, VfsChangedHandler,
                                       ProjectOpenedHandler, ProjectClosedHandler {
 
     public interface Display extends IsView {
@@ -173,24 +173,25 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
     private String                factoryURL;
 
     /** A title to display in a special area in the top of Facebook's post. */
-    private String                socialPostTitle     = "Check out my Codenvy project";
+    private String                socialPostTitle                      = "Check out my Codenvy project";
 
     /** A summary info to display in a special area in the bottom of Facebook's post. */
-    private String                facebookSummaryInfo = "Check out my Codenvy project";
-
-    private String                eMailSubject = "Check out my Codenvy project";
+    private String                facebookSummaryInfo                  = "Check out my Codenvy project";
 
     private String                latestCommitId;
 
     private String                vcsURL;
 
-    /**
-     * URL to CodeNow button.
-     */
-    private static final String   CODE_NOW_BUTTON_URL = "/ide/" + Utils.getWorkspaceName() + "/_app/codenow.html";
+    /** URL to CodeNow button. */
+    private static final String   CODE_NOW_BUTTON_URL                  = "/ide/" + Utils.getWorkspaceName() + "/_app/codenow.html";
+
+    /** URL of image which will be used as link for CodeNow button for GitHub Pages. */
+    private static final String   CODE_NOW_BUTTON_FOR_GITHUB_IMAGE_URL = "/ide/" + Utils.getWorkspaceName() + "/_app/codenow_gh.png";
+
+    private static final String   BASE_FACTORY_URL                     = "https://www.codenvy.com/factory";
 
     public GetCodeNowButtonPresenter() {
-        IDE.addHandler(OpenGetCodeNowButtonViewEvent.TYPE, this);
+        IDE.addHandler(GetCodeNowButtonEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
         IDE.addHandler(VfsChangedEvent.TYPE, this);
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
@@ -267,23 +268,9 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
         display.getShareEmailButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                Window.open("mailto:?subject=Codenvy Factory URL&body=" + factoryURLEscaped, "",
-                            "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=100,width=200");
-//                String from = "";
-//                String to = "";
-//                String replyTo = "";
-//                String subject = eMailSubject;
-//                String mimeType = "text/html; charset=utf-8";
-//                String template = "";
-//                try {
-//                    new MailSenderClient().sendMail(from, to, replyTo, subject, mimeType, template );
-//                } catch (IOException e) {
-//                    // TODO Auto-generated catch block
-//                    e.printStackTrace();
-//                } catch (MessagingException e) {
-//                    // TODO Auto-generated catch block
-//                    e.printStackTrace();
-//                }
+                // Window.open("mailto:?subject=Codenvy Factory URL&body=" + factoryURLEscaped, "",
+                // "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=100,width=200");
+                IDE.fireEvent(new SendMailEvent(factoryURL));
             }
         });
 
@@ -314,7 +301,7 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
      * @see com.codenvy.ide.factory.client.generate.ShareWithFactoryUrlHandler#onCreateFactoryURL(com.codenvy.ide.factory.client.ShareWithFactoryUrlEvent)
      */
     @Override
-    public void onGetCodeNowButton(OpenGetCodeNowButtonViewEvent event) {
+    public void onGetCodeNowButton(GetCodeNowButtonEvent event) {
         getLatestCommitId();
     }
 
@@ -411,7 +398,7 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
     }
 
     private void generateSnippets() {
-        factoryURL = "https://www.codenvy.com/factory?" + //
+        factoryURL = BASE_FACTORY_URL + "?" + //
                      VERSION_PARAMETER + "=" + CURRENT_VERSION + "&" + //
                      PROJECT_NAME + "=" + openedProject.getName() + "&" + //
                      WORKSPACE_NAME + "=" + Utils.getWorkspaceName() + "&" + //
@@ -420,15 +407,15 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
                      COMMIT_ID + "=" + latestCommitId + "&" + //
                      ACTION_PARAMETER + "=" + DEFAULT_ACTION;
         updateWebsitesSnippet(true, false);
-        gitHubPagesSnippet = "[![alt](https://codenvy.com/images/favicon.ico)](" + factoryURL + ")";
+        gitHubPagesSnippet = "[![alt](" + CODE_NOW_BUTTON_FOR_GITHUB_IMAGE_URL + ")](" + factoryURL + ")";
         openView();
     }
 
     private void updateWebsitesSnippet(boolean isShowCounter, boolean isVerticalStyle) {
-        final String showCounterParameter = "&counter=\"true\"";
-        final String verticalSTyleParameter = "&style=\"vertical\"";
+        final String showCounterParameter = "&counter=true";
+        final String verticalSTyleParameter = "&style=vertical";
 
-        websitesSnippet = "<iframe width=\"140\" height=\"30\" frameborder=\"0\" src=http://www.codenvy.com/codenow.html?" + //
+        websitesSnippet = "<iframe width=\"140\" height=\"30\" frameborder=\"0\" src=" + CODE_NOW_BUTTON_URL + "?" + //
                           VERSION_PARAMETER + "=" + CURRENT_VERSION + "&" + //
                           PROJECT_NAME + "=" + openedProject.getName() + "&" + //
                           WORKSPACE_NAME + "=" + Utils.getWorkspaceName() + "&" + //
@@ -436,7 +423,7 @@ public class GetCodeNowButtonPresenter implements OpenGetCodeNowButtonViewHandle
                           VCS_URL + "=" + encodeQueryString(vcsURL) + "&" + //
                           COMMIT_ID + "=" + latestCommitId + "&" + //
                           ACTION_PARAMETER + "=" + DEFAULT_ACTION + //
-//                          (isShowCounter ? showCounterParameter : "") + //
+                          // (isShowCounter ? showCounterParameter : "") + //
                           (isVerticalStyle ? verticalSTyleParameter : "") + //
                           "></iframe>";
     }

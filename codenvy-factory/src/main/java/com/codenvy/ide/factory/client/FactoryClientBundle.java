@@ -37,6 +37,12 @@ public interface FactoryClientBundle extends ClientBundle {
     @Source("com/codenvy/ide/factory/images/buttons/ok_Disabled.png")
     ImageResource okDisabled();
 
+    @Source("com/codenvy/ide/factory/images/buttons/cancel.png")
+    ImageResource cancel();
+
+    @Source("com/codenvy/ide/factory/images/buttons/cancel_Disabled.png")
+    ImageResource cancelDisabled();
+
     @Source("com/codenvy/ide/factory/images/controls/share.png")
     ImageResource share();
 

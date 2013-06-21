@@ -37,6 +37,12 @@ public interface FactoryLocalizationConstants extends Messages {
     @Key("button.continue")
     String buttonContinue();
 
+    @Key("button.send")
+    String buttonSend();
+
+    @Key("button.cancel")
+    String buttonCancel();
+
     /*
      * Messages
      */
@@ -46,14 +52,14 @@ public interface FactoryLocalizationConstants extends Messages {
     /*
      * Controls
      */
-    @Key("control.shareWithFactoryURL.id")
-    String shareWithFactoryURLControlId();
+    @Key("control.factoryURL.id")
+    String factoryURLControlId();
 
-    @Key("control.shareWithFactoryURL.title")
-    String shareWithFactoryURLControlTitle();
+    @Key("control.factoryURL.title")
+    String factoryURLControlTitle();
 
-    @Key("control.shareWithFactoryURL.prompt")
-    String shareWithFactoryURLControlPrompt();
+    @Key("control.factoryURL.prompt")
+    String factoryURLControlPrompt();
 
     /*
      * FactoryURLView
@@ -118,4 +124,24 @@ public interface FactoryLocalizationConstants extends Messages {
     @Key("commitChanges.button.continue.id")
     String commitChangesButtonContinue();
 
+    /*
+     * SendMailView
+     */
+    @Key("sendMail.view.id")
+    String sendMailViewId();
+
+    @Key("sendMail.view.title")
+    String sendMailViewTitle();
+
+    @Key("sendMail.field.message.id")
+    String sendMailFieldMessageId();
+
+    @Key("sendMail.field.message.title")
+    String sendMailFieldMessageTitle();
+
+    @Key("sendMail.button.send.id")
+    String sendMailButtonSend();
+
+    @Key("sendMail.button.cancel.id")
+    String sendMailButtonCancel();
 }

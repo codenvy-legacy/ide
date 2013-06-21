@@ -21,16 +21,16 @@ package com.codenvy.ide.factory.client.generate;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link OpenGetCodeNowButtonViewEvent} event.
+ * Handler for {@link GetCodeNowButtonEvent} event.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: OpenGetCodeNowButtonViewHandler.java Jun 11, 2013 11:26:11 AM azatsarynnyy $
+ * @version $Id: GetCodeNowButtonHandler.java Jun 11, 2013 11:26:11 AM azatsarynnyy $
  */
-public interface OpenGetCodeNowButtonViewHandler extends EventHandler {
+public interface GetCodeNowButtonHandler extends EventHandler {
     /**
      * Perform actions, when user tries to get a CodeNow button.
      * 
      * @param event {@link ShareWithFactoryUrlEvent}
      */
-    void onGetCodeNowButton(OpenGetCodeNowButtonViewEvent event);
+    void onGetCodeNowButton(GetCodeNowButtonEvent event);
 }

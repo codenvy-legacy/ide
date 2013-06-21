@@ -21,7 +21,8 @@ package com.codenvy.ide.factory.client;
 import com.codenvy.ide.factory.client.generate.CommitChangesPresenter;
 import com.codenvy.ide.factory.client.generate.FactoryURLHandler;
 import com.codenvy.ide.factory.client.generate.GetCodeNowButtonPresenter;
-import com.codenvy.ide.factory.client.generate.ShareWithFactoryUrlControl;
+import com.codenvy.ide.factory.client.generate.FactoryUrlControl;
+import com.codenvy.ide.factory.client.generate.SendMailPresenter;
 import com.codenvy.ide.factory.client.receive.CodeNowHandler;
 import com.google.gwt.core.client.GWT;
 
@@ -56,11 +57,12 @@ public class FactoryExtension extends Extension implements InitializeServicesHan
     @Override
     public void initialize() {
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
-        IDE.getInstance().addControl(new ShareWithFactoryUrlControl());
+        IDE.getInstance().addControl(new FactoryUrlControl());
 
         new FactoryURLHandler();
         new CodeNowHandler();
         new GetCodeNowButtonPresenter();
+        new SendMailPresenter();
         new CommitChangesPresenter();
     }
 }

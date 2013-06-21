@@ -24,22 +24,22 @@ import com.google.gwt.event.shared.GwtEvent;
  * Event occurs, when user tries to get a CodeNow button.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: OpenGetCodeNowButtonViewEvent.java Jun 11, 2013 11:27:15 AM azatsarynnyy $
+ * @version $Id: GetCodeNowButtonEvent.java Jun 11, 2013 11:27:15 AM azatsarynnyy $
  */
-public class OpenGetCodeNowButtonViewEvent extends GwtEvent<OpenGetCodeNowButtonViewHandler> {
+public class GetCodeNowButtonEvent extends GwtEvent<GetCodeNowButtonHandler> {
 
     /** Type used to register this event. */
-    public static final Type<OpenGetCodeNowButtonViewHandler> TYPE = new Type<OpenGetCodeNowButtonViewHandler>();
+    public static final Type<GetCodeNowButtonHandler> TYPE = new Type<GetCodeNowButtonHandler>();
 
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
     @Override
-    public Type<OpenGetCodeNowButtonViewHandler> getAssociatedType() {
+    public Type<GetCodeNowButtonHandler> getAssociatedType() {
         return TYPE;
     }
 
     /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
     @Override
-    protected void dispatch(OpenGetCodeNowButtonViewHandler handler) {
+    protected void dispatch(GetCodeNowButtonHandler handler) {
         handler.onGetCodeNowButton(this);
     }
 

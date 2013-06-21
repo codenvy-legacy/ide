@@ -28,4 +28,8 @@
     <replace-with class="com.codenvy.ide.factory.client.generate.CommitChangesView">
         <when-type-is class="com.codenvy.ide.factory.client.generate.CommitChangesPresenter.Display"/>
     </replace-with>
+
+    <replace-with class="com.codenvy.ide.factory.client.generate.SendMailView">
+        <when-type-is class="com.codenvy.ide.factory.client.generate.SendMailPresenter.Display"/>
+    </replace-with>
 </module>

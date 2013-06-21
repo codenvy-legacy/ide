@@ -33,21 +33,21 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import static com.codenvy.ide.factory.client.FactoryExtension.LOCALIZATION_CONSTANTS;
 
 /**
- * Control to share opened project with Factory URL.
+ * Control to share opened project by the Factory URL.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ShareWithFactoryUrlControl.java Jun 11, 2013 11:25:21 AM azatsarynnyy $
+ * @version $Id: FactoryUrlControl.java Jun 11, 2013 11:25:21 AM azatsarynnyy $
  */
-public class ShareWithFactoryUrlControl extends SimpleControl implements IDEControl, VfsChangedHandler, ProjectOpenedHandler,
-                                                          ProjectClosedHandler {
+public class FactoryUrlControl extends SimpleControl implements IDEControl, VfsChangedHandler, ProjectOpenedHandler,
+                                                    ProjectClosedHandler {
 
-    public static final String  ID     = LOCALIZATION_CONSTANTS.shareWithFactoryURLControlId();
+    public static final String  ID     = LOCALIZATION_CONSTANTS.factoryURLControlId();
 
-    private static final String TITLE  = LOCALIZATION_CONSTANTS.shareWithFactoryURLControlTitle();
+    private static final String TITLE  = LOCALIZATION_CONSTANTS.factoryURLControlTitle();
 
-    private static final String PROMPT = LOCALIZATION_CONSTANTS.shareWithFactoryURLControlPrompt();
+    private static final String PROMPT = LOCALIZATION_CONSTANTS.factoryURLControlPrompt();
 
-    public ShareWithFactoryUrlControl() {
+    public FactoryUrlControl() {
         super(ID);
         setTitle(TITLE);
         setPrompt(PROMPT);

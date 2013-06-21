@@ -96,7 +96,7 @@ public class FactoryURLHandler implements ShareWithFactoryUrlHandler, VfsChanged
 
     private void checkUncommittedChanges(Status status) {
         if (status.isClean()) {
-            IDE.fireEvent(new OpenGetCodeNowButtonViewEvent());
+            IDE.fireEvent(new GetCodeNowButtonEvent());
         } else {
             IDE.fireEvent(new CommitChangesEvent());
         }
@@ -145,7 +145,7 @@ public class FactoryURLHandler implements ShareWithFactoryUrlHandler, VfsChanged
     private void onInitializingSuccess(ProjectModel project) {
         IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
         IDE.fireEvent(new RefreshBrowserEvent(project));
-        IDE.fireEvent(new OpenGetCodeNowButtonViewEvent());
+        IDE.fireEvent(new GetCodeNowButtonEvent());
     }
 
     private void handleGitInitializingError(Throwable e) {

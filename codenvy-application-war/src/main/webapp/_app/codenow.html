@@ -185,21 +185,27 @@
     }();
 
     var user = params.user,
-//            repo = params.repo,
-            type = params.type,
-
-            // show counter
-            isShowCounter = params.counter,
-
-            size = params.size,
             head = document.getElementsByTagName("head")[0],
             button = document.getElementById("gh-btn"),
             mainButton = document.getElementById("github-btn"),
             text = document.getElementById("gh-text"),
             counter = document.getElementById("gh-count"),
 
-            // project name
-            pname = params.pname;
+    //            repo = params.repo,
+            type = params.type,
+            size = params.size,
+
+            isShowCounter = params.counter,
+            style = params.style,
+
+    // Factory URL parameters
+            version = params.v,
+            pname = params.pname,
+            wname = params.wname,
+            vcs = params.vcs,
+            vcsurl = params.vcsurl,
+            commitid = params.commitid,
+            action = params.action;
 
     function addCommas(a) {
         return String(a).replace(/(\d)(?=(\d{3})+$)/g, "$1,")
@@ -218,26 +224,32 @@
         }
     }
 
-    button.href = "https://www.codenvy.com/factory?pname=" + pname;
+    button.href = "https://www.codenvy.com/factory?v=" + version +
+            "&pname=" + pname +
+            "&wname=" + wname +
+            "&vcs=" + vcs +
+            "&vcsurl=" + vcsurl +
+            "&commitid=" + commitid +
+            "&action=" + action;
 
-//    if (type == "watch") {
-//        mainButton.className += " github-watchers";
-//        text.innerHTML = "Star";
-//        counter.href = "https://github.com/" + user + "/" + repo + "/stargazers"
-//    } else {
-//        if (type == "fork") {
-//            mainButton.className += " github-forks";
-//            text.innerHTML = "Fork";
-//            counter.href = "https://github.com/" + user + "/" + repo + "/network"
-//        } else {
-//            if (type == "follow") {
-//                mainButton.className += " github-me";
-//                text.innerHTML = "Follow @" + user;
-//                button.href = "https://github.com/" + user;
-//                counter.href = "https://github.com/" + user + "/followers"
-//            }
-//        }
-//    }
+    //    if (type == "watch") {
+    //        mainButton.className += " github-watchers";
+    //        text.innerHTML = "Star";
+    //        counter.href = "https://github.com/" + user + "/" + repo + "/stargazers"
+    //    } else {
+    //        if (type == "fork") {
+    //            mainButton.className += " github-forks";
+    //            text.innerHTML = "Fork";
+    //            counter.href = "https://github.com/" + user + "/" + repo + "/network"
+    //        } else {
+    //            if (type == "follow") {
+    //                mainButton.className += " github-me";
+    //                text.innerHTML = "Follow @" + user;
+    //                button.href = "https://github.com/" + user;
+    //                counter.href = "https://github.com/" + user + "/followers"
+    //            }
+    //        }
+    //    }
 
     if (size == "large") {
         mainButton.className += " github-btn-large"
