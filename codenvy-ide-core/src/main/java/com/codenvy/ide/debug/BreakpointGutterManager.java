@@ -19,6 +19,7 @@
 package com.codenvy.ide.debug;
 
 import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.json.JsonArray;
@@ -157,8 +158,13 @@ public class BreakpointGutterManager {
 
     /** Remove all breakpoints. */
     public void removeAllBreakPoints() {
-        final File activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
-        final String activeFileId = activeFile.getId();
+        EditorPartPresenter activeEditor = editorAgent.getActiveEditor();
+        File activeFile = null;
+        final String activeFileId;
+        if (activeEditor != null) {
+            activeFile = activeEditor.getEditorInput().getFile();
+        }
+        activeFileId = activeFile != null ? activeFile.getId() : null;
 
         breakPoints.iterate(new JsonStringMap.IterationCallback<JsonArray<Breakpoint>>() {
             @Override
