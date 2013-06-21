@@ -19,8 +19,13 @@
 package com.codenvy.ide.ext.git.client;
 
 import com.codenvy.ide.api.extension.Extension;
+import com.codenvy.ide.api.ui.action.ActionManager;
+import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.ext.git.client.action.CloneRepositoryAction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_MENU;
 
 /**
  * Extension add Git support to the IDE Application.
@@ -31,8 +36,20 @@ import com.google.inject.Singleton;
 @Extension(title = "Git Support.", version = "3.0.0")
 public class GitExtension {
     public static final String GIT_REPOSITORY_PROP = "isGitRepository";
+    public static final String GIT_GROUP_MAIN_MENU = "Git";
 
     @Inject
-    public GitExtension() {
+    public GitExtension(GitClientResources resources, ActionManager actionManager, CloneRepositoryAction cloneAction) {
+        resources.gitCSS().ensureInjected();
+
+        DefaultActionGroup mainMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_MENU);
+
+        DefaultActionGroup git = new DefaultActionGroup(GIT_GROUP_MAIN_MENU, true, actionManager);
+        actionManager.registerAction(GIT_GROUP_MAIN_MENU, git);
+
+        actionManager.registerAction("GitCloneRepository", cloneAction);
+        git.add(cloneAction);
+
+        mainMenu.add(git);
     }
 }

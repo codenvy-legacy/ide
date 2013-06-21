@@ -21,7 +21,6 @@ package com.codenvy.ide.ext.git.client;
 import com.codenvy.ide.ext.git.client.marshaller.LogResponse;
 import com.codenvy.ide.ext.git.shared.*;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.WebSocketException;
@@ -436,7 +435,7 @@ public interface GitClientService {
      *         callback
      * @throws RequestException
      */
-    void cloneRepository(String vfsId, Folder project, String remoteUri, String remoteName, AsyncRequestCallback<RepoInfo> callback)
+    void cloneRepository(String vfsId, Project project, String remoteUri, String remoteName, AsyncRequestCallback<RepoInfo> callback)
             throws RequestException;
 
     /**
@@ -454,7 +453,7 @@ public interface GitClientService {
      *         callback
      * @throws WebSocketException
      */
-    void cloneRepositoryWS(String vfsId, Folder project, String remoteUri, String remoteName, RequestCallback<RepoInfo> callback)
+    void cloneRepositoryWS(String vfsId, Project project, String remoteUri, String remoteName, RequestCallback<RepoInfo> callback)
             throws WebSocketException;
 
     /**

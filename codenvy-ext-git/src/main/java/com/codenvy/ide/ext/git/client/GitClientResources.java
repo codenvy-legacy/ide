@@ -19,6 +19,7 @@
 package com.codenvy.ide.ext.git.client;
 
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
@@ -26,6 +27,13 @@ import com.google.gwt.resources.client.ImageResource;
  * @version $Id: Mar 22, 2011 2:39:07 PM anya $
  */
 public interface GitClientResources extends ClientBundle {
+    public interface GitCSS extends CssResource {
+        String textFont();
+    }
+
+    @Source({"Git.css", "com/codenvy/ide/api/ui/style.css"})
+    GitCSS gitCSS();
+
     @Source("push/arrow.png")
     ImageResource arrow();
 
@@ -122,7 +130,7 @@ public interface GitClientResources extends ClientBundle {
     @Source("statuses/conflicting.png")
     ImageResource itemConflicting();
 
-    @Source("ignored_not_in_index.png")
+    @Source("statuses/ignored_not_in_index.png")
     ImageResource itemIgnoredNotInIndex();
 
     @Source("statuses/in_repo.png")

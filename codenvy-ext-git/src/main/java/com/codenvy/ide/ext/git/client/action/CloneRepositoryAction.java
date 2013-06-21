@@ -16,24 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.git.client.inject;
+package com.codenvy.ide.ext.git.client.action;
 
-import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.codenvy.ide.ext.git.client.GitClientService;
-import com.codenvy.ide.ext.git.client.GitClientServiceImpl;
-import com.codenvy.ide.ext.git.client.clone.CloneRepositoryView;
-import com.codenvy.ide.ext.git.client.clone.CloneRepositoryViewImpl;
-import com.google.gwt.inject.client.AbstractGinModule;
+import com.codenvy.ide.api.ui.action.Action;
+import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.ext.git.client.GitClientResources;
+import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
+import com.codenvy.ide.ext.git.client.clone.CloneRepositoryPresenter;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
-@ExtensionGinModule
-public class GitGinModule extends AbstractGinModule {
+@Singleton
+public class CloneRepositoryAction extends Action {
+    private CloneRepositoryPresenter presenter;
+
+    @Inject
+    public CloneRepositoryAction(CloneRepositoryPresenter presenter, GitClientResources resources, GitLocalizationConstant constant) {
+        super(constant.cloneControlTitle(), constant.cloneControlPrompt(), resources.cloneRepo());
+        this.presenter = presenter;
+    }
+
     /** {@inheritDoc} */
     @Override
-    protected void configure() {
-        bind(GitClientService.class).to(GitClientServiceImpl.class).in(Singleton.class);
-
-        bind(CloneRepositoryView.class).to(CloneRepositoryViewImpl.class).in(Singleton.class);
+    public void actionPerformed(ActionEvent e) {
+        presenter.showDialog();
     }
 }

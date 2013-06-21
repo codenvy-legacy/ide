@@ -28,7 +28,6 @@ import com.codenvy.ide.ext.git.client.pull.PullRequestHandler;
 import com.codenvy.ide.ext.git.client.push.PushRequestHandler;
 import com.codenvy.ide.ext.git.shared.*;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -138,18 +137,18 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void cloneRepository(String vfsId, Folder folder, String remoteUri, String remoteName, AsyncRequestCallback<RepoInfo> callback)
+    public void cloneRepository(String vfsId, Project project, String remoteUri, String remoteName, AsyncRequestCallback<RepoInfo> callback)
             throws RequestException {
         String url = restServiceContext + CLONE;
 
-        CloneRequest cloneRequest = new CloneRequest(remoteUri, folder.getId());
+        CloneRequest cloneRequest = new CloneRequest(remoteUri, project.getId());
         cloneRequest.setRemoteName(remoteName);
         CloneRequestMarshaller marshaller = new CloneRequestMarshaller(cloneRequest);
 
-        String params = "vfsid=" + vfsId + "&projectid=" + folder.getId();
+        String params = "vfsid=" + vfsId + "&projectid=" + project.getId();
 
         AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true)
-                    .requestStatusHandler(new CloneRequestStatusHandler(folder.getName(), remoteUri, eventBus, constant))
+                    .requestStatusHandler(new CloneRequestStatusHandler(project.getName(), remoteUri, eventBus, constant))
                     .data(marshaller.marshal())
                     .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
                     .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
@@ -157,14 +156,14 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void cloneRepositoryWS(String vfsId, Folder folder, String remoteUri, String remoteName, RequestCallback<RepoInfo> callback)
+    public void cloneRepositoryWS(String vfsId, Project project, String remoteUri, String remoteName, RequestCallback<RepoInfo> callback)
             throws WebSocketException {
-        CloneRequest cloneRequest = new CloneRequest(remoteUri, folder.getId());
+        CloneRequest cloneRequest = new CloneRequest(remoteUri, project.getId());
         cloneRequest.setRemoteName(remoteName);
         CloneRequestMarshaller marshaller = new CloneRequestMarshaller(cloneRequest);
 
-        String params = "?vfsid=" + vfsId + "&projectid=" + folder.getId();
-        callback.setStatusHandler(new CloneRequestStatusHandler(folder.getName(), remoteUri, eventBus, constant));
+        String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
+        callback.setStatusHandler(new CloneRequestStatusHandler(project.getName(), remoteUri, eventBus, constant));
 
         MessageBuilder builder = new MessageBuilder(RequestBuilder.POST, CLONE + params);
         builder.data(marshaller.marshal())
