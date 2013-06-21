@@ -269,4 +269,10 @@ public interface SamplesLocalizationConstant extends Messages {
     
     @Key("projectNameStartWith_Message")
     String projectNameStartWith_Message();
+    
+    @Key("joinCodenvyMessage")
+    String joinCodenvyMessage();
+    
+    @Key("joinCodenvyTitle")
+    String joinCodenvyTitle();
 }

@@ -78,6 +78,7 @@ public class CleanableSearcherProvider implements SearcherProvider {
             final java.io.File myIndexDir;
             CleanableSearcher newSearcher;
             try {
+                Files.createDirectories(indexRootDir.toPath());
                 myIndexDir = Files.createTempDirectory(indexRootDir.toPath(), workspaceId).toFile();
                 newSearcher = new CleanableSearcher(this, myIndexDir, getIndexedMediaTypes());
             } catch (IOException e) {
