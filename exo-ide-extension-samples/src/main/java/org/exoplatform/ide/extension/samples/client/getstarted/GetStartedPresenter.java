@@ -227,12 +227,16 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
     @Override
     public void onGetStarted(GetStartedEvent event) {
         if (this.display == null) {
-            Display disp = GWT.create(Display.class);
-            IDE.getInstance().openView(disp.asView());
-            this.display = disp;
-            bindDisplay();
-            currentStep = WizardStep.NAME;
-            showChooseNameStep();
+            if (!IDE.userRole.contains("developer") && !IDE.userRole.contains("admin")) {
+                return;
+            } else {
+                Display disp = GWT.create(Display.class);
+                IDE.getInstance().openView(disp.asView());
+                this.display = disp;
+                bindDisplay();
+                currentStep = WizardStep.NAME;
+                showChooseNameStep();
+            }
         }
     }
 

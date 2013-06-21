@@ -110,6 +110,8 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                                                    || result.getUserInfo().getRoles().size() == 0)
                                                                                    result.getUserInfo()
                                                                                          .setRoles(Arrays.asList("not-in-role"));
+                                                                               
+                                                                               IDE.userRole = result.getUserInfo().getRoles();
 
                                                                                controls.initControls(result.getUserInfo().getRoles());
 

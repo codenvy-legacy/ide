@@ -225,7 +225,9 @@ public class VfsWatcher implements Startable {
             if (!projectUsers.hasProject(projectId)) {
                 LOG.debug("Remove VFS listener for {} project", projectId);
                 Pair<ChangeEventFilter, EventListener> pair = vfsListeners.remove(projectId);
-                listeners.removeEventListener(pair.first, pair.second);
+                if(pair != null){
+                   listeners.removeEventListener(pair.first, pair.second);
+                }
             }
 
         }
