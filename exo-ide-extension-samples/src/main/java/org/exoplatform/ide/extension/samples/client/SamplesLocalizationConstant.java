@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.samples.client;
 
 import com.google.gwt.i18n.client.Messages;
+import com.google.gwt.i18n.client.LocalizableResource.Key;
 
 /**
  * Interface to represent the constants contained in resource bundle: 'IdeSamplesLocalizationConstant.properties'.
@@ -256,4 +257,22 @@ public interface SamplesLocalizationConstant extends Messages {
 
     @Key("github.sshkey.label")
     String githubSshKeyLabel();
+    
+    /*
+     * GetStartedView
+     */
+    @Key("noIncorrectProjectNameMessage")
+    String noIncorrectProjectNameMessage();
+
+    @Key("noIncorrectProjectNameTitle")
+    String noIncorrectProjectNameTitle();
+    
+    @Key("projectNameStartWith_Message")
+    String projectNameStartWith_Message();
+    
+    @Key("joinCodenvyMessage")
+    String joinCodenvyMessage();
+    
+    @Key("joinCodenvyTitle")
+    String joinCodenvyTitle();
 }

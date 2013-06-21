@@ -87,7 +87,7 @@ public class IDEConfigurationService {
             if (curentState != null) {
                 Identity identity = curentState.getIdentity();
                 IdeUser user = new IdeUser(identity.getUserId(), identity.getRoles(), request.getSession().getId());
-                LOG.info("Getting user identity: " + identity.getUserId());
+                LOG.info(user.toString());
                 result.put("user", user);
                 final Map<String, Object> userSettings = getUserSettings();
                 result.put("userSettings", userSettings);

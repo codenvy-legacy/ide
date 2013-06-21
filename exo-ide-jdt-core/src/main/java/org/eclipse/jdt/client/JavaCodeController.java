@@ -18,6 +18,7 @@
  */
 package org.eclipse.jdt.client;
 
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.http.client.RequestBuilder;

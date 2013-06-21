@@ -126,48 +126,7 @@ public class VirtualFileSystem {
         String url = info.getUrlTemplates().get(Link.REL_TREE).getHref();
         url = URL.decode(url).replace("[id]", id);
         url += "?" + "propertyFilter=" + PropertyFilter.ALL;
-        AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(emptyLoader).send(callback);
-    }
-
-    /**
-     * Get project tree.
-     *
-     * @param project
-     * @param callback
-     * @throws RequestException
-     */
-    public void getProjectTree(ProjectModel project, AsyncRequestCallback<ProjectModel> callback) throws RequestException {
-        String url = info.getUrlTemplates().get(Link.REL_TREE).getHref();
-        url = URL.decode(url).replace("[id]", project.getId());
-        url += "?" + "propertyFilter=" + PropertyFilter.ALL;
-        AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(emptyLoader).send(callback);
-    }
-
-
-    /**
-     * Get project tree.
-     *
-     * @param callback
-     * @throws RequestException
-     */
-    public void getProjectTree(String id, AsyncRequestCallback<ItemNode> callback) throws RequestException {
-        String url = info.getUrlTemplates().get(Link.REL_TREE).getHref();
-        url = URL.decode(url).replace("[id]", id);
-        url += "?" + "propertyFilter=" + PropertyFilter.ALL;
-        AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(emptyLoader).send(callback);
-    }
-
-    /**
-     * Get folder tree.
-     *
-     * @param folder
-     * @param callback
-     * @throws RequestException
-     */
-    public void getFolderTree(FolderModel folder, AsyncRequestCallback<FolderModel> callback) throws RequestException {
-        String url = info.getUrlTemplates().get(Link.REL_TREE).getHref();
-        url = URL.decode(url).replace("[id]", folder.getId());
-        url += "?" + "propertyFilter=" + PropertyFilter.ALL;
+        url+="&includePermissions=true";
         AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(emptyLoader).send(callback);
     }
 

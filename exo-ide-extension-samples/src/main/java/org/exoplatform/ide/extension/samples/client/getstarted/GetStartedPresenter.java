@@ -25,6 +25,8 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
 
@@ -50,6 +52,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
+import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
@@ -189,7 +192,7 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
             }
         });
 
-        display.getProjectName().addValueChangeHandler(new ValueChangeHandler<String>() {
+        /*display.getProjectName().addValueChangeHandler(new ValueChangeHandler<String>() {
             @Override
             public void onValueChange(ValueChangeEvent<String> event) {
                 if (!event.getValue().matches("[a-zA-Z0-9]{1,100}")) {
@@ -198,7 +201,7 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
                     display.setErrorVisible(false);
                 }
             }
-        });
+        });*/
     }
 
     @Override
@@ -224,12 +227,16 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
     @Override
     public void onGetStarted(GetStartedEvent event) {
         if (this.display == null) {
-            Display disp = GWT.create(Display.class);
-            IDE.getInstance().openView(disp.asView());
-            this.display = disp;
-            bindDisplay();
-            currentStep = WizardStep.NAME;
-            showChooseNameStep();
+            if (!IDE.userRole.contains("developer") && !IDE.userRole.contains("admin")) {
+                return;
+            } else {
+                Display disp = GWT.create(Display.class);
+                IDE.getInstance().openView(disp.asView());
+                this.display = disp;
+                bindDisplay();
+                currentStep = WizardStep.NAME;
+                showChooseNameStep();
+            }
         }
     }
 
@@ -243,6 +250,18 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
     }
 
     private void showChooseTechnologyStep() {
+        if (!isNameValid()) {
+            if (display.getProjectName().getValue().startsWith("_")) {
+                Dialogs.getInstance()
+                       .showInfo(SamplesExtension.LOCALIZATION_CONSTANT.noIncorrectProjectNameTitle(),
+                                 SamplesExtension.LOCALIZATION_CONSTANT.projectNameStartWith_Message());
+            } else {
+                Dialogs.getInstance()
+                       .showInfo(SamplesExtension.LOCALIZATION_CONSTANT.noIncorrectProjectNameTitle(),
+                                 SamplesExtension.LOCALIZATION_CONSTANT.noIncorrectProjectNameMessage());
+            }
+            return;
+        }
         display.showChooseTechnologyStep();
         display.setCurrentStepPagination("2/3");
 
@@ -266,6 +285,11 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         setPaaSButtonsHandlers();
 
         display.setNextButtonEnable(false);
+    }
+    
+    private boolean isNameValid() {
+        RegExp regExp = RegExp.compile("(^[-.a-zA-Z0-9])([-._a-zA-Z0-9])*$");
+        return regExp.test(display.getProjectName().getValue());
     }
 
     private void createAndDeploy() {

@@ -20,7 +20,12 @@ package org.eclipse.jdt.client;
 
 import com.codenvy.ide.client.util.logging.Log;
 
-import org.eclipse.jdt.client.codeassistant.*;
+import org.eclipse.jdt.client.codeassistant.AbstractJavaCompletionProposal;
+import org.eclipse.jdt.client.codeassistant.CompletionProposalCollector;
+import org.eclipse.jdt.client.codeassistant.FillArgumentNamesCompletionProposalCollector;
+import org.eclipse.jdt.client.codeassistant.JavaContentAssistInvocationContext;
+import org.eclipse.jdt.client.codeassistant.LazyGenericTypeProposal;
+import org.eclipse.jdt.client.codeassistant.TemplateCompletionProposalComputer;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.compiler.batch.CompilationUnit;
 import org.eclipse.jdt.client.core.IJavaElement;
@@ -44,7 +49,13 @@ import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -58,6 +69,7 @@ public class JavaContentAssistProcessor implements ContentAssistProcessor {
     /** {@inheritDoc} */
     @Override
     public CompletionProposal[] computeCompletionProposals(Editor viewer, int offset) {
+        try {
         IDE.fireEvent(new CancelParseEvent());
 
         IDocument document = viewer.getDocument();
@@ -79,7 +91,6 @@ public class JavaContentAssistProcessor implements ContentAssistProcessor {
         CompletionEngine e =
                 new CompletionEngine(new NameEnvironment(currentFile.getProject().getId()), collector, JavaCore.getOptions(),
                                      new NullProgressMonitor());
-        try {
             e.complete(
                     new CompilationUnit(fileContent,
                                         currentFile.getName().substring(0, currentFile.getName().lastIndexOf('.')), "UTF-8"),

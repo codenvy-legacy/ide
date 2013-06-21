@@ -58,7 +58,7 @@ public abstract class ItemImpl implements Item {
     /** Links. */
     protected Map<String, Link> links;
 
-    private Set<String> permissions;
+    protected Set<String> permissions;
 
     /**
      * @param id

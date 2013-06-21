@@ -53,7 +53,7 @@ public class EditorActivityManager {
             @Override
             public void onScroll(Buffer buffer, int scrollTop) {
                 userActivityManager.markUserActive();
-                switchTimer.schedule(IDLE_DELAY_MS);
+                //switchTimer.schedule(IDLE_DELAY_MS);
             }
         }));
 
@@ -61,7 +61,7 @@ public class EditorActivityManager {
             @Override
             public boolean onKeyPress(SignalEvent event) {
                 userActivityManager.markUserActive();
-                switchTimer.schedule(IDLE_DELAY_MS);
+                //switchTimer.schedule(IDLE_DELAY_MS);
                 return false;
             }
         }));

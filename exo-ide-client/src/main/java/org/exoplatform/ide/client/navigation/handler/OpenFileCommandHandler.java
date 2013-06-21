@@ -111,11 +111,12 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
                                                             protected void onSuccess(ItemWrapper result) {
 
                                                                 FileModel file = (FileModel)result.getItem();
-                                                                if(MAX_FILE_CONTENT_LENGHT < file.getLength()){
-                                                                    Dialogs.getInstance().showError("File opening failed. Size limit reached.");
+                                                                if (MAX_FILE_CONTENT_LENGHT < file.getLength()) {
+                                                                    Dialogs.getInstance()
+                                                                           .showError("File opening failed. Size limit reached.");
                                                                     return;
                                                                 }
-                                                                getFileContent(file);
+                                                                openFile(file);
                                                             }
 
                                                             @Override
@@ -127,25 +128,6 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
                                                         });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed.<br>Parent folder not found."));
-        }
-    }
-
-    private void getFileContent(FileModel file) {
-        try {
-            VirtualFileSystem.getInstance().getContent(
-                    new AsyncRequestCallback<FileModel>(new FileContentUnmarshaller(file)) {
-                        @Override
-                        protected void onSuccess(FileModel result) {
-                            openFile(result);
-                        }
-
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            IDE.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Resource not found."));
-                        }
-                    });
-        } catch (RequestException e) {
-            IDE.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed.<br>Resource not found."));
         }
     }
 

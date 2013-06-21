@@ -43,6 +43,8 @@ public abstract class IDE {
     private static IDE instance;
 
     public static String userId;
+    
+    public static List<String> userRole;
 
     private static List<Extension> extensions = new ArrayList<Extension>();
 

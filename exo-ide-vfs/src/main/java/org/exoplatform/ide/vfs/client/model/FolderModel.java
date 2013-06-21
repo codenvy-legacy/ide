@@ -21,6 +21,7 @@ package org.exoplatform.ide.vfs.client.model;
 import com.google.gwt.json.client.JSONObject;
 
 import org.exoplatform.ide.vfs.client.JSONDeserializer;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.shared.*;
 
 import java.util.*;
@@ -86,6 +87,7 @@ public class FolderModel extends FolderImpl implements ItemContext {
         creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
         properties = (List)JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
         links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
+        permissions = JSONDeserializer.STRING_DESERIALIZER.toSet(itemObject.get("permissions"));
         persisted = true;
     }
 
