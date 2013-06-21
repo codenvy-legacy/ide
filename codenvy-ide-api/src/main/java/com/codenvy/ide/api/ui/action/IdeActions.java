@@ -39,5 +39,7 @@ public interface IdeActions {
 
     String GROUP_PAAS = "PaaSGroup";
 
-    String GROUP_RUN = "RunGroup";
+    String GROUP_RUN_MAIN_MENU = "RunGroupMainMenu";
+
+    String GROUP_RUN_TOOLBAR = "RunGroupToolbar";
 }

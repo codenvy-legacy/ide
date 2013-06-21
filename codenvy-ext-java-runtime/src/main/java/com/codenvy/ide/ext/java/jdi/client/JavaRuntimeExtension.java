@@ -32,8 +32,7 @@ import com.codenvy.ide.ext.java.jdi.client.fqn.JavaFqnResolver;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_TOOLBAR;
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN;
+import static com.codenvy.ide.api.ui.action.IdeActions.*;
 import static com.codenvy.ide.extension.maven.client.BuilderExtension.SPRING_APPLICATION_PROJECT_TYPE;
 import static com.codenvy.ide.rest.MimeType.APPLICATION_JAVA;
 
@@ -62,15 +61,15 @@ public class JavaRuntimeExtension {
         actionManager.registerAction("debugJavaProject", debugAction);
         actionManager.registerAction("stopJavaProject", stopAction);
         actionManager.registerAction("logsJavaProject", logsAction);
-        DefaultActionGroup run = (DefaultActionGroup)actionManager.getAction(GROUP_RUN);
+        DefaultActionGroup run = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_MAIN_MENU);
         run.add(action);
         run.add(debugAction);
         run.add(stopAction);
         run.add(logsAction);
 
         DefaultActionGroup mainToolbarGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_TOOLBAR);
-        DefaultActionGroup runGroup = new DefaultActionGroup(GROUP_RUN, false, actionManager);
-        actionManager.registerAction(GROUP_RUN, runGroup);
+        DefaultActionGroup runGroup = new DefaultActionGroup(GROUP_RUN_TOOLBAR, false, actionManager);
+        actionManager.registerAction(GROUP_RUN_TOOLBAR, runGroup);
         runGroup.add(action);
         runGroup.add(debugAction);
         mainToolbarGroup.add(runGroup);

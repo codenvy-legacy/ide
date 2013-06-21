@@ -80,7 +80,7 @@ public class ActionManagerImpl implements ActionManager {
         project.add(projectPaas);
 
         DefaultActionGroup runGroup = new DefaultActionGroup("Run", true, this);
-        registerAction(IdeActions.GROUP_RUN, runGroup);
+        registerAction(IdeActions.GROUP_RUN_MAIN_MENU, runGroup);
         Constraints afterProject = new Constraints(Anchor.AFTER, IdeActions.GROUP_PROJECT);
         mainMenu.add(runGroup, afterProject);
     }
