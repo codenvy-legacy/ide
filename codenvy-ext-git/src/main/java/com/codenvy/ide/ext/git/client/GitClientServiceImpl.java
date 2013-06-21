@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.git.client;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.git.client.add.AddRequestHandler;
 import com.codenvy.ide.ext.git.client.clone.CloneRequestStatusHandler;
 import com.codenvy.ide.ext.git.client.commit.CommitRequestHandler;
@@ -104,8 +105,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void init(String vfsId, String projectid, String projectName, boolean bare, AsyncRequestCallback<String> callback)
-            throws RequestException {
+    public void init(@NotNull String vfsId, @NotNull String projectid, @NotNull String projectName, boolean bare,
+                     @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + INIT;
 
         InitRequest initRequest = new InitRequest(projectid, bare);
@@ -120,8 +121,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void initWS(String vfsId, String projectid, String projectName, boolean bare, RequestCallback<String> callback)
-            throws WebSocketException {
+    public void initWS(@NotNull String vfsId, @NotNull String projectid, @NotNull String projectName, boolean bare,
+                       @NotNull RequestCallback<String> callback) throws WebSocketException {
         InitRequest initRequest = new InitRequest(projectid, bare);
         InitRequestMarshaller marshaller = new InitRequestMarshaller(initRequest);
 
@@ -137,8 +138,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void cloneRepository(String vfsId, Project project, String remoteUri, String remoteName, AsyncRequestCallback<RepoInfo> callback)
-            throws RequestException {
+    public void cloneRepository(@NotNull String vfsId, @NotNull Project project, @NotNull String remoteUri, @NotNull String remoteName,
+                                @NotNull AsyncRequestCallback<RepoInfo> callback) throws RequestException {
         String url = restServiceContext + CLONE;
 
         CloneRequest cloneRequest = new CloneRequest(remoteUri, project.getId());
@@ -156,8 +157,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void cloneRepositoryWS(String vfsId, Project project, String remoteUri, String remoteName, RequestCallback<RepoInfo> callback)
-            throws WebSocketException {
+    public void cloneRepositoryWS(@NotNull String vfsId, @NotNull Project project, @NotNull String remoteUri, @NotNull String remoteName,
+                                  @NotNull RequestCallback<RepoInfo> callback) throws WebSocketException {
         CloneRequest cloneRequest = new CloneRequest(remoteUri, project.getId());
         cloneRequest.setRemoteName(remoteName);
         CloneRequestMarshaller marshaller = new CloneRequestMarshaller(cloneRequest);
@@ -176,8 +177,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void statusText(String vfsId, String projectid, boolean shortFormat, AsyncRequestCallback<String> callback)
-            throws RequestException {
+    public void statusText(@NotNull String vfsId, @NotNull String projectid, boolean shortFormat,
+                           @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + STATUS;
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid + "&short=" + shortFormat;
@@ -188,8 +189,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void add(String vfsId, Project project, boolean update, String[] filePattern, AsyncRequestCallback<String> callback)
-            throws RequestException {
+    public void add(@NotNull String vfsId, @NotNull Project project, boolean update, String[] filePattern,
+                    @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + ADD;
 
         AddRequest addRequest = new AddRequest(filePattern, update);
@@ -204,8 +205,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void addWS(String vfsId, Project project, boolean update, String[] filePattern, RequestCallback<String> callback)
-            throws WebSocketException {
+    public void addWS(@NotNull String vfsId, @NotNull Project project, boolean update, String[] filePattern,
+                      @NotNull RequestCallback<String> callback) throws WebSocketException {
         AddRequest addRequest = new AddRequest(filePattern, update);
         AddRequestMarshaller marshaller = new AddRequestMarshaller(addRequest);
 
@@ -222,8 +223,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void commit(String vfsId, Project project, String message, boolean all, boolean amend, AsyncRequestCallback<Revision> callback)
-            throws RequestException {
+    public void commit(@NotNull String vfsId, @NotNull Project project, @NotNull String message, boolean all, boolean amend,
+                       @NotNull AsyncRequestCallback<Revision> callback) throws RequestException {
         String url = restServiceContext + COMMIT;
 
         CommitRequest commitRequest = new CommitRequest(message, all, amend);
@@ -238,8 +239,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void commitWS(String vfsId, Project project, String message, boolean all, boolean amend, RequestCallback<Revision> callback)
-            throws WebSocketException {
+    public void commitWS(@NotNull String vfsId, @NotNull Project project, @NotNull String message, boolean all, boolean amend,
+                         @NotNull RequestCallback<Revision> callback) throws WebSocketException {
         CommitRequest commitRequest = new CommitRequest(message, all, amend);
         CommitRequestMarshaller marshaller = new CommitRequestMarshaller(commitRequest);
 
@@ -256,8 +257,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void push(String vfsId, Project project, String[] refSpec, String remote, boolean force, AsyncRequestCallback<String> callback)
-            throws RequestException {
+    public void push(@NotNull String vfsId, @NotNull Project project, String[] refSpec, @NotNull String remote, boolean force,
+                     @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + PUSH;
         PushRequest pushRequest = new PushRequest();
         pushRequest.setRemote(remote);
@@ -275,8 +276,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void pushWS(String vfsId, Project project, String[] refSpec, String remote, boolean force, RequestCallback<String> callback)
-            throws WebSocketException {
+    public void pushWS(@NotNull String vfsId, @NotNull Project project, String[] refSpec, @NotNull String remote, boolean force,
+                       @NotNull RequestCallback<String> callback) throws WebSocketException {
         PushRequest pushRequest = new PushRequest();
         pushRequest.setRemote(remote);
         pushRequest.setRefSpec(refSpec);
@@ -297,8 +298,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void remoteList(String vfsId, String projectid, String remoteName, boolean verbose,
-                           AsyncRequestCallback<JsonArray<Remote>> callback) throws RequestException {
+    public void remoteList(@NotNull String vfsId, @NotNull String projectid, @NotNull String remoteName, boolean verbose,
+                           @NotNull AsyncRequestCallback<JsonArray<Remote>> callback) throws RequestException {
         String url = restServiceContext + REMOTE_LIST;
 
         RemoteListRequest remoteListRequest = new RemoteListRequest(remoteName, verbose);
@@ -312,8 +313,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void branchList(String vfsId, String projectid, String remoteMode, AsyncRequestCallback<JsonArray<Branch>> callback)
-            throws RequestException {
+    public void branchList(@NotNull String vfsId, @NotNull String projectid, @NotNull String remoteMode,
+                           @NotNull AsyncRequestCallback<JsonArray<Branch>> callback) throws RequestException {
         String url = restServiceContext + BRANCH_LIST;
 
         BranchListRequest branchListRequest = new BranchListRequest();
@@ -328,7 +329,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void status(String vfsId, String projectid, AsyncRequestCallback<Status> callback) throws RequestException {
+    public void status(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<Status> callback)
+            throws RequestException {
         String url = restServiceContext + STATUS;
         String params = "vfsid=" + vfsId + "&projectid=" + projectid + "&short=false";
 
@@ -339,8 +341,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void branchDelete(String vfsId, String projectid, String name, boolean force,
-                             AsyncRequestCallback<String> callback) throws RequestException {
+    public void branchDelete(@NotNull String vfsId, @NotNull String projectid, @NotNull String name, boolean force,
+                             @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + BRANCH_DELETE;
 
         BranchDeleteRequest branchDeleteRequest = new BranchDeleteRequest(name, force);
@@ -354,9 +356,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void branchRename(String vfsId, String projectid, String oldName, String newName,
-                             AsyncRequestCallback<String> callback) throws RequestException {
-
+    public void branchRename(@NotNull String vfsId, @NotNull String projectid, @NotNull String oldName, @NotNull String newName,
+                             @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + BRANCH_RENAME;
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid + "&oldName=" + oldName + "&newName=" + newName;
@@ -367,8 +368,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void branchCreate(String vfsId, String projectid, String name, String startPoint,
-                             AsyncRequestCallback<Branch> callback) throws RequestException {
+    public void branchCreate(@NotNull String vfsId, @NotNull String projectid, @NotNull String name, @NotNull String startPoint,
+                             @NotNull AsyncRequestCallback<Branch> callback) throws RequestException {
         String url = restServiceContext + BRANCH_CREATE;
 
         BranchCreateRequest branchCreateRequest = new BranchCreateRequest(name, startPoint);
@@ -383,8 +384,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void branchCheckout(String vfsId, String projectid, String name, String startPoint, boolean createNew,
-                               AsyncRequestCallback<String> callback) throws RequestException {
+    public void branchCheckout(@NotNull String vfsId, @NotNull String projectid, @NotNull String name, @NotNull String startPoint,
+                               boolean createNew, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + BRANCH_CHECKOUT;
 
         BranchCheckoutRequest branchCheckoutRequest = new BranchCheckoutRequest(name, startPoint, createNew);
@@ -398,8 +399,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void remove(String vfsId, String projectid, String[] files, Boolean cached, AsyncRequestCallback<String> callback)
-            throws RequestException {
+    public void remove(@NotNull String vfsId, @NotNull String projectid, String[] files, boolean cached,
+                       @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + REMOVE;
 
         RmRequest rmRequest = new RmRequest(files);
@@ -414,8 +415,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void reset(String vfsId, String projectid, String commit, ResetRequest.ResetType resetType,
-                      AsyncRequestCallback<String> callback) throws RequestException {
+    public void reset(@NotNull String vfsId, @NotNull String projectid, @NotNull String commit, @NotNull ResetRequest.ResetType resetType,
+                      @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + RESET;
 
         ResetRequest resetRequest = new ResetRequest();
@@ -432,8 +433,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void log(String vfsId, String projectid, boolean isTextFormat, AsyncRequestCallback<LogResponse> callback)
-            throws RequestException {
+    public void log(@NotNull String vfsId, @NotNull String projectid, boolean isTextFormat,
+                    @NotNull AsyncRequestCallback<LogResponse> callback) throws RequestException {
         String url = restServiceContext + LOG;
 
         LogRequest logRequest = new LogRequest();
@@ -454,8 +455,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void remoteAdd(String vfsId, String projectid, String name, String repositoryURL,
-                          AsyncRequestCallback<String> callback) throws RequestException {
+    public void remoteAdd(@NotNull String vfsId, @NotNull String projectid, @NotNull String name, @NotNull String repositoryURL,
+                          @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + REMOTE_ADD;
 
         RemoteAddRequest remoteAddRequest = new RemoteAddRequest(name, repositoryURL);
@@ -470,8 +471,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void remoteDelete(String vfsId, String projectid, String name, AsyncRequestCallback<String> callback)
-            throws RequestException {
+    public void remoteDelete(@NotNull String vfsId, @NotNull String projectid, @NotNull String name,
+                             @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + REMOTE_DELETE + "/" + name;
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
@@ -481,8 +482,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void fetch(String vfsId, Project project, String remote, String[] refspec, boolean removeDeletedRefs,
-                      AsyncRequestCallback<String> callback) throws RequestException {
+    public void fetch(@NotNull String vfsId, @NotNull Project project, @NotNull String remote, String[] refspec, boolean removeDeletedRefs,
+                      @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + FETCH;
 
         FetchRequest fetchRequest = new FetchRequest(refspec, remote, removeDeletedRefs, 0);
@@ -497,8 +498,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void fetchWS(String vfsId, Project project, String remote, String[] refspec, boolean removeDeletedRefs,
-                        RequestCallback<String> callback) throws WebSocketException {
+    public void fetchWS(@NotNull String vfsId, @NotNull Project project, @NotNull String remote, String[] refspec,
+                        boolean removeDeletedRefs, @NotNull RequestCallback<String> callback) throws WebSocketException {
         FetchRequest fetchRequest = new FetchRequest(refspec, remote, removeDeletedRefs, 0);
         FetchRequestMarshaller marshaller = new FetchRequestMarshaller(fetchRequest);
 
@@ -515,8 +516,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void pull(String vfsId, Project project, String refSpec, String remote, AsyncRequestCallback<String> callback)
-            throws RequestException {
+    public void pull(@NotNull String vfsId, @NotNull Project project, @NotNull String refSpec, @NotNull String remote,
+                     @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restServiceContext + PULL;
 
         PullRequest pullRequest = new PullRequest(remote, refSpec, 0);
@@ -531,8 +532,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void pullWS(String vfsId, Project project, String refSpec, String remote, RequestCallback<String> callback)
-            throws WebSocketException {
+    public void pullWS(@NotNull String vfsId, @NotNull Project project, @NotNull String refSpec, @NotNull String remote,
+                       @NotNull RequestCallback<String> callback) throws WebSocketException {
         PullRequest pullRequest = new PullRequest(remote, refSpec, 0);
         PullRequestMarshaller marshaller = new PullRequestMarshaller(pullRequest);
 
@@ -549,17 +550,18 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void diff(String vfsId, String projectid, String[] fileFilter, DiffRequest.DiffType type, boolean noRenames,
-                     int renameLimit, String commitA, String commitB, AsyncRequestCallback<StringBuilder> callback)
-            throws RequestException {
+    public void diff(@NotNull String vfsId, @NotNull String projectid, String[] fileFilter, @NotNull DiffRequest.DiffType type,
+                     boolean noRenames, int renameLimit, @NotNull String commitA, @NotNull String commitB,
+                     @NotNull AsyncRequestCallback<StringBuilder> callback) throws RequestException {
         DiffRequest diffRequest = new DiffRequest(fileFilter, type, noRenames, renameLimit, commitA, commitB);
         diff(diffRequest, vfsId, projectid, callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void diff(String vfsId, String projectid, String[] fileFilter, DiffRequest.DiffType type, boolean noRenames,
-                     int renameLimit, String commitA, boolean cached, AsyncRequestCallback<StringBuilder> callback)
+    public void diff(@NotNull String vfsId, @NotNull String projectid, String[] fileFilter, @NotNull DiffRequest.DiffType type,
+                     boolean noRenames,
+                     int renameLimit, @NotNull String commitA, boolean cached, @NotNull AsyncRequestCallback<StringBuilder> callback)
             throws RequestException {
         DiffRequest diffRequest = new DiffRequest(fileFilter, type, noRenames, renameLimit, commitA, cached);
         diff(diffRequest, vfsId, projectid, callback);
@@ -590,8 +592,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void merge(String vfsId, String projectid, String commit, AsyncRequestCallback<MergeResult> callback)
-            throws RequestException {
+    public void merge(@NotNull String vfsId, @NotNull String projectid, @NotNull String commit,
+                      @NotNull AsyncRequestCallback<MergeResult> callback) throws RequestException {
         String url = restServiceContext + MERGE;
 
         MergeRequest mergeRequest = new MergeRequest(commit);
@@ -606,7 +608,7 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void getGitReadOnlyUrl(String vfsId, String projectid, AsyncRequestCallback<StringBuilder> callback)
+    public void getGitReadOnlyUrl(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<StringBuilder> callback)
             throws RequestException {
         String url = restServiceContext + RO_URL;
         url += "?vfsid=" + vfsId + "&projectid=" + projectid;
@@ -615,7 +617,7 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void getCommiters(String vfsId, String projectid, AsyncRequestCallback<Commiters> callback)
+    public void getCommiters(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<Commiters> callback)
             throws RequestException {
         String url = restServiceContext + COMMITERS;
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
@@ -626,7 +628,8 @@ public class GitClientServiceImpl implements GitClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void deleteRepository(String vfsId, String projectid, AsyncRequestCallback<Void> callback) throws RequestException {
+    public void deleteRepository(@NotNull String vfsId, @NotNull String projectid, @NotNull AsyncRequestCallback<Void> callback)
+            throws RequestException {
         String url = restServiceContext + DELETE_REPOSITORY;
 
         String params = "vfsid=" + vfsId + "&projectid=" + projectid;
