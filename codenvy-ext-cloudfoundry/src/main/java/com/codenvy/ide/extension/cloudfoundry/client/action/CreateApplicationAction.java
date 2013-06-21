@@ -54,6 +54,6 @@ public class CreateApplicationAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        e.getPresentation().setVisible(resourceProvider.getActiveProject() != null);
+        e.getPresentation().setEnabled(resourceProvider.getActiveProject() != null);
     }
 }
