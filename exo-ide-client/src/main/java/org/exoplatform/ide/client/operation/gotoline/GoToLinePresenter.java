@@ -35,6 +35,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
@@ -72,7 +73,7 @@ public class GoToLinePresenter implements EditorActiveFileChangedHandler, GoToLi
 
     private final Browser currentBrowser = BrowserResolver.CURRENT_BROWSER;
 
-    private FileModel activeFile;
+    private Editor activeEditor;
 
     public GoToLinePresenter() {
         IDE.getInstance().addControl(new GoToLineControl());
@@ -121,7 +122,7 @@ public class GoToLinePresenter implements EditorActiveFileChangedHandler, GoToLi
             }
         });
 
-        maxLineNumber = getLineNumber(activeFile.getContent());
+        maxLineNumber = activeEditor.getDocument().getNumberOfLines();
         String labelCaption = IDE.EDITOR_CONSTANT.goToLineLabelEnterLineNumber(maxLineNumber);
         display.setCaptionLabel(labelCaption);
     }
@@ -155,7 +156,7 @@ public class GoToLinePresenter implements EditorActiveFileChangedHandler, GoToLi
      * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
     @Override
     public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
-        this.activeFile = event.getFile();
+        this.activeEditor = event.getEditor();
     }
 
     /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
