@@ -88,7 +88,6 @@ public class CopyTest extends ResourcesBaseTest {
 
         nonExistingFileForCopy = (IFile)ws.newResource(projectForCopy.getFullPath().append("file_not_exist"),
                                                        IResource.FILE);
-        ConversationState.setCurrent(new ConversationState(new Identity("ide", new ArrayList<MembershipEntry>(0), Arrays.asList("developer"))));
     }
 
     @Test(expected = CoreException.class)

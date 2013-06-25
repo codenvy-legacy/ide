@@ -37,8 +37,8 @@
         }
         var hiddenFiles = ".*";
         var ws = "<%= request.getAttribute("ws")%>";
-        var project = "<%= request.getAttribute("project")%>";
-        var path = "<%= request.getAttribute("path")%>";
+        var project = <%= request.getAttribute("project") != null ? "\"" + request.getAttribute("project")  + "\"" : null%>;
+        var path = <%= request.getAttribute("path") != null ? "\"" + request.getAttribute("path")  + "\"" : null%>;
         var authorizationContext = "/rest";
         var authorizationErrorPageURL = "/ide/ide/error_oauth.html";
         var securityCheckURL = "/ide/j_security_check";

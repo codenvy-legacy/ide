@@ -18,21 +18,23 @@
  */
 package org.exoplatform.ide.extension.samples.client.startpage;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.event.CreateProjectEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubEvent;
 import org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersEvent;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryEvent;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 
 /**
  * Presenter for welcome view.
@@ -55,7 +57,7 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
     }
 
     private Display display;
-
+    
     public StartPagePresenter() {
         IDE.addHandler(OpenStartPageEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -65,14 +67,24 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
         display.getCloneLink().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.fireEvent(new CloneRepositoryEvent());
+                if (!IDE.userRole.contains("developer") && !IDE.userRole.contains("admin")){
+                    Dialogs.getInstance().showError(SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyTitle(),
+                                                   SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyMessage());
+                } else {
+                    IDE.fireEvent(new CloneRepositoryEvent());
+                }
             }
         });
 
         display.getProjectLink().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.fireEvent(new CreateProjectEvent());
+                if (!IDE.userRole.contains("developer") && !IDE.userRole.contains("admin")){
+                    Dialogs.getInstance().showError(SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyTitle(),
+                                                   SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyMessage());
+                } else {
+                    IDE.fireEvent(new CreateProjectEvent());
+                }
             }
         });
 
@@ -80,14 +92,24 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
 
             @Override
             public void onClick(ClickEvent event) {
-                IDE.fireEvent(new ImportFromGithubEvent());
+                if (!IDE.userRole.contains("developer") && !IDE.userRole.contains("admin")){
+                    Dialogs.getInstance().showError(SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyTitle(),
+                                                   SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyMessage());
+                } else {
+                    IDE.fireEvent(new ImportFromGithubEvent());
+                }
             }
         });
 
         display.getInvitationsLink().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                IDE.fireEvent(new InviteGoogleDevelopersEvent());
+                if (!IDE.userRole.contains("developer") && !IDE.userRole.contains("admin")){
+                    Dialogs.getInstance().showError(SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyTitle(),
+                                                   SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyMessage());
+                } else {
+                    IDE.fireEvent(new InviteGoogleDevelopersEvent());
+                }
             }
         });
     }
