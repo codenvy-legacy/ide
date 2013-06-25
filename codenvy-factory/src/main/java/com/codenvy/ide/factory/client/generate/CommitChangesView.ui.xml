@@ -95,10 +95,9 @@
     <f:Border margin="15" borderColor="transparent">
         <f:layer>
             <g:DockLayoutPanel unit="PX">
-                <g:north size="75">
+                <g:north size="50">
                     <g:FlowPanel addStyleNames="{style.floatLeft}">
                         <g:Label text="{locale.commitChangesDescriptionText}" addStyleNames="{style.labelTitle}" width="100%"></g:Label>
-                        <g:CheckBox ui:field="allField" HTML="{locale.commitChangesFieldAllTitle}" width="100%"/>
                     </g:FlowPanel>
                 </g:north>
                 <g:center>

@@ -68,13 +68,6 @@ public class CommitChangesPresenter implements CommitChangesHandler, ViewClosedH
     public interface Display extends IsView {
 
         /**
-         * Get 'All' checkbox.
-         * 
-         * @return {@link HasValue}
-         */
-        HasValue<Boolean> getAllField();
-
-        /**
          * Returns 'Commit description' field.
          * 
          * @return 'Commit description' field
@@ -133,7 +126,7 @@ public class CommitChangesPresenter implements CommitChangesHandler, ViewClosedH
         display.getOkButton().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                doCommit(openedProject);
+                addAndCommit(openedProject);
             }
         });
 
@@ -161,8 +154,7 @@ public class CommitChangesPresenter implements CommitChangesHandler, ViewClosedH
                                                       new AsyncRequestCallback(new StringUnmarshaller(new StringBuilder())) {
                                                           @Override
                                                           protected void onSuccess(Object result) {
-                                                              String output = result.toString();
-                                                              IDE.fireEvent(new OutputEvent(output, OutputMessage.Type.GIT));
+                                                              IDE.fireEvent(new OutputEvent(result.toString(), OutputMessage.Type.GIT));
                                                               openView();
                                                           }
 
@@ -229,16 +221,66 @@ public class CommitChangesPresenter implements CommitChangesHandler, ViewClosedH
         openedProject = null;
     }
 
+    /** Perform adding to index (sends request over WebSocket or HTTP). */
+    private void addAndCommit(ProjectModel project) {
+        try {
+            GitClientService.getInstance().addWS(vfs.getId(), project, false, new String[]{"."},
+                                                 new RequestCallback<String>() {
+                                                     @Override
+                                                     protected void onSuccess(String result) {
+                                                         onAddingSuccess();
+                                                     }
+
+                                                     @Override
+                                                     protected void onFailure(Throwable exception) {
+                                                         handleGitAddError(exception);
+                                                     }
+                                                 });
+        } catch (WebSocketException e) {
+            doAddREST(project);
+        }
+    }
+
+    /** Perform adding to index (sends request over HTTP). */
+    private void doAddREST(ProjectModel project) {
+        try {
+            GitClientService.getInstance().add(vfs.getId(), project, false, new String[]{"."},
+                                               new AsyncRequestCallback<String>() {
+                                                   @Override
+                                                   protected void onSuccess(String result) {
+                                                       onAddingSuccess();
+                                                   }
+
+                                                   @Override
+                                                   protected void onFailure(Throwable exception) {
+                                                       handleGitAddError(exception);
+                                                   }
+                                               });
+        } catch (RequestException e) {
+            handleGitAddError(e);
+        }
+    }
+
+    private void onAddingSuccess() {
+        IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.addSuccess()));
+        IDE.fireEvent(new TreeRefreshedEvent(openedProject));
+        doCommit(openedProject);
+    }
+
+    private void handleGitAddError(Throwable e) {
+        String errorMessage = (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES.addFailed();
+        IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+    }
+
     /** Perform the commit to repository and process the response (sends request over WebSocket or HTTP). */
     private void doCommit(ProjectModel project) {
         String message = getCommitDescription();
-        boolean all = display.getAllField().getValue();
 
         try {
             GitClientService.getInstance().commitWS(vfs.getId(),
                                                     project,
                                                     message,
-                                                    all,
+                                                    true,
                                                     false,
                                                     new RequestCallback<Revision>(
                                                                                   new RevisionUnmarshallerWS(new Revision(null, message, 0,
@@ -246,7 +288,7 @@ public class CommitChangesPresenter implements CommitChangesHandler, ViewClosedH
                                                         @Override
                                                         protected void onSuccess(Revision result) {
                                                             if (!result.isFake()) {
-                                                                onCommitSuccess(result);
+                                                                onCommittingSuccess(result);
                                                             } else {
                                                                 IDE.fireEvent(new OutputEvent(result.getMessage(), Type.GIT));
                                                             }
@@ -257,19 +299,18 @@ public class CommitChangesPresenter implements CommitChangesHandler, ViewClosedH
                                                             handleGitCommitError(exception);
                                                         }
                                                     });
-            IDE.getInstance().closeView(display.asView().getId());
         } catch (WebSocketException e) {
-            doCommitREST(project, message, all);
+            doCommitREST(project, message);
         }
     }
 
     /** Perform the commit to repository and process the response (sends request over HTTP). */
-    private void doCommitREST(ProjectModel project, String message, boolean all) {
+    private void doCommitREST(ProjectModel project, String message) {
         try {
             GitClientService.getInstance().commit(vfs.getId(),
                                                   project,
                                                   message,
-                                                  all,
+                                                  true,
                                                   false,
                                                   new AsyncRequestCallback<Revision>(
                                                                                      new RevisionUnmarshaller(new Revision(null, message,
@@ -277,7 +318,7 @@ public class CommitChangesPresenter implements CommitChangesHandler, ViewClosedH
                                                       @Override
                                                       protected void onSuccess(Revision result) {
                                                           if (!result.isFake()) {
-                                                              onCommitSuccess(result);
+                                                              onCommittingSuccess(result);
                                                           } else {
                                                               IDE.fireEvent(new OutputEvent(result.getMessage(), Type.GIT));
                                                           }
@@ -291,7 +332,6 @@ public class CommitChangesPresenter implements CommitChangesHandler, ViewClosedH
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
-        IDE.getInstance().closeView(display.asView().getId());
     }
 
     /**
@@ -299,7 +339,7 @@ public class CommitChangesPresenter implements CommitChangesHandler, ViewClosedH
      * 
      * @param revision a {@link Revision}
      */
-    private void onCommitSuccess(Revision revision) {
+    private void onCommittingSuccess(Revision revision) {
         DateTimeFormat formatter = DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM);
         String date = formatter.format(new Date(revision.getCommitTime()));
         String message = GitExtension.MESSAGES.commitMessage(revision.getId(), date);
@@ -314,14 +354,15 @@ public class CommitChangesPresenter implements CommitChangesHandler, ViewClosedH
                                   revision.getCommitter()
                                           .getName())
                        : "";
+        IDE.getInstance().closeView(display.asView().getId());
         IDE.fireEvent(new OutputEvent(message, Type.GIT));
         IDE.fireEvent(new TreeRefreshedEvent(openedProject));
+        IDE.fireEvent(new GetCodeNowButtonEvent());
     }
 
     private void handleGitCommitError(Throwable e) {
-        String errorMessage =
-                              (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage()
-                                  : GitExtension.MESSAGES.commitFailed();
+        String errorMessage = (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage()
+            : GitExtension.MESSAGES.commitFailed();
         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
     }
 

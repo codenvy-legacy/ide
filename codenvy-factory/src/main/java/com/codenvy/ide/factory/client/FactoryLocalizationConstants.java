@@ -106,12 +106,6 @@ public interface FactoryLocalizationConstants extends Messages {
     @Key("commitChanges.descriptionText")
     String commitChangesDescriptionText();
 
-    @Key("commitChanges.field.all.id")
-    String commitChangesFieldAllId();
-
-    @Key("commitChanges.field.all.title")
-    String commitChangesFieldAllTitle();
-
     @Key("commitChanges.field.description.id")
     String commitChangesFieldDescriptionId();
 

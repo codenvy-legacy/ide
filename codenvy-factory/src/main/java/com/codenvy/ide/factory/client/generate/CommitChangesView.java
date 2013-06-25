@@ -47,13 +47,11 @@ public class CommitChangesView extends ViewImpl implements Display {
 
     private static final String              TITLE                = LOCALIZATION_CONSTANTS.commitChangesViewTitle();
 
-    private static final int                 HEIGHT               = 250;
+    private static final int                 HEIGHT               = 220;
 
     private static final int                 WIDTH                = 450;
 
     private static final String              DESCRIPTION_FIELD_ID = LOCALIZATION_CONSTANTS.commitChangesFieldDescriptionId();
-
-    private static final String              ALL_FIELD_ID         = LOCALIZATION_CONSTANTS.commitChangesFieldAllId();
 
     private static final String              OK_BUTTON_ID         = LOCALIZATION_CONSTANTS.commitChangesButtonContinue();
 
@@ -63,9 +61,6 @@ public class CommitChangesView extends ViewImpl implements Display {
 
     interface CommitChangesViewUiBinder extends UiBinder<Widget, CommitChangesView> {
     }
-
-    @UiField
-    CheckBox      allField;
 
     @UiField
     TextAreaInput descriptionField;
@@ -82,17 +77,8 @@ public class CommitChangesView extends ViewImpl implements Display {
         add(uiBinder.createAndBindUi(this));
 
         descriptionField.getElement().setId(DESCRIPTION_FIELD_ID);
-        allField.getElement().setId(ALL_FIELD_ID);
         okButton.setId(OK_BUTTON_ID);
         continueButton.getElement().setId(CONTINUE_BUTTON_ID);
-    }
-
-    /**
-     * @see com.codenvy.ide.factory.client.generate.CommitChangesPresenter.Display#getAllField()
-     */
-    @Override
-    public HasValue<Boolean> getAllField() {
-        return allField;
     }
 
     /**
