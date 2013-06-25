@@ -22,6 +22,7 @@ import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.ext.git.client.action.CloneRepositoryAction;
+import com.codenvy.ide.ext.git.client.action.InitRepositoryAction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -38,18 +39,36 @@ public class GitExtension {
     public static final String GIT_REPOSITORY_PROP = "isGitRepository";
     public static final String GIT_GROUP_MAIN_MENU = "Git";
 
+    public static final String REPOSITORY_GROUP_MAIN_MENU = "GitRepository";
+    public static final String COMMAND_GROUP_MAIN_MENU    = "GitCommand";
+    public static final String HISTORY_GROUP_MAIN_MENU    = "GitHistory";
+
     @Inject
-    public GitExtension(GitClientResources resources, ActionManager actionManager, CloneRepositoryAction cloneAction) {
+    public GitExtension(GitClientResources resources, ActionManager actionManager, CloneRepositoryAction cloneAction,
+                        InitRepositoryAction initAction) {
         resources.gitCSS().ensureInjected();
 
         DefaultActionGroup mainMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_MENU);
 
         DefaultActionGroup git = new DefaultActionGroup(GIT_GROUP_MAIN_MENU, true, actionManager);
         actionManager.registerAction(GIT_GROUP_MAIN_MENU, git);
+        mainMenu.add(git);
+
+        DefaultActionGroup repositoryGroup = new DefaultActionGroup(REPOSITORY_GROUP_MAIN_MENU, false, actionManager);
+        actionManager.registerAction(REPOSITORY_GROUP_MAIN_MENU, repositoryGroup);
+        git.add(repositoryGroup);
+
+        DefaultActionGroup commandGroup = new DefaultActionGroup(COMMAND_GROUP_MAIN_MENU, false, actionManager);
+        actionManager.registerAction(COMMAND_GROUP_MAIN_MENU, commandGroup);
+        git.add(commandGroup);
+
+        DefaultActionGroup historyGroup = new DefaultActionGroup(HISTORY_GROUP_MAIN_MENU, false, actionManager);
+        actionManager.registerAction(HISTORY_GROUP_MAIN_MENU, historyGroup);
+        git.add(historyGroup);
 
         actionManager.registerAction("GitCloneRepository", cloneAction);
-        git.add(cloneAction);
-
-        mainMenu.add(git);
+        repositoryGroup.add(cloneAction);
+        actionManager.registerAction("GitInitRepository", initAction);
+        repositoryGroup.add(initAction);
     }
 }

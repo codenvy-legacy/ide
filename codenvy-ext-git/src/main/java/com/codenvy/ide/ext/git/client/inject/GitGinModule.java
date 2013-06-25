@@ -23,6 +23,8 @@ import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitClientServiceImpl;
 import com.codenvy.ide.ext.git.client.clone.CloneRepositoryView;
 import com.codenvy.ide.ext.git.client.clone.CloneRepositoryViewImpl;
+import com.codenvy.ide.ext.git.client.init.InitRepositoryView;
+import com.codenvy.ide.ext.git.client.init.InitRepositoryViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
@@ -35,5 +37,6 @@ public class GitGinModule extends AbstractGinModule {
         bind(GitClientService.class).to(GitClientServiceImpl.class).in(Singleton.class);
 
         bind(CloneRepositoryView.class).to(CloneRepositoryViewImpl.class).in(Singleton.class);
+        bind(InitRepositoryView.class).to(InitRepositoryViewImpl.class).in(Singleton.class);
     }
 }
