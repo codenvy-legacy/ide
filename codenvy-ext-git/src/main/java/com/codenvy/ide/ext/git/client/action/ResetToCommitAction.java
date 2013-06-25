@@ -23,7 +23,7 @@ import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.git.client.GitClientResources;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
-import com.codenvy.ide.ext.git.client.add.AddToIndexPresenter;
+import com.codenvy.ide.ext.git.client.reset.ResetToCommitPresenter;
 import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -32,14 +32,14 @@ import static com.codenvy.ide.ext.git.client.GitExtension.GIT_REPOSITORY_PROP;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 @Singleton
-public class AddToIndexAction extends Action {
-    private AddToIndexPresenter presenter;
-    private ResourceProvider    resourceProvider;
+public class ResetToCommitAction extends Action {
+    private ResetToCommitPresenter presenter;
+    private ResourceProvider       resourceProvider;
 
     @Inject
-    public AddToIndexAction(AddToIndexPresenter presenter, ResourceProvider resourceProvider, GitClientResources resources,
-                            GitLocalizationConstant constant) {
-        super(constant.addToIndexTitle(), constant.addToIndexTitle(), resources.addToIndex());
+    public ResetToCommitAction(ResetToCommitPresenter presenter, ResourceProvider resourceProvider, GitClientResources resources,
+                               GitLocalizationConstant constant) {
+        super(constant.resetToCommitControlTitle(), constant.resetToCommitControlPrompt(), resources.revert());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
     }

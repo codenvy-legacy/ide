@@ -21,10 +21,7 @@ package com.codenvy.ide.ext.git.client;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.ext.git.client.action.AddToIndexAction;
-import com.codenvy.ide.ext.git.client.action.CloneRepositoryAction;
-import com.codenvy.ide.ext.git.client.action.DeleteRepositoryAction;
-import com.codenvy.ide.ext.git.client.action.InitRepositoryAction;
+import com.codenvy.ide.ext.git.client.action.*;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -46,7 +43,8 @@ public class GitExtension {
 
     @Inject
     public GitExtension(GitClientResources resources, ActionManager actionManager, CloneRepositoryAction cloneAction,
-                        InitRepositoryAction initAction, DeleteRepositoryAction deleteAction, AddToIndexAction addToIndexAction) {
+                        InitRepositoryAction initAction, DeleteRepositoryAction deleteAction, AddToIndexAction addToIndexAction,
+                        ResetToCommitAction resetToCommitAction) {
         resources.gitCSS().ensureInjected();
 
         DefaultActionGroup mainMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_MENU);
@@ -60,14 +58,14 @@ public class GitExtension {
         git.add(commandGroup);
         git.addSeparator();
 
-        DefaultActionGroup repositoryGroup = new DefaultActionGroup(REPOSITORY_GROUP_MAIN_MENU, false, actionManager);
-        actionManager.registerAction(REPOSITORY_GROUP_MAIN_MENU, repositoryGroup);
-        git.add(repositoryGroup);
-        git.addSeparator();
-
         DefaultActionGroup historyGroup = new DefaultActionGroup(HISTORY_GROUP_MAIN_MENU, false, actionManager);
         actionManager.registerAction(HISTORY_GROUP_MAIN_MENU, historyGroup);
         git.add(historyGroup);
+        git.addSeparator();
+
+        DefaultActionGroup repositoryGroup = new DefaultActionGroup(REPOSITORY_GROUP_MAIN_MENU, false, actionManager);
+        actionManager.registerAction(REPOSITORY_GROUP_MAIN_MENU, repositoryGroup);
+        git.add(repositoryGroup);
 
         actionManager.registerAction("GitCloneRepository", cloneAction);
         repositoryGroup.add(cloneAction);
@@ -78,5 +76,7 @@ public class GitExtension {
 
         actionManager.registerAction("GitAddToIndex", addToIndexAction);
         commandGroup.add(addToIndexAction);
+        actionManager.registerAction("GitResetToCommit", resetToCommitAction);
+        commandGroup.add(resetToCommitAction);
     }
 }

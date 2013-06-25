@@ -21,14 +21,13 @@ package com.codenvy.ide.ext.git.client.marshaller;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.git.shared.GitUser;
 import com.codenvy.ide.ext.git.shared.Revision;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -64,7 +63,7 @@ public class LogResponseUnmarshaller implements Unmarshallable<LogResponse>, Con
             return;
         }
 
-        List<Revision> revisions = new ArrayList<Revision>();
+        JsonArray<Revision> revisions = JsonCollections.createArray();
         JSONObject logObject = JSONParser.parseStrict(response.getText()).isObject();
         if (logObject == null)
             return;
