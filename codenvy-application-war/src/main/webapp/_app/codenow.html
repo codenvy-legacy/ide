@@ -14,11 +14,11 @@
         overflow: hidden
     }
 
-    .button, .counter, .image {
+    .button, .image {
         float: left
     }
 
-    .button, .counter {
+    .button {
         padding: 2px 5px 2px 4px;
         color: #555;
         text-decoration: none;
@@ -75,41 +75,6 @@
         background-repeat: no-repeat;
         background-position: 0 0
     }
-
-    .counter {
-        position: relative;
-        display: none;
-        margin-left: 4px;
-        background-color: #fafafa;
-        border: 1px solid #d4d4d4
-    }
-
-    .counter:before, .counter:after {
-        content: ' ';
-        position: absolute;
-        display: inline-block;
-        width: 0;
-        height: 0;
-        border-color: transparent;
-        border-style: solid
-    }
-
-    .counter:before {
-        top: 50%;
-        left: -3px;
-        margin-top: -4px;
-        border-width: 4px 4px 4px 0;
-        border-right-color: #fafafa
-    }
-
-    .counter:after {
-        top: 50%;
-        left: -4px;
-        z-index: -1;
-        margin-top: -5px;
-        border-width: 5px 5px 5px 0;
-        border-right-color: #d4d4d4
-    }
 </style>
 
 <span class=button-counter id=button-counter>
@@ -117,7 +82,6 @@
         <span class=image></span>
         <span class=label id=label>CodeNow</span>
     </a>
-    <a class=counter id=counter></a>
 </span>
 
 <script type="text/javascript">
@@ -132,14 +96,9 @@
         return d
     }();
 
-    var head = document.getElementsByTagName("head")[0],
-            button = document.getElementById("button"),
+    var button = document.getElementById("button"),
             mainButton = document.getElementById("button-counter"),
             text = document.getElementById("label"),
-            counter = document.getElementById("counter"),
-
-            isShowCounter = params.counter,
-            style = params.style,
 
     // Factory URL parameters:
             version = params.v,
@@ -150,23 +109,6 @@
             commitid = params.commitid,
             action = params.action;
 
-    function addCommas(a) {
-        return String(a).replace(/(\d)(?=(\d{3})+$)/g, "$1,")
-    }
-
-    function jsonp(url) {
-        var scriptElement = document.createElement("script");
-        scriptElement.src = url + "?callback=callback";
-        head.insertBefore(scriptElement, head.firstChild)
-    }
-
-    function callback(response) {
-        counter.innerHTML = addCommas(response.data.public_repos)
-        if (isShowCounter == "true") {
-            counter.style.display = "block"
-        }
-    }
-
     button.href = "https://www.codenvy.com/factory?v=" + version +
             "&pname=" + pname +
             "&wname=" + wname +
@@ -174,10 +116,6 @@
             "&vcsurl=" + vcsurl +
             "&commitid=" + commitid +
             "&action=" + action;
-
-    if (isShowCounter == "true") {
-        jsonp("https://api.github.com/users/azatsarynnyy")
-    }
     ;
 </script>
 
