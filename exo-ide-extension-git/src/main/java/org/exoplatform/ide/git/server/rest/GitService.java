@@ -423,7 +423,7 @@ public class GitService {
     @Path("status")
     @POST
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public Status status(@PathParam("short") boolean shortFormat) throws GitException,
+    public Status status(@QueryParam("short") boolean shortFormat) throws GitException,
                                                                  LocalPathResolveException,
                                                                  VirtualFileSystemException {
         if (!isGitRepository()) {
