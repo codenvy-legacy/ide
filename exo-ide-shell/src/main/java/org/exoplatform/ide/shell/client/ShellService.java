@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.shell.client;
 
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONArray;
@@ -149,8 +150,10 @@ public class ShellService {
             }
         } catch (MandatoryParameterNotFoundException me) {
             CloudShell.console().print(me.getMessage() + "\n");
+            Log.error(getClass(), me);
         } catch (Exception e) {
             CloudShell.console().print(CloudShell.messages.syntaxtError(cmd));
+            Log.error(getClass(), e);
         }
 
     }

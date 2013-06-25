@@ -67,8 +67,8 @@ public class CLIResourceParameter {
      * @param crp
      */
     public CLIResourceParameter(CLIResourceParameter crp) {
-        new CLIResourceParameter(crp.getName(), //
-                                 crp.getOptions() != null ? new HashSet<String>(crp.getOptions()) : new HashSet<String>(),//
+        this(crp.getName(), //
+                                crp.getOptions() != null ? new HashSet<String>(crp.getOptions()) : new HashSet<String>(),//
                                  crp.getType(), crp.mandatory, crp.hasArg);
     }
 
