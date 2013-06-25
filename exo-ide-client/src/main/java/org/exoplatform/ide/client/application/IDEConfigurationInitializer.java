@@ -186,7 +186,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
     public void onVfsChanged(VfsChangedEvent event) {
         IDE.removeHandler(VfsChangedEvent.TYPE, this);
         String projectToOpen = Utils.getProjectToOpen();
-        if (projectToOpen != "null" && projectToOpen != null && !projectToOpen.isEmpty())
+        if (projectToOpen != null && !projectToOpen.isEmpty())
         {
             try {
                 VirtualFileSystem.getInstance()
@@ -196,7 +196,12 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                     protected void onSuccess(ItemWrapper result) {
                                                         if (result.getItem() != null && result.getItem() instanceof ProjectModel) {
                                                             ProjectModel projectModel = (ProjectModel)result.getItem();
+                                                            String file = Utils.getFilePathToOpen();
                                                             IDE.fireEvent(new OpenProjectEvent(projectModel));
+                                                            if (file != null && !file.isEmpty())
+                                                            {
+                                                                openFile(file, projectModel);
+                                                            } 
                                                         }
                                                     }
 
@@ -210,6 +215,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
             }
 
         }
+        
         else {
             Map<String, List<String>> parameterMap = Location.getParameterMap();
             if (parameterMap != null && parameterMap.get(FactorySpec10.VERSION_PARAMETER) != null
@@ -218,6 +224,33 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
             } else {
                 new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject, initialOpenedFiles, initialActiveFile);
             }
+        }
+    }
+
+    /**
+     * @param file
+     */
+    private void openFile(String file, final ProjectModel projectModel) {
+        try {
+            VirtualFileSystem.getInstance()
+                             .getItemByPath(file,
+                                            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper())) {
+                                                @Override
+                                                protected void onSuccess(ItemWrapper result) {
+                                                    if (result.getItem() != null && result.getItem() instanceof FileModel) {
+                                                        FileModel fileModel = (FileModel)result.getItem();
+                                                        fileModel.setProject(projectModel);
+                                                        IDE.fireEvent(new OpenFileEvent((FileModel)fileModel));
+                                                    }
+                                                }
+
+                                                @Override
+                                                protected void onFailure(Throwable exception) {
+                                                    Log.error(AsyncRequestCallback.class, exception);
+                                                }
+                                            });
+        } catch (RequestException e) {
+            Log.debug(getClass(), e);
         }
     }
 

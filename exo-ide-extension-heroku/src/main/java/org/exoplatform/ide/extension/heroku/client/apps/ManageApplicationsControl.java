@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.heroku.client.apps;
 
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
@@ -30,6 +31,7 @@ import org.exoplatform.ide.extension.heroku.client.control.AbstractHerokuControl
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Mar 14, 2012 5:15:04 PM anya $
  */
+@RolesAllowed("developer")
 public class ManageApplicationsControl extends AbstractHerokuControl {
 
     public ManageApplicationsControl() {
