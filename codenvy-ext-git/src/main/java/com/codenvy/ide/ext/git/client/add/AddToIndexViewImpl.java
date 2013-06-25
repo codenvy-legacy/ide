@@ -16,42 +16,41 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.git.client.init;
+package com.codenvy.ide.ext.git.client.add;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.git.client.GitClientResources;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * The implementation of {@link InitRepositoryView}.
+ * The implementation of {@link AddToIndexView}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class InitRepositoryViewImpl extends DialogBox implements InitRepositoryView {
-    interface InitRepositoryViewImplUiBinder extends UiBinder<Widget, InitRepositoryViewImpl> {
+public class AddToIndexViewImpl extends DialogBox implements AddToIndexView {
+    interface AddToIndexViewImplUiBinder extends UiBinder<Widget, AddToIndexViewImpl> {
     }
 
-    private static InitRepositoryViewImplUiBinder ourUiBinder = GWT.create(InitRepositoryViewImplUiBinder.class);
+    private static AddToIndexViewImplUiBinder ourUiBinder = GWT.create(AddToIndexViewImplUiBinder.class);
 
     @UiField
-    CheckBox                  bare;
+    Label                     message;
     @UiField
-    TextBox                   workdir;
+    CheckBox                  update;
     @UiField
-    com.codenvy.ide.ui.Button btnOk;
+    com.codenvy.ide.ui.Button btnAdd;
     @UiField
     com.codenvy.ide.ui.Button btnCancel;
     @UiField(provided = true)
@@ -67,51 +66,32 @@ public class InitRepositoryViewImpl extends DialogBox implements InitRepositoryV
      * @param locale
      */
     @Inject
-    protected InitRepositoryViewImpl(GitClientResources resources, GitLocalizationConstant locale) {
+    protected AddToIndexViewImpl(GitClientResources resources, GitLocalizationConstant locale) {
         this.res = resources;
         this.locale = locale;
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 
-        this.setText(locale.createTitle());
+        this.setText(locale.addToIndexTitle());
         this.setWidget(widget);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setDelegate(ActionDelegate delegate) {
-        this.delegate = delegate;
+    public void setMessage(@NotNull String message) {
+        this.message.setText(message);
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean isBare() {
-        return bare.getValue();
+    public boolean isUpdated() {
+        return update.getValue();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setBare(boolean isBare) {
-        bare.setValue(isBare);
-    }
-
-    /** {@inheritDoc} */
-    @NotNull
-    @Override
-    public String getWorkDir() {
-        return workdir.getText();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setWorkDir(@NotNull String workDir) {
-        this.workdir.setText(workDir);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setEnableOkButton(boolean enable) {
-        btnOk.setEnabled(enable);
+    public void setUpdated(boolean isUpdated) {
+        update.setValue(isUpdated);
     }
 
     /** {@inheritDoc} */
@@ -127,18 +107,19 @@ public class InitRepositoryViewImpl extends DialogBox implements InitRepositoryV
         this.show();
     }
 
-    @UiHandler("btnOk")
-    public void onOkClicked(ClickEvent event) {
-        delegate.onOkClicked();
+    /** {@inheritDoc} */
+    @Override
+    public void setDelegate(ActionDelegate delegate) {
+        this.delegate = delegate;
+    }
+
+    @UiHandler("btnAdd")
+    public void onAddClicked(ClickEvent event) {
+        delegate.onAddClicked();
     }
 
     @UiHandler("btnCancel")
     public void onCancelClicked(ClickEvent event) {
         delegate.onCancelClicked();
-    }
-
-    @UiHandler("workdir")
-    public void onValueChanged(KeyUpEvent event) {
-        delegate.onValueChanged();
     }
 }

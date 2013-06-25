@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.ext.git.client.init;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.event.RefreshBrowserEvent;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
@@ -106,7 +107,7 @@ public class InitRepositoryPresenter implements InitRepositoryView.ActionDelegat
     }
 
     /** Initialize of the repository (sends request over HTTP). */
-    private void initRepositoryREST(String projectId, String projectName, boolean bare) {
+    private void initRepositoryREST(@NotNull String projectId, @NotNull String projectName, boolean bare) {
         try {
             service.init(resourceProvider.getVfsId(), projectId, projectName, bare, new AsyncRequestCallback<String>() {
                 @Override
@@ -146,7 +147,7 @@ public class InitRepositoryPresenter implements InitRepositoryView.ActionDelegat
      * @param e
      *         excpetion what happend
      */
-    private void handleError(Throwable e) {
+    private void handleError(@NotNull Throwable e) {
         String errorMessage = (e.getMessage() != null && !e.getMessage().isEmpty()) ? e.getMessage() : constant.initFailed();
         console.print(errorMessage);
     }

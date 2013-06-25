@@ -16,63 +16,44 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.git.client.init;
+package com.codenvy.ide.ext.git.client.add;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 
 /**
- * The view of {@link InitRepositoryView}.
+ * The view of {@link AddToIndexPresenter}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public interface InitRepositoryView extends View<InitRepositoryView.ActionDelegate> {
+public interface AddToIndexView extends View<AddToIndexView.ActionDelegate> {
     /** Needs for delegate some function into CloneRepository view. */
     public interface ActionDelegate {
-        /** Performs any actions appropriate in response to the user having pressed the Ok button. */
-        void onOkClicked();
+        /** Performs any actions appropriate in response to the user having pressed the Add button. */
+        void onAddClicked();
 
         /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
         void onCancelClicked();
-
-        /** Performs any actions appropriate in response to the user having changed something. */
-        void onValueChanged();
     }
 
     /**
-     * Return which type of repository must be.
+     * Set content into message field.
      *
-     * @return <code>true</code> if the repository must be bare, and <code>false</code> otherwise
+     * @param message
+     *         content of message
      */
-    boolean isBare();
+    void setMessage(@NotNull String message);
+
+    /** @return <code>true</code> if new file must be added to index, and <code>false</code> otherwise */
+    boolean isUpdated();
 
     /**
-     * Set value of the bare field.
+     * Set state of add new file.
      *
-     * @param isBare
-     *         state of the field
+     * @param isUpdated
+     *         <code>true</code> to add new file to index, <code>false</code> don't do it
      */
-    void setBare(boolean isBare);
-
-    /** @return work directory */
-    @NotNull
-    String getWorkDir();
-
-    /**
-     * Set value of workDir field.
-     *
-     * @param workDir
-     *         work directory
-     */
-    void setWorkDir(@NotNull String workDir);
-
-    /**
-     * Change the enable state of the ok button.
-     *
-     * @param enable
-     *         <code>true</code> to enable the button, <code>false</code> to disable it
-     */
-    void setEnableOkButton(boolean enable);
+    void setUpdated(boolean isUpdated);
 
     /** Close dialog. */
     void close();
