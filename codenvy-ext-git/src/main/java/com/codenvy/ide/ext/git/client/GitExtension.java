@@ -22,6 +22,7 @@ import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.ext.git.client.action.CloneRepositoryAction;
+import com.codenvy.ide.ext.git.client.action.DeleteRepositoryAction;
 import com.codenvy.ide.ext.git.client.action.InitRepositoryAction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -36,16 +37,15 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_MENU;
 @Singleton
 @Extension(title = "Git Support.", version = "3.0.0")
 public class GitExtension {
-    public static final String GIT_REPOSITORY_PROP = "isGitRepository";
-    public static final String GIT_GROUP_MAIN_MENU = "Git";
-
+    public static final String GIT_REPOSITORY_PROP        = "isGitRepository";
+    public static final String GIT_GROUP_MAIN_MENU        = "Git";
     public static final String REPOSITORY_GROUP_MAIN_MENU = "GitRepository";
     public static final String COMMAND_GROUP_MAIN_MENU    = "GitCommand";
     public static final String HISTORY_GROUP_MAIN_MENU    = "GitHistory";
 
     @Inject
     public GitExtension(GitClientResources resources, ActionManager actionManager, CloneRepositoryAction cloneAction,
-                        InitRepositoryAction initAction) {
+                        InitRepositoryAction initAction, DeleteRepositoryAction deleteAction) {
         resources.gitCSS().ensureInjected();
 
         DefaultActionGroup mainMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_MENU);
@@ -70,5 +70,7 @@ public class GitExtension {
         repositoryGroup.add(cloneAction);
         actionManager.registerAction("GitInitRepository", initAction);
         repositoryGroup.add(initAction);
+        actionManager.registerAction("GitDeleteRepository", deleteAction);
+        repositoryGroup.add(deleteAction);
     }
 }
