@@ -262,7 +262,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
             @Override
             public void onClick(ClickEvent event) {
                 Window.open("https://twitter.com/share?url=" + factoryURLEscaped + "&text=" + socialPostTitle, "",
-                            "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600");
+                            "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=260,width=660");
             }
         });
 
