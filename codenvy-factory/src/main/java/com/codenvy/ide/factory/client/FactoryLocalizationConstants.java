@@ -127,6 +127,12 @@ public interface FactoryLocalizationConstants extends Messages {
     @Key("sendMail.view.title")
     String sendMailViewTitle();
 
+    @Key("sendMail.field.recipient.id")
+    String sendMailFieldRecipientId();
+
+    @Key("sendMail.field.recipient.title")
+    String sendMailFieldRecipientTitle();
+
     @Key("sendMail.field.message.id")
     String sendMailFieldMessageId();
 

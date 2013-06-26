@@ -271,7 +271,7 @@ public class GetCodeNowButtonPresenter implements GetCodeNowButtonHandler, ViewC
             public void onClick(ClickEvent event) {
                 // Window.open("mailto:?subject=Codenvy Factory URL&body=" + factoryURLEscaped, "",
                 // "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=100,width=200");
-                IDE.fireEvent(new SendMailEvent(factoryURL));
+                IDE.fireEvent(new SendMailEvent(factoryURLEscaped));
             }
         });
 

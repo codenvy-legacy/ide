@@ -51,6 +51,7 @@ public class FactoryExtension extends Extension implements InitializeServicesHan
      */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
+        new FactoryClientServiceImpl(event.getLoader());
     }
 
     /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */

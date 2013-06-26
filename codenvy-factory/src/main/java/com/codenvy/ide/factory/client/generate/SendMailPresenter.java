@@ -18,24 +18,20 @@
  */
 package com.codenvy.ide.factory.client.generate;
 
+import com.codenvy.ide.factory.client.FactoryClientService;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.codenvy.mail.MailSenderClient;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.output.event.OutputEvent;
-import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.git.client.GitExtension;
-
-import javax.mail.MessagingException;
-
-import java.io.IOException;
 
 /**
  * Presenter to share Factory URL by e-mail.
@@ -46,6 +42,13 @@ import java.io.IOException;
 public class SendMailPresenter implements SendMailHandler, ViewClosedHandler {
 
     public interface Display extends IsView {
+
+        /**
+         * Returns 'To' field.
+         * 
+         * @return 'To' field
+         */
+        HasValue<String> getRecipientField();
 
         /**
          * Returns 'Message' field.
@@ -68,17 +71,12 @@ public class SendMailPresenter implements SendMailHandler, ViewClosedHandler {
          */
         HasClickHandlers getCancelButton();
 
-        /** Give focus to the 'Message' field. */
-        void focusMessageField();
+        /** Give focus to the 'To' field. */
+        void focusRecipientField();
     }
 
     /** Display. */
     private Display             display;
-
-    /** Text message to send. */
-    private String              message;
-
-    private static final String EMAIL_SUBJECT = "Check out my Codenvy project";
 
     public SendMailPresenter() {
         IDE.addHandler(SendMailEvent.TYPE, this);
@@ -113,7 +111,7 @@ public class SendMailPresenter implements SendMailHandler, ViewClosedHandler {
         }
 
         display.getMessageField().setValue(event.getMessage());
-        display.focusMessageField();
+        display.focusRecipientField();
     }
 
     /**
@@ -128,26 +126,23 @@ public class SendMailPresenter implements SendMailHandler, ViewClosedHandler {
     }
 
     private void doSend() {
-        String from = "";
-        String to = "";
-        String replyTo = "";
-        String subject = EMAIL_SUBJECT;
-        String mimeType = "text/html; charset=utf-8";
-        String template = display.getMessageField().getValue();
-//        try {
-//            new MailSenderClient().sendMail(from, to, replyTo, subject, mimeType, template);
-//        } catch (IOException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        } catch (MessagingException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-    }
+        String recipient = display.getRecipientField().getValue();
+        String message = display.getMessageField().getValue();
+        try {
+            FactoryClientService.getInstance().share(recipient, message, new AsyncRequestCallback<Object>() {
 
-    private void handleSendingError(Throwable e) {
-        String errorMessage = (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES.commitFailed();
-        IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-    }
+                @Override
+                protected void onSuccess(Object result) {
+                    IDE.getInstance().closeView(display.asView().getId());
+                }
 
+                @Override
+                protected void onFailure(Throwable exception) {
+                    IDE.fireEvent(new ExceptionThrownEvent(exception));
+                }
+            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 }

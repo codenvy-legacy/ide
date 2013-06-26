@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextAreaInput;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 
@@ -41,24 +42,29 @@ import static com.codenvy.ide.factory.client.FactoryExtension.LOCALIZATION_CONST
  */
 public class SendMailView extends ViewImpl implements Display {
 
-    private static final String              ID               = LOCALIZATION_CONSTANTS.sendMailViewId();
+    private static final String              ID                 = LOCALIZATION_CONSTANTS.sendMailViewId();
 
-    private static final String              TITLE            = LOCALIZATION_CONSTANTS.sendMailViewTitle();
+    private static final String              TITLE              = LOCALIZATION_CONSTANTS.sendMailViewTitle();
 
-    private static final int                 HEIGHT           = 250;
+    private static final int                 HEIGHT             = 250;
 
-    private static final int                 WIDTH            = 450;
+    private static final int                 WIDTH              = 450;
 
-    private static final String              MESSAGE_FIELD_ID = LOCALIZATION_CONSTANTS.sendMailFieldMessageId();
+    private static final String              RECIPIENT_FIELD_ID = LOCALIZATION_CONSTANTS.sendMailFieldMessageId();
 
-    private static final String              SEND_BUTTON_ID   = LOCALIZATION_CONSTANTS.sendMailButtonSend();
+    private static final String              MESSAGE_FIELD_ID   = LOCALIZATION_CONSTANTS.sendMailFieldMessageId();
 
-    private static final String              CANCEL_BUTTON_ID = LOCALIZATION_CONSTANTS.sendMailButtonCancel();
+    private static final String              SEND_BUTTON_ID     = LOCALIZATION_CONSTANTS.sendMailButtonSend();
 
-    private static CommitChangesViewUiBinder uiBinder         = GWT.create(CommitChangesViewUiBinder.class);
+    private static final String              CANCEL_BUTTON_ID   = LOCALIZATION_CONSTANTS.sendMailButtonCancel();
+
+    private static CommitChangesViewUiBinder uiBinder           = GWT.create(CommitChangesViewUiBinder.class);
 
     interface CommitChangesViewUiBinder extends UiBinder<Widget, SendMailView> {
     }
+
+    @UiField
+    TextInput     recipientField;
 
     @UiField
     TextAreaInput messageField;
@@ -74,9 +80,18 @@ public class SendMailView extends ViewImpl implements Display {
         setCloseOnEscape(true);
         add(uiBinder.createAndBindUi(this));
 
+        recipientField.getElement().setId(RECIPIENT_FIELD_ID);
         messageField.getElement().setId(MESSAGE_FIELD_ID);
         sendButton.setId(SEND_BUTTON_ID);
         cancelButton.setId(CANCEL_BUTTON_ID);
+    }
+
+    /**
+     * @see com.codenvy.ide.factory.client.generate.SendMailPresenter.Display#getRecipientField()
+     */
+    @Override
+    public HasValue<String> getRecipientField() {
+        return recipientField;
     }
 
     /**
@@ -104,11 +119,11 @@ public class SendMailView extends ViewImpl implements Display {
     }
 
     /**
-     * @see com.codenvy.ide.factory.client.generate.SendMailPresenter.Display#focusMessageField()
+     * @see com.codenvy.ide.factory.client.generate.SendMailPresenter.Display#focusRecipientField()
      */
     @Override
-    public void focusMessageField() {
-        messageField.focus();
+    public void focusRecipientField() {
+        recipientField.focus();
     }
 
 }
