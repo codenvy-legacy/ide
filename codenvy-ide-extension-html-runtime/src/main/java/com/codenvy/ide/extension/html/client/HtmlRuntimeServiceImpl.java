@@ -41,11 +41,14 @@ public class HtmlRuntimeServiceImpl extends HtmlRuntimeService {
 
     private static final String STOP_APPLICATION = BASE_URL + "/stop";
 
+    private final String wsName;
+
     /** REST service context. */
     private final String        restContext;
 
-    public HtmlRuntimeServiceImpl(String restContext) {
+    public HtmlRuntimeServiceImpl(String restContext, String wsName) {
         this.restContext = restContext;
+        this.wsName = wsName;
     }
 
     /**
@@ -55,7 +58,7 @@ public class HtmlRuntimeServiceImpl extends HtmlRuntimeService {
     @Override
     public void start(String vfsId, String projectId, AsyncRequestCallback<ApplicationInstance> callback)
                                                                                                          throws RequestException {
-        String requestUrl = restContext + RUN_APPLICATION;
+        String requestUrl = restContext + wsName + RUN_APPLICATION;
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
         AsyncRequest.build(RequestBuilder.GET, requestUrl + params.toString()).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
@@ -68,7 +71,7 @@ public class HtmlRuntimeServiceImpl extends HtmlRuntimeService {
      */
     @Override
     public void stop(String name, AsyncRequestCallback<Object> callback) throws RequestException {
-        String requestUrl = restContext + STOP_APPLICATION;
+        String requestUrl = restContext + wsName + STOP_APPLICATION;
         StringBuilder params = new StringBuilder("?");
         params.append("name=").append(name);
         AsyncRequest.build(RequestBuilder.GET, requestUrl + params.toString()).send(callback);

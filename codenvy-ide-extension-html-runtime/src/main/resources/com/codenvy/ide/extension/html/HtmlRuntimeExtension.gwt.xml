@@ -26,8 +26,6 @@
     <inherits name='com.google.gwt.json.JSON'/>
     <inherits name='org.exoplatform.gwtframework.commons.Commons'/>
 
-    <inherits name='com.codenvy.ide.extension.html.Views'/>
-
     <source path="client"/>
     <source path="shared"/>
 

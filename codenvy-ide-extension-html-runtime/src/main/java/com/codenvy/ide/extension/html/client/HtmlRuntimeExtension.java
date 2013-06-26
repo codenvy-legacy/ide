@@ -44,7 +44,7 @@ public class HtmlRuntimeExtension extends Extension implements InitializeService
      */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        new HtmlRuntimeServiceImpl(Utils.getRestContext());
+        new HtmlRuntimeServiceImpl(Utils.getRestContext(), Utils.getWorkspaceName());
     }
 
     /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */

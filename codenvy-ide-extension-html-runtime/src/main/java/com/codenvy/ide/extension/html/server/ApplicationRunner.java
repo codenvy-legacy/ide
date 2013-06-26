@@ -24,36 +24,38 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 /**
- * PHP application runner.
+ * HTML application runner.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ApplicationRunner.java Apr 17, 2013 4:33:17 PM azatsarynnyy $
+ * @version $Id: ApplicationRunner.java Jun 26, 2013 2:23:09 PM azatsarynnyy $
  *
  */
 public interface ApplicationRunner {
     /**
-     * Run PHP application.
+     * Run HTML application.
      *
+     * @param wsName
+     *         user's workspace name
      * @param vfs
      *         virtual file system that contains project
      * @param projectId
      *         ID of project folder
-     * @return description of deployed application
+     * @return description of runned application
      * @throws ApplicationRunnerException
      *         if any error occur when try to deploy application
      * @throws VirtualFileSystemException
      *         if any error occur when try to access application files over Virtual File System
-     * @see ApplicationRunnerService#stopApplication(String)
-     * @see org.exoplatform.ide.extension.php.shared.ApplicationInstance
+     * @see HtmlApplicationRunnerService#stopApplication(String)
+     * @see ApplicationInstance
      */
-    ApplicationInstance runApplication(VirtualFileSystem vfs, String projectId) throws ApplicationRunnerException,
+    ApplicationInstance runApplication(String wsName, VirtualFileSystem vfs, String projectId) throws ApplicationRunnerException,
                                                                                        VirtualFileSystemException;
 
     /**
-     * Stop PHP application.
+     * Stop HTML application.
      *
      * @param name
-     *         name of application
+     *         name of application to stop
      * @throws ApplicationRunnerException
      *         if any error occur when try to stop application
      * @see ApplicationInstance#getName()

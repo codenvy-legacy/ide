@@ -38,11 +38,11 @@ import javax.ws.rs.core.UriInfo;
  * Provide access to {@link ApplicationRunner} through HTTP.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ApplicationRunnerService.java Jun 26, 2013 1:14:54 PM azatsarynnyy $
+ * @version $Id: HtmlApplicationRunnerService.java Jun 26, 2013 1:14:54 PM azatsarynnyy $
  *
  */
-@Path("{ws-name}/php/runner")
-public class ApplicationRunnerService {
+@Path("{ws-name}/html/runner")
+public class HtmlApplicationRunnerService {
 
     @Inject
     private ApplicationRunner         runner;
@@ -61,7 +61,7 @@ public class ApplicationRunnerService {
                                               @Context UriInfo uriInfo)
                                                                        throws ApplicationRunnerException, VirtualFileSystemException {
         VirtualFileSystem vfs = vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null;
-        ApplicationInstance app = runner.runApplication(vfs, projectId);
+        ApplicationInstance app = runner.runApplication(wsName, vfs, projectId);
         app.setStopURL(uriInfo.getBaseUriBuilder().path(getClass(), "stopApplication")
                               .queryParam("name", app.getName()).build(wsName).toString());
         return app;

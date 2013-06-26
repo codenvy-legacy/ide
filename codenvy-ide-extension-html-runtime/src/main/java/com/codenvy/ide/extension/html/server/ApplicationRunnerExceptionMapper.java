@@ -26,7 +26,7 @@ import javax.ws.rs.ext.Provider;
 /**
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ApplicationRunnerExceptionMapper.java Apr 17, 2013 4:38:26 PM azatsarynnyy $
+ * @version $Id: ApplicationRunnerExceptionMapper.java Jun 26, 2013 2:23:34 PM azatsarynnyy $
  *
  */
 @Provider

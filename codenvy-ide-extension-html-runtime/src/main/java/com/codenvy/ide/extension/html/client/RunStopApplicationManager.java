@@ -135,10 +135,10 @@ public class RunStopApplicationManager implements RunApplicationHandler, StopApp
                                                        protected void onSuccess(ApplicationInstance result) {
                                                            runnedApplication = result;
                                                            IDE.fireEvent(new ApplicationStartedEvent(runnedApplication));
-                                                           String url = (result.getHost().startsWith("http://")) ? result.getHost()
+                                                           final String url = (result.getHost().startsWith("http://")) ? result.getHost()
                                                                : "http://" +
                                                                  result.getHost();
-                                                           String link = "<a href=\"" + url + "\" target=\"_blank\">" + url + "</a>";
+                                                           final String link = "<a href=\"" + url + "\" target=\"_blank\">" + url + "</a>";
                                                            IDE.fireEvent(new OutputEvent(
                                                                                          HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.applicationStartedUrl(result.getName(),
                                                                                                                                                                 link),

@@ -35,7 +35,7 @@ public class AppRunnerApplication extends Application {
 
     public AppRunnerApplication() {
         classes = new HashSet<Class<?>>(1);
-        classes.add(ApplicationRunnerService.class);
+        classes.add(HtmlApplicationRunnerService.class);
         objects = new HashSet<Object>(1);
         objects.add(new ApplicationRunnerExceptionMapper());
     }

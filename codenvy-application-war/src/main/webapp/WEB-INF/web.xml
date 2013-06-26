@@ -90,15 +90,20 @@
       <servlet-name>EverrestServlet</servlet-name>
       <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
    </servlet>
-   
+
    <servlet>
       <servlet-name>ExoIdeWebSocketServlet</servlet-name>
       <servlet-class>org.exoplatform.ide.websocket.ExoIdeWebSocketServlet</servlet-class>
    </servlet>
-   
+
    <servlet>
       <servlet-name>DispatcherServlet</servlet-name>
       <servlet-class>com.codenvy.commons.servlet.DispatcherServlet</servlet-class>
+   </servlet>
+
+   <servlet>
+      <servlet-name>HtmlAppServlet</servlet-name>
+      <servlet-class>com.codenvy.ide.extension.html.server.HtmlAppServlet</servlet-class>
    </servlet>
    
    <servlet>
@@ -145,6 +150,11 @@
    <servlet-mapping>
       <servlet-name>ExoIdeWebSocketServlet</servlet-name>
       <url-pattern>/websocket/*</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>HtmlAppServlet</servlet-name>
+      <url-pattern>/_apprunner/*</url-pattern>
    </servlet-mapping>
 
     <security-constraint>

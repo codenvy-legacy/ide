@@ -108,6 +108,28 @@ public class IdeDispatcherServletConfigurationFactory extends DispatcherServletC
                                              })
                                              .priority(300)
                                              .done()
+                                             .when(new Condition() {
+                                                 @Override
+                                                 public boolean matches(HttpServletRequest request, HttpServletResponse response) {
+                                                     final String workspace = (String)request.getAttribute("ws");
+                                                     final String requestPath = request.getPathInfo();
+                                                     return requestPath.startsWith("/" + workspace + "/_apprunner");
+                                                     
+                                                 }
+                                             })
+                                             .execute(new Action() {
+                                                 @Override
+                                                 public void perform(HttpServletRequest request, HttpServletResponse response)
+                                                     throws ServletException,
+                                                     IOException {
+                                                     final String workspace = (String)request.getAttribute("ws");
+                                                     final String requestPath = request.getPathInfo();
+                                                     final String myPath = requestPath.substring(workspace.length() + 1);
+                                                     request.getRequestDispatcher(myPath).forward(request, response);
+                                                 }
+                                             })
+                                             .priority(300)
+                                             .done()
                                              .when(Condition.MATCH)
                                              .execute(new Action() {
                                                  @Override
