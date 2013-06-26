@@ -16,16 +16,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.extension.html.client.run;
+package com.codenvy.ide.extension.html.client;
 
-import com.codenvy.ide.extension.html.client.HtmlRuntimeExtension;
-import com.codenvy.ide.extension.html.client.HtmlRuntimeService;
-import com.codenvy.ide.extension.html.client.run.event.ApplicationStartedEvent;
-import com.codenvy.ide.extension.html.client.run.event.ApplicationStoppedEvent;
-import com.codenvy.ide.extension.html.client.run.event.RunApplicationEvent;
-import com.codenvy.ide.extension.html.client.run.event.RunApplicationHandler;
-import com.codenvy.ide.extension.html.client.run.event.StopApplicationEvent;
-import com.codenvy.ide.extension.html.client.run.event.StopApplicationHandler;
+import com.codenvy.ide.extension.html.client.start.ApplicationStartedEvent;
+import com.codenvy.ide.extension.html.client.start.RunApplicationControl;
+import com.codenvy.ide.extension.html.client.start.RunApplicationEvent;
+import com.codenvy.ide.extension.html.client.start.RunApplicationHandler;
+import com.codenvy.ide.extension.html.client.stop.ApplicationStoppedEvent;
+import com.codenvy.ide.extension.html.client.stop.StopApplicationControl;
+import com.codenvy.ide.extension.html.client.stop.StopApplicationEvent;
+import com.codenvy.ide.extension.html.client.stop.StopApplicationHandler;
 import com.codenvy.ide.extension.html.shared.ApplicationInstance;
 import com.google.gwt.http.client.RequestException;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -33,6 +33,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
@@ -47,27 +48,24 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
-import org.exoplatform.ide.client.framework.websocket.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
-import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
- * Manager for running/stopping HTML application.
+ * Manager for running/stopping HTML applications.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: RunStopApplicationManager.java Jun 26, 2013 11:18:06 AM azatsarynnyy $
  */
 public class RunStopApplicationManager implements RunApplicationHandler, StopApplicationHandler,
-                                  VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler {
+                                      VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler {
 
     private ProjectModel          currentProject;
 
     private VirtualFileSystemInfo currentVfs;
 
     /** Run application. */
-    private ApplicationInstance   runApplication;
+    private ApplicationInstance   runnedApplication;
 
     public RunStopApplicationManager() {
         IDE.getInstance().addControl(new StopApplicationControl());
@@ -80,15 +78,15 @@ public class RunStopApplicationManager implements RunApplicationHandler, StopApp
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
     }
 
-    /** @see com.codenvy.ide.extension.html.client.run.event.StopApplicationHandler#onStopApplication(com.codenvy.ide.extension.html.client.run.event.StopApplicationEvent) */
+    /** @see com.codenvy.ide.extension.html.client.stop.StopApplicationHandler#onStopApplication(com.codenvy.ide.extension.html.client.stop.StopApplicationEvent) */
     @Override
     public void onStopApplication(StopApplicationEvent event) {
-        if (runApplication != null) {
+        if (runnedApplication != null) {
             stopApplication();
         }
     }
 
-    /** @see com.codenvy.ide.extension.html.client.run.event.RunApplicationHandler#onRunApplication(com.codenvy.ide.extension.html.client.run.event.RunApplicationEvent) */
+    /** @see com.codenvy.ide.extension.html.client.start.RunApplicationHandler#onRunApplication(com.codenvy.ide.extension.html.client.start.RunApplicationEvent) */
     @Override
     public void onRunApplication(RunApplicationEvent event) {
         if (currentProject != null && ProjectType.JAVASCRIPT.value().equals(currentProject.getProjectType())) {
@@ -127,29 +125,22 @@ public class RunStopApplicationManager implements RunApplicationHandler, StopApp
 
     /** Run HTML application. */
     private void runApplication() {
-        AutoBean<ApplicationInstance> autoBean =
-                                                 HtmlRuntimeExtension.AUTO_BEAN_FACTORY.create(ApplicationInstance.class);
-        AutoBeanUnmarshallerWS<ApplicationInstance> unmarshaller = new AutoBeanUnmarshallerWS<ApplicationInstance>(autoBean);
+        AutoBean<ApplicationInstance> autoBean = HtmlRuntimeExtension.AUTO_BEAN_FACTORY.create(ApplicationInstance.class);
+        AutoBeanUnmarshaller<ApplicationInstance> unmarshaller = new AutoBeanUnmarshaller<ApplicationInstance>(autoBean);
 
         try {
-            IDE.fireEvent(new OutputEvent(
-                                          HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.startingProjectMessage(currentProject
-                                                                                                                                .getName()),
-                                          Type.INFO));
-            HtmlRuntimeService.getInstance().start(currentVfs.getId(), currentProject,
-                                                   new RequestCallback<ApplicationInstance>(unmarshaller) {
+            HtmlRuntimeService.getInstance().start(currentVfs.getId(), currentProject.getId(),
+                                                   new AsyncRequestCallback<ApplicationInstance>(unmarshaller) {
                                                        @Override
                                                        protected void onSuccess(ApplicationInstance result) {
-                                                           runApplication = result;
-                                                           IDE.fireEvent(new ApplicationStartedEvent(runApplication));
-                                                           String url =
-                                                                        (result.getHost().startsWith("http://")) ? result.getHost()
-                                                                            : "http://" +
-                                                                              result.getHost();
+                                                           runnedApplication = result;
+                                                           IDE.fireEvent(new ApplicationStartedEvent(runnedApplication));
+                                                           String url = (result.getHost().startsWith("http://")) ? result.getHost()
+                                                               : "http://" +
+                                                                 result.getHost();
                                                            String link = "<a href=\"" + url + "\" target=\"_blank\">" + url + "</a>";
                                                            IDE.fireEvent(new OutputEvent(
-                                                                                         HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.applicationStartedUrl(
-                                                                                                                                                                result.getName(),
+                                                                                         HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.applicationStartedUrl(result.getName(),
                                                                                                                                                                 link),
                                                                                          Type.INFO));
                                                        }
@@ -166,7 +157,7 @@ public class RunStopApplicationManager implements RunApplicationHandler, StopApp
                                                                                              + message, OutputMessage.Type.ERROR));
                                                        }
                                                    });
-        } catch (WebSocketException e) {
+        } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
     }
@@ -174,35 +165,28 @@ public class RunStopApplicationManager implements RunApplicationHandler, StopApp
     /** Stop HTML application. */
     private void stopApplication() {
         try {
-            IDE.fireEvent(new OutputEvent(
-                                          HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.stoppingProjectMessage(runApplication
-                                                                                                                                .getName()),
-                                          Type.INFO));
-            HtmlRuntimeService.getInstance().stop(runApplication.getName(), new AsyncRequestCallback<Object>() {
-
+            HtmlRuntimeService.getInstance().stop(runnedApplication.getName(), new AsyncRequestCallback<Object>() {
                 @Override
                 protected void onSuccess(Object result) {
-                    IDE.fireEvent(new ApplicationStoppedEvent(runApplication, true));
+                    IDE.fireEvent(new ApplicationStoppedEvent(runnedApplication));
                     IDE.fireEvent(new OutputEvent(
-                                                  HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS
-                                                                                                  .projectStoppedMessage(currentProject.getName()),
+                                                  HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.projectStoppedMessage(currentProject.getName()),
                                                   Type.INFO));
-                    runApplication = null;
+                    runnedApplication = null;
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    String message =
-                                     (exception.getMessage() != null) ? exception.getMessage()
-                                         : HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.stopApplicationFailed();
+                    String message = (exception.getMessage() != null) ? exception.getMessage()
+                        : HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.stopApplicationFailed();
                     IDE.fireEvent(new OutputEvent(message, OutputMessage.Type.WARNING));
 
                     if (exception instanceof ServerException) {
                         ServerException serverException = (ServerException)exception;
                         if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus()
                             && serverException.getMessage() != null && serverException.getMessage().contains("not found")) {
-                            IDE.fireEvent(new ApplicationStoppedEvent(runApplication, false));
-                            runApplication = null;
+                            IDE.fireEvent(new ApplicationStoppedEvent(runnedApplication));
+                            runnedApplication = null;
                         }
                     }
                 }

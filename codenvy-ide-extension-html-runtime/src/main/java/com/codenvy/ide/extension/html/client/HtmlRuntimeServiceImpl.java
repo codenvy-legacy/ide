@@ -22,18 +22,14 @@ import com.codenvy.ide.extension.html.shared.ApplicationInstance;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 
-import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
-import org.exoplatform.ide.client.framework.websocket.MessageBus;
-import org.exoplatform.ide.client.framework.websocket.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
-import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
-import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 
 /**
+ * Implementation of {@link HtmlRuntimeService}.
+ * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: HtmlRuntimeServiceImpl.java Jun 26, 2013 11:10:54 AM azatsarynnyy $
  */
@@ -41,24 +37,15 @@ public class HtmlRuntimeServiceImpl extends HtmlRuntimeService {
 
     private static final String BASE_URL         = "/html/runner";
 
-    private static final String LOGS             = BASE_URL + "/logs";
-
     private static final String RUN_APPLICATION  = BASE_URL + "/run";
 
     private static final String STOP_APPLICATION = BASE_URL + "/stop";
 
-
-    private final String        wsName;
-
+    /** REST service context. */
     private final String        restContext;
 
-    private final MessageBus    wsMessageBus;
-
-    public HtmlRuntimeServiceImpl(String restContext, String wsName, MessageBus wsMessageBus) {
+    public HtmlRuntimeServiceImpl(String restContext) {
         this.restContext = restContext;
-        this.wsName = wsName;
-        this.wsMessageBus = wsMessageBus;
-
     }
 
     /**
@@ -66,13 +53,13 @@ public class HtmlRuntimeServiceImpl extends HtmlRuntimeService {
      *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
      */
     @Override
-    public void start(String vfsId, ProjectModel project, RequestCallback<ApplicationInstance> callback)
-                                                                                                        throws WebSocketException {
+    public void start(String vfsId, String projectId, AsyncRequestCallback<ApplicationInstance> callback)
+                                                                                                         throws RequestException {
+        String requestUrl = restContext + RUN_APPLICATION;
         StringBuilder params = new StringBuilder("?");
-        params.append("vfsid=").append(vfsId).append("&projectid=").append(project.getId());
-        RequestMessage message =
-                                 RequestMessageBuilder.build(RequestBuilder.GET, wsName + RUN_APPLICATION + params).getRequestMessage();
-        wsMessageBus.send(message, callback);
+        params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
+        AsyncRequest.build(RequestBuilder.GET, requestUrl + params.toString()).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+                    .send(callback);
     }
 
     /**
@@ -81,29 +68,9 @@ public class HtmlRuntimeServiceImpl extends HtmlRuntimeService {
      */
     @Override
     public void stop(String name, AsyncRequestCallback<Object> callback) throws RequestException {
-        String requestUrl = restContext + wsName + STOP_APPLICATION;
-
-        StringBuilder params = new StringBuilder("?name=");
-        params.append(name);
-
-        AsyncRequest.build(RequestBuilder.GET, requestUrl + params.toString())
-                    .requestStatusHandler(new StopApplicationStatusHandler(name)).send(callback);
+        String requestUrl = restContext + STOP_APPLICATION;
+        StringBuilder params = new StringBuilder("?");
+        params.append("name=").append(name);
+        AsyncRequest.build(RequestBuilder.GET, requestUrl + params.toString()).send(callback);
     }
-
-    /**
-     * @see com.codenvy.ide.extension.html.client.HtmlRuntimeService#getLogs(java.lang.String,
-     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-     */
-    @Override
-    public void getLogs(String name, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
-        String url = restContext + wsName + LOGS;
-        StringBuilder params = new StringBuilder("?name=");
-        params.append(name);
-
-        Loader loader = new GWTLoader();
-        loader.setMessage("Retrieving logs.... ");
-
-        AsyncRequest.build(RequestBuilder.GET, url + params.toString()).loader(loader).send(callback);
-    }
-
 }

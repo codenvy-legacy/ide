@@ -31,9 +31,6 @@ public interface HtmlExtensionLocalizationConstant extends com.google.gwt.i18n.c
     @Key("run.application.control.prompt")
     String runApplicationControlPrompt();
 
-    @Key("starting.project.message")
-    String startingProjectMessage(String project);
-
     @Key("project.started.message")
     String projectStartedMessage(String project);
 
@@ -49,9 +46,6 @@ public interface HtmlExtensionLocalizationConstant extends com.google.gwt.i18n.c
     @Key("stop.application.control.prompt")
     String stopApplicationControlPrompt();
 
-    @Key("stopping.project.message")
-    String stoppingProjectMessage(String project);
-
     @Key("stop.application.failed")
     String stopApplicationFailed();
 
@@ -60,16 +54,4 @@ public interface HtmlExtensionLocalizationConstant extends com.google.gwt.i18n.c
 
     @Key("not.html.project")
     String notHtmlProject();
-
-    @Key("no.run.application")
-    String noRunningApplication();
-
-    @Key("show.logs.control.title")
-    String showLogsControlTitle();
-
-    @Key("show.logs.control.prompt")
-    String showLogsControlPrompt();
-
-    @Key("get.logs.error.message")
-    String getLogsErrorMessage();
 }

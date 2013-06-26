@@ -19,27 +19,29 @@
 package com.codenvy.ide.extension.html.server;
 
 import javax.ws.rs.core.Application;
-
 import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * JAX-RS application for running HTML applications.
+ * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: AppRunnerApplication.java Jun 26, 2013 11:13:30 AM azatsarynnyy $
+ * @version $Id: AppRunnerApplication.java Jun 26, 2013 1:12:46 PM azatsarynnyy $
+ *
  */
 public class AppRunnerApplication extends Application {
-    private final Set<Class< ? >> classes;
-    private final Set<Object>     objects;
+    private final Set<Class<?>> classes;
+    private final Set<Object>   objects;
 
     public AppRunnerApplication() {
-        classes = new HashSet<Class< ? >>(1);
+        classes = new HashSet<Class<?>>(1);
         classes.add(ApplicationRunnerService.class);
         objects = new HashSet<Object>(1);
         objects.add(new ApplicationRunnerExceptionMapper());
     }
 
     @Override
-    public Set<Class< ? >> getClasses() {
+    public Set<Class<?>> getClasses() {
         return classes;
     }
 

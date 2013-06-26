@@ -16,21 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.extension.html.client.run.event;
+package com.codenvy.ide.extension.html.client.stop;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link ApplicationStartedEvent} event.
- * 
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ApplicationStartedHandler.java Jun 26, 2013 11:07:07 AM azatsarynnyy $
+ * Handler for {@link StopApplicationEvent} event.
  */
-public interface ApplicationStartedHandler extends EventHandler {
+public interface StopApplicationHandler extends EventHandler {
     /**
-     * Perform actions, when HTML application has started.
+     * Perform actions, when user tries to stop HTML application.
      * 
      * @param event
      */
-    void onApplicationStarted(ApplicationStartedEvent event);
+    void onStopApplication(StopApplicationEvent event);
 }

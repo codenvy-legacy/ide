@@ -16,21 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.extension.html.client.logs;
+package com.codenvy.ide.extension.html.client.start;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Handler for {@link ShowLogsEvent} event.
+ * Event occurs, when user tries to run HTML application.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ShowLogsHandler.java Jun 26, 2013 11:06:06 AM azatsarynnyy $
+ * @version $Id: RunApplicationEvent.java Jun 26, 2013 11:07:43 AM azatsarynnyy $
  */
-public interface ShowLogsHandler extends EventHandler {
-    /**
-     * Perform actions, when user tries to view application's logs.
-     * 
-     * @param event
-     */
-    void onShowLogs(ShowLogsEvent event);
+public class RunApplicationEvent extends GwtEvent<RunApplicationHandler> {
+    /** Type used to register the event. */
+    public static final GwtEvent.Type<RunApplicationHandler> TYPE = new GwtEvent.Type<RunApplicationHandler>();
+
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<RunApplicationHandler> getAssociatedType() {
+        return TYPE;
+    }
+
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(RunApplicationHandler handler) {
+        handler.onRunApplication(this);
+    }
+
 }

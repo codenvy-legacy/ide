@@ -40,10 +40,4 @@ public interface HtmlExtensionClientBundle extends ClientBundle {
 
     @Source("com/codenvy/ide/extension/html/images/runApp_Disabled.png")
     ImageResource runAppDisabled();
-
-    @Source("com/codenvy/ide/extension/html/images/logs.png")
-    ImageResource logs();
-
-    @Source("com/codenvy/ide/extension/html/images/logs_Disabled.png")
-    ImageResource logsDisabled();
 }

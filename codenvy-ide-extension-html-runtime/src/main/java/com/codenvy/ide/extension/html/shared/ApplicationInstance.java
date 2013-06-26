@@ -22,7 +22,8 @@ package com.codenvy.ide.extension.html.shared;
  * Interface represents application instance.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ApplicationInstance.java Jun 26, 2013 11:13:41 AM azatsarynnyy $
+ * @version $Id: ApplicationInstance.java Jun 26, 2013 1:05:22 PM azatsarynnyy $
+ *
  */
 public interface ApplicationInstance {
     String getName();
@@ -42,9 +43,9 @@ public interface ApplicationInstance {
     void setStopURL(String url);
 
     /**
-     * Lifetime of application instance in minutes. After this time instance may be stopped. Method may return -1 if lifetime of instance is
-     * unknown.
-     * 
+     * Lifetime of application instance in minutes. After this time instance may be stopped.
+     * Method may return -1 if lifetime of instance is unknown.
+     *
      * @return application instance lifetime in minutes
      */
     int getLifetime();

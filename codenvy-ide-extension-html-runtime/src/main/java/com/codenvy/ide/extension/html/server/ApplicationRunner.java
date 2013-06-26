@@ -24,40 +24,38 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 /**
- * HTML application runner.
+ * PHP application runner.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ApplicationRunner.java Jun 26, 2013 11:12:42 AM azatsarynnyy $
+ * @version $Id: ApplicationRunner.java Apr 17, 2013 4:33:17 PM azatsarynnyy $
+ *
  */
 public interface ApplicationRunner {
     /**
-     * Run HTML application.
-     * 
-     * @param vfs virtual file system that contains project
-     * @param projectId ID of project folder
+     * Run PHP application.
+     *
+     * @param vfs
+     *         virtual file system that contains project
+     * @param projectId
+     *         ID of project folder
      * @return description of deployed application
-     * @throws ApplicationRunnerException if any error occur when try to deploy application
-     * @throws VirtualFileSystemException if any error occur when try to access application files over Virtual File System
+     * @throws ApplicationRunnerException
+     *         if any error occur when try to deploy application
+     * @throws VirtualFileSystemException
+     *         if any error occur when try to access application files over Virtual File System
      * @see ApplicationRunnerService#stopApplication(String)
-     * @see com.codenvy.ide.extension.html.shared.ApplicationInstance
+     * @see org.exoplatform.ide.extension.php.shared.ApplicationInstance
      */
     ApplicationInstance runApplication(VirtualFileSystem vfs, String projectId) throws ApplicationRunnerException,
-                                                                               VirtualFileSystemException;
+                                                                                       VirtualFileSystemException;
 
     /**
-     * Get application logs.
-     * 
-     * @param name name of application
-     * @return logs
-     * @throws ApplicationRunnerException if any error occur when try to get application logs
-     */
-    String getLogs(String name) throws ApplicationRunnerException;
-
-    /**
-     * Stop HTML application.
-     * 
-     * @param name name of application
-     * @throws ApplicationRunnerException if any error occur when try to stop application
+     * Stop PHP application.
+     *
+     * @param name
+     *         name of application
+     * @throws ApplicationRunnerException
+     *         if any error occur when try to stop application
      * @see ApplicationInstance#getName()
      */
     void stopApplication(String name) throws ApplicationRunnerException;

@@ -22,20 +22,22 @@ import com.codenvy.ide.extension.html.shared.ApplicationInstance;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.framework.websocket.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
- * Service for operations with HTML applications.
+ * Client service for running/stopping Factory HTML applications.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: HtmlRuntimeService.java Jun 26, 2013 11:10:07 AM azatsarynnyy $
  */
 public abstract class HtmlRuntimeService {
-    /** HTML service. */
+    /** {@link HtmlRuntimeService} instance. */
     private static HtmlRuntimeService instance;
 
+    /**
+     * Returns instance of {@link HtmlRuntimeService}.
+     * 
+     * @return
+     */
     public static HtmlRuntimeService getInstance() {
         return instance;
     }
@@ -52,8 +54,8 @@ public abstract class HtmlRuntimeService {
      * @param callback callback
      * @throws RequestException
      */
-    public abstract void start(String vfsId, ProjectModel project, RequestCallback<ApplicationInstance> callback)
-                                                                                                                 throws WebSocketException;
+    public abstract void start(String vfsId, String projectId, AsyncRequestCallback<ApplicationInstance> callback)
+                                                                                                                 throws RequestException;
 
     /**
      * Stop running HTML application.
@@ -63,13 +65,4 @@ public abstract class HtmlRuntimeService {
      * @throws RequestException
      */
     public abstract void stop(String name, AsyncRequestCallback<Object> callback) throws RequestException;
-
-    /**
-     * Get HTML application's logs.
-     * 
-     * @param name application's name
-     * @param callback callback
-     * @throws RequestException
-     */
-    public abstract void getLogs(String name, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 }

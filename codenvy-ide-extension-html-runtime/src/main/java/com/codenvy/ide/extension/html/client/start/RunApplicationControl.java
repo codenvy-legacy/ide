@@ -16,15 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.extension.html.client.run;
+package com.codenvy.ide.extension.html.client.start;
 
 import com.codenvy.ide.extension.html.client.HtmlExtensionClientBundle;
 import com.codenvy.ide.extension.html.client.HtmlRuntimeExtension;
-import com.codenvy.ide.extension.html.client.run.event.ApplicationStartedEvent;
-import com.codenvy.ide.extension.html.client.run.event.ApplicationStartedHandler;
-import com.codenvy.ide.extension.html.client.run.event.ApplicationStoppedEvent;
-import com.codenvy.ide.extension.html.client.run.event.ApplicationStoppedHandler;
-import com.codenvy.ide.extension.html.client.run.event.StopApplicationEvent;
+import com.codenvy.ide.extension.html.client.stop.ApplicationStoppedEvent;
+import com.codenvy.ide.extension.html.client.stop.ApplicationStoppedHandler;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -38,36 +35,33 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 
 /**
- * Control for stopping HTML application.
+ * Control for running HTML application.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: StopApplicationControl.java Jun 26, 2013 11:17:18 AM azatsarynnyy $
+ * @version $Id: RunApplicationControl.java Jun 26, 2013 11:17:51 AM azatsarynnyy $
  */
 @RolesAllowed("developer")
-public class StopApplicationControl extends SimpleControl implements IDEControl, ProjectClosedHandler,
-                                                         ProjectOpenedHandler, ApplicationStartedHandler,
-                                                         ApplicationStoppedHandler {
-    public static final String  ID     = "Run/Stop HTML Application";
+public class RunApplicationControl extends SimpleControl implements IDEControl,
+                                                        ProjectClosedHandler, ProjectOpenedHandler, ApplicationStartedHandler,
+                                                        ApplicationStoppedHandler {
+    public static final String  ID     = "Run/Run HTML Application";
 
-    private static final String TITLE  = HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.stopApplicationControlTitle();
+    private static final String TITLE  = HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.runApplicationControlTitle();
 
-    private static final String PROMPT = HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.stopApplicationControlPrompt();
+    private static final String PROMPT = HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.runApplicationControlPrompt();
 
-    public StopApplicationControl() {
+    public RunApplicationControl() {
         super(ID);
         setTitle(TITLE);
         setPrompt(PROMPT);
-        setImages(HtmlExtensionClientBundle.INSTANCE.stopApp(), HtmlExtensionClientBundle.INSTANCE.stopAppDisabled());
-        setEvent(new StopApplicationEvent());
+        setImages(HtmlExtensionClientBundle.INSTANCE.runApp(), HtmlExtensionClientBundle.INSTANCE.runAppDisabled());
+        setEvent(new RunApplicationEvent());
         setGroupName(GroupNames.RUNDEBUG);
     }
 
     /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
     @Override
     public void initialize() {
-        setVisible(false);
-        setEnabled(false);
-
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ApplicationStartedEvent.TYPE, this);
@@ -91,21 +85,27 @@ public class StopApplicationControl extends SimpleControl implements IDEControl,
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
         String projectType = event.getProject().getProjectType();
+        updateStatus(projectType);
+    }
+
+    /** @param projectType */
+    private void updateStatus(String projectType) {
         boolean isHtmlProject = ProjectType.JAVASCRIPT.value().equals(projectType);
         setVisible(isHtmlProject);
-        setEnabled(false);
+        setEnabled(isHtmlProject);
         setShowInContextMenu(isHtmlProject);
     }
 
-    /** @see com.codenvy.ide.extension.html.client.run.event.ApplicationStoppedHandler#onApplicationStopped(com.codenvy.ide.extension.html.client.run.event.ApplicationStoppedEvent) */
+    /** @see com.codenvy.ide.extension.html.client.stop.ApplicationStoppedHandler#onApplicationStopped(com.codenvy.ide.extension.html.client.stop.ApplicationStoppedEvent) */
     @Override
     public void onApplicationStopped(ApplicationStoppedEvent event) {
+        setEnabled(true);
+    }
+
+    /** @see com.codenvy.ide.extension.html.client.start.ApplicationStartedHandler#onApplicationStarted(com.codenvy.ide.extension.html.client.start.ApplicationStartedEvent) */
+    @Override
+    public void onApplicationStarted(ApplicationStartedEvent event) {
         setEnabled(false);
     }
 
-    /** @see com.codenvy.ide.extension.html.client.run.event.ApplicationStartedHandler#onApplicationStarted(com.codenvy.ide.extension.html.client.run.event.ApplicationStartedEvent) */
-    @Override
-    public void onApplicationStarted(ApplicationStartedEvent event) {
-        setEnabled(true);
-    }
 }

@@ -38,9 +38,10 @@ import javax.ws.rs.core.UriInfo;
  * Provide access to {@link ApplicationRunner} through HTTP.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ApplicationRunnerService.java Jun 26, 2013 11:13:14 AM azatsarynnyy $
+ * @version $Id: ApplicationRunnerService.java Jun 26, 2013 1:14:54 PM azatsarynnyy $
+ *
  */
-@Path("{ws-name}/html/runner")
+@Path("{ws-name}/php/runner")
 public class ApplicationRunnerService {
 
     @Inject
@@ -64,13 +65,6 @@ public class ApplicationRunnerService {
         app.setStopURL(uriInfo.getBaseUriBuilder().path(getClass(), "stopApplication")
                               .queryParam("name", app.getName()).build(wsName).toString());
         return app;
-    }
-
-    @GET
-    @Path("logs")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getLogs(@QueryParam("name") String name) throws ApplicationRunnerException {
-        return runner.getLogs(name);
     }
 
     @GET

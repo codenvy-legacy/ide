@@ -18,8 +18,6 @@
  */
 package com.codenvy.ide.extension.html.client;
 
-import com.codenvy.ide.extension.html.client.logs.LogsHandler;
-import com.codenvy.ide.extension.html.client.run.RunStopApplicationManager;
 import com.google.gwt.core.client.GWT;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
@@ -29,7 +27,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.util.Utils;
 
 /**
- * HTML runtime extension.
+ * HTML-runtime extension.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: HtmlRuntimeExtension.java Jun 26, 2013 11:04:37 AM azatsarynnyy $
@@ -46,7 +44,7 @@ public class HtmlRuntimeExtension extends Extension implements InitializeService
      */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        new HtmlRuntimeServiceImpl(Utils.getRestContext(), Utils.getWorkspaceName(), IDE.messageBus());
+        new HtmlRuntimeServiceImpl(Utils.getRestContext());
     }
 
     /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
@@ -55,6 +53,5 @@ public class HtmlRuntimeExtension extends Extension implements InitializeService
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
         new RunStopApplicationManager();
-        new LogsHandler();
     }
 }

@@ -55,7 +55,8 @@ import static com.codenvy.ide.commons.server.ContainerUtils.readValueParam;
  * ApplicationRunner for deploy HTML applications at CloudFoundry.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: CloudfoundryApplicationRunner.java Jun 26, 2013 11:13:53 AM azatsarynnyy $
+ * @version $Id: CloudfoundryApplicationRunner.java Jun 26, 2013 1:12:02 PM azatsarynnyy $
+ *
  */
 public class CloudfoundryApplicationRunner implements ApplicationRunner, Startable {
     /** Default application lifetime (in minutes). After this time application may be stopped automatically. */
@@ -107,7 +108,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             if (project.getItemType() != ItemType.PROJECT) {
                 throw new ApplicationRunnerException("Item '" + project.getPath() + "' is not a project. ");
             }
-            path = createTempDirectory(null, "app-html-");
+            path = createTempDirectory(null, "app-php-");
             unzip(vfs.exportZip(projectId).getStream(), path);
             java.io.File projectFile = new java.io.File(path, ".project");
             if (projectFile.exists()) {
@@ -149,8 +150,8 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
             applications.put(name, new Application(name, target, expired, projectName));
             LOG.debug("Start application {} at CF server {}", name, target);
-            LOG.info("EVENT#run-started# PROJECT#" + projectName + "# TYPE#HTML#");
-            LOG.info("EVENT#project-deployed# PROJECT#" + projectName + "# TYPE#HTML# PAAS#LOCAL#");
+            LOG.info("EVENT#run-started# PROJECT#" + projectName + "# TYPE#PHP#");
+            LOG.info("EVENT#project-deployed# PROJECT#" + projectName + "# TYPE#PHP# PAAS#LOCAL#");
             return new ApplicationInstanceImpl(name, cfApp.getUris().get(0), null, applicationLifetime);
         } catch (Exception e) {
 
@@ -178,40 +179,6 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
         } catch (Exception e) {
             // Not able show log if any errors occurs.
             return null;
-        }
-    }
-
-    @Override
-    public String getLogs(String name) throws ApplicationRunnerException {
-        Application application = applications.get(name);
-        if (application != null) {
-            Cloudfoundry cloudfoundry = cfServers.byTargetName(application.server);
-            if (cloudfoundry != null) {
-                try {
-                    return doGetLogs(cloudfoundry, name);
-                } catch (ApplicationRunnerException e) {
-                    Throwable cause = e.getCause();
-                    if (cause instanceof CloudfoundryException) {
-                        if (200 == ((CloudfoundryException)cause).getExitCode()) {
-                            login(cloudfoundry);
-                            return doGetLogs(cloudfoundry, name);
-                        }
-                    }
-                    throw e;
-                }
-            } else {
-                throw new ApplicationRunnerException("Unable get logs. Server not available. ");
-            }
-        } else {
-            throw new ApplicationRunnerException("Unable get logs. Application '" + name + "' not found. ");
-        }
-    }
-
-    private String doGetLogs(Cloudfoundry cloudfoundry, String name) throws ApplicationRunnerException {
-        try {
-            return cloudfoundry.getLogs(cloudfoundry.getTarget(), name, "0", null, null);
-        } catch (Exception e) {
-            throw new ApplicationRunnerException(e.getMessage(), e);
         }
     }
 
@@ -247,7 +214,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             cloudfoundry.stopApplication(target, name, null, null, "cloudfoundry");
             cloudfoundry.deleteApplication(target, name, null, null, "cloudfoundry", true);
             LOG.debug("Stop application {}.", name);
-            LOG.info("EVENT#run-finished# PROJECT#" + applications.get(name).projectName + "# TYPE#HTML#");
+            LOG.info("EVENT#run-finished# PROJECT#" + applications.get(name).projectName + "# TYPE#PHP#");
             applications.remove(name);
         } catch (Exception e) {
             throw new ApplicationRunnerException(e.getMessage(), e);
@@ -280,7 +247,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                                                                         ParsingResponseException,
                                                                         VirtualFileSystemException,
                                                                         CredentialStoreException {
-        return cloudfoundry.createApplication(target, name, "html", null, 1, 128, false, "html", null, null, null,
+        return cloudfoundry.createApplication(target, name, "php", null, 1, 128, false, "php", null, null, null,
                                               null, path.toURI().toURL(), null);
     }
 
