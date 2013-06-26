@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.git.client.add;
+package com.codenvy.ide.ext.git.client.remove;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
@@ -24,21 +24,17 @@ import com.codenvy.ide.ext.git.client.GitClientService;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.websocket.WebSocketException;
-import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 /**
- * Presenter for add changes to Git index.
+ * Presenter for removing files from index and file system.
  *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 29, 2011 4:35:16 PM anya $
  */
-@Singleton
-public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
-    private AddToIndexView          view;
+public class RemoveFromIndexPresenter implements RemoveFromIndexView.ActionDelegate {
+    private RemoveFromIndexView     view;
     private GitClientService        service;
     private ConsolePart             console;
     private GitLocalizationConstant constant;
@@ -55,8 +51,8 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
      * @param resourceProvider
      */
     @Inject
-    public AddToIndexPresenter(AddToIndexView view, GitClientService service, ConsolePart console, GitLocalizationConstant constant,
-                               ResourceProvider resourceProvider) {
+    public RemoveFromIndexPresenter(RemoveFromIndexView view, GitClientService service, ConsolePart console,
+                                    GitLocalizationConstant constant, ResourceProvider resourceProvider) {
         this.view = view;
         this.view.setDelegate(this);
         this.service = service;
@@ -70,12 +66,12 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
         project = resourceProvider.getActiveProject();
         String workDir = project.getPath();
         view.setMessage(formMessage(workDir));
-        view.setUpdated(false);
+        view.setRemoved(false);
         view.showDialog();
     }
 
     /**
-     * Form the message to display for adding to index, telling the user what is gonna to be added.
+     * Form the message to display for removing from index, telling the user what is gonna to be removed.
      *
      * @return {@link String} message to display
      */
@@ -84,80 +80,67 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
         //        if (selectedItem == null) {
         //            return "";
         //        }
+        //
         //        String pattern = selectedItem.getPath().replaceFirst(workdir, "");
         //        pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
         //
         //        // Root of the working tree:
         //        if (pattern.length() == 0 || "/".equals(pattern)) {
-        //            return GitExtension.MESSAGES.addToIndexAllChanges();
+        //            return GitExtension.MESSAGES.removeFromIndexAll();
         //        }
         //
         //        if (selectedItem instanceof Folder) {
-        //            return GitExtension.MESSAGES.addToIndexFolder(pattern);
+        //            return GitExtension.MESSAGES.removeFromIndexFolder(pattern);
         //        } else {
-        //            return GitExtension.MESSAGES.addToIndexFile(pattern);
+        //            return GitExtension.MESSAGES.removeFromIndexFile(pattern);
         //        }
-
-        return constant.addToIndexAllChanges();
+        return constant.removeFromIndexAll();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onAddClicked() {
-        boolean update = view.isUpdated();
-
+    public void onRemoveClicked() {
         try {
-            service.addWS(resourceProvider.getVfsId(), project, update, getFilePatterns(), new RequestCallback<String>() {
-                @Override
-                protected void onSuccess(String result) {
-                    console.print(constant.addSuccess());
-                    // TODO
-                    //IDE.fireEvent(new TreeRefreshedEvent(getSelectedProject()));
-                }
+            service.remove(resourceProvider.getVfsId(), project.getId(), getFilePatterns(), view.isRemoved(),
+                           new AsyncRequestCallback<String>() {
+                               @Override
+                               protected void onSuccess(String result) {
+                                   console.print(constant.removeFilesSuccessfull());
+// TODO
+//                                   if (display.getFromIndexValue().getValue().booleanValue()) {
+//                                       IDE.fireEvent(new TreeRefreshedEvent(getSelectedProject()));
+//                                   } else {
+//                                       if (selectedItem instanceof ItemContext) {
+//                                           IDE.fireEvent(new RefreshBrowserEvent(
+//                                                   ((ItemContext)selectedItem).getParent()));
+//                                       } else {
+//                                           IDE.fireEvent(new RefreshBrowserEvent());
+//                                       }
+//                                   }
+                               }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    handleError(exception);
-                }
-            });
-            view.close();
-        } catch (WebSocketException e) {
-            doAddREST(project, update);
-        }
-    }
-
-    /** Perform adding to index (sends request over HTTP). */
-    private void doAddREST(Project project, boolean update) {
-        try {
-            service.add(resourceProvider.getVfsId(), project, update, getFilePatterns(), new AsyncRequestCallback<String>() {
-                @Override
-                protected void onSuccess(String result) {
-                    console.print(constant.addSuccess());
-                    // TODO
-                    //IDE.fireEvent(new TreeRefreshedEvent(getSelectedProject()));
-                }
-
-                @Override
-                protected void onFailure(Throwable exception) {
-                    handleError(exception);
-                }
-            });
+                               @Override
+                               protected void onFailure(Throwable exception) {
+                                   handleError(exception);
+                               }
+                           });
         } catch (RequestException e) {
             handleError(e);
         }
         view.close();
     }
 
+
     /**
-     * Returns pattern of the files to be added.
+     * Returns pattern of the files to be removed.
      *
-     * @return pattern of the files to be added
+     * @return pattern of the files to be removed
      */
     private String[] getFilePatterns() {
         String projectPath = project.getPath();
         // TODO we don't know selected item
         String pattern = projectPath;
-        // String pattern = selectedItem.getPath().replaceFirst(projectPath, "");
+        //        String pattern = selectedItem.getPath().replaceFirst(projectPath, "");
 
         pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
         return (pattern.length() == 0 || "/".equals(pattern)) ? new String[]{"."} : new String[]{pattern};
@@ -170,7 +153,7 @@ public class AddToIndexPresenter implements AddToIndexView.ActionDelegate {
      *         exception what happened
      */
     private void handleError(Throwable e) {
-        String errorMessage = (e.getMessage() != null && !e.getMessage().isEmpty()) ? e.getMessage() : constant.addFailed();
+        String errorMessage = (e.getMessage() != null && !e.getMessage().isEmpty()) ? e.getMessage() : constant.removeFilesFailed();
         console.print(errorMessage);
     }
 

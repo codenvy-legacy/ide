@@ -44,7 +44,7 @@ public class GitExtension {
     @Inject
     public GitExtension(GitClientResources resources, ActionManager actionManager, CloneRepositoryAction cloneAction,
                         InitRepositoryAction initAction, DeleteRepositoryAction deleteAction, AddToIndexAction addToIndexAction,
-                        ResetToCommitAction resetToCommitAction) {
+                        ResetToCommitAction resetToCommitAction, RemoveFromIndexAction removeFromIndexAction) {
         resources.gitCSS().ensureInjected();
 
         DefaultActionGroup mainMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_MENU);
@@ -78,5 +78,7 @@ public class GitExtension {
         commandGroup.add(addToIndexAction);
         actionManager.registerAction("GitResetToCommit", resetToCommitAction);
         commandGroup.add(resetToCommitAction);
+        actionManager.registerAction("GitRemoveFromIndexCommit", removeFromIndexAction);
+        commandGroup.add(removeFromIndexAction);
     }
 }
