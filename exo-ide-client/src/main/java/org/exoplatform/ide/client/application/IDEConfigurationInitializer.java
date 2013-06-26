@@ -36,7 +36,6 @@ import org.exoplatform.ide.client.framework.codenow.CodeNowSpec10;
 import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsEvent;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
-import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.DirectoryFilter;
 import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
@@ -197,6 +196,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                     protected void onSuccess(ItemWrapper result) {
                                                         if (result.getItem() != null && result.getItem() instanceof ProjectModel) {
                                                             ProjectModel projectModel = (ProjectModel)result.getItem();
+                                                            initialOpenedProject = projectModel.getId();
                                                             String file = Utils.getFilePathToOpen();
                                                             IDE.fireEvent(new OpenProjectEvent(projectModel));
                                                             if (file != null && !file.isEmpty())
@@ -241,7 +241,10 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                     if (result.getItem() != null && result.getItem() instanceof FileModel) {
                                                         FileModel fileModel = (FileModel)result.getItem();
                                                         fileModel.setProject(projectModel);
-                                                        IDE.fireEvent(new OpenFileEvent((FileModel)fileModel));
+                                                        initialActiveFile = fileModel.getId();
+                                                        initialOpenedFiles.clear();
+                                                        initialOpenedFiles.add(fileModel.getId());
+                                                        new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject, initialOpenedFiles, initialActiveFile);
                                                     }
                                                 }
 
