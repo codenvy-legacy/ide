@@ -104,7 +104,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                                            try {
                                                                                applicationConfiguration = result.getIdeConfiguration();
                                                                                applicationSettings = result.getSettings();
-                                                                               IDE.userId = result.getUserInfo().getName();
+                                                                               IDE.user = result.getUserInfo();
 
                                                                                // TODO: small hack need because currently user on client
                                                                                // must have it least one role
@@ -113,7 +113,6 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                                                    result.getUserInfo()
                                                                                          .setRoles(Arrays.asList("not-in-role"));
                                                                                
-                                                                               IDE.userRole = result.getUserInfo().getRoles();
 
                                                                                controls.initControls(result.getUserInfo().getRoles());
 

@@ -76,6 +76,10 @@ public interface UserInfo {
      *         the user's roles
      */
     public void setRoles(List<String> roles);
+    
+    public void setWorkspaces(List<String> workspaces);
+    
+    public List<String> getWorkspaces();
 
     public String getClientId();
 

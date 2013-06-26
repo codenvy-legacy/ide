@@ -57,8 +57,8 @@
 <script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "browserNotSupported.js")%>'></script>
 
 <div id="ide-preloader" style="position: absolute; left:0px; right: 0px; top:0px; bottom: 0px; background-color: #FFFFFF; z-index: 900100;">
-	<div style="position:absolute; width:230px; height:90px; background-image: url('images/loader/loader-background-element.png'); left:50%; top:50%; margin-left:-115px; margin-top:-45px; text-align: center;">
-		<img src="images/loader/ajax-loader-new.gif" style="margin-top: 20px; margin-bottom: 10px;" />
+	<div style="position:absolute; width:230px; height:90px; background-image: url('<%= genIdeStaticResourceUrl(request, "loader-background-element.png")%>'); left:50%; top:50%; margin-left:-115px; margin-top:-45px; text-align: center;">
+		<img src='<%= genIdeStaticResourceUrl(request, "ajax-loader-new.gif")%>' style="margin-top: 20px; margin-bottom: 10px;" />
 		<br>
 		<span style="font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 11px; text-align: center; color: #222222;">Loading IDE...</span>
 	</div>

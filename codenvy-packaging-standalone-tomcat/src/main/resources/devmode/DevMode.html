@@ -31,8 +31,8 @@
         }
         var hiddenFiles = ".*";
         var ws = "dev-monit";
-        var project = "null";
-        var path = "null";
+        var project = null;
+        var path = null;
         var authorizationContext = "/w/rest";
         var authorizationPageURL = "/ide/" + ws;
         var authorizationErrorPageURL = "/w/ide/error_oauth.html";
@@ -81,8 +81,10 @@
     var htmlShell = "<a id=\"shell-link\" href=\"/shell/Shell.html\" target=\"_blank\">Shell</a>";
     addMenuAddition(htmlShell);
 
-    var htmlLogout = "<span id=\"logoutButton\" onClick=\"window.location = '/site/logout.jsp';\">Logout</span>";
+    var htmlLogout = "<span id=\"logoutButton\" onClick=\"window.location = '/IDE/logout.jsp';\">Logout</span>";
     addMenuAddition(htmlLogout);
+    var htmlLogin = "<span id=\"loginButton\" onClick=\"window.location = '/IDE/login.html';\">Login</span>";
+    addMenuAddition(htmlLogin);
 </script>
 <script type="text/javascript">
     var uvOptions = {};
