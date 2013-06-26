@@ -25,6 +25,8 @@ import com.codenvy.ide.ext.git.client.add.AddToIndexView;
 import com.codenvy.ide.ext.git.client.add.AddToIndexViewImpl;
 import com.codenvy.ide.ext.git.client.clone.CloneRepositoryView;
 import com.codenvy.ide.ext.git.client.clone.CloneRepositoryViewImpl;
+import com.codenvy.ide.ext.git.client.commit.CommitView;
+import com.codenvy.ide.ext.git.client.commit.CommitViewImpl;
 import com.codenvy.ide.ext.git.client.init.InitRepositoryView;
 import com.codenvy.ide.ext.git.client.init.InitRepositoryViewImpl;
 import com.codenvy.ide.ext.git.client.remove.RemoveFromIndexView;
@@ -47,5 +49,6 @@ public class GitGinModule extends AbstractGinModule {
         bind(AddToIndexView.class).to(AddToIndexViewImpl.class).in(Singleton.class);
         bind(ResetToCommitView.class).to(ResetToCommitViewImpl.class).in(Singleton.class);
         bind(RemoveFromIndexView.class).to(RemoveFromIndexViewImpl.class).in(Singleton.class);
+        bind(CommitView.class).to(CommitViewImpl.class).in(Singleton.class);
     }
 }

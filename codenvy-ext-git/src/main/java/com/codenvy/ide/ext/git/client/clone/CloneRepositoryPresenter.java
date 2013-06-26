@@ -202,10 +202,10 @@ public class CloneRepositoryPresenter implements CloneRepositoryView.ActionDeleg
     }
 
     /**
-     * Handler some action whether some exception happend.
+     * Handler some action whether some exception happened.
      *
      * @param e
-     *         excpetion what happend
+     *         exception what happened
      * @param remoteUri
      *         rempote uri
      */
