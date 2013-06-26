@@ -1,0 +1,44 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:c='urn:import:com.codenvy.ide.ui'>
+    <ui:with field='locale' type='com.codenvy.ide.ext.git.client.GitLocalizationConstant'/>
+    <ui:with field='res' type='com.codenvy.ide.ext.git.client.GitClientResources'/>
+    <ui:with field='coreRes' type='com.codenvy.ide.Resources'/>
+    <ui:style>
+        .alignBtn {
+            float: right;
+        }
+
+        .emptyBorder {
+            margin: 6px;
+        }
+
+        .space {
+            margin-right: 5px;
+        }
+
+        .spacing {
+            margin-top: 10px;
+        }
+    </ui:style>
+    <g:DockLayoutPanel unit="PX" width="550px" height="200px" addStyleNames="{style.emptyBorder}">
+        <g:south size="36.0">
+            <g:FlowPanel addStyleNames="{style.spacing}">
+                <c:Button addStyleNames="{style.alignBtn}" text="{locale.buttonClose}" width="70px" size="SMALL" type="DANGER"
+                          ui:field="btnClose"/>
+                <c:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonRename}" width="75px" size="SMALL"
+                          ui:field="btnRename" icon="{res.rename}"/>
+                <c:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonDelete}" width="75px" size="SMALL"
+                          ui:field="btnDelete" icon="{res.remove}"/>
+                <c:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonCreate}" width="75px" size="SMALL"
+                          ui:field="btnCreate" icon="{res.add}"/>
+                <c:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.buttonCheckout}" width="75px" size="SMALL"
+                          ui:field="btnCheckout" icon="{res.ok}"/>
+            </g:FlowPanel>
+        </g:south>
+        <g:center>
+            <g:ScrollPanel ui:field="branchesPanel" addStyleNames="{coreRes.coreCss.simpleListContainer}"/>
+        </g:center>
+    </g:DockLayoutPanel>
+</ui:UiBinder>

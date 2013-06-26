@@ -47,7 +47,7 @@ public interface ResetToCommitView extends View<ResetToCommitView.ActionDelegate
     }
 
     /**
-     * Set available revisons.
+     * Set available revisions.
      *
      * @param revisions
      *         git revisions

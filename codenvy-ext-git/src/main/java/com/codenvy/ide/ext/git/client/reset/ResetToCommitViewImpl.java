@@ -151,7 +151,6 @@ public class ResetToCommitViewImpl extends DialogBox implements ResetToCommitVie
             public String getValue(Revision revision) {
                 return revision.getMessage();
             }
-
         };
 
         commits.addColumn(dateColumn, locale.commitGridDate());
