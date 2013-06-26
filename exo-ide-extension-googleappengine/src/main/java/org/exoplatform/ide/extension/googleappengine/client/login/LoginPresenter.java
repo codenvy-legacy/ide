@@ -89,7 +89,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, JsPopUpO
         String authUrl = Utils.getAuthorizationContext()                        
                          + "/ide/oauth/authenticate?oauth_provider=google"
                          + "&scope=https://www.googleapis.com/auth/appengine.admin"
-                         + "&userId=" + IDE.userId + "&redirect_after_login=/w/" + Utils.getWorkspaceName();
+                         + "&userId=" + IDE.user.getName() + "&redirect_after_login=/w/" + Utils.getWorkspaceName();
                          
         JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 450, 500, this);
         authWindow.loginWithOAuth();

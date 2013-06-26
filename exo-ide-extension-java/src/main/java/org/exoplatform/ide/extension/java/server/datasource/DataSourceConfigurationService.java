@@ -36,7 +36,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /** @author <a href="mailto:aparfonov@codenvy.com">Andrey Parfonov</a> */
-@Path("ide/data-source/java")
+@Path("{ws-name}/data-source/java")
 public class DataSourceConfigurationService {
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;

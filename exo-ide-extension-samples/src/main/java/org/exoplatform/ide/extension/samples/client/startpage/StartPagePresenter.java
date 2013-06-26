@@ -18,34 +18,32 @@
  */
 package org.exoplatform.ide.extension.samples.client.startpage;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.event.CreateProjectEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubEvent;
 import org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersEvent;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryEvent;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-
 /**
  * Presenter for welcome view.
- *
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: WelcomePresenter.java Aug 25, 2011 12:27:27 PM vereshchaka $
  */
 public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandler {
 
     public interface Display extends IsView {
-        
+
         HasClickHandlers getCloneLink();
 
         HasClickHandlers getProjectLink();
@@ -53,11 +51,13 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
         HasClickHandlers getImportLink();
 
         HasClickHandlers getInvitationsLink();
-        
+
     }
 
-    private Display display;
-    
+    private Display          display;
+
+    private ReadOnlyUserView readOnlyUserView;
+
     public StartPagePresenter() {
         IDE.addHandler(OpenStartPageEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -67,9 +67,10 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
         display.getCloneLink().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                if (!IDE.userRole.contains("developer") && !IDE.userRole.contains("admin")){
-                    Dialogs.getInstance().showError(SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyTitle(),
-                                                   SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyMessage());
+                if (IDE.isRoUser()) {
+                    if (readOnlyUserView == null)
+                        readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaces());
+                    IDE.getInstance().openView(readOnlyUserView);
                 } else {
                     IDE.fireEvent(new CloneRepositoryEvent());
                 }
@@ -79,9 +80,10 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
         display.getProjectLink().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                if (!IDE.userRole.contains("developer") && !IDE.userRole.contains("admin")){
-                    Dialogs.getInstance().showError(SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyTitle(),
-                                                   SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyMessage());
+                if (IDE.isRoUser()) {
+                    if (readOnlyUserView == null)
+                        readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaces());
+                    IDE.getInstance().openView(readOnlyUserView);
                 } else {
                     IDE.fireEvent(new CreateProjectEvent());
                 }
@@ -92,9 +94,10 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
 
             @Override
             public void onClick(ClickEvent event) {
-                if (!IDE.userRole.contains("developer") && !IDE.userRole.contains("admin")){
-                    Dialogs.getInstance().showError(SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyTitle(),
-                                                   SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyMessage());
+                if (IDE.isRoUser()) {
+                    if (readOnlyUserView == null)
+                        readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaces());
+                    IDE.getInstance().openView(readOnlyUserView);
                 } else {
                     IDE.fireEvent(new ImportFromGithubEvent());
                 }
@@ -104,9 +107,10 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
         display.getInvitationsLink().addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                if (!IDE.userRole.contains("developer") && !IDE.userRole.contains("admin")){
-                    Dialogs.getInstance().showError(SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyTitle(),
-                                                   SamplesExtension.LOCALIZATION_CONSTANT.joinCodenvyMessage());
+                if (IDE.isRoUser()) {
+                    if (readOnlyUserView == null)
+                        readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaces());
+                    IDE.getInstance().openView(readOnlyUserView);
                 } else {
                     IDE.fireEvent(new InviteGoogleDevelopersEvent());
                 }
@@ -114,8 +118,10 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
         });
     }
 
-    /** @see org.exoplatform.ide.client.OpenStartPageHandler.OpenWelcomeHandler#onOpenStartPage(org.exoplatform.ide.client
-     * .OpenStartPageEvent.OpenWelcomeEvent) */
+    /**
+     * @see org.exoplatform.ide.client.OpenStartPageHandler.OpenWelcomeHandler#onOpenStartPage(org.exoplatform.ide.client
+     *      .OpenStartPageEvent.OpenWelcomeEvent)
+     */
     @Override
     public void onOpenStartPage(OpenStartPageEvent event) {
         if (display == null) {
@@ -130,8 +136,10 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     *      .event.ViewClosedEvent)
+     */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {

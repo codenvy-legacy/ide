@@ -25,7 +25,6 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
@@ -60,7 +59,10 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
@@ -69,7 +71,7 @@ import java.util.*;
 public class GetStartedPresenter implements DeployResultHandler, GetStartedHandler, ViewClosedHandler, VfsChangedHandler {
 
     interface Display extends IsView {
-        
+
         void showChooseNameStep();
 
         void showChooseTechnologyStep();
@@ -103,42 +105,42 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         void setProjectNameFocus();
 
         void setErrorVisible(boolean visible);
-        
+
     }
 
     /** representing display */
-    private Display display;
+    private Display                              display;
 
     /** Representing current step */
-    private WizardStep currentStep;
+    private WizardStep                           currentStep;
 
-    private ProjectType currentProjectType;
+    private ProjectType                          currentProjectType;
 
-    private ProjectTemplate currentProjectTemplate;
+    private ProjectTemplate                      currentProjectTemplate;
 
     /** current selected PaaS */
-    private PaaS currentPaaS;
-    
+    private PaaS                                 currentPaaS;
+
     /** Name of the property for using JRebel. */
-    private static final String JREBEL = "jrebel";
+    private static final String                  JREBEL                    = "jrebel";
 
     /** available project templates */
-    private List<ProjectTemplate> availableProjectTemplates = new ArrayList<ProjectTemplate>();
+    private List<ProjectTemplate>                availableProjectTemplates = new ArrayList<ProjectTemplate>();
 
     /** available project types */
-    private List<ProjectType> availableProjectTypes = new ArrayList<ProjectType>();
+    private List<ProjectType>                    availableProjectTypes     = new ArrayList<ProjectType>();
 
     /** non selected PaaS */
-    private final PaaS noneTarget = new NoneTarget();
-    
+    private final PaaS                           noneTarget                = new NoneTarget();
+
     /** Comparator for ordering project types. */
-    private static final Comparator<ProjectType> PROJECT_TYPES_COMPARATOR = new ProjectTypesComparator();
-    
-    private static final Comparator<PaaS> PAAS_COMPARATOR = new PaaSComparator();
+    private static final Comparator<ProjectType> PROJECT_TYPES_COMPARATOR  = new ProjectTypesComparator();
 
-    private VirtualFileSystemInfo vfsInfo;
+    private static final Comparator<PaaS>        PAAS_COMPARATOR           = new PaaSComparator();
 
-    final Loader loader = new GWTLoader();
+    private VirtualFileSystemInfo                vfsInfo;
+
+    final Loader                                 loader                    = new GWTLoader();
 
     public GetStartedPresenter() {
         IDE.addHandler(GetStartedEvent.TYPE, this);
@@ -146,7 +148,7 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         IDE.addHandler(VfsChangedEvent.TYPE, this);
     }
 
-    //------------------------------------------------
+    // ------------------------------------------------
     public void bindDisplay() {
         display.getNextButton().addClickHandler(new ClickHandler() {
             @Override
@@ -192,16 +194,11 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
             }
         });
 
-        /*display.getProjectName().addValueChangeHandler(new ValueChangeHandler<String>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<String> event) {
-                if (!event.getValue().matches("[a-zA-Z0-9]{1,100}")) {
-                    display.setErrorVisible(true);
-                } else {
-                    display.setErrorVisible(false);
-                }
-            }
-        });*/
+        /*
+         * display.getProjectName().addValueChangeHandler(new ValueChangeHandler<String>() {
+         * @Override public void onValueChange(ValueChangeEvent<String> event) { if (!event.getValue().matches("[a-zA-Z0-9]{1,100}")) {
+         * display.setErrorVisible(true); } else { display.setErrorVisible(false); } } });
+         */
     }
 
     @Override
@@ -227,7 +224,7 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
     @Override
     public void onGetStarted(GetStartedEvent event) {
         if (this.display == null) {
-            if (!IDE.userRole.contains("developer") && !IDE.userRole.contains("admin")) {
+            if (isRoUser()) {
                 return;
             } else {
                 Display disp = GWT.create(Display.class);
@@ -238,6 +235,13 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
                 showChooseNameStep();
             }
         }
+    }
+
+    /**
+     * @return
+     */
+    public boolean isRoUser() {
+        return !IDE.user.getRoles().contains("developer") && !IDE.user.getRoles().contains("admin");
     }
 
     private void showChooseNameStep() {
@@ -286,15 +290,15 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
 
         display.setNextButtonEnable(false);
     }
-    
+
     private boolean isNameValid() {
         RegExp regExp = RegExp.compile("(^[-.a-zA-Z0-9])([-._a-zA-Z0-9])*$");
         return regExp.test(display.getProjectName().getValue());
     }
 
     private void createAndDeploy() {
-//        loader.setMessage("Loading...");
-//        loader.show();
+        // loader.setMessage("Loading...");
+        // loader.show();
         if (currentPaaS instanceof NoneTarget) {
             createProjectFromTemplate(currentProjectTemplate, this);
         } else {
@@ -304,34 +308,35 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
 
     private void setProjectTypes() {
         try {
-            TemplateService.getInstance().getProjectTemplateList(
-                    new AsyncRequestCallback<List<ProjectTemplate>>(new ProjectTemplateListUnmarshaller(
-                            new ArrayList<ProjectTemplate>())) {
-                        
-                        @Override
-                        protected void onSuccess(List<ProjectTemplate> result) {
-                            availableProjectTemplates = result;
-                            availableProjectTypes = getProjectTypesFromTemplates(availableProjectTemplates);
-                            Collections.sort(availableProjectTypes, PROJECT_TYPES_COMPARATOR);
-                            display.setProjectTypes(availableProjectTypes);
-                            setProjectTypesButtonsHandlers();
-                        }
+            TemplateService.getInstance()
+                           .getProjectTemplateList(
+                                                   new AsyncRequestCallback<List<ProjectTemplate>>(
+                                                                                                   new ProjectTemplateListUnmarshaller(
+                                                                                                                                       new ArrayList<ProjectTemplate>())) {
 
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            Dialogs.getInstance().showError("Something wrong.");
-                        }
-                    });
+                                                       @Override
+                                                       protected void onSuccess(List<ProjectTemplate> result) {
+                                                           availableProjectTemplates = result;
+                                                           availableProjectTypes = getProjectTypesFromTemplates(availableProjectTemplates);
+                                                           Collections.sort(availableProjectTypes, PROJECT_TYPES_COMPARATOR);
+                                                           display.setProjectTypes(availableProjectTypes);
+                                                           setProjectTypesButtonsHandlers();
+                                                       }
+
+                                                       @Override
+                                                       protected void onFailure(Throwable exception) {
+                                                           Dialogs.getInstance().showError("Something wrong.");
+                                                       }
+                                                   });
         } catch (RequestException e) {
             Dialogs.getInstance().showError("Something wrong while taking request.");
         }
     }
-    
+
     /**
      * Prepare project type list to be displayed.
-     *
-     * @param projectTemplates
-     *         available project templates
+     * 
+     * @param projectTemplates available project templates
      * @return {@link List}
      */
     private List<ProjectType> getProjectTypesFromTemplates(List<ProjectTemplate> projectTemplates) {
@@ -357,7 +362,7 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         this.vfsInfo = event.getVfsInfo();
     }
 
-    //------------------------------------------------
+    // ------------------------------------------------
 
     /** Need to set for project types buttons handlers that will allow to use one of programming technology */
     private void setProjectTypesButtonsHandlers() {
@@ -405,7 +410,7 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
 
     private void createProjectFromTemplate(ProjectTemplate projectTemplate, final DeployResultHandler deployResultHandler) {
         if (vfsInfo == null || vfsInfo.getRoot() == null) {
-            Dialogs.getInstance().showError("Vfs error");  //TODO
+            Dialogs.getInstance().showError("Vfs error"); // TODO
             return;
         }
 
@@ -413,30 +418,31 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
             String parentId = vfsInfo.getRoot().getId();
 
             String projectName = display.getProjectName().getValue();
-            IDELoader.getInstance().setMessage("Creating project..."); //TODO
+            IDELoader.getInstance().setMessage("Creating project..."); // TODO
             IDELoader.getInstance().show();
-            TemplateService.getInstance().createProjectFromTemplate(vfsInfo.getId(), parentId, projectName,
-                                                                    projectTemplate.getName(),
-                                                                    new AsyncRequestCallback<ProjectModel>(
-                                                                            new ProjectUnmarshaller(new ProjectModel())) {
-                                                                        @Override
-                                                                        protected void onSuccess(final ProjectModel result) {
-                                                                            if ((currentProjectType == ProjectType.JSP ||
-                                                                                currentProjectType == ProjectType.SPRING)) {
-                                                                               writeUseJRebelProperty(result);
-                                                                           }
-                                                                            IDELoader.getInstance().hide();
-                                                                            IDE.getInstance().closeView(display.asView().getId());
-                                                                            IDE.fireEvent(new ProjectCreatedEvent(result));
-                                                                            deployResultHandler.onProjectCreated(result);
-                                                                        }
+            TemplateService.getInstance()
+                           .createProjectFromTemplate(vfsInfo.getId(), parentId, projectName,
+                                                      projectTemplate.getName(),
+                                                      new AsyncRequestCallback<ProjectModel>(
+                                                                                             new ProjectUnmarshaller(new ProjectModel())) {
+                                                          @Override
+                                                          protected void onSuccess(final ProjectModel result) {
+                                                              if ((currentProjectType == ProjectType.JSP ||
+                                                              currentProjectType == ProjectType.SPRING)) {
+                                                                  writeUseJRebelProperty(result);
+                                                              }
+                                                              IDELoader.getInstance().hide();
+                                                              IDE.getInstance().closeView(display.asView().getId());
+                                                              IDE.fireEvent(new ProjectCreatedEvent(result));
+                                                              deployResultHandler.onProjectCreated(result);
+                                                          }
 
-                                                                        @Override
-                                                                        protected void onFailure(Throwable exception) {
-                                                                            IDELoader.getInstance().hide();
-                                                                            IDE.fireEvent(new ExceptionThrownEvent(exception));
-                                                                        }
-                                                                    });
+                                                          @Override
+                                                          protected void onFailure(Throwable exception) {
+                                                              IDELoader.getInstance().hide();
+                                                              IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                          }
+                                                      });
         } catch (RequestException e) {
             IDELoader.getInstance().hide();
             IDE.fireEvent(new ExceptionThrownEvent(e));
@@ -445,9 +451,8 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
 
     /**
      * Writes 'jrebel' property to the project properties.
-     *
-     * @param project
-     *         {@link ProjectModel}
+     * 
+     * @param project {@link ProjectModel}
      */
     private void writeUseJRebelProperty(ProjectModel project) {
         project.getProperties().add(new PropertyImpl(JREBEL, String.valueOf(true)));
@@ -468,13 +473,12 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
             // ignore this exception
         }
     }
-    
+
     private ProjectTemplate selectProjectTemplate(PaaS paaS) {
         String startWithName;
 
         /**
          * OpenShift has specific procedure for creating project, for first we should create application on openshift after that we may
-         *
          */
         if ("OpenShift".equals(paaS.getId()) || "GAE".equals(paaS.getId()) || "Heroku".equals(paaS.getId())) {
             startWithName = paaS.getId() + "_";
@@ -491,7 +495,7 @@ public class GetStartedPresenter implements DeployResultHandler, GetStartedHandl
         return null;
     }
 
-    //TODO fill image
+    // TODO fill image
     private class NoneTarget extends PaaS {
         public NoneTarget() {
             super("none", "None", new Image(SamplesClientBundle.INSTANCE.gitHub()),
