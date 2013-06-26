@@ -31,17 +31,21 @@ public class StartApplicationEvent extends GwtEvent<StartApplicationHandler> {
     public static final GwtEvent.Type<StartApplicationHandler> TYPE = new GwtEvent.Type<StartApplicationHandler>();
 
     private String applicationName;
+    
+    private String server;
 
     /**
      *
      */
     public StartApplicationEvent() {
+        this.server = null;
     }
 
     /** @param applicationName */
-    public StartApplicationEvent(String applicationName) {
+    public StartApplicationEvent(String applicationName, String server) {
         super();
         this.applicationName = applicationName;
+        this.server = server;
     }
 
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
@@ -59,6 +63,11 @@ public class StartApplicationEvent extends GwtEvent<StartApplicationHandler> {
     /** @return the applicationName */
     public String getApplicationName() {
         return applicationName;
+    }
+    
+    /** @return the server */
+    public String getServer() {
+        return server;
     }
 
 }
