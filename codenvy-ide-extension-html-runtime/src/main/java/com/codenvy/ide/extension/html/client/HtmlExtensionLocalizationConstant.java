@@ -16,16 +16,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.php.client;
+package com.codenvy.ide.extension.html.client;
 
 /**
- * Interface to represent the messages contained in resource bundle: PhpExtensionLocalizationConstant.properties'.
+ * Interface to represent the messages contained in resource bundle: HtmlExtensionLocalizationConstant.properties'.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: PhpExtensionLocalizationConstant.java Apr 17, 2013 4:07:00 PM azatsarynnyy $
+ * @version $Id: HtmlExtensionLocalizationConstant.java Jun 26, 2013 11:04:52 AM azatsarynnyy $
  *
  */
-public interface PhpExtensionLocalizationConstant extends com.google.gwt.i18n.client.Messages {
+public interface HtmlExtensionLocalizationConstant extends com.google.gwt.i18n.client.Messages {
     @Key("run.application.control.title")
     String runApplicationControlTitle();
 
@@ -59,8 +59,8 @@ public interface PhpExtensionLocalizationConstant extends com.google.gwt.i18n.cl
     @Key("project.stopped.message")
     String projectStoppedMessage(String project);
 
-    @Key("not.php.project")
-    String notPhpProject();
+    @Key("not.html.project")
+    String notHtmlProject();
 
     @Key("no.run.application")
     String noRunningApplication();
