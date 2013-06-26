@@ -23,13 +23,11 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: HtmlExtensionClientBundle.java Jun 26, 2013 11:11:11 AM azatsarynnyy $
- *
  */
 public interface HtmlExtensionClientBundle extends ClientBundle {
-    HtmlExtensionClientBundle INSTANCE = GWT.<HtmlExtensionClientBundle>create(HtmlExtensionClientBundle.class);
+    HtmlExtensionClientBundle INSTANCE = GWT.<HtmlExtensionClientBundle> create(HtmlExtensionClientBundle.class);
 
     @Source("com/codenvy/ide/extension/html/images/stopApp.png")
     ImageResource stopApp();

@@ -42,15 +42,14 @@ import org.exoplatform.ide.client.framework.project.ProjectType;
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: RunApplicationControl.java Jun 26, 2013 11:17:51 AM azatsarynnyy $
- *
  */
 @RolesAllowed("developer")
 public class RunApplicationControl extends SimpleControl implements IDEControl,
-        ProjectClosedHandler, ProjectOpenedHandler, ApplicationStartedHandler,
-        ApplicationStoppedHandler {
-    public static final String ID = "Run/Run HTML Application";
+                                                        ProjectClosedHandler, ProjectOpenedHandler, ApplicationStartedHandler,
+                                                        ApplicationStoppedHandler {
+    public static final String  ID     = "Run/Run HTML Application";
 
-    private static final String TITLE = HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.runApplicationControlTitle();
+    private static final String TITLE  = HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.runApplicationControlTitle();
 
     private static final String PROMPT = HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.runApplicationControlPrompt();
 
@@ -72,16 +71,20 @@ public class RunApplicationControl extends SimpleControl implements IDEControl,
         IDE.addHandler(ApplicationStoppedEvent.TYPE, this);
     }
 
-    /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
-     * .project.ProjectClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+     *      .project.ProjectClosedEvent)
+     */
     @Override
     public void onProjectClosed(ProjectClosedEvent event) {
         setVisible(false);
         setEnabled(false);
     }
 
-    /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
-     * .project.ProjectOpenedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
+     *      .project.ProjectOpenedEvent)
+     */
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
         String projectType = event.getProject().getProjectType();
@@ -107,5 +110,5 @@ public class RunApplicationControl extends SimpleControl implements IDEControl,
     public void onApplicationStarted(ApplicationStartedEvent event) {
         setEnabled(false);
     }
-    
+
 }

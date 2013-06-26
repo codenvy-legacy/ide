@@ -28,45 +28,36 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ApplicationRunner.java Jun 26, 2013 11:12:42 AM azatsarynnyy $
- *
  */
 public interface ApplicationRunner {
     /**
      * Run HTML application.
-     *
-     * @param vfs
-     *         virtual file system that contains project
-     * @param projectId
-     *         ID of project folder
+     * 
+     * @param vfs virtual file system that contains project
+     * @param projectId ID of project folder
      * @return description of deployed application
-     * @throws ApplicationRunnerException
-     *         if any error occur when try to deploy application
-     * @throws VirtualFileSystemException
-     *         if any error occur when try to access application files over Virtual File System
+     * @throws ApplicationRunnerException if any error occur when try to deploy application
+     * @throws VirtualFileSystemException if any error occur when try to access application files over Virtual File System
      * @see ApplicationRunnerService#stopApplication(String)
      * @see com.codenvy.ide.extension.html.shared.ApplicationInstance
      */
     ApplicationInstance runApplication(VirtualFileSystem vfs, String projectId) throws ApplicationRunnerException,
-                                                                                       VirtualFileSystemException;
+                                                                               VirtualFileSystemException;
 
     /**
      * Get application logs.
-     *
-     * @param name
-     *         name of application
+     * 
+     * @param name name of application
      * @return logs
-     * @throws ApplicationRunnerException
-     *         if any error occur when try to get application logs
+     * @throws ApplicationRunnerException if any error occur when try to get application logs
      */
     String getLogs(String name) throws ApplicationRunnerException;
 
     /**
      * Stop HTML application.
-     *
-     * @param name
-     *         name of application
-     * @throws ApplicationRunnerException
-     *         if any error occur when try to stop application
+     * 
+     * @param name name of application
+     * @throws ApplicationRunnerException if any error occur when try to stop application
      * @see ApplicationInstance#getName()
      */
     void stopApplication(String name) throws ApplicationRunnerException;

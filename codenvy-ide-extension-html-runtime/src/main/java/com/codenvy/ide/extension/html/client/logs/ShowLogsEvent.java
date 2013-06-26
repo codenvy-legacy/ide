@@ -25,7 +25,6 @@ import com.google.gwt.event.shared.GwtEvent;
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ShowLogsEvent.java Jun 26, 2013 11:05:59 AM azatsarynnyy $
- *
  */
 public class ShowLogsEvent extends GwtEvent<ShowLogsHandler> {
     /** Type used to register the event. */

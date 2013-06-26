@@ -23,7 +23,6 @@ package com.codenvy.ide.extension.html.server;
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ApplicationRunnerException.java Jun 26, 2013 11:12:55 AM azatsarynnyy $
- *
  */
 @SuppressWarnings("serial")
 public class ApplicationRunnerException extends Exception {

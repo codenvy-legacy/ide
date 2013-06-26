@@ -34,33 +34,31 @@ import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: HtmlRuntimeServiceImpl.java Jun 26, 2013 11:10:54 AM azatsarynnyy $
- *
  */
 public class HtmlRuntimeServiceImpl extends HtmlRuntimeService {
-    
-    private static final String BASE_URL = "/html/runner";
-    
-    private static final String LOGS = BASE_URL + "/logs";
 
-    private static final String RUN_APPLICATION = BASE_URL + "/run";
+    private static final String BASE_URL         = "/html/runner";
+
+    private static final String LOGS             = BASE_URL + "/logs";
+
+    private static final String RUN_APPLICATION  = BASE_URL + "/run";
 
     private static final String STOP_APPLICATION = BASE_URL + "/stop";
 
 
-    private final String wsName;
+    private final String        wsName;
 
-    private final String restContext;
+    private final String        restContext;
 
-    private final MessageBus wsMessageBus;
+    private final MessageBus    wsMessageBus;
 
     public HtmlRuntimeServiceImpl(String restContext, String wsName, MessageBus wsMessageBus) {
         this.restContext = restContext;
         this.wsName = wsName;
         this.wsMessageBus = wsMessageBus;
-        
+
     }
 
     /**
@@ -69,11 +67,11 @@ public class HtmlRuntimeServiceImpl extends HtmlRuntimeService {
      */
     @Override
     public void start(String vfsId, ProjectModel project, RequestCallback<ApplicationInstance> callback)
-            throws WebSocketException {
+                                                                                                        throws WebSocketException {
         StringBuilder params = new StringBuilder("?");
         params.append("vfsid=").append(vfsId).append("&projectid=").append(project.getId());
         RequestMessage message =
-            RequestMessageBuilder.build(RequestBuilder.GET, wsName + RUN_APPLICATION + params).getRequestMessage();
+                                 RequestMessageBuilder.build(RequestBuilder.GET, wsName + RUN_APPLICATION + params).getRequestMessage();
         wsMessageBus.send(message, callback);
     }
 
@@ -93,7 +91,8 @@ public class HtmlRuntimeServiceImpl extends HtmlRuntimeService {
     }
 
     /**
-     * @see com.codenvy.ide.extension.html.client.HtmlRuntimeService#getLogs(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+     * @see com.codenvy.ide.extension.html.client.HtmlRuntimeService#getLogs(java.lang.String,
+     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
      */
     @Override
     public void getLogs(String name, AsyncRequestCallback<StringBuilder> callback) throws RequestException {

@@ -27,17 +27,16 @@ import com.google.gwt.event.shared.GwtEvent;
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ApplicationStoppedEvent.java Jun 26, 2013 11:07:20 AM azatsarynnyy $
- *
  */
 public class ApplicationStoppedEvent extends GwtEvent<ApplicationStoppedHandler> {
     /** Type used to register the event. */
     public static final GwtEvent.Type<ApplicationStoppedHandler> TYPE = new GwtEvent.Type<ApplicationStoppedHandler>();
 
     /** Stopped application. */
-    private ApplicationInstance application;
+    private ApplicationInstance                                  application;
 
     /** If <code>true</code>, then application was stopped manually. */
-    private boolean manually;
+    private boolean                                              manually;
 
     public ApplicationStoppedEvent(ApplicationInstance application, boolean manually) {
         this.application = application;

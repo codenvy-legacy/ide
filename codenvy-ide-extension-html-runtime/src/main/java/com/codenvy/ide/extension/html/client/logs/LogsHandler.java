@@ -36,10 +36,8 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: LogsHandler.java Jun 26, 2013 11:05:33 AM azatsarynnyy $
- *
  */
 public class LogsHandler implements ShowLogsHandler, ApplicationStartedHandler, ApplicationStoppedHandler {
     private ApplicationInstance runApplication;
@@ -52,8 +50,9 @@ public class LogsHandler implements ShowLogsHandler, ApplicationStartedHandler, 
         IDE.addHandler(ApplicationStoppedEvent.TYPE, this);
     }
 
-    /** @see com.codenvy.ide.extension.html.client.logs.ShowLogsHandler#onShowLogs(com.codenvy.ide.extension.html.client.logs
-     * .ShowLogsEvent) */
+    /**
+     * @see com.codenvy.ide.extension.html.client.logs.ShowLogsHandler#onShowLogs(com.codenvy.ide.extension.html.client.logs .ShowLogsEvent)
+     */
     @Override
     public void onShowLogs(ShowLogsEvent event) {
         if (runApplication != null) {
@@ -66,20 +65,20 @@ public class LogsHandler implements ShowLogsHandler, ApplicationStartedHandler, 
     private void getLogs() {
         try {
             HtmlRuntimeService.getInstance().getLogs(runApplication.getName(),
-                                                       new AsyncRequestCallback<StringBuilder>(
-                                                               new StringUnmarshaller(new StringBuilder())) {
+                                                     new AsyncRequestCallback<StringBuilder>(
+                                                                                             new StringUnmarshaller(new StringBuilder())) {
 
-                                                           @Override
-                                                           protected void onSuccess(StringBuilder result) {
-                                                               IDE.fireEvent(new OutputEvent("<pre>" + result.toString() + "</pre>",
-                                                                                             Type.OUTPUT));
-                                                           }
+                                                         @Override
+                                                         protected void onSuccess(StringBuilder result) {
+                                                             IDE.fireEvent(new OutputEvent("<pre>" + result.toString() + "</pre>",
+                                                                                           Type.OUTPUT));
+                                                         }
 
-                                                           @Override
-                                                           protected void onFailure(Throwable exception) {
-                                                               IDE.fireEvent(new ExceptionThrownEvent(exception));
-                                                           }
-                                                       });
+                                                         @Override
+                                                         protected void onFailure(Throwable exception) {
+                                                             IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                         }
+                                                     });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }

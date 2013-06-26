@@ -28,7 +28,6 @@ import com.google.web.bindery.autobean.shared.AutoBeanFactory;
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: HtmlExtensionAutoBeanFactory.java Jun 26, 2013 11:05:04 AM azatsarynnyy $
- *
  */
 public interface HtmlExtensionAutoBeanFactory extends AutoBeanFactory {
     AutoBean<ApplicationInstance> applicationInstance();

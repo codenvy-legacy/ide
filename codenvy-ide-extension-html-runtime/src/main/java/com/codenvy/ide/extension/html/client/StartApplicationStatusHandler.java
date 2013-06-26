@@ -29,7 +29,6 @@ import org.exoplatform.ide.client.framework.module.IDE;
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: StartApplicationStatusHandler.java Jun 26, 2013 11:11:38 AM azatsarynnyy $
- *
  */
 public class StartApplicationStatusHandler implements RequestStatusHandler {
     private String projectName;

@@ -25,12 +25,11 @@ import com.google.gwt.event.shared.EventHandler;
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ShowLogsHandler.java Jun 26, 2013 11:06:06 AM azatsarynnyy $
- *
  */
 public interface ShowLogsHandler extends EventHandler {
     /**
      * Perform actions, when user tries to view application's logs.
-     *
+     * 
      * @param event
      */
     void onShowLogs(ShowLogsEvent event);

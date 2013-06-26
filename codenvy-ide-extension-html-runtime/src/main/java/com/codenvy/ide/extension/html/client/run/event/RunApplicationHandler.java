@@ -25,12 +25,11 @@ import com.google.gwt.event.shared.EventHandler;
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: RunApplicationHandler.java Jun 26, 2013 11:07:51 AM azatsarynnyy $
- *
  */
 public interface RunApplicationHandler extends EventHandler {
     /**
      * Perform actions, when user tries to run HTML application.
-     *
+     * 
      * @param event
      */
     void onRunApplication(RunApplicationEvent event);

@@ -45,18 +45,17 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static com.codenvy.ide.commons.server.ContainerUtils.readValueParam;
 import static com.codenvy.commons.lang.IoUtil.createTempDirectory;
 import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
 import static com.codenvy.commons.lang.NameGenerator.generate;
 import static com.codenvy.commons.lang.ZipUtils.unzip;
+import static com.codenvy.ide.commons.server.ContainerUtils.readValueParam;
 
 /**
  * ApplicationRunner for deploy HTML applications at CloudFoundry.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: CloudfoundryApplicationRunner.java Jun 26, 2013 11:13:53 AM azatsarynnyy $
- *
  */
 public class CloudfoundryApplicationRunner implements ApplicationRunner, Startable {
     /** Default application lifetime (in minutes). After this time application may be stopped automatically. */

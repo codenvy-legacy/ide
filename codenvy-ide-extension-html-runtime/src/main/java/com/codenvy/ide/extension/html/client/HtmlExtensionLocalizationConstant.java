@@ -23,7 +23,6 @@ package com.codenvy.ide.extension.html.client;
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: HtmlExtensionLocalizationConstant.java Jun 26, 2013 11:04:52 AM azatsarynnyy $
- *
  */
 public interface HtmlExtensionLocalizationConstant extends com.google.gwt.i18n.client.Messages {
     @Key("run.application.control.title")

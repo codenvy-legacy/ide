@@ -22,12 +22,11 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link StopApplicationEvent} event.
- * 
  */
 public interface StopApplicationHandler extends EventHandler {
     /**
      * Perform actions, when user tries to stop HTML application.
-     *
+     * 
      * @param event
      */
     void onStopApplication(StopApplicationEvent event);

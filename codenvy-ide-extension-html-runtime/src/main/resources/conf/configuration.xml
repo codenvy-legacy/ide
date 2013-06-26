@@ -24,11 +24,6 @@
                xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
     <component>
-        <key>com.codenvy.ide.extension.html.server.ApplicationRunner</key>
-        <type>com.codenvy.ide.extension.html.server.CloudfoundryApplicationRunner</type>
-    </component>
-
-    <component>
         <type>com.codenvy.ide.extension.html.server.AppRunnerApplication</type>
     </component>
 </configuration>

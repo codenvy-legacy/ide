@@ -57,20 +57,19 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  * Manager for running/stopping HTML application.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: RunApplicationManager.java Jun 26, 2013 11:18:06 AM azatsarynnyy $
- *
+ * @version $Id: RunStopApplicationManager.java Jun 26, 2013 11:18:06 AM azatsarynnyy $
  */
-public class RunApplicationManager implements RunApplicationHandler, StopApplicationHandler,
-        VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler {
-    
-    private ProjectModel currentProject;
+public class RunStopApplicationManager implements RunApplicationHandler, StopApplicationHandler,
+                                  VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler {
+
+    private ProjectModel          currentProject;
 
     private VirtualFileSystemInfo currentVfs;
 
     /** Run application. */
-    private ApplicationInstance runApplication;
+    private ApplicationInstance   runApplication;
 
-    public RunApplicationManager() {
+    public RunStopApplicationManager() {
         IDE.getInstance().addControl(new StopApplicationControl());
         IDE.getInstance().addControl(new RunApplicationControl(), Docking.TOOLBAR_RIGHT);
 
@@ -99,22 +98,28 @@ public class RunApplicationManager implements RunApplicationHandler, StopApplica
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
-     * .project.ProjectClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+     *      .project.ProjectClosedEvent)
+     */
     @Override
     public void onProjectClosed(ProjectClosedEvent event) {
         this.currentProject = null;
     }
 
-    /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
-     * .project.ProjectOpenedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
+     *      .project.ProjectOpenedEvent)
+     */
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
         this.currentProject = event.getProject();
     }
 
-    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
-     * .application.event.VfsChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     *      .application.event.VfsChangedEvent)
+     */
     @Override
     public void onVfsChanged(VfsChangedEvent event) {
         this.currentVfs = event.getVfsInfo();
@@ -123,40 +128,44 @@ public class RunApplicationManager implements RunApplicationHandler, StopApplica
     /** Run HTML application. */
     private void runApplication() {
         AutoBean<ApplicationInstance> autoBean =
-                HtmlRuntimeExtension.AUTO_BEAN_FACTORY.create(ApplicationInstance.class);
+                                                 HtmlRuntimeExtension.AUTO_BEAN_FACTORY.create(ApplicationInstance.class);
         AutoBeanUnmarshallerWS<ApplicationInstance> unmarshaller = new AutoBeanUnmarshallerWS<ApplicationInstance>(autoBean);
 
         try {
-            IDE.fireEvent(new OutputEvent(HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.startingProjectMessage(currentProject
-                                                                                                                    .getName()),
+            IDE.fireEvent(new OutputEvent(
+                                          HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.startingProjectMessage(currentProject
+                                                                                                                                .getName()),
                                           Type.INFO));
             HtmlRuntimeService.getInstance().start(currentVfs.getId(), currentProject,
-                                                     new RequestCallback<ApplicationInstance>(unmarshaller) {
-                                                         @Override
-                                                         protected void onSuccess(ApplicationInstance result) {
-                                                             runApplication = result;
-                                                             IDE.fireEvent(new ApplicationStartedEvent(runApplication));
-                                                             String url =
-                                                                     (result.getHost().startsWith("http://")) ? result.getHost()
-                                                                                                              : "http://" +
-                                                                                                                result.getHost();
-                                                             String link = "<a href=\"" + url + "\" target=\"_blank\">" + url + "</a>";
-                                                             IDE.fireEvent(new OutputEvent(
-                                                                     HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.applicationStartedUrl(
-                                                                             result.getName(), link), Type.INFO));
-                                                         }
+                                                   new RequestCallback<ApplicationInstance>(unmarshaller) {
+                                                       @Override
+                                                       protected void onSuccess(ApplicationInstance result) {
+                                                           runApplication = result;
+                                                           IDE.fireEvent(new ApplicationStartedEvent(runApplication));
+                                                           String url =
+                                                                        (result.getHost().startsWith("http://")) ? result.getHost()
+                                                                            : "http://" +
+                                                                              result.getHost();
+                                                           String link = "<a href=\"" + url + "\" target=\"_blank\">" + url + "</a>";
+                                                           IDE.fireEvent(new OutputEvent(
+                                                                                         HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.applicationStartedUrl(
+                                                                                                                                                                result.getName(),
+                                                                                                                                                                link),
+                                                                                         Type.INFO));
+                                                       }
 
-                                                         @Override
-                                                         protected void onFailure(Throwable exception) {
-                                                             String message =
-                                                                     (exception.getMessage() != null && !exception.getMessage().isEmpty()) ?
-                                                                     " : "
-                                                                     + exception.getMessage() : "";
-                                                             IDE.fireEvent(new OutputEvent(
-                                                                     HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.startApplicationFailed()
-                                                                     + message, OutputMessage.Type.ERROR));
-                                                         }
-                                                     });
+                                                       @Override
+                                                       protected void onFailure(Throwable exception) {
+                                                           String message =
+                                                                            (exception.getMessage() != null && !exception.getMessage()
+                                                                                                                         .isEmpty()) ?
+                                                                                " : "
+                                                                                    + exception.getMessage() : "";
+                                                           IDE.fireEvent(new OutputEvent(
+                                                                                         HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.startApplicationFailed()
+                                                                                             + message, OutputMessage.Type.ERROR));
+                                                       }
+                                                   });
         } catch (WebSocketException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
@@ -165,24 +174,27 @@ public class RunApplicationManager implements RunApplicationHandler, StopApplica
     /** Stop HTML application. */
     private void stopApplication() {
         try {
-            IDE.fireEvent(new OutputEvent(HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.stoppingProjectMessage(runApplication
-                                                                                                                    .getName()),
+            IDE.fireEvent(new OutputEvent(
+                                          HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.stoppingProjectMessage(runApplication
+                                                                                                                                .getName()),
                                           Type.INFO));
             HtmlRuntimeService.getInstance().stop(runApplication.getName(), new AsyncRequestCallback<Object>() {
 
                 @Override
                 protected void onSuccess(Object result) {
                     IDE.fireEvent(new ApplicationStoppedEvent(runApplication, true));
-                    IDE.fireEvent(new OutputEvent(HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS
-                                                                        .projectStoppedMessage(currentProject.getName()), Type.INFO));
+                    IDE.fireEvent(new OutputEvent(
+                                                  HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS
+                                                                                                  .projectStoppedMessage(currentProject.getName()),
+                                                  Type.INFO));
                     runApplication = null;
                 }
 
                 @Override
                 protected void onFailure(Throwable exception) {
                     String message =
-                            (exception.getMessage() != null) ? exception.getMessage()
-                                                             : HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.stopApplicationFailed();
+                                     (exception.getMessage() != null) ? exception.getMessage()
+                                         : HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.stopApplicationFailed();
                     IDE.fireEvent(new OutputEvent(message, OutputMessage.Type.WARNING));
 
                     if (exception instanceof ServerException) {

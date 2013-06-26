@@ -25,12 +25,11 @@ import com.google.gwt.event.shared.EventHandler;
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ApplicationStartedHandler.java Jun 26, 2013 11:07:07 AM azatsarynnyy $
- *
  */
 public interface ApplicationStartedHandler extends EventHandler {
     /**
      * Perform actions, when HTML application has started.
-     *
+     * 
      * @param event
      */
     void onApplicationStarted(ApplicationStartedEvent event);

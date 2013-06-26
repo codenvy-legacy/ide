@@ -21,18 +21,16 @@ package com.codenvy.ide.extension.html.server;
 import com.codenvy.ide.extension.html.shared.ApplicationInstance;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ApplicationInstanceImpl.java Jun 26, 2013 11:12:28 AM azatsarynnyy $
- *
  */
 public class ApplicationInstanceImpl implements ApplicationInstance {
     private String name;
     private String host;
 
-    private int port = 80;
+    private int    port     = 80;
     private String stopURL;
-    private int lifetime = -1;
+    private int    lifetime = -1;
 
     public ApplicationInstanceImpl(String name, String host, String stopURL, int lifetime) {
         this.name = name;

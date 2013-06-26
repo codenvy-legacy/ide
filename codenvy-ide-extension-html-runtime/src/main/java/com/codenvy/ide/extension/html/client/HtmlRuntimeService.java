@@ -31,7 +31,6 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: HtmlRuntimeService.java Jun 26, 2013 11:10:07 AM azatsarynnyy $
- *
  */
 public abstract class HtmlRuntimeService {
     /** HTML service. */
@@ -47,25 +46,20 @@ public abstract class HtmlRuntimeService {
 
     /**
      * Start HTML project.
-     *
-     * @param vfsId
-     *         virtual file system id
-     * @param projectId
-     *         project's id
-     * @param callback
-     *         callback
+     * 
+     * @param vfsId virtual file system id
+     * @param projectId project's id
+     * @param callback callback
      * @throws RequestException
      */
     public abstract void start(String vfsId, ProjectModel project, RequestCallback<ApplicationInstance> callback)
-            throws WebSocketException;
+                                                                                                                 throws WebSocketException;
 
     /**
      * Stop running HTML application.
-     *
-     * @param name
-     *         application's name to stop
-     * @param callback
-     *         callback
+     * 
+     * @param name application's name to stop
+     * @param callback callback
      * @throws RequestException
      */
     public abstract void stop(String name, AsyncRequestCallback<Object> callback) throws RequestException;
@@ -73,10 +67,8 @@ public abstract class HtmlRuntimeService {
     /**
      * Get HTML application's logs.
      * 
-     * @param name
-     *         application's name
-     * @param callback
-     *         callback
+     * @param name application's name
+     * @param callback callback
      * @throws RequestException
      */
     public abstract void getLogs(String name, AsyncRequestCallback<StringBuilder> callback) throws RequestException;

@@ -18,8 +18,8 @@
  */
 package com.codenvy.ide.extension.html.client.logs;
 
-import com.codenvy.ide.extension.html.client.HtmlRuntimeExtension;
 import com.codenvy.ide.extension.html.client.HtmlExtensionClientBundle;
+import com.codenvy.ide.extension.html.client.HtmlRuntimeExtension;
 import com.codenvy.ide.extension.html.client.run.event.ApplicationStartedEvent;
 import com.codenvy.ide.extension.html.client.run.event.ApplicationStartedHandler;
 import com.codenvy.ide.extension.html.client.run.event.ApplicationStoppedEvent;
@@ -37,17 +37,15 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ShowLogsControl.java Jun 26, 2013 11:05:43 AM azatsarynnyy $
- *
  */
 @RolesAllowed({"developer"})
 public class ShowLogsControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
-                                                              ApplicationStartedHandler, ApplicationStoppedHandler {
-    private static final String ID = "Run/HTML Logs";
+                                                  ApplicationStartedHandler, ApplicationStoppedHandler {
+    private static final String ID     = "Run/HTML Logs";
 
-    private static final String TITLE = HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.showLogsControlTitle();
+    private static final String TITLE  = HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.showLogsControlTitle();
 
     private static final String PROMPT = HtmlRuntimeExtension.HTML_LOCALIZATION_CONSTANTS.showLogsControlPrompt();
 
@@ -60,16 +58,20 @@ public class ShowLogsControl extends SimpleControl implements IDEControl, Projec
         setGroupName(GroupNames.RUNDEBUG);
     }
 
-    /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
-     * .project.ProjectClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+     *      .project.ProjectClosedEvent)
+     */
     @Override
     public void onProjectClosed(ProjectClosedEvent event) {
         setEnabled(false);
         setVisible(false);
     }
 
-    /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
-     * .project.ProjectOpenedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
+     *      .project.ProjectOpenedEvent)
+     */
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
         String projectType = event.getProject().getProjectType();

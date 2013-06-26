@@ -19,7 +19,7 @@
 package com.codenvy.ide.extension.html.client;
 
 import com.codenvy.ide.extension.html.client.logs.LogsHandler;
-import com.codenvy.ide.extension.html.client.run.RunApplicationManager;
+import com.codenvy.ide.extension.html.client.run.RunStopApplicationManager;
 import com.google.gwt.core.client.GWT;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
@@ -33,13 +33,12 @@ import org.exoplatform.ide.client.framework.util.Utils;
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: HtmlRuntimeExtension.java Jun 26, 2013 11:04:37 AM azatsarynnyy $
- *
  */
 public class HtmlRuntimeExtension extends Extension implements InitializeServicesHandler {
-    public static final HtmlExtensionAutoBeanFactory      AUTO_BEAN_FACTORY = GWT
-                                                                                .create(HtmlExtensionAutoBeanFactory.class);
+    public static final HtmlExtensionAutoBeanFactory      AUTO_BEAN_FACTORY           = GWT
+                                                                                           .create(HtmlExtensionAutoBeanFactory.class);
 
-    public static final HtmlExtensionLocalizationConstant HTML_LOCALIZATION_CONSTANTS  = GWT.create(HtmlExtensionLocalizationConstant.class);
+    public static final HtmlExtensionLocalizationConstant HTML_LOCALIZATION_CONSTANTS = GWT.create(HtmlExtensionLocalizationConstant.class);
 
     /**
      * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
@@ -55,7 +54,7 @@ public class HtmlRuntimeExtension extends Extension implements InitializeService
     public void initialize() {
         IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
-        new RunApplicationManager();
+        new RunStopApplicationManager();
         new LogsHandler();
     }
 }
