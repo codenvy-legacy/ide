@@ -221,8 +221,8 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                                 new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject,
                                                                                             initialOpenedFiles, initialActiveFile);
                                                             }
-                                                                
-                                                            
+
+
                                                         }
                                                     }
 
@@ -316,27 +316,28 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                                                                            .getRegisteredControls()));
 
 
-        IconButton iconButton =
-                                new IconButton(new Image(IDEImageBundle.INSTANCE.readonly()), new Image(IDEImageBundle.INSTANCE.readonly()));
-        iconButton.setSize("89px", "29px");
-        iconButton.getElement().getStyle().setMarginTop(-4, Unit.PX);
-        iconButton.getElement().getStyle().setBackgroundImage("none");
-        iconButton.setHandleMouseEvent(false);
-        iconButton.addClickHandler(new ClickHandler() {
+        if (IDE.isRoUser()) {
+            IconButton iconButton =
+                                    new IconButton(new Image(IDEImageBundle.INSTANCE.readonly()),
+                                                   new Image(IDEImageBundle.INSTANCE.readonly()));
+            iconButton.setSize("89px", "29px");
+            iconButton.getElement().getStyle().setMarginTop(-4, Unit.PX);
+            iconButton.getElement().getStyle().setBackgroundImage("none");
+            iconButton.setHandleMouseEvent(false);
+            iconButton.addClickHandler(new ClickHandler() {
 
-            @Override
-            public void onClick(ClickEvent event) {
-                if (IDE.isRoUser()) {
-                    if (readOnlyUserView == null)
-                        readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaces());
-                    IDE.getInstance().openView(readOnlyUserView);
+                @Override
+                public void onClick(ClickEvent event) {
+                    if (IDE.isRoUser()) {
+                        if (readOnlyUserView == null)
+                            readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaces());
+                        IDE.getInstance().openView(readOnlyUserView);
+                    }
                 }
-            }
-        });
+            });
 
-        IDE.fireEvent(new AddToolbarItemsEvent(iconButton));
-
-
+            IDE.fireEvent(new AddToolbarItemsEvent(iconButton));
+        }
     }
 
 }

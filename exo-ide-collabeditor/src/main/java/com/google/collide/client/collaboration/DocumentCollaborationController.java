@@ -184,7 +184,7 @@ public class DocumentCollaborationController implements DocOpRecoveryInitiator {
      * TODO: when supporting multiple editors, we'll need to encapsulate these in a
      * POJO keyed off editor ID. For now, assume only a single editor.
      */
-        localCursorTracker = new LocalCursorTracker(this, editor.getSelection());
+        localCursorTracker = new LocalCursorTracker(this, editor.getSelection(), editor);
         localCursorTracker.forceSendingSelection();
 
         collaboratorCursorController = new CollaboratorCursorController(

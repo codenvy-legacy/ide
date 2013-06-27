@@ -108,8 +108,8 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
     
     
     @Override
-    public void setEnabledInvitationsLink(boolean enable) {
-        invitationsLink.setEnabled(enable);
+    public void disableInvitationsLink() {
+        invitationsLink.getElement().setAttribute("style", " color: grey;cursor: default; text-decoration: none;");
     }
 
 }
