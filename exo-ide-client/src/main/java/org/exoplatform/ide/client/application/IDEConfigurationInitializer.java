@@ -21,13 +21,21 @@ package org.exoplatform.ide.client.application;
 import com.codenvy.ide.client.util.logging.Log;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window.Location;
+import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.command.ui.AddToolbarItemsEvent;
 import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
+import org.exoplatform.gwtframework.ui.client.component.IconButton;
+import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
@@ -112,7 +120,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                                                    || result.getUserInfo().getRoles().size() == 0)
                                                                                    result.getUserInfo()
                                                                                          .setRoles(Arrays.asList("not-in-role"));
-                                                                               
+
 
                                                                                controls.initControls(result.getUserInfo().getRoles());
 
@@ -202,7 +210,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                             if (file != null && !file.isEmpty())
                                                             {
                                                                 openFile(file, projectModel);
-                                                            } 
+                                                            }
                                                         }
                                                     }
 
@@ -216,7 +224,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
             }
 
         }
-        
+
         else {
             Map<String, List<String>> parameterMap = Location.getParameterMap();
             if (parameterMap != null && parameterMap.get(CodeNowSpec10.VERSION_PARAMETER) != null
@@ -290,6 +298,26 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
         IDE.fireEvent(new SetToolbarItemsEvent("exoIDEToolbar", toolbarItems, controls.getRegisteredControls()));
         IDE.fireEvent(new SetToolbarItemsEvent("exoIDEStatusbar", controls.getStatusBarControls(), controls
                                                                                                            .getRegisteredControls()));
+
+
+        // Element toolbar1 = DOM.getElementById("exoIDEToolbar");
+        // Element divElement = DOM.createDiv();
+
+        IconButton iconButton =
+                                new IconButton(new Image(IDEImageBundle.INSTANCE.readonly()), new Image(IDEImageBundle.INSTANCE.readonly()));
+        iconButton.setSize("60px", "22px");
+        iconButton.addClickHandler(new ClickHandler() {
+            
+            @Override
+            public void onClick(ClickEvent event) {
+                
+                
+            }
+        });
+      
+        IDE.fireEvent(new AddToolbarItemsEvent(iconButton));  
+
+       
     }
 
 }
