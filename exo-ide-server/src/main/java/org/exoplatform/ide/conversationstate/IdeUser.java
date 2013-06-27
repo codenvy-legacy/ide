@@ -18,9 +18,7 @@
  */
 package org.exoplatform.ide.conversationstate;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 
 /**
  * Created by The eXo Platform SAS.

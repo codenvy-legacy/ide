@@ -21,14 +21,15 @@ package org.exoplatform.ide.extension.samples.client.startpage;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
@@ -89,11 +90,13 @@ public class ReadOnlyUserView extends ViewImpl {
 
             @Override
             public void onClick(ClickEvent   event) {
+                UrlBuilder builder = new UrlBuilder();
                 if (workspaces.size() == 0)
-                    Window.Location.replace(Window.Location.getHost());
-                else
-                    Dialogs.getInstance().showInfo("Not implement yet. Wait for spec qualification");
-                // not implement yet
+                    Window.Location.replace(builder.setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath("/login").buildString());
+                else if (workspaces.size() == 1)
+                    Window.Location.replace(workspaces.get(0));
+                else 
+                    Window.Location.replace(builder.setProtocol(Location.getProtocol()).setHost(Location.getHost()).setPath("/private/select-tenant").buildString());
             }
         });
 

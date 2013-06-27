@@ -30,8 +30,10 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
+import org.exoplatform.ide.client.framework.event.CursorPosition;
 import org.exoplatform.ide.client.framework.event.IDELoadCompleteEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.GoToItemEvent;
 import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
@@ -117,7 +119,7 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
 
         if (projectId == null || projectId.isEmpty()) {
             //lazyRestoreOpenedFiles();
-            loadComplete();
+            loadComplete(null);
             return;
         }
 
@@ -137,7 +139,7 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
                                                                 final ProjectModel project = (ProjectModel)result.getItem();
 
                                                                 if (ProjectType.MultiModule.value().equals(project.getProjectType())) {
-                                                                    loadComplete();
+                                                                    loadComplete(null);
                                                                     return;
                                                                 }
 
@@ -152,14 +154,13 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
 
                                                             @Override
                                                             protected void onFailure(Throwable exception) {
-                                                                IDE.fireEvent(new ExceptionThrownEvent(exception));
-                                                                loadComplete();
+                                                                loadComplete(null);
                                                             }
                                                         });
 
         } catch (Exception e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
-            loadComplete();
+            loadComplete(null);
         }
     }
 
@@ -233,7 +234,6 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
 
                                                                                 @Override
                                                                                 protected void onFailure(Throwable exception) {
-                                                                                    IDE.fireEvent(new ExceptionThrownEvent(exception));
                                                                                     preloadNextFile();
                                                                                 }
                                                                             });
@@ -287,6 +287,18 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
 
         return null;
     }
+    
+    private FileModel getFileById(String id) {
+        Iterator<FileModel> fileIter = openedFiles.values().iterator();
+        while (fileIter.hasNext()) {
+            FileModel file = fileIter.next();
+            if (file.getId().equals(id)) {
+                return file;
+            }
+        }
+
+        return null;
+    }
 
     public void onError(ExceptionThrownEvent event) {
         if (isLoadingOpenedFiles) {
@@ -309,17 +321,20 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
 
     /** Final step - Changing the active file. */
     private void changeActiveFile() {
+        FileModel file = null;
         if (activeFileURL != null) {
-            FileModel file = getFileByPath(initialActiveFile);
+            file = getFileById(initialActiveFile);
             if (file != null) {
                 IDE.fireEvent(new EditorChangeActiveFileEvent(file));
             }
         }
 
-        loadComplete();
+        loadComplete(file);
     }
 
-    private void loadComplete() {
+    private void loadComplete(FileModel file) {
+        if (file != null)
+           IDE.fireEvent(new GoToItemEvent(file, new CursorPosition(1, 1)));
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
             public void execute() {

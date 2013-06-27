@@ -27,7 +27,6 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -56,7 +55,6 @@ public class ShellConfigurationService {
     @GET
     @Path("/init")
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"developer"})
     public Map<String, Object> inializationParameters(@Context UriInfo uriInfo) {
         try {
             String vfsId = (String)EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID);

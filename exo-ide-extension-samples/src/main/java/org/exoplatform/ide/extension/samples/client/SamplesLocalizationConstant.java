@@ -203,13 +203,13 @@ public interface SamplesLocalizationConstant extends Messages {
 
     @Key("control.welcome.id")
     String welcomeControlId();
-
+    
     @Key("control.welcome.title")
     String welcomeControlTitle();
 
     @Key("control.welcome.prompt")
     String welcomeControlPrompt();
-
+    
     /*
      * LoadSamplesView
      */

@@ -105,5 +105,11 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
     public HasClickHandlers getInvitationsLink() {
         return invitationsLink;
     }
+    
+    
+    @Override
+    public void setEnabledInvitationsLink(boolean enable) {
+        invitationsLink.setEnabled(enable);
+    }
 
 }

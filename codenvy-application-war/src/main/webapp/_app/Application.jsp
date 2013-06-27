@@ -44,7 +44,7 @@
         var securityCheckURL = "/ide/j_security_check";
     </script>
 
-    <link rel="shortcut icon" href='<%= genIdeStaticResourceUrl(request, "favicon.ico")%>'/>
+    <link rel="shortcut icon" href="/images/favicon.ico"/>
 <!--
     <script type="text/javascript" language="javascript" src='<%= genIdeStaticResourceUrl(request, "_app.nocache.js")%>'></script>
 -->

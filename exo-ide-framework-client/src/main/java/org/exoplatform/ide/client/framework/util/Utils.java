@@ -411,7 +411,13 @@ public class Utils {
      }-*/;
     
     public static native String getFilePathToOpen() /*-{
-      return $wnd.project + $wnd.path;
+      if ($wnd.path)
+      {
+        alert($wnd.path); 
+        return $wnd.project + $wnd.path;
+      }
+      else 
+        return null;  
     }-*/;
 
     public static native String getWebSocketContext() /*-{

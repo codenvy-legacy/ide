@@ -24,6 +24,7 @@ import org.everrest.core.resource.AbstractResourceDescriptor;
 import org.exoplatform.ide.shell.server.CLIResourceFactory;
 import org.exoplatform.ide.shell.shared.CLIResource;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -55,6 +56,7 @@ public class CLIResourcesService {
     @Path("resources")
     @Produces(MediaType.APPLICATION_JSON)
     @SuppressWarnings("rawtypes")
+    @RolesAllowed({"developer"})
     public Set<CLIResource> getCLIResources() throws IOException {
         Set<CLIResource> result = new HashSet<CLIResource>();
         List<ObjectFactory<AbstractResourceDescriptor>> resources = binder.getResources();

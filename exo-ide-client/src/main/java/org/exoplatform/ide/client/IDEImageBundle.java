@@ -21,6 +21,7 @@ package org.exoplatform.ide.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.ClientBundle.Source;
 
 /**
  * Created by The eXo Platform SAS .
@@ -682,4 +683,7 @@ public interface IDEImageBundle extends ClientBundle {
 
     @Source("org/exoplatform/ide/public/images/question.png")
     ImageResource question();
+    
+    @Source("org/exoplatform/ide/public/images/readonly.png")
+    ImageResource readonly();
 }

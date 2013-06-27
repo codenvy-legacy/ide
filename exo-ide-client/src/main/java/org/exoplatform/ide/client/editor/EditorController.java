@@ -31,7 +31,45 @@ import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersHandler;
 import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuEvent;
-import org.exoplatform.ide.client.framework.editor.event.*;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorCollapseFoldEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorCollapseFoldHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorCopyTextEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorCopyTextHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorCutTextEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorCutTextHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorDeleteCurrentLineEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorDeleteCurrentLineHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorDeleteTextEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorDeleteTextHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorExpandFoldEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorExpandFoldHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFoldSelectionEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFoldSelectionHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorPasteTextEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorPasteTextHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorRedoTypingEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorRedoTypingHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorSelectAllEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorSelectAllHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorUndoTypingEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorUndoTypingHandler;
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.client.framework.event.SaveFileAsEvent;
@@ -178,28 +216,6 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
 
         IDE.fireEvent(new EditorFileContentChangedEvent(activeFile,
                                                         event.getEditor().hasUndoChanges(), event.getEditor().hasRedoChanges()));
-        
-        /*
-        Editor editor = getEditorFromView(activeFile.getId());
-        if (editor == null || !event.getEditor().getId().equals(editor.getId())) {
-            return;
-        }
-
-        String path = activeFile.getId();
-
-        if (ignoreContentChangedList.contains(path)) {
-            ignoreContentChangedList.remove(path);
-            return;
-        }
-
-        if (!(editor instanceof CollabEditor && !MimeType.TEXT_HTML.equals(activeFile.getMimeType()))) {
-            activeFile.setContentChanged(true);
-            updateTabTitle(activeFile);
-        }
-        activeFile.setContent(editor.getText());
-
-        IDE.fireEvent(new EditorFileContentChangedEvent(activeFile, editor.hasUndoChanges(), editor.hasRedoChanges()));
-        */
     }
 
     public void onEditorFocusReceived(EditorFocusReceivedEvent event) {
@@ -394,6 +410,7 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
             }
 
             IDE.fireEvent(new EditorFileOpenedEvent(file, editorView.getEditor(), openedFiles));
+            
         } catch (EditorNotFoundException e) {
             e.printStackTrace();
             Dialogs.getInstance().showError("Editor for " + file.getMimeType() + " not found!");
