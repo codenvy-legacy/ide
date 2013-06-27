@@ -48,6 +48,8 @@ import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconEvent;
 import org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconHandler;
+import org.exoplatform.ide.client.framework.navigation.event.GoToItemEvent;
+import org.exoplatform.ide.client.framework.navigation.event.GoToItemHandler;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconEvent;
@@ -95,7 +97,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler,
         ViewOpenedHandler, ViewClosedHandler, ProjectOpenedHandler, ProjectClosedHandler, 
         SelectItemHandler, EditorActiveFileChangedHandler, EditorFileOpenedHandler, 
         EditorFileClosedHandler, ApplicationSettingsReceivedHandler, ItemsSelectedHandler, 
-        TreeRefreshedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler, ShowHideHiddenFilesHandler {
+        TreeRefreshedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler, ShowHideHiddenFilesHandler, GoToItemHandler {
 
     private static final String    PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG = "package-explorer-linked-with-editor";
 
@@ -132,6 +134,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler,
         IDE.addHandler(AddItemTreeIconEvent.TYPE, this);
         IDE.addHandler(RemoveItemTreeIconEvent.TYPE, this);
         IDE.addHandler(ShowHideHiddenFilesEvent.TYPE, this);
+        IDE.addHandler(GoToItemEvent.TYPE, this);
 
         for (String type : JavaProjects.getList()) {
             ProjectBuilder.addBuilder(type, new Builder() {
@@ -468,6 +471,12 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler,
                 display.refreshTree();
             }
         });
+    }
+
+    @Override
+    public void onGoToFolder(GoToItemEvent event) {
+       display.selectItem(event.getFileToOpen());
+        
     }
 
 }
