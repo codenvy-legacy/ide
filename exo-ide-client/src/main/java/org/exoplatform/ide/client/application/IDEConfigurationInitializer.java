@@ -22,6 +22,7 @@ import com.codenvy.ide.client.util.logging.Log;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
@@ -311,10 +312,11 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
         IconButton iconButton =
                                 new IconButton(new Image(IDEImageBundle.INSTANCE.readonly()), new Image(IDEImageBundle.INSTANCE.readonly()));
-        iconButton.setSize("60px", "22px");
+        iconButton.setSize("89px", "29px");
+        iconButton.getElement().getStyle().setMarginTop(-4, Unit.PX);
+        iconButton.getElement().getStyle().setBackgroundImage("none");
         iconButton.setHandleMouseEvent(false);
         iconButton.addClickHandler(new ClickHandler() {
-
             @Override
             public void onClick(ClickEvent event) {
                 if (IDE.isRoUser()) {
