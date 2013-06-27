@@ -20,10 +20,7 @@ package org.exoplatform.gwtframework.ui.client.command.ui;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.IconButton;
-
-import java.util.List;
 
 /**
  * @author <a href="mailto:vsvydenko@codenvy.com">Valeriy Svydenko</a>

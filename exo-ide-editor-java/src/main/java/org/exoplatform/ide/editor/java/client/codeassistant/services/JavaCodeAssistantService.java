@@ -28,7 +28,9 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypesInfoList;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypesList;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.String2ArrayMarshaller;
@@ -60,6 +62,8 @@ public class JavaCodeAssistantService extends CodeAssistantService {
     }
 
     public static JavaCodeAssistantService get() {
+        if (instance == null)
+            instance = new JavaCodeAssistantService(Utils.getRestContext(), Utils.getWorkspaceName(), IDELoader.getInstance());
         return instance;
     }
 

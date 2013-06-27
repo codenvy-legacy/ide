@@ -21,14 +21,10 @@ package org.exoplatform.ide.client.application;
 import com.codenvy.ide.client.util.logging.Log;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Image;
 
@@ -213,9 +209,15 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                             String file = Utils.getFilePathToOpen();
                                                             IDE.fireEvent(new OpenProjectEvent(projectModel));
                                                             if (file != null && !file.isEmpty())
-                                                            {
                                                                 openFile(file, projectModel);
+                                                            else {
+                                                                initialActiveFile = null;
+                                                                initialOpenedFiles.clear();
+                                                                new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject,
+                                                                                            initialOpenedFiles, initialActiveFile);
                                                             }
+                                                                
+                                                            
                                                         }
                                                     }
 
@@ -309,25 +311,26 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                                                                            .getRegisteredControls()));
 
 
-        IconButton iconButton =
-                                new IconButton(new Image(IDEImageBundle.INSTANCE.readonly()), new Image(IDEImageBundle.INSTANCE.readonly()));
-        iconButton.setSize("60px", "22px");
-        iconButton.setHandleMouseEvent(false);
-        iconButton.addClickHandler(new ClickHandler() {
+        if (IDE.isRoUser()) {
+            IconButton iconButton =
+                                    new IconButton(new Image(IDEImageBundle.INSTANCE.readonly()),
+                                                   new Image(IDEImageBundle.INSTANCE.readonly()));
+            iconButton.setSize("60px", "22px");
+            iconButton.setHandleMouseEvent(false);
+            iconButton.addClickHandler(new ClickHandler() {
 
-            @Override
-            public void onClick(ClickEvent event) {
-                if (IDE.isRoUser()) {
-                    if (readOnlyUserView == null)
-                        readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaces());
-                    IDE.getInstance().openView(readOnlyUserView);
+                @Override
+                public void onClick(ClickEvent event) {
+                    if (IDE.isRoUser()) {
+                        if (readOnlyUserView == null)
+                            readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaces());
+                        IDE.getInstance().openView(readOnlyUserView);
+                    }
                 }
-            }
-        });
+            });
 
-        IDE.fireEvent(new AddToolbarItemsEvent(iconButton));
-
-
+            IDE.fireEvent(new AddToolbarItemsEvent(iconButton));
+        }
     }
 
 }

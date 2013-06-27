@@ -51,6 +51,8 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
         HasClickHandlers getImportLink();
 
         HasClickHandlers getInvitationsLink();
+        
+        void setEnabledInvitationsLink(boolean enable);
 
     }
 
@@ -116,6 +118,8 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
                 }
             }
         });
+        
+        display.setEnabledInvitationsLink(!IDE.isRoUser());
     }
 
     /**
