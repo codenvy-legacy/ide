@@ -33,16 +33,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class Participants {
-    private static final Log LOG = ExoLogger.getLogger(Participants.class);
-
+    private static final Log                                 LOG           = ExoLogger.getLogger(Participants.class);
     /** Map of per-user session IDs LoggedInUsers. */
-    private final ConcurrentMap<String, LoggedInUser> loggedInUsers = new ConcurrentHashMap<String, LoggedInUser>();
+    private final        ConcurrentMap<String, LoggedInUser> loggedInUsers = new ConcurrentHashMap<>();
 
     public GetWorkspaceParticipantsResponse getParticipants(String workspace) {
         GetWorkspaceParticipantsResponseImpl resp = GetWorkspaceParticipantsResponseImpl.make();
-        List<ParticipantUserDetailsImpl> participantsArr = new ArrayList<ParticipantUserDetailsImpl>();
+        List<ParticipantUserDetailsImpl> participantsArr = new ArrayList<>();
         for (LoggedInUser user : loggedInUsers.values()) {
-            if (user.isLoggedIn(workspace)) {
+            if (user.isLoggedIn(workspace) && !user.isReadOnly()) {
                 String userId = user.getId();
                 String username = user.getName();
                 ParticipantUserDetailsImpl participantDetails = ParticipantUserDetailsImpl.make();
@@ -59,9 +58,9 @@ public class Participants {
     }
 
     public Set<String> getAllParticipantIds(String workspace) {
-        Set<String> result = new LinkedHashSet<String>();
+        Set<String> result = new LinkedHashSet<>();
         for (LoggedInUser user : loggedInUsers.values()) {
-            if (user.isLoggedIn(workspace)) {
+            if (user.isLoggedIn(workspace) && !user.isReadOnly()) {
                 result.add(user.getId());
             }
         }
@@ -69,9 +68,12 @@ public class Participants {
     }
 
     public List<ParticipantUserDetailsImpl> getParticipants(Set<String> userIds) {
-        List<ParticipantUserDetailsImpl> result = new ArrayList<ParticipantUserDetailsImpl>();
+        List<ParticipantUserDetailsImpl> result = new ArrayList<>();
         for (LoggedInUser user : loggedInUsers.values()) {
             String userId = user.getId();
+            if (user.isReadOnly()){
+                continue;
+            }
             if (userIds.contains(userId)) {
                 String username = user.getName();
                 ParticipantUserDetailsImpl participantDetails = ParticipantUserDetailsImpl.make();
@@ -126,7 +128,7 @@ public class Participants {
         loggedInUsers.putIfAbsent(user.getId(), user);
     }
 
-    public LoggedInUser getUser(String userId){
-        return  loggedInUsers.get(userId);
+    public LoggedInUser getUser(String userId) {
+        return loggedInUsers.get(userId);
     }
 }

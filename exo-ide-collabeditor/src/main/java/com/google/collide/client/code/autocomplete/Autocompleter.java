@@ -280,7 +280,9 @@ public class Autocompleter implements ContentAssistant {
      * @return {@code true} if event shouldn't be further processed / bubbled
      */
     public boolean processKeyPress(SignalEventEssence trigger) {
-
+        if(editor.isReadOnly()){
+            return false;
+        }
         if (popup.isShowing() && popup.consumeKeySignal(trigger)) {
             return true;
         }
