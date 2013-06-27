@@ -223,7 +223,7 @@ public class JavaClasspathResolver implements CleanProjectHandler, VfsChangedHan
     }
 
     private void resolveDependencies(ProjectModel... projects) {
-        JobManager.get().showJobSeparated();
+        JobManager.get();
         for (ProjectModel projectModel : projects) {
             //for each project create own update status handler and assign for each their project id
             statusHandler.put(projectModel.getId(), new UpdateDependencyStatusHandler(projectModel.getName()));
