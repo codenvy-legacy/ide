@@ -24,6 +24,8 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.DOM;
@@ -61,6 +63,7 @@ import org.exoplatform.ide.client.model.Settings;
 import org.exoplatform.ide.client.model.SettingsService;
 import org.exoplatform.ide.client.model.SettingsServiceImpl;
 import org.exoplatform.ide.client.workspace.event.SwitchVFSEvent;
+import org.exoplatform.ide.extension.samples.client.startpage.ReadOnlyUserView;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
@@ -91,6 +94,8 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
     private List<String>         initialOpenedFiles;
 
     private String               initialActiveFile;
+
+    protected ReadOnlyUserView   readOnlyUserView;
 
     /** @param controls */
     public IDEConfigurationInitializer(ControlsRegistration controls) {
@@ -303,24 +308,23 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                                                                            .getRegisteredControls()));
 
 
-        // Element toolbar1 = DOM.getElementById("exoIDEToolbar");
-        // Element divElement = DOM.createDiv();
-
         IconButton iconButton =
                                 new IconButton(new Image(IDEImageBundle.INSTANCE.readonly()), new Image(IDEImageBundle.INSTANCE.readonly()));
         iconButton.setSize("60px", "22px");
+        iconButton.setHandleMouseEvent(false);
         iconButton.addClickHandler(new ClickHandler() {
-            
+
             @Override
             public void onClick(ClickEvent event) {
-                
-                
+                if (readOnlyUserView == null)
+                    readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaces());
+                IDE.getInstance().openView(readOnlyUserView);
             }
         });
-      
-        IDE.fireEvent(new AddToolbarItemsEvent(iconButton));  
 
-       
+        IDE.fireEvent(new AddToolbarItemsEvent(iconButton));
+
+
     }
 
 }
