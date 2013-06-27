@@ -16,13 +16,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.ext.java.jdi.client.debug;
+package com.codenvy.ide.ext.git.client.merge;
 
 import elemental.html.DivElement;
 import elemental.html.Element;
 import elemental.html.SpanElement;
 
-import com.codenvy.ide.ext.java.jdi.shared.Variable;
+import com.codenvy.ide.ext.git.shared.Reference;
 import com.codenvy.ide.ui.tree.NodeRenderer;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
@@ -30,36 +30,50 @@ import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
+import static com.codenvy.ide.ext.git.shared.Reference.RefType.LOCAL_BRANCH;
+import static com.codenvy.ide.ext.git.shared.Reference.RefType.REMOTE_BRANCH;
+
 /**
- * The rendered for debug variable node.
+ * The rendered for reference node.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public class VariableTreeNodeRenderer implements NodeRenderer<Variable> {
+public class ReferenceTreeNodeRenderer implements NodeRenderer<Reference> {
     public interface Css extends CssResource {
-        @ClassName("variable-root")
-        String variableRoot();
+        @ClassName("reference-root")
+        String referenceRoot();
 
-        @ClassName("variable-icon")
-        String variableIcon();
+        @ClassName("local-icon")
+        String localBranchesIcon();
 
-        @ClassName("variable-label")
-        String variableLabel();
+        @ClassName("remote-icon")
+        String remoteBranchesIcon();
+
+        @ClassName("branch-icon")
+        String branchIcon();
+
+        @ClassName("reference-label")
+        String referenceLabel();
     }
 
     public interface Resources extends Tree.Resources {
-        @Source("Debug.css")
-        Css variableCss();
+        @Source("Merge.css")
+        Css referenceCss();
 
-        @Source("local.png")
-        ImageResource local();
+        @Source("branch.png")
+        ImageResource branch();
 
+        @Source("local_branches.png")
+        ImageResource localBranches();
+
+        @Source("remote_branches.png")
+        ImageResource remoteBranches();
     }
 
     private final Css css;
 
-    public VariableTreeNodeRenderer(Resources res) {
-        this.css = res.variableCss();
+    public ReferenceTreeNodeRenderer(Resources res) {
+        this.css = res.referenceCss();
         this.css.ensureInjected();
     }
 
@@ -71,11 +85,20 @@ public class VariableTreeNodeRenderer implements NodeRenderer<Variable> {
 
     /** {@inheritDoc} */
     @Override
-    public SpanElement renderNodeContents(Variable data) {
-        SpanElement root = Elements.createSpanElement(css.variableRoot());
-        DivElement icon = Elements.createDivElement(css.variableIcon());
-        SpanElement label = Elements.createSpanElement(css.variableLabel());
-        String content = data.getName() + ": " + data.getValue();
+    public SpanElement renderNodeContents(Reference data) {
+        SpanElement root = Elements.createSpanElement(css.referenceRoot());
+
+        DivElement icon;
+        if (LOCAL_BRANCH.equals(data.getRefType())) {
+            icon = Elements.createDivElement(css.localBranchesIcon());
+        } else if (REMOTE_BRANCH.equals(data.getRefType())) {
+            icon = Elements.createDivElement(css.remoteBranchesIcon());
+        } else {
+            icon = Elements.createDivElement(css.branchIcon());
+        }
+
+        SpanElement label = Elements.createSpanElement(css.referenceLabel());
+        String content = data.getDisplayName();
         label.setTextContent(content);
 
         root.appendChild(icon);
@@ -86,7 +109,7 @@ public class VariableTreeNodeRenderer implements NodeRenderer<Variable> {
 
     /** {@inheritDoc} */
     @Override
-    public void updateNodeContents(TreeNodeElement<Variable> treeNode) {
+    public void updateNodeContents(TreeNodeElement<Reference> treeNode) {
         // do nothing
     }
 }

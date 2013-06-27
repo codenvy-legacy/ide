@@ -23,7 +23,7 @@ import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.git.client.GitClientResources;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
-import com.codenvy.ide.ext.git.client.commit.CommitPresenter;
+import com.codenvy.ide.ext.git.client.merge.MergePresenter;
 import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -32,14 +32,14 @@ import static com.codenvy.ide.ext.git.client.GitExtension.GIT_REPOSITORY_PROP;
 
 /** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 @Singleton
-public class CommitAction extends Action {
-    private CommitPresenter  presenter;
+public class ShowMergeAction extends Action {
+    private MergePresenter   presenter;
     private ResourceProvider resourceProvider;
 
     @Inject
-    public CommitAction(CommitPresenter presenter, ResourceProvider resourceProvider, GitClientResources resources,
-                        GitLocalizationConstant constant) {
-        super(constant.commitControlTitle(), constant.commitControlPrompt(), resources.commit());
+    public ShowMergeAction(MergePresenter presenter, ResourceProvider resourceProvider, GitClientResources resources,
+                           GitLocalizationConstant constant) {
+        super(constant.mergeControlTitle(), constant.mergeControlPrompt(), resources.merge());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
     }

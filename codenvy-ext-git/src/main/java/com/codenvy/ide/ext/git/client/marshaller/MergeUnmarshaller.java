@@ -18,9 +18,13 @@
  */
 package com.codenvy.ide.ext.git.client.marshaller;
 
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.shared.MergeResult;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -42,8 +46,9 @@ public class MergeUnmarshaller implements Unmarshallable<MergeResult>, Constants
      * @param merge
      *         result of merge operation
      */
-    public MergeUnmarshaller(Merge merge, GitLocalizationConstant constant) {
+    public MergeUnmarshaller(@NotNull Merge merge, @NotNull GitLocalizationConstant constant) {
         this.merge = merge;
+        this.constant = constant;
     }
 
     /** {@inheritDoc} */
@@ -62,11 +67,11 @@ public class MergeUnmarshaller implements Unmarshallable<MergeResult>, Constants
 
             if (jsonObject.containsKey(CONFLICTS) && jsonObject.get(CONFLICTS).isArray() != null) {
                 JSONArray array = jsonObject.get(CONFLICTS).isArray();
-                merge.setConflicts(getArray(array));
+                merge.setConflicts(getJsonArray(array));
             }
             if (jsonObject.containsKey(MERGED_COMMITS) && jsonObject.get(MERGED_COMMITS).isArray() != null) {
                 JSONArray array = jsonObject.get(MERGED_COMMITS).isArray();
-                merge.setMergedCommits(getArray(array));
+                merge.setMergedCommits(getJsonArray(array));
             }
             if (jsonObject.containsKey(MERGE_STATUS) && jsonObject.get(MERGE_STATUS).isString() != null) {
                 merge.setMergeStatus(MergeResult.MergeStatus.valueOf(jsonObject.get(MERGE_STATUS).isString().stringValue()));
@@ -86,13 +91,15 @@ public class MergeUnmarshaller implements Unmarshallable<MergeResult>, Constants
      *         JSON array
      * @return array of {@link String}
      */
-    private String[] getArray(JSONArray jsonArray) {
-        if (jsonArray == null || jsonArray.size() == 0) {
+    @Nullable
+    private JsonArray<String> getJsonArray(@NotNull JSONArray jsonArray) {
+        if (jsonArray.size() == 0) {
             return null;
         }
-        String[] array = new String[jsonArray.size()];
+        JsonArray<String> array = JsonCollections.createArray();
         for (int i = 0; i < jsonArray.size(); i++) {
-            array[i] = jsonArray.get(i).isString().stringValue();
+            String value = jsonArray.get(i).isString().stringValue();
+            array.add(value);
         }
         return array;
     }

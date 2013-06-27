@@ -27,7 +27,7 @@ import com.codenvy.ide.ui.tree.TreeNodeElement;
 import java.util.HashMap;
 
 /**
- * The adapter for debug variables tree.
+ * The adapter for debug variable node.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */

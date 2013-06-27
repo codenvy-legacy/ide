@@ -23,9 +23,13 @@ import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.ext.git.shared.Branch;
 import com.codenvy.ide.json.JsonArray;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * The view of {@link BranchPresenter}.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 public interface BranchView extends View<BranchView.ActionDelegate> {
-    /** Needs for delegate some function into CloneRepository view. */
+    /** Needs for delegate some function into Branch view. */
     public interface ActionDelegate {
         /** Performs any actions appropriate in response to the user having pressed the Close button. */
         void onCloseClicked();

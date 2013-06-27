@@ -71,6 +71,8 @@ public class BranchViewImpl extends DialogBox implements BranchView {
     final   GitClientResources      res;
     @UiField(provided = true)
     final   GitLocalizationConstant locale;
+    @UiField(provided = true)
+    final   Resources               coreRes;
     private SimpleList<Branch>      branches;
     private ActionDelegate          delegate;
 
@@ -84,6 +86,7 @@ public class BranchViewImpl extends DialogBox implements BranchView {
     protected BranchViewImpl(GitClientResources resources, GitLocalizationConstant locale, Resources coreRes) {
         this.res = resources;
         this.locale = locale;
+        this.coreRes = coreRes;
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 

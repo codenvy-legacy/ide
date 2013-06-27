@@ -18,7 +18,9 @@
  */
 package com.codenvy.ide.ext.git.client.marshaller;
 
+import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.git.shared.MergeResult;
+import com.codenvy.ide.json.JsonArray;
 
 /**
  * Represents the merge operation result.
@@ -28,14 +30,14 @@ import com.codenvy.ide.ext.git.shared.MergeResult;
  */
 public class Merge implements MergeResult {
     /** Commit head after merge. */
-    private String      newHead;
+    private String            newHead;
     /** Status of merge operation. */
-    private MergeStatus mergeStatus;
+    private MergeStatus       mergeStatus;
     /** List of merged commits. */
-    private String[]    mergedCommits;
+    private JsonArray<String> mergedCommits;
     /** List of files with conflicts. */
-    private String[]    conflicts;
-    private String[]    failed;
+    private JsonArray<String> conflicts;
+    private JsonArray<String> failed;
 
     /** {@inheritDoc} */
     @Override
@@ -51,19 +53,19 @@ public class Merge implements MergeResult {
 
     /** {@inheritDoc} */
     @Override
-    public String[] getMergedCommits() {
+    public JsonArray<String> getMergedCommits() {
         return mergedCommits;
     }
 
     /** {@inheritDoc} */
     @Override
-    public String[] getConflicts() {
+    public JsonArray<String> getConflicts() {
         return conflicts;
     }
 
     /** {@inheritDoc} */
     @Override
-    public String[] getFailed() {
+    public JsonArray<String> getFailed() {
         return failed;
     }
 
@@ -87,7 +89,7 @@ public class Merge implements MergeResult {
      * @param mergedCommits
      *         the mergedCommits to set
      */
-    public void setMergedCommits(String[] mergedCommits) {
+    public void setMergedCommits(JsonArray<String> mergedCommits) {
         this.mergedCommits = mergedCommits;
     }
 
@@ -95,11 +97,11 @@ public class Merge implements MergeResult {
      * @param conflicts
      *         the conflicts to set
      */
-    public void setConflicts(String[] conflicts) {
+    public void setConflicts(JsonArray<String> conflicts) {
         this.conflicts = conflicts;
     }
 
-    public void setFailed(String[] failed) {
+    public void setFailed(JsonArray<String> failed) {
         this.failed = failed;
     }
 }

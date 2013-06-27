@@ -160,15 +160,6 @@ public interface GitClientResources extends ClientBundle {
     @Source("controls/revert.png")
     ImageResource revert();
 
-    @Source("branch/branch.png")
-    ImageResource branch();
-
-    @Source("branch/local_branches.png")
-    ImageResource localBanches();
-
-    @Source("branch/remote_branches.png")
-    ImageResource remoteBranches();
-
     @Source("controls/repository.png")
     ImageResource projectReadOnlyGitUrl();
 }

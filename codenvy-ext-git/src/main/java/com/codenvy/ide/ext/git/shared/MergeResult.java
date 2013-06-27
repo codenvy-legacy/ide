@@ -18,47 +18,29 @@
  */
 package com.codenvy.ide.ext.git.shared;
 
+import com.codenvy.ide.json.JsonArray;
+
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: MergeResult.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
 public interface MergeResult {
     public enum MergeStatus {
-        FAST_FORWARD {
-            @Override
-            public String toString() {
-                return "Fast-forward";
-            }
-        },
-        ALREADY_UP_TO_DATE {
-            @Override
-            public String toString() {
-                return "Already up-to-date";
-            }
-        },
-        FAILED {
-            @Override
-            public String toString() {
-                return "Failed";
-            }
-        },
-        MERGED {
-            @Override
-            public String toString() {
-                return "Merged";
-            }
-        },
-        CONFLICTING {
-            @Override
-            public String toString() {
-                return "Conflicting";
-            }
-        },
-        NOT_SUPPORTED {
-            @Override
-            public String toString() {
-                return "Not-yet-supported";
-            }
+        FAST_FORWARD("Fast-forward"),
+        ALREADY_UP_TO_DATE("Already up-to-date"),
+        FAILED("Failed"),
+        MERGED("Merged"),
+        CONFLICTING("Conflicting"),
+        NOT_SUPPORTED("Not-yet-supported");
+
+        private final String value;
+
+        private MergeStatus(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
         }
     }
 
@@ -69,11 +51,11 @@ public interface MergeResult {
     MergeStatus getMergeStatus();
 
     /** @return merged commits */
-    String[] getMergedCommits();
+    JsonArray<String> getMergedCommits();
 
     /** @return files that has conflicts. May return <code>null</code> or empty array if there is no conflicts */
-    String[] getConflicts();
+    JsonArray<String> getConflicts();
 
     /** @return files that failed to merge (not files that has conflicts). */
-    String[] getFailed();
+    JsonArray<String> getFailed();
 }
