@@ -110,9 +110,7 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
             @Override
             public void onClick(ClickEvent event) {
                 if (IDE.isRoUser()) {
-                    if (readOnlyUserView == null)
-                        readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaces());
-                    IDE.getInstance().openView(readOnlyUserView);
+                    return;
                 } else {
                     IDE.fireEvent(new InviteGoogleDevelopersEvent());
                 }
