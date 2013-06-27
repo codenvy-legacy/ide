@@ -257,7 +257,8 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                                                         initialActiveFile = fileModel.getId();
                                                         initialOpenedFiles.clear();
                                                         initialOpenedFiles.add(fileModel.getId());
-                                                        new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject, initialOpenedFiles, initialActiveFile);
+                                                        new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject,
+                                                                                    initialOpenedFiles, initialActiveFile);
                                                     }
                                                 }
 
@@ -316,9 +317,11 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
             @Override
             public void onClick(ClickEvent event) {
-                if (readOnlyUserView == null)
-                    readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaces());
-                IDE.getInstance().openView(readOnlyUserView);
+                if (IDE.isRoUser()) {
+                    if (readOnlyUserView == null)
+                        readOnlyUserView = new ReadOnlyUserView(IDE.user.getWorkspaces());
+                    IDE.getInstance().openView(readOnlyUserView);
+                }
             }
         });
 
